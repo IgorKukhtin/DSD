@@ -22,7 +22,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , BarCode TVarChar
              ,/* IdBarCode TVarChar,*/ GoodsName TVarChar
              , IntenalSPName TVarChar
-             , GoodsGroupName TVarChar, NDSKindName TVarChar
+             , GoodsGroupName TVarChar, NDSKindName TVarChar, NDS TFloat
              , ConditionsKeepName TVarChar
              , Goods_isTop Boolean, Goods_PercentMarkup TFloat
              , DateChange TDateTime, MCSDateChange TDateTime
@@ -92,6 +92,7 @@ BEGIN
                ,NULL::TVarChar                   AS IntenalSPName
                ,NULL::TVarChar                   AS GoodsGroupName
                ,NULL::TVarChar                   AS NDSKindName
+               ,NULL::TFloat                     AS NDS
                ,NULL::TVarChar                   AS ConditionsKeepName
                ,NULL::Boolean                    AS Goods_isTop
                ,NULL::TFloat                     AS Goods_PercentMarkup
@@ -222,11 +223,12 @@ BEGIN
                             , MCS_EndDateMCSAuto.ValueData                        AS EndDateMCSAuto
                             , COALESCE(Price_MCSAuto.ValueData,False)          :: Boolean   AS isMCSAuto
                             , COALESCE(Price_MCSNotRecalcOld.ValueData,False)  :: Boolean   AS isMCSNotRecalcOld
-                       FROM ObjectLink        AS ObjectLink_Price_Unit
-                            INNER JOIN ObjectLink       AS Price_Goods
-                                    ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
-                                   AND (Price_Goods.ChildObjectId = inGoodsId OR inGoodsId = 0)
+
+                       FROM ObjectLink AS ObjectLink_Price_Unit
+                            INNER JOIN ObjectLink AS Price_Goods
+                                                  ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                 AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                                 AND (Price_Goods.ChildObjectId = inGoodsId OR inGoodsId = 0)
 
                             -- ограничение по торговой сети
                             INNER JOIN ObjectLink AS ObjectLink_Goods_Object
@@ -234,67 +236,67 @@ BEGIN
                                                  AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
                                                  AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
 
-                            LEFT JOIN ObjectFloat       AS Price_Value
-                                   ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                  AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
-                            LEFT JOIN ObjectDate        AS Price_DateChange
-                                   ON Price_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                  AND Price_DateChange.DescId = zc_ObjectDate_Price_DateChange()
-                            LEFT JOIN ObjectFloat       AS MCS_Value
-                                    ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
-                            LEFT JOIN ObjectFloat       AS Price_MCSValueOld
-                                    ON Price_MCSValueOld.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND Price_MCSValueOld.DescId = zc_ObjectFloat_Price_MCSValueOld()
+                            LEFT JOIN ObjectFloat AS Price_Value
+                                                  ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                 AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                            LEFT JOIN ObjectDate AS Price_DateChange
+                                                 ON Price_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                AND Price_DateChange.DescId = zc_ObjectDate_Price_DateChange()
+                            LEFT JOIN ObjectFloat AS MCS_Value
+                                                  ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                 AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
+                            LEFT JOIN ObjectFloat AS Price_MCSValueOld
+                                                  ON Price_MCSValueOld.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                 AND Price_MCSValueOld.DescId = zc_ObjectFloat_Price_MCSValueOld()
 
-                            LEFT JOIN ObjectDate        AS MCS_DateChange
-                                    ON MCS_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND MCS_DateChange.DescId = zc_ObjectDate_Price_MCSDateChange()
-                            LEFT JOIN ObjectDate        AS MCS_StartDateMCSAuto
-                                    ON MCS_StartDateMCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND MCS_StartDateMCSAuto.DescId = zc_ObjectDate_Price_StartDateMCSAuto()
-                            LEFT JOIN ObjectDate        AS MCS_EndDateMCSAuto
-                                    ON MCS_EndDateMCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND MCS_EndDateMCSAuto.DescId = zc_ObjectDate_Price_EndDateMCSAuto()
+                            LEFT JOIN ObjectDate AS MCS_DateChange
+                                                 ON MCS_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                AND MCS_DateChange.DescId = zc_ObjectDate_Price_MCSDateChange()
+                            LEFT JOIN ObjectDate AS MCS_StartDateMCSAuto
+                                                 ON MCS_StartDateMCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                AND MCS_StartDateMCSAuto.DescId = zc_ObjectDate_Price_StartDateMCSAuto()
+                            LEFT JOIN ObjectDate AS MCS_EndDateMCSAuto
+                                                 ON MCS_EndDateMCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                AND MCS_EndDateMCSAuto.DescId = zc_ObjectDate_Price_EndDateMCSAuto()
 
-                            LEFT JOIN ObjectBoolean      AS MCS_isClose
-                                    ON MCS_isClose.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND MCS_isClose.DescId = zc_ObjectBoolean_Price_MCSIsClose()
-                            LEFT JOIN ObjectDate        AS MCSIsClose_DateChange
-                                    ON MCSIsClose_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND MCSIsClose_DateChange.DescId = zc_ObjectDate_Price_MCSIsCloseDateChange()
-                            LEFT JOIN ObjectBoolean     AS MCS_NotRecalc
-                                    ON MCS_NotRecalc.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND MCS_NotRecalc.DescId = zc_ObjectBoolean_Price_MCSNotRecalc()
-                            LEFT JOIN ObjectDate        AS MCSNotRecalc_DateChange
-                                    ON MCSNotRecalc_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND MCSNotRecalc_DateChange.DescId = zc_ObjectDate_Price_MCSNotRecalcDateChange()
-                            LEFT JOIN ObjectBoolean     AS Price_Fix
-                                    ON Price_Fix.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND Price_Fix.DescId = zc_ObjectBoolean_Price_Fix()
-                            LEFT JOIN ObjectDate        AS Fix_DateChange
-                                    ON Fix_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND Fix_DateChange.DescId = zc_ObjectDate_Price_FixDateChange()
-                            LEFT JOIN ObjectBoolean     AS Price_Top
-                                    ON Price_Top.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND Price_Top.DescId = zc_ObjectBoolean_Price_Top()
-                            LEFT JOIN ObjectDate        AS Price_TOPDateChange
-                                    ON Price_TOPDateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND Price_TOPDateChange.DescId = zc_ObjectDate_Price_TOPDateChange()     
+                            LEFT JOIN ObjectBoolean AS MCS_isClose
+                                                    ON MCS_isClose.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                   AND MCS_isClose.DescId = zc_ObjectBoolean_Price_MCSIsClose()
+                            LEFT JOIN ObjectDate AS MCSIsClose_DateChange
+                                                 ON MCSIsClose_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                AND MCSIsClose_DateChange.DescId = zc_ObjectDate_Price_MCSIsCloseDateChange()
+                            LEFT JOIN ObjectBoolean AS MCS_NotRecalc
+                                                    ON MCS_NotRecalc.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                   AND MCS_NotRecalc.DescId = zc_ObjectBoolean_Price_MCSNotRecalc()
+                            LEFT JOIN ObjectDate AS MCSNotRecalc_DateChange
+                                                 ON MCSNotRecalc_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                AND MCSNotRecalc_DateChange.DescId = zc_ObjectDate_Price_MCSNotRecalcDateChange()
+                            LEFT JOIN ObjectBoolean AS Price_Fix
+                                                    ON Price_Fix.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                   AND Price_Fix.DescId = zc_ObjectBoolean_Price_Fix()
+                            LEFT JOIN ObjectDate AS Fix_DateChange
+                                                 ON Fix_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                AND Fix_DateChange.DescId = zc_ObjectDate_Price_FixDateChange()
+                            LEFT JOIN ObjectBoolean AS Price_Top
+                                                    ON Price_Top.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                   AND Price_Top.DescId = zc_ObjectBoolean_Price_Top()
+                            LEFT JOIN ObjectDate AS Price_TOPDateChange
+                                                 ON Price_TOPDateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                AND Price_TOPDateChange.DescId = zc_ObjectDate_Price_TOPDateChange()     
 
-                            LEFT JOIN ObjectFloat       AS Price_PercentMarkup
-                                    ON Price_PercentMarkup.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND Price_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()
-                            LEFT JOIN ObjectDate        AS Price_PercentMarkupDateChange
-                                    ON Price_PercentMarkupDateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND Price_PercentMarkupDateChange.DescId = zc_ObjectDate_Price_PercentMarkupDateChange()    
+                            LEFT JOIN ObjectFloat AS Price_PercentMarkup
+                                                  ON Price_PercentMarkup.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                 AND Price_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()
+                            LEFT JOIN ObjectDate AS Price_PercentMarkupDateChange
+                                                 ON Price_PercentMarkupDateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                AND Price_PercentMarkupDateChange.DescId = zc_ObjectDate_Price_PercentMarkupDateChange()    
 
-                            LEFT JOIN ObjectBoolean     AS Price_MCSAuto
-                                    ON Price_MCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND Price_MCSAuto.DescId = zc_ObjectBoolean_Price_MCSAuto()
-                            LEFT JOIN ObjectBoolean     AS Price_MCSNotRecalcOld
-                                    ON Price_MCSNotRecalcOld.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND Price_MCSNotRecalcOld.DescId = zc_ObjectBoolean_Price_MCSNotRecalcOld()
+                            LEFT JOIN ObjectBoolean AS Price_MCSAuto
+                                                    ON Price_MCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                   AND Price_MCSAuto.DescId = zc_ObjectBoolean_Price_MCSAuto()
+                            LEFT JOIN ObjectBoolean AS Price_MCSNotRecalcOld
+                                                    ON Price_MCSNotRecalcOld.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                   AND Price_MCSNotRecalcOld.DescId = zc_ObjectBoolean_Price_MCSNotRecalcOld()
                        WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                          AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
                        )
@@ -352,6 +354,7 @@ BEGIN
                , Object_IntenalSP.ValueData                      AS IntenalSPName
                , Object_Goods_View.GoodsGroupName                AS GoodsGroupName
                , Object_Goods_View.NDSKindName                   AS NDSKindName
+               , Object_Goods_View.NDS                           AS NDS
                , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
                , Object_Goods_View.isTop                         AS Goods_isTop
                , Object_Goods_View.PercentMarkup                 AS Goods_PercentMarkup
@@ -689,11 +692,12 @@ BEGIN
                                , COALESCE(Price_MCSAuto.ValueData,False)          :: Boolean   AS isMCSAuto
                                , COALESCE(Price_MCSNotRecalcOld.ValueData,False)  :: Boolean   AS isMCSNotRecalcOld
                                , ObjectDate_CheckPrice.ValueData                     AS CheckPrice
-                          FROM ObjectLink        AS ObjectLink_Price_Unit
-                               INNER JOIN ObjectLink       AS Price_Goods
-                                       ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                      AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
-                                      AND (Price_Goods.ChildObjectId = inGoodsId OR inGoodsId = 0)
+
+                          FROM ObjectLink AS ObjectLink_Price_Unit
+                               INNER JOIN ObjectLink AS Price_Goods
+                                                     ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                    AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                                    AND (Price_Goods.ChildObjectId = inGoodsId OR inGoodsId = 0)
    
                                -- ограничение по торговой сети
                                INNER JOIN ObjectLink AS ObjectLink_Goods_Object
@@ -701,71 +705,72 @@ BEGIN
                                                     AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
                                                     AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
 
-                               LEFT JOIN ObjectFloat       AS Price_Value
-                                      ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                     AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
-                               LEFT JOIN ObjectDate        AS Price_DateChange
-                                      ON Price_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                     AND Price_DateChange.DescId = zc_ObjectDate_Price_DateChange()
-                               LEFT JOIN ObjectFloat       AS MCS_Value
-                                       ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                      AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
-                               LEFT JOIN ObjectFloat       AS Price_MCSValueOld
-                                       ON Price_MCSValueOld.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                      AND Price_MCSValueOld.DescId = zc_ObjectFloat_Price_MCSValueOld()
+                               LEFT JOIN ObjectFloat AS Price_Value
+                                                     ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                    AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                               LEFT JOIN ObjectDate AS Price_DateChange
+                                                    ON Price_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                   AND Price_DateChange.DescId = zc_ObjectDate_Price_DateChange()
+                               LEFT JOIN ObjectFloat AS MCS_Value
+                                                     ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                    AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
+                               LEFT JOIN ObjectFloat AS Price_MCSValueOld
+                                                     ON Price_MCSValueOld.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                    AND Price_MCSValueOld.DescId = zc_ObjectFloat_Price_MCSValueOld()
    
-                               LEFT JOIN ObjectDate        AS MCS_DateChange
-                                       ON MCS_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                      AND MCS_DateChange.DescId = zc_ObjectDate_Price_MCSDateChange()
-                               LEFT JOIN ObjectDate        AS MCS_StartDateMCSAuto
-                                       ON MCS_StartDateMCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                      AND MCS_StartDateMCSAuto.DescId = zc_ObjectDate_Price_StartDateMCSAuto()
-                               LEFT JOIN ObjectDate        AS MCS_EndDateMCSAuto
-                                       ON MCS_EndDateMCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                      AND MCS_EndDateMCSAuto.DescId = zc_ObjectDate_Price_EndDateMCSAuto()
+                               LEFT JOIN ObjectDate AS MCS_DateChange
+                                                    ON MCS_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                   AND MCS_DateChange.DescId = zc_ObjectDate_Price_MCSDateChange()
+                               LEFT JOIN ObjectDate AS MCS_StartDateMCSAuto
+                                                    ON MCS_StartDateMCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                   AND MCS_StartDateMCSAuto.DescId = zc_ObjectDate_Price_StartDateMCSAuto()
+                               LEFT JOIN ObjectDate AS MCS_EndDateMCSAuto
+                                                    ON MCS_EndDateMCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                   AND MCS_EndDateMCSAuto.DescId = zc_ObjectDate_Price_EndDateMCSAuto()
    
                                LEFT JOIN ObjectDate AS ObjectDate_CheckPrice
-                                      ON ObjectDate_CheckPrice.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                     AND ObjectDate_CheckPrice.DescId = zc_ObjectDate_Price_CheckPrice()
+                                                    ON ObjectDate_CheckPrice.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                   AND ObjectDate_CheckPrice.DescId = zc_ObjectDate_Price_CheckPrice()
    
-                               LEFT JOIN ObjectBoolean      AS MCS_isClose
-                                       ON MCS_isClose.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                      AND MCS_isClose.DescId = zc_ObjectBoolean_Price_MCSIsClose()
-                               LEFT JOIN ObjectDate        AS MCSIsClose_DateChange
-                                       ON MCSIsClose_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                      AND MCSIsClose_DateChange.DescId = zc_ObjectDate_Price_MCSIsCloseDateChange()
-                               LEFT JOIN ObjectBoolean     AS MCS_NotRecalc
-                                       ON MCS_NotRecalc.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                      AND MCS_NotRecalc.DescId = zc_ObjectBoolean_Price_MCSNotRecalc()
-                               LEFT JOIN ObjectDate        AS MCSNotRecalc_DateChange
-                                       ON MCSNotRecalc_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                      AND MCSNotRecalc_DateChange.DescId = zc_ObjectDate_Price_MCSNotRecalcDateChange()
-                               LEFT JOIN ObjectBoolean     AS Price_Fix
-                                       ON Price_Fix.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                      AND Price_Fix.DescId = zc_ObjectBoolean_Price_Fix()
-                               LEFT JOIN ObjectDate        AS Fix_DateChange
-                                       ON Fix_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                      AND Fix_DateChange.DescId = zc_ObjectDate_Price_FixDateChange()
-                               LEFT JOIN ObjectBoolean     AS Price_Top
-                                       ON Price_Top.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                      AND Price_Top.DescId = zc_ObjectBoolean_Price_Top()
-                               LEFT JOIN ObjectDate        AS Price_TOPDateChange
-                                       ON Price_TOPDateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                      AND Price_TOPDateChange.DescId = zc_ObjectDate_Price_TOPDateChange()     
+                               LEFT JOIN ObjectBoolean AS MCS_isClose
+                                                       ON MCS_isClose.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                      AND MCS_isClose.DescId = zc_ObjectBoolean_Price_MCSIsClose()
+                               LEFT JOIN ObjectDate AS MCSIsClose_DateChange
+                                                    ON MCSIsClose_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                   AND MCSIsClose_DateChange.DescId = zc_ObjectDate_Price_MCSIsCloseDateChange()
+                               LEFT JOIN ObjectBoolean AS MCS_NotRecalc
+                                                       ON MCS_NotRecalc.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                      AND MCS_NotRecalc.DescId = zc_ObjectBoolean_Price_MCSNotRecalc()
+                               LEFT JOIN ObjectDate AS MCSNotRecalc_DateChange
+                                                    ON MCSNotRecalc_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                   AND MCSNotRecalc_DateChange.DescId = zc_ObjectDate_Price_MCSNotRecalcDateChange()
+                               LEFT JOIN ObjectBoolean AS Price_Fix
+                                                       ON Price_Fix.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                      AND Price_Fix.DescId = zc_ObjectBoolean_Price_Fix()
+                               LEFT JOIN ObjectDate AS Fix_DateChange
+                                                    ON Fix_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                   AND Fix_DateChange.DescId = zc_ObjectDate_Price_FixDateChange()
+                               LEFT JOIN ObjectBoolean AS Price_Top
+                                                       ON Price_Top.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                      AND Price_Top.DescId = zc_ObjectBoolean_Price_Top()
+                               LEFT JOIN ObjectDate AS Price_TOPDateChange
+                                                    ON Price_TOPDateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                   AND Price_TOPDateChange.DescId = zc_ObjectDate_Price_TOPDateChange()     
    
-                               LEFT JOIN ObjectFloat       AS Price_PercentMarkup
-                                       ON Price_PercentMarkup.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                      AND Price_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()
-                               LEFT JOIN ObjectDate        AS Price_PercentMarkupDateChange
-                                       ON Price_PercentMarkupDateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                      AND Price_PercentMarkupDateChange.DescId = zc_ObjectDate_Price_PercentMarkupDateChange()    
+                               LEFT JOIN ObjectFloat AS Price_PercentMarkup
+                                                     ON Price_PercentMarkup.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                    AND Price_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()
+                               LEFT JOIN ObjectDate AS Price_PercentMarkupDateChange
+                                                    ON Price_PercentMarkupDateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                   AND Price_PercentMarkupDateChange.DescId = zc_ObjectDate_Price_PercentMarkupDateChange()    
    
-                               LEFT JOIN ObjectBoolean     AS Price_MCSAuto
-                                       ON Price_MCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                      AND Price_MCSAuto.DescId = zc_ObjectBoolean_Price_MCSAuto()
-                               LEFT JOIN ObjectBoolean     AS Price_MCSNotRecalcOld
-                                       ON Price_MCSNotRecalcOld.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                      AND Price_MCSNotRecalcOld.DescId = zc_ObjectBoolean_Price_MCSNotRecalcOld()
+                               LEFT JOIN ObjectBoolean AS Price_MCSAuto
+                                                       ON Price_MCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                      AND Price_MCSAuto.DescId = zc_ObjectBoolean_Price_MCSAuto()
+                               LEFT JOIN ObjectBoolean AS Price_MCSNotRecalcOld
+                                                       ON Price_MCSNotRecalcOld.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                      AND Price_MCSNotRecalcOld.DescId = zc_ObjectBoolean_Price_MCSNotRecalcOld()
+
                           WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                             AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
                           )
@@ -850,6 +855,7 @@ BEGIN
                , Object_IntenalSP.ValueData                AS IntenalSPName
                , Object_Goods_View.GoodsGroupName          AS GoodsGroupName
                , Object_Goods_View.NDSKindName             AS NDSKindName
+               , Object_Goods_View.NDS                     AS NDS
                , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
                , Object_Goods_View.isTop                   AS Goods_isTop
                , Object_Goods_View.PercentMarkup           AS Goods_PercentMarkup
@@ -1102,6 +1108,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А. 
+ 05.01.18         *
  06.12.17         *
  07.09.17         *
  15.08.17         *

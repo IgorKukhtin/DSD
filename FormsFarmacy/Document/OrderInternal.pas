@@ -95,7 +95,7 @@ type
     isTopColor: TcxGridDBColumn;
     RemainsInUnit: TcxGridDBColumn;
     MCS: TcxGridDBColumn;
-    NDSKindName: TcxGridDBColumn;
+    NDS: TcxGridDBColumn;
     AmountAll: TcxGridDBColumn;
     CalcAmountAll: TcxGridDBColumn;
     SummAll: TcxGridDBColumn;

@@ -88,9 +88,9 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
             Options.Editing = False
             Width = 244
           end
-          object colNDSkindName: TcxGridDBColumn
+          object colNDS: TcxGridDBColumn
             Caption = #1053#1044#1057
-            DataBinding.FieldName = 'NDSkindName'
+            DataBinding.FieldName = 'NDS'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 0
             Properties.DisplayFormat = ',0 %; ; ;'

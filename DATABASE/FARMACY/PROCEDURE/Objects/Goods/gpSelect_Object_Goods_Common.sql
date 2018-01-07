@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Common(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
                GoodsGroupId Integer, GoodsGroupName TVarChar,
                MeasureId Integer, MeasureName TVarChar,
-               NDSKindId Integer, NDSKindName TVarChar
+               NDSKindId Integer, NDSKindName TVarChar,
+               NDS TFloat
               ) AS
 $BODY$
 BEGIN 
@@ -27,7 +28,7 @@ BEGIN
            , Object_Goods_View.MeasureName
            , Object_Goods_View.NDSKindId
            , Object_Goods_View.NDSKindName
-       
+           , Object_Goods_View.NDS
     FROM Object_Goods_Main_View AS Object_Goods_View
       
 ;
@@ -42,6 +43,7 @@ ALTER FUNCTION gpSelect_Object_Goods_Common(TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.01.18         *
  19.08.14                         *
  24.06.14         *
  20.06.13                         *
@@ -49,6 +51,4 @@ ALTER FUNCTION gpSelect_Object_Goods_Common(TVarChar) OWNER TO postgres;
 */
 
 -- тест
- --SELECT * FROM gpSelect_Object_Goods('2')
-
-
+-- SELECT * FROM gpSelect_Object_Goods_Common('2')

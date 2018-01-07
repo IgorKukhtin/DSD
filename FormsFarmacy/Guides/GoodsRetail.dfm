@@ -12,18 +12,19 @@ inherited GoodsRetailForm: TGoodsRetailForm
     Top = 61
     Width = 871
     Height = 382
-    ExplicitWidth = 883
-    ExplicitHeight = 417
+    ExplicitTop = 61
+    ExplicitWidth = 871
+    ExplicitHeight = 382
     ClientRectBottom = 382
     ClientRectRight = 871
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 883
-      ExplicitHeight = 417
+      ExplicitWidth = 871
+      ExplicitHeight = 382
       inherited cxGrid: TcxGrid
         Width = 871
         Height = 382
-        ExplicitWidth = 883
-        ExplicitHeight = 417
+        ExplicitWidth = 871
+        ExplicitHeight = 382
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -375,7 +376,6 @@ inherited GoodsRetailForm: TGoodsRetailForm
     Height = 35
     Align = alTop
     TabOrder = 5
-    ExplicitTop = -14
     object cxLabel3: TcxLabel
       Left = 15
       Top = 9

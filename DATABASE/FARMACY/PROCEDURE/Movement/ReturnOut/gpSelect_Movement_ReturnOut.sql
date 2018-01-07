@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer
              , PriceWithVAT Boolean
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
-             , NDSKindId Integer, NDSKindName TVarChar
+             , NDSKindId Integer, NDSKindName TVarChar, NDS TFloat
              , IncomeOperDate TDateTime, IncomeInvNumber TVarChar
              , JuridicalName TVarChar
              , ReturnTypeName TVarChar
@@ -78,6 +78,7 @@ BEGIN
            , Movement_ReturnOut_View.ToName
            , Movement_ReturnOut_View.NDSKindId
            , Movement_ReturnOut_View.NDSKindName
+           , ObjectFloat_NDSKind_NDS.ValueData      AS NDS
            , Movement_ReturnOut_View.IncomeOperDate
            , Movement_ReturnOut_View.IncomeInvNumber
            , Movement_ReturnOut_View.JuridicalName
@@ -86,6 +87,10 @@ BEGIN
            LEFT JOIN Movement_ReturnOut_View ON Movement_ReturnOut_View.FromId = tmpUnit.UnitId
                                             AND Movement_ReturnOut_View.OperDate BETWEEN inStartDate AND inEndDate
            INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement_ReturnOut_View.StatusId 
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                 ON ObjectFloat_NDSKind_NDS.ObjectId = Movement_ReturnOut_View.NDSKindId 
+                                AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()  
   ;
 
 
@@ -98,10 +103,11 @@ ALTER FUNCTION gpSelect_Movement_ReturnOut (TDateTime, TDateTime, Boolean, TVarC
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.01.18         * add NDS
  04.05.16         *
  06.02.15                        *
 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Income (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_ReturnOut (inStartDate:= '30.01.2016', inEndDate:= '01.02.2016', inIsErased := FALSE, inSession:= '2')

@@ -3,9 +3,8 @@ inherited PriceOnDateForm: TPriceOnDateForm
   ClientHeight = 420
   ClientWidth = 1354
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -610
   ExplicitWidth = 1370
-  ExplicitHeight = 459
+  ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   object Panel: TPanel [0]
@@ -180,9 +179,9 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 234
           end
-          object NDSKindName: TcxGridDBColumn
+          object NDS: TcxGridDBColumn
             Caption = #1053#1044#1057
-            DataBinding.FieldName = 'NDSKindName'
+            DataBinding.FieldName = 'NDS'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60

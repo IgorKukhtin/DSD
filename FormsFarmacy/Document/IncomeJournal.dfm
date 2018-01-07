@@ -236,9 +236,9 @@ inherited IncomeJournalForm: TIncomeJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 109
           end
-          object NDSKindName: TcxGridDBColumn
+          object NDS: TcxGridDBColumn
             Caption = #1053#1044#1057
-            DataBinding.FieldName = 'NDSKindName'
+            DataBinding.FieldName = 'NDS'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

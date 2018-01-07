@@ -29,7 +29,7 @@ type
     Income_JuridicalName: TcxGridDBColumn;
     Income_StatusName: TcxGridDBColumn;
     Income_UnitName: TcxGridDBColumn;
-    Income_NDSKindName: TcxGridDBColumn;
+    Income_NDS: TcxGridDBColumn;
     spSelectPrint: TdsdStoredProc;
     PrintItemsCDS: TClientDataSet;
     PrintHeaderCDS: TClientDataSet;

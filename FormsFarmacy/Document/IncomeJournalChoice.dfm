@@ -4,7 +4,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
   ClientWidth = 802
   AddOnFormData.isAlwaysRefresh = True
   ExplicitWidth = 818
-  ExplicitHeight = 377
+  ExplicitHeight = 376
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -128,9 +128,9 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 109
           end
-          object NDSKindName: TcxGridDBColumn
+          object NDS: TcxGridDBColumn
             Caption = #1053#1044#1057
-            DataBinding.FieldName = 'NDSKindName'
+            DataBinding.FieldName = 'NDS'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 56

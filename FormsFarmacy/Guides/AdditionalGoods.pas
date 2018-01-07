@@ -82,7 +82,7 @@ type
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     GoodsGroupName: TcxGridDBColumn;
-    NDSKindName: TcxGridDBColumn;
+    NDS: TcxGridDBColumn;
     cxSplitter4: TcxSplitter;
     cxSplitter5: TcxSplitter;
     GoodsSecondCode: TcxGridDBColumn;

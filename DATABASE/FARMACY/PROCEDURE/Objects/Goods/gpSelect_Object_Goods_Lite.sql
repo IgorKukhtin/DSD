@@ -7,7 +7,11 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Goods_Lite(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Lite(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, CodeInt Integer, Code TVarChar, Name TVarChar, GoodsGroupName TVarChar, NDSKindName TVarChar, isErased boolean) AS
+RETURNS TABLE (Id Integer, CodeInt Integer, Code TVarChar, Name TVarChar
+             , GoodsGroupName TVarChar
+             , NDSKindName TVarChar
+             , NDS TFloat
+             , isErased boolean) AS
 $BODY$
    DECLARE vbUserId   Integer;
    DECLARE vbObjectId Integer;
@@ -26,6 +30,7 @@ BEGIN
         , Object_Goods.GoodsName      AS Name
         , Object_Goods.GoodsGroupName AS GoodsGroupName
         , Object_Goods.NDSKindName    AS NDSKindName
+        , Object_Goods.NDS            AS NDS
         , Object_Goods.isErased
   
     FROM Object_Goods_View AS Object_Goods
@@ -47,6 +52,4 @@ ALTER FUNCTION gpSelect_Object_Goods_Lite(TVarChar) OWNER TO postgres;
 */
 
 -- тест
- --SELECT * FROM gpSelect_Object_Goods('2')
-
-
+-- SELECT * FROM gpSelect_Object_Goods_Lite('2')
