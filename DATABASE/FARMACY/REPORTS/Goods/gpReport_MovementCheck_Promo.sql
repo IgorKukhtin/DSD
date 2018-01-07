@@ -18,6 +18,7 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
               ,Code Integer            --Код товара
               ,Name TVarChar           --Наименование товара
               ,NDSKindName TVarChar    --вид ндс
+              ,NDS TFloat              --% ндс
               ,OperDate TDateTime      --Дата документа
               ,InvNumber TVarChar      --№ документа
               ,StatusName TVarChar     --Состояние документа
@@ -214,6 +215,7 @@ BEGIN
             ,Object.ObjectCode                        AS Code
             ,Object.ValueData                         AS Name
             ,Object_NDSKind.ValueData                 AS NDSKindName
+            ,ObjectFloat_NDSKind_NDS.ValueData        AS NDS
             ,Movement.OperDate                        AS OperDate
             ,Movement.InvNumber                       AS InvNumber
             ,Object_Status.ValueData                  AS StatusName
@@ -252,6 +254,10 @@ BEGIN
                             AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
         LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
 
+        LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                              ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
+                             AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+
         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
                              ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
@@ -278,6 +284,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 07.01.18         *
  23.03.17         *
  09.01.17         * на проводках
  23.11.16         *

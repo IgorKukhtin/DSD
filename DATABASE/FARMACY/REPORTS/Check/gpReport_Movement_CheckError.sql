@@ -19,6 +19,7 @@ RETURNS TABLE (
   GoodsName        TVarChar,
   GoodsGroupName   TVarChar, 
   NDSKindName      TVarChar,
+  NDS              TFloat,
   Amount_Movement  TFloat,
   Amount_Container TFloat,
   Price            TFloat,
@@ -117,7 +118,8 @@ BEGIN
              , Object_Goods_View.GoodsName                 AS GoodsName
              , Object_Goods_View.GoodsGroupName            AS GoodsGroupName
              , Object_Goods_View.NDSKindName               AS NDSKindName
-           
+             , Object_Goods_View.NDS                       AS NDS
+
              , tmpALL.Amount_Movement  :: TFloat
              , tmpALL.Amount_Container :: TFloat
              , CASE WHEN tmpALL.Amount_Movement <> 0 THEN tmpALL.Summa_Movement / tmpALL.Amount_Movement ELSE 0 END :: TFloat AS Price
@@ -146,8 +148,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 07.01.18         *
  10.09.16         *
 */
 
 -- тест
--- 
+-- select * from gpReport_Movement_CheckError(inUnitId := 183293 , inStartDate := ('24.10.2016')::TDateTime , inEndDate := ('01.11.2016')::TDateTime , inisError := 'False' ,  inSession := '3');

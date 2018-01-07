@@ -2,7 +2,7 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
   Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1086#1090' '#1079#1072#1082#1072#1079#1072' '#1076#1086' '#1087#1088#1086#1076#1072#1078#1080
   ClientWidth = 806
   ExplicitWidth = 822
-  ExplicitHeight = 347
+  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -63,15 +63,17 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
             Options.Editing = False
             Width = 224
           end
-          object NDSKindName: TcxGridDBColumn
+          object NDS: TcxGridDBColumn
             Caption = #1053#1044#1057
-            DataBinding.FieldName = 'NDSKindName'
+            DataBinding.FieldName = 'NDS'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0 %; ; ;'
+            GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 68
+            Width = 70
           end
           object PriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1053#1044#1057
@@ -205,18 +207,6 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
             Options.Editing = False
             VisibleForCustomization = False
             Width = 73
-          end
-          object NDS: TcxGridDBColumn
-            Caption = #1053#1044#1057' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'NDS'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = ',0 %; ; ;'
-            Visible = False
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 70
           end
           object GoodsNDS: TcxGridDBColumn
             Caption = #1053#1044#1057' '#1080#1079' '#1087#1088#1072#1081#1089#1072

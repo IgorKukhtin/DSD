@@ -46,7 +46,7 @@ type
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     GoodsGroupName: TcxGridDBColumn;
-    NDSKindName: TcxGridDBColumn;
+    NDS: TcxGridDBColumn;
     JuridicalCode: TcxGridDBColumn;
     JuridicalName: TcxGridDBColumn;
     PriceWithOutVAT: TcxGridDBColumn;

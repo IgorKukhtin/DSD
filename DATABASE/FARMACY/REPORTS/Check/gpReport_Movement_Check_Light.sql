@@ -25,6 +25,7 @@ RETURNS TABLE (
   GoodsName      TVarChar,
   GoodsGroupName TVarChar, 
   NDSKindName    TVarChar,
+  NDS            TFloat,
   ConditionsKeepName    TVarChar,
   Amount                TFloat,
   Price                 TFloat,
@@ -254,6 +255,7 @@ BEGIN
            , Object_Goods.ValueData                                            AS GoodsName
            , Object_GoodsGroup.ValueData                                       AS GoodsGroupName
            , Object_NDSKind_Income.ValueData                                   AS NDSKindName
+           , ObjectFloat_NDSKind_NDS.ValueData                                 AS NDS
            , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar          AS ConditionsKeepName           
 
            , tmpData.Amount          :: TFloat
@@ -343,6 +345,10 @@ BEGIN
                                      AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
 
              LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = ObjectLink_Main.ChildObjectId
+             
+             LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                   ON ObjectFloat_NDSKind_NDS.ObjectId = tmpData.NDSKindId_Income
+                                  AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
 
         ORDER BY Object_GoodsGroup.ValueData
                , Object_Goods.ValueData

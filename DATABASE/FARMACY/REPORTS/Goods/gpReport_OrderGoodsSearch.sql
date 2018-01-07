@@ -17,6 +17,7 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
               ,PartnerGoodsName TVarChar  --Наименование поставщика
               ,MakerName  TVarChar     --Производитель
               ,NDSKindName TVarChar    --вид ндс
+              ,NDS         TFloat
               ,OperDate TDateTime      --Дата документа
               ,InvNumber TVarChar      --№ документа
               ,UnitName TVarChar       --Подразделение
@@ -83,6 +84,8 @@ BEGIN
             ,MI_Income_View.MakerName                 AS MakerName
 
             ,Object_NDSKind.ValueData                 AS NDSKindName
+            ,ObjectFloat_NDSKind_NDS.ValueData        AS NDS
+            
             ,Movement.OperDate                        AS OperDate
             ,Movement.InvNumber                       AS InvNumber
             ,Object_Unit.ValueData                    AS UnitName
@@ -130,6 +133,10 @@ BEGIN
                              ON ObjectLink_Goods_NDSKind.ObjectId = Object.Id
                             AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
         LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                              ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId
+                             AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
 
         LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                   ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
@@ -205,6 +212,7 @@ ALTER FUNCTION gpReport_OrderGoodsSearch (Integer, TDateTime, TDateTime, TVarCha
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 07.01.18         *
  07.01.17         *
  05.09.16         *
  18.07.16         * add zc_Movement_Check

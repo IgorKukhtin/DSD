@@ -3,10 +3,8 @@ inherited Report_MovementCheckErrorForm: TReport_MovementCheckErrorForm
   ClientHeight = 480
   ClientWidth = 1251
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -583
-  ExplicitTop = -26
   ExplicitWidth = 1267
-  ExplicitHeight = 519
+  ExplicitHeight = 518
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -189,9 +187,9 @@ inherited Report_MovementCheckErrorForm: TReport_MovementCheckErrorForm
             HeaderAlignmentVert = vaCenter
             Width = 151
           end
-          object NDSKindName: TcxGridDBColumn
+          object NDS: TcxGridDBColumn
             Caption = #1053#1044#1057
-            DataBinding.FieldName = 'NDSKindName'
+            DataBinding.FieldName = 'NDS'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -482,7 +480,7 @@ inherited Report_MovementCheckErrorForm: TReport_MovementCheckErrorForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDateStart'
+        Name = 'inStartDate'
         Value = 41395d
         Component = deStart
         DataType = ftDateTime
@@ -490,7 +488,7 @@ inherited Report_MovementCheckErrorForm: TReport_MovementCheckErrorForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDateFinal'
+        Name = 'inEndDate'
         Value = 41395d
         Component = deEnd
         DataType = ftDateTime

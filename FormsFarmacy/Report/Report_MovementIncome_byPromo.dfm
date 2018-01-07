@@ -4,21 +4,26 @@ inherited Report_MovementIncome_byPromoForm: TReport_MovementIncome_byPromoForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 943
+  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 77
     Width = 927
     Height = 231
-    ExplicitWidth = 806
+    ExplicitTop = 77
+    ExplicitWidth = 927
+    ExplicitHeight = 231
     ClientRectBottom = 231
     ClientRectRight = 927
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 806
+      ExplicitWidth = 927
+      ExplicitHeight = 231
       inherited cxGrid: TcxGrid
         Width = 927
         Height = 231
-        ExplicitWidth = 806
+        ExplicitWidth = 927
+        ExplicitHeight = 231
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -67,9 +72,9 @@ inherited Report_MovementIncome_byPromoForm: TReport_MovementIncome_byPromoForm
             Options.Editing = False
             Width = 224
           end
-          object NDSKindName: TcxGridDBColumn
+          object NDS: TcxGridDBColumn
             Caption = #1053#1044#1057
-            DataBinding.FieldName = 'NDSKindName'
+            DataBinding.FieldName = 'NDS'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter

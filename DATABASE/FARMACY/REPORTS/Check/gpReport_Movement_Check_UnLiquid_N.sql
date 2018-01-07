@@ -463,6 +463,7 @@ BEGIN
            , Object_Goods_View.GoodsName                        AS GoodsName
            , Object_Goods_View.GoodsGroupName                   AS GoodsGroupName
            , Object_Goods_View.NDSKindName
+           , Object_Goods_View.NDS
            , _tmpData.MinExpirationDate           :: TDateTime  AS MinExpirationDate
            , _tmpData.OperDate_LastIncome         :: TDateTime  AS OperDate_LastIncome
            , _tmpData.Amount_LastIncome           :: TFloat     AS Amount_LastIncome
@@ -583,6 +584,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 07.01.18         * 
  23.11.17         * add inisUnitList, GoodsMainId
  16.01.17         *
  06.10.16         * parce

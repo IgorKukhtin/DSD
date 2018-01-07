@@ -166,9 +166,9 @@ inherited Report_Check_UKTZEDForm: TReport_Check_UKTZEDForm
             Options.Editing = False
             Width = 151
           end
-          object NDSKindName: TcxGridDBColumn
+          object NDS: TcxGridDBColumn
             Caption = #1053#1044#1057
-            DataBinding.FieldName = 'NDSKindName'
+            DataBinding.FieldName = 'NDS'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

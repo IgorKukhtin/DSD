@@ -3,9 +3,8 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
   ClientWidth = 1065
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -380
   ExplicitWidth = 1081
-  ExplicitHeight = 347
+  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -227,9 +226,9 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 151
           end
-          object NDSKindName: TcxGridDBColumn
+          object NDS: TcxGridDBColumn
             Caption = #1053#1044#1057
-            DataBinding.FieldName = 'NDSKindName'
+            DataBinding.FieldName = 'NDS'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -668,7 +667,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         ColorValueList = <>
       end
       item
-        ColorColumn = NDSKindName
+        ColorColumn = NDS
         ValueColumn = Color_calc
         ColorValueList = <>
       end

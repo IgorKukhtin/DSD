@@ -4,7 +4,7 @@ inherited Report_MovementCheck_PromoForm: TReport_MovementCheck_PromoForm
   ClientWidth = 806
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 822
-  ExplicitHeight = 357
+  ExplicitHeight = 356
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -142,9 +142,9 @@ inherited Report_MovementCheck_PromoForm: TReport_MovementCheck_PromoForm
             Options.Editing = False
             Width = 224
           end
-          object NDSKindName: TcxGridDBColumn
+          object NDS: TcxGridDBColumn
             Caption = #1053#1044#1057
-            DataBinding.FieldName = 'NDSKindName'
+            DataBinding.FieldName = 'NDS'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter

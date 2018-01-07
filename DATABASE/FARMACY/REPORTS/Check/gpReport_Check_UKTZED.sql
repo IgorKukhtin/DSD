@@ -31,6 +31,7 @@ RETURNS TABLE (UnitCode          Integer
              , GoodsName         TVarChar
              , CodeUKTZED        TVarChar
              , NDSKindName       TVarChar
+             , NDS               TFloat
              , MeasureName       TVarChar
              , Amount            TFloat
              , PriceSale         TFloat
@@ -252,6 +253,7 @@ BEGIN
            , tmpData.CodeUKTZED                           AS CodeUKTZED
 
            , Object_NDSKind.ValueData                     AS NDSKindName
+           , ObjectFloat_NDSKind_NDS.ValueData            AS NDS
            , Object_Measure.ValueData                     AS MeasureName
 
            , tmpData.Amount                    ::TFloat   AS Amount
@@ -269,7 +271,11 @@ BEGIN
                                   ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
              LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
-             
+
+             LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                   ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
+                                  AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+
              LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                   ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -297,8 +303,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 07.01.18         *
  12.12.17         *
 */
 
 -- тест
--- select * from gpReport_Check_UKTZED(inUnitId := 183292 , inRetailId := 0 , inStartDate := ('03.10.2016')::TDateTime , inEndDate := ('03.10.2016')::TDateTime , inIsMovement := 'True' ::Boolean,  inSession := '3'::tvarchar);
+-- select * from gpReport_Check_UKTZED(inUnitId := 183293 , inRetailId := 0 , inJuridicalId := 0 , inStartDate := ('12.12.2017')::TDateTime , inEndDate := ('12.12.2017')::TDateTime , inIsMovement := 'False' ,  inSession := '3');
