@@ -489,6 +489,12 @@ inherited Goods_BarCodeForm: TGoods_BarCodeForm
         Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 144
     Top = 88

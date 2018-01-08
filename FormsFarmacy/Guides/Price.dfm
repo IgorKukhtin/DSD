@@ -179,13 +179,6 @@ inherited PriceForm: TPriceForm
             Options.Editing = False
             Width = 234
           end
-          object NDSKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1053#1044#1057
-            DataBinding.FieldName = 'NDSKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
           object NDS: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDS'
