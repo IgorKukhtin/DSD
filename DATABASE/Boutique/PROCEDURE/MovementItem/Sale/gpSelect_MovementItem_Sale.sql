@@ -197,7 +197,7 @@ BEGIN
                            LEFT JOIN ContainerLinkObject AS CLO_Client
                                                          ON CLO_Client.ContainerId = Container.Id
                                                         AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
-                      WHERE CLO_Client.ContainerId IS NULL
+                      WHERE CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
                      )
        -- результат
        SELECT
@@ -264,6 +264,7 @@ BEGIN
 
        FROM tmpMI_Master AS tmpMI
             LEFT JOIN tmpContainer AS Container ON Container.PartionId = tmpMI.PartionId
+                                               AND Container.ObjectId  = tmpMI.GoodsId   -- !!!обязательно условие, т.к. мог меняться GoodsId и тогда в Container - несколько строк!!!
 
             LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.Id
             LEFT JOIN tmpMI_Child AS tmpMI_Child_Exc ON tmpMI_Child_Exc.ParentId = 0

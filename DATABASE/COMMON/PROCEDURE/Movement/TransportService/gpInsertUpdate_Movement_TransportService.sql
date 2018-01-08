@@ -51,7 +51,7 @@ BEGIN
      vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_TransportService());
    
      -- Расчитываем Сумму
-     IF inContractConditionKindId IN (zc_Enum_ContractConditionKind_TransportWeight())
+     IF inContractConditionKindId IN (zc_Enum_ContractConditionKind_TransportWeight()) -- Ставка за вывоз, грн/кг
      THEN
                    -- по условиям в договоре "Ставка за вывоз, грн/кг"
          vbValue:= COALESCE ((SELECT ObjectFloat_Value.ValueData
@@ -69,7 +69,10 @@ BEGIN
 
          ioAmount:= COALESCE (inWeightTransport, 0) * vbValue;
      ELSE
-     IF inContractConditionKindId IN (zc_Enum_ContractConditionKind_TransportOneTrip(), zc_Enum_ContractConditionKind_TransportRoundTrip())
+     IF inContractConditionKindId IN (zc_Enum_ContractConditionKind_TransportOneTrip()   -- Ставка за маршрут в одну сторону, грн 
+                                    , zc_Enum_ContractConditionKind_TransportRoundTrip() -- Ставка за маршрут в обе стороны, грн
+                                    --, zc_Enum_ContractConditionKind_TransportPoint()   -- Ставка за точку, грн 
+                                     )
      THEN
                     -- по условиям в договоре "Ставка за маршрут..."
          vbValue:= COALESCE ((SELECT ObjectFloat_Value.ValueData

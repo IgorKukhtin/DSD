@@ -157,4 +157,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_HistoryCost_Branch (inStartDate:= '01.10.2016', inEndDate:= '31.10.2016', inSession:= '2') ORDER BY 4, 1
+-- SELECT * FROM gpSelect_HistoryCost_Branch (inStartDate:= '01.11.2017', inEndDate:= '30.11.2017', inSession:= '2') ORDER BY 4, 1
