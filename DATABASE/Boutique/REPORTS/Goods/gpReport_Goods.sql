@@ -57,12 +57,12 @@ BEGIN
                                  INNER JOIN ContainerLinkObject AS CLO_Location ON CLO_Location.ContainerId = Container.Id
                                                                                AND CLO_Location.DescId      = tmpWhere.DescId
                                                                                AND CLO_Location.ObjectId    = tmpWhere.LocationId
-                                 LEFT JOIN ContainerLinkObject AS CLO_Account ON CLO_Account.ContainerId = Container.Id
-                                                                             AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
+                                 LEFT JOIN ContainerLinkObject AS CLO_Client ON CLO_Client.ContainerId = Container.Id
+                                                                            AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
                                  LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = Container.PartionId                                         
                             WHERE ((Object_PartionGoods.GoodsSizeId = inGoodsSizeId AND inisGoodsSize = False) OR (inisGoodsSize = True))
                               AND ((Object_PartionGoods.MovementItemId = inPartionId AND inisPartion = False) OR (inisPartion = True AND (Object_PartionGoods.MovementId = inMovementId OR inMovementId = 0 )))
-                              AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
+                              AND CLO_Client.ContainerId IS NULL -- !!!т.е. без Долгов Покупателя!!!
                            )
                                
    , tmpMI_Count AS (SELECT tmpContainer_Count.ContainerId

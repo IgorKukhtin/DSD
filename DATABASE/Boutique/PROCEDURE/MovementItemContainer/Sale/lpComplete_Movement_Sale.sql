@@ -766,7 +766,7 @@ BEGIN
            ;
 
 
-     -- 5.2. формируются Проводки - ПЛЮС остаток сумма у Дебиторы покупатели
+     -- 5.2. формируются Проводки - ПЛЮС остаток сумма c/c + прибыль у Дебиторы покупатели
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId
                                        , MovementItemId, ContainerId, ParentId
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, PartionId, WhereObjectId_Analyzer

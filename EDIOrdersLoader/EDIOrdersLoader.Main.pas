@@ -50,6 +50,7 @@ type
     FIntervalVal: Integer;
     FProccessing: Boolean;
     isPrevDay_begin: Boolean;
+    fStartTime: TDateTime;
     procedure AddToLog(S: string);
     procedure StartEDI;
     procedure StopEDI;
@@ -148,6 +149,7 @@ begin
   deEnd.EditValue := Date ;
   deStart.Enabled := False;
   deEnd.Enabled := False;
+  fStartTime:= Now;
   OptionsMemo.Lines.Text := 'Текущий интервал: ' + IntToStr(IntervalVal) + ' мин.';
   LogMemo.Clear;
 end;
@@ -199,7 +201,8 @@ begin
     AddToLog('Обновили Default для EDI');
 
     OptionsMemo.Lines.Clear;
-    OptionsMemo.Lines.Add('Текущий интервал: ' + IntToStr(IntervalVal) + ' мин.');
+    OptionsMemo.Lines.Add('Старт: '+FormatDateTime('dd.mm.yy hh:mm', fStartTime));
+    OptionsMemo.Lines.Add('Текущий интервал: ' + IntToStr(IntervalVal));
     OptionsMemo.Lines.Add('Host: ' +  FormParams.ParamByName('Host').AsString);
     OptionsMemo.Lines.Add('UserName: ' +  FormParams.ParamByName('UserName').AsString);
     OptionsMemo.Lines.Add('Password: ' +  FormParams.ParamByName('Password').AsString);

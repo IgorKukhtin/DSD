@@ -2986,10 +2986,16 @@ begin
         Add('    , BillItemsIncome.Id_Postgres as PartionId');
         Add('    , DiscountMovementItem_byBarCode.Id_Postgres as SaleMI_Id');
 
-        Add('    , CEILING (case when PriceToPay > 0 and TotalPay > 0 then TotalPay / PriceToPay else DiscountMovementItem_byBarCode.OperCount end) as Amount');
+        Add('    , case when PriceToPay > 0 and TotalPay > 0'
+           +'                then case when CEILING (TotalPay / PriceToPay) > DiscountMovementItem_byBarCode.OperCount'
+           +'                               then DiscountMovementItem_byBarCode.OperCount'
+           +'                          else CEILING (TotalPay / PriceToPay)'
+           +'                     end'
+           +'           else DiscountMovementItem_byBarCode.OperCount'
+           +'      end as Amount');
         Add('    , 0 as SummChangePercent');
         Add('    , sum (DiscountKlientAccountMoney.summa * case when DiscountKlientAccountMoney.KursClient <> 0 then DiscountKlientAccountMoney.KursClient else 1 end) as TotalPay');
-        Add('    , DiscountMovementItem_byBarCode.TotalSummToPay / DiscountMovementItem_byBarCode.OperCount  as PriceToPay');
+        Add('    , (DiscountMovementItem_byBarCode.TotalSummToPay - DiscountMovementItem_byBarCode.SummDiscountManual) / DiscountMovementItem_byBarCode.OperCount  as PriceToPay');
 
         Add('    , max (DiscountKlientAccountMoney.CommentInfo) as CommentInfo');
 
@@ -3011,7 +3017,7 @@ begin
         Add('    , BillItemsIncome.Id_Postgres ');
         Add('    , DiscountMovementItem_byBarCode.Id_Postgres');
 
-        Add('    , DiscountMovementItem_byBarCode.TotalSummToPay , DiscountMovementItem_byBarCode.OperCount');
+        Add('    , DiscountMovementItem_byBarCode.TotalSummToPay , DiscountMovementItem_byBarCode.SummDiscountManual, DiscountMovementItem_byBarCode.OperCount');
         Add('    , DiscountKlientAccountMoney.MovementItemId_pg ');
         Add('order by 4, 3');
         Open;
@@ -3959,6 +3965,8 @@ begin
              + '   and DiscountKlientAccountMoney.isCurrent = zc_rvNo()'
              + '   and DiscountKlientAccountMoney.discountMovementItemReturnId  is null'
              + '   and DiscountKlientAccountMoney.isErased = zc_rvNo()'
+             + '   and DiscountKlientAccountMoney.Summa <> 0'
+
              //+ '   and DiscountKlientAccountMoney.MovementId_pg > 0'
             );
         Add(' GROUP BY ');

@@ -51,7 +51,7 @@ BEGIN
             LEFT JOIN Object AS Object_User_Update ON Object_User_Update.Id = LoadPriceList.UserId_Update
             
             LEFT JOIN Object AS Object_Area ON Object_Area.Id = LoadPriceList.AreaId  
-       ORDER BY LoadPriceList.Date_Insert DESC, LoadPriceList.Id DESC
+       ORDER BY LoadPriceList.Date_Insert ASC, LoadPriceList.Id ASC
       ;
 
 END;

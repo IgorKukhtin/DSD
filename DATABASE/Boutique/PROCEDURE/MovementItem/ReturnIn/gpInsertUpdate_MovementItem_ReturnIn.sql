@@ -1,10 +1,5 @@
 -- Function: gpInsertUpdate_MovementItem_ReturnIn()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, Integer, Integer, Boolean, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn(
@@ -246,12 +241,22 @@ BEGIN
                                                                  AND MIL_PartionMI.ObjectId = vbPartionMI_Id
 
                                                               ), 0)
-                                          -- иначе вообще пропроционально - отбросим дробную часть после второго знака
-                                          ELSE FLOOR (100 * (COALESCE (MIFloat_TotalChangePercent.ValueData, 0) + COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0))
+                                          -- иначе почти пропроционально - отбросим дробную часть после второго знака !!!без Скидки из Расчеты покупателей!!!
+                                          ELSE zfCalc_SummPriceList (inAmount, MIFloat_OperPriceList.ValueData) - zfCalc_SummChangePercent (inAmount, MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData)
+                                             - FLOOR (100 * (COALESCE (MIFloat_SummChangePercent.ValueData, 0) /*+ COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)*/)
                                                            / MovementItem.Amount * inAmount)
                                                     / 100
                                      END
                              FROM MovementItem
+                                LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
+                                                            ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
+                                LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                            ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+                                LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
+                                                            ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
                                 LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
                                                             ON MIFloat_TotalChangePercent.MovementItemId = MovementItem.Id
                                                            AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()

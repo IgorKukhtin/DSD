@@ -221,7 +221,7 @@ BEGIN
     OPEN Cursor1 FOR
 --     WITH tmpObject_GoodsPropertyValue AS
 
-
+       -- Результат
        SELECT
              Movement.Id                                AS Id
 --           , Movement.InvNumber                         AS InvNumber
@@ -247,7 +247,7 @@ BEGIN
            , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)     AS OperDatePartner
            , MovementDate_Payment.ValueData             AS PaymentDate
            , CASE WHEN MovementDate_Payment.ValueData IS NOT NULL THEN TRUE ELSE FALSE END AS isPaymentDate
-           , COALESCE (Movement_order.OperDate, Movement.OperDate) AS OperDateOrder
+           , COALESCE (Movement_EDI.OperDate, COALESCE (Movement_order.OperDate, Movement.OperDate)) AS OperDateOrder
            , vbPriceWithVAT                             AS PriceWithVAT
            , vbVATPercent                               AS VATPercent
            , vbExtraChargesPercent - vbDiscountPercent  AS ChangePercent
@@ -394,6 +394,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner_order
                                      ON MovementString_InvNumberPartner_order.MovementId =  Movement_order.Id
                                     AND MovementString_InvNumberPartner_order.DescId = zc_MovementString_InvNumberPartner()
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order_edi
+                                           ON MovementLinkMovement_Order_edi.MovementId = Movement_order.Id
+                                          AND MovementLinkMovement_Order_edi.DescId = zc_MovementLinkMovement_Order()
+            LEFT JOIN Movement AS Movement_EDI ON Movement_EDI.Id = MovementLinkMovement_Order_edi.MovementChildId
 
             LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                      ON MovementString_InvNumberOrder.MovementId =  Movement.Id
