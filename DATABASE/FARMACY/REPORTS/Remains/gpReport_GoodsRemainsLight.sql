@@ -19,7 +19,8 @@ RETURNS TABLE (ContainerId Integer
              , Id Integer, GoodsCode Integer
              , BarCode TVarChar
              , GoodsName TVarChar, GoodsGroupName TVarChar
-             , NDSKindName TVarChar, isSP Boolean
+             , NDSKindName TVarChar, NDS TFloat
+             , isSP Boolean
              , ConditionsKeepName TVarChar
              , Amount TFloat, Price TFloat, PriceWithVAT TFloat, PriceWithOutVAT TFloat
              
@@ -249,6 +250,7 @@ BEGIN
              , Object_Goods.ValueData                                     AS GoodsName
              , Object_GoodsGroup.ValueData                                AS GoodsGroupName
              , Object_NDSKind_Income.ValueData                            AS NDSKindName
+             , ObjectFloat_NDSKind_NDS.ValueData                          AS NDS
              , tmpGoods.isSP                                 :: Boolean   AS isSP
              , COALESCE(Object_ConditionsKeep.ValueData, '') :: TVarChar  AS ConditionsKeepName
              
@@ -336,6 +338,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.01.18         *
  12.05.17         *
 */
 

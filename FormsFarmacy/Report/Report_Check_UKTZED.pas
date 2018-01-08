@@ -42,7 +42,7 @@ type
     spGet_UserUnit: TdsdStoredProc;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    NDSKindName: TcxGridDBColumn;
+    NDS: TcxGridDBColumn;
     cbMovement: TcxCheckBox;
     actRefreshIsPartion: TdsdDataSetRefresh;
     InvNumber: TcxGridDBColumn;

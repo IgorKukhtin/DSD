@@ -4,7 +4,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
   ClientWidth = 1251
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1267
-  ExplicitHeight = 515
+  ExplicitHeight = 518
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -160,9 +160,9 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             HeaderAlignmentVert = vaCenter
             Width = 247
           end
-          object NDSKindName: TcxGridDBColumn
+          object NDS: TcxGridDBColumn
             Caption = #1053#1044#1057
-            DataBinding.FieldName = 'NDSKindName'
+            DataBinding.FieldName = 'NDS'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 102

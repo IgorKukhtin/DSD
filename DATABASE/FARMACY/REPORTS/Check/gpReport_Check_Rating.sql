@@ -21,6 +21,7 @@ RETURNS TABLE (
   GoodsName             TVarChar,
   GoodsGroupName        TVarChar, 
   NDSKindName           TVarChar,
+  NDS                   TFloat,
   Amount                TFloat,
   Price                 TFloat,
   PriceSale             TFloat,
@@ -191,6 +192,7 @@ BEGIN
              , Object_Goods.ValueData                                            AS GoodsName
              , Object_GoodsGroup.ValueData                                       AS GoodsGroupName
              , Object_NDSKind.ValueData                                          AS NDSKindName
+             , ObjectFloat_NDSKind_NDS.ValueData                                 AS NDS
   
              , CASE WHEN inIsFarm = FALSE THEN tmpData.Amount ELSE 0 END                              :: TFloat AS Amount
   
@@ -224,7 +226,11 @@ BEGIN
                                   ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
              LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
-        
+
+             LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                   ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
+                                  AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()  
+
         ORDER BY Object_GoodsGroup.ValueData
                , Object_Goods.ValueData
 ;
@@ -235,8 +241,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 07.01.18         *
  08.09.17         *
 */
 
 -- тест
--- 
+-- select * from gpReport_Check_Rating(inRetailId := 4 , inGoodsId := 42658 , inStartDate := ('01.08.2017')::TDateTime , inEndDate := ('04.08.2017')::TDateTime , inIsFarm := 'FALSE' ,  inSession := '3');

@@ -155,9 +155,9 @@ inherited Report_GoodsRemainsLightForm: TReport_GoodsRemainsLightForm
             Options.Editing = False
             Width = 214
           end
-          object NDSKindName: TcxGridDBColumn
+          object NDS: TcxGridDBColumn
             Caption = #1053#1044#1057
-            DataBinding.FieldName = 'NDSKindName'
+            DataBinding.FieldName = 'NDS'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

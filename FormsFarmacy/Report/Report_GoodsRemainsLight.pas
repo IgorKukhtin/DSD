@@ -35,7 +35,7 @@ type
     GoodsName: TcxGridDBColumn;
     actOpenPartionReport: TdsdOpenForm;
     bbGoodsPartyReport: TdxBarButton;
-    NDSKindName: TcxGridDBColumn;
+    NDS: TcxGridDBColumn;
     actRefreshPartionPrice: TdsdDataSetRefresh;
     actRefreshIsPartion: TdsdDataSetRefresh;
     ExecuteDialog: TExecuteDialog;

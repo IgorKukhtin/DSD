@@ -17,6 +17,7 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
               ,PartnerGoodsName TVarChar  --Наименование поставщика
               ,MakerName  TVarChar     --Производитель
               ,NDSKindName TVarChar    --вид ндс
+              ,NDS         TFloat      -- % ндс
               ,OperDate TDateTime      --Дата документа
               ,InvNumber TVarChar      --№ документа
               ,UnitName TVarChar       --Подразделение
@@ -247,6 +248,8 @@ BEGIN
             , Object_PartnerGoods.ValueData            AS PartnerGoodsName
             , ObjectString_Goods_Maker.ValueData       AS MakerName
             , Object_NDSKind.ValueData                 AS NDSKindName
+            , ObjectFloat_NDSKind_NDS.ValueData        AS NDS
+
             , tmpMovMI.OperDate                        AS OperDate
             , tmpMovMI.InvNumber                       AS InvNumber
             , tmpMov.UnitName
@@ -288,6 +291,10 @@ BEGIN
                              ON ObjectLink_Goods_NDSKind.ObjectId = Object.Id
                             AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
         LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                              ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
+                             AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
 
         LEFT JOIN MovementItemDate  AS MIDate_ExpirationDate
                                     ON MIDate_ExpirationDate.MovementItemId = tmpMovMI.MovementItemId
