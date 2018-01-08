@@ -33,7 +33,7 @@ BEGIN
         , Movement_BankAccount_View.JuridicalId_Basis
         , Movement_BankAccount_View.OperDate
      FROM Movement_BankAccount_View
-    WHERE Movement_BankAccount_View.Id =  inMovementId;
+    WHERE Movement_BankAccount_View.Id = inMovementId;
      
     INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, ContainerId, AccountId, Amount, OperDate)
          SELECT 
@@ -99,20 +99,21 @@ BEGIN
                           inContainerDescId   := zc_Container_SummIncomeMovementPayment(), -- DescId Остатка
                           inParentId          := NULL               , -- Главный Container
                           inObjectId          := lpInsertFind_Object_PartionMovement (Movement_BankAccount_View.IncomeId), -- Объект (Счет или Товар или ...)
-                          inJuridicalId_basis := COALESCE (MovementLinkObject_Juridical.ObjectId, _tmpItem.JuridicalId_Basis), -- Главное юридическое лицо
+                          inJuridicalId_basis := CASE WHEN _tmpItem.OperDate < '16.02.2016' THEN COALESCE (MovementLinkObject_Juridical.ObjectId, _tmpItem.JuridicalId_Basis) ELSE  _tmpItem.JuridicalId_Basis END, -- Главное юридическое лицо
                           inBusinessId        := NULL, -- Бизнесы
                           inObjectCostDescId  := NULL, -- DescId для <элемент с/с>
                           inObjectCostId      := NULL) -- <элемент с/с> - необычная аналитика счета) 
               , NULL
               , OperSumm
               , _tmpItem.OperDate
-         FROM _tmpItem
-              INNER JOIN Movement_BankAccount_View ON Movement_BankAccount_View.Id = inMovementId
+         FROM Movement_BankAccount_View
               LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                            ON MovementLinkObject_Juridical.MovementId = Movement_BankAccount_View.IncomeId
                                           AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
-                                          AND _tmpItem.OperDate < '16.02.2016' -- !!!только для загрузки из Sybase!!!
-        ;
+                                         -- AND _tmpItem.OperDate < '16.02.2016' -- !!!только для загрузки из Sybase!!!
+              LEFT JOIN _tmpItem ON 1 = 1
+              
+         WHERE Movement_BankAccount_View.Id = inMovementId;
 
      PERFORM lpInsertUpdate_MovementItemContainer_byTable();
 
@@ -128,6 +129,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.     Воробкало А.А.
+ 08.01.18         *
  08.12.15                                                            *
  13.02.15                         * 
 */

@@ -1,6 +1,7 @@
 -- Function: gpComplete_Movement_Payment()
 
 DROP FUNCTION IF EXISTS gpComplete_Movement_Payment  (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_Payment  (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Payment(
     IN inMovementId        Integer               , -- ключ Документа
