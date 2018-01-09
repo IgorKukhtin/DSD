@@ -180,6 +180,8 @@ type
     miSale_TotalError: TMenuItem;
     actObject_Client_TotalError: TdsdOpenForm;
     miObject_Client_TotalError: TMenuItem;
+    actObject_Client_LastError: TdsdOpenForm;
+    miObject_Client_LastError: TMenuItem;
   private
     { Private declarations }
   public

@@ -91,15 +91,15 @@ BEGIN
         LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                 ON MovementFloat_TotalCount.MovementId = Movement.Id
                                AND MovementFloat_TotalCount.DescId     = zc_MovementFloat_TotalCount()
-                               
+
         LEFT JOIN MovementFloat AS MovementFloat_TotalSummPriceList
                                 ON MovementFloat_TotalSummPriceList.MovementId = Movement.Id
                                AND MovementFloat_TotalSummPriceList.DescId     = zc_MovementFloat_TotalSummPriceList()
-                               
+
         LEFT JOIN MovementFloat AS MovementFloat_TotalSummChange
                                 ON MovementFloat_TotalSummChange.MovementId = Movement.Id
                                AND MovementFloat_TotalSummChange.DescId     = zc_MovementFloat_TotalSummChange()
-                               
+
         LEFT JOIN MovementFloat AS MovementFloat_TotalSummPay
                                 ON MovementFloat_TotalSummPay.MovementId = Movement.Id
                                AND MovementFloat_TotalSummPay.DescId     = zc_MovementFloat_TotalSummPay()
@@ -111,7 +111,6 @@ BEGIN
                                ON MD_Insert.MovementId = Movement.Id
                               AND MD_Insert.DescId     = zc_MovementDate_Insert()
 
-                                    
         LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
    WHERE Movement.Id = inMovementId;
      
