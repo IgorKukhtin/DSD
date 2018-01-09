@@ -1,6 +1,5 @@
 -- Function: gpSelect_Movement_PersonalService_Print()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_Print (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_Print (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_Print(

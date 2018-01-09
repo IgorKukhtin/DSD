@@ -14,7 +14,7 @@ BEGIN
      -- таблица - по документам, для lpComplete_Movement_PersonalService_Recalc
      CREATE TEMP TABLE _tmpMovement_Recalc (MovementId Integer, StatusId Integer, PersonalServiceListId Integer, PaidKindId Integer, ServiceDate TDateTime) ON COMMIT DROP;
      -- таблица - по элементам, для lpComplete_Movement_PersonalService_Recalc
-     CREATE TEMP TABLE _tmpMI_Recalc (MovementId_from Integer, MovementItemId_from Integer, PersonalServiceListId_from Integer, MovementId_to Integer, MovementItemId_to Integer, PersonalServiceListId_to Integer, ServiceDate TDateTime, UnitId Integer, PersonalId Integer, PositionId Integer, InfoMoneyId Integer, SummCardRecalc TFloat, SummCardSecondRecalc TFloat, SummNalogRecalc TFloat, SummChildRecalc TFloat, SummMinusExtRecalc TFloat, isMovementComplete Boolean) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMI_Recalc (MovementId_from Integer, MovementItemId_from Integer, PersonalServiceListId_from Integer, MovementId_to Integer, MovementItemId_to Integer, PersonalServiceListId_to Integer, ServiceDate TDateTime, UnitId Integer, PersonalId Integer, PositionId Integer, InfoMoneyId Integer, SummCardRecalc TFloat, SummCardSecondRecalc TFloat, SummNalogRecalc TFloat, SummNalogRetRecalc TFloat, SummChildRecalc TFloat, SummMinusExtRecalc TFloat, isMovementComplete Boolean) ON COMMIT DROP;
 
 
      -- Проверка - других быть не должно
@@ -75,13 +75,16 @@ BEGIN
      -- заменили данные !!!если это <Сумма налогов - удержания с сотрудника для распределения>!!!
      IF EXISTS (SELECT 1
                 FROM MovementItem
-                     INNER JOIN MovementItemFloat AS MIFloat_SummNalogRecalc
+                     LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRecalc
                                                   ON MIFloat_SummNalogRecalc.MovementItemId = MovementItem.Id
-                                                 AND MIFloat_SummNalogRecalc.DescId = zc_MIFloat_SummNalogRecalc()
-                                                 AND MIFloat_SummNalogRecalc.ValueData <> 0
+                                                 AND MIFloat_SummNalogRecalc.DescId         = zc_MIFloat_SummNalogRecalc()
+                     LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRetRecalc
+                                                  ON MIFloat_SummNalogRetRecalc.MovementItemId = MovementItem.Id
+                                                 AND MIFloat_SummNalogRetRecalc.DescId         = zc_MIFloat_SummNalogRetRecalc()
                 WHERE MovementItem.MovementId = inMovementId
                   AND MovementItem.DescId     = zc_MI_Master()
                   AND MovementItem.isErased   = FALSE
+                  AND (MIFloat_SummNalogRecalc.ValueData <> 0 OR MIFloat_SummNalogRetRecalc.ValueData <> 0)
                )
      THEN
           PERFORM lpInsertUpdate_MovementItem (tmp.MovementItemId, zc_MI_Master(), tmp.PersonalId, inMovementId, tmp.Amount, tmp.ParentId)
@@ -598,7 +601,7 @@ BEGIN
              , _tmpItem.OperDate
              , 0 AS ObjectId
              , 0 AS ObjectDescId
-             , -1 * MIF.ValueData AS OperSumm
+             , -1 * COALESCE (MIF.ValueData, 0) + 1 * COALESCE (MIF_ret.ValueData, 0) AS OperSumm
              , _tmpItem.MovementItemId
 
              , 0 AS ContainerId                                               -- сформируем позже
@@ -645,11 +648,12 @@ BEGIN
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
         FROM _tmpItem
-             INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem.MovementItemId AND MIF.DescId = zc_MIFloat_SummNalog()
+             LEFT JOIN MovementItemFloat AS MIF     ON MIF.MovementItemId     = _tmpItem.MovementItemId AND MIF.DescId     = zc_MIFloat_SummNalog()
+             LEFT JOIN MovementItemFloat AS MIF_ret ON MIF_ret.MovementItemId = _tmpItem.MovementItemId AND MIF_ret.DescId = zc_MIFloat_SummNalogRet()
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Business ON ObjectLink_Unit_Business.ObjectId = _tmpItem.UnitId
                                                              AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_50101() -- Налоговые платежи по ЗП - Отчисления
-        WHERE MIF.ValueData <> 0
+        WHERE MIF.ValueData <> 0 OR MIF_ret.ValueData <> 0
 
        UNION
         -- 1.3.2. долг сотруднику по ЗП - удержания с ЗП
@@ -657,7 +661,7 @@ BEGIN
              , _tmpItem.OperDate
              , _tmpItem.ObjectId
              , _tmpItem.ObjectDescId
-             , 1 * MIF.ValueData AS OperSumm
+             , 1 * COALESCE (MIF.ValueData, 0) - 1 * COALESCE (MIF_ret.ValueData, 0) AS OperSumm
              , _tmpItem.MovementItemId
 
              , 0 AS ContainerId                                                     -- сформируем позже
@@ -700,7 +704,8 @@ BEGIN
              , _tmpItem.IsActive -- всегда такая
              , FALSE AS IsMaster
         FROM _tmpItem
-             INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem.MovementItemId AND MIF.DescId = zc_MIFloat_SummNalog()
+             LEFT JOIN MovementItemFloat AS MIF     ON MIF.MovementItemId     = _tmpItem.MovementItemId AND MIF.DescId     = zc_MIFloat_SummNalog()
+             LEFT JOIN MovementItemFloat AS MIF_ret ON MIF_ret.MovementItemId = _tmpItem.MovementItemId AND MIF_ret.DescId = zc_MIFloat_SummNalogRet()
 
              LEFT JOIN ObjectLink AS ObjectLink_Personal_Member ON ObjectLink_Personal_Member.ObjectId = _tmpItem.ObjectId
                                                                AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
@@ -708,7 +713,7 @@ BEGIN
                                                                AND ObjectLink_Member_ObjectTo.DescId = zc_ObjectLink_Member_ObjectTo()
              LEFT JOIN Object AS Object_ObjectTo ON Object_ObjectTo.Id     = ObjectLink_Member_ObjectTo.ChildObjectId
                                                 AND Object_ObjectTo.DescId = zc_Object_Founder()
-        WHERE MIF.ValueData <> 0
+        WHERE (MIF.ValueData <> 0 OR MIF_ret.ValueData <> 0)
           AND Object_ObjectTo.Id IS NULL
 
        UNION ALL
@@ -717,7 +722,7 @@ BEGIN
              , _tmpItem.OperDate
              , Object_ObjectTo.Id     AS ObjectId
              , Object_ObjectTo.DescId AS ObjectDescId
-             , 1 * MIF.ValueData AS OperSumm
+             , 1 * COALESCE (MIF.ValueData, 0) - 1 * COALESCE (MIF_ret.ValueData, 0) AS OperSumm
              , _tmpItem.MovementItemId
 
              , 0 AS ContainerId                                               -- сформируем позже
@@ -762,14 +767,16 @@ BEGIN
              , NOT _tmpItem.IsMaster
 
         FROM _tmpItem
-             INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem.MovementItemId AND MIF.DescId = zc_MIFloat_SummNalog()
+             LEFT JOIN MovementItemFloat AS MIF     ON MIF.MovementItemId     = _tmpItem.MovementItemId AND MIF.DescId     = zc_MIFloat_SummNalog()
+             LEFT JOIN MovementItemFloat AS MIF_ret ON MIF_ret.MovementItemId = _tmpItem.MovementItemId AND MIF_ret.DescId = zc_MIFloat_SummNalogRet()
+
              INNER JOIN ObjectLink AS ObjectLink_Personal_Member ON ObjectLink_Personal_Member.ObjectId = _tmpItem.ObjectId
                                                                 AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
              INNER JOIN ObjectLink AS ObjectLink_Member_ObjectTo ON ObjectLink_Member_ObjectTo.ObjectId = ObjectLink_Personal_Member.ChildObjectId
                                                                 AND ObjectLink_Member_ObjectTo.DescId = zc_ObjectLink_Member_ObjectTo()
              INNER JOIN Object AS Object_ObjectTo ON Object_ObjectTo.Id     = ObjectLink_Member_ObjectTo.ChildObjectId
                                                  AND Object_ObjectTo.DescId = zc_Object_Founder()
-        WHERE MIF.ValueData <> 0
+        WHERE (MIF.ValueData <> 0 OR MIF_ret.ValueData <> 0)
        ;
 
 /*
@@ -856,6 +863,7 @@ BEGIN
                                                                                                  - tmpMovement.SummPhone
 
                                                                                                  - tmpMovement.SummNalog
+                                                                                                 - tmpMovement.SummNalogRet
                                                                                                  - tmpMovement.SummChild
                                                                                                  - tmpMovement.SummMinusExt
                                               )
@@ -876,6 +884,7 @@ BEGIN
                                , COALESCE (_tmpItem.OperSumm, 0) AS OperSumm
                                , COALESCE (MIFloat_SummSocialAdd.ValueData, 0) AS SummSocialAdd
                                , COALESCE (MIFloat_SummNalog.ValueData, 0)     AS SummNalog
+                               , COALESCE (MIFloat_SummNalogRet.ValueData, 0)  AS SummNalogRet
                                , COALESCE (MIFloat_SummChild.ValueData, 0)     AS SummChild
                                , COALESCE (MIFloat_SummMinusExt.ValueData, 0)  AS SummMinusExt
                          FROM MovementItem
@@ -885,6 +894,9 @@ BEGIN
                               LEFT JOIN MovementItemFloat AS MIFloat_SummNalog
                                                           ON MIFloat_SummNalog.MovementItemId = MovementItem.Id
                                                          AND MIFloat_SummNalog.DescId = zc_MIFloat_SummNalog()
+                              LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRet
+                                                          ON MIFloat_SummNalogRet.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_SummNalogRet.DescId         = zc_MIFloat_SummNalogRet()
                               LEFT JOIN MovementItemFloat AS MIFloat_SummChild
                                                           ON MIFloat_SummChild.MovementItemId = MovementItem.Id
                                                          AND MIFloat_SummChild.DescId = zc_MIFloat_SummChild()
@@ -912,6 +924,7 @@ BEGIN
                 , tmpMI.OperSumm
                 , tmpMI.SummSocialAdd
                 , tmpMI.SummNalog
+                , tmpMI.SummNalogRet
                 , tmpMI.SummChild
                 , tmpMI.SummMinusExt
                 , COALESCE (SUM (CASE WHEN tmpMI.ObjectId = tmpMI.ObjectIntId_Analyzer THEN tmpMIContainer.SummTransport        ELSE 0 END), 0) AS SummTransport
@@ -925,6 +938,7 @@ BEGIN
                   , tmpMI.OperSumm
                   , tmpMI.SummSocialAdd
                   , tmpMI.SummNalog
+                  , tmpMI.SummNalogRet
                   , tmpMI.SummChild
                   , tmpMI.SummMinusExt
           ) AS tmpMovement

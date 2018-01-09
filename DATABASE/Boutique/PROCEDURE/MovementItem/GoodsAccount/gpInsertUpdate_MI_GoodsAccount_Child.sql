@@ -1,10 +1,6 @@
 -- Function: gpInsertUpdate_MI_GoodsAccount_Child()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_GoodsAccount_Child (Integer, Integer, Boolean, Boolean,Boolean,Boolean,Boolean,Boolean
-                                                            , TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_GoodsAccount_Child (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_GoodsAccount_Child (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_GoodsAccount_Child(
     IN inMovementId            Integer   , -- Ключ объекта <Документ>

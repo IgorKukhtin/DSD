@@ -1,4 +1,4 @@
--- select DiscountKlientAccountMoney.* from  DiscountMovement join "dba".DiscountMovementItem_byBarCode on DiscountMovementId = DiscountMovement.Id join DiscountKlientAccountMoney on DiscountMovementItemId = DiscountMovementItem_byBarCode.Id where DiscountKlientAccountMoney.OperDate between '2013-08-04' and '2013-08-05' order by DiscountMovement.OperDate desc, DiscountMovementItem_byBarCode.Id  desc;
+-- select DiscountKlientAccountMoney.* from  DiscountMovement join "dba".DiscountMovementItem_byBarCode on DiscountMovementId = DiscountMovement.Id join DiscountKlientAccountMoney on DiscountMovementItemId = DiscountMovementItem_byBarCode.Id where DiscountKlientAccountMoney.OperDate between '2012-01-15' and '2012-01-16' and DiscountKlientAccountMoney.isErased = 1 order by DiscountMovement.OperDate desc, DiscountMovementItem_byBarCode.Id  desc;
 -- select * from DiscountMovementItem_byBarCode where DiscountMovementId =  111117
  update DiscountMovementItem_byBarCode set SummDiscountManual = -0.08  where replId =  63251 and DataBaseId = 4
  update DiscountMovementItem_byBarCode set SummDiscountManual = -0.16  where Id = 222287;

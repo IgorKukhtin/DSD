@@ -209,6 +209,7 @@ type
     function FormatToVarCharServer_isSpace(_Value:string):string;
     function FormatToDateServer_notNULL(_Date:TDateTime):string;
     function FormatToDateTimeServer(_Date:TDateTime):string;
+    function FormatToDateTimeServerNOSec(_Date:TDateTime):string;
 
     function fOpenSqFromQuery (mySql:String):Boolean;
     function fExecSqFromQuery (mySql:String):Boolean;
@@ -822,6 +823,19 @@ begin
      if Year <= 1900
      then result:='null'
      else result:=chr(39)+IntToStr(Year)+'-'+IntToStr(Month)+'-'+IntToStr(Day)+' '+IntToStr(AHour)+':'+IntToStr(AMinute)+':'+IntToStr(ASecond)+chr(39);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.FormatToDateTimeServerNOSec(_Date:TDateTime):string;
+var
+  Year, Month, Day: Word;
+  AHour, AMinute, ASecond, MSec: Word;
+begin
+     DecodeDate(_Date,Year,Month,Day);
+     DecodeTime(_Date,AHour, AMinute, ASecond, MSec);
+//     result:=chr(39)+GetStringValue('select zf_FormatToDateServer('+IntToStr(Year)+','+IntToStr(Month)+','+IntToStr(Day)+')as RetV')+chr(39);
+     if Year <= 1900
+     then result:='null'
+     else result:=chr(39)+IntToStr(Year)+'-'+IntToStr(Month)+'-'+IntToStr(Day)+' '+IntToStr(AHour)+':'+IntToStr(AMinute)+':0'+chr(39);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.myExecToStoredProc_ZConnection:Boolean;
@@ -2981,7 +2995,7 @@ begin
         Add('      0 as ObjectId');
         Add('    , DiscountKlientAccountMoney.MovementId_pg as MovementId');
         Add('    , DiscountKlientAccountMoney.DiscountMovementItemId');
-        Add('    , max (DiscountKlientAccountMoney.InsertDate) as OperDateInsert');
+        Add('    , MIN (DiscountKlientAccountMoney.InsertDate) as OperDateInsert');
         Add('    , BillItemsIncome.GoodsId_Postgres as GoodsId');
         Add('    , BillItemsIncome.Id_Postgres as PartionId');
         Add('    , DiscountMovementItem_byBarCode.Id_Postgres as SaleMI_Id');
@@ -3813,7 +3827,7 @@ begin
         Add('      0 as ObjectId');
         Add('    , 0 as InvNumber');
         Add('    , DiscountKlientAccountMoney.OperDate as OperDate');    // Со временем ошибка неверный формат даты
-        Add('    , max (DiscountKlientAccountMoney.InsertDate) as OperDateInsert');
+        Add('    , _lfCalc_DateTime(DiscountKlientAccountMoney.InsertDate) as OperDateInsert');
         Add('    , Unit_From.Id_Postgres as FromId ');
         Add('    , Unit_From.UnitName as UnitNameFrom');
         Add('    , Unit_To.Id_Postgres as ToId');
@@ -3855,7 +3869,9 @@ begin
         Add('    , DiscountMovement.UnitID');
         Add('    , DiscountMovement.DiscountKlientID');
         Add('    , DiscountKlientAccountMoney.MovementId_pg ');
-        Add('order by 4, 5');
+        Add('    , OperDateInsert');
+        // !!!Обязательно сортировка по OperDateInsert!!!
+        Add('order by 3, 4');
         Open;
 
         Result:=RecordCount;
@@ -3870,7 +3886,7 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpInsertUpdate_Movement_GoodsAccount';
+        toStoredProc.StoredProcName:='gpInsertUpdate_Movement_GoodsAccount_Sybase';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
@@ -3879,6 +3895,8 @@ begin
         toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inUserId_insert',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inOperDate_insert',ftDateTime,ptInput, '');
         //
         while not EOF do
         begin
@@ -3890,6 +3908,8 @@ begin
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
              toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId').AsInteger;
              toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId').AsInteger;
+             toStoredProc.Params.ParamByName('inUserId_insert').Value:= FieldByName('UserId_pg').AsInteger;
+             toStoredProc.Params.ParamByName('inOperDate_insert').Value:=FormatToDateTimeServer(FieldByName('OperDateInsert').AsDateTime);
 
              if not myExecToStoredProc then ;//exit;
              //
@@ -3905,13 +3925,14 @@ begin
                                  +'   and DiscountKlientAccountMoney.isCurrent = zc_rvNo()'
                                  +'   and DiscountKlientAccountMoney.discountMovementItemReturnId is null'
                                  +'   and DiscountKlientAccountMoney.isErased = zc_rvNo()'
+                                 +'   and _lfCalc_DateTime(DiscountKlientAccountMoney.InsertDate) = ' +FormatToDateTimeServerNoSec(FieldByName('OperDateInsert').AsDateTime)
                                  );
-             //
-             if FieldByName('Id_Postgres').AsInteger=0
+             //Протокол
+             {if FieldByName('Id_Postgres').AsInteger=0
              then
                  fOpenSqToQuery ('select lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), '+ IntToStr(toStoredProc.Params.ParamByName('ioId').Value) +', ' + FormatToDateTimeServer(FieldByName('OperDateInsert').AsDateTime) +') '
                                + '     , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), '+ IntToStr(toStoredProc.Params.ParamByName('ioId').Value) +', ' + IntToStr(FieldByName('UserId_pg').AsInteger) + ')'
-                                 );
+                                 );}
              //
 
              Next;
@@ -3941,7 +3962,7 @@ begin
         Add('      0 as ObjectId');
         Add('    , DiscountKlientAccountMoney.MovementId_pg as MovementId');
         Add('    , DiscountKlientAccountMoney.DiscountMovementItemId');
-        Add('    , max (DiscountKlientAccountMoney.InsertDate) as OperDateInsert'
+        Add('    , MIN (DiscountKlientAccountMoney.InsertDate) as OperDateInsert'
 
              + '    , sum (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67, 72  )  and KassaProperty.valutaID=1 then  DiscountKlientAccountMoney.Summa else 0 endif) as AmountGRN'
              + '    , sum (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67, 72  )  and KassaProperty.valutaID=2 then  DiscountKlientAccountMoney.Summa else 0 endif) as AmountEUR'
