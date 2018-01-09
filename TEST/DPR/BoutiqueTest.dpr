@@ -269,7 +269,9 @@ uses
   CommonContainerProcedureTest in '..\SOURCEBoutique\Container\CommonContainerProcedureTest.pas',
   GoodsAccount_TotalError in '..\..\FormsBoutique\Document\GoodsAccount_TotalError.pas' {GoodsAccount_TotalErrorForm: TParentForm},
   ReturnIn_TotalError in '..\..\FormsBoutique\Document\ReturnIn_TotalError.pas' {ReturnIn_TotalErrorForm: TParentForm},
-  Sale_TotalError in '..\..\FormsBoutique\Document\Sale_TotalError.pas' {Sale_TotalErrorForm: TParentForm};
+  Sale_TotalError in '..\..\FormsBoutique\Document\Sale_TotalError.pas' {Sale_TotalErrorForm: TParentForm},
+  Object_Client_TotalError in '..\..\FormsBoutique\Guides\Object_Client_TotalError.pas' {Object_Client_TotalErrorForm: TParentForm},
+  Object_Client_LastError in '..\..\FormsBoutique\Guides\Object_Client_LastError.pas' {Object_Client_LastErrorForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

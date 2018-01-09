@@ -1179,9 +1179,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -1431,6 +1428,20 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ShortCut = 116
       RefreshOnTabSetChanges = True
     end
+    object actRefreshMaster: TdsdDataSetRefresh [1]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -1459,7 +1470,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spUnErasedMIMaster
         end>
     end
-    object actUpdateIsMain: TdsdExecStoredProc [8]
+    object actUpdateIsMain: TdsdExecStoredProc [9]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1478,7 +1489,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spInsertUpdateMIMaster
         end>
     end
-    object actPrint_All: TdsdPrintAction [10]
+    object actPrint_All: TdsdPrintAction [11]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint_All
@@ -1697,6 +1708,51 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spUpdateMask
         end>
       Caption = 'actUpdateMask'
+    end
+    object actUpdateSummNalogRet: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      StoredProc = spUpdate_MI_PersonalService_SummNalogRet
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MI_PersonalService_SummNalogRet
+        end>
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' "'#1053#1072#1083#1086#1075#1080' - '#1074#1086#1079#1084#1077#1097'. '#1082' '#1047#1055'" '#1087#1086' "'#1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078'. '#1089' '#1047#1055'"'
+      Hint = 
+        #1047#1072#1087#1086#1083#1085#1080#1090#1100' "'#1053#1072#1083#1086#1075#1080' - '#1074#1086#1079#1084#1077#1097#1077#1085#1080#1077' '#1082' '#1047#1055'" '#1087#1086' "'#1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078#1072#1085#1080#1077' '#1089' '#1047#1055 +
+        '"'
+      ImageIndex = 39
+    end
+    object macUpdateSummNalogRet: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdateNalogRetSimpl
+        end
+        item
+          Action = actRefreshMaster
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1087#1086#1083#1085#1080#1090#1100' "'#1053#1072#1083#1086#1075#1080' - '#1074#1086#1079#1084#1077#1097'. '#1082' '#1047#1055'" '#1087#1086' "'#1053#1072#1083#1086#1075#1080' - '#1091#1076#1077 +
+        #1088#1078'. '#1089' '#1047#1055'"?'
+      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1103' "'#1053#1072#1083#1086#1075#1080' - '#1074#1086#1079#1084#1077#1097'. '#1082' '#1047#1055'" '#1079#1072#1087#1086#1083#1085#1077#1085#1099
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' "'#1053#1072#1083#1086#1075#1080' - '#1074#1086#1079#1084#1077#1097'. '#1082' '#1047#1055'" '#1087#1086' "'#1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078'. '#1089' '#1047#1055'"'
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' "'#1053#1072#1083#1086#1075#1080' - '#1074#1086#1079#1084#1077#1097'. '#1082' '#1047#1055'" '#1087#1086' "'#1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078'. '#1089' '#1047#1055'"'
+      ImageIndex = 39
+    end
+    object macUpdateNalogRetSimpl: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateSummNalogRet
+        end>
+      View = cxGridDBTableView
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' "'#1053#1072#1083#1086#1075#1080' - '#1074#1086#1079#1084#1077#1097'. '#1082' '#1047#1055'" '#1087#1086' "'#1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078'. '#1089' '#1047#1055'"'
+      ImageIndex = 39
     end
     object actPersonalServiceJournalChoice: TOpenChoiceForm
       Category = 'DSDLib'
@@ -1997,6 +2053,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMISign'
         end
         item
@@ -2075,10 +2139,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Category = 0
       ImageIndex = 19
     end
+    object bb: TdxBarButton
+      Action = macUpdateSummNalogRet
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    Left = 830
-    Top = 265
+    Left = 726
+    Top = 281
   end
   inherited PopupMenu: TPopupMenu
     Left = 928
@@ -3121,5 +3189,31 @@ inherited PersonalServiceForm: TPersonalServiceForm
     PackSize = 1
     Left = 359
     Top = 232
+  end
+  object spUpdate_MI_PersonalService_SummNalogRet: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_PersonalService_SummNalogRet'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummNalog'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummNalog'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 856
+    Top = 272
   end
 end
