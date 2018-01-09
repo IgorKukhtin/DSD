@@ -125,6 +125,7 @@ type
     actRefresh_Link: TdsdDataSetRefresh;
     AreaName: TcxGridDBColumn;
     isDefault: TcxGridDBColumn;
+    NDSKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public
