@@ -147,6 +147,12 @@ type
     spSelectPrint_All: TdsdStoredProc;
     actPrint_All: TdsdPrintAction;
     bbPrint_All: TdxBarButton;
+    spUpdate_MI_PersonalService_SummNalogRet: TdsdStoredProc;
+    actUpdateSummNalogRet: TdsdExecStoredProc;
+    macUpdateNalogRetSimpl: TMultiAction;
+    macUpdateSummNalogRet: TMultiAction;
+    bb: TdxBarButton;
+    actRefreshMaster: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
