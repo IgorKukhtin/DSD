@@ -1232,6 +1232,9 @@ end;
 
 procedure TLoadFormTest.LoadControlFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_ContainerErrorForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_ContainerErrorForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TObject_Client_LastErrorForm'));
   TdsdFormStorageFactory.GetStorage.Load('TObject_Client_LastErrorForm');
 

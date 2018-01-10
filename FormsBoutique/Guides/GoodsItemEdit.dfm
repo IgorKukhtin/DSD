@@ -19,7 +19,7 @@ object GoodsItemEditForm: TGoodsItemEditForm
   object cxLabel1: TcxLabel
     Left = 10
     Top = 54
-    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+    Caption = #1040#1088#1090#1080#1082#1091#1083
   end
   object cxButton1: TcxButton
     Left = 40
@@ -83,7 +83,7 @@ object GoodsItemEditForm: TGoodsItemEditForm
   object cxLabel8: TcxLabel
     Left = 10
     Top = 294
-    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1094#1077#1085#1085#1080#1082#1072
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxLabel9: TcxLabel
     Left = 10
@@ -106,42 +106,42 @@ object GoodsItemEditForm: TGoodsItemEditForm
     Left = 10
     Top = 149
     Properties.ReadOnly = True
-    TabOrder = 10
+    TabOrder = 9
     Width = 273
   end
   object edMeasureName: TcxTextEdit
     Left = 179
     Top = 110
     Properties.ReadOnly = True
-    TabOrder = 11
+    TabOrder = 10
     Width = 78
   end
   object edCompositionName: TcxTextEdit
     Left = 10
     Top = 190
     Properties.ReadOnly = True
-    TabOrder = 12
+    TabOrder = 11
     Width = 273
   end
   object edGoodsInfoName: TcxTextEdit
     Left = 10
     Top = 230
     Properties.ReadOnly = True
-    TabOrder = 13
+    TabOrder = 12
     Width = 273
   end
   object edLineFabricaName: TcxTextEdit
     Left = 10
     Top = 270
     Properties.ReadOnly = True
-    TabOrder = 14
+    TabOrder = 13
     Width = 273
   end
   object edLabelName: TcxTextEdit
     Left = 10
     Top = 310
     Properties.ReadOnly = True
-    TabOrder = 15
+    TabOrder = 14
     Width = 273
   end
   object ceGoodsName: TcxButtonEdit

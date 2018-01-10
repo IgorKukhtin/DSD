@@ -5,7 +5,7 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1081
-  ExplicitHeight = 460
+  ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -61,17 +61,17 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 1065
-    ExplicitHeight = 325
+    ExplicitHeight = 336
     ClientRectBottom = 336
     ClientRectRight = 1065
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1065
-      ExplicitHeight = 325
+      ExplicitHeight = 336
       inherited cxGrid: TcxGrid
         Width = 1065
         Height = 336
         ExplicitWidth = 1065
-        ExplicitHeight = 325
+        ExplicitHeight = 336
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -233,7 +233,7 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
             Width = 95
           end
           object LabelName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074' '#1094#1077#1085#1085#1080#1082#1077
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'LabelName'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -249,7 +249,7 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
             Width = 50
           end
           object GoodsName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            Caption = #1040#1088#1090#1080#1082#1091#1083
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentVert = vaCenter
             Width = 151
@@ -490,10 +490,6 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
       Style.Font.Name = 'Tahoma'
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
-      ExplicitLeft = 1
-      ExplicitTop = 1
-      ExplicitWidth = 1063
-      ExplicitHeight = 38
       Height = 30
       Width = 1065
       AnchorX = 533

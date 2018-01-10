@@ -16,13 +16,14 @@ RETURNS TABLE (MovementId            Integer
              , LabelName        TVarChar
              , GoodsSizeName    TVarChar
              , SummDebt_Sale       TFloat
-             , SummDebt_Conteiner  TFloat
+             , SummDebt_Container  TFloat
              , CountDebt_Sale      TFloat
-             , CountDebt_Conteiner TFloat           
+             , CountDebt_Container TFloat           
 
              , Amount                TFloat
              , ChangePercent         TFloat
              , OperPriceList         TFloat
+             , TotalSummPriceList    TFloat
              , SummChangePercent     TFloat
              , TotalChangePercent    TFloat
              , TotalChangePercentPay TFloat
@@ -31,6 +32,7 @@ RETURNS TABLE (MovementId            Integer
              , TotalCountReturn      TFloat
              , TotalReturn           TFloat
              , TotalPayReturn        TFloat
+
   )
 AS
 $BODY$
@@ -152,60 +154,66 @@ BEGIN
                                  - COALESCE (MIFloat_TotalPayReturn.ValueData, 0)) 
                   )     
   -- долги из проводок
-  , tmpContainer AS (SELECT MovementItem.MovementId
-                          , MovementItem.Id                  AS MI_Id
-                          , tmp.PartionId
-                          , tmp.GoodsId
-                          , SUM (COALESCE (tmp.Amount,0))    AS CountDebt
-                          , SUM (COALESCE (tmp.AmountSum,0)) AS SummDebt
-                     FROM
-                         (SELECT Container.PartionId                                                                        AS PartionId
-                               , CLO_PartionMI.ObjectId                                                                     AS PartionMI_Id
-                               , Container.ObjectId                                                                         AS GoodsId
+  , tmpContainer AS (SELECT --MovementItem.MovementId
+                              --, MovementItem.Id                  AS MI_Id
+                               Object_PartionMI.ObjectCode ::Integer AS MI_Id
+                              , Container.PartionId
+                              , Container.GoodsId
 
-                               , SUM (CASE WHEN Container.DescId = zc_Container_Count() THEN Container.Amount ELSE 0 END )  AS Amount
-                               , SUM (CASE WHEN Container.DescId = zc_Container_Summ()  THEN Container.Amount ELSE 0 END )  AS AmountSum
-                          FROM Container
+                               , SUM (CASE WHEN Container.DescId = zc_Container_Count() THEN Container.Amount ELSE 0 END )  AS CountDebt
+                               , SUM (CASE WHEN Container.DescId = zc_Container_Summ()  THEN Container.Amount ELSE 0 END )  AS SummDebt
+                         FROM 
+                             (SELECT Container.Id
+                                   , Container.PartionId 
+                                   , Container.ObjectId     AS GoodsId
+                                   , Container.DescId
+                                   , SUM (Container.Amount) AS Amount
+                              FROM Container
+                              GROUP BY Container.Id
+                                     , Container.PartionId 
+                                     , Container.ObjectId 
+                                     , Container.DescId
+                              HAVING SUM (Container.Amount)<> 0
+                              ) AS Container
+ 
                               LEFT JOIN ContainerLinkObject AS CLO_PartionMI
                                                             ON CLO_PartionMI.ContainerId = Container.Id
-                                                           AND CLO_PartionMI.DescId = zc_ContainerLinkObject_PartionMI()
-                          GROUP BY Container.PartionId
-                                 , CLO_PartionMI.ObjectId
-                                 , Container.ObjectId
-                                 , Container.Amount 
-                          HAVING (COALESCE(Container.Amount, 0)) <> 0
-                          ) AS tmp 
-                        LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = tmp.PartionMI_Id
-                        LEFT JOIN MovementItem               ON MovementItem.Id     = Object_PartionMI.ObjectCode ::Integer
+                                                           AND CLO_PartionMI.DescId = zc_ContainerLinkObject_PartionMI() 
+
+                              LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = CLO_PartionMI.ObjectId 
+                        --      LEFT JOIN MovementItem               ON MovementItem.Id     = Object_PartionMI.ObjectCode ::Integer
                       --  LEFT JOIN Movement                   ON Movement.Id         = MovementItem.MovementId
-                     GROUP BY MovementItem.MovementId
-                            , MovementItem.Id
-                            , tmp.PartionId
-                            , tmp.GoodsId
+                         GROUP BY Object_PartionMI.ObjectCode
+                                , Container.PartionId
+                                , Container.GoodsId
                      )
   -- определяем документы, товары, по которым долги исходя из данных документа отличаются от долгов по проводкам
-  , tmpData AS (SELECT COALESCE (tmpContainer.MovementId, tmpSaleMI.MovementId) AS MovementId
-                     , COALESCE (tmpContainer.MI_Id, tmpSaleMI.MI_Id)           AS MI_Id
+  , tmpData AS (SELECT/* COALESCE (tmpContainer.MovementId, tmpSaleMI.MovementId) AS MovementId
+                     ,*/ COALESCE (tmpContainer.MI_Id, tmpSaleMI.MI_Id)           AS MI_Id
                      , COALESCE (tmpContainer.PartionId, tmpSaleMI.PartionId)   AS PartionId
                      , COALESCE (tmpContainer.GoodsId, tmpSaleMI.PartionId)     AS GoodsId
                      , SUM (COALESCE (tmpSaleMI.SummDebt,0))                    AS SummDebt_Sale
-                     , SUM (COALESCE (tmpContainer.SummDebt,0))                 AS SummDebt_Conteiner
+                     , SUM (COALESCE (tmpContainer.SummDebt,0))                 AS SummDebt_Container
                      , SUM (COALESCE (tmpSaleMI.CountDebt,0))                   AS CountDebt_Sale
-                     , SUM (COALESCE (tmpContainer.CountDebt,0))                AS CountDebt_Conteiner
+                     , SUM (COALESCE (tmpContainer.CountDebt,0))                AS CountDebt_Container
                 FROM tmpContainer
-                     FULL JOIN tmpSaleMI ON tmpSaleMI.MovementId = tmpContainer.MovementId
-                                        AND tmpSaleMI.MI_Id      = tmpContainer.MI_Id
+                     FULL JOIN tmpSaleMI ON /*tmpSaleMI.MovementId = tmpContainer.MovementId
+                                        AND */tmpSaleMI.MI_Id      = tmpContainer.MI_Id
                                         AND tmpSaleMI.PartionId  = tmpContainer.PartionId
                                         AND tmpSaleMI.GoodsId    = tmpContainer.GoodsId
-                GROUP BY COALESCE (tmpContainer.MovementId, tmpSaleMI.MovementId)
-                       , COALESCE (tmpContainer.MI_Id, tmpSaleMI.MI_Id)
+                GROUP BY /*COALESCE (tmpContainer.MovementId, tmpSaleMI.MovementId)
+                       , */COALESCE (tmpContainer.MI_Id, tmpSaleMI.MI_Id)
                        , COALESCE (tmpContainer.PartionId, tmpSaleMI.PartionId)
                        , COALESCE (tmpContainer.GoodsId, tmpSaleMI.PartionId)
                 HAVING SUM(COALESCE (tmpSaleMI.SummDebt,0))  <> SUM(COALESCE (tmpContainer.SummDebt,0))
                     OR SUM(COALESCE (tmpSaleMI.CountDebt,0)) <> SUM(COALESCE (tmpContainer.CountDebt,0))
                )
-               
-        SELECT tmpData.MovementId
+  , tmpMI_Float AS (SELECT MovementItemFloat.*
+                    FROM MovementItemFloat
+                    WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpData.MI_Id FROM tmpData)
+                   )
+
+        SELECT Movement.Id
              , Movement.OperDate
              , Movement.Invnumber
              
@@ -217,19 +225,19 @@ BEGIN
              , Object_Goods.ValueData         AS GoodsName
              
              , Object_GoodsGroup.ValueData    AS GoodsGroupName
--- данные партии прихода номер дата
              , Object_Label.ValueData         AS LabelName
              , Object_GoodsSize.ValueData     AS GoodsSizeName
                
                
              , tmpData.SummDebt_Sale       ::TFloat
-             , tmpData.SummDebt_Conteiner  ::TFloat
+             , tmpData.SummDebt_Container  ::TFloat
              , tmpData.CountDebt_Sale      ::TFloat
-             , tmpData.CountDebt_Conteiner ::TFloat
+             , tmpData.CountDebt_Container ::TFloat
 
              , MI_Master.Amount                                     ::TFloat AS Amount
              , COALESCE (MIFloat_ChangePercent.ValueData, 0)        ::TFloat AS ChangePercent
              , COALESCE (MIFloat_OperPriceList.ValueData, 0)        ::TFloat AS OperPriceList
+             , (MI_Master.Amount * COALESCE (MIFloat_OperPriceList.ValueData, 0)) ::TFloat AS TotalSummPriceList
              , COALESCE (MIFloat_SummChangePercent.ValueData, 0)    ::TFloat AS SummChangePercent
              , COALESCE (MIFloat_TotalChangePercent.ValueData, 0)   ::TFloat AS TotalChangePercent
              , COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)::TFloat AS TotalChangePercentPay
@@ -240,7 +248,8 @@ BEGIN
              , COALESCE (MIFloat_TotalPayReturn.ValueData, 0)       ::TFloat AS TotalPayReturn
                                                                     
         FROM tmpData
-            LEFT JOIN Movement ON Movement.Id = tmpData.MovementId
+            LEFT JOIN MovementItem AS MI_Master ON MI_Master.Id = tmpData.MI_Id
+            LEFT JOIN Movement ON Movement.Id = MI_Master.MovementId
             
             LEFT JOIN Object AS Object_Goods   ON Object_Goods.Id   = tmpData.GoodsId
             
@@ -254,40 +263,38 @@ BEGIN
                                  
             -- свойства строки документа
             -- все float
-            LEFT JOIN MovementItem AS MI_Master
-                                   ON MI_Master.MovementId = tmpData.MI_Id
-                                  AND MI_Master.DescId     = zc_MI_Master()
-            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+
+            LEFT JOIN tmpMI_Float AS MIFloat_ChangePercent
                                         ON MIFloat_ChangePercent.MovementItemId = MI_Master.Id
                                         AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent() 
-            LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
+            LEFT JOIN tmpMI_Float AS MIFloat_OperPriceList
                                         ON MIFloat_OperPriceList.MovementItemId = MI_Master.Id
                                        AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList() 
-            LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
+            LEFT JOIN tmpMI_Float AS MIFloat_TotalPay
                                         ON MIFloat_TotalPay.MovementItemId = MI_Master.Id
                                        AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
 
-            LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
+            LEFT JOIN tmpMI_Float AS MIFloat_SummChangePercent
                                         ON MIFloat_SummChangePercent.MovementItemId = MI_Master.Id
                                        AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()         
-            LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
+            LEFT JOIN tmpMI_Float AS MIFloat_TotalChangePercent
                                         ON MIFloat_TotalChangePercent.MovementItemId = MI_Master.Id
                                        AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()    
-            LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercentPay
+            LEFT JOIN tmpMI_Float AS MIFloat_TotalChangePercentPay
                                         ON MIFloat_TotalChangePercentPay.MovementItemId = MI_Master.Id
                                        AND MIFloat_TotalChangePercentPay.DescId         = zc_MIFloat_TotalChangePercentPay()    
-            LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth
+            LEFT JOIN tmpMI_Float AS MIFloat_TotalPayOth
                                         ON MIFloat_TotalPayOth.MovementItemId = MI_Master.Id
                                        AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth()    
-            LEFT JOIN MovementItemFloat AS MIFloat_TotalCountReturn
+            LEFT JOIN tmpMI_Float AS MIFloat_TotalCountReturn
                                         ON MIFloat_TotalCountReturn.MovementItemId = MI_Master.Id
                                        AND MIFloat_TotalCountReturn.DescId         = zc_MIFloat_TotalCountReturn()    
-            LEFT JOIN MovementItemFloat AS MIFloat_TotalReturn
+            LEFT JOIN tmpMI_Float AS MIFloat_TotalReturn
                                         ON MIFloat_TotalReturn.MovementItemId = MI_Master.Id
                                        AND MIFloat_TotalReturn.DescId         = zc_MIFloat_TotalReturn()    
-            LEFT JOIN MovementItemFloat AS MIFloat_TotalPayReturn
+            LEFT JOIN tmpMI_Float AS MIFloat_TotalPayReturn
                                         ON MIFloat_TotalPayReturn.MovementItemId = MI_Master.Id
-                                       AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()  
+                                       AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()
 ;
  END;
 $BODY$
@@ -301,3 +308,4 @@ $BODY$
 
 -- тест
 -- select * from gpReport_Sale_ContainerError (inSession := '2');
+-- 3,5 мин

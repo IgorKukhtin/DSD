@@ -27,7 +27,6 @@ object GoodsPrintForm: TGoodsPrintForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 774
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -134,7 +133,7 @@ object GoodsPrintForm: TGoodsPrintForm
         Width = 93
       end
       object LabelName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1094#1077#1085#1085#1080#1082#1072
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'LabelName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -150,7 +149,7 @@ object GoodsPrintForm: TGoodsPrintForm
         Width = 40
       end
       object GoodsName: TcxGridDBColumn
-        Caption = #1058#1086#1074#1072#1088
+        Caption = #1040#1088#1090#1080#1082#1091#1083
         DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -256,7 +255,6 @@ object GoodsPrintForm: TGoodsPrintForm
     Height = 35
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 774
     object cxLabel1: TcxLabel
       Left = 332
       Top = 7

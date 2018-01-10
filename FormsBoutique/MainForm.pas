@@ -182,6 +182,8 @@ type
     miObject_Client_TotalError: TMenuItem;
     actObject_Client_LastError: TdsdOpenForm;
     miObject_Client_LastError: TMenuItem;
+    actReport_Sale_ContainerError: TdsdOpenForm;
+    N1: TMenuItem;
   private
     { Private declarations }
   public

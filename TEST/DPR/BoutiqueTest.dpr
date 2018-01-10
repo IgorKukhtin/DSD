@@ -271,7 +271,8 @@ uses
   ReturnIn_TotalError in '..\..\FormsBoutique\Document\ReturnIn_TotalError.pas' {ReturnIn_TotalErrorForm: TParentForm},
   Sale_TotalError in '..\..\FormsBoutique\Document\Sale_TotalError.pas' {Sale_TotalErrorForm: TParentForm},
   Object_Client_TotalError in '..\..\FormsBoutique\Guides\Object_Client_TotalError.pas' {Object_Client_TotalErrorForm: TParentForm},
-  Object_Client_LastError in '..\..\FormsBoutique\Guides\Object_Client_LastError.pas' {Object_Client_LastErrorForm: TParentForm};
+  Object_Client_LastError in '..\..\FormsBoutique\Guides\Object_Client_LastError.pas' {Object_Client_LastErrorForm: TParentForm},
+  Report_Sale_ContainerError in '..\..\FormsBoutique\Report\Report_Sale_ContainerError.pas' {Report_Sale_ContainerErrorForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
