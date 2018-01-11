@@ -34,6 +34,7 @@ RETURNS TABLE (ContainerId Integer
              , IsClose Boolean, UpdateDate TDateTime
              , isTop boolean, isFirst boolean , isSecond boolean
              , isPromo boolean
+             , PercentMarkup TFloat
              )
 AS
 $BODY$
@@ -128,7 +129,78 @@ BEGIN
                             -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
                             LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
                         )
+                        
 
+     /*, tmpData_all_1 AS (SELECT tmpContainerCount.ContainerId
+                             , tmpContainerCount.Amount  AS Amount
+                             , tmpContainerCount.GoodsId
+                             , Object_PartionMovementItem.ObjectCode ::Integer   AS MI_Id_Income
+                             /*, MI_Income.MovementId        AS MovementId_Income
+                             , MI_Income_find.MovementId   AS MovementId_find
+                             , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId) :: Integer AS MovementId
+                             , COALESCE (MI_Income_find.Id,         MI_Income.Id)         :: Integer AS MovementItemId
+                      */
+                        FROM tmpContainerCount
+                            -- партия
+                            LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
+                                                                ON CLI_MI.ContainerId = tmpContainerCount.ContainerId
+                                                               AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                            LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+                           /* -- элемент прихода
+                            LEFT OUTER JOIN MovementItem AS MI_Income
+                                                         ON MI_Income.Id = Object_PartionMovementItem.ObjectCode ::Integer
+                                                         
+                            -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                            LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                        ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                       AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                            -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                            LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)*/
+                        )
+      , tmpData_all_2 AS (SELECT tmpContainerCount.ContainerId
+                             , tmpContainerCount.Amount
+                             , tmpContainerCount.GoodsId
+                             , tmpContainerCount.MI_Id_Income
+                             , MI_Income.MovementId        AS MovementId_Income
+                             , MIFloat_MovementItem.ValueData :: Integer  AS MI_Id_Income_find
+                             --, MI_Income_find.MovementId   AS MovementId_find
+                             --, COALESCE (MI_Income_find.MovementId, MI_Income.MovementId) :: Integer AS MovementId
+                             --, COALESCE (MI_Income_find.Id,         MI_Income.Id)         :: Integer AS MovementItemId
+                      
+                        FROM tmpData_all_1 AS tmpContainerCount
+                            -- элемент прихода
+                            LEFT OUTER JOIN MovementItem AS MI_Income
+                                                         ON MI_Income.Id = tmpContainerCount.MI_Id_Income
+                                                         
+                            -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                            LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                        ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                       AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                        )
+
+      , tmpData_all AS (SELECT tmpContainerCount.ContainerId
+                             , tmpContainerCount.Amount  AS Amount
+                             , tmpContainerCount.GoodsId
+                             , tmpContainerCount.MovementId_Income
+                             , MI_Income_find.MovementId   AS MovementId_find
+                             , COALESCE (MI_Income_find.MovementId, tmpContainerCount.MovementId_Income)    :: Integer AS MovementId
+                             , COALESCE (MI_Income_find.Id,         tmpContainerCount.MI_Id_Income)         :: Integer AS MovementItemId
+                      
+                        FROM tmpData_all_2 AS tmpContainerCount
+                            -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                            LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = tmpContainerCount.MI_Id_Income_find
+                        )*/
+      
+      , tmpMI_Float AS (SELECT MIFloat_JuridicalPrice.*
+                        FROM MovementItemFloat AS MIFloat_JuridicalPrice
+                        WHERE MIFloat_JuridicalPrice.MovementItemId IN (SELECT DISTINCT tmpData_all.MovementItemId FROM tmpData_all)
+                       )
+      , tmpMLO AS (SELECT MovementLinkObject.*
+                   FROM MovementLinkObject 
+                   WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpData_all.MovementId FROM tmpData_all)
+                   --  AND MovementLinkObject.DescId IN (zc_MovementLinkObject_Juridical(), zc_MovementLinkObject_From(), zc_MovementLinkObject_To(), zc_MovementLinkObject_NDSKind())
+                   )
+                   
       , tmpData AS (SELECT CASE WHEN inIsPartion = TRUE THEN tmpData_all.MovementId_Income ELSE 0 END AS MovementId_Income
                          , CASE WHEN inIsPartion = TRUE THEN tmpData_all.MovementId_find   ELSE 0 END AS MovementId_find
                          --, MovementLinkObject_From_Income.ObjectId                                    AS JuridicalId_Income
@@ -147,34 +219,34 @@ BEGIN
                     FROM  tmpData_all
 
                          -- цена с учетом НДС, для элемента прихода от поставщика (или NULL)
-                         LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice
-                                                     ON MIFloat_JuridicalPrice.MovementItemId = tmpData_all.MovementItemId
-                                                    AND MIFloat_JuridicalPrice.DescId = zc_MIFloat_JuridicalPrice()
+                         LEFT JOIN tmpMI_Float AS MIFloat_JuridicalPrice
+                                               ON MIFloat_JuridicalPrice.MovementItemId = tmpData_all.MovementItemId
+                                              AND MIFloat_JuridicalPrice.DescId = zc_MIFloat_JuridicalPrice()
                          -- цена с учетом НДС, для элемента прихода от поставщика без % корректировки  (или NULL)
-                         LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
-                                                     ON MIFloat_PriceWithVAT.MovementItemId = tmpData_all.MovementItemId
-                                                    AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+                         LEFT JOIN tmpMI_Float AS MIFloat_PriceWithVAT
+                                               ON MIFloat_PriceWithVAT.MovementItemId = tmpData_all.MovementItemId
+                                              AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
                          -- цена без учета НДС, для элемента прихода от поставщика без % корректировки  (или NULL)
-                         LEFT JOIN MovementItemFloat AS MIFloat_PriceWithOutVAT
-                                                     ON MIFloat_PriceWithOutVAT.MovementItemId = tmpData_all.MovementItemId
-                                                    AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
+                         LEFT JOIN tmpMI_Float AS MIFloat_PriceWithOutVAT
+                                               ON MIFloat_PriceWithOutVAT.MovementItemId = tmpData_all.MovementItemId
+                                              AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
                          -- Поставшик, для элемента прихода от поставщика (или NULL)
-                         INNER JOIN MovementLinkObject AS MovementLinkObject_From_Income
-                                                       ON MovementLinkObject_From_Income.MovementId = tmpData_all.MovementId
-                                                      AND MovementLinkObject_From_Income.DescId     = zc_MovementLinkObject_From()
-                                                      AND (MovementLinkObject_From_Income.ObjectId  = inJuridicalId OR inJuridicalId = 0)
+                         INNER JOIN tmpMLO AS MovementLinkObject_From_Income
+                                           ON MovementLinkObject_From_Income.MovementId = tmpData_all.MovementId
+                                          AND MovementLinkObject_From_Income.DescId     = zc_MovementLinkObject_From()
+                                          AND (MovementLinkObject_From_Income.ObjectId  = inJuridicalId OR inJuridicalId = 0)
                          -- Вид НДС, для элемента прихода от поставщика (или NULL)
-                         LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind_Income
-                                                      ON MovementLinkObject_NDSKind_Income.MovementId = tmpData_all.MovementId
-                                                     AND MovementLinkObject_NDSKind_Income.DescId = zc_MovementLinkObject_NDSKind()
+                         LEFT JOIN tmpMLO AS MovementLinkObject_NDSKind_Income
+                                          ON MovementLinkObject_NDSKind_Income.MovementId = tmpData_all.MovementId
+                                         AND MovementLinkObject_NDSKind_Income.DescId = zc_MovementLinkObject_NDSKind()
                          -- куда был приход от поставщика (склад или аптека)
-                         LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                      ON MovementLinkObject_To.MovementId = tmpData_all.MovementId
-                                                     AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                         LEFT JOIN tmpMLO AS MovementLinkObject_To
+                                          ON MovementLinkObject_To.MovementId = tmpData_all.MovementId
+                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                          -- на какое наше юр лицо был приход
-                         LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical_Income
-                                                      ON MovementLinkObject_Juridical_Income.MovementId = tmpData_all.MovementId
-                                                     AND MovementLinkObject_Juridical_Income.DescId = zc_MovementLinkObject_Juridical()                                 
+                         LEFT JOIN tmpMLO AS MovementLinkObject_Juridical_Income
+                                          ON MovementLinkObject_Juridical_Income.MovementId = tmpData_all.MovementId
+                                         AND MovementLinkObject_Juridical_Income.DescId = zc_MovementLinkObject_Juridical()                                 
 
                     GROUP BY CASE WHEN inIsPartion = TRUE THEN tmpData_all.MovementId_Income ELSE 0 END
                            , CASE WHEN inIsPartion = TRUE THEN tmpData_all.MovementId_find   ELSE 0 END
@@ -252,6 +324,38 @@ BEGIN
                                                          AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId*/
                        )
 
+      , tmp_ObjectDate AS (SELECT ObjectDate.*
+                           FROM ObjectDate
+                           WHERE ObjectDate.ObjectId IN (SELECT tmpGoods.GoodsId From tmpGoods)
+                             AND ObjectDate.DescId = zc_ObjectDate_Protocol_Update() 
+                             )
+      , tmp_ObjectBoolean AS (SELECT ObjectBoolean.*
+                              FROM ObjectBoolean
+                              WHERE ObjectBoolean.ObjectId IN (SELECT tmpGoods.GoodsId From tmpGoods)
+                             )
+      , tmp_ObjectFloat AS (SELECT ObjectFloat.*
+                            FROM ObjectFloat
+                            WHERE ObjectFloat.ObjectId IN (SELECT tmpGoods.GoodsId From tmpGoods)
+                            )
+ 
+
+     /* , tmpPrice AS (SELECT ObjectLink_Price_Unit.ChildObjectId     AS UnitId
+                          , Price_Goods.ChildObjectId               AS GoodsId
+                          , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
+                     FROM tmpUnit
+                          LEFT JOIN ObjectLink AS ObjectLink_Price_Unit
+                                               ON ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                                              AND ObjectLink_Price_Unit.ChildObjectId = tmpUnit.UnitId
+                          INNER JOIN ObjectLink AS Price_Goods
+                                                ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                               AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                          INNER JOIN tmpGoods ON tmpGoods.GoodsId = Price_Goods.ChildObjectId
+
+                          LEFT JOIN ObjectFloat AS Price_Value
+                                                ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                               AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                     )*/
+                     
 
         -- Результат
         SELECT tmpData.ContainerId                           :: Integer   AS ContainerId
@@ -304,6 +408,7 @@ BEGIN
              
              , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
              
+             , COALESCE(ObjectFloat_Goods_PercentMarkup.ValueData, 0) ::TFloat  AS PercentMarkup
         FROM tmpData
              LEFT JOIN tmpGoods ON tmpGoods.GoodsId = tmpData.GoodsId
              LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = tmpGoods.GoodsGroupId
@@ -325,31 +430,36 @@ BEGIN
         
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
 
-            LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Close
-                                    ON ObjectBoolean_Goods_Close.ObjectId = Object_Goods.Id
-                                   AND ObjectBoolean_Goods_Close.DescId = zc_ObjectBoolean_Goods_Close()  
-            LEFT JOIN ObjectDate AS ObjectDate_Update
-                                 ON ObjectDate_Update.ObjectId = Object_Goods.Id
-                                AND ObjectDate_Update.DescId = zc_ObjectDate_Protocol_Update()  
+            LEFT JOIN tmp_ObjectBoolean AS ObjectBoolean_Goods_Close
+                                        ON ObjectBoolean_Goods_Close.ObjectId = Object_Goods.Id
+                                       AND ObjectBoolean_Goods_Close.DescId = zc_ObjectBoolean_Goods_Close()  
+            LEFT JOIN tmp_ObjectDate AS ObjectDate_Update
+                                     ON ObjectDate_Update.ObjectId = Object_Goods.Id
+                                    AND ObjectDate_Update.DescId = zc_ObjectDate_Protocol_Update()  
 
-            LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
-                                    ON ObjectBoolean_Goods_TOP.ObjectId = Object_Goods.Id
-                                   AND ObjectBoolean_Goods_TOP.DescId = zc_ObjectBoolean_Goods_TOP()  
-            LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_First
-                                    ON ObjectBoolean_Goods_First.ObjectId = Object_Goods.Id
-                                   AND ObjectBoolean_Goods_First.DescId = zc_ObjectBoolean_Goods_First() 
-            LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Second
-                                    ON ObjectBoolean_Goods_Second.ObjectId = Object_Goods.Id
-                                   AND ObjectBoolean_Goods_Second.DescId = zc_ObjectBoolean_Goods_Second() 
+            LEFT JOIN tmp_ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                        ON ObjectBoolean_Goods_TOP.ObjectId = Object_Goods.Id
+                                       AND ObjectBoolean_Goods_TOP.DescId = zc_ObjectBoolean_Goods_TOP()  
+            LEFT JOIN tmp_ObjectBoolean AS ObjectBoolean_Goods_First
+                                        ON ObjectBoolean_Goods_First.ObjectId = Object_Goods.Id
+                                       AND ObjectBoolean_Goods_First.DescId = zc_ObjectBoolean_Goods_First() 
+            LEFT JOIN tmp_ObjectBoolean AS ObjectBoolean_Goods_Second
+                                        ON ObjectBoolean_Goods_Second.ObjectId = Object_Goods.Id
+                                       AND ObjectBoolean_Goods_Second.DescId = zc_ObjectBoolean_Goods_Second() 
 
-            LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS_Income
-                                  ON ObjectFloat_NDSKind_NDS_Income.ObjectId = tmpData.NDSKindId_Income
-                                 AND ObjectFloat_NDSKind_NDS_Income.DescId = zc_ObjectFloat_NDSKind_NDS() 
-            LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
-                                  ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId
-                                 AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+            LEFT JOIN tmp_ObjectFloat AS ObjectFloat_Goods_PercentMarkup
+                                      ON ObjectFloat_Goods_PercentMarkup.ObjectId = Object_Goods.Id
+                                     AND ObjectFloat_Goods_PercentMarkup.DescId = zc_ObjectFloat_Goods_PercentMarkup() 
+
+            LEFT JOIN tmp_ObjectFloat AS ObjectFloat_NDSKind_NDS_Income
+                                      ON ObjectFloat_NDSKind_NDS_Income.ObjectId = tmpData.NDSKindId_Income
+                                     AND ObjectFloat_NDSKind_NDS_Income.DescId = zc_ObjectFloat_NDSKind_NDS() 
+            LEFT JOIN tmp_ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                      ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId
+                                     AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
                                                                   
             LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods.Id
+--            LEFT JOIN tmpPrice ON tmpPrice.
          ;
 
 END;
@@ -364,5 +474,4 @@ $BODY$
 */
 
 -- тест
---
--- select * from gpReport_GoodsRemainsCurrent(inUnitId := 183292 , inRetailId := 0 , inJuridicalId := 0 , inRemainsDate := ('13.07.2017')::TDateTime , inIsPartion := 'False' , inisPartionPrice := 'False' , inisJuridical := 'True' , inisUnitList := 'False' ,  inSession := '3');
+-- select * from gpReport_GoodsRemainsCurrent(inUnitId := 183292 , inRetailId := 0 , inJuridicalId := 0 , inContractId := 0 , inIsPartion := 'False' ::Boolean, inisPartionPrice := 'False' ::Boolean, inisJuridical := 'True' ::Boolean, inisUnitList := 'False' ::Boolean,  inSession := '3');

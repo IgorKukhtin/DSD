@@ -1,4 +1,4 @@
-unit Sale_TotalError;
+unit Report_Client_TotalError;
 
 interface
 
@@ -27,11 +27,11 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxDBLabel;
 
 type
-  TSale_TotalErrorForm = class(TAncestorReportForm)
+  TReport_Client_TotalErrorForm = class(TAncestorReportForm)
     dxBarButton1: TdxBarButton;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    FromName: TcxGridDBColumn;
+    ClientName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     actRefreshSize: TdsdDataSetRefresh;
@@ -43,8 +43,6 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     spGet_UserUnit: TdsdStoredProc;
-    Panel1: TPanel;
-    cxDBLabel1: TcxDBLabel;
   private
     { Private declarations }
   public
@@ -52,7 +50,7 @@ type
   end;
 
 var
-  Sale_TotalErrorForm: TSale_TotalErrorForm;
+  Report_Client_TotalErrorForm: TReport_Client_TotalErrorForm;
 
 implementation
 
@@ -60,5 +58,5 @@ implementation
 
 initialization
 
-  RegisterClass(TSale_TotalErrorForm)
+  RegisterClass(TReport_Client_TotalErrorForm)
 end.

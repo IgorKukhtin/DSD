@@ -1,8 +1,8 @@
--- Function: gpSelect_Object_Client_LastError()
+-- Function: gpReport_Object_Client_LastError()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Client_LastError (TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Object_Client_LastError (TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_Client_LastError(
+CREATE OR REPLACE FUNCTION gpReport_Object_Client_LastError(
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ClientId          Integer
@@ -157,4 +157,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Client_LastError (inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_Object_Client_LastError (inSession:= zfCalc_UserAdmin())

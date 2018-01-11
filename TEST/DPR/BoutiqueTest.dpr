@@ -267,12 +267,12 @@ uses
   Report_MotionByPartnerDialog in '..\..\FormsBoutique\Report\Report_MotionByPartnerDialog.pas' {Report_MotionByPartnerDialogForm: TParentForm},
   IFIN_J1201209 in '..\..\SOURCE\MeDOC\IFIN_J1201209.pas',
   CommonContainerProcedureTest in '..\SOURCEBoutique\Container\CommonContainerProcedureTest.pas',
-  GoodsAccount_TotalError in '..\..\FormsBoutique\Document\GoodsAccount_TotalError.pas' {GoodsAccount_TotalErrorForm: TParentForm},
-  ReturnIn_TotalError in '..\..\FormsBoutique\Document\ReturnIn_TotalError.pas' {ReturnIn_TotalErrorForm: TParentForm},
-  Sale_TotalError in '..\..\FormsBoutique\Document\Sale_TotalError.pas' {Sale_TotalErrorForm: TParentForm},
-  Object_Client_TotalError in '..\..\FormsBoutique\Guides\Object_Client_TotalError.pas' {Object_Client_TotalErrorForm: TParentForm},
-  Object_Client_LastError in '..\..\FormsBoutique\Guides\Object_Client_LastError.pas' {Object_Client_LastErrorForm: TParentForm},
-  Report_Sale_ContainerError in '..\..\FormsBoutique\Report\Report_Sale_ContainerError.pas' {Report_Sale_ContainerErrorForm: TParentForm};
+  Report_Sale_ContainerError in '..\..\FormsBoutique\Report\Report_Sale_ContainerError.pas' {Report_Sale_ContainerErrorForm: TParentForm},
+  Report_ReturnIn_TotalError in '..\..\FormsBoutique\Report\Report_ReturnIn_TotalError.pas' {Report_ReturnIn_TotalErrorForm: TParentForm},
+  Report_Sale_TotalError in '..\..\FormsBoutique\Report\Report_Sale_TotalError.pas' {Report_Sale_TotalErrorForm: TParentForm},
+  Report_Client_TotalError in '..\..\FormsBoutique\Report\Report_Client_TotalError.pas' {Report_Client_TotalErrorForm: TParentForm},
+  Report_Client_LastError in '..\..\FormsBoutique\Report\Report_Client_LastError.pas' {Report_Client_LastErrorForm: TParentForm},
+  Report_GoodsAccount_TotalError in '..\..\FormsBoutique\Report\Report_GoodsAccount_TotalError.pas' {Report_GoodsAccount_TotalErrorForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

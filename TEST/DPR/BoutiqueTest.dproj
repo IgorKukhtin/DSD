@@ -922,28 +922,28 @@
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\MeDOC\IFIN_J1201209.pas"/>
 			<DCCReference Include="..\SOURCEBoutique\Container\CommonContainerProcedureTest.pas"/>
-			<DCCReference Include="..\..\FormsBoutique\Document\GoodsAccount_TotalError.pas">
-				<Form>GoodsAccount_TotalErrorForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Document\ReturnIn_TotalError.pas">
-				<Form>ReturnIn_TotalErrorForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Document\Sale_TotalError.pas">
-				<Form>Sale_TotalErrorForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Guides\Object_Client_TotalError.pas">
-				<Form>Object_Client_TotalErrorForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Guides\Object_Client_LastError.pas">
-				<Form>Object_Client_LastErrorForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Report\Report_Sale_ContainerError.pas">
 				<Form>Report_Sale_ContainerErrorForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_ReturnIn_TotalError.pas">
+				<Form>Report_ReturnIn_TotalErrorForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_Sale_TotalError.pas">
+				<Form>Report_Sale_TotalErrorForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_Client_TotalError.pas">
+				<Form>Report_Client_TotalErrorForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_Client_LastError.pas">
+				<Form>Report_Client_LastErrorForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_GoodsAccount_TotalError.pas">
+				<Form>Report_GoodsAccount_TotalErrorForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

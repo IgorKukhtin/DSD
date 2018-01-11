@@ -1,8 +1,8 @@
--- Function: gpSelect_Object_Client_TotalError()
+-- Function: gpReport_Object_Client_TotalError()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Client_TotalError (TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Object_Client_TotalError (TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_Client_TotalError(
+CREATE OR REPLACE FUNCTION gpReport_Object_Client_TotalError(
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ClientId          Integer
@@ -155,4 +155,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Client_TotalError (inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_Object_Client_TotalError (inSession:= zfCalc_UserAdmin())

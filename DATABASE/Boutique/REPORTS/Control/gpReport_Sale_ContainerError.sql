@@ -52,14 +52,14 @@ BEGIN
                        , MI_Master.Id                        AS MI_Id
 
                        , SUM (MI_Master.Amount - COALESCE (MIFloat_TotalCountReturn.ValueData, 0) ) AS CountDebt
-                       , SUM (zfCalc_SummPriceList (MI_Master.Amount /*- COALESCE(MIFloat_TotalCountReturn.ValueData,0)*/, MIFloat_OperPriceList.ValueData)
+                       , SUM (zfCalc_SummPriceList (MI_Master.Amount - COALESCE(MIFloat_TotalCountReturn.ValueData,0), MIFloat_OperPriceList.ValueData)
                                  - COALESCE (MIFloat_TotalChangePercent.ValueData, 0)
                                  - COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)
                                  - COALESCE (MIFloat_TotalPay.ValueData, 0)
                                  - COALESCE (MIFloat_TotalPayOth.ValueData, 0)
                                    -- Возврат
-                                 - COALESCE (MIFloat_TotalReturn.ValueData, 0)
-                                 - COALESCE (MIFloat_TotalPayReturn.ValueData, 0))   AS SummDebt
+                                 + COALESCE (MIFloat_TotalReturn.ValueData, 0)
+                                 + COALESCE (MIFloat_TotalPayReturn.ValueData, 0))   AS SummDebt
                        
                   FROM Movement AS Movement_Sale
   
@@ -104,14 +104,14 @@ BEGIN
                   GROUP BY MI_Master.ObjectId
                          , MI_Master.Id
                          , MI_Master.PartionId
-                  HAVING 0 <> SUM (zfCalc_SummPriceList (MI_Master.Amount /*- COALESCE(MIFloat_TotalCountReturn.ValueData,0)*/, MIFloat_OperPriceList.ValueData)
+                  HAVING 0 <> SUM (zfCalc_SummPriceList (MI_Master.Amount - COALESCE(MIFloat_TotalCountReturn.ValueData,0), MIFloat_OperPriceList.ValueData)
                                  - COALESCE (MIFloat_TotalChangePercent.ValueData, 0)
                                  - COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)
                                  - COALESCE (MIFloat_TotalPay.ValueData, 0)
                                  - COALESCE (MIFloat_TotalPayOth.ValueData, 0)
                                    -- Возврат
-                                 - COALESCE (MIFloat_TotalReturn.ValueData, 0)
-                                 - COALESCE (MIFloat_TotalPayReturn.ValueData, 0)) 
+                                 + COALESCE (MIFloat_TotalReturn.ValueData, 0)
+                                 + COALESCE (MIFloat_TotalPayReturn.ValueData, 0)) 
                   )     
   -- долги из проводок
   , tmpContainer AS (SELECT  Object_PartionMI.ObjectCode ::Integer AS MI_Id

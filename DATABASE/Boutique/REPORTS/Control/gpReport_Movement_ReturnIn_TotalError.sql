@@ -1,8 +1,8 @@
--- Function: gpSelect_Movement_GoodsAccount_TotalError()
+-- Function: gpReport_Movement_ReturnIn_TotalError()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_GoodsAccount_TotalError (TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Movement_ReturnIn_TotalError (TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_GoodsAccount_TotalError(
+CREATE OR REPLACE FUNCTION gpReport_Movement_ReturnIn_TotalError(
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
@@ -27,16 +27,17 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , FabrikaName      TVarChar
              , PeriodName       TVarChar
              , PeriodYear       Integer
-             , Amount        TFloat
-             , TotalPay      TFloat
-             , TotalPay_Calc TFloat
+             , Amount           TFloat
+             , TotalPay         TFloat
+             , TotalPay_Calc    TFloat
+             , TotalPayOth      TFloat
+             , TotalPayOth_Calc TFloat
              )
 AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_GoodsAccount());
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Результат
@@ -51,10 +52,12 @@ BEGIN
                            , MI_Master.Amount                            AS Amount
                             
                            , MIFloat_TotalPay.ValueData                  AS TotalPay
+                           , MIFloat_TotalPayOth.ValueData               AS TotalPayOth
                            , CAST (COALESCE (SUM (MI_Child.Amount * CASE WHEN MILinkObject_Currency.ObjectId = zc_Currency_GRN() 
-                                                                         THEN 1
-                                                                         ELSE MIFloat_CurrencyValue.ValueData / CASE WHEN COALESCE(MIFloat_ParValue.ValueData, 1) <> 0 THEN COALESCE(MIFloat_ParValue.ValueData, 1) ELSE 1 END
+                                                                         THEN 1 
+                                                                         ELSE MIFloat_CurrencyValue.ValueData / (CASE WHEN COALESCE(MIFloat_ParValue.ValueData, 1) <> 0 THEN COALESCE(MIFloat_ParValue.ValueData, 1) ELSE 1 END)
                                                                     END), 0) AS NUMERIC (16, 2)) AS TotalPay_Calc
+                           , tmpGoodsAccount.TotalPayOth                 AS TotalPayOth_Calc
                        FROM Movement
                             -- мастер
                             INNER JOIN MovementItem AS MI_Master 
@@ -63,14 +66,39 @@ BEGIN
                                                    AND MI_Master.isErased   = FALSE
                             LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
                                                         ON MIFloat_TotalPay.MovementItemId = MI_Master.Id
-                                                       AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay() 
-                                                       
+                                                       AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
+
+                            LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth
+                                                        ON MIFloat_TotalPayOth.MovementItemId = MI_Master.Id
+                                                       AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth()  
+
+                            --оплата возврата в расчетах
+                            LEFT JOIN (SELECT Object_PartionMI.ObjectCode                     AS MI_Id
+                                            , SUM (COALESCE (MIFloat_TotalPay.ValueData, 0))  AS TotalPayOth
+                                       FROM  Object AS Object_PartionMI
+                                             INNER JOIN MovementItemLinkObject AS MILinkObject_PartionMI
+                                                                               ON MILinkObject_PartionMI.ObjectId = Object_PartionMI.Id 
+                                                                              AND MILinkObject_PartionMI.DescId   = zc_MILinkObject_PartionMI()
+                                             INNER JOIN MovementItem ON MovementItem.Id       = MILinkObject_PartionMI.MovementItemId
+                                                                    AND MovementItem.DescId   = zc_MI_Master()
+                                                                    AND MovementItem.isErased = FALSE
+                                             INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                                AND Movement.DescId   = zc_Movement_GoodsAccount()
+                                                                AND Movement.StatusId = zc_Enum_Status_Complete()
+                                             LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
+                                                                         ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
+                                                                        AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay() 
+                                       WHERE /*Object_PartionMI.ObjectCode = MI_Master.Id 
+                                         AND */Object_PartionMI.DescId     = zc_Object_PartionMI() 
+                                       GROUP BY Object_PartionMI.ObjectCode
+                                      ) AS tmpGoodsAccount ON tmpGoodsAccount.MI_Id = MI_Master.Id
+                                                                            
                             -- чайлд
-                            INNER JOIN MovementItem AS MI_Child
-                                                    ON MI_Child.MovementId = Movement.Id
-                                                   AND MI_Child.ParentId   = MI_Master.Id
-                                                   AND MI_Child.DescId     = zc_MI_Child()
-                                                   AND MI_Child.isErased   = FALSE
+                            LEFT JOIN MovementItem AS MI_Child
+                                                   ON MI_Child.MovementId = Movement.Id
+                                                  AND MI_Child.ParentId   = MI_Master.Id
+                                                  AND MI_Child.DescId     = zc_MI_Child()
+                                                  AND MI_Child.isErased   = FALSE
                             
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
                                                              ON MILinkObject_Currency.MovementItemId = MI_Child.Id
@@ -83,7 +111,7 @@ BEGIN
                                                         ON MIFloat_ParValue.MovementItemId = MI_Child.Id
                                                        AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
                 
-                       WHERE Movement.DescId = zc_Movement_GoodsAccount()
+                       WHERE Movement.DescId = zc_Movement_ReturnIn()
                        GROUP BY Movement.Id
                            , Movement.InvNumber
                            , Movement.OperDate
@@ -93,10 +121,13 @@ BEGIN
                            , MI_Master.PartionId
                            , MI_Master.Amount
                            , MIFloat_TotalPay.ValueData
-                       HAVING MIFloat_TotalPay.ValueData <> CAST (COALESCE (SUM (MI_Child.Amount * CASE WHEN MILinkObject_Currency.ObjectId = zc_Currency_GRN() 
-                                                                                                        THEN 1 
-                                                                                                        ELSE MIFloat_CurrencyValue.ValueData / CASE WHEN COALESCE(MIFloat_ParValue.ValueData, 1) <> 0 THEN COALESCE(MIFloat_ParValue.ValueData, 1) ELSE 1 END
-                                                                                                   END), 0) AS NUMERIC (16, 2))
+                           , MIFloat_TotalPayOth.ValueData
+                           , tmpGoodsAccount.TotalPayOth
+                       HAVING (MIFloat_TotalPay.ValueData <> CAST (COALESCE (SUM (MI_Child.Amount * CASE WHEN MILinkObject_Currency.ObjectId = zc_Currency_GRN() 
+                                                                                                         THEN 1 
+                                                                                                         ELSE MIFloat_CurrencyValue.ValueData / (CASE WHEN COALESCE(MIFloat_ParValue.ValueData, 1) <> 0 THEN COALESCE(MIFloat_ParValue.ValueData, 1) ELSE 1 END)
+                                                                                                    END), 0) AS NUMERIC (16, 2)))
+                           OR (MIFloat_TotalPayOth.ValueData <> tmpGoodsAccount.TotalPayOth)
                        )
 
        SELECT
@@ -139,7 +170,8 @@ BEGIN
            , tmpData.Amount                    :: TFloat AS Amount
            , tmpData.TotalPay                  :: TFloat AS TotalPay
            , tmpData.TotalPay_Calc             :: TFloat AS TotalPay_Calc
-           
+           , tmpData.TotalPayOth               :: TFloat AS TotalPayOth
+           , tmpData.TotalPayOth_Calc          :: TFloat AS TotalPayOth_Calc           
        FROM tmpData
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpData.StatusId
@@ -154,8 +186,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = tmpData.MovementId
                                         AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
-            INNER JOIN Object AS Object_From ON Object_From.Id     = MovementLinkObject_From.ObjectId
-                                            AND Object_From.DescId = zc_Object_Client()
+            LEFT JOIN Object AS Object_From ON Object_From.Id     = MovementLinkObject_From.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = tmpData.MovementId
@@ -193,7 +224,6 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpData.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()                   
-            
             ;
   
 END;
@@ -207,4 +237,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_GoodsAccount_TotalError (inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_Movement_ReturnIn_TotalError (inSession:= zfCalc_UserAdmin())

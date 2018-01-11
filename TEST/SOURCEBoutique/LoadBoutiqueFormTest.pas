@@ -1235,20 +1235,20 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_ContainerErrorForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_ContainerErrorForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TObject_Client_LastErrorForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TObject_Client_LastErrorForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Client_LastErrorForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Client_LastErrorForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TObject_Client_TotalErrorForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TObject_Client_TotalErrorForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Client_TotalErrorForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Client_TotalErrorForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_TotalErrorForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSale_TotalErrorForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_TotalErrorForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_TotalErrorForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAccount_TotalErrorForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TGoodsAccount_TotalErrorForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsAccount_TotalErrorForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsAccount_TotalErrorForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_TotalErrorForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReturnIn_TotalErrorForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReturnIn_TotalErrorForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ReturnIn_TotalErrorForm');
 end;
 
 procedure TLoadFormTest.LoadGoodsAccountFormTest;

@@ -1,4 +1,4 @@
-unit Object_Client_LastError;
+unit Report_Client_LastError;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxDBLabel;
 
 type
-  TObject_Client_LastErrorForm = class(TAncestorReportForm)
+  TReport_Client_LastErrorForm = class(TAncestorReportForm)
     dxBarButton1: TdxBarButton;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
@@ -51,7 +51,7 @@ type
   end;
 
 var
-  Object_Client_LastErrorForm: TObject_Client_LastErrorForm;
+  Report_Client_LastErrorForm: TReport_Client_LastErrorForm;
 
 implementation
 
@@ -59,5 +59,5 @@ implementation
 
 initialization
 
-  RegisterClass(TObject_Client_LastErrorForm)
+  RegisterClass(TReport_Client_LastErrorForm)
 end.

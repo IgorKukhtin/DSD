@@ -1,4 +1,4 @@
-unit Object_Client_TotalError;
+unit Report_ReturnIn_TotalError;
 
 interface
 
@@ -27,11 +27,11 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxDBLabel;
 
 type
-  TObject_Client_TotalErrorForm = class(TAncestorReportForm)
+  TReport_ReturnIn_TotalErrorForm = class(TAncestorReportForm)
     dxBarButton1: TdxBarButton;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    ClientName: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     actRefreshSize: TdsdDataSetRefresh;
@@ -43,6 +43,8 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     spGet_UserUnit: TdsdStoredProc;
+    Panel1: TPanel;
+    cxDBLabel1: TcxDBLabel;
   private
     { Private declarations }
   public
@@ -50,7 +52,7 @@ type
   end;
 
 var
-  Object_Client_TotalErrorForm: TObject_Client_TotalErrorForm;
+  Report_ReturnIn_TotalErrorForm: TReport_ReturnIn_TotalErrorForm;
 
 implementation
 
@@ -58,5 +60,5 @@ implementation
 
 initialization
 
-  RegisterClass(TObject_Client_TotalErrorForm)
+  RegisterClass(TReport_ReturnIn_TotalErrorForm)
 end.

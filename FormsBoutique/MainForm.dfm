@@ -21,45 +21,45 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actObject_Client_LastError: TdsdOpenForm [1]
+    object actReport_Client_LastError: TdsdOpenForm [1]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1057#1091#1084#1084' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1087#1086#1082#1091#1087#1082#1080' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
-      FormName = 'TObject_Client_LastErrorForm'
-      FormNameParam.Value = 'TObject_Client_LastErrorForm'
+      FormName = 'TReport_Client_LastErrorForm'
+      FormNameParam.Value = 'TReport_Client_LastErrorForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
-    object actObject_Client_TotalError: TdsdOpenForm [2]
+    object actReport_Client_TotalError: TdsdOpenForm [2]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1048#1090#1086#1075#1086#1074#1099#1093' '#1089#1091#1084#1084' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
-      FormName = 'TObject_Client_TotalErrorForm'
-      FormNameParam.Value = 'TObject_Client_TotalErrorForm'
+      FormName = 'TReport_Client_TotalErrorForm'
+      FormNameParam.Value = 'TReport_Client_TotalErrorForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
-    object actSale_TotalError: TdsdOpenForm [3]
+    object actReport_Sale_TotalError: TdsdOpenForm [3]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1048#1090#1086#1075#1086#1074#1099#1093' '#1057#1091#1084#1084' '#1074' '#1055#1088#1086#1076#1072#1078#1072#1093
-      FormName = 'TSale_TotalErrorForm'
-      FormNameParam.Value = 'TSale_TotalErrorForm'
+      FormName = 'TReport_Sale_TotalErrorForm'
+      FormNameParam.Value = 'TReport_Sale_TotalErrorForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
-    object actReturnIn_TotalError: TdsdOpenForm [4]
+    object actReport_ReturnIn_TotalError: TdsdOpenForm [4]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1057#1091#1084#1084#1099' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' '#1074' '#1042#1086#1079#1074#1088#1072#1090#1072#1093
-      FormName = 'TReturnIn_TotalErrorForm'
-      FormNameParam.Value = 'TReturnIn_TotalErrorForm'
+      FormName = 'TReport_ReturnIn_TotalErrorForm'
+      FormNameParam.Value = 'TReport_ReturnIn_TotalErrorForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -158,12 +158,12 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actGoodsAccount_TotalError: TdsdOpenForm [13]
+    object actReport_GoodsAccount_TotalError: TdsdOpenForm [13]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1057#1091#1084#1084#1099' '#1086#1087#1083#1072#1090#1099' '#1074' '#1056#1072#1089#1095#1077#1090#1072#1093' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
-      FormName = 'TGoodsAccount_TotalErrorForm'
-      FormNameParam.Value = 'TGoodsAccount_TotalErrorForm'
+      FormName = 'TReport_GoodsAccount_TotalErrorForm'
+      FormNameParam.Value = 'TReport_GoodsAccount_TotalErrorForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -1155,19 +1155,19 @@ inherited MainForm: TMainForm
       object miTotalError: TMenuItem [6]
         Caption = #1055#1088#1086#1074#1077#1088#1082#1072
         object miGoodsAccount_TotalError: TMenuItem
-          Action = actGoodsAccount_TotalError
+          Action = actReport_GoodsAccount_TotalError
         end
         object miReturnIn_TotalError: TMenuItem
-          Action = actReturnIn_TotalError
+          Action = actReport_ReturnIn_TotalError
         end
         object miSale_TotalError: TMenuItem
-          Action = actSale_TotalError
+          Action = actReport_Sale_TotalError
         end
         object miObject_Client_TotalError: TMenuItem
-          Action = actObject_Client_TotalError
+          Action = actReport_Client_TotalError
         end
         object miObject_Client_LastError: TMenuItem
-          Action = actObject_Client_LastError
+          Action = actReport_Client_LastError
         end
         object N1: TMenuItem
           Action = actReport_Sale_ContainerError

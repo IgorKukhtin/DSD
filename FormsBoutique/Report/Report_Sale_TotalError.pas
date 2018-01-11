@@ -1,4 +1,4 @@
-unit GoodsAccount_TotalError;
+unit Report_Sale_TotalError;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxDBLabel;
 
 type
-  TGoodsAccount_TotalErrorForm = class(TAncestorReportForm)
+  TReport_Sale_TotalErrorForm = class(TAncestorReportForm)
     dxBarButton1: TdxBarButton;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
@@ -52,7 +52,7 @@ type
   end;
 
 var
-  GoodsAccount_TotalErrorForm: TGoodsAccount_TotalErrorForm;
+  Report_Sale_TotalErrorForm: TReport_Sale_TotalErrorForm;
 
 implementation
 
@@ -60,5 +60,5 @@ implementation
 
 initialization
 
-  RegisterClass(TGoodsAccount_TotalErrorForm)
+  RegisterClass(TReport_Sale_TotalErrorForm)
 end.
