@@ -29,11 +29,13 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , ConditionsKeepName TVarChar
              , MorionCode Integer, BarCode TVarChar, OrdBar Integer
              , NDS_PriceList TFloat, isNDS_dif Boolean
+             , OrdPrice Integer
               ) AS
 $BODY$ 
   DECLARE vbUserId Integer;
 
   DECLARE vbObjectId Integer;
+  DECLARE vbAreaDneprId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_User());
@@ -48,6 +50,8 @@ BEGIN
    THEN 
        vbObjectId := inRetailId;
    END IF;
+   
+   vbAreaDneprId := (SELECT Object.Id FROM Object WHERE Object.Descid = zc_Object_Area() AND Object.ValueData LIKE 'Днепр');
    
 /*
    -- !!!для Админа!!!
@@ -213,15 +217,23 @@ BEGIN
                                --GROUP BY ObjectLink_Main_BarCode.ChildObjectId
                               )  
          -- вытягиваем из LoadPriceListItem.GoodsNDS по входящему Договору поставщика (inContractId)
-         , tmpPricelistItems AS (SELECT DISTINCT
-                                        LoadPriceListItem.GoodsId      AS GoodsMainId
-                                      , CAST (REPLACE (REPLACE ( REPLACE (LoadPriceListItem.GoodsNDS , '%', ''), 'НДС', '') , ',', '.') AS TFloat) AS GoodsNDS
-                                 FROM LoadPriceList
-                                      INNER JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
-                                 WHERE (LoadPriceList.ContractId = inContractId AND inContractId <> 0)
-                                   AND COALESCE (LoadPriceListItem.GoodsId, 0) <> 0
+         , tmpPricelistItems AS (SELECT tmp.GoodsMainId
+                                      , tmp.GoodsNDS
+                                      , MAX (tmp.Ord) AS Ord
+                                 FROM
+                                     (SELECT DISTINCT
+                                             LoadPriceListItem.GoodsId      AS GoodsMainId
+                                           , CAST (REPLACE (REPLACE ( REPLACE (LoadPriceListItem.GoodsNDS , '%', ''), 'НДС', '') , ',', '.') AS TFloat) AS GoodsNDS
+                                           , ROW_NUMBER() OVER (PARTITION BY LoadPriceListItem.GoodsId  ORDER BY LoadPriceListItem.GoodsCode) AS Ord
+                                      FROM LoadPriceList
+                                           INNER JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
+                                      WHERE (LoadPriceList.ContractId = inContractId AND inContractId <> 0)
+                                        AND COALESCE (LoadPriceListItem.GoodsId, 0) <> 0
+                                        AND (COALESCE (LoadPriceList.AreaId, 0) = 0 OR LoadPriceList.AreaId = vbAreaDneprId)
+                                     ) tmp
+                                 GROUP BY tmp.GoodsMainId
+                                        , tmp.GoodsNDS
                                  )
-         
                          
       SELECT Object_Goods_View.Id
            , ObjectLink_Main.ChildObjectId     AS GoodsMainId 
@@ -273,9 +285,10 @@ BEGIN
            , tmpGoodsMorion.MorionCode
            , tmpGoodsBarCode.BarCode
            , tmpGoodsBarCode.Ord        :: Integer AS OrdBar
-           
+
            , tmpPricelistItems.GoodsNDS :: TFloat  AS NDS_PriceList
            , CASE WHEN COALESCE (tmpPricelistItems.GoodsNDS, 0) <> 0 AND inContractId <> 0 AND COALESCE (tmpPricelistItems.GoodsNDS, 0) <> Object_Goods_View.NDS THEN TRUE ELSE FALSE END AS isNDS_dif
+           , tmpPricelistItems.Ord      :: Integer AS OrdPrice
       FROM Object_Goods_View
            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = Object_Goods_View.ObjectId
            LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id 

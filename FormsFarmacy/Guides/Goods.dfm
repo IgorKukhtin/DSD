@@ -112,6 +112,16 @@ inherited GoodsForm: TGoodsForm
             HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1086' '#1053#1044#1057' '#1074' '#1087#1088#1072#1081#1089#1077' '#1080' '#1090#1086#1074#1072#1088#1077
             Width = 52
           end
+          object OrdPrice: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1090#1086#1074'. '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            DataBinding.FieldName = 'OrdPrice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1090#1086#1074#1072#1088#1086#1074' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1074' '#1087#1088#1072#1081#1089#1077
+            Options.Editing = False
+            Width = 50
+          end
           object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084
             DataBinding.FieldName = 'MeasureName'
