@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, PartionId Integer
              , GoodsInfoName TVarChar
              , LineFabricaName TVarChar
              , LabelName TVarChar
-             , GoodsSizeName TVarChar
+             , GoodsSizeId Integer, GoodsSizeName TVarChar
 
              , Amount TFloat, Amount_Sale TFloat, Remains TFloat
              , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat
@@ -354,6 +354,7 @@ BEGIN
            , Object_GoodsInfo.ValueData                  AS GoodsInfoName
            , Object_LineFabrica.ValueData                AS LineFabricaName
            , Object_Label.ValueData                      AS LabelName
+           , Object_GoodsSize.Id                         AS GoodsSizeId
            , Object_GoodsSize.ValueData                  AS GoodsSizeName
 
            , tmpMI.Amount                      :: TFloat AS Amount
@@ -395,11 +396,12 @@ BEGIN
             - tmpMI.TotalChangePercentPay_sale
             - tmpMI.TotalPay_Sale
             - tmpMI.TotalPayOth_Sale
-              -- так минуснули Возврат
+              -- так минуснули Возвраты (проведенные)
             - tmpMI.TotalReturn
+            + tmpMI.TotalPay_Return
               -- если НЕ ПРОВЕЛИ - уменьшаем Долг на сумму из тек. документа
-            - CASE WHEN vbStatusId = zc_Enum_Status_UnComplete() THEN tmpMI.TotalPay ELSE 0 END
-            - CASE WHEN vbStatusId = zc_Enum_Status_UnComplete() THEN tmpMI.TotalChangePercent ELSE 0 END
+            - CASE WHEN vbStatusId = zc_Enum_Status_UnComplete() THEN zfCalc_SummPriceList (tmpMI.Amount, tmpMI.OperPriceList_Sale) - tmpMI.TotalChangePercent ELSE 0 END
+            + CASE WHEN vbStatusId = zc_Enum_Status_UnComplete() THEN tmpMI.TotalPay ELSE 0 END
              ) :: TFloat AS SummDebt
 
              -- % Скидки
@@ -412,18 +414,31 @@ BEGIN
              -- Итого сумма Скидки - все "Расчеты покупателей"
            , tmpMI.TotalChangePercentPay_sale                   :: TFloat AS TotalChangePercentPay
 
-             -- Сумма к оплате
-           , (zfCalc_SummPriceList (tmpMI.Amount_Sale, tmpMI.OperPriceList_Sale)
+             -- Сумма к возврату оплаты
+           , CASE WHEN tmpMI.Amount = 0
+                       THEN 0
+                  WHEN tmpMI.Amount = tmpMI.Amount_Sale
+                       THEN tmpMI.TotalPay_Sale
+                          + tmpMI.TotalPayOth_Sale
+                          - tmpMI.TotalPay_Return
+                            -- если ПРОВЕЛИ - вернем обратно сумму Оплаты из тек. документа
+                          + CASE WHEN vbStatusId = zc_Enum_Status_Complete() THEN tmpMI.TotalPay ELSE 0 END
+                  ELSE
+             -1 *
+             (zfCalc_SummPriceList (tmpMI.Amount_Sale, tmpMI.OperPriceList_Sale)
             - tmpMI.TotalChangePercent_sale
             - tmpMI.TotalChangePercentPay_sale
             - tmpMI.TotalPay_Sale
             - tmpMI.TotalPayOth_Sale
-              -- так минуснули Возврат
+              -- так минуснули Возвраты (проведенные)
             - tmpMI.TotalReturn
+            + tmpMI.TotalPay_Return
               -- если НЕ ПРОВЕЛИ - уменьшаем Долг на сумму из тек. документа
-            + CASE WHEN vbStatusId = zc_Enum_Status_Complete() THEN tmpMI.TotalPay ELSE 0 END
-            + CASE WHEN vbStatusId = zc_Enum_Status_Complete() THEN tmpMI.TotalChangePercent ELSE 0 END
-             ) :: TFloat AS TotalSummToPay
+            - CASE WHEN vbStatusId = zc_Enum_Status_UnComplete() THEN zfCalc_SummPriceList (tmpMI.Amount, tmpMI.OperPriceList_Sale) - tmpMI.TotalChangePercent ELSE 0 END
+            + CASE WHEN vbStatusId = zc_Enum_Status_UnComplete() THEN tmpMI.TotalPay ELSE 0 END
+              -- вернем обратно сумму из тек. документа
+            - tmpMI.TotalPay
+             ) END :: TFloat AS TotalSummToPay
 
            , tmpMI_Child.Amount_GRN            :: TFloat AS TotalPay_Grn
            , tmpMI_Child.Amount_USD            :: TFloat AS TotalPay_USD
@@ -555,9 +570,10 @@ BEGIN
    , tmpContainer AS (SELECT Container.*
                       FROM tmpMI_Master
                            INNER JOIN Container ON Container.PartionId     = tmpMI_Master.PartionId
-                                               AND Container.ObjectId      = tmpMI_Master.GoodsId
                                                AND Container.WhereObjectId = vbUnitId
                                                AND Container.DescId        = zc_Container_count()
+                                               -- !!!обязательно условие, т.к. мог меняться GoodsId и тогда в Container - несколько строк!!!
+                                               AND Container.ObjectId      = tmpMI_Master.GoodsId
                            LEFT JOIN ContainerLinkObject AS CLO_Client
                                                          ON CLO_Client.ContainerId = Container.Id
                                                         AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
@@ -577,6 +593,7 @@ BEGIN
            , Object_GoodsInfo.ValueData                                   AS GoodsInfoName
            , Object_LineFabrica.ValueData                                 AS LineFabricaName
            , Object_Label.ValueData                                       AS LabelName
+           , Object_GoodsSize.Id                                          AS GoodsSizeId
            , Object_GoodsSize.ValueData                                   AS GoodsSizeName
 
            , tmpMI.Amount                                       :: TFloat AS Amount
@@ -618,11 +635,12 @@ BEGIN
             - COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)
             - COALESCE (MIFloat_TotalPay.ValueData, 0)
             - COALESCE (MIFloat_TotalPayOth.ValueData, 0)
-              -- так минуснули Возврат
+              -- так минуснули Возвраты (проведенные)
             - COALESCE (MIFloat_TotalReturn.ValueData, 0)
+            + COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
               -- если НЕ ПРОВЕЛИ - уменьшаем Долг на сумму из тек. документа
-            - CASE WHEN vbStatusId = zc_Enum_Status_UnComplete() THEN tmpMI.TotalPay ELSE 0 END
-            - CASE WHEN vbStatusId = zc_Enum_Status_UnComplete() THEN tmpMI.TotalChangePercent ELSE 0 END
+            - CASE WHEN vbStatusId = zc_Enum_Status_UnComplete() THEN zfCalc_SummPriceList (tmpMI.Amount, MIFloat_OperPriceList.ValueData) - tmpMI.TotalChangePercent ELSE 0 END
+            + CASE WHEN vbStatusId = zc_Enum_Status_UnComplete() THEN tmpMI.TotalPay ELSE 0 END
              ) :: TFloat AS SummDebt
 
              -- % Скидки
@@ -634,18 +652,31 @@ BEGIN
              -- Итого сумма Скидки - все "Расчеты покупателей"
            , COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0) :: TFloat AS TotalChangePercentPay
 
-             -- Сумма к оплате
-           , (zfCalc_SummPriceList (MI_Sale.Amount, MIFloat_OperPriceList.ValueData)
+             -- Сумма к возврату оплаты
+           , CASE WHEN tmpMI.Amount = 0
+                       THEN 0
+                  WHEN tmpMI.Amount = MI_Sale.Amount
+                       THEN COALESCE (MIFloat_TotalPay.ValueData, 0)
+                          + COALESCE (MIFloat_TotalPayOth.ValueData, 0)
+                          - COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
+                            -- если ПРОВЕЛИ - вернем обратно сумму Оплаты из тек. документа
+                          + CASE WHEN vbStatusId = zc_Enum_Status_Complete() THEN tmpMI.TotalPay ELSE 0 END
+                  ELSE
+             -1 *
+             (zfCalc_SummPriceList (MI_Sale.Amount, MIFloat_OperPriceList.ValueData)
             - COALESCE (MIFloat_TotalChangePercent.ValueData, 0)
             - COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)
             - COALESCE (MIFloat_TotalPay.ValueData, 0)
             - COALESCE (MIFloat_TotalPayOth.ValueData, 0)
-              -- так минуснули Возврат
+              -- так минуснули Возвраты (проведенные)
             - COALESCE (MIFloat_TotalReturn.ValueData, 0)
-              -- если ПРОВЕЛИ - вернем обратно суммы из тек. документа
-            + CASE WHEN vbStatusId = zc_Enum_Status_Complete() THEN tmpMI.TotalPay ELSE 0 END
-            + CASE WHEN vbStatusId = zc_Enum_Status_Complete() THEN tmpMI.TotalChangePercent ELSE 0 END
-             ) :: TFloat AS TotalSummToPay
+            + COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
+              -- если НЕ ПРОВЕЛИ - уменьшаем Долг на сумму из тек. документа
+            - CASE WHEN vbStatusId = zc_Enum_Status_UnComplete() THEN zfCalc_SummPriceList (tmpMI.Amount, MIFloat_OperPriceList.ValueData) - tmpMI.TotalChangePercent ELSE 0 END
+            + CASE WHEN vbStatusId = zc_Enum_Status_UnComplete() THEN tmpMI.TotalPay ELSE 0 END
+              -- вернем обратно сумму из тек. документа
+            - tmpMI.TotalPay
+             ) END :: TFloat AS TotalSummToPay
 
            , tmpMI_Child.Amount_GRN                             :: TFloat AS TotalPay_Grn
            , tmpMI_Child.Amount_USD                             :: TFloat AS TotalPay_USD

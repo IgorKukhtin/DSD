@@ -46,7 +46,7 @@ BEGIN
                   FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect )
                 
    , tmpContainer_Count AS (SELECT Container.Id                    AS ContainerId
-                                 , CLO_Location.ObjectId           AS LocationId 
+                                 , COALESCE (CLO_Client.ObjectId, CLO_Location.ObjectId) AS LocationId 
                                  , Container.ObjectId              AS GoodsId
                                  , Container.PartionId             AS PartionId
                                  , Object_PartionGoods.GoodsSizeId AS GoodsSizeId
@@ -62,11 +62,12 @@ BEGIN
                                  LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = Container.PartionId                                         
                             WHERE ((Object_PartionGoods.GoodsSizeId = inGoodsSizeId AND inisGoodsSize = False) OR (inisGoodsSize = True))
                               AND ((Object_PartionGoods.MovementItemId = inPartionId AND inisPartion = False) OR (inisPartion = True AND (Object_PartionGoods.MovementId = inMovementId OR inMovementId = 0 )))
-                              AND CLO_Client.ContainerId IS NULL -- !!!т.е. без Долгов Покупателя!!!
+                              -- AND CLO_Client.ContainerId IS NULL -- !!!т.е. без Долгов Покупателя!!!
                            )
                                
    , tmpMI_Count AS (SELECT tmpContainer_Count.ContainerId
                           , tmpContainer_Count.LocationId
+                          , MIContainer.ObjectExtId_Analyzer AS LocationId_by
                           , tmpContainer_Count.GoodsId
                           , tmpContainer_Count.PartionId
                           , tmpContainer_Count.GoodsSizeId
@@ -96,6 +97,7 @@ BEGIN
                                                                         AND (MIContainer.OperDate >= inStartDate OR inisPeriod = TRUE)
                      GROUP BY tmpContainer_Count.ContainerId
                             , tmpContainer_Count.LocationId
+                            , MIContainer.ObjectExtId_Analyzer
                             , tmpContainer_Count.GoodsId
                             , tmpContainer_Count.PartionId
                             , tmpContainer_Count.GoodsSizeId
@@ -146,6 +148,7 @@ BEGIN
    , tmpMIContainer_group AS (SELECT tmpMIContainer_all.MovementId
                                    , tmpMIContainer_all.MovementItemId
                                    , tmpMIContainer_all.LocationId
+                                   , tmpMIContainer_all.LocationId_by
                                    , tmpMIContainer_all.GoodsId
                                    , CASE WHEN inisPartion = TRUE THEN tmpMIContainer_all.PartionId ELSE 0 END AS PartionId
                                    , tmpMIContainer_all.GoodsSizeId
@@ -183,6 +186,7 @@ BEGIN
                                            , 0 AS MovementItemId
                                            , tmpMI_Count.ContainerId
                                            , tmpMI_Count.LocationId
+                                           , 0 AS LocationId_by
                                            , tmpMI_Count.GoodsId
                                            , tmpMI_Count.PartionId
                                            , tmpMI_Count.GoodsSizeId
@@ -208,6 +212,7 @@ BEGIN
                                            , tmpMI_Count.MovementItemId
                                            , tmpMI_Count.ContainerId
                                            , tmpMI_Count.LocationId
+                                           , tmpMI_Count.LocationId_by
                                            , tmpMI_Count.GoodsId
                                            , tmpMI_Count.PartionId
                                            , tmpMI_Count.GoodsSizeId
@@ -226,6 +231,7 @@ BEGIN
                                GROUP BY tmpMIContainer_all.MovementId
                                       , tmpMIContainer_all.MovementItemId
                                       , tmpMIContainer_all.LocationId
+                                      , tmpMIContainer_all.LocationId_by
                                       , tmpMIContainer_all.GoodsId
                                       , CASE WHEN inisPartion = TRUE THEN tmpMIContainer_all.PartionId ELSE 0 END
                                       , tmpMIContainer_all.GoodsSizeId
@@ -244,8 +250,13 @@ BEGIN
         , CASE WHEN tmpMIContainer_group.MovementId <= 0 THEN NULL ELSE tmpMIContainer_group.isActive END :: Boolean AS isActive
         , CASE WHEN tmpMIContainer_group.MovementId <= 0 THEN TRUE ELSE FALSE END :: Boolean AS isRemains
      
+        , ObjectDesc_Location.ItemName           AS LocationDescName
         , Object_Location.ObjectCode             AS LocationCode
         , Object_Location.ValueData              AS LocationName
+
+        , ObjectDesc_Location_by.ItemName        AS LocationDescName_by
+        , Object_Location_by.ObjectCode          AS LocationCode_by
+        , Object_Location_by.ValueData           AS LocationName_by
 
         , Object_GoodsSize.ValueData             AS GoodsSizeName
         , Object_Currency.ValueData              AS CurrencyName
@@ -328,9 +339,13 @@ BEGIN
                                    AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
         LEFT JOIN tmpPrice ON 1=1
 
-        LEFT JOIN Object AS Object_Location  ON Object_Location.Id  = tmpMIContainer_group.LocationId
-        LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = tmpMIContainer_group.GoodsSizeId
-        LEFT JOIN Object AS Object_Currency  ON Object_Currency.Id  = tmpMIContainer_group.CurrencyId
+        LEFT JOIN Object AS Object_Location    ON Object_Location.Id    = tmpMIContainer_group.LocationId
+        LEFT JOIN Object AS Object_Location_by ON Object_Location_by.Id = tmpMIContainer_group.LocationId_by
+        LEFT JOIN Object AS Object_GoodsSize   ON Object_GoodsSize.Id   = tmpMIContainer_group.GoodsSizeId
+        LEFT JOIN Object AS Object_Currency    ON Object_Currency.Id    = tmpMIContainer_group.CurrencyId
+
+        LEFT JOIN ObjectDesc AS ObjectDesc_Location    ON ObjectDesc_Location.Id    = Object_Location.DescId
+        LEFT JOIN ObjectDesc AS ObjectDesc_Location_by ON ObjectDesc_Location_by.Id = Object_Location_by.DescId
 
         LEFT JOIN lfSelect_Movement_Currency_byDate (inOperDate:= inStartDate, inCurrencyFromId:= zc_Currency_Basis(), inCurrencyToId:= tmpMIContainer_group.CurrencyId) AS tmpCurrency_Start ON 1=1
         LEFT JOIN lfSelect_Movement_Currency_byDate (inOperDate:= inEndDate, inCurrencyFromId:= zc_Currency_Basis(), inCurrencyToId:= tmpMIContainer_group.CurrencyId) AS tmpCurrency_End ON 1=1

@@ -1037,4 +1037,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpComplete_Movement_GoodsAccount (inMovementId:= 241325, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpComplete_Movement_GoodsAccount (inMovementId:= 354046, inSession:= zfCalc_UserAdmin())

@@ -160,7 +160,7 @@ type
     cxLabel15: TcxLabel;
     edStartDate: TcxDateEdit;
     edEndDate: TcxDateEdit;
-    PartionMI_Id: TcxGridDBColumn;
+    PartionId: TcxGridDBColumn;
     SaleMI_Id: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
     actOpenReportForm: TdsdOpenForm;

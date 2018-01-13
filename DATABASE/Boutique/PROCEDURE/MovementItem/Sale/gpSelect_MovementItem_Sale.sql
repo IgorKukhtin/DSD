@@ -1,12 +1,9 @@
 -- Function: gpSelect_MovementItem_Sale()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_Sale (Integer, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_Sale (Integer, Boolean, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Sale(
     IN inMovementId       Integer      , -- ключ Документа
---    IN inShowAll          Boolean      , --
     IN inIsErased         Boolean      , --
     IN inSession          TVarChar       -- сессия пользователя
 )
@@ -234,10 +231,11 @@ BEGIN
 
            , tmpMI.CurrencyValue            :: TFloat AS CurrencyValue
            , tmpMI.ParValue                 :: TFloat AS ParValue
-           , tmpMI.ChangePercent            :: TFloat AS ChangePercent         -- % Скидки
-           , tmpMI.SummChangePercent        :: TFloat AS SummChangePercent     -- Дополнительная скидка в продаже ГРН
-           , tmpMI.TotalChangePercent       :: TFloat AS TotalChangePercent    -- Итого скидка в продаже ГРН
-           , tmpMI.TotalChangePercentPay    :: TFloat AS TotalChangePercentPay -- Дополнительная скидка в расчетах ГРН
+
+           , tmpMI.ChangePercent                                  :: TFloat AS ChangePercent         -- % Скидки
+           , tmpMI.SummChangePercent                              :: TFloat AS SummChangePercent     -- Итого сумма Скидки: 2)дополнительная
+           , (tmpMI.TotalChangePercent - tmpMI.SummChangePercent) :: TFloat AS TotalChangePercent    -- Итого сумма Скидки: 1)по %скидки
+           , tmpMI.TotalChangePercentPay                          :: TFloat AS TotalChangePercentPay -- Дополнительная скидка в расчетах ГРН
 
              -- Сумма к оплате ГРН
            , (zfCalc_SummPriceList (tmpMI.Amount, tmpMI.OperPriceList) - tmpMI.TotalChangePercent) :: TFloat AS TotalSummToPay

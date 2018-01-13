@@ -377,8 +377,9 @@ BEGIN
             - tmpMI.TotalChangePercentPay_sale
             - tmpMI.TotalPay_Sale
             - tmpMI.TotalPayOth_Sale
-              -- так минуснули Возврат
+              -- так минуснули Возвраты (проведенные)
             - tmpMI.TotalReturn
+            + tmpMI.TotalPay_Return
               -- если НЕ ПРОВЕЛИ - уменьшаем Долг на сумму из тек. документа
             - CASE WHEN vbStatusId = zc_Enum_Status_UnComplete() THEN tmpMI.TotalPay ELSE 0 END
             - CASE WHEN vbStatusId = zc_Enum_Status_UnComplete() THEN tmpMI.SummChangePercent ELSE 0 END
@@ -400,8 +401,9 @@ BEGIN
             - tmpMI.TotalChangePercentPay_sale
             - tmpMI.TotalPay_Sale
             - tmpMI.TotalPayOth_Sale
-              -- так минуснули Возврат
+              -- так минуснули Возвраты (проведенные)
             - tmpMI.TotalReturn
+            + tmpMI.TotalPay_Return
               -- если НЕ ПРОВЕЛИ - уменьшаем Долг на сумму из тек. документа
             + CASE WHEN vbStatusId = zc_Enum_Status_Complete() THEN tmpMI.TotalPay ELSE 0 END
             + CASE WHEN vbStatusId = zc_Enum_Status_Complete() THEN tmpMI.SummChangePercent ELSE 0 END
@@ -579,8 +581,9 @@ BEGIN
             - COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)
             - COALESCE (MIFloat_TotalPay.ValueData, 0)
             - COALESCE (MIFloat_TotalPayOth.ValueData, 0)
-              -- так минуснули Возврат
+              -- так минуснули Возвраты (проведенные)
             - COALESCE (MIFloat_TotalReturn.ValueData, 0)
+            + COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
               -- если НЕ ПРОВЕЛИ - уменьшаем Долг на сумму из тек. документа
             - CASE WHEN vbStatusId = zc_Enum_Status_UnComplete() THEN tmpMI.TotalPay ELSE 0 END
             - CASE WHEN vbStatusId = zc_Enum_Status_UnComplete() THEN tmpMI.SummChangePercent ELSE 0 END
@@ -601,8 +604,9 @@ BEGIN
             - COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)
             - COALESCE (MIFloat_TotalPay.ValueData, 0)
             - COALESCE (MIFloat_TotalPayOth.ValueData, 0)
-              -- так минуснули Возврат
+              -- так минуснули Возвраты (проведенные)
             - COALESCE (MIFloat_TotalReturn.ValueData, 0)
+            + COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
               -- если ПРОВЕЛИ - вернем обратно суммы из тек. документа
             + CASE WHEN vbStatusId = zc_Enum_Status_Complete() THEN tmpMI.TotalPay ELSE 0 END
             + CASE WHEN vbStatusId = zc_Enum_Status_Complete() THEN tmpMI.SummChangePercent ELSE 0 END
