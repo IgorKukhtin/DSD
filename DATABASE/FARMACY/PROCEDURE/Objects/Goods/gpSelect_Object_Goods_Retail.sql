@@ -219,12 +219,11 @@ BEGIN
          -- вытягиваем из LoadPriceListItem.GoodsNDS по входящему Договору поставщика (inContractId)
          , tmpPricelistItems AS (SELECT tmp.GoodsMainId
                                       , tmp.GoodsNDS
-                                      , MAX (tmp.Ord) AS Ord
+                                      , ROW_NUMBER() OVER (PARTITION BY tmp.GoodsMainId  ORDER BY tmp.GoodsMainId, tmp.GoodsNDS) AS Ord
                                  FROM
                                      (SELECT DISTINCT
                                              LoadPriceListItem.GoodsId      AS GoodsMainId
                                            , CAST (REPLACE (REPLACE ( REPLACE (LoadPriceListItem.GoodsNDS , '%', ''), 'НДС', '') , ',', '.') AS TFloat) AS GoodsNDS
-                                           , ROW_NUMBER() OVER (PARTITION BY LoadPriceListItem.GoodsId  ORDER BY LoadPriceListItem.GoodsCode) AS Ord
                                       FROM LoadPriceList
                                            INNER JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
                                       WHERE (LoadPriceList.ContractId = inContractId AND inContractId <> 0)
