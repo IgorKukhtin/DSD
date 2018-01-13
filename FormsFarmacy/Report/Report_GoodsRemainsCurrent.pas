@@ -59,6 +59,7 @@ type
     NDS_PriceList: TcxGridDBColumn;
     isNDS_PriceList_dif: TcxGridDBColumn;
     isNDS_dif: TcxGridDBColumn;
+    PercentMarkup: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -23,8 +23,6 @@ inherited Report_GoodsRemainsCurrentForm: TReport_GoodsRemainsCurrentForm
       inherited cxGrid: TcxGrid
         Width = 1134
         Height = 273
-        ExplicitLeft = -336
-        ExplicitTop = 32
         ExplicitWidth = 1134
         ExplicitHeight = 273
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -64,6 +62,11 @@ inherited Report_GoodsRemainsCurrentForm: TReport_GoodsRemainsCurrentForm
             item
               Format = ',0.00'
               Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummaRemains
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -114,6 +117,11 @@ inherited Report_GoodsRemainsCurrentForm: TReport_GoodsRemainsCurrentForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummaRemains
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -278,6 +286,26 @@ inherited Report_GoodsRemainsCurrentForm: TReport_GoodsRemainsCurrentForm
             Options.Editing = False
             Width = 87
           end
+          object MinPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' ('#1084#1080#1085')'
+            DataBinding.FieldName = 'MinPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
+          object MaxPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' ('#1084#1072#1082#1089')'
+            DataBinding.FieldName = 'MaxPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
           object SummaWithVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'SummaWithVAT'
@@ -297,6 +325,17 @@ inherited Report_GoodsRemainsCurrentForm: TReport_GoodsRemainsCurrentForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 102
+          end
+          object SummaRemains: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1086#1089#1090#1072#1090#1086#1082
+            DataBinding.FieldName = 'SummaRemains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object PartionDescName: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103' '#1042#1080#1076
@@ -431,6 +470,16 @@ inherited Report_GoodsRemainsCurrentForm: TReport_GoodsRemainsCurrentForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
+            Width = 60
+          end
+          object PercentMarkup: TcxGridDBColumn
+            Caption = '% '#1085#1072#1094#1077#1085#1082#1080
+            DataBinding.FieldName = 'PercentMarkup'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
         end
