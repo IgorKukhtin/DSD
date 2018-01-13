@@ -145,10 +145,6 @@
     TabOrder = 2
     object TabSheet1: TTabSheet
       Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080' - '#1044#1086#1082#1091#1084#1077#1085#1090#1099
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GuidePanel: TPanel
         Left = 0
         Top = 0
@@ -880,6 +876,34 @@
           ParentFont = False
           TabOrder = 19
         end
+        object cbMovementNotOne: TCheckBox
+          Left = 54
+          Top = 273
+          Width = 51
+          Height = 17
+          Caption = '1 '#1053#1045#1058
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 20
+        end
+        object cbMINotTwo: TCheckBox
+          Left = 111
+          Top = 273
+          Width = 51
+          Height = 17
+          Caption = '2 '#1053#1045#1058
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 21
+        end
       end
       object CompleteDocumentPanel: TPanel
         Left = 379
@@ -1171,10 +1195,6 @@
     object TabSheet2: TTabSheet
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' '#1092#1072#1081#1083#1086#1074
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 0

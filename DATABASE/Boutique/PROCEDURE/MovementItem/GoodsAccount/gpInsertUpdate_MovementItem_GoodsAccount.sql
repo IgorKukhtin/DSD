@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_GoodsAccount(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId             Integer   , -- Ключ объекта <Документ>
     IN inPartionId              Integer   , -- Партия
-    IN inMovementMI_Id          Integer   , -- Партия элемента продажа/возврат
+    IN inSaleMI_Id              Integer   , -- Партия элемента продажа/возврат
     IN inIsPay                  Boolean   , -- добавить с оплатой
     IN inAmount                 TFloat    , -- Количество
    OUT outTotalPay              TFloat    , -- 
@@ -39,7 +39,7 @@ BEGIN
 
 
      -- определяем Партию элемента продажи/возврата
-     vbPartionMI_Id := lpInsertFind_Object_PartionMI (inMovementMI_Id);
+     vbPartionMI_Id := lpInsertFind_Object_PartionMI (inSaleMI_Id);
 
      -- данные из партии : GoodsId
      vbGoodsId:= (SELECT Object_PartionGoods.GoodsId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inPartionId);

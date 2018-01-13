@@ -127,7 +127,6 @@ type
     edTotalDebt: TcxCurrencyEdit;
     bbUpdateRecord1: TdxBarButton;
     actRefreshMI: TdsdDataSetRefresh;
-    PartionId: TcxGridDBColumn;
     edHappyDate: TcxDateEdit;
     cxLabel8: TcxLabel;
     cxLabel9: TcxLabel;
@@ -175,6 +174,16 @@ type
     spGet_Partion_byBarcode: TdsdStoredProc;
     spInsertUpdateMIMaster_BarCode: TdsdStoredProc;
     ChangePercent: TcxGridDBColumn;
+    OperDate_Sale: TcxGridDBColumn;
+    InvNumber_Sale_Full: TcxGridDBColumn;
+    TotalPay_Sale: TcxGridDBColumn;
+    TotalPayOth_Sale: TcxGridDBColumn;
+    TotalPay_Return: TcxGridDBColumn;
+    SummDebt: TcxGridDBColumn;
+    SummChangePercent_sale: TcxGridDBColumn;
+    TotalChangePercent_sale: TcxGridDBColumn;
+    TotalChangePercent: TcxGridDBColumn;
+    TotalPayOth: TcxGridDBColumn;
   private
   public
   end;

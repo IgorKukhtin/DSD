@@ -115,22 +115,22 @@ BEGIN
 
                -- Итого сумма Скидки - 1) + 2) + 3) + 4)дополнительная для текущего документа
           -- , tmp.TotalChangePercent
-             , zfCalc_SummPriceList (tmp.Amount_begin, tmp.OperPriceList) - zfCalc_SummChangePercent (tmp.Amount_begin, tmp.OperPriceList, tmp.ChangePercent)
-             + CASE WHEN tmp.Amount_begin > 0 THEN FLOOR (100 * tmp.SummChangePercent / tmp.Amount * tmp.Amount_begin) / 100 ELSE 0 END
+             , tmp.SummChangePercent_pl
+             + CASE WHEN tmp.Amount_begin > 0 THEN ROUND (tmp.SummChangePercent / tmp.Amount * tmp.Amount_begin, 2) ELSE 0 END
              + tmp.TotalChangePercentPay + tmp.SummChangePercent_curr
                AS TotalChangePercent
 
              , tmp.TotalPay           -- Итого сумма оплаты - 1) + 2) + 3)в текущем документе
              , tmp.TotalPay_curr      -- Итого сумма оплаты - в текущем документе
 
-                     -- Сезонная скидка - Только для %
-             , CASE WHEN tmp.DiscountSaleKindId = zc_Enum_DiscountSaleKind_Period() THEN zfCalc_SummPriceList (tmp.Amount_begin, tmp.OperPriceList) - zfCalc_SummChangePercent (tmp.Amount_begin, tmp.OperPriceList, tmp.ChangePercent) ELSE 0 END AS Summ_10201
+               -- Сезонная скидка - Только для %
+             , CASE WHEN tmp.DiscountSaleKindId = zc_Enum_DiscountSaleKind_Period() THEN tmp.SummChangePercent_pl ELSE 0 END AS Summ_10201
                -- Скидка outlet - Только для %
-             , CASE WHEN tmp.DiscountSaleKindId = zc_Enum_DiscountSaleKind_Outlet() THEN zfCalc_SummPriceList (tmp.Amount_begin, tmp.OperPriceList) - zfCalc_SummChangePercent (tmp.Amount_begin, tmp.OperPriceList, tmp.ChangePercent) ELSE 0 END AS Summ_10202
+             , CASE WHEN tmp.DiscountSaleKindId = zc_Enum_DiscountSaleKind_Outlet() THEN tmp.SummChangePercent_pl ELSE 0 END AS Summ_10202
                -- Скидка клиента - Только для %
-             , CASE WHEN tmp.DiscountSaleKindId = zc_Enum_DiscountSaleKind_Client() THEN zfCalc_SummPriceList (tmp.Amount_begin, tmp.OperPriceList) - zfCalc_SummChangePercent (tmp.Amount_begin, tmp.OperPriceList, tmp.ChangePercent) ELSE 0 END AS Summ_10203
+             , CASE WHEN tmp.DiscountSaleKindId = zc_Enum_DiscountSaleKind_Client() THEN tmp.SummChangePercent_pl ELSE 0 END AS Summ_10203
                -- Скидка дополнительная - иначе почти пропроционально - отбросим дробную часть после второго знака
-             , CASE WHEN tmp.Amount_begin > 0 THEN FLOOR (100 * tmp.SummChangePercent / tmp.Amount * tmp.Amount_begin) / 100 ELSE 0 END
+             , CASE WHEN tmp.Amount_begin > 0 THEN ROUND (tmp.SummChangePercent / tmp.Amount * tmp.Amount_begin, 2) ELSE 0 END
              + tmp.TotalChangePercentPay + tmp.SummChangePercent_curr AS Summ_10204
                
              , 0 AS AccountId          -- Счет(справочника), сформируем позже
@@ -153,6 +153,15 @@ BEGIN
                                     tmp.Amount - tmp.Amount_Return
                           ELSE 0
                      END AS Amount_begin
+                     -- !!!самое Важное - определить для Amount_begin Скидка - Только для %!!!
+                   , CASE WHEN tmp.SummDebt_sale = 0
+                               THEN -- то что в продаже
+                                    zfCalc_SummPriceList (tmp.Amount, tmp.OperPriceList) - zfCalc_SummChangePercent (tmp.Amount, tmp.OperPriceList, tmp.ChangePercent)
+                          WHEN tmp.SummDebt_return = 0
+                               THEN -- продажа МИНУС возврат
+                                    zfCalc_SummPriceList (tmp.Amount - tmp.Amount_Return, tmp.OperPriceList) - zfCalc_SummChangePercent (tmp.Amount - tmp.Amount_Return, tmp.OperPriceList, tmp.ChangePercent)
+                          ELSE 0
+                     END AS SummChangePercent_pl
                      -- !!!самое Важное - определить Долг!!!
                    , CASE WHEN tmp.SummDebt_sale = 0
                                THEN -- то что в продаже

@@ -18,209 +18,286 @@ RETURNS TABLE (Id Integer, PartionId Integer
              , GoodsInfoName TVarChar
              , LineFabricaName TVarChar
              , LabelName TVarChar
-             , GoodsSizeId Integer, GoodsSizeName TVarChar
-             , Amount TFloat, Amount_Sale TFloat, Amount_Return TFloat, Remains TFloat
+             , GoodsSizeName TVarChar
+
+             , Amount TFloat, Amount_Sale TFloat, Remains TFloat
              , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat
-             , TotalSumm TFloat
-             , TotalSummBalance TFloat             
-             , TotalSummPriceList TFloat
+               -- Итого сумма вх. + прайс (в прод.)
+             , TotalSumm TFloat, TotalSummBalance TFloat, TotalSummPriceList TFloat
+               -- Итого сумма вх. + прайс (текущий возврат)
+             , TotalSumm_return TFloat, TotalSummBalance_return TFloat, TotalSummPriceList_return TFloat
+
+               -- Курс для перевода из валюты партии в ГРН
              , CurrencyValue TFloat, ParValue TFloat
-             , TotalChangePercent TFloat
-             , TotalSummToPay TFloat, TotalSummPay_Sale TFloat
+
+               -- Итого сумма оплаты - для "текущего" документа Продажи
+             , TotalPay_Sale TFloat
+               -- Итого сумма оплаты - все "Расчеты покупателей"
+             , TotalPayOth_Sale TFloat
+
+               -- возвраты
+             , Amount_Return TFloat, TotalReturn TFloat, TotalPay_Return TFloat
+               -- долг
+             , SummDebt TFloat
+               -- % Скидки
+             , ChangePercent TFloat
+               -- Итого сумма Скидки - для "текущего" документа Продажи: 2)дополнительная
+             , SummChangePercent_sale TFloat
+               -- Итого сумма Скидки - для "текущего" документа Продажи: 1)по %скидки
+             , TotalChangePercent_sale TFloat
+               -- Итого сумма Скидки - все "Расчеты покупателей"
+             , TotalChangePercentPay TFloat
+
+             , TotalSummToPay TFloat
              , TotalPay_Grn TFloat, TotalPay_USD TFloat, TotalPay_Eur TFloat, TotalPay_Card TFloat
-             , TotalPay TFloat, TotalPayOth TFloat
+             , TotalPay TFloat, TotalPayOth TFloat, TotalChangePercent TFloat
 
              , Amount_USD_Exc    TFloat
              , Amount_EUR_Exc    TFloat
              , Amount_GRN_Exc    TFloat
              
-             , PartionMI_Id Integer, SaleMI_Id Integer, MovementId_Sale Integer, InvNumber_Sale_Full TVarChar
-             , BarCode TVarChar
+             , SaleMI_Id Integer
+             , MovementId_Sale Integer, InvNumber_Sale_Full TVarChar
+             , OperDate_Sale TDateTime , DescName TVarChar
              , Comment TVarChar
              , isErased Boolean
               )
 AS
 $BODY$
   DECLARE vbUserId Integer;
-  DECLARE vbUnitId Integer;
+
+  DECLARE vbStatusId Integer;
+  DECLARE vbUnitId   Integer;
   DECLARE vbClientId Integer;
-  DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_ReturnIn());
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- данные из шапки
-     SELECT Movement.OperDate
-          , MovementLinkObject_To.ObjectId
-          , MovementLinkObject_From.ObjectId
-    INTO vbOperDate, vbUnitId, vbClientId
+
+     -- Параметры документа
+     SELECT Movement.StatusId                AS StatusId
+          , MovementLinkObject_From.ObjectId AS ClientId
+          , MovementLinkObject_To.ObjectId   AS UnitId
+            INTO vbStatusId, vbClientId, vbUnitId
      FROM Movement 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = Movement.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                         ON MovementLinkObject_From.MovementId = Movement.Id
-                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                       ON MovementLinkObject_From.MovementId = Movement.Id
+                                      AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                       ON MovementLinkObject_To.MovementId = Movement.Id
+                                      AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
      WHERE Movement.Id = inMovementId;
 
 
-     IF inShowAll THEN
+     IF inShowAll = TRUE
+     THEN
      -- Результат такой
      RETURN QUERY 
-     WITH 
-            tmpSale AS (SELECT Movement.Id          AS MovementId_Sale
-                             , Movement.InvNumber   AS InvNumber_Sale
+     WITH
+         tmpMI_Sale AS (-- продажа покупателю
+                        SELECT Movement.Id                                        AS MovementId
+                             , Movement.DescId                                    AS DescId
+                             , Movement.OperDate                                  AS OperDate
+                             , Movement.InvNumber                                 AS InvNumber
+                             , MovementItem.Id                                    AS SaleMI_Id
+                             , MovementItem.PartionId                             AS PartionId
+                             , MovementItem.ObjectId                              AS GoodsId
+                             , MovementItem.Amount                                AS Amount
+                             , COALESCE (MIFloat_OperPriceList.ValueData, 0)      AS OperPriceList
+
+                               -- Итого сумма оплаты - для "текущего" документа Продажи
+                             , COALESCE (MIFloat_TotalPay.ValueData, 0)           AS TotalPay
+                               -- Итого сумма оплаты - все "Расчеты покупателей"
+                             , COALESCE (MIFloat_TotalPayOth.ValueData, 0)        AS TotalPayOth
+
+                               -- Итого количество возврата - все док-ты
+                             , COALESCE (MIFloat_TotalCountReturn.ValueData, 0)   AS Amount_Return
+                               -- Итого сумма возврата со скидкой  - все док-ты
+                             , COALESCE (MIFloat_TotalReturn.ValueData, 0)        AS TotalReturn
+                               -- Итого сумма возврата оплаты - все док-ты
+                             , COALESCE (MIFloat_TotalPayReturn.ValueData, 0)     AS TotalPayReturn
+
+                               -- Итого сумма Скидки - для "текущего" документа Продажи: 1)по %скидки + 2)дополнительная
+                             , COALESCE (MIFloat_TotalChangePercent.ValueData, 0) AS TotalChangePercent
+                               -- Итого сумма Скидки - все "Расчеты покупателей"
+                             , COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0) AS TotalChangePercentPay
+
                         FROM Movement
-                            INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                                          ON MovementLinkObject_To.MovementId = Movement.Id
-                                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                         AND MovementLinkObject_To.ObjectId = vbClientId
-                            INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                                          ON MovementLinkObject_From.MovementId = Movement.Id
-                                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                         AND MovementLinkObject_From.ObjectId = vbUnitId
-                        WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate 
-                          AND Movement.DescId = zc_Movement_Sale()
-                          AND Movement.StatusId = zc_Enum_Status_Complete()
-                        )
-
-      ,  tmpMI_Sale AS (SELECT tmpSale.MovementId_Sale
-                             , tmpSale.InvNumber_Sale
-                             , MI_Master.Id         AS MI_Id
-                             , MI_Master.PartionId  AS PartionId
-                             , MI_Master.ObjectId   AS GoodsId
-                             , MI_Master.Amount     AS Amount
-                             , COALESCE (MIFloat_OperPrice.ValueData, 0)       AS OperPrice
-                             , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice 
-                             , COALESCE (MIFloat_OperPriceList.ValueData, 0)   AS OperPriceList
-                             , COALESCE (MIFloat_CurrencyValue.ValueData, 0)   AS CurrencyValue
-                             , COALESCE (MIFloat_ParValue.ValueData, 0)        AS ParValue
-                             , COALESCE (MIFloat_TotalPay.ValueData, 0)        AS TotalPay
-                             , COALESCE (MIFloat_TotalCountReturn.ValueData,0) AS TotalCountReturn
-                        FROM tmpSale
-                             LEFT JOIN MovementItem AS MI_Master 
-                                                    ON MI_Master.MovementId = tmpSale.MovementId_Sale
-                                                   AND MI_Master.DescId = zc_MI_Master()
-                                                   AND MI_Master.isErased = False
-                             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                                         ON MIFloat_CountForPrice.MovementItemId = MI_Master.Id
-                                                        AND MIFloat_CountForPrice.DescId         = zc_MIFloat_CountForPrice()
-                             LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
-                                                         ON MIFloat_OperPrice.MovementItemId = MI_Master.Id
-                                                        AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()    
+                             INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                           ON MovementLinkObject_To.MovementId = Movement.Id
+                                                          AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                                          AND MovementLinkObject_To.ObjectId   = vbClientId
+                             INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                           ON MovementLinkObject_From.MovementId = Movement.Id
+                                                          AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                                                          AND MovementLinkObject_From.ObjectId   = vbUnitId
+                             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                   AND MovementItem.DescId     = zc_MI_Master()
+                                                   AND MovementItem.isErased   = FALSE
                              LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
-                                                         ON MIFloat_OperPriceList.MovementItemId = MI_Master.Id
+                                                         ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                                         AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
-                             LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValue
-                                                         ON MIFloat_CurrencyValue.MovementItemId = MI_Master.Id
-                                                        AND MIFloat_CurrencyValue.DescId         = zc_MIFloat_CurrencyValue()    
-                             LEFT JOIN MovementItemFloat AS MIFloat_ParValue
-                                                         ON MIFloat_ParValue.MovementItemId = MI_Master.Id
-                                                        AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue() 
+
+                             LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
+                                                         ON MIFloat_TotalChangePercent.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()
+                             LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercentPay
+                                                         ON MIFloat_TotalChangePercentPay.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_TotalChangePercentPay.DescId         = zc_MIFloat_TotalChangePercentPay()
+
                              LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
-                                                         ON MIFloat_TotalPay.MovementItemId = MI_Master.Id
-                                                        AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay() 
+                                                         ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
+                             LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth
+                                                         ON MIFloat_TotalPayOth.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth()
+
                              LEFT JOIN MovementItemFloat AS MIFloat_TotalCountReturn
-                                                         ON MIFloat_TotalCountReturn.MovementItemId = MI_Master.Id
-                                                        AND MIFloat_TotalCountReturn.DescId         = zc_MIFloat_TotalCountReturn() 
-                        WHERE MI_Master.Amount - COALESCE (MIFloat_TotalCountReturn.ValueData,0) > 0
-                      ) 
+                                                         ON MIFloat_TotalCountReturn.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_TotalCountReturn.DescId         = zc_MIFloat_TotalCountReturn()
+                             LEFT JOIN MovementItemFloat AS MIFloat_TotalReturn
+                                                         ON MIFloat_TotalReturn.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_TotalReturn.DescId         = zc_MIFloat_TotalReturn()
+                             LEFT JOIN MovementItemFloat AS MIFloat_TotalPayReturn
+                                                         ON MIFloat_TotalPayReturn.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()
+
+                        WHERE Movement.DescId   = zc_Movement_Sale()
+                          -- !!!ВРЕМЕННО - потом оставить только ПРОВЕДЕННЫЕ!!!
+                          AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                          -- ЗА ПЕРИОД
+                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                       )
  
-   , tmpMI_Master AS (SELECT MovementItem.Id
-                           , MovementItem.ObjectId                                 AS GoodsId
-                           , MovementItem.PartionId
-                           , MILinkObject_PartionMI.ObjectId                       AS PartionMI_Id
-                           , Object_PartionMI.ObjectCode                           AS SaleMI_ID
-                           , MovementItem.Amount 
-                           , COALESCE (MIFloat_OperPrice.ValueData, 0)             AS OperPrice
-                           , COALESCE (MIFloat_CountForPrice.ValueData, 1)         AS CountForPrice 
-                           , COALESCE (MIFloat_OperPriceList.ValueData, 0)         AS OperPriceList
-                           , COALESCE (MIFloat_CurrencyValue.ValueData, 0)         AS CurrencyValue
-                           , COALESCE (MIFloat_ParValue.ValueData, 0)              AS ParValue
-                           , COALESCE (MIFloat_TotalChangePercent.ValueData, 0)    AS TotalChangePercent
-                           , COALESCE (MIFloat_TotalPay.ValueData, 0)              AS TotalPay
-                           , COALESCE (MIFloat_TotalPayOth.ValueData, 0)           AS TotalPayOth
-                           , MIString_BarCode.ValueData                            AS BarCode
-                           , MIString_Comment.ValueData                            AS Comment
-                           , MovementItem.isErased
-                           , ROW_NUMBER() OVER (PARTITION BY MovementItem.isErased ORDER BY MovementItem.Id ASC) AS Ord
-                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-                            JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                             AND MovementItem.DescId     = zc_MI_Master()
-                                             AND MovementItem.isErased   = tmpIsErased.isErased
+     , tmpMI_Master AS (SELECT MI_Master.Id                                              AS MovementItemId
+                             , MI_Master.PartionId                                       AS PartionId
+                             , MI_Master.ObjectId                                        AS GoodsId
+                             , MI_Master.Amount                                          AS Amount_master
+                             , COALESCE (MIFloat_TotalChangePercent_master.ValueData, 0) AS TotalChangePercent_master
+                             , COALESCE (MIFloat_TotalPay_master.ValueData, 0)           AS TotalPay_master
+                             , COALESCE (MIFloat_TotalPayOth_master.ValueData, 0)        AS TotalPayOth_master
+                             , COALESCE (MIString_Comment_master.ValueData,'')           AS Comment_master
+                             , MI_Master.isErased                                        AS isErased
+                             , ROW_NUMBER() OVER (PARTITION BY MI_Master.isErased ORDER BY MI_Master.Id ASC) AS Ord
 
-                            LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_CountForPrice.DescId         = zc_MIFloat_CountForPrice()
-                            LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
-                                                        ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()    
-                            LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
-                                                        ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
+                             , Movement.Id                                        AS MovementId
+                             , Movement.DescId                                    AS DescId
+                             , Movement.OperDate                                  AS OperDate
+                             , Movement.InvNumber                                 AS InvNumber
+                             , Object_PartionMI.ObjectCode                        AS SaleMI_ID
+                             , MovementItem.Amount                                AS Amount
+                             , COALESCE (MIFloat_OperPriceList.ValueData, 0)      AS OperPriceList
 
-                            LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValue
-                                                        ON MIFloat_CurrencyValue.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_CurrencyValue.DescId         = zc_MIFloat_CurrencyValue()    
-                            LEFT JOIN MovementItemFloat AS MIFloat_ParValue
-                                                        ON MIFloat_ParValue.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue() 
-                            LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
-                                                        ON MIFloat_TotalChangePercent.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()    
-                            LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
-                                                        ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()    
-                            LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth
-                                                        ON MIFloat_TotalPayOth.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth()    
-                           
-                            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
-                                                             ON MILinkObject_PartionMI.MovementItemId = MovementItem.Id
-                                                            AND MILinkObject_PartionMI.DescId         = zc_MILinkObject_PartionMI()
-                            LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = MILinkObject_PartionMI.ObjectId
+                               -- Итого сумма оплаты - для "текущего" документа Продажи
+                             , COALESCE (MIFloat_TotalPay.ValueData, 0)           AS TotalPay
+                               -- Итого сумма оплаты - все "Расчеты покупателей"
+                             , COALESCE (MIFloat_TotalPayOth.ValueData, 0)        AS TotalPayOth
 
-                            LEFT JOIN MovementItemString AS MIString_BarCode
-                                                         ON MIString_BarCode.MovementItemId = MovementItem.Id
-                                                        AND MIString_BarCode.DescId         = zc_MIString_BarCode()
-                            LEFT JOIN MovementItemString AS MIString_Comment
-                                                         ON MIString_Comment.MovementItemId = MovementItem.Id
-                                                        AND MIString_Comment.DescId = zc_MIString_Comment()
+                               -- Итого количество возврата - все док-ты
+                             , COALESCE (MIFloat_TotalCountReturn.ValueData, 0)   AS Amount_Return
+                               -- Итого сумма возврата со скидкой  - все док-ты
+                             , COALESCE (MIFloat_TotalReturn.ValueData, 0)        AS TotalReturn
+                               -- Итого сумма возврата оплаты - все док-ты
+                             , COALESCE (MIFloat_TotalPayReturn.ValueData, 0)     AS TotalPayReturn
+
+                               -- Итого сумма Скидки - для "текущего" документа Продажи: 1)по %скидки + 2)дополнительная
+                             , COALESCE (MIFloat_TotalChangePercent.ValueData, 0) AS TotalChangePercent
+                               -- Итого сумма Скидки - все "Расчеты покупателей"
+                             , COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0) AS TotalChangePercentPay
+
+                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+                             JOIN MovementItem AS MI_Master
+                                               ON MI_Master.MovementId = inMovementId
+                                              AND MI_Master.DescId     = zc_MI_Master()
+                                              AND MI_Master.isErased   = tmpIsErased.isErased
+
+                             LEFT JOIN MovementItemString AS MIString_Comment_master
+                                                          ON MIString_Comment_master.MovementItemId = MI_Master.Id
+                                                         AND MIString_Comment_master.DescId         = zc_MIString_Comment()
+
+                             LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent_master
+                                                         ON MIFloat_TotalChangePercent_master.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_TotalChangePercent_master.DescId         = zc_MIFloat_TotalChangePercent()
+                             LEFT JOIN MovementItemFloat AS MIFloat_TotalPay_master
+                                                         ON MIFloat_TotalPay_master.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_TotalPay_master.DescId         = zc_MIFloat_TotalPay()
+                             LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth_master
+                                                         ON MIFloat_TotalPayOth_master.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_TotalPayOth_master.DescId         = zc_MIFloat_TotalPayOth()
+
+                             LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
+                                                              ON MILinkObject_PartionMI.MovementItemId = MI_Master.Id
+                                                             AND MILinkObject_PartionMI.DescId         = zc_MILinkObject_PartionMI()
+                             LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = MILinkObject_PartionMI.ObjectId
+                             LEFT JOIN MovementItem ON MovementItem.Id = Object_PartionMI.ObjectCode
+                             LEFT JOIN Movement     ON Movement.Id     = MovementItem.MovementId
+
+                             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
+                                                         ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
+
+                             LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
+                                                         ON MIFloat_TotalChangePercent.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()
+                             LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercentPay
+                                                         ON MIFloat_TotalChangePercentPay.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_TotalChangePercentPay.DescId         = zc_MIFloat_TotalChangePercentPay()
+
+                             LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
+                                                         ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
+                             LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth
+                                                         ON MIFloat_TotalPayOth.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth()
+
+                             LEFT JOIN MovementItemFloat AS MIFloat_TotalCountReturn
+                                                         ON MIFloat_TotalCountReturn.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_TotalCountReturn.DescId         = zc_MIFloat_TotalCountReturn()
+                             LEFT JOIN MovementItemFloat AS MIFloat_TotalReturn
+                                                         ON MIFloat_TotalReturn.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_TotalReturn.DescId         = zc_MIFloat_TotalReturn()
+                             LEFT JOIN MovementItemFloat AS MIFloat_TotalPayReturn
+                                                         ON MIFloat_TotalPayReturn.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()
                        )
                        
-          , tmpMI AS (SELECT COALESCE (tmpMI_Master.Id,0) AS Id
-                           , COALESCE (tmpMI_Master.GoodsId, tmpMI_Sale.GoodsId)     AS GoodsId
-                           , COALESCE (tmpMI_Master.PartionId, tmpMI_Sale.PartionId) AS PartionId
-                           , COALESCE (tmpMI_Master.PartionMI_Id, 0)                 AS PartionMI_Id
-                           , COALESCE (tmpMI_Sale.MI_Id, tmpMI_Master.SaleMI_ID)     AS SaleMI_Id
-                           , COALESCE (tmpMI_Master.Amount,0)                        AS Amount
-                           , COALESCE (tmpMI_Sale.Amount,0)                          AS Amount_Sale
-                           , COALESCE (tmpMI_Sale.TotalCountReturn,0)                AS TotalCountReturn
-                           , COALESCE (tmpMI_Master.OperPrice, tmpMI_Sale.OperPrice) AS OperPrice
-                           , COALESCE (tmpMI_Master.CountForPrice, tmpMI_Sale.CountForPrice) AS CountForPrice 
-                           , COALESCE (tmpMI_Master.OperPriceList, tmpMI_Sale.OperPriceList) AS OperPriceList
-                           , zfCalc_SummIn (tmpMI_Master.Amount,  COALESCE (tmpMI_Master.OperPrice, tmpMI_Sale.OperPrice), COALESCE (tmpMI_Master.CountForPrice, tmpMI_Sale.CountForPrice)) AS TotalSumm
-                           , zfCalc_SummPriceList (tmpMI_Master.Amount,  COALESCE (tmpMI_Master.OperPriceList, tmpMI_Sale.OperPriceList))                                                   AS TotalSummPriceList
-                           , COALESCE (tmpMI_Master.CurrencyValue, tmpMI_Sale.CurrencyValue) AS CurrencyValue
-                           , COALESCE (tmpMI_Master.ParValue, tmpMI_Sale.ParValue)           AS ParValue
-                           , COALESCE (tmpMI_Master.TotalChangePercent, 0)           AS TotalChangePercent
-                           , COALESCE (tmpMI_Master.TotalPay, 0)                     AS TotalPay
-                           , COALESCE (tmpMI_Sale.TotalPay, 0)                       AS TotalSummPay_Sale
-                           , COALESCE (tmpMI_Master.TotalPayOth, 0)                  AS TotalPayOth
-                           , COALESCE (tmpMI_Master.isErased, False)                 AS isErased
+            , tmpMI AS (SELECT COALESCE (tmpMI_Master.MovementItemId, 0)               AS Id
+                             , COALESCE (tmpMI_Master.PartionId, tmpMI_Sale.PartionId) AS PartionId
+                             , COALESCE (tmpMI_Master.GoodsId, tmpMI_Sale.GoodsId)     AS GoodsId
+                             , COALESCE (tmpMI_Master.Amount_master, 0)                AS Amount
+                             , COALESCE (tmpMI_Master.TotalChangePercent_master, 0)    AS TotalChangePercent
+                             , COALESCE (tmpMI_Master.TotalPay_master, 0)              AS TotalPay
+                             , COALESCE (tmpMI_Master.TotalPayOth_master, 0)           AS TotalPayOth
+                             , COALESCE (tmpMI_Master.Comment_master, '')              AS Comment
+                             , COALESCE (tmpMI_Master.isErased, FALSE)                 AS isErased
+                             , COALESCE (tmpMI_Master.Ord, 0)                          AS Ord
 
-                           , CAST (zfCalc_SummPriceList (tmpMI_Master.Amount,  COALESCE (tmpMI_Master.OperPriceList, tmpMI_Sale.OperPriceList)) 
-                                  - COALESCE (tmpMI_Master.TotalChangePercent, 0)
-                             AS TFloat)                                              AS TotalSummToPay
-                           , tmpMI_Master.BarCode
-                           , tmpMI_Master.Comment
-                           , tmpMI_Master.Ord
+                             , COALESCE (tmpMI_Master.MovementId, tmpMI_Sale.MovementId)         AS MovementId_Sale
+                             , COALESCE (tmpMI_Master.DescId, tmpMI_Sale.DescId)                 AS DescId_Sale
+                             , COALESCE (tmpMI_Master.OperDate, tmpMI_Sale.OperDate)             AS OperDate_Sale
+                             , COALESCE (tmpMI_Master.InvNumber, tmpMI_Sale.InvNumber)           AS InvNumber_Sale
+                             , COALESCE (tmpMI_Master.SaleMI_ID, tmpMI_Sale.SaleMI_ID)           AS SaleMI_Id
+                             , COALESCE (tmpMI_Master.Amount, tmpMI_Sale.Amount)                 AS Amount_Sale
+                             , COALESCE (tmpMI_Master.OperPriceList, tmpMI_Sale.OperPriceList)   AS OperPriceList_Sale
 
-                FROM tmpMI_Sale
-                     FULL JOIN tmpMI_Master ON tmpMI_Master.GoodsId = tmpMI_Sale.GoodsId
-                                           AND tmpMI_Master.SaleMI_ID = tmpMI_Sale.MI_Id  -- уточнить правильную связь
-                )
+                             , COALESCE (tmpMI_Master.TotalPay, tmpMI_Sale.TotalPay)             AS TotalPay_Sale
+                             , COALESCE (tmpMI_Master.TotalPayOth, tmpMI_Sale.TotalPayOth)       AS TotalPayOth_Sale
+
+                             , COALESCE (tmpMI_Master.Amount_Return, tmpMI_Sale.Amount_Return)   AS Amount_Return
+                             , COALESCE (tmpMI_Master.TotalReturn, tmpMI_Sale.TotalReturn)       AS TotalReturn
+                             , COALESCE (tmpMI_Master.TotalPayReturn, tmpMI_Sale.TotalPayReturn) AS TotalPay_Return
+
+                               -- Итого сумма Скидки - для "текущего" документа Продажи: 1)по %скидки + 2)дополнительная
+                             , COALESCE (tmpMI_Master.TotalChangePercent, tmpMI_Sale.TotalChangePercent)       AS TotalChangePercent_Sale
+                               -- Итого сумма Скидки - все "Расчеты покупателей"
+                             , COALESCE (tmpMI_Master.TotalChangePercentPay, tmpMI_Sale.TotalChangePercentPay) AS TotalChangePercentPay_Sale
+
+                  FROM tmpMI_Sale
+                       FULL JOIN tmpMI_Master ON tmpMI_Master.SaleMI_Id = tmpMI_Sale.SaleMI_Id  -- ТОЛЬКО по партии
+                                             -- AND tmpMI_Master.GoodsId   = tmpMI_Sale.GoodsId
+                  -- WHERE tmpMI_Sale.SummDebt <> 0 OR tmpMI_Master.SaleMI_Id > 0
+                 )
 
     , tmpMI_Child AS (SELECT COALESCE (MovementItem.ParentId, 0) AS ParentId
                            , SUM (CASE WHEN MovementItem.ParentId IS NULL
@@ -249,166 +326,203 @@ BEGIN
                                                        AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
                       GROUP BY MovementItem.ParentId
                       )
+   , tmpContainer AS (SELECT Container.*
+                      FROM tmpMI AS tmpMI_Master
+                           INNER JOIN Container ON Container.PartionId     = tmpMI_Master.PartionId
+                                               AND Container.WhereObjectId = vbUnitId
+                                               AND Container.DescId        = zc_Container_count()
+                                               -- !!!обязательно условие, т.к. мог меняться GoodsId и тогда в Container - несколько строк!!!
+                                               AND Container.ObjectId      = tmpMI_Master.GoodsId
+                           LEFT JOIN ContainerLinkObject AS CLO_Client
+                                                         ON CLO_Client.ContainerId = Container.Id
+                                                        AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
+                      WHERE CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
+                     )
 
        -- результат
        SELECT
-             tmpMI.Id
-           , tmpMI.PartionId
-           , Object_Goods.Id                AS GoodsId
-           , Object_Goods.ObjectCode        AS GoodsCode
-           , Object_Goods.ValueData         AS GoodsName
+             tmpMI.Id                         :: Integer AS Id
+           , tmpMI.PartionId                  :: Integer AS PartionId
+           , Object_Goods.Id                             AS GoodsId
+           , Object_Goods.ObjectCode                     AS GoodsCode
+           , Object_Goods.ValueData                      AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-           , Object_Measure.ValueData       AS MeasureName
+           , Object_Measure.ValueData                    AS MeasureName
 
-           , Object_CompositionGroup.ValueData   AS CompositionGroupName  
-           , Object_Composition.ValueData   AS CompositionName
-           , Object_GoodsInfo.ValueData     AS GoodsInfoName
-           , Object_LineFabrica.ValueData   AS LineFabricaName
-           , Object_Label.ValueData         AS LabelName
-           , Object_GoodsSize.Id            AS GoodsSizeId
-           , Object_GoodsSize.ValueData     AS GoodsSizeName 
+           , Object_CompositionGroup.ValueData           AS CompositionGroupName
+           , Object_Composition.ValueData                AS CompositionName
+           , Object_GoodsInfo.ValueData                  AS GoodsInfoName
+           , Object_LineFabrica.ValueData                AS LineFabricaName
+           , Object_Label.ValueData                      AS LabelName
+           , Object_GoodsSize.ValueData                  AS GoodsSizeName
 
-           , tmpMI.Amount            ::TFloat
-           , tmpMI.Amount_Sale       ::TFloat
-           , tmpMI.TotalCountReturn  ::TFloat AS Amount_Return
-           , Container.Amount        ::TFloat AS Remains
+           , tmpMI.Amount                      :: TFloat AS Amount
+           , tmpMI.Amount_Sale                 :: TFloat AS Amount_Sale
+           , Container.Amount                  :: TFloat AS Remains
+           , 0                                 :: TFloat AS OperPrice
+           , 0                                 :: TFloat AS CountForPrice
+           , tmpMI.OperPriceList_Sale          :: TFloat AS OperPriceList
 
-           , tmpMI.OperPrice         ::TFloat
-           , tmpMI.CountForPrice     ::TFloat
-           , tmpMI.OperPriceList     ::TFloat
+             -- Итого сумма (в прод.)
+           , 0                                 :: TFloat AS TotalSumm
+           , 0                                 :: TFloat AS TotalSummBalance
+           , zfCalc_SummPriceList (tmpMI.Amount_Sale, tmpMI.OperPriceList_Sale) AS TotalSummPriceList
 
-           , tmpMI.TotalSumm         ::TFloat
-           , zfCalc_CurrencyFrom (tmpMI.TotalSumm, tmpMI.CurrencyValue, tmpMI.ParValue) :: TFloat AS TotalSummBalance
-           , tmpMI.TotalSummPriceList       ::TFloat
+             -- Итого сумма (текущий возврат)
+           , 0                                 :: TFloat AS TotalSumm_return
+           , 0                                 :: TFloat AS TotalSummBalance_return
+           , zfCalc_SummPriceList (tmpMI.Amount, tmpMI.OperPriceList_Sale) AS TotalSummPriceList_return
 
-           , tmpMI.CurrencyValue            ::TFloat
-           , tmpMI.ParValue                 ::TFloat
-           , tmpMI.TotalChangePercent       ::TFloat
+             -- Курс для перевода из валюты партии в ГРН - элемент продажи
+           , 0 :: TFloat AS CurrencyValue
+           , 0 :: TFloat AS ParValue
 
-           , CASE WHEN tmpMI.TotalSummToPay > tmpMI.TotalSummPay_Sale
-                  THEN tmpMI.TotalSummPay_Sale
-                  ELSE tmpMI.TotalSummToPay
-             END                            ::TFloat AS TotalSummToPay
+             -- Итого сумма оплаты - для "текущего" документа Продажи
+           , tmpMI.TotalPay_Sale               :: TFloat AS TotalPay_Sale
+             -- Итого сумма оплаты - все "Расчеты покупателей"
+           , tmpMI.TotalPayOth_Sale            :: TFloat AS TotalPayOth_Sale
 
-           , tmpMI.TotalSummPay_Sale        ::TFloat 
+             -- Итого количество возврата - все док-ты
+           , tmpMI.Amount_Return               :: TFloat AS Amount_Return
+             -- Итого сумма возврата со скидкой  - все док-ты
+           , tmpMI.TotalReturn                 :: TFloat AS TotalReturn
+             -- Итого сумма возврата оплаты - все док-ты
+           , tmpMI.TotalPay_Return             :: TFloat AS TotalPay_Return
 
-           , tmpMI_Child.Amount_GRN         ::TFloat AS TotalPay_Grn 
-           , tmpMI_Child.Amount_USD         ::TFloat AS TotalPay_USD
-           , tmpMI_Child.Amount_EUR         ::TFloat AS TotalPay_EUR
-           , tmpMI_Child.Amount_Bank        ::TFloat AS TotalPay_Card
-           , tmpMI.TotalPay                 ::TFloat
-           , tmpMI.TotalPayOth              ::TFloat
+             -- Сумма долга
+           , (zfCalc_SummPriceList (tmpMI.Amount_Sale, tmpMI.OperPriceList_Sale)
+            - tmpMI.TotalChangePercent_sale
+            - tmpMI.TotalChangePercentPay_sale
+            - tmpMI.TotalPay_Sale
+            - tmpMI.TotalPayOth_Sale
+              -- так минуснули Возврат
+            - tmpMI.TotalReturn
+              -- если НЕ ПРОВЕЛИ - уменьшаем Долг на сумму из тек. документа
+            - CASE WHEN vbStatusId = zc_Enum_Status_UnComplete() THEN tmpMI.TotalPay ELSE 0 END
+            - CASE WHEN vbStatusId = zc_Enum_Status_UnComplete() THEN tmpMI.TotalChangePercent ELSE 0 END
+             ) :: TFloat AS SummDebt
 
-           , tmpMI_Child_Exc.Amount_USD     :: TFloat AS Amount_USD_Exc    -- Сумма USD - обмен приход
-           , tmpMI_Child_Exc.Amount_EUR     :: TFloat AS Amount_EUR_Exc    -- Сумма EUR - обмен приход
-           , tmpMI_Child_Exc.Amount_GRN     :: TFloat AS Amount_GRN_Exc    -- Сумма GRN - обмен расход
+             -- % Скидки
+           , COALESCE (MIFloat_ChangePercent.ValueData, 0)      :: TFloat AS ChangePercent
 
-           , tmpMI.PartionMI_Id
-           , COALESCE (MI_Sale.Id, tmpMI.SaleMI_Id)  AS SaleMI_Id
-           , Movement_Sale.Id                        AS MovementId_Sale
-           , Movement_Sale.InvNumber                 AS InvNumber_Sale_Full
-           , tmpMI.BarCode                  ::TVarChar
-           , tmpMI.Comment                  ::TVarChar
-           , tmpMI.isErased
+             -- Итого сумма Скидки - для "текущего" документа Продажи: 2)дополнительная
+           , COALESCE (MIFloat_SummChangePercent.ValueData, 0)  :: TFloat AS SummChangePercent_sale
+             -- Итого сумма Скидки - для "текущего" документа Продажи: 1)по %скидки
+           , (tmpMI.TotalChangePercent_sale - COALESCE (MIFloat_SummChangePercent.ValueData, 0)) :: TFloat AS TotalChangePercent_sale
+             -- Итого сумма Скидки - все "Расчеты покупателей"
+           , tmpMI.TotalChangePercentPay_sale                   :: TFloat AS TotalChangePercentPay
+
+             -- Сумма к оплате
+           , (zfCalc_SummPriceList (tmpMI.Amount_Sale, tmpMI.OperPriceList_Sale)
+            - tmpMI.TotalChangePercent_sale
+            - tmpMI.TotalChangePercentPay_sale
+            - tmpMI.TotalPay_Sale
+            - tmpMI.TotalPayOth_Sale
+              -- так минуснули Возврат
+            - tmpMI.TotalReturn
+              -- если НЕ ПРОВЕЛИ - уменьшаем Долг на сумму из тек. документа
+            + CASE WHEN vbStatusId = zc_Enum_Status_Complete() THEN tmpMI.TotalPay ELSE 0 END
+            + CASE WHEN vbStatusId = zc_Enum_Status_Complete() THEN tmpMI.TotalChangePercent ELSE 0 END
+             ) :: TFloat AS TotalSummToPay
+
+           , tmpMI_Child.Amount_GRN            :: TFloat AS TotalPay_Grn
+           , tmpMI_Child.Amount_USD            :: TFloat AS TotalPay_USD
+           , tmpMI_Child.Amount_EUR            :: TFloat AS TotalPay_EUR
+           , tmpMI_Child.Amount_Bank           :: TFloat AS TotalPay_Card
+           , tmpMI.TotalPay                    :: TFloat AS TotalPay
+           , tmpMI.TotalPayOth                 :: TFloat AS TotalPayOth
+           , tmpMI.TotalChangePercent          :: TFloat AS TotalChangePercent
+
+
+           , tmpMI_Child_Exc.Amount_USD        :: TFloat AS Amount_USD_Exc    -- Сумма USD - обмен приход
+           , tmpMI_Child_Exc.Amount_EUR        :: TFloat AS Amount_EUR_Exc    -- Сумма EUR - обмен приход
+           , tmpMI_Child_Exc.Amount_GRN        :: TFloat AS Amount_GRN_Exc    -- Сумма GRN - обмен расход
+
+           , tmpMI.SaleMI_Id                   :: Integer   AS SaleMI_Id
+           , tmpMI.MovementId_Sale             :: Integer   AS MovementId_Sale
+           , tmpMI.InvNumber_Sale              :: TVarChar  AS InvNumber_Sale_Full
+           , tmpMI.OperDate_Sale               :: TDateTime AS OperDate_Sale
+           , MovementDesc.ItemName                          AS DescName
+
+           , tmpMI.Comment                     :: TVarChar  AS Comment
+           , tmpMI.isErased                    :: Boolean   AS isErased
 
        FROM tmpMI
-            LEFT JOIN Container ON Container.PartionId     = tmpMI.PartionId
-                               AND Container.WhereObjectId = vbUnitId
-                               AND Container.DescId        = zc_Container_count()
-                               
+            -- суммы оплаты
             LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.Id
+            -- суммы обмена
             LEFT JOIN tmpMI_Child AS tmpMI_Child_Exc ON tmpMI_Child_Exc.ParentId = 0
                                                     AND tmpMI.Ord                = 1
                                                     AND tmpMI.isErased           = FALSE
-                                                                
+
+            LEFT JOIN tmpContainer AS Container ON Container.PartionId = tmpMI.PartionId
+
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
-            LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpMI.PartionId                                 
+            LEFT JOIN Object_PartionGoods    ON Object_PartionGoods.MovementItemId = tmpMI.PartionId
 
             LEFT JOIN Object AS Object_GoodsGroup       ON Object_GoodsGroup.Id       = Object_PartionGoods.GoodsGroupId
             LEFT JOIN Object AS Object_Measure          ON Object_Measure.Id          = Object_PartionGoods.MeasureId
             LEFT JOIN Object AS Object_Composition      ON Object_Composition.Id      = Object_PartionGoods.CompositionId
             LEFT JOIN Object AS Object_CompositionGroup ON Object_CompositionGroup.Id = Object_PartionGoods.CompositionGroupId
             LEFT JOIN Object AS Object_GoodsInfo        ON Object_GoodsInfo.Id        = Object_PartionGoods.GoodsInfoId
-            LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = Object_PartionGoods.LineFabricaId 
+            LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = Object_PartionGoods.LineFabricaId
             LEFT JOIN Object AS Object_Label            ON Object_Label.Id            = Object_PartionGoods.LabelId
             LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = Object_PartionGoods.GoodsSizeId
-           
+
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
 
-           LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = tmpMI.PartionMI_Id
-           LEFT JOIN MovementItem AS MI_Sale ON MI_Sale.Id = Object_PartionMI.ObjectCode
-           LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MI_Sale.MovementId
+            LEFT JOIN MovementDesc ON MovementDesc.Id = tmpMI.DescId_Sale
+            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                        ON MIFloat_ChangePercent.MovementItemId = tmpMI.SaleMI_Id
+                                       AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
+                                        ON MIFloat_SummChangePercent.MovementItemId = tmpMI.SaleMI_Id
+                                       AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
        ;
+
      ELSE
      -- Результат такой
      RETURN QUERY 
      WITH 
-     tmpMI_Master AS (SELECT MovementItem.Id
-                           , MovementItem.ObjectId                                 AS GoodsId
-                           , MovementItem.PartionId
-                           , MILinkObject_PartionMI.ObjectId                       AS PartionMI_Id
-                           , MovementItem.Amount 
-                           , COALESCE (MIFloat_OperPrice.ValueData, 0)             AS OperPrice
-                           , COALESCE (MIFloat_CountForPrice.ValueData, 1)         AS CountForPrice 
-                           , COALESCE (MIFloat_OperPriceList.ValueData, 0)         AS OperPriceList
-                           , zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData) AS TotalSumm
-                           , zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData)                       AS TotalSummPriceList
-                           , COALESCE (MIFloat_CurrencyValue.ValueData, 0)         AS CurrencyValue
-                           , COALESCE (MIFloat_ParValue.ValueData, 0)              AS ParValue
-                           , COALESCE (MIFloat_TotalChangePercent.ValueData, 0)    AS TotalChangePercent
-                           , COALESCE (MIFloat_TotalPay.ValueData, 0)              AS TotalPay
-                           , COALESCE (MIFloat_TotalPayOth.ValueData, 0)           AS TotalPayOth
-                          
-                           , CAST (zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData)
-                                  - COALESCE (MIFloat_TotalChangePercent.ValueData, 0)
-                                                                                   AS TFloat) AS TotalSummToPay
-                           , MIString_BarCode.ValueData                            AS BarCode
-                           , COALESCE (MIString_Comment.ValueData,'')              AS Comment
-                           , MovementItem.isErased
-                           , ROW_NUMBER() OVER (PARTITION BY MovementItem.isErased ORDER BY MovementItem.Id ASC) AS Ord
-                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-                            JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                             AND MovementItem.DescId     = zc_MI_Master()
-                                             AND MovementItem.isErased   = tmpIsErased.isErased
+       tmpMI_Master AS (SELECT MI_Master.Id                                              AS Id
+                             , MI_Master.PartionId                                       AS PartionId
+                             , MI_Master.ObjectId                                        AS GoodsId
+                             , MI_Master.Amount                                          AS Amount
+                             , COALESCE (MIFloat_TotalChangePercent_master.ValueData, 0) AS TotalChangePercent
+                             , COALESCE (MIFloat_TotalPay_master.ValueData, 0)           AS TotalPay
+                             , COALESCE (MIFloat_TotalPayOth_master.ValueData, 0)        AS TotalPayOth
+                             , COALESCE (MIString_Comment_master.ValueData,'')           AS Comment
+                             , MI_Master.isErased                                        AS isErased
+                             , ROW_NUMBER() OVER (PARTITION BY MI_Master.isErased ORDER BY MI_Master.Id ASC) AS Ord
 
-                            LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_CountForPrice.DescId         = zc_MIFloat_CountForPrice()
-                            LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
-                                                        ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()    
-                            LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
-                                                        ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
+                             , Object_PartionMI.ObjectCode                               AS SaleMI_ID
 
-                            LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValue
-                                                        ON MIFloat_CurrencyValue.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_CurrencyValue.DescId         = zc_MIFloat_CurrencyValue()    
-                            LEFT JOIN MovementItemFloat AS MIFloat_ParValue
-                                                        ON MIFloat_ParValue.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue() 
-                            LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
-                                                        ON MIFloat_TotalChangePercent.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()    
-                            LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
-                                                        ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()    
-                            LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth
-                                                        ON MIFloat_TotalPayOth.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth()    
-                           
-                            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
-                                                             ON MILinkObject_PartionMI.MovementItemId = MovementItem.Id
-                                                            AND MILinkObject_PartionMI.DescId = zc_MILinkObject_PartionMI()
+                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+                             JOIN MovementItem AS MI_Master
+                                               ON MI_Master.MovementId = inMovementId
+                                              AND MI_Master.DescId     = zc_MI_Master()
+                                              AND MI_Master.isErased   = tmpIsErased.isErased
 
-                            LEFT JOIN MovementItemString AS MIString_BarCode
-                                                         ON MIString_BarCode.MovementItemId = MovementItem.Id
-                                                        AND MIString_BarCode.DescId         = zc_MIString_BarCode()
-                            LEFT JOIN MovementItemString AS MIString_Comment
-                                                         ON MIString_Comment.MovementItemId = MovementItem.Id
-                                                        AND MIString_Comment.DescId = zc_MIString_Comment()
+                             LEFT JOIN MovementItemString AS MIString_Comment_master
+                                                          ON MIString_Comment_master.MovementItemId = MI_Master.Id
+                                                         AND MIString_Comment_master.DescId         = zc_MIString_Comment()
+
+                             LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent_master
+                                                         ON MIFloat_TotalChangePercent_master.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_TotalChangePercent_master.DescId         = zc_MIFloat_TotalChangePercent()
+                             LEFT JOIN MovementItemFloat AS MIFloat_TotalPay_master
+                                                         ON MIFloat_TotalPay_master.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_TotalPay_master.DescId         = zc_MIFloat_TotalPay()
+                             LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth_master
+                                                         ON MIFloat_TotalPayOth_master.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_TotalPayOth_master.DescId         = zc_MIFloat_TotalPayOth()
+
+                             LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
+                                                              ON MILinkObject_PartionMI.MovementItemId = MI_Master.Id
+                                                             AND MILinkObject_PartionMI.DescId         = zc_MILinkObject_PartionMI()
+                             LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = MILinkObject_PartionMI.ObjectId
                        )
 
     , tmpMI_Child AS (SELECT COALESCE (MovementItem.ParentId, 0) AS ParentId
@@ -438,108 +552,186 @@ BEGIN
                                                        AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
                       GROUP BY MovementItem.ParentId
                       )
-
+   , tmpContainer AS (SELECT Container.*
+                      FROM tmpMI_Master
+                           INNER JOIN Container ON Container.PartionId     = tmpMI_Master.PartionId
+                                               AND Container.ObjectId      = tmpMI_Master.GoodsId
+                                               AND Container.WhereObjectId = vbUnitId
+                                               AND Container.DescId        = zc_Container_count()
+                           LEFT JOIN ContainerLinkObject AS CLO_Client
+                                                         ON CLO_Client.ContainerId = Container.Id
+                                                        AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
+                      WHERE CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
+                     )
        -- результат
        SELECT
-             tmpMI.Id
-           , tmpMI.PartionId
-           , Object_Goods.Id                AS GoodsId
-           , Object_Goods.ObjectCode        AS GoodsCode
-           , Object_Goods.ValueData         AS GoodsName
-           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-           , Object_Measure.ValueData       AS MeasureName
+             tmpMI.Id                                          :: Integer AS Id
+           , tmpMI.PartionId                                   :: Integer AS PartionId
+           , Object_Goods.Id                                              AS GoodsId
+           , Object_Goods.ObjectCode                                      AS GoodsCode
+           , Object_Goods.ValueData                                       AS GoodsName
+           , ObjectString_Goods_GoodsGroupFull.ValueData                  AS GoodsGroupNameFull
+           , Object_Measure.ValueData                                     AS MeasureName
+           , Object_CompositionGroup.ValueData                            AS CompositionGroupName
+           , Object_Composition.ValueData                                 AS CompositionName
+           , Object_GoodsInfo.ValueData                                   AS GoodsInfoName
+           , Object_LineFabrica.ValueData                                 AS LineFabricaName
+           , Object_Label.ValueData                                       AS LabelName
+           , Object_GoodsSize.ValueData                                   AS GoodsSizeName
 
-           , Object_CompositionGroup.ValueData   AS CompositionGroupName  
-           , Object_Composition.ValueData   AS CompositionName
-           , Object_GoodsInfo.ValueData     AS GoodsInfoName
-           , Object_LineFabrica.ValueData   AS LineFabricaName
-           , Object_Label.ValueData         AS LabelName
-           , Object_GoodsSize.Id            AS GoodsSizeId
-           , Object_GoodsSize.ValueData     AS GoodsSizeName 
+           , tmpMI.Amount                                       :: TFloat AS Amount
+           , MI_Sale.Amount                                     :: TFloat AS Amount_Sale
+           , Container.Amount                                   :: TFloat AS Remains
+           , 0                                                  :: TFloat AS OperPrice
+           , 0                                                  :: TFloat AS CountForPrice
+           , COALESCE (MIFloat_OperPriceList.ValueData, 0)      :: TFloat AS OperPriceList
 
-           , tmpMI.Amount                   ::TFloat
-           , MI_Sale.Amount                 ::TFloat
-           , COALESCE (MIFloat_TotalCountReturn.ValueData,0) ::TFloat  AS Amount_Return
-           , Container.Amount               ::TFloat AS Remains
+             -- Итого сумма (в прод.)
+           , 0                                                  :: TFloat AS TotalSumm
+           , 0                                                  :: TFloat AS TotalSummBalance
+           , zfCalc_SummPriceList (MI_Sale.Amount, MIFloat_OperPriceList.ValueData) AS TotalSummPriceList
 
-           , tmpMI.OperPrice                ::TFloat
-           , tmpMI.CountForPrice            ::TFloat
-           , tmpMI.OperPriceList            ::TFloat
+             -- Итого сумма (текущий возврат)
+           , 0                                                  :: TFloat AS TotalSumm_return
+           , 0                                                  :: TFloat AS TotalSummBalance_return
+           , zfCalc_SummPriceList (tmpMI.Amount, MIFloat_OperPriceList.ValueData) AS TotalSummPriceList_return
 
-           , tmpMI.TotalSumm                ::TFloat
-           , zfCalc_CurrencyFrom (tmpMI.TotalSumm, tmpMI.CurrencyValue, tmpMI.ParValue) :: TFloat AS TotalSummBalance
-           , tmpMI.TotalSummPriceList       ::TFloat
+             -- Курс для перевода из валюты партии в ГРН - элемент продажи
+           , 0                                                  :: TFloat AS CurrencyValue
+           , 0                                                  :: TFloat AS ParValue
 
-           , tmpMI.CurrencyValue            ::TFloat
-           , tmpMI.ParValue                 ::TFloat
-           , tmpMI.TotalChangePercent       ::TFloat
+             -- Итого сумма оплаты - для "текущего" документа Продажи
+           , COALESCE (MIFloat_TotalPay.ValueData, 0)           ::TFloat AS TotalPay_Sale
+             -- Итого сумма оплаты - все "Расчеты покупателей"
+           , COALESCE (MIFloat_TotalPayOth.ValueData, 0)        ::TFloat AS TotalPayOth_Sale
 
-           , CASE WHEN tmpMI.TotalSummToPay > COALESCE (MIFloat_TotalPay.ValueData, 0) 
-                  THEN COALESCE (MIFloat_TotalPay.ValueData, 0)
-                  ELSE tmpMI.TotalSummToPay
-             END                            ::TFloat AS TotalSummToPay
+             -- Итого сумма возврата оплаты - все док-ты
+           , COALESCE (MIFloat_TotalCountReturn.ValueData, 0)   ::TFloat AS Amount_Return
+             -- Итого сумма возврата оплаты - все док-ты
+           , COALESCE (MIFloat_TotalReturn.ValueData, 0)        ::TFloat AS TotalReturn
+             -- Итого сумма возврата оплаты - все док-ты
+           , COALESCE (MIFloat_TotalPayReturn.ValueData, 0)     ::TFloat AS TotalPay_Return
 
-           , COALESCE (MIFloat_TotalPay.ValueData, 0)    ::TFloat  AS TotalSummPay_Sale
+             -- Сумма долга
+           , (zfCalc_SummPriceList (MI_Sale.Amount, MIFloat_OperPriceList.ValueData)
+            - COALESCE (MIFloat_TotalChangePercent.ValueData, 0)
+            - COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)
+            - COALESCE (MIFloat_TotalPay.ValueData, 0)
+            - COALESCE (MIFloat_TotalPayOth.ValueData, 0)
+              -- так минуснули Возврат
+            - COALESCE (MIFloat_TotalReturn.ValueData, 0)
+              -- если НЕ ПРОВЕЛИ - уменьшаем Долг на сумму из тек. документа
+            - CASE WHEN vbStatusId = zc_Enum_Status_UnComplete() THEN tmpMI.TotalPay ELSE 0 END
+            - CASE WHEN vbStatusId = zc_Enum_Status_UnComplete() THEN tmpMI.TotalChangePercent ELSE 0 END
+             ) :: TFloat AS SummDebt
 
-           , tmpMI_Child.Amount_GRN         ::TFloat AS TotalPay_Grn 
-           , tmpMI_Child.Amount_USD         ::TFloat AS TotalPay_USD
-           , tmpMI_Child.Amount_EUR         ::TFloat AS TotalPay_EUR
-           , tmpMI_Child.Amount_Bank        ::TFloat AS TotalPay_Card
-           , tmpMI.TotalPay                 ::TFloat
-           , tmpMI.TotalPayOth              ::TFloat
+             -- % Скидки
+           , COALESCE (MIFloat_ChangePercent.ValueData, 0)      :: TFloat AS ChangePercent
+             -- Итого сумма Скидки - для "текущего" документа Продажи: 2)дополнительная
+           , COALESCE (MIFloat_SummChangePercent.ValueData, 0)  :: TFloat AS SummChangePercent_sale
+             -- Итого сумма Скидки - для "текущего" документа Продажи: 1)по %скидки
+           , (COALESCE (MIFloat_TotalChangePercent.ValueData, 0) - COALESCE (MIFloat_SummChangePercent.ValueData, 0)) :: TFloat AS TotalChangePercent_sale
+             -- Итого сумма Скидки - все "Расчеты покупателей"
+           , COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0) :: TFloat AS TotalChangePercentPay
 
-           , tmpMI_Child_Exc.Amount_USD     :: TFloat AS Amount_USD_Exc    -- Сумма USD - обмен приход
-           , tmpMI_Child_Exc.Amount_EUR     :: TFloat AS Amount_EUR_Exc    -- Сумма EUR - обмен приход
-           , tmpMI_Child_Exc.Amount_GRN     :: TFloat AS Amount_GRN_Exc    -- Сумма GRN - обмен расход
+             -- Сумма к оплате
+           , (zfCalc_SummPriceList (MI_Sale.Amount, MIFloat_OperPriceList.ValueData)
+            - COALESCE (MIFloat_TotalChangePercent.ValueData, 0)
+            - COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)
+            - COALESCE (MIFloat_TotalPay.ValueData, 0)
+            - COALESCE (MIFloat_TotalPayOth.ValueData, 0)
+              -- так минуснули Возврат
+            - COALESCE (MIFloat_TotalReturn.ValueData, 0)
+              -- если ПРОВЕЛИ - вернем обратно суммы из тек. документа
+            + CASE WHEN vbStatusId = zc_Enum_Status_Complete() THEN tmpMI.TotalPay ELSE 0 END
+            + CASE WHEN vbStatusId = zc_Enum_Status_Complete() THEN tmpMI.TotalChangePercent ELSE 0 END
+             ) :: TFloat AS TotalSummToPay
 
-           , tmpMI.PartionMI_Id
-           , MI_Sale.Id                     AS SaleMI_Id
-           , Movement_Sale.Id               AS MovementId_Sale
-           , Movement_Sale.InvNumber        AS InvNumber_Sale_Full
-           , tmpMI.BarCode                  ::TVarChar
-           , tmpMI.Comment                  ::TVarChar
-           , tmpMI.isErased
+           , tmpMI_Child.Amount_GRN                             :: TFloat AS TotalPay_Grn
+           , tmpMI_Child.Amount_USD                             :: TFloat AS TotalPay_USD
+           , tmpMI_Child.Amount_EUR                             :: TFloat AS TotalPay_EUR
+           , tmpMI_Child.Amount_Bank                            :: TFloat AS TotalPay_Card
+           , tmpMI.TotalPay                                     :: TFloat AS TotalPay
+           , tmpMI.TotalPayOth                                  :: TFloat AS TotalPayOth
+           , tmpMI.TotalChangePercent                           :: TFloat AS TotalChangePercent
+
+
+           , tmpMI_Child_Exc.Amount_USD                         :: TFloat AS Amount_USD_Exc    -- Сумма USD - обмен приход
+           , tmpMI_Child_Exc.Amount_EUR                         :: TFloat AS Amount_EUR_Exc    -- Сумма EUR - обмен приход
+           , tmpMI_Child_Exc.Amount_GRN                         :: TFloat AS Amount_GRN_Exc    -- Сумма GRN - обмен расход
+
+           , tmpMI.SaleMI_ID                                   :: Integer AS SaleMI_Id
+           , Movement_Sale.Id                                             AS MovementId_Sale
+           , Movement_Sale.InvNumber                                      AS InvNumber_Sale_Full
+           , Movement_Sale.OperDate                                       AS OperDate_Sale
+           , MovementDesc.ItemName                                        AS DescName
+           , tmpMI.Comment                                    :: TVarChar AS Comment
+           , tmpMI.isErased                                               AS isErased
 
        FROM tmpMI_Master AS tmpMI
-            LEFT JOIN Container ON Container.PartionId     = tmpMI.PartionId
-                               AND Container.WhereObjectId = vbUnitId
-                               AND Container.DescId        = zc_Container_count()
-                               
+            -- суммы оплаты
             LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.Id
+            -- суммы обмена
             LEFT JOIN tmpMI_Child AS tmpMI_Child_Exc ON tmpMI_Child_Exc.ParentId = 0
                                                     AND tmpMI.Ord                = 1
                                                     AND tmpMI.isErased           = FALSE
 
+            LEFT JOIN tmpContainer AS Container ON Container.PartionId = tmpMI.PartionId
+
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
-            LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpMI.PartionId                                 
+            LEFT JOIN Object_PartionGoods    ON Object_PartionGoods.MovementItemId = tmpMI.PartionId
 
             LEFT JOIN Object AS Object_GoodsGroup       ON Object_GoodsGroup.Id       = Object_PartionGoods.GoodsGroupId
             LEFT JOIN Object AS Object_Measure          ON Object_Measure.Id          = Object_PartionGoods.MeasureId
             LEFT JOIN Object AS Object_Composition      ON Object_Composition.Id      = Object_PartionGoods.CompositionId
             LEFT JOIN Object AS Object_CompositionGroup ON Object_CompositionGroup.Id = Object_PartionGoods.CompositionGroupId
             LEFT JOIN Object AS Object_GoodsInfo        ON Object_GoodsInfo.Id        = Object_PartionGoods.GoodsInfoId
-            LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = Object_PartionGoods.LineFabricaId 
+            LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = Object_PartionGoods.LineFabricaId
             LEFT JOIN Object AS Object_Label            ON Object_Label.Id            = Object_PartionGoods.LabelId
             LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = Object_PartionGoods.GoodsSizeId
-           
+
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
 
-            LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = tmpMI.PartionMI_Id
-            LEFT JOIN MovementItem AS MI_Sale ON MI_Sale.Id = Object_PartionMI.ObjectCode
+           LEFT JOIN MovementItem AS MI_Sale    ON MI_Sale.Id          = tmpMI.SaleMI_Id
+           LEFT JOIN Movement AS Movement_Sale  ON Movement_Sale.Id    = MI_Sale.MovementId
+           LEFT JOIN MovementDesc               ON MovementDesc.Id     = Movement_Sale.DescId
+           ----
+           LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
+                                       ON MIFloat_OperPriceList.MovementItemId = MI_Sale.Id
+                                      AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
 
-            LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
-                                        ON MIFloat_TotalPay.MovementItemId = MI_Sale.Id
-                                       AND MIFloat_TotalPay.DescId = zc_MIFloat_TotalPay()
+           LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                       ON MIFloat_ChangePercent.MovementItemId = MI_Sale.Id
+                                      AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+           LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
+                                       ON MIFloat_SummChangePercent.MovementItemId = MI_Sale.Id
+                                      AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
+           LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
+                                       ON MIFloat_TotalChangePercent.MovementItemId = MI_Sale.Id
+                                      AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()
+           LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercentPay
+                                       ON MIFloat_TotalChangePercentPay.MovementItemId = MI_Sale.Id
+                                      AND MIFloat_TotalChangePercentPay.DescId         = zc_MIFloat_TotalChangePercentPay()
 
-            LEFT JOIN MovementItemFloat AS MIFloat_TotalCountReturn
-                                        ON MIFloat_TotalCountReturn.MovementItemId = MI_Sale.Id
-                                       AND MIFloat_TotalCountReturn.DescId         = zc_MIFloat_TotalCountReturn() 
-                                                        
-            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MI_Sale.MovementId
+           LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
+                                       ON MIFloat_TotalPay.MovementItemId = MI_Sale.Id
+                                      AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
+           LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth
+                                       ON MIFloat_TotalPayOth.MovementItemId = MI_Sale.Id
+                                      AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth()
 
-         ;
+           LEFT JOIN MovementItemFloat AS MIFloat_TotalCountReturn
+                                       ON MIFloat_TotalCountReturn.MovementItemId = MI_Sale.Id
+                                      AND MIFloat_TotalCountReturn.DescId         = zc_MIFloat_TotalCountReturn()
+           LEFT JOIN MovementItemFloat AS MIFloat_TotalReturn
+                                       ON MIFloat_TotalReturn.MovementItemId = MI_Sale.Id
+                                      AND MIFloat_TotalReturn.DescId         = zc_MIFloat_TotalReturn()
+           LEFT JOIN MovementItemFloat AS MIFloat_TotalPayReturn
+                                       ON MIFloat_TotalPayReturn.MovementItemId = MI_Sale.Id
+                                      AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()
+       ;
 
        END IF;
 
@@ -555,4 +747,5 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_MovementItem_ReturnIn(inMovementId := 7 , inIsErased := 'False' ,  inSession := '2');
+-- SELECT * FROM gpSelect_MovementItem_ReturnIn (inMovementId:= 241258, inStartDate:= CURRENT_DATE - INTERVAL '100 DAY', inEndDate:= CURRENT_DATE, inShowAll:= TRUE,  inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_MovementItem_ReturnIn (inMovementId:= 241258, inStartDate:= CURRENT_DATE - INTERVAL '100 DAY', inEndDate:= CURRENT_DATE, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());

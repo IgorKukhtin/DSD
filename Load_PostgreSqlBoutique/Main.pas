@@ -161,6 +161,8 @@ type
     btnAddlDocId_Postgres: TButton;
     cbLast: TCheckBox;
     cbErr: TCheckBox;
+    cbMovementNotOne: TCheckBox;
+    cbMINotTwo: TCheckBox;
 
     procedure btnAddGuideId_PostgresClick(Sender: TObject);
     procedure btnAddlDocId_PostgresClick(Sender: TObject);
@@ -3040,7 +3042,7 @@ begin
         cbGoodsAccount.Caption:='1.12. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Расчеты покупателей';
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMIChild.Checked);
-        if cbOnlyOpen.Checked then exit;
+        if (cbOnlyOpen.Checked)or (cbMINotTwo.Checked = TRUE) then exit;
         //
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
@@ -3052,7 +3054,7 @@ begin
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPartionId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inMovementMI_Id',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inSaleMI_Id',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inIsPay',ftBoolean,ptInput, False);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
@@ -3067,7 +3069,7 @@ begin
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
              toStoredProc.Params.ParamByName('inPartionId').Value:=FieldByName('PartionId').AsInteger;
              //toStoredProc.Params.ParamByName('inPartionMI_Id').Value:=FieldByName('PartionMI_Id').AsInteger;
-             toStoredProc.Params.ParamByName('inMovementMI_Id').Value:=FieldByName('SaleMI_Id').AsInteger;
+             toStoredProc.Params.ParamByName('inSaleMI_Id').Value:=FieldByName('SaleMI_Id').AsInteger;
              //toStoredProc.Params.ParamByName('inIsPay').Value:=Boolean(FieldByName('isPay').AsInteger);
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
              toStoredProc.Params.ParamByName('inComment').Value:=FieldByName('CommentInfo').AsString;
@@ -3472,7 +3474,7 @@ begin
         toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('ioGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPartionId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inMovementMI_Id',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inSaleMI_Id',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inisPay',ftBoolean,ptInput, False);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('ioOperPriceList',ftFloat,ptInput, 0);
@@ -3487,7 +3489,7 @@ begin
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
              toStoredProc.Params.ParamByName('ioGoodsId').Value:=FieldByName('GoodsId').AsInteger;
              toStoredProc.Params.ParamByName('inPartionId').Value:=FieldByName('PartionId').AsInteger;
-             toStoredProc.Params.ParamByName('inMovementMI_Id').Value:=FieldByName('MovementMI_Id').AsInteger;
+             toStoredProc.Params.ParamByName('inSaleMI_Id').Value:=FieldByName('MovementMI_Id').AsInteger;
              if FieldByName('isBill').AsInteger = zc_rvYes
              then toStoredProc.Params.ParamByName('inIsPay').Value:= TRUE
              else toStoredProc.Params.ParamByName('inIsPay').Value:= FALSE;
@@ -3827,7 +3829,7 @@ begin
         Add('      0 as ObjectId');
         Add('    , 0 as InvNumber');
         Add('    , DiscountKlientAccountMoney.OperDate as OperDate');    // Со временем ошибка неверный формат даты
-        Add('    , _lfCalc_DateTime(DiscountKlientAccountMoney.InsertDate) as OperDateInsert');
+        Add('    , _lfCalc_DateTime_change(DiscountKlientAccountMoney.InsertDate, DiscountKlientAccountMoney.OperDate) as OperDateInsert');
         Add('    , Unit_From.Id_Postgres as FromId ');
         Add('    , Unit_From.UnitName as UnitNameFrom');
         Add('    , Unit_To.Id_Postgres as ToId');
@@ -3881,7 +3883,7 @@ begin
         //
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMIMaster.Checked)and(not cbOnlyOpenMIChild.Checked);
-        if cbOnlyOpen.Checked then exit;
+        if (cbOnlyOpen.Checked = TRUE) or (cbMovementNotOne.Checked = TRUE) then exit;
         //
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
@@ -3925,7 +3927,7 @@ begin
                                  +'   and DiscountKlientAccountMoney.isCurrent = zc_rvNo()'
                                  +'   and DiscountKlientAccountMoney.discountMovementItemReturnId is null'
                                  +'   and DiscountKlientAccountMoney.isErased = zc_rvNo()'
-                                 +'   and _lfCalc_DateTime(DiscountKlientAccountMoney.InsertDate) = ' +FormatToDateTimeServerNoSec(FieldByName('OperDateInsert').AsDateTime)
+                                 +'   and _lfCalc_DateTime_change(DiscountKlientAccountMoney.InsertDate, DiscountKlientAccountMoney.OperDate) = ' +FormatToDateTimeServerNoSec(FieldByName('OperDateInsert').AsDateTime)
                                  );
              //Протокол
              {if FieldByName('Id_Postgres').AsInteger=0
@@ -4477,7 +4479,7 @@ begin
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMIMaster.Checked)and(not cbOnlyOpenMIChild.Checked);
 
-        if cbOnlyOpen.Checked then exit;
+        if (cbOnlyOpen.Checked = TRUE) or (cbMovementNotOne.Checked = TRUE) then exit;
         //
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
@@ -4553,7 +4555,7 @@ begin
              + '    , SUM (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67, 72  )  and KassaProperty.valutaID=1 then  Abs(DiscountKlientAccountMoney.Summa) else 0 endif ) as AmountGRN'
              + '    , SUM (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67, 72  )  and KassaProperty.valutaID=2 then  Abs(DiscountKlientAccountMoney.Summa) else 0 endif ) as AmountEUR'
              + '    , SUM (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67, 72  )  and KassaProperty.valutaID=5 then  Abs(DiscountKlientAccountMoney.Summa) else 0 endif ) as AmountUSD'
-             + '    , SUM (if  Kassa.ID     in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67, 72  ) then  DiscountKlientAccountMoney.Summa else 0 endif ) as AmountCard'
+             + '    , SUM (if  Kassa.ID     in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67, 72  ) then  Abs(DiscountKlientAccountMoney.Summa) else 0 endif ) as AmountCard'
              + '    , MAX (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67, 72  )  and KassaProperty.valutaID=5 then DiscountKlientAccountMoney.KursClient else 0 endif ) as CurrencyValueUSD'
              + '    , MAX (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67, 72  )  and KassaProperty.valutaID=5 then DiscountKlientAccountMoney.NominalKursClient else 0 endif ) as ParValueUSD'
              + '    , MAX (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67, 72  )  and KassaProperty.valutaID=2 then DiscountKlientAccountMoney.KursClient else 0 endif ) as CurrencyValueEUR'
@@ -4787,7 +4789,7 @@ begin
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMIMaster.Checked)and(not cbOnlyOpenMIChild.Checked);
 
-        if cbOnlyOpen.Checked then exit;
+        if (cbOnlyOpen.Checked = TRUE) or (cbMovementNotOne.Checked = TRUE) then exit;
         //
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;

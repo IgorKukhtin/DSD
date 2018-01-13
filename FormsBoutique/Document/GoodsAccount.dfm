@@ -594,7 +594,7 @@ object GoodsAccountForm: TGoodsAccountForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 46
+            Width = 50
           end
           object Amount_Sale: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1086#1076#1072#1078#1072
@@ -602,11 +602,10 @@ object GoodsAccountForm: TGoodsAccountForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 58
           end
           object OperPriceList: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1043#1056#1053
@@ -695,7 +694,7 @@ object GoodsAccountForm: TGoodsAccountForm
             Width = 80
           end
           object TotalChangePercentPay: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1044#1086#1087'. '#1089#1082'. ('#1074' '#1088#1072#1089#1095'..)'
+            Caption = #1048#1090#1086#1075#1086' '#1044#1086#1087'. '#1089#1082'. ('#1074' '#1088#1072#1089#1095'.)'
             DataBinding.FieldName = 'TotalChangePercentPay'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -1975,7 +1974,7 @@ object GoodsAccountForm: TGoodsAccountForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMovementMI_Id'
+        Name = 'inSaleMI_Id'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'SaleMI_Id'
@@ -2626,7 +2625,6 @@ object GoodsAccountForm: TGoodsAccountForm
     Top = 256
   end
   object spInsertMaskMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_GoodsAccount'
     DataSets = <>
     OutputType = otResult
     Params = <

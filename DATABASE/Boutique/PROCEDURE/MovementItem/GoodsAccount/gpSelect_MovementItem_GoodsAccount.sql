@@ -1,6 +1,5 @@
 -- Function: gpSelect_MovementItem_GoodsAccount()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_GoodsAccount (Integer, TDatetime, TDatetime, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_GoodsAccount (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_GoodsAccount(
@@ -21,7 +20,7 @@ RETURNS TABLE (Id Integer, PartionId Integer
 
              , Amount TFloat, Amount_Sale TFloat
              , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat
-               -- Итого сумма (в прод.)
+               -- Итого сумма вх. + прайс (в прод.)
              , TotalSumm TFloat, TotalSummPriceList TFloat
 
                -- Курс для перевода из валюты партии в ГРН
@@ -55,7 +54,7 @@ RETURNS TABLE (Id Integer, PartionId Integer
 
              , SaleMI_Id Integer
              , MovementId_Sale Integer, InvNumber_Sale_Full TVarChar
-             , OperDate_Sale TDatetime , DescName TVarChar
+             , OperDate_Sale TDateTime , DescName TVarChar
              , Comment TVarChar
              , isErased Boolean
               )
@@ -163,7 +162,7 @@ BEGIN
 
                         WHERE Movement.DescId   = zc_Movement_Sale()
                           -- !!!ВРЕМЕННО - потом оставить только ПРОВЕДЕННЫЕ!!!
-                          AND Movement.StatusId in (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                          AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
                           -- если ЕСТЬ долг
                           AND 0 <> zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData)
                                  - COALESCE (MIFloat_TotalChangePercent.ValueData, 0)
@@ -174,14 +173,14 @@ BEGIN
                                  - COALESCE (MIFloat_TotalReturn.ValueData, 0)
                        )
 
-     , tmpMI_Master AS (SELECT MI_Master.Id                                             AS MovementItemId
-                             , MI_Master.PartionId                                      AS PartionId
-                             , MI_Master.ObjectId                                       AS GoodsId
-                             , MI_Master.Amount                                         AS Amount_master
-                             , COALESCE (MIFloat_SummChangePercent_master.ValueData, 0) AS SummChangePercent_master
-                             , COALESCE (MIFloat_TotalPay_master.ValueData, 0)          AS TotalPay_master
-                             , COALESCE (MIString_Comment_master.ValueData,'')          AS Comment_master
-                             , MI_Master.isErased                                       AS isErased
+     , tmpMI_Master AS (SELECT MI_Master.Id                                              AS MovementItemId
+                             , MI_Master.PartionId                                       AS PartionId
+                             , MI_Master.ObjectId                                        AS GoodsId
+                             , MI_Master.Amount                                          AS Amount_master
+                             , COALESCE (MIFloat_SummChangePercent_master.ValueData, 0)  AS SummChangePercent_master
+                             , COALESCE (MIFloat_TotalPay_master.ValueData, 0)           AS TotalPay_master
+                             , COALESCE (MIString_Comment_master.ValueData,'')           AS Comment_master
+                             , MI_Master.isErased                                        AS isErased
                              , ROW_NUMBER() OVER (PARTITION BY MI_Master.isErased ORDER BY MI_Master.Id ASC) AS Ord
 
                              , Movement.Id                                        AS MovementId
@@ -352,6 +351,7 @@ BEGIN
            , 0                                 :: TFloat AS CountForPrice
            , tmpMI.OperPriceList_Sale          :: TFloat AS OperPriceList
 
+             -- Итого сумма (в прод.)
            , 0                                 :: TFloat AS TotalSumm
            , zfCalc_SummPriceList (tmpMI.Amount_Sale, tmpMI.OperPriceList_Sale) AS TotalSummPriceList
 
@@ -465,17 +465,17 @@ BEGIN
      -- Результат такой
      RETURN QUERY
      WITH
-       tmpMI_Master AS (SELECT MI_Master.Id                                             AS Id
-                             , MI_Master.PartionId                                      AS PartionId
-                             , MI_Master.ObjectId                                       AS GoodsId
-                             , MI_Master.Amount                                         AS Amount
-                             , COALESCE (MIFloat_SummChangePercent_master.ValueData, 0) AS SummChangePercent
-                             , COALESCE (MIFloat_TotalPay_master.ValueData, 0)          AS TotalPay
-                             , COALESCE (MIString_Comment_master.ValueData,'')          AS Comment
-                             , MI_Master.isErased                                       AS isErased
+       tmpMI_Master AS (SELECT MI_Master.Id                                              AS Id
+                             , MI_Master.PartionId                                       AS PartionId
+                             , MI_Master.ObjectId                                        AS GoodsId
+                             , MI_Master.Amount                                          AS Amount
+                             , COALESCE (MIFloat_SummChangePercent_master.ValueData, 0)  AS SummChangePercent
+                             , COALESCE (MIFloat_TotalPay_master.ValueData, 0)           AS TotalPay
+                             , COALESCE (MIString_Comment_master.ValueData,'')           AS Comment
+                             , MI_Master.isErased                                        AS isErased
                              , ROW_NUMBER() OVER (PARTITION BY MI_Master.isErased ORDER BY MI_Master.Id ASC) AS Ord
 
-                             , Object_PartionMI.ObjectCode                              AS SaleMI_ID
+                             , Object_PartionMI.ObjectCode                               AS SaleMI_ID
 
                         FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                              JOIN MovementItem AS MI_Master
@@ -553,6 +553,7 @@ BEGIN
            , 0                                                  :: TFloat AS CountForPrice
            , COALESCE (MIFloat_OperPriceList.ValueData, 0)      :: TFloat AS OperPriceList
 
+             -- Итого сумма (в прод.)
            , 0                                                  :: TFloat AS TotalSumm
            , zfCalc_SummPriceList (MI_Sale.Amount, MIFloat_OperPriceList.ValueData) AS TotalSummPriceList
 
@@ -704,5 +705,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_GoodsAccount (inMovementId:= 241258 , inShowAll:= TRUE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpSelect_MovementItem_GoodsAccount (inMovementId:= 241258 , inShowAll:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_MovementItem_GoodsAccount (inMovementId:= 241258, inShowAll:= TRUE,  inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_MovementItem_GoodsAccount (inMovementId:= 241258, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());
