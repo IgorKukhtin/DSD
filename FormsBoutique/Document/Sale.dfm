@@ -552,6 +552,9 @@ object SaleForm: TSaleForm
           object clBarCode: TcxGridDBColumn
             Caption = #1064#1090#1088#1080#1093#1082#1086#1076
             DataBinding.FieldName = 'BarCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object GoodsGroupNameFull: TcxGridDBColumn

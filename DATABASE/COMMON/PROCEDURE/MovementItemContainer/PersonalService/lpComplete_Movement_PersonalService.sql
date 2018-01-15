@@ -78,13 +78,13 @@ BEGIN
                      LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRecalc
                                                   ON MIFloat_SummNalogRecalc.MovementItemId = MovementItem.Id
                                                  AND MIFloat_SummNalogRecalc.DescId         = zc_MIFloat_SummNalogRecalc()
-                     LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRetRecalc
+                     /*LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRetRecalc
                                                   ON MIFloat_SummNalogRetRecalc.MovementItemId = MovementItem.Id
-                                                 AND MIFloat_SummNalogRetRecalc.DescId         = zc_MIFloat_SummNalogRetRecalc()
+                                                 AND MIFloat_SummNalogRetRecalc.DescId         = zc_MIFloat_SummNalogRetRecalc()*/
                 WHERE MovementItem.MovementId = inMovementId
                   AND MovementItem.DescId     = zc_MI_Master()
                   AND MovementItem.isErased   = FALSE
-                  AND (MIFloat_SummNalogRecalc.ValueData <> 0 OR MIFloat_SummNalogRetRecalc.ValueData <> 0)
+                  AND (MIFloat_SummNalogRecalc.ValueData <> 0 /*OR MIFloat_SummNalogRetRecalc.ValueData <> 0*/)
                )
      THEN
           PERFORM lpInsertUpdate_MovementItem (tmp.MovementItemId, zc_MI_Master(), tmp.PersonalId, inMovementId, tmp.Amount, tmp.ParentId)
@@ -656,12 +656,12 @@ BEGIN
         WHERE MIF.ValueData <> 0 OR MIF_ret.ValueData <> 0
 
        UNION
-        -- 1.3.2. долг сотруднику по ЗП - удержания с ЗП
+        -- 1.3.2.1. долг сотруднику по ЗП - удержания с ЗП
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
              , _tmpItem.ObjectId
              , _tmpItem.ObjectDescId
-             , 1 * COALESCE (MIF.ValueData, 0) - 1 * COALESCE (MIF_ret.ValueData, 0) AS OperSumm
+             , 1 * COALESCE (MIF.ValueData, 0) AS OperSumm
              , _tmpItem.MovementItemId
 
              , 0 AS ContainerId                                                     -- сформируем позже
@@ -705,6 +705,65 @@ BEGIN
              , FALSE AS IsMaster
         FROM _tmpItem
              LEFT JOIN MovementItemFloat AS MIF     ON MIF.MovementItemId     = _tmpItem.MovementItemId AND MIF.DescId     = zc_MIFloat_SummNalog()
+
+             LEFT JOIN ObjectLink AS ObjectLink_Personal_Member ON ObjectLink_Personal_Member.ObjectId = _tmpItem.ObjectId
+                                                               AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+             LEFT JOIN ObjectLink AS ObjectLink_Member_ObjectTo ON ObjectLink_Member_ObjectTo.ObjectId = ObjectLink_Personal_Member.ChildObjectId
+                                                               AND ObjectLink_Member_ObjectTo.DescId = zc_ObjectLink_Member_ObjectTo()
+             LEFT JOIN Object AS Object_ObjectTo ON Object_ObjectTo.Id     = ObjectLink_Member_ObjectTo.ChildObjectId
+                                                AND Object_ObjectTo.DescId = zc_Object_Founder()
+        WHERE MIF.ValueData <> 0 
+          AND Object_ObjectTo.Id IS NULL
+
+       UNION
+        -- 1.3.2.2. долг сотруднику по ЗП - возмещение к ЗП
+        SELECT _tmpItem.MovementDescId
+             , _tmpItem.OperDate
+             , _tmpItem.ObjectId
+             , _tmpItem.ObjectDescId
+             , -1 * COALESCE (MIF_ret.ValueData, 0) AS OperSumm
+             , _tmpItem.MovementItemId
+
+             , 0 AS ContainerId                                                     -- сформируем позже
+             , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId         -- сформируем позже
+             , 0 AS ProfitLossGroupId, 0 AS ProfitLossDirectionId                   -- не используется
+
+               -- Управленческие группы назначения
+             , _tmpItem.InfoMoneyGroupId
+               -- Управленческие назначения
+             , _tmpItem.InfoMoneyDestinationId
+               -- Управленческие статьи назначения
+             , _tmpItem.InfoMoneyId
+
+               -- Бизнес Баланс: из какой кассы будет выплачено
+             , 0 AS BusinessId_Balance
+               -- Бизнес ОПиУ: не используется
+             , 0 AS BusinessId_ProfitLoss
+
+               -- Главное Юр.лицо: из какой кассы будет выплачено
+             , _tmpItem.JuridicalId_Basis
+
+             , _tmpItem.UnitId
+             , _tmpItem.PositionId
+             , _tmpItem.PersonalServiceListId
+
+               -- Филиал Баланс: всегда по подразделению !!!в кассе и р/счете - делать аналогично!!!
+             , _tmpItem.BranchId_Balance
+               -- Филиал ОПиУ: не используется !!!в кассе и р/счете - делать аналогично!!!
+             , 0 AS BranchId_ProfitLoss
+
+               -- Месяц начислений: есть
+             , _tmpItem.ServiceDateId
+
+             , 0 AS ContractId -- не используется
+             , 0 AS PaidKindId -- не используется
+
+             , zc_Enum_AnalyzerId_PersonalService_NalogRet() AS AnalyzerId -- надо, т.к. это возмещение к ЗП
+             , _tmpItem.ObjectIntId_Analyzer -- надо, т.к. это возмещение к ЗП
+
+             , _tmpItem.IsActive -- всегда такая
+             , FALSE AS IsMaster
+        FROM _tmpItem
              LEFT JOIN MovementItemFloat AS MIF_ret ON MIF_ret.MovementItemId = _tmpItem.MovementItemId AND MIF_ret.DescId = zc_MIFloat_SummNalogRet()
 
              LEFT JOIN ObjectLink AS ObjectLink_Personal_Member ON ObjectLink_Personal_Member.ObjectId = _tmpItem.ObjectId
@@ -713,16 +772,16 @@ BEGIN
                                                                AND ObjectLink_Member_ObjectTo.DescId = zc_ObjectLink_Member_ObjectTo()
              LEFT JOIN Object AS Object_ObjectTo ON Object_ObjectTo.Id     = ObjectLink_Member_ObjectTo.ChildObjectId
                                                 AND Object_ObjectTo.DescId = zc_Object_Founder()
-        WHERE (MIF.ValueData <> 0 OR MIF_ret.ValueData <> 0)
+        WHERE MIF_ret.ValueData <> 0
           AND Object_ObjectTo.Id IS NULL
 
        UNION ALL
-         -- 1.3.3. Перевыставление по налогам на Учредителя
+         -- 1.3.3.1. Перевыставление по налогам на Учредителя
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
              , Object_ObjectTo.Id     AS ObjectId
              , Object_ObjectTo.DescId AS ObjectDescId
-             , 1 * COALESCE (MIF.ValueData, 0) - 1 * COALESCE (MIF_ret.ValueData, 0) AS OperSumm
+             , 1 * COALESCE (MIF.ValueData, 0) AS OperSumm
              , _tmpItem.MovementItemId
 
              , 0 AS ContainerId                                               -- сформируем позже
@@ -768,6 +827,65 @@ BEGIN
 
         FROM _tmpItem
              LEFT JOIN MovementItemFloat AS MIF     ON MIF.MovementItemId     = _tmpItem.MovementItemId AND MIF.DescId     = zc_MIFloat_SummNalog()
+
+             INNER JOIN ObjectLink AS ObjectLink_Personal_Member ON ObjectLink_Personal_Member.ObjectId = _tmpItem.ObjectId
+                                                                AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+             INNER JOIN ObjectLink AS ObjectLink_Member_ObjectTo ON ObjectLink_Member_ObjectTo.ObjectId = ObjectLink_Personal_Member.ChildObjectId
+                                                                AND ObjectLink_Member_ObjectTo.DescId = zc_ObjectLink_Member_ObjectTo()
+             INNER JOIN Object AS Object_ObjectTo ON Object_ObjectTo.Id     = ObjectLink_Member_ObjectTo.ChildObjectId
+                                                 AND Object_ObjectTo.DescId = zc_Object_Founder()
+        WHERE MIF.ValueData <> 0
+       UNION ALL
+         -- 1.3.3.2. Перевыставление по возмещению налогов на Учредителя
+        SELECT _tmpItem.MovementDescId
+             , _tmpItem.OperDate
+             , Object_ObjectTo.Id     AS ObjectId
+             , Object_ObjectTo.DescId AS ObjectDescId
+             , -1 * COALESCE (MIF_ret.ValueData, 0) AS OperSumm
+             , _tmpItem.MovementItemId
+
+             , 0 AS ContainerId                                               -- сформируем позже
+             , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId   -- сформируем позже
+
+             , 0 AS ProfitLossGroupId, 0 AS ProfitLossDirectionId                   -- не используется
+
+               -- Управленческие группы назначения - не используется
+             , 0 AS InfoMoneyGroupId
+               -- Управленческие назначения - не используется
+             , 0 AS InfoMoneyDestinationId
+               -- Управленческие статьи назначения - не используется
+             , 0 AS InfoMoneyId
+
+               -- Бизнес Баланс: не используется
+             , 0 AS BusinessId_Balance
+               -- Бизнес ОПиУ: не используется
+             , 0 AS BusinessId_ProfitLoss
+
+               -- Главное Юр.лицо
+             , zc_Juridical_Basis() AS JuridicalId_Basis
+
+             , 0 AS UnitId                -- не используется
+             , 0 AS PositionId            -- не используется
+             , 0 AS PersonalServiceListId -- не используется
+
+               -- Филиал Баланс: не используется
+             , 0 AS BranchId_Balance
+               -- Филиал ОПиУ: не используется
+             , 0 AS BranchId_ProfitLoss
+
+               -- Месяц начислений: не используется
+             , 0 AS ServiceDateId
+
+             , 0 AS ContractId
+             , 0 AS PaidKindId
+
+             , zc_Enum_AnalyzerId_PersonalService_NalogRet() AS AnalyzerId -- надо, т.к. это Перевыставление - Налоги
+             , _tmpItem.ObjectIntId_Analyzer -- надо, т.к. это удержания с ЗП
+
+             , NOT _tmpItem.IsActive
+             , NOT _tmpItem.IsMaster
+
+        FROM _tmpItem
              LEFT JOIN MovementItemFloat AS MIF_ret ON MIF_ret.MovementItemId = _tmpItem.MovementItemId AND MIF_ret.DescId = zc_MIFloat_SummNalogRet()
 
              INNER JOIN ObjectLink AS ObjectLink_Personal_Member ON ObjectLink_Personal_Member.ObjectId = _tmpItem.ObjectId
@@ -776,7 +894,7 @@ BEGIN
                                                                 AND ObjectLink_Member_ObjectTo.DescId = zc_ObjectLink_Member_ObjectTo()
              INNER JOIN Object AS Object_ObjectTo ON Object_ObjectTo.Id     = ObjectLink_Member_ObjectTo.ChildObjectId
                                                  AND Object_ObjectTo.DescId = zc_Object_Founder()
-        WHERE (MIF.ValueData <> 0 OR MIF_ret.ValueData <> 0)
+        WHERE MIF_ret.ValueData <> 0
        ;
 
 /*
@@ -863,7 +981,7 @@ BEGIN
                                                                                                  - tmpMovement.SummPhone
 
                                                                                                  - tmpMovement.SummNalog
-                                                                                                 - tmpMovement.SummNalogRet
+                                                                                                 + tmpMovement.SummNalogRet
                                                                                                  - tmpMovement.SummChild
                                                                                                  - tmpMovement.SummMinusExt
                                               )

@@ -25,16 +25,17 @@ BEGIN
                                           , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                           , GoodsId Integer, PartionId Integer, GoodsSizeId Integer, PartionId_MI Integer
                                           , OperCount TFloat, OperSumm TFloat, OperSumm_ToPay TFloat, TotalPay TFloat
-                                          , OperCount_sale TFloat, OperSumm_sale TFloat, OperSummPriceList_sale TFloat
+                                          , OperCount_sale TFloat, OperSumm_sale TFloat
+                                          , Summ_10501 TFloat
                                           , ContainerId_ProfitLoss_10501 TFloat, ContainerId_ProfitLoss_10601 TFloat
                                            ) ON COMMIT DROP;
 
      -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
                                , ContainerId_Summ Integer, ContainerId_Goods Integer
-                               , GoodsId Integer, PartionId Integer, PartionId_MI, GoodsSizeId Integer
+                               , GoodsId Integer, PartionId Integer, PartionId_MI Integer, GoodsSizeId Integer
                                , OperCount TFloat, OperPrice TFloat, CountForPrice TFloat, OperSumm TFloat, OperSumm_Currency TFloat
-                               , OperSumm_ToPay TFloat, OperSummPriceList TFloat, TotalChangePercent TFloat, TotalPay TFloat, TotalToPay TFloat
+                               , OperSumm_ToPay TFloat, OperSummPriceList TFloat, TotalChangePercent TFloat, TotalPay TFloat
                                , AccountId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                 ) ON COMMIT DROP;
 

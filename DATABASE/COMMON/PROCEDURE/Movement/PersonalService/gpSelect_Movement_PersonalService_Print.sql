@@ -192,9 +192,9 @@ BEGIN
                                         , CLO_Unit.ObjectId                        AS UnitId
                                         , CLO_Position.ObjectId                    AS PositionId
                                         , ObjectLink_Personal_Member.ChildObjectId AS MemberId
-                                        , (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_PersonalService_Nalog() THEN MIContainer.Amount ELSE 0 END) AS SummNalog
-                                        -- , ROW_NUMBER() OVER (PARTITION BY MIContainer.MovementItemId ORDER BY ABS (MIContainer.Amount) DESC) AS Ord
-                                        , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Personal_Member.ChildObjectId ORDER BY ABS (MIContainer.Amount) DESC) AS Ord
+                                        , (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_PersonalService_Nalog()    THEN  1 * MIContainer.Amount ELSE 0 END) AS SummNalog
+                                        , (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_PersonalService_NalogRet() THEN -1 * MIContainer.Amount ELSE 0 END) AS SummNalogRet
+                                        , MIContainer.AnalyzerId
                                    FROM MovementItemContainer AS MIContainer
                                         LEFT JOIN ContainerLinkObject AS CLO_Unit
                                                                       ON CLO_Unit.ContainerId = MIContainer.ContainerId
@@ -210,12 +210,18 @@ BEGIN
                                                             AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
                                    WHERE MIContainer.MovementId = inMovementId
                                      AND MIContainer.DescId     = zc_MIContainer_Summ()
-                                     AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_PersonalService_Nalog())
+                                     AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_PersonalService_Nalog(), zc_Enum_AnalyzerId_PersonalService_NalogRet())
+	                          )
+        , tmpMIContainer_find AS (SELECT tmpMIContainer_all.*
+                                        , ROW_NUMBER() OVER (PARTITION BY tmpMIContainer_all.MemberId ORDER BY ABS (tmpMIContainer_all.SummNalog) DESC) AS Ord
+                                   FROM tmpMIContainer_all
+                                   WHERE tmpMIContainer_all.AnalyzerId IN (zc_Enum_AnalyzerId_PersonalService_Nalog())
 	                          )
           , tmpMIContainer AS (SELECT /*tmpMIContainer_all.UnitId
                                     , tmpMIContainer_all.PositionId
                                     ,*/ tmpMIContainer_all.MemberId
-                                    , SUM (tmpMIContainer_all.SummNalog) :: TFloat AS SummNalog
+                                    , SUM (tmpMIContainer_all.SummNalog)    :: TFloat AS SummNalog
+                                    , SUM (tmpMIContainer_all.SummNalogRet) :: TFloat AS SummNalogRet
                                     , CASE WHEN inisShowAll = TRUE THEN tmpMIContainer_all.PositionId ELSE 0 END AS PositionId
                                FROM tmpMIContainer_all
                                GROUP BY /*tmpMIContainer_all.UnitId
@@ -556,32 +562,35 @@ BEGIN
 
 --            , tmpAll.Amount           :: TFloat AS Amount
 --            , tmpAll.SummToPay        :: TFloat AS AmountToPay
-            , (tmpAll.SummToPay - COALESCE (tmpMIContainer.SummNalog, 0) + tmpAll.SummNalog
+            , (tmpAll.SummToPay
+             - COALESCE (tmpMIContainer.SummNalog, 0)    + tmpAll.SummNalog
+             + COALESCE (tmpMIContainer.SummNalogRet, 0) - tmpAll.SummNalogRet
              - tmpAll.SummCard
              - tmpAll.SummCardSecond
              - tmpAll.SummCardSecondCash
              - COALESCE (tmpMIContainer_pay.Amount_avance, 0)
               ) :: TFloat AS AmountCash
+
             , (tmpAll.SummService /*+ COALESCE (tmpMIContainer.SummNalog, 0)*/
              -- + tmpAll.SummAdd
              + tmpAll.SummHoliday
               ) :: TFloat AS SummService
-            , tmpAll.SummCard           :: TFloat AS SummCard
-            , tmpAll.SummCardSecond     :: TFloat AS SummCardSecond
-            , tmpAll.SummCardSecondCash :: TFloat AS SummCardSecondCash
-            , tmpMIContainer.SummNalog  :: TFloat AS SummNalog
-            , tmpAll.SummNalogRet       :: TFloat AS SummNalogRet
---            , tmpAll.SummCardRecalc   :: TFloat AS SummCardRecalc
-            , tmpAll.SummMinus          :: TFloat AS SummMinus
-            , tmpAll.SummAdd          :: TFloat AS SummAdd
---            , tmpAll.SummSocialIn     :: TFloat AS SummSocialIn
---            , tmpAll.SummSocialAdd    :: TFloat AS SummSocialAdd
-            , tmpAll.SummChild          :: TFloat AS SummChild
-            , tmpAll.SummMinusExt       :: TFloat AS SummMinusExt
+            , tmpAll.SummCard               :: TFloat AS SummCard
+            , tmpAll.SummCardSecond         :: TFloat AS SummCardSecond
+            , tmpAll.SummCardSecondCash     :: TFloat AS SummCardSecondCash
+            , tmpMIContainer.SummNalog      :: TFloat AS SummNalog
+            , tmpMIContainer.SummNalogRet   :: TFloat AS SummNalogRet
+--            , tmpAll.SummCardRecalc       :: TFloat AS SummCardRecalc
+            , tmpAll.SummMinus              :: TFloat AS SummMinus
+            , tmpAll.SummAdd                :: TFloat AS SummAdd
+--            , tmpAll.SummSocialIn         :: TFloat AS SummSocialIn
+--            , tmpAll.SummSocialAdd        :: TFloat AS SummSocialAdd
+            , tmpAll.SummChild              :: TFloat AS SummChild
+            , tmpAll.SummMinusExt           :: TFloat AS SummMinusExt
 
-            , tmpAll.SummTransportAdd   :: TFloat AS SummTransportAdd
-            , tmpAll.SummTransport      :: TFloat AS SummTransport
-            , tmpAll.SummPhone          :: TFloat AS SummPhone
+            , tmpAll.SummTransportAdd       :: TFloat AS SummTransportAdd
+            , tmpAll.SummTransport          :: TFloat AS SummTransport
+            , tmpAll.SummPhone              :: TFloat AS SummPhone
 
             , tmpMIContainer_pay.Amount_avance :: TFloat AS Amount_avance
 
@@ -592,10 +601,10 @@ BEGIN
                                     AND (tmpMIContainer.PositionId = tmpAll.PositionId
                                       OR inisShowAll = FALSE
                                         )
-            LEFT JOIN tmpMIContainer_all ON tmpMIContainer_all.MemberId = tmpAll.MemberId
-                                        AND ((tmpMIContainer_all.Ord      = 1 -- !!!только 1-ый!!!
+            LEFT JOIN tmpMIContainer_find ON tmpMIContainer_find.MemberId = tmpAll.MemberId
+                                        AND ((tmpMIContainer_find.Ord      = 1 -- !!!только 1-ый!!!
                                               AND inisShowAll = FALSE)
-                                          OR (tmpMIContainer_all.PositionId = tmpAll.PositionId
+                                          OR (tmpMIContainer_find.PositionId = tmpAll.PositionId
                                               AND inisShowAll = TRUE)
                                             )
             LEFT JOIN tmpMIContainer_pay ON tmpMIContainer_pay.MemberId    = tmpAll.MemberId
@@ -607,7 +616,7 @@ BEGIN
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpAll.UnitId
             LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpAll.PositionId
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpAll.MemberId
-            LEFT JOIN Object AS Object_PersonalTo ON Object_PersonalTo.Id = tmpMIContainer_all.MemberId
+            LEFT JOIN Object AS Object_PersonalTo ON Object_PersonalTo.Id = tmpMIContainer_find.MemberId
 
             LEFT JOIN ObjectString AS ObjectString_Member_INN
                                    ON ObjectString_Member_INN.ObjectId = tmpAll.MemberId
@@ -615,17 +624,22 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Member_Official
                                     ON ObjectBoolean_Member_Official.ObjectId = tmpAll.MemberId
                                    AND ObjectBoolean_Member_Official.DescId = zc_ObjectBoolean_Member_Official()
-       WHERE 0 <> tmpAll.SummToPay + tmpAll.SummNalog - COALESCE (tmpMIContainer.SummNalog, 0) - tmpAll.SummCard - tmpAll.SummChild
+       WHERE 0 <> tmpAll.SummToPay
+                + tmpAll.SummNalog    - COALESCE (tmpMIContainer.SummNalog, 0)
+                - tmpAll.SummNalogRet + COALESCE (tmpMIContainer.SummNalogRet, 0)
+                - tmpAll.SummCard - tmpAll.SummChild
           OR 0 <> tmpAll.SummService /*+ COALESCE (tmpMIContainer.SummNalog, 0)*/ + tmpAll.SummHoliday
           OR 0 <> tmpAll.SummCard
           OR 0 <> tmpMIContainer.SummNalog
+          OR 0 <> tmpMIContainer.SummNalogRet
           OR 0 <> tmpAll.SummMinus
           OR 0 <> tmpAll.SummTransportAdd
           OR 0 <> tmpAll.SummTransport
           OR 0 <> tmpAll.SummPhone
           OR 0 <> tmpAll.SummCardSecond
           OR 0 <> tmpAll.SummAdd
-          OR 0 <> tmpAll.SummNalogRet
+          -- OR 0 <> tmpAll.SummNalog
+          -- OR 0 <> tmpAll.SummNalogRet
        ORDER BY Object_Personal.ValueData
       ;
 

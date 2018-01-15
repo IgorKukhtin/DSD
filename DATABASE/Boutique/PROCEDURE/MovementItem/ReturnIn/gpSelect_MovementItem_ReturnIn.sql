@@ -326,7 +326,7 @@ BEGIN
                                                        AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
                       GROUP BY MovementItem.ParentId
                       )
-   , tmpContainer AS (SELECT Container.*
+   , tmpContainer AS (SELECT DISTINCT Container.*
                       FROM tmpMI AS tmpMI_Master
                            INNER JOIN Container ON Container.PartionId     = tmpMI_Master.PartionId
                                                AND Container.WhereObjectId = vbUnitId
@@ -567,7 +567,7 @@ BEGIN
                                                        AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
                       GROUP BY MovementItem.ParentId
                       )
-   , tmpContainer AS (SELECT Container.*
+   , tmpContainer AS (SELECT DISTINCT Container.*
                       FROM tmpMI_Master
                            INNER JOIN Container ON Container.PartionId     = tmpMI_Master.PartionId
                                                AND Container.WhereObjectId = vbUnitId

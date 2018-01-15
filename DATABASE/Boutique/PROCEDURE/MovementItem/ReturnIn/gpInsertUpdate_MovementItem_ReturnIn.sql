@@ -38,6 +38,7 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ReturnIn());
+     vbUserId := zc_User_Sybase() ;
 
 
      -- проверка - документ должен быть сохранен
@@ -261,6 +262,11 @@ BEGIN
                                                                    ), 0)
                                                          -- МИНУС Сумма ВОЗВРАТ по Прайсу
                                                        - zfCalc_SummPriceList (inAmount, MIFloat_OperPriceList.ValueData)
+                                                       + COALESCE ((SELECT MIFloat_TotalPay.ValueData
+                                                                    FROM MovementItemFloat AS MIFloat_TotalPay
+                                                                    WHERE MIFloat_TotalPay.MovementItemId = ioId
+                                                                      AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
+                                                                   ), 0)
                                                         )
 
                                           -- !!!иначе - для Sybase - №п/п<>1!!!
@@ -294,7 +300,7 @@ BEGIN
                                                                                            AND (MovementItem.Id < ioId OR COALESCE (ioId, 0) = 0)
                                                                     INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
                                                                                        AND Movement.DescId   = zc_Movement_ReturnIn()
-                                                                                       AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                                                       AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
                                                                     LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
                                                                                                 ON MIFloat_TotalChangePercent.MovementItemId = MovementItem.Id
                                                                                                AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()
@@ -325,9 +331,8 @@ BEGIN
 
                                                               ), 0)
                                           
-                                          ELSE -- иначе почти пропроционально - ОКРУГЛИМ дробную часть после второго знака !!!без Скидки из Расчеты покупателей!!!
-                                               zfCalc_SummPriceList (inAmount, MIFloat_OperPriceList.ValueData)
-                                             - ROUND ((COALESCE (MIFloat_TotalChangePercent.ValueData, 0) + COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0))
+                                          ELSE -- иначе почти пропроционально - ОКРУГЛИМ дробную часть после второго знака
+                                               ROUND ((COALESCE (MIFloat_TotalChangePercent.ValueData, 0) + COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0))
                                                     / MovementItem.Amount * inAmount, 2)
                                      END
                              FROM MovementItem

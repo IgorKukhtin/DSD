@@ -213,8 +213,9 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_Transport_AddLong(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1202, inName:= 'Сумма дальнобойные (тоже командировочные) из Путевой лист', inEnumName:= 'zc_Enum_AnalyzerId_Transport_AddLong');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_Transport_Taxi(),    inDescId:= zc_Object_AnalyzerId(), inCode:= 1203, inName:= 'Сумма на такси из Путевой лист',                            inEnumName:= 'zc_Enum_AnalyzerId_Transport_Taxi');
 
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_PersonalService_Nalog(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1301, inName:= 'Сумма Налоги - удержания с ЗП',                         inEnumName:= 'zc_Enum_AnalyzerId_PersonalService_Nalog');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_MobileBills_Personal(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1302, inName:= 'Сумма мобильная связь - удержания с ЗП',                 inEnumName:= 'zc_Enum_AnalyzerId_MobileBills_Personal');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_PersonalService_Nalog(),    inDescId:= zc_Object_AnalyzerId(), inCode:= 1301, inName:= 'Сумма Налоги - удержания с ЗП',                      inEnumName:= 'zc_Enum_AnalyzerId_PersonalService_Nalog');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_PersonalService_NalogRet(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1302, inName:= 'Сумма Налоги - возмещение к ЗП',                     inEnumName:= 'zc_Enum_AnalyzerId_PersonalService_NalogRet');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_MobileBills_Personal(),     inDescId:= zc_Object_AnalyzerId(), inCode:= 1303, inName:= 'Сумма мобильная связь - удержания с ЗП',             inEnumName:= 'zc_Enum_AnalyzerId_MobileBills_Personal');
      --
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_TareReturning(), inDescId:= zc_Object_AnalyzerId(), inCode:= 2001, inName:= 'Кол-во, возвратная тара', inEnumName:= 'zc_Enum_AnalyzerId_TareReturning');
      

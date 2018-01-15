@@ -108,20 +108,19 @@ BEGIN
              , zfCalc_SummIn (tmp.Amount_begin, tmp.OperPrice, tmp.CountForPrice) AS OperSumm_Currency
 
                -- Сумма к Оплате ИТОГО
-             , tmp.SummDebt + tmp.TotalPay AS OperSumm_ToPay
+             , zfCalc_SummPriceList (tmp.Amount_Sale, tmp.OperPriceList)
+             - (tmp.TotalChangePercent + tmp.TotalChangePercentPay + tmp.SummChangePercent_curr)
+             - tmp.TotalReturn_calc
+               AS OperSumm_ToPay
 
                -- Сумма по Прайсу - с округлением до 2-х знаков
              , zfCalc_SummPriceList (tmp.Amount_begin, tmp.OperPriceList) AS OperSummPriceList
 
-               -- Итого сумма Скидки - 1) + 2) + 3) + 4)дополнительная для текущего документа
-          -- , tmp.TotalChangePercent
-             , tmp.SummChangePercent_pl
-             + CASE WHEN tmp.Amount_begin > 0 THEN ROUND (tmp.SummChangePercent / tmp.Amount * tmp.Amount_begin, 2) ELSE 0 END
-             + tmp.TotalChangePercentPay + tmp.SummChangePercent_curr
-               AS TotalChangePercent
+               -- Итого сумма Скидки - 1) + 2) + 3) + 4)в текущем документе - 5)сколько Скидки - вернули
+             , tmp.TotalChangePercent + tmp.TotalChangePercentPay + tmp.SummChangePercent_curr - tmp.SummChangePercent_return AS TotalChangePercent
 
-             , tmp.TotalPay           -- Итого сумма оплаты - 1) + 2) + 3)в текущем документе
-             , tmp.TotalPay_curr      -- Итого сумма оплаты - в текущем документе
+             , tmp.TotalPay + tmp.TotalPayOth + tmp.TotalPay_curr - tmp.TotalPayReturn_calc AS TotalPay      -- Итого сумма оплаты - 1) + 2) + 3)в текущем документе - 4)сколько оплаты - вернули
+             , tmp.TotalPay_curr                                                            AS TotalPay_curr -- Итого сумма оплаты - в текущем документе
 
                -- Сезонная скидка - Только для %
              , CASE WHEN tmp.DiscountSaleKindId = zc_Enum_DiscountSaleKind_Period() THEN tmp.SummChangePercent_pl ELSE 0 END AS Summ_10201
@@ -129,10 +128,9 @@ BEGIN
              , CASE WHEN tmp.DiscountSaleKindId = zc_Enum_DiscountSaleKind_Outlet() THEN tmp.SummChangePercent_pl ELSE 0 END AS Summ_10202
                -- Скидка клиента - Только для %
              , CASE WHEN tmp.DiscountSaleKindId = zc_Enum_DiscountSaleKind_Client() THEN tmp.SummChangePercent_pl ELSE 0 END AS Summ_10203
-               -- Скидка дополнительная - иначе почти пропроционально - отбросим дробную часть после второго знака
-             , CASE WHEN tmp.Amount_begin > 0 THEN ROUND (tmp.SummChangePercent / tmp.Amount * tmp.Amount_begin, 2) ELSE 0 END
-             + tmp.TotalChangePercentPay + tmp.SummChangePercent_curr AS Summ_10204
-               
+               -- Скидка дополнительная - считаем сколько от неё остаётся
+             , tmp.TotalChangePercent + tmp.TotalChangePercentPay + tmp.SummChangePercent_curr - tmp.SummChangePercent_return - tmp.SummChangePercent_pl AS Summ_10204
+
              , 0 AS AccountId          -- Счет(справочника), сформируем позже
 
                -- УП для Sale - для определения счета Запасы
@@ -147,21 +145,23 @@ BEGIN
                      -- !!!самое Важное - определить Кол-во!!!
                    , CASE WHEN tmp.SummDebt_sale = 0
                                THEN -- то что в продаже
-                                    tmp.Amount
+                                    tmp.Amount_Sale
                           WHEN tmp.SummDebt_return = 0
                                THEN -- продажа МИНУС возврат
-                                    tmp.Amount - tmp.Amount_Return
+                                    tmp.Amount_Sale - tmp.Amount_Return
                           ELSE 0
                      END AS Amount_begin
+
                      -- !!!самое Важное - определить для Amount_begin Скидка - Только для %!!!
                    , CASE WHEN tmp.SummDebt_sale = 0
                                THEN -- то что в продаже
-                                    zfCalc_SummPriceList (tmp.Amount, tmp.OperPriceList) - zfCalc_SummChangePercent (tmp.Amount, tmp.OperPriceList, tmp.ChangePercent)
+                                    zfCalc_SummPriceList (tmp.Amount_Sale, tmp.OperPriceList) - zfCalc_SummChangePercent (tmp.Amount_Sale, tmp.OperPriceList, tmp.ChangePercent)
                           WHEN tmp.SummDebt_return = 0
                                THEN -- продажа МИНУС возврат
-                                    zfCalc_SummPriceList (tmp.Amount - tmp.Amount_Return, tmp.OperPriceList) - zfCalc_SummChangePercent (tmp.Amount - tmp.Amount_Return, tmp.OperPriceList, tmp.ChangePercent)
+                                    zfCalc_SummPriceList (tmp.Amount_Sale - tmp.Amount_Return, tmp.OperPriceList) - zfCalc_SummChangePercent (tmp.Amount_Sale - tmp.Amount_Return, tmp.OperPriceList, tmp.ChangePercent)
                           ELSE 0
                      END AS SummChangePercent_pl
+
                      -- !!!самое Важное - определить Долг!!!
                    , CASE WHEN tmp.SummDebt_sale = 0
                                THEN -- то что в продаже
@@ -171,65 +171,106 @@ BEGIN
                                     tmp.SummDebt_return
                           ELSE tmp.SummDebt_return
                      END AS SummDebt
-                       
+
+                     -- !!!сколько Скидки - вернули!!!
+                   , CASE WHEN tmp.SummDebt_sale = 0
+                               THEN -- НЕ учитываем её
+                                    0
+                          WHEN tmp.SummDebt_return = 0
+                               THEN -- просто разница
+                                    zfCalc_SummPriceList (tmp.Amount_Return, tmp.OperPriceList) - tmp.TotalReturn
+                          ELSE 0
+                     END AS SummChangePercent_return
+                     -- !!!сколько оплаты - вернули!!!
+                   , CASE WHEN tmp.SummDebt_sale = 0
+                               THEN -- НЕ учитываем её
+                                    0
+                          WHEN tmp.SummDebt_return = 0
+                               THEN -- учитываем её
+                                    tmp.TotalPayReturn
+                          ELSE 0
+                     END AS TotalPayReturn_calc
+                     -- !!!сколько суммы со скидкой - вернули!!!
+                   , CASE WHEN tmp.SummDebt_sale = 0
+                               THEN -- НЕ учитываем её
+                                    0
+                          WHEN tmp.SummDebt_return = 0
+                               THEN -- учитываем её
+                                    tmp.TotalReturn
+                          ELSE 0
+                     END AS TotalReturn_calc
+
               FROM
              (SELECT MovementItem.Id                  AS MovementItemId
                    , MovementItem.ObjectId            AS GoodsId
                    , MovementItem.PartionId           AS PartionId
-                   -- , Object_PartionMI.ObjectCode      AS MovementItemId_MI
+                   -- , Object_PartionMI.ObjectCode   AS MovementItemId_MI
                    , MILinkObject_PartionMI.ObjectId  AS PartionId_MI
                    , Object_PartionGoods.GoodsSizeId  AS GoodsSizeId
-                   , MovementItem.Amount              AS OperCount
+                   -- , MovementItem.Amount           AS OperCount
                    , Object_PartionGoods.OperPrice    AS OperPrice
                    , MIFloat_OperPriceList.ValueData  AS OperPriceList
                    , CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END AS CountForPrice
                    , Object_PartionGoods.CurrencyId   AS CurrencyId
-                   
-                     -- !!!самое Важное - Сложный расчет ДОЛГА - БЕЗ ВОЗВРАТА!!!
-                   , -- Сумма по Прайсу
-                     zfCalc_SummPriceList (MI_Sale.Amount, MIFloat_OperPriceList.ValueData)
-                     -- МИНУС TotalChangePercent - Итого сумма Скидки (в ГРН) - для ВСЕХ документов - суммируется 1)по %скидки + 2)дополнительная + 3)дополнительная в оплатах + 4)дополнительная для текущего документа
-                   - (COALESCE (MIFloat_TotalChangePercent.ValueData, 0) + COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0) + COALESCE (MIFloat_SummChangePercent_curr.ValueData, 0))
-                     -- МИНУС TotalPay - Итого сумма оплаты (в ГРН) - для ВСЕХ документов - суммируется 1) + 2) + 3)в текущем документе по zc_MI_Child
-                   - (COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_TotalPayOth.ValueData, 0) + COALESCE (MIFloat_TotalPay_curr.ValueData, 0))
-                     AS SummDebt_sale
 
-                     -- !!!самое Важное - Сложный расчет ДОЛГА - с учетом ВОЗВРАТА!!!
+
+                     -- !!!1.1. самое Важное - Сложный расчет ДОЛГА - БЕЗ ВОЗВРАТА!!!
                    , -- Сумма по Прайсу
                      zfCalc_SummPriceList (MI_Sale.Amount, MIFloat_OperPriceList.ValueData)
-                     -- МИНУС TotalChangePercent - Итого сумма Скидки (в ГРН) - для ВСЕХ документов - суммируется 1)по %скидки + 2)дополнительная + 3)дополнительная в оплатах + 4)дополнительная для текущего документа
+
+                     -- МИНУС: Итого сумма Скидки (в ГРН) - для ВСЕХ документов - суммируется 1)по %скидки + 2)дополнительная + 3)дополнительная в оплатах + 4)в текущем документе
                    - (COALESCE (MIFloat_TotalChangePercent.ValueData, 0) + COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0) + COALESCE (MIFloat_SummChangePercent_curr.ValueData, 0))
-                     -- МИНУС TotalPay - Итого сумма оплаты (в ГРН) - для ВСЕХ документов - суммируется 1) + 2) + 3)в текущем документе по zc_MI_Child
+
+                     -- МИНУС: Итого сумма оплаты (в ГРН) - для ВСЕХ документов - суммируется 1) + 2) + 3)в текущем документе по zc_MI_Child
                    - (COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_TotalPayOth.ValueData, 0) + COALESCE (MIFloat_TotalPay_curr.ValueData, 0))
+
+                     AS SummDebt_sale -- 1.1.
+
+
+                     -- !!!1.2. самое Важное - Сложный расчет ДОЛГА - с учетом ВОЗВРАТА!!!
+                   , -- Сумма по Прайсу
+                     zfCalc_SummPriceList (MI_Sale.Amount, MIFloat_OperPriceList.ValueData)
+
+                     -- МИНУС: Итого сумма Скидки (в ГРН) - для ВСЕХ документов - суммируется 1)по %скидки + 2)дополнительная + 3)дополнительная в оплатах + 4)в текущем документе
+                   - (COALESCE (MIFloat_TotalChangePercent.ValueData, 0) + COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0) + COALESCE (MIFloat_SummChangePercent_curr.ValueData, 0))
+
+                     -- МИНУС: Итого сумма оплаты (в ГРН) - для ВСЕХ документов - суммируется 1) + 2) + 3)в текущем документе по zc_MI_Child
+                   - (COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_TotalPayOth.ValueData, 0) + COALESCE (MIFloat_TotalPay_curr.ValueData, 0))
+
                      -- МИНУС TotalReturn - Итого сумма возврата со скидкой - все док-ты
                    - COALESCE (MIFloat_TotalReturn.ValueData, 0)
-                     -- !!!ПЛЮС!!! TotalReturn - Итого возврата оплаты - все док-ты
+                     -- !!!ПЛЮС!!! TotalReturn - Итого возврат оплаты - все док-ты
                    + COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
-                     AS SummDebt_return
+
+                     AS SummDebt_return -- 1.2.
+
 
                      -- кол-во в самой продаже
-                   , MI_Sale.Amount
+                   , MI_Sale.Amount AS Amount_Sale
+                     -- Скидка % - в самой продаже
+                   , COALESCE (MIFloat_ChangePercent.ValueData, 0)          AS ChangePercent
+                     -- Скидка в самой продаже - суммируется 1)по %скидки + 2)дополнительная
+                   , COALESCE (MIFloat_TotalChangePercent.ValueData, 0)     AS TotalChangePercent
+                     -- Скидка в самой продаже - дополнительная из Расчеты покупателей
+                   , COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)  AS TotalChangePercentPay
+                     -- сумма оплаты в самой продаже
+                   , COALESCE (MIFloat_TotalPay.ValueData, 0)               AS TotalPay
+                     -- сумма оплаты в самой продаже - из Расчеты покупателей
+                   , COALESCE (MIFloat_TotalPayOth.ValueData, 0)            AS TotalPayOth
+
                      -- кол-во Итого возврат
                    , COALESCE (MIFloat_TotalCountReturn.ValueData, 0)   AS Amount_Return
-
-                     -- Итого сумма Скидки (в ГРН) - для ВСЕХ документов - суммируется 1)по %скидки + 2)дополнительная + 3)дополнительная в оплатах + 4)дополнительная для текущего документа
-                   , COALESCE (MIFloat_TotalChangePercent.ValueData, 0) + COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0) + COALESCE (MIFloat_SummChangePercent_curr.ValueData, 0) AS TotalChangePercent
-                     -- Итого сумма оплаты (в ГРН) - для ВСЕХ документов - суммируется 1) + 2) + 3)в текущем документе по zc_MI_Child
-                   , COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_TotalPayOth.ValueData, 0) + COALESCE (MIFloat_TotalPay_curr.ValueData, 0) AS TotalPay
+                     -- Итого сумма возврата со скидкой - все док-ты
+                   , COALESCE (MIFloat_TotalReturn.ValueData, 0)        AS TotalReturn
+                     -- Итого сумма возврата ОПЛАТЫ - все док-ты
+                   , COALESCE (MIFloat_TotalPayReturn.ValueData, 0)     AS TotalPayReturn
 
                      -- сумма Скидки - в текущем документе
                    , COALESCE (MIFloat_SummChangePercent_curr.ValueData, 0) AS SummChangePercent_curr
                      -- Итого сумма оплаты (в ГРН) - в текущем документе по zc_MI_Child
-                   , COALESCE (MIFloat_TotalPay_curr.ValueData, 0) AS TotalPay_curr
+                   , COALESCE (MIFloat_TotalPay_curr.ValueData, 0)          AS TotalPay_curr
 
-                     -- Скидка % - в самой продаже
-                   , COALESCE (MIFloat_ChangePercent.ValueData, 0)         AS ChangePercent
-                     -- Скидка дополнительная - в самой продаже
-                   , COALESCE (MIFloat_SummChangePercent.ValueData, 0)     AS SummChangePercent
-                     -- Скидка дополнительная из Расчеты покупателей - в самой продаже
-                   , COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0) AS TotalChangePercentPay
-                   
-                   
+
                    , MILinkObject_DiscountSaleKind.ObjectId AS DiscountSaleKindId
 
                      -- Управленческая группа
@@ -260,7 +301,7 @@ BEGIN
                    LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = MILinkObject_PartionMI.ObjectId
 
                    LEFT JOIN MovementItem AS MI_Sale ON MI_Sale.Id = Object_PartionMI.ObjectCode
-                   
+
                    LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                ON MIFloat_OperPriceList.MovementItemId = Object_PartionMI.ObjectCode
                                               AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
@@ -310,7 +351,6 @@ BEGIN
                    LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = COALESCE (ObjectLink_Goods_InfoMoney.ChildObjectId, zc_Enum_InfoMoney_10101()) -- !!!ВРЕМЕННО!!! Доходы + Товары + Одежда
                    LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MovementItem.PartionId
 
-
               WHERE Movement.Id       = inMovementId
                 AND Movement.DescId   = zc_Movement_GoodsAccount()
                 AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
@@ -322,7 +362,7 @@ BEGIN
      IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.TotalPay > _tmpItem.OperSumm_ToPay)
      THEN
          RAISE EXCEPTION 'Ошибка. Сумма к оплате = <%> больше чем сумма оплаты = <%>.', (SELECT _tmpItem.OperSumm_ToPay FROM _tmpItem WHERE _tmpItem.TotalPay > _tmpItem.OperSumm_ToPay ORDER BY _tmpItem.MovementItemId LIMIT 1)
-                                                                , (SELECT _tmpItem.TotalPay FROM _tmpItem WHERE _tmpItem.TotalPay > _tmpItem.OperSumm_ToPay ORDER BY _tmpItem.MovementItemId LIMIT 1)
+                                                                                      , (SELECT _tmpItem.TotalPay       FROM _tmpItem WHERE _tmpItem.TotalPay > _tmpItem.OperSumm_ToPay ORDER BY _tmpItem.MovementItemId LIMIT 1)
          ;
      END IF;
      -- проверка что скидка та что надо
@@ -390,7 +430,7 @@ BEGIN
              , (tmp.TotalPay)          AS TotalPay       -- сумма оплаты - 1) + 2) + 3)в текущем документе
              , (tmp.TotalPay_curr)     AS TotalPay_curr  -- сумма оплаты - в текущем документе
 
-               -- расчет кол-во которое попадает в ПРОДАЖУ
+               -- расчет кол-во которое попадает в ПРОДАЖУ - ОПИУ
              , tmp.OperCount_sale
 
                -- расчет с/с которое попадает в ПРОДАЖУ
@@ -432,7 +472,7 @@ BEGIN
              , 0 AS ContainerId_ProfitLoss_10101, 0 AS ContainerId_ProfitLoss_10201, 0 AS ContainerId_ProfitLoss_10202, 0 AS ContainerId_ProfitLoss_10203, 0 AS ContainerId_ProfitLoss_10204, 0 AS ContainerId_ProfitLoss_10301
 
         FROM (SELECT _tmpItem.*
-                     -- расчет кол-во которое попадает в ПРОДАЖУ
+                     -- расчет кол-во которое попадает в ПРОДАЖУ - ОПИУ
                    , CASE WHEN 1=1
                                THEN _tmpItem.OperCount
                           WHEN _tmpItem.OperSumm_ToPay = _tmpItem.TotalPay AND _tmpItem.OperCount = tmpContainer.Amount
@@ -451,9 +491,9 @@ BEGIN
      -- проверка что сумма оплаты ....
      -- IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.TotalChangePercent <> _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204)
      -- THEN
-     --     RAISE EXCEPTION 'Ошибка. Скида итого <%> не равна <%>.', (SELECT _tmpItem.TotalChangePercent FROM _tmpItem WHERE _tmpItem.TotalChangePercent <> _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204 ORDER BY _tmpItem.MovementItemId LIMIT 1)
-     --                                                            , (SELECT _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204 FROM _tmpItem WHERE _tmpItem.TotalChangePercent <> _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204 ORDER BY _tmpItem.MovementItemId LIMIT 1)
-     --     ;
+     --     RAISE EXCEPTION 'Ошибка. проверка что сумма оплаты .....', (SELECT _tmpItem.TotalChangePercent FROM _tmpItem WHERE _tmpItem.TotalChangePercent <> _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204 ORDER BY _tmpItem.MovementItemId LIMIT 1)
+     --                                                              , (SELECT _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204 FROM _tmpItem WHERE _tmpItem.TotalChangePercent <> _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204 ORDER BY _tmpItem.MovementItemId LIMIT 1)
+     --    ;
      -- END IF;
 
      -- проверка что количество - РАВНО Кол-во Остаток (долг)

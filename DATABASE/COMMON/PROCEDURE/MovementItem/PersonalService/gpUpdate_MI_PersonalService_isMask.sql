@@ -54,7 +54,7 @@ BEGIN
                              , MILinkObject_InfoMoney.ObjectId
                      )
          INSERT INTO tmpMI  (MovementItemId, PersonalId, isMain, UnitId, PositionId, InfoMoneyId, MemberId, PersonalServiceListId
-                           , Amount, SummService, SummCardRecalc, SummCardSecondRecalc, SummCardSecondCash, SummNalogRecalc, SummMinus, SummAdd
+                           , Amount, SummService, SummCardRecalc, SummCardSecondRecalc, SummCardSecondCash, SummNalogRecalc, SummNalogRetRecalc, SummMinus, SummAdd
                            , SummHoliday, SummSocialIn, SummSocialAdd, SummChildRecalc, SummMinusExtRecalc)
             SELECT COALESCE (tmpMI.MovementItemId, 0)        AS MovementItemId
                  , MovementItem.ObjectId                     AS PersonalId

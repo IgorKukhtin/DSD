@@ -111,6 +111,8 @@ CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_Transport_Taxi()    RETURNS intege
 
 -- из Начисление зарплаты - Сумма Налоги - удержания с ЗП
 CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_PersonalService_Nalog() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_PersonalService_Nalog' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+-- из Начисление зарплаты - Сумма Налоги - возмещение к ЗП
+CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_PersonalService_NalogRet() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_PersonalService_NalogRet' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 --  из Затраты на мобильную связь - Сумма мобильная связь - удержания с ЗП 
 CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_MobileBills_Personal() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_MobileBills_Personal' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
