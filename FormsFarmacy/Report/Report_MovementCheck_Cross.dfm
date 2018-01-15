@@ -971,7 +971,6 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         Value = ''
         Component = GuidesUnit
         ComponentItem = 'Key'
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1038,6 +1037,13 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         ComponentItem = 'isFarm'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
