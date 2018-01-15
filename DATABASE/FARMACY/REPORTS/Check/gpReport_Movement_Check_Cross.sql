@@ -26,7 +26,7 @@ $BODY$
 
    DECLARE vbDateStartPromo TDateTime;
    DECLARE vbDatEndPromo TDateTime;
-
+   DECLARE vbUnitId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
@@ -34,9 +34,10 @@ BEGIN
 
 
     -- !!!меняем параметр!!!
-    IF inIsFarm = TRUE THEN inUnitId:= zfConvert_StringToNumber (COALESCE (lpGet_DefaultValue ('zc_Object_Unit', vbUserId), ''));
+    IF inIsFarm = TRUE THEN vbUnitId:= zfConvert_StringToNumber (COALESCE (lpGet_DefaultValue ('zc_Object_Unit', vbUserId), ''));
     END IF;
 
+    IF COALESCE (vbUnitId, 0)<> 0 THEN inUnitId:= vbUnitId; END IF;
 
     vbDateStartPromo := date_trunc('month', inStartDate);
     vbDatEndPromo := date_trunc('month', inEndDate) + interval '1 month'; 
