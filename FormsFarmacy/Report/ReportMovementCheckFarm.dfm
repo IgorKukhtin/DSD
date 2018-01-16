@@ -8,23 +8,25 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 58
+    Top = 60
     Width = 1251
-    Height = 422
+    Height = 420
     TabOrder = 3
-    ExplicitTop = 58
+    ExplicitTop = 60
     ExplicitWidth = 1251
-    ExplicitHeight = 422
-    ClientRectBottom = 422
-    ClientRectRight = 1251
+    ExplicitHeight = 420
+    ClientRectBottom = 416
+    ClientRectRight = 1247
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1251
-      ExplicitHeight = 422
+      ExplicitLeft = 4
+      ExplicitTop = 4
+      ExplicitWidth = 1243
+      ExplicitHeight = 412
       inherited cxGrid: TcxGrid
-        Width = 1251
-        Height = 422
-        ExplicitWidth = 1251
-        ExplicitHeight = 422
+        Width = 1243
+        Height = 412
+        ExplicitWidth = 1243
+        ExplicitHeight = 412
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -117,7 +119,6 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             DataBinding.FieldName = 'JuridicalCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 55
           end
@@ -126,7 +127,6 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             DataBinding.FieldName = 'JuridicalName'
             Visible = False
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 80
           end
@@ -134,7 +134,6 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsGroupName'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 155
           end
@@ -143,28 +142,24 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             DataBinding.FieldName = 'GoodsId'
             Visible = False
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 27
           end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 50
           end
           object GoodsName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 247
           end
           object NDS: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDS'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 102
           end
           object Amount: TcxGridDBColumn
@@ -174,7 +169,6 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 65
           end
           object PriceWithOutVAT: TcxGridDBColumn
@@ -184,7 +178,6 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 55
           end
@@ -195,7 +188,6 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 78
           end
@@ -206,7 +198,6 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 70
           end
@@ -216,7 +207,6 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 84
           end
           object SummaWithOutVAT: TcxGridDBColumn
@@ -226,7 +216,6 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 87
           end
@@ -237,7 +226,6 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 87
           end
@@ -248,7 +236,6 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 102
           end
@@ -258,7 +245,6 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 138
           end
           object SummaMargin: TcxGridDBColumn
@@ -268,7 +254,6 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 70
           end
@@ -279,7 +264,6 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 70
           end
@@ -288,7 +272,6 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             DataBinding.FieldName = 'PartionDescName'
             Visible = False
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 80
           end
@@ -297,7 +280,6 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             DataBinding.FieldName = 'PartionInvNumber'
             Visible = False
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 55
           end
@@ -306,7 +288,6 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             DataBinding.FieldName = 'PartionOperDate'
             Visible = False
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 70
           end
@@ -315,7 +296,6 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             DataBinding.FieldName = 'PartionPriceDescName'
             Visible = False
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 80
           end
@@ -324,7 +304,6 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             DataBinding.FieldName = 'PartionPriceInvNumber'
             Visible = False
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 55
           end
@@ -333,7 +312,6 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             DataBinding.FieldName = 'PartionPriceOperDate'
             Visible = False
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 70
           end
@@ -342,7 +320,6 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             DataBinding.FieldName = 'UnitName'
             Visible = False
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             VisibleForCustomization = False
             Width = 108
@@ -352,7 +329,6 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             DataBinding.FieldName = 'OurJuridicalName'
             Visible = False
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 100
           end
@@ -588,6 +564,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
       item
         Name = 'inRetailId'
         Value = '0'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -636,7 +613,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -715,10 +692,10 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
-    FormNameParam.Value = 'TUnitTree___Form'
+    FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnitTree___Form'
+    FormName = 'TUnitTreeForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
