@@ -1,7 +1,8 @@
 -- select distinct DatabaseId from _data_all
 -- select distinct DatabaseId from _dataRet_all
 -- select distinct DatabaseId from _dataPay_all 
--- select DiscountKlientAccountMoney.* from DiscountKlientAccountMoney left join _dataPay_all  on _dataPay_all.ReplId = DiscountKlientAccountMoney.ReplId and DatabaseId = DiscountKlientAccountMoney.DatabaseId where _dataPay_all.ReplId is null and DiscountKlientAccountMoney.isErased = 1 and DiscountKlientAccountMoney.DatabaseId <> 3
+-- select DiscountKlientAccountMoney.* from DiscountKlientAccountMoney left outer join _dataPay_all  on _dataPay_all.ReplId = DiscountKlientAccountMoney.ReplId and _dataPay_all.DatabaseId = DiscountKlientAccountMoney.DatabaseId where _dataPay_all.ReplId is null and DiscountKlientAccountMoney.isErased = 1 and DiscountKlientAccountMoney.DatabaseId not in (3,6)
+-- select DiscountKlientAccountMoney.* from DiscountKlientAccountMoney join _dataPay_all  on _dataPay_all.ReplId = DiscountKlientAccountMoney.ReplId and _dataPay_all.DatabaseId = DiscountKlientAccountMoney.DatabaseId where _dataPay_all.DiscountMovementItemReturnId > 0 AND DiscountKlientAccountMoney.DiscountMovementItemReturnId is null and DiscountKlientAccountMoney.isErased = 1
 -- truncate table _data_all; truncate table _dataRet_all; truncate table _dataPay_all;
 -- select * from _data_all    where BillItemsId > 0 and BillItemsId in (select BillItemsId from _data_all    where BillItemsId > 0 group by BillItemsId having count(*) > 1) order by BillItemsId desc
 -- select * from _dataRet_all where BillItemsId > 0 and BillItemsId in (select BillItemsId from _dataRet_all where BillItemsId > 0 group by BillItemsId having count(*) > 1)
@@ -56,7 +57,7 @@ output  to 'c:\Profimanager\0444chado.dat' FORMAT ASCII;
 go
 
 
--- 05
+-- 05-1
 select Id,DiscountMovementId,BillItemsIncomeId,BarCode_byClient,OperCount,OperPrice,CommentInfo,TotalSummToPay,TotalSummPay,TotalSummPayCurrent,TotalSummReturnToPay,TotalSummReturnPay,TotalSummReturnPayCurrent,TotalReturnOperCount,SummDiscountManual,replId,DatabaseId,BillItemsId,isReplication,DiscountTax from DBA.DiscountMovementItem_byBarCode order by 1;
 output  to 'c:\Profimanager\05sav.dat' FORMAT ASCII;
 go
@@ -67,6 +68,17 @@ select ID,DiscountKlientId,OperDate,Summa,KursClient,NominalKursClient,isKursToV
 output  to 'c:\Profimanager\0555sav.dat' FORMAT ASCII;
 go
 
+
+-- 05-2
+select Id,DiscountMovementId,BillItemsIncomeId,BarCode_byClient,OperCount,OperPrice,CommentInfo,TotalSummToPay,TotalSummPay,TotalSummPayCurrent,TotalSummReturnToPay,TotalSummReturnPay,TotalSummReturnPayCurrent,TotalReturnOperCount,SummDiscountManual,replId,DatabaseId,BillItemsId,isReplication,DiscountTax from DBA.DiscountMovementItem_byBarCode order by 1;
+output  to 'c:\Profimanager\05pz.dat' FORMAT ASCII;
+go
+select Id,DiscountMovementId,BillItemsIncomeId,OperCount,CommentInfo,TotalSummToPay,TotalSummPay,TotalSummPayCurrent,DiscountMovementItemId,replId,DatabaseId,BillItemsId,isReplication from DBA.DiscountMovementItemReturn_byBarCode order by 1;
+output  to 'c:\Profimanager\055pz.dat' FORMAT ASCII;
+go
+select ID,DiscountKlientId,OperDate,Summa,KursClient,NominalKursClient,isKursToValutaClient,DiscountMovementItemId,InsertUserID,InsertDate,KassaId,UpdateUserID,UpdateDate,isCurrent,isErased,CommentInfo,DiscountMovementItemReturnId,SummDiscountManual,replId,DatabaseId,ClientAccountMoneyId from DBA.DiscountKlientAccountMoney order by 1;
+output  to 'c:\Profimanager\0555pz.dat' FORMAT ASCII;
+go
 
 -- 06
 select Id,DiscountMovementId,BillItemsIncomeId,BarCode_byClient,OperCount,OperPrice,CommentInfo,TotalSummToPay,TotalSummPay,TotalSummPayCurrent,TotalSummReturnToPay,TotalSummReturnPay,TotalSummReturnPayCurrent,TotalReturnOperCount,SummDiscountManual,replId,DatabaseId,BillItemsId,isReplication,DiscountTax from DBA.DiscountMovementItem_byBarCode order by 1;
@@ -173,6 +185,12 @@ LOAD TABLE DBA._data_all
 	DELIMITED BY ','
 go
 LOAD TABLE DBA._data_all
+	FROM 'C:\\PROFIMANAGER\\05pz.dat'
+	FORMAT 'ASCII'
+	QUOTES ON ESCAPES ON STRIP OFF
+	DELIMITED BY ','
+go
+LOAD TABLE DBA._data_all
 	FROM 'C:\\PROFIMANAGER\\06ter_Vin.dat'
 	FORMAT 'ASCII'
 	QUOTES ON ESCAPES ON STRIP OFF
@@ -248,6 +266,12 @@ LOAD TABLE DBA._dataRet_all
 	DELIMITED BY ','
 go
 LOAD TABLE DBA._dataRet_all
+	FROM 'C:\\PROFIMANAGER\\055pz.dat'
+	FORMAT 'ASCII'
+	QUOTES ON ESCAPES ON STRIP OFF
+	DELIMITED BY ','
+go
+LOAD TABLE DBA._dataRet_all
 	FROM 'C:\\PROFIMANAGER\\066ter_Vin.dat'
 	FORMAT 'ASCII'
 	QUOTES ON ESCAPES ON STRIP OFF
@@ -316,6 +340,12 @@ LOAD TABLE DBA._dataPay_all
 go
 LOAD TABLE DBA._dataPay_all
 	FROM 'C:\\PROFIMANAGER\\0555sav.dat'
+	FORMAT 'ASCII'
+	QUOTES ON ESCAPES ON STRIP OFF
+	DELIMITED BY ','
+go
+LOAD TABLE DBA._dataPay_all
+	FROM 'C:\\PROFIMANAGER\\0555pz.dat'
 	FORMAT 'ASCII'
 	QUOTES ON ESCAPES ON STRIP OFF
 	DELIMITED BY ','

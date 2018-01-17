@@ -195,6 +195,35 @@ BEGIN
      outTotalSummDebt := COALESCE (outTotalSummToPay, 0) - COALESCE (outTotalPay, 0) ;
 
 
+    -- !!!для SYBASE - потом убрать!!!
+    /*IF vbUserId = zc_User_Sybase() AND ioId > 0 AND inIsPay = FALSE
+    THEN PERFORM gpInsertUpdate_MI_Sale_Child(
+                       inMovementId            := inMovementId
+                     , inParentId              := ioId
+                     , inAmountGRN             := 0
+                     , inAmountUSD             := 0
+                     , inAmountEUR             := 0
+                     , inAmountCard            := 0
+                     , inAmountDiscount        := 0
+                     , inCurrencyValueUSD      := 0
+                     , inParValueUSD           := 0
+                     , inCurrencyValueEUR      := 0
+                     , inParValueEUR           := 0
+                     , inSession               := inSession
+                 );
+        -- в мастер записать - Дополнительная скидка в продаже ГРН - т.к. могли обнулить
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), ioId, COALESCE (ioSummChangePercent, 0));
+
+        -- в мастер записать - Итого оплата в продаже ГРН
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), ioId, 0);
+
+        -- пересчитали Итоговые суммы по накладной
+        PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+
+    END IF;*/
+
+
+
      -- сохранили
      ioId:= lpInsertUpdate_MovementItem_Sale   (ioId                    := ioId
                                               , inMovementId            := inMovementId
@@ -226,6 +255,7 @@ BEGIN
                                               , inUserId                := vbUserId
                                                );
 
+    
     -- !!!для SYBASE - потом убрать!!!
     IF vbUserId = zc_User_Sybase() AND inIsPay = FALSE
     THEN

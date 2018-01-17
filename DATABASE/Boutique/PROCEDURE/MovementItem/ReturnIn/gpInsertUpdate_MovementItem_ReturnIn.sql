@@ -38,6 +38,7 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ReturnIn());
+     -- !!!временно - для Sybase!!!
      vbUserId := zc_User_Sybase() ;
 
 
@@ -230,7 +231,7 @@ BEGIN
                                                                                                                       ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
                                                                                                                      AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
       
-                                                                                     WHERE MIL_PartionMI.DescId   = zc_MILinkObject_PartionMI ()
+                                                                                     WHERE MIL_PartionMI.DescId   = zc_MILinkObject_PartionMI()
                                                                                        AND MIL_PartionMI.ObjectId = vbPartionMI_Id
       
                                                                                     ) AS tmp
@@ -256,17 +257,46 @@ BEGIN
                                                                                                      ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
                                                                                                     AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
 
-                                                                    WHERE MIL_PartionMI.DescId   = zc_MILinkObject_PartionMI ()
+                                                                    WHERE MIL_PartionMI.DescId   = zc_MILinkObject_PartionMI()
                                                                       AND MIL_PartionMI.ObjectId = vbPartionMI_Id
 
                                                                    ), 0)
-                                                         -- МИНУС Сумма ВОЗВРАТ по Прайсу
-                                                       - zfCalc_SummPriceList (inAmount, MIFloat_OperPriceList.ValueData)
-                                                       + COALESCE ((SELECT MIFloat_TotalPay.ValueData
+                                                         -- МИНУС ИТОГО - Сумма ВОЗВРАТ по Прайсу
+                                                       - zfCalc_SummPriceList (COALESCE ((SELECT SUM (MovementItem.Amount)
+                                                                                          FROM MovementItemLinkObject AS MIL_PartionMI
+                                                                                               INNER JOIN MovementItem ON MovementItem.Id       = MIL_PartionMI.MovementItemId
+                                                                                                                      AND MovementItem.DescId   = zc_MI_Master()
+                                                                                                                      AND MovementItem.isErased = FALSE
+                                                                                               INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                                                                                  AND Movement.DescId   = zc_Movement_ReturnIn()
+                                                                                                                  AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                                                                                          WHERE MIL_PartionMI.DescId   = zc_MILinkObject_PartionMI()
+                                                                                            AND MIL_PartionMI.ObjectId = vbPartionMI_Id
+                      
+                                                                                         ), 0)
+                                                                             , MIFloat_OperPriceList.ValueData)
+                                                         -- ПЛЮС ИТОГО - Сумма ВОЗВРАТ ОПЛАТЫ
+                                                       + COALESCE ((SELECT SUM (COALESCE (MIFloat_TotalPay.ValueData, 0))
+                                                                    FROM MovementItemLinkObject AS MIL_PartionMI
+                                                                         INNER JOIN MovementItem ON MovementItem.Id       = MIL_PartionMI.MovementItemId
+                                                                                                AND MovementItem.DescId   = zc_MI_Master()
+                                                                                                AND MovementItem.isErased = FALSE
+                                                                         INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                                                            AND Movement.DescId   = zc_Movement_ReturnIn()
+                                                                                            AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                                                                         LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
+                                                                                                     ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
+                                                                                                    AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
+
+                                                                    WHERE MIL_PartionMI.DescId   = zc_MILinkObject_PartionMI()
+                                                                      AND MIL_PartionMI.ObjectId = vbPartionMI_Id
+
+                                                                   ), 0)
+                                                         /*COALESCE ((SELECT MIFloat_TotalPay.ValueData
                                                                     FROM MovementItemFloat AS MIFloat_TotalPay
                                                                     WHERE MIFloat_TotalPay.MovementItemId = ioId
                                                                       AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
-                                                                   ), 0)
+                                                                   ), 0)*/
                                                         )
 
                                           -- !!!иначе - для Sybase - №п/п<>1!!!
@@ -360,6 +390,8 @@ BEGIN
                                AND MovementItem.DescId     = zc_MI_Master()
                                AND MovementItem.isErased   = FALSE
                             );
+
+-- RAISE EXCEPTION '<%>', outTotalChangePercent;
 
      -- сохранили
      ioId:= lpInsertUpdate_MovementItem_ReturnIn (ioId                    := ioId

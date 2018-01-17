@@ -105,6 +105,7 @@ BEGIN
                 LEFT JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsmainId = ObjectLink_Main.ChildObjectId
                                                AND Object_LinkGoods_View.ObjectId = zc_Enum_GlobalConst_Marion()
                                                AND vbPartnerId = 59612 -- Вента
+                                               AND 1=0 -- 17.01.2018 - во внешних заказах по поставщику вента   убрать  задвоение позиции  из-за разных кодов Мориона.   Так как у них идет загрузка  наших заказов по их коду  (мы грузим их прайсы межгорода) - отпала необходимость в кодировке Мориона.
 ;
 
 END;

@@ -39,31 +39,29 @@ BEGIN
      -- данные из документа
      vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
 
-     -- Сумма к оплате
-     SELECT SUM (-- Сумма к выплате из партии продажи - МИНУС возврат
-                 zfCalc_SummChangePercent (MovementItem.Amount - COALESCE (MIFloat_TotalCountReturn.ValueData, 0)
-                                         , MIFloat_OperPriceList.ValueData
-                                         , MIFloat_ChangePercent.ValueData
-                                           )
-                 -- минус Сумма дополнительной Скидки
-               - COALESCE (MIFloat_SummChangePercent.ValueData, 0) - COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)
-                 -- минус Оплата при продаже
-               - COALESCE (MIFloat_TotalPay.ValueData, 0)
-                 -- минус Оплата в расчетах
-               - COALESCE (MIFloat_TotalPayOth.ValueData, 0)
-                 -- плюс возврат оплаты
+
+     -- самое Важное - Сложный расчет ДОЛГА - с учетом ВОЗВРАТА
+     SELECT SUM (-- Сумма по Прайсу
+                 zfCalc_SummPriceList (MI_Sale.Amount, MIFloat_OperPriceList.ValueData)
+                 -- МИНУС: Итого сумма Скидки (в ГРН) - для ВСЕХ документов - суммируется 1)по %скидки + 2)дополнительная + 3)дополнительная в оплатах
+               - (COALESCE (MIFloat_SummChangePercent.ValueData, 0) + COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0))
+                 -- МИНУС: Итого сумма оплаты (в ГРН) - для ВСЕХ документов - суммируется 1) + 2)
+               - (COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_TotalPayOth.ValueData, 0))
+                 -- МИНУС TotalReturn - Итого сумма возврата со скидкой - все док-ты
+               - COALESCE (MIFloat_TotalReturn.ValueData, 0)
+                 -- !!!ПЛЮС!!! TotalReturn - Итого возврат оплаты - все док-ты
                + COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
                 ) AS SummToPay
 
-          -- сумма доп.скидки - Списание при округлении при Расчетах
-          , COALESCE (SUM (COALESCE (MIFloat_SummChangePercent_Account.ValueData, 0)), 0) AS SummChangePercent
+            -- сумма доп.скидки - Списание при округлении - в текущем документе
+          , COALESCE (SUM (COALESCE (MIFloat_SummChangePercent_curr.ValueData, 0)), 0) AS SummChangePercent
 
             INTO vbSummToPay, vbSummChangePercent
 
      FROM MovementItem
-          LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent_Account
-                                      ON MIFloat_SummChangePercent_Account.MovementItemId = MovementItem.Id
-                                     AND MIFloat_SummChangePercent_Account.DescId         = zc_MIFloat_SummChangePercent()
+          LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent_curr
+                                      ON MIFloat_SummChangePercent_curr.MovementItemId = MovementItem.Id
+                                     AND MIFloat_SummChangePercent_curr.DescId         = zc_MIFloat_SummChangePercent()
 
           -- получаем сразу партию Продажи
           LEFT JOIN MovementItemLinkObject AS MILO_PartionMI_level1
@@ -76,33 +74,33 @@ BEGIN
                                           AND MILO_PartionMI_level2.DescId         = zc_MILinkObject_PartionMI()
           LEFT JOIN Object AS Object_PartionMI_level2 ON Object_PartionMI_level2.Id = MILO_PartionMI_level2.ObjectId
 
+          LEFT JOIN MovementItem AS MI_Sale ON MI_Sale.Id = COALESCE (Object_PartionMI_level2.ObjectCode, Object_PartionMI_level1.ObjectCode)
+
           LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
-                                      ON MIFloat_OperPriceList.MovementItemId = COALESCE (Object_PartionMI_level2.ObjectCode, Object_PartionMI_level1.ObjectCode)
+                                      ON MIFloat_OperPriceList.MovementItemId = MI_Sale.Id
                                      AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
 
-          LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
-                                      ON MIFloat_ChangePercent.MovementItemId = COALESCE (Object_PartionMI_level2.ObjectCode, Object_PartionMI_level1.ObjectCode)
-                                     AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
           LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
-                                      ON MIFloat_SummChangePercent.MovementItemId = COALESCE (Object_PartionMI_level2.ObjectCode, Object_PartionMI_level1.ObjectCode)
+                                      ON MIFloat_SummChangePercent.MovementItemId = MI_Sale.Id
                                      AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
           LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercentPay
-                                      ON MIFloat_TotalChangePercentPay.MovementItemId = COALESCE (Object_PartionMI_level2.ObjectCode, Object_PartionMI_level1.ObjectCode)
+                                      ON MIFloat_TotalChangePercentPay.MovementItemId = MI_Sale.Id
                                      AND MIFloat_TotalChangePercentPay.DescId         = zc_MIFloat_TotalChangePercentPay()
 
-          LEFT JOIN MovementItemFloat AS MIFloat_TotalCountReturn
-                                      ON MIFloat_TotalCountReturn.MovementItemId = COALESCE (Object_PartionMI_level2.ObjectCode, Object_PartionMI_level1.ObjectCode)
-                                     AND MIFloat_TotalCountReturn.DescId         = zc_MIFloat_TotalCountReturn()
-
           LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
-                                      ON MIFloat_TotalPay.MovementItemId = COALESCE (Object_PartionMI_level2.ObjectCode, Object_PartionMI_level1.ObjectCode)
+                                      ON MIFloat_TotalPay.MovementItemId = MI_Sale.Id
                                      AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
           LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth
-                                      ON MIFloat_TotalPayOth.MovementItemId = COALESCE (Object_PartionMI_level2.ObjectCode, Object_PartionMI_level1.ObjectCode)
+                                      ON MIFloat_TotalPayOth.MovementItemId = MI_Sale.Id
                                      AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth()
+
+          LEFT JOIN MovementItemFloat AS MIFloat_TotalReturn
+                                      ON MIFloat_TotalReturn.MovementItemId = MI_Sale.Id
+                                     AND MIFloat_TotalReturn.DescId         = zc_MIFloat_TotalReturn()
           LEFT JOIN MovementItemFloat AS MIFloat_TotalPayReturn
-                                      ON MIFloat_TotalPayReturn.MovementItemId = COALESCE (Object_PartionMI_level2.ObjectCode, Object_PartionMI_level1.ObjectCode)
+                                      ON MIFloat_TotalPayReturn.MovementItemId = MI_Sale.Id
                                      AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()
+
       WHERE MovementItem.MovementId = inMovementId
         AND MovementItem.DescId     = zc_MI_Master()
         AND MovementItem.isErased   = FALSE
