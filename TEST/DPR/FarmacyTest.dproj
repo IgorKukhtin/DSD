@@ -376,8 +376,8 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\CommonObjectProcedureTest.pas"/>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\Goods.pas">
-				<Form>GoodsForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Goods_NDS_diff.pas">
+				<Form>Goods_NDS_diffForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\UnitsTest.pas"/>
@@ -1887,6 +1887,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsRetailDialog.pas">
 				<Form>GoodsRetailDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Goods.pas">
+				<Form>GoodsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

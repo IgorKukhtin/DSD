@@ -1,4 +1,4 @@
-unit Goods;
+unit Goods_NDS_diff;
 
 interface
 
@@ -25,7 +25,7 @@ uses
   cxButtonEdit, cxLabel;
 
 type
-  TGoodsForm = class(TAncestorGuidesForm)
+  TGoods_NDS_diffForm = class(TAncestorGuidesForm)
     Code: TcxGridDBColumn;
     Name: TcxGridDBColumn;
     NDSKindName: TcxGridDBColumn;
@@ -67,8 +67,13 @@ type
     BarCode: TcxGridDBColumn;
     CountDays: TcxGridDBColumn;
     spUpdate_Goods_LastPriceOld: TdsdStoredProc;
+    cxLabel3: TcxLabel;
+    edContract: TcxButtonEdit;
+    GuidesContract: TdsdGuides;
     bbLabel3: TdxBarControlContainerItem;
     bbContract: TdxBarControlContainerItem;
+    NDS_PriceList: TcxGridDBColumn;
+    isNDS_dif: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
     spUpdate_Goods_NDS: TdsdStoredProc;
     macUpdateNDS: TMultiAction;
@@ -86,6 +91,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TGoodsForm);
+  RegisterClass(TGoods_NDS_diffForm);
 
 end.

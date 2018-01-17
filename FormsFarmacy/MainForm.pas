@@ -413,6 +413,8 @@ type
     miReport_GoodsRemainsCurrent: TMenuItem;
     actGoodsRetail: TdsdOpenForm;
     miGoodsRetail: TMenuItem;
+    actGoods_NDS_diff: TdsdOpenForm;
+    miGoods_NDS_diff: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

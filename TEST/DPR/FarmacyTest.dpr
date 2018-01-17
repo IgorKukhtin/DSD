@@ -125,7 +125,7 @@ uses
   CommonObjectDescProcedureTest in '..\SOURCE\ObjectDesc\CommonObjectDescProcedureTest.pas',
   UserKey in '..\..\Forms\Guides\UserKey.pas' {UserKeyForm: TParentForm},
   CommonObjectProcedureTest in '..\SOURCE\Objects\CommonObjectProcedureTest.pas',
-  Goods in '..\..\FormsFarmacy\Guides\Goods.pas' {GoodsForm: TParentForm},
+  Goods_NDS_diff in '..\..\FormsFarmacy\Guides\Goods_NDS_diff.pas' {Goods_NDS_diffForm: TParentForm},
   UnitsTest in '..\SOURCE\Objects\All\Farmacy\UnitsTest.pas',
   GoodsEdit in '..\..\FormsFarmacy\Guides\GoodsEdit.pas' {GoodsEditForm: TParentForm},
   GoodsMain in '..\..\FormsFarmacy\Guides\GoodsMain.pas' {GoodsMainForm: TParentForm},
@@ -565,7 +565,8 @@ uses
   Report_GoodsRemainsCurrentDialog in '..\..\FormsFarmacy\Report\Report_GoodsRemainsCurrentDialog.pas' {Report_GoodsRemainsCurrentDialogForm: TParentForm},
   Report_GoodsRemainsCurrent in '..\..\FormsFarmacy\Report\Report_GoodsRemainsCurrent.pas' {Report_GoodsRemainsCurrentForm: TParentForm},
   GoodsRetail in '..\..\FormsFarmacy\Guides\GoodsRetail.pas' {GoodsRetailForm: TParentForm},
-  GoodsRetailDialog in '..\..\FormsFarmacy\Guides\GoodsRetailDialog.pas' {GoodsRetailDialogForm: TParentForm};
+  GoodsRetailDialog in '..\..\FormsFarmacy\Guides\GoodsRetailDialog.pas' {GoodsRetailDialogForm: TParentForm},
+  Goods in '..\..\FormsFarmacy\Guides\Goods.pas' {GoodsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
