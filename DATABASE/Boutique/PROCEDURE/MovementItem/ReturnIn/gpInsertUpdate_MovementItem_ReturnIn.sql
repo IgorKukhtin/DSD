@@ -237,15 +237,14 @@ BEGIN
                                                                                     ) AS tmp
                                                                                WHERE tmp.Ord = 1
                                                                               ), 0)
-
                                                THEN 0 - (-- Сумма по Прайсу
                                                          zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData)
-                                                         -- МИНУС сколько скидки !!!только из Продажи, т.к. для Sybase скидки по Оплатам=0!!!
+                                                         -- МИНУС сколько скидки !!!только из Продажи, а скидка по Оплатам по другому!!!
                                                        - COALESCE (MIFloat_TotalChangePercent.ValueData, 0)
                                                          -- МИНУС Итого сумма оплаты !!!только из Продажи!!!
                                                        - COALESCE (MIFloat_TotalPay.ValueData, 0)
-                                                         -- МИНУС сумма оплаты !!!Расчеты - ВСЕ Статусы!!!
-                                                       - COALESCE ((SELECT SUM (COALESCE (MIFloat_TotalPay.ValueData, 0))
+                                                         -- МИНУС сумма оплаты И скидка по Оплатам !!!Расчеты - ВСЕ Статусы!!!
+                                                       - COALESCE ((SELECT SUM (COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_SummChangePercent.ValueData, 0))
                                                                     FROM MovementItemLinkObject AS MIL_PartionMI
                                                                          INNER JOIN MovementItem ON MovementItem.Id       = MIL_PartionMI.MovementItemId
                                                                                                 AND MovementItem.DescId   = zc_MI_Master()
@@ -256,6 +255,9 @@ BEGIN
                                                                          LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
                                                                                                      ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
                                                                                                     AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
+                                                                         LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
+                                                                                                     ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
+                                                                                                    AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
 
                                                                     WHERE MIL_PartionMI.DescId   = zc_MILinkObject_PartionMI()
                                                                       AND MIL_PartionMI.ObjectId = vbPartionMI_Id

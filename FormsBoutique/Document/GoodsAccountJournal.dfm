@@ -222,7 +222,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
         Width = 163
       end
       object TotalSummChange: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080
+        Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1074' '#1043#1056#1053
         DataBinding.FieldName = 'TotalSummChange'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -233,7 +233,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
         Width = 80
       end
       object TotalSummPay: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099
+        Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1074' '#1043#1056#1053')'
         DataBinding.FieldName = 'TotalSummPay'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -249,7 +249,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 100
+        Width = 150
       end
       object InsertName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
@@ -257,7 +257,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 80
+        Width = 100
       end
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
@@ -265,7 +265,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 80
+        Width = 100
       end
     end
     object cxGridLevel: TcxGridLevel

@@ -588,7 +588,7 @@ BEGIN
                               FROM tmpRemains_CEH AS tmp
                                    LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmp.PartionGoodsId
                             UNION
-                              -- Остаток - Цех
+                              -- tmpIncome - Цех
                               SELECT tmp.GoodsId         AS GoodsId
                                    , tmp.GoodsKindId     AS GoodsKindId
                                    , tmp.FromId          AS FromId
@@ -730,6 +730,7 @@ BEGIN
             -- здесь уже товары - что из чего делается
             LEFT JOIN tmpIncome ON tmpIncome.GoodsId     = tmpData.GoodsId
                                AND tmpIncome.GoodsKindId = tmpData.GoodsKindId
+                               AND tmpIncome.FromId      = tmpData.FromId
 
             LEFT JOIN Object AS Object_Goods_basis     ON Object_Goods_basis.Id     = tmpGoodsBasis.GoodsId_Basis
             LEFT JOIN Object AS Object_GoodsKind_basis ON Object_GoodsKind_basis.Id = tmpGoodsBasis.GoodsKindId_Basis

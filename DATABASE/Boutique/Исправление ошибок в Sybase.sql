@@ -1,3 +1,6 @@
+  delete from _pgSummDiscountManual;
+  insert into _pgSummDiscountManual (DiscountMovementItemId, SummDiscountManual) select  DiscountMovementItemId, SummDiscountManual from _pgSummDiscountManual_view;
+
   select * from Unit inner join DiscountKlient on DiscountKlient.ClientId = Unit.id where KindUnit = zc_kuClient()  and Id_Postgres is null order by 1
 
 
@@ -295,3 +298,21 @@ SELECT Movement.*, MovementItem.*, MIFloat_TotalPay.*
                                                                     WHERE MIL_PartionMI.DescId   = zc_MILinkObject_PartionMI ()
                                                                       AND MIL_PartionMI.ObjectId = lpInsertFind_Object_PartionMI (685112 ) -- vbPartionMI_Id
 */
+
+
+
+SELECT MovementDesc.ItemName, Movement.*, MovementItem.*, MIFloat_TotalPay.*
+                                                                    FROM MovementItemLinkObject AS MIL_PartionMI
+                                                                         INNER JOIN MovementItem ON MovementItem.Id       = MIL_PartionMI.MovementItemId
+                                                                                                AND MovementItem.DescId   = zc_MI_Master()
+                                                                                                AND MovementItem.isErased = FALSE
+                                                                         INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                                                            -- AND Movement.DescId   = zc_Movement_GoodsAccount()
+                                                                                            AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                                                                         INNER JOIN MovementDesc ON MovementDesc.Id = Movement.DescId       
+                                                                         LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
+                                                                                                     ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
+                                                                                                    AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
+
+                                                                    WHERE MIL_PartionMI.DescId   = zc_MILinkObject_PartionMI ()
+                                                                      AND MIL_PartionMI.ObjectId = 379409 -- select lpInsertFind_Object_PartionMI (680181 ) -- vbPartionMI_Id

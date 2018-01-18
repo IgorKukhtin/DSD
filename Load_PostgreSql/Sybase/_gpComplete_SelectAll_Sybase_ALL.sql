@@ -16,6 +16,11 @@ BEGIN
 
 -- inIsBefoHistoryCost:= TRUE;
 
+     /*IF inIsBefoHistoryCost = TRUE
+     THEN 
+          return;
+     END IF;*/
+
      -- !!!Замена!!!
      -- inIsBefoHistoryCost:= FALSE;
      -- !!!Замена!!!

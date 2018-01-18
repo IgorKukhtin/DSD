@@ -3108,7 +3108,6 @@ begin
            +'                     end'
            +'           else DiscountMovementItem_byBarCode.OperCount'
            +'      end as Amount');
-        Add('    , 0 as SummChangePercent');
         Add('    , sum (DiscountKlientAccountMoney.summa * case when DiscountKlientAccountMoney.KursClient <> 0 then DiscountKlientAccountMoney.KursClient else 1 end) as TotalPay');
         Add('    , (DiscountMovementItem_byBarCode.TotalSummToPay - DiscountMovementItem_byBarCode.SummDiscountManual) / DiscountMovementItem_byBarCode.OperCount  as PriceToPay');
 
@@ -3749,7 +3748,7 @@ begin
         Add('           else 0');
         Add('      end as DiscountSaleKindId');
         Add('    , DiscountMovementItem_byBarCode.OperCount as Amount');
-        Add('    , DiscountMovementItem_byBarCode.SummDiscountManual as SummChangePercent');
+        Add('    , DiscountMovementItem_byBarCode.SummDiscountManual - isnull(_pgSummDiscountManual.SummDiscountManual, 0) as SummChangePercent');
         Add('    , DiscountMovementItem_byBarCode.OperPrice as OperPriceList');
         Add('    , DiscountMovementItem_byBarCode.DiscountTax AS ChangePercent');
         Add('    , DiscountMovementItem_byBarCode.BarCode_byClient as BarCode');
@@ -3758,6 +3757,7 @@ begin
         Add('    , case when coalesce (_data_all.BillItemsId, 0) > 0 then zc_rvYes() else zc_rvNo() end  as isClose');
         Add('FROM dba.DiscountMovementItem_byBarCode');
         Add('    join DiscountMovement     on DiscountMovement.id = DiscountMovementItem_byBarCode.DiscountMovementId');
+        Add('    left outer join _pgSummDiscountManual on _pgSummDiscountManual.DiscountMovementItemId  = DiscountMovementItem_byBarCode.Id');
         Add('    left outer join DiscountKlient on DiscountKlient.id  = DiscountMovement.DiscountKlientId');
         Add('    left outer join BillItemsIncome on BillItemsIncome.id  = DiscountMovementItem_byBarCode.BillItemsIncomeId');
         Add('    left outer join _data_all on _data_all.DatabaseId  = DiscountMovementItem_byBarCode.DatabaseId');
@@ -4069,7 +4069,7 @@ begin
              + '    , sum (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67, 72  )  and KassaProperty.valutaID=2 then  DiscountKlientAccountMoney.Summa else 0 endif) as AmountEUR'
              + '    , sum (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67, 72  )  and KassaProperty.valutaID=5 then  DiscountKlientAccountMoney.Summa else 0 endif) as AmountUSD'
              + '    , sum (if  Kassa.ID     in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67, 72  ) then  DiscountKlientAccountMoney.Summa else 0 endif) as AmountCard'
-             + '    , 0 as  AmountDiscount'
+             + '    , sum (DiscountKlientAccountMoney.SummDiscountManual) as  AmountDiscount'
              + '    , max (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67, 72  )  and KassaProperty.valutaID=5 then DiscountKlientAccountMoney.KursClient else 0 endif) as CurrencyValueUSD'
              + '    , max (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67, 72  )  and KassaProperty.valutaID=5 then DiscountKlientAccountMoney.NominalKursClient else 0 endif) as ParValueUSD'
              + '    , max (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67, 72  )  and KassaProperty.valutaID=2 then DiscountKlientAccountMoney.KursClient else 0 endif) as CurrencyValueEUR'
@@ -4087,7 +4087,7 @@ begin
              + '   and DiscountKlientAccountMoney.isCurrent = zc_rvNo()'
              + '   and DiscountKlientAccountMoney.discountMovementItemReturnId  is null'
              + '   and DiscountKlientAccountMoney.isErased = zc_rvNo()'
-             + '   and DiscountKlientAccountMoney.Summa <> 0'
+             + '   and (DiscountKlientAccountMoney.Summa <> 0 or DiscountKlientAccountMoney.SummDiscountManual <> 0)'
 
              //+ '   and DiscountKlientAccountMoney.MovementId_pg > 0'
             );
