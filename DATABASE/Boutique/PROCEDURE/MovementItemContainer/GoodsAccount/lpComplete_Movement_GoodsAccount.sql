@@ -304,11 +304,11 @@ BEGIN
                    , COALESCE (MIFloat_TotalPayOth.ValueData, 0)            AS TotalPayOth
 
                      -- кол-во Итого возврат
-                   , COALESCE (MIFloat_TotalCountReturn.ValueData, 0)   AS Amount_Return
+                   , COALESCE (MIFloat_TotalCountReturn.ValueData, 0)       AS Amount_Return
                      -- Итого сумма возврата со скидкой - все док-ты
-                   , COALESCE (MIFloat_TotalReturn.ValueData, 0)        AS TotalReturn
+                   , COALESCE (MIFloat_TotalReturn.ValueData, 0)            AS TotalReturn
                      -- Итого сумма возврата ОПЛАТЫ - все док-ты
-                   , COALESCE (MIFloat_TotalPayReturn.ValueData, 0)     AS TotalPayReturn
+                   , COALESCE (MIFloat_TotalPayReturn.ValueData, 0)         AS TotalPayReturn
 
                      -- сумма Скидки - в текущем документе
                    , COALESCE (MIFloat_SummChangePercent_curr.ValueData, 0) AS SummChangePercent_curr

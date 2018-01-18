@@ -83,9 +83,10 @@ BEGIN
      INSERT INTO _tmpItem (MovementItemId
                          , ContainerId_Summ, ContainerId_Goods
                          , GoodsId, PartionId, PartionId_MI, GoodsSizeId
-                         , OperCount, OperPrice, CountForPrice, OperSumm, OperSumm_Currency
+                         , OperCount, OperPrice, CountForPrice, OperPriceList, OperSumm, OperSumm_Currency
                          , OperSumm_ToPay, OperSummPriceList, TotalChangePercent, TotalPay
                          , AccountId, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
+                         , CurrencyValue, ParValue
                           )
         -- результат
         SELECT tmp.MovementItemId
@@ -101,6 +102,8 @@ BEGIN
              , tmp.OperPrice
                -- Цена за количество - из партии
              , tmp.CountForPrice
+             
+             , tmp.OperPriceList
 
                -- Сумма по Вх. в zc_Currency_Basis
              , CASE WHEN tmp.CurrencyId = zc_Currency_Basis()
@@ -120,10 +123,13 @@ BEGIN
 
              , 0 AS AccountId          -- Счет(справочника), сформируем позже
 
-               -- УП для Sale - для определения счета Запасы
+               -- УП для ReturnIn - для определения счета Запасы
              , tmp.InfoMoneyGroupId
              , tmp.InfoMoneyDestinationId
              , tmp.InfoMoneyId
+             
+             , tmp.CurrencyValue
+             , tmp.ParValue
 
         FROM (SELECT MovementItem.Id                  AS MovementItemId
                    , MovementItem.ObjectId            AS GoodsId
@@ -931,6 +937,15 @@ BEGIN
       ;
 
 
+     -- 5.0. Пересохраним св-ва из партии: <Цена> + <Цена за количество> + Курс - из истории
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPrice(),     _tmpItem.MovementItemId, _tmpItem.OperPrice)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), _tmpItem.MovementItemId, _tmpItem.CountForPrice)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(), _tmpItem.MovementItemId, _tmpItem.OperPriceList)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_CurrencyValue(), _tmpItem.MovementItemId, _tmpItem.CurrencyValue)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ParValue(),      _tmpItem.MovementItemId, _tmpItem.ParValue)
+     FROM _tmpItem;
+
+
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable();
 
@@ -1144,6 +1159,9 @@ BEGIN
 
      -- 6.3. меняются ИТОГОВЫЕ суммы по покупателю
      PERFORM lpUpdate_Object_Client_Total (inMovementId:= inMovementId, inIsComplete:= TRUE, inUserId:= inUserId);
+
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
 END;
 $BODY$

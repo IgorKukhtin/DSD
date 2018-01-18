@@ -1149,6 +1149,9 @@ BEGIN
      -- 6. мен€ютс€ »“ќ√ќ¬џ≈ суммы по покупателю
      PERFORM lpUpdate_Object_Client_Total (inMovementId:= inMovementId, inIsComplete:= TRUE, inUserId:= inUserId);
 
+     -- пересчитали »тоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
