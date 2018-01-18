@@ -10,13 +10,17 @@ RETURNS TABLE (
              MovementItemId       Integer
            , InvNumber            TVarChar  
            --, SybaseId             Integer  
-           , PartnerName          TVarChar  
+           , PartnerName          TVarChar 
+           , UnitId               Integer
            , UnitName             TVarChar  
            , OperDate             TDateTime  
+           , GoodsId              Integer
            , GoodsName            TVarChar  
            , GroupNameFull        TVarChar  
            , CurrencyName         TVarChar  
-           , Amount               TFloat  
+           , Amount               TFloat
+           , Amount_Debt          TFloat
+           , Amount_All           TFloat
            , OperPrice            TFloat  
            , PriceSale            TFloat  
            , BrandName            TVarChar  
@@ -30,6 +34,7 @@ RETURNS TABLE (
            , LineFabricaName      TVarChar  
            , LabelName            TVarChar  
            , CompositionGroupName TVarChar  
+           , GoodsSizeId          Integer
            , GoodsSizeName        TVarChar  
            , isErased             Boolean  
            , isArc                Boolean  
@@ -48,17 +53,37 @@ BEGIN
 
      -- –ÂÁÛÎ¸Ú‡Ú
      RETURN QUERY 
+       WITH 
+       tmpContainer AS (SELECT Container.PartionId     AS PartionId
+                             , Container.WhereObjectId AS UnitId
+                             , Container.ObjectId      AS GoodsId
+                             , SUM (Container.Amount)  AS Amount
+                        FROM Container
+                             INNER JOIN ContainerLinkObject AS CLO_Client
+                                                            ON CLO_Client.ContainerId = Container.Id
+                                                           AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
+                        WHERE Container.DescId = zc_Container_count()
+                        GROUP BY Container.PartionId
+                               , Container.WhereObjectId
+                               , Container.ObjectId
+                        HAVING SUM (Container.Amount) <> 0 
+                        )
+
        SELECT 
              Object_PartionGoods.MovementItemId  AS MovementItemId
            , Movement.InvNumber                  AS InvNumber
            --, Object_PartionGoods.SybaseId        AS SybaseId
            , Object_Partner.ValueData            AS PartnerName
+           , Object_Unit.Id                      AS UnitId
            , Object_Unit.ValueData               AS UnitName
            , Object_PartionGoods.OperDate        AS OperDate
+           , Object_Goods.Id                     AS GoodsId
            , Object_Goods.ValueData              AS GoodsName
            , Object_GroupNameFull.ValueData      As GroupNameFull
            , Object_Currency.ValueData           AS CurrencyName
            , Object_PartionGoods.Amount          AS Amount
+           , tmpContainer.Amount   :: TFloat              AS Amount_Debt
+           , (COALESCE (Object_PartionGoods.Amount, 0) + COALESCE (tmpContainer.Amount, 0)) :: TFloat AS Amount_All
            , Object_PartionGoods.OperPrice       AS OperPrice
            , Object_PartionGoods.PriceSale       AS PriceSale
            , Object_Brand.ValueData              AS BrandName
@@ -72,9 +97,12 @@ BEGIN
            , Object_LineFabrica.ValueData        AS LineFabricaName
            , Object_Label.ValueData              AS LabelName
            , Object_CompositionGroup.ValueData   AS CompositionGroupName
+           , Object_GoodsSize.Id                 AS GoodsSizeId
            , Object_GoodsSize.ValueData          AS GoodsSizeName
            , Object_PartionGoods.isErased        AS isErased
            , Object_PartionGoods.isArc           AS isArc
+           
+           
            
        FROM Object_PartionGoods
 
@@ -97,7 +125,12 @@ BEGIN
            LEFT JOIN  Object AS Object_CompositionGroup on Object_CompositionGroup.Id = Object_PartionGoods.CompositionGroupId
            LEFT JOIN  Object AS Object_GoodsSize on Object_GoodsSize.Id = Object_PartionGoods.GoodsSizeId
            LEFT JOIN  Movement on Movement.Id = Object_PartionGoods.MovementId
+           
+           LEFT JOIN tmpContainer ON tmpContainer.PartionId = Object_PartionGoods.MovementItemId
+                                 AND tmpContainer.UnitId = Object_PartionGoods.UnitId
+                                 AND tmpContainer.GoodsId = Object_PartionGoods.GoodsId
      WHERE  (Object_PartionGoods.isErased = FALSE OR inIsShowAll = TRUE)
+     --LIMIT 10000
 
     ;
 
@@ -109,8 +142,10 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».    œÓÎˇÚ˚ÍËÌ ¿.¿.
+18.01.18          *
 15.03.17                                                           *
 */
 
 -- ÚÂÒÚ
 -- SELECT * FROM gpSelect_Object_PartionGoods (TRUE, zfCalc_UserAdmin())
+--SELECT * FROM gpSelect_Object_PartionGoods (FALSE, zfCalc_UserAdmin())

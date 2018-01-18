@@ -35,6 +35,16 @@ object PartionGoodsForm: TPartionGoodsForm
           Format = ',0.####'
           Kind = skSum
           Column = Amount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount_Debt
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount_All
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -46,6 +56,16 @@ object PartionGoodsForm: TPartionGoodsForm
           Format = ',0.####'
           Kind = skSum
           Column = Amount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount_Debt
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount_All
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -89,7 +109,7 @@ object PartionGoodsForm: TPartionGoodsForm
         Width = 100
       end
       object GroupNameFull: TcxGridDBColumn
-        Caption = #1055#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1087#1087#1099
+        Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'GroupNameFull'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -106,7 +126,7 @@ object PartionGoodsForm: TPartionGoodsForm
         Width = 93
       end
       object LabelName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1094#1077#1085#1085#1080#1082#1072
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'LabelName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -114,7 +134,7 @@ object PartionGoodsForm: TPartionGoodsForm
         Width = 122
       end
       object GoodsName: TcxGridDBColumn
-        Caption = #1058#1086#1074#1072#1088
+        Caption = #1040#1088#1090#1080#1082#1091#1083
         DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -143,7 +163,7 @@ object PartionGoodsForm: TPartionGoodsForm
         Width = 65
       end
       object CompositionGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' '#1076#1083#1103' '#1089#1086#1089#1090#1072#1074#1072' '#1090#1086#1074#1072#1088#1072
+        Caption = #1043#1088#1091#1087#1087#1072' '#1089#1086#1089#1090#1072#1074#1072
         DataBinding.FieldName = 'CompositionGroupName'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -151,7 +171,7 @@ object PartionGoodsForm: TPartionGoodsForm
         Width = 170
       end
       object CompositionName: TcxGridDBColumn
-        Caption = #1057#1086#1089#1090#1072#1074' '#1090#1086#1074#1072#1088#1072
+        Caption = #1057#1086#1089#1090#1072#1074
         DataBinding.FieldName = 'CompositionName'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -160,7 +180,7 @@ object PartionGoodsForm: TPartionGoodsForm
         Width = 94
       end
       object GoodsInfoName: TcxGridDBColumn
-        Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+        Caption = #1054#1087#1080#1089#1072#1085#1080#1077
         DataBinding.FieldName = 'GoodsInfoName'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -169,7 +189,7 @@ object PartionGoodsForm: TPartionGoodsForm
         Width = 110
       end
       object FabrikaName: TcxGridDBColumn
-        Caption = #1060#1072#1073#1088#1080#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+        Caption = #1060#1072#1073#1088#1080#1082#1072
         DataBinding.FieldName = 'FabrikaName'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -177,7 +197,7 @@ object PartionGoodsForm: TPartionGoodsForm
         Width = 107
       end
       object LineFabricaName: TcxGridDBColumn
-        Caption = #1051#1080#1085#1080#1103' '#1082#1086#1083#1083#1077#1082#1094#1080#1080
+        Caption = #1051#1080#1085#1080#1103
         DataBinding.FieldName = 'LineFabricaName'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -186,7 +206,7 @@ object PartionGoodsForm: TPartionGoodsForm
         Width = 111
       end
       object GoodsSizeName: TcxGridDBColumn
-        Caption = #1056#1072#1079#1084#1077#1088' '#1090#1086#1074#1072#1088#1072
+        Caption = #1056#1072#1079#1084#1077#1088
         DataBinding.FieldName = 'GoodsSizeName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -194,7 +214,7 @@ object PartionGoodsForm: TPartionGoodsForm
         Width = 55
       end
       object MeasureName: TcxGridDBColumn
-        Caption = #1045#1076#1080#1085#1080#1094#1072' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
+        Caption = #1045#1076'. '#1080#1079#1084'.'
         DataBinding.FieldName = 'MeasureName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -213,6 +233,28 @@ object PartionGoodsForm: TPartionGoodsForm
         DataBinding.FieldName = 'Amount'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 65
+      end
+      object Amount_Debt: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1083#1075#1080
+        DataBinding.FieldName = 'Amount_Debt'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1086#1083#1075#1080' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+        Options.Editing = False
+        Width = 65
+      end
+      object Amount_All: TcxGridDBColumn
+        Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086
+        DataBinding.FieldName = 'Amount_All'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1089' '#1091#1095#1077#1090#1086#1084' '#1076#1086#1083#1075#1072
+        Options.Editing = False
         Width = 65
       end
       object OperPrice: TcxGridDBColumn
@@ -332,6 +374,14 @@ object PartionGoodsForm: TPartionGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenReportForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoice'
         end
         item
@@ -401,6 +451,10 @@ object PartionGoodsForm: TPartionGoodsForm
     end
     object bbShowAll: TdxBarButton
       Action = actShowAll
+      Category = 0
+    end
+    object bbOpenReportForm: TdxBarButton
+      Action = actOpenReportForm
       Category = 0
     end
   end
@@ -504,6 +558,105 @@ object PartionGoodsForm: TPartionGoodsForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 62
       ImageIndexFalse = 63
+    end
+    object actOpenReportForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>'
+      ImageIndex = 40
+      FormName = 'TReport_GoodsForm'
+      FormNameParam.Value = 'TReport_GoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'LocationId'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LocationName'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsSizeId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsSizeId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsSizeName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsSizeName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementItemId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPeriod'
+          Value = 'TRUE'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartion'
+          Value = 'False'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object spSelect: TdsdStoredProc
