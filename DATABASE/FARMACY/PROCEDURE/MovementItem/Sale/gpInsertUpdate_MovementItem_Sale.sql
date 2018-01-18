@@ -55,6 +55,19 @@ BEGIN
                 AND Movement.DescId = zc_Movement_Sale())
               , False);
 
+    
+    -- если  признак участвует в соц.проекте = TRUE . то в док. должна быть 1 строка
+    IF outIsSp = TRUE
+    THEN 
+         IF (SELECT COUNT(*) FROM MovementItem 
+             WHERE MovementItem.MovementId = inMovementId 
+               AND MovementItem.Id <> ioId
+               AND MovementItem.IsErased = FALSE) >= 1
+            THEN
+                 RAISE EXCEPTION 'Ошибка.В документе может быть только 1 препарат.', inInvNumberSP;
+            END IF;
+    END IF;    
+    
     --Посчитали цену продажи
     IF COALESCE(inChangePercent,0) <> 0 THEN
        ioPrice:= ROUND( COALESCE(inPriceSale,0) - (COALESCE(inPriceSale,0)/100 * inChangePercent) ,2);

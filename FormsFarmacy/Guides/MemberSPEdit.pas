@@ -30,6 +30,14 @@ type
     spGet: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
+    cxLabel10: TcxLabel;
+    cePartnerMedical: TcxButtonEdit;
+    GuidesPartnerMedical: TdsdGuides;
+    cxLabel2: TcxLabel;
+    edGroupMemberSP: TcxButtonEdit;
+    GuidesGroupMemberSP: TdsdGuides;
+    cxLabel3: TcxLabel;
+    edHappyDate: TcxDateEdit;
   private
     { Private declarations }
   public

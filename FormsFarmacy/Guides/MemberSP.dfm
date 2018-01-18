@@ -3,7 +3,7 @@ object MemberSPForm: TMemberSPForm
   Top = 0
   Caption = #1060#1048#1054' '#1087#1072#1094#1080#1077#1085#1090#1072' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
   ClientHeight = 344
-  ClientWidth = 452
+  ClientWidth = 674
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,18 +14,22 @@ object MemberSPForm: TMemberSPForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
-    Width = 452
-    Height = 318
+    Top = 61
+    Width = 674
+    Height = 283
     Align = alClient
     PopupMenu = pmGrid
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitTop = 26
+    ExplicitWidth = 452
+    ExplicitHeight = 318
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -40,7 +44,6 @@ object MemberSPForm: TMemberSPForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -51,14 +54,14 @@ object MemberSPForm: TMemberSPForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 115
+        Width = 70
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 323
+        Width = 241
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -70,9 +73,59 @@ object MemberSPForm: TMemberSPForm
         Options.Editing = False
         Width = 78
       end
+      object PartnerMedicalName: TcxGridDBColumn
+        Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077
+        DataBinding.FieldName = 'PartnerMedicalName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 219
+      end
+      object GroupMemberSPName: TcxGridDBColumn
+        Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103
+        DataBinding.FieldName = 'GroupMemberSPName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
+      object HappyDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1088#1086#1078#1076#1077#1085#1080#1103
+        DataBinding.FieldName = 'HappyDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel: TPanel
+    Left = 0
+    Top = 0
+    Width = 674
+    Height = 35
+    Align = alTop
+    TabOrder = 5
+    ExplicitTop = -6
+    object cxLabel6: TcxLabel
+      Left = 6
+      Top = 9
+      AutoSize = False
+      Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077':'
+      Height = 17
+      Width = 141
+    end
+    object edPartnerMedical: TcxButtonEdit
+      Left = 147
+      Top = 8
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 0
+      Width = 450
     end
   end
   object DataSource: TDataSource
@@ -320,6 +373,21 @@ object MemberSPForm: TMemberSPForm
           ComponentItem = 'Name'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GroupMemberSPId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GroupMemberSPId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GroupMemberSPName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GroupMemberSPName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -404,7 +472,15 @@ object MemberSPForm: TMemberSPForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inPartnerMedicalId'
+        Value = Null
+        Component = GuidesPartnerMedical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 144
     Top = 152
@@ -477,5 +553,64 @@ object MemberSPForm: TMemberSPForm
     object N4: TMenuItem
       Action = dsdSetUnErased
     end
+  end
+  object GuidesPartnerMedical: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartnerMedical
+    FormNameParam.Value = 'TPartnerMedicalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPartnerMedicalForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPartnerMedical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPartnerMedical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 296
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'MasterPartnerMedicalId'
+        Value = ''
+        Component = GuidesPartnerMedical
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPartnerMedicalName'
+        Value = ''
+        Component = GuidesPartnerMedical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 512
+    Top = 136
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = GuidesPartnerMedical
+      end>
+    Left = 440
+    Top = 112
   end
 end

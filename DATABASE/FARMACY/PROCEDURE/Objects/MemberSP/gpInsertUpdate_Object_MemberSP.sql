@@ -1,11 +1,15 @@
 -- Function: gpInsertUpdate_Object_MemberSP()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberSP (Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberSP (Integer, Integer, TVarChar, Integer, Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MemberSP(
  INOUT ioId	             Integer   ,    -- ключ объекта <Торговельна назва лікарського засобу (Соц. проект)> 
     IN inCode                Integer   ,    -- код объекта 
     IN inName                TVarChar  ,    -- Название объекта <>
+    IN inPartnerMedicalId    Integer   ,    -- Мед. учрежд.
+    IN inGroupMemberSPId     Integer   ,    -- категория пац.
+    IN inHappyDate           TDateTime ,    -- Дата рождения
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -33,6 +37,15 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_MemberSP(), vbCode_calc, inName);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_MemberSP_PartnerMedical(), ioId, inPartnerMedicalId);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_MemberSP_GroupMemberSP(), ioId, inGroupMemberSPId);   
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_MemberSP_HappyDate(), ioId, inHappyDate);
+   
+      
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
@@ -44,6 +57,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.01.18         *
  14.02.17         * 
 */
 
