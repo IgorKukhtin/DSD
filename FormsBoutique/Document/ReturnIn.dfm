@@ -2232,6 +2232,7 @@ object ReturnInForm: TReturnInForm
           Name = 'LocationId'
           Value = ''
           Component = GuidesTo
+          ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
@@ -2239,6 +2240,7 @@ object ReturnInForm: TReturnInForm
           Name = 'LocationName'
           Value = ''
           Component = GuidesTo
+          ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
