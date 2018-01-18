@@ -38,11 +38,20 @@ RETURNS TABLE (Id Integer
              )
 AS
 $BODY$
+   DECLARE vbUnitId Integer;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Sale());
 
+    -- Для этих точек при создании накладной продажи  автоматом было прописано их подразделение, соотв. Мед.учреждение, Вид соцпроекта»- постановление 1303, «Форма оплаты» - БН.
+    -- 1 - АП_2 ул_Бр.Трофимовых (Большая Диевская)_111 КЗДЦПМСП_5 (Шапиро ИА) (183289) и только с Комунальний заклад "ДЦПМСД №5" (3751525)
+    -- 2 - Аптека_3 ул_Коммунаровская (Ю. Кондратюка)_1   (Шапиро ИА)          (183294) и только с Комунальний заклад "ДЦПМСД №5" (3751525)
+    -- 3 - Аптека_2 шоссе_Донецкое_3 (АСНБ-4)                                  (377605) и только с Комунальний заклад "ДЦПМСД №11"(4212299)
+
+    -- определяем подразделение ()
+    vbUnitId := COALESCE ((SELECT tmp.UnitId FROM gpGet_UserUnit(inSession) AS tmp), 0);
+    
     IF COALESCE (inMovementId, 0) = 0
     THEN
         RETURN QUERY
@@ -55,17 +64,17 @@ BEGIN
           , 0::TFloat                                        AS TotalCount
           , 0::TFloat                                        AS TotalSumm
           , 0::TFloat                                        AS TotalSummPrimeCost
-          , NULL::Integer                                    AS UnitId
-          , NULL::TVarChar                                   AS UnitName
+          , COALESCE (Object_Unit.Id, NULL)       ::Integer  AS UnitId
+          , COALESCE (Object_Unit.ValueData, NULL)::TVarChar AS UnitName
           , NULL::Integer                                    AS JuridicalId
           , NULL::TVarChar                                   AS JuridicalName
-          , NULL::Integer                                    AS PaidKindId
-          , NULL::TVarChar                                   AS PaidKindName
+          , COALESCE (Object_PaidKind.Id, NULL)        ::Integer  AS PaidKindId
+          , COALESCE (Object_PaidKind.ValueData, NULL) ::TVarChar AS PaidKindName
           , NULL::TVarChar                                   AS Comment
 
           , CURRENT_DATE::TDateTime                          AS OperDateSP
-          , NULL::Integer                                    AS PartnerMedicalId
-          , NULL::TVarChar                                   AS PartnerMedicalName
+          , COALESCE (Object_PartnerMedical.Id, NULL)        ::Integer   AS PartnerMedicalId
+          , COALESCE (Object_PartnerMedical.ValueData, NULL) ::TVarChar  AS PartnerMedicalName
           , NULL::TVarChar                                   AS InvNumberSP
           , NULL::Integer                                    AS MedicSPId
           , NULL::TVarChar                                   AS MedicSPName
@@ -75,10 +84,18 @@ BEGIN
           , NULL::Integer                                    AS GroupMemberSPId
           , NULL::TVarChar                                   AS GroupMemberSPName
 
-          , NULL::Integer                                    AS SPKindId
-          , NULL::TVarChar                                   AS SPKindName 
+          , COALESCE (Object_SPKind.Id, NULL)        ::Integer   AS SPKindId
+          , COALESCE (Object_SPKind.ValueData, NULL) ::TVarChar  AS SPKindName 
 
-        FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
+        FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
+            LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id     = CASE WHEN vbUnitId IN (183289, 183294, 377605, 183292) THEN vbUnitId ELSE 0 END    --, 183292
+            LEFT JOIN Object AS Object_SPKind   ON Object_SPKind.Id   = CASE WHEN vbUnitId IN (183289, 183294, 377605, 183292) THEN zc_Enum_SPKind_1303() ELSE 0 END
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = CASE WHEN vbUnitId IN (183289, 183294, 377605, 183292) THEN zc_Enum_PaidKind_FirstForm() ELSE 0 END
+            LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = CASE WHEN vbUnitId IN (183289, 183294, 183292, 183292) THEN 3751525  --3690583 /*тест*/  --
+                                                                                         WHEN vbUnitId = 377605 THEN 4212299
+                                                                                         ELSE 0
+                                                                                    END
+        ;
     ELSE
         RETURN QUERY
         SELECT
@@ -130,3 +147,6 @@ ALTER FUNCTION gpGet_Movement_Sale (Integer, TDateTime, TVarChar) OWNER TO postg
  15.09.16         *
  13.10.15                                                                        *
 */
+
+--select * from gpGet_Movement_Sale(inMovementId := 0 , inOperDate := ('30.04.2017')::TDateTime ,  inSession := '3');
+

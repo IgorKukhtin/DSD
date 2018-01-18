@@ -936,14 +936,14 @@ inherited SaleForm: TSaleForm
       item
         Name = 'PartnerMedicalId'
         Value = Null
-        Component = PartnerMedicalGuides
+        Component = GuidesPartnerMedical
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerMedicalName'
         Value = Null
-        Component = PartnerMedicalGuides
+        Component = GuidesPartnerMedical
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -965,14 +965,14 @@ inherited SaleForm: TSaleForm
       item
         Name = 'MedicSPId'
         Value = Null
-        Component = MedicSPGuides
+        Component = GuidesMedicSP
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MedicSPName'
         Value = Null
-        Component = MedicSPGuides
+        Component = GuidesMedicSP
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -980,14 +980,14 @@ inherited SaleForm: TSaleForm
       item
         Name = 'MemberSPId'
         Value = Null
-        Component = MemberSPGuides
+        Component = GuidesMemberSP
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MemberSPName'
         Value = Null
-        Component = MemberSPGuides
+        Component = GuidesMemberSP
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -995,14 +995,14 @@ inherited SaleForm: TSaleForm
       item
         Name = 'GroupMemberSPId'
         Value = Null
-        Component = GroupMemberSPGuides
+        Component = GuidesGroupMemberSP
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'GroupMemberSPName'
         Value = Null
-        Component = GroupMemberSPGuides
+        Component = GuidesGroupMemberSP
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1079,7 +1079,7 @@ inherited SaleForm: TSaleForm
       item
         Name = 'inPartnerMedicalId'
         Value = Null
-        Component = PartnerMedicalGuides
+        Component = GuidesPartnerMedical
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1087,7 +1087,7 @@ inherited SaleForm: TSaleForm
       item
         Name = 'inGroupMemberSPId'
         Value = Null
-        Component = GroupMemberSPGuides
+        Component = GuidesGroupMemberSP
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1529,7 +1529,7 @@ inherited SaleForm: TSaleForm
     Left = 318
     Top = 409
   end
-  object PartnerMedicalGuides: TdsdGuides
+  object GuidesPartnerMedical: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPartnerMedical
     FormNameParam.Value = 'TPartnerMedicalForm'
@@ -1541,7 +1541,7 @@ inherited SaleForm: TSaleForm
       item
         Name = 'Key'
         Value = ''
-        Component = PartnerMedicalGuides
+        Component = GuidesPartnerMedical
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1549,7 +1549,7 @@ inherited SaleForm: TSaleForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PartnerMedicalGuides
+        Component = GuidesPartnerMedical
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1558,7 +1558,7 @@ inherited SaleForm: TSaleForm
     Left = 88
     Top = 128
   end
-  object GroupMemberSPGuides: TdsdGuides
+  object GuidesGroupMemberSP: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGroupMemberSP
     FormNameParam.Value = 'TGroupMemberSPForm'
@@ -1570,7 +1570,7 @@ inherited SaleForm: TSaleForm
       item
         Name = 'Key'
         Value = ''
-        Component = GroupMemberSPGuides
+        Component = GuidesGroupMemberSP
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1578,7 +1578,7 @@ inherited SaleForm: TSaleForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GroupMemberSPGuides
+        Component = GuidesGroupMemberSP
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1587,7 +1587,7 @@ inherited SaleForm: TSaleForm
     Left = 640
     Top = 128
   end
-  object MemberSPGuides: TdsdGuides
+  object GuidesMemberSP: TdsdGuides
     KeyField = 'Id'
     LookupControl = edMemberSP
     FormNameParam.Value = 'TMemberSPForm'
@@ -1599,7 +1599,7 @@ inherited SaleForm: TSaleForm
       item
         Name = 'Key'
         Value = ''
-        Component = MemberSPGuides
+        Component = GuidesMemberSP
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1607,16 +1607,48 @@ inherited SaleForm: TSaleForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = MemberSPGuides
+        Component = GuidesMemberSP
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GroupMemberSPId'
+        Value = Null
+        Component = GuidesGroupMemberSP
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GroupMemberSPName'
+        Value = Null
+        Component = GuidesGroupMemberSP
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPartnerMedicalId'
+        Value = Null
+        Component = GuidesPartnerMedical
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPartnerMedicalName'
+        Value = Null
+        Component = GuidesPartnerMedical
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 520
     Top = 128
   end
-  object MedicSPGuides: TdsdGuides
+  object GuidesMedicSP: TdsdGuides
     KeyField = 'Id'
     LookupControl = edMedicSP
     FormNameParam.Value = 'TMedicSPForm'
@@ -1628,7 +1660,7 @@ inherited SaleForm: TSaleForm
       item
         Name = 'Key'
         Value = ''
-        Component = MedicSPGuides
+        Component = GuidesMedicSP
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1636,7 +1668,7 @@ inherited SaleForm: TSaleForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = MedicSPGuides
+        Component = GuidesMedicSP
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1645,20 +1677,20 @@ inherited SaleForm: TSaleForm
       item
         Name = 'MasterPartnerMedicalId'
         Value = Null
-        Component = PartnerMedicalGuides
+        Component = GuidesPartnerMedical
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MasterPartnerMedicalName'
         Value = Null
-        Component = PartnerMedicalGuides
+        Component = GuidesPartnerMedical
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 400
-    Top = 80
+    Top = 120
   end
   object spSelectPrintCheck: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Print'

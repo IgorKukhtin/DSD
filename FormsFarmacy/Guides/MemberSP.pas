@@ -22,7 +22,8 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  Vcl.Menus;
+  Vcl.Menus, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxButtonEdit,
+  cxLabel, Vcl.ExtCtrls;
 
 type
   TMemberSPForm = class(TParentForm)
@@ -65,6 +66,15 @@ type
     N4: TMenuItem;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    PartnerMedicalName: TcxGridDBColumn;
+    GroupMemberSPName: TcxGridDBColumn;
+    HappyDate: TcxGridDBColumn;
+    Panel: TPanel;
+    cxLabel6: TcxLabel;
+    edPartnerMedical: TcxButtonEdit;
+    GuidesPartnerMedical: TdsdGuides;
+    FormParams: TdsdFormParams;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public

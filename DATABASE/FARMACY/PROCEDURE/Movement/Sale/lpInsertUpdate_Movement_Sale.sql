@@ -71,7 +71,32 @@ BEGIN
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_GroupMemberSP(), ioId, inGroupMemberSPId);
 
     -- сохранили <>
+    IF COALESCE(inInvNumberSP, '') <> '' 
+       THEN
+           IF EXISTS (SELECT 1 
+                      FROM Movement 
+                        INNER JOIN MovementString AS MovementString_InvNumberSP
+                                                  ON MovementString_InvNumberSP.MovementId = Movement.Id
+                                                 AND MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
+                                                 AND MovementString_InvNumberSP.ValueData = inInvNumberSP
+                        INNER JOIN MovementLinkObject AS MovementLinkObject_PartnerMedical
+                                                      ON MovementLinkObject_PartnerMedical.MovementId = Movement.Id
+                                                     AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()
+                                                     AND MovementLinkObject_PartnerMedical.ObjectId = inPartnerMedicalId
+                        INNER JOIN MovementLinkObject AS MovementLinkObject_MedicSP
+                                                      ON MovementLinkObject_MedicSP.MovementId = Movement.Id
+                                                     AND MovementLinkObject_MedicSP.DescId = zc_MovementLinkObject_MedicSP()
+                                                     AND MovementLinkObject_MedicSP.ObjectId = inMedicSP
+                      WHERE Movement.DescId = zc_Movement_Sale()
+                        AND Movement.StatusId <> zc_Enum_Status_Erased()
+                        AND Movement.Id <> ioId
+                      )
+              THEN
+                  RAISE EXCEPTION 'Ошибка.По рецепту <%> уже была продажа.', inInvNumberSP;
+              END IF;
+    END IF;
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberSP(), ioId, inInvNumberSP);
+    
     -- сохранили <>
     --PERFORM lpInsertUpdate_MovementString (zc_MovementString_MemberSP(), ioId, inMemberSP);
     -- сохранили <>
@@ -103,6 +128,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 18.01.18         *
  03.04.17         *
  14.02.17         *
  08.02.17         * add SP
