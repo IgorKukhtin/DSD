@@ -945,56 +945,77 @@ BEGIN
 
 
      -- 6.2. ПРОВЕРКА - ОБЯЗАТЕЛЬНО после lpComplete + "пересчета" - !!!Сложный расчет ДОЛГА - с учетом ВОЗВРАТА!!!
-     IF EXISTS (SELECT tmp.SummDebt_return
-                FROM
-               (SELECT
-                     -- Сумма по Прайсу
-                     zfCalc_SummPriceList (MI_Sale.Amount, MIFloat_OperPriceList.ValueData)
+     IF EXISTS (WITH tmpRes AS (SELECT -- Сумма по Прайсу
+                                       zfCalc_SummPriceList (MI_Sale.Amount, MIFloat_OperPriceList.ValueData)
+                  
+                                       -- МИНУС: Итого сумма Скидки (в ГРН) - для ВСЕХ документов - суммируется 1-по %скидки + 2-дополнительная + 3-дополнительная в оплатах
+                                     - (COALESCE (MIFloat_TotalChangePercent.ValueData, 0) + COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0))
+                  
+                                       -- МИНУС: Итого сумма оплаты (в ГРН) - для ВСЕХ документов - суммируется 1 + 2
+                                     - (COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_TotalPayOth.ValueData, 0))
+                  
+                                       -- МИНУС TotalReturn - Итого сумма возврата со скидкой - все док-ты
+                                     - COALESCE (MIFloat_TotalReturn.ValueData, 0)
+                                       -- !!!ПЛЮС!!! TotalReturn - Итого возврат оплаты - все док-ты
+                                     + COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
+                  
+                                       AS SummDebt_return
 
-                     -- МИНУС: Итого сумма Скидки (в ГРН) - для ВСЕХ документов - суммируется 1-по %скидки + 2-дополнительная + 3-дополнительная в оплатах
-                   - (COALESCE (MIFloat_TotalChangePercent.ValueData, 0) + COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0))
-
-                     -- МИНУС: Итого сумма оплаты (в ГРН) - для ВСЕХ документов - суммируется 1 + 2
-                   - (COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_TotalPayOth.ValueData, 0))
-
-                     -- МИНУС TotalReturn - Итого сумма возврата со скидкой - все док-ты
-                   - COALESCE (MIFloat_TotalReturn.ValueData, 0)
-                     -- !!!ПЛЮС!!! TotalReturn - Итого возврат оплаты - все док-ты
-                   + COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
-
-                     AS SummDebt_return
-                FROM _tmpItem
-                     INNER JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
-                     
-                     INNER JOIN Container ON Container.Id     = _tmpItem_SummClient.ContainerId_Goods
-                                         AND Container.Amount <> 0
-                     INNER JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = _tmpItem.PartionId_MI
-                     INNER JOIN MovementItem AS MI_Sale ON MI_Sale.Id = Object_PartionMI.ObjectCode
-
-                     LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
-                                                 ON MIFloat_OperPriceList.MovementItemId = MI_Sale.Id
-                                                AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
-                     LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
-                                                 ON MIFloat_TotalChangePercent.MovementItemId = MI_Sale.Id
-                                                AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()
-                     LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercentPay
-                                                 ON MIFloat_TotalChangePercentPay.MovementItemId = MI_Sale.Id
-                                                AND MIFloat_TotalChangePercentPay.DescId         = zc_MIFloat_TotalChangePercentPay()
-                     LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
-                                                 ON MIFloat_TotalPay.MovementItemId = MI_Sale.Id
-                                                AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
-                     LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth
-                                                 ON MIFloat_TotalPayOth.MovementItemId = MI_Sale.Id
-                                                AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth()
-  
-                     LEFT JOIN MovementItemFloat AS MIFloat_TotalReturn
-                                                 ON MIFloat_TotalReturn.MovementItemId = MI_Sale.Id
-                                                AND MIFloat_TotalReturn.DescId         = zc_MIFloat_TotalReturn()
-                     LEFT JOIN MovementItemFloat AS MIFloat_TotalPayReturn
-                                                 ON MIFloat_TotalPayReturn.MovementItemId = MI_Sale.Id
-                                                AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()
-               ) AS tmp
-                WHERE tmp.SummDebt_return = 0
+                                     , _tmpItem.MovementItemId  AS MovementItemId
+                                     , _tmpItem.PartionId_MI    AS PartionId_MI
+                                FROM _tmpItem
+                                     INNER JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
+                                     
+                                     INNER JOIN Container ON Container.Id     = _tmpItem_SummClient.ContainerId_Goods
+                                                         AND Container.Amount <> 0
+                                     INNER JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = _tmpItem.PartionId_MI
+                                     INNER JOIN MovementItem AS MI_Sale ON MI_Sale.Id = Object_PartionMI.ObjectCode
+                                     -- убрали из проверки ЕСЛИ документ - НЕ проведен
+                                     INNER JOIN Movement AS Movement_Sale ON Movement_Sale.Id       = MI_Sale.MovementId
+                                                                         AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
+                  
+                                     LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
+                                                                 ON MIFloat_OperPriceList.MovementItemId = MI_Sale.Id
+                                                                AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
+                                     LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
+                                                                 ON MIFloat_TotalChangePercent.MovementItemId = MI_Sale.Id
+                                                                AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()
+                                     LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercentPay
+                                                                 ON MIFloat_TotalChangePercentPay.MovementItemId = MI_Sale.Id
+                                                                AND MIFloat_TotalChangePercentPay.DescId         = zc_MIFloat_TotalChangePercentPay()
+                                     LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
+                                                                 ON MIFloat_TotalPay.MovementItemId = MI_Sale.Id
+                                                                AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
+                                     LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth
+                                                                 ON MIFloat_TotalPayOth.MovementItemId = MI_Sale.Id
+                                                                AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth()
+                    
+                                     LEFT JOIN MovementItemFloat AS MIFloat_TotalReturn
+                                                                 ON MIFloat_TotalReturn.MovementItemId = MI_Sale.Id
+                                                                AND MIFloat_TotalReturn.DescId         = zc_MIFloat_TotalReturn()
+                                     LEFT JOIN MovementItemFloat AS MIFloat_TotalPayReturn
+                                                                 ON MIFloat_TotalPayReturn.MovementItemId = MI_Sale.Id
+                                                                AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()
+                               )
+                  , tmpFind AS (SELECT tmp.MovementItemId
+                                FROM tmpRes AS tmp
+                                     INNER JOIN MovementItemLinkObject AS MIL_PartionMI
+                                                                       ON MIL_PartionMI.DescId   = zc_MILinkObject_PartionMI ()
+                                                                      AND MIL_PartionMI.ObjectId = tmp.PartionId_MI
+                                     INNER JOIN MovementItem ON MovementItem.Id       = MIL_PartionMI.MovementItemId
+                                                            AND MovementItem.DescId   = zc_MI_Master()
+                                                            AND MovementItem.isErased = FALSE
+                                     INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                        AND Movement.DescId   = zc_Movement_GoodsAccount()
+                                                        AND Movement.StatusId IN (zc_Enum_Status_UnComplete())
+                                WHERE tmp.SummDebt_return = 0
+                               )
+                
+                SELECT tmp.SummDebt_return
+                FROM tmpRes AS tmp
+                     LEFT JOIN tmpFind ON tmpFind.MovementItemId = tmp.MovementItemId
+                WHERE tmp.SummDebt_return    = 0
+                  AND tmpFind.MovementItemId IS NULL
                )
      THEN
          RAISE EXCEPTION 'Ошибка. Найден долг по покупателю Кол-во = <%> для <%>.%Необходимо сначала сформировать Возврат, потом сформировать Оплату долга.'

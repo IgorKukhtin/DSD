@@ -27,7 +27,7 @@ object SaleJournalForm: TSaleJournalForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 42736d
+      EditValue = 43101d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -37,7 +37,7 @@ object SaleJournalForm: TSaleJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 42736d
+      EditValue = 43101d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -95,26 +95,6 @@ object SaleJournalForm: TSaleJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalSummPayOth
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = TotalCountReturn
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = TotalSummReturn
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = TotalSummPayReturn
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
           Column = TotalSummBalance
         end>
       DataController.Summary.FooterSummaryItems = <
@@ -142,26 +122,6 @@ object SaleJournalForm: TSaleJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalSummPay
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = TotalSummPayOth
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = TotalCountReturn
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = TotalSummReturn
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = TotalSummPayReturn
         end
         item
           Format = ',0.####'
@@ -245,14 +205,15 @@ object SaleJournalForm: TSaleJournalForm
         Width = 70
       end
       object TotalSummBalance: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' ('#1074' '#1043#1056#1053')'
+        Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1074#1093'. ('#1074' '#1043#1056#1053')'
         DataBinding.FieldName = 'TotalSummBalance'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 92
+        Width = 80
       end
       object TotalSummPriceList: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
@@ -262,7 +223,7 @@ object SaleJournalForm: TSaleJournalForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 78
+        Width = 80
       end
       object TotalSummChange: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1074' '#1043#1056#1053
@@ -272,7 +233,7 @@ object SaleJournalForm: TSaleJournalForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 97
+        Width = 80
       end
       object TotalSummPay: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1074' '#1043#1056#1053')'
@@ -282,47 +243,7 @@ object SaleJournalForm: TSaleJournalForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object TotalSummPayOth: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1074' '#1043#1056#1053')'
-        DataBinding.FieldName = 'TotalSummPayOth'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 62
-      end
-      object TotalCountReturn: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090#1072
-        DataBinding.FieldName = 'TotalCountReturn'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 69
-      end
-      object TotalSummReturn: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1074' '#1043#1056#1053')'
-        DataBinding.FieldName = 'TotalSummReturn'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 85
-      end
-      object TotalSummPayReturn: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' ('#1074' '#1043#1056#1053')'
-        DataBinding.FieldName = 'TotalSummPayReturn'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 110
+        Width = 80
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -330,7 +251,7 @@ object SaleJournalForm: TSaleJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 228
+        Width = 150
       end
       object InsertName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
@@ -338,7 +259,7 @@ object SaleJournalForm: TSaleJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 101
+        Width = 100
       end
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
@@ -346,7 +267,7 @@ object SaleJournalForm: TSaleJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 78
+        Width = 100
       end
     end
     object cxGridLevel: TcxGridLevel

@@ -148,7 +148,7 @@ BEGIN
                    , CASE WHEN tmp.SummDebt_sale = 0
                                THEN -- то что в продаже
                                     tmp.Amount_Sale
-                          WHEN tmp.SummDebt_return = 0
+                          WHEN tmp.SummDebt_return = 0 AND (tmp.TotalPay_curr > 0 OR tmp.SummChangePercent_curr > 0)
                                THEN -- продажа МИНУС возврат
                                     tmp.Amount_Sale - tmp.Amount_Return
                           ELSE 0
@@ -226,6 +226,28 @@ BEGIN
                      -- МИНУС: Итого сумма оплаты (в ГРН) - для ВСЕХ документов - суммируется 1) + 2) + 3)в текущем документе по zc_MI_Child
                    - (COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_TotalPayOth.ValueData, 0) + COALESCE (MIFloat_TotalPay_curr.ValueData, 0))
 
+                     -- !!!временно - для Sybase!!! - zc_Enum_Status_UnComplete
+                   - COALESCE ((SELECT SUM (COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_SummChangePercent.ValueData, 0))
+                                FROM MovementItemLinkObject AS MIL_PartionMI
+                                     INNER JOIN MovementItem ON MovementItem.Id         = MIL_PartionMI.MovementItemId
+                                                            AND MovementItem.DescId     = zc_MI_Master()
+                                                            AND MovementItem.isErased   = FALSE
+                                                            AND MovementItem.MovementId <> inMovementId
+                                     INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                        AND Movement.DescId   = zc_Movement_GoodsAccount()
+                                                        AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                     LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
+                                                                 ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
+                                                                AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
+                                     LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
+                                                                 ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
+                                                                AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
+                                WHERE MIL_PartionMI.DescId       = zc_MILinkObject_PartionMI()
+                                  AND MIL_PartionMI.ObjectId     = MILinkObject_PartionMI.ObjectId
+                                  AND inUserId                   = zc_User_Sybase()
+                                  AND MIFloat_TotalPay.ValueData < 0
+                               ), 0)
+
                      AS SummDebt_sale -- 1.1.
 
 
@@ -244,6 +266,27 @@ BEGIN
                      -- !!!ПЛЮС!!! TotalReturn - Итого возврат оплаты - все док-ты
                    + COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
 
+                     -- !!!временно - для Sybase!!! - zc_Enum_Status_UnComplete
+                   /*- COALESCE ((SELECT SUM (COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_SummChangePercent.ValueData, 0))
+                                FROM MovementItemLinkObject AS MIL_PartionMI
+                                     INNER JOIN MovementItem ON MovementItem.Id         = MIL_PartionMI.MovementItemId
+                                                            AND MovementItem.DescId     = zc_MI_Master()
+                                                            AND MovementItem.isErased   = FALSE
+                                                            AND MovementItem.MovementId <> inMovementId
+                                     INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                        AND Movement.DescId   = zc_Movement_GoodsAccount()
+                                                        AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                     LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
+                                                                 ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
+                                                                AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
+                                     LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
+                                                                 ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
+                                                                AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
+                                WHERE MIL_PartionMI.DescId       = zc_MILinkObject_PartionMI()
+                                  AND MIL_PartionMI.ObjectId     = MILinkObject_PartionMI.ObjectId
+                                  AND inUserId                   = zc_User_Sybase()
+                                  AND MIFloat_TotalPay.ValueData < 0
+                               ), 0)*/
                      AS SummDebt_return -- 1.2.
 
 
@@ -379,13 +422,8 @@ BEGIN
      END IF;
      -- проверка SummDebt_sale
      IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.SummDebt_sale < 0)
-     THEN
-         RAISE EXCEPTION 'Ошибка. Сумма долга после оплаты = <%> <SummDebt_sale>.', (SELECT _tmpItem.SummDebt_sale FROM _tmpItem WHERE _tmpItem.SummDebt_sale < 0 ORDER BY _tmpItem.MovementItemId LIMIT 1);
-     END IF;
-     -- проверка SummDebt_return
-     IF   EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.SummDebt_return < 0)
-          -- !!!временно - для Sybase!!!
-      AND EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.SummDebt_return - COALESCE ((SELECT SUM (COALESCE (MIFloat_TotalPay.ValueData, 0))
+          -- !!!временно - для Sybase!!! - zc_Enum_Status_UnComplete
+      /*AND EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.SummDebt_sale - COALESCE ((SELECT SUM (COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_SummChangePercent.ValueData, 0))
                                                                                      FROM MovementItemLinkObject AS MIL_PartionMI
                                                                                           INNER JOIN MovementItem ON MovementItem.Id         = MIL_PartionMI.MovementItemId
                                                                                                                  AND MovementItem.DescId     = zc_MI_Master()
@@ -397,6 +435,36 @@ BEGIN
                                                                                           LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
                                                                                                                       ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
                                                                                                                      AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
+                                                                                          LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
+                                                                                                                      ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
+                                                                                                                     AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
+                                                                                     WHERE MIL_PartionMI.DescId       = zc_MILinkObject_PartionMI()
+                                                                                       AND MIL_PartionMI.ObjectId     = _tmpItem.PartionId_MI
+                                                                                       AND inUserId                   = zc_User_Sybase()
+                                                                                       AND MIFloat_TotalPay.ValueData < 0
+                                                                                    ), 0)
+                  < 0)*/
+     THEN
+         RAISE EXCEPTION 'Ошибка. Сумма долга после оплаты = <%> <SummDebt_sale>.', (SELECT _tmpItem.SummDebt_sale FROM _tmpItem WHERE _tmpItem.SummDebt_sale < 0 ORDER BY _tmpItem.MovementItemId LIMIT 1);
+     END IF;
+     -- проверка SummDebt_return
+     IF   EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.SummDebt_return < 0)
+          -- !!!временно - для Sybase!!! - zc_Enum_Status_UnComplete
+      AND EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.SummDebt_return - COALESCE ((SELECT SUM (COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_SummChangePercent.ValueData, 0))
+                                                                                     FROM MovementItemLinkObject AS MIL_PartionMI
+                                                                                          INNER JOIN MovementItem ON MovementItem.Id         = MIL_PartionMI.MovementItemId
+                                                                                                                 AND MovementItem.DescId     = zc_MI_Master()
+                                                                                                                 AND MovementItem.isErased   = FALSE
+                                                                                                                 AND MovementItem.MovementId <> inMovementId
+                                                                                          INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                                                                             AND Movement.DescId   = zc_Movement_GoodsAccount()
+                                                                                                             AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                                                                          LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
+                                                                                                                      ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
+                                                                                                                     AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
+                                                                                          LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
+                                                                                                                      ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
+                                                                                                                     AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
                                                                                      WHERE MIL_PartionMI.DescId       = zc_MILinkObject_PartionMI()
                                                                                        AND MIL_PartionMI.ObjectId     = _tmpItem.PartionId_MI
                                                                                        AND inUserId                   = zc_User_Sybase()

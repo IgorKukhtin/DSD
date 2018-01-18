@@ -234,8 +234,9 @@ BEGIN
               FULL JOIN _tmpMI ON _tmpMI.CashId = _tmpCash.CashId;
 
 
-         -- в мастер записать - Итого оплата в Child ГРН
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), inParentId
+         -- в мастер записать - Итого оплата в Child ГРН + Дополнительная скидка в расчетах ГРН
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(),  inParentId, inAmountDiscount)
+               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), inParentId
                                                  , CAST (COALESCE ((SELECT SUM (_tmpCash.Amount * CASE WHEN _tmpCash.CurrencyId = zc_Currency_GRN() THEN 1 ELSE _tmpCash.CurrencyValue / _tmpCash.ParValue END)
                                                                     FROM _tmpCash
                                                                    ), 0)

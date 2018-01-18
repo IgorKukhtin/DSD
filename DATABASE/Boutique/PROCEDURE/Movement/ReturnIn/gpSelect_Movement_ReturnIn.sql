@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ReturnIn(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSummBalance TFloat, TotalSummPriceList TFloat
-             , TotalSummChange TFloat, TotalSummPay TFloat, TotalSummPayOth TFloat
+             , TotalSummChange TFloat, TotalSummPay TFloat
              , FromName TVarChar, ToName TVarChar
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
@@ -44,7 +44,6 @@ BEGIN
 
            , MovementFloat_TotalSummChange.ValueData     AS TotalSummChange
            , MovementFloat_TotalSummPay.ValueData        AS TotalSummPay
-           , MovementFloat_TotalSummPayOth.ValueData     AS TotalSummPayOth
      
            , Object_From.ValueData                       AS FromName
            , Object_To.ValueData                         AS ToName
@@ -52,6 +51,7 @@ BEGIN
 
            , Object_Insert.ValueData                     AS InsertName
            , MovementDate_Insert.ValueData               AS InsertDate         
+
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate 
@@ -65,6 +65,7 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId = Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
@@ -74,15 +75,13 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPriceList
                                     ON MovementFloat_TotalSummPriceList.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummPriceList.DescId = zc_MovementFloat_TotalSummPriceList()
+
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummChange
                                     ON MovementFloat_TotalSummChange.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummChange.DescId = zc_MovementFloat_TotalSummChange()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPay
                                     ON MovementFloat_TotalSummPay.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummPay.DescId = zc_MovementFloat_TotalSummPay()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPayOth
-                                    ON MovementFloat_TotalSummPayOth.MovementId = Movement.Id
-                                   AND MovementFloat_TotalSummPayOth.DescId = zc_MovementFloat_TotalSummPayOth()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -114,4 +113,4 @@ $BODY$
 */
 
 -- тест
- --SELECT * FROM gpSelect_Movement_ReturnIn (inStartDate:= '01.01.2015', inEndDate:= '01.02.2015', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_ReturnIn (inStartDate:= '01.01.2015', inEndDate:= '01.02.2015', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
