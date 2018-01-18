@@ -114,10 +114,10 @@ BEGIN
 
 
      -- Если НЕ Базовая Валюта
-     IF vbCurrencyId <> zc_Currency_Basis()
+     IF COALESCE (vbCurrencyId, 0) <> zc_Currency_Basis()
      THEN
          -- Определили курс на Дату документа
-         SELECT COALESCE (tmp.Amount, 1), COALESCE (tmp.ParValue, 0)
+         SELECT COALESCE (tmp.Amount, 0), COALESCE (tmp.ParValue, 0)
                 INTO outCurrencyValue, outParValue
          FROM lfSelect_Movement_Currency_byDate (inOperDate      := vbOperDate
                                                , inCurrencyFromId:= zc_Currency_Basis()

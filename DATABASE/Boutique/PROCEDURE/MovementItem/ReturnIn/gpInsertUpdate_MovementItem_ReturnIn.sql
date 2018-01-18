@@ -110,15 +110,31 @@ BEGIN
 
 
      -- Если НЕ Базовая Валюта
-     IF vbCurrencyId <> zc_Currency_Basis()
+     IF COALESCE (vbCurrencyId, 0) <> zc_Currency_Basis()
      THEN
-         -- Определили курс на Дату документа
-         SELECT COALESCE (tmp.Amount, 1), COALESCE (tmp.ParValue, 0)
-                INTO outCurrencyValue, outParValue
-         FROM lfSelect_Movement_Currency_byDate (inOperDate      := vbOperDate
-                                               , inCurrencyFromId:= zc_Currency_Basis()
-                                               , inCurrencyToId  := vbCurrencyId
-                                                ) AS tmp;
+         IF inSaleMI_Id > 0
+         THEN
+              -- Определили курс - из Партии элемента продажи/возврата
+              SELECT COALESCE (MIFloat_CurrencyValue.ValueData, 0), COALESCE (MIFloat_ParValue.ValueData, 0)
+                     INTO outCurrencyValue, outParValue
+              FROM MovementItem
+                   LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValue
+                                               ON MIFloat_CurrencyValue.MovementItemId = MovementItem.Id
+                                              AND MIFloat_CurrencyValue.DescId         = zc_MIFloat_CurrencyValue()
+                   LEFT JOIN MovementItemFloat AS MIFloat_ParValue
+                                               ON MIFloat_ParValue.MovementItemId = MovementItem.Id
+                                              AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
+              WHERE MovementItem.Id = inSaleMI_Id;
+         ELSE
+             -- Определили курс на Дату документа
+             SELECT COALESCE (tmp.Amount, 1), COALESCE (tmp.ParValue, 0)
+                    INTO outCurrencyValue, outParValue
+             FROM lfSelect_Movement_Currency_byDate (inOperDate      := vbOperDate
+                                                   , inCurrencyFromId:= zc_Currency_Basis()
+                                                   , inCurrencyToId  := vbCurrencyId
+                                                    ) AS tmp;
+         END IF;          
+
          -- проверка
          IF COALESCE (vbCurrencyId, 0) = 0 THEN
             RAISE EXCEPTION 'Ошибка.Не определено значение <Валюта>.';
