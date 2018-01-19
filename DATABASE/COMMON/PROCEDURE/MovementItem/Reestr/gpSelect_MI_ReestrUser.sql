@@ -30,6 +30,11 @@ RETURNS TABLE ( Id Integer, MovementId Integer, LineNum Integer
               , ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
               , JuridicalName_To TVarChar, OKPO_To TVarChar 
               , ReestrKindName TVarChar
+
+              , PersonalName            TVarChar
+              , PersonalTradeName       TVarChar
+              , UnitName_Personal       TVarChar
+              , UnitName_PersonalTrade  TVarChar
                )
 AS
 $BODY$
@@ -109,13 +114,13 @@ BEGIN
             , Object_Reestr_Personal.ValueData          AS PersonalDriverName
             , Object_Reestr_Member.ValueData            AS MemberName
 
-            , Object_Update.ValueData           AS UpdateName
-            , MovementDate_Update.ValueData     AS UpdateDate
+            , Object_Update.ValueData                   AS UpdateName
+            , MovementDate_Update.ValueData             AS UpdateDate
 
-            , Movement_Reestr_Transport.InvNumber      AS InvNumber_Transport
-            , Movement_Reestr_Transport.OperDate       AS OperDate_Transport
-            , Object_Status_Transport.ObjectCode       AS StatusCode_Transport
-            , Object_Status_Transport.ValueData        AS StatusName_Transport
+            , Movement_Reestr_Transport.InvNumber       AS InvNumber_Transport
+            , Movement_Reestr_Transport.OperDate        AS OperDate_Transport
+            , Object_Status_Transport.ObjectCode        AS StatusCode_Transport
+            , Object_Status_Transport.ValueData         AS StatusName_Transport
   
             , MIDate_Insert.ValueData                   AS Date_Insert
             , Object_Member.ValueData                   AS MemberName_Insert
@@ -159,6 +164,11 @@ BEGIN
             , ObjectHistory_JuridicalDetails_View.OKPO  AS OKPO_To
 
             , Object_ReestrKind.ValueData               AS ReestrKindName    
+
+            , Object_Personal.ValueData                 AS PersonalName
+            , Object_PersonalTrade.ValueData            AS PersonalTradeName
+            , Object_UnitPersonal.ValueData             AS UnitName_Personal
+            , Object_UnitPersonalTrade.ValueData        AS UnitName_PersonalTrade
 
        FROM tmpMI
             LEFT JOIN MovementItem ON MovementItem.Id = tmpMI.MovementItemId
@@ -320,6 +330,26 @@ BEGIN
                                          ON MovementLinkObject_ReestrKind.MovementId = Movement_Sale.Id
                                         AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
             LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
+                                 ON ObjectLink_Partner_Personal.ObjectId = Object_To.Id
+                                AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
+            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Partner_Personal.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                 ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
+                                AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+            LEFT JOIN Object AS Object_UnitPersonal ON Object_UnitPersonal.Id = ObjectLink_Personal_Unit.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                 ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_To.Id
+                                AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+            LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = ObjectLink_Partner_PersonalTrade.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_PersonalTrade_Unit
+                                 ON ObjectLink_PersonalTrade_Unit.ObjectId = Object_PersonalTrade.Id
+                                AND ObjectLink_PersonalTrade_Unit.DescId = zc_ObjectLink_Personal_Unit()
+            LEFT JOIN Object AS Object_UnitPersonalTrade ON Object_UnitPersonalTrade.Id = ObjectLink_PersonalTrade_Unit.ChildObjectId
            ;
 
 END;
