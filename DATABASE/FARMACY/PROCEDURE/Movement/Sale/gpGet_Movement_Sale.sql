@@ -88,10 +88,10 @@ BEGIN
           , COALESCE (Object_SPKind.ValueData, NULL) ::TVarChar  AS SPKindName 
 
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
-            LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id     = CASE WHEN vbUnitId IN (183289, 183294, 377605, 183292) THEN vbUnitId ELSE 0 END    --, 183292
-            LEFT JOIN Object AS Object_SPKind   ON Object_SPKind.Id   = CASE WHEN vbUnitId IN (183289, 183294, 377605, 183292) THEN zc_Enum_SPKind_1303() ELSE 0 END
-            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = CASE WHEN vbUnitId IN (183289, 183294, 377605, 183292) THEN zc_Enum_PaidKind_FirstForm() ELSE 0 END
-            LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = CASE WHEN vbUnitId IN (183289, 183294, 183292, 183292) THEN 3751525  --3690583 /*тест*/  --
+            LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id     = CASE WHEN vbUnitId IN (183289, 183294, 377605) THEN vbUnitId ELSE 0 END    --, 183292
+            LEFT JOIN Object AS Object_SPKind   ON Object_SPKind.Id   = CASE WHEN vbUnitId IN (183289, 183294, 377605) THEN zc_Enum_SPKind_1303() ELSE 0 END
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = CASE WHEN vbUnitId IN (183289, 183294, 377605) THEN zc_Enum_PaidKind_FirstForm() ELSE 0 END
+            LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = CASE WHEN vbUnitId IN (183289, 183294) THEN 3751525  --3690583 /*тест*/  --
                                                                                          WHEN vbUnitId = 377605 THEN 4212299
                                                                                          ELSE 0
                                                                                     END
