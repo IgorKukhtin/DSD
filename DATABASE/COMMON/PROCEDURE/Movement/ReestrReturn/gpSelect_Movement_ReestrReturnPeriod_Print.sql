@@ -167,5 +167,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_Movement_ReestrReturnPeriod_Print(inStartDate := ('03.12.2016')::TDateTime , inEndDate := ('03.12.2016')::TDateTime , inReestrKindId := 640042 ,  inSession := '5');
---select * from gpSelect_Movement_ReestrReturnPeriod_Print(inStartDate := ('03.12.2016')::TDateTime , inEndDate := ('03.12.2016')::TDateTime , inReestrKindId := 640043 , inIsShowAll := 'True' ,  inSession := '5');
+-- SELECT * FROM gpSelect_Movement_ReestrReturnPeriod_Print (inStartDate:= '03.12.2016', inEndDate:= '03.12.2016', inReestrKindId:= 640043, inIsShowAll:= True, inSession:= zfCalc_UserAdmin());

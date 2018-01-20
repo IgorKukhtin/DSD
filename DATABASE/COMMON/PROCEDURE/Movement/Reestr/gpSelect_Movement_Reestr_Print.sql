@@ -20,7 +20,7 @@ BEGIN
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Reestr());
      vbUserId:= lpGetUserBySession (inSession);
 
-     SELECT  Movement.DescId, Movement.StatusId 
+     SELECT  Movement.DescId, Movement.StatusId
    INTO vbDescId, vbStatusId
      FROM Movement WHERE Movement.Id = inMovementId;
 
@@ -42,13 +42,13 @@ BEGIN
 
      -- Результат
      OPEN Cursor1 FOR
-    
+
 
        SELECT
              Movement.Id
            , Movement.InvNumber
            , Movement.OperDate
-      
+
            , Object_Update.ValueData           AS UpdateName
            , MovementDate_Update.ValueData     AS UpdateDate
 
@@ -67,7 +67,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MLO_Update
                                          ON MLO_Update.MovementId = Movement.Id
                                         AND MLO_Update.DescId = zc_MovementLinkObject_Update()
-            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId  
+            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
                                            ON MovementLinkMovement_Transport.MovementId = Movement.Id
@@ -83,7 +83,7 @@ BEGIN
                                  ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
                                 AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
-            
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
@@ -99,7 +99,7 @@ BEGIN
     RETURN NEXT Cursor1;
 
      OPEN Cursor2 FOR
-      WITH 
+      WITH
        -- выбираем строки текущего реестра
        tmpMI_Main AS (SELECT MovementItem.Id                AS MovementItemId
                            , MovementItem.ObjectId          AS MemberId
@@ -120,12 +120,12 @@ BEGIN
 
          -- клиенты реестра
          , tmpTo AS (SELECT tmpTo.ToId
-                          
-                     FROM  (SELECT DISTINCT tmpMI_Main.ToId  
+
+                     FROM  (SELECT DISTINCT tmpMI_Main.ToId
                             FROM tmpMI_Main
                             ) AS tmpTo
 
-                       
+
                      )
          -- выбираем строки из других реестров, по клиентам текущего реестра
          , tmpMIList AS (SELECT MovementItem.Id         AS MovementItemId
@@ -139,12 +139,12 @@ BEGIN
                            LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
                                                    ON MovementFloat_MovementItemId.ValueData ::integer = MovementItem.Id
                                                   AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
-                           
+
                            INNER JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
                                          ON MovementLinkObject_ReestrKind.MovementId = MovementFloat_MovementItemId.MovementId
                                         AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
                                         AND MovementLinkObject_ReestrKind.ObjectId IN (zc_Enum_ReestrKind_PartnerOut(), zc_Enum_ReestrKind_Remake())
-      
+
                            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                         ON MovementLinkObject_To.MovementId = MovementFloat_MovementItemId.MovementId
                                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -160,22 +160,25 @@ BEGIN
                          , tmpMI_Main.MovementId_Sale
                          , tmpMI_Main.GroupNum
                     FROM tmpMI_Main
-                  UNION 
+                  UNION
                     SELECT tmpMIList.MovementItemId
                          , tmpMIList.MemberId
                          , tmpMIList.MovementId_Sale
                          , tmpMIList.GroupNum
                     FROM tmpMIList
                     )
-  
-       SELECT 
+
+       SELECT
              Movement_Sale.InvNumber                AS InvNumber_Sale
            , Movement_Sale.OperDate                 AS OperDate_Sale
            , MovementDate_OperDatePartner.ValueData AS OperDatePartner
            , Object_To.ValueData                    AS ToName
-           , CASE WHEN Object_Personal.Id <> Object_PersonalTrade.Id AND COALESCE (Object_PersonalTrade.Id, 0) <> 0 THEN Object_Personal.ValueData|| ' / '||Object_PersonalTrade.ValueData
+           , CASE WHEN Object_Personal.Id <> Object_PersonalTrade.Id -- AND Object_Personal.Id > 0 AND Object_PersonalTrade.Id > 0
+                       THEN Object_Personal.ValueData || ' / ' || Object_PersonalTrade.ValueData
+                  WHEN Object_Personal.Id IS NULL AND Object_PersonalTrade.Id > 0
+                       THEN ' / ' || Object_PersonalTrade.ValueData
                   ELSE Object_Personal.ValueData
-             END                                    AS PersonalName
+             END                        :: TVarChar AS PersonalName
            , Object_ReestrKind.ValueData    	    AS ReestrKindName
            , Object_PaidKind.ValueData              AS PaidKindName
 
@@ -291,17 +294,17 @@ BEGIN
                                          ON MovementLinkObject_PaidKind.MovementId = Movement_Sale.Id
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
-            
+
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
                                  ON ObjectLink_Partner_Personal.ObjectId = Object_To.Id
                                 AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Partner_Personal.ChildObjectId
-   
+
             LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
                                  ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_To.Id
                                 AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
             LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = ObjectLink_Partner_PersonalTrade.ChildObjectId
-            
+
          ORDER BY tmpMI.GroupNum
                 , Object_To.ValueData
                 , MovementDate_OperDatePartner.ValueData

@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_ReestrPeriod_Print (TDateTime, TDateTi
 DROP FUNCTION IF EXISTS gpSelect_Movement_ReestrPeriod_Print (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ReestrPeriod_Print(
-    IN inStartDate           TDateTime ,  
+    IN inStartDate           TDateTime ,
     IN inEndDate             TDateTime ,
     IN inReestrKindId        Integer   ,
     IN inisShowAll           Boolean   ,
@@ -46,17 +46,17 @@ BEGIN
 
      -- Определяется
      vbDateDescId := (SELECT CASE WHEN inReestrKindId = zc_Enum_ReestrKind_PartnerIn() THEN zc_MIDate_PartnerIn()
-                                  WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeIn()  THEN zc_MIDate_RemakeIn()  
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeIn()  THEN zc_MIDate_RemakeIn()
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeBuh() THEN zc_MIDate_RemakeBuh()
-                                  WHEN inReestrKindId = zc_Enum_ReestrKind_Remake()    THEN zc_MIDate_Remake() 
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_Remake()    THEN zc_MIDate_Remake()
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()       THEN zc_MIDate_Buh()
                              END AS DateDescId
                       );
      -- Определяется
      vbMILinkObjectId := (SELECT CASE WHEN inReestrKindId = zc_Enum_ReestrKind_PartnerIn() THEN zc_MILinkObject_PartnerInTo()
-                                      WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeIn()  THEN zc_MILinkObject_RemakeInTo()  
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeIn()  THEN zc_MILinkObject_RemakeInTo()
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeBuh() THEN zc_MILinkObject_RemakeBuh()
-                                      WHEN inReestrKindId = zc_Enum_ReestrKind_Remake()    THEN zc_MILinkObject_Remake() 
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_Remake()    THEN zc_MILinkObject_Remake()
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()       THEN zc_MILinkObject_Buh()
                                  END AS MILinkObjectId
                       );
@@ -72,7 +72,7 @@ BEGIN
 
      -- Результат
      OPEN Cursor1 FOR
-    
+
        SELECT inStartDate AS StartDate
             , inEndDate   AS EndDate
             , Object_ReestrKind.ValueData AS ReestrKindName
@@ -85,33 +85,36 @@ BEGIN
     RETURN NEXT Cursor1;
 
      OPEN Cursor2 FOR
-       WITH 
+       WITH
        -- выбираем строки реестров по выбранной визе и пользователю (или всем пользователям)
-       tmpMI AS (SELECT MIDate.MovementItemId 
+       tmpMI AS (SELECT MIDate.MovementItemId
                         , MILinkObject.ObjectId AS MemberId
                         , MovementFloat_MovementItemId.MovementId AS MovementId_Sale
                    FROM MovementItemDate AS MIDate
                         INNER JOIN MovementItemLinkObject AS MILinkObject
                                                           ON MILinkObject.MovementItemId = MIDate.MovementItemId
-                                                         AND MILinkObject.DescId = vbMILinkObjectId 
+                                                         AND MILinkObject.DescId = vbMILinkObjectId
                                                          AND (MILinkObject.ObjectId = vbMemberId_User OR inisShowAll = True)
                         LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
-                                                ON MovementFloat_MovementItemId.ValueData = MIDate.MovementItemId  
+                                                ON MovementFloat_MovementItemId.ValueData = MIDate.MovementItemId
                                                AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
-                   WHERE MIDate.DescId = vbDateDescId 
+                   WHERE MIDate.DescId = vbDateDescId
                      AND MIDate.ValueData >= inStartDate AND MIDate.ValueData < inEndDate + INTERVAL '1 DAY'
                    )
 
-       SELECT 
+       SELECT
              Movement_Sale.InvNumber                AS InvNumber_Sale
            , Movement_Sale.OperDate                 AS OperDate_Sale
            , MovementDate_OperDatePartner.ValueData AS OperDatePartner
            , Object_To.ValueData                    AS ToName
-           , CASE WHEN Object_Personal.Id <> Object_PersonalTrade.Id AND COALESCE (Object_PersonalTrade.Id, 0) <> 0 THEN Object_Personal.ValueData|| ' / '||Object_PersonalTrade.ValueData
+           , CASE WHEN Object_Personal.Id <> Object_PersonalTrade.Id -- AND Object_Personal.Id > 0 AND Object_PersonalTrade.Id > 0
+                       THEN Object_Personal.ValueData || ' / ' || Object_PersonalTrade.ValueData
+                  WHEN Object_Personal.Id IS NULL AND Object_PersonalTrade.Id > 0
+                       THEN ' / ' || Object_PersonalTrade.ValueData
                   ELSE Object_Personal.ValueData
-             END                                    AS PersonalName
+             END                        :: TVarChar AS PersonalName
            , Object_ReestrKind.ValueData    	    AS ReestrKindName
-           , Object_PaidKind.ValueData              AS PaidKindName 
+           , Object_PaidKind.ValueData              AS PaidKindName
 
            , MovementFloat_TotalCountKg.ValueData           AS TotalCountKg
            , MovementFloat_TotalSumm.ValueData              AS TotalSumm
@@ -133,7 +136,7 @@ BEGIN
            , Object_RemakeBuh.ValueData      AS Member_RemakeBuh
            , Object_Remake.ValueData         AS Member_Remake
            , Object_Buh.ValueData            AS Member_Buh
-          
+
        FROM tmpMI
             LEFT JOIN Object AS Object_ObjectMember ON Object_ObjectMember.Id = tmpMI.MemberId
 
@@ -229,7 +232,7 @@ BEGIN
                                  ON ObjectLink_Partner_Personal.ObjectId = Object_To.Id
                                 AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Partner_Personal.ChildObjectId
-   
+
             LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
                                  ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_To.Id
                                 AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
@@ -253,5 +256,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_Movement_ReestrPeriod_Print(inStartDate := ('03.12.2016')::TDateTime , inEndDate := ('03.12.2016')::TDateTime , inReestrKindId := 640042 ,  inSession := '5');
---select * from gpSelect_Movement_ReestrPeriod_Print(inStartDate := ('03.12.2016')::TDateTime , inEndDate := ('03.12.2016')::TDateTime , inReestrKindId := 640043 , inIsShowAll := 'True' ,  inSession := '5');
+-- SELECT * FROM gpSelect_Movement_ReestrPeriod_Print (inStartDate:= '03.12.2016', inEndDate:= '03.12.2016', inReestrKindId:= 640043, inIsShowAll:= True, inSession:= zfCalc_UserAdmin());
