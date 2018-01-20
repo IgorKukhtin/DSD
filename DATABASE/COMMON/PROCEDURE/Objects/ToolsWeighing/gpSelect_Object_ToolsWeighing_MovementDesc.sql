@@ -32,6 +32,7 @@ AS
 $BODY$
    DECLARE vbUserId     Integer;
 
+   DECLARE vbIsSticker  Boolean;
    DECLARE vbLevelMain  TVarChar;
    DECLARE vbCount      Integer;
    DECLARE vbBranchId   Integer;
@@ -42,13 +43,17 @@ BEGIN
 
     -- !!!очень важно - захардкодили главную ветку!!!
     vbLevelMain:= CASE WHEN inIsCeh = TRUE THEN 'ScaleCeh_' || inBranchCode ELSE 'Scale_' || inBranchCode END;
+    
+    -- !!!важно - Печать этикеток - определили по BranchCode!!!
+    vbIsSticker:= inBranchCode > 1000;
 
 
     -- определяется кол-во операций
-    vbCount:= (SELECT gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', '', 'Count', '10', inSession));
+    vbCount:= (SELECT gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', '', 'Count', CASE WHEN vbIsSticker = TRUE THEN '1' ELSE '10' END, inSession));
     -- определяется
-    vbBranchId:= CASE WHEN inBranchCode > 100 THEN zc_Branch_Basis()
-                      ELSE (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inBranchCode and Object.DescId = zc_Object_Branch())
+    vbBranchId:= CASE WHEN inBranchCode > 1000 THEN (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inBranchCode - 1000 AND Object.DescId = zc_Object_Branch())
+                      WHEN inBranchCode > 100 AND inBranchCode < 1000 THEN zc_Branch_Basis()
+                      ELSE (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inBranchCode AND Object.DescId = zc_Object_Branch())
                  END;
 
 
@@ -138,16 +143,16 @@ BEGIN
                   , gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'FromId'    ,               '0',      inSession) AS FromId
                   , gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'ToId'      ,               '0',      inSession) AS ToId
                   , gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'ColorGrid' ,               '0',      inSession) AS ColorGridValue
-                  , gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'GoodsId_ReWork' ,          '0',      inSession) AS GoodsId_ReWork
-                  , gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'GoodsKindWeighingGroupId', '345238', inSession) AS GoodsKindWeighingGroupId -- Продажа
-                  , CASE WHEN inIsCeh = TRUE THEN '0' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END     || tmp.Number, 'PaidKindId',         '0',                                                         inSession)          END AS PaidKindId
-                  , CASE WHEN inIsCeh = TRUE THEN '0' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END     || tmp.Number, 'InfoMoneyId',        zc_Enum_InfoMoney_30101() :: TVarChar,                       inSession)          END AS InfoMoneyId -- Доходы + Продукция + Готовая продукция
-                  , CASE WHEN inIsCeh = TRUE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'DocumentKindId',     '0',                                                         inSession) ELSE '0' END AS DocumentKindId
-                  , CASE WHEN inIsCeh = TRUE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'isProductionIn',     'TRUE',                                                      inSession) ELSE ''  END AS isProductionIn
-                  , CASE WHEN inIsCeh = TRUE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'isLockStartWeighing', CASE WHEN inBranchCode >= 201 THEN 'FALSE' ELSE 'TRUE' END, inSession) ELSE ''  END AS isLockStartWeighing
-                  , CASE WHEN inIsCeh = TRUE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'isPartionGoodsDate', 'FALSE',                                                     inSession) ELSE ''  END AS isPartionGoodsDate
-                  , CASE WHEN inIsCeh = TRUE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'isStorageLine',      'FALSE',                                                     inSession) ELSE ''  END AS isStorageLine
-                  , CASE WHEN inIsCeh = TRUE THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isTransport_link',   'FALSE',                                                     inSession)          END AS isTransport_link
+                  , CASE WHEN vbIsSticker = TRUE THEN '0' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'GoodsId_ReWork' ,          '0',      inSession) END AS GoodsId_ReWork
+                  , CASE WHEN vbIsSticker = TRUE THEN '0' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'GoodsKindWeighingGroupId', '345238', inSession) END AS GoodsKindWeighingGroupId -- Продажа
+                  , CASE WHEN inIsCeh = TRUE                         THEN '0'     ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END     || tmp.Number, 'PaidKindId',         '0',                                                         inSession)      END AS PaidKindId
+                  , CASE WHEN inIsCeh = TRUE OR  vbIsSticker = TRUE  THEN '0'     ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END     || tmp.Number, 'InfoMoneyId',        zc_Enum_InfoMoney_30101() :: TVarChar,                       inSession)      END AS InfoMoneyId -- Доходы + Продукция + Готовая продукция
+                  , CASE WHEN inIsCeh = TRUE AND vbIsSticker = FALSE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'DocumentKindId',     '0',                                                         inSession) ELSE '0' END AS DocumentKindId
+                  , CASE WHEN inIsCeh = TRUE AND vbIsSticker = FALSE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'isProductionIn',     'TRUE',                                                      inSession) ELSE ''  END AS isProductionIn
+                  , CASE WHEN inIsCeh = TRUE AND vbIsSticker = FALSE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'isLockStartWeighing', CASE WHEN inBranchCode >= 201 THEN 'FALSE' ELSE 'TRUE' END, inSession) ELSE ''  END AS isLockStartWeighing
+                  , CASE WHEN inIsCeh = TRUE AND vbIsSticker = FALSE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'isPartionGoodsDate', 'FALSE',                                                     inSession) ELSE ''  END AS isPartionGoodsDate
+                  , CASE WHEN inIsCeh = TRUE AND vbIsSticker = FALSE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'isStorageLine',      'FALSE',                                                     inSession) ELSE ''  END AS isStorageLine
+                  , CASE WHEN inIsCeh = TRUE OR  vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isTransport_link',   'FALSE',                                                     inSession)          END AS isTransport_link
                   
              FROM (SELECT GENERATE_SERIES (1, vbCount) AS Number) AS tmp
             ) AS tmp

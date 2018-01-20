@@ -58,6 +58,12 @@ BEGIN
 -- if inSession = '5' then return; end if;
 -- if inSession = '5' then inMovementId:= 7505643; end if;
 
+
+   IF (inBranchCode > 1000)
+   THEN RETURN;
+   END IF;
+
+
    -- товар которого нет как бы в заявке, но его все равно надо провести
    IF (inOrderExternalId > 0 OR inBranchCode = 301) AND inGoodsCode <> 0 THEN vbGoodsId:= (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inGoodsCode AND Object.DescId = zc_Object_Goods() AND Object.isErased = FALSE);
    END IF;
@@ -805,4 +811,4 @@ where (namefull  like '%ScaleCeh_201 Movement%'  or namefull  like '%Scale_201 M
 */
 
 -- тест
--- SELECT * FROM gpSelect_Scale_Goods (inIsGoodsComplete:= TRUE, inOperDate:= '01.12.2016', inMovementId:= -79137, inOrderExternalId:= 0, inPriceListId:=0, inGoodsCode:= 0, inGoodsName:= '', inDayPrior_PriceReturn:= 10, inBranchCode:= 301, inSession:=zfCalc_UserAdmin()) WHERE GoodsCode = 901
+-- SELECT * FROM gpSelect_Scale_Goods (inIsGoodsComplete:= TRUE, inOperDate:= CURRENT_DATE, inMovementId:= -79137, inOrderExternalId:= 0, inPriceListId:=0, inGoodsCode:= 0, inGoodsName:= '', inDayPrior_PriceReturn:= 10, inBranchCode:= 301, inSession:=zfCalc_UserAdmin()) WHERE GoodsCode = 901

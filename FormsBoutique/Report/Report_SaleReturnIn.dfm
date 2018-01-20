@@ -119,6 +119,51 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalPayOth
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPay_Grn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPay_Usd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPay_Eur
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPay_Card
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCountReturn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalReturn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPayReturn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummDebt
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummToPay
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -166,6 +211,56 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalPayOth
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = PartnerName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPay_Grn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPay_Usd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPay_Eur
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPay_Card
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCountReturn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalReturn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPayReturn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummDebt
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummToPay
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -176,6 +271,30 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object StatusCode: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1091#1089
+            DataBinding.FieldName = 'StatusCode'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = 1
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
           object DescName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1076#1086#1082'.'
             DataBinding.FieldName = 'DescName'
@@ -204,6 +323,14 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object InsertDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
           end
           object OperDate_Sale: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1087#1088#1086#1076#1072#1078#1072')'
@@ -379,30 +506,6 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 51
           end
-          object SummChangePercent: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1076#1086#1087'. '#1089#1082#1080#1076#1082#1080' ('#1074' '#1043#1056#1053')'
-            DataBinding.FieldName = 'SummChangePercent'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.ReadOnly = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1057#1082#1080#1076#1082#1080' ('#1074' '#1043#1056#1053')'
-            Width = 80
-          end
-          object TotalChangePercent: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' ('#1074' '#1043#1056#1053') ('#1090#1077#1082'.'#1076#1086#1082'.)'
-            DataBinding.FieldName = 'TotalChangePercent'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.ReadOnly = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
@@ -414,26 +517,78 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
             Width = 55
           end
           object OperPriceList: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' ('#1087#1088#1072#1081#1089')'
+            Caption = #1062#1077#1085#1072' '#1043#1056#1053
             DataBinding.FieldName = 'OperPriceList'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 58
+          end
+          object SummChangePercent: TcxGridDBColumn
+            Caption = #1044#1086#1087'. '#1089#1082'. '#1074' '#1087#1088#1086#1076'.'
+            DataBinding.FieldName = 'SummChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1072#1103' '#1089#1082#1080#1076#1082#1072' '#1074' '#1087#1088#1086#1076#1072#1078#1077' '#1043#1056#1053
+            Width = 80
+          end
+          object TotalChangePercent: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089#1082'. '#1087#1086' % '#1074' '#1087#1088#1086#1076'.'
+            DataBinding.FieldName = 'TotalChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1087#1086' % '#1074' '#1087#1088#1086#1076#1072#1078#1077' '#1043#1056#1053
+            Options.Editing = False
+            Width = 80
           end
           object TotalSummPriceList: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1087#1088#1072#1081#1089')'
             DataBinding.FieldName = 'TotalSummPriceList'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 110
           end
+          object TotalSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074#1093'. '#1074' '#1074#1072#1083'.'
+            DataBinding.FieldName = 'TotalSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1074' '#1074#1072#1083#1102#1090#1077
+            Options.Editing = False
+            Width = 80
+          end
           object TotalPay: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1074' '#1043#1056#1053') ('#1090#1077#1082'.'#1076#1086#1082'.)'
+            Caption = #1048#1090#1086#1075#1086' '#1086#1087#1083#1072#1090#1072' -> '#1043#1056#1053
             DataBinding.FieldName = 'TotalPay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1086#1087#1083#1072#1090#1072' '#1074' '#1087#1088#1086#1076#1072#1078#1077' '#1043#1056#1053
+            Options.Editing = False
+            Width = 80
+          end
+          object TotalPayOth: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1086#1087#1083#1072#1090#1072' '#1074' '#1056#1072#1089#1095#1077#1090#1072#1093
+            DataBinding.FieldName = 'TotalPayOth'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -443,15 +598,118 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
             Options.Editing = False
             Width = 80
           end
-          object TotalPayOth: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1074' '#1043#1056#1053') ('#1076#1086#1082'.'#1088#1072#1089#1095#1077#1090')'
-            DataBinding.FieldName = 'TotalPayOth'
+          object TotalSummDebt: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1076#1086#1083#1075#1072
+            DataBinding.FieldName = 'TotalSummDebt'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1076#1086#1083#1075#1072' '#1074' '#1087#1088#1086#1076#1072#1078#1077' '#1043#1056#1053
+            Options.Editing = False
+            Width = 80
+          end
+          object TotalSummToPay: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1082' '#1086#1087#1083#1072#1090#1077
+            DataBinding.FieldName = 'TotalSummToPay'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1082' '#1086#1087#1083#1072#1090#1077'  '#1074' '#1087#1088#1086#1076#1072#1078#1077' '#1043#1056#1053
+            Options.Editing = False
+            Width = 80
+          end
+          object TotalPay_Grn: TcxGridDBColumn
+            Caption = #1054#1087#1083#1072#1090#1072' '#1043#1056#1053
+            DataBinding.FieldName = 'TotalPay_Grn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object TotalPay_Usd: TcxGridDBColumn
+            Caption = #1054#1087#1083#1072#1090#1072' $'
+            DataBinding.FieldName = 'TotalPay_Usd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object TotalPay_Eur: TcxGridDBColumn
+            Caption = #1054#1087#1083#1072#1090#1072' EUR'
+            DataBinding.FieldName = 'TotalPay_Eur'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object TotalPay_Card: TcxGridDBColumn
+            Caption = #1054#1087#1083#1072#1090#1072' '#1082#1072#1088#1090#1072
+            DataBinding.FieldName = 'TotalPay_Card'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object TotalCountReturn: TcxGridDBColumn
+            Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090
+            DataBinding.FieldName = 'TotalCountReturn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1076#1083#1103' '#1069#1083#1077#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
+            Options.Editing = False
+            Width = 80
+          end
+          object TotalReturn: TcxGridDBColumn
+            Caption = #1048#1058#1054#1043#1054' '#1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072
+            DataBinding.FieldName = 'TotalReturn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1076#1083#1103' '#1069#1083#1077#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
+            Options.Editing = False
+            Width = 80
+          end
+          object TotalPayReturn: TcxGridDBColumn
+            Caption = #1048#1058#1054#1043#1054' '#1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'TotalPayReturn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1076#1083#1103' '#1069#1083#1077#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
             Options.Editing = False
             Width = 80
           end
@@ -779,6 +1037,49 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1089#1090#1072#1090#1091#1089#1099
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1089#1090#1072#1090#1091#1089#1099
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1087#1088#1086#1074#1077#1076#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1089#1090#1072#1090#1091#1089#1099
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1087#1088#1086#1074#1077#1076#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1089#1090#1072#1090#1091#1089#1099
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
+    object actSetErased: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spMovementSetErased
+      StoredProcList = <
+        item
+          StoredProc = spMovementSetErased
+        end>
+      Caption = 'dsdactSetErased'
+      ImageIndex = 13
+    end
+    object actComplete: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spMovementComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementComplete
+        end>
+      Caption = 'dsdactComplete'
+      ImageIndex = 12
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -814,6 +1115,14 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 200
@@ -842,7 +1151,28 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         end
         item
           Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErased'
         end
         item
           Visible = True
@@ -882,6 +1212,18 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
     end
     object bbPrint: TdxBarButton
       Action = actPrint
+      Category = 0
+    end
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
+      Category = 0
+    end
+    object bbComplete: TdxBarButton
+      Action = actComplete
+      Category = 0
+    end
+    object bbSetErased: TdxBarButton
+      Action = actSetErased
       Category = 0
     end
   end
@@ -955,5 +1297,53 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
     PackSize = 1
     Left = 608
     Top = 208
+  end
+  object spMovementComplete: TdsdStoredProc
+    StoredProcName = 'gpComplete_Movement_byReport'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outStatusCode'
+        Value = 'outStatusCode'
+        Component = MasterCDS
+        ComponentItem = 'StatusCode'
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 288
+    Top = 208
+  end
+  object spMovementSetErased: TdsdStoredProc
+    StoredProcName = 'gpSetErased_Movement_byReport'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outStatusCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StatusCode'
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 288
+    Top = 280
   end
 end

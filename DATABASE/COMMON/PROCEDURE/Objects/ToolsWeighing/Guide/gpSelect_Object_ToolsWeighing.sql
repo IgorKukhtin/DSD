@@ -23,14 +23,19 @@ BEGIN
            , Object_ToolsWeighing_View.Code
            , Object_ToolsWeighing_View.Name
            , Object_ToolsWeighing_View.NameFull
-           , Object_ToolsWeighing_View.NameUser
+
+           , CASE WHEN Object_ToolsWeighing_View.isLeaf = FALSE AND COALESCE (Object_ToolsWeighing_View.ParentId, 0) = 0
+                       THEN (SELECT gpSelect.Name FROM gpSelect_Object_ToolsWeighing_Tree (inSession) AS gpSelect WHERE gpSelect.Id = Object_ToolsWeighing_View.Id)
+                  ELSE Object_ToolsWeighing_View.NameUser
+             END :: TVarChar AS NameUser
+
            , Object_ToolsWeighing_View.ValueData
            , COALESCE (Object_ToolsWeighing_View.ParentId, 0) AS ParentId
            , Object_ToolsWeighing_View.ParentName
            , Object_ToolsWeighing_View.isErased
            , Object_ToolsWeighing_View.isLeaf
            , COALESCE (Object_InfoMoney_View.InfoMoneyName_all, COALESCE (Object_ToolsWeighingPlace.ValueData, MovementDesc.ItemName)) :: TVarChar as ToolsWeighingPlaceName
-       FROM Object_ToolsWeighing_View 
+       FROM Object_ToolsWeighing_View
             LEFT JOIN Object AS Object_ToolsWeighingPlace ON Object_ToolsWeighingPlace.Id = CASE WHEN CHAR_LENGTH (Object_ToolsWeighing_View.ValueData) > 0
                                                                                                   AND POSITION ('Id' IN Object_ToolsWeighing_View.Name) > 0
                                                                                                   AND POSITION ('DescId' IN Object_ToolsWeighing_View.Name) = 0

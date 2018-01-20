@@ -24,7 +24,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxDBLabel;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxDBLabel,
+  cxImageComboBox;
 
 type
   TReport_GoodsMI_AccountForm = class(TAncestorReportForm)
@@ -48,6 +49,14 @@ type
     spGet_UserUnit: TdsdStoredProc;
     PanelGoodsGroupNameFull: TPanel;
     DBLabelGoodsGroupNameFull: TcxDBLabel;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
+    spMovementComplete: TdsdStoredProc;
+    spMovementSetErased: TdsdStoredProc;
+    actSetErased: TdsdExecStoredProc;
+    actComplete: TdsdExecStoredProc;
+    bbComplete: TdxBarButton;
+    bbSetErased: TdxBarButton;
   private
     { Private declarations }
   public

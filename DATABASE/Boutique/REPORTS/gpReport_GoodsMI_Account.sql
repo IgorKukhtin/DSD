@@ -1,14 +1,17 @@
 -- Function:  gpReport_GoodsMI_Account()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_Account (TDateTime,TDateTime,Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_Account (TDateTime,TDateTime,Integer,Boolean,TVarChar);
 
 CREATE OR REPLACE FUNCTION  gpReport_GoodsMI_Account(
     IN inStartDate        TDateTime,  -- Дата начала
     IN inEndDate          TDateTime,  -- Дата окончания
     IN inUnitId           Integer  ,  -- Подразделение
+    IN inIsShowAll        Boolean  ,  -- Показывать все документы / только проведенные
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId            Integer
+             , StatusCode            Integer
              , DescName              TVarChar
              , OperDate              TDateTime
              , Invnumber             TVarChar
@@ -43,6 +46,7 @@ RETURNS TABLE (MovementId            Integer
              , TotalPay_EUR     TFloat
              , TotalPay_Card    TFloat
              , TotalPay         TFloat
+             , InsertDate       TDateTime
   )
 AS
 $BODY$
@@ -65,8 +69,17 @@ BEGIN
     -- Результат
     RETURN QUERY
     WITH
-    tmpSale AS (SELECT Movement_Sale.Id                    AS MovementId
+    tmpStatus AS (SELECT tmp.StatusId              AS StatusId
+                       , Object_Status.ObjectCode  AS StatusCode
+                  FROM (SELECT zc_Enum_Status_Complete()   AS StatusId
+                        UNION SELECT zc_Enum_Status_UnComplete() AS StatusId WHERE inIsShowAll = TRUE
+                        UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsShowAll = TRUE
+                        ) AS tmp
+                        LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmp.StatusId
+                 )
+  , tmpSale AS (SELECT Movement_Sale.Id                    AS MovementId
                      , zc_Movement_Sale()                  AS MovementDescId
+                     , tmpStatus.StatusCode                AS StatusCode
                      , Movement_Sale.OperDate              AS OperDate
                      , Movement_Sale.Invnumber             AS Invnumber
                      , Movement_Sale.Id                    AS MovementId_Sale
@@ -88,6 +101,7 @@ BEGIN
                      , SUM (CASE WHEN Object.DescId = zc_Object_BankAccount() THEN MI_Child.Amount ELSE 0 END) AS TotalPay_Card
                      , COALESCE (MIFloat_TotalPay.ValueData, 0)           AS TotalPay
                 FROM Movement AS Movement_Sale
+                     INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement_Sale.StatusId
                      INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                    ON MovementLinkObject_From.MovementId = Movement_Sale.Id
                                                   AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -127,6 +141,7 @@ BEGIN
                        , Movement_Sale.OperDate
                        , Movement_Sale.Invnumber 
                        , Movement_Sale.DescId
+                       , tmpStatus.StatusCode
                        , MovementLinkObject_To.ObjectId
                        , MI_Master.ObjectId 
                        , MI_Master.PartionId
@@ -136,8 +151,10 @@ BEGIN
                        , COALESCE (MIFloat_TotalPay.ValueData, 0)
                        , COALESCE (MIFloat_SummChangePercent.ValueData, 0)
               )     
+
   , tmpReturnIn AS (SELECT Movement_ReturnIn.Id                AS MovementId
                          , zc_Movement_ReturnIn()              AS MovementDescId
+                         , tmpStatus.StatusCode                AS StatusCode
                          , Movement_ReturnIn.OperDate          AS OperDate
                          , Movement_ReturnIn.Invnumber         AS Invnumber
                          , Movement_Sale.Id                    AS MovementId_Sale
@@ -159,6 +176,8 @@ BEGIN
                          , SUM (CASE WHEN Object.DescId = zc_Object_BankAccount() THEN (-1) * MI_Child.Amount ELSE 0 END) AS TotalPay_Card
                          , (COALESCE (MIFloat_TotalPay.ValueData, 0)) * (-1)  AS TotalPay
                     FROM Movement AS Movement_ReturnIn
+                         INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement_ReturnIn.StatusId
+
                          INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                        ON MovementLinkObject_To.MovementId = Movement_ReturnIn.Id
                                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -210,6 +229,7 @@ BEGIN
                            , Movement_Sale.DescId
                            , Movement_Sale.OperDate
                            , Movement_Sale.Invnumber
+                           , tmpStatus.StatusCode
                            , MovementLinkObject_From.ObjectId
                            , MI_Master.ObjectId
                            , MI_Master.PartionId
@@ -221,6 +241,7 @@ BEGIN
                   )
   , tmpGoodsAccount AS (SELECT Movement_GoodsAccount.Id            AS MovementId
                              , zc_Movement_GoodsAccount()          AS MovementDescId
+                             , tmpStatus.StatusCode                AS StatusCode
                              , Movement_GoodsAccount.OperDate      AS OperDate
                              , Movement_GoodsAccount.Invnumber     AS Invnumber
                              , Movement_Sale.Id                    AS MovementId_Sale
@@ -241,6 +262,8 @@ BEGIN
                              , SUM (CASE WHEN Object.DescId = zc_Object_BankAccount() THEN MI_Child.Amount ELSE 0 END) AS TotalPay_Card
                              , (COALESCE (MIFloat_TotalPay.ValueData, 0))         AS TotalPay
                         FROM Movement AS Movement_GoodsAccount
+                             INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement_GoodsAccount.StatusId
+
                              LEFT JOIN MovementItem AS MI_Master
                                                     ON MI_Master.MovementId = Movement_GoodsAccount.Id
                                                    AND MI_Master.DescId     = zc_MI_Master()
@@ -295,7 +318,8 @@ BEGIN
                                , Movement_Sale.Id
                                , Movement_Sale.DescId 
                                , Movement_Sale.OperDate
-                               , Movement_Sale.Invnumber 
+                               , Movement_Sale.Invnumber
+                               , tmpStatus.StatusCode 
                                , MovementLinkObject_From.ObjectId
                                , MI_Sale.ObjectId
                                , MI_Sale.PartionId
@@ -308,6 +332,7 @@ BEGIN
 
      , tmpData  AS  (SELECT tmp.MovementId
                           , tmp.MovementDescId
+                          , tmp.StatusCode
                           , tmp.OperDate
                           , tmp.Invnumber
                           , tmp.MovementId_Sale
@@ -329,6 +354,7 @@ BEGIN
                      FROM tmpSale AS tmp
                      GROUP BY tmp.MovementId
                             , tmp.MovementDescId
+                            , tmp.StatusCode
                             , tmp.OperDate
                             , tmp.Invnumber
                             , tmp.MovementId_Sale
@@ -343,6 +369,7 @@ BEGIN
                    UNION ALL
                      SELECT tmp.MovementId
                           , tmp.MovementDescId
+                          , tmp.StatusCode
                           , tmp.OperDate
                           , tmp.Invnumber
                           , tmp.MovementId_Sale
@@ -364,6 +391,7 @@ BEGIN
                      FROM tmpReturnIn AS tmp
                      GROUP BY tmp.MovementId
                             , tmp.MovementDescId
+                            , tmp.StatusCode
                             , tmp.OperDate
                             , tmp.Invnumber
                             , tmp.MovementId_Sale
@@ -378,6 +406,7 @@ BEGIN
                    UNION ALL
                      SELECT tmp.MovementId
                           , tmp.MovementDescId
+                          , tmp.StatusCode
                           , tmp.OperDate
                           , tmp.Invnumber
                           , tmp.MovementId_Sale
@@ -399,6 +428,7 @@ BEGIN
                      FROM tmpGoodsAccount AS tmp
                      GROUP BY tmp.MovementId
                             , tmp.MovementDescId
+                            , tmp.StatusCode
                             , tmp.OperDate
                             , tmp.Invnumber
                             , tmp.MovementId_Sale
@@ -414,6 +444,7 @@ BEGIN
             
 
         SELECT tmpData.MovementId
+             , tmpData.StatusCode             AS StatusCode
              , MovementDesc.ItemName          AS DescName
              , tmpData.OperDate
              , tmpData.Invnumber
@@ -454,7 +485,7 @@ BEGIN
              , tmpData.TotalPay_EUR        ::TFloat
              , tmpData.TotalPay_Card       ::TFloat
              , tmpData.TotalPay            ::TFloat
-
+             , MovementDate_Insert.ValueData        AS InsertDate
         FROM tmpData
             LEFT JOIN MovementDesc ON MovementDesc.Id = tmpData.MovementDescId
             LEFT JOIN MovementDesc AS MovementDesc_Sale ON MovementDesc_Sale.Id = tmpData.MovementDescId_Sale
@@ -481,6 +512,9 @@ BEGIN
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpData.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
 
+            LEFT JOIN MovementDate AS MovementDate_Insert
+                                   ON MovementDate_Insert.MovementId = tmpData.MovementId
+                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
 ;
  END;
 $BODY$
@@ -493,4 +527,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpReport_GoodsMI_Account(inStartDate := ('01.01.2017')::TDateTime , inEndDate := ('13.07.2017')::TDateTime , inUnitId := 506 ,  inSession := '2');
+-- select * from gpReport_GoodsMI_Account(inStartDate := ('01.01.2017')::TDateTime , inEndDate := ('13.07.2017')::TDateTime , inUnitId := 506 , inIsShowAll:= 'TRUE'::Boolean, inSession := '2');

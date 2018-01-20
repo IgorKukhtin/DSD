@@ -119,8 +119,13 @@ BEGIN
                       )
 
          -- клиенты реестра
-         , tmpTo AS (SELECT DISTINCT tmpMI_Main.ToId  
-                     FROM tmpMI_Main
+         , tmpTo AS (SELECT tmpTo.ToId
+                          
+                     FROM  (SELECT DISTINCT tmpMI_Main.ToId  
+                            FROM tmpMI_Main
+                            ) AS tmpTo
+
+                       
                      )
          -- выбираем строки из других реестров, по клиентам текущего реестра
          , tmpMIList AS (SELECT MovementItem.Id         AS MovementItemId
@@ -168,6 +173,9 @@ BEGIN
            , Movement_Sale.OperDate                 AS OperDate_Sale
            , MovementDate_OperDatePartner.ValueData AS OperDatePartner
            , Object_To.ValueData                    AS ToName
+           , CASE WHEN Object_Personal.Id <> Object_PersonalTrade.Id AND COALESCE (Object_PersonalTrade.Id, 0) <> 0 THEN Object_Personal.ValueData|| ' / '||Object_PersonalTrade.ValueData
+                  ELSE Object_Personal.ValueData
+             END                                    AS PersonalName
            , Object_ReestrKind.ValueData    	    AS ReestrKindName
            , Object_PaidKind.ValueData              AS PaidKindName
 
@@ -283,7 +291,17 @@ BEGIN
                                          ON MovementLinkObject_PaidKind.MovementId = Movement_Sale.Id
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
-
+            
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
+                                 ON ObjectLink_Partner_Personal.ObjectId = Object_To.Id
+                                AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
+            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Partner_Personal.ChildObjectId
+   
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                 ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_To.Id
+                                AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+            LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = ObjectLink_Partner_PersonalTrade.ChildObjectId
+            
          ORDER BY tmpMI.GroupNum
                 , Object_To.ValueData
                 , MovementDate_OperDatePartner.ValueData
@@ -297,7 +315,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.01.18         *
  25.10.16         *
 */
 

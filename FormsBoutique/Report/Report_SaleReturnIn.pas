@@ -24,7 +24,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxImageComboBox;
 
 type
   TReport_SaleReturnInForm = class(TAncestorReportForm)
@@ -46,6 +47,15 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     spGet_UserUnit: TdsdStoredProc;
+    StatusCode: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
+    bbComplete: TdxBarButton;
+    bbSetErased: TdxBarButton;
+    spMovementComplete: TdsdStoredProc;
+    actComplete: TdsdExecStoredProc;
+    actSetErased: TdsdExecStoredProc;
+    spMovementSetErased: TdsdStoredProc;
   private
     { Private declarations }
   public
