@@ -22,7 +22,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
     IN inSummCardSecondRecalc  TFloat    , -- Карта БН (ввод) - 2ф.
     IN inSummCardSecondCash    TFloat    , -- Карта БН (касса) - 2ф.
     IN inSummNalogRecalc       TFloat    , -- Налоги - удержания (ввод)
-    IN inSummNalogRetRecalc    TFloat    , -- Налоги - возмещение к ЗП (ввод)
+    IN inSummNalogRet          TFloat    , -- Налоги - возмещение к ЗП !!!НЕ ввод!!!
     IN inSummMinus             TFloat    , -- Сумма удержания
     IN inSummAdd               TFloat    , -- Сумма премия
     IN inSummHoliday           TFloat    , -- Сумма отпускные
@@ -59,7 +59,7 @@ BEGIN
                                                      , inSummCardSecondRecalc  := inSummCardSecondRecalc
                                                      , inSummCardSecondCash    := inSummCardSecondCash
                                                      , inSummNalogRecalc       := inSummNalogRecalc
-                                                     , inSummNalogRetRecalc    := inSummNalogRetRecalc
+                                                     , inSummNalogRetRecalc    := 0
                                                      , inSummMinus             := inSummMinus
                                                      , inSummAdd               := inSummAdd
                                                      , inSummHoliday           := inSummHoliday
@@ -75,6 +75,10 @@ BEGIN
                                                      , inPersonalServiceListId := inPersonalServiceListId
                                                      , inUserId                := vbUserId
                                                       ) AS tmp;
+
+
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummNalogRet(), ioId, inSummNalogRet);
 
      -- сохранили свойство строки <создан автоматически>
      outisAuto := FALSE;

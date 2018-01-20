@@ -2,8 +2,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 673
   ClientWidth = 1307
+  ExplicitLeft = -534
   ExplicitWidth = 1323
-  ExplicitHeight = 711
+  ExplicitHeight = 708
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -588,7 +589,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object SummNalogRetRecalc: TcxGridDBColumn [27]
@@ -599,6 +599,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object SummChild: TcxGridDBColumn [28]
@@ -2588,10 +2589,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inSummNalogRetRecalc'
+        Name = 'inSummNalogRet'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'SummNalogRetRecalc'
+        ComponentItem = 'SummNalogRet'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -34,4 +34,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_Client_SYBASE (1, 1380) union SELECT * FROM gpGet_Object_Client_SYBASE (4, 1236) union SELECT * FROM gpGet_Object_Client_SYBASE (2, 2412)
+-- SELECT 1, * FROM gpGet_Object_Client_SYBASE (3, 1154) union SELECT 2, * FROM gpGet_Object_Client_SYBASE (2, 992) union SELECT 3, * FROM gpGet_Object_Client_SYBASE (4, 1191)

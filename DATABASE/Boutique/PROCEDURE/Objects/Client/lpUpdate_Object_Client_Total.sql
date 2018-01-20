@@ -144,7 +144,7 @@ BEGIN
    IF vbMovementDescId = zc_Movement_Sale() AND inIsComplete = FALSE AND vbOperDate > vbLastDate_Client
    THEN
        -- находим данные по последнему док.продажи
-       SELECT COALESCE (MD_Insert.ValueData, Movement.OperDate)        AS OperDate            -- дата/время создания, а уже потом - дата документа
+       SELECT Movement.OperDate                                        AS OperDate            -- дата/время создания, а уже потом - дата документа
             , COALESCE (MovementFloat_TotalCount.ValueData, 0)         AS TotalCount          -- кол-во
             , COALESCE (MovementFloat_TotalSummPriceList.ValueData, 0) AS TotalSummPriceList  -- Сумма
             , COALESCE (MovementFloat_TotalSummChange.ValueData, 0)    AS TotalSummChange     -- Сумма скидки
@@ -164,7 +164,8 @@ BEGIN
              WHERE Movement.StatusId = zc_Enum_Status_Complete() 
                AND Movement.DescId = zc_Movement_Sale()
              ORDER BY MD_Insert.ValueData DESC -- для скорости - без Movement.OperDate
-             LIMIT 1) AS Movement
+             LIMIT 1
+            ) AS Movement
             
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId = Movement.Id

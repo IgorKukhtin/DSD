@@ -16,6 +16,10 @@ $BODY$
   DECLARE vbJuridicalId_Basis       Integer; -- значение пока НЕ определяется
   DECLARE vbBusinessId              Integer; -- значение пока НЕ определяется
 BEGIN
+     -- !!!временно - для Sybase!!!
+     vbUserId := zc_User_Sybase() ;
+
+
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
      -- !!!обязательно!!! очистили таблицу - элементы оплаты, со всеми свойствами для формирования Аналитик в проводках
@@ -205,9 +209,10 @@ BEGIN
             ;
 
      -- проверка что оплачено НЕ больше чем надо
-     IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.TotalPay > _tmpItem.OperSumm_ToPay)
+     IF (EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.TotalPay > _tmpItem.OperSumm_ToPay) AND inUserId <> zc_User_Sybase())
+     OR (EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.TotalPay > _tmpItem.OperSumm_ToPay AND _tmpItem.TotalPay > 0) AND inUserId = zc_User_Sybase())
      THEN
-         RAISE EXCEPTION 'Ошибка. Сумма к оплате = <%> больше чем сумма оплаты = <%>.', (SELECT _tmpItem.OperSumm_ToPay FROM _tmpItem WHERE _tmpItem.TotalPay > _tmpItem.OperSumm_ToPay ORDER BY _tmpItem.MovementItemId LIMIT 1)
+         RAISE EXCEPTION 'Ошибка. Сумма к оплате = <%> меньше чем сумма оплаты = <%>.', (SELECT _tmpItem.OperSumm_ToPay FROM _tmpItem WHERE _tmpItem.TotalPay > _tmpItem.OperSumm_ToPay ORDER BY _tmpItem.MovementItemId LIMIT 1)
                                                                                       , (SELECT _tmpItem.TotalPay       FROM _tmpItem WHERE _tmpItem.TotalPay > _tmpItem.OperSumm_ToPay ORDER BY _tmpItem.MovementItemId LIMIT 1)
          ;
      END IF;
@@ -1092,7 +1097,7 @@ BEGIN
                LIMIT 1
                )
               -- 2
-            , (SELECT '(' || Object_Goods.ObjectCode :: TVarChar || ')' ||  Object_Goods.ValueData || ' р.' || COALESCE (Object_GoodsSize.ValueData, '')
+            , (SELECT '(' || Object_Goods.ObjectCode :: TVarChar || ')' ||  Object_Goods.ValueData || ' р.' || COALESCE (Object_GoodsSize.ValueData, '') || '(' || tmp.ContainerId :: TVarChar || ')'
                FROM
               (SELECT
                      -- Сумма по Прайсу
@@ -1110,6 +1115,7 @@ BEGIN
                    + COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
 
                      AS SummDebt_return
+                   , Container.Id     AS ContainerId
                    , MI_Sale.ObjectId AS GoodsId
                    , Object_PartionGoods.GoodsSizeId
                    , _tmpItem.MovementItemId  AS MovementItemId

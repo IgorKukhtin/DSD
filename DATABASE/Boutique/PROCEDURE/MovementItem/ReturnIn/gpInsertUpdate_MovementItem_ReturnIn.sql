@@ -133,7 +133,7 @@ BEGIN
                                                    , inCurrencyFromId:= zc_Currency_Basis()
                                                    , inCurrencyToId  := vbCurrencyId
                                                     ) AS tmp;
-         END IF;          
+         END IF;
 
          -- проверка
          IF COALESCE (vbCurrencyId, 0) = 0 THEN
@@ -228,6 +228,23 @@ BEGIN
      outTotalChangePercent:= (SELECT CASE -- если вернули все - тогда вся скидка из продажи
                                           WHEN MovementItem.Amount = inAmount
                                                THEN COALESCE (MIFloat_TotalChangePercent.ValueData, 0) + COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)
+                                                    -- ПЛЮС для Sybase - скидка в Оплатах !!!Расчеты - НЕ ВСЕ Статусы!!!
+                                                  + COALESCE ((SELECT SUM (COALESCE (MIFloat_SummChangePercent.ValueData, 0))
+                                                               FROM MovementItemLinkObject AS MIL_PartionMI
+                                                                    INNER JOIN MovementItem ON MovementItem.Id       = MIL_PartionMI.MovementItemId
+                                                                                           AND MovementItem.DescId   = zc_MI_Master()
+                                                                                           AND MovementItem.isErased = FALSE
+                                                                    INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                                                       AND Movement.DescId   = zc_Movement_GoodsAccount()
+                                                                                       AND Movement.StatusId IN (zc_Enum_Status_UnComplete())
+                                                                    LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
+                                                                                                ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
+                                                                                               AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
+
+                                                               WHERE MIL_PartionMI.DescId   = zc_MILinkObject_PartionMI()
+                                                                 AND MIL_PartionMI.ObjectId = vbPartionMI_Id
+                                                                 AND vbUserId               = zc_User_Sybase()
+                                                              ), 0)
 
                                           -- !!!Сложный расчет - для Sybase - что б после возврата оплаты ДОЛГ был = 0 - только для №п/п=1!!!
                                           WHEN vbUserId = zc_User_Sybase()
@@ -246,10 +263,10 @@ BEGIN
                                                                                           LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
                                                                                                                       ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
                                                                                                                      AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
-      
+
                                                                                      WHERE MIL_PartionMI.DescId   = zc_MILinkObject_PartionMI()
                                                                                        AND MIL_PartionMI.ObjectId = vbPartionMI_Id
-      
+
                                                                                     ) AS tmp
                                                                                WHERE tmp.Ord = 1
                                                                               ), 0)
@@ -290,7 +307,7 @@ BEGIN
                                                                                                                   AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
                                                                                           WHERE MIL_PartionMI.DescId   = zc_MILinkObject_PartionMI()
                                                                                             AND MIL_PartionMI.ObjectId = vbPartionMI_Id
-                      
+
                                                                                          ), 0)
                                                                              , MIFloat_OperPriceList.ValueData)
                                                          -- ПЛЮС ИТОГО - Сумма ВОЗВРАТ ОПЛАТЫ
@@ -335,7 +352,7 @@ BEGIN
                                                                                                         AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
                                                                                 WHERE MIL_PartionMI.DescId   = zc_MILinkObject_PartionMI ()
                                                                                   AND MIL_PartionMI.ObjectId = vbPartionMI_Id
-            
+
                                                                                ), 0)
                                              = inAmount
                                                THEN COALESCE (MIFloat_TotalChangePercent.ValueData, 0) + COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)
@@ -378,7 +395,7 @@ BEGIN
                                                                  AND MIL_PartionMI.ObjectId = vbPartionMI_Id
 
                                                               ), 0)
-                                          
+
                                           ELSE -- иначе почти пропроционально - ОКРУГЛИМ дробную часть после второго знака
                                                ROUND ((COALESCE (MIFloat_TotalChangePercent.ValueData, 0) + COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0))
                                                     / MovementItem.Amount * inAmount, 2)
