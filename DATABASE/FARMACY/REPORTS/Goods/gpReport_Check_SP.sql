@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpReport_Check_SP (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Check_SP (TDateTime, TDateTime, Integer,Integer,Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION  gpReport_Check_SP(
+CREATE OR REPLACE FUNCTION gpReport_Check_SP(
     IN inStartDate        TDateTime,  -- Дата начала
     IN inEndDate          TDateTime,  -- Дата окончания
     IN inJuridicalId      Integer  ,  -- Юр.лицо
@@ -345,6 +345,7 @@ BEGIN
                          , COALESCE(Object_PartnerMedical_Contract.Id,0)         AS PartnerMedical_ContractId
                          , Object_PartnerMedical_Contract.ValueData              AS PartnerMedical_ContractName
                          , ObjectDate_Start.ValueData                            AS PartnerMedical_Contract_StartDate 
+                         , ObjectDate_End.ValueData                              AS PartnerMedical_Contract_EndDate 
 
                     FROM (SELECT DISTINCT tmpMI.UnitId
                                , tmpMI.JuridicalId
@@ -352,27 +353,30 @@ BEGIN
                           FROM tmpMI) AS tmp
                          
                           LEFT JOIN ObjectLink AS ObjectLink_PartnerMedical_Juridical 
-                                 ON ObjectLink_PartnerMedical_Juridical.ObjectId = tmp.HospitalId
-                                AND ObjectLink_PartnerMedical_Juridical.DescId = zc_ObjectLink_PartnerMedical_Juridical()
+                                               ON ObjectLink_PartnerMedical_Juridical.ObjectId = tmp.HospitalId
+                                              AND ObjectLink_PartnerMedical_Juridical.DescId = zc_ObjectLink_PartnerMedical_Juridical()
 
                           LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
-                                  ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_PartnerMedical_Juridical.ChildObjectId
-                                 AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                                               ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_PartnerMedical_Juridical.ChildObjectId
+                                              AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
                           LEFT JOIN Object AS Object_PartnerMedical_Contract ON Object_PartnerMedical_Contract.Id = ObjectLink_Contract_Juridical.ObjectId
 
                           INNER JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
-                                  ON ObjectLink_Contract_JuridicalBasis.ObjectId = Object_PartnerMedical_Contract.Id
-                                 AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
-                                 AND ObjectLink_Contract_JuridicalBasis.ChildObjectId = tmp.JuridicalId
+                                                ON ObjectLink_Contract_JuridicalBasis.ObjectId = Object_PartnerMedical_Contract.Id 
+                                               AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
+                                               AND ObjectLink_Contract_JuridicalBasis.ChildObjectId = tmp.JuridicalId
 
                           LEFT JOIN ObjectLink AS ObjectLink_Contract_GroupMemberSP
-                                 ON ObjectLink_Contract_GroupMemberSP.ObjectId = Object_PartnerMedical_Contract.Id
-                                AND ObjectLink_Contract_GroupMemberSP.DescId = zc_ObjectLink_Contract_GroupMemberSP()
+                                               ON ObjectLink_Contract_GroupMemberSP.ObjectId = Object_PartnerMedical_Contract.Id
+                                              AND ObjectLink_Contract_GroupMemberSP.DescId = zc_ObjectLink_Contract_GroupMemberSP()
                           LEFT JOIN Object AS Object_PartnerMedical_GroupMemberSP ON Object_PartnerMedical_GroupMemberSP.Id = ObjectLink_Contract_GroupMemberSP.ChildObjectId
       
                           LEFT JOIN ObjectDate AS ObjectDate_Start
-                                  ON ObjectDate_Start.ObjectId = Object_PartnerMedical_Contract.Id
-                                 AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
+                                               ON ObjectDate_Start.ObjectId = Object_PartnerMedical_Contract.Id
+                                              AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
+                          LEFT JOIN ObjectDate AS ObjectDate_End
+                                               ON ObjectDate_End.ObjectId = Object_PartnerMedical_Contract.Id
+                                              AND ObjectDate_End.DescId = zc_ObjectDate_Contract_End()
 
                           LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := tmp.JuridicalId, inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_JuridicalDetails ON 1=1
                           LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := ObjectLink_PartnerMedical_Juridical.ChildObjectId, inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_PartnerMedicalDetails ON 1=1
@@ -381,16 +385,16 @@ BEGIN
                                                   AND tmpBankAccount.BankAccount = ObjectHistory_JuridicalDetails.BankAccount
                           -- расчетный счет из договора , по идее для заклада охорони здоров'я
                       /*    LEFT JOIN ObjectLink AS ObjectLink_Contract_BankAccount
-                                 ON ObjectLink_Contract_BankAccount.ObjectId = Object_PartnerMedical_Contract.Id
-                                AND ObjectLink_Contract_BankAccount.DescId = zc_ObjectLink_Contract_BankAccount()
+                                                 ON ObjectLink_Contract_BankAccount.ObjectId = Object_PartnerMedical_Contract.Id
+                                                AND ObjectLink_Contract_BankAccount.DescId = zc_ObjectLink_Contract_BankAccount()
                           LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = ObjectLink_Contract_BankAccount.ChildObjectId 
                           LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
-                                 ON ObjectLink_BankAccount_Bank.ObjectId = Object_BankAccount.Id
-                                AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
+                                               ON ObjectLink_BankAccount_Bank.ObjectId = Object_BankAccount.Id
+                                              AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
                           LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
                           LEFT JOIN ObjectString AS ObjectString_MFO
-                                 ON ObjectString_MFO.ObjectId = Object_Bank.Id
-                                AND ObjectString_MFO.DescId = zc_ObjectString_Bank_MFO()*/
+                                                 ON ObjectString_MFO.ObjectId = Object_Bank.Id
+                                                AND ObjectString_MFO.DescId = zc_ObjectString_Bank_MFO()*/
                     WHERE COALESCE (Object_PartnerMedical_GroupMemberSP.ObjectCode,0) = -1
                     )
 
@@ -402,10 +406,12 @@ BEGIN
                                , tmpMI.JuridicalId
                                , tmpMI.HospitalId
                                , tmpMI.InvNumberSP
+                               , tmpMI.OperDate
                           FROM tmpMI) AS tmpData
                          LEFT JOIN tmpParam ON tmpParam.UnitId = tmpData.UnitId
                                AND tmpParam.JuridicalId = tmpData.JuridicalId
                                AND tmpParam.HospitalId = tmpData.HospitalId
+                               AND tmpParam.PartnerMedical_Contract_StartDate <= tmpData.OperDate AND tmpParam.PartnerMedical_Contract_EndDate >= tmpData.OperDate
                     GROUP BY tmpData.JuridicalId
                            , tmpData.HospitalId
                            , tmpParam.PartnerMedical_ContractId
@@ -501,6 +507,7 @@ BEGIN
              LEFT JOIN tmpParam ON tmpParam.UnitId = tmpData.UnitId
                                AND tmpParam.JuridicalId = tmpData.JuridicalId
                                AND tmpParam.HospitalId = tmpData.HospitalId
+                               AND tmpParam.PartnerMedical_Contract_StartDate <= tmpData.OperDate AND tmpParam.PartnerMedical_Contract_EndDate >= tmpData.OperDate
 
              LEFT JOIN tmpCountR ON tmpCountR.JuridicalId = tmpData.JuridicalId
                                 AND tmpCountR.HospitalId = tmpData.HospitalId
