@@ -91,8 +91,14 @@ BEGIN
             , Object_PartionGoods.isArc           AS isArc
            
        FROM Container
+           LEFT JOIN ContainerLinkObject AS CLO_Client
+                                         ON CLO_Client.ContainerId = Container.Id
+                                        AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
+
            LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = Container.PartionId
-                                        AND (Object_PartionGoods.isErased = FALSE)
+                                        AND Object_PartionGoods.isErased       = FALSE
+                                        -- !!!обязательно условие, т.к. мог меняться GoodsId и тогда в Container - несколько строк!!!
+                                        AND Object_PartionGoods.GoodsId        = Container.ObjectId
 
            LEFT JOIN  Object AS Object_Partner ON Object_Partner.Id = Object_PartionGoods.PartnerId
            LEFT JOIN  Object AS Object_Unit    ON Object_Unit.Id    = Object_PartionGoods.UnitId
@@ -117,9 +123,10 @@ BEGIN
 
            LEFT JOIN  Movement ON Movement.Id = Object_PartionGoods.MovementId
 
-     WHERE Container.DescId = zc_Container_count()
+     WHERE Container.DescId = zc_Container_Count()
        AND Container.WhereObjectId = inUnitId  
        AND (COALESCE (Container.Amount,0) <> 0 OR inIsShowAll = TRUE)       
+       AND CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
     ;
 
 END;
