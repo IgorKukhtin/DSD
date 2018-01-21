@@ -51,7 +51,7 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
 
      -- при сканировании вызывается лишний раз
-     IF COALESCE (ioId, 0) = 0 AND COALESCE (inBarCode, '') = '' THEN
+     IF COALESCE (ioId, 0) = 0 AND COALESCE (inBarCode, '') = '' And COALESCE (inPartionId, 0) = 0 THEN
         RETURN;
      END IF;
      

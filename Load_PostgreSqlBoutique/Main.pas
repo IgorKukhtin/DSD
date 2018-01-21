@@ -4295,7 +4295,7 @@ begin
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMIMaster.Checked)and(not cbOnlyOpenMIChild.Checked);
 
-        if cbOnlyOpen.Checked then exit;
+        if (cbOnlyOpen.Checked = TRUE) or (cbMovementNotOne.Checked = TRUE) then exit;
         //
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
@@ -4383,7 +4383,7 @@ begin
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMIMaster.Checked)and(not cbOnlyOpenMIChild.Checked);
 
-        if cbOnlyOpen.Checked then exit;
+        if (cbOnlyOpen.Checked = TRUE) or (cbMovementNotOne.Checked = TRUE) then exit;
         //
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
@@ -4467,7 +4467,7 @@ begin
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMIMaster.Checked)and(not cbOnlyOpenMIChild.Checked);
 
-        if cbOnlyOpen.Checked then exit;
+        if (cbOnlyOpen.Checked = TRUE) or (cbMovementNotOne.Checked = TRUE) then exit;
         //
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
@@ -4772,7 +4772,7 @@ begin
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMIMaster.Checked)and(not cbOnlyOpenMIChild.Checked);
 
-        if cbOnlyOpen.Checked then exit;
+        if (cbOnlyOpen.Checked = TRUE) or (cbMovementNotOne.Checked = TRUE) then exit;
         //
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
@@ -5087,7 +5087,7 @@ begin
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMIMaster.Checked)and(not cbOnlyOpenMIChild.Checked);
 
-        if cbOnlyOpen.Checked then exit;
+        if (cbOnlyOpen.Checked = TRUE) or (cbMovementNotOne.Checked = TRUE) then exit;
         //
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;

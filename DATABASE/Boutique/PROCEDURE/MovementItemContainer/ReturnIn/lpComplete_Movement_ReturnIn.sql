@@ -17,7 +17,7 @@ $BODY$
   DECLARE vbBusinessId              Integer; -- значение пока Ќ≈ определ€етс€
 BEGIN
      -- !!!временно - дл€ Sybase!!!
-     vbUserId := zc_User_Sybase() ;
+     -- inUserId := zc_User_Sybase() ;
 
 
      -- !!!об€зательно!!! очистили таблицу проводок
