@@ -821,6 +821,12 @@ end;
 //
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  //Движ. по покупателю
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CollationByPartnerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CollationByPartnerForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CollationByPartnerDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CollationByPartnerDialogForm');
+  exit;
 {
   //Движ. по покупателю
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionByPartnerForm'));

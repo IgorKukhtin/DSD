@@ -184,6 +184,8 @@ type
     miObject_Client_LastError: TMenuItem;
     actReport_Sale_ContainerError: TdsdOpenForm;
     N1: TMenuItem;
+    actReport_CollationByPartner: TdsdOpenForm;
+    miReport_CollationByPartner: TMenuItem;
   private
     { Private declarations }
   public
