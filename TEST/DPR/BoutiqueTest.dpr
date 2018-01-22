@@ -272,7 +272,9 @@ uses
   Report_Sale_TotalError in '..\..\FormsBoutique\Report\Report_Sale_TotalError.pas' {Report_Sale_TotalErrorForm: TParentForm},
   Report_Client_TotalError in '..\..\FormsBoutique\Report\Report_Client_TotalError.pas' {Report_Client_TotalErrorForm: TParentForm},
   Report_Client_LastError in '..\..\FormsBoutique\Report\Report_Client_LastError.pas' {Report_Client_LastErrorForm: TParentForm},
-  Report_GoodsAccount_TotalError in '..\..\FormsBoutique\Report\Report_GoodsAccount_TotalError.pas' {Report_GoodsAccount_TotalErrorForm: TParentForm};
+  Report_GoodsAccount_TotalError in '..\..\FormsBoutique\Report\Report_GoodsAccount_TotalError.pas' {Report_GoodsAccount_TotalErrorForm: TParentForm},
+  Report_CollationByPartnerDialog in '..\..\FormsBoutique\Report\Report_CollationByPartnerDialog.pas' {Report_CollationByPartnerDialogForm: TParentForm},
+  Report_CollationByPartner in '..\..\FormsBoutique\Report\Report_CollationByPartner.pas' {Report_CollationByPartnerForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -10,7 +10,18 @@ inherited MainForm: TMainForm
   inherited ActionList: TActionList
     Left = 336
     Top = 8
-    object actReport_Sale_ContainerError: TdsdOpenForm [0]
+    object actReport_CollationByPartner: TdsdOpenForm [0]
+      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
+      MoveParams = <>
+      Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080
+      FormName = 'TReport_CollationByPartnerForm'
+      FormNameParam.Value = 'TReport_CollationByPartnerForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_Sale_ContainerError: TdsdOpenForm [1]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1044#1086#1083#1075#1086#1074
@@ -21,7 +32,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Client_LastError: TdsdOpenForm [1]
+    object actReport_Client_LastError: TdsdOpenForm [2]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1057#1091#1084#1084' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1087#1086#1082#1091#1087#1082#1080' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
@@ -32,7 +43,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Client_TotalError: TdsdOpenForm [2]
+    object actReport_Client_TotalError: TdsdOpenForm [3]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1048#1090#1086#1075#1086#1074#1099#1093' '#1089#1091#1084#1084' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
@@ -43,7 +54,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Sale_TotalError: TdsdOpenForm [3]
+    object actReport_Sale_TotalError: TdsdOpenForm [4]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1048#1090#1086#1075#1086#1074#1099#1093' '#1057#1091#1084#1084' '#1074' '#1055#1088#1086#1076#1072#1078#1072#1093
@@ -54,7 +65,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_ReturnIn_TotalError: TdsdOpenForm [4]
+    object actReport_ReturnIn_TotalError: TdsdOpenForm [5]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1057#1091#1084#1084#1099' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' '#1074' '#1042#1086#1079#1074#1088#1072#1090#1072#1093
@@ -65,7 +76,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actGoodsAccountMovement: TdsdOpenForm [5]
+    object actGoodsAccountMovement: TdsdOpenForm [6]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1056#1072#1089#1095#1077#1090#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1087#1086' '#1055#1088#1086#1076#1072#1078#1072#1084' ('#1044#1086#1082#1091#1084#1077#1085#1090')'
@@ -77,7 +88,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReturnInMovement: TdsdOpenForm [6]
+    object actReturnInMovement: TdsdOpenForm [7]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1044#1086#1082#1091#1084#1077#1085#1090')'
@@ -89,7 +100,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actSaleMovement: TdsdOpenForm [7]
+    object actSaleMovement: TdsdOpenForm [8]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1044#1086#1082#1091#1084#1077#1085#1090')'
@@ -101,7 +112,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_MotionByPartner: TdsdOpenForm [8]
+    object actReport_MotionByPartner: TdsdOpenForm [9]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
@@ -112,7 +123,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_PartnerDebt: TdsdOpenForm [9]
+    object actReport_PartnerDebt: TdsdOpenForm [10]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1058#1077#1082#1091#1097#1080#1077' '#1076#1086#1083#1075#1080
@@ -123,7 +134,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actGoodsAccount: TdsdOpenForm [10]
+    object actGoodsAccount: TdsdOpenForm [11]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1056#1072#1089#1095#1077#1090#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1087#1086' '#1055#1088#1086#1076#1072#1078#1072#1084
@@ -135,7 +146,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actGoodsAccount_ReturnIn: TdsdOpenForm [11]
+    object actGoodsAccount_ReturnIn: TdsdOpenForm [12]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1056#1072#1089#1095#1077#1090#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1087#1086' '#1042#1086#1079#1074#1088#1072#1090#1072#1084
@@ -147,7 +158,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_GoodsMI_Account: TdsdOpenForm [12]
+    object actReport_GoodsMI_Account: TdsdOpenForm [13]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1072#1084
@@ -158,7 +169,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_GoodsAccount_TotalError: TdsdOpenForm [13]
+    object actReport_GoodsAccount_TotalError: TdsdOpenForm [14]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1057#1091#1084#1084#1099' '#1086#1087#1083#1072#1090#1099' '#1074' '#1056#1072#1089#1095#1077#1090#1072#1093' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
@@ -169,7 +180,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_MovementIncome: TdsdOpenForm [14]
+    object actReport_MovementIncome: TdsdOpenForm [15]
       Category = #1054#1090#1095#1077#1090#1099
       MoveParams = <>
       Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
@@ -181,7 +192,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_MovementReturnOut: TdsdOpenForm [15]
+    object actReport_MovementReturnOut: TdsdOpenForm [16]
       Category = #1054#1090#1095#1077#1090#1099
       MoveParams = <>
       Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
@@ -193,7 +204,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_MovementSend: TdsdOpenForm [16]
+    object actReport_MovementSend: TdsdOpenForm [17]
       Category = #1054#1090#1095#1077#1090#1099
       MoveParams = <>
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
@@ -205,7 +216,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Goods: TdsdOpenForm [17]
+    object actReport_Goods: TdsdOpenForm [18]
       Category = #1054#1090#1095#1077#1090#1099
       MoveParams = <>
       Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
@@ -216,7 +227,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Goods_RemainsCurrent: TdsdOpenForm [18]
+    object actReport_Goods_RemainsCurrent: TdsdOpenForm [19]
       Category = #1054#1090#1095#1077#1090#1099
       MoveParams = <>
       Caption = #1058#1077#1082#1091#1097#1080#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1090#1086#1074#1072#1088#1072
@@ -227,7 +238,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actGoodsPrint: TdsdOpenForm [19]
+    object actGoodsPrint: TdsdOpenForm [20]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1058#1086#1074#1072#1088#1099' '#1076#1083#1103' '#1087#1077#1095#1072#1090#1080' '#1094#1077#1085#1085#1080#1082#1086#1074
@@ -238,7 +249,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_MovementLoss: TdsdOpenForm [20]
+    object actReport_MovementLoss: TdsdOpenForm [21]
       Category = #1054#1090#1095#1077#1090#1099
       MoveParams = <>
       Caption = #1057#1087#1080#1089#1072#1085#1080#1077
@@ -250,7 +261,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReturnIn: TdsdOpenForm [21]
+    object actReturnIn: TdsdOpenForm [22]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
@@ -262,7 +273,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actDiscountPeriodItem: TdsdOpenForm [22]
+    object actDiscountPeriodItem: TdsdOpenForm [23]
       Category = #1048#1089#1090#1086#1088#1080#1080
       MoveParams = <>
       Caption = #1048#1089#1090#1086#1088#1080#1080' '#1089#1077#1079#1086#1085#1085#1099#1093' '#1089#1082#1080#1076#1086#1082
@@ -274,7 +285,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actSale: TdsdOpenForm [23]
+    object actSale: TdsdOpenForm [24]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
@@ -286,7 +297,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actSend: TdsdOpenForm [24]
+    object actSend: TdsdOpenForm [25]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
@@ -298,7 +309,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReturnOut: TdsdOpenForm [25]
+    object actReturnOut: TdsdOpenForm [26]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
@@ -310,7 +321,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actInventory: TdsdOpenForm [26]
+    object actInventory: TdsdOpenForm [27]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
@@ -325,7 +336,7 @@ inherited MainForm: TMainForm
     inherited actExit: TFileExit
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
     end
-    object actIncome: TdsdOpenForm [29]
+    object actIncome: TdsdOpenForm [30]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
@@ -337,7 +348,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actUser: TdsdOpenForm [32]
+    object actUser: TdsdOpenForm [33]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
@@ -348,7 +359,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actForms: TdsdOpenForm [36]
+    object actForms: TdsdOpenForm [37]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1080#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1086#1081' '#1089#1080#1089#1090#1077#1084#1086#1081
@@ -360,7 +371,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actRole: TdsdOpenForm [37]
+    object actRole: TdsdOpenForm [38]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1056#1086#1083#1080
@@ -371,7 +382,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actPriceList: TdsdOpenForm [38]
+    object actPriceList: TdsdOpenForm [39]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099
@@ -385,11 +396,11 @@ inherited MainForm: TMainForm
     inherited actImportExportLink: TdsdOpenForm
       Enabled = False
     end
-    inherited actAccount: TdsdOpenForm [48]
+    inherited actAccount: TdsdOpenForm [49]
     end
-    inherited actProfitLossGroup: TdsdOpenForm [49]
+    inherited actProfitLossGroup: TdsdOpenForm [50]
     end
-    inherited actProfitLossDirection: TdsdOpenForm [50]
+    inherited actProfitLossDirection: TdsdOpenForm [51]
     end
     inherited actMovementDesc: TdsdOpenForm
       Enabled = False
@@ -966,6 +977,9 @@ inherited MainForm: TMainForm
       end
       object miReport_MotionByPartner: TMenuItem
         Action = actReport_MotionByPartner
+      end
+      object miReport_CollationByPartner: TMenuItem
+        Action = actReport_CollationByPartner
       end
     end
     object N45: TMenuItem [5]

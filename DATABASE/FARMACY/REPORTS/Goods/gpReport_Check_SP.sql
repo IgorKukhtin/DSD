@@ -532,3 +532,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_Check_SP (inStartDate:= '01.04.2017',inEndDate:= '15.04.2017', inJuridicalId:= 0, inUnitId:= 0, inHospitalId:= 0, inSession := '3');
+-- select * from gpReport_Check_SP(inStartDate := ('01.08.2017')::TDateTime , inEndDate := ('02.08.2017')::TDateTime , inJuridicalId := 393052 , inUnitId := 183289 , inHospitalId := 3751525 ,  inSession := '3');
