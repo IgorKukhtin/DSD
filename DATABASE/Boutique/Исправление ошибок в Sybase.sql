@@ -310,19 +310,17 @@ SELECT MovementDesc.ItemName, Movement.*, MovementItem.*, MIFloat_TotalPay.*
 
                                                                     WHERE MIL_PartionMI.DescId   = zc_MILinkObject_PartionMI ()
                                                                       AND MIL_PartionMI.ObjectId = 379409 -- select lpInsertFind_Object_PartionMI (680181 ) -- vbPartionMI_Id
-
+                             
 
 
 -- Исправляем  zc_MovementLinkObject_To by zc_MovementLinkObject_From
-select gpReComplete_Movement_Sale (MovementId, zfCalc_UserAdmin())
-, *
-from
-
-(select lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), MovementId, newClientId)
-, *
-from
-(
+-- select gpReComplete_Movement_Sale (MovementId, zfCalc_UserAdmin()), * from
+-- (select lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), MovementId, newClientId), * from(
+-- select gpReComplete_Movement_GoodsAccount (MovementId_to, zfCalc_UserAdmin()), * from
+-- (select lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), MovementId_to, newClientId_sale), * from(
 select distinct Object_To.ValueData, Object_From.ValueData, Movement.Id as MovementId, Object_From.Id as newClientId
+              , Object_To.Id as newClientId_sale -- !!!!!!!!
+              , Mov.Id as MovementId_to          -- !!!!!!!!
            FROM Movement
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                              ON MovementLinkObject_To.MovementId = Movement.Id
@@ -336,15 +334,15 @@ inner join Object on Object.ObjectCode = MovementItem.Id
                     and Object.DescId = zc_Object_PartionMI()
 INNER JOIN MovementItemLinkObject AS MIL_PartionMI
                    ON MIL_PartionMI.DescId   = zc_MILinkObject_PartionMI()
-                   AND MIL_PartionMI.ObjectId = Object.Id
+                  AND MIL_PartionMI.ObjectId = Object.Id
 
 INNER JOIN MovementItem as MI ON MI.Id       = MIL_PartionMI.MovementItemId
                         AND MI.DescId   = zc_MI_Master()
                         AND MI.isErased = FALSE
 inner join Movement as Mov ON Mov.Id = MI.MovementId
-                          AND Mov.DescId   = zc_Movement_ReturnIn()
+                          -- AND Mov.DescId   = zc_Movement_ReturnIn()
                            AND Mov.DescId   = zc_Movement_GoodsAccount()
-                          -- AND Mov.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                          AND Mov.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
                 inner JOIN MovementLinkObject AS MovementLinkObject_From
                                              ON MovementLinkObject_From.MovementId = Mov.Id
                                             AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
@@ -353,5 +351,4 @@ inner join Movement as Mov ON Mov.Id = MI.MovementId
 
            WHERE Movement.DescId   = zc_Movement_Sale()
              AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
-) as tmp
-) as tmp
+-- ) as tmp) as tmp

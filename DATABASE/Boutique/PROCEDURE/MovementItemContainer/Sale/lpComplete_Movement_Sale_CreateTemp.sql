@@ -48,7 +48,8 @@ BEGIN
                                     ) ON COMMIT DROP;
      END IF;
 
-END;$BODY$
+END;
+$BODY$
   LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------
