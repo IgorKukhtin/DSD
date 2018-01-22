@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn(
     IN inMovementId             Integer   , -- Ключ объекта <Документ>
  INOUT ioGoodsId                Integer   , -- Товары
     IN inPartionId              Integer   , -- Партия
-    IN inSaleMI_Id              Integer   , -- строка док. продажи
+    IN inSaleMI_Id              Integer   , -- Элемент MI - док. продажи
     IN inIsPay                  Boolean   , -- добавить с оплатой
     IN inAmount                 TFloat    , -- Количество
    OUT outOperPrice             TFloat    , -- Цена вх. в валюте

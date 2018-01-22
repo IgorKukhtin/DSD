@@ -1,6 +1,3 @@
-  delete from _pgSummDiscountManual;
-  insert into _pgSummDiscountManual (DiscountMovementItemId, SummDiscountManual) select  DiscountMovementItemId, SummDiscountManual from _pgSummDiscountManual_view;
-
   select * from Unit inner join DiscountKlient on DiscountKlient.ClientId = Unit.id where KindUnit = zc_kuClient()  and Id_Postgres is null order by 1
 
 
@@ -26,9 +23,13 @@ where  TotalSummToPay <> TotalSummReturnToPay and TotalReturnOperCount = OperCou
   and TotalSummPay = 1
 order by InsertDate, DiscountMovement.OperDate
 
+-- select GoodsProperty.CashCode, GoodsSize.GoodsSizeName, BillItemsIncome.*  from "dba".BillItemsIncome join GoodsProperty on GoodsProperty.Id =BillItemsIncome.GoodsPropertyId join GoodsSize on GoodsSize.Id = GoodsProperty.GoodsSizeId  where BillItemsIncome.Id  order by GoodsProperty.CashCode
 -- select _zz_zc_StartDate()
   '2006-01-01' -- MaxMara
-  '2007-04-28' -- TerryL
+  '2007-04-28' -- TerryL  -- 30762 + 32257(M) + 35078(XS) + 41063(36) + 65813(40) + 77309(XS) in (54663,46751,42986,71924,192757,155479)
+  '2007-04-01' ? -- 5 Elem
+  '2007-12-03' -- Chado -- 70064 + 39629(I) in (169245,67594) 
+  '2008-03-31' --Savoy  -- 
 
 -- select * from DiscountMovement inner join DiscountMovementItem_byBarCode on DiscountMovementId = DiscountMovement.Id where DiscountMovement.OperDate < _zz_zc_StartDate() and DiscountMovement.isErased = 1
 -- select * from DiscountMovement inner join DiscountMovementItemReturn_byBarCode on DiscountMovementId = DiscountMovement.Id where OperDate < _zz_zc_StartDate() and isErased = 1
@@ -312,8 +313,10 @@ SELECT MovementDesc.ItemName, Movement.*, MovementItem.*, MIFloat_TotalPay.*
                                                                       AND MIL_PartionMI.ObjectId = 379409 -- select lpInsertFind_Object_PartionMI (680181 ) -- vbPartionMI_Id
                              
 
-
--- Исправляем  zc_MovementLinkObject_To by zc_MovementLinkObject_From
+   
+-- !!!!
+-- !!!! Исправляем  zc_MovementLinkObject_To by zc_MovementLinkObject_From!!!!
+-- !!!!
 -- select gpReComplete_Movement_Sale (MovementId, zfCalc_UserAdmin()), * from
 -- (select lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), MovementId, newClientId), * from(
 -- select gpReComplete_Movement_GoodsAccount (MovementId_to, zfCalc_UserAdmin()), * from
@@ -352,3 +355,41 @@ inner join Movement as Mov ON Mov.Id = MI.MovementId
            WHERE Movement.DescId   = zc_Movement_Sale()
              AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
 -- ) as tmp) as tmp
+
+
+
+
+
+
+-- !!!!
+-- !!!! Исправляем  BillItemsIncomeID
+-- !!!!
+select  DiscountMovement.*, DiscountMovementItem_byBarCode.*
+from DiscountMovementItem_byBarCode
+     join DiscountMovement on DiscountMovement.Id = DiscountMovementId
+where BillItemsIncomeID_OLD > 0
+
+select  _data_all.BillItemsIncomeID as id_Shop , DiscountMovementItem_byBarCode.BillItemsIncomeID, BillItems.BillItemsIncomeID as currId, _dataBI_all.BillItemsIncomeID as currId_shop, *
+from DiscountMovementItem_byBarCode
+     join _data_all   on _data_all.ReplId = DiscountMovementItem_byBarCode.ReplId and _data_all.DatabaseId = DiscountMovementItem_byBarCode.DatabaseId 
+     left outer join _dataBI_all on _dataBI_all.Id = _data_all.BillItemsId and _dataBI_all.DatabaseId = _data_all.DatabaseId 
+     left outer join BillItems on BillItems.ReplId = _dataBI_all.ReplId and BillItems.DatabaseId = _dataBI_all.DatabaseId 
+     left outer join BillItemsIncome on BillItemsIncome.Id = _data_all.BillItemsIncomeID
+where _data_all.BillItemsIncomeID  <> DiscountMovementItem_byBarCode.BillItemsIncomeID 
+-- where BillItems.BillItemsIncomeID  <> DiscountMovementItem_byBarCode.BillItemsIncomeID 
+--  and _data_all.BillItemsId > 0
+--  and _data_all.BillItemsIncomeID = 220466
+  and BillItemsIncome.Id is null
+     
+--update  DiscountMovementItem_byBarCode set DiscountMovementItem_byBarCode.BillItemsIncomeID = _data_all.BillItemsIncomeID
+--                                         , DiscountMovementItem_byBarCode.BillItemsIncomeID_OLD = DiscountMovementItem_byBarCode.BillItemsIncomeID
+update  DiscountMovementItem_byBarCode set DiscountMovementItem_byBarCode.BillItemsIncomeID = BillItems.BillItemsIncomeID
+                                         , DiscountMovementItem_byBarCode.BillItemsIncomeID_OLD = DiscountMovementItem_byBarCode.BillItemsIncomeID
+from  _data_all
+     left outer join _dataBI_all on _dataBI_all.Id = _data_all.BillItemsId and _dataBI_all.DatabaseId = _data_all.DatabaseId 
+     left outer join BillItems on BillItems.ReplId = _dataBI_all.ReplId and BillItems.DatabaseId = _dataBI_all.DatabaseId 
+where BillItems.BillItemsIncomeID  <> DiscountMovementItem_byBarCode.BillItemsIncomeID 
+where _data_all.BillItemsIncomeID  <> DiscountMovementItem_byBarCode.BillItemsIncomeID 
+  and _data_all.ReplId = DiscountMovementItem_byBarCode.ReplId and _data_all.DatabaseId = DiscountMovementItem_byBarCode.DatabaseId 
+  and _data_all.BillItemsId > 0
+-- and _data_all.BillItemsIncomeID = 220466

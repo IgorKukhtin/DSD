@@ -1809,12 +1809,23 @@ begin
 end;
 
 procedure TRefreshDispatcher.OnComponentChange(Sender: TObject);
+var fNeedRefreshOnExecute_calc: Boolean; // add 22.01.2018
 begin
+  // add 22.01.2018
+  fNeedRefreshOnExecute_calc:= true;
+  //
   if FNotRefresh then
      exit;
   if CheckIdParam then
+  begin
      if (IdParam.asString = '') or (IdParam.asString = '0') or (IdParam.Value=NULL) then
         exit;
+     //
+     // add 22.01.2018 - Отловили значение параметра, вдруг он НЕ изменился - НЕ будем перечитывать
+     if Assigned (TParentForm(Self.Owner).AddOnFormData.Params) then
+        if TParentForm(Self.Owner).AddOnFormData.Params.ParamByName(IdParam.ComponentItem) <> nil
+        then fNeedRefreshOnExecute_calc:= TParentForm(Self.Owner).AddOnFormData.Params.ParamByName(IdParam.ComponentItem).isValueChange;
+  end;
 
   if Assigned(FRefreshAction) then
   // перечитываем запросы только если форма загружена
@@ -1822,7 +1833,7 @@ begin
         if TParentForm(Self.Owner).Visible then
            FRefreshAction.Execute
         else
-           TParentForm(Self.Owner).NeedRefreshOnExecute := true;
+           TParentForm(Self.Owner).NeedRefreshOnExecute := fNeedRefreshOnExecute_calc; // change 22.01.2018
   FNotRefresh := true;
   SetFlag;
 end;

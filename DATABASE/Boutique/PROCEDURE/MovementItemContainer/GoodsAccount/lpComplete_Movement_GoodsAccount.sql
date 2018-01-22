@@ -98,7 +98,7 @@ BEGIN
                            -- , Object_PartionMI.ObjectCode   AS MovementItemId_MI
                            , MILinkObject_PartionMI.ObjectId  AS PartionId_MI
                            , Object_PartionGoods.GoodsSizeId  AS GoodsSizeId
-                           -- , MovementItem.Amount           AS OperCount
+                           , MovementItem.Amount              AS OperCount
                            , Object_PartionGoods.OperPrice    AS OperPrice
                            , MIFloat_OperPriceList.ValueData  AS OperPriceList
                            , CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END AS CountForPrice
@@ -378,6 +378,9 @@ BEGIN
                    , CASE WHEN tmp.SummDebt_sale = 0 AND tmpLast.PartionId_MI IS NULL
                                THEN -- то что в продаже
                                     tmp.Amount_Sale
+                          WHEN tmp.Amount_Sale = tmp.Amount_Return AND tmp.SummDebt_return = 0 AND (tmp.TotalPay_curr > 0 OR tmp.SummChangePercent_curr > 0) AND tmpLast.PartionId_MI IS NULL
+                               THEN -- пока так, но не всегда будет корректно
+                                    tmp.OperCount
                           WHEN tmp.SummDebt_return = 0 AND (tmp.TotalPay_curr > 0 OR tmp.SummChangePercent_curr > 0) AND tmpLast.PartionId_MI IS NULL
                                THEN -- продажа ћ»Ќ”— возврат
                                     tmp.Amount_Sale - tmp.Amount_Return
@@ -435,9 +438,9 @@ BEGIN
              FROM tmpMI AS tmp
                   -- если найден проведенный док созданный позже - тогда в нем будет Amount_begin
                   LEFT JOIN tmpLast ON tmpLast.PartionId_MI = tmp.PartionId_MI
-                                   AND tmpLast.Ord          = 1
-                                   AND tmpLast.OperDate     >= vbOperDate
-                                   AND tmpLast.MovementId   >  inMovementId
+                                   AND tmpLast.Ord          = 1                -- !!!выбрали последний ѕ–ќ¬≈ƒ≈ЌЌџ…!!!
+                                   AND tmpLast.OperDate     >= vbOperDate      -- и если он позже того что сейчас
+                                   AND tmpLast.MovementId   >  inMovementId    -- и если он позже того что сейчас
 
              WHERE tmp.SummChangePercent_curr <> 0
                 OR tmp.TotalPay_curr          <> 0

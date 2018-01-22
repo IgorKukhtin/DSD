@@ -253,10 +253,7 @@ BEGIN
                END AS OperSumm_sale
 
                -- расчет Суммы которая попадает в ВОЗВРАТ
-             , CASE WHEN tmp.OperCount_sale > 0
-                         THEN tmp.OperSummPriceList - tmp.TotalChangePercent
-                    ELSE 0
-               END AS Summ_10501
+             , tmp.OperSummPriceList - tmp.TotalChangePercent AS Summ_10501
 
              , 0 AS ContainerId_ProfitLoss_10501, 0 AS ContainerId_ProfitLoss_10601
 
@@ -651,6 +648,9 @@ BEGIN
            ;
 
 
+-- RAISE EXCEPTION '<%>',  (SELECT   -1 * (_tmpItem_SummClient.Summ_10501 - _tmpItem_SummClient.OperSumm) FROM _tmpItem_SummClient where _tmpItem_SummClient.MovementItemId = 1160010 );
+
+
      -- 5.2. формируются Проводки - МИНУС остаток сумма c/c + прибыль у Дебиторы покупатели
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId
                                        , MovementItemId, ContainerId, ParentId
@@ -1038,7 +1038,7 @@ BEGIN
                   AND tmpFind.MovementItemId IS NULL
                )
      THEN
-         RAISE EXCEPTION 'Ошибка. Найден долг по покупателю Кол-во = <%> для <%>.%Необходимо сначала сформировать Возврат, потом сформировать Оплату долга.'
+         RAISE EXCEPTION 'Ошибка.Т.к. оплата была сформирована раньше возврата, найден долг по покупателю Кол-во = <%> для <%>.%Необходимо сначала сформировать Возврат, потом сформировать Оплату долга.'
               -- 1
             , (SELECT tmp.Amount
                FROM
