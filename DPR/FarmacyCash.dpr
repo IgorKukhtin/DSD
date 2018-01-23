@@ -88,7 +88,6 @@ uses
 
 {$R *.res}
 
-var MForm:Boolean; // Какая форма запускается
 begin
   Application.Initialize;
   Logger.Enabled := FindCmdLineSwitch('log');
@@ -104,11 +103,11 @@ begin
      case 1 of   // 1 для MainCash;  2 для MainCash2
      1: begin
           AllowLocalConnect := False;  //от режима зависит создание файла 'users.local' и переход приложения в автономный режим при обрыве звязи
-          MForm := True;
+          isMainForm_OLD:= True;
         end;
      2: begin
           AllowLocalConnect := True;  //от режима зависит создание файла 'users.local' и переход приложения в автономный режим при обрыве звязи
-          MForm := False;
+          isMainForm_OLD:= False;
           gc_User.LocalMaxAtempt:=2;
         end;
     end;
@@ -138,10 +137,14 @@ begin
         gc_isSetDefault := True;
       //
       Application.CreateForm(TdmMain, dmMain);
-  if MForm then  // определяет главную форму
-        Application.CreateForm(TMainCashForm, MainCash.MainCashForm) // имя модуля обязательно
-      else  // Форма работате в связке с FarmacyCashServise.exe
-        Application.CreateForm(TMainCashForm2, MainCash2.MainCashForm); // имя модуля обязательно
+
+      // определяет главную форму
+      if isMainForm_OLD = TRUE
+      then
+           Application.CreateForm(TMainCashForm, MainCash.MainCashForm) // имя модуля обязательно
+      else
+          // Форма работате в связке с FarmacyCashServise.exe
+          Application.CreateForm(TMainCashForm2, MainCash2.MainCashForm); // имя модуля обязательно
 
 
       Application.CreateForm(TfrmSplash, frmSplash);

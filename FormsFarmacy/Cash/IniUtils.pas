@@ -29,6 +29,7 @@ function iniCashSerialNumber: String;
 function iniTaxGroup7:Integer;
 
 var gUnitName, gUserName, gPassValue: string;
+var isMainForm_OLD : Boolean;
 
 implementation
 

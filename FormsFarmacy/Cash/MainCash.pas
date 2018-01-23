@@ -407,6 +407,7 @@ type
     procedure ConnectionModeChange(var Msg: TMessage); message UM_LOCAL_CONNECTION;
     procedure SetWorkMode(ALocal: Boolean);
   public
+    procedure pGet_OldSP(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP: String);
   end;
 
 var
@@ -641,7 +642,7 @@ begin
     lblDiscountCardNumber.Caption  := '  ' + FormParams.ParamByName('DiscountCardNumber').Value + '  ';
     pnlDiscount.Visible            := FormParams.ParamByName('DiscountExternalId').Value > 0;
 
-    lblPartnerMedicalName.Caption:= '  ' + FormParams.ParamByName('PartnerMedicalName').Value + '  /  № амб. ' + FormParams.ParamByName('Ambulance').Value;
+    lblPartnerMedicalName.Caption:= '  ' + FormParams.ParamByName('PartnerMedicalName').Value; //+ '  /  № амб. ' + FormParams.ParamByName('Ambulance').Value;
     lblMedicSP.Caption:= '  ' + FormParams.ParamByName('MedicSP').Value + '  /  № '+FormParams.ParamByName('InvNumberSP').Value+'  от ' + DateToStr(FormParams.ParamByName('OperDateSP').Value);
     if FormParams.ParamByName('SPTax').Value <> 0 then lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + FloatToStr(FormParams.ParamByName('SPTax').Value) + '% : ' + FormParams.ParamByName('SPKindName').Value
     else lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + FormParams.ParamByName('SPKindName').Value;
@@ -1272,7 +1273,7 @@ begin
   FormParams.ParamByName('SPKindName').Value:= SPKindName;
   //
   pnlSP.Visible := InvNumberSP <> '';
-  lblPartnerMedicalName.Caption:= '  ' + PartnerMedicalName + '  /  № амб. ' + Ambulance;
+  lblPartnerMedicalName.Caption:= '  ' + PartnerMedicalName; // + '  /  № амб. ' + Ambulance;
   lblMedicSP.Caption  := '  ' + MedicSP + '  /  № '+InvNumberSP+'  от ' + DateToStr(OperDateSP);
   if SPTax <> 0 then lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + FloatToStr(SPTax) + '% : ' + SPKindName
   else lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + SPKindName;
@@ -1623,12 +1624,13 @@ begin
         exit;
       end;
       //
-      {if  (Self.FormParams.ParamByName('InvNumberSP').Value <> '')
+      //23.01.2018 - Нужно опять вернуть  проверку, чтобы в один чек пробивался только один пр-т
+      if  (Self.FormParams.ParamByName('InvNumberSP').Value <> '')
        and(CheckCDS.RecordCount >= 1)
       then begin
         ShowMessage('Ошибка.В чеке для Соц.проекта уже есть <'+IntToStr(CheckCDS.RecordCount)+'> Товар.Запрещено больше чем <1>.');
         exit;
-      end;}
+      end;
   end;
   //
   // потому что криво, надо правильно определить ТОВАР + цена БЕЗ скидки
@@ -3045,6 +3047,39 @@ begin
   end;
 end;
 
+
+procedure TMainCashForm.pGet_OldSP(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP: String);
+begin
+
+ APartnerMedicalId:=0;
+ APartnerMedicalName:='';
+ AMedicSP:='';
+ //
+ try
+     WaitForSingleObject(MutexDBF, INFINITE);
+     try
+       FLocalDataBaseHead.Active:=True;
+       FLocalDataBaseHead.First;
+       while not FLocalDataBaseHead.EOF do
+       begin
+            if FLocalDataBaseHead.FieldByName('PMEDICALID').AsInteger <> 0 then
+            begin
+              APartnerMedicalId   := FLocalDataBaseHead.FieldByName('PMEDICALID').AsInteger;
+              APartnerMedicalName := trim(FLocalDataBaseHead.FieldByName('PMEDICALN').AsString);
+              AMedicSP            := trim(FLocalDataBaseHead.FieldByName('MEDICSP').AsString);
+            end;
+
+            FLocalDataBaseHead.Next;
+       end;
+     finally
+       FLocalDataBaseBody.Active:=False;
+       ReleaseMutex(MutexDBF);
+     end;
+     //
+  except
+  end;
+
+end;
 
 procedure TMainCashForm.TimerSaveAllTimer(Sender: TObject);
 var fEmpt  : Boolean;
