@@ -76,6 +76,14 @@ type
     bbPrintPeriod: TdxBarButton;
     macPrintPeriod: TMultiAction;
     actDialog_Print: TExecuteDialog;
+    cxLabel18: TcxLabel;
+    cePersonal: TcxButtonEdit;
+    PersonalGuides: TdsdGuides;
+    cxLabel19: TcxLabel;
+    cePersonalTrade: TcxButtonEdit;
+    PersonalTradeGuides: TdsdGuides;
+    edIsShowAll: TcxCheckBox;
+    actPrintPersonal: TdsdPrintAction;
   private
     { Private declarations }
   public
