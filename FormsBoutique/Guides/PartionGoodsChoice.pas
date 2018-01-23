@@ -92,6 +92,8 @@ type
     InvNumber_full: TcxGridDBColumn;
     MovementId: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
+    actOpenReportForm: TdsdOpenForm;
+    bbOpenReportForm: TdxBarButton;
   private
     { Private declarations }
   public
