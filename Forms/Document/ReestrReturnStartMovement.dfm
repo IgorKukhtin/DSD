@@ -765,7 +765,7 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
           Name = 'EndDate'
           Value = 42705d
           Component = FormParams
-          ComponentItem = 'InEndDate'
+          ComponentItem = 'inEndDate'
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
@@ -1105,7 +1105,7 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InEndDate'
+        Name = 'inEndDate'
         Value = 42705d
         DataType = ftString
         ParamType = ptInput
