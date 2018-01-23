@@ -594,7 +594,9 @@ begin
            Add.AssignParam(Source[i])
         end
         else begin
-           ParamByName(Source[i].Name).isValueChange:= ParamByName(Source[i].Name).Value <> Source[i].Value;
+           try ParamByName(Source[i].Name).isValueChange:= ParamByName(Source[i].Name).Value <> Source[i].Value;
+           except ParamByName(Source[i].Name).isValueChange:= true;
+           end;
            ParamByName(Source[i].Name).Value := Source[i].Value
         end;
 end;

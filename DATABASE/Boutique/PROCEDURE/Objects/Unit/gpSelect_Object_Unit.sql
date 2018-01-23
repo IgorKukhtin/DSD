@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpSelect_Object_Unit (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Unit(
-    IN inIsShowAll   Boolean,       -- признак показать удаленные да / нет 
+    IN inIsShowAll   Boolean,       -- признак показать удаленные да / нет
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , JuridicalName TVarChar, ParentName TVarChar, ChildName TVarChar
              , BankAccountName TVarChar, BankName TVarChar
              , AccountDirectionName TVarChar
+             , StartDate_sybase TDateTime
              , isErased boolean)
 AS
 $BODY$
@@ -24,8 +25,8 @@ BEGIN
      -- vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
 
      -- Результат
-     RETURN QUERY 
-       SELECT 
+     RETURN QUERY
+       SELECT
              Object_Unit.Id                  AS Id
            , Object_Unit.ObjectCode          AS Code
            , Object_Unit.ValueData           AS Name
@@ -39,8 +40,53 @@ BEGIN
            , Object_Bank.ValueData           AS BankName
 
            , Object_AccountDirection.ValueData  AS AccountDirectionName
+           
+           , CASE WHEN Object_Unit.ValueData = 'магазин MaxMara'
+                       THEN '2006-01-01' -- MaxMara -- OK
 
-           , Object_Unit.isErased            AS isErased           
+                  WHEN Object_Unit.ValueData = 'магазин Terri-Luxury'
+                       THEN '2007-04-28' -- TerryL  -- 30762 + 32257(M) + 35078(XS) + 41063(36) + 65813(40) + 77309(XS) in (54663,46751,42986,71924,192757,155479)
+
+                  WHEN Object_Unit.ValueData = 'магазин 5 Элемент'
+                       THEN '2007-04-01' -- 5 Elem  -- 28025(36) in (36477)
+
+                  WHEN Object_Unit.ValueData = 'магазин CHADO'
+                       THEN '2007-12-03' -- Chado   -- 70064 + 39629(I) in (169245,67594) 
+
+                  WHEN Object_Unit.ValueData = 'магазин SAVOY'
+                       THEN '2008-03-31' -- Savoy   -- OK
+
+                  WHEN Object_Unit.ValueData = 'магазин Savoy-P.Z.'
+                       THEN '2008-03-01' -- PZ      -- OK
+
+                  WHEN Object_Unit.ValueData = 'магазин Терри-Out'
+                       THEN '2007-04-28' -- Terry   -- OK -- 30762 + 32257(M) + 35978(XS) + 41063(36) in (54663,46751,42986,71924)
+
+                  WHEN Object_Unit.ValueData = 'магазин Vintag'
+                       THEN '2011-03-31' -- Vintag  -- OK
+
+                  -- WHEN Object_Unit.ValueData = 'магазин Vintag 50'
+                  --      THEN '2011-03-31' -- Vintag  -- OK
+                  -- WHEN Object_Unit.ValueData = 'магазин Vintag 80'
+                  --      THEN '2011-03-31' -- Vintag  -- OK
+                  -- WHEN Object_Unit.ValueData = 'магазин Vintag 90'
+                  --      THEN '2011-03-31' -- Vintag  -- OK
+
+                  WHEN Object_Unit.ValueData = 'магазин ESCADA'
+                       THEN '2012-04-01' -- Escada  -- OK
+
+                  WHEN Object_Unit.ValueData = 'магазин Savoy-O'
+                       THEN '2008-03-31' -- Savoy-2 -- OK
+
+                  WHEN Object_Unit.ValueData = 'магазин Terry-Vintage'
+                       THEN '2014-01-13' -- Sopra   -- OK
+
+                  WHEN Object_Unit.ValueData = 'магазин Chado-Outlet'
+                       THEN '2014-01-13' -- 11      -- OK
+
+             END :: TDateTime AS StartDate_sybase
+
+           , Object_Unit.isErased            AS isErased
        FROM Object AS Object_Unit
             LEFT JOIN ObjectString AS OS_Unit_Address
                                    ON OS_Unit_Address.ObjectId = Object_Unit.Id
@@ -78,14 +124,13 @@ BEGIN
             LEFT JOIN Object AS Object_AccountDirection ON Object_AccountDirection.Id = ObjectLink_Unit_AccountDirection.ChildObjectId
 
      WHERE Object_Unit.DescId = zc_Object_Unit()
-              AND (Object_Unit.isErased = FALSE OR inIsShowAll = TRUE)
+       AND (Object_Unit.isErased = FALSE OR inIsShowAll = TRUE)
 
     ;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
