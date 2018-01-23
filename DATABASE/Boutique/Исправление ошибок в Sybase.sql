@@ -25,11 +25,18 @@ order by InsertDate, DiscountMovement.OperDate
 
 -- select GoodsProperty.CashCode, GoodsSize.GoodsSizeName, BillItemsIncome.*  from "dba".BillItemsIncome join GoodsProperty on GoodsProperty.Id =BillItemsIncome.GoodsPropertyId join GoodsSize on GoodsSize.Id = GoodsProperty.GoodsSizeId  where BillItemsIncome.Id  order by GoodsProperty.CashCode
 -- select _zz_zc_StartDate()
-  '2006-01-01' -- MaxMara
+  '2006-01-01' -- MaxMara -- OK
   '2007-04-28' -- TerryL  -- 30762 + 32257(M) + 35078(XS) + 41063(36) + 65813(40) + 77309(XS) in (54663,46751,42986,71924,192757,155479)
-  '2007-04-01' ? -- 5 Elem
-  '2007-12-03' -- Chado -- 70064 + 39629(I) in (169245,67594) 
-  '2008-03-31' --Savoy  -- 
+  '2007-04-01' -- 5 Elem  -- 28025(36) in (36477)
+  '2007-12-03' -- Chado   -- 70064 + 39629(I) in (169245,67594) 
+  '2008-03-31' -- Savoy   -- OK
+  '2008-03-01' -- PZ      -- OK
+  '2007-04-28' -- Terry   -- OK -- 30762 + 32257(M) + 35978(XS) + 41063(36) in (54663,46751,42986,71924)
+  '2011-03-31' -- Vintag  -- OK
+  '2012-04-01' -- Escada  -- OK
+  '2008-03-31' -- Savoy-2 -- OK
+  '2014-01-13' -- Sopra   -- OK
+  '2014-01-13' -- 11      -- OK
 
 -- select * from DiscountMovement inner join DiscountMovementItem_byBarCode on DiscountMovementId = DiscountMovement.Id where DiscountMovement.OperDate < _zz_zc_StartDate() and DiscountMovement.isErased = 1
 -- select * from DiscountMovement inner join DiscountMovementItemReturn_byBarCode on DiscountMovementId = DiscountMovement.Id where OperDate < _zz_zc_StartDate() and isErased = 1
