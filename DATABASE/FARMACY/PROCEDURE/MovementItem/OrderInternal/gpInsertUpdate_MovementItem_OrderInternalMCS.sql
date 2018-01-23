@@ -158,12 +158,12 @@ BEGIN
                                                                ON MovementBoolean_isAuto.MovementId = Movement.Id
                                                               AND MovementBoolean_isAuto.DescId     = zc_MovementBoolean_isAuto()
                                                               AND MovementBoolean_isAuto.ValueData  = TRUE*/
-                                    LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                    /*LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                                               ON MovementBoolean_Deferred.MovementId = Movement.Id
-                                                             AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                                             AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()*/
                              WHERE Movement.DescId = zc_Movement_Send()
                                   AND Movement.StatusId = zc_Enum_Status_UnComplete()
-                                  AND COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = FALSE
+                                  --AND COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = FALSE
                                   -- AND Movement.OperDate >= CURRENT_DATE - INTERVAL '14 DAY' AND Movement.OperDate < CURRENT_DATE + INTERVAL '14 DAY'
                                   AND Movement.OperDate >= CURRENT_DATE - INTERVAL '30 DAY' AND Movement.OperDate < CURRENT_DATE + INTERVAL '30 DAY'
                              GROUP BY MovementItem.ObjectId
