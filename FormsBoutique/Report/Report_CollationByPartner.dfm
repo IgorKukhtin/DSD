@@ -601,6 +601,12 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
         Properties.Strings = (
           'Key'
           'TextValue')
+      end
+      item
+        Component = GuidesClient
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end>
   end
   inherited ActionList: TActionList

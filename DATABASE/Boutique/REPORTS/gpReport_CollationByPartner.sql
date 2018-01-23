@@ -92,38 +92,36 @@ BEGIN
                                    ELSE 0
                               END AS AmountSumm
   
-                            , CASE WHEN (MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < vbEndDate)
+                            , CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate)
                                         THEN MIContainer.MovementId
                                    ELSE 0
                               END AS MovementId
-                            , CASE WHEN (MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < vbEndDate)
+                            , CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate)
                                         THEN MIContainer.MovementItemId
                                    ELSE 0
                               END AS MovementItemId
-                            ,  (CASE WHEN (MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < vbEndDate) AND MIContainer.DescId = zc_Container_Count()
+                            , SUM (CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate) AND MIContainer.DescId = zc_Container_Count()
                                              THEN MIContainer.Amount
                                         ELSE 0
                                    END) AS Amount_Period
   
-                            ,  (CASE WHEN MIContainer.DescId = zc_Container_Count()
+                            , SUM (CASE WHEN MIContainer.DescId = zc_Container_Count()
                                         THEN COALESCE (MIContainer.Amount, 0)
                                         ELSE 0
                                     END) AS Amount_Total
-                            ,  (CASE WHEN (MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < vbEndDate) AND MIContainer.DescId = zc_Container_SummCurrency()
+                            , SUM (CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate) AND MIContainer.DescId = zc_Container_SummCurrency()
                                              THEN MIContainer.Amount
                                         ELSE 0
                                    END) AS Summ_Period
   
-                            ,  (CASE WHEN MIContainer.DescId = zc_Container_SummCurrency()
+                            , SUM (CASE WHEN MIContainer.DescId = zc_Container_SummCurrency()
                                         THEN COALESCE (MIContainer.Amount, 0)
                                         ELSE 0
                                     END) AS Summ_Total
-                            , MIContainer.MovementDescId
-                            , MIContainer.isActive
                        FROM tmpContainer
                             INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId
                                                                           AND (MIContainer.OperDate >= inStartDate)
-                      /* GROUP BY tmpContainer.ContainerId
+                       GROUP BY tmpContainer.ContainerId
                               , tmpContainer.GoodsId
                               , tmpContainer.PartionId
                               , CASE WHEN tmpContainer.ContainerDescId = zc_Container_Count()
@@ -142,9 +140,8 @@ BEGIN
                                           THEN MIContainer.MovementItemId
                                      ELSE 0
                                 END
-                              , MIContainer.MovementDescId
-                              , MIContainer.isActive*/
                       )
+
   , tmpMIContainer_group AS (SELECT tmpMIContainer_all.MovementId
                                      , tmpMIContainer_all.MovementItemId
                                      , tmpMIContainer_all.GoodsId
@@ -303,5 +300,4 @@ $BODY$
 */
 
 -- тест
---
-select * from gpReport_CollationByPartner(inStartDate := ('01.03.2017')::TDateTime , inEndDate := ('31.03.2017')::TDateTime , inUnitId := 4195 , inPartnerId := 9765 ,  inSession := '2');
+--  select * from gpReport_CollationByPartner(inStartDate := ('01.03.2017')::TDateTime , inEndDate := ('31.03.2017')::TDateTime , inUnitId := 4195 , inPartnerId := 9765 ,  inSession := '2');
