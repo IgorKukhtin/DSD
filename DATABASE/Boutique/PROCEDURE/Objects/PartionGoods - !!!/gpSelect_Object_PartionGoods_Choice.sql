@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpSelect_Object_PartionGoods_Choice (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_PartionGoods_Choice(
-    IN inUnitId      Integer,       --  признак показать удаленные да/нет
+    IN inUnitId      Integer,       --  
     IN inIsShowAll   Boolean,       --  признак показать удаленные да/нет
     IN inSessiON     TVarChar       --  сессия пользователя
 )
@@ -23,6 +23,8 @@ RETURNS TABLE (Id                   Integer
              , CurrencyName         TVarChar  
              , Amount               TFloat  
              , Remains              TFloat
+             , AmountDebt           TFloat
+             , RemainsWithDebt      TFloat
              , OperPrice            TFloat
              , PriceSale            TFloat
              , BrandName            TVarChar  
@@ -55,7 +57,21 @@ BEGIN
 
      -- Результат
      RETURN QUERY 
-       
+       WITH 
+       tmpDebt AS (SELECT Container.PartionId     AS PartionId
+                        , Container.ObjectId      AS GoodsId
+                        , SUM (Container.Amount)  AS Amount
+                   FROM Container
+                        INNER JOIN ContainerLinkObject AS CLO_Client
+                                                       ON CLO_Client.ContainerId = Container.Id
+                                                      AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
+                   WHERE Container.DescId = zc_Container_count()
+                     AND Container.WhereObjectId = inUnitId
+                   GROUP BY Container.PartionId
+                          , Container.ObjectId
+                   HAVING SUM (Container.Amount) <> 0 
+                   )
+                        
        SELECT Object_PartionGoods.MovementItemId  AS Id
             , Object_PartionGoods.MovementItemId  AS MovementItemId
             , Movement.Id                         AS MovementId
@@ -70,7 +86,10 @@ BEGIN
             , Object_GroupNameFull.ValueData      As GroupNameFull
             , Object_Currency.ValueData           AS CurrencyName
             , Object_PartionGoods.Amount          AS Amount
-            , COALESCE (Container.Amount,0) ::TFloat AS Remains            
+            , COALESCE (Container.Amount,0) ::TFloat AS Remains
+            , COALESCE (tmpDebt.Amount, 0)  ::TFloat AS AmountDebt
+            , ( COALESCE (Container.Amount,0) + COALESCE (tmpDebt.Amount, 0))  ::TFloat AS RemainsWithDebt
+                    
             , Object_PartionGoods.OperPrice       AS OperPrice
             --, tmpPrice.ValuePrice                 AS PriceSale
             , Object_PartionGoods.PriceSale
@@ -123,8 +142,11 @@ BEGIN
 
            LEFT JOIN  Movement ON Movement.Id = Object_PartionGoods.MovementId
 
+           LEFT JOIN tmpDebt ON tmpDebt.PartionId = Object_PartionGoods.MovementItemId
+                            AND tmpDebt.GoodsId   = Object_PartionGoods.GoodsId
+                            
      WHERE Container.DescId = zc_Container_Count()
-       AND Container.WhereObjectId = inUnitId  
+       AND Container.WhereObjectId = inUnitId
        AND (COALESCE (Container.Amount,0) <> 0 OR inIsShowAll = TRUE)       
        AND CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
     ;
@@ -137,6 +159,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
+23.01.18          *
 29.06.17          *
 21.06.17          *
 09.05.17          *

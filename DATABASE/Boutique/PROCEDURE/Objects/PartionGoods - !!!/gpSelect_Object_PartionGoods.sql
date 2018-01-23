@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_PartionGoods (Boolean, TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_PartionGoods (Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_PartionGoods (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_PartionGoods(
+    IN inUnitId      Integer,
     IN inIsShowAll   Boolean,       --  признак показать удаленные да/нет
     IN inSession     TVarChar       --  сессия пользователя
 )
@@ -19,8 +21,6 @@ RETURNS TABLE (
            , GroupNameFull        TVarChar  
            , CurrencyName         TVarChar  
            , Amount               TFloat
-           , Amount_Debt          TFloat
-           , Amount_All           TFloat
            , OperPrice            TFloat  
            , PriceSale            TFloat  
            , BrandName            TVarChar  
@@ -53,22 +53,6 @@ BEGIN
 
      -- Результат
      RETURN QUERY 
-       WITH 
-       tmpContainer AS (SELECT Container.PartionId     AS PartionId
-                             , Container.WhereObjectId AS UnitId
-                             , Container.ObjectId      AS GoodsId
-                             , SUM (Container.Amount)  AS Amount
-                        FROM Container
-                             INNER JOIN ContainerLinkObject AS CLO_Client
-                                                            ON CLO_Client.ContainerId = Container.Id
-                                                           AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
-                        WHERE Container.DescId = zc_Container_count()
-                        GROUP BY Container.PartionId
-                               , Container.WhereObjectId
-                               , Container.ObjectId
-                        HAVING SUM (Container.Amount) <> 0 
-                        )
-
        SELECT 
              Object_PartionGoods.MovementItemId  AS MovementItemId
            , Movement.InvNumber                  AS InvNumber
@@ -82,8 +66,6 @@ BEGIN
            , Object_GroupNameFull.ValueData      As GroupNameFull
            , Object_Currency.ValueData           AS CurrencyName
            , Object_PartionGoods.Amount          AS Amount
-           , tmpContainer.Amount   :: TFloat              AS Amount_Debt
-           , (COALESCE (Object_PartionGoods.Amount, 0) + COALESCE (tmpContainer.Amount, 0)) :: TFloat AS Amount_All
            , Object_PartionGoods.OperPrice       AS OperPrice
            , Object_PartionGoods.PriceSale       AS PriceSale
            , Object_Brand.ValueData              AS BrandName
@@ -101,8 +83,6 @@ BEGIN
            , Object_GoodsSize.ValueData          AS GoodsSizeName
            , Object_PartionGoods.isErased        AS isErased
            , Object_PartionGoods.isArc           AS isArc
-           
-           
            
        FROM Object_PartionGoods
 
@@ -126,10 +106,8 @@ BEGIN
            LEFT JOIN  Object AS Object_GoodsSize on Object_GoodsSize.Id = Object_PartionGoods.GoodsSizeId
            LEFT JOIN  Movement on Movement.Id = Object_PartionGoods.MovementId
            
-           LEFT JOIN tmpContainer ON tmpContainer.PartionId = Object_PartionGoods.MovementItemId
-                                 AND tmpContainer.UnitId = Object_PartionGoods.UnitId
-                                 AND tmpContainer.GoodsId = Object_PartionGoods.GoodsId
-     WHERE  (Object_PartionGoods.isErased = FALSE OR inIsShowAll = TRUE)
+     WHERE (Object_PartionGoods.isErased = FALSE OR inIsShowAll = TRUE)
+       AND Object_PartionGoods.UnitId = inUnitId
      --LIMIT 10000
 
     ;
@@ -142,10 +120,11 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
+23.01.18          *
 18.01.18          *
 15.03.17                                                           *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_PartionGoods (TRUE, zfCalc_UserAdmin())
---SELECT * FROM gpSelect_Object_PartionGoods (FALSE, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_PartionGoods (inUnitId := 1151, TRUE, zfCalc_UserAdmin())
+--SELECT * FROM gpSelect_Object_PartionGoods (inUnitId := 1151, FALSE, zfCalc_UserAdmin())

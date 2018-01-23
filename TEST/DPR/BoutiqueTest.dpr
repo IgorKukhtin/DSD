@@ -274,7 +274,8 @@ uses
   Report_Client_LastError in '..\..\FormsBoutique\Report\Report_Client_LastError.pas' {Report_Client_LastErrorForm: TParentForm},
   Report_GoodsAccount_TotalError in '..\..\FormsBoutique\Report\Report_GoodsAccount_TotalError.pas' {Report_GoodsAccount_TotalErrorForm: TParentForm},
   Report_CollationByPartnerDialog in '..\..\FormsBoutique\Report\Report_CollationByPartnerDialog.pas' {Report_CollationByPartnerDialogForm: TParentForm},
-  Report_CollationByPartner in '..\..\FormsBoutique\Report\Report_CollationByPartner.pas' {Report_CollationByPartnerForm: TParentForm};
+  Report_CollationByPartner in '..\..\FormsBoutique\Report\Report_CollationByPartner.pas' {Report_CollationByPartnerForm: TParentForm},
+  Unit_Dialog in '..\..\FormsBoutique\Guides\Unit_Dialog.pas' {Unit_DialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

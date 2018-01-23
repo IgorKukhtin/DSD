@@ -15,6 +15,7 @@ object PartionGoodsForm: TPartionGoodsForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -39,12 +40,10 @@ object PartionGoodsForm: TPartionGoodsForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = Amount_Debt
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = Amount_All
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -60,12 +59,10 @@ object PartionGoodsForm: TPartionGoodsForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = Amount_Debt
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = Amount_All
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -235,28 +232,6 @@ object PartionGoodsForm: TPartionGoodsForm
         HeaderAlignmentVert = vaCenter
         Width = 65
       end
-      object Amount_Debt: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1083#1075#1080
-        DataBinding.FieldName = 'Amount_Debt'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1086#1083#1075#1080' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
-        Options.Editing = False
-        Width = 65
-      end
-      object Amount_All: TcxGridDBColumn
-        Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086
-        DataBinding.FieldName = 'Amount_All'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1089' '#1091#1095#1077#1090#1086#1084' '#1076#1086#1083#1075#1072
-        Options.Editing = False
-        Width = 65
-      end
       object OperPrice: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072
         DataBinding.FieldName = 'OperPrice'
@@ -293,6 +268,23 @@ object PartionGoodsForm: TPartionGoodsForm
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
     end
+  end
+  object cxLabel6: TcxLabel
+    Left = 172
+    Top = 78
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+  end
+  object edUnit: TcxButtonEdit
+    Left = 279
+    Top = 76
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 6
+    Width = 203
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -367,6 +359,18 @@ object PartionGoodsForm: TPartionGoodsForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbLabel6'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnit'
         end
         item
           Visible = True
@@ -456,6 +460,20 @@ object PartionGoodsForm: TPartionGoodsForm
     object bbOpenReportForm: TdxBarButton
       Action = actOpenReportForm
       Category = 0
+    end
+    object bbLabel6: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel6
+    end
+    object bbUnit: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edUnit
     end
   end
   object ActionList: TActionList
@@ -658,6 +676,37 @@ object PartionGoodsForm: TPartionGoodsForm
         end>
       isShowModal = False
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099
+      ImageIndex = 35
+      FormName = 'TUnit_DialogForm'
+      FormNameParam.Value = 'TUnit_DialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_PartionGoods'
@@ -667,6 +716,14 @@ object PartionGoodsForm: TPartionGoodsForm
         DataSet = MasterCDS
       end>
     Params = <
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inIsShowAll'
         Value = False
@@ -681,7 +738,7 @@ object PartionGoodsForm: TPartionGoodsForm
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 288
-    Top = 200
+    Top = 152
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -708,5 +765,47 @@ object PartionGoodsForm: TPartionGoodsForm
     SummaryItemList = <>
     Left = 104
     Top = 248
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnitForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnitForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 392
+    Top = 72
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    CheckIdParam = True
+    IdParam.Value = ''
+    IdParam.ComponentItem = 'MasterUnitId'
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = GuidesUnit
+      end>
+    Left = 544
+    Top = 104
   end
 end

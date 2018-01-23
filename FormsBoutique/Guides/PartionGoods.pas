@@ -22,7 +22,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCurrencyEdit;
+  cxCurrencyEdit, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxButtonEdit,
+  cxLabel;
 
 type
   TPartionGoodsForm = class(TParentForm)
@@ -77,6 +78,13 @@ type
     isArc: TcxGridDBColumn;
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
+    cxLabel6: TcxLabel;
+    edUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
+    bbLabel6: TdxBarControlContainerItem;
+    bbUnit: TdxBarControlContainerItem;
+    ExecuteDialog: TExecuteDialog;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public
