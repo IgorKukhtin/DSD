@@ -83,7 +83,7 @@ type
     isArc: TcxGridDBColumn;
     cxLabel6: TcxLabel;
     edUnit: TcxButtonEdit;
-    UnitGuides: TdsdGuides;
+    GuidesUnit: TdsdGuides;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     dxBarControlContainerItem2: TdxBarControlContainerItem;
     FormParams: TdsdFormParams;

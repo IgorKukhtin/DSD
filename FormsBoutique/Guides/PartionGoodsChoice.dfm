@@ -41,6 +41,16 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           Format = ',0.####'
           Kind = skSum
           Column = Amount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountDebt
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = RemainsWithDebt
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -57,6 +67,16 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           Format = 'C'#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = LabelName
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountDebt
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = RemainsWithDebt
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -256,6 +276,28 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
+      end
+      object AmountDebt: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1083#1075#1080' '#1087#1086' '#1084#1072#1075'.'
+        DataBinding.FieldName = 'AmountDebt'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1086#1083#1075#1080' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+        Options.Editing = False
+        Width = 85
+      end
+      object RemainsWithDebt: TcxGridDBColumn
+        Caption = #1048#1090#1086#1075#1086' '#1086#1089#1090'. '#1089' '#1091#1095'. '#1076#1086#1083#1075#1072
+        DataBinding.FieldName = 'RemainsWithDebt'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1086#1089#1090#1072#1090#1086#1082' '#1089' '#1091#1095#1077#1090#1086#1084' '#1076#1086#1083#1075#1072
+        Options.Editing = False
+        Width = 78
       end
       object OperPrice: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072
@@ -806,7 +848,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       item
         Name = 'inUnitId'
         Value = Null
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -877,7 +919,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
     Left = 104
     Top = 248
   end
-  object UnitGuides: TdsdGuides
+  object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
     FormNameParam.Value = 'TUnitForm'
@@ -889,7 +931,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       item
         Name = 'Key'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -897,7 +939,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -911,14 +953,14 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       item
         Name = 'MasterUnitId'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MasterUnitName'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -935,7 +977,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
     RefreshAction = actRefresh
     ComponentList = <
       item
-        Component = UnitGuides
+        Component = GuidesUnit
       end
       item
       end>

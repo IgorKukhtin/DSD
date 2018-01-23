@@ -703,6 +703,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPartionGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoodsChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionGoodsChoiceForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_DialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPUnit_DialogForm');
 end;
 
 procedure TLoadFormTest.LoadPartnerFormTest;
