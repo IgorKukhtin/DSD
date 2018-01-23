@@ -1343,7 +1343,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReestrJournalForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrStartMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReestrStartMovementForm');
 

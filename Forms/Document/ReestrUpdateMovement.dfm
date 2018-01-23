@@ -6,7 +6,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1017
-  ExplicitHeight = 440
+  ExplicitHeight = 444
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -868,8 +868,8 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
     Top = 235
   end
   inherited ActionList: TActionList
-    Left = 335
-    Top = 74
+    Left = 319
+    Top = 90
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TSale_OrderForm'
       FormNameParam.Value = 'TSale_OrderForm'
@@ -1845,5 +1845,29 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
     PackSize = 1
     Left = 631
     Top = 296
+  end
+  object spSelectPrintGroup: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Reestr_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 647
+    Top = 248
   end
 end
