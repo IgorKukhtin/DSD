@@ -54,6 +54,7 @@ type
     AmountEnd: TcxGridDBColumn;
     SummOut: TcxGridDBColumn;
     SummIn: TcxGridDBColumn;
+    Text_info: TcxGridDBColumn;
   private
     { Private declarations }
   public

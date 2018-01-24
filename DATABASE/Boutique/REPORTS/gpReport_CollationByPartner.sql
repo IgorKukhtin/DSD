@@ -9,21 +9,24 @@ CREATE OR REPLACE FUNCTION gpReport_CollationByPartner (
     IN inPartnerId        Integer  ,  -- Покупатель
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (MovementId            Integer
+RETURNS TABLE (Text_info             TVarChar
+             , MovementId            Integer
              , Invnumber             TVarChar
              , MovementDescName      TVarChar
              , OperDate              TDateTime
              
-             , PartionId        Integer
+             , PartionId          Integer
+             , InvNumber_Partion  TVarChar
+             , OperDate_Partion   TDateTime
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar
-             , MeasureName      TVarChar
-             , JuridicalName    TVarChar
+             , MeasureName        TVarChar
+             , JuridicalName      TVarChar
              , CompositionGroupName TVarChar
-             , CompositionName  TVarChar
-             , GoodsInfoName    TVarChar
-             , LineFabricaName  TVarChar
-             , LabelName        TVarChar
+             , CompositionName    TVarChar
+             , GoodsInfoName      TVarChar
+             , LineFabricaName    TVarChar
+             , LabelName          TVarChar
              , GoodsSizeId Integer, GoodsSizeName    TVarChar
              , CurrencyName       TVarChar
              , BrandName          TVarChar
@@ -92,14 +95,11 @@ BEGIN
                                    ELSE 0
                               END AS AmountSumm
   
-                            , CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate)
+                            , /*CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate)
                                         THEN MIContainer.MovementId
                                    ELSE 0
-                              END AS MovementId
-                            , CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate)
-                                        THEN MIContainer.MovementItemId
-                                   ELSE 0
-                              END AS MovementItemId
+                              END*/ MIContainer.MovementId AS MovementId
+
                             , SUM (CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate) AND MIContainer.DescId = zc_Container_Count()
                                              THEN MIContainer.Amount
                                         ELSE 0
@@ -119,7 +119,7 @@ BEGIN
                                         ELSE 0
                                     END) AS Summ_Total
                        FROM tmpContainer
-                            INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId
+                            LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId
                                                                           AND (MIContainer.OperDate >= inStartDate)
                        GROUP BY tmpContainer.ContainerId
                               , tmpContainer.GoodsId
@@ -132,107 +132,108 @@ BEGIN
                                      THEN tmpContainer.Amount
                                      ELSE 0
                                 END
-                              , CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate)
-                                          THEN MIContainer.MovementId
-                                     ELSE 0
-                                END
-                              , CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate)
-                                          THEN MIContainer.MovementItemId
-                                     ELSE 0
-                                END
+                              , MIContainer.MovementId
+     
                       )
 
-  , tmpMIContainer_group AS (SELECT tmpMIContainer_all.MovementId
-                                     , tmpMIContainer_all.MovementItemId
+  , tmpMIContainer_group AS (SELECT tmpMIContainer_all.Text_info
+                                  , tmpMIContainer_all.MovementId
+                                  , tmpMIContainer_all.GoodsId
+                                  , tmpMIContainer_all.PartionId
+
+                                  , SUM (tmpMIContainer_all.AmountStart)      AS AmountStart
+                                  , SUM (tmpMIContainer_all.AmountEnd)        AS AmountEnd
+                                  , SUM (tmpMIContainer_all.AmountIn)         AS AmountIn
+                                  , SUM (tmpMIContainer_all.AmountOut)        AS AmountOut
+
+                                  , SUM (tmpMIContainer_all.SummStart)        AS SummStart
+                                  , SUM (tmpMIContainer_all.SummEnd)          AS SummEnd
+                                  , SUM (tmpMIContainer_all.SummIn)           AS SummIn
+                                  , SUM (tmpMIContainer_all.SummOut)          AS SummOut
+
+                              FROM ( -- 1.1. Остатки нач.
+                                    SELECT 'Долг начальный'  AS Text_info
+                                         , tmpMIContainer.MovementId
+                                         , tmpMIContainer.GoodsId
+                                         , tmpMIContainer.PartionId
+
+                                         , tmpMIContainer.Amount - SUM (tmpMIContainer.Amount_Total)   AS AmountStart
+                                         , 0 AS AmountEnd
+                                         , 0 AS AmountIn
+                                         , 0 AS AmountOut
+                                         , tmpMIContainer.AmountSumm - SUM (tmpMIContainer.Summ_Total) AS SummStart
+                                         , 0 AS SummEnd
+                                         , 0 AS SummIn
+                                         , 0 AS SummOut
+                                    FROM tmpMIContainer
+                                    GROUP BY tmpMIContainer.ContainerId
+                                           , tmpMIContainer.Amount
+                                           , tmpMIContainer.AmountSumm
+                                           , tmpMIContainer.MovementId
+                                           , tmpMIContainer.GoodsId
+                                           , tmpMIContainer.PartionId
+                                    HAVING (tmpMIContainer.Amount - SUM (tmpMIContainer.Amount_Total)) <> 0
+                                        OR (tmpMIContainer.AmountSumm - SUM (tmpMIContainer.Summ_Total)) <> 0
+                                   UNION ALL
+                                    -- 1.1. Остатки конечн.
+                                    SELECT 'Долг конечный'   AS Text_info
+                                         , tmpMIContainer.MovementId
+                                         , tmpMIContainer.GoodsId
+                                         , tmpMIContainer.PartionId
+
+                                         , 0 AS AmountStart
+                                         , tmpMIContainer.Amount - SUM (tmpMIContainer.Amount_Total) + SUM (tmpMIContainer.Amount_Period) AS AmountEnd
+                                         , 0 AS AmountIn
+                                         , 0 AS AmountOut
+                                         , 0 AS SummStart
+                                         , tmpMIContainer.AmountSumm - SUM (tmpMIContainer.Summ_Total) + SUM (tmpMIContainer.Summ_Period) AS SummEnd
+                                         , 0 AS SummIn
+                                         , 0 AS SummOut
+                                    FROM tmpMIContainer
+                                    GROUP BY tmpMIContainer.ContainerId
+                                           , tmpMIContainer.Amount
+                                           , tmpMIContainer.AmountSumm
+                                           , tmpMIContainer.MovementId
+                                            , tmpMIContainer.GoodsId
+                                           , tmpMIContainer.PartionId
+                                    HAVING (tmpMIContainer.Amount - SUM (tmpMIContainer.Amount_Total) + SUM (tmpMIContainer.Amount_Period)) <> 0
+                                        OR (tmpMIContainer.AmountSumm - SUM (tmpMIContainer.Summ_Total) + SUM (tmpMIContainer.Summ_Period)) <> 0
+                                   UNION ALL
+                                    -- 1.2. Движение
+                                    SELECT 'Движение'        AS Text_info
+                                         , tmpMIContainer.MovementId
+                                         , tmpMIContainer.GoodsId
+                                         , tmpMIContainer.PartionId
+
+                                         , 0 AS AmountStart
+                                         , 0 AS AmountEnd
+                                         , CASE WHEN tmpMIContainer.Amount_Period > 0 THEN      tmpMIContainer.Amount_Period ELSE 0 END AS AmountIn
+                                         , CASE WHEN tmpMIContainer.Amount_Period < 0 THEN -1 * tmpMIContainer.Amount_Period ELSE 0 END AS AmountOut
+                                         , 0 AS SummStart
+                                         , 0 AS SummEnd
+                                         , CASE WHEN tmpMIContainer.Summ_Period > 0 THEN      tmpMIContainer.Summ_Period ELSE 0 END AS SummIn
+                                         , CASE WHEN tmpMIContainer.Summ_Period < 0 THEN -1 * tmpMIContainer.Summ_Period ELSE 0 END AS SummOut
+                                    FROM tmpMIContainer
+                                    WHERE tmpMIContainer.Amount_Period <> 0
+                                       OR tmpMIContainer.Summ_Period <> 0
+                                   ) AS tmpMIContainer_all
+                      
+                              GROUP BY tmpMIContainer_all.MovementId
                                      , tmpMIContainer_all.GoodsId
                                      , tmpMIContainer_all.PartionId
-
-                                     , SUM (tmpMIContainer_all.AmountStart)      AS AmountStart
-                                     , SUM (tmpMIContainer_all.AmountEnd)        AS AmountEnd
-                                     , SUM (tmpMIContainer_all.AmountIn)         AS AmountIn
-                                     , SUM (tmpMIContainer_all.AmountOut)        AS AmountOut
-  
-                                     , SUM (tmpMIContainer_all.SummStart)        AS SummStart
-                                     , SUM (tmpMIContainer_all.SummEnd)          AS SummEnd
-                                     , SUM (tmpMIContainer_all.SummIn)           AS SummIn
-                                     , SUM (tmpMIContainer_all.SummOut)          AS SummOut
-  
-                                 FROM ( -- 1.1. Остатки нач.
-                                       SELECT -1 AS MovementId
-                                             , 0 AS MovementItemId
-                                             , 0 AS GoodsId
-                                             , 0 AS PartionId
-  
-                                             , tmpMIContainer.Amount - SUM (tmpMIContainer.Amount_Total)   AS AmountStart
-                                             , 0 AS AmountEnd
-                                             , 0 AS AmountIn
-                                             , 0 AS AmountOut
-                                             , tmpMIContainer.AmountSumm - SUM (tmpMIContainer.Summ_Total) AS SummStart
-                                             , 0 AS SummEnd
-                                             , 0 AS SummIn
-                                             , 0 AS SummOut
-                                       FROM tmpMIContainer
-                                       GROUP BY tmpMIContainer.ContainerId
-                                              , tmpMIContainer.Amount
-                                              , tmpMIContainer.AmountSumm
-                                      UNION ALL
-                                       -- 1.1. Остатки конечн.
-                                       SELECT -2 AS MovementId
-                                             , 0 AS MovementItemId
-                                             , 0 AS GoodsId
-                                             , 0 AS PartionId
-  
-                                             , 0 AS AmountStart
-                                             , tmpMIContainer.Amount - SUM (tmpMIContainer.Amount_Total) + SUM (tmpMIContainer.Amount_Period) AS AmountEnd
-                                             , 0 AS AmountIn
-                                             , 0 AS AmountOut
-                                             , 0 AS SummStart
-                                             , tmpMIContainer.AmountSumm - SUM (tmpMIContainer.Summ_Total) + SUM (tmpMIContainer.Summ_Period) AS SummEnd
-                                             , 0 AS SummIn
-                                             , 0 AS SummOut
-                                       FROM tmpMIContainer
-                                       GROUP BY tmpMIContainer.ContainerId
-                                              , tmpMIContainer.Amount
-                                              , tmpMIContainer.AmountSumm
-                                      UNION ALL
-                                       -- 1.2. Движение
-                                       SELECT tmpMIContainer.MovementId
-                                             , tmpMIContainer.MovementItemId
-                                             , tmpMIContainer.GoodsId
-                                             , tmpMIContainer.PartionId
-  
-                                             , 0 AS AmountStart
-                                             , 0 AS AmountEnd
-                                             , CASE WHEN tmpMIContainer.Amount_Period > 0 THEN      tmpMIContainer.Amount_Period ELSE 0 END AS AmountIn
-                                             , CASE WHEN tmpMIContainer.Amount_Period < 0 THEN -1 * tmpMIContainer.Amount_Period ELSE 0 END AS AmountOut
-                                             , 0 AS SummStart
-                                             , 0 AS SummEnd
-                                             , CASE WHEN tmpMIContainer.Summ_Period > 0 THEN      tmpMIContainer.Summ_Period ELSE 0 END AS SummIn
-                                             , CASE WHEN tmpMIContainer.Summ_Period < 0 THEN -1 * tmpMIContainer.Summ_Period ELSE 0 END AS SummOut
-                                       FROM tmpMIContainer
-                                       WHERE tmpMIContainer.Amount_Period <> 0
-                                          OR tmpMIContainer.Summ_Period <> 0
-                                      ) AS tmpMIContainer_all
-                         
-                                 GROUP BY tmpMIContainer_all.MovementId
-                                        , tmpMIContainer_all.MovementItemId
-                                        , tmpMIContainer_all.GoodsId
-                                        , tmpMIContainer_all.PartionId
                              )
 
 
-   SELECT Movement.Id                            AS MovementId
-        , Movement.InvNumber
-        , CASE WHEN tmpData.MovementId = -1 THEN 'Долг начальный'
-               WHEN tmpData.MovementId = -2 THEN 'Долг конечный'
-               ELSE MovementDesc.ItemName 
-          END                :: TVarChar AS MovementDescName
-        , CASE WHEN tmpData.MovementId = -1 THEN inStartDate
-               WHEN tmpData.MovementId = -2 THEN inEndDate
-               ELSE Movement.OperDate
-          END                            AS OperDate
+   SELECT tmpData.Text_info
+        , Movement.Id                    AS MovementId
+        , Movement.InvNumber             AS InvNumber
+        , MovementDesc.ItemName          AS MovementDescName
+        , Movement.OperDate              AS OperDate
         
-        , tmpData.PartionId
+        , tmpData.PartionId              AS PartionId
+        , MovementDesc.ItemName          AS MovementDescName
+        , Movement_Partion.InvNumber     AS InvNumber_Partion
+        , Object_PartionGoods.OperDate   AS OperDate_Partion
         , Object_Goods.Id                AS GoodsId
         , Object_Goods.ObjectCode        AS GoodsCode
         , Object_Goods.ValueData         AS GoodsName
@@ -268,26 +269,29 @@ BEGIN
         LEFT JOIN Movement ON Movement.Id = tmpData.MovementId
         LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
-            LEFT JOIN Object_PartionGoods      ON Object_PartionGoods.MovementItemId  = tmpData.PartionId
-            
-            LEFT JOIN Object AS Object_Goods            ON Object_Goods.Id            = Object_PartionGoods.GoodsId 
-            LEFT JOIN Object AS Object_GoodsGroup       ON Object_GoodsGroup.Id       = Object_PartionGoods.GoodsGroupId
-            LEFT JOIN Object AS Object_Measure          ON Object_Measure.Id          = Object_PartionGoods.MeasureId
-            LEFT JOIN Object AS Object_Composition      ON Object_Composition.Id      = Object_PartionGoods.CompositionId
-            LEFT JOIN Object AS Object_CompositionGroup ON Object_CompositionGroup.Id = Object_PartionGoods.CompositionGroupId
-            LEFT JOIN Object AS Object_GoodsInfo        ON Object_GoodsInfo.Id        = Object_PartionGoods.GoodsInfoId
-            LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = Object_PartionGoods.LineFabricaId 
-            LEFT JOIN Object AS Object_Label            ON Object_Label.Id            = Object_PartionGoods.LabelId
-            LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = Object_PartionGoods.GoodsSizeId
-            LEFT JOIN Object AS Object_Juridical        ON Object_Juridical.Id        = Object_PartionGoods.JuridicalId
-            LEFT JOIN Object AS Object_Currency         ON Object_Currency.Id         = Object_PartionGoods.CurrencyId
-            LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = Object_PartionGoods.BrandId
-            LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = Object_PartionGoods.PeriodId
-            LEFT JOIN Object AS Object_Fabrika          ON Object_Fabrika.Id          = Object_PartionGoods.FabrikaId
-            
-            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
-                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id 
-                                  AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
+        LEFT JOIN Object_PartionGoods      ON Object_PartionGoods.MovementItemId  = tmpData.PartionId
+        
+        LEFT JOIN Object AS Object_Goods            ON Object_Goods.Id            = Object_PartionGoods.GoodsId 
+        LEFT JOIN Object AS Object_GoodsGroup       ON Object_GoodsGroup.Id       = Object_PartionGoods.GoodsGroupId
+        LEFT JOIN Object AS Object_Measure          ON Object_Measure.Id          = Object_PartionGoods.MeasureId
+        LEFT JOIN Object AS Object_Composition      ON Object_Composition.Id      = Object_PartionGoods.CompositionId
+        LEFT JOIN Object AS Object_CompositionGroup ON Object_CompositionGroup.Id = Object_PartionGoods.CompositionGroupId
+        LEFT JOIN Object AS Object_GoodsInfo        ON Object_GoodsInfo.Id        = Object_PartionGoods.GoodsInfoId
+        LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = Object_PartionGoods.LineFabricaId 
+        LEFT JOIN Object AS Object_Label            ON Object_Label.Id            = Object_PartionGoods.LabelId
+        LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = Object_PartionGoods.GoodsSizeId
+        LEFT JOIN Object AS Object_Juridical        ON Object_Juridical.Id        = Object_PartionGoods.JuridicalId
+        LEFT JOIN Object AS Object_Currency         ON Object_Currency.Id         = Object_PartionGoods.CurrencyId
+        LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = Object_PartionGoods.BrandId
+        LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = Object_PartionGoods.PeriodId
+        LEFT JOIN Object AS Object_Fabrika          ON Object_Fabrika.Id          = Object_PartionGoods.FabrikaId
+        
+        LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id = Object_PartionGoods.MovementId
+        LEFT JOIN MovementDesc AS MovementDesc_Partion ON MovementDesc_Partion.Id = Movement_Partion.DescId
+
+        LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                               ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id 
+                              AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
         ;
  END;
 $BODY$

@@ -13,19 +13,19 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
     Height = 388
     TabOrder = 3
     ExplicitTop = 81
-    ExplicitWidth = 989
+    ExplicitWidth = 991
     ExplicitHeight = 388
     ClientRectBottom = 388
     ClientRectRight = 991
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 989
+      ExplicitWidth = 991
       ExplicitHeight = 388
       inherited cxGrid: TcxGrid
         Top = 8
         Width = 991
         Height = 228
         ExplicitTop = 8
-        ExplicitWidth = 989
+        ExplicitWidth = 991
         ExplicitHeight = 228
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -342,7 +342,6 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
             Width = 193
           end
           object Persent_AmountLast: TcxGridDBColumn
-            AlternateCaption = '70'
             Caption = '% +/- ('#1082#1086#1083'-'#1074#1086' '#1095#1077#1082#1086#1074' '#1086#1090' '#1087#1088#1077#1076'. '#1084#1077#1089#1103#1094#1072')'
             DataBinding.FieldName = 'Persent_AmountLast'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -389,13 +388,12 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
             Width = 186
           end
           object PersentMiddle: TcxGridDBColumn
-            Caption = '%'
+            Caption = '% '#1086#1090#1082#1083'. '#1089#1088'. '#1095#1077#1082#1072' '#1090#1077#1082'. '#1086#1090' '#1087#1088#1086#1096#1083#1086#1075#1086' '
             DataBinding.FieldName = 'PersentMiddle'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103
-            VisibleForCustomization = False
             Width = 50
           end
         end
@@ -409,7 +407,6 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
         AlignSplitter = salBottom
         AutoSnap = True
         Control = grChart2
-        ExplicitWidth = 989
       end
       object cxSplitter2: TcxSplitter
         Left = 0
@@ -419,7 +416,6 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
         AlignSplitter = salTop
         AutoSnap = True
         Control = cxGrid
-        ExplicitWidth = 989
       end
       object grChart2: TcxGrid
         Left = 0
@@ -429,7 +425,6 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
         Hint = #1044#1080#1085#1072#1084#1080#1082#1072
         Align = alBottom
         TabOrder = 3
-        ExplicitWidth = 989
         object cxGridDBChartView1: TcxGridDBChartView
           DataController.DataSource = MasterDS
           DiagramColumn.Active = True
@@ -465,7 +460,7 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
   inherited Panel: TPanel
     Width = 991
     Height = 55
-    ExplicitWidth = 989
+    ExplicitWidth = 991
     ExplicitHeight = 55
     inherited deStart: TcxDateEdit
       Left = 26

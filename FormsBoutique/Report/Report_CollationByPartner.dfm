@@ -6,7 +6,7 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1081
-  ExplicitHeight = 488
+  ExplicitHeight = 489
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -287,6 +287,14 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object Text_info: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1076#1072#1085#1085#1099#1093
+            DataBinding.FieldName = 'Text_info'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
           object MovementDescName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1076#1086#1082'.'
             DataBinding.FieldName = 'MovementDescName'
@@ -415,15 +423,6 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
             Options.Editing = False
             Width = 70
           end
-          object JuridicalName: TcxGridDBColumn
-            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
-            DataBinding.FieldName = 'JuridicalName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 95
-          end
           object CompositionGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1089#1086#1089#1090#1072#1074#1072
             DataBinding.FieldName = 'CompositionGroupName'
@@ -520,7 +519,7 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
             Width = 71
           end
           object AmountIn: TcxGridDBColumn
-            Caption = #1056#1072#1089#1093#1086#1076' '#1082#1086#1083'-'#1074#1086
+            Caption = #1055#1088#1080#1093#1086#1076' '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'AmountIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -530,7 +529,7 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
             Width = 70
           end
           object AmountOut: TcxGridDBColumn
-            Caption = #1055#1088#1080#1093#1086#1076' '#1082#1086#1083'-'#1074#1086
+            Caption = #1056#1072#1089#1093#1086#1076' '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'AmountOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -542,7 +541,7 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
             Width = 80
           end
           object SummIn: TcxGridDBColumn
-            Caption = #1056#1072#1089#1093#1086#1076' '#1043#1056#1053
+            Caption = #1055#1088#1080#1093#1086#1076' '#1043#1056#1053
             DataBinding.FieldName = 'SummIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -552,10 +551,32 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
             Width = 70
           end
           object SummOut: TcxGridDBColumn
-            Caption = #1055#1088#1080#1093#1086#1076' '#1043#1056#1053
+            Caption = #1056#1072#1089#1093#1086#1076' '#1043#1056#1053
             DataBinding.FieldName = 'SummOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object DescName_Partion: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080
+            DataBinding.FieldName = 'DescName_Partion'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object InvNumber_Partion: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080
+            DataBinding.FieldName = 'InvNumber_Partion'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 73
+          end
+          object OperDate_Partion: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080
+            DataBinding.FieldName = 'OperDate_Partion'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
