@@ -82,7 +82,7 @@ type
     cxLabel19: TcxLabel;
     cePersonalTrade: TcxButtonEdit;
     GuidesPersonalTrade: TdsdGuides;
-    cbIsShowAll: TcxCheckBox;
+    cbReestrKind: TcxCheckBox;
     actPrintGroupPersonal: TdsdPrintAction;
     bbPrintGroupPersonal: TdxBarButton;
     actPrintPeriodGroup: TdsdPrintAction;

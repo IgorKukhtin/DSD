@@ -1,27 +1,28 @@
 inherited ReestrStartMovementForm: TReestrStartMovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1077#1077#1089#1090#1088' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' ('#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072')>'
   ClientHeight = 385
-  ClientWidth = 924
+  ClientWidth = 943
   AddOnFormData.RefreshAction = actRefreshStart
-  ExplicitWidth = 940
-  ExplicitHeight = 424
+  ExplicitLeft = -153
+  ExplicitWidth = 959
+  ExplicitHeight = 420
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 924
+    Width = 943
     Height = 259
     ExplicitTop = 126
     ExplicitWidth = 924
     ExplicitHeight = 259
     ClientRectBottom = 259
-    ClientRectRight = 924
+    ClientRectRight = 943
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 924
       ExplicitHeight = 235
       inherited cxGrid: TcxGrid
         Top = 67
-        Width = 924
+        Width = 943
         Height = 168
         ExplicitTop = 67
         ExplicitWidth = 924
@@ -311,11 +312,12 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
-        Width = 924
+        Width = 943
         Height = 59
         Align = alTop
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 924
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           Navigator.Buttons.Append.Visible = False
@@ -431,17 +433,18 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 59
-        Width = 924
+        Width = 943
         Height = 8
         HotZoneClassName = 'TcxSimpleStyle'
         HotZone.Visible = False
         AlignSplitter = salTop
         Control = cxGrid1
+        ExplicitWidth = 924
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 924
+    Width = 943
     Height = 100
     TabOrder = 3
     ExplicitWidth = 924
@@ -489,7 +492,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     object cxLabel18: TcxLabel
       Left = 630
       Top = 4
-      Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088')'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088')'
     end
     object cePersonal: TcxButtonEdit
       Left = 630
@@ -506,7 +509,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     object cxLabel19: TcxLabel
       Left = 630
       Top = 45
-      Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1090#1086#1088#1075#1086#1074#1099#1081')'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1090#1086#1088#1075#1086#1074#1099#1081')'
     end
     object cePersonalTrade: TcxButtonEdit
       Left = 630
@@ -589,12 +592,15 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     TabOrder = 13
     Width = 200
   end
-  object cbIsShowAll: TcxCheckBox [10]
-    Left = 831
+  object cbReestrKind: TcxCheckBox [10]
+    Left = 832
     Top = 22
-    Caption = #1042#1099#1073#1088'. '#1089#1090#1072#1090#1091#1089
+    Hint = #1055#1077#1095#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1089' '#1074#1080#1079#1086#1081' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
+    Caption = #1090#1086#1083#1100#1082#1086' '#1089' '#1074#1080#1079#1086#1081
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 14
-    Width = 93
+    Width = 103
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 499
@@ -614,8 +620,8 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'> '#1075#1088#1091#1087'. '#1087#1086' '#1058#1055
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'> '#1075#1088#1091#1087'. '#1087#1086' '#1058#1055
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1058#1055' - '#1056#1077#1077#1089#1090#1088' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1058#1055' - '#1056#1077#1077#1089#1090#1088' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
       ImageIndex = 3
       DataSets = <
         item
@@ -689,8 +695,8 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         item
           Action = actPrintPeriodGroup
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1042#1057#1045' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1074#1080#1079#1086#1081' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'> '#1087#1086' '#1058#1055
-      Hint = #1055#1077#1095#1072#1090#1100' '#1042#1057#1045' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1074#1080#1079#1086#1081' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'> '#1087#1086' '#1058#1055
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1058#1055' - '#1042#1057#1045' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1074#1080#1079#1086#1081' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1058#1055' - '#1042#1057#1045' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1074#1080#1079#1086#1081' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
       ImageIndex = 19
     end
     object actPrintPeriodGroup: TdsdPrintAction [5]
@@ -1838,7 +1844,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       item
         Name = 'inIsReestrKind'
         Value = 'FALSE'
-        Component = cbIsShowAll
+        Component = cbReestrKind
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2147,7 +2153,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       item
         Name = 'inIsReestrKind'
         Value = 'FALSE'
-        Component = cbIsShowAll
+        Component = cbReestrKind
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

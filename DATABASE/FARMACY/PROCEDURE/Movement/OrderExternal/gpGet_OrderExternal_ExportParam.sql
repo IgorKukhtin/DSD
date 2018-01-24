@@ -22,70 +22,92 @@ BEGIN
    vbUserId := lpGetUserBySession (inSession);
 
 
-      SELECT FromId, REPLACE (REPLACE (ToName, '/', '_'), '\', '_'), Object_Unit_View.JuridicalName
-             INTO vbJuridicalId, vbUnitName, vbMainJuridicalName
-       FROM Movement_OrderExternal_View 
-            LEFT JOIN Object_Unit_View ON Object_Unit_View.Id = ToId
-       WHERE Movement_OrderExternal_View.Id = inMovementId;
+   -- определяем
+   SELECT FromId
+        , REPLACE (REPLACE (ToName, '/', '_'), '\', '_'), Object_Unit_View.JuridicalName
+          INTO vbJuridicalId
+             , vbUnitName
+             , vbMainJuridicalName
+   FROM Movement_OrderExternal_View 
+        LEFT JOIN Object_Unit_View ON Object_Unit_View.Id = ToId
+   WHERE Movement_OrderExternal_View.Id = inMovementId;
 
        
-   IF vbJuridicalId = 59611 -- Оптима
+   -- Оптима
+   IF vbJuridicalId = 59611
    THEN 
-
-
-      SELECT replace(replace(Object_ImportExportLink_View.StringKey, '|', ''), '*', ' ') INTO vbSubject
-      FROM 
-          MovementLinkObject 
-    
-                LEFT JOIN MovementLinkObject AS UnitLink ON UnitLink.DescId = zc_MovementLinkObject_To()
-                                                        AND UnitLink.movementid = MovementLinkObject.MovementId
-                LEFT JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.MainId = UnitLink.objectid
-                                                      AND Object_ImportExportLink_View.LinkTypeId = zc_Enum_ImportExportLinkType_ClientEmailSubject()
-                                                      AND Object_ImportExportLink_View.ValueId = MovementLinkObject.ObjectId  
+       -- определяем
+       SELECT REPLACE(REPLACE(Object_ImportExportLink_View.StringKey, '|', ''), '*', ' ')
+              INTO vbSubject
+       FROM MovementLinkObject 
+            LEFT JOIN MovementLinkObject AS UnitLink ON UnitLink.DescId = zc_MovementLinkObject_To()
+                                                    AND UnitLink.movementid = MovementLinkObject.MovementId
+            LEFT JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.MainId = UnitLink.objectid
+                                                  AND Object_ImportExportLink_View.LinkTypeId = zc_Enum_ImportExportLinkType_ClientEmailSubject()
+                                                   AND Object_ImportExportLink_View.ValueId = MovementLinkObject.ObjectId  
  
-    WHERE MovementLinkObject.DescId = zc_MovementLinkObject_Contract()
-      AND MovementLinkObject.MovementId = inMovementId;
+       WHERE MovementLinkObject.DescId = zc_MovementLinkObject_Contract()
+         AND MovementLinkObject.MovementId = inMovementId;
 
+       -- Результат - ДЛЯ Оптима
        RETURN QUERY
-       SELECT
-         COALESCE(vbSubject, ('Заказ - '||COALESCE(vbMainJuridicalName, '')||' от '||COALESCE(vbUnitName, '')))::TVarChar
-        , 5;
+         SELECT COALESCE(vbSubject, ('Заказ - ' || COALESCE (vbMainJuridicalName, '') || ' от ' || COALESCE (vbUnitName, ''))) :: TVarChar
+              , 5 AS ExportType
+               ;
+
+       -- !!!выход!!!
        RETURN;
+
    END IF;
 
-   IF vbJuridicalId = 59610 THEN --БАДМ
 
+   -- БАДМ
+   IF vbJuridicalId = 59610
+   THEN
+       -- Результат - ДЛЯ БАДМ
        RETURN QUERY
-       SELECT
-         ('Заказ - '||COALESCE(vbMainJuridicalName, '')||' от '||COALESCE(vbUnitName, ''))::TVarChar
-        , 5;
+         SELECT ('Заказ - ' || COALESCE (vbMainJuridicalName, '') || ' от ' || COALESCE (vbUnitName, '')) :: TVarChar
+               , 5 AS ExportType
+                ;
+
+       -- !!!выход!!!
        RETURN;
+
    END IF;
    
-   IF vbJuridicalId = 59612 -- ВЕНТА
-   THEN 
-      SELECT replace(replace(Object_ImportExportLink_View.StringKey, '|', ''), '*', ' ') INTO vbSubject
-      FROM MovementLinkObject AS MLO_From
-                LEFT JOIN MovementLinkObject AS MLO_To 
-                                             ON MLO_To.DescId     = zc_MovementLinkObject_To()
-                                            AND MLO_To.MovementId = MLO_From.MovementId
-                LEFT JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.MainId     = MLO_To.objectid
-                                                      AND Object_ImportExportLink_View.LinkTypeId = zc_Enum_ImportExportLinkType_ClientEmailSubject()
-                                                      AND Object_ImportExportLink_View.ValueId    = MLO_From.ObjectId  
-    WHERE MLO_From.DescId     = zc_MovementLinkObject_From()
-      AND MLO_From.MovementId = inMovementId;
 
+   -- ВЕНТА
+   IF vbJuridicalId = 59612
+   THEN 
+       SELECT REPLACE(REPLACE(Object_ImportExportLink_View.StringKey, '|', ''), '*', ' ') INTO vbSubject
+       FROM MovementLinkObject AS MLO_From
+                 LEFT JOIN MovementLinkObject AS MLO_To 
+                                              ON MLO_To.DescId     = zc_MovementLinkObject_To()
+                                             AND MLO_To.MovementId = MLO_From.MovementId
+                 LEFT JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.MainId     = MLO_To.objectid
+                                                       AND Object_ImportExportLink_View.LinkTypeId = zc_Enum_ImportExportLinkType_ClientEmailSubject()
+                                                       AND Object_ImportExportLink_View.ValueId    = MLO_From.ObjectId  
+       WHERE MLO_From.DescId     = zc_MovementLinkObject_From()
+         AND MLO_From.MovementId = inMovementId;
+
+       -- Результат - ДЛЯ ВЕНТА
        RETURN QUERY
-       SELECT
-         COALESCE(vbSubject, ('Заказ - '||COALESCE(vbMainJuridicalName, '')||' от '||COALESCE(vbUnitName, '')))::TVarChar
-        , 5;
+         SELECT COALESCE(vbSubject, ('Заказ - '||COALESCE(vbMainJuridicalName, '')||' от '||COALESCE(vbUnitName, ''))) :: TVarChar
+              , 3 AS ExportType
+               ;
+
+       -- !!!выход!!!
        RETURN;
+
    END IF;
 
+
+   -- Результат - ДЛЯ ВСЕХ остальных
    RETURN QUERY
    SELECT
       ('Заказ - '||COALESCE(vbMainJuridicalName, '')||' от '||COALESCE(vbUnitName, ''))::TVarChar
-    , 3;
+    , 3 AS ExportType
+     ;
 
 
 END;
@@ -104,4 +126,4 @@ ALTER FUNCTION gpGet_OrderExternal_ExportParam(integer, TVarChar) OWNER TO postg
 */
 
 -- тест
--- SELECT * FROM gpGet_OrderExternal_ExportParam (8034989, '2')
+-- SELECT * FROM gpGet_OrderExternal_ExportParam (8112483, '2')

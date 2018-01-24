@@ -6,7 +6,7 @@ inherited ReestrReturnJournalForm: TReestrReturnJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 854
-  ExplicitHeight = 449
+  ExplicitHeight = 446
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -433,12 +433,12 @@ inherited ReestrReturnJournalForm: TReestrReturnJournalForm
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 112
-      EditValue = 42736d
+      EditValue = 43101d
       ExplicitLeft = 112
     end
     inherited deEnd: TcxDateEdit
       Left = 312
-      EditValue = 42736d
+      EditValue = 43101d
       ExplicitLeft = 312
     end
     inherited cxLabel1: TcxLabel

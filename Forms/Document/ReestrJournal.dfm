@@ -6,7 +6,7 @@ inherited ReestrJournalForm: TReestrJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 854
-  ExplicitHeight = 450
+  ExplicitHeight = 446
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -164,6 +164,7 @@ inherited ReestrJournalForm: TReestrJournalForm
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1091#1089' ('#1088#1077#1077#1089#1090#1088')'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             Width = 70
           end
@@ -602,13 +603,13 @@ inherited ReestrJournalForm: TReestrJournalForm
     ExplicitWidth = 838
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
-      Left = 112
-      EditValue = 42370d
-      ExplicitLeft = 112
+      Left = 111
+      EditValue = 43101d
+      ExplicitLeft = 111
     end
     inherited deEnd: TcxDateEdit
       Left = 312
-      EditValue = 42370d
+      EditValue = 43101d
       ExplicitLeft = 312
     end
     inherited cxLabel1: TcxLabel
