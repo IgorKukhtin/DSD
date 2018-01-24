@@ -1,28 +1,28 @@
 inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
   Caption = #1054#1090#1095#1077#1090' <'#1057#1088#1077#1076#1085#1080#1081' '#1095#1077#1082' '#1079#1072' '#1087#1077#1088#1080#1086#1076'> '
   ClientHeight = 469
-  ClientWidth = 989
+  ClientWidth = 991
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1005
-  ExplicitHeight = 507
+  ExplicitWidth = 1007
+  ExplicitHeight = 508
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 81
-    Width = 989
+    Width = 991
     Height = 388
     TabOrder = 3
     ExplicitTop = 81
     ExplicitWidth = 989
     ExplicitHeight = 388
     ClientRectBottom = 388
-    ClientRectRight = 989
+    ClientRectRight = 991
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 989
       ExplicitHeight = 388
       inherited cxGrid: TcxGrid
         Top = 8
-        Width = 989
+        Width = 991
         Height = 228
         ExplicitTop = 8
         ExplicitWidth = 989
@@ -341,6 +341,18 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
             HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1095#1077#1082#1086#1074'  '#1079#1072' '#1087#1077#1088#1080#1086#1076
             Width = 193
           end
+          object Persent_AmountLast: TcxGridDBColumn
+            AlternateCaption = '70'
+            Caption = '% +/- ('#1082#1086#1083'-'#1074#1086' '#1095#1077#1082#1086#1074' '#1086#1090' '#1087#1088#1077#1076'. '#1084#1077#1089#1103#1094#1072')'
+            DataBinding.FieldName = 'Persent_AmountLast'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1088#1086#1089#1090#1072'/'#1087#1072#1076#1077#1085#1080#1103' '#1082#1086#1083'-'#1074#1072' '#1095#1077#1082#1086#1074' '#1074' '#1089#1088#1072#1074#1085#1077#1085#1080#1080' '#1089' '#1087#1088#1077#1076'.'#1084#1077#1089#1103#1094#1077#1084
+            Options.Editing = False
+            Width = 99
+          end
           object SummaSaleAll: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1087#1088#1086#1076#1072#1078#1080' '#1079#1072' '#1087#1077#1088#1080#1086#1076
             DataBinding.FieldName = 'SummaSaleAll'
@@ -351,6 +363,19 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1048#1090#1086#1075#1086' '#1087#1088#1086#1076#1072#1078#1080' '#1079#1072' '#1087#1077#1088#1080#1086#1076
             Width = 187
+          end
+          object Persent_SummaLast: TcxGridDBColumn
+            Caption = '% +/- ('#1089#1091#1084#1084#1072' '#1089#1088'. '#1095#1077#1082#1072' '#1086#1090' '#1087#1088#1077#1076'. '#1084#1077#1089#1103#1094#1072')'
+            DataBinding.FieldName = 'Persent_SummaLast'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = '% '#1088#1086#1089#1090#1072'/'#1087#1072#1076#1077#1085#1080#1103' '#1089#1091#1084#1084#1099' '#1089#1088'. '#1095#1077#1082#1072' '#1074' '#1089#1088#1072#1074#1085#1077#1085#1080#1080' '#1089' '#1087#1088#1077#1076'.'#1084#1077#1089#1103#1094#1077#1084
+            Options.Editing = False
+            Width = 100
           end
           object SummaMiddleAll: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1089#1088#1077#1076#1085#1077#1075#1086' '#1095#1077#1082#1072' '
@@ -366,9 +391,11 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
           object PersentMiddle: TcxGridDBColumn
             Caption = '%'
             DataBinding.FieldName = 'PersentMiddle'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103
+            VisibleForCustomization = False
             Width = 50
           end
         end
@@ -376,30 +403,33 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 236
-        Width = 989
+        Width = 991
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         AutoSnap = True
         Control = grChart2
+        ExplicitWidth = 989
       end
       object cxSplitter2: TcxSplitter
         Left = 0
         Top = 0
-        Width = 989
+        Width = 991
         Height = 8
         AlignSplitter = salTop
         AutoSnap = True
         Control = cxGrid
+        ExplicitWidth = 989
       end
       object grChart2: TcxGrid
         Left = 0
         Top = 244
-        Width = 989
+        Width = 991
         Height = 144
         Hint = #1044#1080#1085#1072#1084#1080#1082#1072
         Align = alBottom
         TabOrder = 3
+        ExplicitWidth = 989
         object cxGridDBChartView1: TcxGridDBChartView
           DataController.DataSource = MasterDS
           DiagramColumn.Active = True
@@ -433,7 +463,7 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
     end
   end
   inherited Panel: TPanel
-    Width = 989
+    Width = 991
     Height = 55
     ExplicitWidth = 989
     ExplicitHeight = 55

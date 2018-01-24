@@ -162,8 +162,6 @@ BEGIN
                     HAVING SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount)) <> 0 
                    )                                                               
         -- выбираем продажи по товарам соц.проекта 1303
-        
-        
         , tmpMovement_Sale AS (SELECT CASE WHEN inisDAy = True THEN DATE_TRUNC('day', Movement_Sale.OperDate)
                                            WHEN inisMonth = TRUE THEN DATE_TRUNC('Month', Movement_Sale.OperDate)
                                            ELSE NULL END              ::TDateTime  AS OperDate
@@ -217,8 +215,8 @@ BEGIN
                         GROUP BY tmpMI.Unitid
                                , tmpMI.OperDate
                         )
-                          
-        , tmpData AS (SELECT tmpMI.Unitid
+
+       , tmpData AS (SELECT tmpMI.Unitid
                            , tmpMI.OperDate
 
                            , SUM (tmpMI.Amount) AS Amount
@@ -252,7 +250,7 @@ BEGIN
                             GROUP BY tmpMI.Unitid
                                    , tmpMI.OperDate 
                       )
-    
+
         , DataResult AS(SELECT tmpData.OperDate
                              , tmpData.UnitId
                              
@@ -278,12 +276,32 @@ BEGIN
                                     THEN (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) + COALESCE (tmpData.SummSale_1303, 0)) / (tmpPeriod.AmountPeriod + COALESCE (tmpData.Count_1303, 0))
                                     ELSE 0 
                                END       :: TFloat   AS SummaMiddleAll
-                             
-                        FROM  tmpData
-                              LEFT JOIN tmpPeriod ON tmpPeriod.UnitId = tmpData.UnitId 
-                                                 AND ((COALESCE(tmpPeriod.OperDate, NULL) = COALESCE(tmpData.OperDate, NULL)) 
-                                                   OR (inisMonth = FALSE AND inisDay = FALSE))
-                    )
+
+                        FROM tmpData
+                             LEFT JOIN tmpPeriod ON tmpPeriod.UnitId = tmpData.UnitId 
+                                                AND ((COALESCE(tmpPeriod.OperDate, NULL) = COALESCE(tmpData.OperDate, NULL)) 
+                                                  OR (inisMonth = FALSE AND inisDay = FALSE))
+                       )
+
+        -- находим кол-во чеков и сумму текущего и прошлого месяцев
+        , tmpLast AS (SELECT tmp.OperDate
+                           , tmp.UnitId
+                           , CASE WHEN COALESCE (tmp.Amount_PeriodLast, 0) <> 0         THEN (tmp.AmountWith_1303 / tmp.Amount_PeriodLast         * 100) - 100 ELSE 0 END AS Persent_AmountLast
+                           , CASE WHEN COALESCE (tmp.SummaMiddleAll_PeriodLast, 0) <> 0 THEN (tmp.SummaMiddleAll  / tmp.SummaMiddleAll_PeriodLast * 100) - 100 ELSE 0 END AS Persent_SummaLast
+                      FROM (SELECT t1.OperDate
+                                 , t1.UnitId
+                                 , t1.AmountWith_1303
+                                 , t1.SummaMiddleAll
+                                 , t2.AmountWith_1303     AS Amount_PeriodLast
+                                 , t2.SummaMiddleAll      AS SummaMiddleAll_PeriodLast
+                            FROM DataResult AS t1
+                                 LEFT JOIN DataResult AS t2 
+                                                      ON t2.Unitid = t1.Unitid
+                                                     AND t2.OperDate = t1.OperDate - INTERVAL '1 Month'
+                            WHERE inisMonth = TRUE
+                           ) AS tmp
+                     )
+        
 
         -- результат      
         SELECT tmpData.OperDate            ::TDateTime AS OperDate
@@ -311,6 +329,8 @@ BEGIN
  
              , COALESCE (CAST (CASE WHEN tmpData.SummaMiddleAll <> 0 THEN (tmpData.SummaMiddleAll * 100 / DataResult.SummaMiddleAll) - 100  ELSE 0 END  AS NUMERIC (16,2)), 0) :: TFloat AS PersentMiddle
              
+             , COALESCE (CAST (tmpLast.Persent_AmountLast AS NUMERIC (16,2)), 0) :: TFloat AS Persent_AmountLast
+             , COALESCE (CAST (tmpLast.Persent_SummaLast  AS NUMERIC (16,2)), 0) :: TFloat AS Persent_SummaLast
         FROM DataResult AS tmpData
              LEFT JOIN DataResult ON DataResult.UnitId = tmpData.UnitId
                                  AND ((DataResult.OperDate + interval '1 month' = tmpData.OperDate AND inisMonth = TRUE) 
@@ -328,6 +348,9 @@ BEGIN
                                   ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
                                  AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
              LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
+             LEFT JOIN tmpLast ON tmpLast.UnitId   = tmpData.UnitId
+                              AND tmpLast.OperDate = tmpData.OperDate
                      
         ORDER BY 2, 1 ;
 
@@ -341,6 +364,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 24.01.18         *
  09.10.17         *
 */
 
