@@ -76,6 +76,19 @@ type
     macPrintPeriod: TMultiAction;
     edIsShowAll: TcxCheckBox;
     spSelectPrintGroup: TdsdStoredProc;
+    cxLabel18: TcxLabel;
+    cePersonal: TcxButtonEdit;
+    GuidesPersonal: TdsdGuides;
+    cxLabel19: TcxLabel;
+    cePersonalTrade: TcxButtonEdit;
+    cbReestrKind: TcxCheckBox;
+    GuidesPersonalTrade: TdsdGuides;
+    actPrintGroup: TdsdPrintAction;
+    actPrintPeriodGroup: TdsdPrintAction;
+    spSelectPrintPeriodGroup: TdsdStoredProc;
+    macPrintPeriodGroup: TMultiAction;
+    bbPrintGroup: TdxBarButton;
+    bbPrintPeriodGroup: TdxBarButton;
   private
     { Private declarations }
   public

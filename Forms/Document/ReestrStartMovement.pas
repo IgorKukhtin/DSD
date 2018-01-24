@@ -88,6 +88,8 @@ type
     actPrintPeriodGroup: TdsdPrintAction;
     macPrintPeriodGroup: TMultiAction;
     bb: TdxBarButton;
+    spSelectPrintGroup: TdsdStoredProc;
+    spSelectPrintPeriodGroup: TdsdStoredProc;
   private
     { Private declarations }
   public

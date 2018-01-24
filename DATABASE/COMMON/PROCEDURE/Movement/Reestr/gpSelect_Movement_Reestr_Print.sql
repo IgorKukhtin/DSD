@@ -183,16 +183,18 @@ BEGIN
            , Movement_Sale.OperDate                 AS OperDate_Sale
            , MovementDate_OperDatePartner.ValueData AS OperDatePartner
            , Object_To.ValueData                    AS ToName
-           , CASE WHEN Object_Personal.Id <> Object_PersonalTrade.Id -- AND Object_Personal.Id > 0 AND Object_PersonalTrade.Id > 0
-                       THEN Object_Personal.ValueData || ' / ' || Object_PersonalTrade.ValueData
+           , CASE WHEN Object_Personal.Id <> Object_PersonalTrade.Id
+                  THEN Object_Personal.ValueData || ' / ' || Object_PersonalTrade.ValueData
                   WHEN Object_Personal.Id IS NULL AND Object_PersonalTrade.Id > 0
                        THEN ' / ' || Object_PersonalTrade.ValueData
                   ELSE Object_Personal.ValueData
              END                        :: TVarChar AS PersonalName
+           , Object_PersonalTrade.ValueData         AS PersonalTradeName
            , CASE WHEN Object_Personal.Id <> 0 
                   THEN Object_Personal.ValueData
-                  ELSE Object_Personal.ValueData
+                  ELSE Object_PersonalTrade.ValueData
              END                        :: TVarChar AS PersonalName_Group
+             
            , Object_ReestrKind.ValueData    	    AS ReestrKindName
            , Object_PaidKind.ValueData              AS PaidKindName
 

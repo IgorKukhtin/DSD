@@ -83,7 +83,7 @@ BEGIN
                        THEN ' / ' || Object_PersonalTrade.ValueData
                   ELSE Object_Personal.ValueData
              END                        :: TVarChar AS PersonalName
-
+           , Object_PersonalTrade.ValueData         AS PersonalTradeName
            , CASE WHEN Object_Personal.Id <> 0 
                   THEN Object_Personal.ValueData
                   ELSE Object_Personal.ValueData

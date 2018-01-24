@@ -3,9 +3,8 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
   ClientHeight = 385
   ClientWidth = 943
   AddOnFormData.RefreshAction = actRefreshStart
-  ExplicitLeft = -153
   ExplicitWidth = 959
-  ExplicitHeight = 420
+  ExplicitHeight = 424
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -13,19 +12,19 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     Width = 943
     Height = 259
     ExplicitTop = 126
-    ExplicitWidth = 924
+    ExplicitWidth = 943
     ExplicitHeight = 259
     ClientRectBottom = 259
     ClientRectRight = 943
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 924
+      ExplicitWidth = 943
       ExplicitHeight = 235
       inherited cxGrid: TcxGrid
         Top = 67
         Width = 943
         Height = 168
         ExplicitTop = 67
-        ExplicitWidth = 924
+        ExplicitWidth = 943
         ExplicitHeight = 168
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -317,7 +316,6 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         Align = alTop
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 924
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           Navigator.Buttons.Append.Visible = False
@@ -439,7 +437,6 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         HotZone.Visible = False
         AlignSplitter = salTop
         Control = cxGrid1
-        ExplicitWidth = 924
       end
     end
   end
@@ -447,7 +444,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     Width = 943
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 924
+    ExplicitWidth = 943
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -615,10 +612,10 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     object actPrintGroupPersonal: TdsdPrintAction [0]
       Category = 'Print'
       MoveParams = <>
-      StoredProc = spSelectPrint
+      StoredProc = spSelectPrintGroup
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectPrintGroup
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1058#1055' - '#1056#1077#1077#1089#1090#1088' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
       Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1058#1055' - '#1056#1077#1077#1089#1090#1088' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
@@ -631,7 +628,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GroupNum;PersonalName_Group;ToName;OperDatePartner'
+          IndexFieldNames = 'PersonalName_Group;ToName;OperDatePartner'
         end>
       Params = <
         item
@@ -702,10 +699,10 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     object actPrintPeriodGroup: TdsdPrintAction [5]
       Category = 'Print'
       MoveParams = <>
-      StoredProc = spSelectPrintPeriod
+      StoredProc = spSelectPrintPeriodGroup
       StoredProcList = <
         item
-          StoredProc = spSelectPrintPeriod
+          StoredProc = spSelectPrintPeriodGroup
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1087#1086' '#1058#1055
       Hint = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1087#1086' '#1058#1055
@@ -1822,16 +1819,12 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       item
         Name = 'inPersonalId'
         Value = '0'
-        Component = GuidesPersonal
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalTradeId'
         Value = '0'
-        Component = GuidesPersonalTrade
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1844,7 +1837,6 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       item
         Name = 'inIsReestrKind'
         Value = 'FALSE'
-        Component = cbReestrKind
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2131,16 +2123,12 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       item
         Name = 'inPersonalId'
         Value = '0'
-        Component = GuidesPersonal
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalTradeId'
         Value = '0'
-        Component = GuidesPersonalTrade
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2153,7 +2141,6 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       item
         Name = 'inIsReestrKind'
         Value = 'FALSE'
-        Component = cbReestrKind
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2198,8 +2185,8 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 688
-    Top = 5
+    Left = 696
+    Top = 21
   end
   object GuidesPersonalTrade: TdsdGuides
     KeyField = 'Id'
@@ -2230,5 +2217,132 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       end>
     Left = 744
     Top = 37
+  end
+  object spSelectPrintGroup: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Reestr_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = 0
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId'
+        Value = ''
+        Component = GuidesPersonal
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalTradeId'
+        Value = ''
+        Component = GuidesPersonalTrade
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReestrKindId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsReestrKind'
+        Value = 'False'
+        Component = cbReestrKind
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 647
+    Top = 80
+  end
+  object spSelectPrintPeriodGroup: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_ReestrStartPeriod_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 42705d
+        Component = FormParams
+        ComponentItem = 'inStartDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 42705d
+        Component = FormParams
+        ComponentItem = 'inEndDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId'
+        Value = ''
+        Component = GuidesPersonal
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalTradeId'
+        Value = ''
+        Component = GuidesPersonalTrade
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReestrKindId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsReestrKind'
+        Value = 'False'
+        Component = cbReestrKind
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsShowAll'
+        Value = False
+        Component = FormParams
+        ComponentItem = 'IsShowAllPrint'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 847
+    Top = 96
   end
 end
