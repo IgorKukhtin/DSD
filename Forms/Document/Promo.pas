@@ -294,6 +294,7 @@ type
     dsdDBViewAddOnPlan: TdsdDBViewAddOn;
     plGoodsKindName_List: TcxGridDBColumn;
     GoodsKindCompleteChoiceForm: TOpenChoiceForm;
+    PriceTender: TcxGridDBColumn;
   private
     { Private declarations }
   public
