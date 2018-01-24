@@ -3337,6 +3337,10 @@
 				<Form>Sticker_ListForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ProductionSeparateStorageLine.pas">
+				<Form>ProductionSeparateStorageLineForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

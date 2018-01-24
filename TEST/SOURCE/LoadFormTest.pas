@@ -1181,10 +1181,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionSeparateItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionSeparateItemJournalForm');
   //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionSeparateStorageLineForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProductionSeparateStorageLineForm');
+  exit;
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionSeparateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionSeparateForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionSeparateJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionSeparateJournalForm');
+
 end;
 procedure TLoadFormTest.LoadProductionUnionFormTest;
 begin

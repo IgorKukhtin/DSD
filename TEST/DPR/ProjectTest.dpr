@@ -996,7 +996,8 @@ uses
   Report_MovementProtocolDialog in '..\..\Forms\Report\Report_MovementProtocolDialog.pas' {Report_MovementProtocolDialogForm: TParentForm},
   Sale_TransportJournal in '..\..\Forms\Document\Sale_TransportJournal.pas' {Sale_TransportJournalForm: TParentForm},
   StickerFile in '..\..\Forms\Guides\StickerFile.pas' {StickerFileForm: TParentForm},
-  Sticker_List in '..\..\Forms\Guides\Sticker_List.pas' {Sticker_ListForm: TParentForm};
+  Sticker_List in '..\..\Forms\Guides\Sticker_List.pas' {Sticker_ListForm: TParentForm},
+  ProductionSeparateStorageLine in '..\..\Forms\Document\ProductionSeparateStorageLine.pas' {ProductionSeparateStorageLineForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
