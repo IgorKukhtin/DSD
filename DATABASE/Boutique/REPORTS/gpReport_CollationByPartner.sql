@@ -16,6 +16,7 @@ RETURNS TABLE (Text_info             TVarChar
              , OperDate              TDateTime
              
              , PartionId          Integer
+             , DescName_Partion   TVarChar
              , InvNumber_Partion  TVarChar
              , OperDate_Partion   TDateTime
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
@@ -218,20 +219,21 @@ BEGIN
                                        OR tmpMIContainer.Summ_Period <> 0
                                    ) AS tmpMIContainer_all
                       
-                              GROUP BY tmpMIContainer_all.MovementId
+                              GROUP BY tmpMIContainer_all.Text_info
+                                     , tmpMIContainer_all.MovementId
                                      , tmpMIContainer_all.GoodsId
                                      , tmpMIContainer_all.PartionId
                              )
 
 
-   SELECT tmpData.Text_info
+   SELECT tmpData.Text_info :: TVarChar
         , Movement.Id                    AS MovementId
         , Movement.InvNumber             AS InvNumber
         , MovementDesc.ItemName          AS MovementDescName
         , Movement.OperDate              AS OperDate
         
         , tmpData.PartionId              AS PartionId
-        , MovementDesc.ItemName          AS MovementDescName
+        , MovementDesc_Partion.ItemName          AS DescName_Partion
         , Movement_Partion.InvNumber     AS InvNumber_Partion
         , Object_PartionGoods.OperDate   AS OperDate_Partion
         , Object_Goods.Id                AS GoodsId
