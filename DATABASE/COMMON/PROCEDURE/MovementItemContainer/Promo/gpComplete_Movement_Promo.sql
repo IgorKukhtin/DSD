@@ -15,6 +15,53 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Promo());
 
 
+     -- Проверка
+     IF EXISTS (SELECT 1
+                FROM MovementItem
+                WHERE MovementItem.MovementId = inMovementId
+                  AND MovementItem.DescId     = zc_MI_Master()
+                  AND MovementItem.isErased   = FALSE
+                GROUP BY MovementItem.ObjectId
+                HAVING MIN (MovementItem.Amount) <> MAX (MovementItem.Amount)
+               )
+     THEN 
+         RAISE EXCEPTION 'Ошибка.Для товара <%> введен разный Процент скидки : <%> и <%>.'
+                       , lfGet_Object_ValueData(
+                         (SELECT MovementItem.ObjectId
+                          FROM MovementItem
+                          WHERE MovementItem.MovementId = inMovementId
+                            AND MovementItem.DescId     = zc_MI_Master()
+                            AND MovementItem.isErased   = FALSE
+                          GROUP BY MovementItem.ObjectId
+                          HAVING MIN (MovementItem.Amount) <> MAX (MovementItem.Amount)
+                          ORDER BY MovementItem.ObjectId
+                          LIMIT 1
+                         ))
+                       , zfConvert_FloatToString(
+                         (SELECT MIN (MovementItem.Amount)
+                          FROM MovementItem
+                          WHERE MovementItem.MovementId = inMovementId
+                            AND MovementItem.DescId     = zc_MI_Master()
+                            AND MovementItem.isErased   = FALSE
+                          GROUP BY MovementItem.ObjectId
+                          HAVING MIN (MovementItem.Amount) <> MAX (MovementItem.Amount)
+                          ORDER BY MovementItem.ObjectId
+                          LIMIT 1
+                         ))
+                       , zfConvert_FloatToString(
+                         (SELECT MAX (MovementItem.Amount)
+                          FROM MovementItem
+                          WHERE MovementItem.MovementId = inMovementId
+                            AND MovementItem.DescId     = zc_MI_Master()
+                            AND MovementItem.isErased   = FALSE
+                          GROUP BY MovementItem.ObjectId
+                          HAVING MIN (MovementItem.Amount) <> MAX (MovementItem.Amount)
+                          ORDER BY MovementItem.ObjectId
+                          LIMIT 1
+                         ))
+               ;
+     END IF;
+
      -- сохранение "новых" контрагентов + по продажам за аналогичный период
      PERFORM lpUpdate_Movement_Promo_Auto (inMovementId := inMovementId
                                          , inUserId     := vbUserId

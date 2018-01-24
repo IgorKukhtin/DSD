@@ -28,8 +28,10 @@ BEGIN
             LEFT JOIN Object_Unit_View ON Object_Unit_View.Id = ToId
        WHERE Movement_OrderExternal_View.Id = inMovementId;
 
+       
+   IF vbJuridicalId = 59611 -- Оптима
+   THEN 
 
-   IF vbJuridicalId = 59611 THEN --Оптима
 
       SELECT replace(replace(Object_ImportExportLink_View.StringKey, '|', ''), '*', ' ') INTO vbSubject
       FROM 
@@ -59,6 +61,26 @@ BEGIN
         , 5;
        RETURN;
    END IF;
+   
+   IF vbJuridicalId = 59612 -- ВЕНТА
+   THEN 
+      SELECT replace(replace(Object_ImportExportLink_View.StringKey, '|', ''), '*', ' ') INTO vbSubject
+      FROM MovementLinkObject AS MLO_From
+                LEFT JOIN MovementLinkObject AS MLO_To 
+                                             ON MLO_To.DescId     = zc_MovementLinkObject_To()
+                                            AND MLO_To.MovementId = MLO_From.MovementId
+                LEFT JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.MainId     = MLO_To.objectid
+                                                      AND Object_ImportExportLink_View.LinkTypeId = zc_Enum_ImportExportLinkType_ClientEmailSubject()
+                                                      AND Object_ImportExportLink_View.ValueId    = MLO_From.ObjectId  
+    WHERE MLO_From.DescId     = zc_MovementLinkObject_From()
+      AND MLO_From.MovementId = inMovementId;
+
+       RETURN QUERY
+       SELECT
+         COALESCE(vbSubject, ('Заказ - '||COALESCE(vbMainJuridicalName, '')||' от '||COALESCE(vbUnitName, '')))::TVarChar
+        , 5;
+       RETURN;
+   END IF;
 
    RETURN QUERY
    SELECT
@@ -82,5 +104,4 @@ ALTER FUNCTION gpGet_OrderExternal_ExportParam(integer, TVarChar) OWNER TO postg
 */
 
 -- тест
--- 
-SELECT * FROM gpGet_OrderExternal_ExportParam (13692, '2')
+-- SELECT * FROM gpGet_OrderExternal_ExportParam (8034989, '2')
