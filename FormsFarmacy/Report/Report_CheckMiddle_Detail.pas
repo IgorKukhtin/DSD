@@ -59,6 +59,8 @@ type
     cxLabel19: TcxLabel;
     ceRetail: TcxButtonEdit;
     GuidesRetail: TdsdGuides;
+    Persent_AmountLast: TcxGridDBColumn;
+    Persent_SummaLast: TcxGridDBColumn;
   private
     { Private declarations }
   public

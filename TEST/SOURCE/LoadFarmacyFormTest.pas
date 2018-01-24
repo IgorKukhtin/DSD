@@ -704,10 +704,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionMoveDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionMoveDialogForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_CrossForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_CrossForm');
-  {exit;
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsLightForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRReport_GoodsRemainsLightForm');
@@ -724,14 +724,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckDialogForm');
-  }
+
   // для фармацевта
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckFarmForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckFarmForm');
   
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckFarmDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckFarmDialogForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionHistoryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionHistoryForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionHistoryDialogForm'));
@@ -756,12 +756,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitDialogForm');
-
+  }
   // средний чек за период
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckMiddle_DetailForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckMiddle_DetailForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckMiddle_DetailDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckMiddle_DetailDialogForm');
+  {
   // средний чек
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckMiddleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckMiddleForm');
