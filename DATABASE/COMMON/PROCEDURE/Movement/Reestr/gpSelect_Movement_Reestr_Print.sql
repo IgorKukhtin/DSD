@@ -1,9 +1,14 @@
 -- Function: gpSelect_Movement_Reestr()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Reestr_Print (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Reestr_Print (Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Reestr_Print(
     IN inMovementId        Integer   ,
+    IN inPersonalId        Integer   ,
+    IN inPersonalTradeId   Integer   ,
+    IN inReestrKindId      Integer   ,
+    IN inIsReestrKind      Boolean   ,
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -40,6 +45,11 @@ BEGIN
     END IF;
 */
 
+     -- переопределим значение для вывезено со склада; в форме start нет єтого параметра, в др.формах есть
+     IF COALESCE (inReestrKindId, 0 ) = 0
+        THEN inReestrKindId := zc_Enum_ReestrKind_PartnerOut();
+     END IF;
+     
      -- Результат
      OPEN Cursor1 FOR
 
@@ -179,6 +189,10 @@ BEGIN
                        THEN ' / ' || Object_PersonalTrade.ValueData
                   ELSE Object_Personal.ValueData
              END                        :: TVarChar AS PersonalName
+           , CASE WHEN Object_Personal.Id <> 0 
+                  THEN Object_Personal.ValueData
+                  ELSE Object_Personal.ValueData
+             END                        :: TVarChar AS PersonalName_Group
            , Object_ReestrKind.ValueData    	    AS ReestrKindName
            , Object_PaidKind.ValueData              AS PaidKindName
 
@@ -270,6 +284,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
                                          ON MovementLinkObject_ReestrKind.MovementId = Movement_Sale.Id
                                         AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
+                                        --AND ((inIsReestrKind = TRUE AND MovementLinkObject_ReestrKind.ObjectId = inReestrKindId) OR inIsReestrKind = FALSE)
             LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
@@ -304,10 +319,14 @@ BEGIN
                                  ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_To.Id
                                 AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
             LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = ObjectLink_Partner_PersonalTrade.ChildObjectId
-
-         ORDER BY tmpMI.GroupNum
-                , Object_To.ValueData
-                , MovementDate_OperDatePartner.ValueData
+       WHERE ((inIsReestrKind = TRUE AND MovementLinkObject_ReestrKind.ObjectId = inReestrKindId) 
+          OR inIsReestrKind = FALSE
+             )
+         AND (Object_Personal.Id = inPersonalId OR inPersonalId = 0)
+         AND (Object_PersonalTrade.Id = inPersonalTradeId OR inPersonalTradeId = 0)
+       ORDER BY tmpMI.GroupNum
+              , Object_To.ValueData
+              , MovementDate_OperDatePartner.ValueData
 ;
 
     RETURN NEXT Cursor2;
@@ -324,4 +343,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Reestr_Print (inMovementId:= 1, inSession:= zfCalc_UserAdmin())
+-- select * from gpSelect_Movement_Reestr_Print(inMovementId := 4887960 , inPersonalId := 0 , inPersonalTradeId := 0 , inReestrKindId := 0 , inIsReestrKind := 'False' ,  inSession := '5');

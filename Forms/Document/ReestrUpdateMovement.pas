@@ -75,6 +75,7 @@ type
     actDialog_Print: TExecuteDialog;
     macPrintPeriod: TMultiAction;
     edIsShowAll: TcxCheckBox;
+    spSelectPrintGroup: TdsdStoredProc;
   private
     { Private declarations }
   public

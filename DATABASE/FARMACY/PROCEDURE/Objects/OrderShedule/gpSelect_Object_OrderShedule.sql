@@ -14,11 +14,11 @@ RETURNS TABLE (Id Integer, Code Integer,
                Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, 
                Value5 TFloat, Value6 TFloat, Value7 TFloat,
                OurJuridicalName TVarChar,
-               UnitId Integer, UnitName TVarChar,
+               UnitId Integer, UnitName TVarChar, AreaName TVarChar,
                ProvinceCityId Integer, ProvinceCityName TVarChar,
                JuridicalName TVarChar,
                ContractId Integer, ContractName TVarChar,
-               isErased boolean,
+               isErased_OrderShedule boolean, isErased_Contract boolean, isErased boolean, 
                Inf_Text1 TVarChar, Inf_Text2 TVarChar,
                Color_Calc1 Integer, Color_Calc2 Integer, Color_Calc3 Integer, Color_Calc4 Integer,
                Color_Calc5 Integer, Color_Calc6 Integer, Color_Calc7 Integer,
@@ -61,9 +61,10 @@ BEGIN
                  WHERE Object_OrderShedule.DescId = zc_Object_OrderShedule()
                   AND (Object_OrderShedule.isErased = inShowErased OR inShowErased = True OR inisShowAll = True)
                  )
-   , tmpAll AS (SELECT Object_Unit.Id      AS UnitId
-                     , Object_Contract.Id  AS ContractId
+   , tmpAll AS (SELECT Object_Unit.Id           AS UnitId
+                     , Object_Contract.Id       AS ContractId
                      , ObjectLink_Contract_Juridical.ChildObjectId  AS JuridicalId
+                     , Object_Contract.isErased AS isErased_Contract
                 FROM Object AS Object_Unit
                      LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
                                           ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
@@ -93,7 +94,8 @@ BEGIN
 
            , Object_Unit_Juridical.ValueData      AS OurJuridicalName
            , Object_Unit.Id                       AS UnitId
-           , Object_Unit.ValueData                AS UnitName 
+           , Object_Unit.ValueData                AS UnitName
+           , Object_Area.ValueData                AS AreaName
            
            , Object_ProvinceCity.Id               AS ProvinceCityId
            , Object_ProvinceCity.ValueData        AS ProvinceCityName
@@ -102,7 +104,9 @@ BEGIN
            , Object_Contract.Id                   AS ContractId
            , Object_Contract.ValueData            AS ContractName 
                      
-           , Object_OrderShedule.isErased         AS isErased
+           , Object_OrderShedule.isErased         AS isErased_OrderShedule
+           , Object_Contract.isErased             AS isErased_Contract
+           , CASE WHEN Object_OrderShedule.isErased = TRUE OR Object_Contract.isErased = TRUE THEN TRUE ELSE FALSE END  :: Boolean AS isErased
 
            , (CASE WHEN Object_OrderShedule.Value1 in (1,3) THEN 'Понедельник,' ELSE '' END ||
              CASE WHEN Object_OrderShedule.Value2 in (1,3) THEN 'Вторник,'     ELSE '' END ||
@@ -166,7 +170,12 @@ BEGIN
                                 ON ObjectLink_Unit_ProvinceCity.ObjectId = Object_Unit.Id
                                AND ObjectLink_Unit_ProvinceCity.DescId = zc_ObjectLink_Unit_ProvinceCity()
            LEFT JOIN Object AS Object_ProvinceCity ON Object_ProvinceCity.Id = ObjectLink_Unit_ProvinceCity.ChildObjectId
-        
+
+           LEFT JOIN ObjectLink AS ObjectLink_Unit_Area
+                                ON ObjectLink_Unit_Area.ObjectId = Object_Unit.Id 
+                               AND ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
+           LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Unit_Area.ChildObjectId
+           
             --
            LEFT JOIN ObjectFloat AS ObjectFloat_OrderSumm
                                  ON ObjectFloat_OrderSumm.ObjectId = Object_Contract_Juridical.Id
@@ -198,6 +207,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.01.18         *
  08.08.17         *
  22.06.17         *
  14.01.17         *
