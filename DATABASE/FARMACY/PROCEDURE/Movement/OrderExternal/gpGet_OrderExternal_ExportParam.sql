@@ -79,6 +79,7 @@ BEGIN
    -- ВЕНТА
    IF vbJuridicalId = 59612
    THEN 
+       -- определяем
        SELECT REPLACE(REPLACE(Object_ImportExportLink_View.StringKey, '|', ''), '*', ' ') INTO vbSubject
        FROM MovementLinkObject AS MLO_From
                  LEFT JOIN MovementLinkObject AS MLO_To 

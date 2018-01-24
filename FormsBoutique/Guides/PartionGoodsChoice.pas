@@ -74,7 +74,7 @@ type
     CurrencyName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     OperPrice: TcxGridDBColumn;
-    PriceSale: TcxGridDBColumn;
+    OperPriceList: TcxGridDBColumn;
     BrandName: TcxGridDBColumn;
     PeriodName: TcxGridDBColumn;
     PeriodYear: TcxGridDBColumn;
@@ -89,11 +89,11 @@ type
     FormParams: TdsdFormParams;
     RefreshDispatcher: TRefreshDispatcher;
     spUnErased: TdsdStoredProc;
-    InvNumber_full: TcxGridDBColumn;
-    MovementId: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
+    SybaseId: TcxGridDBColumn;
+    PartionId: TcxGridDBColumn;
   private
     { Private declarations }
   public

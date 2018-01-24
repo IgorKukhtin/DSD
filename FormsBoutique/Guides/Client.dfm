@@ -959,7 +959,10 @@ object ClientForm: TClientForm
     Top = 144
   end
   object RefreshDispatcher: TRefreshDispatcher
+    CheckIdParam = True
     IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'MasterUnitId'
     IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <

@@ -86,6 +86,13 @@ type
     LocationDescName_by: TcxGridDBColumn;
     LocationCode_by: TcxGridDBColumn;
     LocationName_by: TcxGridDBColumn;
+    OperPriceList: TcxGridDBColumn;
+    PartnerName: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    Amount_PartionMI: TcxGridDBColumn;
+    OperDate_PartionMI: TcxGridDBColumn;
+    InvNumber_PartionMI: TcxGridDBColumn;
   private
     { Private declarations }
   public
