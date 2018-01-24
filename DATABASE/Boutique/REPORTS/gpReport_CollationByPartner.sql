@@ -22,7 +22,6 @@ RETURNS TABLE (Text_info             TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar
              , MeasureName        TVarChar
-             , JuridicalName      TVarChar
              , CompositionGroupName TVarChar
              , CompositionName    TVarChar
              , GoodsInfoName      TVarChar
@@ -242,7 +241,6 @@ BEGIN
         , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
         , Object_GoodsGroup.ValueData    AS GoodsGroupName
         , Object_Measure.ValueData       AS MeasureName
-        , Object_Juridical.ValueData     AS JuridicalName
         , Object_CompositionGroup.ValueData   AS CompositionGroupName
         , Object_Composition.ValueData   AS CompositionName
         , Object_GoodsInfo.ValueData     AS GoodsInfoName
@@ -282,7 +280,6 @@ BEGIN
         LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = Object_PartionGoods.LineFabricaId 
         LEFT JOIN Object AS Object_Label            ON Object_Label.Id            = Object_PartionGoods.LabelId
         LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = Object_PartionGoods.GoodsSizeId
-        LEFT JOIN Object AS Object_Juridical        ON Object_Juridical.Id        = Object_PartionGoods.JuridicalId
         LEFT JOIN Object AS Object_Currency         ON Object_Currency.Id         = Object_PartionGoods.CurrencyId
         LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = Object_PartionGoods.BrandId
         LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = Object_PartionGoods.PeriodId
