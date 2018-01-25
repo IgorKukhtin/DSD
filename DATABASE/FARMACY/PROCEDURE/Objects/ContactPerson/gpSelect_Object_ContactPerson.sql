@@ -63,11 +63,14 @@ BEGIN
                  WHEN zc_Object_Juridical() THEN ContactPerson_Object.Id                   
                  ELSE 0
              END                                 AS JuridicalId
-           , CASE ContactPerson_Object.DescId
-                 WHEN zc_Object_Juridical() THEN ContactPerson_Object.ValueData                   
-                 ELSE ''::TVarChar
+           , CASE WHEN COALESCE (Object_Juridical.Id, 0) <> 0 
+                  THEN Object_Juridical.ValueData
+                  ELSE
+                      CASE ContactPerson_Object.DescId
+                          WHEN zc_Object_Juridical() THEN ContactPerson_Object.ValueData                   
+                          ELSE ''::TVarChar
+                      END
              END                                 AS JuridicalName
-
            , CASE ContactPerson_Object.DescId
                  WHEN zc_Object_Contract() THEN ContactPerson_Object.Id                   
                  ELSE 0
@@ -152,7 +155,13 @@ BEGIN
                                  ON ObjectLink_Email_Area.ObjectId = Object_Email.Id 
                                 AND ObjectLink_Email_Area.DescId = zc_ObjectLink_Email_Area()
             LEFT JOIN Object AS Object_Area_Email ON Object_Area_Email.Id = ObjectLink_Email_Area.ChildObjectId
-      
+
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                 ON ObjectLink_Contract_Juridical.ObjectId = ContactPerson_Object.Id
+                                AND ContactPerson_Object.DescId = zc_Object_Contract()
+                                AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Contract_Juridical.ChildObjectId 
+                 
      WHERE Object_ContactPerson.DescId = zc_Object_ContactPerson()
        -- AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
     ;

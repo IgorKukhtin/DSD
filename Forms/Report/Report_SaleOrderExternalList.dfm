@@ -686,8 +686,8 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 312
-    Top = 200
+    Left = 328
+    Top = 184
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -796,8 +796,8 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 256
-    Top = 232
+    Left = 248
+    Top = 248
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1034,8 +1034,8 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
     Top = 296
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 440
-    Top = 240
+    Left = 480
+    Top = 280
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -1066,8 +1066,8 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
       item
         Component = cbSale
       end>
-    Left = 504
-    Top = 216
+    Left = 512
+    Top = 192
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -1145,7 +1145,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 615
-    Top = 200
+    Left = 607
+    Top = 240
   end
 end

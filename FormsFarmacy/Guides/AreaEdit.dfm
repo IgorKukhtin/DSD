@@ -63,13 +63,11 @@ object AreaEditForm: TAreaEditForm
     Left = 10
     Top = 101
     Caption = #1053#1040#1064' E-Mail '#1085#1072' '#1082#1086#1090#1086#1088#1099#1081' '#1087#1088#1080#1093#1086#1076#1080#1090' '#1055#1056#1040#1049#1057
-    Visible = False
   end
   object edEmail: TcxTextEdit
     Left = 10
     Top = 121
     TabOrder = 7
-    Visible = False
     Width = 273
   end
   object ActionList: TActionList

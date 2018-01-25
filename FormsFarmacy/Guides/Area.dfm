@@ -50,7 +50,7 @@ object AreaForm: TAreaForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 44
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -58,16 +58,14 @@ object AreaForm: TAreaForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 442
+        Width = 188
       end
       object EMail: TcxGridDBColumn
         Caption = #1053#1040#1064' E-Mail '#1085#1072' '#1082#1086#1090#1086#1088#1099#1081' '#1087#1088#1080#1093#1086#1076#1080#1090' '#1055#1056#1040#1049#1057
         DataBinding.FieldName = 'EMail'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        VisibleForCustomization = False
-        Width = 300
+        Width = 276
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
