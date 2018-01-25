@@ -29,8 +29,10 @@ BEGIN
            , 0                                      AS GoodsKindId
            , CAST ('' AS TVarChar)                  AS GoodsKindName
 
+           , 0                                      AS StorageLineId_old
            , 0                                      AS StorageLineId
            , CAST ('' AS TVarChar)                  AS StorageLineName
+
 
            , CAST (NULL AS TFloat)                  AS Amount
            , CAST (NULL AS TFloat)                  AS LiveWeight
@@ -75,6 +77,7 @@ BEGIN
            , Object_GoodsKind.Id                    AS GoodsKindId
            , Object_GoodsKind.ValueData             AS GoodsKindName
 
+           , Object_StorageLine.Id                  AS StorageLineId_old
            , Object_StorageLine.Id                  AS StorageLineId
            , Object_StorageLine.ValueData           AS StorageLineName
 
@@ -132,6 +135,7 @@ BEGIN
            , Object_GoodsKind.Id                         AS GoodsKindId
            , Object_GoodsKind.ValueData                  AS GoodsKindName
 
+           , Object_StorageLine.Id                       AS StorageLineId_old
            , Object_StorageLine.Id                       AS StorageLineId
            , Object_StorageLine.ValueData                AS StorageLineName
 
@@ -192,6 +196,7 @@ BEGIN
            , Object_GoodsKind.Id                         AS GoodsKindId
            , Object_GoodsKind.ValueData                  AS GoodsKindName
 
+           , Object_StorageLine.Id                       AS StorageLineId_old
            , Object_StorageLine.Id                       AS StorageLineId
            , Object_StorageLine.ValueData                AS StorageLineName
 
@@ -244,6 +249,7 @@ ALTER FUNCTION gpSelect_MI_ProductionSeparate (Integer, Boolean, Boolean, TVarCh
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.01.18         * StorageLineId_old
  26.05.17         * add StorageLine
  11.03.17         *
  31.03.15         * 
