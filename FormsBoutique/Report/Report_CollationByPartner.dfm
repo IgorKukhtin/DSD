@@ -474,6 +474,33 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
             HeaderAlignmentVert = vaCenter
             Width = 53
           end
+          object Amount_PartionMI: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1074' '#1087#1072#1088#1090#1080#1080' '#1087#1088#1086#1076'.'
+            DataBinding.FieldName = 'Amount_PartionMI'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1087#1072#1088#1090#1080#1080' '#1087#1088#1086#1076#1072#1078#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
+            Width = 70
+          end
+          object InvNumber_PartionMI: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. ('#1087#1072#1088#1090#1080#1103' '#1087#1086#1082'.)'
+            DataBinding.FieldName = 'InvNumber_PartionMI'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1074' '#1087#1072#1088#1090#1080#1080' '#1087#1088#1086#1076#1072#1078#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
+            Width = 70
+          end
+          object OperDate_PartionMI: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1087#1072#1088#1090#1080#1103' '#1087#1086#1082'.)'
+            DataBinding.FieldName = 'OperDate_PartionMI'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1074' '#1087#1072#1088#1090#1080#1080' '#1087#1088#1086#1076#1072#1078#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
+            Width = 70
+          end
           object AmountStart: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1083#1075' ('#1085#1072#1095'.)'
             DataBinding.FieldName = 'AmountStart'
@@ -555,28 +582,6 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
             DataBinding.FieldName = 'SummOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object DescName_Partion: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080
-            DataBinding.FieldName = 'DescName_Partion'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object InvNumber_Partion: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080
-            DataBinding.FieldName = 'InvNumber_Partion'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 73
-          end
-          object OperDate_Partion: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080
-            DataBinding.FieldName = 'OperDate_Partion'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -1170,6 +1175,7 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
         Component = PeriodChoice
       end
       item
+        Component = GuidesClient
       end
       item
         Component = GuidesUnit

@@ -511,7 +511,7 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True

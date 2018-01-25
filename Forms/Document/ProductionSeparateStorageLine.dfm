@@ -80,6 +80,7 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
           end
           inherited colGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1088#1072#1089#1093#1086#1076')'
+            Options.Editing = False
           end
           object GoodsKindName: TcxGridDBColumn [3]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -94,6 +95,7 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 122
           end
           object MeasureName: TcxGridDBColumn [4]
@@ -127,6 +129,7 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object colLiveWeight: TcxGridDBColumn [7]
@@ -137,6 +140,7 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object HeadCount: TcxGridDBColumn [8]
@@ -147,6 +151,7 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
           end
           inherited colIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
@@ -203,6 +208,7 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
           end
           inherited colChildGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1087#1088#1080#1093#1086#1076')'
+            Options.Editing = False
           end
           object ChildGoodsKindName: TcxGridDBColumn [3]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -217,6 +223,7 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 122
           end
           object CholdMeasureName: TcxGridDBColumn [4]
@@ -250,6 +257,7 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object ChildLiveWeight: TcxGridDBColumn [7]
@@ -261,6 +269,7 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object ChildHeadCount: TcxGridDBColumn [8]
@@ -271,6 +280,7 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object ChildPartionGoods: TcxGridDBColumn [9]
@@ -851,13 +861,13 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionSeparate_Master_SetErased'
-    Left = 478
-    Top = 248
+    Left = 518
+    Top = 320
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionSeparate_Master_SetUnErased'
-    Left = 390
-    Top = 200
+    Left = 358
+    Top = 232
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_ProductionSeparate_Master'
@@ -929,7 +939,8 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 560
+    Left = 504
+    Top = 224
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_ProductionSeparate_Master'
@@ -992,6 +1003,7 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
+    Top = 312
   end
   inherited ChildCDS: TClientDataSet
     IndexFieldNames = ''
@@ -1177,8 +1189,8 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 751
-    Top = 96
+    Left = 767
+    Top = 88
   end
   object spSelectPrintCeh: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ProductionSeparate_Ceh_Print'

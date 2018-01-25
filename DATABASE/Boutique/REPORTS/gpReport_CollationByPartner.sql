@@ -16,9 +16,11 @@ RETURNS TABLE (Text_info             TVarChar
              , OperDate              TDateTime
              
              , PartionId          Integer
-             , DescName_Partion   TVarChar
-             , InvNumber_Partion  TVarChar
-             , OperDate_Partion   TDateTime
+
+             , Amount_PartionMI    TFloat
+             , OperDate_PartionMI  TDateTime
+             , InvNumber_PartionMI TVarChar
+             
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar
              , MeasureName        TVarChar
@@ -63,6 +65,7 @@ BEGIN
                          -- , Container.ObjectId              AS GoodsId
                           , CASE WHEN Container.DescId = zc_Container_Count() THEN Container.ObjectId ELSE CLO_Goods.ObjectId END  AS GoodsId
                           , Container.PartionId             AS PartionId
+                          , CLO_PartionMI.ObjectId          AS PartionId_MI
                           , Container.Amount
                      FROM Container
                           INNER JOIN ContainerLinkObject AS CLO_Client 
@@ -75,7 +78,10 @@ BEGIN
                                                         AND (CLO_Unit.ObjectId    = inUnitId OR inUnitId = 0)
                           LEFT JOIN ContainerLinkObject AS CLO_Goods
                                                         ON CLO_Goods.ContainerId = Container.Id
-                                                       AND CLO_Goods.DescId = zc_ContainerLinkObject_Goods()     
+                                                       AND CLO_Goods.DescId = zc_ContainerLinkObject_Goods()  
+                          LEFT JOIN ContainerLinkObject AS CLO_PartionMI 
+                                                        ON CLO_PartionMI.ContainerId = Container.Id
+                                                       AND CLO_PartionMI.DescId      = zc_ContainerLinkObject_PartionMI()
                       WHERE Container.ObjectId <> zc_Enum_Account_20102()                          
                      --WHERE Container.ObjectId = tmpWhere.GoodsId
                             --       AND Container.DescId = zc_Container_Count()
@@ -85,6 +91,7 @@ BEGIN
   , tmpMIContainer AS (SELECT tmpContainer.ContainerId
                             , tmpContainer.GoodsId
                             , tmpContainer.PartionId
+                            , tmpContainer.PartionId_MI
                 
                             , CASE WHEN tmpContainer.ContainerDescId = zc_Container_Count()
                                    THEN tmpContainer.Amount
@@ -124,6 +131,7 @@ BEGIN
                        GROUP BY tmpContainer.ContainerId
                               , tmpContainer.GoodsId
                               , tmpContainer.PartionId
+                              , tmpContainer.PartionId_MI
                               , CASE WHEN tmpContainer.ContainerDescId = zc_Container_Count()
                                    THEN tmpContainer.Amount
                                    ELSE 0
@@ -133,13 +141,13 @@ BEGIN
                                      ELSE 0
                                 END
                               , MIContainer.MovementId
-     
                       )
 
   , tmpMIContainer_group AS (SELECT tmpMIContainer_all.Text_info
                                   , tmpMIContainer_all.MovementId
                                   , tmpMIContainer_all.GoodsId
                                   , tmpMIContainer_all.PartionId
+                                  , tmpMIContainer_all.PartionId_MI
 
                                   , SUM (tmpMIContainer_all.AmountStart)      AS AmountStart
                                   , SUM (tmpMIContainer_all.AmountEnd)        AS AmountEnd
@@ -153,9 +161,10 @@ BEGIN
 
                               FROM ( -- 1.1. Остатки нач.
                                     SELECT 'Долг начальный'  AS Text_info
-                                         , tmpMIContainer.MovementId
+                                         , 0 AS MovementId--, tmpMIContainer.MovementId
                                          , tmpMIContainer.GoodsId
                                          , tmpMIContainer.PartionId
+                                         , tmpMIContainer.PartionId_MI
 
                                          , tmpMIContainer.Amount - SUM (tmpMIContainer.Amount_Total)   AS AmountStart
                                          , 0 AS AmountEnd
@@ -169,17 +178,19 @@ BEGIN
                                     GROUP BY tmpMIContainer.ContainerId
                                            , tmpMIContainer.Amount
                                            , tmpMIContainer.AmountSumm
-                                           , tmpMIContainer.MovementId
+                                           --, tmpMIContainer.MovementId
                                            , tmpMIContainer.GoodsId
                                            , tmpMIContainer.PartionId
+                                           , tmpMIContainer.PartionId_MI
                                     HAVING (tmpMIContainer.Amount - SUM (tmpMIContainer.Amount_Total)) <> 0
                                         OR (tmpMIContainer.AmountSumm - SUM (tmpMIContainer.Summ_Total)) <> 0
                                    UNION ALL
                                     -- 1.1. Остатки конечн.
                                     SELECT 'Долг конечный'   AS Text_info
-                                         , tmpMIContainer.MovementId
+                                         , 0 AS MovementId--, tmpMIContainer.MovementId
                                          , tmpMIContainer.GoodsId
                                          , tmpMIContainer.PartionId
+                                         , tmpMIContainer.PartionId_MI
 
                                          , 0 AS AmountStart
                                          , tmpMIContainer.Amount - SUM (tmpMIContainer.Amount_Total) + SUM (tmpMIContainer.Amount_Period) AS AmountEnd
@@ -193,9 +204,10 @@ BEGIN
                                     GROUP BY tmpMIContainer.ContainerId
                                            , tmpMIContainer.Amount
                                            , tmpMIContainer.AmountSumm
-                                           , tmpMIContainer.MovementId
-                                            , tmpMIContainer.GoodsId
+                                           --, tmpMIContainer.MovementId
+                                           , tmpMIContainer.GoodsId
                                            , tmpMIContainer.PartionId
+                                           , tmpMIContainer.PartionId_MI
                                     HAVING (tmpMIContainer.Amount - SUM (tmpMIContainer.Amount_Total) + SUM (tmpMIContainer.Amount_Period)) <> 0
                                         OR (tmpMIContainer.AmountSumm - SUM (tmpMIContainer.Summ_Total) + SUM (tmpMIContainer.Summ_Period)) <> 0
                                    UNION ALL
@@ -204,6 +216,7 @@ BEGIN
                                          , tmpMIContainer.MovementId
                                          , tmpMIContainer.GoodsId
                                          , tmpMIContainer.PartionId
+                                         , tmpMIContainer.PartionId_MI
 
                                          , 0 AS AmountStart
                                          , 0 AS AmountEnd
@@ -222,6 +235,7 @@ BEGIN
                                      , tmpMIContainer_all.MovementId
                                      , tmpMIContainer_all.GoodsId
                                      , tmpMIContainer_all.PartionId
+                                     , tmpMIContainer_all.PartionId_MI
                              )
 
 
@@ -232,9 +246,11 @@ BEGIN
         , Movement.OperDate              AS OperDate
         
         , tmpData.PartionId              AS PartionId
-        , MovementDesc_Partion.ItemName          AS DescName_Partion
-        , Movement_Partion.InvNumber     AS InvNumber_Partion
-        , Object_PartionGoods.OperDate   AS OperDate_Partion
+
+        , MI_PartionMI.Amount            AS Amount_PartionMI
+        , Movement_PartionMI.OperDate    AS OperDate_PartionMI
+        , Movement_PartionMI.InvNumber   AS InvNumber_PartionMI
+
         , Object_Goods.Id                AS GoodsId
         , Object_Goods.ObjectCode        AS GoodsCode
         , Object_Goods.ValueData         AS GoodsName
@@ -285,8 +301,10 @@ BEGIN
         LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = Object_PartionGoods.PeriodId
         LEFT JOIN Object AS Object_Fabrika          ON Object_Fabrika.Id          = Object_PartionGoods.FabrikaId
         
-        LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id = Object_PartionGoods.MovementId
-        LEFT JOIN MovementDesc AS MovementDesc_Partion ON MovementDesc_Partion.Id = Movement_Partion.DescId
+        LEFT JOIN Object AS Object_PartionMI     ON Object_PartionMI.Id     = tmpData.PartionId_MI
+        LEFT JOIN MovementItem AS MI_PartionMI   ON MI_PartionMI.Id         = Object_PartionMI.ObjectCode
+        LEFT JOIN Movement AS Movement_PartionMI ON Movement_PartionMI.Id   = MI_PartionMI.MovementId
+        --LEFT JOIN MovementDesc AS MovementDesc_Partion ON MovementDesc_Partion.Id = Movement_PartionMI.DescId
 
         LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id 
