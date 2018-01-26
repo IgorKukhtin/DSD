@@ -12,21 +12,23 @@ object PartnerMedical_ObjectForm: TPartnerMedical_ObjectForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 61
     Width = 598
-    Height = 253
+    Height = 218
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitTop = 26
+    ExplicitHeight = 253
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -89,6 +91,49 @@ object PartnerMedical_ObjectForm: TPartnerMedical_ObjectForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel: TPanel
+    Left = 0
+    Top = 0
+    Width = 598
+    Height = 35
+    Align = alTop
+    TabOrder = 5
+    ExplicitTop = -6
+    object cxLabel6: TcxLabel
+      Left = 6
+      Top = 9
+      AutoSize = False
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+      Height = 17
+      Width = 91
+    end
+    object edUnit: TcxButtonEdit
+      Left = 96
+      Top = 8
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 0
+      Width = 297
+    end
+    object cxLabel2: TcxLabel
+      Left = 432
+      Top = 9
+      Caption = #1053#1072' '#1076#1072#1090#1091':'
+    end
+    object deOperDate: TcxDateEdit
+      Left = 478
+      Top = 8
+      EditValue = 43101d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 3
+      Width = 85
     end
   end
   object DataSource: TDataSource
@@ -258,10 +303,10 @@ object PartnerMedical_ObjectForm: TPartnerMedical_ObjectForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -424,14 +469,30 @@ object PartnerMedical_ObjectForm: TPartnerMedical_ObjectForm
       isShowModal = False
     end
   end
-  object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_PartnerMedical'
+  object spSelect: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_PartnerMedicalChoice'
     DataSet = ClientDataSet
     DataSets = <
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = deOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 40
     Top = 208
@@ -484,5 +545,74 @@ object PartnerMedical_ObjectForm: TPartnerMedical_ObjectForm
     SummaryItemList = <>
     Left = 184
     Top = 216
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 240
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'MasterUnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitName'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterOperDate'
+        Value = 'NULL'
+        Component = deOperDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    Left = 512
+    Top = 136
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = GuidesUnit
+      end
+      item
+        Component = deOperDate
+      end>
+    Left = 440
+    Top = 112
   end
 end

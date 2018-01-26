@@ -1261,6 +1261,9 @@ end;
 
  procedure TLoadFormTest.LoadPartnerMedicalFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerMedical_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartnerMedical_ObjectForm');
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerMedicalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerMedicalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerMedicalEditForm'));
@@ -1382,6 +1385,9 @@ end;
 
 procedure TLoadFormTest.LoadSPObjectFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSP_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMedicSP_ObjectForm');
+  exit;
  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMedicSPForm');

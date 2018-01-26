@@ -20,7 +20,9 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxDropDownEdit, cxCalendar,
+  dsdGuides, cxTextEdit, cxMaskEdit, cxButtonEdit, cxLabel, Vcl.ExtCtrls;
 
 type
   TPartnerMedical_ObjectForm = class(TParentForm)
@@ -49,7 +51,7 @@ type
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     isErased: TcxGridDBColumn;
@@ -59,6 +61,14 @@ type
     MedicFIO: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocol: TdxBarButton;
+    Panel: TPanel;
+    cxLabel6: TcxLabel;
+    edUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
+    FormParams: TdsdFormParams;
+    cxLabel2: TcxLabel;
+    deOperDate: TcxDateEdit;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public

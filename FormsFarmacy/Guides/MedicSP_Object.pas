@@ -23,7 +23,8 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   Vcl.Menus, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxButtonEdit,
-  cxLabel, Vcl.ExtCtrls, ExternalLoad;
+  cxLabel, Vcl.ExtCtrls, ExternalLoad, Vcl.ComCtrls, dxCore, cxDateUtils,
+  cxDropDownEdit, cxCalendar;
 
 type
   TMedicSP_ObjectForm = class(TParentForm)
@@ -69,7 +70,7 @@ type
     Panel: TPanel;
     cxLabel6: TcxLabel;
     edPartnerMedical: TcxButtonEdit;
-    PartnerMedicalGuides: TdsdGuides;
+    GuidesPartnerMedical: TdsdGuides;
     PartnerMedicalName: TcxGridDBColumn;
     FormParams: TdsdFormParams;
     actDoLoad: TExecuteImportSettingsAction;
@@ -78,6 +79,11 @@ type
     actStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
     RefreshDispatcher: TRefreshDispatcher;
+    cxLabel1: TcxLabel;
+    edUnit: TcxButtonEdit;
+    cxLabel2: TcxLabel;
+    deOperDate: TcxDateEdit;
+    GuidesUnit: TdsdGuides;
   private
     { Private declarations }
   public

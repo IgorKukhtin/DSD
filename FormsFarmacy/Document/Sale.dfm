@@ -4,7 +4,7 @@ inherited SaleForm: TSaleForm
   ClientWidth = 740
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
   ExplicitWidth = 756
-  ExplicitHeight = 517
+  ExplicitHeight = 518
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1532,10 +1532,10 @@ inherited SaleForm: TSaleForm
   object GuidesPartnerMedical: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPartnerMedical
-    FormNameParam.Value = 'TPartnerMedicalForm'
+    FormNameParam.Value = 'TPartnerMedical_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPartnerMedicalForm'
+    FormName = 'TPartnerMedical_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1553,6 +1553,28 @@ inherited SaleForm: TSaleForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterOperDate'
+        Value = 'NULL'
+        Component = edOperDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 88
@@ -1651,10 +1673,10 @@ inherited SaleForm: TSaleForm
   object GuidesMedicSP: TdsdGuides
     KeyField = 'Id'
     LookupControl = edMedicSP
-    FormNameParam.Value = 'TMedicSPForm'
+    FormNameParam.Value = 'TMedicSP_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMedicSPForm'
+    FormName = 'TMedicSP_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1685,6 +1707,28 @@ inherited SaleForm: TSaleForm
         Name = 'MasterPartnerMedicalName'
         Value = Null
         Component = GuidesPartnerMedical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterOperDate'
+        Value = 'NULL'
+        Component = edOperDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitName'
+        Value = Null
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','

@@ -566,7 +566,9 @@ uses
   Report_GoodsRemainsCurrent in '..\..\FormsFarmacy\Report\Report_GoodsRemainsCurrent.pas' {Report_GoodsRemainsCurrentForm: TParentForm},
   GoodsRetail in '..\..\FormsFarmacy\Guides\GoodsRetail.pas' {GoodsRetailForm: TParentForm},
   GoodsRetailDialog in '..\..\FormsFarmacy\Guides\GoodsRetailDialog.pas' {GoodsRetailDialogForm: TParentForm},
-  Goods in '..\..\FormsFarmacy\Guides\Goods.pas' {GoodsForm: TParentForm};
+  Goods in '..\..\FormsFarmacy\Guides\Goods.pas' {GoodsForm: TParentForm},
+  PartnerMedical_Object in '..\..\FormsFarmacy\Guides\PartnerMedical_Object.pas' {PartnerMedical_ObjectForm: TParentForm},
+  MedicSP_Object in '..\..\FormsFarmacy\Guides\MedicSP_Object.pas' {MedicSP_ObjectForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
