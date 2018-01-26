@@ -375,12 +375,19 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object FromDescName: TcxGridDBColumn
+        Caption = #1042#1080#1076' ('#1086#1090' '#1082#1086#1075#1086')'
+        DataBinding.FieldName = 'FromDescName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 86
+      end
       object FromName: TcxGridDBColumn
         Caption = #1054#1090' '#1082#1086#1075#1086' ('#1079#1072#1103#1074#1082#1072')'
         DataBinding.FieldName = 'FromName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 90
+        Width = 109
       end
       object ToName: TcxGridDBColumn
         Caption = #1050#1086#1084#1091' ('#1079#1072#1103#1074#1082#1072')'

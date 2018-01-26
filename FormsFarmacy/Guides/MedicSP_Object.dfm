@@ -27,8 +27,6 @@ object MedicSP_ObjectForm: TMedicSP_ObjectForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 61
-    ExplicitHeight = 283
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -648,10 +646,10 @@ object MedicSP_ObjectForm: TMedicSP_ObjectForm
   object GuidesPartnerMedical: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPartnerMedical
-    FormNameParam.Value = 'TPartnerMedicalForm'
+    FormNameParam.Value = 'TPartnerMedical_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPartnerMedicalForm'
+    FormName = 'TPartnerMedical_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -669,6 +667,28 @@ object MedicSP_ObjectForm: TMedicSP_ObjectForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterOperDate'
+        Value = 'NULL'
+        Component = deOperDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 296
@@ -769,6 +789,12 @@ object MedicSP_ObjectForm: TMedicSP_ObjectForm
     ComponentList = <
       item
         Component = GuidesPartnerMedical
+      end
+      item
+        Component = GuidesUnit
+      end
+      item
+        Component = deOperDate
       end>
     Left = 440
     Top = 112

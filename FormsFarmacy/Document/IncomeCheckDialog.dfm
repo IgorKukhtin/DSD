@@ -144,21 +144,8 @@ object IncomeCheckDialogForm: TIncomeCheckDialogForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterPartnerMedicalId'
-        Value = ''
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterPartnerMedicalName'
-        Value = ''
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
       end>
-    Left = 168
+    Left = 192
     Top = 73
   end
 end

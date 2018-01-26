@@ -17,7 +17,6 @@ uses
 
 type
   TCheckForm = class(TAncestorDocumentForm)
-    edUnitName: TcxTextEdit;
     edCashRegisterName: TcxTextEdit;
     cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
@@ -78,6 +77,8 @@ type
     edSPKind: TcxTextEdit;
     cxLabel19: TcxLabel;
     edInvNumber_PromoCode_Full: TcxTextEdit;
+    edUnitName: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
   private
     { Private declarations }
   public
