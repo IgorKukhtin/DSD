@@ -457,10 +457,15 @@ BEGIN
                      -- Расчетная сумма в грн для обмен
                    , CASE WHEN MovementItem.ParentId IS NULL THEN zfCalc_CurrencyFrom (MovementItem.Amount, MIFloat_CurrencyValue.ValueData, MIFloat_ParValue.ValueData) ELSE 0 END AS OperSumm_from
               FROM Movement
-                   JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                    AND MovementItem.DescId     = zc_MI_Child()
-                                    AND MovementItem.isErased   = FALSE
-                                    AND MovementItem.Amount     <> 0
+                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                          AND MovementItem.DescId     = zc_MI_Child()
+                                          AND MovementItem.isErased   = FALSE
+                                          AND MovementItem.Amount     <> 0
+                   INNER JOIN MovementItem AS MI_Master
+                                           ON MI_Master.MovementId = Movement.Id
+                                          AND MI_Master.DescId     = zc_MI_Master()
+                                          AND MI_Master.Id         = MovementItem.ParentId
+                                          AND MI_Master.isErased   = FALSE
                    LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
                                                     ON MILinkObject_Currency.MovementItemId = MovementItem.Id

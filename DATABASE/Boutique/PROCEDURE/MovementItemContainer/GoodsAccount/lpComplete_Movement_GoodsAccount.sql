@@ -92,8 +92,22 @@ BEGIN
                          , SummDebt_sale, SummDebt_return
                          , isGoods_Debt
                           )
-       WITH -- Данные по MI + расчет SummDebt
-            tmpMI AS (SELECT MovementItem.Id                  AS MovementItemId
+       WITH -- для Sybase
+            tmpCheck AS (SELECT 366872 AS PartionId_MI
+                   UNION SELECT 374215
+                   UNION SELECT 739198
+                   UNION SELECT 739264
+                   UNION SELECT 739269
+                   UNION SELECT 739270
+                   UNION SELECT 739271
+                   UNION SELECT 744408
+                   UNION SELECT 744677
+                   UNION SELECT 739173
+                   UNION SELECT 739185
+                         -- FROM gpSelect_MovementItem_Sale_Sybase_Check()
+                        )
+            -- Данные по MI + расчет SummDebt
+          , tmpMI AS (SELECT MovementItem.Id                  AS MovementItemId
                            , MovementItem.ObjectId            AS GoodsId
                            , MovementItem.PartionId           AS PartionId
                            -- , Object_PartionMI.ObjectCode   AS MovementItemId_MI
@@ -218,7 +232,10 @@ BEGIN
                            , MIFloat_CurrencyValue.ValueData  AS CurrencyValue
                            , MIFloat_ParValue.ValueData       AS ParValue
 
-                           , CASE WHEN MovementItem.ObjectId = zc_Enum_Goods_Debt() THEN TRUE ELSE FALSE END AS isGoods_Debt
+                           , CASE WHEN MovementItem.ObjectId = zc_Enum_Goods_Debt() THEN TRUE 
+                                  WHEN EXISTS (SELECT 1 FROM tmpCheck WHERE tmpCheck.PartionId_MI = MILinkObject_PartionMI.ObjectId) THEN TRUE 
+                                  ELSE FALSE
+                             END AS isGoods_Debt
 
                       FROM Movement
                            JOIN MovementItem ON MovementItem.MovementId = Movement.Id
@@ -316,6 +333,7 @@ BEGIN
                                                       AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
                       WHERE MIFloat_TotalPay.ValueData <> 0 OR MIFloat_SummChangePercent.ValueData <> 0
                      )
+        
         -- результат
         SELECT tmp.MovementItemId
              , 0 AS ContainerId_Summ          -- сформируем позже
@@ -400,6 +418,7 @@ BEGIN
                                THEN -- то что в продаже
                                     tmp.Amount_Sale
                           WHEN tmp.Amount_Sale = tmp.Amount_Return AND tmp.SummDebt_return = 0 AND (tmp.TotalPay_curr > 0 OR tmp.SummChangePercent_curr > 0) AND tmpLast.PartionId_MI IS NULL
+                               AND 1=0
                                THEN -- пока так, но не всегда будет корректно
                                     tmp.OperCount
                           WHEN tmp.SummDebt_return = 0 AND (tmp.TotalPay_curr > 0 OR tmp.SummChangePercent_curr > 0) AND tmpLast.PartionId_MI IS NULL
@@ -760,11 +779,16 @@ BEGIN
                      -- Расчетная сумма в грн для обмен
                    , CASE WHEN MovementItem.ParentId IS NULL THEN zfCalc_CurrencyFrom (MovementItem.Amount, MIFloat_CurrencyValue.ValueData, MIFloat_ParValue.ValueData) ELSE 0 END AS OperSumm_from
               FROM Movement
-                   JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                    AND MovementItem.DescId     = zc_MI_Child()
-                                    AND MovementItem.isErased   = FALSE
-                                    AND MovementItem.Amount     <> 0
-                LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
+                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                          AND MovementItem.DescId     = zc_MI_Child()
+                                          AND MovementItem.isErased   = FALSE
+                                          AND MovementItem.Amount     <> 0
+                   INNER JOIN MovementItem AS MI_Master
+                                           ON MI_Master.MovementId = Movement.Id
+                                          AND MI_Master.DescId     = zc_MI_Master()
+                                          AND MI_Master.Id         = MovementItem.ParentId
+                                          AND MI_Master.isErased   = FALSE
+                   LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
                                                     ON MILinkObject_Currency.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_Currency.DescId         = zc_MILinkObject_Currency()

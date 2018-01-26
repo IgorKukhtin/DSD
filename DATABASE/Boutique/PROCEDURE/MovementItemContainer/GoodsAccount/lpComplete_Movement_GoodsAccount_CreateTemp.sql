@@ -10,6 +10,14 @@ BEGIN
      -- таблица - Проводки
      PERFORM lpComplete_Movement_All_CreateTemp();
 
+     -- !!!ВРЕМЕННО - DROP!!!
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem'))
+     THEN
+         DROP TABLE _tmpPay;
+         DROP TABLE _tmpItem_SummClient;
+         DROP TABLE _tmpItem;
+     END IF;
+
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem'))
      THEN
          DELETE FROM _tmpPay;
