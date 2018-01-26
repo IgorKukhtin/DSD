@@ -33,11 +33,15 @@ BEGIN
    -- еще
    SELECT tmp.Mail, tmp.JuridicalId_unit, tmp.JuridicalName
           INTO vbMail, vbJuridicalId_unit, vbJuridicalName
-   FROM (WITH tmpMovement AS (SELECT MLO_From.ObjectId AS FromId, MLO_To.ObjectId AS ToId
+   FROM (WITH -- Документ Заявка Внешняя (т.е. Поставщику)
+              tmpMovement AS (SELECT MLO_From.ObjectId AS FromId, MLO_To.ObjectId AS ToId, MLO_Contract.ObjectId AS ContractId
                                    , ObjectLink_Juridical_Retail.ChildObjectId    AS RetailId
                                    , ObjectLink_Unit_Juridical.ChildObjectId      AS JuridicalId_unit
                                    , ObjectLink_Unit_Area.ChildObjectId           AS AreaId
                               FROM MovementLinkObject AS MLO_From
+                                   LEFT JOIN MovementLinkObject AS MLO_Contract
+                                                                ON MLO_Contract.MovementId = MLO_From.MovementId
+                                                               AND MLO_Contract.DescId     = zc_MovementLinkObject_Contract()
                                    -- !!!только так - определяется <Торговая сеть>!!!
                                    LEFT JOIN MovementLinkObject AS MLO_To
                                                                 ON MLO_To.MovementId = MLO_From.MovementId
@@ -55,9 +59,42 @@ BEGIN
                                 AND MLO_From.DescId     = zc_MovementLinkObject_From()
                              )
          SELECT tmpMovement.JuridicalId_unit
-              , COALESCE (View_ContactPerson_0.Mail,          View_ContactPerson_1.Mail,          View_ContactPerson_2.Mail,          View_ContactPerson_3.Mail)          AS Mail
-              , COALESCE (View_ContactPerson_0.JuridicalName, View_ContactPerson_1.JuridicalName, View_ContactPerson_2.JuridicalName, View_ContactPerson_3.JuridicalName) AS JuridicalName
+              , COALESCE (View_ContactPerson_Contract_0.Mail, View_ContactPerson_Contract_1.Mail, View_ContactPerson_Contract_2.Mail, View_ContactPerson_Contract_3.Mail
+                        , View_ContactPerson_0.Mail,          View_ContactPerson_1.Mail,          View_ContactPerson_2.Mail,          View_ContactPerson_3.Mail
+                         ) AS Mail
+              , COALESCE (View_ContactPerson_Contract_0.JuridicalName, View_ContactPerson_Contract_1.JuridicalName, View_ContactPerson_Contract_2.JuridicalName, View_ContactPerson_Contract_3.JuridicalName
+                        , View_ContactPerson_0.JuridicalName,          View_ContactPerson_1.JuridicalName,          View_ContactPerson_2.JuridicalName,          View_ContactPerson_3.JuridicalName
+                         ) AS JuridicalName
          FROM tmpMovement
+              -- Сначала ищем по Договорам
+              LEFT JOIN Object_ContactPerson_View AS View_ContactPerson_Contract_0
+                                                  ON View_ContactPerson_Contract_0.ContractId          = tmpMovement.ContractId
+                                                 AND View_ContactPerson_Contract_0.ContactPersonKindId = zc_Enum_ContactPersonKind_ProcessOrder() -- хотя не понятно чем отличается от zc_Enum_ContactPersonKind_CreateOrder
+                                                 AND View_ContactPerson_Contract_0.RetailId            = tmpMovement.RetailId
+                                                 AND View_ContactPerson_Contract_0.AreaId              = tmpMovement.AreaId
+              LEFT JOIN Object_ContactPerson_View AS View_ContactPerson_Contract_1
+                                                  ON View_ContactPerson_Contract_1.ContractId          = tmpMovement.ContractId
+                                                 AND View_ContactPerson_Contract_1.ContactPersonKindId = zc_Enum_ContactPersonKind_ProcessOrder() -- хотя не понятно чем отличается от zc_Enum_ContactPersonKind_CreateOrder
+                                                 AND View_ContactPerson_Contract_1.RetailId            = tmpMovement.RetailId
+                                                 AND View_ContactPerson_Contract_1.AreaId              = zc_Area_Basis()
+                                                 AND View_ContactPerson_Contract_0.JuridicalId IS NULL
+              LEFT JOIN Object_ContactPerson_View AS View_ContactPerson_Contract_2
+                                                  ON View_ContactPerson_Contract_2.ContractId          = tmpMovement.ContractId
+                                                 AND View_ContactPerson_Contract_2.ContactPersonKindId = zc_Enum_ContactPersonKind_ProcessOrder() -- хотя не понятно чем отличается от zc_Enum_ContactPersonKind_CreateOrder
+                                                 AND View_ContactPerson_Contract_2.RetailId            IS NULL
+                                                 AND View_ContactPerson_Contract_2.AreaId              = tmpMovement.AreaId
+                                                 AND View_ContactPerson_Contract_0.JuridicalId IS NULL
+                                                 AND View_ContactPerson_Contract_1.JuridicalId IS NULL
+              LEFT JOIN Object_ContactPerson_View AS View_ContactPerson_Contract_3
+                                                  ON View_ContactPerson_Contract_3.ContractId          = tmpMovement.ContractId
+                                                 AND View_ContactPerson_Contract_3.ContactPersonKindId = zc_Enum_ContactPersonKind_ProcessOrder() -- хотя не понятно чем отличается от zc_Enum_ContactPersonKind_CreateOrder
+                                                 AND View_ContactPerson_Contract_3.RetailId            IS NULL
+                                                 AND View_ContactPerson_Contract_3.AreaId              = zc_Area_Basis()
+                                                 AND View_ContactPerson_Contract_0.JuridicalId IS NULL
+                                                 AND View_ContactPerson_Contract_1.JuridicalId IS NULL
+                                                 AND View_ContactPerson_Contract_2.JuridicalId IS NULL
+
+              -- Потом ищем по Юр.Лицам
               LEFT JOIN Object_ContactPerson_View AS View_ContactPerson_0
                                                   ON View_ContactPerson_0.JuridicalId         = tmpMovement.FromId
                                                  AND View_ContactPerson_0.ContactPersonKindId = zc_Enum_ContactPersonKind_ProcessOrder() -- хотя не понятно чем отличается от zc_Enum_ContactPersonKind_CreateOrder

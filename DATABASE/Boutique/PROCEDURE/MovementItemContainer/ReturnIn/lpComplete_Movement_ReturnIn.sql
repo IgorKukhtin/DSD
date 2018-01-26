@@ -91,6 +91,7 @@ BEGIN
                          , OperSumm_ToPay, OperSummPriceList, TotalChangePercent, TotalPay
                          , AccountId, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , CurrencyValue, ParValue
+                         , isGoods_Debt
                           )
         -- результат
         SELECT tmp.MovementItemId
@@ -110,20 +111,37 @@ BEGIN
              , tmp.OperPriceList
 
                -- Сумма по Вх. в zc_Currency_Basis
-             , CASE WHEN tmp.CurrencyId = zc_Currency_Basis()
+             , CASE WHEN tmp.isGoods_Debt = TRUE
+                         THEN 0 -- !!!это долги!!!
+                    WHEN tmp.CurrencyId = zc_Currency_Basis()
                          THEN tmp.OperSumm_Currency
                     ELSE -- !!!Надо не забыть и курс записать в ГРН!!!
                          zfCalc_CurrencyFrom (tmp.OperSumm_Currency, tmp.CurrencyValue, tmp.ParValue)
                END AS OperSumm
+
                -- Сумма по Вх. в ВАЛЮТЕ
-             , tmp.OperSumm_Currency
+             , CASE WHEN tmp.isGoods_Debt = TRUE
+                         THEN 0  -- !!!это долги!!!
+                    ELSE tmp.OperSumm_Currency
+               END AS OperSumm_Currency
 
                -- Сумма к Оплате ИТОГО
              , tmp.OperSummPriceList - tmp.TotalChangePercent AS OperSumm_ToPay
 
-             , tmp.OperSummPriceList  -- Сумма по Прайсу
-             , tmp.TotalChangePercent -- Итого сумма Скидки
-             , tmp.TotalPay           -- Итого сумма оплаты
+               -- Сумма по Прайсу
+             , CASE WHEN tmp.isGoods_Debt = TRUE
+                         THEN tmp.OperSummPriceList - tmp.TotalChangePercent -- подставили - Сумма к Оплате !!!т.к. это долги!!!
+                    ELSE tmp.OperSummPriceList
+               END AS OperSummPriceList
+
+               -- Итого сумма Скидки
+             , CASE WHEN tmp.isGoods_Debt = TRUE
+                         THEN 0 -- !!!это долги!!!
+                    ELSE tmp.TotalChangePercent
+               END AS TotalChangePercent
+
+               -- Итого сумма оплаты
+             , tmp.TotalPay
 
              , 0 AS AccountId          -- Счет(справочника), сформируем позже
 
@@ -134,6 +152,8 @@ BEGIN
              
              , tmp.CurrencyValue
              , tmp.ParValue
+
+             , tmp.isGoods_Debt
 
         FROM (SELECT MovementItem.Id                  AS MovementItemId
                    , MovementItem.ObjectId            AS GoodsId
@@ -166,6 +186,8 @@ BEGIN
 
                    , MIFloat_CurrencyValue.ValueData  AS CurrencyValue
                    , MIFloat_ParValue.ValueData       AS ParValue
+
+                   , CASE WHEN MovementItem.ObjectId = zc_Enum_Goods_Debt() THEN TRUE ELSE FALSE END AS isGoods_Debt
 
               FROM Movement
                    JOIN MovementItem ON MovementItem.MovementId = Movement.Id
@@ -259,7 +281,9 @@ BEGIN
 
         FROM (SELECT _tmpItem.*
                      -- расчет кол-во которое попадает в ВОЗВРАТ - ОПИУ
-                   , CASE WHEN _tmpItem.OperSumm_ToPay = _tmpItem.TotalPay
+                   , CASE WHEN _tmpItem.isGoods_Debt = TRUE
+                               THEN 1 -- !!!виртуально что б сразу в прибыль!!!
+                          WHEN _tmpItem.OperSumm_ToPay = _tmpItem.TotalPay
                                THEN _tmpItem.OperCount
                           ELSE -- иначе Только ДОЛГ
                                0
@@ -582,7 +606,8 @@ BEGIN
             , TRUE                                    AS isActive
        FROM _tmpItem
             LEFT JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
-           ;
+       WHERE _tmpItem.isGoods_Debt = FALSE
+      ;
 
      -- 4.2. формируются Проводки - ПЛЮС остаток сумма c/c Магазин
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId
@@ -613,7 +638,8 @@ BEGIN
             , TRUE                                    AS isActive
        FROM _tmpItem
             LEFT JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
-           ;
+       WHERE _tmpItem.isGoods_Debt = FALSE
+      ;
 
 
      -- 5.1. формируются Проводки - МИНУС остаток количество у Дебиторы покупатели
@@ -645,7 +671,8 @@ BEGIN
             , FALSE                                   AS isActive
        FROM _tmpItem
             LEFT JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
-           ;
+       WHERE _tmpItem.isGoods_Debt = FALSE
+      ;
 
 
 -- RAISE EXCEPTION '<%>',  (SELECT   -1 * (_tmpItem_SummClient.Summ_10501 - _tmpItem_SummClient.OperSumm) FROM _tmpItem_SummClient where _tmpItem_SummClient.MovementItemId = 1160010 );
@@ -680,6 +707,7 @@ BEGIN
             , FALSE                                   AS isActive
        FROM _tmpItem
             LEFT JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
+       WHERE _tmpItem.isGoods_Debt = FALSE
       UNION ALL
        -- проводки - Прибыль будущих периодов - МИНУС в остаток
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId
@@ -723,6 +751,7 @@ BEGIN
             , TRUE                                    AS isActive
        FROM _tmpItem
             LEFT JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
+       WHERE _tmpItem.isGoods_Debt = FALSE
       ;
 
 
@@ -756,6 +785,7 @@ BEGIN
        FROM _tmpItem
             LEFT JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
        WHERE _tmpItem_SummClient.OperCount_sale > 0
+         AND _tmpItem.isGoods_Debt              = FALSE
        ;
 
 
@@ -812,6 +842,7 @@ BEGIN
        FROM _tmpItem
             LEFT JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
        WHERE _tmpItem_SummClient.OperCount_sale > 0
+         AND _tmpItem.isGoods_Debt              = FALSE
       ;
 
 

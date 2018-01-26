@@ -34,6 +34,7 @@ BEGIN
                                               , OperCount_sale TFloat, OperSumm_sale TFloat, OperSummPriceList_sale TFloat
                                               , Summ_10201 TFloat, Summ_10202 TFloat, Summ_10203 TFloat, Summ_10204 TFloat
                                               , ContainerId_ProfitLoss_10101 TFloat, ContainerId_ProfitLoss_10201 TFloat, ContainerId_ProfitLoss_10202 TFloat, ContainerId_ProfitLoss_10203 TFloat, ContainerId_ProfitLoss_10204 TFloat, ContainerId_ProfitLoss_10301 TFloat
+                                              , isGoods_Debt Boolean
                                                ) ON COMMIT DROP;
 
          -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
@@ -41,10 +42,11 @@ BEGIN
                                    , ContainerId_Summ Integer, ContainerId_Goods Integer
                                    , GoodsId Integer, PartionId Integer, PartionId_MI Integer, GoodsSizeId Integer
                                    , OperCount TFloat, OperPrice TFloat, CountForPrice TFloat, OperSumm TFloat, OperSumm_Currency TFloat
-                                   , OperSumm_ToPay TFloat, OperSummPriceList TFloat, TotalChangePercent TFloat, TotalPay TFloat, TotalPay_curr TFloat
+                                   , OperSumm_ToPay TFloat, OperSummPriceList TFloat, TotalChangePercent TFloat, SummChangePercent_curr TFloat, TotalPay TFloat, TotalPay_curr TFloat
                                    , Summ_10201 TFloat, Summ_10202 TFloat, Summ_10203 TFloat, Summ_10204 TFloat
                                    , AccountId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                    , SummDebt_sale TFloat, SummDebt_return TFloat
+                                   , isGoods_Debt Boolean
                                     ) ON COMMIT DROP;
      END IF;
 

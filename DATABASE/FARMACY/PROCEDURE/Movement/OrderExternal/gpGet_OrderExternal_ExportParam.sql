@@ -80,7 +80,8 @@ BEGIN
    IF vbJuridicalId = 59612
    THEN 
        -- определяем
-       SELECT REPLACE(REPLACE(Object_ImportExportLink_View.StringKey, '|', ''), '*', ' ') INTO vbSubject
+       SELECT REPLACE (REPLACE (REPLACE (Object_ImportExportLink_View.StringKey, '|', ''), '\', '_'),  '*', ' ')
+              INTO vbSubject
        FROM MovementLinkObject AS MLO_From
                  LEFT JOIN MovementLinkObject AS MLO_To 
                                               ON MLO_To.DescId     = zc_MovementLinkObject_To()

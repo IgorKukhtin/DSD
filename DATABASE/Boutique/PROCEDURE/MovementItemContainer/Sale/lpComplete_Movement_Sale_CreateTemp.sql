@@ -45,6 +45,7 @@ BEGIN
                                    , Summ_10201 TFloat, Summ_10202 TFloat, Summ_10203 TFloat, Summ_10204 TFloat
                                    , AccountId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                    , CurrencyValue TFloat, ParValue TFloat
+                                   , isGoods_Debt Boolean
                                     ) ON COMMIT DROP;
      END IF;
 

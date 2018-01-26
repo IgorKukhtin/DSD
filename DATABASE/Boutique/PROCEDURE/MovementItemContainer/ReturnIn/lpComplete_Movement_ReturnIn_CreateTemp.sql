@@ -44,6 +44,7 @@ BEGIN
                                    , OperSumm_ToPay TFloat, OperSummPriceList TFloat, TotalChangePercent TFloat, TotalPay TFloat
                                    , AccountId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                    , CurrencyValue TFloat, ParValue TFloat
+                                   , isGoods_Debt Boolean
                                     ) ON COMMIT DROP;
      END IF;
 
