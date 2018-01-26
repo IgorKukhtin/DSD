@@ -107,28 +107,28 @@ BEGIN
                                    ELSE 0
                               END*/ MIContainer.MovementId AS MovementId
 
-                            , SUM (CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate) AND MIContainer.DescId = zc_Container_Count()
+                            ,  (CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate) AND MIContainer.DescId = zc_Container_Count()
                                              THEN MIContainer.Amount
                                         ELSE 0
                                    END) AS Amount_Period
   
-                            , SUM (CASE WHEN MIContainer.DescId = zc_Container_Count()
+                            ,  (CASE WHEN MIContainer.DescId = zc_Container_Count()
                                         THEN COALESCE (MIContainer.Amount, 0)
                                         ELSE 0
                                     END) AS Amount_Total
-                            , SUM (CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate) AND MIContainer.DescId = zc_Container_SummCurrency()
+                            ,  (CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate) AND MIContainer.DescId = zc_Container_SummCurrency()
                                              THEN MIContainer.Amount
                                         ELSE 0
                                    END) AS Summ_Period
   
-                            , SUM (CASE WHEN MIContainer.DescId = zc_Container_SummCurrency()
+                            ,  (CASE WHEN MIContainer.DescId = zc_Container_SummCurrency()
                                         THEN COALESCE (MIContainer.Amount, 0)
                                         ELSE 0
                                     END) AS Summ_Total
                        FROM tmpContainer
                             LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId
                                                                           AND (MIContainer.OperDate >= inStartDate)
-                       GROUP BY tmpContainer.ContainerId
+                      /* GROUP BY tmpContainer.ContainerId
                               , tmpContainer.GoodsId
                               , tmpContainer.PartionId
                               , tmpContainer.PartionId_MI
@@ -141,6 +141,7 @@ BEGIN
                                      ELSE 0
                                 END
                               , MIContainer.MovementId
+                              */
                       )
 
   , tmpMIContainer_group AS (SELECT tmpMIContainer_all.Text_info

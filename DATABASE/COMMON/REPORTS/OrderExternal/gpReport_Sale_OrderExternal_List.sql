@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpReport_Sale_OrderExternal_List(
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId_Order Integer, InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime
-             , FromName TVarChar, ToName TVarChar
+             , FromDescName TVarChar, FromName TVarChar, ToName TVarChar
              , TotalSummPVAT TFloat, TotalSumm TFloat
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat, TotalCountSecond TFloat
 
@@ -37,6 +37,7 @@ BEGIN
                                 , Movement.InvNumber                             AS InvNumber
                                 , Movement.OperDate                              AS OperDate
                                 , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
+                                , ObjectDesc_From.ItemName                       AS FromDescName
                                 , Object_From.Id                                 AS FromId
                                 , Object_From.ValueData                          AS FromName
                                 , Object_To.Id                                   AS ToId
@@ -62,6 +63,7 @@ BEGIN
                                                               ON MovementLinkObject_From.MovementId = Movement.Id
                                                              AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                                  LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+                                 LEFT JOIN ObjectDesc AS ObjectDesc_From ON ObjectDesc_From.Id = Object_From.DescId
 
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                               ON MovementLinkObject_To.MovementId = Movement.Id
@@ -92,8 +94,9 @@ BEGIN
                             WHERE Movement.DescId = zc_Movement_OrderExternal()
                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate   
                               AND Movement.StatusId = zc_Enum_Status_Complete()
-                              AND COALESCE (Object_From.DescId, 0) <> zc_Object_Unit()
-                              AND (MovementLinkObject_To.ObjectId = inUnitId OR inUnitId = 0) 
+                              --AND COALESCE (Object_From.DescId, 0) <> zc_Object_Unit()
+                              AND ((MovementLinkObject_To.ObjectId = inUnitId OR inUnitId = 0) 
+                                  )
                           )
 
    , tmpSale AS (SELECT Movement.Id
@@ -169,15 +172,16 @@ BEGIN
                                                      ON MovementLinkMovement_Order.MovementId = Movement.Id 
                                                     AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
           
-                 WHERE Movement.DescId = zc_Movement_Sale() 
+                 WHERE Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SendOnPrice())
                    AND Movement.StatusId = zc_Enum_Status_Complete()
                    AND (MovementLinkObject_From.ObjectId = inUnitId OR inUnitId = 0) 
                    )
-                             
+
    , tmpList AS (SELECT tmpOrderExternal.Id AS MovementId_Order 
                       , tmpOrderExternal.InvNumber
                       , tmpOrderExternal.OperDate
                       , tmpOrderExternal.OperDatePartner
+                      , tmpOrderExternal.FromDescName
                       , tmpOrderExternal.FromName
                       , tmpOrderExternal.ToName
                       
@@ -212,6 +216,7 @@ BEGIN
                       , tmpList.InvNumber
                       , tmpList.OperDate
                       , tmpList.OperDatePartner
+                      , tmpList.FromDescName
                       , tmpList.FromName
                       , tmpList.ToName
 
@@ -241,8 +246,6 @@ BEGIN
                  WHERE ( COALESCE (tmpList.Sale_InvNumber,'') <> '' AND inisSale = True)
                     OR ( COALESCE (tmpList.Sale_InvNumber,'') = '' AND inisNoSale = True)
                     OR (inisSale = False and inisNoSale = False)
-    
-        
       ;
   
 END;
@@ -252,6 +255,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.01.18         *
  04.01.16         *
 */
 

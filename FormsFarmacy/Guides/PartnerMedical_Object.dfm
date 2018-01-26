@@ -1,9 +1,9 @@
-object JuridicalAreaForm: TJuridicalAreaForm
+object PartnerMedical_ObjectForm: TPartnerMedical_ObjectForm
   Left = 0
   Top = 0
-  Caption = #1056#1077#1075#1080#1086#1085' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
-  ClientHeight = 349
-  ClientWidth = 667
+  Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077
+  ClientHeight = 279
+  ClientWidth = 598
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,22 +12,23 @@ object JuridicalAreaForm: TJuridicalAreaForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
-    Width = 667
-    Height = 323
+    Top = 61
+    Width = 598
+    Height = 218
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 790
+    ExplicitTop = 26
+    ExplicitHeight = 253
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -38,7 +39,7 @@ object JuridicalAreaForm: TJuridicalAreaForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = Comment
+      OptionsBehavior.IncSearchItem = Name
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -46,6 +47,7 @@ object JuridicalAreaForm: TJuridicalAreaForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
+      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -53,82 +55,86 @@ object JuridicalAreaForm: TJuridicalAreaForm
       object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
-        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 34
+        Width = 103
+      end
+      object Name: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'Name'
+        HeaderAlignmentVert = vaCenter
+        Width = 279
       end
       object JuridicalName: TcxGridDBColumn
-        Caption = #1070#1088'.'#1083#1080#1094#1086
+        Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 184
+        Width = 147
       end
-      object AreaName: TcxGridDBColumn
-        Caption = #1056#1077#1075#1080#1086#1085
-        DataBinding.FieldName = 'AreaName'
+      object MedicFIO: TcxGridDBColumn
+        Caption = #1060#1048#1054' '#1075#1083#1072#1074'.'#1074#1088#1072#1095#1072
+        DataBinding.FieldName = 'MedicFIO'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 122
+        Options.Editing = False
+        Width = 90
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 53
-      end
-      object IsDefault: TcxGridDBColumn
-        Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
-        DataBinding.FieldName = 'isDefault'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
         Options.Editing = False
-        Width = 85
-      end
-      object IsGoodsCode: TcxGridDBColumn
-        Caption = #1059#1085#1080#1082'. '#1082#1086#1076' '#1087#1086#1089#1090'.'
-        DataBinding.FieldName = 'isGoodsCode'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1059#1085#1080#1082#1072#1083#1100#1085#1099#1081' '#1082#1086#1076' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1058#1054#1051#1068#1050#1054' '#1076#1083#1103' '#1056#1077#1075#1080#1086#1085#1072
-        Options.Editing = False
-        Width = 85
-      end
-      object Comment: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-        DataBinding.FieldName = 'Comment'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 140
+        Width = 60
       end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
     end
   end
-  object cxLabel3: TcxLabel
-    Left = 309
-    Top = 86
-    Caption = #1070#1088'.'#1083#1080#1094#1086':'
-  end
-  object edJuridical: TcxButtonEdit
-    Left = 364
-    Top = 85
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.Nullstring = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
-    Properties.ReadOnly = True
-    Properties.UseNullString = True
-    TabOrder = 6
-    Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1102#1088'.'#1083#1080#1094#1086'>'
-    Width = 234
+  object Panel: TPanel
+    Left = 0
+    Top = 0
+    Width = 598
+    Height = 35
+    Align = alTop
+    TabOrder = 5
+    ExplicitTop = -6
+    object cxLabel6: TcxLabel
+      Left = 6
+      Top = 9
+      AutoSize = False
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+      Height = 17
+      Width = 91
+    end
+    object edUnit: TcxButtonEdit
+      Left = 96
+      Top = 8
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 0
+      Width = 297
+    end
+    object cxLabel2: TcxLabel
+      Left = 432
+      Top = 9
+      Caption = #1053#1072' '#1076#1072#1090#1091':'
+    end
+    object deOperDate: TcxDateEdit
+      Left = 478
+      Top = 8
+      EditValue = 43101d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 3
+      Width = 85
+    end
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -194,6 +200,10 @@ object JuridicalAreaForm: TJuridicalAreaForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsert'
         end
         item
@@ -223,11 +233,7 @@ object JuridicalAreaForm: TJuridicalAreaForm
         end
         item
           Visible = True
-          ItemName = 'dxBarControlContainerItem1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarControlContainerItem2'
+          ItemName = 'bbGridToExcel'
         end
         item
           Visible = True
@@ -235,7 +241,7 @@ object JuridicalAreaForm: TJuridicalAreaForm
         end
         item
           Visible = True
-          ItemName = 'bbProtocolOpenForm'
+          ItemName = 'bbProtocol'
         end
         item
           Visible = True
@@ -244,14 +250,6 @@ object JuridicalAreaForm: TJuridicalAreaForm
         item
           Visible = True
           ItemName = 'bbChoiceGuides'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGridToExcel'
         end>
       OneOnRow = True
       Row = 0
@@ -293,21 +291,7 @@ object JuridicalAreaForm: TJuridicalAreaForm
       Action = dsdChoiceGuides
       Category = 0
     end
-    object dxBarControlContainerItem1: TdxBarControlContainerItem
-      Caption = 'New Item'
-      Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
-      Control = cxLabel3
-    end
-    object dxBarControlContainerItem2: TdxBarControlContainerItem
-      Caption = 'New Item'
-      Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
-      Control = edJuridical
-    end
-    object bbProtocolOpenForm: TdxBarButton
+    object bbProtocol: TdxBarButton
       Action = ProtocolOpenForm
       Category = 0
     end
@@ -336,8 +320,8 @@ object JuridicalAreaForm: TJuridicalAreaForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TJuridicalAreaEditForm'
-      FormNameParam.Value = 'TJuridicalAreaEditForm'
+      FormName = 'TPartnerMedicalEditForm'
+      FormNameParam.Value = 'TPartnerMedicalEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -357,8 +341,8 @@ object JuridicalAreaForm: TJuridicalAreaForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TJuridicalAreaEditForm'
-      FormNameParam.Value = 'TJuridicalAreaEditForm'
+      FormName = 'TPartnerMedicalEditForm'
+      FormNameParam.Value = 'TPartnerMedicalEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -425,6 +409,20 @@ object JuridicalAreaForm: TJuridicalAreaForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MedicSPId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MedicSPId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MedicSPName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MedicSPName'
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -441,7 +439,7 @@ object JuridicalAreaForm: TJuridicalAreaForm
       ShortCut = 16472
     end
     object ProtocolOpenForm: TdsdOpenForm
-      Category = #1055#1088#1086#1090#1086#1082#1086#1083
+      Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
@@ -463,7 +461,7 @@ object JuridicalAreaForm: TJuridicalAreaForm
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'Comment'
+          ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -472,7 +470,7 @@ object JuridicalAreaForm: TJuridicalAreaForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_JuridicalArea'
+    StoredProcName = 'gpSelect_Object_PartnerMedicalChoice'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -480,9 +478,17 @@ object JuridicalAreaForm: TJuridicalAreaForm
       end>
     Params = <
       item
-        Name = 'inJuridicalId'
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = deOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
         Value = Null
-        Component = GuidesJuridical
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -496,7 +502,7 @@ object JuridicalAreaForm: TJuridicalAreaForm
     Top = 152
   end
   object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
+    StoredProcName = 'gpUpdate_Object_isErased_PartnerMedical'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -509,8 +515,8 @@ object JuridicalAreaForm: TJuridicalAreaForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 288
-    Top = 208
+    Left = 488
+    Top = 96
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -537,22 +543,22 @@ object JuridicalAreaForm: TJuridicalAreaForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 456
-    Top = 184
+    Left = 184
+    Top = 216
   end
-  object GuidesJuridical: TdsdGuides
+  object GuidesUnit: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edJuridical
-    FormNameParam.Value = 'TJuridical_ObjectForm'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TJuridical_ObjectForm'
+    FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesJuridical
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -560,14 +566,40 @@ object JuridicalAreaForm: TJuridicalAreaForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesJuridical
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 528
-    Top = 80
+    Left = 240
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'MasterUnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitName'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterOperDate'
+        Value = 'NULL'
+        Component = deOperDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    Left = 512
+    Top = 136
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -575,9 +607,12 @@ object JuridicalAreaForm: TJuridicalAreaForm
     RefreshAction = actRefresh
     ComponentList = <
       item
-        Component = GuidesJuridical
+        Component = GuidesUnit
+      end
+      item
+        Component = deOperDate
       end>
-    Left = 424
-    Top = 120
+    Left = 440
+    Top = 112
   end
 end

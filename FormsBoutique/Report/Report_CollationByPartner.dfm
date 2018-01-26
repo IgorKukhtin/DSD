@@ -5,6 +5,7 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitTop = -56
   ExplicitWidth = 1081
   ExplicitHeight = 489
   PixelsPerInch = 96
@@ -546,7 +547,7 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
             Width = 71
           end
           object AmountIn: TcxGridDBColumn
-            Caption = #1055#1088#1080#1093#1086#1076' '#1082#1086#1083'-'#1074#1086
+            Caption = #1055#1088#1086#1076#1072#1078#1072' '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'AmountIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -556,7 +557,7 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
             Width = 70
           end
           object AmountOut: TcxGridDBColumn
-            Caption = #1056#1072#1089#1093#1086#1076' '#1082#1086#1083'-'#1074#1086
+            Caption = #1042#1086#1079#1074#1088#1072#1090' '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'AmountOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -568,7 +569,7 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
             Width = 80
           end
           object SummIn: TcxGridDBColumn
-            Caption = #1055#1088#1080#1093#1086#1076' '#1043#1056#1053
+            Caption = #1055#1088#1086#1076#1072#1078#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1086#1087#1083#1072#1090#1099' '#1043#1056#1053
             DataBinding.FieldName = 'SummIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -578,7 +579,7 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
             Width = 70
           end
           object SummOut: TcxGridDBColumn
-            Caption = #1056#1072#1089#1093#1086#1076' '#1043#1056#1053
+            Caption = #1054#1087#1083#1072#1090#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1043#1056#1053
             DataBinding.FieldName = 'SummOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'

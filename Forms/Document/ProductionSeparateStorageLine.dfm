@@ -330,6 +330,15 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
+    inherited actUpdateMainDS: TdsdUpdateDataSet
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end
+        item
+          StoredProc = spSelect
+        end>
+    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -407,6 +416,9 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdateMIChild
+        end
+        item
+          StoredProc = spSelect
         end>
       Caption = 'actUpdateChildDS'
       DataSource = ChildDS
@@ -870,16 +882,8 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
     Top = 232
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_ProductionSeparate_Master'
+    StoredProcName = 'gpUpdate_MI_ProductionSeparate_StorageLine'
     Params = <
-      item
-        Name = 'ioId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
       item
         Name = 'inMovementId'
         Value = Null
@@ -913,30 +917,30 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmount'
+        Name = 'ioStorageLineId_old'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Amount'
-        DataType = ftFloat
+        ComponentItem = 'StorageLineId_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDescMaster'
+        Value = 'TRUE'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inLiveWeight'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'LiveWeight'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inHeadCount'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'HeadCount'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 504
@@ -1092,27 +1096,13 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
     Left = 304
   end
   inherited spInsertUpdateMIChild: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_ProductionSeparate_Child'
+    StoredProcName = 'gpUpdate_MI_ProductionSeparate_StorageLine'
     Params = <
-      item
-        Name = 'ioId'
-        Value = Null
-        Component = ChildCDS
-        ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
       item
         Name = 'inMovementId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inParentId'
-        Value = 0
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1141,30 +1131,38 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmount'
+        Name = 'ioStorageLineId_old'
         Value = Null
         Component = ChildCDS
-        ComponentItem = 'Amount'
-        DataType = ftFloat
+        ComponentItem = 'StorageLineId_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDescMaster'
+        Value = 'FALSE'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inLiveWeight'
-        Value = Null
-        Component = ChildCDS
-        ComponentItem = 'LiveWeight'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inHeadCount'
         Value = Null
         Component = ChildCDS
         ComponentItem = 'HeadCount'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = 0
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
   end

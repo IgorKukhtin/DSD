@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1053#1086#1074#1099#1081' '#1056#1077#1075#1080#1086#1085' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
-  ClientHeight = 293
+  ClientHeight = 259
   ClientWidth = 344
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,18 +18,18 @@
   TextHeight = 13
   object edName: TcxTextEdit
     Left = 17
-    Top = 219
+    Top = 179
     TabOrder = 0
     Width = 296
   end
   object cxLabel1: TcxLabel
     Left = 17
-    Top = 199
+    Top = 159
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 51
-    Top = 260
+    Top = 220
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 201
-    Top = 260
+    Top = 220
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -94,14 +94,16 @@
     Width = 296
   end
   object cxLabel5: TcxLabel
-    Left = 17
-    Top = 151
+    Left = 282
+    Top = 204
     Caption = 'E-mail '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1085#1072' '#1082#1086#1090#1086#1088#1099#1081' '#1086#1090#1087#1088#1072#1074#1083#1103#1077#1090#1089#1103' '#1047#1040#1050#1040#1047
+    Visible = False
   end
   object edEmail: TcxTextEdit
-    Left = 17
-    Top = 171
+    Left = 282
+    Top = 224
     TabOrder = 11
+    Visible = False
     Width = 296
   end
   object cbisDefault: TcxCheckBox

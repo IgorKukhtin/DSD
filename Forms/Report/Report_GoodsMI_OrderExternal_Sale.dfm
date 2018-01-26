@@ -5,7 +5,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1108
-  ExplicitHeight = 425
+  ExplicitHeight = 426
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -282,6 +282,13 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
+          end
+          object FromDescName: TcxGridDBColumn
+            Caption = #1042#1080#1076' ('#1082#1086#1085#1090'.)'
+            DataBinding.FieldName = 'FromDescName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 86
           end
           object FromCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1082'.'

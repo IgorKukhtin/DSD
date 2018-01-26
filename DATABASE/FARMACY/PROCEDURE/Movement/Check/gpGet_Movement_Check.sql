@@ -10,7 +10,8 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Check(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSumm TFloat
-             , UnitName TVarChar, CashRegisterName TVarChar, PaidKindName TVarChar, PaidTypeName TVarChar
+             , UnitId Integer, UnitName TVarChar
+             , CashRegisterName TVarChar, PaidKindName TVarChar, PaidTypeName TVarChar
              , CashMember TVarChar, Bayer TVarChar, FiscalCheckNumber TVarChar, NotMCS Boolean
              , DiscountCardName TVarChar
              , BayerPhone TVarChar
@@ -46,6 +47,7 @@ BEGIN
            , Movement_Check.StatusName
            , Movement_Check.TotalCount
            , Movement_Check.TotalSumm
+           , Movement_Check.UnitId
            , Movement_Check.UnitName
            , Movement_Check.CashRegisterName
            , Movement_Check.PaidKindName

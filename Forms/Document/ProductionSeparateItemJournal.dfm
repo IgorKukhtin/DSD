@@ -890,6 +890,13 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
         ComponentItem = 'StorageLineId_old'
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDescMaster'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 552
