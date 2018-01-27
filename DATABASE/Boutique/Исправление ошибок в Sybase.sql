@@ -318,6 +318,20 @@ SELECT MovementDesc.ItemName, Movement.*, MovementItem.*, MIFloat_TotalPay.*
 
                                                                     WHERE MIL_PartionMI.DescId   = zc_MILinkObject_PartionMI ()
                                                                       AND MIL_PartionMI.ObjectId = 379409 -- select lpInsertFind_Object_PartionMI (680181 ) -- vbPartionMI_Id
+UNION ALL
+SELECT MovementDesc.ItemName, Movement.*, MovementItem.*, MIFloat_TotalPay.*
+                                                                    FROM Object
+                                                                         INNER JOIN MovementItem ON MovementItem.Id       = Object.ObjectCode
+                                                                                                AND MovementItem.DescId   = zc_MI_Master()
+                                                                                                AND MovementItem.isErased = FALSE
+                                                                         INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                                                            -- AND Movement.DescId   = zc_Movement_GoodsAccount()
+                                                                                            AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                                                                         INNER JOIN MovementDesc ON MovementDesc.Id = Movement.DescId       
+                                                                         LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
+                                                                                                     ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
+                                                                                                    AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
+                                                                    WHERE Object.Id  = 379409 -- select lpInsertFind_Object_PartionMI (680181 ) -- vbPartionMI_Id
                              
 
    

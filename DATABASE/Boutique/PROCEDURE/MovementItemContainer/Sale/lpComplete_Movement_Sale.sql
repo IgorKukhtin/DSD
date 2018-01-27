@@ -97,6 +97,20 @@ BEGIN
                                                                       , inCurrencyToId  := 0
                                                                        )
                             )
+            -- для Sybase
+          , tmpCheck AS (SELECT Object.ObjectCode AS PartionId_MI FROM Object WHERE Object.Id IN (SELECT 366872 
+                   UNION SELECT 374215
+                   UNION SELECT 739198
+                   UNION SELECT 739264
+                   UNION SELECT 739269
+                   UNION SELECT 739270
+                   UNION SELECT 739271
+                   UNION SELECT 744408
+                   UNION SELECT 744677
+                   UNION SELECT 739173
+                   UNION SELECT 739185
+                         -- FROM gpSelect_MovementItem_Sale_Sybase_Check()
+                        ))
         -- результат
         SELECT tmp.MovementItemId
              , 0 AS ContainerId_Summ          -- сформируем позже
@@ -200,7 +214,10 @@ BEGIN
                      -- Статьи назначения
                    , View_InfoMoney.InfoMoneyId
 
-                   , CASE WHEN MovementItem.ObjectId = zc_Enum_Goods_Debt() THEN TRUE ELSE FALSE END AS isGoods_Debt
+                   , CASE WHEN MovementItem.ObjectId = zc_Enum_Goods_Debt() THEN TRUE
+                          WHEN EXISTS (SELECT 1 FROM tmpCheck WHERE tmpCheck.PartionId_MI = MovementItem.Id) THEN TRUE 
+                               ELSE FALSE
+                     END AS isGoods_Debt
 
               FROM Movement
                    JOIN MovementItem ON MovementItem.MovementId = Movement.Id
