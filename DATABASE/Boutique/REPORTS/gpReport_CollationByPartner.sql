@@ -44,6 +44,17 @@ RETURNS TABLE (Text_info             TVarChar
              , SummIn          TFloat
              , SummOut         TFloat
              , SummEnd         TFloat
+             
+             , TotalPay_Grn TFloat
+             , TotalPay_USD TFloat
+             , TotalPay_Eur TFloat
+             , TotalPay_Card TFloat
+             
+             , SummChangePercent_Calc TFloat
+             , TotalChangePercent     TFloat
+             , SummChangePercent      TFloat
+             , OperPriceList          TFloat
+             , ChangePercent          TFloat
   )
 AS
 $BODY$
@@ -62,7 +73,6 @@ BEGIN
     tmpContainer AS (SELECT Container.Id                    AS ContainerId
                           , Container.DescId                AS ContainerDescId
                           , CLO_Client.ObjectId             AS ClientId 
-                         -- , Container.ObjectId              AS GoodsId
                           , CASE WHEN Container.DescId = zc_Container_Count() THEN Container.ObjectId ELSE CLO_Goods.ObjectId END  AS GoodsId
                           , Container.PartionId             AS PartionId
                           , CLO_PartionMI.ObjectId          AS PartionId_MI
@@ -71,7 +81,7 @@ BEGIN
                           INNER JOIN ContainerLinkObject AS CLO_Client 
                                                          ON CLO_Client.ContainerId = Container.Id
                                                         AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
-                                                        AND CLO_Client.ObjectId    = inPartnerId --inClientId --Перцева Наталья 6343  -- 
+                                                        AND CLO_Client.ObjectId    = inPartnerId                            --inClientId --Перцева Наталья 6343  -- 
                           INNER JOIN ContainerLinkObject AS CLO_Unit 
                                                          ON CLO_Unit.ContainerId = Container.Id
                                                         AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
@@ -83,9 +93,6 @@ BEGIN
                                                         ON CLO_PartionMI.ContainerId = Container.Id
                                                        AND CLO_PartionMI.DescId      = zc_ContainerLinkObject_PartionMI()
                       WHERE Container.ObjectId <> zc_Enum_Account_20102()                          
-                     --WHERE Container.ObjectId = tmpWhere.GoodsId
-                            --       AND Container.DescId = zc_Container_Count()
-
                     )
 
   , tmpMIContainer AS (SELECT tmpContainer.ContainerId
@@ -102,11 +109,12 @@ BEGIN
                                    ELSE 0
                               END AS AmountSumm
   
-                            , /*CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate)
-                                        THEN MIContainer.MovementId
+                            , MIContainer.MovementId AS MovementId
+                            , CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate)
+                                      THEN MIContainer.MovementItemId
                                    ELSE 0
-                              END*/ MIContainer.MovementId AS MovementId
-
+                              END AS MovementItemId
+                            
                             ,  (CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate) AND MIContainer.DescId = zc_Container_Count()
                                              THEN MIContainer.Amount
                                         ELSE 0
@@ -128,24 +136,11 @@ BEGIN
                        FROM tmpContainer
                             LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId
                                                                           AND (MIContainer.OperDate >= inStartDate)
-                      /* GROUP BY tmpContainer.ContainerId
-                              , tmpContainer.GoodsId
-                              , tmpContainer.PartionId
-                              , tmpContainer.PartionId_MI
-                              , CASE WHEN tmpContainer.ContainerDescId = zc_Container_Count()
-                                   THEN tmpContainer.Amount
-                                   ELSE 0
-                                END
-                              , CASE WHEN tmpContainer.ContainerDescId = zc_Container_Summ()
-                                     THEN tmpContainer.Amount
-                                     ELSE 0
-                                END
-                              , MIContainer.MovementId
-                              */
                       )
 
   , tmpMIContainer_group AS (SELECT tmpMIContainer_all.Text_info
                                   , tmpMIContainer_all.MovementId
+                                  , tmpMIContainer_all.MovementItemId
                                   , tmpMIContainer_all.GoodsId
                                   , tmpMIContainer_all.PartionId
                                   , tmpMIContainer_all.PartionId_MI
@@ -163,6 +158,7 @@ BEGIN
                               FROM ( -- 1.1. Остатки нач.
                                     SELECT 'Долг начальный'  AS Text_info
                                          , 0 AS MovementId--, tmpMIContainer.MovementId
+                                         , 0 AS MovementItemId
                                          , tmpMIContainer.GoodsId
                                          , tmpMIContainer.PartionId
                                          , tmpMIContainer.PartionId_MI
@@ -189,6 +185,7 @@ BEGIN
                                     -- 1.1. Остатки конечн.
                                     SELECT 'Долг конечный'   AS Text_info
                                          , 0 AS MovementId--, tmpMIContainer.MovementId
+                                         , 0 AS MovementItemId
                                          , tmpMIContainer.GoodsId
                                          , tmpMIContainer.PartionId
                                          , tmpMIContainer.PartionId_MI
@@ -205,7 +202,6 @@ BEGIN
                                     GROUP BY tmpMIContainer.ContainerId
                                            , tmpMIContainer.Amount
                                            , tmpMIContainer.AmountSumm
-                                           --, tmpMIContainer.MovementId
                                            , tmpMIContainer.GoodsId
                                            , tmpMIContainer.PartionId
                                            , tmpMIContainer.PartionId_MI
@@ -215,6 +211,7 @@ BEGIN
                                     -- 1.2. Движение
                                     SELECT 'Движение'        AS Text_info
                                          , tmpMIContainer.MovementId
+                                         , tmpMIContainer.MovementItemId
                                          , tmpMIContainer.GoodsId
                                          , tmpMIContainer.PartionId
                                          , tmpMIContainer.PartionId_MI
@@ -234,11 +231,41 @@ BEGIN
                       
                               GROUP BY tmpMIContainer_all.Text_info
                                      , tmpMIContainer_all.MovementId
+                                     , tmpMIContainer_all.MovementItemId
                                      , tmpMIContainer_all.GoodsId
                                      , tmpMIContainer_all.PartionId
                                      , tmpMIContainer_all.PartionId_MI
                              )
 
+    , tmpMI_Child AS (SELECT tmpMovement.MovementId
+                           , MovementItem.ParentId
+                           , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_GRN() THEN MovementItem.Amount ELSE 0 END) AS Amount_GRN
+                           , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_USD() THEN MovementItem.Amount ELSE 0 END) AS Amount_USD
+                           , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN MovementItem.Amount ELSE 0 END) AS Amount_EUR
+                           , SUM (CASE WHEN Object.DescId = zc_Object_BankAccount() THEN MovementItem.Amount ELSE 0 END) AS Amount_Bank
+
+                      FROM (SELECT tmpMIContainer.MovementId
+                            FROM tmpMIContainer
+                            WHERE tmpMIContainer.Amount_Period <> 0
+                               OR tmpMIContainer.Summ_Period <> 0
+                            ) AS tmpMovement
+                            INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
+                                                   AND MovementItem.DescId     = zc_MI_Child()
+                                                   AND MovementItem.isErased   = FALSE
+                                              
+                            LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
+                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
+                                                             ON MILinkObject_Currency.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_Currency.DescId         = zc_MILinkObject_Currency()
+                            LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValue
+                                                        ON MIFloat_CurrencyValue.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_CurrencyValue.DescId         = zc_MIFloat_CurrencyValue()
+                            LEFT JOIN MovementItemFloat AS MIFloat_ParValue
+                                                        ON MIFloat_ParValue.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
+                      GROUP BY tmpMovement.MovementId
+                             , MovementItem.ParentId
+                     )
 
    SELECT tmpData.Text_info :: TVarChar
         , Movement.Id                    AS MovementId
@@ -281,7 +308,22 @@ BEGIN
         , CAST (tmpData.SummOut AS TFloat)     AS SummOut
         , CAST (tmpData.SummEnd AS TFloat)     AS SummEnd
         
+        , (tmpMI_Child.Amount_GRN  * CASE WHEN MovementDesc.Id = zc_Movement_ReturnIn() THEN -1 ELSE 1 END)       :: TFloat AS TotalPay_Grn
+        , (tmpMI_Child.Amount_USD  * CASE WHEN MovementDesc.Id = zc_Movement_ReturnIn() THEN -1 ELSE 1 END)       :: TFloat AS TotalPay_USD
+        , (tmpMI_Child.Amount_EUR  * CASE WHEN MovementDesc.Id = zc_Movement_ReturnIn() THEN -1 ELSE 1 END)       :: TFloat AS TotalPay_EUR
+        , (tmpMI_Child.Amount_Bank * CASE WHEN MovementDesc.Id = zc_Movement_ReturnIn() THEN -1 ELSE 1 END)       :: TFloat AS TotalPay_Card
+        
+        , (CASE WHEN MovementDesc.Id = zc_Movement_Sale() THEN zfCalc_SummPriceList (tmpData.AmountIn, MIFloat_OperPriceList.ValueData) * COALESCE (MIFloat_ChangePercent.ValueData, 0)/100
+               WHEN MovementDesc.Id = zc_Movement_ReturnIn() THEN (-1) * zfCalc_SummPriceList (tmpData.AmountOut, MIFloat_OperPriceList.ValueData) * COALESCE (MIFloat_ChangePercent.ValueData, 0)/100
+           END)                                                       :: TFloat   AS SummChangePercent_Calc
+        
+        , (COALESCE (MIFloat_TotalChangePercent.ValueData, 0) * CASE WHEN MovementDesc.Id = zc_Movement_ReturnIn() THEN -1 ELSE 1 END)       :: TFloat   AS TotalChangePercent
+        , (COALESCE (MIFloat_SummChangePercent.ValueData, 0) * CASE WHEN MovementDesc.Id IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN 1
+                                                                    WHEN MovementDesc.Id = zc_Movement_ReturnIn() THEN (-1)
+                                                               END) :: TFloat   AS SummChangePercent
 
+        , COALESCE (MIFloat_OperPriceList.ValueData, 0)             :: TFloat   AS OperPriceList
+        , COALESCE (MIFloat_ChangePercent.ValueData, 0)             :: TFloat   AS ChangePercent
    FROM tmpMIContainer_group AS tmpData
         LEFT JOIN Movement ON Movement.Id = tmpData.MovementId
         LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
@@ -310,6 +352,24 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id 
                               AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
+
+        LEFT JOIN tmpMI_Child ON tmpMI_Child.MovementId = tmpData.MovementId
+                             AND tmpMI_Child.ParentId   = tmpData.MovementItemId
+  
+  
+        LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
+                                    ON MIFloat_OperPriceList.MovementItemId = MI_PartionMI.Id
+                                   AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()                             
+        LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                    ON MIFloat_ChangePercent.MovementItemId = MI_PartionMI.Id
+                                   AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+
+        LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
+                                    ON MIFloat_SummChangePercent.MovementItemId = tmpData.MovementItemId
+                                   AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
+        LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
+                                    ON MIFloat_TotalChangePercent.MovementItemId = tmpData.MovementItemId
+                                   AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()
         ;
  END;
 $BODY$
