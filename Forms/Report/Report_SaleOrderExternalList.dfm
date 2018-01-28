@@ -1,7 +1,7 @@
 object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
   Left = 0
   Top = 0
-  Caption = #1054#1090#1095#1077#1090' <'#1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1079#1072#1103#1074#1086#1082' '#1080' '#1087#1088#1086#1076#1072#1078'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1048#1090#1086#1075#1086' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084' - '#1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1079#1072#1103#1074#1086#1082' '#1080' '#1087#1088#1086#1076#1072#1078'>'
   ClientHeight = 393
   ClientWidth = 1080
   Color = clBtnFace
@@ -376,7 +376,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         Width = 70
       end
       object FromDescName: TcxGridDBColumn
-        Caption = #1042#1080#1076' ('#1086#1090' '#1082#1086#1075#1086')'
+        Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1086#1090' '#1082#1086#1075#1086')'
         DataBinding.FieldName = 'FromDescName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -585,7 +585,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
     object deStart: TcxDateEdit
       Left = 118
       Top = 5
-      EditValue = 42370d
+      EditValue = 43101d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -594,7 +594,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
     object deEnd: TcxDateEdit
       Left = 118
       Top = 31
-      EditValue = 42370d
+      EditValue = 43101d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1

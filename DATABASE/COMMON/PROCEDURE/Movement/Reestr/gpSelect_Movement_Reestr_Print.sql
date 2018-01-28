@@ -345,4 +345,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_Movement_Reestr_Print(inMovementId := 4887960 , inPersonalId := 0 , inPersonalTradeId := 0 , inReestrKindId := 0 , inIsReestrKind := 'False' ,  inSession := '5');
+-- SELECT * FROM gpSelect_Movement_Reestr_Print(inMovementId := 4887960 , inPersonalId := 0 , inPersonalTradeId := 0 , inReestrKindId := 0 , inIsReestrKind := 'False' ,  inSession := '5');

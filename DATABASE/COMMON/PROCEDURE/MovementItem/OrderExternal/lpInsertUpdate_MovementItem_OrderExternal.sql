@@ -91,14 +91,23 @@ BEGIN
      vbChangePercent:= CASE WHEN COALESCE (vbIsChangePercent_Promo, TRUE) = TRUE THEN COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_ChangePercent()), 0) ELSE 0 END;
 
      -- !!!замена для акции!!
-     IF outMovementId_Promo > 0 THEN
-        IF COALESCE (ioId, 0) = 0 AND vbTaxPromo <> 0
+     IF outMovementId_Promo > 0
+     THEN
+        IF NOT EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = outMovementId_Promo AND MB.DescId = zc_MovementBoolean_Promo() AND MB.ValueData = TRUE)
         THEN
+              -- меняется значение - для Тенедер
+             ioPrice:= outPricePromo;
+
+        ELSEIF COALESCE (ioId, 0) = 0 AND vbTaxPromo <> 0
+        THEN
+            -- меняется значение
             ioPrice:= outPricePromo;
+
         ELSE IF ioId <> 0 AND ioPrice <> outPricePromo AND vbTaxPromo <> 0
              THEN
                  IF EXISTS (SELECT 1 FROM MovementString AS MS WHERE MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_GUID())
                  THEN
+                     -- меняется значение
                      ioPrice:= outPricePromo;
                  ELSE
                      RAISE EXCEPTION 'Ошибка.Для товара = <%> <%> необходимо ввести акционную цену = <%>.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inGoodsKindId), TFloat (outPricePromo);

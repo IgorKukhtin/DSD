@@ -1,6 +1,6 @@
 -- Function: gpSelect_MovementItem_PromoGoods()
 
-DROP FUNCTION IF EXISTS gpSelect_MI_PromoGoods_Plan (Integer, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_MI_PromoGoods_Plan (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_PromoGoods (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PromoGoods(

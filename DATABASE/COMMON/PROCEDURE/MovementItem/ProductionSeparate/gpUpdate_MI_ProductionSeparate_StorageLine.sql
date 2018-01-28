@@ -58,4 +58,5 @@ $BODY$
 
 -- тест
 -- select * from gpUpdate_MI_ProductionSeparate_StorageLine(inMovementId := 5268188 , inGoodsId := 5246 , inGoodsKindId := 0 , inStorageLineId := 0 , ioStorageLineId_old := 0 , inIsDescMaster := 'TRUE' ,  inSession := '5');
-   select * from gpUpdate_MI_ProductionSeparate_StorageLine(inMovementId := 5268188 , inGoodsId := 5246 , inGoodsKindId := 0 , inStorageLineId := 1005633 , inIsDescMaster := 'TRUE' ,  inSession := '5');
+-- select * from gpUpdate_MI_ProductionSeparate_StorageLine(inMovementId := 5268188 , inGoodsId := 5246 , inGoodsKindId := 0 , inStorageLineId := 1005633 , inIsDescMaster := 'TRUE' ,  inSession := '5');
+   

@@ -74,7 +74,7 @@ BEGIN
                        END
                       ;
 
-     -- Результат
+     -- Результат - 1
      OPEN Cursor1 FOR
 
        SELECT inStartDate AS StartDate
@@ -86,8 +86,10 @@ BEGIN
             LEFT JOIN Object AS Object_User ON Object_User.Id = vbUserId
        WHERE Object_ReestrKind.Id = inReestrKindId;
 
-    RETURN NEXT Cursor1;
+     RETURN NEXT Cursor1;
 
+
+     -- Результат - 2
      OPEN Cursor2 FOR
        WITH
        -- выбираем строки реестров по выбранной визе и пользователю (или всем пользователям)
@@ -106,8 +108,8 @@ BEGIN
                    WHERE MIDate.DescId = vbDateDescId
                      AND MIDate.ValueData >= inStartDate AND MIDate.ValueData < inEndDate + INTERVAL '1 DAY'
                    )
-
-       SELECT
+     , tmpData AS
+      (SELECT
              Movement_Sale.InvNumber                AS InvNumber_Sale
            , Movement_Sale.OperDate                 AS OperDate_Sale
            , MovementDate_OperDatePartner.ValueData AS OperDatePartner
@@ -118,6 +120,8 @@ BEGIN
                        THEN ' / ' || Object_PersonalTrade.ValueData
                   ELSE Object_Personal.ValueData
              END                        :: TVarChar AS PersonalName
+           , Object_Personal.Id                     AS PersonalId
+           , Object_PersonalTrade.Id                AS PersonalTradeId
            , Object_PersonalTrade.ValueData         AS PersonalTradeName
            , CASE WHEN Object_Personal.Id <> 0 
                   THEN Object_Personal.ValueData
@@ -242,22 +246,27 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
                                  ON ObjectLink_Partner_Personal.ObjectId = Object_To.Id
                                 AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
-            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Partner_Personal.ChildObjectId and Object_Personal.DescId = zc_Object_Personal()
+            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Partner_Personal.ChildObjectId -- AND Object_Personal.DescId = zc_Object_Personal()
 
             LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
                                  ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_To.Id
                                 AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
             LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = ObjectLink_Partner_PersonalTrade.ChildObjectId
-       WHERE ((inIsReestrKind = TRUE AND MovementLinkObject_ReestrKind.ObjectId = inReestrKindId) 
-          OR inIsReestrKind = FALSE
-             )
-         AND (Object_Personal.Id = inPersonalId OR inPersonalId = 0)
-         AND (Object_PersonalTrade.Id = inPersonalTradeId OR inPersonalTradeId = 0)
-       ORDER BY Object_To.ValueData
-              , MovementDate_OperDatePartner.ValueData
-;
 
-    RETURN NEXT Cursor2;
+       WHERE (inIsReestrKind = TRUE AND MovementLinkObject_ReestrKind.ObjectId = inReestrKindId) 
+           OR inIsReestrKind = FALSE
+         -- AND (Object_Personal.Id      = inPersonalId      OR inPersonalId      = 0)
+         -- AND (Object_PersonalTrade.Id = inPersonalTradeId OR inPersonalTradeId = 0)
+      )
+      SELECT *
+      FROM tmpData
+      WHERE (tmpData.PersonalId      = inPersonalId      OR inPersonalId      = 0)
+        AND (tmpData.PersonalTradeId = inPersonalTradeId OR inPersonalTradeId = 0)
+      ORDER BY tmpData.ToName
+             , tmpData.OperDatePartner
+      ;
+
+     RETURN NEXT Cursor2;
 
 END;
 $BODY$

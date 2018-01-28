@@ -25,7 +25,7 @@ BEGIN
      DELETE FROM _tmpItem;
 
      -- !!!временно - для Sybase!!!
-     -- inUserId := zc_User_Sybase() ;
+     inUserId := zc_User_Sybase() ;
 
 
      -- Параметры из документа
@@ -417,13 +417,41 @@ BEGIN
                           WHEN tmp.SummDebt_sale = 0 AND tmpLast.PartionId_MI IS NULL
                                THEN -- то что в продаже
                                     tmp.Amount_Sale
+
+                          -- надо отловить если в долге 2 шт. + сначала оплатили за 1шт, потом еще 1 шт вернули, а потом вернули 1шт за которую оплатили
                           WHEN tmp.Amount_Sale = tmp.Amount_Return AND tmp.SummDebt_return = 0 AND (tmp.TotalPay_curr > 0 OR tmp.SummChangePercent_curr > 0) AND tmpLast.PartionId_MI IS NULL
-                               AND 1=0
-                               THEN -- пока так, но не всегда будет корректно
+                           -- и если вернули НЕ сразу
+                           AND tmp.Amount_Sale <> (SELECT MovementItem.Amount
+                                                   FROM MovementItemLinkObject AS MIL_PartionMI
+                                                        INNER JOIN MovementItem ON MovementItem.Id         = MIL_PartionMI.MovementItemId
+                                                                               AND MovementItem.DescId     = zc_MI_Master()
+                                                                               AND MovementItem.isErased   = FALSE
+                                                        INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                                           AND Movement.DescId   = zc_Movement_ReturnIn()
+                                                                           AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                   WHERE MIL_PartionMI.DescId       = zc_MILinkObject_PartionMI()
+                                                     AND MIL_PartionMI.ObjectId     = tmp.PartionId_MI
+                                                     AND inUserId                   = zc_User_Sybase()
+                                                   LIMIT 1
+                                                  )
+                            -- Сумма "К оплате" ПРОПОРЦИОНАЛЬНО для OperCount
+                            AND -- Сумма по Прайсу
+                                (zfCalc_SummPriceList (tmp.Amount_Sale, tmp.OperPriceList)
+                                 -- МИНУС: Итого сумма Скидки (в ГРН) - суммируется ТОЛЬКО 1)по %скидки + 2)дополнительная + 3)дополнительная в оплатах
+                               - (tmp.TotalChangePercent + tmp.TotalChangePercentPay )
+                                ) / tmp.Amount_Sale * tmp.OperCount
+                                -- МИНУС: сумма Скидки (в ГРН) - в текущем документе
+                              - tmp.SummChangePercent_curr
+                              -- РАВНО ИТОГО оплате: 1+2+3
+                              = tmp.TotalPay_curr + tmp.TotalPayOth + tmp.TotalPay
+                            -- AND 1=0
+                               THEN -- ?пока так, но всегда ЛИ будет корректно ?
                                     tmp.OperCount
+
                           WHEN tmp.SummDebt_return = 0 AND (tmp.TotalPay_curr > 0 OR tmp.SummChangePercent_curr > 0) AND tmpLast.PartionId_MI IS NULL
                                THEN -- продажа МИНУС возврат
                                     tmp.Amount_Sale - tmp.Amount_Return
+
                           ELSE 0
                      END AS Amount_begin
 

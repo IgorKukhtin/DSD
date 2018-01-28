@@ -4,7 +4,6 @@
 DROP FUNCTION IF EXISTS gpReport_Sale_OrderExternal_List (TDateTime, TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Sale_OrderExternal_List (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpReport_Sale_OrderExternal_List(
     IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
@@ -260,4 +259,4 @@ $BODY$
 */
 
 -- тест
- --SELECT * FROM gpReport_Sale_OrderExternal_List (inStartDate:= '01.08.2015', inEndDate:= '01.08.2015', inUnitId:=0 ,inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_Sale_OrderExternal_List (inStartDate:= '01.08.2018', inEndDate:= '01.08.2018', inUnitId:=0, inisSale:= TRUE, inisNoSale:= TRUE, inSession:= zfCalc_UserAdmin())

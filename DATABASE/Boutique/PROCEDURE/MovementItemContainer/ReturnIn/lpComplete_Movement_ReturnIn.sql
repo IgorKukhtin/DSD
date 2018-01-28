@@ -17,7 +17,7 @@ $BODY$
   DECLARE vbBusinessId              Integer; -- значение пока НЕ определяется
 BEGIN
      -- !!!временно - для Sybase!!!
-     -- inUserId := zc_User_Sybase() ;
+     inUserId := zc_User_Sybase() ;
 
 
      -- !!!обязательно!!! очистили таблицу проводок
@@ -1133,7 +1133,7 @@ BEGIN
                LIMIT 1
                )
               -- 2
-            , (SELECT '(' || Object_Goods.ObjectCode :: TVarChar || ')' ||  Object_Goods.ValueData || ' р.' || COALESCE (Object_GoodsSize.ValueData, '') || '(' || tmp.ContainerId :: TVarChar || ')'
+            , (SELECT '(' || Object_Goods.ObjectCode :: TVarChar || ')' ||  Object_Goods.ValueData || CASE WHEN Object_GoodsSize.ValueData <> '' THEN ' р.' || Object_GoodsSize.ValueData ELSE '' END || '(' || tmp.ContainerId :: TVarChar || ')'
                FROM
               (SELECT
                      -- Сумма по Прайсу

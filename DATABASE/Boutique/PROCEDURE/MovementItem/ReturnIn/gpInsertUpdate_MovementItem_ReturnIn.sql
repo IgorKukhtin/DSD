@@ -39,7 +39,13 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ReturnIn());
      -- !!!временно - для Sybase!!!
-     -- vbUserId := zc_User_Sybase();
+     vbUserId := zc_User_Sybase();
+
+     -- !!!временно - для Sybase!!!
+     IF vbUserId = zc_User_Sybase() AND EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.Id = ioId AND MovementItem.isErased = TRUE)
+     THEN
+         RETURN;
+     END IF;
 
 
      -- проверка - документ должен быть сохранен
@@ -246,9 +252,64 @@ BEGIN
                                                                  AND vbUserId               = zc_User_Sybase()
                                                               ), 0)
 
-                                          -- !!!Сложный расчет - для Sybase - что б после возврата оплаты ДОЛГ был = 0 - только для №п/п=1!!!
+                                          -- !!!1-Сложный расчет - для Sybase - если вернули ВСЕ, тогда пропроционально и последовательно из zc_Movement_GoodsAccount
+                                          WHEN vbUserId = zc_User_Sybase()
+                                           -- !!!если вернули ВСЁ!! - ВСЕ Статусы
+                                           AND MovementItem.Amount = (SELECT SUM (MovementItem.Amount)
+                                                                      FROM MovementItemLinkObject AS MIL_PartionMI
+                                                                           INNER JOIN MovementItem ON MovementItem.Id         = MIL_PartionMI.MovementItemId
+                                                                                                  AND MovementItem.DescId     = zc_MI_Master()
+                                                                                                  AND MovementItem.isErased   = FALSE
+                                                                           INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                                                              AND Movement.DescId   = zc_Movement_ReturnIn()
+                                                                                              AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                                                                      WHERE MIL_PartionMI.DescId       = zc_MILinkObject_PartionMI()
+                                                                        AND MIL_PartionMI.ObjectId     = vbPartionMI_Id
+                                                                     )
+                                               -- №п/п=1
+                                           AND COALESCE (ioId, 0) <> COALESCE ((SELECT tmp.Id
+                                                                               FROM (SELECT MovementItem.Id
+                                                                                          , ROW_NUMBER() OVER (PARTITION BY MIL_PartionMI.ObjectId ORDER BY Movement.OperDate DESC, MovementItem.Id DESC) AS Ord
+                                                                                     FROM MovementItemLinkObject AS MIL_PartionMI
+                                                                                          INNER JOIN MovementItem ON MovementItem.Id       = MIL_PartionMI.MovementItemId
+                                                                                                                 AND MovementItem.DescId   = zc_MI_Master()
+                                                                                                                 AND MovementItem.isErased = FALSE
+                                                                                          INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                                                                             AND Movement.DescId   = zc_Movement_ReturnIn()
+                                                                                                             AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+
+                                                                                     WHERE MIL_PartionMI.DescId   = zc_MILinkObject_PartionMI()
+                                                                                       AND MIL_PartionMI.ObjectId = vbPartionMI_Id
+
+                                                                                    ) AS tmp
+                                                                               WHERE tmp.Ord = 1
+                                                                              ), 0)
+                                               THEN ROUND (inAmount * COALESCE (MIFloat_TotalChangePercent.ValueData, 0) / MovementItem.Amount, 2)
+                                                    -- скидка в Оплатах !!!Расчеты - ВСЕ Статусы!!!
+                                                  + ROUND (inAmount
+                                                         * COALESCE ((SELECT SUM (COALESCE (MIFloat_SummChangePercent.ValueData / MovementItem.Amount, 0))
+                                                                      FROM MovementItemLinkObject AS MIL_PartionMI
+                                                                           INNER JOIN MovementItem ON MovementItem.Id       = MIL_PartionMI.MovementItemId
+                                                                                                  AND MovementItem.DescId   = zc_MI_Master()
+                                                                                                  AND MovementItem.isErased = FALSE
+                                                                           INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                                                              AND Movement.DescId   = zc_Movement_GoodsAccount()
+                                                                                              AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                                                                                              AND Movement.OperDate < vbOperDate
+                                                                           LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
+                                                                                                       ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
+                                                                                                      AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
+       
+                                                                      WHERE MIL_PartionMI.DescId   = zc_MILinkObject_PartionMI()
+                                                                        AND MIL_PartionMI.ObjectId = vbPartionMI_Id
+                                                                     ), 0), 2)
+
+
+                                          -- !!!2-Сложный расчет - для Sybase - что б после возврата оплаты ДОЛГ был = 0 - только для №п/п=1!!!
                                           WHEN vbUserId = zc_User_Sybase()
                                            AND MIBoolean_Close.ValueData = TRUE
+                                           AND (MovementItem.Amount = inAmount -- !!!если вернули ВСЁ!!
+                                             OR (COALESCE (MIFloat_TotalPayOth.ValueData, 0) = 0 OR COALESCE (MIFloat_TotalPayOth.ValueData, 0) = 0))
                                                -- №п/п=1
                                            AND COALESCE (ioId, 0) = COALESCE ((SELECT tmp.Id
                                                                                FROM (SELECT MovementItem.Id
@@ -337,6 +398,8 @@ BEGIN
                                           -- !!!иначе - для Sybase - №п/п<>1!!!
                                           WHEN vbUserId = zc_User_Sybase()
                                            AND MIBoolean_Close.ValueData = TRUE
+                                           AND (MovementItem.Amount = inAmount
+                                             OR (COALESCE (MIFloat_TotalPayOth.ValueData, 0) = 0 OR COALESCE (MIFloat_TotalPayOth.ValueData, 0) = 0))
                                                THEN 0
 
                                           -- !!!для Sybase!!! если вернули все но не сразу - тогда вся скидка из продажи МИНУС сколько скидки вернули раньше
@@ -407,6 +470,9 @@ BEGIN
                                 LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
                                                             ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
                                                            AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
+                                LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth
+                                                            ON MIFloat_TotalPayOth.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth()
                                 LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                             ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                                            AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
