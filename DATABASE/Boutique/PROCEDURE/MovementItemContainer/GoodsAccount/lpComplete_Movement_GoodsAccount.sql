@@ -866,7 +866,7 @@ BEGIN
                                                                                            , inGoodsSizeId            := _tmpItem_SummClient.GoodsSizeId
                                                                                            , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                             )
-     WHERE _tmpItem_SummClient.OperCount_sale > 0 -- !!!ЕСЛИ будет продажа!!!
+     -- WHERE _tmpItem_SummClient.OperCount_sale > 0 -- !!!ЕСЛИ будет продажа!!!
     ;
 
      -- 3.2.1. определяется Счет(справочника) для проводок по Покупателю

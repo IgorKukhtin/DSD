@@ -99,7 +99,7 @@ BEGIN
                             , tmpContainer.GoodsId
                             , tmpContainer.PartionId
                             , tmpContainer.PartionId_MI
-                
+               
                             , CASE WHEN tmpContainer.ContainerDescId = zc_Container_Count()
                                    THEN tmpContainer.Amount
                                    ELSE 0
@@ -109,7 +109,10 @@ BEGIN
                                    ELSE 0
                               END AS AmountSumm
   
-                            , MIContainer.MovementId AS MovementId
+                            , MIContainer.MovementId     AS MovementId
+                            , MIContainer.MovementDescId AS MovementDescId
+                            , COALESCE (MIContainer.AnalyzerId, 0) AS AnalyzerId
+
                             , CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate)
                                       THEN MIContainer.MovementItemId
                                    ELSE 0
@@ -218,12 +221,30 @@ BEGIN
 
                                          , 0 AS AmountStart
                                          , 0 AS AmountEnd
-                                         , CASE WHEN tmpMIContainer.Amount_Period > 0 THEN      tmpMIContainer.Amount_Period ELSE 0 END AS AmountIn
+
+                                         , CASE WHEN tmpMIContainer.Amount_Period > 0 THEN  1 * tmpMIContainer.Amount_Period ELSE 0 END AS AmountIn
                                          , CASE WHEN tmpMIContainer.Amount_Period < 0 THEN -1 * tmpMIContainer.Amount_Period ELSE 0 END AS AmountOut
+
                                          , 0 AS SummStart
                                          , 0 AS SummEnd
-                                         , CASE WHEN tmpMIContainer.Summ_Period > 0 THEN      tmpMIContainer.Summ_Period ELSE 0 END AS SummIn
-                                         , CASE WHEN tmpMIContainer.Summ_Period < 0 THEN -1 * tmpMIContainer.Summ_Period ELSE 0 END AS SummOut
+                                         , CASE WHEN tmpMIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount(), zc_Movement_ReturnIn())
+                                                 AND tmpMIContainer.AnalyzerId     > 0
+                                                     THEN 1 * tmpMIContainer.Summ_Period
+                                                WHEN tmpMIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount(), zc_Movement_ReturnIn())
+                                                     THEN 0
+                                                WHEN tmpMIContainer.Summ_Period > 0
+                                                     THEN 1 * tmpMIContainer.Summ_Period
+                                                ELSE 0
+                                           END AS SummIn
+                                         , CASE WHEN tmpMIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount(), zc_Movement_ReturnIn())
+                                                 AND tmpMIContainer.AnalyzerId     = 0
+                                                     THEN -1 * tmpMIContainer.Summ_Period
+                                                WHEN tmpMIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount(), zc_Movement_ReturnIn())
+                                                     THEN 0
+                                                WHEN tmpMIContainer.Summ_Period < 0
+                                                     THEN -1 * tmpMIContainer.Summ_Period
+                                                ELSE 0
+                                           END AS SummOut
                                     FROM tmpMIContainer
                                     WHERE tmpMIContainer.Amount_Period <> 0
                                        OR tmpMIContainer.Summ_Period <> 0

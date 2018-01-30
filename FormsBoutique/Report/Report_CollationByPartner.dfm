@@ -547,7 +547,7 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 61
           end
           object AmountEnd: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1083#1075' ('#1082#1086#1085#1077#1095#1085'.)'
@@ -557,7 +557,7 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 61
           end
           object SummStart: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1076#1086#1083#1075#1072' ('#1085#1072#1095'.)'
@@ -568,7 +568,7 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 71
+            Width = 70
           end
           object SummEnd: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1076#1086#1083#1075#1072' ('#1082#1086#1085#1077#1095#1085'.)'
@@ -579,7 +579,7 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 71
+            Width = 70
           end
           object AmountIn: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072' '#1082#1086#1083'-'#1074#1086
@@ -592,7 +592,7 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
             Width = 70
           end
           object AmountOut: TcxGridDBColumn
-            Caption = #1042#1086#1079#1074#1088#1072#1090' '#1082#1086#1083'-'#1074#1086
+            Caption = #1054#1087#1083#1072#1090#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'AmountOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -601,26 +601,26 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 70
           end
           object SummIn: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076#1072#1078#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1086#1087#1083#1072#1090#1099' '#1043#1056#1053
+            Caption = #1055#1088#1086#1076#1072#1078#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1043#1056#1053
             DataBinding.FieldName = 'SummIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 100
           end
           object SummOut: TcxGridDBColumn
-            Caption = #1054#1087#1083#1072#1090#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1043#1056#1053
+            Caption = #1054#1087#1083#1072#1090#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1086#1087#1083'. '#1043#1056#1053
             DataBinding.FieldName = 'SummOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 100
           end
           object ChangePercent: TcxGridDBColumn
             Caption = '% '#1057#1082#1080#1076#1082#1080
@@ -807,6 +807,7 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object ExecuteDialog: TExecuteDialog
