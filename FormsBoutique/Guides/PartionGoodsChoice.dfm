@@ -122,7 +122,6 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       object BrandName: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
         DataBinding.FieldName = 'BrandName'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -131,7 +130,6 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       object PeriodName: TcxGridDBColumn
         Caption = #1057#1077#1079#1086#1085
         DataBinding.FieldName = 'PeriodName'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -140,7 +138,6 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       object PeriodYear: TcxGridDBColumn
         Caption = #1043#1086#1076
         DataBinding.FieldName = 'PeriodYear'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -149,6 +146,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       object PartnerName: TcxGridDBColumn
         Caption = #1055#1086'c'#1090#1072#1074#1097#1080#1082
         DataBinding.FieldName = 'PartnerName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -264,6 +262,17 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 45
+      end
+      object DiscountTax: TcxGridDBColumn
+        Caption = '% '#1089#1082'. '#1057#1077#1079#1086#1085
+        DataBinding.FieldName = 'DiscountTax'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 50
       end
       object OperPriceList: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1055#1088#1072#1081#1089
@@ -619,7 +628,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       Control = edUnit
     end
     object bbOpenReportForm: TdxBarButton
-      Action = actOpenReportForm
+      Action = actReport_Goods
       Category = 0
     end
   end
@@ -911,7 +920,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
-    object actOpenReportForm: TdsdOpenForm
+    object actReport_Goods: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>'

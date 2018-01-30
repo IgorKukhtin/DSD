@@ -251,6 +251,7 @@ object Goods_ObjectForm: TGoods_ObjectForm
       Category = 0
       Hint = '    '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides

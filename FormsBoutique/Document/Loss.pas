@@ -122,8 +122,8 @@ type
     actGoodsChoiceForm: TOpenChoiceForm;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
-    actOpenReportForm: TdsdOpenForm;
-    bbOpenReportForm: TdxBarButton;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
   private
   public
   end;

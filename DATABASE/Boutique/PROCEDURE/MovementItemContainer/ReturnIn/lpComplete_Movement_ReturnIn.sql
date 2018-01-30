@@ -156,7 +156,7 @@ BEGIN
              , tmp.isGoods_Debt
 
         FROM (SELECT MovementItem.Id                  AS MovementItemId
-                   , MovementItem.ObjectId            AS GoodsId
+                   , Object_PartionGoods.GoodsId      AS GoodsId
                    , MovementItem.PartionId           AS PartionId
                    , MILinkObject_PartionMI.ObjectId  AS PartionId_MI
                    , Object_PartionGoods.GoodsSizeId  AS GoodsSizeId
@@ -187,7 +187,7 @@ BEGIN
                    , MIFloat_CurrencyValue.ValueData  AS CurrencyValue
                    , MIFloat_ParValue.ValueData       AS ParValue
 
-                   , CASE WHEN MovementItem.ObjectId = zc_Enum_Goods_Debt() THEN TRUE ELSE FALSE END AS isGoods_Debt
+                   , CASE WHEN Object_PartionGoods.GoodsId = zc_Enum_Goods_Debt() THEN TRUE ELSE FALSE END AS isGoods_Debt
 
               FROM Movement
                    JOIN MovementItem ON MovementItem.MovementId = Movement.Id
@@ -217,11 +217,11 @@ BEGIN
                                                ON MIFloat_ParValue.MovementItemId = Object_PartionMI.ObjectCode
                                               AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
 
+                   LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MovementItem.PartionId
                    LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                        ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
+                                        ON ObjectLink_Goods_InfoMoney.ObjectId = Object_PartionGoods.GoodsId
                                        AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
                    LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = COALESCE (ObjectLink_Goods_InfoMoney.ChildObjectId, zc_Enum_InfoMoney_10101()) -- !!!ВРЕМЕННО!!! Доходы + Товары + Одежда
-                   LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MovementItem.PartionId
 
 
               WHERE Movement.Id       = inMovementId

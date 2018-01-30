@@ -126,7 +126,7 @@ BEGIN
              , _tmp.InfoMoneyId
 
         FROM (SELECT MovementItem.Id                  AS MovementItemId
-                   , MovementItem.ObjectId            AS GoodsId
+                   , Object_PartionGoods.GoodsId      AS GoodsId
                    , MovementItem.PartionId           AS PartionId
                    , Object_PartionGoods.GoodsSizeId  AS GoodsSizeId
                    , MovementItem.Amount              AS OperCount
@@ -154,10 +154,10 @@ BEGIN
                    JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                     AND MovementItem.DescId     = zc_MI_Master()
                                     AND MovementItem.isErased   = FALSE
-                   LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MovementItem.PartionId
 
+                   LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MovementItem.PartionId
                    LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                        ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
+                                        ON ObjectLink_Goods_InfoMoney.ObjectId = Object_PartionGoods.GoodsId
                                        AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
                    LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = COALESCE (ObjectLink_Goods_InfoMoney.ChildObjectId, zc_Enum_InfoMoney_10101()) -- !!!ВРЕМЕННО!!! Доходы + Товары + Одежда
 

@@ -121,7 +121,7 @@ BEGIN
              , _tmp.InfoMoneyId
 
         FROM (SELECT MovementItem.Id                  AS MovementItemId
-                   , MovementItem.ObjectId            AS GoodsId
+                   , Object_PartionGoods.GoodsId      AS GoodsId
                    , MovementItem.Id                  AS PartionId -- !!!здесь можно было б и MovementItem.PartionId!!!
                    , Object_PartionGoods.GoodsSizeId  AS GoodsSizeId
                    , MovementItem.Amount              AS OperCount
@@ -153,12 +153,12 @@ BEGIN
                    LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                               AND MIFloat_CountForPrice.DescId         = zc_MIFloat_CountForPrice()
+
+                   LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MovementItem.Id
                    LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                        ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
+                                        ON ObjectLink_Goods_InfoMoney.ObjectId = Object_PartionGoods.GoodsId
                                        AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
                    LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = COALESCE (ObjectLink_Goods_InfoMoney.ChildObjectId, zc_Enum_InfoMoney_10101()) -- !!!ВРЕМЕННО!!! Доходы + Товары + Одежда
-                   LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MovementItem.Id
-
 
               WHERE Movement.Id       = inMovementId
                 AND Movement.DescId   = zc_Movement_Income()

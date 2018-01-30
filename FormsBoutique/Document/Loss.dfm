@@ -637,7 +637,7 @@ object LossForm: TLossForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenReportForm'
+          ItemName = 'bbReport_Goods'
         end
         item
           Visible = True
@@ -780,8 +780,8 @@ object LossForm: TLossForm
       ImageIndex = 1
       ShortCut = 115
     end
-    object bbOpenReportForm: TdxBarButton
-      Action = actOpenReportForm
+    object bbReport_Goods: TdxBarButton
+      Action = actReport_Goods
       Category = 0
     end
   end
@@ -1278,7 +1278,7 @@ object LossForm: TLossForm
         end>
       isShowModal = True
     end
-    object actOpenReportForm: TdsdOpenForm
+    object actReport_Goods: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>'

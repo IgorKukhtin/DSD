@@ -76,8 +76,8 @@ type
     FabrikaName: TcxGridDBColumn;
     CompositionGroupName: TcxGridDBColumn;
     isArc: TcxGridDBColumn;
-    actOpenReportForm: TdsdOpenForm;
-    bbOpenReportForm: TdxBarButton;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
     cxLabel6: TcxLabel;
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;

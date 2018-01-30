@@ -10,8 +10,8 @@
 
 
 -- !!!Собрали скидки!!!
-delete from _pgSummDiscountManual;
-insert into _pgSummDiscountManual (DiscountMovementItemId, SummDiscountManual) select  DiscountMovementItemId, SummDiscountManual from _pgSummDiscountManual_view;
+-- delete from _pgSummDiscountManual;
+-- insert into _pgSummDiscountManual (DiscountMovementItemId, SummDiscountManual) select  DiscountMovementItemId, SummDiscountManual from _pgSummDiscountManual_view;
 
 --
 -- 1. Выгрузили сво всех маг - Продажи + Возвраты - !!!в файл!!! потом скопировали

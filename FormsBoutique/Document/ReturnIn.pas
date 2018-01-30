@@ -163,8 +163,8 @@ type
     PartionId: TcxGridDBColumn;
     SaleMI_Id: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
-    actOpenReportForm: TdsdOpenForm;
-    bbOpenReportForm: TdxBarButton;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
     cxLabel18: TcxLabel;
     edInsertDate: TcxDateEdit;
     edInsertName: TcxButtonEdit;

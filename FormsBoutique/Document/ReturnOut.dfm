@@ -649,7 +649,7 @@ object ReturnOutForm: TReturnOutForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenReportForm'
+          ItemName = 'bbReport_Goods'
         end
         item
           Visible = True
@@ -788,8 +788,8 @@ object ReturnOutForm: TReturnOutForm
       Action = macUpdateAction
       Category = 0
     end
-    object bbOpenReportForm: TdxBarButton
-      Action = actOpenReportForm
+    object bbReport_Goods: TdxBarButton
+      Action = actReport_Goods
       Category = 0
     end
   end
@@ -1264,7 +1264,7 @@ object ReturnOutForm: TReturnOutForm
       ImageIndex = 0
       ShortCut = 45
     end
-    object actOpenReportForm: TdsdOpenForm
+    object actReport_Goods: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>'

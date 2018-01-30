@@ -5,7 +5,7 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1081
-  ExplicitHeight = 463
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -680,7 +680,7 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actOpenReportForm: TdsdOpenForm
+    object actReport_Goods: TdsdOpenForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -995,7 +995,7 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenReportForm'
+          ItemName = 'bbReport_Goods'
         end
         item
           Visible = True
@@ -1029,8 +1029,8 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
       Action = ExecuteDialog
       Category = 0
     end
-    object bbOpenReportForm: TdxBarButton
-      Action = actOpenReportForm
+    object bbReport_Goods: TdxBarButton
+      Action = actReport_Goods
       Category = 0
     end
     object bbPrint: TdxBarButton

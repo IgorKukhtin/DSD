@@ -262,10 +262,12 @@ BEGIN
         , CASE WHEN tmpMIContainer_group.MovementId <= 0 THEN TRUE ELSE FALSE END :: Boolean AS isRemains
      
         , ObjectDesc_Location.ItemName           AS LocationDescName
+        , Object_Location.Id                     AS LocationId
         , Object_Location.ObjectCode             AS LocationCode
         , Object_Location.ValueData              AS LocationName
 
         , ObjectDesc_Location_by.ItemName        AS LocationDescName_by
+        , Object_Location_by.Id                  AS LocationId_by
         , Object_Location_by.ObjectCode          AS LocationCode_by
         , Object_Location_by.ValueData           AS LocationName_by
 

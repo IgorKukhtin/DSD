@@ -74,6 +74,7 @@ BEGIN
      -- !!!
      -- !!! Баланс: Управленческие Счета (1+2+3 уровень)
      -- !!!
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20101,  inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_20101');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20102,  inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_20102');
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 30101,  inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_30101');
@@ -129,6 +130,8 @@ BEGIN
      -- !!! ОПиУ: 1-уровень (Группа ОПиУ)
      -- !!!
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10000, inDescId:= zc_Object_ProfitLossGroup(), inEnumName:= 'zc_Enum_ProfitLossGroup_10000');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20000, inDescId:= zc_Object_ProfitLossGroup(), inEnumName:= 'zc_Enum_ProfitLossGroup_20000');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 30000, inDescId:= zc_Object_ProfitLossGroup(), inEnumName:= 'zc_Enum_ProfitLossGroup_30000');
 
 
      -- !!!
@@ -138,6 +141,8 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10200, inDescId:= zc_Object_ProfitLossDirection(), inEnumName:= 'zc_Enum_ProfitLossDirection_10200');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10300, inDescId:= zc_Object_ProfitLossDirection(), inEnumName:= 'zc_Enum_ProfitLossDirection_10300');
 
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 30100, inDescId:= zc_Object_ProfitLossDirection(), inEnumName:= 'zc_Enum_ProfitLossDirection_30100');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 30200, inDescId:= zc_Object_ProfitLossDirection(), inEnumName:= 'zc_Enum_ProfitLossDirection_30200');
 
      -- !!!
      -- !!! ОПиУ: Статья (1+2+3 уровень)

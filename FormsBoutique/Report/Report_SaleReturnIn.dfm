@@ -5,7 +5,7 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1081
-  ExplicitHeight = 463
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -864,7 +864,7 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actOpenReportForm: TdsdOpenForm
+    object actReport_Goods: TdsdOpenForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -1180,7 +1180,7 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenReportForm'
+          ItemName = 'bbReport_Goods'
         end
         item
           Visible = True
@@ -1206,8 +1206,8 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
       Action = ExecuteDialog
       Category = 0
     end
-    object bbOpenReportForm: TdxBarButton
-      Action = actOpenReportForm
+    object bbReport_Goods: TdxBarButton
+      Action = actReport_Goods
       Category = 0
     end
     object bbPrint: TdxBarButton

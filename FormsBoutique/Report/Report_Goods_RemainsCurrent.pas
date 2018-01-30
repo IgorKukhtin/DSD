@@ -37,13 +37,12 @@ type
     UnitName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    actRefreshSize: TdsdDataSetRefresh;
+    actRefreshIsSize: TdsdDataSetRefresh;
     actRefreshIsPartion: TdsdDataSetRefresh;
     cbPartion: TcxCheckBox;
     cbSize: TcxCheckBox;
     cbPartner: TcxCheckBox;
-    actRefreshPartner: TdsdDataSetRefresh;
-    actRefreshMovement: TdsdDataSetRefresh;
+    actRefreshIsPartner: TdsdDataSetRefresh;
     CountForPrice: TcxGridDBColumn;
     cxLabel5: TcxLabel;
     edBrand: TcxButtonEdit;
@@ -82,6 +81,15 @@ type
     spSelectPrintSticker: TdsdStoredProc;
     macGoodsPrintList_Print: TMultiAction;
     bb: TdxBarButton;
+    cbPeriodYear: TcxCheckBox;
+    UnitName_in: TcxGridDBColumn;
+    Amount_in: TcxGridDBColumn;
+    RemainsDebt: TcxGridDBColumn;
+    SummDebt: TcxGridDBColumn;
+    SummDebt_profit: TcxGridDBColumn;
+    actRefreshIsPeriodYear: TdsdDataSetRefresh;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
   private
     { Private declarations }
   public

@@ -90,8 +90,8 @@ type
     FormParams: TdsdFormParams;
     TotalDebtSumm: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
-    actOpenReportForm: TdsdOpenForm;
-    bbOpenReportForm: TdxBarButton;
+    actReport_CollationByPartner: TdsdOpenForm;
+    bbReport_CollationByPartner: TdxBarButton;
   private
     { Private declarations }
   public

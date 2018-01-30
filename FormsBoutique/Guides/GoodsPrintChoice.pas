@@ -69,6 +69,7 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     spUnErased: TdsdStoredProc;
     Id: TcxGridDBColumn;
+    cxGridDBTableViewColumn1: TcxGridDBColumn;
   private
     { Private declarations }
   public

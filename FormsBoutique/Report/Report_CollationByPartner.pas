@@ -36,16 +36,11 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    actRefreshSize: TdsdDataSetRefresh;
-    actRefreshIsPartion: TdsdDataSetRefresh;
-    actRefreshPartner: TdsdDataSetRefresh;
-    actRefreshMovement: TdsdDataSetRefresh;
-    actOpenReportForm: TdsdOpenForm;
-    bbOpenReportForm: TdxBarButton;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     spGet_UserUnit: TdsdStoredProc;
-    actOpenReportForm_Partner: TdsdOpenForm;
     bbOpenReportForm_Partner: TdxBarButton;
     cxLabel4: TcxLabel;
     edClient: TcxButtonEdit;
@@ -55,6 +50,7 @@ type
     SummOut: TcxGridDBColumn;
     SummIn: TcxGridDBColumn;
     Text_info: TcxGridDBColumn;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

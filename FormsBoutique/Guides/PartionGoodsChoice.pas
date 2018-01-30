@@ -90,10 +90,11 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     spUnErased: TdsdStoredProc;
     GoodsCode: TcxGridDBColumn;
-    actOpenReportForm: TdsdOpenForm;
+    actReport_Goods: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
     SybaseId: TcxGridDBColumn;
     PartionId: TcxGridDBColumn;
+    DiscountTax: TcxGridDBColumn;
   private
     { Private declarations }
   public

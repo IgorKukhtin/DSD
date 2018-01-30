@@ -42,8 +42,8 @@ type
     actRefreshIsPartion: TdsdDataSetRefresh;
     actRefreshPartner: TdsdDataSetRefresh;
     actRefreshMovement: TdsdDataSetRefresh;
-    actOpenReportForm: TdsdOpenForm;
-    bbOpenReportForm: TdxBarButton;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     spGet_UserUnit: TdsdStoredProc;

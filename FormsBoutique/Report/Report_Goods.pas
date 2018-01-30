@@ -53,7 +53,6 @@ type
     edUnitGroup: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
     cbGoodsSize: TcxCheckBox;
-    bbSumm_branch: TdxBarControlContainerItem;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     getMovementForm: TdsdStoredProc;
@@ -74,13 +73,13 @@ type
     cxGridLevel1: TcxGridLevel;
     cxSplitter1: TcxSplitter;
     PartionId: TcxGridDBColumn;
-    actRefreshGoodsSize: TdsdDataSetRefresh;
+    actRefreshIsGoodsSize: TdsdDataSetRefresh;
     cbPartion: TcxCheckBox;
     cxLabel5: TcxLabel;
     edPartion: TcxButtonEdit;
     GuidesPartion: TdsdGuides;
-    actRefreshPartion: TdsdDataSetRefresh;
-    actRefreshPeriod: TdsdDataSetRefresh;
+    actRefreshIsPartion: TdsdDataSetRefresh;
+    actRefreshIsPeriod: TdsdDataSetRefresh;
     cbPeriod: TcxCheckBox;
     InvNumber_full: TcxGridDBColumn;
     LocationDescName_by: TcxGridDBColumn;
@@ -93,6 +92,8 @@ type
     Amount_PartionMI: TcxGridDBColumn;
     OperDate_PartionMI: TcxGridDBColumn;
     InvNumber_PartionMI: TcxGridDBColumn;
+    actReport_CollationByPartner: TdsdOpenForm;
+    bbReport_CollationByPartner: TdxBarButton;
   private
     { Private declarations }
   public

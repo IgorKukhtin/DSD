@@ -418,7 +418,7 @@ object ClientForm: TClientForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenReportForm'
+          ItemName = 'bbReport_CollationByPartner'
         end
         item
           Visible = True
@@ -489,8 +489,8 @@ object ClientForm: TClientForm
       Action = actShowAll
       Category = 0
     end
-    object bbOpenReportForm: TdxBarButton
-      Action = actOpenReportForm
+    object bbReport_CollationByPartner: TdxBarButton
+      Action = actReport_CollationByPartner
       Category = 0
     end
   end
@@ -754,7 +754,7 @@ object ClientForm: TClientForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
-    object actOpenReportForm: TdsdOpenForm
+    object actReport_CollationByPartner: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'

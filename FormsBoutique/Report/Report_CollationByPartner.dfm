@@ -5,9 +5,8 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitTop = -56
   ExplicitWidth = 1081
-  ExplicitHeight = 489
+  ExplicitHeight = 485
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -651,14 +650,16 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelect
+      StoredProc = spGet_UserUnit
       StoredProcList = <
+        item
+          StoredProc = spGet_UserUnit
+        end
         item
           StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object ExecuteDialog: TExecuteDialog
@@ -726,157 +727,7 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
-    object actRefreshMovement: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
-      Hint = #1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object actRefreshSize: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1087#1086' '#1056#1072#1079#1084#1077#1088#1072#1084
-      Hint = #1087#1086' '#1056#1072#1079#1084#1077#1088#1072#1084
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object actRefreshPartner: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
-      Hint = #1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object actRefreshIsPartion: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
-      Hint = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object actOpenReportForm_Partner: TdsdOpenForm
-      Category = 'DSDLib'
-      TabSheet = tsMain
-      MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' '#1079#1072' '#1087#1077#1088#1080#1086#1076'>'
-      Hint = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' '#1079#1072' '#1087#1077#1088#1080#1086#1076'>'
-      ImageIndex = 55
-      FormName = 'TReport_GoodsForm'
-      FormNameParam.Value = 'TReport_GoodsForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'LocationId'
-          Value = ''
-          Component = GuidesUnit
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'LocationName'
-          Value = ''
-          Component = GuidesUnit
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsSizeId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsSizeId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsSizeName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsSizeName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PartionId'
-          Value = '0'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isPeriod'
-          Value = 'TRUE'
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isPartion'
-          Value = 'TRUE'
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MovementId'
-          Value = '0'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InvNumber'
-          Value = Null
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actOpenReportForm: TdsdOpenForm
+    object actReport_Goods: TdsdOpenForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -1128,6 +979,10 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
         end
         item
           Visible = True
+          ItemName = 'bbReport_Goods'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1150,8 +1005,8 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
       Action = ExecuteDialog
       Category = 0
     end
-    object bbOpenReportForm: TdxBarButton
-      Action = actOpenReportForm
+    object bbReport_Goods: TdxBarButton
+      Action = actReport_Goods
       Category = 0
     end
     object bbPrint: TdxBarButton
@@ -1159,7 +1014,14 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
       Category = 0
     end
     object bbOpenReportForm_Partner: TdxBarButton
-      Action = actOpenReportForm_Partner
+      Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' '#1079#1072' '#1087#1077#1088#1080#1086#1076'>'
+      Category = 0
+      Hint = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' '#1079#1072' '#1087#1077#1088#1080#1086#1076'>'
+      Visible = ivAlways
+      ImageIndex = 55
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actReport_Goods
       Category = 0
     end
   end

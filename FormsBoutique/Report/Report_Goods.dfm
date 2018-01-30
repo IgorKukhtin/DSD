@@ -15,19 +15,19 @@ inherited Report_GoodsForm: TReport_GoodsForm
     Height = 393
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1053
+    ExplicitWidth = 1195
     ExplicitHeight = 393
     ClientRectBottom = 393
     ClientRectRight = 1195
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1053
+      ExplicitWidth = 1195
       ExplicitHeight = 393
       inherited cxGrid: TcxGrid
         Top = 83
         Width = 1195
         Height = 310
         ExplicitTop = 83
-        ExplicitWidth = 1053
+        ExplicitWidth = 1195
         ExplicitHeight = 310
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -608,7 +608,6 @@ inherited Report_GoodsForm: TReport_GoodsForm
         Align = alTop
         PopupMenu = PopupMenu
         TabOrder = 2
-        ExplicitWidth = 1053
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource
@@ -801,14 +800,13 @@ inherited Report_GoodsForm: TReport_GoodsForm
         HotZoneClassName = 'TcxMediaPlayer9Style'
         AlignSplitter = salTop
         Control = cxGrid1
-        ExplicitWidth = 1053
       end
     end
   end
   inherited Panel: TPanel
     Width = 1195
     Height = 54
-    ExplicitWidth = 1053
+    ExplicitWidth = 1195
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
@@ -870,7 +868,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
     object cbGoodsSize: TcxCheckBox
       Left = 626
       Top = 29
-      Action = actRefreshGoodsSize
+      Action = actRefreshIsGoodsSize
       Properties.ReadOnly = False
       State = cbsChecked
       TabOrder = 8
@@ -879,7 +877,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
     object cbPartion: TcxCheckBox
       Left = 749
       Top = 29
-      Action = actRefreshPartion
+      Action = actRefreshIsPartion
       Properties.ReadOnly = False
       State = cbsChecked
       TabOrder = 9
@@ -888,7 +886,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
     object cbPeriod: TcxCheckBox
       Left = 865
       Top = 29
-      Action = actRefreshPeriod
+      Action = actRefreshIsPeriod
       Properties.ReadOnly = False
       State = cbsChecked
       TabOrder = 10
@@ -977,7 +975,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       end>
   end
   inherited ActionList: TActionList
-    object actRefreshPeriod: TdsdDataSetRefresh [0]
+    object actRefreshIsPeriod: TdsdDataSetRefresh [0]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -987,11 +985,9 @@ inherited Report_GoodsForm: TReport_GoodsForm
         end>
       Caption = #1047#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
       Hint = #1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
-      ImageIndex = 4
-      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actRefreshPartion: TdsdDataSetRefresh [1]
+    object actRefreshIsPartion: TdsdDataSetRefresh [1]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -1001,11 +997,9 @@ inherited Report_GoodsForm: TReport_GoodsForm
         end>
       Caption = #1055#1086' '#1074#1089#1077#1084' '#1087#1072#1088#1090#1080#1103#1084
       Hint = #1055#1086' '#1087#1072#1088#1090#1080#1103#1084
-      ImageIndex = 4
-      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actRefreshGoodsSize: TdsdDataSetRefresh [2]
+    object actRefreshIsGoodsSize: TdsdDataSetRefresh [2]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -1015,8 +1009,6 @@ inherited Report_GoodsForm: TReport_GoodsForm
         end>
       Caption = #1055#1086' '#1074#1089#1077#1084' '#1088#1072#1079#1084#1077#1088#1072#1084
       Hint = #1055#1086' '#1074#1089#1077#1084' '#1088#1072#1079#1084#1077#1088#1072#1084
-      ImageIndex = 4
-      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actPrint: TdsdPrintAction
@@ -1277,6 +1269,53 @@ inherited Report_GoodsForm: TReport_GoodsForm
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 28
     end
+    object actReport_CollationByPartner: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
+      ImageIndex = 40
+      FormName = 'TReport_CollationByPartnerForm'
+      FormNameParam.Value = 'TReport_CollationByPartnerForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'LocationId_by'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'LocationName_by'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'LocationId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'LocationName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1412,6 +1451,10 @@ inherited Report_GoodsForm: TReport_GoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbReport_CollationByPartner'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1428,19 +1471,16 @@ inherited Report_GoodsForm: TReport_GoodsForm
       Category = 0
       Visible = ivNever
     end
-    object bbSumm_branch: TdxBarControlContainerItem
-      Caption = 'bbSumm_branch'
-      Category = 0
-      Hint = 'bbSumm_branch'
-      Visible = ivAlways
-      Control = cbSumm_branch
-    end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
       Category = 0
     end
     object bbOpenDocument: TdxBarButton
       Action = actOpenDocument
+      Category = 0
+    end
+    object bbReport_CollationByPartner: TdxBarButton
+      Action = actReport_CollationByPartner
       Category = 0
     end
   end

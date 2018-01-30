@@ -331,7 +331,7 @@ SELECT MovementDesc.ItemName, Movement.*, MovementItem.*, MIFloat_TotalPay.*
                                                                          LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
                                                                                                      ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
                                                                                                     AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
-                                                                    WHERE Object.Id  = 379409 -- select lpInsertFind_Object_PartionMI (680181 ) -- vbPartionMI_Id
+e                                                                    WHERE Object.Id  = 379409 -- select lpInsertFind_Object_PartionMI (680181 ) -- vbPartionMI_Id
                              
 
    

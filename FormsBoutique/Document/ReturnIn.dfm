@@ -651,6 +651,7 @@ object ReturnInForm: TReturnInForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
             Options.Editing = False
             Width = 70
           end
@@ -844,7 +845,7 @@ object ReturnInForm: TReturnInForm
             Width = 70
           end
           object TotalSummPriceList: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1072#1081#1089' ('#1074' '#1087#1088#1086#1076'.)'
+            Caption = #1057#1091#1084#1084#1072' '#1043#1056#1053' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080' ('#1074' '#1087#1088#1086#1076'.)'
             DataBinding.FieldName = 'TotalSummPriceList'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -1442,7 +1443,7 @@ object ReturnInForm: TReturnInForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenReportForm'
+          ItemName = 'bbReport_Goods'
         end
         item
           Visible = True
@@ -1595,8 +1596,8 @@ object ReturnInForm: TReturnInForm
       Category = 0
       ImageIndex = 50
     end
-    object bbOpenReportForm: TdxBarButton
-      Action = actOpenReportForm
+    object bbReport_Goods: TdxBarButton
+      Action = actReport_Goods
       Category = 0
     end
   end
@@ -2217,7 +2218,7 @@ object ReturnInForm: TReturnInForm
       ImageIndex = 0
       ShortCut = 45
     end
-    object actOpenReportForm: TdsdOpenForm
+    object actReport_Goods: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>'

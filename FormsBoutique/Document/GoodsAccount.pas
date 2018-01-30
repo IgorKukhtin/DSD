@@ -164,8 +164,8 @@ type
     TotalPayOth_Sale: TcxGridDBColumn;
     SummChangePercent_sale: TcxGridDBColumn;
     TotalChangePercentPay: TcxGridDBColumn;
-    actOpenReportForm: TdsdOpenForm;
-    bbOpenReportForm: TdxBarButton;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
   private
   public
   end;

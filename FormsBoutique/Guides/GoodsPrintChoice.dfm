@@ -3,7 +3,7 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1077#1089#1089#1080#1103' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103' '#1087#1077#1095#1072#1090#1080' '#1094#1077#1085#1085#1080#1082#1086#1074'>'
   ClientHeight = 336
-  ClientWidth = 533
+  ClientWidth = 611
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 533
+    Width = 611
     Height = 310
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 533
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -38,6 +39,11 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
         item
           Format = ',0.####'
           Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cxGridDBTableViewColumn1
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -51,6 +57,11 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
         item
           Format = 'C'#1090#1088#1086#1082': ,0'
           Kind = skCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cxGridDBTableViewColumn1
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -60,13 +71,14 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object Id: TcxGridDBColumn
-        Caption = #8470
+        Caption = #8470' '#1087'/'#1087
         DataBinding.FieldName = 'Id'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -78,6 +90,16 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 169
+      end
+      object cxGridDBTableViewColumn1: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1087#1077#1095#1072#1090#1080
+        DataBinding.FieldName = 'Amount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object UserName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100

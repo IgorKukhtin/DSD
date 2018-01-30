@@ -682,6 +682,7 @@ object SaleForm: TSaleForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
             Options.Editing = False
             Width = 70
           end
@@ -832,7 +833,7 @@ object SaleForm: TSaleForm
             Width = 50
           end
           object TotalSummPriceList: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' ('#1087#1088#1072#1081#1089')'
+            Caption = #1057#1091#1084#1084#1072' '#1043#1056#1053' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'TotalSummPriceList'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -840,6 +841,7 @@ object SaleForm: TSaleForm
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
             Options.Editing = False
             Width = 80
           end
@@ -991,7 +993,7 @@ object SaleForm: TSaleForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1074' '#1074#1072#1083#1102#1090#1077
+            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1086' '#1074#1093#1086#1076#1085#1099#1084' '#1094#1077#1085#1072#1084' '#1074' '#1074#1072#1083#1102#1090#1077
             Options.Editing = False
             Width = 80
           end
@@ -1005,7 +1007,7 @@ object SaleForm: TSaleForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1043#1056#1053
+            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1086' '#1074#1093#1086#1076#1085#1099#1084' '#1094#1077#1085#1072#1084' '#1074' '#1043#1056#1053
             Options.Editing = False
             Width = 80
           end
@@ -1423,7 +1425,7 @@ object SaleForm: TSaleForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenReportForm'
+          ItemName = 'bbReport_Goods'
         end
         item
           Visible = True
@@ -1572,8 +1574,8 @@ object SaleForm: TSaleForm
       Category = 0
       ImageIndex = 50
     end
-    object bbOpenReportForm: TdxBarButton
-      Action = actOpenReportForm
+    object bbReport_Goods: TdxBarButton
+      Action = actReport_Goods
       Category = 0
     end
   end
@@ -2170,7 +2172,7 @@ object SaleForm: TSaleForm
       ImageIndex = 0
       ShortCut = 45
     end
-    object actOpenReportForm: TdsdOpenForm
+    object actReport_Goods: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>'

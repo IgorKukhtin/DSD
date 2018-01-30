@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpComplete_Movement_Loss  (Integer, TVarChar);
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Loss(
     IN inMovementId        Integer               , -- ключ Документа
     IN inSession           TVarChar                -- сессия пользователя
-)                              
+)
 RETURNS VOID
 AS
 $BODY$
@@ -13,13 +13,14 @@ $BODY$
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
- 
-    -- собственно проводки
-    PERFORM lpComplete_Movement_Loss(inMovementId, -- ключ Документа
-                                       vbUserId);    -- Пользователь  
 
-    UPDATE Movement SET StatusId = zc_Enum_Status_Complete() 
-    WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
+     -- создаются временные таблицы - для формирование данных по проводкам
+     PERFORM lpComplete_Movement_Loss_CreateTemp();
+
+    -- собственно проводки
+    PERFORM lpComplete_Movement_Loss (inMovementId -- ключ Документа
+                                    , vbUserId     -- Пользователь
+                                     );
 
 END;
 $BODY$

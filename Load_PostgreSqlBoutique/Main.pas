@@ -163,6 +163,7 @@ type
     cbErr: TCheckBox;
     cbMovementNotOne: TCheckBox;
     cbMINotTwo: TCheckBox;
+    cbSelect_MovementItem_Sale_Sybase_Check: TCheckBox;
 
     procedure btnAddGuideId_PostgresClick(Sender: TObject);
     procedure btnAddlDocId_PostgresClick(Sender: TObject);
@@ -3709,6 +3710,10 @@ begin
      zc_Enum_DiscountSaleKind_Outlet:=toSqlQuery.FieldByName('RetV').AsInteger;
      //
      myEnabledCB(cbSale);
+     //
+     // !!!Собрали скидки!!!
+     fExecSqFromQuery('delete from _pgSummDiscountManual');
+     fExecSqFromQuery('insert into _pgSummDiscountManual (DiscountMovementItemId, SummDiscountManual) select  DiscountMovementItemId, SummDiscountManual from _pgSummDiscountManual_view');
      //
      with fromQuery,Sql do begin
         Close;

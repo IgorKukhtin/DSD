@@ -49,6 +49,7 @@ type
     edPeriodYearStart: TcxCurrencyEdit;
     cxLabel6: TcxLabel;
     edPeriodYearEnd: TcxCurrencyEdit;
+    cbPeriodYear: TcxCheckBox;
   private
     { Private declarations }
   public

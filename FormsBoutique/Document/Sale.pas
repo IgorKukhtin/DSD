@@ -157,8 +157,8 @@ type
     MacInsertUpdateMIChildTotal: TMultiAction;
     bbInsertUpdateMIChildTotal: TdxBarButton;
     Remains: TcxGridDBColumn;
-    actOpenReportForm: TdsdOpenForm;
-    bbOpenReportForm: TdxBarButton;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
     cxLabel15: TcxLabel;
     edInsertDate: TcxDateEdit;
     cxLabel18: TcxLabel;

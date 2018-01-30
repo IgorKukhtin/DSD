@@ -25,7 +25,7 @@ BEGIN
      DELETE FROM _tmpItem;
 
      -- !!!временно - для Sybase!!!
-     inUserId := zc_User_Sybase() ;
+     inUserId := zc_User_Sybase();
 
 
      -- Параметры из документа
@@ -108,7 +108,7 @@ BEGIN
                         )
             -- Данные по MI + расчет SummDebt
           , tmpMI AS (SELECT MovementItem.Id                  AS MovementItemId
-                           , MovementItem.ObjectId            AS GoodsId
+                           , Object_PartionGoods.GoodsId      AS GoodsId
                            , MovementItem.PartionId           AS PartionId
                            -- , Object_PartionMI.ObjectCode   AS MovementItemId_MI
                            , MILinkObject_PartionMI.ObjectId  AS PartionId_MI
@@ -232,7 +232,7 @@ BEGIN
                            , MIFloat_CurrencyValue.ValueData  AS CurrencyValue
                            , MIFloat_ParValue.ValueData       AS ParValue
 
-                           , CASE WHEN MovementItem.ObjectId = zc_Enum_Goods_Debt() THEN TRUE 
+                           , CASE WHEN Object_PartionGoods.GoodsId = zc_Enum_Goods_Debt() THEN TRUE 
                                   WHEN EXISTS (SELECT 1 FROM tmpCheck WHERE tmpCheck.PartionId_MI = MILinkObject_PartionMI.ObjectId) THEN TRUE 
                                   ELSE FALSE
                              END AS isGoods_Debt
@@ -299,11 +299,11 @@ BEGIN
                                                             ON MILinkObject_DiscountSaleKind.MovementItemId = Object_PartionMI.ObjectCode
                                                            AND MILinkObject_DiscountSaleKind.DescId         = zc_MILinkObject_DiscountSaleKind()
 
+                           LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MovementItem.PartionId
                            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                                ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
+                                                ON ObjectLink_Goods_InfoMoney.ObjectId = Object_PartionGoods.GoodsId
                                                AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
                            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = COALESCE (ObjectLink_Goods_InfoMoney.ChildObjectId, zc_Enum_InfoMoney_10101()) -- !!!ВРЕМЕННО!!! Доходы + Товары + Одежда
-                           LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MovementItem.PartionId
 
                       WHERE Movement.Id       = inMovementId
                         AND Movement.DescId   = zc_Movement_GoodsAccount()
@@ -560,6 +560,10 @@ BEGIN
      END IF;
      -- проверка SummDebt_return
      IF   EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.SummDebt_return < 0)
+          -- !!!временно!!!
+      -- AND inUserId <> zc_User_Sybase()
+      -- AND 1=0
+      -- AND inMovementId <> 334388
           -- !!!временно - для Sybase!!! - zc_Enum_Status_UnComplete
       AND EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.SummDebt_sale <> 0
                                            AND _tmpItem.SummDebt_return - COALESCE ((SELECT SUM (COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_SummChangePercent.ValueData, 0))

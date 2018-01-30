@@ -50,28 +50,25 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
   object cxLabel3: TcxLabel
     Left = 10
     Top = 40
-    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' / '#1075#1088#1091#1087#1087#1072':'
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' / '#1043#1088#1091#1087#1087#1072':'
   end
   object cbPartion: TcxCheckBox
     Left = 10
     Top = 12
-    Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
     TabOrder = 4
     Width = 86
   end
   object cbSize: TcxCheckBox
-    Left = 113
+    Left = 230
     Top = 12
-    Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     Caption = #1087#1086' '#1056#1072#1079#1084#1077#1088#1072#1084
     TabOrder = 5
     Width = 85
   end
   object cbPartner: TcxCheckBox
-    Left = 217
+    Left = 109
     Top = 12
-    Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     Caption = #1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
     TabOrder = 6
     Width = 109
@@ -128,40 +125,47 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
     Width = 305
   end
   object cxLabel5: TcxLabel
-    Left = 27
-    Top = 241
-    Caption = #1043#1086#1076' ('#1085#1072#1095'.):'
+    Left = 10
+    Top = 244
+    Caption = #1043#1086#1076' '#1089' ...'
   end
   object edPeriodYearStart: TcxCurrencyEdit
-    Left = 27
-    Top = 261
+    Left = 10
+    Top = 264
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 14
-    Width = 100
+    Width = 70
   end
   object cxLabel6: TcxLabel
-    Left = 171
-    Top = 241
-    Caption = #1043#1086#1076' ('#1086#1082#1086#1085'.):'
+    Left = 94
+    Top = 244
+    Caption = #1043#1086#1076' '#1087#1086' ...'
   end
   object edPeriodYearEnd: TcxCurrencyEdit
-    Left = 171
-    Top = 261
+    Left = 94
+    Top = 264
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 16
-    Width = 100
+    Width = 70
+  end
+  object cbPeriodYear: TcxCheckBox
+    Left = 180
+    Top = 264
+    Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076
+    TabOrder = 17
+    Width = 122
   end
   object PeriodChoice: TPeriodChoice
-    Left = 279
-    Top = 65
+    Left = 263
+    Top = 41
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 286
-    Top = 249
+    Left = 262
+    Top = 193
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -173,7 +177,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 303
+    Left = 279
     Top = 80
   end
   object FormParams: TdsdFormParams
@@ -215,6 +219,14 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
         Name = 'isPartner'
         Value = Null
         Component = cbPartner
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPeriodYear'
+        Value = Null
+        Component = cbPeriodYear
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -284,7 +296,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 30
+    Left = 158
     Top = 291
   end
   object GuidesUnit: TdsdGuides

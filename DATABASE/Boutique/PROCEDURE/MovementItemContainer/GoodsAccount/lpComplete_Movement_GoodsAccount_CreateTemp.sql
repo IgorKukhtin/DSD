@@ -41,7 +41,7 @@ BEGIN
                                               , OperCount TFloat, OperSumm TFloat, OperSumm_ToPay TFloat, TotalPay TFloat, TotalPay_curr TFloat
                                               , OperCount_sale TFloat, OperSumm_sale TFloat, OperSummPriceList_sale TFloat
                                               , Summ_10201 TFloat, Summ_10202 TFloat, Summ_10203 TFloat, Summ_10204 TFloat
-                                              , ContainerId_ProfitLoss_10101 TFloat, ContainerId_ProfitLoss_10201 TFloat, ContainerId_ProfitLoss_10202 TFloat, ContainerId_ProfitLoss_10203 TFloat, ContainerId_ProfitLoss_10204 TFloat, ContainerId_ProfitLoss_10301 TFloat
+                                              , ContainerId_ProfitLoss_10101 Integer, ContainerId_ProfitLoss_10201 Integer, ContainerId_ProfitLoss_10202 Integer, ContainerId_ProfitLoss_10203 Integer, ContainerId_ProfitLoss_10204 Integer, ContainerId_ProfitLoss_10301 Integer
                                               , isGoods_Debt Boolean
                                                ) ON COMMIT DROP;
 

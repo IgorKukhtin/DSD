@@ -18,10 +18,6 @@ $BODY$
   DECLARE vbJuridicalId_Basis        Integer; -- значение пока НЕ определяется
   DECLARE vbBusinessId               Integer; -- значение пока НЕ определяется
 
-  DECLARE vbCurrencyDocumentId     Integer;
-  DECLARE vbCurrencyValue          TFloat;
-  DECLARE vbParValue               TFloat;
-
   DECLARE vbWhereObjectId_Analyzer_From Integer; -- Аналитика для проводок
   DECLARE vbWhereObjectId_Analyzer_To   Integer; -- Аналитика для проводок
 
@@ -113,7 +109,7 @@ BEGIN
              , _tmp.InfoMoneyId
 
         FROM (SELECT MovementItem.Id                  AS MovementItemId
-                   , MovementItem.ObjectId            AS GoodsId
+                   , Object_PartionGoods.GoodsId      AS GoodsId
                    , MovementItem.PartionId           AS PartionId
                    , Object_PartionGoods.GoodsSizeId  AS GoodsSizeId
                    , MovementItem.Amount              AS OperCount
@@ -130,7 +126,7 @@ BEGIN
 
                      -- сумма по Контрагенту в Валюте - с округлением до 2-х знаков
                    , CAST (MovementItem.Amount * COALESCE (MIFloat_OperPrice.ValueData, 0) / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS NUMERIC (16, 2)) AS OperSumm_Currency
-                   
+
                      -- Управленческая группа
                    , View_InfoMoney.InfoMoneyGroupId
                      -- Управленческие назначения
@@ -142,7 +138,6 @@ BEGIN
                    JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                     AND MovementItem.DescId     = zc_MI_Master()
                                     AND MovementItem.isErased   = FALSE
-                   LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MovementItem.PartionId
 
                    LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
                                                ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
@@ -156,8 +151,10 @@ BEGIN
                    LEFT JOIN MovementItemFloat AS MIFloat_ParValue
                                                ON MIFloat_ParValue.MovementItemId = MovementItem.Id
                                               AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
+
+                   LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MovementItem.PartionId
                    LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                        ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
+                                        ON ObjectLink_Goods_InfoMoney.ObjectId = Object_PartionGoods.GoodsId
                                        AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
                    LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = COALESCE (ObjectLink_Goods_InfoMoney.ChildObjectId, zc_Enum_InfoMoney_10101()) -- !!!ВРЕМЕННО!!! Доходы + Товары + Одежда
 
@@ -351,7 +348,7 @@ BEGIN
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable();
-     
+
 
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId

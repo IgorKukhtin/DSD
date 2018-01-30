@@ -140,8 +140,8 @@ type
     TotalSummBalance: TcxGridDBColumn;
     actInsertMaskAction: TdsdInsertUpdateAction;
     macInsertMaskAction: TMultiAction;
-    actOpenReportForm: TdsdOpenForm;
-    bbOpenReportForm: TdxBarButton;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
   private
   public
   end;
