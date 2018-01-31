@@ -34,7 +34,7 @@ type
     dxBarButton1: TdxBarButton;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    PartnerName: TcxGridDBColumn;
+    ClientName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     actRefreshSize: TdsdDataSetRefresh;
@@ -48,6 +48,11 @@ type
     spGet_UserUnit: TdsdStoredProc;
     actOpenReportForm_Partner: TdsdOpenForm;
     bbOpenReportForm_Partner: TdxBarButton;
+    SummDebt_profit: TcxGridDBColumn;
+    TotalChangePercentPay: TcxGridDBColumn;
+    TotalCountReturn: TcxGridDBColumn;
+    TotalReturn: TcxGridDBColumn;
+    TotalPayReturn: TcxGridDBColumn;
   private
     { Private declarations }
   public

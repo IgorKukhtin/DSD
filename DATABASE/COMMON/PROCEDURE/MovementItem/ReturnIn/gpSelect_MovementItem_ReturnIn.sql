@@ -347,6 +347,8 @@ BEGIN
 
             LEFT JOIN tmpPromo ON tmpPromo.GoodsId      = tmpGoods.GoodsId
                               AND (tmpPromo.GoodsKindId = tmpGoods.GoodsKindId OR tmpPromo.GoodsKindId = 0)
+                              AND (tmpPromo.MovementId  = tmpMI.MovementId_Promo OR COALESCE (tmpMI.MovementId_Promo, 0) = 0)
+                              
 
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
             LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpGoods.GoodsId
@@ -444,6 +446,7 @@ BEGIN
 
             LEFT JOIN tmpPromo ON tmpPromo.GoodsId      = tmpResult.GoodsId
                               AND (tmpPromo.GoodsKindId = tmpResult.GoodsKindId OR tmpPromo.GoodsKindId = 0)
+                              AND (tmpPromo.MovementId  = tmpResult.MovementId_Promo OR COALESCE (tmpResult.MovementId_Promo, 0) = 0)
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpResult.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpResult.GoodsKindId
