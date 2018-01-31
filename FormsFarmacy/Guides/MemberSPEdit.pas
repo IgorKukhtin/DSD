@@ -37,7 +37,7 @@ type
     edGroupMemberSP: TcxButtonEdit;
     GuidesGroupMemberSP: TdsdGuides;
     cxLabel3: TcxLabel;
-    edHappyDate: TcxDateEdit;
+    edHappyDate: TcxTextEdit;
   private
     { Private declarations }
   public

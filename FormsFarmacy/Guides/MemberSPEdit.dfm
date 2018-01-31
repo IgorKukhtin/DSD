@@ -98,15 +98,11 @@
   object cxLabel3: TcxLabel
     Left = 243
     Top = 8
-    Caption = #1044#1072#1090#1072' '#1088#1086#1078#1076#1077#1085#1080#1103
+    Caption = #1043#1086#1076' '#1088#1086#1078#1076#1077#1085#1080#1103
   end
-  object edHappyDate: TcxDateEdit
+  object edHappyDate: TcxTextEdit
     Left = 243
     Top = 26
-    EditValue = 43118d
-    Properties.DisplayFormat = 'DD.MM.YYYY'
-    Properties.SaveTime = False
-    Properties.ShowTime = False
     TabOrder = 11
     Width = 93
   end
@@ -191,7 +187,7 @@
         Name = 'inHappyDate'
         Value = 'NULL'
         Component = edHappyDate
-        DataType = ftDateTime
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -268,8 +264,9 @@
       end
       item
         Name = 'HappyDate'
+        Value = Null
         Component = edHappyDate
-        DataType = ftDateTime
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
