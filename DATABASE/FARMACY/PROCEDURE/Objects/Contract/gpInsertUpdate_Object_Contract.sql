@@ -51,7 +51,7 @@ BEGIN
    -- !!! IF COALESCE (inCode, 0) = 0  THEN vbCode_calc := NULL; ELSE vbCode_calc := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
    
    -- проверка уникальности <Наименование>
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Contract(), inName);
+   -- PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Contract(), inName);
    -- проверка уникальности <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Contract(), vbCode_calc);
 
