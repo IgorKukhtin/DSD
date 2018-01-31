@@ -81,7 +81,7 @@ type
     actRefreshIsPartion: TdsdDataSetRefresh;
     actRefreshIsPeriod: TdsdDataSetRefresh;
     cbPeriod: TcxCheckBox;
-    InvNumber_full: TcxGridDBColumn;
+    InvNumberAll: TcxGridDBColumn;
     LocationDescName_by: TcxGridDBColumn;
     LocationCode_by: TcxGridDBColumn;
     LocationName_by: TcxGridDBColumn;

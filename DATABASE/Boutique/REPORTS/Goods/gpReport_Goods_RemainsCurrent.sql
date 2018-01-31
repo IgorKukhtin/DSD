@@ -21,7 +21,9 @@ CREATE OR REPLACE FUNCTION  gpReport_Goods_RemainsCurrent(
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (PartionId            Integer
+             , MovementId_Partion   Integer
              , InvNumber_Partion    TVarChar
+             , InvNumberAll_Partion TVarChar
              , OperDate_Partion     TDateTime
              , DescName_Partion     TVarChar
              , UnitId               Integer
@@ -156,6 +158,7 @@ BEGIN
        , tmpData AS (SELECT tmpContainer.UnitId
                           , tmpContainer.GoodsId
                           , CASE WHEN inisPartion = TRUE THEN tmpContainer.PartionId        ELSE 0  END AS PartionId
+                          , CASE WHEN inisPartion = TRUE THEN tmpContainer.MovementId       ELSE 0  END AS MovementId_Partion
                           , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE '' END AS DescName_Partion
                           , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE '' END AS InvNumber_Partion
                           , CASE WHEN inisPartion = TRUE THEN Movement_Partion.OperDate     ELSE zc_DateStart() END AS OperDate_Partion
@@ -199,6 +202,7 @@ BEGIN
                      GROUP BY tmpContainer.UnitId
                             , tmpContainer.GoodsId
                             , CASE WHEN inisPartion = TRUE THEN tmpContainer.PartionId        ELSE 0  END
+                            , CASE WHEN inisPartion = TRUE THEN tmpContainer.MovementId       ELSE 0  END
                             , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE '' END
                             , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE '' END
                             , CASE WHEN inisPartion = TRUE THEN Movement_Partion.OperDate     ELSE zc_DateStart() END
@@ -277,8 +281,10 @@ BEGIN
         -- Результат
         SELECT
              tmpData.PartionId                      AS PartionId
+           , tmpData.MovementId_Partion             AS MovementId_Partion
            , tmpData.InvNumber_Partion :: TVarChar  AS InvNumber_Partion
-           , tmpData.OperDate_Partion  :: TDateTime AS OperDate_Partion
+           , zfCalc_PartionMovementName (0, '', tmpData.InvNumber_Partion, tmpData.OperDate_Partion) AS InvNumberAll_Partion
+           , CASE WHEN tmpData.OperDate_Partion = zc_DateStart() THEN NULL ELSE tmpData.OperDate_Partion END  :: TDateTime AS OperDate_Partion
            , tmpData.DescName_Partion  :: TVarChar  AS DescName_Partion
 
            , Object_Unit.Id                 AS UnitId

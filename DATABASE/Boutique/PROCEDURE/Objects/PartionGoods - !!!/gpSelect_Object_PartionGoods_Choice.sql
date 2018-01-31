@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PartionGoods_Choice(
 RETURNS TABLE (Id                   Integer
              , MovementId           Integer
              , InvNumber            TVarChar
-             , InvNumber_Full       TVarChar
+             , InvNumberAll         TVarChar
              , PartnerName          TVarChar
              , UnitName             TVarChar
              , OperDate             TDateTime
@@ -96,7 +96,7 @@ BEGIN
        SELECT tmpContainer.PartionId              AS Id
             , Movement.Id                         AS MovementId
             , Movement.InvNumber                  AS InvNumber
-            , ('№ ' || Movement.InvNumber ||' от '||zfConvert_DateToString(Movement.OperDate) ) :: TVarChar AS InvNumber_full
+            , zfCalc_PartionMovementName (0, '', Movement.InvNumber, Movement.OperDate) AS InvNumberAll
             , Object_Partner.ValueData            AS PartnerName
             , Object_Unit.ValueData               AS UnitName
             , Object_PartionGoods.OperDate        AS OperDate

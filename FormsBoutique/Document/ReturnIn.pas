@@ -175,7 +175,7 @@ type
     spInsertUpdateMIMaster_BarCode: TdsdStoredProc;
     ChangePercent: TcxGridDBColumn;
     OperDate_Sale: TcxGridDBColumn;
-    InvNumber_Sale_Full: TcxGridDBColumn;
+    InvNumber_Sale: TcxGridDBColumn;
     TotalPay_Sale: TcxGridDBColumn;
     TotalPayOth_Sale: TcxGridDBColumn;
     TotalPay_Return: TcxGridDBColumn;

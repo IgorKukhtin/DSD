@@ -850,10 +850,10 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'InvNumber_full'
+          Name = 'InvNumberAll'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'InvNumber_full'
+          ComponentItem = 'InvNumberAll'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

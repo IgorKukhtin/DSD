@@ -6,16 +6,18 @@ CREATE OR REPLACE FUNCTION  gpReport_PartnerDebt (
     IN inUnitId           Integer  ,  -- Подразделение
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (DescName              TVarChar
-             , OperDate              TDateTime
-             , Invnumber             TVarChar
-             , MovementId_Sale       Integer
-             , DescName_Sale         TVarChar
-             , OperDate_Sale         TDateTime
-             , Invnumber_Sale        TVarChar             
-             , ClientId              Integer
-             , ClientName            TVarChar
-             , PartionId             Integer
+RETURNS TABLE (MovementId_Partion   Integer
+             , DescName_Partion     TVarChar
+             , OperDate_Partion     TDateTime
+             , Invnumber_Partion    TVarChar
+             , InvNumberAll_Partion TVarChar
+             , MovementId_Sale      Integer
+             , DescName_Sale        TVarChar
+             , OperDate_Sale        TDateTime
+             , Invnumber_Sale       TVarChar             
+             , ClientId             Integer
+             , ClientName           TVarChar
+             , PartionId            Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar
              , MeasureName      TVarChar
@@ -197,9 +199,11 @@ BEGIN
                     )
 
      
-        SELECT MovementDesc.ItemName          AS DescName
-             , Movement.OperDate
-             , Movement.Invnumber
+        SELECT Object_PartionGoods.MovementId AS MovementId_Partion
+             , MovementDesc.ItemName          AS DescName_Partion
+             , Movement.OperDate              AS OperDate_Partion
+             , Movement.InvNumber             AS InvNumber_Partion
+             , zfCalc_PartionMovementName (0, '', Movement.InvNumber, Movement.OperDate) AS InvNumberAll_Partion
              
              , tmpData.MovementId_Sale
              , MovementDesc_Sale.ItemName     AS DescName_Sale

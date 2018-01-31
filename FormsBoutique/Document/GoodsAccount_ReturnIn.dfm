@@ -807,7 +807,7 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
           end
           object InvNumber_ReturnIn_Full: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. ('#1074#1086#1079#1074#1088#1072#1090')'
-            DataBinding.FieldName = 'InvNumber_ReturnIn_Full'
+            DataBinding.FieldName = 'InvNumber_ReturnIn'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

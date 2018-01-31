@@ -758,8 +758,8 @@ object ClientForm: TClientForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
-      Hint = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
-      ImageIndex = 40
+      Hint = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'> '#1087#1086' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
+      ImageIndex = 55
       FormName = 'TReport_CollationByPartnerForm'
       FormNameParam.Value = 'TReport_CollationByPartnerForm'
       FormNameParam.DataType = ftString

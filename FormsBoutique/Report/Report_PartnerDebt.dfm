@@ -14,32 +14,32 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
     ExplicitWidth = 1065
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
-      Left = 775
+      Left = 723
       Top = 6
-      EditValue = 42736d
-      ExplicitLeft = 775
+      EditValue = 43101d
+      ExplicitLeft = 723
       ExplicitTop = 6
     end
     inherited deEnd: TcxDateEdit
-      Left = 889
+      Left = 837
       Top = 6
-      EditValue = 42736d
-      ExplicitLeft = 889
+      EditValue = 43101d
+      ExplicitLeft = 837
       ExplicitTop = 6
     end
     inherited cxLabel1: TcxLabel
-      Left = 568
+      Left = 567
       Top = 7
-      Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' '#1079#1072' '#1087#1077#1088#1080#1086#1076' c:'
-      ExplicitLeft = 568
+      Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' c:'
+      ExplicitLeft = 567
       ExplicitTop = 7
-      ExplicitWidth = 203
+      ExplicitWidth = 154
     end
     inherited cxLabel2: TcxLabel
-      Left = 868
+      Left = 816
       Top = 7
       Caption = #1087#1086':'
-      ExplicitLeft = 868
+      ExplicitLeft = 816
       ExplicitTop = 7
       ExplicitWidth = 20
     end
@@ -567,27 +567,27 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object DescName: TcxGridDBColumn
+          object DescName_Partion: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080
-            DataBinding.FieldName = 'DescName'
+            DataBinding.FieldName = 'DescName_Partion'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
             Width = 80
           end
-          object InvNumber: TcxGridDBColumn
+          object InvNumber_Partion: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080
-            DataBinding.FieldName = 'InvNumber'
+            DataBinding.FieldName = 'InvNumber_Partion'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
             Width = 73
           end
-          object OperDate: TcxGridDBColumn
+          object OperDate_Partion: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080
-            DataBinding.FieldName = 'OperDate'
+            DataBinding.FieldName = 'OperDate_Partion'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -733,11 +733,11 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' '#1079#1072' '#1087#1077#1088#1080#1086#1076'>'
-      Hint = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' '#1079#1072' '#1087#1077#1088#1080#1086#1076'>'
+      Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'> '#1087#1086' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
       ImageIndex = 55
-      FormName = 'TReport_MotionByPartnerForm'
-      FormNameParam.Value = 'TReport_MotionByPartnerForm'
+      FormName = 'TReport_CollationByPartnerForm'
+      FormNameParam.Value = 'TReport_CollationByPartnerForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -859,32 +859,24 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
         item
           Name = 'PartionId'
           Value = '0'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isPeriod'
-          Value = 'TRUE'
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isPartion'
-          Value = 'TRUE'
-          DataType = ftBoolean
+          Component = MasterCDS
+          ComponentItem = 'PartionId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'MovementId'
           Value = '0'
+          Component = MasterCDS
+          ComponentItem = 'MovementId_Partion'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'InvNumber'
           Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumberAll_Partion'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','

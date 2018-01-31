@@ -27,13 +27,22 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_Goods());
      vbUserId:= lpGetUserBySession (inSession);
      
-    -- проверка - товар должен быть выбран
-    /*IF COALESCE (inGoodsId, 0) = 0 THEN
-        RAISE EXCEPTION 'Ошибка.Партия товара не выбрана.';
-    END IF;*/
-  
+
+    -- !!!замена!!!
+    inPartionId:= 0;
+
+    -- !!!замена!!!
+    IF COALESCE (inMovementId, 0) = 0 THEN
+        inisPartion := TRUE;
+    END IF;
+    -- !!!замена!!!
+    IF COALESCE (inGoodsSizeId, 0) = 0 THEN
+        inisGoodsSize := TRUE;
+    END IF;
+
+
     -- если за весь период установин кон. дату  = текущей, для определения цены (прайс) для остатка
-    IF COALESCE (inisPeriod, False) = True THEN
+    IF COALESCE (inisPeriod, FALSE) = TRUE THEN
         inEndDate := CURRENT_DATE;
     END IF;
   
@@ -64,7 +73,8 @@ BEGIN
                                                                             AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
                                  LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = Container.PartionId                                         
                             WHERE ((Object_PartionGoods.GoodsSizeId    = inGoodsSizeId AND inisGoodsSize = FALSE) OR (inisGoodsSize = TRUE))
-                              AND ((Object_PartionGoods.MovementItemId = inPartionId   AND inisPartion = FALSE)
+                              AND (-- (Object_PartionGoods.MovementItemId = inPartionId   AND inisPartion = FALSE)
+                                   inisPartion = FALSE
                                 OR (inisPartion = TRUE AND (Object_PartionGoods.MovementId = inMovementId OR inMovementId = 0 )))
                               -- AND CLO_Client.ContainerId IS NULL -- !!!т.е. без Долгов Покупателя!!!
                            )
@@ -397,7 +407,7 @@ BEGIN
                        )
       -- Результат
       SELECT DISTINCT
-             ('№ ' || Movement.InvNumber ||' от '||zfConvert_DateToString(Movement.OperDate) ) :: TVarChar AS InvNumber_full
+             zfCalc_PartionMovementName (0, '', Movement.InvNumber, Movement.OperDate) AS InvNumberAll
            , Object_Goods.ObjectCode AS GoodsCode
            , Object_Goods.ValueData  AS GoodsName
    
@@ -445,7 +455,7 @@ BEGIN
            LEFT JOIN Movement ON Movement.Id = Object_PartionGoods.MovementId    
                              
       WHERE Object_PartionGoods.GoodsId = inGoodsId
-        AND ((Object_PartionGoods.MovementItemId = inPartionId AND inisPartion = FALSE) OR (inisPartion = TRUE))
+        -- AND ((Object_PartionGoods.MovementItemId = inPartionId AND inisPartion = FALSE) OR (inisPartion = TRUE))
         AND ((Object_PartionGoods.GoodsSizeId = inGoodsSizeId AND inisGoodsSize = FALSE) OR (inisGoodsSize = TRUE) )
      ;
                              

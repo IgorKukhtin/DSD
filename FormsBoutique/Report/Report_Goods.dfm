@@ -4,7 +4,6 @@ inherited Report_GoodsForm: TReport_GoodsForm
   ClientWidth = 1195
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -422
   ExplicitWidth = 1211
   ExplicitHeight = 508
   PixelsPerInch = 96
@@ -628,9 +627,9 @@ inherited Report_GoodsForm: TReport_GoodsForm
           OptionsView.HeaderHeight = 40
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object InvNumber_full: TcxGridDBColumn
-            Caption = #1044#1086#1082'. '#1087#1088#1080#1093#1086#1076
-            DataBinding.FieldName = 'InvNumber_full'
+          object InvNumberAll: TcxGridDBColumn
+            Caption = #1044#1086#1082'. '#1087#1072#1088#1090#1080#1103' '#8470
+            DataBinding.FieldName = 'InvNumberAll'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -648,7 +647,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' - '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
-            Width = 150
+            Width = 100
           end
           object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
@@ -656,7 +655,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 150
+            Width = 100
           end
           object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' ('#1090#1086#1074'.)'
@@ -682,7 +681,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 40
+            Width = 55
           end
           object GoodsName: TcxGridDBColumn
             Caption = #1040#1088#1090#1080#1082#1091#1083
@@ -833,25 +832,25 @@ inherited Report_GoodsForm: TReport_GoodsForm
       ExplicitTop = 31
     end
     object cxLabel3: TcxLabel
-      Left = 209
-      Top = 29
-      Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072':'
+      Left = 291
+      Top = 31
+      Caption = #1040#1088#1090#1080#1082#1091#1083':'
     end
     object edPartionGoods: TcxButtonEdit
-      Left = 294
-      Top = 29
+      Left = 344
+      Top = 31
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 202
+      Width = 152
     end
     object cxLabel8: TcxLabel
-      Left = 210
+      Left = 208
       Top = 6
-      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' / '#1075#1088#1091#1087#1087#1072':'
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' / '#1043#1088#1091#1087#1087#1072':'
     end
     object edUnitGroup: TcxButtonEdit
       Left = 344
@@ -894,12 +893,12 @@ inherited Report_GoodsForm: TReport_GoodsForm
     end
   end
   object cxLabel4: TcxLabel [2]
-    Left = 501
+    Left = 505
     Top = 31
     Caption = #1056#1072#1079#1084#1077#1088':'
   end
   object edGoodsSize: TcxButtonEdit [3]
-    Left = 541
+    Left = 550
     Top = 29
     Properties.Buttons = <
       item
@@ -907,15 +906,15 @@ inherited Report_GoodsForm: TReport_GoodsForm
         Kind = bkEllipsis
       end>
     TabOrder = 7
-    Width = 79
+    Width = 70
   end
   object cxLabel5: TcxLabel [4]
     Left = 631
     Top = 6
-    Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1080':'
+    Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470':'
   end
   object edPartion: TcxButtonEdit [5]
-    Left = 734
+    Left = 746
     Top = 5
     Properties.Buttons = <
       item
@@ -925,7 +924,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       end>
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 197
+    Width = 219
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -940,6 +939,11 @@ inherited Report_GoodsForm: TReport_GoodsForm
           'Checked')
       end
       item
+        Component = cbPeriod
+        Properties.Strings = (
+          'Checked')
+      end
+      item
         Component = deEnd
         Properties.Strings = (
           'Date')
@@ -950,13 +954,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
           'Date')
       end
       item
-        Component = GuidesPartionGoods
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
-        Component = GuidesUnit
+        Component = GuidesGoodsSize
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -968,7 +966,13 @@ inherited Report_GoodsForm: TReport_GoodsForm
           'TextValue')
       end
       item
-        Component = GuidesGoodsSize
+        Component = GuidesPartionGoods
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesUnit
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -985,6 +989,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         end>
       Caption = #1047#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
       Hint = #1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefreshIsPartion: TdsdDataSetRefresh [1]
@@ -997,6 +1002,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         end>
       Caption = #1055#1086' '#1074#1089#1077#1084' '#1087#1072#1088#1090#1080#1103#1084
       Hint = #1055#1086' '#1087#1072#1088#1090#1080#1103#1084
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefreshIsGoodsSize: TdsdDataSetRefresh [2]
@@ -1009,6 +1015,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         end>
       Caption = #1055#1086' '#1074#1089#1077#1084' '#1088#1072#1079#1084#1077#1088#1072#1084
       Hint = #1055#1086' '#1074#1089#1077#1084' '#1088#1072#1079#1084#1077#1088#1072#1084
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actPrint: TdsdPrintAction
@@ -1164,6 +1171,14 @@ inherited Report_GoodsForm: TReport_GoodsForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'isPeriod'
+          Value = Null
+          Component = cbPeriod
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'isGoodsSize'
           Value = 'False'
           Component = cbGoodsSize
@@ -1273,13 +1288,27 @@ inherited Report_GoodsForm: TReport_GoodsForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
-      Hint = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
-      ImageIndex = 40
+      Hint = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'> '#1087#1086' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
+      ImageIndex = 55
       FormName = 'TReport_CollationByPartnerForm'
       FormNameParam.Value = 'TReport_CollationByPartnerForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 'NULL'
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 'NULL'
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
         item
           Name = 'UnitId'
           Value = ''
@@ -1552,7 +1581,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InvNumber_full'
+        Name = 'InvNumberAll'
         Value = Null
         Component = GuidesPartion
         ComponentItem = 'TextValue'
@@ -1600,8 +1629,8 @@ inherited Report_GoodsForm: TReport_GoodsForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 328
-    Top = 27
+    Left = 424
+    Top = 35
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -1630,7 +1659,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 384
+    Left = 360
   end
   object getMovementForm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Form'
@@ -1789,8 +1818,8 @@ inherited Report_GoodsForm: TReport_GoodsForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 560
-    Top = 19
+    Left = 568
+    Top = 35
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
