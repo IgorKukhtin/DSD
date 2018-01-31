@@ -6,7 +6,7 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1081
-  ExplicitHeight = 485
+  ExplicitHeight = 488
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -659,7 +659,7 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
             Width = 70
           end
           object SummChangePercent: TcxGridDBColumn
-            Caption = #1044#1086#1087'. '#1089#1082'. '#1074' '#1087#1088#1086#1076'.'
+            Caption = #1044#1086#1087'. '#1089#1082'. '#1074' '#1087#1088#1086#1076'./ '#1088#1072#1089#1095'.'
             DataBinding.FieldName = 'SummChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
