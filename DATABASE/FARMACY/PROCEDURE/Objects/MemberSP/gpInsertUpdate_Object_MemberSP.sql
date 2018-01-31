@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberSP (Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberSP (Integer, Integer, TVarChar, Integer, Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberSP (Integer, Integer, TVarChar, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MemberSP(
  INOUT ioId	             Integer   ,    -- ключ объекта <Торговельна назва лікарського засобу (Соц. проект)> 
@@ -9,21 +10,22 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MemberSP(
     IN inName                TVarChar  ,    -- Название объекта <>
     IN inPartnerMedicalId    Integer   ,    -- Мед. учрежд.
     IN inGroupMemberSPId     Integer   ,    -- категория пац.
-    IN inHappyDate           TDateTime ,    -- Дата рождения
+--    IN inHappyDate           TDateTime ,    -- Дата рождения
+    IN inHappyDate           TVarChar ,    -- Дата рождения
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;   
- 
+   DECLARE vbHappyDate TDateTime;
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_MemberSP());
    vbUserId := inSession;
    
-   -- пытаемся найти код
+    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
 
    -- Если код не установлен, определяем его как последний+1
@@ -43,7 +45,11 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_MemberSP_GroupMemberSP(), ioId, inGroupMemberSPId);   
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_MemberSP_HappyDate(), ioId, inHappyDate);
+   IF COALESCE (inHappyDate, '') <> ''
+      THEN
+          vbHappyDate := ('01.01.' || TRIM (inHappyDate)) :: TDatetime;   -- вносят только год рождения, поэтому для даты дополняем 01,01
+          PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_MemberSP_HappyDate(), ioId, vbHappyDate);
+   END IF;
    
       
    -- сохранили протокол

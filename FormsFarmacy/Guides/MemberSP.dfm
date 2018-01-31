@@ -27,9 +27,6 @@ object MemberSPForm: TMemberSPForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 26
-    ExplicitWidth = 452
-    ExplicitHeight = 318
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -90,6 +87,9 @@ object MemberSPForm: TMemberSPForm
       object HappyDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1088#1086#1078#1076#1077#1085#1080#1103
         DataBinding.FieldName = 'HappyDate'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'YYYY'
+        Properties.EditFormat = 'YYYY'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
@@ -106,7 +106,6 @@ object MemberSPForm: TMemberSPForm
     Height = 35
     Align = alTop
     TabOrder = 5
-    ExplicitTop = -6
     object cxLabel6: TcxLabel
       Left = 6
       Top = 9

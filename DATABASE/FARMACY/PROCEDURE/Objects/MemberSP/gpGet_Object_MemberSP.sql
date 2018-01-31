@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_MemberSP(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PartnerMedicalId Integer, PartnerMedicalName TVarChar
              , GroupMemberSPId Integer, GroupMemberSPName TVarChar
-             , HappyDate TDateTime
+             , HappyDate TVarChar
              , isErased Boolean) AS
 $BODY$
 BEGIN
@@ -28,7 +28,7 @@ BEGIN
            , CAST ('' as TVarChar)  AS PartnerMedicalName
            , CAST (0 as Integer)    AS GroupMemberSPId
            , CAST ('' as TVarChar)  AS GroupMemberSPName
-           , Null     :: TDateTime  AS HappyDate
+           , Null     :: TVarChar   AS HappyDate
            , CAST (NULL AS Boolean) AS isErased;
    ELSE
        RETURN QUERY 
@@ -39,7 +39,7 @@ BEGIN
             , Object_PartnerMedical.ValueData    AS PartnerMedicalName
             , Object_GroupMemberSP.Id            AS GroupMemberSPId
             , Object_GroupMemberSP.ValueData     AS GroupMemberSPName
-            , COALESCE (ObjectDate_HappyDate.ValueData, Null) :: TDateTime AS HappyDate
+            , COALESCE (EXTRACT (YEAR FROM ObjectDate_HappyDate.ValueData), Null) :: TVarChar AS HappyDate
             , Object_MemberSP.isErased           AS isErased
        FROM Object AS Object_MemberSP
          LEFT JOIN ObjectDate AS ObjectDate_HappyDate

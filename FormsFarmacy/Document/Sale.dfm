@@ -4,7 +4,7 @@ inherited SaleForm: TSaleForm
   ClientWidth = 740
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
   ExplicitWidth = 756
-  ExplicitHeight = 518
+  ExplicitHeight = 517
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -371,7 +371,7 @@ inherited SaleForm: TSaleForm
       Top = 92
       Properties.ReadOnly = False
       TabOrder = 19
-      Width = 384
+      Width = 173
     end
     object cxLabel12: TcxLabel
       Left = 8
@@ -379,33 +379,33 @@ inherited SaleForm: TSaleForm
       Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076'.('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
     end
     object edOperDateSP: TcxDateEdit
-      Left = 196
+      Left = 270
       Top = 130
       Properties.AutoSelect = False
       Properties.DateButtons = [btnClear]
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 21
-      Width = 83
+      Width = 85
     end
     object cxLabel13: TcxLabel
-      Left = 196
+      Left = 270
       Top = 115
       Caption = #1044#1072#1090#1072' '#1088#1077#1094#1077#1087#1090#1072
     end
     object cxLabel14: TcxLabel
-      Left = 283
+      Left = 363
       Top = 114
       Caption = #1053#1086#1084#1077#1088' '#1088#1077#1094#1077#1087#1090#1072
     end
     object edInvNumberSP: TcxTextEdit
-      Left = 283
+      Left = 363
       Top = 130
       TabOrder = 24
       Width = 80
     end
     object cxLabel16: TcxLabel
-      Left = 367
+      Left = 450
       Top = 114
       Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072
     end
@@ -419,7 +419,7 @@ inherited SaleForm: TSaleForm
         end>
       Properties.ReadOnly = True
       TabOrder = 26
-      Width = 184
+      Width = 252
     end
     object cxLabel10: TcxLabel
       Left = 8
@@ -441,18 +441,18 @@ inherited SaleForm: TSaleForm
     end
   end
   object cxLabel8: TcxLabel [2]
-    Left = 491
-    Top = 114
+    Left = 450
+    Top = 76
     Caption = #1060#1048#1054' '#1087#1072#1094#1080#1077#1085#1090#1072
   end
   object cxLabel9: TcxLabel [3]
-    Left = 617
-    Top = 114
+    Left = 584
+    Top = 76
     Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1087#1072#1094#1080#1077#1085#1090#1072
   end
   object edGroupMemberSP: TcxButtonEdit [4]
-    Left = 617
-    Top = 130
+    Left = 584
+    Top = 92
     Properties.Buttons = <
       item
         Default = True
@@ -460,10 +460,10 @@ inherited SaleForm: TSaleForm
       end>
     Properties.ReadOnly = True
     TabOrder = 8
-    Width = 121
+    Width = 109
   end
   object edMedicSP: TcxButtonEdit [5]
-    Left = 367
+    Left = 450
     Top = 130
     Properties.Buttons = <
       item
@@ -472,18 +472,18 @@ inherited SaleForm: TSaleForm
       end>
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 121
+    Width = 243
   end
   object edMemberSP: TcxButtonEdit [6]
-    Left = 494
-    Top = 130
+    Left = 450
+    Top = 92
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 10
-    Width = 121
+    Width = 128
   end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh
@@ -1422,8 +1422,8 @@ inherited SaleForm: TSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 472
-    Top = 40
+    Left = 512
+    Top = 32
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_SaleExactly_Print'
@@ -1606,8 +1606,8 @@ inherited SaleForm: TSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 640
-    Top = 128
+    Left = 624
+    Top = 80
   end
   object GuidesMemberSP: TdsdGuides
     KeyField = 'Id'
@@ -1667,8 +1667,8 @@ inherited SaleForm: TSaleForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 520
-    Top = 128
+    Left = 528
+    Top = 120
   end
   object GuidesMedicSP: TdsdGuides
     KeyField = 'Id'
@@ -1733,8 +1733,8 @@ inherited SaleForm: TSaleForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 400
-    Top = 120
+    Left = 432
+    Top = 152
   end
   object spSelectPrintCheck: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Print'
