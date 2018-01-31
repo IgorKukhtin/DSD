@@ -57,7 +57,7 @@ RETURNS TABLE (Id Integer, PartionId Integer
              , Amount_GRN_Exc    TFloat
              
              , SaleMI_Id Integer
-             , MovementId_Sale Integer, InvNumber_Sale_Full TVarChar
+             , MovementId_Sale Integer, InvNumber_Sale TVarChar
              , OperDate_Sale TDateTime , DescName TVarChar
              , Comment TVarChar
              , isErased Boolean
@@ -455,7 +455,7 @@ BEGIN
 
            , tmpMI.SaleMI_Id                   :: Integer   AS SaleMI_Id
            , tmpMI.MovementId_Sale             :: Integer   AS MovementId_Sale
-           , tmpMI.InvNumber_Sale              :: TVarChar  AS InvNumber_Sale_Full
+           , tmpMI.InvNumber_Sale              :: TVarChar  AS InvNumber_Sale
            , tmpMI.OperDate_Sale               :: TDateTime AS OperDate_Sale
            , MovementDesc.ItemName                          AS DescName
 
@@ -693,7 +693,7 @@ BEGIN
 
            , tmpMI.SaleMI_ID                                   :: Integer AS SaleMI_Id
            , Movement_Sale.Id                                             AS MovementId_Sale
-           , Movement_Sale.InvNumber                                      AS InvNumber_Sale_Full
+           , Movement_Sale.InvNumber                                      AS InvNumber_Sale
            , Movement_Sale.OperDate                                       AS OperDate_Sale
            , MovementDesc.ItemName                                        AS DescName
            , tmpMI.Comment                                    :: TVarChar AS Comment

@@ -14,11 +14,11 @@ RETURNS TABLE (MovementId            Integer
              , StatusCode            Integer
              , DescName              TVarChar
              , OperDate              TDateTime
-             , Invnumber             TVarChar
+             , InvNumber             TVarChar
              , MovementId_Sale       Integer
              , DescName_Sale         TVarChar
              , OperDate_Sale         TDateTime
-             , Invnumber_Sale        TVarChar
+             , InvNumber_Sale        TVarChar
              , PartnerName           TVarChar
              , PartionId             Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar

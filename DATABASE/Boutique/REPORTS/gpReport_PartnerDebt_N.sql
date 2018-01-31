@@ -10,6 +10,7 @@ RETURNS TABLE (MovementId_Partion   Integer
              , DescName_Partion     TVarChar
              , OperDate_Partion     TDateTime
              , Invnumber_Partion    TVarChar
+             , InvNumberAll_Partion TVarChar
              , MovementId_Sale      Integer
              , DescName_Sale        TVarChar
              , OperDate_Sale        TDateTime
@@ -202,6 +203,7 @@ BEGIN
              , MovementDesc.ItemName          AS DescName_Partion
              , Movement.OperDate              AS OperDate_Partion
              , Movement.InvNumber             AS InvNumber_Partion
+             , zfCalc_PartionMovementName (0, '', Movement.InvNumber, Movement.OperDate) AS InvNumberAll_Partion
              
              , tmpData.MovementId_Sale
              , MovementDesc_Sale.ItemName     AS DescName_Sale

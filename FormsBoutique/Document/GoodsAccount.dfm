@@ -483,9 +483,9 @@ object GoodsAccountForm: TGoodsAccountForm
             Options.Editing = False
             Width = 70
           end
-          object InvNumber_Sale_Full: TcxGridDBColumn
+          object InvNumber_Sale: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. ('#1087#1088#1086#1076#1072#1078#1072')'
-            DataBinding.FieldName = 'InvNumber_Sale_Full'
+            DataBinding.FieldName = 'InvNumber_Sale'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

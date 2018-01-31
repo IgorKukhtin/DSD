@@ -149,7 +149,7 @@ type
     SaleMI_Id: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
     OperDate_Sale: TcxGridDBColumn;
-    InvNumber_Sale_Full: TcxGridDBColumn;
+    InvNumber_Sale: TcxGridDBColumn;
     DescName: TcxGridDBColumn;
     cxLabel18: TcxLabel;
     edInsertDate: TcxDateEdit;
