@@ -381,6 +381,7 @@ inherited SaleForm: TSaleForm
     object edOperDateSP: TcxDateEdit
       Left = 270
       Top = 130
+      EditValue = 43131d
       Properties.AutoSelect = False
       Properties.DateButtons = [btnClear]
       Properties.SaveTime = False
@@ -639,6 +640,20 @@ inherited SaleForm: TSaleForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
       ImageIndex = 3
     end
+    object actGet_SP_Prior: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_SP_Prior
+      StoredProcList = <
+        item
+          StoredProc = spGet_SP_Prior
+        end
+        item
+        end>
+      Caption = #1040#1042#1058#1054#1047#1040#1055#1054#1051#1053#1048#1058#1068' '#1057#1055
+      ImageIndex = 74
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -676,11 +691,19 @@ inherited SaleForm: TSaleForm
         item
           BeginGroup = True
           Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
           ItemName = 'bbAddMask'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGet_SP_Prior'
         end
         item
           Visible = True
@@ -696,7 +719,7 @@ inherited SaleForm: TSaleForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -751,6 +774,11 @@ inherited SaleForm: TSaleForm
       Action = macPrintCheck
       Category = 0
       ImageIndex = 15
+    end
+    object bbGet_SP_Prior: TdxBarButton
+      Action = actGet_SP_Prior
+      Caption = #1040#1042#1058#1054#1047#1040#1055#1054#1051#1053#1048#1058#1068
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1577,8 +1605,8 @@ inherited SaleForm: TSaleForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 88
-    Top = 128
+    Left = 64
+    Top = 112
   end
   object GuidesGroupMemberSP: TdsdGuides
     KeyField = 'Id'
@@ -1788,5 +1816,98 @@ inherited SaleForm: TSaleForm
       end>
     Left = 128
     Top = 88
+  end
+  object spGet_SP_Prior: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Sale_SP_Prior'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDateSP'
+        Value = 43131d
+        Component = edOperDateSP
+        DataType = ftDateTime
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberSP'
+        Value = ''
+        Component = edInvNumberSP
+        DataType = ftString
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerMedicalId'
+        Value = ''
+        Component = GuidesPartnerMedical
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerMedicalName'
+        Value = ''
+        Component = GuidesPartnerMedical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MedicSPId'
+        Value = ''
+        Component = GuidesMedicSP
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MedicSPName'
+        Value = ''
+        Component = GuidesMedicSP
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberSPId'
+        Value = ''
+        Component = GuidesMemberSP
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberSPName'
+        Value = ''
+        Component = GuidesMemberSP
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GroupMemberSPId'
+        Value = ''
+        Component = GuidesGroupMemberSP
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GroupMemberSPName'
+        Value = ''
+        Component = GuidesGroupMemberSP
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 208
+    Top = 304
   end
 end

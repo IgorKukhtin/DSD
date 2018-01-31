@@ -93,6 +93,9 @@ type
     cxLabel10: TcxLabel;
     edSPKind: TcxButtonEdit;
     SPKindGuides: TdsdGuides;
+    spGet_SP_Prior: TdsdStoredProc;
+    actGet_SP_Prior: TdsdExecStoredProc;
+    bbGet_SP_Prior: TdxBarButton;
   private
     { Private declarations }
   public
