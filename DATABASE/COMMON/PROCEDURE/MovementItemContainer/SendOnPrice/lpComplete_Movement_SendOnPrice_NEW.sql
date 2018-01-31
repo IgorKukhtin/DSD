@@ -441,6 +441,13 @@ BEGIN
              ) AS _tmp;
 
 
+     -- !!!проверка!!!
+     IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.OperCount <> _tmpItem.OperCount_ChangePercent AND vbIsBranch_to = FALSE)
+     THEN
+         RAISE EXCEPTION 'Ошибка. В приходе с филиала нельзя вводить Скидку в весе для товара <%>', (SELECT lfGet_Object_ValueData (_tmpItem.GoodsId) FROM _tmpItem WHERE _tmpItem.OperCount <>_tmpItem.OperCount_ChangePercent AND vbIsBranch_to = FALSE LIMIT 1);
+     END IF;
+
+
      IF inUserId <> zfCalc_UserAdmin() :: Integer THEN
        -- !!!Синхронно - пересчитали/провели Пересортица!!! - на основании "Реализация" - !!!важно - здесь очищается _tmpMIContainer_insert, поэтому делаем ДО проводок!!!, но после заполнения _tmpItem
        PERFORM lpComplete_Movement_Sale_Recalc (inMovementId := inMovementId
@@ -1814,8 +1821,8 @@ BEGIN
        WHERE _tmpItemSumm.OperSummVirt_Account_60000 <> 0 -- !!!нулевые не нужны!!!
       ;
 /*
-    RAISE EXCEPTION '<%>', (select 
--- _tmpItemSumm.OperSumm_Account_60000 
+    RAISE EXCEPTION '<%>', (select
+-- _tmpItemSumm.OperSumm_Account_60000
 -- _tmpItemSumm.OperSummVirt_Account_60000
 --  lfGet_Object_ValueData (_tmpItem.GoodsId) -- 6779
 -- _tmpItem.OperSumm_PartnerVirt_ChangePercent --35819.9700

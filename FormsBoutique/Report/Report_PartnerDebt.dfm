@@ -14,32 +14,32 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
     ExplicitWidth = 1065
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
-      Left = 775
+      Left = 723
       Top = 6
-      EditValue = 42736d
-      ExplicitLeft = 775
+      EditValue = 43101d
+      ExplicitLeft = 723
       ExplicitTop = 6
     end
     inherited deEnd: TcxDateEdit
-      Left = 889
+      Left = 837
       Top = 6
-      EditValue = 42736d
-      ExplicitLeft = 889
+      EditValue = 43101d
+      ExplicitLeft = 837
       ExplicitTop = 6
     end
     inherited cxLabel1: TcxLabel
-      Left = 568
+      Left = 567
       Top = 7
-      Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' '#1079#1072' '#1087#1077#1088#1080#1086#1076' c:'
-      ExplicitLeft = 568
+      Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' c:'
+      ExplicitLeft = 567
       ExplicitTop = 7
-      ExplicitWidth = 203
+      ExplicitWidth = 154
     end
     inherited cxLabel2: TcxLabel
-      Left = 868
+      Left = 816
       Top = 7
       Caption = #1087#1086':'
-      ExplicitLeft = 868
+      ExplicitLeft = 816
       ExplicitTop = 7
       ExplicitWidth = 20
     end
@@ -733,11 +733,11 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' '#1079#1072' '#1087#1077#1088#1080#1086#1076'>'
-      Hint = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' '#1079#1072' '#1087#1077#1088#1080#1086#1076'>'
+      Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'> '#1087#1086' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
       ImageIndex = 55
-      FormName = 'TReport_MotionByPartnerForm'
-      FormNameParam.Value = 'TReport_MotionByPartnerForm'
+      FormName = 'TReport_CollationByPartnerForm'
+      FormNameParam.Value = 'TReport_CollationByPartnerForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -859,20 +859,6 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
         item
           Name = 'PartionId'
           Value = '0'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isPeriod'
-          Value = 'TRUE'
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isPartion'
-          Value = 'TRUE'
-          DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
