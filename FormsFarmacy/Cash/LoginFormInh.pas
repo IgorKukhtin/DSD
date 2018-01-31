@@ -38,6 +38,7 @@ procedure TLoginForm1.btnOkClick(Sender: TObject);
 begin
   inherited;
   // сохраняем авторизационные данные для запуска сервиса + для вывода в MainForm
+  IniUtils.gUnitId    := 0;
   IniUtils.gUnitName  := edFarmacyName.Text;
   IniUtils.gUserName  := edUserName.Text;
   IniUtils.gPassValue := edPassword.Text;
@@ -49,6 +50,7 @@ begin
   begin
       spChekFarmacyName.ParamByName('inUnitName').Value := edFarmacyName.Text;
       try spChekFarmacyName.Execute;
+          IniUtils.gUnitId    := spChekFarmacyName.ParamByName('outUnitId').Value;
           //
           if spChekFarmacyName.ParamByName('outIsEnter').Value = FALSE
           then ModalResult := mrCancel

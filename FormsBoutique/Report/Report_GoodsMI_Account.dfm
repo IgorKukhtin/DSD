@@ -3,6 +3,7 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
   ClientHeight = 425
   ClientWidth = 1065
   AddOnFormData.RefreshAction = actRefreshStart
+  AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1081
   ExplicitHeight = 460
@@ -15,12 +16,12 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 29
-      EditValue = 42736d
+      EditValue = 43101d
       ExplicitLeft = 29
     end
     inherited deEnd: TcxDateEdit
       Left = 142
-      EditValue = 42736d
+      EditValue = 43101d
       ExplicitLeft = 142
     end
     inherited cxLabel1: TcxLabel
@@ -1060,11 +1061,13 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
         Component = PeriodChoice
       end
       item
+        Component = deStart
+      end
+      item
+        Component = deEnd
       end
       item
         Component = GuidesUnit
-      end
-      item
       end>
     Left = 688
     Top = 280

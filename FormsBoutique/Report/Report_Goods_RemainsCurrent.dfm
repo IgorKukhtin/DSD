@@ -2,8 +2,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   Caption = #1054#1090#1095#1077#1090' <'#1058#1077#1082#1091#1097#1080#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1090#1086#1074#1072#1088#1072'>'
   ClientHeight = 433
   ClientWidth = 1169
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefreshStart
+  AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1185
@@ -1449,14 +1449,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       end
       item
         Component = GuidesPeriod
-      end
-      item
-        Component = edPeriodYearStart
-      end
-      item
-        Component = edPeriodYearEnd
-      end
-      item
       end>
     Left = 384
     Top = 176

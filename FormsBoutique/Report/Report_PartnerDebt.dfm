@@ -3,7 +3,9 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
   ClientHeight = 425
   ClientWidth = 1065
   AddOnFormData.RefreshAction = actRefreshStart
+  AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -292
   ExplicitWidth = 1081
   ExplicitHeight = 460
   PixelsPerInch = 96
@@ -255,9 +257,9 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
               Kind = skSum
               Column = TotalPayReturn
             end>
+          OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -270,6 +272,7 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object OperDate_Sale: TcxGridDBColumn
@@ -277,6 +280,7 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             DataBinding.FieldName = 'OperDate_Sale'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object InvNumber_Sale: TcxGridDBColumn
@@ -284,6 +288,7 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             DataBinding.FieldName = 'InvNumber_Sale'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 73
           end
           object ClientName: TcxGridDBColumn
@@ -343,6 +348,7 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             DataBinding.FieldName = 'LabelName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object GoodsCode: TcxGridDBColumn
@@ -350,6 +356,7 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object GoodsName: TcxGridDBColumn
@@ -357,6 +364,7 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object MeasureName: TcxGridDBColumn
@@ -365,6 +373,7 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object GoodsSizeName: TcxGridDBColumn
@@ -372,6 +381,7 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             DataBinding.FieldName = 'GoodsSizeName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 53
           end
           object ChangePercent: TcxGridDBColumn
@@ -382,6 +392,7 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 51
           end
           object CountDebt: TcxGridDBColumn
@@ -407,6 +418,7 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1043#1056#1053' - '#1076#1086#1083#1075#1080' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+            Options.Editing = False
             Width = 100
           end
           object SummDebt_profit: TcxGridDBColumn
@@ -418,6 +430,7 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1043#1056#1053' - '#1055#1088#1080#1073#1099#1083#1100' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076#1086#1074' '#1074' '#1076#1086#1083#1075#1072#1093' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+            Options.Editing = False
             Width = 100
           end
           object CompositionName: TcxGridDBColumn
@@ -444,6 +457,7 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object Amount: TcxGridDBColumn
@@ -455,6 +469,7 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1087#1072#1088#1090#1080#1080' '#1087#1088#1086#1076#1072#1078#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
+            Options.Editing = False
             Width = 80
           end
           object OperPriceList: TcxGridDBColumn
@@ -465,6 +480,7 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object TotalSummPriceList: TcxGridDBColumn
@@ -476,6 +492,7 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
+            Options.Editing = False
             Width = 80
           end
           object SummChangePercent: TcxGridDBColumn
@@ -488,6 +505,7 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1072#1103' '#1089#1082#1080#1076#1082#1072' '#1074' '#1087#1088#1086#1076#1072#1078#1077' '#1043#1056#1053
+            Options.Editing = False
             Width = 70
           end
           object TotalChangePercent: TcxGridDBColumn
@@ -511,6 +529,7 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object TotalPayOth: TcxGridDBColumn
@@ -545,6 +564,7 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object TotalReturn: TcxGridDBColumn
@@ -555,6 +575,7 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object TotalPayReturn: TcxGridDBColumn
@@ -565,6 +586,7 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object DescName_Partion: TcxGridDBColumn
@@ -574,6 +596,7 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            Options.Editing = False
             Width = 80
           end
           object InvNumber_Partion: TcxGridDBColumn
@@ -583,6 +606,7 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            Options.Editing = False
             Width = 73
           end
           object OperDate_Partion: TcxGridDBColumn
@@ -592,6 +616,21 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            Options.Editing = False
+            Width = 70
+          end
+          object MovementItemId_Sale: TcxGridDBColumn
+            DataBinding.FieldName = 'MovementItemId_Sale'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
         end
@@ -1067,14 +1106,7 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
       item
-        Component = PeriodChoice
-      end
-      item
-      end
-      item
         Component = GuidesUnit
-      end
-      item
       end>
     Left = 688
     Top = 280

@@ -3,6 +3,7 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
   ClientHeight = 450
   ClientWidth = 1065
   AddOnFormData.RefreshAction = actRefreshStart
+  AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1081
@@ -1172,12 +1173,16 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
         Component = PeriodChoice
       end
       item
+        Component = deStart
+      end
+      item
+        Component = deEnd
+      end
+      item
         Component = GuidesClient
       end
       item
         Component = GuidesUnit
-      end
-      item
       end>
     Left = 688
     Top = 280

@@ -69,6 +69,11 @@ inherited LoginForm1: TLoginForm1
         MultiSelectSeparator = ','
       end
       item
+        Name = 'outUnitId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inUnitName'
         Value = Null
         DataType = ftString

@@ -5,7 +5,7 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 677
-  ExplicitHeight = 342
+  ExplicitHeight = 339
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -13,17 +13,17 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
     Height = 247
     TabOrder = 3
     ExplicitWidth = 661
-    ExplicitHeight = 232
+    ExplicitHeight = 247
     ClientRectBottom = 247
     ClientRectRight = 661
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 661
-      ExplicitHeight = 232
+      ExplicitHeight = 247
       inherited cxGrid: TcxGrid
         Width = 661
         Height = 247
         ExplicitWidth = 661
-        ExplicitHeight = 232
+        ExplicitHeight = 247
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -101,10 +101,10 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
     Width = 661
     ExplicitWidth = 661
     inherited deStart: TcxDateEdit
-      EditValue = 42736d
+      EditValue = 43101d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42736d
+      EditValue = 43101d
     end
   end
   object cxLabel27: TcxLabel [2]

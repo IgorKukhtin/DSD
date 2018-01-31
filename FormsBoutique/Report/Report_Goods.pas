@@ -94,6 +94,9 @@ type
     InvNumber_PartionMI: TcxGridDBColumn;
     actReport_CollationByPartner: TdsdOpenForm;
     bbReport_CollationByPartner: TdxBarButton;
+    MovementItemId: TcxGridDBColumn;
+    MovementItemId_PartionMI: TcxGridDBColumn;
+    PartionId_mi: TcxGridDBColumn;
   private
     { Private declarations }
   public

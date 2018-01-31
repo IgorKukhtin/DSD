@@ -173,6 +173,8 @@ Begin
       edInvNumberSP.Text:= AInvNumberSP;
       edOperDateSP.Text:= DateToStr(aOperDateSP);
       edSPKind.Text:= AInvNumberSP;
+      FormParams.ParamByName('MasterUnitId').Value  :=IniUtils.gUnitId;
+      FormParams.ParamByName('MasterUnitName').Value:=IniUtils.gUnitName;
       //
       PartnerMedicalGuides.Params.ParamByName('Key').Value      := APartnerMedicalId;
       PartnerMedicalGuides.Params.ParamByName('TextValue').Value:= '';

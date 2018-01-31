@@ -4989,7 +4989,7 @@ begin
              + '    , DiscountMovement.OperDate'
              + '    , DiscountMovement.SaleId_Postgres'
              + '    , DiscountMovementItem_byBarCode.Id_Postgres'
-             + '    , DiscountKlientAccountMoney.SummDiscountManual'
+             //+ '    , DiscountKlientAccountMoney.SummDiscountManual'
              + ' ORDER BY DiscountMovement.OperDate, DiscountMovementItem_byBarCode.Id');
         Open;
 

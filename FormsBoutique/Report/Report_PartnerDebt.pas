@@ -53,6 +53,7 @@ type
     TotalCountReturn: TcxGridDBColumn;
     TotalReturn: TcxGridDBColumn;
     TotalPayReturn: TcxGridDBColumn;
+    MovementItemId_Sale: TcxGridDBColumn;
   private
     { Private declarations }
   public
