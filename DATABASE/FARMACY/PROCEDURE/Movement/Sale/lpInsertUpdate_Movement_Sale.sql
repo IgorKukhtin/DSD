@@ -118,6 +118,23 @@ BEGIN
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_MemberSP(), ioId, inMemberSP);
 
 
+    -- !!!протокол через свойства конкретного объекта!!!
+     IF vbIsInsert = FALSE
+     THEN
+         -- сохранили свойство <Дата корректировки>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), ioId, CURRENT_TIMESTAMP);
+         -- сохранили свойство <Пользователь (корректировка)>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Update(), ioId, inUserId);
+     ELSE
+         IF vbIsInsert = TRUE
+         THEN
+             -- сохранили свойство <Дата создания>
+             PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
+             -- сохранили свойство <Пользователь (создание)>
+             PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
+         END IF;
+     END IF;
+     
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
 
