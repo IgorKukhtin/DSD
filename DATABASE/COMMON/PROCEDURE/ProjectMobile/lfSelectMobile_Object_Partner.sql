@@ -15,33 +15,43 @@ RETURNS TABLE (Id               Integer
 AS
 $BODY$
    DECLARE vbPersonalId Integer;
+   DECLARE vbMemberId   Integer;
 BEGIN
       -- Определяем сотрудника для пользователя
       vbPersonalId:= (SELECT PersonalId FROM gpGetMobile_Object_Const (inSession));
+      -- Определяем
+      vbMemberId:= (SELECT OL.ChildObjectId AS MemberId FROM ObjectLink AS OL WHERE OL.ObjectId = vbPersonalId AND OL.DescId   = zc_ObjectLink_Personal_Member());
 
       -- Результат
       IF vbPersonalId IS NOT NULL
       THEN
            RETURN QUERY
-             WITH tmpPartner AS (-- если vbPersonalId - Сотрудник (торговый)
+             WITH tmpPersonal AS (SELECT OL.ObjectId AS PersonalId
+                                  FROM ObjectLink AS OL
+                                  WHERE OL.ChildObjectId = vbMemberId
+                                    AND OL.DescId        = zc_ObjectLink_Personal_Member()
+                                 )
+                , tmpPartner AS (-- если vbPersonalId - Сотрудник (торговый)
                                  SELECT OL.ObjectId AS PartnerId
                                  FROM ObjectLink AS OL
-                                 WHERE OL.ChildObjectId = vbPersonalId
-                                   AND OL.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                                 WHERE OL.ChildObjectId IN (SELECT tmpPersonal.PersonalId FROM tmpPersonal)
+                                   AND OL.DescId        = zc_ObjectLink_Partner_PersonalTrade()
                                  UNION
                                  -- если vbPersonalId - Сотрудник (супервайзер)
                                  SELECT OL.ObjectId AS PartnerId
                                  FROM ObjectLink AS OL
-                                 WHERE OL.ChildObjectId = vbPersonalId
-                                   AND OL.DescId = zc_ObjectLink_Partner_Personal()
+                                 WHERE OL.ChildObjectId IN (SELECT tmpPersonal.PersonalId FROM tmpPersonal)
+                                   AND OL.DescId        = zc_ObjectLink_Partner_Personal()
                                  UNION
                                  -- если vbPersonalId - Сотрудник (мерчандайзер)
                                  SELECT OL.ObjectId AS PartnerId
                                  FROM ObjectLink AS OL
-                                 WHERE OL.ChildObjectId = vbPersonalId
+                                 WHERE OL.ChildObjectId IN (SELECT tmpPersonal.PersonalId FROM tmpPersonal)
                                    AND OL.DescId        = zc_ObjectLink_Partner_PersonalMerch()
                                 )
                 , tmpIsErased AS (SELECT FALSE AS isErased UNION SELECT inIsErased AS isErased)
+
+             -- Результат
              SELECT Object_Partner.Id
                   , Object_Partner.ObjectCode
                   , Object_Partner.ValueData

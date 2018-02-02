@@ -414,6 +414,9 @@ BEGIN
                                 , inUserId     := inUserId
                                  );
 
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -4,10 +4,8 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   ClientWidth = 1076
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -73
-  ExplicitTop = -205
   ExplicitWidth = 1092
-  ExplicitHeight = 724
+  ExplicitHeight = 720
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1774,13 +1772,9 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       StoredProcList = <
         item
           StoredProc = spGet_UserJuridicalBasis
-        end
-        item
-          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
   end

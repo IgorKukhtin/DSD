@@ -45,14 +45,20 @@ BEGIN
 
      --
      SELECT SUM (COALESCE(MovementItem.Amount, 0))                                                                  AS TotalCount
-          , SUM (zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData)) AS TotalSumm
-          , SUM (CAST (zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData)
-                     * COALESCE (MIFloat_CurrencyValue.ValueData, 0) / CASE WHEN MIFloat_ParValue.ValueData > 0
-                                                                            THEN MIFloat_ParValue.ValueData
-                                                                            ELSE 1
-                                                                      END
-                 AS NUMERIC (16, 2))
+            -- Сумма по Вх. в Валюте - с округлением до 2-х знаков
+          , SUM (zfCalc_SummIn (MovementItem.Amount, Object_PartionGoods.OperPrice, Object_PartionGoods.CountForPrice)) AS TotalSumm
+            -- Сумма по Вх. в zc_Currency_Basis
+          , SUM (zfCalc_SummIn (MovementItem.Amount
+                                -- Цена Вх. в Валюте - сначала переводим в zc_Currency_Basis - с округлением до 2-х знаков
+                              , zfCalc_PriceIn_Basis (Object_PartionGoods.CurrencyId
+                                                    , Object_PartionGoods.OperPrice
+                                                    , COALESCE (MovementFloat_CurrencyValue.ValueData, MIFloat_CurrencyValue.ValueData)
+                                                    , COALESCE (MovementFloat_ParValue.ValueData,      MIFloat_ParValue.ValueData))
+                              , Object_PartionGoods.CountForPrice
+                               )
                 )                                                                                                   AS TotalSummBalance
+
+            -- Сумма по Прайсу - с округлением до 0/2-х знаков
           , SUM (zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData))                       AS TotalSummPriceList
 
           , SUM (COALESCE (MIFloat_TotalChangePercent.ValueData, 0) + COALESCE (MIFloat_SummChangePercent.ValueData, 0)) AS TotalSummChange
@@ -72,8 +78,6 @@ BEGIN
           , SUM (zfCalc_SummPriceList (MIFloat_AmountSecondRemains.ValueData, MIFloat_OperPriceList.ValueData)) AS TotalSummSecondRemainsPriceList
           , SUM (zfCalc_SummPriceList (MIFloat_AmountRemains.ValueData, MIFloat_OperPriceList.ValueData))       AS TotalSummRemainsPriceList
 
-          --, COALESCE (MIFloat_CurrencyValue.ValueData, 0)              ::TFloat AS CurrencyValue
-          --, COALESCE (MIFloat_ParValue.ValueData, 0)                   ::TFloat AS ParValue
 
             INTO vbTotalCount, vbTotalSumm, vbTotalSummBalance, vbTotalSummPriceList
                , vbTotalSummChange, vbTotalSummPay
@@ -82,12 +86,8 @@ BEGIN
                , vbTotalSummSecondPriceList, vbTotalSummSecondRemainsPriceList, vbTotalSummRemainsPriceList
        
        FROM MovementItem
-            LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-            LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
-                                        ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
-                                       AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()
+            LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MovementItem.PartionId
+            
             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                         ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                        AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
@@ -123,6 +123,23 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_ParValue
                                         ON MIFloat_ParValue.MovementItemId = MovementItem.Id
                                        AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
+
+            -- LEFT JOIN MovementLinkObject AS MLO_CurrencyDocument
+            --                              ON MLO_CurrencyDocument.MovementId = MovementItem.MovementId
+            --                             AND MLO_CurrencyDocument.DescId     = zc_MovementLinkObject_CurrencyDocument()
+                                        -- Только для 
+            --                             AND vbMovementDescId                IN (zc_Movement_Income(), zc_Movement_ReturnOut())
+            LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
+                                    ON MovementFloat_CurrencyValue.MovementId = MovementItem.MovementId
+                                   AND MovementFloat_CurrencyValue.DescId     = zc_MovementFloat_CurrencyValue()
+                                   -- Только для 
+                                   AND vbMovementDescId                       IN (zc_Movement_Income(), zc_Movement_ReturnOut())
+            LEFT JOIN MovementFloat AS MovementFloat_ParValue
+                                    ON MovementFloat_ParValue.MovementId = MovementItem.MovementId
+                                   AND MovementFloat_ParValue.DescId     = zc_MovementFloat_ParValue()
+                                   -- Только для 
+                                   AND vbMovementDescId                  IN (zc_Movement_Income(), zc_Movement_ReturnOut())
+
       WHERE MovementItem.MovementId = inMovementId
         AND MovementItem.DescId     = zc_MI_Master()
         AND MovementItem.isErased = false;

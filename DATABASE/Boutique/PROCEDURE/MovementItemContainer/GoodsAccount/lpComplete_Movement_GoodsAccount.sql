@@ -90,6 +90,7 @@ BEGIN
                          , Summ_10201, Summ_10202, Summ_10203, Summ_10204
                          , AccountId, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , SummDebt_sale, SummDebt_return
+                         , CurrencyValue, ParValue
                          , isGoods_Debt
                           )
        WITH -- для Sybase
@@ -119,6 +120,9 @@ BEGIN
                            , CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END AS CountForPrice
                            , Object_PartionGoods.CurrencyId   AS CurrencyId
 
+
+                             -- Цена Вх. в Валюте - сначала переводим в zc_Currency_Basis - с округлением до 2-х знаков
+                           , zfCalc_PriceIn_Basis (Object_PartionGoods.CurrencyId, Object_PartionGoods.OperPrice, MIFloat_CurrencyValue.ValueData, MIFloat_ParValue.ValueData) AS OperPrice_basis
 
                              -- !!!1.1. самое Важное - Сложный расчет ДОЛГА - БЕЗ ВОЗВРАТА!!!
                            , -- Сумма по Прайсу
@@ -354,10 +358,8 @@ BEGIN
                -- Сумма по Вх. в zc_Currency_Basis
              , CASE WHEN tmp.isGoods_Debt = TRUE
                          THEN 0 -- !!!это долги!!!
-                    WHEN tmp.CurrencyId = zc_Currency_Basis()
-                         THEN zfCalc_SummIn (tmp.Amount_begin, tmp.OperPrice, tmp.CountForPrice)
-                    ELSE -- !!!Надо не забыть и курс записать в ГРН!!!
-                         zfCalc_CurrencyFrom (zfCalc_SummIn (tmp.Amount_begin, tmp.OperPrice, tmp.CountForPrice), tmp.CurrencyValue, tmp.ParValue)
+                    -- Сумма по Вх. - с округлением до 2-х знаков
+                    ELSE zfCalc_SummIn (tmp.Amount_begin, tmp.OperPrice_basis, tmp.CountForPrice)
                END AS OperSumm
 
                -- Сумма по Вх. в ВАЛЮТЕ
@@ -407,6 +409,11 @@ BEGIN
 
              , tmp.SummDebt_sale
              , tmp.SummDebt_return
+
+               -- Курс - из партии продажи
+             , COALESCE (tmp.CurrencyValue, 0) AS CurrencyValue
+               -- Номинал курса - из партии продажи
+             , COALESCE (tmp.ParValue, 0)      AS ParValue
 
              , tmp.isGoods_Debt
 
@@ -899,7 +906,8 @@ BEGIN
                      END AS OperCount_sale
               FROM _tmpItem
                    LEFT JOIN tmpContainer ON tmpContainer.PartionId_MI = _tmpItem.PartionId_MI
-                                         AND tmpContainer.GoodsId      = _tmpItem.GoodsId     -- !!!обязательно условие, т.к. мог меняться GoodsId и тогда в Container - несколько строк!!!
+                                         -- !!!обязательно условие, т.к. мог меняться GoodsId и тогда в Container - несколько строк!!!
+                                         AND tmpContainer.GoodsId      = _tmpItem.GoodsId
               -- WHERE _tmpItem.OperCount > 0
              ) AS tmp
         ;
@@ -1520,6 +1528,11 @@ BEGIN
       ;
 
 
+
+     -- 5.0. Пересохраним св-ва из партии: Курс - из партии продажи
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CurrencyValue(), _tmpItem.MovementItemId, COALESCE (_tmpItem.CurrencyValue, 0))
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ParValue(),      _tmpItem.MovementItemId, COALESCE (_tmpItem.ParValue, 0))
+     FROM _tmpItem;
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable();

@@ -4,7 +4,6 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SendOnPrice_Branch (Integer,
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SendOnPrice_Branch (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SendOnPrice_Branch (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SendOnPrice_Branch(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
@@ -141,7 +140,7 @@ BEGIN
                                                                               THEN inGoodsKindId
                                                                          ELSE (SELECT ObjectId FROM MovementItemLinkObject WHERE MovementItemId = ioId AND DescId = zc_MILinkObject_GoodsKind())
                                                                     END
-                                          , inUnitId             := inUnitId
+                                          , inUnitId             := (SELECT ObjectId FROM MovementItemLinkObject WHERE MovementItemId = ioId AND DescId = zc_MILinkObject_Unit())
 
                                           , inCountPack          := COALESCE (outCountPack, 0)
                                           , inWeightTotal        := COALESCE (outWeightTotal, 0)

@@ -6569,7 +6569,7 @@ begin
         Add('     , Users.Erased as Erased');
         Add('     , Users.MemberId_Postgres as Id_Postgres');
         Add('from dba.Users  ');
-        Add('     left outer join dba.Unit on Unit.Id = case when   ');
+        //Add('     left outer join dba.Unit on Unit.Id = case when   ');
         Add('where haschildren = -1');
         Add('order by ObjectId');
         Open;

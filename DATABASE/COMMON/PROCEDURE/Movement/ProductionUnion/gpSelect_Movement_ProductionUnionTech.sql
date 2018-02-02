@@ -64,6 +64,11 @@ BEGIN
                                INNER JOIN Movement ON Movement.OperDate BETWEEN tmpDate.StartDate AND tmpDate.EndDate
                                                   AND Movement.DescId = zc_Movement_OrderInternal()
                                                   AND Movement.StatusId <> zc_Enum_Status_Erased()
+                               INNER JOIN MovementLinkObject AS MLO_To
+                                                             ON MLO_To.MovementId = Movement.Id
+                                                            AND MLO_To.DescId = zc_MovementLinkObject_To()
+                                                            AND MLO_To.ObjectId IN (inFromId, vbFromId_group)
+
                                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                       AND MovementItem.isErased = FALSE
                                                       AND MovementItem.DescId     = zc_MI_Master()
@@ -86,9 +91,6 @@ BEGIN
                                LEFT JOIN MovementItemLinkObject AS MILO_ReceiptBasis
                                                                 ON MILO_ReceiptBasis.MovementItemId = MovementItem.Id
                                                                AND MILO_ReceiptBasis.DescId = zc_MILinkObject_ReceiptBasis()
-                               LEFT JOIN MovementLinkObject AS MLO_To
-                                                            ON MLO_To.MovementId = Movement.Id
-                                                           AND MLO_To.DescId = zc_MovementLinkObject_To()
                                LEFT JOIN MovementLinkObject AS MLO_DocumentKind
                                                             ON MLO_DocumentKind.MovementId = Movement.Id
                                                            AND MLO_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
@@ -107,7 +109,7 @@ BEGIN
                                                     ON OrderType_Unit.ObjectId = ObjectLink_OrderType_Goods.ObjectId
                                                    AND OrderType_Unit.DescId = zc_ObjectLink_OrderType_Unit()
 
-                          WHERE MLO_To.ObjectId IN (inFromId, vbFromId_group)
+                          -- WHERE MLO_To.ObjectId IN (inFromId, vbFromId_group)
                             -- AND OrderType_Unit.ChildObjectId = inFromId
                           GROUP BY Movement.OperDate
                                  , COALESCE (MILO_Goods.ObjectId, MovementItem.ObjectId)
@@ -256,6 +258,8 @@ BEGIN
 
 
     OPEN Cursor1 FOR
+    -- для оптимизации - в Табл. 1
+    -- CREATE TEMP TABLE _tmpRes1_ProductionUnionTech ON COMMIT DROP AS
       WITH tmpStatus AS (SELECT 0                           AS StatusId
                    UNION SELECT zc_Enum_Status_Complete()   AS StatusId
                    UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
@@ -431,6 +435,8 @@ BEGIN
 
 
      OPEN Cursor2 FOR
+     -- для оптимизации - в Табл. - 2
+     -- CREATE TEMP TABLE _tmpRes2_ProductionUnionTech ON COMMIT DROP AS
      WITH tmpMI_Child AS (SELECT tmpMI_Child_two.MovementItemId
                                , tmpMI_Child_two.MovementItemId_Child
                                , tmpMI_Child_two.GoodsId
@@ -691,11 +697,20 @@ BEGIN
 
       ;
     RETURN NEXT Cursor2;
+    
+
+    -- Все Результаты - 1
+    -- OPEN Cursor1 FOR SELECT * FROM _tmpRes1_ProductionUnionTech;
+    -- RETURN NEXT Cursor1;
+    
+    -- Все Результаты - 1
+    -- OPEN Cursor2 FOR SELECT * FROM _tmpRes1_ProductionUnionTech;
+    -- RETURN NEXT Cursor2;
+
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
---ALTER FUNCTION gpSelect_Movement_ProductionUnionTech (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -709,4 +724,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ProductionUnionTech (inStartDate:= ('01.02.2015')::TDateTime, inEndDate:= ('01.02.2015')::TDateTime, inFromId:= 8447, inToId:= 8447, inJuridicalBasisId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_ProductionUnionTech (inStartDate:= '01.02.2018', inEndDate:= '01.02.2018', inFromId:= 8447, inToId:= 8447, inJuridicalBasisId:= 9399, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());

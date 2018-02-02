@@ -2,10 +2,10 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077' ('#1092#1080#1083#1080#1072#1083')>'
   ClientHeight = 668
   ClientWidth = 944
-  ExplicitLeft = -285
-  ExplicitTop = -237
+  ExplicitLeft = -171
+  ExplicitTop = -122
   ExplicitWidth = 960
-  ExplicitHeight = 707
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -301,16 +301,9 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
           object UnitName: TcxGridDBColumn [18]
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1082#1086#1084#1091')'
             DataBinding.FieldName = 'UnitName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = UnitChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 120
           end
           object InfoMoneyCode: TcxGridDBColumn

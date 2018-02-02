@@ -44,7 +44,11 @@ BEGIN
 --для теста
 if inMovementId in (5712201 , 5716456)
 then
-    update Movement set statusId = zc_Enum_Status_UnComplete() where  Id = inMovementId;
+    --
+    update MovementLinkMovement set MovementChildId = null where MovementLinkMovement.DescId = zc_MovementLinkMovement_Order() and
+           MovementLinkMovement.MovementId = (select Movement.ParentId from Movement where Movement.Id = inMovementId);
+    --
+    update Movement set statusId = zc_Enum_Status_UnComplete(), ParentId = null where Movement.Id = inMovementId;
 end if;*/
 
 
