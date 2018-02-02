@@ -98,7 +98,7 @@ BEGIN
                                                                        )
                             )
             -- для Sybase
-          , tmpCheck AS (SELECT Object.ObjectCode AS PartionId_MI FROM Object WHERE Object.Id IN (SELECT 366872 
+          , tmpCheck AS (SELECT Object.ObjectCode AS PartionId_MI FROM Object WHERE Object.Id IN (SELECT 366872
                    UNION SELECT 374215
                    UNION SELECT 739198
                    UNION SELECT 739264
@@ -128,12 +128,10 @@ BEGIN
                -- Сумма по Вх. в zc_Currency_Basis
              , CASE WHEN tmp.isGoods_Debt = TRUE
                          THEN 0 -- !!!это долги!!!
-                    WHEN tmp.CurrencyId = zc_Currency_Basis()
-                         THEN tmp.OperSumm_Currency
-                    WHEN tmp.CurrencyId = tmpCurrency.CurrencyToId
-                         THEN zfCalc_CurrencyFrom (tmp.OperSumm_Currency, tmpCurrency.Amount, tmpCurrency.ParValue)
-                    WHEN tmp.CurrencyId = tmpCurrency.CurrencyFromId
-                         THEN zfCalc_CurrencyTo (tmp.OperSumm_Currency, tmpCurrency.Amount, tmpCurrency.ParValue)
+
+                    -- Сумма по Вх. - с округлением до 2-х знаков
+                    ELSE zfCalc_SummIn (tmp.OperCount, tmp.OperPrice_basis, tmp.CountForPrice)
+
                END AS OperSumm
 
                -- Сумма по Вх. в ВАЛЮТЕ
@@ -173,25 +171,56 @@ BEGIN
              , tmp.InfoMoneyId
 
                -- Курс - из истории
-             , COALESCE (tmpCurrency.Amount, 0)   AS CurrencyValue
+             , COALESCE (tmp.CurrencyValue, 0) AS CurrencyValue
                -- Номинал курса - из истории
-             , COALESCE (tmpCurrency.ParValue, 0) AS ParValue
+             , COALESCE (tmp.ParValue, 0)      AS ParValue
 
              , tmp.isGoods_Debt
 
-        FROM (SELECT MovementItem.Id                  AS MovementItemId
-                   , Object_PartionGoods.GoodsId      AS GoodsId
-                   , MovementItem.PartionId           AS PartionId
-                   , Object_PartionGoods.GoodsSizeId  AS GoodsSizeId
-                   , MovementItem.Amount              AS OperCount
-                   , Object_PartionGoods.OperPrice    AS OperPrice
+        FROM (SELECT MovementItem.Id                    AS MovementItemId
+                   , Object_PartionGoods.GoodsId        AS GoodsId
+                   , MovementItem.PartionId             AS PartionId
+                   , Object_PartionGoods.GoodsSizeId    AS GoodsSizeId
+                   , MovementItem.Amount                AS OperCount
+                   , Object_PartionGoods.OperPrice      AS OperPrice
                    , CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END AS CountForPrice
-                   , Object_PartionGoods.CurrencyId   AS CurrencyId
+                   , Object_PartionGoods.CurrencyId     AS CurrencyId
+
+                     -- Курс - из истории
+                   , CASE WHEN Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyToId
+                               THEN tmpCurrency.Amount
+                          WHEN Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyFromId AND tmpCurrency.Amount > 0
+                               -- Здесь Деление
+                               THEN 1000 * 1 / tmpCurrency.Amount
+                     END AS CurrencyValue
+                     -- Номинал курса - из истории
+                   , CASE WHEN Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyToId
+                               THEN tmpCurrency.ParValue
+                          WHEN Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyFromId AND tmpCurrency.Amount > 0
+                               -- т.к. было Деление
+                               THEN 1000 * tmpCurrency.ParValue
+                     END AS ParValue
+
+                     -- Цена Вх. в Валюте - сначала переводим в zc_Currency_Basis - с округлением до 2-х знаков
+                   , zfCalc_PriceIn_Basis (Object_PartionGoods.CurrencyId, Object_PartionGoods.OperPrice
+                                         , CASE WHEN Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyToId
+                                                     THEN tmpCurrency.Amount
+                                                WHEN Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyFromId AND tmpCurrency.Amount > 0
+                                                     -- Здесь Деление
+                                                     THEN 1000 * 1 / tmpCurrency.Amount
+                                           END
+                                         , CASE WHEN Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyToId
+                                                     THEN tmpCurrency.ParValue
+                                                WHEN Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyFromId AND tmpCurrency.Amount > 0
+                                                     -- т.к. было Деление
+                                                     THEN 1000 * tmpCurrency.ParValue
+                                           END
+                                          ) AS OperPrice_basis
 
                      -- Сумма по Вх. в Валюте - с округлением до 2-х знаков
                    , zfCalc_SummIn (MovementItem.Amount, Object_PartionGoods.OperPrice, Object_PartionGoods.CountForPrice) AS OperSumm_Currency
 
-                     -- Сумма по Прайсу - с округлением до 2-х знаков
+                     -- Сумма по Прайсу - с округлением до 0/2-х знаков
                    , zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData) AS OperSummPriceList
                      -- Итого сумма Скидки (в ГРН) - только для текущего документа - суммируется 1)по %скидки + 2)дополнительная
                    , COALESCE (MIFloat_TotalChangePercent.ValueData, 0)                          AS TotalChangePercent
@@ -215,7 +244,7 @@ BEGIN
                    , View_InfoMoney.InfoMoneyId
 
                    , CASE WHEN Object_PartionGoods.GoodsId = zc_Enum_Goods_Debt() THEN TRUE
-                          WHEN EXISTS (SELECT 1 FROM tmpCheck WHERE tmpCheck.PartionId_MI = MovementItem.Id) THEN TRUE 
+                          WHEN EXISTS (SELECT 1 FROM tmpCheck WHERE tmpCheck.PartionId_MI = MovementItem.Id) THEN TRUE
                                ELSE FALSE
                      END AS isGoods_Debt
 
@@ -249,12 +278,13 @@ BEGIN
                                        AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
                    LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = COALESCE (ObjectLink_Goods_InfoMoney.ChildObjectId, zc_Enum_InfoMoney_10101()) -- !!!ВРЕМЕННО!!! Доходы + Товары + Одежда
 
+                   LEFT JOIN tmpCurrency ON (tmpCurrency.CurrencyFromId = Object_PartionGoods.CurrencyId OR tmpCurrency.CurrencyToId = Object_PartionGoods.CurrencyId)
+                                        AND Object_PartionGoods.CurrencyId <> zc_Currency_Basis()
+
               WHERE Movement.Id       = inMovementId
                 AND Movement.DescId   = zc_Movement_Sale()
                 AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
              ) AS tmp
-             LEFT JOIN tmpCurrency ON (tmpCurrency.CurrencyFromId = tmp.CurrencyId OR tmpCurrency.CurrencyToId = tmp.CurrencyId)
-                                  AND tmp.CurrencyId <> zc_Currency_Basis()
             ;
 
 

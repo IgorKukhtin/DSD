@@ -80,16 +80,21 @@ BEGIN
          outAmountChangePercent:= ioAmountPartner;
 
      ELSE
-     -- !!!из контрола!!! - % скидки для кол-ва
-     IF inIsChangePercentAmount = TRUE
-     THEN
-         IF EXISTS (SELECT ObjectId FROM ObjectLink WHERE ObjectId = inGoodsId AND ChildObjectId = zc_Measure_Kg())
-         THEN ioChangePercentAmount:= inChangePercentAmount; -- !!!из контрола!!!
-         ELSE ioChangePercentAmount:= 0;
+         -- !!!из контрола!!! - % скидки для кол-ва
+         IF inIsChangePercentAmount = TRUE
+         THEN
+             IF EXISTS (SELECT ObjectId FROM ObjectLink WHERE ObjectId = inGoodsId AND ChildObjectId = zc_Measure_Kg())
+             THEN ioChangePercentAmount:= inChangePercentAmount; -- !!!из контрола!!!
+             ELSE ioChangePercentAmount:= 0;
+             END IF;
          END IF;
-     END IF;
-     -- !!!расчет!!! - Количество c учетом % скидки
-     outAmountChangePercent:= CAST (ioAmount * (1 - COALESCE (ioChangePercentAmount, 0) / 100) AS NUMERIC (16, 3));
+
+         -- !!!расчет!!! - Количество c учетом % скидки
+         IF ioChangePercentAmount <> 0
+         THEN outAmountChangePercent:= CAST (ioAmount * (1 - COALESCE (ioChangePercentAmount, 0) / 100) AS NUMERIC (16, 3));
+         ELSE outAmountChangePercent:= ioAmount;
+         END IF;
+         
      END IF;
 
      IF inIsCalcAmountPartner = TRUE

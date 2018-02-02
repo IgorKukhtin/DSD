@@ -481,6 +481,7 @@ BEGIN
                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
                                                           )
                                                          AND _tmpItem.MemberId_From > 0
+                                                         AND _tmpItem.UnitId_To     = 0
                                                          )
                                                          THEN (SELECT CLO_PartionGoods.ObjectId -- ObjectLink_Goods.ObjectId
                                                                FROM ObjectLink AS ObjectLink_Goods
@@ -553,6 +554,10 @@ BEGIN
                                                                                                             , inOperDate      := (SELECT OD.ValueData  FROM ObjectDate  AS OD  WHERE OD.ObjectId  = _tmpItem.PartionGoodsId_Item AND OD.DescId  = zc_ObjectDate_PartionGoods_Value())
                                                                                                             , inPrice         := (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = _tmpItem.PartionGoodsId_Item AND OFl.DescId = zc_ObjectFloat_PartionGoods_Price())
                                                                                                              )
+                                                                  WHEN _tmpItem.UnitId_To <> 0
+                                                                       THEN -- !!!если вернулось на склад - будет ПУСТАЯ Партия
+                                                                            0
+                                                                            
                                                                   -- !!!Партия не меняется - т.е. как в расходе, хотя надо бы отследить
                                                                   ELSE _tmpItem.PartionGoodsId_Item
                                                              END

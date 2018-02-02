@@ -107,16 +107,14 @@ BEGIN
              , tmp.OperPrice
                -- Цена за количество - из партии
              , tmp.CountForPrice
-             
+
              , tmp.OperPriceList
 
                -- Сумма по Вх. в zc_Currency_Basis
              , CASE WHEN tmp.isGoods_Debt = TRUE
                          THEN 0 -- !!!это долги!!!
-                    WHEN tmp.CurrencyId = zc_Currency_Basis()
-                         THEN tmp.OperSumm_Currency
-                    ELSE -- !!!Надо не забыть и курс записать в ГРН!!!
-                         zfCalc_CurrencyFrom (tmp.OperSumm_Currency, tmp.CurrencyValue, tmp.ParValue)
+                    -- Сумма по Вх. - с округлением до 2-х знаков
+                    ELSE zfCalc_SummIn (tmp.OperCount, tmp.OperPrice_basis, tmp.CountForPrice)
                END AS OperSumm
 
                -- Сумма по Вх. в ВАЛЮТЕ
@@ -149,9 +147,11 @@ BEGIN
              , tmp.InfoMoneyGroupId
              , tmp.InfoMoneyDestinationId
              , tmp.InfoMoneyId
-             
-             , tmp.CurrencyValue
-             , tmp.ParValue
+
+               -- Курс - из партии продажи
+             , COALESCE (tmp.CurrencyValue, 0) AS CurrencyValue
+               -- Номинал курса - из партии продажи
+             , COALESCE (tmp.ParValue, 0)      AS ParValue
 
              , tmp.isGoods_Debt
 
@@ -166,6 +166,8 @@ BEGIN
                    , CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END AS CountForPrice
                    , Object_PartionGoods.CurrencyId   AS CurrencyId
 
+                     -- Цена Вх. в Валюте - сначала переводим в zc_Currency_Basis - с округлением до 2-х знаков
+                   , zfCalc_PriceIn_Basis (Object_PartionGoods.CurrencyId, Object_PartionGoods.OperPrice, MIFloat_CurrencyValue.ValueData, MIFloat_ParValue.ValueData) AS OperPrice_basis
                      -- Сумма по Вх. в Валюте - с округлением до 2-х знаков
                    , zfCalc_SummIn (MovementItem.Amount, Object_PartionGoods.OperPrice, Object_PartionGoods.CountForPrice) AS OperSumm_Currency
 
@@ -978,7 +980,7 @@ BEGIN
       ;
 
 
-     -- 5.0. Пересохраним св-ва из партии: <Цена> + <Цена за количество> + Курс - из истории
+     -- 5.0. Пересохраним св-ва из партии: <Цена> + <Цена за количество> + Курс - из партии продажи
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPrice(),     _tmpItem.MovementItemId, _tmpItem.OperPrice)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), _tmpItem.MovementItemId, _tmpItem.CountForPrice)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(), _tmpItem.MovementItemId, COALESCE (_tmpItem.OperPriceList, 0))
@@ -1003,25 +1005,25 @@ BEGIN
      -- 6.2. ПРОВЕРКА - ОБЯЗАТЕЛЬНО после lpComplete + "пересчета" - !!!Сложный расчет ДОЛГА - с учетом ВОЗВРАТА!!!
      IF EXISTS (WITH tmpRes AS (SELECT -- Сумма по Прайсу
                                        zfCalc_SummPriceList (MI_Sale.Amount, MIFloat_OperPriceList.ValueData)
-                  
+
                                        -- МИНУС: Итого сумма Скидки (в ГРН) - для ВСЕХ документов - суммируется 1-по %скидки + 2-дополнительная + 3-дополнительная в оплатах
                                      - (COALESCE (MIFloat_TotalChangePercent.ValueData, 0) + COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0))
-                  
+
                                        -- МИНУС: Итого сумма оплаты (в ГРН) - для ВСЕХ документов - суммируется 1 + 2
                                      - (COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_TotalPayOth.ValueData, 0))
-                  
+
                                        -- МИНУС TotalReturn - Итого сумма возврата со скидкой - все док-ты
                                      - COALESCE (MIFloat_TotalReturn.ValueData, 0)
                                        -- !!!ПЛЮС!!! TotalReturn - Итого возврат оплаты - все док-ты
                                      + COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
-                  
+
                                        AS SummDebt_return
 
                                      , _tmpItem.MovementItemId  AS MovementItemId
                                      , _tmpItem.PartionId_MI    AS PartionId_MI
                                 FROM _tmpItem
                                      INNER JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
-                                     
+
                                      INNER JOIN Container ON Container.Id     = _tmpItem_SummClient.ContainerId_Goods
                                                          AND Container.Amount <> 0
                                      INNER JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = _tmpItem.PartionId_MI
@@ -1029,7 +1031,7 @@ BEGIN
                                      -- убрали из проверки ЕСЛИ документ - НЕ проведен
                                      INNER JOIN Movement AS Movement_Sale ON Movement_Sale.Id       = MI_Sale.MovementId
                                                                          AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
-                  
+
                                      LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                                  ON MIFloat_OperPriceList.MovementItemId = MI_Sale.Id
                                                                 AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
@@ -1045,7 +1047,7 @@ BEGIN
                                      LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth
                                                                  ON MIFloat_TotalPayOth.MovementItemId = MI_Sale.Id
                                                                 AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth()
-                    
+
                                      LEFT JOIN MovementItemFloat AS MIFloat_TotalReturn
                                                                  ON MIFloat_TotalReturn.MovementItemId = MI_Sale.Id
                                                                 AND MIFloat_TotalReturn.DescId         = zc_MIFloat_TotalReturn()
@@ -1066,7 +1068,7 @@ BEGIN
                                                         AND Movement.StatusId IN (zc_Enum_Status_UnComplete())
                                 WHERE tmp.SummDebt_return = 0
                                )
-                
+
                 SELECT tmp.SummDebt_return
                 FROM tmpRes AS tmp
                      LEFT JOIN tmpFind ON tmpFind.MovementItemId = tmp.MovementItemId
@@ -1099,7 +1101,7 @@ BEGIN
                    , MI_Sale.Id               AS MovementItemId_Sale
                 FROM _tmpItem
                      INNER JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
-                     
+
                      INNER JOIN Container ON Container.Id     = _tmpItem_SummClient.ContainerId_Goods
                                          AND Container.Amount <> 0
                      INNER JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = _tmpItem.PartionId_MI
@@ -1120,7 +1122,7 @@ BEGIN
                      LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth
                                                  ON MIFloat_TotalPayOth.MovementItemId = MI_Sale.Id
                                                 AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth()
-  
+
                      LEFT JOIN MovementItemFloat AS MIFloat_TotalReturn
                                                  ON MIFloat_TotalReturn.MovementItemId = MI_Sale.Id
                                                 AND MIFloat_TotalReturn.DescId         = zc_MIFloat_TotalReturn()
@@ -1158,7 +1160,7 @@ BEGIN
                    , MI_Sale.Id               AS MovementItemId_Sale
                 FROM _tmpItem
                      INNER JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
-                     
+
                      INNER JOIN Container ON Container.Id     = _tmpItem_SummClient.ContainerId_Goods
                                          AND Container.Amount <> 0
                      INNER JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = _tmpItem.PartionId_MI
@@ -1180,7 +1182,7 @@ BEGIN
                      LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth
                                                  ON MIFloat_TotalPayOth.MovementItemId = MI_Sale.Id
                                                 AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth()
-  
+
                      LEFT JOIN MovementItemFloat AS MIFloat_TotalReturn
                                                  ON MIFloat_TotalReturn.MovementItemId = MI_Sale.Id
                                                 AND MIFloat_TotalReturn.DescId         = zc_MIFloat_TotalReturn()

@@ -57,7 +57,15 @@ BEGIN
                            , COALESCE (MIFloat_OperPrice.ValueData, 0)       AS OperPrice
                            , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
                            , COALESCE (MIFloat_OperPriceList.ValueData, 0)   AS OperPriceList
+                             -- —умма по ¬х. в ¬алюте - с округлением до 2-х знаков
                            , zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData) AS TotalSumm
+                             -- —умма по ¬х. в zc_Currency_Basis
+                           , zfCalc_SummIn (MovementItem.Amount
+                                            -- ÷ена ¬х. в ¬алюте - сначала переводим в zc_Currency_Basis - с округлением до 2-х знаков
+                                          , zfCalc_PriceIn_Basis (vbCurrencyId_Doc, MIFloat_OperPrice.ValueData, vbCurrencyValue, vbParValue)
+                                          , MIFloat_CountForPrice.ValueData
+                                           ) AS TotalSummBalance
+                             -- —умма по ѕрайсу - с округлением до 0/2-х знаков
                            , zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData)                       AS TotalSummPriceList
                            , MovementItem.isErased
 
@@ -98,10 +106,7 @@ BEGIN
            , tmpMI.CountForPrice       :: TFloat AS CountForPrice
            , tmpMI.OperPriceList       :: TFloat AS OperPriceList
            , tmpMI.TotalSumm           :: TFloat AS TotalSumm
-           , (CASE WHEN vbCurrencyId_Doc = zc_Currency_Basis()
-                        THEN tmpMI.TotalSumm
-                   ELSE zfCalc_CurrencyFrom (tmpMI.TotalSumm, vbCurrencyValue, vbParValue)
-              END) :: TFloat AS TotalSummBalance
+           , tmpMI.TotalSummBalance    :: TFloat AS TotalSummBalance
            , tmpMI.TotalSummPriceList  :: TFloat AS TotalSummPriceList
            , tmpMI.isErased
        FROM tmpMI
