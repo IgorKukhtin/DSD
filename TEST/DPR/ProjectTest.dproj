@@ -2307,10 +2307,6 @@
 				<Form>Report_Transport_ProfitLossDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_Transport_ProfitLoss.pas">
-				<Form>Report_Transport_ProfitLossForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\IncomeJournalChoice.pas">
 				<Form>IncomeJournalChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -3339,6 +3335,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ProductionSeparateStorageLine.pas">
 				<Form>ProductionSeparateStorageLineForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Transport_ProfitLoss.pas">
+				<Form>Report_Transport_ProfitLossForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
