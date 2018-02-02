@@ -1,9 +1,12 @@
 -- Function: gpSelect_Movement_Reestr()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_ReestrReturn_Print (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ReestrReturn_Print (Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ReestrReturn_Print(
     IN inMovementId        Integer   ,
+    IN inPersonalId        Integer   ,
+    IN inPersonalTradeId   Integer   ,
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -24,6 +27,11 @@ BEGIN
    INTO vbDescId, vbStatusId
      FROM Movement WHERE Movement.Id = inMovementId;
 
+     -- переопределим значение для вывезено со склада; в форме start нет єтого параметра, в др.формах есть
+     /*IF COALESCE (inReestrKindId, 0 ) = 0
+        THEN inReestrKindId := zc_Enum_ReestrKind_PartnerOut();
+     END IF;
+*/
      -- Результат
      OPEN Cursor1 FOR
    
@@ -122,6 +130,19 @@ BEGIN
            , Movement_ReturnIn.OperDate             AS OperDate_ReturnIn
            , MovementDate_OperDatePartner.ValueData AS OperDatePartner
            , Object_From.ValueData                  AS FromName
+
+           , CASE WHEN Object_Personal.Id <> Object_PersonalTrade.Id
+                  THEN Object_Personal.ValueData || ' / ' || Object_PersonalTrade.ValueData
+                  WHEN Object_Personal.Id IS NULL AND Object_PersonalTrade.Id > 0
+                       THEN ' / ' || Object_PersonalTrade.ValueData
+                  ELSE Object_Personal.ValueData
+             END                        :: TVarChar AS PersonalName
+           , Object_PersonalTrade.ValueData         AS PersonalTradeName
+           , CASE WHEN Object_Personal.Id <> 0 
+                  THEN Object_Personal.ValueData
+                  ELSE Object_PersonalTrade.ValueData
+             END                        :: TVarChar AS PersonalName_Group
+
            , Object_ReestrKind.ValueData    	    AS ReestrKindName
            , Object_PaidKind.ValueData              AS PaidKindName
 
@@ -190,9 +211,20 @@ BEGIN
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
-         ORDER BY tmpMI.GroupNum
-                , Object_From.ValueData
-                , MovementDate_OperDatePartner.ValueData
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
+                                 ON ObjectLink_Partner_Personal.ObjectId = Object_From.Id
+                                AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
+            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Partner_Personal.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                 ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_From.Id
+                                AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+            LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = ObjectLink_Partner_PersonalTrade.ChildObjectId
+       WHERE (Object_Personal.Id = inPersonalId OR inPersonalId = 0)
+         AND (Object_PersonalTrade.Id = inPersonalTradeId OR inPersonalTradeId = 0)
+       ORDER BY tmpMI.GroupNum
+              , Object_From.ValueData
+              , MovementDate_OperDatePartner.ValueData
 ;
 
     RETURN NEXT Cursor2;
@@ -204,8 +236,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 01.02.18         *
  12.03.17         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ReestrReturn_Print (inMovementId:= 1, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_ReestrReturn_Print (inMovementId:= 1, inPersonalId := 0 , inPersonalTradeId := 0, inSession:= zfCalc_UserAdmin())
