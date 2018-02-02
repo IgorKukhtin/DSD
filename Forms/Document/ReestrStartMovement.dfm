@@ -4,7 +4,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
   ClientWidth = 943
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 959
-  ExplicitHeight = 424
+  ExplicitHeight = 423
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2155,8 +2155,8 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 767
-    Top = 104
+    Left = 751
+    Top = 136
   end
   object GuidesPersonal: TdsdGuides
     KeyField = 'Id'
@@ -2185,8 +2185,8 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 696
-    Top = 21
+    Left = 720
+    Top = 69
   end
   object GuidesPersonalTrade: TdsdGuides
     KeyField = 'Id'
@@ -2215,8 +2215,8 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 744
-    Top = 37
+    Left = 856
+    Top = 61
   end
   object spSelectPrintGroup: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Reestr_Print'

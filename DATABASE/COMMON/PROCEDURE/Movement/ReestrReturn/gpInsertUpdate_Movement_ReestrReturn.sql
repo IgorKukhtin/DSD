@@ -68,7 +68,6 @@ BEGIN
                                                 , inUserId           := vbUserId
                                                 );
 
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

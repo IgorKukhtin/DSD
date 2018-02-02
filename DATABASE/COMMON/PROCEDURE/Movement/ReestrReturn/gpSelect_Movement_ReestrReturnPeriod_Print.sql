@@ -1,11 +1,14 @@
 -- Function: gpSelect_Movement_Reestr()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_ReestrReturnPeriod_Print (TDateTime, TDateTime, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ReestrReturnPeriod_Print (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ReestrReturnPeriod_Print(
     IN inStartDate           TDateTime ,  
     IN inEndDate             TDateTime ,
     IN inReestrKindId        Integer   ,
+    IN inPersonalId          Integer   ,
+    IN inPersonalTradeId     Integer   ,
     IN inisShowAll           Boolean   ,
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -84,6 +87,19 @@ BEGIN
            , Movement_ReturnIn.OperDate             AS OperDate_ReturnIn
            , MovementDate_OperDatePartner.ValueData AS OperDatePartner
            , Object_From.ValueData                  AS FromName
+
+           , CASE WHEN Object_Personal.Id <> Object_PersonalTrade.Id
+                  THEN Object_Personal.ValueData || ' / ' || Object_PersonalTrade.ValueData
+                  WHEN Object_Personal.Id IS NULL AND Object_PersonalTrade.Id > 0
+                       THEN ' / ' || Object_PersonalTrade.ValueData
+                  ELSE Object_Personal.ValueData
+             END                        :: TVarChar AS PersonalName
+           , Object_PersonalTrade.ValueData         AS PersonalTradeName
+           , CASE WHEN Object_Personal.Id <> 0 
+                  THEN Object_Personal.ValueData
+                  ELSE Object_PersonalTrade.ValueData
+             END                        :: TVarChar AS PersonalName_Group
+
            , Object_ReestrKind.ValueData    	    AS ReestrKindName
            , Object_PaidKind.ValueData              AS PaidKindName 
 
@@ -150,8 +166,20 @@ BEGIN
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
-         ORDER BY Object_From.ValueData
-                , MovementDate_OperDatePartner.ValueData
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
+                                 ON ObjectLink_Partner_Personal.ObjectId = Object_From.Id
+                                AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
+            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Partner_Personal.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                 ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_From.Id
+                                AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+            LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = ObjectLink_Partner_PersonalTrade.ChildObjectId
+
+       WHERE (Object_Personal.Id = inPersonalId OR inPersonalId = 0)
+         AND (Object_PersonalTrade.Id = inPersonalTradeId OR inPersonalTradeId = 0)
+       ORDER BY Object_From.ValueData
+              , MovementDate_OperDatePartner.ValueData
 ;
 
     RETURN NEXT Cursor2;
