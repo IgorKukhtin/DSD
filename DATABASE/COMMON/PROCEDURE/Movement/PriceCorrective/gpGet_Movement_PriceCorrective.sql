@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_PriceCorrective(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusId Integer, StatusCode Integer, StatusName TVarChar
+             , MovementId_Tax Integer, InvNumber_Tax TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat
              , InvNumberPartner TVarChar, InvNumberMark TVarChar
@@ -36,6 +37,8 @@ BEGIN
              , zc_Enum_Status_UnComplete()              AS StatusId
              , Object_Status.Code                       AS StatusCode
              , Object_Status.Name                       AS StatusName
+             , 0                                        AS MovementId_Tax
+             , '' :: TVarChar                           AS InvNumber_Tax
              , CAST (False as Boolean)                  AS PriceWithVAT
              , CAST (TaxPercent_View.Percent as TFloat) AS VATPercent
              , CAST (0 as TFloat)                       AS TotalCount
@@ -75,6 +78,9 @@ BEGIN
            , Object_Status.ObjectCode          	    AS StatusCode
            , Object_Status.ValueData         	    AS StatusName
 
+           , Movement.ParentId                      AS MovementId_Tax
+           , (zfConvert_StringToNumber (MovementString_InvNumberPartner_Tax.ValueData) || ' от ' || Movement_Parent.OperDate :: Date :: TVarChar ) :: TVarChar AS InvNumber_Tax
+
            , MovementBoolean_PriceWithVAT.ValueData AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData     AS VATPercent
         
@@ -102,7 +108,7 @@ BEGIN
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-             
+            
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
@@ -165,7 +171,12 @@ BEGIN
                                         AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
 
             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
-
+-- Налоговая накладная
+            LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.id = Movement.ParentId
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner_Tax
+                                     ON MovementString_InvNumberPartner_Tax.MovementId = Movement_Parent.Id
+                                    AND MovementString_InvNumberPartner_Tax.DescId = zc_MovementString_InvNumberPartner()
+                                    
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_PriceCorrective();
      END IF;

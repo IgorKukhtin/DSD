@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PriceCorrective(
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+             , InvNumber_Tax TVarChar, OperDate_Tax TDateTime
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat, TotalCountSh TFloat, TotalCountKg TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat
@@ -54,6 +55,9 @@ BEGIN
            , Movement.OperDate                          AS OperDate
            , Object_Status.ObjectCode                   AS StatusCode
            , Object_Status.ValueData                    AS StatusName
+           , MovementString_InvNumberPartner_Tax.ValueData  AS InvNumber_Tax
+           , Movement_Parent.OperDate                   AS OperDate_Tax
+
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
            , MovementFloat_TotalCount.ValueData         AS TotalCount
@@ -180,6 +184,11 @@ BEGIN
                                         AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()
             LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = MovementLinkObject_Branch.ObjectId
 
+-- Налоговая накладная
+            LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.id = Movement.ParentId
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner_Tax
+                                     ON MovementString_InvNumberPartner_Tax.MovementId = Movement_Parent.Id
+                                    AND MovementString_InvNumberPartner_Tax.DescId = zc_MovementString_InvNumberPartner()
             ;
 
 END;
@@ -190,6 +199,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.02.18         *
  06.10.16         * add inJuridicalBasisId
  17.06.14         * add inInvNumberPartner 
                       , inInvNumberMark

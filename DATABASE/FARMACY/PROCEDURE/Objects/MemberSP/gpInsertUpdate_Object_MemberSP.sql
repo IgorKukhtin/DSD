@@ -31,8 +31,25 @@ BEGIN
    -- Если код не установлен, определяем его как последний+1
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_MemberSP());
    
+   -- проверка заполнения мед.учрежд.
+   IF COALESCE (inPartnerMedicalId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Значение <Медицинское учреждение> не установлено.';
+   END IF;
    -- проверка уникальности <Наименование>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_MemberSP(), inName);
+   --PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_MemberSP(), inName);
+   IF EXISTS (SELECT 1 
+              FROM Object AS Object_MemberSP
+                   LEFT JOIN ObjectLink AS OL_PartnerMedical
+                          ON OL_PartnerMedical.ObjectId = Object_MemberSP.Id
+                         AND OL_PartnerMedical.DescId = zc_ObjectLink_MemberSP_PartnerMedical()
+              WHERE Object_MemberSP.DescId = zc_Object_MemberSP()
+                AND Object_MemberSP.ValueData = TRIM(inName)
+                AND OL_PartnerMedical.ChildObjectId = inPartnerMedicalId
+              )
+   THEN
+       RAISE EXCEPTION 'Ошибка.Значение <%> не уникально для справочника' , inName;
+   END IF;
    -- проверка уникальности <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_MemberSP(), vbCode_calc);
 
@@ -63,6 +80,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.02.18         *
  18.01.18         *
  14.02.17         * 
 */

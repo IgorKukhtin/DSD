@@ -2,9 +2,11 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PriceCorrective (integer, tvarchar, tdatetime, boolean, tfloat, integer, integer, integer, integer, integer, integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PriceCorrective (integer, tvarchar, tdatetime, boolean, tfloat, tvarchar, tvarchar, integer, integer, integer, integer, integer, integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PriceCorrective (integer, integer, tvarchar, tdatetime, boolean, tfloat, tvarchar, tvarchar, integer, integer, integer, integer, integer, integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_PriceCorrective(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Возврат покупателя>
+    IN inParentId            Integer   , -- Налоговая накладная
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
@@ -50,7 +52,7 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_PriceCorrective(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_PriceCorrective(), inInvNumber, inOperDate, inParentId, vbAccessKeyId);
 
      -- сохранили свойство <Цена с НДС (да/нет)>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), ioId, inPriceWithVAT);
@@ -94,6 +96,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.02.18         * add inParentId
  17.06.14         * add inInvNumberPartner 
                       , inInvNumberMark                
  29.05.14         * 
@@ -101,4 +104,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_PriceCorrective (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inPriceWithVAT:= true, inVATPercent:= 20, inFromId:= 1, inToId:= 2, inPartnerId:= 1, inPaidKindId:= 1, inContractId:= 1, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpInsertUpdate_Movement_PriceCorrective (ioId:= 0, inParentId:=0 ,inInvNumber:= '-1', inOperDate:= '01.01.2013', inPriceWithVAT:= true, inVATPercent:= 20, inFromId:= 1, inToId:= 2, inPartnerId:= 1, inPaidKindId:= 1, inContractId:= 1, inSession:= zfCalc_UserAdmin())
