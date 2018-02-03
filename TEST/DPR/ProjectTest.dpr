@@ -736,7 +736,6 @@ uses
   Report_GoodsMI_TransferDebtDialog in '..\..\Forms\Report\Report_GoodsMI_TransferDebtDialog.pas' {Report_GoodsMI_TransferDebtDialogForm: TParentForm},
   Report_GoodsMI_ProductionSeparateUnionDialog in '..\..\Forms\Report\Report_GoodsMI_ProductionSeparateUnionDialog.pas' {Report_GoodsMI_ProductionSeparateUnionDialogForm: TParentForm},
   Report_Transport_ProfitLossDialog in '..\..\Forms\Report\Report_Transport_ProfitLossDialog.pas' {Report_Transport_ProfitLossDialogForm: TParentForm},
-  Report_Transport_ProfitLoss in '..\..\Forms\Report\Report_Transport_ProfitLoss.pas' {Report_Transport_ProfitLossForm: TParentForm},
   IncomeJournalChoice in '..\..\Forms\Document\IncomeJournalChoice.pas' {IncomeJournalChoiceForm: TParentForm},
   RecadvXML in '..\..\SOURCE\EDI\RecadvXML.pas',
   Advertising in '..\..\Forms\Guides\Advertising.pas' {AdvertisingForm: TParentForm},
@@ -997,7 +996,8 @@ uses
   Sale_TransportJournal in '..\..\Forms\Document\Sale_TransportJournal.pas' {Sale_TransportJournalForm: TParentForm},
   StickerFile in '..\..\Forms\Guides\StickerFile.pas' {StickerFileForm: TParentForm},
   Sticker_List in '..\..\Forms\Guides\Sticker_List.pas' {Sticker_ListForm: TParentForm},
-  ProductionSeparateStorageLine in '..\..\Forms\Document\ProductionSeparateStorageLine.pas' {ProductionSeparateStorageLineForm: TParentForm};
+  ProductionSeparateStorageLine in '..\..\Forms\Document\ProductionSeparateStorageLine.pas' {ProductionSeparateStorageLineForm: TParentForm},
+  Report_Transport_ProfitLoss in '..\..\Forms\Report\Report_Transport_ProfitLoss.pas' {Report_Transport_ProfitLossForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

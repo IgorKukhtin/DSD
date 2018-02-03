@@ -1929,8 +1929,8 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_PriceCorrective_SetErased'
-    Left = 718
-    Top = 512
+    Left = 638
+    Top = 464
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_PriceCorrective_SetUnErased'
