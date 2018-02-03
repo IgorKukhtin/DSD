@@ -3,10 +3,11 @@
 DROP FUNCTION IF EXISTS gpGet_Movement_Check_SP_Prior (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Check_SP_Prior(
-   OUT outPartnerMedicalId    Integer,  -- 
+   OUT outPartnerMedicalId    Integer,   -- 
    OUT outPartnerMedicalName  TVarChar,  -- 
    OUT outMedicSId            TVarChar,  -- 
    OUT outMedicSPName         TVarChar,  -- 
+   OUT outOperDateSP          TVarChar,  -- 
     IN inSession              TVarChar   -- сессия пользователя
 )
 RETURNS RECORD
@@ -18,12 +19,15 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_...());
     vbUserId:= lpGetUserBySession (inSession);
 
--- vbUserId:= 4000066;
+
+IF inSession = zfCalc_UserAdmin() then vbUserId:= 4000066; end if;
+
 
     -- Результат - ВСЕ документы - с типом "Не подтвержден"
-    WITH tmpData AS (SELECT Object_PartnerMedical.Id         AS PartnerMedicalId
-                          , Object_PartnerMedical.ValueData  AS PartnerMedicalName
-                          , MovementString_MedicSP.ValueData AS MedicSPName
+    WITH tmpData AS (SELECT Object_PartnerMedical.Id           AS PartnerMedicalId
+                          , Object_PartnerMedical.ValueData    AS PartnerMedicalName
+                          , MovementString_MedicSP.ValueData   AS MedicSPName
+                          , MovementDate_OperDateSP.ValueData  AS OperDateSP
                           , Movement.Id AS MovementId
                           , Movement.OperDate
                             --  № п/п
@@ -41,9 +45,14 @@ BEGIN
                                                       AND MovementLinkObject_PartnerMedical.DescId     = zc_MovementLinkObject_PartnerMedical()
                                                       AND MovementLinkObject_PartnerMedical.ObjectId   > 0
                          LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = MovementLinkObject_PartnerMedical.ObjectId
+
+                        LEFT JOIN MovementDate AS MovementDate_OperDateSP
+                                               ON MovementDate_OperDateSP.MovementId = Movement.Id
+                                              AND MovementDate_OperDateSP.DescId     = zc_MovementDate_OperDateSP()
+
                      WHERE Movement.DescId   =  zc_Movement_Check()
                        AND Movement.StatusId =  zc_Enum_Status_Complete()
-                       AND Movement.OperDate >=  CURRENT_DATE - INTERVAL '31 DAY'
+                       AND Movement.OperDate >=  CURRENT_DATE - INTERVAL '51 DAY'
                      ORDER BY Movement.Id DESC
                     )
     -- Результат
@@ -51,10 +60,13 @@ BEGIN
          , COALESCE (tmpData.PartnerMedicalName, '')
          , 0 AS MedicSPId
          , COALESCE (tmpData.MedicSPName, '')
+           -- вернуть через строчку, т.к. с TDateTime - ошибка
+         , zfConvert_DateToString (COALESCE (tmpData.OperDateSP, CURRENT_DATE))
            INTO outPartnerMedicalId
               , outPartnerMedicalName
               , outMedicSId
               , outMedicSPName
+              , outOperDateSP
     FROM (SELECT 1 AS xxx) AS tmp
          LEFT JOIN tmpData ON tmpData.Ord = 1
     ;

@@ -122,6 +122,7 @@ end;
 procedure TSPDialogForm.bbSP_PriorClick(Sender: TObject);
 var APartnerMedicalId: Integer;
     APartnerMedicalName, AMedicSP : String;
+    AOperDateSP : TDateTime;
 begin
       ActiveControl:= edInvNumberSP;
       //
@@ -138,8 +139,8 @@ begin
       //
       //Сначала ищем в текущем ДБФ
       if isMainForm_OLD = TRUE
-      then MainCash.MainCashForm.pGet_OldSP (APartnerMedicalId, APartnerMedicalName, AMedicSP)
-      else MainCash2.MainCashForm.pGet_OldSP (APartnerMedicalId, APartnerMedicalName, AMedicSP);
+      then MainCash.MainCashForm.pGet_OldSP (APartnerMedicalId, APartnerMedicalName, AMedicSP, AOperDateSP)
+      else MainCash2.MainCashForm.pGet_OldSP (APartnerMedicalId, APartnerMedicalName, AMedicSP, AOperDateSP);
 
       //если не нашли - попробуем в базе
       if APartnerMedicalId = 0 then
@@ -154,6 +155,9 @@ begin
                PartnerMedicalGuides.Params.ParamByName('TextValue').Value:= spGet_SP_Prior.ParamByName('outPartnerMedicalName').Value;
                cePartnerMedical.Text:= spGet_SP_Prior.ParamByName('outPartnerMedicalName').Value;
                edMedicSP.Text       := spGet_SP_Prior.ParamByName('outMedicSPName').Value;
+               //вернуть через строчку, т.к. с TDateTime - ошибка
+               AOperDateSP          := StrToDate(spGet_SP_Prior.ParamByName('outOperDateSP').Value);
+               edOperDateSP.Date    := AOperDateSP;
           end
       end
       else
@@ -162,6 +166,7 @@ begin
           PartnerMedicalGuides.Params.ParamByName('TextValue').Value:= APartnerMedicalName;
           cePartnerMedical.Text:= APartnerMedicalName;
           edMedicSP.Text:= AMedicSP;
+          edOperDateSP.Date:= AOperDateSP;
       end;
 
 end;

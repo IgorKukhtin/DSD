@@ -77,6 +77,7 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+			<Debugger_RunParams>/autologin</Debugger_RunParams>
 			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.12.24;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 			<VerInfo_Release>12</VerInfo_Release>
 			<VerInfo_Build>24</VerInfo_Build>
@@ -98,10 +99,10 @@
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
 			<Debugger_RunParams>/autologin</Debugger_RunParams>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.12.35;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.12.37;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
 			<DCC_DcuOutput>..\TEMP</DCC_DcuOutput>
-			<VerInfo_Build>35</VerInfo_Build>
+			<VerInfo_Build>37</VerInfo_Build>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
 			<VerInfo_Release>12</VerInfo_Release>

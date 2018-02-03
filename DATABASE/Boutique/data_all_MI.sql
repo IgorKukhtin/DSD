@@ -4,7 +4,7 @@
 -- select distinct DatabaseId from _dataBI_all
 -- select DiscountKlientAccountMoney.* from DiscountKlientAccountMoney left outer join _dataPay_all  on _dataPay_all.ReplId = DiscountKlientAccountMoney.ReplId and _dataPay_all.DatabaseId = DiscountKlientAccountMoney.DatabaseId where _dataPay_all.ReplId is null and DiscountKlientAccountMoney.isErased = 1 and DiscountKlientAccountMoney.DatabaseId not in (3,6)
 -- select DiscountKlientAccountMoney.* from DiscountKlientAccountMoney join _dataPay_all  on _dataPay_all.ReplId = DiscountKlientAccountMoney.ReplId and _dataPay_all.DatabaseId = DiscountKlientAccountMoney.DatabaseId where _dataPay_all.DiscountMovementItemReturnId > 0 AND DiscountKlientAccountMoney.DiscountMovementItemReturnId is null and DiscountKlientAccountMoney.isErased = 1
--- truncate table _data_all; truncate table _dataRet_all; truncate table _dataPay_all;
+-- truncate table _data_all; truncate table _dataRet_all; truncate table _dataPay_all; truncate table _DataBI_all;
 -- select * from _data_all    where BillItemsId > 0 and BillItemsId in (select BillItemsId from _data_all    where BillItemsId > 0 group by BillItemsId having count(*) > 1) order by BillItemsId desc
 -- select * from _dataRet_all where BillItemsId > 0 and BillItemsId in (select BillItemsId from _dataRet_all where BillItemsId > 0 group by BillItemsId having count(*) > 1)
 

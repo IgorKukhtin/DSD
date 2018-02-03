@@ -395,7 +395,7 @@ type
     procedure SetWorkMode(ALocal: Boolean);
     procedure AppMsgHandler(var Msg: TMsg; var Handled: Boolean);  // только 2 форма
   public
-    procedure pGet_OldSP(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP: String);
+    procedure pGet_OldSP(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP: String; var AOperDateSP : TDateTime);
   end;
 
 
@@ -3446,7 +3446,7 @@ begin
 end;
 
 
-procedure TMainCashForm2.pGet_OldSP(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP: String);
+procedure TMainCashForm2.pGet_OldSP(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP: String; var AOperDateSP : TDateTime);
 begin
 
  APartnerMedicalId:=0;
@@ -3465,6 +3465,7 @@ begin
               APartnerMedicalId   := FLocalDataBaseHead.FieldByName('PMEDICALID').AsInteger;
               APartnerMedicalName := trim(FLocalDataBaseHead.FieldByName('PMEDICALN').AsString);
               AMedicSP            := trim(FLocalDataBaseHead.FieldByName('MEDICSP').AsString);
+              AOperDateSP         := FLocalDataBaseHead.FieldByName('OPERDATESP').AsDateTime;
             end;
 
             FLocalDataBaseHead.Next;

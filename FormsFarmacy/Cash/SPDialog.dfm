@@ -417,6 +417,12 @@ inherited SPDialogForm: TSPDialogForm
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outOperDateSP'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 152

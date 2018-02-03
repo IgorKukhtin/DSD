@@ -35,10 +35,17 @@ $BODY$
    DECLARE vbOperDate_order TDateTime;
    DECLARE vbId_tmp Integer;
    DECLARE vbGoodsId_ReWork Integer;
+
+   DECLARE vbOperDate_StartBegin TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Scale_Movement());
      vbUserId:= lpGetUserBySession (inSession);
+
+
+     -- сразу запомнили время начала выполнения Проц.
+     vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
+
 
 /*
 --для теста
@@ -1498,6 +1505,11 @@ then
     -- 'Повторите действие через 3 мин.'
 end if;
 
+
+     -- дописали св-во <Дата/время создания>
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartBegin(), inMovementId, vbOperDate_StartBegin);
+     -- дописали св-во <Дата/время создания>
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndBegin(), inMovementId, CLOCK_TIMESTAMP());
 
      -- Результат
      RETURN QUERY

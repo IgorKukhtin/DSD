@@ -407,7 +407,7 @@ type
     procedure ConnectionModeChange(var Msg: TMessage); message UM_LOCAL_CONNECTION;
     procedure SetWorkMode(ALocal: Boolean);
   public
-    procedure pGet_OldSP(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP: String);
+    procedure pGet_OldSP(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP: String; var AOperDateSP : TDateTime);
   end;
 
 var
@@ -3048,7 +3048,7 @@ begin
 end;
 
 
-procedure TMainCashForm.pGet_OldSP(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP: String);
+procedure TMainCashForm.pGet_OldSP(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP: String; var AOperDateSP : TDateTime);
 begin
 
  APartnerMedicalId:=0;
@@ -3067,6 +3067,7 @@ begin
               APartnerMedicalId   := FLocalDataBaseHead.FieldByName('PMEDICALID').AsInteger;
               APartnerMedicalName := trim(FLocalDataBaseHead.FieldByName('PMEDICALN').AsString);
               AMedicSP            := trim(FLocalDataBaseHead.FieldByName('MEDICSP').AsString);
+              AOperDateSP         := FLocalDataBaseHead.FieldByName('OPERDATESP').AsDateTime;
             end;
 
             FLocalDataBaseHead.Next;
