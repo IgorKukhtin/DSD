@@ -377,6 +377,12 @@ object UtilPrintForm: TUtilPrintForm
         Value = False
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DescCode_EDI_Send'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 40
     Top = 16
@@ -656,6 +662,17 @@ object UtilPrintForm: TUtilPrintForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+    end
+    object actInsert_Movement_EDI_Send: TdsdExecStoredProc
+      Category = 'EDI'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_Movement_EDI_Send
+      StoredProcList = <
+        item
+          StoredProc = spInsert_Movement_EDI_Send
+        end>
+      Caption = 'actInsert_Movement_EDI_Send'
     end
     object mactPrint_ReturnIn: TMultiAction
       Category = 'DSDLib'
@@ -2302,5 +2319,37 @@ object UtilPrintForm: TUtilPrintForm
     Params = <>
     Left = 212
     Top = 70
+  end
+  object spInsert_Movement_EDI_Send: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_EDI_Send'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = 0
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_MovementBoolean_EdiInvoice'
+        Component = FormParams
+        ComponentItem = 'DescCode_EDI_Send'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 432
+    Top = 216
   end
 end

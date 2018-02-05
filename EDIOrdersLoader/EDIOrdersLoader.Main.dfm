@@ -97,30 +97,48 @@ object MainForm: TMainForm
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object StartButton: TcxButton
-      Left = 561
+      Left = 594
       Top = 3
-      Width = 75
+      Width = 58
       Height = 25
-      Action = actStartEDI
       Anchors = [akTop, akRight]
+      Caption = #1047#1072#1087#1091#1089#1082
       TabOrder = 0
+      OnClick = actStartEDIExecute
     end
     object StopButton: TcxButton
-      Left = 642
+      Left = 656
       Top = 3
-      Width = 75
+      Width = 61
       Height = 25
-      Action = actStopEDI
       Anchors = [akTop, akRight]
+      Caption = #1054#1089#1090#1072#1085#1086#1074#1082#1072
       TabOrder = 1
+      OnClick = actStopEDIExecute
     end
     object cbPrevDay: TCheckBox
-      Left = 424
+      Left = 403
       Top = 8
-      Width = 97
+      Width = 62
       Height = 17
       Caption = #1079#1072' '#1074#1095#1077#1088#1072
       TabOrder = 6
+    end
+    object cbLoad: TCheckBox
+      Left = 483
+      Top = 0
+      Width = 94
+      Height = 17
+      Caption = #1090#1086#1083#1100#1082#1086' Load'
+      TabOrder = 7
+    end
+    object cbSend: TCheckBox
+      Left = 483
+      Top = 15
+      Width = 94
+      Height = 17
+      Caption = #1090#1086#1083#1100#1082#1086' Send'
+      TabOrder = 8
     end
   end
   object TrayIcon: TTrayIcon
@@ -10346,6 +10364,22 @@ object MainForm: TMainForm
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_toEDI'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Err_str_toEDI'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_sendEDI'
+        Value = Null
+        MultiSelectSeparator = ','
       end>
     Left = 108
     Top = 180
@@ -10453,6 +10487,145 @@ object MainForm: TMainForm
           StoredProc = spGetStatMovementEDI
         end>
       Caption = 'actGet_Movement_Edi_stat'
+    end
+    object actUpdate_EDI_Send: TdsdExecStoredProc
+      Category = 'EDI'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_EDI_Send
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_EDI_Send
+        end>
+      Caption = 'actUpdate_EDI_Send'
+    end
+    object actExecPrintStoredProc: TdsdExecStoredProc
+      Category = 'EDI'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectSale_EDI
+      StoredProcList = <
+        item
+          StoredProc = spSelectSale_EDI
+        end>
+      Caption = 'actExecPrintStoredProc'
+    end
+    object actUpdateEdiDesadvTrue: TdsdExecStoredProc
+      Category = 'EDI'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateEdiDesadv
+      StoredProcList = <
+        item
+          StoredProc = spUpdateEdiDesadv
+        end>
+      Caption = 'actUpdateEdiDesadvTrue'
+    end
+    object actUpdateEdiInvoiceTrue: TdsdExecStoredProc
+      Category = 'EDI'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateEdiInvoice
+      StoredProcList = <
+        item
+          StoredProc = spUpdateEdiInvoice
+        end>
+      Caption = 'actUpdateEdiInvoiceTrue'
+    end
+    object actUpdateEdiOrdsprTrue: TdsdExecStoredProc
+      Category = 'EDI'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateEdiOrdspr
+      StoredProcList = <
+        item
+          StoredProc = spUpdateEdiOrdspr
+        end>
+      Caption = 'actUpdateEdiOrdsprTrue'
+    end
+    object actInvoice: TEDIAction
+      Category = 'EDI'
+      MoveParams = <>
+      StartDateParam.Value = Null
+      StartDateParam.MultiSelectSeparator = ','
+      EndDateParam.Value = Null
+      EndDateParam.MultiSelectSeparator = ','
+      EDI = EDI
+      EDIDocType = ediInvoice
+      HeaderDataSet = PrintHeaderCDS
+      ListDataSet = PrintItemsCDS
+    end
+    object actOrdSpr: TEDIAction
+      Category = 'EDI'
+      MoveParams = <>
+      StartDateParam.Value = Null
+      StartDateParam.MultiSelectSeparator = ','
+      EndDateParam.Value = Null
+      EndDateParam.MultiSelectSeparator = ','
+      EDI = EDI
+      EDIDocType = ediOrdrsp
+      HeaderDataSet = PrintHeaderCDS
+      ListDataSet = PrintItemsCDS
+    end
+    object actDesadv: TEDIAction
+      Category = 'EDI'
+      MoveParams = <>
+      StartDateParam.Value = Null
+      StartDateParam.MultiSelectSeparator = ','
+      EndDateParam.Value = Null
+      EndDateParam.MultiSelectSeparator = ','
+      EDI = EDI
+      EDIDocType = ediDesadv
+      HeaderDataSet = PrintHeaderCDS
+      ListDataSet = PrintItemsCDS
+    end
+    object mactInvoice: TMultiAction
+      Category = 'EDI'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecPrintStoredProc
+        end
+        item
+          Action = actInvoice
+        end
+        item
+          Action = actUpdateEdiInvoiceTrue
+        end>
+      Caption = #1057#1095#1077#1090
+      Hint = #1054#1090#1087#1088#1072#1074#1082#1072' '#1089#1095#1077#1090#1072
+    end
+    object mactOrdSpr: TMultiAction
+      Category = 'EDI'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecPrintStoredProc
+        end
+        item
+          Action = actOrdSpr
+        end
+        item
+          Action = actUpdateEdiOrdsprTrue
+        end>
+      Caption = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
+    end
+    object mactDesadv: TMultiAction
+      Category = 'EDI'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecPrintStoredProc
+        end
+        item
+          Action = actDesadv
+        end
+        item
+          Action = actUpdateEdiDesadvTrue
+        end>
+      Caption = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
     end
   end
   object spHeaderOrder: TdsdStoredProc
@@ -10578,7 +10751,159 @@ object MainForm: TMainForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 440
-    Top = 180
+    Left = 384
+    Top = 164
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 556
+    Top = 201
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 556
+    Top = 150
+  end
+  object spSelectSale_EDI: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_EDI'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_toEDI'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 552
+    Top = 321
+  end
+  object spUpdateEdiOrdspr: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Edi'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_toEDI'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_MovementBoolean_EdiOrdspr'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 328
+    Top = 328
+  end
+  object spUpdateEdiInvoice: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Edi'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_toEDI'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_MovementBoolean_EdiInvoice'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 392
+    Top = 304
+  end
+  object spUpdateEdiDesadv: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Edi'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_toEDI'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_MovementBoolean_EdiDesadv'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 456
+    Top = 328
+  end
+  object Send_toEDICDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 532
+    Top = 54
+  end
+  object spSelectSend_toEDI: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_EDI_Send_UnComplete'
+    DataSet = Send_toEDICDS
+    DataSets = <
+      item
+        DataSet = Send_toEDICDS
+      end>
+    Params = <>
+    PackSize = 1
+    Left = 608
+    Top = 56
+  end
+  object spUpdate_EDI_Send: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_EDI_Send'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_sendEDI'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Err_str_toEDI'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 608
+    Top = 88
   end
 end

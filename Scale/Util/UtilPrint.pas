@@ -96,6 +96,8 @@ type
     spSelectPrint_ReestrKind: TdsdStoredProc;
     actPrint_ReestrKind: TdsdPrintAction;
     PrintItemsTwoCDS: TClientDataSet;
+    spInsert_Movement_EDI_Send: TdsdStoredProc;
+    actInsert_Movement_EDI_Send: TdsdExecStoredProc;
   private
   end;
 
@@ -458,34 +460,55 @@ end;
 //------------------------------------------------------------------------------------------------
 procedure SendEDI_Invoice (MovementId: Integer);
 begin
+  UtilPrintForm.spInsert_Movement_EDI_Send.ParamByName('ioId').Value := 0;
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
-  try UtilPrintForm.mactInvoice.Execute;
+  UtilPrintForm.FormParams.ParamByName('DescCode_EDI_Send').Value := 'zc_MovementBoolean_EdiInvoice';
+  try UtilPrintForm.actInsert_Movement_EDI_Send.Execute;
   except
         ShowMessage('Ошибка при отправке в EXITE документа <Счет>.');
         exit;
   end;
+  {try UtilPrintForm.mactInvoice.Execute;
+  except
+        ShowMessage('Ошибка при отправке в EXITE документа <Счет>.');
+        exit;
+  end;}
   ShowMessage('Документ <Счет> отправлен успешно в EXITE.');
 end;
 //------------------------------------------------------------------------------------------------
 procedure SendEDI_OrdSpr (MovementId: Integer);
 begin
+  UtilPrintForm.spInsert_Movement_EDI_Send.ParamByName('ioId').Value := 0;
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
-  try UtilPrintForm.mactOrdSpr.Execute;
+  UtilPrintForm.FormParams.ParamByName('DescCode_EDI_Send').Value := 'zc_MovementBoolean_EdiOrdspr';
+  try UtilPrintForm.actInsert_Movement_EDI_Send.Execute;
   except
         ShowMessage('Ошибка при отправке в EXITE документа <Подтверждение отгрузки>.');
         exit;
   end;
+  {try UtilPrintForm.mactOrdSpr.Execute;
+  except
+        ShowMessage('Ошибка при отправке в EXITE документа <Подтверждение отгрузки>.');
+        exit;
+  end;}
   ShowMessage('Документ <Подтверждение отгрузки> отправлен успешно в EXITE.');
 end;
 //------------------------------------------------------------------------------------------------
 procedure SendEDI_Desadv (MovementId: Integer);
 begin
+  UtilPrintForm.spInsert_Movement_EDI_Send.ParamByName('ioId').Value := 0;
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
-  try UtilPrintForm.mactDesadv.Execute;
+  UtilPrintForm.FormParams.ParamByName('DescCode_EDI_Send').Value := 'zc_MovementBoolean_EdiDesadv';
+  try UtilPrintForm.actInsert_Movement_EDI_Send.Execute;
   except
         ShowMessage('Ошибка при отправке в EXITE документа <Уведомление об отгрузке>.');
         exit;
   end;
+  {try UtilPrintForm.mactDesadv.Execute;
+  except
+        ShowMessage('Ошибка при отправке в EXITE документа <Уведомление об отгрузке>.');
+        exit;
+  end;}
   ShowMessage('Документ <Уведомление об отгрузке> отправлен успешно в EXITE.');
 end;
 //------------------------------------------------------------------------------------------------

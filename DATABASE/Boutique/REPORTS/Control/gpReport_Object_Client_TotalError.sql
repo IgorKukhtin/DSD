@@ -55,7 +55,7 @@ BEGIN
                                                    AND ObjectFloat_TotalSummPay.DescId = zc_ObjectFloat_Client_TotalSummPay()
                   
                         WHERE Object_Client.DescId = zc_Object_Client()
-                          AND (Object_Client.isErased = FALSE)
+                          -- AND (Object_Client.isErased = FALSE)
                        )
         -- данные из документов
         , tmpMovAll AS (SELECT Movement.Id
@@ -79,8 +79,8 @@ BEGIN
                                                          AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
                              LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
                         WHERE Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_GoodsAccount())
-                         --AND Movement.StatusId = zc_Enum_Status_Complete() 
-                          AND  Movement.StatusId <> zc_Enum_Status_Erased()
+                          AND Movement.StatusId = zc_Enum_Status_Complete() 
+                         -- AND  Movement.StatusId <> zc_Enum_Status_Erased()
                         )
         , tmpMov AS (SELECT Movement.ClientId
                           , SUM (COALESCE (CASE WHEN Movement.DescId = zc_Movement_GoodsAccount() THEN 0 ELSE MovementFloat_TotalCount.ValueData END, 0)         * Movement.Koef ) AS TotalCount      -- кол-во

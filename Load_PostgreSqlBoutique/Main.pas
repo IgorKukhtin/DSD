@@ -6792,7 +6792,8 @@ begin
         Add(', PriceList.Id_Postgres');
         Add(', valuta.Id_Postgres as ValutaID');
         Add('from DBA.PriceList ');
-        Add('left outer join valuta on valuta.id = PriceList.valutaid');
+        Add('     left outer join valuta on valuta.id = PriceList.valutaid');
+        Add('where PriceList.Erased = zc_erasedVis()');
         Add('order by  ObjectId');
         Open;
         //
@@ -6952,7 +6953,7 @@ begin
         Add(', PriceListItems.PriceListID');
         Add(', PriceListItems.Id_Postgres');
         Add('from DBA.PriceListItems');
-        Add('     left outer join PriceList on PriceList.id = PriceListItems.PriceListID');
+        Add('     inner join PriceList on PriceList.id = PriceListItems.PriceListID and PriceList.Id_Postgres > 0 and PriceList.Erased = zc_erasedVis()');
         Add('     left outer join BillItemsIncome on BillItemsIncome.GoodsID= PriceListItems.goodsid');
         Add('where BillItemsIncome.GoodsId_Postgres is not null'); // Эта строка только для тестирования в реальной загрузке НЕ удалять
         Add('  and (PriceListItems.NewPrice <> 0 or PriceListItems.StartDate <> zc_DateStart())');
@@ -6961,9 +6962,11 @@ begin
         if cbLast.Checked = TRUE
         then begin
                    Add('  and PriceListItems.EndDate = zc_DateEnd()');
+                   Add('  and PriceListItems.PriceListID <> 20');
                    Add(' order by PriceListItems.PriceListID, PriceListItems.StartDate asc, BillItemsIncome.GoodsId_Postgres asc');
         end
-        else begin Add('  and PriceListItems.EndDate <> zc_DateEnd()');
+        else begin Add('  and (PriceListItems.EndDate <> zc_DateEnd()');
+                   Add('    or PriceListItems.PriceListID = 20)');
                    Add(' order by PriceListItems.PriceListID, PriceListItems.StartDate asc, PriceListItems.EndDate asc');
              end;
         Open;
