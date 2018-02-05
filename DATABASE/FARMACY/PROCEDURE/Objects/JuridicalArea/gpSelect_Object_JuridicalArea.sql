@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , Email TVarChar
              , isDefault Boolean
              , isGoodsCode Boolean
+             , isOnly Boolean
              , isErased boolean
              ) AS
 $BODY$BEGIN
@@ -35,6 +36,7 @@ $BODY$BEGIN
            , ObjectString_JuridicalArea_Email.ValueData  AS Email
            , COALESCE (ObjectBoolean_JuridicalArea_Default.ValueData, FALSE)    AS isDefault
            , COALESCE (ObjectBoolean_JuridicalArea_GoodsCode.ValueData, FALSE)  AS isGoodsCode
+           , COALESCE (ObjectBoolean_JuridicalArea_Only.ValueData, FALSE)       AS isOnly
            
            , Object_JuridicalArea.isErased AS isErased
            
@@ -60,6 +62,9 @@ $BODY$BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_JuridicalArea_GoodsCode
                                     ON ObjectBoolean_JuridicalArea_GoodsCode.ObjectId = Object_JuridicalArea.Id
                                    AND ObjectBoolean_JuridicalArea_GoodsCode.DescId = zc_ObjectBoolean_JuridicalArea_GoodsCode()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_JuridicalArea_Only
+                                    ON ObjectBoolean_JuridicalArea_Only.ObjectId = Object_JuridicalArea.Id
+                                   AND ObjectBoolean_JuridicalArea_Only.DescId = zc_ObjectBoolean_JuridicalArea_Only()
      WHERE Object_JuridicalArea.DescId = zc_Object_JuridicalArea()
          ;
   
@@ -72,6 +77,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 05.02.18         *
  20.10.17         *
  25.09.17         *
 */

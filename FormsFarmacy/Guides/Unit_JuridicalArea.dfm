@@ -198,6 +198,15 @@ inherited Unit_JuridicalAreaForm: TUnit_JuridicalAreaForm
             Options.Editing = False
             Width = 56
           end
+          object isOnly_JuridicalArea: TcxGridDBColumn
+            Caption = '1 '#1088#1077#1075#1080#1086#1085
+            DataBinding.FieldName = 'isOnly_JuridicalArea'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1086#1083#1100#1082#1086' '#1076#1083#1103' 1-'#1086#1075#1086' '#1088#1077#1075#1080#1086#1085#1072
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end
@@ -319,7 +328,7 @@ inherited Unit_JuridicalAreaForm: TUnit_JuridicalAreaForm
         Value = Null
         Component = actShowAll
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 88
@@ -335,14 +344,6 @@ inherited Unit_JuridicalAreaForm: TUnit_JuridicalAreaForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bb'
-        end
         item
           Visible = True
           ItemName = 'dxBarStatic'

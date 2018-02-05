@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalArea (Integer,Integer,TVa
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalArea (Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalArea (Integer, Integer, Integer, Integer, TVarChar, TVarChar, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalArea (Integer, Integer, Integer, Integer, TVarChar, TVarChar, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalArea (Integer, Integer, Integer, Integer, TVarChar, TVarChar, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalArea(
  INOUT ioId                Integer   ,    -- ключ объекта <>
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalArea(
     IN inEMail             TVarChar  ,    -- E-Mail
     IN inisDefault         Boolean   ,    -- по умолчанию
     IN inisGoodsCode       Boolean   ,    -- Уникальный код поставщика
+    IN inisOnly            Boolean   ,    -- Только для 1-ого региона
     IN inSession           TVarChar       -- сессия пользователя
 )
  RETURNS Integer AS
@@ -46,6 +48,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_JuridicalArea_Default(), ioId, inisDefault);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_JuridicalArea_GoodsCode(), ioId, inisGoodsCode);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_JuridicalArea_Only(), ioId, inisOnly);
    
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -58,6 +62,7 @@ $BODY$ LANGUAGE plpgsql;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.02.18         *
  20.10.17         *
  25.09.17         *  
 */
