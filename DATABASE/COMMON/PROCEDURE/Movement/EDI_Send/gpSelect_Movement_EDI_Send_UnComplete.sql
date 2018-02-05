@@ -94,7 +94,9 @@ BEGIN
 
            WHERE Movement.DescId   = zc_Movement_EDI_Send()
              AND Movement.StatusId = zc_Enum_Status_UnComplete()
-           ORDER BY Movement.OperDate
+             AND Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '125 MIN'
+             AND COALESCE (MovementDate_Update.ValueData, zc_DateStart()) < CURRENT_TIMESTAMP - INTERVAL '125 MIN'
+           ORDER BY COALESCE (MovementDate_Update.ValueData, Movement.OperDate)
           ;
 
 END;
@@ -109,5 +111,5 @@ $BODY$
 
 -- тест
 -- update Movement set Statusid = zc_Enum_Status_Erased() WHERE Id IN (SELECT tmp.MovementId FROM gpSelect_Movement_EDI_Send_UnComplete (inSession := zfCalc_UserAdmin()) AS tmp);
--- SELECT * FROM Movement WHERE DescId = zc_Movement_EDI_Send() ORDER BY OperDate DESC
+-- SELECT Movement.*, MD1.ValueData AS DateUpdate, MD2.ValueData AS DateSend FROM Movement LEFT JOIN MovementDate AS MD1 ON MD1.MovementId = Movement.Id AND MD1.DescId = zc_MovementDate_Update() LEFT JOIN MovementDate AS MD2 ON MD2.MovementId = Movement.Id AND MD2.DescId = zc_MovementDate_OperDatePartner() WHERE Movement.DescId = zc_Movement_EDI_Send() ORDER BY COALESCE (MD1.ValueData, Movement.OperDate) DESC
 -- SELECT * FROM gpSelect_Movement_EDI_Send_UnComplete (inSession := zfCalc_UserAdmin());

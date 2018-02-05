@@ -242,8 +242,8 @@ begin
     Result:= TRUE;
 
   except
-    on E: Exception do
-      AddToLog(E.Message);
+     on E: Exception do
+        AddToLog(E.Message);
   end;
 end;
 
@@ -349,11 +349,16 @@ begin
 
   //
   // !!! Только Загрузка !!!
-  fEdi_LoadData_from;
+  try fEdi_LoadData_from;
+  except
+        AddToLog('**** Ошибка *** LoadData - from ***');
+  end;
   //
   // !!! Только Отправка !!!
-  fEdi_SendData_to;
-
+  try fEdi_SendData_to;
+  except
+        AddToLog('**** Ошибка *** SendData - to ***');
+  end;
   //
   if FindCmdLineSwitch('interval', IntervalStr) then
     FIntervalVal := StrToIntDef(IntervalStr, 1)

@@ -223,6 +223,7 @@ BEGIN
                                                             AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
                             WHERE MovementLinkMovement.MovementChildId = inOrderExternalId
                               AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
+                              -- AND inSession <> '5'
                            )
                 , tmpMI AS (SELECT tmpMI.GoodsId
                                  , tmpMI.GoodsKindId

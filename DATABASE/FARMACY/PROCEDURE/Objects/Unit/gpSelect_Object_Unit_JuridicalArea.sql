@@ -126,6 +126,12 @@ BEGIN
                               , ObjectLink_JuridicalArea_Area.ChildObjectId                      AS AreaId
                               , Object_Area.ValueData                                            AS AreaName
                               , COALESCE (ObjectBoolean_JuridicalArea_Default.ValueData, FALSE)  AS isDefault
+                              , CASE WHEN ObjectLink_JuridicalArea_Juridical.ChildObjectId IN (2618417 -- ГАЙДАР ПЛЮС ООО
+                                                                                             , 183322  -- Золотой Орлан
+                                                                                              )
+                                          THEN TRUE
+                                     ELSE FALSE
+                                END AS isOnly
                          FROM Object AS Object_JuridicalArea
                                INNER JOIN ObjectLink AS ObjectLink_JuridicalArea_Juridical
                                                      ON ObjectLink_JuridicalArea_Juridical.ObjectId = Object_JuridicalArea.Id 
@@ -168,6 +174,14 @@ BEGIN
                                , tmpJuridical.isCorporate   AS isCorporate_Juridical
                           FROM tmpUnit
                                CROSS JOIN tmpJuridical
+                               LEFT JOIN (SELECT DISTINCT tmpJuridicalArea.JuridicalId FROM tmpJuridicalArea WHERE tmpJuridicalArea.isOnly = TRUE
+                                         ) AS tmpIsOnly ON tmpIsOnly.JuridicalId = tmpJuridical.Id
+                               LEFT JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = tmpJuridical.Id
+                                                         AND tmpJuridicalArea.AreaId      = tmpUnit.AreaId
+                          WHERE -- выбрали если Юр лицу не указан isOnly
+                                tmpIsOnly.JuridicalId IS NULL
+                                -- или он СТРОГО из определенного региона
+                             OR tmpJuridicalArea.JuridicalId > 0
                           )
                            
     SELECT tmpUnitJuridical.UnitId
