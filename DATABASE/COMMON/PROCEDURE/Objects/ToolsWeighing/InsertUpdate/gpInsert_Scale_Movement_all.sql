@@ -1,8 +1,11 @@
--- Function: gpInsert_Scale_Movement_all_TEST()
+-- Function: gpInsert_Scale_Movement_all()
 
-DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all_TEST (Integer, Integer, TDateTime, TVarChar);
+-- DROP FUNCTION IF EXISTS lpComplete_Movement_Sale_test (Integer, Integer, Boolean);
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Tax_From_Kind_test (Integer, Integer, Integer, TDateTime, Integer);
 
-CREATE OR REPLACE FUNCTION gpInsert_Scale_Movement_all_TEST(
+DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, TDateTime, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpInsert_Scale_Movement_all(
     IN inBranchCode          Integer   , --
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inOperDate            TDateTime , -- Дата документа
@@ -48,15 +51,15 @@ BEGIN
 
 
 
---для теста
-if inMovementId in (8340395)
+-- для теста
+/*if inMovementId in (8351040)
 then
     --
     update MovementLinkMovement set MovementChildId = null where MovementLinkMovement.DescId = zc_MovementLinkMovement_Order() and
            MovementLinkMovement.MovementId = (select Movement.ParentId from Movement where Movement.Id = inMovementId);
     --
     update Movement set statusId = zc_Enum_Status_UnComplete(), ParentId = null where Movement.Id = inMovementId;
-end if;
+end if;*/
 
 
      -- проверка
@@ -1234,6 +1237,12 @@ end if;
           ) AS tmp;
 
 
+--для теста
+/* if inMovementId in (8351040) then
+    RAISE EXCEPTION 'inSession  - Errr _end <%>', vbMovementId_begin;
+ end if;*/
+
+
      -- добавили расход на переработку
      IF vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE
      THEN
@@ -1492,9 +1501,9 @@ end if;
 
 
 --для теста
-if inMovementId in (8340395) then
-    RAISE EXCEPTION 'inSession  - Errr _end <%>', vbMovementId_begin;
-end if;
+/*if inMovementId in (8351040) then
+    RAISE EXCEPTION ' !!! --- END ALL --- !!! Errr <%>', vbMovementId_begin;
+end if;*/
 
 -- !!! ВРЕМЕННО !!!
 if inSession = '5' AND 1=1 then
@@ -1525,4 +1534,5 @@ $BODY$
  03.02.15                                        *
 */
 -- тест
--- SELECT * FROM gpInsert_Scale_Movement_all_TEST (inBranchCode:= 2, inMovementId:= 8340395, inOperDate:= CURRENT_DATE, inSession:= '992376') -- Калугин С.В.
+-- SELECT * FROM gpInsert_Scale_Movement_all (inBranchCode:= 2, inMovementId:= 8351040, inOperDate:= CURRENT_DATE, inSession:= '992376') -- Калугин С.В.
+-- SELECT * FROM gpInsert_Scale_Movement_all (inBranchCode:= 2, inMovementId:= 8351040, inOperDate:= CURRENT_DATE, inSession:= '539736') -- Чёрный А.А.

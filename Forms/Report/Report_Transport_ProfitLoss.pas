@@ -23,7 +23,7 @@ uses
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, dsdGuides,
-  cxButtonEdit, ChoicePeriod, cxLabel, dxBarExtItems, cxCheckBox;
+  cxButtonEdit, ChoicePeriod, cxLabel, cxCheckBox, dxBarExtItems;
 
 type
   TReport_Transport_ProfitLossForm = class(TParentForm)
@@ -44,59 +44,50 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     Panel1: TPanel;
+    RouteName: TcxGridDBColumn;
+    CarName: TcxGridDBColumn;
+    PersonalDriverName: TcxGridDBColumn;
     PeriodChoice: TPeriodChoice;
     bbDialogForm: TdxBarButton;
     RefreshDispatcher: TRefreshDispatcher;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
     OperDate: TcxGridDBColumn;
+    CarModelName: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
+    FuelName: TcxGridDBColumn;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
     cxLabel5: TcxLabel;
     edBranch: TcxButtonEdit;
-    GuidesBranch: TdsdGuides;
+    BranchGuides: TdsdGuides;
+    BranchName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
-    dxBarStatic: TdxBarStatic;
+    UnitName: TcxGridDBColumn;
+    PriceFuel: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     edBusiness: TcxButtonEdit;
-    GuidesBusiness: TdsdGuides;
+    BusinessGuides: TdsdGuides;
     cxLabel4: TcxLabel;
     edUnit: TcxButtonEdit;
     cxLabel6: TcxLabel;
     edCar: TcxButtonEdit;
-    GuidesUnit: TdsdGuides;
-    GuidesCar: TdsdGuides;
+    CarGuides: TdsdGuides;
+    UnitGuides: TdsdGuides;
     cbMovement: TcxCheckBox;
+    BusinessName: TcxGridDBColumn;
     MovementDescName: TcxGridDBColumn;
-    FuelName: TcxGridDBColumn;
-    SumCount_Transport: TcxGridDBColumn;
-    SumAmount_Transport: TcxGridDBColumn;
-    PriceFuel: TcxGridDBColumn;
+    dxBarStatic1: TdxBarStatic;
+    Distance: TcxGridDBColumn;
+    WeightTransport: TcxGridDBColumn;
+    One_KM: TcxGridDBColumn;
+    One_KG: TcxGridDBColumn;
+    WeightSale: TcxGridDBColumn;
     SumAmount_TransportAdd: TcxGridDBColumn;
     SumAmount_TransportAddLong: TcxGridDBColumn;
     SumAmount_TransportTaxi: TcxGridDBColumn;
-    SumAmount_ServiceTotal: TcxGridDBColumn;
-    SumAmount_TransportService: TcxGridDBColumn;
     SumAmount_ServiceAdd: TcxGridDBColumn;
-    SumAmount_PersonalSendCash: TcxGridDBColumn;
-    SumTotal: TcxGridDBColumn;
-    BusinessName: TcxGridDBColumn;
-    RouteName: TcxGridDBColumn;
-    BranchName: TcxGridDBColumn;
-    UnitName: TcxGridDBColumn;
-    CarModelName: TcxGridDBColumn;
-    CarName: TcxGridDBColumn;
-    PersonalDriverName: TcxGridDBColumn;
-    ProfitLossGroupName: TcxGridDBColumn;
-    ProfitLossDirectionName: TcxGridDBColumn;
-    ProfitLossName: TcxGridDBColumn;
-    ProfitLossName_all: TcxGridDBColumn;
-    Distance: TcxGridDBColumn;
-    WeightTransport: TcxGridDBColumn;
-    WeightSale: TcxGridDBColumn;
-    One_KM: TcxGridDBColumn;
-    One_KG: TcxGridDBColumn;
+    SumAmount_ServiceTotal: TcxGridDBColumn;
   private
   public
   end;

@@ -115,5 +115,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpSelect_Movement_EDI_Send (inStartDate:= '01.01.2018', inEndDate:= '01.02.2018', inIsErased := FALSE, inSession:= '2')
-
+-- SELECT * FROM gpSelect_Movement_EDI_Send (inStartDate:= '01.01.2018', inEndDate:= '01.02.2018', inIsErased := FALSE, inSession:= '2')
