@@ -40,7 +40,7 @@ BEGIN
          INNER JOIN MovementDateDesc ON MovementDateDesc.Id = MovementDate.DescId
     WHERE MovementDate.MovementId = inMovementId
    UNION
-    SELECT '<Field FieldName = "' || zfStrToXmlStr (COALESCE (ObjectDesc.ItemName, MovementLinkObjectDesc.ItemName)) || '" FieldValue = "' || zfStrToXmlStr(COALESCE (Object.ValueData, 'NULL')) || '"/>' AS FieldXML 
+    SELECT '<Field FieldName = "' || zfStrToXmlStr (COALESCE (ObjectDesc.ItemName, MovementLinkObjectDesc.ItemName)) || '" FieldValue = "' || zfStrToXmlStr (CASE WHEN Object.ValueData = '' THEN Object.Id :: TVarChar ELSE COALESCE (Object.ValueData, 'NULL') END) || '"/>' AS FieldXML 
          , 4 AS GroupId
          , MovementLinkObject.DescId
     FROM MovementLinkObject

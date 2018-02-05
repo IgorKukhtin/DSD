@@ -172,6 +172,10 @@ BEGIN
      -- расчитали Итого оплата в возврате ГРН, для грида - !!!из Элемента Продажи!!!
      IF inIsPay = TRUE
      THEN
+         IF inSaleMI_Id < 0 AND vbUserId = zc_User_Sybase()
+         THEN -- !!!для Sybase!!!
+              outTotalPay:= inAmount * ioOperPriceList;
+         ELSE
          outTotalPay := COALESCE ((SELECT CASE -- если вернули все - Вся сумма ОПЛАТЫ
                                                WHEN MovementItem.Amount = inAmount
                                                     THEN COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_TotalPayOth.ValueData, 0)
@@ -226,6 +230,8 @@ BEGIN
                                      AND MovementItem.DescId     = zc_MI_Master()
                                      AND MovementItem.isErased   = FALSE
                                   ), 0);
+         END IF;
+
      ELSE
          outTotalPay := COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalPay()), 0);
      END IF;

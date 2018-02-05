@@ -162,7 +162,8 @@ BEGIN
                    , Object_PartionGoods.GoodsSizeId  AS GoodsSizeId
                    , MovementItem.Amount              AS OperCount
                    , Object_PartionGoods.OperPrice    AS OperPrice
-                   , MIFloat_OperPriceList.ValueData  AS OperPriceList
+                     -- временно для Sybase
+                   , CASE WHEN inUserId = zc_User_Sybase() THEN COALESCE (MIFloat_OperPriceList.ValueData, MIFloat_OperPriceList_curr.ValueData) ELSE COALESCE (MIFloat_OperPriceList.ValueData, 0) END AS OperPriceList
                    , CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END AS CountForPrice
                    , Object_PartionGoods.CurrencyId   AS CurrencyId
 
@@ -172,7 +173,7 @@ BEGIN
                    , zfCalc_SummIn (MovementItem.Amount, Object_PartionGoods.OperPrice, Object_PartionGoods.CountForPrice) AS OperSumm_Currency
 
                      -- Сумма по Прайсу - с округлением до 2-х знаков
-                   , zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData) AS OperSummPriceList
+                   , zfCalc_SummPriceList (MovementItem.Amount, CASE WHEN inUserId = zc_User_Sybase() THEN COALESCE (MIFloat_OperPriceList.ValueData, MIFloat_OperPriceList_curr.ValueData) ELSE MIFloat_OperPriceList.ValueData END) AS OperSummPriceList
                      -- Итого сумма возврата Скидки
                    , COALESCE (MIFloat_TotalChangePercent_curr.ValueData, 0)                     AS TotalChangePercent
                      -- Итого сумма возврата оплаты (в ГРН) - в текущем документе по zc_MI_Child
@@ -196,6 +197,9 @@ BEGIN
                                     AND MovementItem.DescId     = zc_MI_Master()
                                     AND MovementItem.isErased   = FALSE
 
+                   LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList_curr
+                                               ON MIFloat_OperPriceList_curr.MovementItemId = MovementItem.Id
+                                              AND MIFloat_OperPriceList_curr.DescId         = zc_MIFloat_OperPriceList()
                    LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent_curr
                                                ON MIFloat_TotalChangePercent_curr.MovementItemId = MovementItem.Id
                                               AND MIFloat_TotalChangePercent_curr.DescId         = zc_MIFloat_TotalChangePercent()
@@ -231,6 +235,13 @@ BEGIN
                 AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
              ) AS tmp
             ;
+
+     -- проверка PartionId_MI
+     IF inUserId <> zc_User_Sybase() AND EXISTS (SELECT 1 FROM _tmpItem WHERE COALESCE (_tmpItem.PartionId_MI, 0) = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка. PartionId_MI = 0';
+     END IF;
+
 
      -- проверка что оплачено НЕ больше чем надо
      IF (EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.TotalPay > _tmpItem.OperSumm_ToPay) AND inUserId <> zc_User_Sybase())

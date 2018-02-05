@@ -1,7 +1,5 @@
 -- Function: lpInsertUpdate_MovementFloat_TotalSumm (Integer)
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementFloat_TotalSummSale (Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementFloat_TotalSummIncome (Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementFloat_TotalSumm (Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementFloat_TotalSumm(
