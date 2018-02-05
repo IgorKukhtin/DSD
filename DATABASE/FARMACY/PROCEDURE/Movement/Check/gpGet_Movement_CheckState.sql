@@ -13,7 +13,7 @@ RETURNS Integer
 AS
 $BODY$
 BEGIN
-   
+
     SELECT
         Object.ObjectCode
     INTO
@@ -22,7 +22,6 @@ BEGIN
         Inner Join Object ON Movement.StatusId = Object.ID
     WHERE Movement.Id =  inMovementId;
 
-    IF outState is null THEN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

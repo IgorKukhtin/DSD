@@ -60,6 +60,8 @@ begin
       AddDateField(LocalDataBaseHead, 'OPERDATESP');   //дата рецепта (Соц. проект)
       //***15.06.17
       AddIntField(LocalDataBaseHead,  'SPKINDID');     //Id Вид СП
+      //***02.02.18
+      AddIntField(LocalDataBaseHead,  'PROMOCODE');  //Id промокода
 
       LocalDataBaseHead.CreateTable;
     end
@@ -107,6 +109,9 @@ begin
         //***15.06.17
         if FindField('SPKINDID') = nil then
           AddIntField(LFieldDefs, 'SPKINDID');
+        //***02.02.18
+        if FindField('PROMOCODE') = nil then
+          AddIntField(LFieldDefs, 'PROMOCODE');
 
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
@@ -150,7 +155,9 @@ begin
         (FindField('INVNUMSP') = nil) or
         (FindField('OPERDATESP') = nil) or
         //***15.06.17
-        (FindField('SPKINDID') = nil));
+        (FindField('SPKINDID') = nil) or
+        //***02.02.18
+        (FindField('PROMOCODE') = nil));
 
       Close;
 
