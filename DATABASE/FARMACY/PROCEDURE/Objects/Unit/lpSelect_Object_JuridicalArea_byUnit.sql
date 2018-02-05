@@ -31,6 +31,7 @@ RETURNS TABLE (UnitId                 Integer
              , AreaId_Juridical       Integer
              , AreaName_Juridical     TVarChar
              , isDefault_JuridicalArea Boolean
+             , isOnly_JuridicalArea    Boolean
 ) AS     
 $BODY$   
 BEGIN    
@@ -132,7 +133,7 @@ BEGIN
                                                                                              , 183322  -- ַמכמעמי ־נכאם
                                                                                               )
                                           THEN TRUE
-                                     ELSE FALSE
+                                     ELSE COALESCE (ObjectBoolean_JuridicalArea_Only.ValueData, FALSE)
                                 END AS isOnly
                          FROM Object AS Object_JuridicalArea
                                INNER JOIN ObjectLink AS ObjectLink_JuridicalArea_Juridical
@@ -149,6 +150,10 @@ BEGIN
                                LEFT JOIN ObjectBoolean AS ObjectBoolean_JuridicalArea_Default
                                                        ON ObjectBoolean_JuridicalArea_Default.ObjectId = Object_JuridicalArea.Id
                                                       AND ObjectBoolean_JuridicalArea_Default.DescId = zc_ObjectBoolean_JuridicalArea_Default()
+
+                               LEFT JOIN ObjectBoolean AS ObjectBoolean_JuridicalArea_Only
+                                                       ON ObjectBoolean_JuridicalArea_Only.ObjectId = Object_JuridicalArea.Id
+                                                      AND ObjectBoolean_JuridicalArea_Only.DescId = zc_ObjectBoolean_JuridicalArea_Only()
                          WHERE Object_JuridicalArea.DescId = zc_Object_JuridicalArea()
                            AND Object_JuridicalArea.isErased = FALSE
                          )    
@@ -214,7 +219,8 @@ BEGIN
          
          , COALESCE (tmp1.AreaId, COALESCE (tmp2.AreaId, COALESCE (tmp3.AreaId, 0)))                           AS AreaId_Juridical
          , COALESCE (tmp1.AreaName, COALESCE (tmp2.AreaName, COALESCE (tmp3.AreaName, '')))       :: TVarChar  AS AreaName_Juridical
-         , COALESCE (tmp1.isDefault, COALESCE (tmp2.isDefault, COALESCE (tmp3.isDefault, FALSE))) ::Boolean    AS isDefault_JuridicalArea
+         , COALESCE (tmp1.isDefault, COALESCE (tmp2.isDefault, COALESCE (tmp3.isDefault, FALSE))) :: Boolean   AS isDefault_JuridicalArea
+         , COALESCE (tmp1.isOnly, COALESCE (tmp2.isOnly, COALESCE (tmp3.isOnly, FALSE)))          :: Boolean   AS isOnly_JuridicalArea
          
     From tmpUnitJuridical
          LEFT JOIN tmpJuridicalArea AS tmp1 ON tmp1.juridicalId = tmpUnitJuridical.JuridicalId AND tmp1.areaId = tmpUnitJuridical.AreaId_Unit 

@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1053#1086#1074#1099#1081' '#1056#1077#1075#1080#1086#1085' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
-  ClientHeight = 259
+  ClientHeight = 279
   ClientWidth = 344
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,18 +18,18 @@
   TextHeight = 13
   object edName: TcxTextEdit
     Left = 17
-    Top = 179
+    Top = 202
     TabOrder = 0
     Width = 296
   end
   object cxLabel1: TcxLabel
     Left = 17
-    Top = 159
+    Top = 182
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 51
-    Top = 220
+    Top = 243
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 201
-    Top = 220
+    Top = 243
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -63,12 +63,12 @@
   end
   object cxLabel4: TcxLabel
     Left = 17
-    Top = 54
+    Top = 77
     Caption = #1070#1088'.'#1083#1080#1094#1086
   end
   object edJuridical: TcxButtonEdit
     Left = 17
-    Top = 76
+    Top = 99
     Properties.Buttons = <
       item
         Default = True
@@ -79,12 +79,12 @@
   end
   object cxLabel2: TcxLabel
     Left = 17
-    Top = 104
+    Top = 127
     Caption = #1056#1077#1075#1080#1086#1085
   end
   object edArea: TcxButtonEdit
     Left = 17
-    Top = 124
+    Top = 147
     Properties.Buttons = <
       item
         Default = True
@@ -95,13 +95,13 @@
   end
   object cxLabel5: TcxLabel
     Left = 282
-    Top = 204
+    Top = 227
     Caption = 'E-mail '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1085#1072' '#1082#1086#1090#1086#1088#1099#1081' '#1086#1090#1087#1088#1072#1074#1083#1103#1077#1090#1089#1103' '#1047#1040#1050#1040#1047
     Visible = False
   end
   object edEmail: TcxTextEdit
     Left = 282
-    Top = 224
+    Top = 247
     TabOrder = 11
     Visible = False
     Width = 296
@@ -120,9 +120,16 @@
     TabOrder = 13
     Width = 172
   end
+  object cbisOnly: TcxCheckBox
+    Left = 163
+    Top = 65
+    Caption = #1058#1086#1083#1100#1082#1086' '#1076#1083#1103' 1-'#1086#1075#1086' '#1088#1077#1075#1080#1086#1085#1072
+    TabOrder = 14
+    Width = 159
+  end
   object ActionList: TActionList
     Left = 265
-    Top = 148
+    Top = 171
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -220,10 +227,18 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOnly'
+        Value = Null
+        Component = cbisOnly
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 305
-    Top = 104
+    Top = 127
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -234,7 +249,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 249
-    Top = 72
+    Top = 95
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_JuridicalArea'
@@ -312,14 +327,21 @@
         Component = cbisGoodsCode
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isOnly'
+        Value = Null
+        Component = cbisOnly
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 305
-    Top = 152
+    Top = 175
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 137
-    Top = 191
+    Top = 214
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -334,7 +356,7 @@
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 321
-    Top = 64
+    Top = 87
   end
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
@@ -362,8 +384,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 137
-    Top = 63
+    Left = 105
+    Top = 86
   end
   object GuidesArea: TdsdGuides
     KeyField = 'Id'
@@ -392,6 +414,6 @@
         MultiSelectSeparator = ','
       end>
     Left = 145
-    Top = 115
+    Top = 138
   end
 end
