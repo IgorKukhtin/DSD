@@ -19,8 +19,17 @@ inherited EDI_SendJournalForm: TEDI_SendJournalForm
       inherited cxGrid: TcxGrid
         Width = 941
         Height = 374
-        ExplicitWidth = 916
+        ExplicitLeft = -3
+        ExplicitTop = 3
+        ExplicitWidth = 941
+        ExplicitHeight = 374
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = ToName
+            end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -53,6 +62,7 @@ inherited EDI_SendJournalForm: TEDI_SendJournalForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object OperDate_Parent: TcxGridDBColumn
@@ -62,6 +72,14 @@ inherited EDI_SendJournalForm: TEDI_SendJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object OperDatePartner_Parent: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1087#1088'. '#1091' '#1087#1086#1082#1091#1087'.'
+            DataBinding.FieldName = 'OperDatePartner_Parent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 81
           end
           object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
@@ -75,7 +93,8 @@ inherited EDI_SendJournalForm: TEDI_SendJournalForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Options.Editing = False
+            Width = 80
           end
           object ToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
@@ -83,14 +102,15 @@ inherited EDI_SendJournalForm: TEDI_SendJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 160
           end
           object JuridicalName_To: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName_To'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 90
+            Options.Editing = False
+            Width = 104
           end
           object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
@@ -104,6 +124,7 @@ inherited EDI_SendJournalForm: TEDI_SendJournalForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 53
           end
           object OperDatePartner: TcxGridDBColumn
@@ -275,14 +296,6 @@ inherited EDI_SendJournalForm: TEDI_SendJournalForm
         item
           Visible = True
           ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMovementItemContainer'
         end
         item
           Visible = True
