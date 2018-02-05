@@ -1409,6 +1409,9 @@ end;
 
 procedure TLoadFormTest.LoadEDIForm;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEDI_SendJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEDI_SendJournalForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TEDIJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TEDIJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TEDIJournalLoadForm'));

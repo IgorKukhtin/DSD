@@ -920,7 +920,7 @@ type
     actReport_PromoPlan: TdsdOpenForm;
     N188: TMenuItem;
     actEDILoad: TdsdOpenForm;
-    EDI1: TMenuItem;
+    miEDILoad: TMenuItem;
     actReport_GoodsBalance_Server: TdsdOpenForm;
     miReport_GoodsBalance_Server: TMenuItem;
     actSendMember: TdsdOpenForm;
@@ -935,6 +935,8 @@ type
     N191: TMenuItem;
     actSticker_List: TdsdOpenForm;
     N192: TMenuItem;
+    actEDI_Send: TdsdOpenForm;
+    miEDI_Send: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

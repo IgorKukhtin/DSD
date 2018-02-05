@@ -5,7 +5,7 @@ inherited EDIJournalForm: TEDIJournalForm
   AddOnFormData.OnLoadAction = actSetDefaults
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1378
-  ExplicitHeight = 488
+  ExplicitHeight = 491
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2206,7 +2206,7 @@ inherited EDIJournalForm: TEDIJournalForm
     DateStart = deStart
     DateEnd = deEnd
     Left = 320
-    Top = 72
+    Top = 128
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
