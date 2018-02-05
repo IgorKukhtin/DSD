@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_EDI_Send(
 RETURNS TABLE (Id Integer, ParentId Integer
              , isEdiOrdspr Boolean, isEdiInvoice Boolean, isEdiDesadv Boolean
              , InvNumber TVarChar, OperDate TDateTime, UpdateDate TDateTime, OperDatePartner TDateTime
-             , InvNumber_Parent TVarChar, OperDate_Parent TDateTime
+             , InvNumber_Parent TVarChar, OperDate_Parent TDateTime, OperDatePartner_Parent TDateTime
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , JuridicalName_To TVarChar
@@ -41,6 +41,7 @@ BEGIN
 
                , Movement_Parent.InvNumber                      AS InvNumber_Parent
                , Movement_Parent.OperDate                       AS OperDate_Parent
+               , MovementDate_OperDatePartner_Parent.ValueData  AS OperDatePartner_Parent
                , Object_From.Id                    		AS FromId
                , Object_From.ValueData             		AS FromName
                , Object_To.Id                      		AS ToId
@@ -94,7 +95,7 @@ BEGIN
                 LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                             ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                             ON MovementLinkObject_PaidKind.MovementId = Movement_Parent.Id
                                             AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
                 LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
@@ -102,6 +103,10 @@ BEGIN
                                      ON ObjectLink_Partner_Juridical.ObjectId = Object_To.Id
                                     AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                 LEFT JOIN Object AS Object_JuridicalTo ON Object_JuridicalTo.Id = ObjectLink_Partner_Juridical.ChildObjectId
+
+                LEFT JOIN MovementDate AS MovementDate_OperDatePartner_Parent
+                                       ON MovementDate_OperDatePartner_Parent.MovementId = Movement_Parent.Id
+                                      AND MovementDate_OperDatePartner_Parent.DescId = zc_MovementDate_OperDatePartner()
           ;
 
 END;
@@ -115,5 +120,5 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpSelect_Movement_EDI_Send (inStartDate:= '01.01.2018', inEndDate:= '01.02.2018', inIsErased := FALSE, inSession:= '2')
+--SELECT * FROM gpSelect_Movement_EDI_Send (inStartDate:= '01.01.2017', inEndDate:= '01.02.2018', inIsErased := FALSE, inSession:= '2')
 

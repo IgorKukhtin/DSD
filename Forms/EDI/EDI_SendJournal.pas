@@ -27,6 +27,7 @@ type
     OperDatePartner: TcxGridDBColumn;
     UpdateDate: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
+    OperDatePartner_Parent: TcxGridDBColumn;
   private
     { Private declarations }
   public
