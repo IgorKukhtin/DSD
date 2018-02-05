@@ -7,7 +7,7 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1081
-  ExplicitHeight = 485
+  ExplicitHeight = 488
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -1004,7 +1004,9 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
         item
           DataSet = MasterCDS
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'OperDate;DescName;InvNumber;LabelName;GoodsSizeName'
+          IndexFieldNames = 
+            'NumGroup;OperDate;MovementDescName;InvNumber;LabelName;GoodsSize' +
+            'Name'
         end>
       Params = <
         item
@@ -1029,8 +1031,8 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      ReportName = #1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
-      ReportNameParam.Value = #1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
+      ReportName = #1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1040#1082#1090' '#1089#1074#1077#1088#1082#1080')'
+      ReportNameParam.Value = #1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1040#1082#1090' '#1089#1074#1077#1088#1082#1080')'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1115,6 +1117,14 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
         item
           Visible = True
           ItemName = 'bbReport_Goods'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
         end
         item
           Visible = True

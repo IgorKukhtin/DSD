@@ -59,6 +59,7 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+  LoadReportFromFile('Движение по покупателю (Акт сверки)', ReportPath + '\Движение по покупателю (Акт сверки).fr3');
   LoadReportFromFile('Движение по покупателю', ReportPath + '\Движение по покупателю.fr3');
   LoadReportFromFile('Отчет по расчетам', ReportPath + '\Отчет по расчетам.fr3');
   LoadReportFromFile('PrintMovement_Income', ReportPath + '\Приход от поставщика.fr3');

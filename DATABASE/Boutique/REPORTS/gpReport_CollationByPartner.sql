@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpReport_CollationByPartner (
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Text_info             TVarChar
+             , NumGroup              Integer
              , MovementId            Integer
              , Invnumber             TVarChar
              , MovementDescName      TVarChar
@@ -143,6 +144,7 @@ BEGIN
                       )
   -- выбираем и группируем данные нач / конечн. остатки и движение по клиенту
   , tmpMIContainer_group AS (SELECT tmpMIContainer_all.Text_info
+                                  , tmpMIContainer_all.NumGroup
                                   , tmpMIContainer_all.MovementId
                                   , tmpMIContainer_all.MovementItemId
                                   , tmpMIContainer_all.GoodsId
@@ -161,6 +163,7 @@ BEGIN
 
                               FROM ( -- 1.1. Выбираем Остатки начальные
                                     SELECT 'Долг начальный'  AS Text_info
+                                         , 1 AS NumGroup
                                          , 0 AS MovementId
                                          , 0 AS MovementItemId
                                          , tmpMIContainer.GoodsId
@@ -187,6 +190,7 @@ BEGIN
                                    UNION ALL
                                     -- 1.2. Выбираем Остатки конечные
                                     SELECT 'Долг конечный'   AS Text_info
+                                         , 3 AS NumGroup
                                          , 0 AS MovementId--, tmpMIContainer.MovementId
                                          , 0 AS MovementItemId
                                          , tmpMIContainer.GoodsId
@@ -213,6 +217,7 @@ BEGIN
                                    UNION ALL
                                     -- 1.3. Выбираем Движение за выбранный период
                                     SELECT 'Движение'        AS Text_info
+                                         , 2 AS NumGroup
                                          , tmpMIContainer.MovementId
                                          , tmpMIContainer.MovementItemId
                                          , tmpMIContainer.GoodsId
@@ -251,6 +256,7 @@ BEGIN
                                    ) AS tmpMIContainer_all
                       
                               GROUP BY tmpMIContainer_all.Text_info
+                                     , tmpMIContainer_all.NumGroup
                                      , tmpMIContainer_all.MovementId
                                      , tmpMIContainer_all.MovementItemId
                                      , tmpMIContainer_all.GoodsId
@@ -289,6 +295,7 @@ BEGIN
                      )
 
    SELECT tmpData.Text_info :: TVarChar
+        , tmpData.NumGroup
         , Movement.Id                    AS MovementId
         , Movement.InvNumber             AS InvNumber
         , MovementDesc.ItemName          AS MovementDescName
@@ -405,6 +412,7 @@ BEGIN
         LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercentPay
                                     ON MIFloat_TotalChangePercentPay.MovementItemId = MI_PartionMI.Id
                                    AND MIFloat_TotalChangePercentPay.DescId         = zc_MIFloat_TotalChangePercentPay()
+      
         ;
  END;
 $BODY$
