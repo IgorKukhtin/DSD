@@ -120,10 +120,10 @@ BEGIN
                            
                       FROM tmpObject
                            LEFT JOIN tmpMov ON tmpMov.ClientId = tmpObject.Id
-                      WHERE tmpObject.TotalCount        <> tmpMov.TotalCount
-                         OR tmpObject.TotalSumm         <> tmpMov.TotalSumm
-                         OR tmpObject.TotalSummDiscount <> tmpMov.TotalSummChange
-                         OR tmpObject.TotalSummPay      <> tmpMov.TotalSummPay
+                      WHERE tmpObject.TotalCount        <> COALESCE (tmpMov.TotalCount, 0)
+                         OR tmpObject.TotalSumm         <> COALESCE (tmpMov.TotalSumm, 0)
+                         OR tmpObject.TotalSummDiscount <> COALESCE (tmpMov.TotalSummChange, 0)
+                         OR tmpObject.TotalSummPay      <> COALESCE (tmpMov.TotalSummPay, 0)
                       )
    
 
@@ -155,4 +155,5 @@ $BODY$
 */
 
 -- тест
+-- update ObjectFloat set ValueData = tmp.TotalSumm_Calc FROM gpReport_Object_Client_TotalError (inSession:= zfCalc_UserAdmin()) AS tmp WHERE tmp.ClientId = ObjectFloat.ObjectId AND ObjectFloat.DescId = zc_ObjectFloat_Client_TotalSumm()
 -- SELECT * FROM gpReport_Object_Client_TotalError (inSession:= zfCalc_UserAdmin())

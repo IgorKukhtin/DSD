@@ -20,6 +20,7 @@ type
     procedure CreateReportProcedure;
     procedure CreateSystemProcedure;
     procedure CreateLoadProcedure;
+    procedure CreateUpdatePromoCodeProcedures;
   end;
 
 
@@ -88,6 +89,18 @@ procedure TdbProcedureTest.CreateLoadProcedure;
 begin
   ScriptDirectory := FarmacyProcedurePath + 'Load\';
   ProcedureLoad;
+end;
+
+procedure TdbProcedureTest.CreateUpdatePromoCodeProcedures;
+begin
+  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'Movement\Check\gpInsertUpdate_Movement_Check_ver2.sql');
+  ZQuery.ExecSQL;
+
+  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'Movement\PromoCode\gpGet_IsGoodsInPromo.sql');
+  ZQuery.ExecSQL;
+
+  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'Movement\PromoCode\gpGet_PromoCode_by_GUID.sql');
+  ZQuery.ExecSQL;
 end;
 
 procedure TdbProcedureTest.CreateMovementItemContainerProcedure;

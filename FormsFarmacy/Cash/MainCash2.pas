@@ -52,6 +52,8 @@ type
     OPERDATESP  : TDateTime;     //дата рецепта (Соц. проект)
     //***15.06.17
     SPKINDID    : Integer;       //Id Вид СП
+    //***05.02.18
+    PROMOCODE : Integer;       //Id промокода
   end;
   TBodyRecord = record
     ID: Integer;            //ид записи
@@ -272,6 +274,15 @@ type
     edDays: TcxCurrencyEdit;
     miMCSAuto: TMenuItem;
     actSetFilter: TAction;
+    actSetPromoCode: TAction;
+    miSetPromo: TMenuItem;
+    pnlPromoCode: TPanel;
+    Label8: TLabel;
+    lblPromoName: TLabel;
+    Label10: TLabel;
+    lblPromoCode: TLabel;
+    Label12: TLabel;
+    edPromoCodeChangePrice: TcxCurrencyEdit;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -332,6 +343,7 @@ type
     procedure N1Click(Sender: TObject);
     procedure N10Click(Sender: TObject); //***10.08.16
     procedure actSetFilterExecute(Sender: TObject); //***10.08.16
+    procedure actSetPromoCodeExecute(Sender: TObject); //***05.02.18
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -383,7 +395,7 @@ type
       ADiscountExternalId: Integer; ADiscountExternalName, ADiscountCardNumber: String;
       APartnerMedicalId: Integer; APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP : String;
       AOperDateSP : TDateTime;
-      ASPKindId: Integer; ASPKindName : String; ASPTax : Currency;
+      ASPKindId: Integer; ASPKindName : String; ASPTax : Currency; APromoCodeID : Integer;
       NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 
     //проверили что есть остаток
@@ -422,7 +434,7 @@ implementation
 
 uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, SPDialog, CashWork, MessagesUnit,
      LocalWorkUnit, Splash, DiscountService, MainCash, UnilWin,
-	 MediCard.Intf;
+	   MediCard.Intf, PromoCodeDialog;
 
 const
   StatusUnCompleteCode = 1;
@@ -607,6 +619,11 @@ begin
   FormParams.ParamByName('SPTax').Value      := 0;
   FormParams.ParamByName('SPKindId').Value   := 0;
   FormParams.ParamByName('SPKindName').Value := '';
+  //***05.02.18
+  FormParams.ParamByName('PromoCodeID').Value               := 0;
+  FormParams.ParamByName('PromoCodeGUID').Value             := '';
+  FormParams.ParamByName('PromoName').Value                 := '';
+  FormParams.ParamByName('PromoCodeChangePercent').Value    := 0.0;
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
@@ -624,6 +641,10 @@ begin
   UpdateRemainsFromCheck;
   CheckCDS.EmptyDataSet;
   MCDesigner.CasualCache.Clear;
+  pnlPromoCode.Visible := false;
+  lblPromoName.Caption := '';
+  lblPromoCode.Caption := '';
+  edPromoCodeChangePrice.Value := 0;
 end;
 
 procedure TMainCashForm2.actClearMoneyExecute(Sender: TObject);
@@ -915,6 +936,8 @@ begin
                    FormParams.ParamByName('SPKindId').Value,
                    FormParams.ParamByName('SPKindName').Value,
                    FormParams.ParamByName('SPTax').Value,
+                   //***05.02.18
+                   FormParams.ParamByName('PromoCodeID').Value,
 
                    True,         // NeedComplete
                    CheckNumber,  // FiscalCheckNumber
@@ -1237,6 +1260,41 @@ begin
 
 end;
 
+procedure TMainCashForm2.actSetPromoCodeExecute(Sender: TObject);
+var
+  PromoCodeId: Integer;
+  PromoName, PromoCodeGUID: String;
+  PromoCodeChangePercent: currency;
+begin
+  if (not CheckCDS.IsEmpty) then
+  Begin
+    ShowMessage('Текущий чек не пустой. Сначала очистите чек!');
+    exit;
+  End;
+
+  with TPromoCodeDialogForm.Create(nil) do
+  try
+     PromoCodeId            := Self.FormParams.ParamByName('PromoCodeID').Value;
+     PromoCodeGUID          := Self.FormParams.ParamByName('PromoCodeGUID').Value;
+     PromoName              := Self.FormParams.ParamByName('PromoName').Value;
+     PromoCodeChangePercent := Self.FormParams.ParamByName('PromoCodeChangePercent').Value;
+     if not PromoCodeDialogExecute(PromoCodeId, PromoCodeGUID, PromoName, PromoCodeChangePercent)
+     then exit;
+  finally
+     Free;
+  end;
+  //
+  FormParams.ParamByName('PromoCodeID').Value             := PromoCodeId;
+  FormParams.ParamByName('PromoCodeGUID').Value           := PromoCodeGUID;
+  FormParams.ParamByName('PromoName').Value               := PromoName;
+  FormParams.ParamByName('PromoCodeChangePercent').Value  := PromoCodeChangePercent;
+
+  pnlPromoCode.Visible          := PromoCodeId > 0;
+  lblPromoName.Caption          := '  ' + PromoName + '  ';
+  lblPromoCode.Caption          := '  ' + PromoCodeGUID + '  ';
+  edPromoCodeChangePrice.Value  := PromoCodeChangePercent;
+end;
+
 procedure TMainCashForm2.actSetRimainsFromMemdataExecute(Sender: TObject);  // только 2 форма
 var
   GoodsId: Integer;
@@ -1500,6 +1558,8 @@ begin
               ,FormParams.ParamByName('SPKindId').Value
               ,FormParams.ParamByName('SPKindName').Value
               ,FormParams.ParamByName('SPTax').Value
+              //***05.02.18
+              ,FormParams.ParamByName('PromoCodeID').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -1572,6 +1632,8 @@ begin
               ,FormParams.ParamByName('SPKindId').Value
               ,FormParams.ParamByName('SPKindName').Value
               ,FormParams.ParamByName('SPTax').Value
+              //***05.02.18
+              ,FormParams.ParamByName('PromoCodeID').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -1717,6 +1779,8 @@ begin
               ,FormParams.ParamByName('SPKindId').Value
               ,FormParams.ParamByName('SPKindName').Value
               ,FormParams.ParamByName('SPTax').Value
+              //***05.02.18
+              ,FormParams.ParamByName('PromoCodeID').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -2070,8 +2134,16 @@ begin
                lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
                // цена СО скидкой
                lPrice_bySoldRegim := edPrice.Value;
-             end
-             else begin
+             end else
+             if (Self.FormParams.ParamByName('PromoCodeID').Value > 0) and
+                 CheckIfGoodsIdInPromo(Self.FormParams.ParamByName('PromoCodeID').Value, SourceClientDataSet.FieldByName('Id').asInteger)
+             then
+             begin
+               // цена БЕЗ скидки
+               lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
+               // цена СО скидкой
+               lPrice_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency * (1 - Self.FormParams.ParamByName('PromoCodeChangePercent').Value/100);
+             end else begin
                        // цена БЕЗ скидки
                        lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
                        // цена СО скидкой в этом случае такая же
@@ -2119,6 +2191,11 @@ begin
          then begin
                  lChangePercent     := Self.FormParams.ParamByName('SPTax').Value;
                  lSummChangePercent := (lPriceSale_bySoldRegim - lPrice_bySoldRegim) * 0;
+              end
+         else if (Self.FormParams.ParamByName('PromoCodeID').Value > 0)
+         then begin
+                 lChangePercent     := Self.FormParams.ParamByName('PromoCodeChangePercent').Value;
+                 lSummChangePercent := (lPriceSale_bySoldRegim - lPrice_bySoldRegim);
               end
          else begin
                 lChangePercent     := 0;
@@ -2449,6 +2526,11 @@ begin
   FormParams.ParamByName('SPTax').Value      := 0;
   FormParams.ParamByName('SPKindId').Value   := 0;
   FormParams.ParamByName('SPKindName').Value := '';
+  //***05.02.18
+  FormParams.ParamByName('PromoCodeID').Value               := 0;
+  FormParams.ParamByName('PromoCodeGUID').Value             := '';
+  FormParams.ParamByName('PromoName').Value                 := '';
+  FormParams.ParamByName('PromoCodeChangePercent').Value    := 0.0;
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
@@ -2464,6 +2546,10 @@ begin
   lblBayer.Caption := '';
   CheckCDS.DisableControls;
   chbNotMCS.Checked := False;
+  pnlPromoCode.Visible := false;
+  lblPromoName.Caption := '';
+  lblPromoCode.Caption := '';
+  edPromoCodeChangePrice.Value := 0;
   try
     CheckCDS.EmptyDataSet;
   finally
@@ -2890,6 +2976,20 @@ begin
             // и УСТАНОВИМ скидку
             checkCDS.FieldByName('ChangePercent').asCurrency     := 0;
             checkCDS.FieldByName('SummChangePercent').asCurrency := CheckCDS.FieldByName('Amount').asCurrency * (RemainsCDS.FieldByName('Price').asCurrency - edPrice.Value);
+        end else
+        if (Self.FormParams.ParamByName('PromoCodeID').Value > 0) and
+           CheckIfGoodsIdInPromo(Self.FormParams.ParamByName('PromoCodeID').Value, SourceClientDataSet.FieldByName('Id').asInteger)
+        then
+        begin
+           // на всяк случай - УСТАНОВИМ скидку еще разок
+            checkCDS.FieldByName('PriceSale').asCurrency:= RemainsCDS.FieldByName('Price').asCurrency;
+            checkCDS.FieldByName('Price').asCurrency    := RemainsCDS.FieldByName('Price').asCurrency
+                                                           * (1 - Self.FormParams.ParamByName('PromoCodeChangePercent').Value/100);
+            // и УСТАНОВИМ скидку
+            checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('PromoCodeChangePercent').Value;
+            checkCDS.FieldByName('SummChangePercent').asCurrency := CheckCDS.FieldByName('Amount').asCurrency
+                                                                    * RemainsCDS.FieldByName('Price').asCurrency
+                                                                    * (Self.FormParams.ParamByName('PromoCodeChangePercent').Value/100);
         end
         else begin
             // на всяк случай условие - восстановим если Цена БЕЗ скидки была запонена
@@ -2924,7 +3024,7 @@ function TMainCashForm2.SaveLocal(ADS :TClientDataSet; AManagerId: Integer; AMan
       ADiscountExternalId: Integer; ADiscountExternalName, ADiscountCardNumber: String;
       APartnerMedicalId: Integer; APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP : String;
       AOperDateSP : TDateTime;
-      ASPKindId: Integer; ASPKindName : String; ASPTax : Currency;
+      ASPKindId: Integer; ASPKindName : String; ASPTax : Currency; APromoCodeID : Integer;
       NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 var
   NextVIPId: integer;
@@ -3085,7 +3185,9 @@ begin
                                          AInvNumberSP,             //номер рецепта (Соц. проект)
                                          AOperDateSP,              //дата рецепта (Соц. проект)
                                          //***15.06.17
-                                         ASPKindId                 //Id Вид СП
+                                         ASPKindId,                //Id Вид СП
+                                         //***02.02.18
+                                         APromoCodeID               //Id промокода
                                         ]);
       End
       else
@@ -3121,6 +3223,8 @@ begin
         FLocalDataBaseHead.FieldByName('OPERDATESP').Value := AOperDateSP;         //дата рецепта (Соц. проект)
         //***15.06.17
         FLocalDataBaseHead.FieldByName('SPKINDID').Value   := ASPKindId;  //Id Вид СП
+        //***02.02.18
+        FLocalDataBaseHead.FieldByName('PROMOCODE').Value  := APromoCodeID;  //Id промокода
 
         FLocalDataBaseHead.Post;
       End;

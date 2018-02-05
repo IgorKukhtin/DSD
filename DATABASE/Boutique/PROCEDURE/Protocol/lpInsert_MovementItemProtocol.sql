@@ -46,7 +46,7 @@ BEGIN
     WHERE MovementItemDate.MovementItemId = inMovementItemId
       AND inIsErased IS NULL
    UNION
-    SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementItemLinkObjectDesc.ItemName) || '" FieldValue = "' || zfStrToXmlStr(COALESCE (Object.ValueData, 'NULL')) || '"/>' AS FieldXML
+    SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementItemLinkObjectDesc.ItemName) || '" FieldValue = "' || zfStrToXmlStr(CASE WHEN Object.ValueData = '' THEN Object.Id :: TVarChar ELSE COALESCE (Object.ValueData, 'NULL') END) || '"/>' AS FieldXML
          , 4 AS GroupId
          , MovementItemLinkObject.DescId
     FROM MovementItemLinkObject

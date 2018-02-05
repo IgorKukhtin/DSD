@@ -94,7 +94,8 @@ BEGIN
                          , isGoods_Debt
                           )
        WITH -- для Sybase
-            tmpCheck AS (SELECT 366872 AS PartionId_MI
+            tmpCheck AS (SELECT -12345 AS PartionId_MI
+                   /*UNION SELECT 366872 AS PartionId_MI
                    UNION SELECT 374215
                    UNION SELECT 739198
                    UNION SELECT 739264
@@ -104,7 +105,7 @@ BEGIN
                    UNION SELECT 744408
                    UNION SELECT 744677
                    UNION SELECT 739173
-                   UNION SELECT 739185
+                   UNION SELECT 739185*/
                          -- FROM gpSelect_MovementItem_Sale_Sybase_Check()
                         )
             -- Данные по MI + расчет SummDebt
@@ -728,6 +729,12 @@ BEGIN
 
              ) AS tmp
             ;
+
+     -- проверка PartionId_MI
+     IF /*inUserId <> zc_User_Sybase() AND*/ EXISTS (SELECT 1 FROM _tmpItem WHERE COALESCE (_tmpItem.PartionId_MI, 0) = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка. PartionId_MI = 0';
+     END IF;
 
      -- проверка что оплачено НЕ больше чем надо
      IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.TotalPay > _tmpItem.OperSumm_ToPay)

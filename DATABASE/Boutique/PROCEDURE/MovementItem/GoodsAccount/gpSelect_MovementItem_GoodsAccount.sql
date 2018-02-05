@@ -188,7 +188,7 @@ BEGIN
                              , Movement.OperDate                                  AS OperDate
                              , Movement.InvNumber                                 AS InvNumber
                              , Object_PartionMI.ObjectCode                        AS SaleMI_ID
-                             , MovementItem.Amount                                AS Amount
+                             , MovementItem.Amount                                AS Amount_Sale
                              , COALESCE (MIFloat_OperPriceList.ValueData, 0)      AS OperPriceList
 
                                -- Итого сумма оплаты - для "текущего" документа Продажи
@@ -276,7 +276,7 @@ BEGIN
                              , COALESCE (tmpMI_Master.OperDate, tmpMI_Sale.OperDate)             AS OperDate_Sale
                              , COALESCE (tmpMI_Master.InvNumber, tmpMI_Sale.InvNumber)           AS InvNumber_Sale
                              , COALESCE (tmpMI_Master.SaleMI_ID, tmpMI_Sale.SaleMI_ID)           AS SaleMI_Id
-                             , COALESCE (tmpMI_Master.Amount, tmpMI_Sale.Amount)                 AS Amount_Sale
+                             , COALESCE (tmpMI_Master.Amount_Sale, tmpMI_Sale.Amount)            AS Amount_Sale
                              , COALESCE (tmpMI_Master.OperPriceList, tmpMI_Sale.OperPriceList)   AS OperPriceList_Sale
 
                              , COALESCE (tmpMI_Master.TotalPay, tmpMI_Sale.TotalPay)             AS TotalPay_Sale
@@ -291,10 +291,10 @@ BEGIN
                                -- Итого сумма Скидки - все "Расчеты покупателей"
                              , COALESCE (tmpMI_Master.TotalChangePercentPay, tmpMI_Sale.TotalChangePercentPay) AS TotalChangePercentPay_Sale
 
-                  FROM tmpMI_Sale
-                       FULL JOIN tmpMI_Master ON tmpMI_Master.SaleMI_Id = tmpMI_Sale.SaleMI_Id  -- ТОЛЬКО по партии
-                                             -- AND tmpMI_Master.GoodsId   = tmpMI_Sale.GoodsId
-                  -- WHERE tmpMI_Sale.SummDebt <> 0 OR tmpMI_Master.SaleMI_Id > 0
+                  FROM tmpMI_Master
+                       FULL JOIN tmpMI_Sale ON tmpMI_Sale.SaleMI_Id = tmpMI_Master.SaleMI_Id  -- ТОЛЬКО по партии
+                                             -- AND tmpMI_Sale.GoodsId   = tmpMI_Master.GoodsId
+                  -- WHERE tmpMI_Sale.SummDebt <> 0 OR tmpMI_Sale.SaleMI_Id > 0
                  )
 
     , tmpMI_Child AS (SELECT COALESCE (MovementItem.ParentId, 0) AS ParentId

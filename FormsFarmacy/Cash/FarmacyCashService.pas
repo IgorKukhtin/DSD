@@ -50,6 +50,8 @@ type
     OPERDATESP  : TDateTime;     //дата рецепта (Соц. проект)
     //***15.06.17
     SPKINDID    : Integer;       //Id Вид СП
+    //***05.02.18
+    PROMOCODE    : Integer;      //Id промокода
   end;
   TBodyRecord = record
     ID: Integer;            //ид записи
@@ -727,6 +729,8 @@ begin
               OPERDATESP := FieldByName('OPERDATESP').asCurrency;
               //***15.06.17
               SPKINDID := FieldByName('SPKINDID').AsInteger;
+              //***05.02.18
+              PROMOCODE := FieldByName('PROMOCODE').AsInteger;
 
               FNeedSaveVIP := (MANAGER <> 0);
             end;
@@ -827,6 +831,8 @@ begin
                 dsdSave.Params.AddParam('inOperDateSP', ftDateTime, ptInput, Head.OPERDATESP);
                 //***15.06.17
                 dsdSave.Params.AddParam('inSPKindId',ftInteger,ptInput,Head.SPKINDID);
+                //***05.02.18
+                dsdSave.Params.AddParam('inPromoCodeId',ftInteger,ptInput,Head.PROMOCODE);
                 //***24.01.17
                 dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
 

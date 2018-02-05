@@ -1,7 +1,5 @@
 -- DROP FUNCTION lpInsert_ObjectProtocol (IN inObjectId Integer, IN inUserId Integer);
 
-DROP FUNCTION IF EXISTS lpInsert_ObjectProtocol (Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsert_ObjectProtocol (Integer, Integer, Boolean);
 DROP FUNCTION IF EXISTS lpInsert_ObjectProtocol (Integer, Integer, Boolean, Boolean);
 
 CREATE OR REPLACE FUNCTION lpInsert_ObjectProtocol(
@@ -45,7 +43,7 @@ BEGIN
            WHERE ObjectDate.ObjectId = inObjectId
              AND inIsErased IS NULL
           UNION
-           SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectLinkDesc.ItemName) || '" FieldValue = "' || zfStrToXmlStr(COALESCE (Object.ValueData, 'NULL')) || '"/>' AS FieldXML 
+           SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectLinkDesc.ItemName) || '" FieldValue = "' || zfStrToXmlStr (CASE WHEN Object.ValueData = '' THEN Object.Id :: TVarChar ELSE COALESCE (Object.ValueData, 'NULL') END) || '"/>' AS FieldXML 
                 , 4 AS GroupId
                 , ObjectLink.DescId
            FROM ObjectLink
