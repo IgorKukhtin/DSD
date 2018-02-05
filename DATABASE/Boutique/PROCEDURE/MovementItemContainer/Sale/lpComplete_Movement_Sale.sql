@@ -1229,11 +1229,11 @@ BEGIN
                                 , inUserId     := inUserId
                                  );
 
-     -- 6. мен€ютс€ »“ќ√ќ¬џ≈ суммы по покупателю
-     PERFORM lpUpdate_Object_Client_Total (inMovementId:= inMovementId, inIsComplete:= TRUE, inUserId:= inUserId);
-
      -- пересчитали »тоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+
+     -- мен€ютс€ »“ќ√ќ¬џ≈ суммы по покупателю - !!!ѕќ—Ћ≈ »тоговые суммы по накладной!!!
+     PERFORM lpUpdate_Object_Client_Total (inMovementId:= inMovementId, inIsComplete:= TRUE, inUserId:= inUserId);
 
 END;
 $BODY$
