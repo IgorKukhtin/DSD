@@ -319,7 +319,7 @@ BEGIN
         , Object_LineFabrica.ValueData   AS LineFabricaName
         , Object_Label.ValueData         AS LabelName
         , Object_GoodsSize.Id            AS GoodsSizeId
-        , Object_GoodsSize.ValueData     AS GoodsSizeName
+        , COALESCE (Object_GoodsSize.ValueData, '') :: TVarChar     AS GoodsSizeName
         , Object_Currency.ValueData      AS CurrencyName
         , Object_Brand.ValueData         AS BrandName
         , Object_Fabrika.ValueData       AS FabrikaName
