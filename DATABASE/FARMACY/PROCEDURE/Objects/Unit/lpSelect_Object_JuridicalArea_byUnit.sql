@@ -1,10 +1,12 @@
 -- Function: gpSelect_Object_Unit_JuridicalArea()
 
 DROP FUNCTION IF EXISTS lpSelect_Object_JuridicalArea_byUnit(Integer, Integer);
+DROP FUNCTION IF EXISTS lpSelect_Object_JuridicalArea_byUnit(Integer, Integer, Boolean);
 
 CREATE OR REPLACE FUNCTION lpSelect_Object_JuridicalArea_byUnit(
     IN inUnitId           Integer,
-    IN inJuridicalId      Integer
+    IN inJuridicalId      Integer,
+    IN inisShowAll        Boolean  DEFAULT FALSE
 )
 RETURNS TABLE (UnitId                 Integer
              , UnitCode               Integer
@@ -17,7 +19,9 @@ RETURNS TABLE (UnitId                 Integer
              , UserManagerId_Unit     Integer
              , UserManagerName_Unit   TVarChar
              , JuridicalName_Unit     TVarChar
-             , isErased               Boolean
+             , isErased_Unit          Boolean
+             , isErased_Juridical     Boolean
+             , isErased               Boolean             
              , AreaId_Unit            Integer
              , AreaName_Unit          TVarChar
              , CreateDate_Unit        TDateTime
@@ -107,7 +111,7 @@ BEGIN
                                            AND ObjectDate_Close.DescId = zc_ObjectDate_Unit_Close()
                                            
                 WHERE Object_Unit.DescId = zc_Object_Unit()
-                  AND Object_Unit.isErased = FALSE
+                  AND (Object_Unit.isErased = FALSE OR inisShowAll = TRUE)
                   AND (Object_Unit.Id = inUnitId OR inUnitId = 0)
                 )
              
@@ -115,12 +119,13 @@ BEGIN
                           , Object_Juridical.ObjectCode         AS Code
                           , Object_Juridical.ValueData          AS Name
                           , ObjectBoolean_isCorporate.ValueData AS isCorporate
+                          , Object_Juridical.isErased           AS isErased
                       FROM Object AS Object_Juridical
                            LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate 
                                                    ON ObjectBoolean_isCorporate.ObjectId = Object_Juridical.Id
                                                   AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
                       WHERE Object_Juridical.DescId = zc_Object_Juridical()
-                        AND Object_Juridical.isErased = FALSE
+                        AND (Object_Juridical.isErased = FALSE OR inisShowAll = TRUE)
                         AND COALESCE (ObjectBoolean_isCorporate.ValueData, FALSE) = FALSE
                         AND (Object_Juridical.Id = inJuridicalId OR inJuridicalId = 0)
                      )
@@ -181,6 +186,7 @@ BEGIN
                                , tmpJuridical.Code          AS JuridicalCode
                                , tmpJuridical.Name          AS JuridicalName
                                , tmpJuridical.isCorporate   AS isCorporate_Juridical
+                               , tmpJuridical.isErased      AS isErased_Juridical
                           FROM tmpUnit
                                CROSS JOIN tmpJuridical
                                LEFT JOIN (SELECT DISTINCT tmpJuridicalArea.JuridicalId FROM tmpJuridicalArea WHERE tmpJuridicalArea.isOnly = TRUE
@@ -205,6 +211,8 @@ BEGIN
          , tmpUnitJuridical.UserManagerName_Unit
          , tmpUnitJuridical.JuridicalName_Unit
          , tmpUnitJuridical.isErased_Unit
+         , tmpUnitJuridical.isErased_Juridical
+         , CASE WHEN tmpUnitJuridical.isErased_Unit = TRUE OR tmpUnitJuridical.isErased_Juridical = TRUE THEN TRUE ELSE FALSE END isErased
          , tmpUnitJuridical.AreaId_Unit
          , tmpUnitJuridical.AreaName_Unit
          , tmpUnitJuridical.CreateDate_Unit

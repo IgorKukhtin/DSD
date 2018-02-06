@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Unit_JuridicalArea(Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Unit_JuridicalArea(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Unit_JuridicalArea(
---    IN inisShowAll   Boolean,
+    IN inisShowAll   Boolean,
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (UnitId                  Integer
@@ -19,6 +19,8 @@ RETURNS TABLE (UnitId                  Integer
              , UserManagerId_Unit      Integer
              , UserManagerName_Unit    TVarChar
              , JuridicalName_Unit      TVarChar
+             , isErased_Unit           Boolean
+             , isErased_Juridical      Boolean
              , isErased                Boolean
              , AreaId_Unit             Integer
              , AreaName_Unit           TVarChar
@@ -53,7 +55,10 @@ BEGIN
          , tmp.UserManagerId_Unit
          , tmp.UserManagerName_Unit
          , tmp.JuridicalName_Unit
-         , tmp.isErased    AS isErased_Unit
+         , tmp.isErased_Unit
+         , tmp.isErased_Juridical
+         , tmp.isErased
+         
          , tmp.AreaId_Unit
          , tmp.AreaName_Unit
          , tmp.CreateDate_Unit
@@ -71,7 +76,7 @@ BEGIN
          , tmp.isDefault_JuridicalArea
          , tmp.isOnly_JuridicalArea
          
-    FROM lpSelect_Object_JuridicalArea_byUnit (inUnitId := 0, inJuridicalId := 0) AS tmp
+    FROM lpSelect_Object_JuridicalArea_byUnit (inUnitId := 0, inJuridicalId := 0, inisShowAll:= inisShowAll) AS tmp
    ;
   
 END;

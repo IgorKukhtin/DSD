@@ -42,6 +42,8 @@ type
     RetailName_Juridical: TcxGridDBColumn;
     AreaName_Juridical: TcxGridDBColumn;
     isOnly_JuridicalArea: TcxGridDBColumn;
+    isErased_Unit: TcxGridDBColumn;
+    isErased_Juridical: TcxGridDBColumn;
   private
     { Private declarations }
   public
