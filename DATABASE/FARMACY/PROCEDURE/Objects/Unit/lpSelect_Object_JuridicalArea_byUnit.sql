@@ -1,7 +1,6 @@
 -- Function: gpSelect_Object_Unit_JuridicalArea()
 
-DROP FUNCTION IF EXISTS lpSelect_Object_JuridicalArea_byUnit(Integer, Integer);
-DROP FUNCTION IF EXISTS lpSelect_Object_JuridicalArea_byUnit(Integer, Integer, Boolean);
+DROP FUNCTION IF EXISTS lpSelect_Object_JuridicalArea_byUnit (Integer, Integer, Boolean);
 
 CREATE OR REPLACE FUNCTION lpSelect_Object_JuridicalArea_byUnit(
     IN inUnitId           Integer,
@@ -134,12 +133,7 @@ BEGIN
                               , ObjectLink_JuridicalArea_Area.ChildObjectId                      AS AreaId
                               , Object_Area.ValueData                                            AS AreaName
                               , COALESCE (ObjectBoolean_JuridicalArea_Default.ValueData, FALSE)  AS isDefault
-                              , CASE WHEN ObjectLink_JuridicalArea_Juridical.ChildObjectId IN (2618417 -- √¿…ƒ¿– œÀﬁ— ŒŒŒ
-                                                                                             , 183322  -- «ÓÎÓÚÓÈ ŒÎ‡Ì
-                                                                                              )
-                                          THEN TRUE
-                                     ELSE COALESCE (ObjectBoolean_JuridicalArea_Only.ValueData, FALSE)
-                                END AS isOnly
+                              , COALESCE (ObjectBoolean_JuridicalArea_Only.ValueData, FALSE)     AS isOnly
                          FROM Object AS Object_JuridicalArea
                                INNER JOIN ObjectLink AS ObjectLink_JuridicalArea_Juridical
                                                      ON ObjectLink_JuridicalArea_Juridical.ObjectId = Object_JuridicalArea.Id 

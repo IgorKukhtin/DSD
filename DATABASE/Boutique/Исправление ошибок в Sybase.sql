@@ -1,5 +1,5 @@
   select * from Unit inner join DiscountKlient on DiscountKlient.ClientId = Unit.id where KindUnit = zc_kuClient()  and Id_Postgres is null order by 1
-
+-- Ўибко ƒмитрий,ёл€ - 20% - 25%
 
 -- select DiscountKlientAccountMoney.* from  DiscountMovement join "dba".DiscountMovementItem_byBarCode on DiscountMovementId = DiscountMovement.Id join DiscountKlientAccountMoney on DiscountMovementItemId = DiscountMovementItem_byBarCode.Id where DiscountKlientAccountMoney.OperDate between '2012-01-15' and '2012-01-16' and DiscountKlientAccountMoney.isErased = 1 order by DiscountMovement.OperDate desc, DiscountMovementItem_byBarCode.Id  desc;
 -- select * from DiscountMovementItem_byBarCode where DiscountMovementId =  111117
