@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_ReturnIn(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , LastDate TDateTime, StartDate TDateTime, EndDate TDateTime
-             , TotalLastSumm TFloat, TotalSummPay TFloat, TotalDebt TFloat
+             , TotalSumm TFloat, TotalSummPay TFloat, TotalDebt TFloat
              , DiscountTax TFloat
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
@@ -62,7 +62,7 @@ BEGIN
              , CAST (NULL AS TDateTime)         AS LastDate
              , (inOperDate - interval '1 month') :: TDateTime AS StartDate
              , (inOperDate - interval '1 day')   :: TDateTime AS EndDate
-             , CAST (0 as TFloat)               AS TotalLastSumm
+             , CAST (0 as TFloat)               AS TotalSumm
              , CAST (0 as TFloat)               AS TotalSummPay
              , CAST (0 as TFloat)               AS TotalDebt
              , CAST (0 as TFloat)               AS DiscountTax
@@ -99,9 +99,9 @@ BEGIN
              , (Movement.OperDate - interval '1 month') :: TDateTime AS StartDate
              , (Movement.OperDate - interval '1 day')   :: TDateTime AS EndDate
 
-             , COALESCE (ObjectFloat_LastSumm.ValueData,0) ::TFloat     AS TotalLastSumm
-             , COALESCE (ObjectFloat_TotalSummPay.ValueData,0) ::TFloat AS TotalSummPay
-             , (COALESCE (ObjectFloat_LastSumm.ValueData,0) - COALESCE (ObjectFloat_TotalSummPay.ValueData,0)) ::TFloat AS TotalDebt
+             , (COALESCE (ObjectFloat_TotalSumm.ValueData, 0) - COALESCE (ObjectFloat_TotalSummDiscount.ValueData, 0)) :: TFloat AS TotalSumm
+             , COALESCE (ObjectFloat_TotalSummPay.ValueData, 0) :: TFloat AS TotalSummPay
+             , (COALESCE (ObjectFloat_TotalSumm.ValueData, 0) - COALESCE (ObjectFloat_TotalSummDiscount.ValueData, 0) - COALESCE (ObjectFloat_TotalSummPay.ValueData, 0)) :: TFloat AS TotalDebt
              , ObjectFloat_DiscountTax.ValueData      AS DiscountTax
 
              , Object_From.Id                         AS FromId
@@ -158,10 +158,13 @@ BEGIN
                                   ON ObjectFloat_TotalSummPay.ObjectId = Object_From.Id 
                                  AND ObjectFloat_TotalSummPay.DescId = zc_ObjectFloat_Client_TotalSummPay()
 
-            LEFT JOIN ObjectFloat AS ObjectFloat_LastSumm 
-                                  ON ObjectFloat_LastSumm.ObjectId = Object_From.Id 
-                                 AND ObjectFloat_LastSumm.DescId = zc_ObjectFloat_Client_LastSumm()
-
+            LEFT JOIN ObjectFloat AS ObjectFloat_TotalSumm
+                                  ON ObjectFloat_TotalSumm.ObjectId = Object_From.Id
+                                 AND ObjectFloat_TotalSumm.DescId = zc_ObjectFloat_Client_TotalSumm()
+            LEFT JOIN ObjectFloat AS ObjectFloat_TotalSummDiscount
+                                  ON ObjectFloat_TotalSummDiscount.ObjectId = Object_From.Id
+                                 AND ObjectFloat_TotalSummDiscount.DescId = zc_ObjectFloat_Client_TotalSummDiscount()
+                                 
             LEFT JOIN ObjectDate AS ObjectDate_LastDate 
                                  ON ObjectDate_LastDate.ObjectId = Object_From.Id 
                                 AND ObjectDate_LastDate.DescId = zc_ObjectDate_Client_LastDate()

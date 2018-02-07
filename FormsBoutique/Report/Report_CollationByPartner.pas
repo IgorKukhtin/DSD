@@ -51,6 +51,7 @@ type
     SummIn: TcxGridDBColumn;
     Text_info: TcxGridDBColumn;
     dxBarButton2: TdxBarButton;
+    SummDebt: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -117,7 +117,7 @@ type
     bbactSetErasedCost: TdxBarButton;
     bbShowErasedCost: TdxBarButton;
     cxLabel5: TcxLabel;
-    edTotalLastSumm: TcxCurrencyEdit;
+    edTotalSumm: TcxCurrencyEdit;
     cxLabel6: TcxLabel;
     edTotalSummPay: TcxCurrencyEdit;
     cxLabel7: TcxLabel;

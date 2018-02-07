@@ -56,6 +56,7 @@ RETURNS TABLE (Text_info             TVarChar
              , SummChangePercent      TFloat
              , OperPriceList          TFloat
              , ChangePercent          TFloat
+             , SummDebt               TFloat
   )
 AS
 $BODY$
@@ -343,9 +344,10 @@ BEGIN
         , (tmpMI_Child.Amount_Bank * CASE WHEN MovementDesc.Id = zc_Movement_ReturnIn() THEN -1 ELSE 1 END)       :: TFloat AS TotalPay_Card
 
         --сумма скидки по % скидки док. продажи
-        , (CASE WHEN MovementDesc.Id = zc_Movement_Sale() THEN zfCalc_SummPriceList (tmpData.AmountIn, MIFloat_OperPriceList.ValueData) * COALESCE (MIFloat_ChangePercent.ValueData, 0)/100
-               WHEN MovementDesc.Id = zc_Movement_ReturnIn() THEN (-1) * zfCalc_SummPriceList (tmpData.AmountOut, MIFloat_OperPriceList.ValueData) * COALESCE (MIFloat_ChangePercent.ValueData, 0)/100
-           END)                                                     :: TFloat   AS SummChangePercent_Calc
+        , (zfCalc_SummPriceList ((tmpData.AmountIn+tmpData.AmountOut), MIFloat_OperPriceList.ValueData) * COALESCE (MIFloat_ChangePercent.ValueData, 0)/100 
+           * CASE WHEN MovementDesc.Id IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN 1
+                  WHEN MovementDesc.Id = zc_Movement_ReturnIn() THEN (-1) 
+             END)                                                   :: TFloat   AS SummChangePercent_Calc
         --Итого сумма Скидки (в ГРН)
         , (COALESCE (MIFloat_TotalChangePercent.ValueData, 0) * CASE WHEN MovementDesc.Id = zc_Movement_ReturnIn() THEN -1 ELSE 1 END)       :: TFloat   AS TotalChangePercent
         --Сумма дополнительной Скидки (в ГРН)
@@ -358,6 +360,14 @@ BEGIN
         -- % скидки из партии док. продажи
         , COALESCE (MIFloat_ChangePercent.ValueData, 0)             :: TFloat   AS ChangePercent
         
+        , (CASE WHEN tmpData.NumGroup = 2 THEN CASE WHEN MovementDesc.Id = zc_Movement_GoodsAccount() 
+                                                   THEN tmpData.SummOut 
+                                                   ELSE tmpData.SummIn
+                                              END
+               ELSE (tmpData.SummStart + tmpData.SummEnd)   
+          END  
+          - COALESCE (MIFloat_TotalPay.ValueData, 0) )              :: TFloat   AS SummDebt
+
    FROM tmpMIContainer_group AS tmpData
         LEFT JOIN Movement ON Movement.Id = tmpData.MovementId
         LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
@@ -412,6 +422,10 @@ BEGIN
         LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercentPay
                                     ON MIFloat_TotalChangePercentPay.MovementItemId = MI_PartionMI.Id
                                    AND MIFloat_TotalChangePercentPay.DescId         = zc_MIFloat_TotalChangePercentPay()
+        -- итого оплата грн
+        LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
+                                    ON MIFloat_TotalPay.MovementItemId = tmpData.MovementItemId
+                                   AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
       
         ;
  END;
