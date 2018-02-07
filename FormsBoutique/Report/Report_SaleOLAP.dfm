@@ -56,7 +56,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     object cxLabel4: TcxLabel
       Left = 232
       Top = 12
-      Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100':'
+      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
     end
     object edPartner: TcxButtonEdit
       Left = 301
@@ -70,7 +70,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Properties.ReadOnly = True
       Properties.UseNullString = True
       TabOrder = 5
-      Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+      Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
       Width = 208
     end
     object cxLabel3: TcxLabel
@@ -166,7 +166,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     TabOrder = 1
     object pvLabelName: TcxDBPivotGridField
       Area = faRow
-      AreaIndex = 1
+      AreaIndex = 0
       IsCaptionAssigned = True
       Caption = #1053#1072#1079#1074#1072#1085#1080#1077
       DataBinding.FieldName = 'LabelName'
@@ -178,7 +178,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     object pvPartnerName: TcxDBPivotGridField
       AreaIndex = 2
       IsCaptionAssigned = True
-      Caption = #1050#1083#1080#1077#1085#1090
+      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
       DataBinding.FieldName = 'PartnerName'
       Visible = True
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -297,7 +297,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvGoodsCode: TcxDBPivotGridField
       Area = faRow
-      AreaIndex = 0
+      AreaIndex = 1
       IsCaptionAssigned = True
       Caption = #1050#1086#1076
       DataBinding.FieldName = 'GoodsCode'
@@ -1436,10 +1436,10 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPartner
-    FormNameParam.Value = 'TClientForm'
+    FormNameParam.Value = 'TPartnerForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TClientForm'
+    FormName = 'TPartnerForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
