@@ -164,6 +164,8 @@ type
     cbMovementNotOne: TCheckBox;
     cbMINotTwo: TCheckBox;
     cbSelect_MovementItem_Sale_Sybase_Check: TCheckBox;
+    cbClientNew: TCheckBox;
+    cbPartnerNew: TCheckBox;
 
     procedure btnAddGuideId_PostgresClick(Sender: TObject);
     procedure btnAddlDocId_PostgresClick(Sender: TObject);
@@ -5289,6 +5291,7 @@ begin
         Add('from Unit inner join DiscountKlient on DiscountKlient.ClientId = Unit.id');
         Add('     left outer join Users on users.id = DiscountKlient.LastUserID');
         Add('where KindUnit = zc_kuClient()');
+        if cbClientNew.Checked then Add(' and Unit.Id_Postgres is null');
         Add('order by Unit.UnitName, ObjectId');
         Open;
         //
@@ -6667,6 +6670,7 @@ begin
         Add(' left outer join dba.Fabrika as Partner_parent_fabrika on Partner_parent_fabrika.Id =  Partner.FabrikaID');
         Add(' left outer join dba.Period as Partner_parent_Period on Partner_parent_Period.Id =  Partner.PeriodID');
         Add('where KindUnit = zc_kuIncome()');
+        if cbPartnerNew.Checked then Add(' and Partner.Id_Postgres is null');
         Add('order by ObjectId');
         Open;
         //

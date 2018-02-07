@@ -1,4 +1,4 @@
-sunit dsdOlap;
+unit dsdOlap;
 
 interface
 uses Classes, DB;

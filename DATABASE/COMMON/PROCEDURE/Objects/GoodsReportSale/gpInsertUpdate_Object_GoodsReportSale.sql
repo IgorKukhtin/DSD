@@ -22,7 +22,7 @@ BEGIN
      
      -- vbOperDate := '02.11.2017';
      -- vbOperDate := '08.11.2017';
-     vbOperDate := CURRENT_DATE;
+     vbOperDate := CURRENT_DATE - INTERVAL '1 DAY';
 
      -- !!!АШКН 8 медекэ!!!
      -- vbStartDate := (vbOperDate - INTERVAL '57 DAY') ::TDateTime;
