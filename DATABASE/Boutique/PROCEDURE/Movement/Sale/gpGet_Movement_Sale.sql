@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Sale(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , LastDate TDateTime, TotalLastSumm TFloat, TotalSummPay TFloat, TotalDebt TFloat
+             , LastDate TDateTime, TotalSumm TFloat, TotalSummPay TFloat, TotalDebt TFloat
              , DiscountTax TFloat
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
@@ -61,7 +61,7 @@ BEGIN
              , Object_Status.Name               AS StatusName
 
              , CAST (NULL AS TDateTime)         AS LastDate
-             , CAST (0 as TFloat)               AS TotalLastSumm
+             , CAST (0 as TFloat)               AS TotalSumm
              , CAST (0 as TFloat)               AS TotalSummPay
              , CAST (0 as TFloat)               AS TotalDebt
              , CAST (0 as TFloat)               AS DiscountTax
@@ -94,7 +94,7 @@ BEGIN
              , Object_Status.ValueData                AS StatusName
 
              , ObjectDate_LastDate.ValueData           AS LastDate
-             , (COALESCE (ObjectFloat_TotalSumm.ValueData, 0) - COALESCE (ObjectFloat_TotalSummDiscount.ValueData, 0)) :: TFloat AS TotalLastSumm
+             , (COALESCE (ObjectFloat_TotalSumm.ValueData, 0) - COALESCE (ObjectFloat_TotalSummDiscount.ValueData, 0)) :: TFloat AS TotalSumm
              , COALESCE (ObjectFloat_TotalSummPay.ValueData, 0) :: TFloat AS TotalSummPay
              , (COALESCE (ObjectFloat_TotalSumm.ValueData, 0) - COALESCE (ObjectFloat_TotalSummDiscount.ValueData, 0) - COALESCE (ObjectFloat_TotalSummPay.ValueData, 0)) :: TFloat AS TotalDebt
              , ObjectFloat_DiscountTax.ValueData      AS DiscountTax

@@ -46,6 +46,7 @@ BEGIN
               WHERE Object_MemberSP.DescId = zc_Object_MemberSP()
                 AND Object_MemberSP.ValueData = TRIM(inName)
                 AND OL_PartnerMedical.ChildObjectId = inPartnerMedicalId
+                AND Object_MemberSP.Id <> ioId
               )
    THEN
        RAISE EXCEPTION 'Ошибка.Значение <%> не уникально для справочника' , inName;

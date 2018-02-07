@@ -734,6 +734,17 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
             Options.Editing = False
             Width = 80
           end
+          object SummDebt: TcxGridDBColumn
+            Caption = #1044#1086#1083#1075', '#1075#1088#1085
+            DataBinding.FieldName = 'SummDebt'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end
@@ -1004,9 +1015,7 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
         item
           DataSet = MasterCDS
           UserName = 'frxDBDItems'
-          IndexFieldNames = 
-            'NumGroup;OperDate;MovementDescName;InvNumber;LabelName;GoodsSize' +
-            'Name'
+          IndexFieldNames = 'NumGroup;OperDate;PartionId;LabelName;GoodsSizeName'
         end>
       Params = <
         item
