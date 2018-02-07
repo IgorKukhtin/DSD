@@ -1,7 +1,7 @@
 -- Function: lpInsertUpdate_Movement_LoadPriceList_Contract()
 
 /*
-select * 
+select *
 , gpInsertUpdate_Object_ImportSettingsItems (ioId := Id, inName := '%EXTERNALPARAM%' , inImportSettingsId := ImportSettingsId, inImportTypeItemsId := ImportTypeItemsId , inDefaultValue := '' ,  inSession := '3')
 from gpSelect_Object_ImportSettingsItems(inImportSettingsId := 0 ,  inSession := '3')
 where ParamName = 'inAreaId'
@@ -67,10 +67,10 @@ BEGIN
                                                     INNER JOIN Object AS Object_JuridicalArea ON Object_JuridicalArea.Id       = ObjectLink_JuridicalArea_Juridical.ObjectId
                                                                                              AND Object_JuridicalArea.isErased = FALSE
                                                     -- INNER JOIN ObjectLink AS ObjectLink_JuridicalArea_Area
-                                                    --                       ON ObjectLink_JuridicalArea_Area.ObjectId      = Object_JuridicalArea.Id 
+                                                    --                       ON ObjectLink_JuridicalArea_Area.ObjectId      = Object_JuridicalArea.Id
                                                     --                      AND ObjectLink_JuridicalArea_Area.DescId        = zc_ObjectLink_JuridicalArea_Area()
                                                     --                      AND ObjectLink_JuridicalArea_Area.ChildObjectId > 0
-                                                                         
+
                                                WHERE ObjectLink_JuridicalArea_Juridical.ChildObjectId = inJuridicalId
                                                  AND ObjectLink_JuridicalArea_Juridical.DescId        = zc_ObjectLink_JuridicalArea_Juridical()
                                               ))
@@ -79,10 +79,10 @@ BEGIN
                                                     INNER JOIN Object AS Object_JuridicalArea ON Object_JuridicalArea.Id       = ObjectLink_JuridicalArea_Juridical.ObjectId
                                                                                              AND Object_JuridicalArea.isErased = FALSE
                                                     INNER JOIN ObjectLink AS ObjectLink_JuridicalArea_Area
-                                                                          ON ObjectLink_JuridicalArea_Area.ObjectId      = Object_JuridicalArea.Id 
+                                                                          ON ObjectLink_JuridicalArea_Area.ObjectId      = Object_JuridicalArea.Id
                                                                          AND ObjectLink_JuridicalArea_Area.DescId        = zc_ObjectLink_JuridicalArea_Area()
                                                                          AND ObjectLink_JuridicalArea_Area.ChildObjectId = inAreaId
-                                                                         
+
                                                WHERE ObjectLink_JuridicalArea_Juridical.ChildObjectId = inJuridicalId
                                                  AND ObjectLink_JuridicalArea_Juridical.DescId        = zc_ObjectLink_JuridicalArea_Juridical()
                                               ))
@@ -98,7 +98,7 @@ BEGIN
                                     INNER JOIN Object AS Object_JuridicalArea ON Object_JuridicalArea.Id       = ObjectLink_JuridicalArea_Juridical.ObjectId
                                                                              AND Object_JuridicalArea.isErased = FALSE
                                     LEFT JOIN ObjectLink AS ObjectLink_JuridicalArea_Area
-                                                         ON ObjectLink_JuridicalArea_Area.ObjectId      = Object_JuridicalArea.Id 
+                                                         ON ObjectLink_JuridicalArea_Area.ObjectId      = Object_JuridicalArea.Id
                                                         AND ObjectLink_JuridicalArea_Area.DescId        = zc_ObjectLink_JuridicalArea_Area()
                                     LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_JuridicalArea_Area.ChildObjectId
                                WHERE ObjectLink_JuridicalArea_Juridical.ChildObjectId = inJuridicalId
@@ -111,21 +111,21 @@ BEGIN
 
     -- определяется AreaId - для поиска товара только для Региона
     vbAreaId_find:= CASE WHEN EXISTS (SELECT 1
-                                 FROM ObjectLink AS ObjectLink_JuridicalArea_Juridical
-                                      INNER JOIN Object AS Object_JuridicalArea ON Object_JuridicalArea.Id       = ObjectLink_JuridicalArea_Juridical.ObjectId
-                                                                               AND Object_JuridicalArea.isErased = FALSE
-                                      INNER JOIN ObjectLink AS ObjectLink_JuridicalArea_Area
-                                                            ON ObjectLink_JuridicalArea_Area.ObjectId      = Object_JuridicalArea.Id 
-                                                           AND ObjectLink_JuridicalArea_Area.DescId        = zc_ObjectLink_JuridicalArea_Area()
-                                                           AND ObjectLink_JuridicalArea_Area.ChildObjectId = inAreaId
-                                      -- Уникальный код поставщика ТОЛЬКО для Региона
-                                      INNER JOIN ObjectBoolean AS ObjectBoolean_JuridicalArea_GoodsCode
-                                                               ON ObjectBoolean_JuridicalArea_GoodsCode.ObjectId  = Object_JuridicalArea.Id 
-                                                              AND ObjectBoolean_JuridicalArea_GoodsCode.DescId    = zc_ObjectBoolean_JuridicalArea_GoodsCode()
-                                                              AND ObjectBoolean_JuridicalArea_GoodsCode.ValueData = TRUE
-                                 WHERE ObjectLink_JuridicalArea_Juridical.ChildObjectId = inJuridicalId
-                                   AND ObjectLink_JuridicalArea_Juridical.DescId        = zc_ObjectLink_JuridicalArea_Juridical()
-                                ) 
+                                      FROM ObjectLink AS ObjectLink_JuridicalArea_Juridical
+                                           INNER JOIN Object AS Object_JuridicalArea ON Object_JuridicalArea.Id       = ObjectLink_JuridicalArea_Juridical.ObjectId
+                                                                                    AND Object_JuridicalArea.isErased = FALSE
+                                           INNER JOIN ObjectLink AS ObjectLink_JuridicalArea_Area
+                                                                 ON ObjectLink_JuridicalArea_Area.ObjectId      = Object_JuridicalArea.Id
+                                                                AND ObjectLink_JuridicalArea_Area.DescId        = zc_ObjectLink_JuridicalArea_Area()
+                                                                AND ObjectLink_JuridicalArea_Area.ChildObjectId = inAreaId
+                                           -- Уникальный код поставщика ТОЛЬКО для Региона
+                                           INNER JOIN ObjectBoolean AS ObjectBoolean_JuridicalArea_GoodsCode
+                                                                    ON ObjectBoolean_JuridicalArea_GoodsCode.ObjectId  = Object_JuridicalArea.Id
+                                                                   AND ObjectBoolean_JuridicalArea_GoodsCode.DescId    = zc_ObjectBoolean_JuridicalArea_GoodsCode()
+                                                                   AND ObjectBoolean_JuridicalArea_GoodsCode.ValueData = TRUE
+                                      WHERE ObjectLink_JuridicalArea_Juridical.ChildObjectId = inJuridicalId
+                                        AND ObjectLink_JuridicalArea_Juridical.DescId        = zc_ObjectLink_JuridicalArea_Juridical()
+                                     )
                     THEN inAreaId
                     ELSE 0
                END;
@@ -156,38 +156,42 @@ BEGIN
     -- Ищем по общему коду
     IF COALESCE (vbGoodsId, 0) = 0 AND inCommonCode > 0
     THEN
-      SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId
-           , tmp.isSpecCondition
-             INTO vbGoodsId, vbIsSpecCondition
-      FROM Object AS Object_Goods
-           INNER JOIN ObjectLink AS ObjectLink_Goods_Object
-                                 ON ObjectLink_Goods_Object.ObjectId      = Object_Goods.Id
-                                AND ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
-                                AND ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_Marion()
-           INNER JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
-                                 ON ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods.Id
-                                AND ObjectLink_LinkGoods_Goods.DescId        = zc_ObjectLink_LinkGoods_Goods()
-           INNER JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
-                                 ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
-                                AND ObjectLink_LinkGoods_GoodsMain.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-             LEFT JOIN (SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId
-                             , ObjectBoolean_Goods_SpecCondition.ValueData  AS isSpecCondition
-                        FROM ObjectLink AS ObjectLink_Goods_Object
-                             JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
-                                             ON ObjectLink_LinkGoods_Goods.ChildObjectId = ObjectLink_Goods_Object.ObjectId
-                                            AND ObjectLink_LinkGoods_Goods.DescId        = zc_ObjectLink_LinkGoods_Goods()
-                             JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
-                                             ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
-                                            AND ObjectLink_LinkGoods_GoodsMain.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-                             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SpecCondition
-                                                     ON ObjectBoolean_Goods_SpecCondition.ObjectId = ObjectLink_Goods_Object.ObjectId
-                                                    AND ObjectBoolean_Goods_SpecCondition.DescId = zc_ObjectBoolean_Goods_SpecCondition()
-                        WHERE ObjectLink_Goods_Object.ChildObjectId = inJuridicalId
-                          AND ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
-                       ) AS tmp ON tmp.GoodsId = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
-
-      WHERE Object_Goods.ObjectCode = inCommonCode
-        AND Object_Goods.DescId = zc_Object_Goods();
+        SELECT tmpGoods.GoodsId
+             , tmpGoods.isSpecCondition
+               INTO vbGoodsId, vbIsSpecCondition
+        FROM (WITH tmp AS (SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId
+                                , ObjectBoolean_Goods_SpecCondition.ValueData  AS isSpecCondition
+                           FROM ObjectLink AS ObjectLink_Goods_Object
+                                JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                                ON ObjectLink_LinkGoods_Goods.ChildObjectId = ObjectLink_Goods_Object.ObjectId
+                                               AND ObjectLink_LinkGoods_Goods.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                                                ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
+                                               AND ObjectLink_LinkGoods_GoodsMain.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SpecCondition
+                                                        ON ObjectBoolean_Goods_SpecCondition.ObjectId = ObjectLink_Goods_Object.ObjectId
+                                                       AND ObjectBoolean_Goods_SpecCondition.DescId = zc_ObjectBoolean_Goods_SpecCondition()
+                           WHERE ObjectLink_Goods_Object.ChildObjectId = inJuridicalId
+                             AND ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
+                          )
+              SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId
+                   , tmp.isSpecCondition
+              FROM Object AS Object_Goods
+                   INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                         ON ObjectLink_Goods_Object.ObjectId      = Object_Goods.Id
+                                        AND ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
+                                        AND ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_Marion()
+                   INNER JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                         ON ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods.Id
+                                        AND ObjectLink_LinkGoods_Goods.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                   INNER JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                                         ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
+                                        AND ObjectLink_LinkGoods_GoodsMain.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                   LEFT JOIN tmp ON tmp.GoodsId = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
+              WHERE Object_Goods.ObjectCode = inCommonCode
+                AND Object_Goods.DescId = zc_Object_Goods()
+             ) AS tmpGoods
+             ;
 
     END IF;
 

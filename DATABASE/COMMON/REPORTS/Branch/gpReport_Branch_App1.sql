@@ -584,7 +584,7 @@ BEGIN
                         , CAST (SUM (tmpGoodsSumm.SummSendOnPriceOut) AS NUMERIC (16, 2)) AS SummSendOnPriceOut  
                         , CAST (SUM (tmpGoodsSumm.SummPeresortIn) AS NUMERIC (16, 2))     AS SummPeresortIn    
                         , CAST (SUM (tmpGoodsSumm.SummPeresortOut) AS NUMERIC (16, 2))    AS SummPeresortOut    
-                        , CAST (SUM (tmpGoodsSumm.SummInventory) AS NUMERIC (16, 2))  AS SummInventory
+                        , CAST (-1 * SUM (tmpGoodsSumm.SummInventory) AS NUMERIC (16, 2))  AS SummInventory
                         , CAST (SUM (tmpGoodsSumm.SummSale_40208) AS NUMERIC (16, 2)) AS SummSale_40208
                         , CAST (SUM (tmpGoodsSumm.SummSale_10500) AS NUMERIC (16, 2)) AS SummSale_10500
                         , CAST (SUM (tmpGoodsSumm.SummSale_10200) AS NUMERIC (16, 2)) AS SummSale_10200
@@ -599,7 +599,7 @@ BEGIN
                         , CAST (SUM (tmpGoodsSumm.SummPeresortOut_Vz) AS NUMERIC (16, 2))    AS SummPeresortOut_Vz  
                         , CAST (SUM (tmpGoodsSumm.SummSendOnPriceOut_Vz) AS NUMERIC (16, 2)) AS SummSendOnPriceOut_Vz  
                         , CAST (SUM (tmpGoodsSumm.SummLoss_Vz) AS NUMERIC (16, 2))           AS SummLoss_Vz
-                        , CAST (SUM (tmpGoodsSumm.SummInventory_Vz) AS NUMERIC (16, 2))      AS SummInventory_Vz
+                        , CAST (-1 * SUM (tmpGoodsSumm.SummInventory_Vz) AS NUMERIC (16, 2))      AS SummInventory_Vz
                         , CAST (SUM (tmpGoodsSumm.SummInventory_RePrice_Vz) AS NUMERIC (16, 2)) AS SummInventory_RePrice_Vz
                         , 0 AS CountStart
                         , 0 AS CountEnd
@@ -717,4 +717,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Branch_App1 (inStartDate:= '01.02.2016'::TDateTime, inEndDate:= '29.02.2016'::TDateTime, inBranchId:= 8374, inSession:= zfCalc_UserAdmin()) -- филиал Одесса
+-- SELECT * FROM gpReport_Branch_App1 (inStartDate:= '01.02.2018'::TDateTime, inEndDate:= '28.02.2018'::TDateTime, inBranchId:= 8374, inSession:= zfCalc_UserAdmin()) -- филиал Одесса
