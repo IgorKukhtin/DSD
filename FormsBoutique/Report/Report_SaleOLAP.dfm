@@ -162,45 +162,21 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     Align = alClient
     DataSource = DataSource
     Groups = <>
+    OptionsView.RowGrandTotalWidth = 190
     TabOrder = 1
     object pvLabelName: TcxDBPivotGridField
       Area = faRow
-      AreaIndex = 0
+      AreaIndex = 1
       IsCaptionAssigned = True
       Caption = #1053#1072#1079#1074#1072#1085#1080#1077
       DataBinding.FieldName = 'LabelName'
+      MinWidth = 40
       Visible = True
+      Width = 700
       UniqueName = #1040'-'#1055
     end
-    object pvGoodsName: TcxDBPivotGridField
-      Area = faRow
-      AreaIndex = 1
-      IsCaptionAssigned = True
-      Caption = #1040#1088#1090#1080#1082#1091#1083
-      DataBinding.FieldName = 'GoodsName'
-      Visible = True
-      UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
-    end
-    object pvGoodsInfoName: TcxDBPivotGridField
-      Area = faRow
-      AreaIndex = 2
-      IsCaptionAssigned = True
-      Caption = #1057#1095#1077#1090' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
-      DataBinding.FieldName = 'GoodsInfoName'
-      Visible = True
-      UniqueName = #1057#1095#1077#1090' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
-    end
-    object pvGoodsSizeName: TcxDBPivotGridField
-      Area = faRow
-      AreaIndex = 3
-      IsCaptionAssigned = True
-      Caption = #1056#1072#1079#1084#1077#1088
-      DataBinding.FieldName = 'GoodsSizeName'
-      Visible = True
-      UniqueName = #1057#1095#1077#1090' - '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
-    end
     object pvPartnerName: TcxDBPivotGridField
-      AreaIndex = 0
+      AreaIndex = 2
       IsCaptionAssigned = True
       Caption = #1050#1083#1080#1077#1085#1090
       DataBinding.FieldName = 'PartnerName'
@@ -208,7 +184,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
     object pvBrandName: TcxDBPivotGridField
-      AreaIndex = 1
+      AreaIndex = 3
       IsCaptionAssigned = True
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
       DataBinding.FieldName = 'BrandName'
@@ -216,12 +192,117 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvPeriodName: TcxDBPivotGridField
-      AreaIndex = 2
+      AreaIndex = 4
       IsCaptionAssigned = True
       Caption = #1057#1077#1079#1086#1085
       DataBinding.FieldName = 'PeriodName'
       Visible = True
       UniqueName = #1069#1083#1077#1084#1077#1085#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
+    end
+    object pvGoodsName: TcxDBPivotGridField
+      AreaIndex = 8
+      IsCaptionAssigned = True
+      Caption = #1040#1088#1090#1080#1082#1091#1083
+      DataBinding.FieldName = 'GoodsName'
+      Visible = True
+      UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
+    end
+    object pvGoodsInfoName: TcxDBPivotGridField
+      AreaIndex = 9
+      IsCaptionAssigned = True
+      Caption = #1054#1087#1080#1089#1072#1085#1080#1077
+      DataBinding.FieldName = 'GoodsInfoName'
+      Visible = True
+      UniqueName = #1057#1095#1077#1090' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+    end
+    object pvGoodsSizeName: TcxDBPivotGridField
+      AreaIndex = 10
+      IsCaptionAssigned = True
+      Caption = #1056#1072#1079#1084#1077#1088
+      DataBinding.FieldName = 'GoodsSizeName'
+      Visible = True
+      UniqueName = #1057#1095#1077#1090' - '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+    end
+    object pvPeriodYearName: TcxDBPivotGridField
+      AreaIndex = 5
+      IsCaptionAssigned = True
+      Caption = #1043#1086#1076
+      DataBinding.FieldName = 'PeriodYearName'
+      Visible = True
+      UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    end
+    object pvGoodsGroupName_all: TcxDBPivotGridField
+      AreaIndex = 6
+      IsCaptionAssigned = True
+      Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+      DataBinding.FieldName = 'GoodsGroupName_all'
+      Visible = True
+      UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    end
+    object pvGoodsGroupName: TcxDBPivotGridField
+      AreaIndex = 7
+      IsCaptionAssigned = True
+      Caption = #1043#1088#1091#1087#1087#1072
+      DataBinding.FieldName = 'GoodsGroupName'
+      Visible = True
+      UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    end
+    object pvCompositionGroupName: TcxDBPivotGridField
+      AreaIndex = 11
+      IsCaptionAssigned = True
+      Caption = #1043#1088#1091#1087#1087#1072' '#1089#1086#1089#1090#1072#1074#1072
+      DataBinding.FieldName = 'CompositionGroupName'
+      Visible = True
+      UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    end
+    object pvCompositionName: TcxDBPivotGridField
+      AreaIndex = 12
+      IsCaptionAssigned = True
+      Caption = #1057#1086#1089#1090#1072#1074
+      DataBinding.FieldName = 'CompositionName'
+      Visible = True
+      UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    end
+    object pvUnitName: TcxDBPivotGridField
+      AreaIndex = 0
+      IsCaptionAssigned = True
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      DataBinding.FieldName = 'UnitName'
+      Visible = True
+      UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    end
+    object pvUnitName_In: TcxDBPivotGridField
+      AreaIndex = 1
+      IsCaptionAssigned = True
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1087#1088#1080#1093#1086#1076#1072
+      DataBinding.FieldName = 'UnitName_In'
+      Visible = True
+      UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    end
+    object pvLineFabricaName: TcxDBPivotGridField
+      AreaIndex = 13
+      IsCaptionAssigned = True
+      Caption = #1051#1080#1085#1080#1103
+      DataBinding.FieldName = 'LineFabricaName'
+      Visible = True
+      UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    end
+    object pvFabricaName: TcxDBPivotGridField
+      AreaIndex = 14
+      IsCaptionAssigned = True
+      Caption = #1060#1072#1073#1088#1080#1082#1072
+      DataBinding.FieldName = 'FabricaName'
+      Visible = True
+      UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    end
+    object pvGoodsCode: TcxDBPivotGridField
+      Area = faRow
+      AreaIndex = 0
+      IsCaptionAssigned = True
+      Caption = #1050#1086#1076
+      DataBinding.FieldName = 'GoodsCode'
+      Visible = True
+      UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
     object pvSale_Amount: TcxDBPivotGridField
       Area = faData
@@ -441,11 +522,12 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
   end
   object cbTotal: TcxCheckBox
-    Left = 134
-    Top = 179
+    Left = 904
+    Top = 132
     Caption = 'C'#1075#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100
     Properties.ReadOnly = False
     TabOrder = 6
+    Visible = False
     Width = 101
   end
   object DataSource: TDataSource
@@ -599,17 +681,19 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
+      UnclickAfterDoing = False
     end
     object bbPrint2: TdxBarButton
       Action = actPrint2
       Category = 0
       ImageIndex = 16
+      UnclickAfterDoing = False
     end
     object bb: TdxBarControlContainerItem
       Caption = 'New Item'
       Category = 0
       Hint = 'New Item'
-      Visible = ivAlways
+      Visible = ivNever
       Control = cbTotal
     end
   end
@@ -769,8 +853,8 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_SalesOLAPDialogForm'
-      FormNameParam.Value = 'TReport_SalesOLAPDialogForm'
+      FormName = 'TReport_SaleOLAPDialogForm'
+      FormNameParam.Value = 'TReport_SaleOLAPDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1113,14 +1197,14 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     Top = 288
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 448
-    Top = 104
+    Left = 536
+    Top = 32
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 632
-    Top = 88
+    Left = 808
+    Top = 144
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -1129,6 +1213,27 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     ComponentList = <
       item
         Component = PeriodChoice
+      end
+      item
+        Component = GuidesPartner
+      end
+      item
+        Component = GuidesBrand
+      end
+      item
+        Component = GuidesPeriod
+      end
+      item
+        Component = edPeriodYearStart
+      end
+      item
+        Component = edPeriodYearEnd
+      end
+      item
+        Component = cbSize
+      end
+      item
+        Component = cbGoods
       end>
     Left = 720
     Top = 120

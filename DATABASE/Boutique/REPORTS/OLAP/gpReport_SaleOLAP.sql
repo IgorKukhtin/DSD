@@ -1,6 +1,4 @@
 -- Function:  gpReport_SalesOLAP()
-
-DROP FUNCTION IF EXISTS gpReport_SalesOLAP (TDateTime, TDateTime, Integer, Integer, Integer, TFloat, TFloat, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_SaleOLAP (TDateTime, TDateTime, Integer, Integer, Integer, TFloat, TFloat, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_SaleOLAP (
@@ -134,7 +132,6 @@ BEGIN
                             , SoldTable.OperDate
                             , SoldTable.UnitId
                             , SoldTable.UnitId_in
-limit 1000
                      )
 
         -- результат
