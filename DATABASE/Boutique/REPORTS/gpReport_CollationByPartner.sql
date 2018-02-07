@@ -95,6 +95,7 @@ BEGIN
                           LEFT JOIN ContainerLinkObject AS CLO_PartionMI 
                                                         ON CLO_PartionMI.ContainerId = Container.Id
                                                        AND CLO_PartionMI.DescId      = zc_ContainerLinkObject_PartionMI()
+                      -- !!!кроме ѕокупатели + ѕрибыль будущих периодов!!!
                       WHERE Container.ObjectId <> zc_Enum_Account_20102()                          
                     )
   -- прив€зываем движение за выбранный период
