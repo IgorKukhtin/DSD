@@ -275,7 +275,9 @@ uses
   Report_GoodsAccount_TotalError in '..\..\FormsBoutique\Report\Report_GoodsAccount_TotalError.pas' {Report_GoodsAccount_TotalErrorForm: TParentForm},
   Report_CollationByPartnerDialog in '..\..\FormsBoutique\Report\Report_CollationByPartnerDialog.pas' {Report_CollationByPartnerDialogForm: TParentForm},
   Report_CollationByPartner in '..\..\FormsBoutique\Report\Report_CollationByPartner.pas' {Report_CollationByPartnerForm: TParentForm},
-  Unit_Dialog in '..\..\FormsBoutique\Guides\Unit_Dialog.pas' {Unit_DialogForm: TParentForm};
+  Unit_Dialog in '..\..\FormsBoutique\Guides\Unit_Dialog.pas' {Unit_DialogForm: TParentForm},
+  Report_SaleOLAPDialog in '..\..\FormsBoutique\Report\Report_SaleOLAPDialog.pas' {Report_SaleOLAPDialogForm: TParentForm},
+  Report_SaleOLAP in '..\..\FormsBoutique\Report\Report_SaleOLAP.pas' {Report_SaleOLAPForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

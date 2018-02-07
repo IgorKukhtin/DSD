@@ -186,8 +186,8 @@ type
     miReport_Sale_ContainerError: TMenuItem;
     actReport_CollationByPartner: TdsdOpenForm;
     miReport_CollationByPartner: TMenuItem;
-    actReport_SaleOLAP: TAction;
     miReport_SaleOLAP: TMenuItem;
+    actReport_SaleOLAP: TdsdOpenForm;
   private
     { Private declarations }
   public
