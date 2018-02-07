@@ -65,7 +65,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
   object cxLabel4: TcxLabel
     Left = 34
     Top = 90
-    Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100':'
+    Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
   end
   object edPartner: TcxButtonEdit
     Left = 34
@@ -79,7 +79,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     Properties.ReadOnly = True
     Properties.UseNullString = True
     TabOrder = 7
-    Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+    Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
     Width = 306
   end
   object cxLabel1: TcxLabel
@@ -292,10 +292,10 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPartner
-    FormNameParam.Value = 'TClientForm'
+    FormNameParam.Value = 'TPartnerForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TClientForm'
+    FormName = 'TPartnerForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
