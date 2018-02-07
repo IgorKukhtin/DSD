@@ -17,15 +17,15 @@ type
     actRole: TdsdOpenForm;
     miUser: TMenuItem;
     miRole: TMenuItem;
-    N20: TMenuItem;
+    miGuide_Basis: TMenuItem;
     miAccountGroup: TMenuItem;
     miAccountDirection: TMenuItem;
     miAccount: TMenuItem;
-    N24: TMenuItem;
+    miLine8001: TMenuItem;
     miInfoMoneyGroup: TMenuItem;
     miInfoMoneyDestination: TMenuItem;
     miInfoMoney: TMenuItem;
-    N28: TMenuItem;
+    miLine8002: TMenuItem;
     miProfitLossGroup: TMenuItem;
     miProfitLossDirection: TMenuItem;
     miProfitLoss: TMenuItem;
@@ -88,7 +88,7 @@ type
     actPersonal: TdsdOpenForm;
     miPersonal: TMenuItem;
     actIncome: TdsdOpenForm;
-    N44: TMenuItem;
+    miMovement: TMenuItem;
     miIncome: TMenuItem;
     actReturnOut: TdsdOpenForm;
     miReturnOut: TMenuItem;
@@ -115,7 +115,7 @@ type
     actSale: TdsdOpenForm;
     miSale: TMenuItem;
     actBankAccount: TdsdOpenForm;
-    N57: TMenuItem;
+    miBankAccount: TMenuItem;
     actReturnIn: TdsdOpenForm;
     miReturnIn: TMenuItem;
     actGoodsAccount: TdsdOpenForm;
@@ -132,12 +132,12 @@ type
     actReport_Balance: TdsdOpenForm;
     actReport_ProfitLoss: TdsdOpenForm;
     actReport_Cash: TdsdOpenForm;
-    N49: TMenuItem;
+    miFinance: TMenuItem;
     miLine11: TMenuItem;
     miLine31: TMenuItem;
-    N45: TMenuItem;
+    miReport_Basis: TMenuItem;
     miReport_Balance: TMenuItem;
-    N46: TMenuItem;
+    miReport_Finance: TMenuItem;
     miReport_Cash: TMenuItem;
     miReport_ProfitLoss: TMenuItem;
     miGoodsAll: TMenuItem;
@@ -147,7 +147,7 @@ type
     miLine73: TMenuItem;
     miLine74: TMenuItem;
     actReport_Goods_RemainsCurrent: TdsdOpenForm;
-    N6: TMenuItem;
+    miLine41: TMenuItem;
     miReport_Goods_RemainsCurrent: TMenuItem;
     actReport_Goods: TdsdOpenForm;
     miReport_Goods: TMenuItem;
@@ -157,7 +157,7 @@ type
     miReport_SaleReturnIn: TMenuItem;
     actReport_PartnerDebt: TdsdOpenForm;
     miReport_PartnerDebt: TMenuItem;
-    N58: TMenuItem;
+    miLine51: TMenuItem;
     actGoodsAccount_ReturnIn: TdsdOpenForm;
     miGoodsAccount_ReturnIn: TMenuItem;
     actGoodsPrint: TdsdOpenForm;
@@ -172,7 +172,7 @@ type
     miSaleMovement: TMenuItem;
     actReport_GoodsAccount_TotalError: TdsdOpenForm;
     miTotalError: TMenuItem;
-    N4: TMenuItem;
+    miLine803: TMenuItem;
     miGoodsAccount_TotalError: TMenuItem;
     actReport_ReturnIn_TotalError: TdsdOpenForm;
     miReturnIn_TotalError: TMenuItem;
@@ -183,9 +183,11 @@ type
     actReport_Client_LastError: TdsdOpenForm;
     miObject_Client_LastError: TMenuItem;
     actReport_Sale_ContainerError: TdsdOpenForm;
-    N1: TMenuItem;
+    miReport_Sale_ContainerError: TMenuItem;
     actReport_CollationByPartner: TdsdOpenForm;
     miReport_CollationByPartner: TMenuItem;
+    actReport_SaleOLAP: TAction;
+    miReport_SaleOLAP: TMenuItem;
   private
     { Private declarations }
   public
@@ -196,9 +198,7 @@ var
   MainFormInstance: TMainForm;
 
 implementation
-uses // UploadUnloadData,
- Dialogs, Forms, SysUtils, IdGlobal
-// , RepriceUnit
+uses Dialogs, Forms, SysUtils, IdGlobal
  ;
 {$R *.dfm}
 

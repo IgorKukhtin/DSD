@@ -2259,7 +2259,7 @@ inherited MainForm: TMainForm
   inherited MainMenu: TMainMenu
     Left = 488
     Top = 88
-    inherited miGuides: TMenuItem
+    inherited miGuide: TMenuItem
       object miCommon: TMenuItem
         Action = actGoods
       end
@@ -2779,7 +2779,7 @@ inherited MainForm: TMainForm
       end
     end
     inherited miService: TMenuItem
-      inherited N221: TMenuItem
+      inherited miServiceGuide: TMenuItem
         object miNDSKind: TMenuItem [0]
           Action = actNDSKind
         end

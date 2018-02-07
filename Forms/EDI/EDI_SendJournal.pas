@@ -28,6 +28,7 @@ type
     UpdateDate: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     OperDatePartner_Parent: TcxGridDBColumn;
+    RetailName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -474,7 +474,7 @@ object OLAPSetupForm: TOLAPSetupForm
         object deStart: TcxDateEdit
           Left = 536
           Top = 3
-          EditValue = 42370d
+          EditValue = 43101d
           Properties.SaveTime = False
           Properties.ShowTime = False
           TabOrder = 15
@@ -488,7 +488,7 @@ object OLAPSetupForm: TOLAPSetupForm
         object deEnd: TcxDateEdit
           Left = 739
           Top = 3
-          EditValue = 42370d
+          EditValue = 43101d
           Properties.SaveTime = False
           Properties.ShowTime = False
           TabOrder = 17

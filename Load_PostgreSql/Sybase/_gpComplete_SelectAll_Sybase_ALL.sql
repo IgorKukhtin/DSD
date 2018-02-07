@@ -16,8 +16,12 @@ BEGIN
 
 -- inIsBefoHistoryCost:= TRUE;
 
-     /*IF inIsBefoHistoryCost = TRUE
-     THEN 
+     -- !!!бпелеммн!!!
+     /*IF inStartDate >= '01.02.2018' THEN 
+          return;
+     END IF;*/
+
+     /*IF inIsBefoHistoryCost = TRUE THEN 
           return;
      END IF;*/
 

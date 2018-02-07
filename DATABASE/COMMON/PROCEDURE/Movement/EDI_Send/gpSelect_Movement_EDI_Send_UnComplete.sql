@@ -9,7 +9,7 @@ RETURNS TABLE (Id Integer, MovementId Integer
              , isEdiOrdspr Boolean, isEdiInvoice Boolean, isEdiDesadv Boolean
              , InvNumber TVarChar, OperDate TDateTime, UpdateDate TDateTime, OperDatePartner TDateTime
              , InvNumber_Parent TVarChar, OperDate_Parent TDateTime
-             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, RetailName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , JuridicalName_To TVarChar
              , StatusCode Integer, StatusName TVarChar
@@ -38,6 +38,7 @@ BEGIN
                , Object_From.ValueData             		AS FromName
                , Object_To.Id                      		AS ToId
                , Object_To.ValueData               		AS ToName
+               , Object_Retail.ValueData                        AS RetailName
                , Object_PaidKind.Id                		AS PaidKindId
                , Object_PaidKind.ValueData         		AS PaidKindName
                , Object_JuridicalTo.ValueData                   AS JuridicalName_To
@@ -92,10 +93,23 @@ BEGIN
                                     AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                 LEFT JOIN Object AS Object_JuridicalTo ON Object_JuridicalTo.Id = ObjectLink_Partner_Juridical.ChildObjectId
 
+                LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                     ON ObjectLink_Juridical_Retail.ObjectId = Object_JuridicalTo.Id
+                                    AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
+                LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
            WHERE Movement.DescId   = zc_Movement_EDI_Send()
              AND Movement.StatusId = zc_Enum_Status_UnComplete()
-             AND Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '125 MIN'
-             AND COALESCE (MovementDate_Update.ValueData, zc_DateStart()) < CURRENT_TIMESTAMP - INTERVAL '125 MIN'
+             AND ((Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '55 MIN'
+              AND COALESCE (MovementDate_Update.ValueData, zc_DateStart()) < CURRENT_TIMESTAMP - INTERVAL '55 MIN'
+                  )
+              -- Этих Отправляем Сразу
+              OR (Object_Retail.Id IN (310855 -- !!!Варус!!!
+                                     -- , 310846 -- !!!ВК!!!
+                                      )
+              AND Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '1 MIN'
+              AND COALESCE (MovementDate_Update.ValueData, zc_DateStart()) < CURRENT_TIMESTAMP - INTERVAL '1 MIN'
+                 ))
            ORDER BY COALESCE (MovementDate_Update.ValueData, Movement.OperDate)
           ;
 

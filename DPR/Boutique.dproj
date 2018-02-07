@@ -187,6 +187,15 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201009.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201209.pas"/>
+			<DCCReference Include="..\FormsBoutique\Report\OLAP\OLAPSales.pas">
+				<Form>OLAPSalesForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\FormsBoutique\Report\OLAP\dsdOLAPSetup.pas">
+				<Form>OLAPSetupForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdOlap.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdOLAPXMLBind.pas"/>
+			<DCCReference Include="..\SOURCE\GridGroupCalculate.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

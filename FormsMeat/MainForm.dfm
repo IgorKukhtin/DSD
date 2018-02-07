@@ -5,7 +5,7 @@ inherited MainForm: TMainForm
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 260
+  ExplicitHeight = 257
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -6929,7 +6929,7 @@ inherited MainForm: TMainForm
         Action = actReport_Branch_Cash
       end
     end
-    inherited miGuides: TMenuItem
+    inherited miGuide: TMenuItem
       object miBusiness: TMenuItem
         Action = actBusiness
       end
@@ -7257,7 +7257,7 @@ inherited MainForm: TMainForm
       end
     end
     inherited miService: TMenuItem
-      inherited N221: TMenuItem
+      inherited miServiceGuide: TMenuItem
         object miAction: TMenuItem [0]
           Action = actAction
         end
@@ -7420,7 +7420,7 @@ inherited MainForm: TMainForm
       object N90: TMenuItem [17]
         Action = actForms
       end
-      inherited N116: TMenuItem
+      inherited miProtocolAll: TMenuItem
         inherited miUserProtocol: TMenuItem [0]
         end
         object N76: TMenuItem [1]

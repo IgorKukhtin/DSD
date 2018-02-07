@@ -294,21 +294,21 @@ object AncestorMainForm: TAncestorMainForm
     Images = dmMain.ImageList
     Left = 496
     Top = 56
-    object miGuides: TMenuItem
+    object miGuide: TMenuItem
       Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
     end
     object miService: TMenuItem
       Caption = #1057#1083#1091#1078#1077#1073#1085#1099#1077
-      object N221: TMenuItem
+      object miServiceGuide: TMenuItem
         Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
         object miMovementDesc: TMenuItem
           Action = actMovementDesc
         end
       end
-      object N2: TMenuItem
+      object miLine801: TMenuItem
         Caption = '-'
       end
-      object N116: TMenuItem
+      object miProtocolAll: TMenuItem
         Caption = #1055#1088#1086#1090#1086#1082#1086#1083
         object miProtocol: TMenuItem
           Action = actProtocol
@@ -321,7 +321,7 @@ object AncestorMainForm: TAncestorMainForm
           Action = actProtocolUser
         end
       end
-      object N3: TMenuItem
+      object miLine802: TMenuItem
         Caption = '-'
       end
       object miLookAndFillSettings: TMenuItem

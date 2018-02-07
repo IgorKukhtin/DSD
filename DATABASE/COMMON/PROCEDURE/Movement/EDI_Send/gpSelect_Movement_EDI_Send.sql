@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, ParentId Integer
              , isEdiOrdspr Boolean, isEdiInvoice Boolean, isEdiDesadv Boolean
              , InvNumber TVarChar, OperDate TDateTime, UpdateDate TDateTime, OperDatePartner TDateTime
              , InvNumber_Parent TVarChar, OperDate_Parent TDateTime, OperDatePartner_Parent TDateTime
-             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, RetailId Integer, RetailName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , JuridicalName_To TVarChar
              , StatusCode Integer, StatusName TVarChar
@@ -46,6 +46,8 @@ BEGIN
                , Object_From.ValueData             		AS FromName
                , Object_To.Id                      		AS ToId
                , Object_To.ValueData               		AS ToName
+               , Object_Retail.Id                               AS RetailId
+               , Object_Retail.ValueData                        AS RetailName
                , Object_PaidKind.Id                		AS PaidKindId
                , Object_PaidKind.ValueData         		AS PaidKindName
                , Object_JuridicalTo.ValueData                   AS JuridicalName_To
@@ -83,6 +85,9 @@ BEGIN
                                          AND MovementBoolean_EdiDesadv.DescId     = zc_MovementBoolean_EdiDesadv()
 
                 LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
+                LEFT JOIN MovementDate AS MovementDate_OperDatePartner_Parent
+                                       ON MovementDate_OperDatePartner_Parent.MovementId = Movement_Parent.Id
+                                      AND MovementDate_OperDatePartner_Parent.DescId = zc_MovementDate_OperDatePartner()
 
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                              ON MovementLinkObject_From.MovementId = Movement_Parent.Id
@@ -104,9 +109,10 @@ BEGIN
                                     AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                 LEFT JOIN Object AS Object_JuridicalTo ON Object_JuridicalTo.Id = ObjectLink_Partner_Juridical.ChildObjectId
 
-                LEFT JOIN MovementDate AS MovementDate_OperDatePartner_Parent
-                                       ON MovementDate_OperDatePartner_Parent.MovementId = Movement_Parent.Id
-                                      AND MovementDate_OperDatePartner_Parent.DescId = zc_MovementDate_OperDatePartner()
+                LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                     ON ObjectLink_Juridical_Retail.ObjectId = Object_JuridicalTo.Id
+                                    AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
+                LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
           ;
 
 END;

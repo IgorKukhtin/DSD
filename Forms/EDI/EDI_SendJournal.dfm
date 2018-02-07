@@ -3,24 +3,25 @@ inherited EDI_SendJournalForm: TEDI_SendJournalForm
   ClientHeight = 431
   ClientWidth = 941
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -168
   ExplicitWidth = 957
-  ExplicitHeight = 469
+  ExplicitHeight = 466
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 941
     Height = 374
     TabOrder = 3
-    ExplicitWidth = 916
+    ExplicitWidth = 941
+    ExplicitHeight = 374
     ClientRectBottom = 374
     ClientRectRight = 941
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 916
+      ExplicitWidth = 941
+      ExplicitHeight = 374
       inherited cxGrid: TcxGrid
         Width = 941
         Height = 374
-        ExplicitLeft = -3
-        ExplicitTop = 3
         ExplicitWidth = 941
         ExplicitHeight = 374
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -33,6 +34,7 @@ inherited EDI_SendJournalForm: TEDI_SendJournalForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -103,6 +105,14 @@ inherited EDI_SendJournalForm: TEDI_SendJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 160
+          end
+          object RetailName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object JuridicalName_To: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
@@ -181,7 +191,7 @@ inherited EDI_SendJournalForm: TEDI_SendJournalForm
   end
   inherited Panel: TPanel
     Width = 941
-    ExplicitWidth = 916
+    ExplicitWidth = 941
     inherited deStart: TcxDateEdit
       EditValue = 43101d
     end
@@ -200,6 +210,30 @@ inherited EDI_SendJournalForm: TEDI_SendJournalForm
   inherited ActionList: TActionList
     Left = 239
     Top = 290
+    inherited actUpdate: TdsdInsertUpdateAction
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+    end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>

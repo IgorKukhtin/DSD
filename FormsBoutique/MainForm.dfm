@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 723
   KeyPreview = True
   ExplicitWidth = 739
-  ExplicitHeight = 226
+  ExplicitHeight = 223
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -837,6 +837,10 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_SaleOLAP: TAction
+      Category = #1054#1090#1095#1077#1090#1099' ('#1059#1055')'
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' ('#1054#1051#1040#1055')'
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 152
@@ -870,7 +874,7 @@ inherited MainForm: TMainForm
   inherited MainMenu: TMainMenu
     Left = 272
     Top = 8
-    object N44: TMenuItem [0]
+    object miMovement: TMenuItem [0]
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       object miIncome: TMenuItem
         Action = actIncome
@@ -904,7 +908,7 @@ inherited MainForm: TMainForm
         Hint = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
       end
     end
-    object N49: TMenuItem [1]
+    object miFinance: TMenuItem [1]
       Caption = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       object miGoodsAccount: TMenuItem
         Action = actGoodsAccount
@@ -948,7 +952,7 @@ inherited MainForm: TMainForm
       object miReport_MovementLoss: TMenuItem
         Action = actReport_MovementLoss
       end
-      object N6: TMenuItem
+      object miLine41: TMenuItem
         Caption = '-'
       end
       object miReport_Goods_RemainsCurrent: TMenuItem
@@ -961,12 +965,12 @@ inherited MainForm: TMainForm
         Action = actReport_SaleReturnIn
       end
     end
-    object N46: TMenuItem [4]
+    object miReport_Finance: TMenuItem [4]
       Caption = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       object miReport_Cash: TMenuItem
         Action = actReport_Cash
       end
-      object N58: TMenuItem
+      object miLine51: TMenuItem
         Caption = '-'
       end
       object miReport_GoodsMI_Account: TMenuItem
@@ -982,7 +986,7 @@ inherited MainForm: TMainForm
         Action = actReport_CollationByPartner
       end
     end
-    object N45: TMenuItem [5]
+    object miReport_Basis: TMenuItem [5]
       Caption = #1054#1090#1095#1077#1090#1099' ('#1059#1055')'
       object miReport_Balance: TMenuItem
         Action = actReport_Balance
@@ -990,8 +994,11 @@ inherited MainForm: TMainForm
       object miReport_ProfitLoss: TMenuItem
         Action = actReport_ProfitLoss
       end
+      object miReport_SaleOLAP: TMenuItem
+        Action = actReport_SaleOLAP
+      end
     end
-    inherited miGuides: TMenuItem
+    inherited miGuide: TMenuItem
       object miGoodsAll: TMenuItem
         Caption = #1058#1086#1074#1072#1088#1099
         object mioodsTree: TMenuItem
@@ -1088,7 +1095,7 @@ inherited MainForm: TMainForm
       object miCash: TMenuItem
         Action = actCash
       end
-      object N57: TMenuItem
+      object miBankAccount: TMenuItem
         Action = actBankAccount
       end
       object miBank: TMenuItem
@@ -1111,7 +1118,7 @@ inherited MainForm: TMainForm
       end
     end
     inherited miService: TMenuItem
-      inherited N221: TMenuItem
+      inherited miServiceGuide: TMenuItem
         object miForms: TMenuItem [0]
           Action = actForms
         end
@@ -1125,9 +1132,9 @@ inherited MainForm: TMainForm
       object miRole: TMenuItem [2]
         Action = actRole
       end
-      inherited N3: TMenuItem [3]
+      inherited miLine802: TMenuItem [3]
       end
-      object N20: TMenuItem [4]
+      object miGuide_Basis: TMenuItem [4]
         Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
         object miAccountGroup: TMenuItem
           Action = actAccountGroup
@@ -1138,7 +1145,7 @@ inherited MainForm: TMainForm
         object miAccount: TMenuItem
           Action = actAccount
         end
-        object N24: TMenuItem
+        object miLine8001: TMenuItem
           Caption = '-'
         end
         object miInfoMoneyGroup: TMenuItem
@@ -1150,7 +1157,7 @@ inherited MainForm: TMainForm
         object miInfoMoney: TMenuItem
           Action = actInfoMoney
         end
-        object N28: TMenuItem
+        object miLine8002: TMenuItem
           Caption = '-'
         end
         object miProfitLossGroup: TMenuItem
@@ -1163,8 +1170,7 @@ inherited MainForm: TMainForm
           Action = actProfitLoss
         end
       end
-      object N4: TMenuItem [5]
-        Caption = '-'
+      inherited miLine801: TMenuItem [5]
       end
       object miTotalError: TMenuItem [6]
         Caption = #1055#1088#1086#1074#1077#1088#1082#1072
@@ -1183,13 +1189,14 @@ inherited MainForm: TMainForm
         object miObject_Client_LastError: TMenuItem
           Action = actReport_Client_LastError
         end
-        object N1: TMenuItem
+        object miReport_Sale_ContainerError: TMenuItem
           Action = actReport_Sale_ContainerError
         end
       end
-      inherited N2: TMenuItem [7]
+      object miLine803: TMenuItem [7]
+        Caption = '-'
       end
-      inherited N116: TMenuItem [8]
+      inherited miProtocolAll: TMenuItem [8]
         inherited miProtocol: TMenuItem
           Visible = False
         end

@@ -69,7 +69,12 @@ uses
   RoleUnion in '..\Forms\RoleUnion.pas' {RoleUnionForm: TParentForm},
   Movement_PeriodDialog in '..\FormsBoutique\Document\Movement_PeriodDialog.pas' {Movement_PeriodDialogForm: TParentForm},
   IFIN_J1201009 in '..\SOURCE\MeDOC\IFIN_J1201009.pas',
-  IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas';
+  IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas',
+  OLAPSales in '..\FormsBoutique\Report\OLAP\OLAPSales.pas' {OLAPSalesForm},
+  dsdOLAPSetup in '..\FormsBoutique\Report\OLAP\dsdOLAPSetup.pas' {OLAPSetupForm},
+  dsdOlap in '..\SOURCE\COMPONENT\dsdOlap.pas',
+  dsdOLAPXMLBind in '..\SOURCE\COMPONENT\dsdOLAPXMLBind.pas',
+  GridGroupCalculate in '..\SOURCE\GridGroupCalculate.pas';
 
 {$R *.res}
 
