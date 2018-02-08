@@ -23,7 +23,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, Vcl.ExtCtrls;
 
 type
   TGoodsPartnerCodeForm = class(TAncestorGuidesForm)
@@ -58,7 +58,7 @@ type
     actDoLoad: TExecuteImportSettingsAction;
     spGetImportSetting_Goods_MinimumLot: TdsdStoredProc;
     actGetImportSetting_Goods_MinimumLot: TdsdExecStoredProc;
-    dxBarButton1: TdxBarButton;
+    bbStartLoad: TdxBarButton;
     FormParams: TdsdFormParams;
     IsUpload: TcxGridDBColumn;
     spUpdate_Goods_IsUpload: TdsdStoredProc;
@@ -103,6 +103,10 @@ type
     isUploadTeva: TcxGridDBColumn;
     spUpdate_Goods_isUploadTeva: TdsdStoredProc;
     AreaName: TcxGridDBColumn;
+    Panel: TPanel;
+    cxLabel6: TcxLabel;
+    edArea: TcxButtonEdit;
+    GuidesArea: TdsdGuides;
   private
     { Private declarations }
   public
