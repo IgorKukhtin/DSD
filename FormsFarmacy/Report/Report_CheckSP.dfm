@@ -1011,6 +1011,65 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 15
     end
+    object actGetReportNameSP: TdsdExecStoredProc
+      Category = 'Print'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReporNameSP
+      StoredProcList = <
+        item
+          StoredProc = spGetReporNameSP
+        end>
+      Caption = 'actGetReportNameSP'
+    end
+    object mactPrint_Pact: TMultiAction
+      Category = 'Print'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetReportNameSP
+        end
+        item
+          Action = actPrintPact
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1044#1086#1087'. '#1089#1086#1075#1083#1072#1096#1077#1085#1080#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1044#1086#1087'. '#1089#1086#1075#1083#1072#1096#1077#1085#1080#1077
+      ImageIndex = 3
+    end
+    object actPrintPact: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1044#1086#1087'. '#1089#1086#1075#1083#1072#1096#1077#1085#1080#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1044#1086#1087'. '#1089#1086#1075#1083#1072#1096#1077#1085#1080#1077
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 'NULL'
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 'NULL'
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'ReportNameSP'
+      ReportNameParam.Value = 'ReportNameSP'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSP'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1129,6 +1188,14 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Pact'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1165,6 +1232,11 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
     object bbPrintInvoice: TdxBarButton
       Action = macPrintInvoice
       Category = 0
+    end
+    object bbPrint_Pact: TdxBarButton
+      Action = mactPrint_Pact
+      Category = 0
+      ImageIndex = 17
     end
   end
   inherited PeriodChoice: TPeriodChoice
@@ -1345,5 +1417,50 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
     PackSize = 1
     Left = 592
     Top = 216
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'ReportNameSP'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 400
+    Top = 216
+  end
+  object spGetReporNameSP: TdsdStoredProc
+    StoredProcName = 'gpGet_ReportNameSP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerMedicalId'
+        Value = Null
+        Component = HospitalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_ReportNameSP'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameSP'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 704
+    Top = 296
   end
 end

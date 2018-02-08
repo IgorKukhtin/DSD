@@ -62,6 +62,12 @@ type
     edInvoice: TcxTextEdit;
     cxLabel7: TcxLabel;
     edDateInvoice: TcxDateEdit;
+    actGetReportNameSP: TdsdExecStoredProc;
+    mactPrint_Pact: TMultiAction;
+    actPrintPact: TdsdPrintAction;
+    FormParams: TdsdFormParams;
+    spGetReporNameSP: TdsdStoredProc;
+    bbPrint_Pact: TdxBarButton;
   private
     { Private declarations }
   public
