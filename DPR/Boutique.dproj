@@ -187,9 +187,6 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201009.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201209.pas"/>
-			<DCCReference Include="..\FormsBoutique\Report\OLAP\OLAPSales.pas">
-				<Form>OLAPSalesForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\FormsBoutique\Report\OLAP\dsdOLAPSetup.pas">
 				<Form>OLAPSetupForm</Form>
 			</DCCReference>

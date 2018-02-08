@@ -95,6 +95,11 @@ type
     edPeriodYearEnd: TcxCurrencyEdit;
     cbSize: TcxCheckBox;
     cbGoods: TcxCheckBox;
+    pvCurrencyName: TcxDBPivotGridField;
+    pvClientName: TcxDBPivotGridField;
+    pvOperDate: TcxDBPivotGridField;
+    pvOperPrice: TcxDBPivotGridField;
+    pvDebt_Amount: TcxDBPivotGridField;
   private
   public
   end;

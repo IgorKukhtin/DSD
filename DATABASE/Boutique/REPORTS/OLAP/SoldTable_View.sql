@@ -36,9 +36,9 @@ AS
 
        , Object_PartionGoods.UnitId     AS UnitId_in
        , Object_PartionGoods.CurrencyId AS CurrencyId
+       , Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END AS OperPrice
          -- Кол-во Приход от поставщика - только для UnitId
        , CASE WHEN Object_PartionGoods.UnitId = COALESCE (MIConatiner.ObjectExtId_Analyzer, Object_PartionGoods.UnitId) THEN Object_PartionGoods.Amount ELSE 0 END AS Income_Amount
-       , Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END AS OperPrice
 
        , SUM (COALESCE (MIConatiner.Amount, 0)) :: TFloat AS Debt_Amount
        , SUM (CASE WHEN MIConatiner.Amount < 0 AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END) :: TFloat AS Sale_Amount
@@ -63,6 +63,9 @@ AS
        , 0 :: TFloat AS Result_Summ
        , 0 :: TFloat AS Result_SummCost
        , 0 :: TFloat AS Result_Summ_10200
+
+         --  № п/п
+       , ROW_NUMBER() OVER (PARTITION BY Object_PartionGoods.MovementItemId ORDER BY CASE WHEN Object_PartionGoods.UnitId = COALESCE (MIConatiner.ObjectExtId_Analyzer, Object_PartionGoods.UnitId) THEN 0 ELSE 1 END ASC) AS Ord
 
   FROM Object_PartionGoods
        LEFT JOIN tmpContainer ON tmpContainer.PartionId = Object_PartionGoods.MovementItemId

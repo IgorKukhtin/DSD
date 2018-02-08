@@ -143,7 +143,7 @@ BEGIN
          RETURNING Id INTO vbLoadPriceListId;
     ELSE
          -- иначе запишем что его надо перенести
-         UPDATE LoadPriceList SET isMoved = FALSE WHERE Id = vbLoadPriceListId;
+         UPDATE LoadPriceList SET isMoved = FALSE, Date_Update = CURRENT_TIMESTAMP WHERE Id = vbLoadPriceListId;
          /*-- иначе в протокол запишем что типа Insert
          UPDATE LoadPriceList SET UserId_Insert = inUserId, Date_Insert = CURRENT_TIMESTAMP WHERE Id = vbLoadPriceListId;*/
     END IF;
