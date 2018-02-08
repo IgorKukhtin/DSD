@@ -25,6 +25,7 @@ RETURNS TABLE (MovementId     Integer
              , InvNumberSP    TVarChar
              , MedicSP        TVarChar
              , MemberSP       TVarChar
+             , GroupMemberSPId Integer
              , GroupMemberSPName TVarChar
              , OperDateSP     TDateTime
              , OperDate       TDateTime
@@ -498,6 +499,7 @@ BEGIN
              , tmpData.InvNumberSP
              , tmpData.MedicSP
              , tmpData.MemberSP
+             , Object_GroupMemberSP.Id             AS GroupMemberSPId
              , Object_GroupMemberSP.ValueData      AS GroupMemberSPName
              , tmpData.OperDateSP        :: TDateTime
              , tmpData.OperDate          :: TDateTime
