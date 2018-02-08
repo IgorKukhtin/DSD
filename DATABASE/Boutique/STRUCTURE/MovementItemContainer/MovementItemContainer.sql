@@ -41,6 +41,7 @@ CREATE TABLE MovementItemContainer(
 
 -- Индексы
 CREATE INDEX idx_MovementItemContainer_MovementId_DescId             ON MovementItemContainer (MovementId, DescId);
+CREATE INDEX idx_MovementItemContainer_ContainerId                   ON MovementItemContainer (ContainerId);
 CREATE INDEX idx_MovementItemContainer_ContainerId_OperDate          ON MovementItemContainer (ContainerId, OperDate);
 CREATE INDEX idx_MovementItemContainer_ContainerId_Analyzer_OperDate ON MovementItemContainer (ContainerId_Analyzer, OperDate);
 CREATE INDEX idx_MovementItemContainer_AnalyzerId_OperDate           ON MovementItemContainer (AnalyzerId, OperDate);

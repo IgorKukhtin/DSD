@@ -49,6 +49,9 @@ CREATE INDEX idx_Object_PartionGoods_MovementItemId ON Object_PartionGoods (Move
 CREATE INDEX idx_Object_PartionGoods_MovementId	 ON Object_PartionGoods (MovementId);
 CREATE INDEX idx_Object_PartionGoods_GoodsId_PartnerId ON Object_PartionGoods (GoodsId, PartnerId);
 CREATE INDEX idx_Object_PartionGoods_MovementItemId_GoodsId ON Object_PartionGoods (MovementItemId, GoodsId);
+CREATE INDEX idx_Object_PartionGoods_PartnerId  ON Object_PartionGoods (PartnerId);
+CREATE INDEX idx_Object_PartionGoods_BrandId    ON Object_PartionGoods (BrandId);
+CREATE INDEX idx_Object_PartionGoods_PeriodYear ON Object_PartionGoods (PeriodYear);
 
 /*-------------------------------------------------------------------------------*/
 /*

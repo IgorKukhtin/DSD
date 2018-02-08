@@ -36,7 +36,7 @@ type
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
-    dsdStoredProc: TdsdStoredProc;
+    spReport: TdsdStoredProc;
     actExportToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
@@ -46,7 +46,6 @@ type
     cxDBPivotGrid: TcxDBPivotGrid;
     pvLabelName: TcxDBPivotGridField;
     pvGoodsName: TcxDBPivotGridField;
-    pvGoodsInfoName: TcxDBPivotGridField;
     pvGoodsSizeName: TcxDBPivotGridField;
     pvPartnerName: TcxDBPivotGridField;
     pvSale_Summ_10100: TcxDBPivotGridField;
@@ -97,9 +96,16 @@ type
     cbGoods: TcxCheckBox;
     pvCurrencyName: TcxDBPivotGridField;
     pvClientName: TcxDBPivotGridField;
-    pvOperDate: TcxDBPivotGridField;
     pvOperPrice: TcxDBPivotGridField;
     pvDebt_Amount: TcxDBPivotGridField;
+    pvGroupsName1: TcxDBPivotGridField;
+    pvGroupsName2: TcxDBPivotGridField;
+    pvGroupsName3: TcxDBPivotGridField;
+    pvGroupsName4: TcxDBPivotGridField;
+    PeriodName_doc: TcxDBPivotGridField;
+    PeriodYear_doc: TcxDBPivotGridField;
+    MonthName_doc: TcxDBPivotGridField;
+    DayName_doc: TcxDBPivotGridField;
   private
   public
   end;

@@ -335,13 +335,22 @@ BEGIN
                      , SUM (tmpMIAll.AmountSale)       AS AmountSale
                      , SUM (tmpMIAll.AmountSalePromo)  AS AmountSalePromo
                        -- !!!Приоритет - по продаже!!!
-                     , MAX (CASE WHEN tmpMIAll.AmountSale > 0 THEN tmpMIAll.Amount1 + tmpMIAll.Branch1 ELSE tmpMIAll.Order1 + tmpMIAll.OrderBranch1 END) AS Value1
+                     /*, MAX (CASE WHEN tmpMIAll.AmountSale > 0 THEN tmpMIAll.Amount1 + tmpMIAll.Branch1 ELSE tmpMIAll.Order1 + tmpMIAll.OrderBranch1 END) AS Value1
                      , MAX (CASE WHEN tmpMIAll.AmountSale > 0 THEN tmpMIAll.Amount2 + tmpMIAll.Branch2 ELSE tmpMIAll.Order2 + tmpMIAll.OrderBranch2 END) AS Value2
                      , MAX (CASE WHEN tmpMIAll.AmountSale > 0 THEN tmpMIAll.Amount3 + tmpMIAll.Branch3 ELSE tmpMIAll.Order3 + tmpMIAll.OrderBranch3 END) AS Value3
                      , MAX (CASE WHEN tmpMIAll.AmountSale > 0 THEN tmpMIAll.Amount4 + tmpMIAll.Branch4 ELSE tmpMIAll.Order4 + tmpMIAll.OrderBranch4 END) AS Value4
                      , MAX (CASE WHEN tmpMIAll.AmountSale > 0 THEN tmpMIAll.Amount5 + tmpMIAll.Branch5 ELSE tmpMIAll.Order5 + tmpMIAll.OrderBranch5 END) AS Value5
                      , MAX (CASE WHEN tmpMIAll.AmountSale > 0 THEN tmpMIAll.Amount6 + tmpMIAll.Branch6 ELSE tmpMIAll.Order6 + tmpMIAll.OrderBranch6 END) AS Value6
                      , MAX (CASE WHEN tmpMIAll.AmountSale > 0 THEN tmpMIAll.Amount7 + tmpMIAll.Branch7 ELSE tmpMIAll.Order7 + tmpMIAll.OrderBranch7 END) AS Value7
+                     */
+                       -- !!!Приоритет - по Заявке!!!
+                     , MAX (CASE WHEN tmpMIAll.AmountOrder = 0 THEN tmpMIAll.Amount1 + tmpMIAll.Branch1 ELSE tmpMIAll.Order1 + tmpMIAll.OrderBranch1 END) AS Value1
+                     , MAX (CASE WHEN tmpMIAll.AmountOrder = 0 THEN tmpMIAll.Amount2 + tmpMIAll.Branch2 ELSE tmpMIAll.Order2 + tmpMIAll.OrderBranch2 END) AS Value2
+                     , MAX (CASE WHEN tmpMIAll.AmountOrder = 0 THEN tmpMIAll.Amount3 + tmpMIAll.Branch3 ELSE tmpMIAll.Order3 + tmpMIAll.OrderBranch3 END) AS Value3
+                     , MAX (CASE WHEN tmpMIAll.AmountOrder = 0 THEN tmpMIAll.Amount4 + tmpMIAll.Branch4 ELSE tmpMIAll.Order4 + tmpMIAll.OrderBranch4 END) AS Value4
+                     , MAX (CASE WHEN tmpMIAll.AmountOrder = 0 THEN tmpMIAll.Amount5 + tmpMIAll.Branch5 ELSE tmpMIAll.Order5 + tmpMIAll.OrderBranch5 END) AS Value5
+                     , MAX (CASE WHEN tmpMIAll.AmountOrder = 0 THEN tmpMIAll.Amount6 + tmpMIAll.Branch6 ELSE tmpMIAll.Order6 + tmpMIAll.OrderBranch6 END) AS Value6
+                     , MAX (CASE WHEN tmpMIAll.AmountOrder = 0 THEN tmpMIAll.Amount7 + tmpMIAll.Branch7 ELSE tmpMIAll.Order7 + tmpMIAll.OrderBranch7 END) AS Value7
                        -- !!!акции - план на 1 неделю вперед!!!
                      , 0 AS Promo1
                      , 0 AS Promo2

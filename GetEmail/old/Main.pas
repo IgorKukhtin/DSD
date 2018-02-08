@@ -147,11 +147,11 @@ begin
   // переносить прайс в актуальные цены (а загрузка выполняется всегда)
   cbBeginMove.Checked:=false;
   // включаем таймер
-  Timer.Interval:=1000;
-  Timer.Enabled:=true;
-  cbTimer.Checked:=Timer.Enabled;
+  cbTimer.Checked:=true;
+  Timer.Enabled:=cbTimer.Checked;
+  Timer.Interval:=100;
   cbTimer.Caption:= 'Timer ON ' + FloatToStr(Timer.Interval / 1000) + ' sec';
-  Sleep(50);
+  Sleep(300);
   //
   GaugeHost.Progress:=0;
   GaugeMailFrom.Progress:=0;
@@ -691,7 +691,7 @@ begin
 
 
                    //все, идем дальше
-                   Sleep(200);
+                   Sleep(100);
                    GaugeMailFrom.Progress:=GaugeMailFrom.Progress+1;
                    Application.ProcessMessages;
 
@@ -716,7 +716,7 @@ begin
 
               PanelHost.Caption:= 'OK - End Mail (7.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime)+' to '+FormatDateTime('dd.mm.yyyy hh:mm:ss',NOW)+' and Next - ' + FormatDateTime('dd.mm.yyyy hh:mm:ss',vbArrayMail[ii].BeginTime + vbArrayMail[ii].onTime / 24 / 60);
               Application.ProcessMessages;
-              Sleep(200);
+              Sleep(500);
 
            end;// with IdIMAP4 do
        except
@@ -730,7 +730,7 @@ begin
            Add_Log_XML(mailFolderMain, PanelHost.Caption);
 
            Application.ProcessMessages;
-           Sleep(1000);
+           Sleep(3000);
        end;//финиш - цикл по почтовым ящикам
 
      // завершена обработка
@@ -845,7 +845,7 @@ begin
               and (FieldByName('UserName').asString = inUserName)
            then begin
                  PanelLoadXLS.Caption:= 'Load XLS : ('+FieldByName('Id').AsString + ') ' + FieldByName('Name').AsString + ' - ' + FieldByName('ContactPersonName').AsString;
-                 Sleep(200);
+                 Sleep(100);
                  Application.ProcessMessages;
                  //Загружаем если есть откуда
                  if FieldByName('DirectoryImport').asString <> ''
@@ -947,7 +947,7 @@ begin
            then begin
                  PanelLoadXLS.Caption:= 'Load MMO : ('+FieldByName('Id').AsString + ') ' + FieldByName('Name').AsString + ' - ' + FieldByName('ContactPersonName').AsString;
                  Application.ProcessMessages;
-                 Sleep(50);
+                 Sleep(500);
                  //Загружаем если есть откуда
                  if FieldByName('DirectoryImport').asString <> ''
                  then try
@@ -1051,36 +1051,19 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // обработка все
 function TMainForm.fBeginAll : Boolean;
-var isErr, isErr_exit : Boolean;
 begin
      PanelError.Caption:= '';
 
-     try
-       isErr_exit:= false;
-       Timer.Enabled:= false;
-       BtnStart.Enabled:= false;
-
-       //инициализируем данные по всем поставщикам
-       try fInitArray; except PanelHost.Caption:= '!!! ERROR - fInitArray - exit !!!'; isErr_exit:= true; exit; end;
-       // обработка всей почты
-       try isErr:= true; fBeginMail; isErr:= false; except vbIsBegin:= false; PanelHost.Caption:= '!!! ERROR - fBeginMail - next !!!'; end;
-       // обработка всех XLS - !!!Только если "Загрузка Прайса"!!!
-       try if vbEmailKindDesc= 'zc_Enum_EmailKind_InPrice' then fBeginXLS; except vbIsBegin:= false; PanelHost.Caption:= '!!! ERROR - fBeginXLS - exit !!!'; isErr_exit:= true; exit; end;
-       // оптимизация если была загрузка XLS - !!!Только если "Загрузка Прайса"!!!
-       try if vbEmailKindDesc= 'zc_Enum_EmailKind_InPrice' then fRefreshMovementItemLastPriceList_View; except vbIsBegin:= false; PanelHost.Caption:= '!!! ERROR - fRefreshMovementItemLastPriceList_View - exit !!!'; isErr_exit:= true; exit; end;
-       // перенос цен - !!!Только если "Загрузка Прайса"!!!
-       try if (cbBeginMove.Checked = TRUE) and (vbEmailKindDesc= 'zc_Enum_EmailKind_InPrice') then fBeginMove; except vbIsBegin:= false; PanelHost.Caption:= '!!! ERROR - fBeginMove - exit !!!'; isErr_exit:= true; exit; end;
-
-     finally
-       Timer.Enabled:= true;
-       BtnStart.Enabled:= vbIsBegin = false;
-       //
-       if isErr_exit= false
-       then
-           if isErr = true
-           then PanelHost.Caption:= 'End !!!ERROR!!! - fBeginMail ... and Next - ' + FormatDateTime('dd.mm.yyyy hh:mm:ss',now + Timer.Interval / 1000 / 60 /  24 / 60 )
-           else PanelHost.Caption:= 'End OK all ... and Next - ' + FormatDateTime('dd.mm.yyyy hh:mm:ss',now + Timer.Interval / 1000 / 60 / 24 / 60 );
-     end;
+     //инициализируем данные по всем поставщикам
+     fInitArray;
+     // обработка всей почты
+     fBeginMail;
+     // обработка всех XLS - !!!Только если "Загрузка Прайса"!!!
+     if vbEmailKindDesc= 'zc_Enum_EmailKind_InPrice' then fBeginXLS;
+     // оптимизация если была загрузка XLS - !!!Только если "Загрузка Прайса"!!!
+     if vbEmailKindDesc= 'zc_Enum_EmailKind_InPrice' then fRefreshMovementItemLastPriceList_View;
+     // перенос цен - !!!Только если "Загрузка Прайса"!!!
+     if (cbBeginMove.Checked = TRUE) and (vbEmailKindDesc= 'zc_Enum_EmailKind_InPrice') then fBeginMove;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.BtnStartClick(Sender: TObject);
@@ -1098,7 +1081,7 @@ begin
      // время когда сработал таймера
      vbOnTimer:= NOW;
      cbTimer.Caption:= 'Timer ON ' + FloatToStr(Timer.Interval / 1000) + ' seccc ' + '('+FormatDateTime('dd.mm.yyyy hh:mm:ss',vbOnTimer)+')';
-     Sleep(500);
+     Sleep(1000);
      // обработка все
      fBeginAll;
 end;

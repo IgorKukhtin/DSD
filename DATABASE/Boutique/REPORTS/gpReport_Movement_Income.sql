@@ -9,12 +9,12 @@ CREATE OR REPLACE FUNCTION  gpReport_Movement_Income(
     IN inUnitId           Integer  ,  -- Подразделение
     IN inBrandId          Integer  ,  -- Бренд
     IN inPartnerId        Integer  ,  -- Поставщик
-    
-    IN inPeriodId         Integer  ,  -- 
+
+    IN inPeriodId         Integer  ,  --
     IN inPeriodYearStart  Integer  ,  --
     IN inPeriodYearEnd    Integer  ,  --
-    
-    IN inisPartion        Boolean,    -- 
+
+    IN inisPartion        Boolean,    --
     IN inisSize           Boolean,    --
     IN inisPartner        Boolean,    --
     IN inSession          TVarChar    -- сессия пользователя
@@ -46,7 +46,7 @@ RETURNS TABLE (MovementId     Integer,
                OperPriceList       TFloat,
                PriceSale           TFloat,
                Amount              TFloat,
-  
+
                TotalSumm           TFloat,
                TotalSummBalance    TFloat,
                TotalSummPriceList  TFloat,
@@ -81,8 +81,7 @@ BEGIN
                                      INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                    ON MovementLinkObject_To.MovementId = Movement_Income.Id
                                                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                                  AND MovementLinkObject_To.ObjectId = inUnitId
-                                     -- от кого приход    Поставщик                   
+                                     -- от кого приход    Поставщик
                                      LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                                    ON MovementLinkObject_From.MovementId = Movement_Income.Id
                                                                   AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -90,11 +89,11 @@ BEGIN
                                      LEFT JOIN ObjectLink AS ObjectLink_Partner_Brand
                                                            ON ObjectLink_Partner_Brand.ObjectId = MovementLinkObject_From.ObjectId
                                                           AND ObjectLink_Partner_Brand.DescId = zc_ObjectLink_Partner_Brand()
-                                                          
+
                                      LEFT JOIN ObjectLink AS ObjectLink_Partner_Fabrika
                                                           ON ObjectLink_Partner_Fabrika.ObjectId = MovementLinkObject_From.ObjectId
                                                          AND ObjectLink_Partner_Fabrika.DescId = zc_ObjectLink_Partner_Fabrika()
-                                     
+
                                      LEFT JOIN ObjectLink AS ObjectLink_Partner_Period
                                                           ON ObjectLink_Partner_Period.ObjectId = MovementLinkObject_From.ObjectId
                                                          AND ObjectLink_Partner_Period.DescId = zc_ObjectLink_Partner_Period()
@@ -106,13 +105,15 @@ BEGIN
                                                              ON MovementFloat_CurrencyValue.MovementId = Movement_Income.Id
                                                             AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
 
-                                     LEFT JOIN MovementDesc AS MovementDesc_Income ON MovementDesc_Income.Id = Movement_Income.DescId                                                          
+                                     LEFT JOIN MovementDesc AS MovementDesc_Income ON MovementDesc_Income.Id = Movement_Income.DescId
+
                                 WHERE Movement_Income.DescId = zc_Movement_Income()
                                   AND Movement_Income.OperDate BETWEEN inStartDate AND inEndDate
-                                  AND Movement_Income.StatusId = zc_Enum_Status_Complete() 
-                                  AND (MovementLinkObject_From.ObjectId = inPartnerId OR inPartnerId = 0)
-                                  AND (ObjectLink_Partner_Brand.ChildObjectId = inBrandId OR inBrandId = 0)
-                                  AND (ObjectLink_Partner_Period.ChildObjectId = inPeriodId OR inPeriodId = 0)
+                                  AND Movement_Income.StatusId = zc_Enum_Status_Complete()
+                                  AND (MovementLinkObject_From.ObjectId        = inPartnerId OR inPartnerId = 0)
+                                  AND (MovementLinkObject_To.ObjectId          = inUnitId    OR inUnitId    = 0)
+                                  AND (ObjectLink_Partner_Brand.ChildObjectId  = inBrandId   OR inBrandId   = 0)
+                                  AND (ObjectLink_Partner_Period.ChildObjectId = inPeriodId  OR inPeriodId  = 0)
                               )
 
      , tmpData  AS  (SELECT CASE WHEN inIsPartion = TRUE THEN tmpMovementIncome.MovementId ELSE -1 END  AS MovementId
@@ -131,7 +132,7 @@ BEGIN
                           , Object_PartionGoods.CompositionId
                           , Object_PartionGoods.CompositionGroupId
                           , Object_PartionGoods.GoodsInfoId
-                          , Object_PartionGoods.LineFabricaId 
+                          , Object_PartionGoods.LineFabricaId
                           , Object_PartionGoods.LabelId
                           , Object_PartionGoods.JuridicalId
                           , Object_PartionGoods.CurrencyId
@@ -151,7 +152,7 @@ BEGIN
                           , SUM (COALESCE (MI_Income.Amount, 0) * COALESCE (Object_PartionGoods.PriceSale,0) )    AS SaleSumm
 
                      FROM tmpMovementIncome
-                          INNER JOIN MovementItem AS MI_Income 
+                          INNER JOIN MovementItem AS MI_Income
                                                   ON MI_Income.MovementId = tmpMovementIncome.MovementId
                                                  AND MI_Income.isErased   = False
                           INNER JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MI_Income.PartionId
@@ -166,7 +167,7 @@ BEGIN
                                                       ON MIFloat_OperPriceList.MovementItemId = MI_Income.Id
                                                      AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
                      WHERE (Object_PartionGoods.PeriodYear >= inPeriodYearStart OR inPeriodYearStart = 0)
-                       AND (Object_PartionGoods.PeriodYear <= inPeriodYearEnd OR inPeriodYearEnd = 0) 
+                       AND (Object_PartionGoods.PeriodYear <= inPeriodYearEnd OR inPeriodYearEnd = 0)
                      GROUP BY CASE WHEN inIsPartion = TRUE THEN tmpMovementIncome.MovementId ELSE -1 END
                             , tmpMovementIncome.InvNumber
                             , tmpMovementIncome.OperDate
@@ -176,13 +177,13 @@ BEGIN
                             , tmpMovementIncome.CurrencyValue
                             , tmpMovementIncome.ParValue
                             , MI_Income.ObjectId
-                            , CASE WHEN inisSize = TRUE THEN Object_PartionGoods.GoodsSizeId  ELSE 0 END 
+                            , CASE WHEN inisSize = TRUE THEN Object_PartionGoods.GoodsSizeId  ELSE 0 END
                             , Object_PartionGoods.MeasureId
                             , Object_PartionGoods.GoodsGroupId
                             , Object_PartionGoods.CompositionId
                             , Object_PartionGoods.CompositionGroupId
                             , Object_PartionGoods.GoodsInfoId
-                            , Object_PartionGoods.LineFabricaId 
+                            , Object_PartionGoods.LineFabricaId
                             , Object_PartionGoods.LabelId
                             , Object_PartionGoods.JuridicalId
                             , COALESCE (MIFloat_CountForPrice.ValueData, 1)
@@ -192,7 +193,7 @@ BEGIN
                             , Object_PartionGoods.CurrencyId
                             , Object_PartionGoods.PeriodYear
               )
-              
+
 
         SELECT
              tmpData.MovementId
@@ -222,31 +223,31 @@ BEGIN
            , Object_GoodsSize.Id            AS GoodsSizeId
            , Object_GoodsSize.ValueData     AS GoodsSizeName
            , Object_Currency.ValueData      AS CurrencyName
-           
+
            , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSumm  / tmpData.Amount ELSE 0 END          ::TFloat AS OperPrice
            , tmpData.CountForPrice           ::TFloat
            , (CAST ( (CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSumm / tmpData.Amount ELSE 0 END)
                       * tmpData.CurrencyValue / CASE WHEN tmpData.ParValue <> 0 THEN tmpData.ParValue ELSE 1 END  AS NUMERIC (16, 2))) :: TFloat  AS OperPriceBalance
-     
+
            , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSummPriceList  / tmpData.Amount ELSE 0 END ::TFloat AS OperPriceList
            , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SaleSumm  / tmpData.Amount ELSE 0 END           ::TFloat AS PriceSale
            , tmpData.Amount                  ::TFloat
            , tmpData.TotalSumm               ::TFloat
            , (CAST (tmpData.TotalSumm * tmpData.CurrencyValue / CASE WHEN tmpData.ParValue <> 0 THEN tmpData.ParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat AS TotalSummBalance
-           , tmpData.TotalSummPriceList      ::TFloat 
+           , tmpData.TotalSummPriceList      ::TFloat
            , tmpData.SaleSumm                ::TFloat  AS TotalSummSale
-           
+
         FROM tmpData
             LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.FromId
             LEFT JOIN Object AS Object_To   ON Object_To.Id   = tmpData.ToId
- 
+
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
             LEFT JOIN Object AS Object_GoodsGroup       ON Object_GoodsGroup.Id       = tmpData.GoodsGroupId
             LEFT JOIN Object AS Object_Measure          ON Object_Measure.Id          = tmpData.MeasureId
             LEFT JOIN Object AS Object_Composition      ON Object_Composition.Id      = tmpData.CompositionId
             LEFT JOIN Object AS Object_CompositionGroup ON Object_CompositionGroup.Id = tmpData.CompositionGroupId
             LEFT JOIN Object AS Object_GoodsInfo        ON Object_GoodsInfo.Id        = tmpData.GoodsInfoId
-            LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = tmpData.LineFabricaId 
+            LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = tmpData.LineFabricaId
             LEFT JOIN Object AS Object_Label            ON Object_Label.Id            = tmpData.LabelId
             LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = tmpData.GoodsSizeId
             LEFT JOIN Object AS Object_Juridical        ON Object_Juridical.Id        = tmpData.JuridicalId
@@ -260,8 +261,9 @@ BEGIN
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpData.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
 
-;
- END;
+           ;
+
+END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
@@ -272,4 +274,4 @@ $BODY$
 */
 
 -- тест
---select * from gpReport_Movement_Income(inStartDate := ('01.11.2016')::TDateTime , inEndDate := ('01.07.2018')::TDateTime , inUnitId := 506 , inBrandId := 0 , inPartnerId := 0 , inPeriodId := 0 , inPeriodYearStart := 0 , inPeriodYearEnd := 2017 , inisPartion := 'False' , inisSize := 'False' , inisPartner := 'False' ,  inSession := '2');
+-- SELECT * FROM gpReport_Movement_Income(inStartDate := ('01.11.2016')::TDateTime , inEndDate := ('01.07.2018')::TDateTime , inUnitId := 506 , inBrandId := 0 , inPartnerId := 0 , inPeriodId := 0 , inPeriodYearStart := 0 , inPeriodYearEnd := 2017 , inisPartion := 'False' , inisSize := 'False' , inisPartner := 'False' ,  inSession := '2');

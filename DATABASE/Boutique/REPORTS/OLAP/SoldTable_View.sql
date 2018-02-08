@@ -22,11 +22,11 @@ AS
 
        , Object_PartionGoods.GoodsGroupId
        , Object_PartionGoods.LabelId
-       , Object_PartionGoods.CompositionGroupId
+       -- , Object_PartionGoods.CompositionGroupId
        , Object_PartionGoods.CompositionId
 
        , Object_PartionGoods.GoodsId
-       , Object_PartionGoods.GoodsInfoId
+       -- , Object_PartionGoods.GoodsInfoId
        , Object_PartionGoods.LineFabricaId
        , Object_PartionGoods.GoodsSizeId
 
