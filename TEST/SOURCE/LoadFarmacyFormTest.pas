@@ -351,6 +351,7 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsRetailForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsRetailForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsRetailDialogForm'));
@@ -359,7 +360,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_BarCodeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_BarCodeForm');
   //exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAllForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsAllForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAllRetailForm'));
@@ -370,6 +371,7 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeMasterForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeMasterForm');
 
@@ -394,7 +396,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoodsChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionGoodsChoiceForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAllForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsAllForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAllRetailForm'));
