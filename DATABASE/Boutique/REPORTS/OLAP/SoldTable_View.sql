@@ -38,7 +38,7 @@ AS
        , Object_PartionGoods.CurrencyId AS CurrencyId
        , Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END AS OperPrice
          -- Кол-во Приход от поставщика - только для UnitId
-       , CASE WHEN Object_PartionGoods.UnitId = COALESCE (MIConatiner.ObjectExtId_Analyzer, Object_PartionGoods.UnitId) THEN Object_PartionGoods.Amount ELSE 0 END AS Income_Amount
+       , Object_PartionGoods.Amount AS Income_Amount
 
        , SUM (COALESCE (MIConatiner.Amount, 0)) :: TFloat AS Debt_Amount
        , SUM (CASE WHEN MIConatiner.Amount < 0 AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END) :: TFloat AS Sale_Amount
