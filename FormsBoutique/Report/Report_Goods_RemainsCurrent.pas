@@ -51,9 +51,9 @@ type
     edPeriod: TcxButtonEdit;
     GuidesPeriod: TdsdGuides;
     cxLabel7: TcxLabel;
-    edPeriodYearStart: TcxCurrencyEdit;
+    edStartYear: TcxCurrencyEdit;
     cxLabel8: TcxLabel;
-    edPeriodYearEnd: TcxCurrencyEdit;
+    edEndYear: TcxCurrencyEdit;
     cxLabel4: TcxLabel;
     edPartner: TcxButtonEdit;
     GuidesPartner: TdsdGuides;
@@ -81,7 +81,7 @@ type
     spSelectPrintSticker: TdsdStoredProc;
     macGoodsPrintList_Print: TMultiAction;
     bb: TdxBarButton;
-    cbPeriodYear: TcxCheckBox;
+    cbYear: TcxCheckBox;
     UnitName_in: TcxGridDBColumn;
     Amount_in: TcxGridDBColumn;
     RemainsDebt: TcxGridDBColumn;

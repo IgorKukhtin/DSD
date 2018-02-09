@@ -5,20 +5,20 @@ inherited Report_GoodsForm: TReport_GoodsForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -422
+  ExplicitLeft = -234
   ExplicitWidth = 1211
   ExplicitHeight = 508
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 80
+    Top = 81
     Width = 1195
-    Height = 393
+    Height = 392
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1195
     ExplicitHeight = 393
-    ClientRectBottom = 393
+    ClientRectBottom = 392
     ClientRectRight = 1195
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1195
@@ -26,7 +26,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       inherited cxGrid: TcxGrid
         Top = 83
         Width = 1195
-        Height = 310
+        Height = 309
         ExplicitTop = 83
         ExplicitWidth = 1195
         ExplicitHeight = 310
@@ -879,56 +879,84 @@ inherited Report_GoodsForm: TReport_GoodsForm
   end
   inherited Panel: TPanel
     Width = 1195
-    Height = 54
+    Height = 55
     ExplicitWidth = 1195
-    ExplicitHeight = 54
+    ExplicitHeight = 55
     inherited deStart: TcxDateEdit
-      Left = 118
+      Left = 79
       EditValue = 43101d
       Properties.SaveTime = False
-      ExplicitLeft = 118
+      ExplicitLeft = 79
     end
     inherited deEnd: TcxDateEdit
-      Left = 118
-      Top = 29
+      Left = 79
+      Top = 30
       EditValue = 43101d
       Properties.SaveTime = False
-      ExplicitLeft = 118
-      ExplicitTop = 29
+      ExplicitLeft = 79
+      ExplicitTop = 30
     end
-    inherited cxLabel1: TcxLabel
-      Left = 25
-      ExplicitLeft = 25
+    object edPartion: TcxButtonEdit [2]
+      Left = 728
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 13
+      Width = 224
     end
-    inherited cxLabel2: TcxLabel
-      Left = 6
-      Top = 31
-      ExplicitLeft = 6
-      ExplicitTop = 31
-    end
-    object cxLabel3: TcxLabel
-      Left = 291
-      Top = 31
-      Caption = #1040#1088#1090#1080#1082#1091#1083':'
-    end
-    object edPartionGoods: TcxButtonEdit
-      Left = 344
-      Top = 31
+    object edGoodsSize: TcxButtonEdit [3]
+      Left = 535
+      Top = 30
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 5
+      Width = 70
+    end
+    inherited cxLabel1: TcxLabel
+      Left = 12
+      Caption = #1055#1077#1088#1080#1086#1076' '#1089' ...'
+      ExplicitLeft = 12
+      ExplicitWidth = 65
+    end
+    inherited cxLabel2: TcxLabel
+      Left = 5
+      Top = 31
+      Caption = #1055#1077#1088#1080#1086#1076' '#1087#1086' ...'
+      ExplicitLeft = 5
+      ExplicitTop = 31
+      ExplicitWidth = 72
+    end
+    object cxLabel3: TcxLabel
+      Left = 277
+      Top = 32
+      Caption = #1040#1088#1090#1080#1082#1091#1083':'
+    end
+    object edPartionGoods: TcxButtonEdit
+      Left = 331
+      Top = 30
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 4
       Width = 152
     end
     object cxLabel8: TcxLabel
-      Left = 208
+      Left = 194
       Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' / '#1043#1088#1091#1087#1087#1072':'
     end
     object edUnitGroup: TcxButtonEdit
-      Left = 344
+      Left = 330
       Top = 5
       Properties.Buttons = <
         item
@@ -936,85 +964,61 @@ inherited Report_GoodsForm: TReport_GoodsForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 7
+      TabOrder = 6
       Width = 276
     end
-    object cbGoodsSize: TcxCheckBox
-      Left = 626
-      Top = 29
+    object cbGoodsSizeAll: TcxCheckBox
+      Left = 614
+      Top = 30
       Action = actRefreshIsGoodsSize
       Properties.ReadOnly = False
       State = cbsChecked
-      TabOrder = 8
+      TabOrder = 7
       Width = 115
     end
-    object cbPartion: TcxCheckBox
-      Left = 749
-      Top = 29
+    object cbPartionAll: TcxCheckBox
+      Left = 737
+      Top = 30
       Action = actRefreshIsPartion
       Properties.ReadOnly = False
       State = cbsChecked
-      TabOrder = 9
+      TabOrder = 8
       Width = 110
     end
-    object cbPeriod: TcxCheckBox
-      Left = 865
-      Top = 29
+    object cbPeriodAll: TcxCheckBox
+      Left = 168
+      Top = 30
       Action = actRefreshIsPeriod
       Properties.ReadOnly = False
       State = cbsChecked
-      TabOrder = 10
-      Width = 110
+      TabOrder = 9
+      Width = 105
     end
-  end
-  object cxLabel4: TcxLabel [2]
-    Left = 505
-    Top = 31
-    Caption = #1056#1072#1079#1084#1077#1088':'
-  end
-  object edGoodsSize: TcxButtonEdit [3]
-    Left = 550
-    Top = 29
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    TabOrder = 7
-    Width = 70
-  end
-  object cxLabel5: TcxLabel [4]
-    Left = 631
-    Top = 6
-    Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470':'
-  end
-  object edPartion: TcxButtonEdit [5]
-    Left = 746
-    Top = 5
-    Properties.Buttons = <
-      item
-        Default = True
-        Enabled = False
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 9
-    Width = 219
+    object cxLabel5: TcxLabel
+      Left = 614
+      Top = 6
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470':'
+    end
+    object cxLabel4: TcxLabel
+      Left = 490
+      Top = 32
+      Caption = #1056#1072#1079#1084#1077#1088':'
+    end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = cbGoodsSize
+        Component = cbGoodsSizeAll
         Properties.Strings = (
           'Checked')
       end
       item
-        Component = cbPartion
+        Component = cbPartionAll
         Properties.Strings = (
           'Checked')
       end
       item
-        Component = cbPeriod
+        Component = cbPeriodAll
         Properties.Strings = (
           'Checked')
       end
@@ -1062,8 +1066,8 @@ inherited Report_GoodsForm: TReport_GoodsForm
         item
           StoredProc = spSelect
         end>
-      Caption = #1047#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
-      Hint = #1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
+      Caption = #1079#1072' '#1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
+      Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1079#1072' '#1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' ('#1044#1072'/'#1053#1077#1090')'
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -1075,9 +1079,8 @@ inherited Report_GoodsForm: TReport_GoodsForm
         item
           StoredProc = spSelect
         end>
-      Caption = #1055#1086' '#1074#1089#1077#1084' '#1087#1072#1088#1090#1080#1103#1084
-      Hint = #1055#1086' '#1087#1072#1088#1090#1080#1103#1084
-      ShortCut = 116
+      Caption = #1087#1086' '#1042#1089#1077#1084' '#1055#1072#1088#1090#1080#1103#1084
+      Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1086' '#1042#1089#1077#1084' '#1055#1072#1088#1090#1080#1103#1084' ('#1044#1072'/'#1053#1077#1090')'
       RefreshOnTabSetChanges = False
     end
     object actRefreshIsGoodsSize: TdsdDataSetRefresh [2]
@@ -1088,9 +1091,8 @@ inherited Report_GoodsForm: TReport_GoodsForm
         item
           StoredProc = spSelect
         end>
-      Caption = #1055#1086' '#1074#1089#1077#1084' '#1088#1072#1079#1084#1077#1088#1072#1084
-      Hint = #1055#1086' '#1074#1089#1077#1084' '#1088#1072#1079#1084#1077#1088#1072#1084
-      ShortCut = 116
+      Caption = #1087#1086' '#1042#1089#1077#1084' '#1056#1072#1079#1084#1077#1088#1072#1084
+      Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1086' '#1042#1089#1077#1084' '#1056#1072#1079#1084#1077#1088#1072#1084' ('#1044#1072'/'#1053#1077#1090')'
       RefreshOnTabSetChanges = False
     end
     object actPrint: TdsdPrintAction
@@ -1248,7 +1250,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         item
           Name = 'isPeriod'
           Value = Null
-          Component = cbPeriod
+          Component = cbPeriodAll
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1256,7 +1258,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         item
           Name = 'isGoodsSize'
           Value = 'False'
-          Component = cbGoodsSize
+          Component = cbGoodsSizeAll
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1264,7 +1266,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         item
           Name = 'isPartion'
           Value = Null
-          Component = cbPartion
+          Component = cbPartionAll
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1497,25 +1499,25 @@ inherited Report_GoodsForm: TReport_GoodsForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsGoodsSize'
+        Name = 'inIsGoodsSizeAll'
         Value = Null
-        Component = cbGoodsSize
+        Component = cbGoodsSizeAll
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPartion'
+        Name = 'inIsPartionAll'
         Value = Null
-        Component = cbPartion
+        Component = cbPartionAll
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPeriod'
+        Name = 'inIsPeriodAll'
         Value = Null
-        Component = cbPeriod
+        Component = cbPeriodAll
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1772,7 +1774,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       item
         Name = 'isPeriod'
         Value = Null
-        Component = cbPeriod
+        Component = cbPeriodAll
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1780,7 +1782,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       item
         Name = 'isPartion'
         Value = Null
-        Component = cbPartion
+        Component = cbPartionAll
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end

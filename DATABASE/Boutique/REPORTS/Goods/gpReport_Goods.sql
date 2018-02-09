@@ -1,18 +1,19 @@
 -- Function: gpReport_Goods ()
+
 DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Goods (
-    IN inStartDate    TDateTime ,
-    IN inEndDate      TDateTime ,
-    IN inUnitId       Integer   ,
-    IN inGoodsId      Integer   ,
-    IN inPartionId    Integer   ,
-    IN inMovementId   Integer   ,
-    IN inGoodsSizeId  Integer   ,
-    IN inisGoodsSize  Boolean   ,
-    IN inisPartion    Boolean   ,
-    IN inisPeriod     Boolean   ,
-    IN inSession      TVarChar    -- сессия пользователя
+    IN inStartDate        TDateTime ,
+    IN inEndDate          TDateTime ,
+    IN inUnitId           Integer   , -- Подразделение
+    IN inGoodsId          Integer   , -- Товар
+    IN inPartionId        Integer   , -- Документ партия №
+    IN inMovementId       Integer   , -- Документ партия №
+    IN inGoodsSizeId      Integer   , -- Размер
+    IN inIsGoodsSizeAll   Boolean   , -- ограничение по Всем Размерам (Да/Нет)
+    IN inIsPartionAll     Boolean   , -- ограничение по Всем Партиям (Да/Нет)
+    IN inIsPeriodAll      Boolean   , -- ограничение за Весь период (Да/Нет) (движение по Документам)
+    IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
 AS
@@ -33,16 +34,16 @@ BEGIN
 
     -- !!!замена!!!
     IF COALESCE (inMovementId, 0) = 0 THEN
-        inisPartion := TRUE;
+        inIsPartionAll := TRUE;
     END IF;
     -- !!!замена!!!
     IF COALESCE (inGoodsSizeId, 0) = 0 THEN
-        inisGoodsSize := TRUE;
+        inIsGoodsSizeAll := TRUE;
     END IF;
 
 
     -- если за весь период установин кон. дату  = текущей, для определения цены (прайс) для остатка
-    IF COALESCE (inisPeriod, FALSE) = TRUE THEN
+    IF COALESCE (inIsPeriodAll, FALSE) = TRUE THEN
         inEndDate := CURRENT_DATE;
     END IF;
 
@@ -72,10 +73,10 @@ BEGIN
                                  LEFT JOIN ContainerLinkObject AS CLO_Client ON CLO_Client.ContainerId = Container.Id
                                                                             AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
                                  LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = Container.PartionId
-                            WHERE ((Object_PartionGoods.GoodsSizeId    = inGoodsSizeId AND inisGoodsSize = FALSE) OR (inisGoodsSize = TRUE))
-                              AND (-- (Object_PartionGoods.MovementItemId = inPartionId   AND inisPartion = FALSE)
-                                   inisPartion = FALSE
-                                OR (inisPartion = TRUE AND (Object_PartionGoods.MovementId = inMovementId OR inMovementId = 0 )))
+                            WHERE ((Object_PartionGoods.GoodsSizeId    = inGoodsSizeId AND inIsGoodsSizeAll = FALSE) OR (inIsGoodsSizeAll = TRUE))
+                              AND (-- (Object_PartionGoods.MovementItemId = inPartionId   AND inIsPartionAll = FALSE)
+                                   inIsPartionAll = FALSE
+                                OR (inIsPartionAll = TRUE AND (Object_PartionGoods.MovementId = inMovementId OR inMovementId = 0 )))
                               -- AND CLO_Client.ContainerId IS NULL -- !!!т.е. без Долгов Покупателя!!!
                            )
 
@@ -87,20 +88,20 @@ BEGIN
                           , tmpContainer_Count.PartionId_mi
                           , tmpContainer_Count.GoodsSizeId
                           , tmpContainer_Count.Amount
-                          , CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisPeriod = TRUE)
+                          , CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inIsPeriodAll = TRUE)
                                    AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_Sale(), zc_Movement_ReturnIn())
                                       THEN MIContainer.ContainerId_Analyzer
                                  ELSE 0
                             END AS ContainerId_Analyzer
-                          , CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisPeriod = TRUE)
+                          , CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inIsPeriodAll = TRUE)
                                       THEN MIContainer.MovementId
                                  ELSE 0
                             END AS MovementId
-                          , CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisPeriod = TRUE)
+                          , CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inIsPeriodAll = TRUE)
                                       THEN MIContainer.MovementItemId
                                  ELSE 0
                             END AS MovementItemId
-                          , SUM (CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisPeriod = TRUE)
+                          , SUM (CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inIsPeriodAll = TRUE)
                                            THEN MIContainer.Amount
                                       ELSE 0
                                  END) AS Amount_Period
@@ -109,7 +110,7 @@ BEGIN
                           , MIContainer.isActive
                      FROM tmpContainer_Count
                           INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_Count.ContainerId
-                                                                        AND (MIContainer.OperDate >= inStartDate OR inisPeriod = TRUE)
+                                                                        AND (MIContainer.OperDate >= inStartDate OR inIsPeriodAll = TRUE)
                      GROUP BY tmpContainer_Count.ContainerId
                             , tmpContainer_Count.LocationId
                             , MIContainer.ObjectExtId_Analyzer
@@ -118,16 +119,16 @@ BEGIN
                             , tmpContainer_Count.PartionId_mi
                             , tmpContainer_Count.GoodsSizeId
                             , tmpContainer_Count.Amount
-                            , CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisPeriod = TRUE)
+                            , CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inIsPeriodAll = TRUE)
                                      AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_Sale(), zc_Movement_ReturnIn())
                                         THEN MIContainer.ContainerId_Analyzer
                                    ELSE 0
                               END
-                            , CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisPeriod = TRUE)
+                            , CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inIsPeriodAll = TRUE)
                                         THEN MIContainer.MovementId
                                    ELSE 0
                               END
-                            , CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisPeriod = TRUE)
+                            , CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inIsPeriodAll = TRUE)
                                         THEN MIContainer.MovementItemId
                                    ELSE 0
                               END
@@ -166,7 +167,7 @@ BEGIN
                                    , tmpMIContainer_all.LocationId
                                    , tmpMIContainer_all.LocationId_by
                                    , tmpMIContainer_all.GoodsId
-                                   , CASE WHEN inisPartion = TRUE THEN tmpMIContainer_all.PartionId ELSE 0 END AS PartionId
+                                   , CASE WHEN inIsPartionAll = TRUE THEN tmpMIContainer_all.PartionId ELSE 0 END AS PartionId
                                    , tmpMIContainer_all.PartionId_mi
                                    , tmpMIContainer_all.GoodsSizeId
                                    , Object_PartionGoods.CurrencyId
@@ -253,7 +254,7 @@ BEGIN
                                       , tmpMIContainer_all.LocationId
                                       , tmpMIContainer_all.LocationId_by
                                       , tmpMIContainer_all.GoodsId
-                                      , CASE WHEN inisPartion = TRUE THEN tmpMIContainer_all.PartionId ELSE 0 END
+                                      , CASE WHEN inIsPartionAll = TRUE THEN tmpMIContainer_all.PartionId ELSE 0 END
                                       , tmpMIContainer_all.PartionId_mi
                                       , tmpMIContainer_all.GoodsSizeId
                                       , Object_PartionGoods.CurrencyId
@@ -460,8 +461,8 @@ BEGIN
            LEFT JOIN Movement ON Movement.Id = Object_PartionGoods.MovementId
 
       WHERE Object_PartionGoods.GoodsId = inGoodsId
-        -- AND ((Object_PartionGoods.MovementItemId = inPartionId AND inisPartion = FALSE) OR (inisPartion = TRUE))
-        AND ((Object_PartionGoods.GoodsSizeId = inGoodsSizeId AND inisGoodsSize = FALSE) OR (inisGoodsSize = TRUE) )
+        -- AND ((Object_PartionGoods.MovementItemId = inPartionId AND inIsPartionAll = FALSE) OR (inIsPartionAll = TRUE))
+        AND ((Object_PartionGoods.GoodsSizeId = inGoodsSizeId AND inIsGoodsSizeAll = FALSE) OR (inIsGoodsSizeAll = TRUE) )
      ;
 
      RETURN NEXT Cursor2;
@@ -477,4 +478,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Goods (inStartDate:= '01.06.2017', inEndDate:= '29.06.2017', inUnitId:= 506, inGoodsId:= 709, inPartionId:= 64, inMovementId:= 18, inGoodsSizeId:= 0, inIsGoodsSize:= TRUE, inisPartion:= TRUE, inisPeriod:= TRUE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_Goods (inStartDate:= '01.06.2017', inEndDate:= '29.06.2017', inUnitId:= 506, inGoodsId:= 709, inPartionId:= 64, inMovementId:= 18, inGoodsSizeId:= 0, inIsGoodsSizeAll:= TRUE, inIsPartionAll:= TRUE, inIsPeriodAll:= TRUE, inSession:= zfCalc_UserAdmin());

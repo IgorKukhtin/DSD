@@ -52,7 +52,7 @@ type
     cxLabel8: TcxLabel;
     edUnitGroup: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
-    cbGoodsSize: TcxCheckBox;
+    cbGoodsSizeAll: TcxCheckBox;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     getMovementForm: TdsdStoredProc;
@@ -61,7 +61,6 @@ type
     actOpenDocument: TMultiAction;
     bbOpenDocument: TdxBarButton;
     FormParams: TdsdFormParams;
-    cxLabel4: TcxLabel;
     edGoodsSize: TcxButtonEdit;
     GuidesGoodsSize: TdsdGuides;
     cbSumm_branch: TcxCheckBox;
@@ -74,13 +73,12 @@ type
     cxSplitter1: TcxSplitter;
     PartionId: TcxGridDBColumn;
     actRefreshIsGoodsSize: TdsdDataSetRefresh;
-    cbPartion: TcxCheckBox;
-    cxLabel5: TcxLabel;
+    cbPartionAll: TcxCheckBox;
     edPartion: TcxButtonEdit;
     GuidesPartion: TdsdGuides;
     actRefreshIsPartion: TdsdDataSetRefresh;
     actRefreshIsPeriod: TdsdDataSetRefresh;
-    cbPeriod: TcxCheckBox;
+    cbPeriodAll: TcxCheckBox;
     InvNumberAll: TcxGridDBColumn;
     LocationDescName_by: TcxGridDBColumn;
     LocationCode_by: TcxGridDBColumn;
@@ -97,6 +95,8 @@ type
     MovementItemId: TcxGridDBColumn;
     MovementItemId_PartionMI: TcxGridDBColumn;
     PartionId_mi: TcxGridDBColumn;
+    cxLabel5: TcxLabel;
+    cxLabel4: TcxLabel;
   private
     { Private declarations }
   public

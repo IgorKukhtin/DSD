@@ -42,12 +42,12 @@ type
     GuidesUnit: TdsdGuides;
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
-    cbGoodsSize: TcxCheckBox;
-    cbPartion: TcxCheckBox;
+    cbGoodsSizeAll: TcxCheckBox;
+    cbPartionAll: TcxCheckBox;
     cxLabel5: TcxLabel;
     edPartion: TcxButtonEdit;
     GuidesPartion: TdsdGuides;
-    cbPeriod: TcxCheckBox;
+    cbPeriodAll: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -106,6 +106,11 @@ type
     PeriodYear_doc: TcxDBPivotGridField;
     MonthName_doc: TcxDBPivotGridField;
     DayName_doc: TcxDBPivotGridField;
+    cxLabel7: TcxLabel;
+    edUnit: TcxButtonEdit;
+    cxCheckBox1: TcxCheckBox;
+    cbYear: TcxCheckBox;
+    cbPeriodAll: TcxCheckBox;
   private
   public
   end;

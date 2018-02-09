@@ -55,23 +55,26 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
   object cbPartion: TcxCheckBox
     Left = 10
     Top = 12
-    Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470
     TabOrder = 4
-    Width = 86
+    Width = 133
   end
   object cbSize: TcxCheckBox
-    Left = 230
+    Left = 244
     Top = 12
-    Caption = #1087#1086' '#1056#1072#1079#1084#1077#1088#1072#1084
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1056#1072#1079#1084#1077#1088#1099
     TabOrder = 5
-    Width = 85
+    Width = 70
   end
   object cbPartner: TcxCheckBox
-    Left = 109
+    Left = 152
     Top = 12
-    Caption = #1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082#1080
     TabOrder = 6
-    Width = 109
+    Width = 80
   end
   object cxLabel1: TcxLabel
     Left = 10
@@ -129,7 +132,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
     Top = 244
     Caption = #1043#1086#1076' '#1089' ...'
   end
-  object edPeriodYearStart: TcxCurrencyEdit
+  object edStartYear: TcxCurrencyEdit
     Left = 10
     Top = 264
     EditValue = 0.000000000000000000
@@ -143,7 +146,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
     Top = 244
     Caption = #1043#1086#1076' '#1087#1086' ...'
   end
-  object edPeriodYearEnd: TcxCurrencyEdit
+  object edEndYear: TcxCurrencyEdit
     Left = 94
     Top = 264
     EditValue = 0.000000000000000000
@@ -152,12 +155,13 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
     TabOrder = 16
     Width = 70
   end
-  object cbPeriodYear: TcxCheckBox
+  object cbYear: TcxCheckBox
     Left = 180
     Top = 264
-    Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076
+    Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052' ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052
     TabOrder = 17
-    Width = 122
+    Width = 142
   end
   object PeriodChoice: TPeriodChoice
     Left = 263
@@ -226,7 +230,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
       item
         Name = 'isPeriodYear'
         Value = Null
-        Component = cbPeriodYear
+        Component = cbYear
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -285,14 +289,14 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
       item
         Name = 'PeriodYearStart'
         Value = Null
-        Component = edPeriodYearStart
+        Component = edStartYear
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'PeriodYearEnd'
         Value = Null
-        Component = edPeriodYearEnd
+        Component = edEndYear
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

@@ -1573,7 +1573,7 @@ begin
         Connected:=false;
         HostName:='192.168.10.103';
         User:='postgres';
-        Password:='postgres';
+        Password:='ET862tira';
         try Connected:=true; except ShowMessage ('not Connected');end;
         //
         //if ParamCount = 2 then isGlobalLoad:=zc_rvYes else isGlobalLoad:=zc_rvNo;

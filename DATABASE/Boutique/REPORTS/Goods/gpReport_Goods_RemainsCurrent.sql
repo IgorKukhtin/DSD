@@ -7,17 +7,17 @@ DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent (Integer, Integer, Integer
 
 CREATE OR REPLACE FUNCTION  gpReport_Goods_RemainsCurrent(
     IN inUnitId           Integer  ,  -- Подразделение / группа
-    IN inBrandId          Integer  ,  --
-    IN inPartnerId        Integer  ,  --
-    IN inPeriodId         Integer  ,  --
-    IN inPeriodYearStart  Integer  ,  --
-    IN inPeriodYearEnd    Integer  ,  --
+    IN inBrandId          Integer  ,  -- Торговая марка
+    IN inPartnerId        Integer  ,  -- Поставщик
+    IN inPeriodId         Integer  ,  -- Сезон
+    IN inStartYear        Integer  ,  -- Год с ...
+    IN inEndYear          Integer  ,  -- Год по ...
     IN inUserId           Integer  ,  -- Id пользователя сессии GoodsPrint
     IN inGoodsPrintId     Integer  ,  -- № п/п сессии GoodsPrint
-    IN inIsPartion        Boolean  ,  --
-    IN inIsPartner        Boolean  ,  --
-    IN inIsSize           Boolean  ,  --
-    IN inIsPeriodYear     Boolean  ,  --
+    IN inIsPartion        Boolean  ,  -- показать <Документ партия №> (Да/Нет)
+    IN inIsPartner        Boolean  ,  -- показать Поставщика (Да/Нет)
+    IN inIsSize           Boolean  ,  -- показать Размеры (Да/Нет)
+    IN inIsYear           Boolean  ,  -- ограничение Год ТМ (Да/Нет) (выбор партий)
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (PartionId            Integer
@@ -152,7 +152,7 @@ BEGIN
                         AND (ObjectLink_Partner_Period.ChildObjectId = inPeriodId   OR inPeriodId  = 0)
                         AND (Object_PartionGoods.BrandId             = inBrandId    OR inBrandId   = 0)
                         AND (Object_PartionGoods.PartnerId           = inPartnerId  OR inPartnerId = 0)
-                        AND ((Object_PartionGoods.PeriodYear BETWEEN inPeriodYearStart AND inPeriodYearEnd) OR inIsPeriodYear = FALSE)
+                        AND ((Object_PartionGoods.PeriodYear BETWEEN inStartYear AND inEndYear) OR inIsYear = FALSE)
                      )
 
        , tmpData AS (SELECT tmpContainer.UnitId
@@ -378,4 +378,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Goods_RemainsCurrent (inUnitId:= 1152, inBrandId:= 0, inPartnerId:= 0, inPeriodId:= 0, inPeriodYearStart:= 0, inPeriodYearEnd:= 2017, inUserId:= 0, inGoodsPrintId:= 0, inisPartion:= FALSE, inisPartner:= FALSE, inisSize:= FALSE, inIsPeriodYear:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_Goods_RemainsCurrent (inUnitId:= 1152, inBrandId:= 0, inPartnerId:= 0, inPeriodId:= 0, inStartYear:= 0, inEndYear:= 2017, inUserId:= 0, inGoodsPrintId:= 0, inisPartion:= FALSE, inisPartner:= FALSE, inisSize:= FALSE, inIsYear:= FALSE, inSession:= zfCalc_UserAdmin())

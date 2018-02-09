@@ -6,15 +6,16 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -396
   ExplicitWidth = 1185
   ExplicitHeight = 468
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
     Width = 1169
-    Height = 70
+    Height = 55
     ExplicitWidth = 1169
-    ExplicitHeight = 70
+    ExplicitHeight = 55
     inherited deStart: TcxDateEdit
       Left = 22
       Top = 38
@@ -71,36 +72,36 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Properties.UseNullString = True
       TabOrder = 5
       Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
-      Width = 212
+      Width = 200
     end
     object cbPartion: TcxCheckBox
-      Left = 850
-      Top = 35
+      Left = 810
+      Top = 30
       Action = actRefreshIsPartion
       TabOrder = 6
-      Width = 86
+      Width = 131
     end
     object cbSize: TcxCheckBox
       Left = 1055
-      Top = 35
+      Top = 30
       Action = actRefreshIsSize
       TabOrder = 7
-      Width = 88
+      Width = 70
     end
     object cbPartner: TcxCheckBox
-      Left = 941
-      Top = 35
+      Left = 955
+      Top = 30
       Action = actRefreshIsPartner
       TabOrder = 8
-      Width = 110
+      Width = 90
     end
     object cxLabel5: TcxLabel
-      Left = 366
+      Left = 350
       Top = 6
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072':'
     end
     object edBrand: TcxButtonEdit
-      Left = 456
+      Left = 440
       Top = 5
       Properties.Buttons = <
         item
@@ -109,16 +110,16 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         end>
       Properties.ReadOnly = True
       TabOrder = 10
-      Width = 159
+      Width = 155
     end
     object cxLabel6: TcxLabel
-      Left = 416
-      Top = 37
+      Left = 400
+      Top = 31
       Caption = #1057#1077#1079#1086#1085':'
     end
     object edPeriod: TcxButtonEdit
-      Left = 456
-      Top = 35
+      Left = 440
+      Top = 30
       Properties.Buttons = <
         item
           Default = True
@@ -126,15 +127,15 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         end>
       Properties.ReadOnly = True
       TabOrder = 12
-      Width = 159
+      Width = 155
     end
     object cxLabel7: TcxLabel
-      Left = 624
+      Left = 610
       Top = 6
       Caption = #1043#1086#1076' '#1089' ...'
     end
-    object edPeriodYearStart: TcxCurrencyEdit
-      Left = 672
+    object edStartYear: TcxCurrencyEdit
+      Left = 658
       Top = 5
       EditValue = 0.000000000000000000
       Properties.DecimalPlaces = 0
@@ -144,14 +145,14 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Width = 40
     end
     object cxLabel8: TcxLabel
-      Left = 617
-      Top = 37
+      Left = 704
+      Top = 7
       Caption = #1043#1086#1076' '#1087#1086' ...'
     end
-    object edPeriodYearEnd: TcxCurrencyEdit
-      Left = 672
-      Top = 35
-      EditValue = 2017.000000000000000000
+    object edEndYear: TcxCurrencyEdit
+      Left = 759
+      Top = 5
+      EditValue = 2018.000000000000000000
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = '0'
       Properties.ReadOnly = True
@@ -160,12 +161,12 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     end
     object cxLabel4: TcxLabel
       Left = 76
-      Top = 37
+      Top = 31
       Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
     end
     object edPartner: TcxButtonEdit
       Left = 143
-      Top = 35
+      Top = 30
       Properties.Buttons = <
         item
           Default = True
@@ -173,15 +174,15 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         end>
       Properties.ReadOnly = True
       TabOrder = 18
-      Width = 212
+      Width = 200
     end
     object cxLabel9: TcxLabel
-      Left = 749
+      Left = 810
       Top = 6
       Caption = #1055#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074' :'
     end
     object edGoodsPrint: TcxButtonEdit
-      Left = 850
+      Left = 911
       Top = 5
       Properties.Buttons = <
         item
@@ -190,32 +191,32 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         end>
       Properties.ReadOnly = True
       TabOrder = 20
-      Width = 293
+      Width = 214
     end
-    object cbPeriodYear: TcxCheckBox
-      Left = 719
-      Top = 35
+    object cbYear: TcxCheckBox
+      Left = 610
+      Top = 30
       Action = actRefreshIsPeriodYear
       TabOrder = 21
-      Width = 114
+      Width = 129
     end
   end
   inherited PageControl: TcxPageControl [1]
-    Top = 96
+    Top = 81
     Width = 1169
-    Height = 337
+    Height = 352
     TabOrder = 3
     ExplicitTop = 96
     ExplicitWidth = 1169
     ExplicitHeight = 337
-    ClientRectBottom = 337
+    ClientRectBottom = 352
     ClientRectRight = 1169
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1169
       ExplicitHeight = 337
       inherited cxGrid: TcxGrid
         Width = 1169
-        Height = 337
+        Height = 352
         ExplicitWidth = 1169
         ExplicitHeight = 337
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -722,7 +723,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           'Checked')
       end
       item
-        Component = cbPeriodYear
+        Component = cbYear
         Properties.Strings = (
           'Checked')
       end
@@ -742,12 +743,12 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           'Date')
       end
       item
-        Component = edPeriodYearEnd
+        Component = edEndYear
         Properties.Strings = (
           'Value')
       end
       item
-        Component = edPeriodYearStart
+        Component = edStartYear
         Properties.Strings = (
           'Value')
       end
@@ -876,7 +877,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         item
           Name = 'isPeriodYear'
           Value = Null
-          Component = cbPeriodYear
+          Component = cbYear
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -901,14 +902,14 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         item
           Name = 'PeriodYearStart'
           Value = Null
-          Component = edPeriodYearStart
+          Component = edStartYear
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'PeriodYearEnd'
           Value = Null
-          Component = edPeriodYearEnd
+          Component = edEndYear
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
@@ -958,9 +959,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         item
           StoredProc = spSelect
         end>
-      Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
-      Hint = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
-      ShortCut = 116
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
       RefreshOnTabSetChanges = False
     end
     object actRefreshIsSize: TdsdDataSetRefresh
@@ -971,9 +971,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         item
           StoredProc = spSelect
         end>
-      Caption = #1087#1086' '#1056#1072#1079#1084#1077#1088#1072#1084
-      Hint = #1087#1086' '#1056#1072#1079#1084#1077#1088#1072#1084
-      ShortCut = 116
+      Caption = #1056#1072#1079#1084#1077#1088#1099
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
       RefreshOnTabSetChanges = False
     end
     object actRefreshIsPartner: TdsdDataSetRefresh
@@ -984,9 +983,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         item
           StoredProc = spSelect
         end>
-      Caption = #1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
-      Hint = #1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
-      ShortCut = 116
+      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082#1080
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
       RefreshOnTabSetChanges = False
     end
     object actRefreshIsPeriodYear: TdsdDataSetRefresh
@@ -997,9 +995,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         item
           StoredProc = spSelect
         end>
-      Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076
-      Hint = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076
-      ShortCut = 116
+      Caption = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052
+      Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052' ('#1044#1072'/'#1053#1077#1090')'
       RefreshOnTabSetChanges = False
     end
     object actGoodsPrint_Rem: TdsdExecStoredProc
@@ -1252,16 +1249,16 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPeriodYearStart'
+        Name = 'inStartYear'
         Value = Null
-        Component = edPeriodYearStart
+        Component = edStartYear
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPeriodYearEnd'
-        Value = Null
-        Component = edPeriodYearEnd
+        Name = 'inEndYear'
+        Value = 2018.000000000000000000
+        Component = edEndYear
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1306,9 +1303,9 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsPeriodYear'
+        Name = 'inIsYear'
         Value = Null
-        Component = cbPeriodYear
+        Component = cbYear
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

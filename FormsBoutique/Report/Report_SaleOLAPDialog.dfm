@@ -55,12 +55,12 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
   object cxLabel6: TcxLabel
     Left = 34
     Top = 8
-    Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
+    Caption = #1055#1077#1088#1080#1086#1076' '#1089' ...'
   end
   object cxLabel7: TcxLabel
     Left = 163
     Top = 8
-    Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
+    Caption = #1055#1077#1088#1080#1086#1076' '#1087#1086' ...'
   end
   object cxLabel4: TcxLabel
     Left = 34
@@ -121,7 +121,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
   object cxLabel5: TcxLabel
     Left = 34
     Top = 235
-    Caption = #1043#1086#1076' ('#1085#1072#1095'.):'
+    Caption = #1043#1086#1076' '#1089' ...'
   end
   object edPeriodYearStart: TcxCurrencyEdit
     Left = 34
@@ -144,7 +144,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
   object cxLabel8: TcxLabel
     Left = 149
     Top = 235
-    Caption = #1043#1086#1076' ('#1086#1082#1086#1085'.):'
+    Caption = #1043#1086#1076' '#1087#1086' ...'
   end
   object cbSize: TcxCheckBox
     Left = 149

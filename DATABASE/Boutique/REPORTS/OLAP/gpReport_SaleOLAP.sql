@@ -11,8 +11,15 @@ CREATE OR REPLACE FUNCTION gpReport_SaleOLAP (
     IN inPeriodId         Integer  ,  --
     IN inYearStart        TFloat   ,
     IN inYearEnd          TFloat   ,
-    IN inIsSize           Boolean  ,
-    IN inIsGoods          Boolean  ,
+    IN inIsSize           Boolean  ,  -- показать Размеры (Да/Нет)
+    IN inIsGoods          Boolean  ,  -- показать Товары (Да/Нет)
+    IN inIsOperPrice      Boolean  ,  -- показать Цена вх. в вал. (Да/Нет)
+
+    IN inIsClient_doc     Boolean  , -- показать Покупателя (Да/Нет)
+    IN inIsOperDate_doc   Boolean  , -- показать Год / Месяц (Да/Нет) (движение по Документам)
+    IN inIsDayId_doc      Boolean  , -- показать День недели (Да/Нет) (движение по Документам)
+    IN inIsPeriodAll      Boolean  , -- ограничение за Весь период (Да/Нет) (движение по Документам)
+
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (BrandName          TVarChar
@@ -109,8 +116,9 @@ BEGIN
                                 , Object_PartionGoods.LineFabricaId
                                 , Object_PartionGoods.GoodsSizeId
 
-                                -- , MIConatiner.OperDate AS OperDate
-                                , DATE_TRUNC ('MONTH',  MIConatiner.OperDate) AS OperDate_doc
+                                -- , MIConatiner.OperDate AS OperDate_doc
+                                -- , DATE_TRUNC ('MONTH',  MIConatiner.OperDate) AS OperDate_doc
+                                , NULL :: TDateTime AS OperDate_doc
                                 , EXTRACT (DOW FROM MIConatiner.OperDate)     AS DayId_doc
                                 , COALESCE (MIConatiner.ObjectExtId_Analyzer, Object_PartionGoods.UnitId) :: Integer AS UnitId
                                 , tmpContainer.ClientId
@@ -178,7 +186,105 @@ BEGIN
                                   , Object_PartionGoods.GoodsSizeId
 
                                   -- , MIConatiner.OperDate
-                                  , DATE_TRUNC ('MONTH',  MIConatiner.OperDate)
+                                  -- , DATE_TRUNC ('MONTH',  MIConatiner.OperDate)
+                                  , EXTRACT (DOW FROM MIConatiner.OperDate)
+                                  , MIConatiner.ObjectExtId_Analyzer
+                                  , tmpContainer.ClientId
+
+                                  , Object_PartionGoods.UnitId
+                                  , Object_PartionGoods.CurrencyId
+                                  , Object_PartionGoods.Amount
+                                  , Object_PartionGoods.OperPrice
+                                  , Object_PartionGoods.CountForPrice
+
+                          UNION ALL
+                           SELECT Object_PartionGoods.MovementItemId AS PartionId
+                                , Object_PartionGoods.BrandId
+                                , Object_PartionGoods.PeriodId
+                                , Object_PartionGoods.PeriodYear
+                                , Object_PartionGoods.PartnerId
+
+                                , Object_PartionGoods.GoodsGroupId
+                                , Object_PartionGoods.LabelId
+                                , Object_PartionGoods.CompositionGroupId
+                                -- , Object_PartionGoods.CompositionId
+
+                                , Object_PartionGoods.GoodsId
+                                -- , Object_PartionGoods.GoodsInfoId
+                                , Object_PartionGoods.LineFabricaId
+                                , Object_PartionGoods.GoodsSizeId
+
+                                -- , MIConatiner.OperDate AS OperDate_doc
+                                -- , DATE_TRUNC ('MONTH',  MIConatiner.OperDate) AS OperDate_doc
+                                , NULL :: TDateTime AS OperDate_doc
+                                , EXTRACT (DOW FROM MIConatiner.OperDate)     AS DayId_doc
+                                , COALESCE (MIConatiner.ObjectExtId_Analyzer, Object_PartionGoods.UnitId) :: Integer AS UnitId
+                                , tmpContainer.ClientId
+
+                                , Object_PartionGoods.UnitId     AS UnitId_in
+                                , Object_PartionGoods.CurrencyId AS CurrencyId
+                                , Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END AS OperPrice
+                                  -- Кол-во Приход от поставщика - только для UnitId
+                                , Object_PartionGoods.Amount AS Income_Amount
+
+                                , SUM (COALESCE (MIConatiner.Amount, 0)) :: TFloat AS Debt_Amount
+                                , SUM (CASE WHEN MIConatiner.Amount < 0 AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END) :: TFloat AS Sale_Amount
+                                , 0 :: TFloat AS Sale_Summ
+
+                                , 0 :: TFloat AS Sale_SummCost
+                                , 0 :: TFloat AS Sale_Summ_10100
+                                , 0 :: TFloat AS Sale_Summ_10201
+                                , 0 :: TFloat AS Sale_Summ_10202
+                                , 0 :: TFloat AS Sale_Summ_10203
+                                , 0 :: TFloat AS Sale_Summ_10204
+                                , 0 :: TFloat AS Sale_Summ_10200
+
+                                , SUM (CASE WHEN MIConatiner.Amount > 0 AND MIConatiner.MovementDescId IN (zc_Movement_ReturnIn()) THEN 1 * MIConatiner.Amount ELSE 0 END) :: TFloat AS Return_Amount
+                                , 0 :: TFloat AS Return_Summ
+                                , 0 :: TFloat AS Return_SummCost
+                                , 0 :: TFloat AS Return_Summ_10200
+
+                                , SUM (CASE WHEN MIConatiner.Amount < 0 AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END
+                                     - CASE WHEN MIConatiner.Amount > 0 AND MIConatiner.MovementDescId IN (zc_Movement_ReturnIn()) THEN 1 * MIConatiner.Amount ELSE 0 END
+                                       ) :: TFloat AS Result_Amount
+                                , 0 :: TFloat AS Result_Summ
+                                , 0 :: TFloat AS Result_SummCost
+                                , 0 :: TFloat AS Result_Summ_10200
+
+                                  --  № п/п
+                                , ROW_NUMBER() OVER (PARTITION BY Object_PartionGoods.MovementItemId ORDER BY CASE WHEN Object_PartionGoods.UnitId = COALESCE (MIConatiner.ObjectExtId_Analyzer, Object_PartionGoods.UnitId) THEN 0 ELSE 1 END ASC) AS Ord
+
+                           FROM Object_PartionGoods
+                                LEFT JOIN tmpContainer ON tmpContainer.PartionId = Object_PartionGoods.MovementItemId
+                                LEFT JOIN MovementItemContainer AS MIConatiner
+                                                                ON MIConatiner.ContainerId    = tmpContainer.ContainerId
+                                                               -- AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_GoodsAccount())
+                                                               -- AND MIConatiner.OperDate BETWEEN inStartDate AND inEndDate
+                           WHERE (Object_PartionGoods.PartnerId  = inPartnerId        OR inPartnerId        = 0)
+                             AND (Object_PartionGoods.BrandId    = inBrandId          OR inBrandId         = 0)
+                             AND (Object_PartionGoods.PeriodId   = inPeriodId         OR inPeriodId        = 0)
+                             AND Object_PartionGoods.PeriodYear BETWEEN inYearStart AND inYearEnd
+                             -- AND (Object_PartionGoods.PeriodYear >= inYearStart OR inYearStart = 0)
+                             -- AND (Object_PartionGoods.PeriodYear <= inYearEnd   OR inYearEnd   = 0)
+
+                           GROUP BY Object_PartionGoods.MovementItemId
+                                  , Object_PartionGoods.BrandId
+                                  , Object_PartionGoods.PeriodId
+                                  , Object_PartionGoods.PeriodYear
+                                  , Object_PartionGoods.PartnerId
+
+                                  , Object_PartionGoods.GoodsGroupId
+                                  , Object_PartionGoods.LabelId
+                                  , Object_PartionGoods.CompositionGroupId
+                                  , Object_PartionGoods.CompositionId
+
+                                  , Object_PartionGoods.GoodsId
+                                  , Object_PartionGoods.GoodsInfoId
+                                  , Object_PartionGoods.LineFabricaId
+                                  , Object_PartionGoods.GoodsSizeId
+
+                                  -- , MIConatiner.OperDate
+                                  -- , DATE_TRUNC ('MONTH',  MIConatiner.OperDate)
                                   , EXTRACT (DOW FROM MIConatiner.OperDate)
                                   , MIConatiner.ObjectExtId_Analyzer
                                   , tmpContainer.ClientId
