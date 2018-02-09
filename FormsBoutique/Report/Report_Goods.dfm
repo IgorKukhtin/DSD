@@ -5,7 +5,6 @@ inherited Report_GoodsForm: TReport_GoodsForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -234
   ExplicitWidth = 1211
   ExplicitHeight = 508
   PixelsPerInch = 96
@@ -910,7 +909,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       Width = 217
     end
     object edGoodsSize: TcxButtonEdit [3]
-      Left = 535
+      Left = 536
       Top = 30
       Properties.Buttons = <
         item
@@ -968,10 +967,12 @@ inherited Report_GoodsForm: TReport_GoodsForm
       Width = 276
     end
     object cbGoodsSizeAll: TcxCheckBox
-      Left = 621
-      Top = 29
+      Left = 608
+      Top = 30
       Action = actRefreshIsGoodsSize
+      ParentShowHint = False
       Properties.ReadOnly = False
+      ShowHint = True
       State = cbsChecked
       TabOrder = 7
       Width = 113
@@ -980,7 +981,9 @@ inherited Report_GoodsForm: TReport_GoodsForm
       Left = 737
       Top = 30
       Action = actRefreshIsPartion
+      ParentShowHint = False
       Properties.ReadOnly = False
+      ShowHint = True
       State = cbsChecked
       TabOrder = 8
       Width = 110
@@ -989,7 +992,9 @@ inherited Report_GoodsForm: TReport_GoodsForm
       Left = 168
       Top = 30
       Action = actRefreshIsPeriod
+      ParentShowHint = False
       Properties.ReadOnly = False
+      ShowHint = True
       State = cbsChecked
       TabOrder = 9
       Width = 105
@@ -1000,28 +1005,13 @@ inherited Report_GoodsForm: TReport_GoodsForm
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470':'
     end
     object cxLabel4: TcxLabel
-      Left = 490
+      Left = 491
       Top = 32
       Caption = #1056#1072#1079#1084#1077#1088':'
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
-      item
-        Component = cbGoodsSizeAll
-        Properties.Strings = (
-          'Checked')
-      end
-      item
-        Component = cbPartionAll
-        Properties.Strings = (
-          'Checked')
-      end
-      item
-        Component = cbPeriodAll
-        Properties.Strings = (
-          'Checked')
-      end
       item
         Component = deEnd
         Properties.Strings = (
@@ -1034,12 +1024,6 @@ inherited Report_GoodsForm: TReport_GoodsForm
       end
       item
         Component = GuidesGoodsSize
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
-        Component = GuidesPartion
         Properties.Strings = (
           'Key'
           'TextValue')

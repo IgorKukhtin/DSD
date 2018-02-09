@@ -3,8 +3,8 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' ('#1054#1051#1040#1055')>'
-  ClientHeight = 337
-  ClientWidth = 362
+  ClientHeight = 381
+  ClientWidth = 400
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,8 +18,8 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 69
-    Top = 297
+    Left = 110
+    Top = 340
     Width = 75
     Height = 24
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 198
-    Top = 297
+    Left = 239
+    Top = 340
     Width = 75
     Height = 24
     Caption = #1054#1090#1084#1077#1085#1072
@@ -37,39 +37,39 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     TabOrder = 1
   end
   object deEnd: TcxDateEdit
-    Left = 163
-    Top = 28
+    Left = 300
+    Top = 30
     EditValue = 42736d
     Properties.ShowTime = False
     TabOrder = 2
-    Width = 110
+    Width = 85
   end
   object deStart: TcxDateEdit
-    Left = 34
-    Top = 28
+    Left = 200
+    Top = 30
     EditValue = 42736d
     Properties.ShowTime = False
     TabOrder = 3
-    Width = 110
+    Width = 85
   end
   object cxLabel6: TcxLabel
-    Left = 34
-    Top = 8
+    Left = 200
+    Top = 10
     Caption = #1055#1077#1088#1080#1086#1076' '#1089' ...'
   end
   object cxLabel7: TcxLabel
-    Left = 163
-    Top = 8
+    Left = 300
+    Top = 10
     Caption = #1055#1077#1088#1080#1086#1076' '#1087#1086' ...'
   end
   object cxLabel4: TcxLabel
-    Left = 34
-    Top = 90
+    Left = 25
+    Top = 175
     Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
   end
   object edPartner: TcxButtonEdit
-    Left = 34
-    Top = 110
+    Left = 25
+    Top = 195
     Properties.Buttons = <
       item
         Default = True
@@ -80,16 +80,16 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     Properties.UseNullString = True
     TabOrder = 7
     Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
-    Width = 306
+    Width = 350
   end
   object cxLabel1: TcxLabel
-    Left = 34
-    Top = 139
+    Left = 25
+    Top = 85
     Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072':'
   end
   object edBrand: TcxButtonEdit
-    Left = 34
-    Top = 159
+    Left = 25
+    Top = 103
     Properties.Buttons = <
       item
         Default = True
@@ -98,16 +98,16 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     Properties.ReadOnly = True
     TabOrder = 9
     Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1090#1086#1088#1075#1086#1074#1091#1102' '#1084#1072#1088#1082#1091'>'
-    Width = 306
+    Width = 350
   end
   object cxLabel2: TcxLabel
-    Left = 34
-    Top = 185
+    Left = 25
+    Top = 130
     Caption = #1057#1077#1079#1086#1085' :'
   end
   object edPeriod: TcxButtonEdit
-    Left = 34
-    Top = 205
+    Left = 25
+    Top = 150
     Properties.Buttons = <
       item
         Default = True
@@ -116,61 +116,146 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     Properties.ReadOnly = True
     TabOrder = 11
     Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1089#1077#1079#1086#1085'>'
-    Width = 306
+    Width = 350
   end
   object cxLabel5: TcxLabel
-    Left = 34
-    Top = 235
+    Left = 25
+    Top = 10
     Caption = #1043#1086#1076' '#1089' ...'
   end
-  object edPeriodYearStart: TcxCurrencyEdit
-    Left = 34
-    Top = 255
+  object edStartYear: TcxCurrencyEdit
+    Left = 25
+    Top = 30
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 13
-    Width = 100
+    Width = 70
   end
-  object edPeriodYearEnd: TcxCurrencyEdit
-    Left = 149
-    Top = 255
+  object edEndYear: TcxCurrencyEdit
+    Left = 100
+    Top = 30
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 14
-    Width = 100
+    Width = 70
   end
   object cxLabel8: TcxLabel
-    Left = 149
-    Top = 235
+    Left = 100
+    Top = 10
     Caption = #1043#1086#1076' '#1087#1086' ...'
   end
   object cbSize: TcxCheckBox
-    Left = 149
-    Top = 64
-    Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-    Caption = #1087#1086' '#1056#1072#1079#1084#1077#1088#1072#1084
+    Left = 25
+    Top = 300
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1056#1072#1079#1084#1077#1088#1099
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 16
     Width = 85
   end
   object cbGoods: TcxCheckBox
-    Left = 34
-    Top = 64
-    Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-    Caption = #1087#1086' '#1058#1086#1074#1072#1088#1072#1084
+    Left = 25
+    Top = 275
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1058#1086#1074#1072#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1058#1086#1074#1072#1088#1099
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 17
     Width = 85
+  end
+  object cbPeriodAll: TcxCheckBox
+    Left = 239
+    Top = 55
+    Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1079#1072' '#1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1079#1072' '#1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
+    ParentShowHint = False
+    Properties.ReadOnly = False
+    ShowHint = True
+    TabOrder = 18
+    Width = 105
+  end
+  object cbYear: TcxCheckBox
+    Left = 34
+    Top = 55
+    Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052' ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 19
+    Width = 130
+  end
+  object cxLabel3: TcxLabel
+    Left = 25
+    Top = 220
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' / '#1043#1088#1091#1087#1087#1072':'
+  end
+  object edUnit: TcxButtonEdit
+    Left = 25
+    Top = 240
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.Nullstring = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
+    Properties.ReadOnly = True
+    Properties.UseNullString = True
+    TabOrder = 21
+    Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
+    Width = 350
+  end
+  object cbClient_doc: TcxCheckBox
+    Left = 140
+    Top = 275
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 22
+    Width = 100
+  end
+  object cbOperPrice: TcxCheckBox
+    Left = 140
+    Top = 300
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1062#1077#1085#1072' '#1074#1093'. '#1074' '#1074#1072#1083'. ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1062#1077#1085#1072' '#1074#1093'.'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 23
+    Width = 100
+  end
+  object cbOperDate_doc: TcxCheckBox
+    Left = 270
+    Top = 275
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1043#1086#1076' / '#1052#1077#1089#1103#1094' '#1055#1088#1086#1076#1072#1078#1080' ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1043#1086#1076' / '#1052#1077#1089#1103#1094
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 24
+    Width = 100
+  end
+  object cbDay_doc: TcxCheckBox
+    Left = 270
+    Top = 300
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' '#1055#1088#1086#1076#1072#1078#1080' ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 25
+    Width = 100
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 296
-    Top = 274
+    Left = 345
+    Top = 41
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 311
-    Top = 14
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 287
+    Top = 214
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -182,8 +267,8 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 312
-    Top = 102
+    Left = 329
+    Top = 333
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -255,18 +340,40 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PeriodYearStart'
+        Name = 'StartYear'
         Value = Null
-        Component = edPeriodYearStart
+        Component = edStartYear
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PeriodYearEnd'
+        Name = 'EndYear'
         Value = Null
-        Component = edPeriodYearEnd
+        Component = edEndYear
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isYear'
+        Value = Null
+        Component = cbYear
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPeriodAll'
+        Value = Null
+        Component = cbPeriodAll
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isGoods'
+        Value = Null
+        Component = cbGoods
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -279,15 +386,35 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isGoods'
+        Name = 'isClient_doc'
         Value = Null
-        Component = cbGoods
+        Component = cbClient_doc
         DataType = ftBoolean
-        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isOperDate_doc'
+        Value = Null
+        Component = cbOperDate_doc
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDay_doc'
+        Value = Null
+        Component = cbDay_doc
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isOperPrice'
+        Value = Null
+        Component = cbOperPrice
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
-    Left = 15
-    Top = 280
+    Left = 47
+    Top = 327
   end
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'
@@ -330,8 +457,8 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 168
-    Top = 98
+    Left = 241
+    Top = 169
   end
   object GuidesBrand: TdsdGuides
     KeyField = 'Id'
@@ -361,8 +488,8 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 142
-    Top = 144
+    Left = 223
+    Top = 95
   end
   object GuidesPeriod: TdsdGuides
     KeyField = 'Id'
@@ -392,7 +519,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 174
-    Top = 172
+    Left = 183
+    Top = 139
   end
 end

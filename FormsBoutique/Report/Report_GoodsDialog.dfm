@@ -118,7 +118,9 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
     Top = 63
     Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1086' '#1042#1089#1077#1084' '#1056#1072#1079#1084#1077#1088#1072#1084' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1087#1086' '#1042#1089#1077#1084' '#1056#1072#1079#1084#1077#1088#1072#1084
+    ParentShowHint = False
     Properties.ReadOnly = False
+    ShowHint = True
     TabOrder = 12
     Width = 115
   end
@@ -127,7 +129,9 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
     Top = 63
     Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1086' '#1042#1089#1077#1084' '#1055#1072#1088#1090#1080#1103#1084' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1087#1086' '#1042#1089#1077#1084' '#1055#1072#1088#1090#1080#1103#1084
+    ParentShowHint = False
     Properties.ReadOnly = False
+    ShowHint = True
     TabOrder = 13
     Width = 109
   end
@@ -154,7 +158,9 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
     Top = 63
     Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1079#1072' '#1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1079#1072' '#1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
+    ParentShowHint = False
     Properties.ReadOnly = False
+    ShowHint = True
     TabOrder = 16
     Width = 102
   end

@@ -57,6 +57,8 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
     Top = 12
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 4
     Width = 133
   end
@@ -65,6 +67,8 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
     Top = 12
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1056#1072#1079#1084#1077#1088#1099
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 5
     Width = 70
   end
@@ -73,6 +77,8 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
     Top = 12
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082#1080
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 6
     Width = 80
   end
@@ -160,6 +166,8 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
     Top = 264
     Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 17
     Width = 142
   end

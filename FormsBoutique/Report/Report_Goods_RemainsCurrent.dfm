@@ -78,20 +78,26 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Left = 842
       Top = 30
       Action = actRefreshIsPartion
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 6
       Width = 131
     end
     object cbSize: TcxCheckBox
-      Left = 1078
+      Left = 1083
       Top = 30
       Action = actRefreshIsSize
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 7
       Width = 68
     end
     object cbPartner: TcxCheckBox
-      Left = 983
+      Left = 982
       Top = 30
       Action = actRefreshIsPartner
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 8
       Width = 89
     end
@@ -137,7 +143,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     object edStartYear: TcxCurrencyEdit
       Left = 658
       Top = 5
-      EditValue = 0.000000000000000000
+      EditValue = 2018.000000000000000000
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = '0'
       Properties.ReadOnly = True
@@ -194,11 +200,13 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Width = 300
     end
     object cbYear: TcxCheckBox
-      Left = 715
+      Left = 700
       Top = 30
       Action = actRefreshIsPeriodYear
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 21
-      Width = 129
+      Width = 130
     end
   end
   inherited PageControl: TcxPageControl [1]
@@ -206,19 +214,19 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     Width = 1169
     Height = 352
     TabOrder = 3
-    ExplicitTop = 96
+    ExplicitTop = 81
     ExplicitWidth = 1169
-    ExplicitHeight = 337
+    ExplicitHeight = 352
     ClientRectBottom = 352
     ClientRectRight = 1169
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1169
-      ExplicitHeight = 337
+      ExplicitHeight = 352
       inherited cxGrid: TcxGrid
         Width = 1169
         Height = 352
         ExplicitWidth = 1169
-        ExplicitHeight = 337
+        ExplicitHeight = 352
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -723,12 +731,12 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           'Checked')
       end
       item
-        Component = cbYear
+        Component = cbSize
         Properties.Strings = (
           'Checked')
       end
       item
-        Component = cbSize
+        Component = cbYear
         Properties.Strings = (
           'Checked')
       end
@@ -961,6 +969,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         end>
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefreshIsSize: TdsdDataSetRefresh
@@ -973,6 +982,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         end>
       Caption = #1056#1072#1079#1084#1077#1088#1099
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefreshIsPartner: TdsdDataSetRefresh
@@ -985,6 +995,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         end>
       Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082#1080
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefreshIsPeriodYear: TdsdDataSetRefresh
@@ -997,6 +1008,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         end>
       Caption = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052
       Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052' ('#1044#1072'/'#1053#1077#1090')'
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actGoodsPrint_Rem: TdsdExecStoredProc

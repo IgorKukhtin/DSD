@@ -2,6 +2,7 @@
 
 -- DROP VIEW IF EXISTS SoldTable;
 DROP FUNCTION IF EXISTS gpReport_SaleOLAP (TDateTime, TDateTime, Integer, Integer, Integer, TFloat, TFloat, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_SaleOLAP (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_SaleOLAP (
     IN inStartDate        TDateTime,  -- Дата начала
@@ -9,18 +10,17 @@ CREATE OR REPLACE FUNCTION gpReport_SaleOLAP (
     IN inPartnerId        Integer  ,  -- Покупатель
     IN inBrandId          Integer  ,  --
     IN inPeriodId         Integer  ,  --
-    IN inYearStart        TFloat   ,
-    IN inYearEnd          TFloat   ,
-    IN inIsSize           Boolean  ,  -- показать Размеры (Да/Нет)
-    IN inIsGoods          Boolean  ,  -- показать Товары (Да/Нет)
-    IN inIsOperPrice      Boolean  ,  -- показать Цена вх. в вал. (Да/Нет)
-
+    IN inYearStart        Integer  ,
+    IN inYearEnd          Integer  ,
+    IN inIsYear           Boolean  , -- ограничение Год ТМ (Да/Нет) (выбор партий)
+    IN inIsPeriodAll      Boolean  , -- ограничение за Весь период (Да/Нет) (движение по Документам)
+    IN inIsGoods          Boolean  , -- показать Товары (Да/Нет)
+    IN inIsSize           Boolean  , -- показать Размеры (Да/Нет)
     IN inIsClient_doc     Boolean  , -- показать Покупателя (Да/Нет)
     IN inIsOperDate_doc   Boolean  , -- показать Год / Месяц (Да/Нет) (движение по Документам)
-    IN inIsDayId_doc      Boolean  , -- показать День недели (Да/Нет) (движение по Документам)
-    IN inIsPeriodAll      Boolean  , -- ограничение за Весь период (Да/Нет) (движение по Документам)
-
-    IN inSession          TVarChar    -- сессия пользователя
+    IN inIsDay_doc        Boolean  , -- показать День недели (Да/Нет) (движение по Документам)
+    IN inIsOperPrice      Boolean  , -- показать Цена вх. в вал. (Да/Нет)
+    IN inSession          TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (BrandName          TVarChar
              , PeriodName         TVarChar
@@ -116,16 +116,14 @@ BEGIN
                                 , Object_PartionGoods.LineFabricaId
                                 , Object_PartionGoods.GoodsSizeId
 
-                                -- , MIConatiner.OperDate AS OperDate_doc
-                                -- , DATE_TRUNC ('MONTH',  MIConatiner.OperDate) AS OperDate_doc
-                                , NULL :: TDateTime AS OperDate_doc
-                                , EXTRACT (DOW FROM MIConatiner.OperDate)     AS DayId_doc
                                 , COALESCE (MIConatiner.ObjectExtId_Analyzer, Object_PartionGoods.UnitId) :: Integer AS UnitId
-                                , tmpContainer.ClientId
+                                , CASE WHEN inIsOperDate_doc = TRUE THEN DATE_TRUNC ('MONTH', MIConatiner.OperDate) ELSE NULL :: TDateTime END AS OperDate_doc
+                                , CASE WHEN inIsDay_doc      = TRUE THEN EXTRACT (DOW FROM MIConatiner.OperDate)    ELSE NULL :: Integer   END AS DayId_doc
+                                , CASE WHEN inIsClient_doc   = TRUE THEN tmpContainer.ClientId                      ELSE NULL :: Integer   END AS ClientId
 
                                 , Object_PartionGoods.UnitId     AS UnitId_in
                                 , Object_PartionGoods.CurrencyId AS CurrencyId
-                                , Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END AS OperPrice
+                                , CASE WHEN inIsOperPrice    = TRUE THEN Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END ELSE NULL :: TFloat END AS OperPrice
                                   -- Кол-во Приход от поставщика - только для UnitId
                                 , Object_PartionGoods.Amount AS Income_Amount
 
@@ -160,14 +158,14 @@ BEGIN
                                 LEFT JOIN tmpContainer ON tmpContainer.PartionId = Object_PartionGoods.MovementItemId
                                 LEFT JOIN MovementItemContainer AS MIConatiner
                                                                 ON MIConatiner.ContainerId    = tmpContainer.ContainerId
-                                                               -- AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_GoodsAccount())
-                                                               -- AND MIConatiner.OperDate BETWEEN inStartDate AND inEndDate
-                           WHERE (Object_PartionGoods.PartnerId  = inPartnerId        OR inPartnerId        = 0)
-                             AND (Object_PartionGoods.BrandId    = inBrandId          OR inBrandId         = 0)
-                             AND (Object_PartionGoods.PeriodId   = inPeriodId         OR inPeriodId        = 0)
-                             AND Object_PartionGoods.PeriodYear BETWEEN inYearStart AND inYearEnd
-                             -- AND (Object_PartionGoods.PeriodYear >= inYearStart OR inYearStart = 0)
-                             -- AND (Object_PartionGoods.PeriodYear <= inYearEnd   OR inYearEnd   = 0)
+                                                               AND (MIConatiner.OperDate BETWEEN inStartDate AND inEndDate
+                                                                 OR inIsPeriodAll = TRUE
+                                                                   )
+                           WHERE (Object_PartionGoods.PartnerId  = inPartnerId        OR inPartnerId   = 0)
+                             AND (Object_PartionGoods.BrandId    = inBrandId          OR inBrandId     = 0)
+                             AND (Object_PartionGoods.PeriodId   = inPeriodId         OR inPeriodId    = 0)
+                             AND ((Object_PartionGoods.PeriodYear BETWEEN inYearStart AND inYearEnd) OR inIsYear = FALSE)
+                             AND (MIConatiner.ContainerId        > 0                  OR inIsPeriodAll = TRUE)
 
                            GROUP BY Object_PartionGoods.MovementItemId
                                   , Object_PartionGoods.BrandId
@@ -185,11 +183,10 @@ BEGIN
                                   , Object_PartionGoods.LineFabricaId
                                   , Object_PartionGoods.GoodsSizeId
 
-                                  -- , MIConatiner.OperDate
-                                  -- , DATE_TRUNC ('MONTH',  MIConatiner.OperDate)
-                                  , EXTRACT (DOW FROM MIConatiner.OperDate)
                                   , MIConatiner.ObjectExtId_Analyzer
-                                  , tmpContainer.ClientId
+                                  , CASE WHEN inIsOperDate_doc = TRUE THEN DATE_TRUNC ('MONTH', MIConatiner.OperDate) ELSE NULL :: TDateTime END
+                                  , CASE WHEN inIsDay_doc      = TRUE THEN EXTRACT (DOW FROM MIConatiner.OperDate)    ELSE NULL :: Integer   END
+                                  , CASE WHEN inIsClient_doc   = TRUE THEN tmpContainer.ClientId                      ELSE NULL :: Integer   END
 
                                   , Object_PartionGoods.UnitId
                                   , Object_PartionGoods.CurrencyId
@@ -197,103 +194,6 @@ BEGIN
                                   , Object_PartionGoods.OperPrice
                                   , Object_PartionGoods.CountForPrice
 
-                          UNION ALL
-                           SELECT Object_PartionGoods.MovementItemId AS PartionId
-                                , Object_PartionGoods.BrandId
-                                , Object_PartionGoods.PeriodId
-                                , Object_PartionGoods.PeriodYear
-                                , Object_PartionGoods.PartnerId
-
-                                , Object_PartionGoods.GoodsGroupId
-                                , Object_PartionGoods.LabelId
-                                , Object_PartionGoods.CompositionGroupId
-                                -- , Object_PartionGoods.CompositionId
-
-                                , Object_PartionGoods.GoodsId
-                                -- , Object_PartionGoods.GoodsInfoId
-                                , Object_PartionGoods.LineFabricaId
-                                , Object_PartionGoods.GoodsSizeId
-
-                                -- , MIConatiner.OperDate AS OperDate_doc
-                                -- , DATE_TRUNC ('MONTH',  MIConatiner.OperDate) AS OperDate_doc
-                                , NULL :: TDateTime AS OperDate_doc
-                                , EXTRACT (DOW FROM MIConatiner.OperDate)     AS DayId_doc
-                                , COALESCE (MIConatiner.ObjectExtId_Analyzer, Object_PartionGoods.UnitId) :: Integer AS UnitId
-                                , tmpContainer.ClientId
-
-                                , Object_PartionGoods.UnitId     AS UnitId_in
-                                , Object_PartionGoods.CurrencyId AS CurrencyId
-                                , Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END AS OperPrice
-                                  -- Кол-во Приход от поставщика - только для UnitId
-                                , Object_PartionGoods.Amount AS Income_Amount
-
-                                , SUM (COALESCE (MIConatiner.Amount, 0)) :: TFloat AS Debt_Amount
-                                , SUM (CASE WHEN MIConatiner.Amount < 0 AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END) :: TFloat AS Sale_Amount
-                                , 0 :: TFloat AS Sale_Summ
-
-                                , 0 :: TFloat AS Sale_SummCost
-                                , 0 :: TFloat AS Sale_Summ_10100
-                                , 0 :: TFloat AS Sale_Summ_10201
-                                , 0 :: TFloat AS Sale_Summ_10202
-                                , 0 :: TFloat AS Sale_Summ_10203
-                                , 0 :: TFloat AS Sale_Summ_10204
-                                , 0 :: TFloat AS Sale_Summ_10200
-
-                                , SUM (CASE WHEN MIConatiner.Amount > 0 AND MIConatiner.MovementDescId IN (zc_Movement_ReturnIn()) THEN 1 * MIConatiner.Amount ELSE 0 END) :: TFloat AS Return_Amount
-                                , 0 :: TFloat AS Return_Summ
-                                , 0 :: TFloat AS Return_SummCost
-                                , 0 :: TFloat AS Return_Summ_10200
-
-                                , SUM (CASE WHEN MIConatiner.Amount < 0 AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END
-                                     - CASE WHEN MIConatiner.Amount > 0 AND MIConatiner.MovementDescId IN (zc_Movement_ReturnIn()) THEN 1 * MIConatiner.Amount ELSE 0 END
-                                       ) :: TFloat AS Result_Amount
-                                , 0 :: TFloat AS Result_Summ
-                                , 0 :: TFloat AS Result_SummCost
-                                , 0 :: TFloat AS Result_Summ_10200
-
-                                  --  № п/п
-                                , ROW_NUMBER() OVER (PARTITION BY Object_PartionGoods.MovementItemId ORDER BY CASE WHEN Object_PartionGoods.UnitId = COALESCE (MIConatiner.ObjectExtId_Analyzer, Object_PartionGoods.UnitId) THEN 0 ELSE 1 END ASC) AS Ord
-
-                           FROM Object_PartionGoods
-                                LEFT JOIN tmpContainer ON tmpContainer.PartionId = Object_PartionGoods.MovementItemId
-                                LEFT JOIN MovementItemContainer AS MIConatiner
-                                                                ON MIConatiner.ContainerId    = tmpContainer.ContainerId
-                                                               -- AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_GoodsAccount())
-                                                               -- AND MIConatiner.OperDate BETWEEN inStartDate AND inEndDate
-                           WHERE (Object_PartionGoods.PartnerId  = inPartnerId        OR inPartnerId        = 0)
-                             AND (Object_PartionGoods.BrandId    = inBrandId          OR inBrandId         = 0)
-                             AND (Object_PartionGoods.PeriodId   = inPeriodId         OR inPeriodId        = 0)
-                             AND Object_PartionGoods.PeriodYear BETWEEN inYearStart AND inYearEnd
-                             -- AND (Object_PartionGoods.PeriodYear >= inYearStart OR inYearStart = 0)
-                             -- AND (Object_PartionGoods.PeriodYear <= inYearEnd   OR inYearEnd   = 0)
-
-                           GROUP BY Object_PartionGoods.MovementItemId
-                                  , Object_PartionGoods.BrandId
-                                  , Object_PartionGoods.PeriodId
-                                  , Object_PartionGoods.PeriodYear
-                                  , Object_PartionGoods.PartnerId
-
-                                  , Object_PartionGoods.GoodsGroupId
-                                  , Object_PartionGoods.LabelId
-                                  , Object_PartionGoods.CompositionGroupId
-                                  , Object_PartionGoods.CompositionId
-
-                                  , Object_PartionGoods.GoodsId
-                                  , Object_PartionGoods.GoodsInfoId
-                                  , Object_PartionGoods.LineFabricaId
-                                  , Object_PartionGoods.GoodsSizeId
-
-                                  -- , MIConatiner.OperDate
-                                  -- , DATE_TRUNC ('MONTH',  MIConatiner.OperDate)
-                                  , EXTRACT (DOW FROM MIConatiner.OperDate)
-                                  , MIConatiner.ObjectExtId_Analyzer
-                                  , tmpContainer.ClientId
-
-                                  , Object_PartionGoods.UnitId
-                                  , Object_PartionGoods.CurrencyId
-                                  , Object_PartionGoods.Amount
-                                  , Object_PartionGoods.OperPrice
-                                  , Object_PartionGoods.CountForPrice
                           )
        , tmpData AS (SELECT tmpData_all.BrandId
                           , tmpData_all.PeriodId
@@ -305,20 +205,20 @@ BEGIN
                           , tmpData_all.CompositionGroupId
                           -- , tmpData_all.CompositionId
 
-                          , CASE WHEN inisGoods = TRUE THEN tmpData_all.GoodsId     ELSE 0 END AS GoodsId
-                          -- , CASE WHEN inisGoods = TRUE THEN tmpData_all.GoodsInfoId ELSE 0 END AS GoodsInfoId
+                          , CASE WHEN inIsGoods = TRUE THEN tmpData_all.GoodsId     ELSE 0 END AS GoodsId
+                          -- , CASE WHEN inIsGoods = TRUE THEN tmpData_all.GoodsInfoId ELSE 0 END AS GoodsInfoId
                           , tmpData_all.LineFabricaId
-                          , CASE WHEN inisSize  = TRUE THEN tmpData_all.GoodsSizeId ELSE 0 END AS GoodsSizeId
+                          , CASE WHEN inIsSize  = TRUE THEN tmpData_all.GoodsSizeId ELSE 0 END AS GoodsSizeId
 
                           , tmpData_all.OperDate_doc
                           , tmpData_all.DayId_doc
                           , tmpData_all.UnitId
-                          , CASE WHEN inisGoods = TRUE THEN tmpData_all.ClientId ELSE 0 END AS ClientId
+                          , tmpData_all.ClientId
 
                           , tmpData_all.UnitId_in
                           , tmpData_all.CurrencyId
 
-                          , CASE WHEN inisGoods = TRUE THEN tmpData_all.OperPrice ELSE 0 END AS OperPrice
+                          , tmpData_all.OperPrice
                           , SUM (CASE WHEN tmpData_all.Ord = 1 THEN tmpData_all.Income_Amount ELSE 0 END) AS Income_Amount
 
                           , SUM (tmpData_all.Debt_Amount)         AS Debt_Amount
@@ -404,19 +304,19 @@ BEGIN
                             , tmpData_all.CompositionGroupId
                             -- , tmpData_all.CompositionId
 
-                            , CASE WHEN inisGoods = TRUE THEN tmpData_all.GoodsId     ELSE 0 END
-                            -- , CASE WHEN inisGoods = TRUE THEN tmpData_all.GoodsInfoId ELSE 0 END
+                            , CASE WHEN inIsGoods = TRUE THEN tmpData_all.GoodsId     ELSE 0 END
+                            -- , CASE WHEN inIsGoods = TRUE THEN tmpData_all.GoodsInfoId ELSE 0 END
                             , tmpData_all.LineFabricaId
-                            , CASE WHEN inisSize  = TRUE THEN tmpData_all.GoodsSizeId ELSE 0 END
+                            , CASE WHEN inIsSize  = TRUE THEN tmpData_all.GoodsSizeId ELSE 0 END
 
                             , tmpData_all.OperDate_doc
                             , tmpData_all.DayId_doc
                             , tmpData_all.UnitId
-                            , CASE WHEN inisGoods = TRUE THEN tmpData_all.ClientId ELSE 0 END
+                            , tmpData_all.ClientId
 
                             , tmpData_all.UnitId_in
                             , tmpData_all.CurrencyId
-                            , CASE WHEN inisGoods = TRUE THEN tmpData_all.OperPrice ELSE 0 END
+                            , tmpData_all.OperPrice
 
                             , ObjectLink_Parent0.ChildObjectId
                             , ObjectLink_Parent1.ChildObjectId
@@ -636,4 +536,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_SaleOLAP (inStartDate:= '01.03.2017', inEndDate:= '31.03.2017', inPartnerId:= 2628, inBrandId:= 0, inPeriodId:= 0, inYearStart:= 2017, inYearEnd:= 2017, inIsSize:= FALSE, inIsGoods:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_SaleOLAP (inStartDate:= '01.03.2017', inEndDate:= '31.03.2017', inPartnerId:= 2628, inBrandId:= 0, inPeriodId:= 0, inYearStart:= 2017, inYearEnd:= 2017, inIsYear:= TRUE, inIsPeriodAll:= TRUE, inIsGoods:= FALSE, inIsSize:= FALSE, inIsClient_doc:= FALSE, inIsOperDate_doc:= FALSE, inIsDay_doc:= FALSE, inIsOperPrice:= FALSE, inSession:= zfCalc_UserAdmin());

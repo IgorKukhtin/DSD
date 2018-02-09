@@ -18,7 +18,7 @@ type
     deEnd: TcxDateEdit;
     deStart: TcxDateEdit;
     PeriodChoice: TPeriodChoice;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     FormParams: TdsdFormParams;
     cxLabel6: TcxLabel;
@@ -33,11 +33,19 @@ type
     edPeriod: TcxButtonEdit;
     GuidesPeriod: TdsdGuides;
     cxLabel5: TcxLabel;
-    edPeriodYearStart: TcxCurrencyEdit;
-    edPeriodYearEnd: TcxCurrencyEdit;
+    edStartYear: TcxCurrencyEdit;
+    edEndYear: TcxCurrencyEdit;
     cxLabel8: TcxLabel;
     cbSize: TcxCheckBox;
     cbGoods: TcxCheckBox;
+    cbPeriodAll: TcxCheckBox;
+    cbYear: TcxCheckBox;
+    cxLabel3: TcxLabel;
+    edUnit: TcxButtonEdit;
+    cbClient_doc: TcxCheckBox;
+    cbOperPrice: TcxCheckBox;
+    cbOperDate_doc: TcxCheckBox;
+    cbDay_doc: TcxCheckBox;
   private
     { Private declarations }
   public

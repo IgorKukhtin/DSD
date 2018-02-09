@@ -3,7 +3,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
   Top = 0
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' ('#1054#1051#1040#1055')'
   ClientHeight = 440
-  ClientWidth = 1234
+  ClientWidth = 1366
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,10 +21,11 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 1234
+    Width = 1366
     Height = 55
     Align = alTop
     TabOrder = 0
+    ExplicitWidth = 1434
     object deStart: TcxDateEdit
       Left = 79
       Top = 5
@@ -57,12 +58,12 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Width = 72
     end
     object cxLabel4: TcxLabel
-      Left = 241
-      Top = 31
+      Left = 275
+      Top = 32
       Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
     end
     object edPartner: TcxButtonEdit
-      Left = 308
+      Left = 342
       Top = 30
       Properties.Buttons = <
         item
@@ -73,16 +74,16 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Properties.ReadOnly = True
       Properties.UseNullString = True
       TabOrder = 5
-      Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
+      Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
       Width = 200
     end
     object cxLabel3: TcxLabel
-      Left = 515
+      Left = 549
       Top = 6
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072':'
     end
     object edBrand: TcxButtonEdit
-      Left = 609
+      Left = 643
       Top = 5
       Properties.Buttons = <
         item
@@ -91,17 +92,17 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1090#1086#1088#1075#1086#1074#1091#1102' '#1084#1072#1088#1082#1091'>'
+      Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1058#1086#1088#1075#1086#1074#1091#1102' '#1084#1072#1088#1082#1091'>'
       Width = 155
     end
     object cxLabel5: TcxLabel
-      Left = 566
+      Left = 600
       Top = 31
       Caption = #1057#1077#1079#1086#1085' :'
     end
     object edPeriod: TcxButtonEdit
-      Left = 609
-      Top = 30
+      Left = 644
+      Top = 31
       Properties.Buttons = <
         item
           Default = True
@@ -109,60 +110,66 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
         end>
       Properties.ReadOnly = True
       TabOrder = 9
-      Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1089#1077#1079#1086#1085'>'
+      Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1057#1077#1079#1086#1085'>'
       Width = 155
     end
     object cxLabel6: TcxLabel
-      Left = 787
+      Left = 812
       Top = 6
       Caption = #1043#1086#1076' '#1089' ...'
     end
-    object edPeriodYearStart: TcxCurrencyEdit
-      Left = 835
+    object edStartYear: TcxCurrencyEdit
+      Left = 860
       Top = 5
-      EditValue = 0.000000000000000000
+      EditValue = 2018.000000000000000000
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = '0'
+      Properties.ReadOnly = True
       TabOrder = 11
       Width = 40
     end
     object cxLabel8: TcxLabel
-      Left = 780
-      Top = 33
+      Left = 805
+      Top = 31
       Caption = #1043#1086#1076' '#1087#1086' ...'
     end
-    object edPeriodYearEnd: TcxCurrencyEdit
-      Left = 835
-      Top = 32
+    object edEndYear: TcxCurrencyEdit
+      Left = 860
+      Top = 30
       EditValue = 2018.000000000000000000
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = '0'
+      Properties.ReadOnly = True
       TabOrder = 13
       Width = 40
     end
     object cbSize: TcxCheckBox
-      Left = 1088
-      Top = 6
+      Left = 1055
+      Top = 30
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1056#1072#1079#1084#1077#1088#1099
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 14
-      Width = 85
+      Width = 75
     end
     object cbGoods: TcxCheckBox
-      Left = 1008
+      Left = 1055
       Top = 5
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1058#1086#1074#1072#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1058#1086#1074#1072#1088#1099
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 15
-      Width = 85
+      Width = 75
     end
     object cxLabel7: TcxLabel
-      Left = 172
+      Left = 206
       Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' / '#1043#1088#1091#1087#1087#1072':'
     end
     object edUnit: TcxButtonEdit
-      Left = 308
+      Left = 342
       Top = 5
       Properties.Buttons = <
         item
@@ -173,73 +180,84 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Properties.ReadOnly = True
       Properties.UseNullString = True
       TabOrder = 17
-      Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
+      Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
       Width = 200
     end
-    object cxCheckBox1: TcxCheckBox
-      Left = 1163
-      Top = 6
-      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
+    object cbOperPrice: TcxCheckBox
+      Left = 1140
+      Top = 30
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1062#1077#1085#1072' '#1074#1093'. '#1074' '#1074#1072#1083'. ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1062#1077#1085#1072' '#1074#1093'.'
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 18
-      Width = 85
+      Width = 70
     end
     object cbYear: TcxCheckBox
-      Left = 881
-      Top = 5
+      Left = 900
+      Top = 30
       Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052' ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052
+      ParentShowHint = False
+      ShowHint = True
+      State = cbsChecked
       TabOrder = 19
-      Width = 129
+      Width = 130
     end
     object cbPeriodAll: TcxCheckBox
       Left = 168
       Top = 30
       Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1079#1072' '#1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1079#1072' '#1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
+      ParentShowHint = False
       Properties.ReadOnly = False
+      ShowHint = True
       State = cbsChecked
       TabOrder = 20
       Width = 105
     end
-    object cxCheckBox2: TcxCheckBox
-      Left = 1008
-      Top = 27
-      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1058#1086#1074#1072#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
+    object cbClient_doc: TcxCheckBox
+      Left = 1140
+      Top = 5
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 21
       Width = 85
     end
-    object cxCheckBox3: TcxCheckBox
-      Left = 1099
-      Top = 27
-      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1058#1086#1074#1072#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
+    object cbOperDate_doc: TcxCheckBox
+      Left = 1250
+      Top = 5
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1043#1086#1076' / '#1052#1077#1089#1103#1094' '#1055#1088#1086#1076#1072#1078#1080' ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1043#1086#1076' / '#1052#1077#1089#1103#1094
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 22
-      Width = 85
+      Width = 100
     end
-    object cxCheckBox4: TcxCheckBox
-      Left = 1179
-      Top = 33
-      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1058#1086#1074#1072#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
+    object cbDay_doc: TcxCheckBox
+      Left = 1250
+      Top = 30
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' '#1055#1088#1086#1076#1072#1078#1080' ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 23
-      Width = 85
+      Width = 100
     end
   end
   object cxDBPivotGrid: TcxDBPivotGrid
     Left = 0
     Top = 81
-    Width = 1234
+    Width = 1366
     Height = 359
     Align = alClient
     DataSource = DataSource
     Groups = <>
     OptionsView.RowGrandTotalWidth = 232
     TabOrder = 1
-    ExplicitTop = 91
-    ExplicitWidth = 926
-    ExplicitHeight = 349
+    ExplicitWidth = 1234
     object pvLabelName: TcxDBPivotGridField
       Area = faRow
       AreaIndex = 1
@@ -641,15 +659,6 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       UniqueName = #1044#1077#1085#1100' ('#1087#1088#1086#1076'.)'
     end
   end
-  object cbTotal: TcxCheckBox
-    Left = 752
-    Top = 94
-    Caption = 'C'#1075#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100
-    Properties.ReadOnly = False
-    TabOrder = 6
-    Visible = False
-    Width = 101
-  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 120
@@ -674,12 +683,12 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
           'Date')
       end
       item
-        Component = edPeriodYearEnd
+        Component = edEndYear
         Properties.Strings = (
           'Value')
       end
       item
-        Component = edPeriodYearStart
+        Component = edStartYear
         Properties.Strings = (
           'Value')
       end
@@ -752,7 +761,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbStaticText'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -760,40 +769,15 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
         end
         item
           Visible = True
-          ItemName = 'bbStaticText'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
           ItemName = 'bbRefresh'
         end
         item
-          BeginGroup = True
           Visible = True
-          ItemName = 'bbStaticText'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStaticText'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint2'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStaticText'
-        end
-        item
-          Visible = True
-          ItemName = 'bb'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStaticText'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -801,7 +785,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
         end
         item
           Visible = True
-          ItemName = 'bbStaticText'
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -817,32 +801,14 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Action = actExportToExcel
       Category = 0
     end
-    object bbStaticText: TdxBarButton
-      Caption = '     '
+    object dxBarStatic: TdxBarStatic
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
       Category = 0
-    end
-    object bbPrint: TdxBarButton
-      Action = actPrint
-      Category = 0
-      UnclickAfterDoing = False
-    end
-    object bbPrint2: TdxBarButton
-      Action = actPrint2
-      Category = 0
-      ImageIndex = 16
-      UnclickAfterDoing = False
-    end
-    object bb: TdxBarControlContainerItem
-      Caption = 'New Item'
-      Category = 0
-      Hint = 'New Item'
-      Visible = ivNever
-      Control = cbTotal
     end
   end
   object ActionList: TActionList
@@ -860,7 +826,6 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
-      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actExportToExcel: TdsdGridToExcel
@@ -871,129 +836,6 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
-    end
-    object dsdOpenForm1: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'dsdOpenForm1'
-      FormName = 'TReport_AccountForm'
-      FormNameParam.Value = 'TReport_AccountForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'StartDate'
-          Value = 41640d
-          Component = deStart
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'AccountId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'AccountId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'AccountName'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'AccountName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'AccountGroupId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'AccountGroupId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'AccountGroupName'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'AccountGroupName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'AccountDirectionId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'AccountDirectionId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'AccountDirectionName'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'AccountDirectionName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InfoMoneyId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'InfoMoneyId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InfoMoneyName'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'InfoMoneyName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'BusinessId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'BusinessId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'BusinessName'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'BusinessName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object MultiAction1: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = dsdExecStoredProc1
-        end
-        item
-          Action = dsdOpenForm1
-        end>
-      Caption = 'MultiAction1'
-    end
-    object dsdExecStoredProc1: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGetBalanceParam
-      StoredProcList = <
-        item
-          StoredProc = spGetBalanceParam
-        end>
-      Caption = 'dsdExecStoredProc1'
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -1008,7 +850,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = 41640d
+          Value = 41579d
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
@@ -1016,7 +858,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
         end
         item
           Name = 'EndDate'
-          Value = 41640d
+          Value = 41608d
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
@@ -1074,18 +916,40 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PeriodYearStart'
+          Name = 'StartYear'
           Value = Null
-          Component = edPeriodYearStart
+          Component = edStartYear
           DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PeriodYearEnd'
+          Name = 'EndYear'
           Value = Null
-          Component = edPeriodYearEnd
+          Component = edEndYear
           DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isYear'
+          Value = Null
+          Component = cbYear
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPeriodAll'
+          Value = Null
+          Component = cbPeriodAll
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGoods'
+          Value = Null
+          Component = cbGoods
+          DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
@@ -1098,166 +962,36 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'isGoods'
+          Name = 'isClient_doc'
           Value = Null
-          Component = cbGoods
+          Component = cbClient_doc
           DataType = ftBoolean
-          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isOperDate_doc'
+          Value = Null
+          Component = cbOperDate_doc
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDay_doc'
+          Value = Null
+          Component = cbDay_doc
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isOperPrice'
+          Value = Null
+          Component = cbOperPrice
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
-    end
-    object actPrint2: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = '0'
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end
-        item
-          FromParam.Value = 42370d
-          FromParam.Component = deStart
-          FromParam.DataType = ftDateTime
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
-          ToParam.DataType = ftDateTime
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end
-        item
-          FromParam.Value = 42370d
-          FromParam.Component = deEnd
-          FromParam.DataType = ftDateTime
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
-          ToParam.DataType = ftDateTime
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' ('#1044#1077#1073#1077#1090'/'#1050#1088#1077#1076#1080#1090')'
-      Hint = #1055#1077#1095#1072#1090#1100' ('#1044#1077#1073#1077#1090'/'#1050#1088#1077#1076#1080#1090')'
-      ImageIndex = 3
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = ClientDataSet
-          UserName = 'frxDBDItems'
-          IndexFieldNames = 'RootName;AccountGroupName;AccountDirectionName;AccountName'
-        end>
-      Params = <
-        item
-          Name = 'StartDate'
-          Value = 42370d
-          Component = deStart
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = 42370d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isTotal'
-          Value = Null
-          Component = cbTotal
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end>
-      ReportName = #1054#1090#1095#1077#1090' '#1059#1055' '#1041#1072#1083#1072#1085#1089' ('#1044#1077#1073#1077#1090' '#1050#1088#1077#1076#1080#1090')'
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1059#1055' '#1041#1072#1083#1072#1085#1089' ('#1044#1077#1073#1077#1090' '#1050#1088#1077#1076#1080#1090')'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-    end
-    object actPrint: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = '0'
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end
-        item
-          FromParam.Value = 42370d
-          FromParam.Component = deStart
-          FromParam.DataType = ftDateTime
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
-          ToParam.DataType = ftDateTime
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end
-        item
-          FromParam.Value = 42370d
-          FromParam.Component = deEnd
-          FromParam.DataType = ftDateTime
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
-          ToParam.DataType = ftDateTime
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' ('#1040#1082#1090#1080#1074'/'#1055#1072#1089#1089#1080#1074')'
-      Hint = #1055#1077#1095#1072#1090#1100' ('#1040#1082#1090#1080#1074'/'#1055#1072#1089#1089#1080#1074')'
-      ImageIndex = 3
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = ClientDataSet
-          UserName = 'frxDBDItems'
-          IndexFieldNames = 'RootName;AccountGroupName;AccountDirectionName;AccountName'
-        end>
-      Params = <
-        item
-          Name = 'StartDate'
-          Value = 42370d
-          Component = deStart
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = 42370d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isTotal'
-          Value = Null
-          Component = cbTotal
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end>
-      ReportName = #1054#1090#1095#1077#1090' '#1059#1055' '#1041#1072#1083#1072#1085#1089
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1059#1055' '#1041#1072#1083#1072#1085#1089
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
     end
   end
   object spReport: TdsdStoredProc
@@ -1309,18 +1043,40 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inYearStart'
+        Name = 'inStartYear'
         Value = Null
-        Component = edPeriodYearStart
-        DataType = ftFloat
+        Component = edStartYear
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inYearEnd'
+        Name = 'inEndYear'
         Value = Null
-        Component = edPeriodYearEnd
-        DataType = ftFloat
+        Component = edEndYear
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsYear'
+        Value = Null
+        Component = cbYear
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsPeriodAll'
+        Value = Null
+        Component = cbPeriodAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisGoods'
+        Value = Null
+        Component = cbGoods
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1333,9 +1089,33 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisGoods'
+        Name = 'inIsClient_doc'
         Value = Null
-        Component = cbGoods
+        Component = cbClient_doc
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsOperDate_doc'
+        Value = Null
+        Component = cbOperDate_doc
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDay_doc'
+        Value = Null
+        Component = cbDay_doc
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsOperPrice'
+        Value = Null
+        Component = cbOperPrice
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1372,212 +1152,41 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
         Component = GuidesPeriod
       end
       item
-        Component = edPeriodYearStart
+        Component = cbYear
       end
       item
-        Component = edPeriodYearEnd
+        Component = cbPeriodAll
+      end
+      item
+        Component = cbGoods
       end
       item
         Component = cbSize
       end
       item
-        Component = cbGoods
+        Component = cbClient_doc
+      end
+      item
+        Component = cbOperDate_doc
+      end
+      item
+        Component = cbDay_doc
+      end
+      item
+        Component = cbOperPrice
       end>
     Left = 496
     Top = 224
   end
   object PivotAddOn: TPivotAddOn
-    ErasedFieldName = 'isErased'
     PivotGrid = cxDBPivotGrid
-    OnDblClickActionList = <
-      item
-        Action = MultiAction1
-      end>
-    ActionItemList = <
-      item
-        Action = MultiAction1
-        ShortCut = 13
-      end>
+    OnDblClickActionList = <>
+    ActionItemList = <>
     Left = 392
     Top = 272
   end
-  object spGetBalanceParam: TdsdStoredProc
-    StoredProcName = 'gpGetBalanceParam'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inData'
-        Value = ''
-        Component = PivotAddOn
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'RootType'
-        Value = '0'
-        Component = FormParams
-        ComponentItem = 'RootType'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AccountGroupId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'AccountGroupId'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AccountGroupName'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'AccountGroupName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AccountDirectionId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'AccountDirectionId'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AccountDirectionName'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'AccountDirectionName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AccountId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'AccountId'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AccountName'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'AccountName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InfoMoneyId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'InfoMoneyId'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InfoMoneyName'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'InfoMoneyName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ObjectDirectionId'
-        Value = '0'
-        Component = FormParams
-        ComponentItem = 'ObjectDirectionId'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ObjectDestinationId'
-        Value = '0'
-        Component = FormParams
-        ComponentItem = 'ObjectDestinationId'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'JuridicalBasisId'
-        Value = '0'
-        Component = FormParams
-        ComponentItem = 'JuridicalBasisId'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'BusinessId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'BusinessId'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'BusinessName'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'BusinessName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 320
-    Top = 320
-  end
   object FormParams: TdsdFormParams
-    Params = <
-      item
-        Name = 'AccountId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AccountName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AccountGroupId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AccountGroupName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AccountDirectionId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AccountDirectionName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InfoMoneyId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InfoMoneyName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'BusinessId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'BusinessName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
+    Params = <>
     Left = 360
     Top = 184
   end
@@ -1622,8 +1231,8 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 560
-    Top = 112
+    Left = 488
+    Top = 32
   end
   object GuidesBrand: TdsdGuides
     KeyField = 'Id'
@@ -1653,8 +1262,8 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 462
-    Top = 102
+    Left = 726
+    Top = 65534
   end
   object GuidesPeriod: TdsdGuides
     KeyField = 'Id'
@@ -1684,7 +1293,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 630
-    Top = 2
+    Left = 662
+    Top = 34
   end
 end

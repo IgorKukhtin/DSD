@@ -60,12 +60,7 @@ type
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
     PivotAddOn: TPivotAddOn;
-    spGetBalanceParam: TdsdStoredProc;
     FormParams: TdsdFormParams;
-    dsdOpenForm1: TdsdOpenForm;
-    MultiAction1: TMultiAction;
-    dsdExecStoredProc1: TdsdExecStoredProc;
-    bbStaticText: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     pvIncome_Amount: TcxDBPivotGridField;
@@ -73,12 +68,6 @@ type
     pvSale_Summ_10204: TcxDBPivotGridField;
     pvSale_Summ_10200: TcxDBPivotGridField;
     pvPeriodName: TcxDBPivotGridField;
-    actPrint: TdsdPrintAction;
-    bbPrint: TdxBarButton;
-    actPrint2: TdsdPrintAction;
-    bbPrint2: TdxBarButton;
-    cbTotal: TcxCheckBox;
-    bb: TdxBarControlContainerItem;
     cxLabel4: TcxLabel;
     edPartner: TcxButtonEdit;
     cxLabel3: TcxLabel;
@@ -89,9 +78,9 @@ type
     edPeriod: TcxButtonEdit;
     GuidesPeriod: TdsdGuides;
     cxLabel6: TcxLabel;
-    edPeriodYearStart: TcxCurrencyEdit;
+    edStartYear: TcxCurrencyEdit;
     cxLabel8: TcxLabel;
-    edPeriodYearEnd: TcxCurrencyEdit;
+    edEndYear: TcxCurrencyEdit;
     cbSize: TcxCheckBox;
     cbGoods: TcxCheckBox;
     pvCurrencyName: TcxDBPivotGridField;
@@ -108,12 +97,13 @@ type
     DayName_doc: TcxDBPivotGridField;
     cxLabel7: TcxLabel;
     edUnit: TcxButtonEdit;
-    cxCheckBox1: TcxCheckBox;
+    cbOperPrice: TcxCheckBox;
     cbYear: TcxCheckBox;
     cbPeriodAll: TcxCheckBox;
-    cxCheckBox2: TcxCheckBox;
-    cxCheckBox3: TcxCheckBox;
-    cxCheckBox4: TcxCheckBox;
+    cbClient_doc: TcxCheckBox;
+    cbOperDate_doc: TcxCheckBox;
+    cbDay_doc: TcxCheckBox;
+    dxBarStatic: TdxBarStatic;
   private
   public
   end;
