@@ -897,7 +897,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       ExplicitTop = 30
     end
     object edPartion: TcxButtonEdit [2]
-      Left = 728
+      Left = 740
       Top = 5
       Properties.Buttons = <
         item
@@ -907,7 +907,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         end>
       Properties.ReadOnly = True
       TabOrder = 13
-      Width = 224
+      Width = 217
     end
     object edGoodsSize: TcxButtonEdit [3]
       Left = 535
@@ -968,13 +968,13 @@ inherited Report_GoodsForm: TReport_GoodsForm
       Width = 276
     end
     object cbGoodsSizeAll: TcxCheckBox
-      Left = 614
-      Top = 30
+      Left = 621
+      Top = 29
       Action = actRefreshIsGoodsSize
       Properties.ReadOnly = False
       State = cbsChecked
       TabOrder = 7
-      Width = 115
+      Width = 113
     end
     object cbPartionAll: TcxCheckBox
       Left = 737
@@ -995,7 +995,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       Width = 105
     end
     object cxLabel5: TcxLabel
-      Left = 614
+      Left = 625
       Top = 6
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470':'
     end

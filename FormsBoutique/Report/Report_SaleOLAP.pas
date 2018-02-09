@@ -111,6 +111,9 @@ type
     cxCheckBox1: TcxCheckBox;
     cbYear: TcxCheckBox;
     cbPeriodAll: TcxCheckBox;
+    cxCheckBox2: TcxCheckBox;
+    cxCheckBox3: TcxCheckBox;
+    cxCheckBox4: TcxCheckBox;
   private
   public
   end;

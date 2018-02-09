@@ -75,25 +75,25 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Width = 200
     end
     object cbPartion: TcxCheckBox
-      Left = 810
+      Left = 842
       Top = 30
       Action = actRefreshIsPartion
       TabOrder = 6
       Width = 131
     end
     object cbSize: TcxCheckBox
-      Left = 1055
+      Left = 1078
       Top = 30
       Action = actRefreshIsSize
       TabOrder = 7
-      Width = 70
+      Width = 68
     end
     object cbPartner: TcxCheckBox
-      Left = 955
+      Left = 983
       Top = 30
       Action = actRefreshIsPartner
       TabOrder = 8
-      Width = 90
+      Width = 89
     end
     object cxLabel5: TcxLabel
       Left = 350
@@ -145,13 +145,13 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Width = 40
     end
     object cxLabel8: TcxLabel
-      Left = 704
-      Top = 7
+      Left = 603
+      Top = 31
       Caption = #1043#1086#1076' '#1087#1086' ...'
     end
     object edEndYear: TcxCurrencyEdit
-      Left = 759
-      Top = 5
+      Left = 658
+      Top = 30
       EditValue = 2018.000000000000000000
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = '0'
@@ -177,12 +177,12 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Width = 200
     end
     object cxLabel9: TcxLabel
-      Left = 810
+      Left = 748
       Top = 6
-      Caption = #1055#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074' :'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074':'
     end
     object edGoodsPrint: TcxButtonEdit
-      Left = 911
+      Left = 846
       Top = 5
       Properties.Buttons = <
         item
@@ -191,10 +191,10 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         end>
       Properties.ReadOnly = True
       TabOrder = 20
-      Width = 214
+      Width = 300
     end
     object cbYear: TcxCheckBox
-      Left = 610
+      Left = 715
       Top = 30
       Action = actRefreshIsPeriodYear
       TabOrder = 21

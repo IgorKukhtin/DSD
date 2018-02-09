@@ -113,12 +113,12 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Width = 155
     end
     object cxLabel6: TcxLabel
-      Left = 774
+      Left = 787
       Top = 6
       Caption = #1043#1086#1076' '#1089' ...'
     end
     object edPeriodYearStart: TcxCurrencyEdit
-      Left = 826
+      Left = 835
       Top = 5
       EditValue = 0.000000000000000000
       Properties.DecimalPlaces = 0
@@ -127,13 +127,13 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Width = 40
     end
     object cxLabel8: TcxLabel
-      Left = 891
-      Top = 6
+      Left = 780
+      Top = 33
       Caption = #1043#1086#1076' '#1087#1086' ...'
     end
     object edPeriodYearEnd: TcxCurrencyEdit
-      Left = 945
-      Top = 5
+      Left = 835
+      Top = 32
       EditValue = 2018.000000000000000000
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = '0'
@@ -185,8 +185,8 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Width = 85
     end
     object cbYear: TcxCheckBox
-      Left = 774
-      Top = 29
+      Left = 881
+      Top = 5
       Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052' ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052
       TabOrder = 19
@@ -201,6 +201,30 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       State = cbsChecked
       TabOrder = 20
       Width = 105
+    end
+    object cxCheckBox2: TcxCheckBox
+      Left = 1008
+      Top = 27
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1058#1086#1074#1072#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
+      TabOrder = 21
+      Width = 85
+    end
+    object cxCheckBox3: TcxCheckBox
+      Left = 1099
+      Top = 27
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1058#1086#1074#1072#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1043#1086#1076' / '#1052#1077#1089#1103#1094
+      TabOrder = 22
+      Width = 85
+    end
+    object cxCheckBox4: TcxCheckBox
+      Left = 1179
+      Top = 33
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1058#1086#1074#1072#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080
+      TabOrder = 23
+      Width = 85
     end
   end
   object cxDBPivotGrid: TcxDBPivotGrid
