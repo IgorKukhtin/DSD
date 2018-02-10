@@ -10,8 +10,8 @@ CREATE OR REPLACE FUNCTION gpReport_SaleOLAP (
     IN inPartnerId        Integer  ,  -- Покупатель
     IN inBrandId          Integer  ,  --
     IN inPeriodId         Integer  ,  --
-    IN inYearStart        Integer  ,
-    IN inYearEnd          Integer  ,
+    IN inStartYear        Integer  ,
+    IN inEndYear          Integer  ,
     IN inIsYear           Boolean  , -- ограничение Год ТМ (Да/Нет) (выбор партий)
     IN inIsPeriodAll      Boolean  , -- ограничение за Весь период (Да/Нет) (движение по Документам)
     IN inIsGoods          Boolean  , -- показать Товары (Да/Нет)
@@ -22,37 +22,36 @@ CREATE OR REPLACE FUNCTION gpReport_SaleOLAP (
     IN inIsOperPrice      Boolean  , -- показать Цена вх. в вал. (Да/Нет)
     IN inSession          TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (BrandName          TVarChar
-             , PeriodName         TVarChar
+RETURNS TABLE (BrandName          VarChar (100)
+             , PeriodName         VarChar (25)
              , PeriodYear         Integer
              , PartnerId          Integer
-             , PartnerName        TVarChar
+             , PartnerName        VarChar (100)
 
              -- , GoodsGroupName_all TVarChar
              , GoodsGroupName     TVarChar
-             , LabelName          TVarChar
+             , LabelName          VarChar (100)
              -- , CompositionGroupName  TVarChar
              -- , CompositionName       TVarChar
 
              , GoodsId            Integer
              , GoodsCode          Integer
-             , GoodsName          TVarChar
+             , GoodsName          VarChar (100)
              -- , GoodsInfoName      TVarChar
              -- , LineFabricaName    TVarChar
              -- , FabrikaName        TVarChar
              , GoodsSizeId        Integer
              , GoodsSizeName      VarChar (25)
 
-             -- , OperDate           TDateTime
              , PeriodName_doc     VarChar (25)
              , PeriodYear_doc     Integer
              , MonthName_doc      VarChar (25)
              , DayName_doc        VarChar (3)
-             , UnitName           TVarChar
-             , ClientName         TVarChar
+             , UnitName           VarChar (100)
+             , ClientName         VarChar (100)
 
-             , UnitName_In        TVarChar
-             , CurrencyName       TVarChar
+             , UnitName_In        VarChar (100)
+             , CurrencyName       VarChar (10)
 
              , OperPrice          TFloat
              , Income_Amount      TFloat
@@ -75,11 +74,11 @@ RETURNS TABLE (BrandName          TVarChar
              , Result_Summ        TFloat
              , Result_SummCost    TFloat
              , Result_Summ_10200  TFloat
-             
-             , GroupsName4        TVarChar
-             , GroupsName3        TVarChar
-             , GroupsName2        TVarChar
-             , GroupsName1        TVarChar
+
+             , GroupsName4        VarChar (50)
+             , GroupsName3        VarChar (50)
+             , GroupsName2        VarChar (50)
+             , GroupsName1        VarChar (50)
   )
 AS
 $BODY$
@@ -118,7 +117,7 @@ BEGIN
 
                                 , COALESCE (MIConatiner.ObjectExtId_Analyzer, Object_PartionGoods.UnitId) :: Integer AS UnitId
                                 , CASE WHEN inIsOperDate_doc = TRUE THEN DATE_TRUNC ('MONTH', MIConatiner.OperDate) ELSE NULL :: TDateTime END AS OperDate_doc
-                                , CASE WHEN inIsDay_doc      = TRUE THEN EXTRACT (DOW FROM MIConatiner.OperDate)    ELSE NULL :: Integer   END AS DayId_doc
+                                , CASE WHEN inIsDay_doc      = TRUE THEN EXTRACT (DOW FROM MIConatiner.OperDate)    ELSE NULL :: Integer   END AS OrdDay_doc
                                 , CASE WHEN inIsClient_doc   = TRUE THEN tmpContainer.ClientId                      ELSE NULL :: Integer   END AS ClientId
 
                                 , Object_PartionGoods.UnitId     AS UnitId_in
@@ -164,7 +163,7 @@ BEGIN
                            WHERE (Object_PartionGoods.PartnerId  = inPartnerId        OR inPartnerId   = 0)
                              AND (Object_PartionGoods.BrandId    = inBrandId          OR inBrandId     = 0)
                              AND (Object_PartionGoods.PeriodId   = inPeriodId         OR inPeriodId    = 0)
-                             AND ((Object_PartionGoods.PeriodYear BETWEEN inYearStart AND inYearEnd) OR inIsYear = FALSE)
+                             AND ((Object_PartionGoods.PeriodYear BETWEEN inStartYear AND inEndYear) OR inIsYear = FALSE)
                              AND (MIConatiner.ContainerId        > 0                  OR inIsPeriodAll = TRUE)
 
                            GROUP BY Object_PartionGoods.MovementItemId
@@ -211,7 +210,7 @@ BEGIN
                           , CASE WHEN inIsSize  = TRUE THEN tmpData_all.GoodsSizeId ELSE 0 END AS GoodsSizeId
 
                           , tmpData_all.OperDate_doc
-                          , tmpData_all.DayId_doc
+                          , tmpData_all.OrdDay_doc
                           , tmpData_all.UnitId
                           , tmpData_all.ClientId
 
@@ -268,7 +267,7 @@ BEGIN
                           LEFT JOIN ObjectLink AS ObjectLink_Parent0
                                                ON ObjectLink_Parent0.ObjectId = tmpData_all.GoodsId
                                               AND ObjectLink_Parent0.DescId   = zc_ObjectLink_Goods_GoodsGroup()
-              
+
                           LEFT JOIN ObjectLink AS ObjectLink_Parent1
                                                ON ObjectLink_Parent1.ObjectId = ObjectLink_Parent0.ChildObjectId
                                               AND ObjectLink_Parent1.DescId   = zc_ObjectLink_GoodsGroup_Parent()
@@ -310,7 +309,7 @@ BEGIN
                             , CASE WHEN inIsSize  = TRUE THEN tmpData_all.GoodsSizeId ELSE 0 END
 
                             , tmpData_all.OperDate_doc
-                            , tmpData_all.DayId_doc
+                            , tmpData_all.OrdDay_doc
                             , tmpData_all.UnitId
                             , tmpData_all.ClientId
 
@@ -335,49 +334,42 @@ BEGIN
                             , ObjectLink_Parent7.ChildObjectId
                             , ObjectLink_Parent8.ChildObjectId
                      )
-
+   , tmpDayOfWeek AS (SELECT zfCalc.Ord_dow, zfCalc.DayOfWeekName
+                      FROM (SELECT GENERATE_SERIES (CURRENT_DATE, CURRENT_DATE + INTERVAL '6 DAY', '1 DAY' :: INTERVAL) AS OperDate) AS tmp
+                           CROSS JOIN zfCalc_DayOfWeekName_cross (tmp.OperDate) AS zfCalc
+                     )
         -- результат
-        SELECT Object_Brand.ValueData             AS BrandName
-             , Object_Period.ValueData            AS PeriodName
-             , tmpData.PeriodYear      :: Integer AS PeriodYear
-             , Object_Partner.Id                  AS PartnerId
-             , Object_Partner.ValueData           AS PartnerName
+        SELECT Object_Brand.ValueData    :: VarChar (100) AS BrandName
+             , Object_Period.ValueData   :: VarChar (25)  AS PeriodName
+             , tmpData.PeriodYear        :: Integer       AS PeriodYear
+             , Object_Partner.Id                          AS PartnerId
+             , Object_Partner.ValueData  :: VarChar (100) AS PartnerName
 
              -- , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupName_all
-             , Object_GoodsGroup.ValueData        AS GoodsGroupName
-             , Object_Label.ValueData             AS LabelName
+             , Object_GoodsGroup.ValueData                AS GoodsGroupName
+             , Object_Label.ValueData    :: VarChar (100) AS LabelName
              -- , Object_CompositionGroup.ValueData  AS CompositionGroupName
              -- , Object_Composition.ValueData       AS CompositionName
 
-             , Object_Goods.Id                    AS GoodsId
-             , Object_Goods.ObjectCode            AS GoodsCode
-             , Object_Goods.ValueData             AS GoodsName
+             , Object_Goods.Id                            AS GoodsId
+             , Object_Goods.ObjectCode                    AS GoodsCode
+             , Object_Goods.ValueData    :: VarChar (100) AS GoodsName
              -- , Object_GoodsInfo.ValueData         AS GoodsInfoName
              -- , Object_LineFabrica.ValueData       AS LineFabricaName
              -- , Object_Fabrika.ValueData           AS FabrikaName
-             , Object_GoodsSize.Id                AS GoodsSizeId
-             , Object_GoodsSize.ValueData    :: VarChar (25) AS GoodsSizeName
+             , Object_GoodsSize.Id                        AS GoodsSizeId
+             , Object_GoodsSize.ValueData :: VarChar (25) AS GoodsSizeName
 
-             -- , tmpData.OperDate_doc                     :: TDateTime    AS OperDate
-             , zfCalc_MonthYearName (tmpData.OperDate_doc) :: VarChar (25) AS PeriodName_doc
-             , EXTRACT (YEAR FROM tmpData.OperDate_doc)    :: Integer      AS PeriodYear_doc
-             , zfCalc_MonthName (tmpData.OperDate_doc)     :: VarChar (25) AS MonthName_doc
-             , CASE tmpData.DayId_doc
-                    WHEN 1 THEN '1Пн'
-                    WHEN 2 THEN '2Вт'
-                    WHEN 3 THEN '3Ср'
-                    WHEN 4 THEN '4Чт'
-                    WHEN 5 THEN '5Пт'
-                    WHEN 6 THEN '6Сб'
-                    WHEN 0 THEN '7Вс'
-                    ELSE '???'
-               END :: VarChar (3) AS DayName_doc
+             , zfCalc_MonthYearName_cross (tmpData.OperDate_doc) :: VarChar (25) AS PeriodName_doc
+             , EXTRACT (YEAR FROM tmpData.OperDate_doc)          :: Integer      AS PeriodYear_doc
+             , zfCalc_MonthName_cross (tmpData.OperDate_doc)     :: VarChar (25) AS MonthName_doc
+             , tmpDayOfWeek.DayOfWeekName                        :: VarChar (4)  AS DayName_doc
 
-             , Object_Unit.ValueData              AS UnitName
-             , Object_Client.ValueData            AS ClientName
+             , Object_Unit.ValueData     :: VarChar (100) AS UnitName
+             , Object_Client.ValueData   :: VarChar (100) AS ClientName
 
-             , Object_Unit_In.ValueData           AS UnitName_In
-             , Object_Currency.ValueData          AS CurrencyName
+             , Object_Unit_In.ValueData  :: VarChar (100) AS UnitName_In
+             , Object_Currency.ValueData :: VarChar (10)  AS CurrencyName
 
              , tmpData.OperPrice          :: TFloat
              , tmpData.Income_Amount      :: TFloat
@@ -403,9 +395,9 @@ BEGIN
              , tmpData.Result_Summ        :: TFloat
              , tmpData.Result_SummCost    :: TFloat
              , tmpData.Result_Summ_10200  :: TFloat
-             
+
                -- 0 - Вторая Группа СНИЗУ
-             , Object_GoodsGroup1.ValueData AS GroupsName4
+             , Object_GoodsGroup1.ValueData :: VarChar (50) AS GroupsName4
 
                -- 1 - Самый Верхней уровень
              , CASE WHEN tmpData.GroupId1_parent IS NULL
@@ -424,7 +416,7 @@ BEGIN
                          THEN Object_GoodsGroup7.ValueData
                     WHEN tmpData.GroupId8_parent IS NULL
                          THEN Object_GoodsGroup8.ValueData
-               END :: TVarChar AS GroupsName3
+               END :: VarChar (50) AS GroupsName3
 
                -- 2 - Следующий ПОСЛЕ П.1. + !!!для "Детское" - еще Следующий!!!
              , CASE WHEN tmpData.GroupId3_parent IS NULL
@@ -457,7 +449,7 @@ BEGIN
                                    THEN Object_GoodsGroup6.ValueData
                                    ELSE Object_GoodsGroup7.ValueData
                               END
-               END :: TVarChar AS GroupsName2
+               END :: VarChar (50) AS GroupsName2
 
                -- 3 - Следующий ПОСЛЕ П.2. + !!!для "Детское" - еще Следующий!!!
              , CASE WHEN tmpData.GroupId3_parent IS NULL
@@ -490,9 +482,11 @@ BEGIN
                                    THEN Object_GoodsGroup5.ValueData
                                    ELSE Object_GoodsGroup6.ValueData
                               END
-               END :: TVarChar AS GroupsName1
+               END :: VarChar (50) AS GroupsName1
 
         FROM tmpData
+            LEFT JOIN tmpDayOfWeek ON tmpDayOfWeek.Ord_dow = tmpData.OrdDay_doc
+
             LEFT JOIN Object AS Object_Client   ON Object_Client.Id   = tmpData.ClientId
             LEFT JOIN Object AS Object_Partner  ON Object_Partner.Id  = tmpData.PartnerId
             LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id     = tmpData.UnitId
@@ -536,4 +530,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_SaleOLAP (inStartDate:= '01.03.2017', inEndDate:= '31.03.2017', inPartnerId:= 2628, inBrandId:= 0, inPeriodId:= 0, inYearStart:= 2017, inYearEnd:= 2017, inIsYear:= TRUE, inIsPeriodAll:= TRUE, inIsGoods:= FALSE, inIsSize:= FALSE, inIsClient_doc:= FALSE, inIsOperDate_doc:= FALSE, inIsDay_doc:= FALSE, inIsOperPrice:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_SaleOLAP (inStartDate:= '01.01.2017', inEndDate:= '31.12.2017', inPartnerId:= 2628, inBrandId:= 0, inPeriodId:= 0, inStartYear:= 2017, inEndYear:= 2017, inIsYear:= TRUE, inIsPeriodAll:= TRUE, inIsGoods:= FALSE, inIsSize:= FALSE, inIsClient_doc:= FALSE, inIsOperDate_doc:= FALSE, inIsDay_doc:= FALSE, inIsOperPrice:= FALSE, inSession:= zfCalc_UserAdmin());

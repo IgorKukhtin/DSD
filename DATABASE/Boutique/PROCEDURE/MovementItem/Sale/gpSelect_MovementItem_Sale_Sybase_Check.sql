@@ -130,7 +130,7 @@ BEGIN
              FROM tmpData;
 
 
-/*
+
      -- !!! 1. эти были закрыты ƒќ StartDate_sybase!!! - ”ƒјЋя≈ћ
      vbTmp:= (WITH tmpRet AS (SELECT Movement.OperDate, tmpData.*
                               FROM _tmpData AS tmpData
@@ -258,7 +258,7 @@ BEGIN
                    ) AS tmp
              );
      -- !!! END !!! 1. эти были закрыты ƒќ StartDate_sybase!!! - ”ƒјЋя≈ћ
-     */
+     
 
 
 

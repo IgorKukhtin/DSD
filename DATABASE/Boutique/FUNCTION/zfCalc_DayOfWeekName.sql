@@ -3,11 +3,17 @@
 DROP FUNCTION IF EXISTS zfCalc_DayOfWeekName (TDateTime);
 
 CREATE OR REPLACE FUNCTION zfCalc_DayOfWeekName (inOperDate TDateTime)
-RETURNS TABLE ( Number integer, DayOfWeekName TVarChar, DayOfWeekName_Full TVarChar) AS
+RETURNS TABLE (Ord_dow            Integer
+             , Ord                Integer
+             , DayOfWeekName      TVarChar
+             , DayOfWeekName_Full TVarChar
+              )
+AS
 $BODY$
 BEGIN
   RETURN QUERY
-  SELECT CASE EXTRACT (DOW FROM inOperDate) WHEN 0 THEN 7 ELSE EXTRACT (DOW FROM inOperDate) END  ::integer AS Number
+  SELECT EXTRACT (DOW FROM inOperDate) :: Integer AS Ord_dow
+       , CASE EXTRACT (DOW FROM inOperDate) WHEN 0 THEN 7 ELSE EXTRACT (DOW FROM inOperDate) END  :: Integer AS Ord
        , CASE EXTRACT (DOW FROM inOperDate)
                WHEN 1 THEN 'ѕн'
                WHEN 2 THEN '¬т'
@@ -42,5 +48,4 @@ ALTER FUNCTION zfCalc_DayOfWeekName (TDateTime) OWNER TO postgres;
 */
 
 -- тест
---SELECT zfCalc_DayOfWeekName (CURRENT_DATE)
---SELECT zfCalc_DayOfWeekName ('22.01.2016')
+-- SELECT zfCalc.* FROM (SELECT GENERATE_SERIES (CURRENT_DATE, CURRENT_DATE + INTERVAL '6 DAY', '1 DAY' :: INTERVAL) AS OperDate) AS tmp CROSS JOIN zfCalc_DayOfWeekName (tmp.OperDate) AS zfCalc ORDER BY 2

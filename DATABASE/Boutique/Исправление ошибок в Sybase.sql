@@ -123,9 +123,14 @@ where isnull (DiscountMovementItem_byBarCode.Id, 0) <> isnull (DiscountKlientAcc
   and DiscountKlientAccountMoney.isErased = 1
   and DiscountMovementItemReturn_byBarCode.Id is not null
 
-
-
-
+  
+select Bill.OperDate , BillItems.* 
+from BillItems
+     left outer join _dataBI_all  on _dataBI_all.ReplId = BillItems.ReplId and _dataBI_all.DatabaseId = BillItems.DatabaseId 
+     left outer join Bill  on Bill.Id = BillItems.BillId 
+where BillItems.DatabaseId  > 0
+  and _dataBI_all.ReplId is null
+order by 1
 
 
 -- Проверка / Расчет  для Sybase - что б после возврата оплаты ДОЛГ был = 0

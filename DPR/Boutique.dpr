@@ -70,7 +70,6 @@ uses
   Movement_PeriodDialog in '..\FormsBoutique\Document\Movement_PeriodDialog.pas' {Movement_PeriodDialogForm: TParentForm},
   IFIN_J1201009 in '..\SOURCE\MeDOC\IFIN_J1201009.pas',
   IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas',
-  dsdOLAPSetup in '..\FormsBoutique\Report\OLAP\dsdOLAPSetup.pas' {OLAPSetupForm},
   dsdOlap in '..\SOURCE\COMPONENT\dsdOlap.pas',
   dsdOLAPXMLBind in '..\SOURCE\COMPONENT\dsdOLAPXMLBind.pas',
   GridGroupCalculate in '..\SOURCE\GridGroupCalculate.pas';
@@ -91,7 +90,7 @@ begin
       TUpdater.AutomaticUpdateProgram;
       TUpdater.AutomaticCheckConnect;
       Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TMainFormInstance, MainFormInstance);
+      Application.CreateForm(TMainForm, MainFormInstance);
   end;
   Application.Run;
 

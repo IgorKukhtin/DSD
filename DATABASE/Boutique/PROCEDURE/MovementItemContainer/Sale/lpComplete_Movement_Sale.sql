@@ -98,7 +98,8 @@ BEGIN
                                                                        )
                             )
             -- для Sybase
-          , tmpCheck AS (SELECT Object.ObjectCode AS PartionId_MI FROM Object WHERE Object.Id IN (SELECT 366872
+          , tmpCheck AS (SELECT Object.ObjectCode AS PartionId_MI FROM Object WHERE Object.Id IN (SELECT -12345 AS PartionId_MI
+                   /*UNION SELECT 366872
                    UNION SELECT 374215
                    UNION SELECT 739198
                    UNION SELECT 739264
@@ -108,7 +109,19 @@ BEGIN
                    UNION SELECT 744408
                    UNION SELECT 744677
                    UNION SELECT 739173
-                   UNION SELECT 739185
+                   UNION SELECT 739185*/
+
+UNION SELECT 793448
+UNION SELECT 793469
+UNION SELECT 793471
+UNION SELECT 821522
+UNION SELECT 821528
+UNION SELECT 793544
+UNION SELECT 793184
+UNION SELECT 793202
+UNION SELECT 476394
+UNION SELECT 483737
+UNION SELECT 793470
                          -- FROM gpSelect_MovementItem_Sale_Sybase_Check()
                         ))
         -- результат
