@@ -1,4 +1,4 @@
-inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
+inherited Report_CollationByClientForm: TReport_CollationByClientForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'> '#1087#1086' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
   ClientHeight = 450
   ClientWidth = 1065
@@ -828,8 +828,8 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_CollationByPartnerDialogForm'
-      FormNameParam.Value = 'TReport_CollationByPartnerDialogForm'
+      FormName = 'TReport_CollationByClientDialogForm'
+      FormNameParam.Value = 'TReport_CollationByClientDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1064,7 +1064,7 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
     Top = 160
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_CollationByPartner'
+    StoredProcName = 'gpReport_CollationByClient'
     Params = <
       item
         Name = 'inStartDate'
@@ -1091,7 +1091,7 @@ inherited Report_CollationByPartnerForm: TReport_CollationByPartnerForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPartnerId'
+        Name = 'inClientId'
         Value = Null
         Component = GuidesClient
         ComponentItem = 'Key'

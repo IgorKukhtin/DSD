@@ -1,19 +1,20 @@
 -- Function:  gpReport_MotionByPartner()
 
 DROP FUNCTION IF EXISTS gpReport_MotionByPartner (TDateTime, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_MotionByClient (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_MotionByPartner (
+CREATE OR REPLACE FUNCTION gpReport_MotionByClient (
     IN inStartDate        TDateTime,  -- Дата начала
     IN inEndDate          TDateTime,  -- Дата окончания
     IN inUnitId           Integer  ,  -- Подразделение
-    IN inPartnerId        Integer  ,  -- Покупатель
+    IN inClientId        Integer  ,  -- Покупатель
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId            Integer
              , DescName              TVarChar
              , OperDate              TDateTime
              , Invnumber             TVarChar
-             , PartnerName           TVarChar
+             , ClientName           TVarChar
              , PartionId             Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar
@@ -62,7 +63,7 @@ BEGIN
     RETURN QUERY
     WITH
     tmpContainer_All AS (SELECT Container.WhereObjectId          AS UnitId
-                              , CLO_Client.ObjectId              AS PartnerId
+                              , CLO_Client.ObjectId              AS ClientId
                               , Container.PartionId              AS PartionId
                               , CLO_PartionMI.ObjectId           AS PartionMI_Id
                               
@@ -107,7 +108,7 @@ BEGIN
                               INNER JOIN ContainerLinkObject AS CLO_Client
                                                              ON CLO_Client.ContainerId = Container.Id
                                                             AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
-                                                            AND CLO_Client.ObjectId    = inPartnerId
+                                                            AND CLO_Client.ObjectId    = inClientId
                               LEFT JOIN ContainerLinkObject AS CLO_PartionMI
                                                             ON CLO_PartionMI.ContainerId = Container.Id
                                                            AND CLO_PartionMI.DescId = zc_ContainerLinkObject_PartionMI()
@@ -135,7 +136,7 @@ BEGIN
                          ) 
                       
    , tmpContainer AS (SELECT tmp.UnitId
-                           , tmp.PartnerId
+                           , tmp.ClientId
                            , tmp.PartionId
                            , tmp.PartionMI_Id
                            , SUM (COALESCE (tmp.StartAmount,0))    AS CountDebt_Start
@@ -150,7 +151,7 @@ BEGIN
                            , SUM (COALESCE (tmp.SumReturnIn,0))    AS SumReturnIn
                       FROM tmpContainer_All AS tmp 
                       GROUP BY tmp.UnitId
-                             , tmp.PartnerId
+                             , tmp.ClientId
                              , tmp.PartionId
                              , tmp.PartionMI_Id
                       )
@@ -161,7 +162,7 @@ BEGIN
                              , tmp.Invnumber
                              , tmp.MovementItemId
                              , tmp.Amount
-                             , tmp.PartnerId
+                             , tmp.ClientId
                              , tmp.PartionId
                              
                              , SUM (tmp.CountDebt_Start) AS CountDebt_Start
@@ -182,7 +183,7 @@ BEGIN
                                    , COALESCE (MI_Sale.Id,  MovementItem.Id)                 AS MovementItemId
                                    , COALESCE (MI_Sale.Amount, MovementItem.Amount)          AS Amount
                                    
-                                   , tmpContainer.PartnerId
+                                   , tmpContainer.ClientId
                                    , tmpContainer.PartionId
                                    , tmpContainer.CountDebt_Start
                                    , tmpContainer.SummDebt_Start
@@ -213,7 +214,7 @@ BEGIN
                                , tmp.Invnumber
                                , tmp.MovementItemId
                                , tmp.Amount
-                               , tmp.PartnerId
+                               , tmp.ClientId
                                , tmp.PartionId
                         )
                         
@@ -267,7 +268,7 @@ BEGIN
              , tmpData.OperDate
              , tmpData.Invnumber
 
-             , Object_Partner.ValueData       AS PartnerName
+             , Object_Client.ValueData        AS ClientName
              , tmpData.PartionId
              , Object_Goods.Id                AS GoodsId
              , Object_Goods.ObjectCode        AS GoodsCode
@@ -312,7 +313,7 @@ BEGIN
         FROM tmpData_All AS tmpData
             LEFT JOIN MovementDesc ON MovementDesc.Id = tmpData.MovementDescId
                         
-            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpData.PartnerId
+            LEFT JOIN Object AS Object_Client ON Object_Client.Id = tmpData.ClientId
             
             LEFT JOIN Object_PartionGoods      ON Object_PartionGoods.MovementItemId  = tmpData.PartionId
             
@@ -346,4 +347,4 @@ $BODY$
 */
 
 -- тест
---select * from gpReport_MotionByPartner(inStartDate := ('01.03.2017')::TDateTime , inEndDate := ('31.03.2017')::TDateTime , inUnitId := 4195 , inPartnerId := 9765 ,  inSession := '2');
+--select * from gpReport_MotionByClient(inStartDate := ('01.03.2017')::TDateTime , inEndDate := ('31.03.2017')::TDateTime , inUnitId := 4195 , inClientId := 9765 ,  inSession := '2');

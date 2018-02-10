@@ -883,12 +883,12 @@
 				<Form>Report_SaleReturnInDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Report\Report_PartnerDebt.pas">
-				<Form>Report_PartnerDebtForm</Form>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_ClientDebt.pas">
+				<Form>Report_ClientDebtForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Report\Report_PartnerDebtDialog.pas">
-				<Form>Report_PartnerDebtDialogForm</Form>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_ClientDebtDialog.pas">
+				<Form>Report_ClientDebtDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Report\Report_MovementIncomeDialog.pas">
@@ -912,12 +912,12 @@
 				<Form>GoodsPrintForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Report\Report_MotionByPartner.pas">
-				<Form>Report_MotionByPartnerForm</Form>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_MotionByClient.pas">
+				<Form>Report_MotionByClientForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Report\Report_MotionByPartnerDialog.pas">
-				<Form>Report_MotionByPartnerDialogForm</Form>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_MotionByClientDialog.pas">
+				<Form>Report_MotionByClientDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\MeDOC\IFIN_J1201209.pas"/>
@@ -946,12 +946,12 @@
 				<Form>Report_GoodsAccount_TotalErrorForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Report\Report_CollationByPartnerDialog.pas">
-				<Form>Report_CollationByPartnerDialogForm</Form>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_CollationByClientDialog.pas">
+				<Form>Report_CollationByClientDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Report\Report_CollationByPartner.pas">
-				<Form>Report_CollationByPartnerForm</Form>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_CollationByClient.pas">
+				<Form>Report_CollationByClientForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Guides\Unit_Dialog.pas">

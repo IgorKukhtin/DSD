@@ -1,8 +1,9 @@
--- Function:  gpReport_PartnerDebt()
+-- Function:  gpReport_ClientDebt()
 
 DROP FUNCTION IF EXISTS gpReport_PartnerDebt (Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpReport_ClientDebt (Integer,TVarChar);
 
-CREATE OR REPLACE FUNCTION  gpReport_PartnerDebt (
+CREATE OR REPLACE FUNCTION  gpReport_ClientDebt (
     IN inUnitId           Integer  ,  -- ѕодразделение
     IN inSession          TVarChar    -- сесси€ пользовател€
 )
@@ -284,5 +285,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_PartnerDebt (inUnitId := 506 ,  inSession := '2');
--- SELECT * FROM gpReport_PartnerDebt(inUnitId := 4195 ,  inSession := '2');
+-- SELECT * FROM gpReport_ClientDebt (inUnitId := 506 ,  inSession := '2');
+-- SELECT * FROM gpReport_ClientDebt(inUnitId := 4195 ,  inSession := '2');

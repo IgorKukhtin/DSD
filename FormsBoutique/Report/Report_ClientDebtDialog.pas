@@ -1,4 +1,4 @@
-unit Report_CollationByPartnerDialog;
+unit Report_ClientDebtDialog;
 
 interface
 
@@ -22,7 +22,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TReport_CollationByPartnerDialogForm = class(TParentForm)
+  TReport_ClientDebtDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     PeriodChoice: TPeriodChoice;
@@ -37,13 +37,6 @@ type
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     actRefresh: TdsdDataSetRefresh;
-    cxLabel1: TcxLabel;
-    deStart: TcxDateEdit;
-    cxLabel2: TcxLabel;
-    deEnd: TcxDateEdit;
-    cxLabel4: TcxLabel;
-    edClient: TcxButtonEdit;
-    GuidesClient: TdsdGuides;
   private
     { Private declarations }
   public
@@ -55,6 +48,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_CollationByPartnerDialogForm);
+  RegisterClass(TReport_ClientDebtDialogForm);
 
 end.

@@ -1,4 +1,4 @@
-object Report_CollationByPartnerDialogForm: TReport_CollationByPartnerDialogForm
+object Report_CollationByClientDialogForm: TReport_CollationByClientDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog

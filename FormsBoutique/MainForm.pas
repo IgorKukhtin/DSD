@@ -155,14 +155,14 @@ type
     actReport_GoodsMI_Account: TdsdOpenForm;
     actReport_SaleReturnIn: TdsdOpenForm;
     miReport_SaleReturnIn: TMenuItem;
-    actReport_PartnerDebt: TdsdOpenForm;
+    actReport_ClientDebt: TdsdOpenForm;
     miReport_PartnerDebt: TMenuItem;
     miLine51: TMenuItem;
     actGoodsAccount_ReturnIn: TdsdOpenForm;
     miGoodsAccount_ReturnIn: TMenuItem;
     actGoodsPrint: TdsdOpenForm;
     miGoodsPrint: TMenuItem;
-    actReport_MotionByPartner: TdsdOpenForm;
+    actReport_MotionByClient: TdsdOpenForm;
     miReport_MotionByPartner: TMenuItem;
     actSaleMovement: TdsdOpenForm;
     actReturnInMovement: TdsdOpenForm;
@@ -184,7 +184,7 @@ type
     miObject_Client_LastError: TMenuItem;
     actReport_Sale_ContainerError: TdsdOpenForm;
     miReport_Sale_ContainerError: TMenuItem;
-    actReport_CollationByPartner: TdsdOpenForm;
+    actReport_CollationByClient: TdsdOpenForm;
     miReport_CollationByPartner: TMenuItem;
     miReport_SaleOLAP: TMenuItem;
     actReport_SaleOLAP: TdsdOpenForm;

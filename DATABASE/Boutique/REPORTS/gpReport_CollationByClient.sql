@@ -1,12 +1,13 @@
 -- Function:  gpReport_CollationByPartner()
 
 DROP FUNCTION IF EXISTS gpReport_CollationByPartner (TDateTime, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_CollationByClient (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_CollationByPartner (
+CREATE OR REPLACE FUNCTION gpReport_CollationByClient (
     IN inStartDate        TDateTime,  -- Дата начала
     IN inEndDate          TDateTime,  -- Дата окончания
     IN inUnitId           Integer  ,  -- Подразделение
-    IN inPartnerId        Integer  ,  -- Покупатель
+    IN inClientId        Integer  ,  -- Покупатель
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Text_info             TVarChar
@@ -84,7 +85,7 @@ BEGIN
                           INNER JOIN ContainerLinkObject AS CLO_Client 
                                                          ON CLO_Client.ContainerId = Container.Id
                                                         AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
-                                                        AND CLO_Client.ObjectId    = inPartnerId                            --inClientId --Перцева Наталья 6343  -- 
+                                                        AND CLO_Client.ObjectId    = inClientId                            --inClientId --Перцева Наталья 6343  -- 
                           INNER JOIN ContainerLinkObject AS CLO_Unit 
                                                          ON CLO_Unit.ContainerId = Container.Id
                                                         AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
@@ -440,4 +441,4 @@ $BODY$
 */
 
 -- тест
---  select * from gpReport_CollationByPartner(inStartDate := ('01.03.2017')::TDateTime , inEndDate := ('31.03.2017')::TDateTime , inUnitId := 4195 , inPartnerId := 9765 ,  inSession := '2');
+--  select * from gpReport_CollationByClient(inStartDate := ('01.03.2017')::TDateTime , inEndDate := ('31.03.2017')::TDateTime , inUnitId := 4195 , inClientId := 9765 ,  inSession := '2');

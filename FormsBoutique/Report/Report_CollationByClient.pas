@@ -1,4 +1,4 @@
-unit Report_CollationByPartner;
+unit Report_CollationByClient;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TReport_CollationByPartnerForm = class(TAncestorReportForm)
+  TReport_CollationByClientForm = class(TAncestorReportForm)
     cxLabel3: TcxLabel;
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
@@ -59,7 +59,7 @@ type
   end;
 
 var
-  Report_CollationByPartnerForm: TReport_CollationByPartnerForm;
+  Report_CollationByClientForm: TReport_CollationByClientForm;
 
 implementation
 
@@ -67,5 +67,5 @@ implementation
 
 initialization
 
-  RegisterClass(TReport_CollationByPartnerForm)
+  RegisterClass(TReport_CollationByClientForm)
 end.

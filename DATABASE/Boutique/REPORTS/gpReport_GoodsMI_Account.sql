@@ -73,7 +73,6 @@ BEGIN
                        , Object_Status.ObjectCode  AS StatusCode
                   FROM (SELECT zc_Enum_Status_Complete()   AS StatusId
                         UNION SELECT zc_Enum_Status_UnComplete() AS StatusId WHERE inIsShowAll = TRUE
-                        UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsShowAll = TRUE
                         ) AS tmp
                         LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmp.StatusId
                  )
@@ -121,7 +120,7 @@ BEGIN
                      LEFT JOIN MovementItem AS MI_Master
                                             ON MI_Master.Id         = MI_Child.ParentId
                                            AND MI_Master.DescId     = zc_MI_Master()
-                                           AND MI_Master.isErased   = FALSE   
+                                           AND MI_Master.isErased   = FALSE
                      LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                  ON MIFloat_ChangePercent.MovementItemId = MI_Master.Id
                                                  AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent() 
@@ -136,7 +135,6 @@ BEGIN
                                                 AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()                                                  
                 WHERE Movement_Sale.DescId = zc_Movement_Sale()
                   AND Movement_Sale.OperDate BETWEEN inStartDate AND inEndDate
-                  AND Movement_Sale.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
                 GROUP BY Movement_Sale.Id
                        , Movement_Sale.OperDate
                        , Movement_Sale.Invnumber 
@@ -167,7 +165,7 @@ BEGIN
                          , MI_Master.Id                        AS MI_Id
                          , COALESCE (MIFloat_ChangePercent.ValueData, 0)      AS ChangePercent
                          , COALESCE (MIFloat_OperPriceList.ValueData, 0)      AS OperPriceList
-                         , COALESCE (MIFloat_SummChangePercent.ValueData, 0)  AS SummChangePercent
+                         , COALESCE (MIFloat_SummChangePercent.ValueData, 0) * (-1)  AS SummChangePercent
                          
                          , SUM (MI_Master.Amount) * (-1)                      AS Amount
                          , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_GRN() THEN (-1) * MI_Child.Amount ELSE 0 END) AS TotalPay_Grn
@@ -221,7 +219,6 @@ BEGIN
                                                     AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent() 
                     WHERE Movement_ReturnIn.DescId = zc_Movement_ReturnIn()
                       AND Movement_ReturnIn.OperDate BETWEEN inStartDate AND inEndDate
-                      AND Movement_ReturnIn.StatusId = zc_Enum_Status_Complete() 
                     GROUP BY Movement_ReturnIn.Id 
                            , Movement_ReturnIn.OperDate 
                            , Movement_ReturnIn.Invnumber 
@@ -311,7 +308,6 @@ BEGIN
 
                         WHERE Movement_GoodsAccount.DescId = zc_Movement_GoodsAccount()
                           AND Movement_GoodsAccount.OperDate BETWEEN inStartDate AND inEndDate
-                          AND Movement_GoodsAccount.StatusId = zc_Enum_Status_Complete() 
                         GROUP BY Movement_GoodsAccount.Id 
                                , Movement_GoodsAccount.OperDate
                                , Movement_GoodsAccount.Invnumber

@@ -1,10 +1,10 @@
-object Report_PartnerDebtDialogForm: TReport_PartnerDebtDialogForm
+object Report_MotionByClientDialogForm: TReport_MotionByClientDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1087#1086' '#1090#1077#1082#1091#1097#1080#1084' '#1076#1086#1083#1075#1072#1084'>'
-  ClientHeight = 119
-  ClientWidth = 342
+  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
+  ClientHeight = 189
+  ClientWidth = 345
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,8 +18,8 @@ object Report_PartnerDebtDialogForm: TReport_PartnerDebtDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 49
-    Top = 85
+    Left = 41
+    Top = 154
     Width = 75
     Height = 21
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_PartnerDebtDialogForm: TReport_PartnerDebtDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 223
-    Top = 85
+    Left = 215
+    Top = 154
     Width = 75
     Height = 21
     Caption = #1054#1090#1084#1077#1085#1072
@@ -37,8 +37,8 @@ object Report_PartnerDebtDialogForm: TReport_PartnerDebtDialogForm
     TabOrder = 1
   end
   object edUnit: TcxButtonEdit
-    Left = 10
-    Top = 40
+    Left = 8
+    Top = 61
     Properties.Buttons = <
       item
         Default = True
@@ -49,17 +49,65 @@ object Report_PartnerDebtDialogForm: TReport_PartnerDebtDialogForm
     Width = 305
   end
   object cxLabel3: TcxLabel
-    Left = 10
-    Top = 20
+    Left = 8
+    Top = 41
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
+  object cxLabel1: TcxLabel
+    Left = 18
+    Top = 7
+    Caption = #1057':'
+  end
+  object deStart: TcxDateEdit
+    Left = 36
+    Top = 6
+    EditValue = 42736d
+    Properties.ShowTime = False
+    TabOrder = 5
+    Width = 85
+  end
+  object cxLabel2: TcxLabel
+    Left = 128
+    Top = 7
+    Caption = #1087#1086':'
+  end
+  object deEnd: TcxDateEdit
+    Left = 150
+    Top = 6
+    EditValue = 42736d
+    Properties.ShowTime = False
+    TabOrder = 7
+    Width = 85
+  end
+  object cxLabel4: TcxLabel
+    Left = 8
+    Top = 90
+    Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100':'
+  end
+  object edClient: TcxButtonEdit
+    Left = 8
+    Top = 113
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.Nullstring = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
+    Properties.ReadOnly = True
+    Properties.UseNullString = True
+    TabOrder = 9
+    Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+    Width = 305
+  end
   object PeriodChoice: TPeriodChoice
-    Left = 279
-    Top = 11
+    DateStart = deStart
+    DateEnd = deEnd
+    Left = 304
+    Top = 35
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 214
-    Top = 9
+    Left = 295
+    Top = 116
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -71,8 +119,8 @@ object Report_PartnerDebtDialogForm: TReport_PartnerDebtDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 255
-    Top = 55
+    Left = 247
+    Top = 124
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -92,9 +140,42 @@ object Report_PartnerDebtDialogForm: TReport_PartnerDebtDialogForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerId'
+        Value = Null
+        Component = GuidesClient
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerName'
+        Value = Null
+        Component = GuidesClient
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 38
-    Top = 65
+    Left = 30
+    Top = 134
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -124,8 +205,8 @@ object Report_PartnerDebtDialogForm: TReport_PartnerDebtDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 102
-    Top = 17
+    Left = 108
+    Top = 51
   end
   object spGet_UserUnit: TdsdStoredProc
     StoredProcName = 'gpGet_UserUnit'
@@ -148,12 +229,12 @@ object Report_PartnerDebtDialogForm: TReport_PartnerDebtDialogForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 168
-    Top = 72
+    Left = 160
+    Top = 141
   end
   object ActionList: TActionList
-    Left = 155
-    Top = 49
+    Left = 148
+    Top = 67
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -188,5 +269,49 @@ object Report_PartnerDebtDialogForm: TReport_PartnerDebtDialogForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+  end
+  object GuidesClient: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edClient
+    FormNameParam.Value = 'TClientForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TClientForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesClient
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesClient
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 185
+    Top = 102
   end
 end

@@ -21,12 +21,12 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_CollationByPartner: TdsdOpenForm [1]
+    object actReport_CollationByClient: TdsdOpenForm [1]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080
-      FormName = 'TReport_CollationByPartnerForm'
-      FormNameParam.Value = 'TReport_CollationByPartnerForm'
+      FormName = 'TReport_CollationByClientForm'
+      FormNameParam.Value = 'TReport_CollationByClientForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -123,23 +123,23 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_MotionByPartner: TdsdOpenForm [10]
+    object actReport_MotionByClient: TdsdOpenForm [10]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
-      FormName = 'TReport_MotionByPartnerForm'
-      FormNameParam.Value = 'TReport_MotionByPartnerForm'
+      FormName = 'TReport_MotionByClientForm'
+      FormNameParam.Value = 'TReport_MotionByClientForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_PartnerDebt: TdsdOpenForm [11]
+    object actReport_ClientDebt: TdsdOpenForm [11]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1058#1077#1082#1091#1097#1080#1077' '#1076#1086#1083#1075#1080
-      FormName = 'TReport_PartnerDebtForm'
-      FormNameParam.Value = 'TReport_PartnerDebtForm'
+      FormName = 'TReport_ClientDebtForm'
+      FormNameParam.Value = 'TReport_ClientDebtForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -984,13 +984,13 @@ inherited MainForm: TMainForm
         Action = actReport_GoodsMI_Account
       end
       object miReport_PartnerDebt: TMenuItem
-        Action = actReport_PartnerDebt
+        Action = actReport_ClientDebt
       end
       object miReport_MotionByPartner: TMenuItem
-        Action = actReport_MotionByPartner
+        Action = actReport_MotionByClient
       end
       object miReport_CollationByPartner: TMenuItem
-        Action = actReport_CollationByPartner
+        Action = actReport_CollationByClient
       end
     end
     object miReport_Basis: TMenuItem [5]
