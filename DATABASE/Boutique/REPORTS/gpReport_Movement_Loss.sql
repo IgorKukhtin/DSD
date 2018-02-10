@@ -12,8 +12,8 @@ CREATE OR REPLACE FUNCTION  gpReport_Movement_Loss(
     IN inPartnerId        Integer  ,  -- Поставщик
     
     IN inPeriodId         Integer  ,  -- 
-    IN inPeriodYearStart  Integer  ,  --
-    IN inPeriodYearEnd    Integer  ,  --
+    IN inStartYear        Integer  ,  --
+    IN inEndYear          Integer  ,  --
         
     IN inisPartion        Boolean,    -- 
     IN inisSize           Boolean,    --
@@ -153,8 +153,8 @@ BEGIN
                                                ON ObjectLink_Partner_Period.ObjectId = Object_PartionGoods.PartnerId
                                               AND ObjectLink_Partner_Period.DescId = zc_ObjectLink_Partner_Period()
                                               
-                     WHERE (Object_PartionGoods.PeriodYear >= inPeriodYearStart OR inPeriodYearStart = 0)
-                       AND (Object_PartionGoods.PeriodYear <= inPeriodYearEnd OR inPeriodYearEnd = 0) 
+                     WHERE (Object_PartionGoods.PeriodYear >= inStartYear OR inStartYear = 0)
+                       AND (Object_PartionGoods.PeriodYear <= inEndYear OR inEndYear = 0) 
                        AND (ObjectLink_Partner_Period.ChildObjectId = inPeriodId OR inPeriodId = 0)
                      GROUP BY tmpMovementLoss.InvNumber
                             , tmpMovementLoss.OperDate
@@ -262,4 +262,4 @@ $BODY$
 */
 
 -- тест
---select * from gpReport_Movement_Loss(inStartDate := ('01.07.2017')::TDateTime , inEndDate := ('09.07.2017')::TDateTime , inUnitId_From := 506 , inUnitId_To := 506 , inBrandId := 0 , inPartnerId := 0 , inPeriodId := 0 , inPeriodYearStart := 0 , inPeriodYearEnd := 2017 , inisPartion := 'False' , inisSize := 'False' , inisPartner := 'False' , inisMovement := 'False' ,  inSession := '2');
+--select * from gpReport_Movement_Loss(inStartDate := ('01.07.2017')::TDateTime , inEndDate := ('09.07.2017')::TDateTime , inUnitId_From := 506 , inUnitId_To := 506 , inBrandId := 0 , inPartnerId := 0 , inPeriodId := 0 , inStartYear := 0 , inEndYear := 2017 , inisPartion := 'False' , inisSize := 'False' , inisPartner := 'False' , inisMovement := 'False' ,  inSession := '2');

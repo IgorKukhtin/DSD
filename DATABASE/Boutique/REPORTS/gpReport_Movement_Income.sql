@@ -11,8 +11,8 @@ CREATE OR REPLACE FUNCTION  gpReport_Movement_Income(
     IN inPartnerId        Integer  ,  -- Поставщик
 
     IN inPeriodId         Integer  ,  --
-    IN inPeriodYearStart  Integer  ,  --
-    IN inPeriodYearEnd    Integer  ,  --
+    IN inStartYear        Integer  ,  --
+    IN inEndYear          Integer  ,  --
 
     IN inisPartion        Boolean,    --
     IN inisSize           Boolean,    --
@@ -166,8 +166,8 @@ BEGIN
                           LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                       ON MIFloat_OperPriceList.MovementItemId = MI_Income.Id
                                                      AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
-                     WHERE (Object_PartionGoods.PeriodYear >= inPeriodYearStart OR inPeriodYearStart = 0)
-                       AND (Object_PartionGoods.PeriodYear <= inPeriodYearEnd OR inPeriodYearEnd = 0)
+                     WHERE (Object_PartionGoods.PeriodYear >= inStartYear OR inStartYear = 0)
+                       AND (Object_PartionGoods.PeriodYear <= inEndYear OR inEndYear = 0)
                      GROUP BY CASE WHEN inIsPartion = TRUE THEN tmpMovementIncome.MovementId ELSE -1 END
                             , tmpMovementIncome.InvNumber
                             , tmpMovementIncome.OperDate
@@ -274,4 +274,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Movement_Income(inStartDate := ('01.11.2016')::TDateTime , inEndDate := ('01.07.2018')::TDateTime , inUnitId := 506 , inBrandId := 0 , inPartnerId := 0 , inPeriodId := 0 , inPeriodYearStart := 0 , inPeriodYearEnd := 2017 , inisPartion := 'False' , inisSize := 'False' , inisPartner := 'False' ,  inSession := '2');
+-- SELECT * FROM gpReport_Movement_Income(inStartDate := ('01.11.2016')::TDateTime , inEndDate := ('01.07.2018')::TDateTime , inUnitId := 506 , inBrandId := 0 , inPartnerId := 0 , inPeriodId := 0 , inStartYear := 0 , inEndYear := 2017 , inisPartion := 'False' , inisSize := 'False' , inisPartner := 'False' ,  inSession := '2');

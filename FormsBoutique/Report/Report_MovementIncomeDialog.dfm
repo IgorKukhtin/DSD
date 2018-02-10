@@ -71,28 +71,28 @@ object Report_MovementIncomeDialogForm: TReport_MovementIncomeDialogForm
   object cxLabel6: TcxLabel
     Left = 10
     Top = 7
-    Caption = #1044#1072#1090#1072' '#1089' :'
+    Caption = #1055#1077#1088#1080#1086#1076' '#1089' ...'
   end
   object cxLabel7: TcxLabel
     Left = 121
     Top = 7
-    Caption = #1044#1072#1090#1072' '#1087#1086' :'
+    Caption = #1055#1077#1088#1080#1086#1076' '#1087#1086' ...'
   end
   object cbPartion: TcxCheckBox
     Left = 10
     Top = 63
-    Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-    Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
+    Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1086' '#1042#1089#1077#1084' '#1055#1072#1088#1090#1080#1103#1084' ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1087#1086' '#1042#1089#1077#1084' '#1055#1072#1088#1090#1080#1103#1084
     TabOrder = 8
-    Width = 86
+    Width = 108
   end
   object cbSize: TcxCheckBox
-    Left = 113
+    Left = 120
     Top = 63
-    Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-    Caption = #1087#1086' '#1056#1072#1079#1084#1077#1088#1072#1084
+    Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1086' '#1042#1089#1077#1084' '#1056#1072#1079#1084#1077#1088#1072#1084' ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1087#1086' '#1042#1089#1077#1084' '#1056#1072#1079#1084#1077#1088#1072#1084
     TabOrder = 9
-    Width = 85
+    Width = 115
   end
   object cxLabel1: TcxLabel
     Left = 10
@@ -129,12 +129,12 @@ object Report_MovementIncomeDialogForm: TReport_MovementIncomeDialogForm
     Width = 305
   end
   object cbPartner: TcxCheckBox
-    Left = 217
+    Left = 234
     Top = 63
-    Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-    Caption = #1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082#1080
     TabOrder = 14
-    Width = 109
+    Width = 87
   end
   object cxLabel4: TcxLabel
     Left = 10
@@ -156,30 +156,34 @@ object Report_MovementIncomeDialogForm: TReport_MovementIncomeDialogForm
   object cxLabel5: TcxLabel
     Left = 10
     Top = 289
-    Caption = #1043#1086#1076' ('#1085#1072#1095'.):'
-  end
-  object edPeriodYearStart: TcxCurrencyEdit
-    Left = 10
-    Top = 309
-    EditValue = 0.000000000000000000
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 18
-    Width = 100
-  end
-  object edPeriodYearEnd: TcxCurrencyEdit
-    Left = 154
-    Top = 309
-    EditValue = 0.000000000000000000
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 19
-    Width = 100
+    Caption = #1043#1086#1076' '#1089' ...'
   end
   object cxLabel8: TcxLabel
     Left = 154
     Top = 289
-    Caption = #1043#1086#1076' ('#1086#1082#1086#1085'.):'
+    Caption = #1043#1086#1076' '#1087#1086' ...'
+  end
+  object edStartYear: TcxButtonEdit
+    Left = 10
+    Top = 308
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 19
+    Width = 111
+  end
+  object edEndYear: TcxButtonEdit
+    Left = 154
+    Top = 308
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 20
+    Width = 111
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -315,16 +319,16 @@ object Report_MovementIncomeDialogForm: TReport_MovementIncomeDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PeriodYearStart'
+        Name = 'StartYear'
         Value = Null
-        Component = edPeriodYearStart
+        Component = edStartYear
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PeriodYearEnd'
+        Name = 'EndYear'
         Value = Null
-        Component = edPeriodYearEnd
+        Component = edEndYear
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -454,5 +458,43 @@ object Report_MovementIncomeDialogForm: TReport_MovementIncomeDialogForm
       end>
     Left = 142
     Top = 250
+  end
+  object GuidesStartYear: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edStartYear
+    Key = '0'
+    FormNameParam.Value = 'TPeriodYear_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodYear_ChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'PeriodYear'
+        Value = ''
+        Component = edStartYear
+        MultiSelectSeparator = ','
+      end>
+    Left = 54
+    Top = 306
+  end
+  object GuidesEndYear: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edEndYear
+    Key = '0'
+    FormNameParam.Value = 'TPeriodYear_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodYear_ChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'PeriodYear'
+        Value = ''
+        Component = edEndYear
+        MultiSelectSeparator = ','
+      end>
+    Left = 190
+    Top = 298
   end
 end

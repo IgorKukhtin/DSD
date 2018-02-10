@@ -60,25 +60,31 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       Width = 188
     end
     object cbPartion: TcxCheckBox
-      Left = 700
+      Left = 694
       Top = 5
+      Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1086' '#1042#1089#1077#1084' '#1055#1072#1088#1090#1080#1103#1084' ('#1044#1072'/'#1053#1077#1090')'
       Action = actRefreshIsPartion
+      Caption = #1087#1086' '#1042#1089#1077#1084' '#1055#1072#1088#1090#1080#1103#1084
       TabOrder = 6
-      Width = 82
+      Width = 109
     end
     object cbSize: TcxCheckBox
-      Left = 785
+      Left = 804
       Top = 5
+      Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1086' '#1042#1089#1077#1084' '#1056#1072#1079#1084#1077#1088#1072#1084' ('#1044#1072'/'#1053#1077#1090')'
       Action = actRefreshSize
+      Caption = #1087#1086' '#1042#1089#1077#1084' '#1056#1072#1079#1084#1077#1088#1072#1084
       TabOrder = 7
-      Width = 87
+      Width = 113
     end
     object cbPartner: TcxCheckBox
-      Left = 876
+      Left = 918
       Top = 5
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
       Action = actRefreshPartner
+      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082#1080
       TabOrder = 8
-      Width = 108
+      Width = 105
     end
     object cxLabel6: TcxLabel
       Left = 409
@@ -98,32 +104,14 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       Width = 232
     end
     object cxLabel7: TcxLabel
-      Left = 700
+      Left = 710
       Top = 35
-      Caption = #1043#1086#1076' ('#1085#1072#1095'.):'
-    end
-    object edPeriodYearStart: TcxCurrencyEdit
-      Left = 762
-      Top = 34
-      EditValue = 0.000000000000000000
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = '0'
-      TabOrder = 12
-      Width = 40
+      Caption = #1043#1086#1076' '#1089' ...'
     end
     object cxLabel8: TcxLabel
-      Left = 808
+      Left = 818
       Top = 35
-      Caption = #1043#1086#1076' ('#1086#1082#1086#1085'.):'
-    end
-    object edPeriodYearEnd: TcxCurrencyEdit
-      Left = 875
-      Top = 34
-      EditValue = 2017.000000000000000000
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = '0'
-      TabOrder = 14
-      Width = 40
+      Caption = #1043#1086#1076' '#1087#1086' ...'
     end
   end
   inherited PageControl: TcxPageControl [1]
@@ -529,6 +517,31 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
     TabOrder = 9
     Width = 205
   end
+  object edStartYear: TcxButtonEdit [6]
+    Left = 758
+    Top = 34
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 10
+    Width = 50
+  end
+  object edEndYear: TcxButtonEdit [7]
+    Left = 873
+    Top = 34
+    TabStop = False
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 50
+  end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
@@ -710,16 +723,16 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PeriodYearStart'
+          Name = 'StartYear'
           Value = Null
-          Component = edPeriodYearStart
+          Component = edStartYear
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PeriodYearEnd'
+          Name = 'EndYear'
           Value = Null
-          Component = edPeriodYearEnd
+          Component = edEndYear
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -958,16 +971,16 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPeriodYearStart'
+        Name = 'inStartYear'
         Value = Null
-        Component = edPeriodYearStart
+        Component = edStartYear
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPeriodYearEnd'
+        Name = 'inEndYear'
         Value = Null
-        Component = edPeriodYearEnd
+        Component = edEndYear
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1095,10 +1108,8 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         Component = GuidesPeriod
       end
       item
-        Component = edPeriodYearEnd
       end
       item
-        Component = edPeriodYearStart
       end>
     Left = 688
     Top = 280
@@ -1224,5 +1235,43 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       end>
     Left = 454
     Top = 34
+  end
+  object GuidesStartYear: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edStartYear
+    Key = '0'
+    FormNameParam.Value = 'TPeriodYear_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodYear_ChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'PeriodYear'
+        Value = ''
+        Component = edStartYear
+        MultiSelectSeparator = ','
+      end>
+    Left = 758
+    Top = 50
+  end
+  object GuidesEndYear: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edEndYear
+    Key = '0'
+    FormNameParam.Value = 'TPeriodYear_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodYear_ChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'PeriodYear'
+        Value = ''
+        Component = edEndYear
+        MultiSelectSeparator = ','
+      end>
+    Left = 910
+    Top = 50
   end
 end

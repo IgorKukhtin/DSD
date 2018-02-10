@@ -602,6 +602,9 @@ end;
 
 procedure TLoadFormTest.LoadPartnerFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPeriodYear_ChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPeriodYear_ChoiceForm');
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerEditForm'));

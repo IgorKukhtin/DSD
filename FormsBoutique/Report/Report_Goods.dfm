@@ -6,7 +6,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1211
-  ExplicitHeight = 508
+  ExplicitHeight = 511
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -14,21 +14,21 @@ inherited Report_GoodsForm: TReport_GoodsForm
     Width = 1195
     Height = 392
     TabOrder = 3
-    ExplicitTop = 80
+    ExplicitTop = 81
     ExplicitWidth = 1195
-    ExplicitHeight = 393
+    ExplicitHeight = 392
     ClientRectBottom = 392
     ClientRectRight = 1195
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1195
-      ExplicitHeight = 393
+      ExplicitHeight = 392
       inherited cxGrid: TcxGrid
         Top = 83
         Width = 1195
         Height = 309
         ExplicitTop = 83
         ExplicitWidth = 1195
-        ExplicitHeight = 310
+        ExplicitHeight = 309
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -967,7 +967,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       Width = 276
     end
     object cbGoodsSizeAll: TcxCheckBox
-      Left = 608
+      Left = 621
       Top = 30
       Action = actRefreshIsGoodsSize
       ParentShowHint = False
@@ -1065,6 +1065,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         end>
       Caption = #1087#1086' '#1042#1089#1077#1084' '#1055#1072#1088#1090#1080#1103#1084
       Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1086' '#1042#1089#1077#1084' '#1055#1072#1088#1090#1080#1103#1084' ('#1044#1072'/'#1053#1077#1090')'
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefreshIsGoodsSize: TdsdDataSetRefresh [2]
@@ -1077,6 +1078,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         end>
       Caption = #1087#1086' '#1042#1089#1077#1084' '#1056#1072#1079#1084#1077#1088#1072#1084
       Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1086' '#1042#1089#1077#1084' '#1056#1072#1079#1084#1077#1088#1072#1084' ('#1044#1072'/'#1053#1077#1090')'
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actPrint: TdsdPrintAction
