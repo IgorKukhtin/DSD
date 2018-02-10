@@ -21,7 +21,7 @@ BEGIN
           , ObjectFloat_PeriodYear.ValueData :: Integer AS PeriodYear
      FROM ObjectFloat AS ObjectFloat_PeriodYear 
      WHERE ObjectFloat_PeriodYear.DescId = zc_ObjectFloat_Partner_PeriodYear()
-     ORDER BY 2;
+     ORDER BY 2 Desc;
 
 END;
 $BODY$

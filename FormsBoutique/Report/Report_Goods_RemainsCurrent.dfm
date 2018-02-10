@@ -6,9 +6,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -396
   ExplicitWidth = 1185
-  ExplicitHeight = 468
+  ExplicitHeight = 471
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -140,30 +139,10 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Top = 6
       Caption = #1043#1086#1076' '#1089' ...'
     end
-    object edStartYear: TcxCurrencyEdit
-      Left = 658
-      Top = 5
-      EditValue = 2018.000000000000000000
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = '0'
-      Properties.ReadOnly = True
-      TabOrder = 14
-      Width = 40
-    end
     object cxLabel8: TcxLabel
       Left = 603
       Top = 31
       Caption = #1043#1086#1076' '#1087#1086' ...'
-    end
-    object edEndYear: TcxCurrencyEdit
-      Left = 658
-      Top = 30
-      EditValue = 2018.000000000000000000
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = '0'
-      Properties.ReadOnly = True
-      TabOrder = 16
-      Width = 40
     end
     object cxLabel4: TcxLabel
       Left = 76
@@ -179,7 +158,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 18
+      TabOrder = 16
       Width = 200
     end
     object cxLabel9: TcxLabel
@@ -196,17 +175,42 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 20
+      TabOrder = 18
       Width = 300
     end
     object cbYear: TcxCheckBox
-      Left = 700
+      Left = 711
       Top = 30
       Action = actRefreshIsPeriodYear
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 21
+      TabOrder = 19
       Width = 130
+    end
+    object edStartYear: TcxButtonEdit
+      Left = 657
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 20
+      Width = 50
+    end
+    object edEndYear: TcxButtonEdit
+      Left = 657
+      Top = 30
+      TabStop = False
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 21
+      Width = 50
     end
   end
   inherited PageControl: TcxPageControl [1]
@@ -751,16 +755,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           'Date')
       end
       item
-        Component = edEndYear
-        Properties.Strings = (
-          'Value')
-      end
-      item
-        Component = edStartYear
-        Properties.Strings = (
-          'Value')
-      end
-      item
         Component = GuidesBrand
         Properties.Strings = (
           'Key'
@@ -908,14 +902,14 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PeriodYearStart'
+          Name = 'StartYear'
           Value = Null
           Component = edStartYear
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PeriodYearEnd'
+          Name = 'EndYear'
           Value = Null
           Component = edEndYear
           ParamType = ptInput
@@ -1919,5 +1913,43 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     PackSize = 1
     Left = 831
     Top = 288
+  end
+  object GuidesStartYear: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edStartYear
+    Key = '0'
+    FormNameParam.Value = 'TPeriodYear_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodYear_ChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'PeriodYear'
+        Value = ''
+        Component = edStartYear
+        MultiSelectSeparator = ','
+      end>
+    Left = 710
+    Top = 66
+  end
+  object GuidesEndYear: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edEndYear
+    Key = '0'
+    FormNameParam.Value = 'TPeriodYear_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodYear_ChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'PeriodYear'
+        Value = ''
+        Component = edEndYear
+        MultiSelectSeparator = ','
+      end>
+    Left = 790
+    Top = 82
   end
 end

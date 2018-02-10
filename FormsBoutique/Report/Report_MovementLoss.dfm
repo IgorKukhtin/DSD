@@ -11,7 +11,7 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
   inherited Panel: TPanel [0]
     Width = 1103
     Height = 59
-    ExplicitWidth = 1065
+    ExplicitWidth = 1103
     ExplicitHeight = 59
     inherited deStart: TcxDateEdit
       Left = 29
@@ -80,7 +80,7 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
       Top = 5
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
       Action = actRefreshPartner
-      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082#1080
+      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
       TabOrder = 8
       Width = 91
     end
@@ -127,17 +127,17 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
     Height = 340
     TabOrder = 3
     ExplicitTop = 85
-    ExplicitWidth = 1065
+    ExplicitWidth = 1103
     ExplicitHeight = 340
     ClientRectBottom = 340
     ClientRectRight = 1103
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1065
+      ExplicitWidth = 1103
       ExplicitHeight = 340
       inherited cxGrid: TcxGrid
         Width = 1103
         Height = 340
-        ExplicitWidth = 1065
+        ExplicitWidth = 1103
         ExplicitHeight = 340
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <

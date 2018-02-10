@@ -132,9 +132,9 @@ object Report_MovementLossDialogForm: TReport_MovementLossDialogForm
     Left = 234
     Top = 63
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
-    Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082#1080
+    Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
     TabOrder = 14
-    Width = 109
+    Width = 91
   end
   object cbMovement: TcxCheckBox
     Left = 234

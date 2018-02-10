@@ -4,7 +4,6 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
   ClientWidth = 1119
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -8
   ExplicitWidth = 1135
   ExplicitHeight = 463
   PixelsPerInch = 96
@@ -12,7 +11,7 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
   inherited Panel: TPanel [0]
     Width = 1119
     Height = 59
-    ExplicitWidth = 1065
+    ExplicitWidth = 1119
     ExplicitHeight = 59
     inherited deStart: TcxDateEdit
       Left = 29
@@ -81,7 +80,7 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
       Top = 5
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
       Action = actRefreshPartner
-      Caption = ' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1080
+      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
       TabOrder = 8
       Width = 92
     end
@@ -122,7 +121,7 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
       Caption = #1043#1086#1076' '#1087#1086' ...'
     end
     object edStartYear: TcxButtonEdit
-      Left = 720
+      Left = 722
       Top = 32
       Properties.Buttons = <
         item
@@ -153,18 +152,17 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
     Height = 340
     TabOrder = 3
     ExplicitTop = 85
-    ExplicitWidth = 1065
+    ExplicitWidth = 1119
     ExplicitHeight = 340
     ClientRectBottom = 340
     ClientRectRight = 1119
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1065
+      ExplicitWidth = 1119
       ExplicitHeight = 340
       inherited cxGrid: TcxGrid
         Width = 1119
         Height = 340
-        ExplicitLeft = -3
-        ExplicitWidth = 1111
+        ExplicitWidth = 1119
         ExplicitHeight = 340
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <

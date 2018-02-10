@@ -11,7 +11,7 @@ inherited Report_MovementReturnOutForm: TReport_MovementReturnOutForm
   inherited Panel: TPanel [0]
     Width = 1030
     Height = 60
-    ExplicitWidth = 1065
+    ExplicitWidth = 1030
     ExplicitHeight = 60
     inherited deStart: TcxDateEdit
       Left = 29
@@ -80,7 +80,7 @@ inherited Report_MovementReturnOutForm: TReport_MovementReturnOutForm
       Top = 5
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
       Action = actRefreshPartner
-      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082#1080
+      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
       TabOrder = 8
       Width = 108
     end
@@ -127,17 +127,17 @@ inherited Report_MovementReturnOutForm: TReport_MovementReturnOutForm
     Height = 339
     TabOrder = 3
     ExplicitTop = 86
-    ExplicitWidth = 1065
+    ExplicitWidth = 1030
     ExplicitHeight = 339
     ClientRectBottom = 339
     ClientRectRight = 1030
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1065
+      ExplicitWidth = 1030
       ExplicitHeight = 339
       inherited cxGrid: TcxGrid
         Width = 1030
         Height = 339
-        ExplicitWidth = 1065
+        ExplicitWidth = 1030
         ExplicitHeight = 339
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <

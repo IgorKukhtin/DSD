@@ -46,10 +46,12 @@ type
     edPartner: TcxButtonEdit;
     GuidesPartner: TdsdGuides;
     cxLabel5: TcxLabel;
-    edStartYear: TcxCurrencyEdit;
     cxLabel6: TcxLabel;
-    edEndYear: TcxCurrencyEdit;
     cbYear: TcxCheckBox;
+    edStartYear: TcxButtonEdit;
+    edEndYear: TcxButtonEdit;
+    GuidesStartYear: TdsdGuides;
+    GuidesEndYear: TdsdGuides;
   private
     { Private declarations }
   public
