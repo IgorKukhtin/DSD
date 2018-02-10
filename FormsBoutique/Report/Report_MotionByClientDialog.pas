@@ -1,4 +1,4 @@
-unit Report_MotionByPartnerDialog;
+unit Report_MotionByClientDialog;
 
 interface
 
@@ -22,7 +22,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TReport_MotionByPartnerDialogForm = class(TParentForm)
+  TReport_MotionByClientDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     PeriodChoice: TPeriodChoice;
@@ -55,6 +55,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_MotionByPartnerDialogForm);
+  RegisterClass(TReport_MotionByClientDialogForm);
 
 end.

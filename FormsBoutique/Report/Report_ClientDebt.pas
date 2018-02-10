@@ -1,4 +1,4 @@
-unit Report_MotionByPartner;
+unit Report_ClientDebt;
 
 interface
 
@@ -27,14 +27,14 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TReport_MotionByPartnerForm = class(TAncestorReportForm)
+  TReport_ClientDebtForm = class(TAncestorReportForm)
     cxLabel3: TcxLabel;
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
     dxBarButton1: TdxBarButton;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    PartnerName: TcxGridDBColumn;
+    ClientName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     actRefreshSize: TdsdDataSetRefresh;
@@ -48,13 +48,12 @@ type
     spGet_UserUnit: TdsdStoredProc;
     actOpenReportForm_Partner: TdsdOpenForm;
     bbOpenReportForm_Partner: TdxBarButton;
-    cxLabel4: TcxLabel;
-    edClient: TcxButtonEdit;
-    GuidesClient: TdsdGuides;
-    FormParams: TdsdFormParams;
-    AmountSale: TcxGridDBColumn;
-    SumPay: TcxGridDBColumn;
-    SumSale: TcxGridDBColumn;
+    SummDebt_profit: TcxGridDBColumn;
+    TotalChangePercentPay: TcxGridDBColumn;
+    TotalCountReturn: TcxGridDBColumn;
+    TotalReturn: TcxGridDBColumn;
+    TotalPayReturn: TcxGridDBColumn;
+    MovementItemId_Sale: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -62,7 +61,7 @@ type
   end;
 
 var
-  Report_MotionByPartnerForm: TReport_MotionByPartnerForm;
+  Report_ClientDebtForm: TReport_ClientDebtForm;
 
 implementation
 
@@ -70,5 +69,5 @@ implementation
 
 initialization
 
-  RegisterClass(TReport_MotionByPartnerForm)
+  RegisterClass(TReport_ClientDebtForm)
 end.

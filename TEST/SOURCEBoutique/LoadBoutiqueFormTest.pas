@@ -669,20 +669,20 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
   //Движ. по покупателю
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CollationByPartnerForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_CollationByPartnerForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CollationByPartnerDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_CollationByPartnerDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CollationByClientForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CollationByClientForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CollationByClientDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CollationByClientDialogForm');
   //Движ. по покупателю
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionByPartnerForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_MotionByPartnerForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionByPartnerDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_MotionByPartnerDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionByClientForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MotionByClientForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionByClientDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MotionByClientDialogForm');
   //текущие долги
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PartnerDebtForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_PartnerDebtForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PartnerDebtDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_PartnerDebtDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ClientDebtForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ClientDebtForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ClientDebtDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ClientDebtDialogForm');
   //Report_GoodsMI_SaleReturnInForm
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleReturnInForm');
