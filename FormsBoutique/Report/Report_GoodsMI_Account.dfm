@@ -823,7 +823,7 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
         item
           DataSet = MasterCDS
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'OperDate;DescName;InvNumber;LabelName;GoodsSizeName'
+          IndexFieldNames = 'NumGroup;OperDate;DescName;InvNumber;LabelName;GoodsSizeName'
         end>
       Params = <
         item
