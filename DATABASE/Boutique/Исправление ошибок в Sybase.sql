@@ -123,13 +123,22 @@ where isnull (DiscountMovementItem_byBarCode.Id, 0) <> isnull (DiscountKlientAcc
   and DiscountKlientAccountMoney.isErased = 1
   and DiscountMovementItemReturn_byBarCode.Id is not null
 
-  
-select Bill.OperDate , BillItems.* 
+-- 1  
+select Bill.BillDate , BillItems.* 
 from BillItems
      left outer join _dataBI_all  on _dataBI_all.ReplId = BillItems.ReplId and _dataBI_all.DatabaseId = BillItems.DatabaseId 
      left outer join Bill  on Bill.Id = BillItems.BillId 
 where BillItems.DatabaseId  > 0
   and _dataBI_all.ReplId is null
+order by 1
+-- 2
+select DiscountMovement.OperDate , _dataBI_all.* 
+from _dataBI_all
+     left outer join BillItems  on BillItems.ReplId = _dataBI_all.ReplId and BillItems.DatabaseId = _dataBI_all.DatabaseId 
+     left outer join _data_all on _data_all.BillItemsId  = _dataBI_all.Id and _data_all.DatabaseId = _dataBI_all.DatabaseId 
+     left outer join DiscountMovementItem_byBarCode on DiscountMovementItem_byBarCode.ReplId =_data_all.ReplId and DiscountMovementItem_byBarCode.DatabaseId = _data_all.DatabaseId
+     left outer join DiscountMovement on DiscountMovement.Id = DiscountMovementItem_byBarCode.DiscountMovementId 
+where BillItems.ReplId is null
 order by 1
 
 

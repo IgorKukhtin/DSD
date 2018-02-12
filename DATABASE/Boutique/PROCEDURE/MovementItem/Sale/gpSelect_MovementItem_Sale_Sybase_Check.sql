@@ -130,7 +130,7 @@ BEGIN
              FROM tmpData;
 
 
-
+/*
      -- !!! 1. эти были закрыты ƒќ StartDate_sybase!!! - ”ƒјЋя≈ћ
      vbTmp:= (WITH tmpRet AS (SELECT Movement.OperDate, tmpData.*
                               FROM _tmpData AS tmpData
@@ -258,7 +258,7 @@ BEGIN
                    ) AS tmp
              );
      -- !!! END !!! 1. эти были закрыты ƒќ StartDate_sybase!!! - ”ƒјЋя≈ћ
-     
+*/     
 
 
 
@@ -283,6 +283,23 @@ BEGIN
                                                                                                                 ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
                                                                                                                AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
                              -- WHERE SummDebt_sale = 0 and MIFloat_TotalPay.ValueData <> 0 and goodsCode <> 1 -- AND SummDebt_return = 0
+                            UNION ALL
+                             SELECT Movement.OperDate, MIFloat_TotalPay.ValueData AS TotalPay, MIFloat_SummChangePercent.ValueData  AS SummChangePercent, tmpData.*
+                             FROM _tmpData AS tmpData
+                                  INNER JOIN MovementItem ON MovementItem.Id       = tmpData.MovementItemId
+                                                         AND MovementItem.DescId   = zc_MI_Master()
+                                                         AND MovementItem.isErased = FALSE
+                                  INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                     AND Movement.DescId   = zc_Movement_Sale()
+                                                     AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                     AND Movement.OperDate < tmpData.StartDate_sybase
+                                                                                    LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
+                                                                                                                ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
+                                                                                                               AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
+                                                                                    LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
+                                                                                                                ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
+                                                                                                               AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
+                             WHERE coalesce (MIFloat_TotalPay.ValueData , 0) > 0 -- and MIFloat_SummChangePercent.ValueData <> 0
                             )
        -- –езультат
        SELECT _tmpData.isErased, _tmpData.MovementItemId, _tmpData.MovementId, _tmpData.InvNumber, _tmpData.OperDate, _tmpData.StartDate_sybase

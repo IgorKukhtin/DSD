@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent(Integer,Integer,Integer,In
 DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent(Integer,Integer,Integer,Integer,Integer,Integer,Integer, TDateTime, Boolean, Boolean,Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION  gpReport_Goods_RemainsCurrent(
+CREATE OR REPLACE FUNCTION gpReport_Goods_RemainsCurrent(
     IN inUnitId           Integer  ,  -- Подразделение / группа
     IN inBrandId          Integer  ,  -- Торговая марка
     IN inPartnerId        Integer  ,  -- Поставщик
@@ -123,6 +123,8 @@ BEGIN
                            , Object_PartionGoods.PriceSale  AS OperPriceList
                            , Object_PartionGoods.Amount     AS Amount_in
                            , Object_PartionGoods.UnitId     AS UnitId_in
+                             --  № п/п - только для = 1 возьмем Amount_in
+                           , ROW_NUMBER() OVER (PARTITION BY Container.PartionId) AS Ord
 
                       FROM Container
                            -- INNER JOIN _tmpUnit ON _tmpUnit.UnitId = Container.WhereObjectId
@@ -182,7 +184,8 @@ BEGIN
                           , tmpContainer.OperPriceList
                           , tmpContainer.UnitId_in
 
-                          , SUM (tmpContainer.Amount_in)       AS Amount_in
+                            --  только для Ord = 1
+                          , SUM (CASE WHEN tmpContainer.Ord = 1 THEN tmpContainer.Amount_in ELSE 0 END) AS Amount_in
                           , SUM (tmpContainer.Remains)         AS Remains
                           , SUM (tmpContainer.RemainsDebt)     AS RemainsDebt
                           , SUM (tmpContainer.SummDebt)        AS SummDebt
@@ -264,7 +267,7 @@ BEGIN
                                                      AND Object_GoodsPrint.UserId     = inUserId
                           LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = Object_GoodsPrint.PartionId
 
-                      WHERE tmp.Ord = inGoodsPrintId -- № п/п сессии GoodsPrint
+                     WHERE tmp.Ord = inGoodsPrintId -- № п/п сессии GoodsPrint
                      GROUP BY Object_GoodsPrint.UnitId
                             , CASE WHEN inisPartion = TRUE THEN Object_GoodsPrint.PartionId ELSE 0 END
                             , Object_PartionGoods.GoodsId

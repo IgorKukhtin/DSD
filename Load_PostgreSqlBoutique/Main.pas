@@ -3758,6 +3758,7 @@ begin
         Add('    , BillItemsIncome.GoodsId_Postgres as GoodsId');
         Add('    , BillItemsIncome.Id_Postgres as PartionId');
         Add('    , 0 as DiscountSaleKindId');
+        Add('    , goods.CashCode');
         Add('    , -1 * BillItems.OperCount as Amount');
         Add('    , 0 as SummChangePercent');
         Add('    , BillItems.OperPrice as OperPriceList');
@@ -3769,6 +3770,7 @@ begin
         Add('from DBA.Bill');
         Add('    join BillItems  on BillItems.BillId = Bill.Id');
         Add('    left outer join BillItemsIncome on BillItemsIncome.id  = BillItems.BillItemsIncomeId');
+        Add('    left outer join goods on goods.id  = BillItemsIncome.goodsId');
         Add('where Bill.BillKind = zc_bkSaleFromUnitToClient() and Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add('  and Bill.DatabaseId = 0');
         if cbSaleErr.Checked then Add(' and 1=0 ');
@@ -3782,6 +3784,7 @@ begin
         Add('    , BillItemsIncome.GoodsId_Postgres as GoodsId');
         Add('    , BillItemsIncome.Id_Postgres as PartionId');
         Add('    , 0 as DiscountSaleKindId');
+        Add('    , goods.CashCode');
         Add('    , -1 * BillItems.OperCount as Amount');
         Add('    , 0 as SummChangePercent');
         Add('    , BillItems.OperPrice as OperPriceList');
@@ -3794,6 +3797,7 @@ begin
         Add('    join BillItems  on BillItems.BillId = Bill.Id');
         Add('    left outer join _dataBI_all  on _dataBI_all.ReplId = BillItems.ReplId and _dataBI_all.DatabaseId = BillItems.DatabaseId ');
         Add('    left outer join BillItemsIncome on BillItemsIncome.id  = BillItems.BillItemsIncomeId');
+        Add('    left outer join goods on goods.id  = BillItemsIncome.goodsId');
         Add('where Bill.BillKind = zc_bkSaleFromUnitToClient() and Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add('  and Bill.DatabaseId > 0');
         Add('  and _dataBI_all.ReplId is null');
@@ -3812,6 +3816,7 @@ begin
         Add('           when DiscountMovementItem_byBarCode.DiscountTax > 0 then '+ IntToStr(zc_Enum_DiscountSaleKind_Client));
         Add('           else 0');
         Add('      end as DiscountSaleKindId');
+        Add('    , goods.CashCode');
         Add('    , DiscountMovementItem_byBarCode.OperCount as Amount');
         Add('    , DiscountMovementItem_byBarCode.SummDiscountManual - isnull(_pgSummDiscountManual.SummDiscountManual, 0) as SummChangePercent');
         Add('    , DiscountMovementItem_byBarCode.OperPrice as OperPriceList');
@@ -3827,6 +3832,7 @@ begin
         Add('    left outer join BillItemsIncome on BillItemsIncome.id  = DiscountMovementItem_byBarCode.BillItemsIncomeId');
         Add('    left outer join _data_all on _data_all.DatabaseId  = DiscountMovementItem_byBarCode.DatabaseId');
         Add('                             and _data_all.ReplId      = DiscountMovementItem_byBarCode.ReplId');
+        Add('    left outer join goods on goods.id  = BillItemsIncome.goodsId');
         Add('WHERE DiscountMovement.descId = 1  AND DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add('  and DiscountMovement.isErased = zc_rvNo()');
         if cbSaleErr.Checked then Add(' and 1=0 ');
