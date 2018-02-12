@@ -110,10 +110,10 @@ BEGIN
                                                                 ON CLO_Client.ContainerId = Container.Id
                                                                AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
                                                                AND CLO_Client.ObjectId    = vbClientId                            --inClientId --Перцева Наталья 6343  -- 
-                                 LEFT JOIN ContainerLinkObject AS CLO_Unit 
-                                                               ON CLO_Unit.ContainerId = Container.Id
-                                                              AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
-                                                              AND CLO_Unit.ObjectId    = vbUnitId
+                                 INNER JOIN ContainerLinkObject AS CLO_Unit 
+                                                                ON CLO_Unit.ContainerId = Container.Id
+                                                               AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
+                                                               AND CLO_Unit.ObjectId    = vbUnitId
                                  LEFT JOIN ContainerLinkObject AS CLO_PartionMI 
                                                                ON CLO_PartionMI.ContainerId = Container.Id
                                                               AND CLO_PartionMI.DescId      = zc_ContainerLinkObject_PartionMI()
@@ -128,11 +128,12 @@ BEGIN
                           )                     
           -- расчет суммы продаж и оплат по партии продажи
          , tmpData AS (SELECT tmpData.SummDedt AS SummDedt
-                            , SUM (((MI_PartionMI.Amount - COALESCE (MIFloat_TotalCountReturn.ValueData, 0))   *  MIFloat_OperPriceList.ValueData )  --AS SALESum
-                                - (CASE WHEN (MI_PartionMI.Amount - COALESCE (MIFloat_TotalCountReturn.ValueData, 0)) = 0 THEN 0
-                                       ELSE COALESCE (MIFloat_TotalChangePercent.ValueData, 0) + COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)
-                                   END))   AS TotalSumm
-
+                            , SUM ((MI_PartionMI.Amount * MIFloat_OperPriceList.ValueData)
+                                  - COALESCE (MIFloat_TotalReturn.ValueData, 0) 
+                                  - COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0) 
+                                  - COALESCE (MIFloat_TotalChangePercent.ValueData, 0)
+                                  )   AS TotalSumm
+                                   
                             , SUM (COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_TotalPayOth.ValueData, 0) - COALESCE (MIFloat_TotalPayReturn.ValueData, 0)) AS TotalPay
                             , MAX (Movement_PartionMI.Operdate) AS LastDate
                        FROM (SELECT DISTINCT tmpPartion.PartionId_MI , tmpPartion.SummDedt  FROM tmpPartion) AS tmpData
@@ -167,6 +168,9 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_TotalPayReturn
                                                        ON MIFloat_TotalPayReturn.MovementItemId = MI_PartionMI.Id
                                                       AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()
+                           LEFT JOIN MovementItemFloat AS MIFloat_TotalReturn
+                                                       ON MIFloat_TotalReturn.MovementItemId = MI_PartionMI.Id
+                                                      AND MIFloat_TotalReturn.DescId         = zc_MIFloat_TotalReturn()
                        GROUP BY tmpData.SummDedt 
                        )
 
@@ -182,10 +186,6 @@ BEGIN
              , (Movement.OperDate - interval '1 month') :: TDateTime AS StartDate
              , (Movement.OperDate - interval '1 day')   :: TDateTime AS EndDate
 
-            /* , (COALESCE (ObjectFloat_TotalSumm.ValueData, 0) - COALESCE (ObjectFloat_TotalSummDiscount.ValueData, 0)) :: TFloat AS TotalSumm
-             , COALESCE (ObjectFloat_TotalSummPay.ValueData, 0) :: TFloat AS TotalSummPay
-             , (COALESCE (ObjectFloat_TotalSumm.ValueData, 0) - COALESCE (ObjectFloat_TotalSummDiscount.ValueData, 0) - COALESCE (ObjectFloat_TotalSummPay.ValueData, 0)) :: TFloat AS TotalDebt
-             */
              , COALESCE (tmpData.TotalSumm, 0) :: TFloat AS TotalSumm
              , COALESCE (tmpData.TotalPay, 0)  :: TFloat AS TotalSummPay
              , COALESCE (tmpData.SummDedt, 0)  :: TFloat AS TotalDebt
