@@ -150,7 +150,7 @@ BEGIN
 
 
     -- Поиск "элемента"
-    SELECT Id INTO vbLoadPriceListItemsId FROM LoadPriceListItem  WHERE LoadPriceListId = vbLoadPriceListId AND GoodsCode = inGoodsCode;
+    SELECT Id INTO vbLoadPriceListItemsId FROM LoadPriceListItem WHERE LoadPriceListId = vbLoadPriceListId AND GoodsCode = inGoodsCode;
 
 
     -- Ищем по общему коду

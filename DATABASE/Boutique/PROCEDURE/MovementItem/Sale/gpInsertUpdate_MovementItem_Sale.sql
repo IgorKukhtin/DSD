@@ -65,6 +65,13 @@ BEGIN
      END IF;
 
 
+     -- !!!временно - для Sybase!!!
+     IF vbUserId = zc_User_Sybase() AND EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.Id = ioId AND MovementItem.isErased = TRUE)
+     THEN
+         RETURN;
+     END IF;
+
+
      -- параметры из Документа
      SELECT Movement.OperDate
           , MovementLinkObject_From.ObjectId

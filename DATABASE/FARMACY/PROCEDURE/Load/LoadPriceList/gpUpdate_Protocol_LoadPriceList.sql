@@ -25,7 +25,7 @@ BEGIN
   THEN
 
         UPDATE LoadPriceList SET UserId_Insert = vbUserId
-                               , Date_Insert = CURRENT_TIMESTAMP
+                               , Date_Update   = CURRENT_TIMESTAMP
         WHERE UserId_Insert IS NULL
           AND Id IN (SELECT LoadPriceList.Id
                      FROM Object_ImportSettings_View
@@ -35,7 +35,8 @@ BEGIN
                                                   OR COALESCE (Object_ImportSettings_View.ContractId, 0) = 0
                                                     )
                                                 AND COALESCE (LoadPriceList.AreaId, 0)  = COALESCE (inAreaId, 0)
-                     WHERE Object_ImportSettings_View.id = inImportSettingsId)
+                     WHERE Object_ImportSettings_View.id = inImportSettingsId
+                    )
        ;
   END IF;
 

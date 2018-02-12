@@ -1013,7 +1013,40 @@ BEGIN
      PERFORM lpUpdate_MI_Partion_Total_byMovement (inMovementId);
 
 
-     -- 6.2. ПРОВЕРКА - ОБЯЗАТЕЛЬНО после lpComplete + "пересчета" - !!!Сложный расчет ДОЛГА - с учетом ВОЗВРАТА!!!
+     -- 6.2.1. ПРОВЕРКА - ОБЯЗАТЕЛЬНО после lpComplete + "пересчета" - !!!по Кол-ву не Может быть Долга Покупателю!!!
+     IF EXISTS (SELECT 1
+                FROM _tmpItem
+                     INNER JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
+                     -- Долги по Кол-ву у Покупателя
+                     INNER JOIN Container ON Container.Id     = _tmpItem_SummClient.ContainerId_Goods
+                                         AND Container.Amount < 0
+               )
+     THEN
+         RAISE EXCEPTION 'Ошибка.По Кол-ву НЕ может быть Долга Покупателю, Кол-во = <%> для <%>.'
+             , (SELECT zfConvert_FloatToString (Container.Amount)
+                FROM _tmpItem
+                     INNER JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
+                     -- Долги по Кол-ву у Покупателя
+                     INNER JOIN Container ON Container.Id     = _tmpItem_SummClient.ContainerId_Goods
+                                         AND Container.Amount < 0
+                ORDER BY Container.Id
+                LIMIT 1
+               )
+            , (SELECT '(' || Object_Goods.ObjectCode :: TVarChar || ')' ||  Object_Goods.ValueData || CASE WHEN Object_GoodsSize.ValueData <> '' THEN ' р.' || Object_GoodsSize.ValueData ELSE '' END || '(' || Container.Id :: TVarChar || ')'
+                FROM _tmpItem
+                     INNER JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
+                     -- Долги по Кол-ву у Покупателя
+                     INNER JOIN Container ON Container.Id     = _tmpItem_SummClient.ContainerId_Goods
+                                         AND Container.Amount < 0
+                     LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = _tmpItem_SummClient.GoodsId
+                     LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = _tmpItem_SummClient.GoodsSizeId
+                ORDER BY Container.Id
+                LIMIT 1
+               );
+     END IF;
+
+
+     -- 6.2.2. ПРОВЕРКА - ОБЯЗАТЕЛЬНО после lpComplete + "пересчета" - !!!Сложный расчет ДОЛГА - с учетом ВОЗВРАТА!!!
      IF EXISTS (WITH tmpRes AS (SELECT -- Сумма по Прайсу
                                        zfCalc_SummPriceList (MI_Sale.Amount, MIFloat_OperPriceList.ValueData)
 
@@ -1035,8 +1068,10 @@ BEGIN
                                 FROM _tmpItem
                                      INNER JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
 
+                                     -- Долги по Кол-ву у Покупателя
                                      INNER JOIN Container ON Container.Id     = _tmpItem_SummClient.ContainerId_Goods
                                                          AND Container.Amount <> 0
+
                                      INNER JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = _tmpItem.PartionId_MI
                                      INNER JOIN MovementItem AS MI_Sale ON MI_Sale.Id = Object_PartionMI.ObjectCode
                                      -- убрали из проверки ЕСЛИ документ - НЕ проведен
@@ -1113,8 +1148,10 @@ BEGIN
                 FROM _tmpItem
                      INNER JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
 
+                     -- Долги по Кол-ву у Покупателя
                      INNER JOIN Container ON Container.Id     = _tmpItem_SummClient.ContainerId_Goods
                                          AND Container.Amount <> 0
+
                      INNER JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = _tmpItem.PartionId_MI
                      INNER JOIN MovementItem AS MI_Sale ON MI_Sale.Id = Object_PartionMI.ObjectCode
 
@@ -1172,8 +1209,10 @@ BEGIN
                 FROM _tmpItem
                      INNER JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
 
+                     -- Долги по Кол-ву у Покупателя
                      INNER JOIN Container ON Container.Id     = _tmpItem_SummClient.ContainerId_Goods
                                          AND Container.Amount <> 0
+
                      INNER JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = _tmpItem.PartionId_MI
                      INNER JOIN MovementItem AS MI_Sale ON MI_Sale.Id = Object_PartionMI.ObjectCode
                      LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MI_Sale.PartionId
