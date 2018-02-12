@@ -277,7 +277,8 @@ uses
   Report_CollationByClient in '..\..\FormsBoutique\Report\Report_CollationByClient.pas' {Report_CollationByClientForm: TParentForm},
   Unit_Dialog in '..\..\FormsBoutique\Guides\Unit_Dialog.pas' {Unit_DialogForm: TParentForm},
   Report_SaleOLAPDialog in '..\..\FormsBoutique\Report\Report_SaleOLAPDialog.pas' {Report_SaleOLAPDialogForm: TParentForm},
-  Report_SaleOLAP in '..\..\FormsBoutique\Report\Report_SaleOLAP.pas' {Report_SaleOLAPForm: TParentForm};
+  Report_SaleOLAP in '..\..\FormsBoutique\Report\Report_SaleOLAP.pas' {Report_SaleOLAPForm: TParentForm},
+  PeriodYear_Choice in '..\..\FormsBoutique\Guides\PeriodYear_Choice.pas' {PeriodYear_ChoiceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

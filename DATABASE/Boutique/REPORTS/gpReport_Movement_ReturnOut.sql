@@ -11,8 +11,8 @@ CREATE OR REPLACE FUNCTION  gpReport_Movement_ReturnOut(
     IN inPartnerId        Integer  ,  -- Поставщик
     
     IN inPeriodId         Integer  ,  -- 
-    IN inPeriodYearStart  Integer  ,  --
-    IN inPeriodYearEnd    Integer  ,  --
+    IN inStartYear        Integer  ,  --
+    IN inEndYear          Integer  ,  --
     
     IN inisPartion        Boolean,    -- 
     IN inisSize           Boolean,    --
@@ -163,8 +163,8 @@ BEGIN
                                                       ON MIFloat_OperPriceList.MovementItemId = MI_ReturnOut.Id
                                                      AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
                                                      
-                     WHERE (Object_PartionGoods.PeriodYear >= inPeriodYearStart OR inPeriodYearStart = 0)
-                       AND (Object_PartionGoods.PeriodYear <= inPeriodYearEnd OR inPeriodYearEnd = 0) 
+                     WHERE (Object_PartionGoods.PeriodYear >= inStartYear OR inStartYear = 0)
+                       AND (Object_PartionGoods.PeriodYear <= inEndYear OR inEndYear = 0) 
                                                                            
                      GROUP BY tmpMovementReturnOut.InvNumber
                             , tmpMovementReturnOut.OperDate
@@ -271,8 +271,8 @@ $BODY$
 */
 
 -- тест
---SELECT * from gpReport_Movement_ReturnOut(    inStartDate := '01.12.2016' :: TDateTime, inEndDate:= '01.12.2018' :: TDateTime, inUnitId :=311,inBrandId  := 0 ,inPartnerId  := 0 , inPeriodId := 0 , inPeriodYearStart := 0 , inPeriodYearEnd := 2017 , inisPartion  := TRUE,inisSize:=  TRUE, inisPartner := TRUE, inisMovement := 'False', inSession := '2':: TVarChar )
---SELECT * from gpReport_Movement_ReturnOut(    inStartDate := '01.12.2016' :: TDateTime, inEndDate:= '01.12.2018' :: TDateTime, inUnitId :=230,inBrandId  := 0 ,inPartnerId  := 0 , inPeriodId := 0 , inPeriodYearStart := 0 , inPeriodYearEnd := 2017 , inisPartion  :=False,inisSize:=  False, inisPartner := False, inisMovement := 'False', inSession := '2':: TVarChar )
+--SELECT * from gpReport_Movement_ReturnOut(    inStartDate := '01.12.2016' :: TDateTime, inEndDate:= '01.12.2018' :: TDateTime, inUnitId :=311,inBrandId  := 0 ,inPartnerId  := 0 , inPeriodId := 0 , inStartYear := 0 , inEndYear := 2017 , inisPartion  := TRUE,inisSize:=  TRUE, inisPartner := TRUE, inisMovement := 'False', inSession := '2':: TVarChar )
+--SELECT * from gpReport_Movement_ReturnOut(    inStartDate := '01.12.2016' :: TDateTime, inEndDate:= '01.12.2018' :: TDateTime, inUnitId :=230,inBrandId  := 0 ,inPartnerId  := 0 , inPeriodId := 0 , inStartYear := 0 , inEndYear := 2017 , inisPartion  :=False,inisSize:=  False, inisPartner := False, inisMovement := 'False', inSession := '2':: TVarChar )
 
  
 --select * from gpGet_Movement_ReturnOut(inMovementId := 22 , inOperDate := ('04.02.2018')::TDateTime ,  inSession := '2');

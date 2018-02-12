@@ -61,10 +61,12 @@ type
     cxLabel7: TcxLabel;
     edPeriod: TcxButtonEdit;
     cxLabel8: TcxLabel;
-    edPeriodYearStart: TcxCurrencyEdit;
     cxLabel9: TcxLabel;
-    edPeriodYearEnd: TcxCurrencyEdit;
     GuidesPeriod: TdsdGuides;
+    edStartYear: TcxButtonEdit;
+    edEndYear: TcxButtonEdit;
+    GuidesEndYear: TdsdGuides;
+    GuidesStartYear: TdsdGuides;
   private
     { Private declarations }
   public

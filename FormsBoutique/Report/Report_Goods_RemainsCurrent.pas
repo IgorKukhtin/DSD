@@ -51,9 +51,7 @@ type
     edPeriod: TcxButtonEdit;
     GuidesPeriod: TdsdGuides;
     cxLabel7: TcxLabel;
-    edStartYear: TcxCurrencyEdit;
     cxLabel8: TcxLabel;
-    edEndYear: TcxCurrencyEdit;
     cxLabel4: TcxLabel;
     edPartner: TcxButtonEdit;
     GuidesPartner: TdsdGuides;
@@ -90,6 +88,10 @@ type
     actRefreshIsPeriodYear: TdsdDataSetRefresh;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
+    edStartYear: TcxButtonEdit;
+    edEndYear: TcxButtonEdit;
+    GuidesStartYear: TdsdGuides;
+    GuidesEndYear: TdsdGuides;
   private
     { Private declarations }
   public

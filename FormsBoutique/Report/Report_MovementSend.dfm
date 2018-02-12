@@ -1,17 +1,17 @@
 inherited Report_MovementSendForm: TReport_MovementSendForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102'>'
   ClientHeight = 425
-  ClientWidth = 1065
+  ClientWidth = 1119
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1081
+  ExplicitWidth = 1135
   ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
-    Width = 1065
+    Width = 1119
     Height = 59
-    ExplicitWidth = 1065
+    ExplicitWidth = 1119
     ExplicitHeight = 59
     inherited deStart: TcxDateEdit
       Left = 29
@@ -60,30 +60,38 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
     object cbPartion: TcxCheckBox
       Left = 887
       Top = 5
+      Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1086' '#1042#1089#1077#1084' '#1055#1072#1088#1090#1080#1103#1084' ('#1044#1072'/'#1053#1077#1090')'
       Action = actRefreshIsPartion
+      Caption = #1087#1086' '#1042#1089#1077#1084' '#1055#1072#1088#1090#1080#1103#1084
       TabOrder = 6
-      Width = 84
+      Width = 110
     end
     object cbSize: TcxCheckBox
       Left = 887
       Top = 32
+      Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1086' '#1042#1089#1077#1084' '#1056#1072#1079#1084#1077#1088#1072#1084' ('#1044#1072'/'#1053#1077#1090')'
       Action = actRefreshSize
+      Caption = #1087#1086' '#1042#1089#1077#1084' '#1056#1072#1079#1084#1077#1088#1072#1084
       TabOrder = 7
-      Width = 90
+      Width = 113
     end
     object cbPartner: TcxCheckBox
-      Left = 978
+      Left = 995
       Top = 5
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
       Action = actRefreshPartner
+      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
       TabOrder = 8
-      Width = 111
+      Width = 92
     end
     object cbMovement: TcxCheckBox
-      Left = 978
+      Left = 993
       Top = 32
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090'> ('#1044#1072'/'#1053#1077#1090')'
       Action = actRefreshMovement
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#8470
       TabOrder = 9
-      Width = 108
+      Width = 94
     end
     object cxLabel7: TcxLabel
       Left = 668
@@ -103,51 +111,58 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
       Width = 172
     end
     object cxLabel8: TcxLabel
-      Left = 669
+      Left = 670
       Top = 33
-      Caption = #1043#1086#1076' ('#1085#1072#1095'.):'
-    end
-    object edPeriodYearStart: TcxCurrencyEdit
-      Left = 731
-      Top = 32
-      EditValue = 0.000000000000000000
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = '0'
-      TabOrder = 13
-      Width = 40
+      Caption = #1043#1086#1076' '#1089' ...'
     end
     object cxLabel9: TcxLabel
-      Left = 777
+      Left = 779
       Top = 33
-      Caption = #1043#1086#1076' ('#1086#1082#1086#1085'.):'
+      Caption = #1043#1086#1076' '#1087#1086' ...'
     end
-    object edPeriodYearEnd: TcxCurrencyEdit
-      Left = 844
+    object edStartYear: TcxButtonEdit
+      Left = 722
       Top = 32
-      EditValue = 2017.000000000000000000
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = '0'
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 14
+      Width = 50
+    end
+    object edEndYear: TcxButtonEdit
+      Left = 834
+      Top = 32
+      TabStop = False
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
       TabOrder = 15
-      Width = 40
+      Width = 50
     end
   end
   inherited PageControl: TcxPageControl [1]
     Top = 85
-    Width = 1065
+    Width = 1119
     Height = 340
     TabOrder = 3
     ExplicitTop = 85
-    ExplicitWidth = 1065
+    ExplicitWidth = 1119
     ExplicitHeight = 340
     ClientRectBottom = 340
-    ClientRectRight = 1065
+    ClientRectRight = 1119
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1065
+      ExplicitWidth = 1119
       ExplicitHeight = 340
       inherited cxGrid: TcxGrid
-        Width = 1065
+        Width = 1119
         Height = 340
-        ExplicitWidth = 1065
+        ExplicitWidth = 1119
         ExplicitHeight = 340
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -789,16 +804,16 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PeriodYearStart'
+          Name = 'StartYear'
           Value = Null
-          Component = edPeriodYearStart
+          Component = edStartYear
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PeriodYearEnd'
+          Name = 'EndYear'
           Value = Null
-          Component = edPeriodYearEnd
+          Component = edEndYear
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -1131,16 +1146,16 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPeriodYearStart'
+        Name = 'inStartYear'
         Value = Null
-        Component = edPeriodYearStart
+        Component = edStartYear
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPeriodYearEnd'
+        Name = 'inEndYear'
         Value = Null
-        Component = edPeriodYearEnd
+        Component = edEndYear
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1279,10 +1294,8 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
         Component = GuidesPeriod
       end
       item
-        Component = edPeriodYearStart
       end
       item
-        Component = edPeriodYearEnd
       end>
     Left = 384
     Top = 176
@@ -1433,7 +1446,45 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 766
-    Top = 18
+    Left = 782
+    Top = 74
+  end
+  object GuidesEndYear: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edEndYear
+    Key = '0'
+    FormNameParam.Value = 'TPeriodYear_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodYear_ChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'PeriodYear'
+        Value = ''
+        Component = edEndYear
+        MultiSelectSeparator = ','
+      end>
+    Left = 838
+    Top = 74
+  end
+  object GuidesStartYear: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edStartYear
+    Key = '0'
+    FormNameParam.Value = 'TPeriodYear_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodYear_ChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'PeriodYear'
+        Value = ''
+        Component = edStartYear
+        MultiSelectSeparator = ','
+      end>
+    Left = 710
+    Top = 66
   end
 end

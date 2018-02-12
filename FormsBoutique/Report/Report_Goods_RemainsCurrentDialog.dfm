@@ -3,7 +3,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1058#1077#1082#1091#1097#1080#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1090#1086#1074#1072#1088#1072'>'
-  ClientHeight = 347
+  ClientHeight = 339
   ClientWidth = 342
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -117,7 +117,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
     Width = 305
   end
   object cxLabel2: TcxLabel
-    Left = 8
+    Left = 10
     Top = 147
     Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
   end
@@ -138,28 +138,10 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
     Top = 244
     Caption = #1043#1086#1076' '#1089' ...'
   end
-  object edStartYear: TcxCurrencyEdit
-    Left = 10
-    Top = 264
-    EditValue = 0.000000000000000000
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 14
-    Width = 70
-  end
   object cxLabel6: TcxLabel
     Left = 94
     Top = 244
     Caption = #1043#1086#1076' '#1087#1086' ...'
-  end
-  object edEndYear: TcxCurrencyEdit
-    Left = 94
-    Top = 264
-    EditValue = 0.000000000000000000
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 16
-    Width = 70
   end
   object cbYear: TcxCheckBox
     Left = 180
@@ -168,8 +150,30 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
     Caption = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 17
+    TabOrder = 15
     Width = 142
+  end
+  object edStartYear: TcxButtonEdit
+    Left = 10
+    Top = 264
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 16
+    Width = 70
+  end
+  object edEndYear: TcxButtonEdit
+    Left = 94
+    Top = 264
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 17
+    Width = 70
   end
   object PeriodChoice: TPeriodChoice
     Left = 263
@@ -295,14 +299,14 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PeriodYearStart'
+        Name = 'StartYear'
         Value = Null
         Component = edStartYear
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PeriodYearEnd'
+        Name = 'EndYear'
         Value = Null
         Component = edEndYear
         ParamType = ptInput
@@ -434,5 +438,43 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
       end>
     Left = 238
     Top = 142
+  end
+  object GuidesStartYear: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edStartYear
+    Key = '0'
+    FormNameParam.Value = 'TPeriodYear_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodYear_ChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'PeriodYear'
+        Value = ''
+        Component = edStartYear
+        MultiSelectSeparator = ','
+      end>
+    Left = 38
+    Top = 258
+  end
+  object GuidesEndYear: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edEndYear
+    Key = '0'
+    FormNameParam.Value = 'TPeriodYear_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodYear_ChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'PeriodYear'
+        Value = ''
+        Component = edEndYear
+        MultiSelectSeparator = ','
+      end>
+    Left = 110
+    Top = 258
   end
 end
