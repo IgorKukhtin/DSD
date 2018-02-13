@@ -100,7 +100,7 @@ BEGIN
                LEFT JOIN Object AS Object_Unit   ON Object_Unit.Id   = vbUnitId;
      ELSE
        RETURN QUERY 
-                  WITH
+       WITH
            -- выбираю все контейнеры по покупателю и подразделению , если выбрано 
            tmpContainer AS (SELECT CLO_PartionMI.ObjectId          AS PartionId_MI
                                  , Container.Amount

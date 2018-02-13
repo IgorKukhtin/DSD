@@ -166,6 +166,10 @@ type
     TotalChangePercentPay: TcxGridDBColumn;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
+    ClientDataSet1: TClientDataSet;
+    ClientDataSet2: TClientDataSet;
+    bbPrintCheck: TdxBarButton;
+    actPrintCheck: TdsdPrintAction;
   private
   public
   end;

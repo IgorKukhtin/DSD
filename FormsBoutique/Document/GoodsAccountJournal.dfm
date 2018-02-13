@@ -405,6 +405,14 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintCheck'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -474,6 +482,10 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
     end
     object bbShowErased: TdxBarButton
       Action = actShowErased
+      Category = 0
+    end
+    object bbPrintCheck: TdxBarButton
+      Action = actPrintCheck
       Category = 0
     end
   end
@@ -928,6 +940,50 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actPrintCheck: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'Print_Check_GoodsAccount'
+      ReportNameParam.Value = 'Print_Check_GoodsAccount'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
   end
   object spSelect: TdsdStoredProc

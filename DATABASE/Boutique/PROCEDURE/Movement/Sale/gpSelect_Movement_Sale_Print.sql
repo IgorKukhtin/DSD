@@ -133,6 +133,7 @@ BEGIN
 
            , Object_From.ValueData                       AS FromName
            , OS_Unit_Address.ValueData                   AS Address_From
+           , OS_Unit_Phone.ValueData                     As Phone_From
            , Object_To.ValueData                         AS ToName
            , MovementString_Comment.ValueData            AS Comment
            
@@ -195,11 +196,14 @@ BEGIN
             LEFT JOIN ObjectString AS OS_Unit_Address
                                    ON OS_Unit_Address.ObjectId = MovementLinkObject_From.ObjectId
                                   AND OS_Unit_Address.DescId = zc_ObjectString_Unit_Address()
+            LEFT JOIN ObjectString AS OS_Unit_Phone
+                                   ON OS_Unit_Phone.ObjectId = MovementLinkObject_From.ObjectId
+                                  AND OS_Unit_Phone.DescId = zc_ObjectString_Unit_Phone()
+
             -- вид скидки клиента
             LEFT JOIN ObjectLink AS ObjectLink_Client_DiscountKind
                                  ON ObjectLink_Client_DiscountKind.ObjectId = MovementLinkObject_To.ObjectId
                                 AND ObjectLink_Client_DiscountKind.DescId = zc_ObjectLink_Client_DiscountKind()
-            --LEFT JOIN Object AS Object_DiscountKind ON Object_DiscountKind.Id = ObjectLink_Client_DiscountKind.ChildObjectId
             
             LEFT JOIN tmpDiscount ON tmpDiscount.StartSumm <= MovementFloat_TotalSummPriceList.ValueData
                                  AND tmpDiscount.EndSumm   >= MovementFloat_TotalSummPriceList.ValueData
@@ -295,6 +299,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,  TVarChar) OWNER TO postgr
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+ 13.02.18         *
  26.04.17                                                          *
  05.06.15         * 
 */

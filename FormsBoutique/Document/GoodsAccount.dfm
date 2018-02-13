@@ -1249,6 +1249,14 @@ object GoodsAccountForm: TGoodsAccountForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintCheck'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -1380,6 +1388,10 @@ object GoodsAccountForm: TGoodsAccountForm
     end
     object bbReport_Goods: TdxBarButton
       Action = actReport_Goods
+      Category = 0
+    end
+    object bbPrintCheck: TdxBarButton
+      Action = actPrintCheck
       Category = 0
     end
   end
@@ -1557,8 +1569,59 @@ object GoodsAccountForm: TGoodsAccountForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_ReturnOut'
-      ReportNameParam.Value = 'PrintMovement_ReturnOut'
+      ReportName = 'PrintMovement_GoodsAccount'
+      ReportNameParam.Value = 'PrintMovement_GoodsAccount'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintCheck: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'InvNumber'
+          Value = ''
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'From'
+          Value = ''
+          Component = GuidesTo
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = 42864d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'Print_Check_GoodsAccount'
+      ReportNameParam.Value = 'Print_Check_GoodsAccount'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end
@@ -2965,5 +3028,17 @@ object GoodsAccountForm: TGoodsAccountForm
       end>
     Left = 392
     Top = 8
+  end
+  object ClientDataSet1: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 876
+    Top = 273
+  end
+  object ClientDataSet2: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 908
+    Top = 318
   end
 end
