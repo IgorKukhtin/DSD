@@ -749,6 +749,49 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         end>
       Caption = 'actGet_UserUnit'
     end
+    object actPrintCheck: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'Print_Check'
+      ReportNameParam.Value = 'Print_Check'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1083,8 +1126,8 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 48
-    Top = 160
+    Left = 64
+    Top = 168
   end
   inherited MasterCDS: TClientDataSet
     Left = 16
@@ -1189,6 +1232,14 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintCheck'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1225,6 +1276,10 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
     end
     object bbSetErased: TdxBarButton
       Action = actSetErased
+      Category = 0
+    end
+    object bbPrintCheck: TdxBarButton
+      Action = actPrintCheck
       Category = 0
     end
   end
@@ -1348,5 +1403,41 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
     PackSize = 1
     Left = 288
     Top = 280
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 804
+    Top = 193
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 804
+    Top = 246
+  end
+  object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Sale'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 736
+    Top = 176
   end
 end
