@@ -176,6 +176,7 @@ type
     BarCode_str: TcxGridDBColumn;
     actPrintCheck: TdsdPrintAction;
     bbPrintCheck: TdxBarButton;
+    spSelectPrint_Check: TdsdStoredProc;
   private
   public
   end;

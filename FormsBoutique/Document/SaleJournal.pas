@@ -97,6 +97,7 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     actPrintCheck: TdsdPrintAction;
     bbPrintCheck: TdxBarButton;
+    spSelectPrint_Check: TdsdStoredProc;
   private
   public
   end;

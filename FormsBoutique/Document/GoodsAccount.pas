@@ -170,6 +170,7 @@ type
     ClientDataSet2: TClientDataSet;
     bbPrintCheck: TdxBarButton;
     actPrintCheck: TdsdPrintAction;
+    spSelectPrint_Check: TdsdStoredProc;
   private
   public
   end;

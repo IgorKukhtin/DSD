@@ -1753,10 +1753,10 @@ object SaleForm: TSaleForm
     object actPrintCheck: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectPrint
+      StoredProc = spSelectPrint_Check
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectPrint_Check
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
       Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
@@ -3632,5 +3632,29 @@ object SaleForm: TSaleForm
     PackSize = 1
     Left = 216
     Top = 400
+  end
+  object spSelectPrint_Check: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Check_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Sale'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 624
+    Top = 200
   end
 end

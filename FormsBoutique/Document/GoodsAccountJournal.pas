@@ -95,6 +95,7 @@ type
     ToName: TcxGridDBColumn;
     actPrintCheck: TdsdPrintAction;
     bbPrintCheck: TdxBarButton;
+    spSelectPrint_Check: TdsdStoredProc;
   private
   public
   end;

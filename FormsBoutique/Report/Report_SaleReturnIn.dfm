@@ -5,6 +5,7 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1081
   ExplicitHeight = 463
   PixelsPerInch = 96
@@ -762,10 +763,10 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
         end>
-      StoredProc = spSelectPrint
+      StoredProc = spSelectPrint_Check
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectPrint_Check
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
       Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
@@ -786,8 +787,8 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'Print_Check'
-      ReportNameParam.Value = 'Print_Check'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameCheck'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1124,6 +1125,31 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
       Caption = 'dsdactComplete'
       ImageIndex = 12
     end
+    object actGetReportName: TdsdExecStoredProc
+      Category = 'Print'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReporName
+      StoredProcList = <
+        item
+          StoredProc = spGetReporName
+        end>
+      Caption = 'actGetReportName'
+    end
+    object mactPrint_Check: TMultiAction
+      Category = 'Print'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetReportName
+        end
+        item
+          Action = actPrintCheck
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1063#1077#1082
+      Hint = #1055#1077#1095#1072#1090#1100' '#1063#1077#1082
+      ImageIndex = 3
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1279,8 +1305,9 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
       Category = 0
     end
     object bbPrintCheck: TdxBarButton
-      Action = actPrintCheck
+      Action = mactPrint_Check
       Category = 0
+      ImageIndex = 15
     end
   end
   inherited PeriodChoice: TPeriodChoice
@@ -1439,5 +1466,65 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
     PackSize = 1
     Left = 736
     Top = 176
+  end
+  object spSelectPrint_Check: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Check_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 720
+    Top = 232
+  end
+  object spGetReporName: TdsdStoredProc
+    StoredProcName = 'gpGet_ReportName_SaleReturnId'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_ReportName_SaleReturnId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameCheck'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 664
+    Top = 152
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'ReportNameCheck'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 416
+    Top = 208
   end
 end

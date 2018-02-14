@@ -61,6 +61,11 @@ type
     actPrintCheck: TdsdPrintAction;
     bbPrintCheck: TdxBarButton;
     spSelectPrint: TdsdStoredProc;
+    spSelectPrint_Check: TdsdStoredProc;
+    spGetReporName: TdsdStoredProc;
+    actGetReportName: TdsdExecStoredProc;
+    mactPrint_Check: TMultiAction;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

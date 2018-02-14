@@ -184,6 +184,9 @@ type
     TotalChangePercent_sale: TcxGridDBColumn;
     TotalChangePercent: TcxGridDBColumn;
     TotalPayOth: TcxGridDBColumn;
+    spSelectPrint_Check: TdsdStoredProc;
+    actPrintCheck: TdsdPrintAction;
+    bbPrintCheck: TdxBarButton;
   private
   public
   end;
