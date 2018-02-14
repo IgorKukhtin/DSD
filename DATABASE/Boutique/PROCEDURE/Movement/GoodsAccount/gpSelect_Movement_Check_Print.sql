@@ -217,6 +217,7 @@ BEGIN
                            , COALESCE (MIFloat_ChangePercent.ValueData, 0)   AS ChangePercent
                            , COALESCE (MIFloat_SummChangePercent.ValueData, 0)  AS SummChangePercent
                            , COALESCE (MIFloat_TotalPay.ValueData, 0)           AS TotalPay
+                           , COALESCE (MIFloat_TotalChangePercent.ValueData, 0) AS TotalChangePercent
                            , Object_PartionMI.ObjectCode                        AS SaleMI_ID
                            , MovementItem.isErased
                        FROM MovementItem 
@@ -238,6 +239,10 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
                                                         ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
                                                        AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
+
+                            LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
+                                                        ON MIFloat_TotalChangePercent.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()
 
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
                                                              ON MILinkObject_PartionMI.MovementItemId = MovementItem.Id
@@ -289,8 +294,9 @@ BEGIN
             + CASE WHEN vbStatusId = zc_Enum_Status_Complete() THEN tmpMI.SummChangePercent ELSE 0 END
              ) :: TFloat AS TotalSummToPay
              
-           , tmpMI.TotalPay                                          :: TFloat  AS TotalPay
-           , tmpMI.SummChangePercent                                 :: TFloat  AS SummChangePercent
+           , tmpMI.TotalPay                                               :: TFloat  AS TotalPay
+           , COALESCE (tmpMI.SummChangePercent, tmpMI.TotalChangePercent) :: TFloat  AS SummChangePercent
+            
            , tmpMI.isErased
 
        FROM tmpMI
