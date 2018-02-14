@@ -1574,8 +1574,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 190
-    Top = 30
+    Left = 182
+    Top = 158
   end
   object GuidesGoodsPrint: TdsdGuides
     KeyField = 'Id'
