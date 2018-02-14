@@ -283,6 +283,10 @@ type
     lblPromoCode: TLabel;
     Label12: TLabel;
     edPromoCodeChangePrice: TcxCurrencyEdit;
+    mdCheck: TdxMemData;
+    mdCheckID: TIntegerField;
+    mdCheckAMOUNT: TCurrencyField;
+    miPrintNotFiscalCheck: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -344,6 +348,7 @@ type
     procedure N10Click(Sender: TObject); //***10.08.16
     procedure actSetFilterExecute(Sender: TObject); //***10.08.16
     procedure actSetPromoCodeExecute(Sender: TObject); //***05.02.18
+    procedure miPrintNotFiscalCheckClick(Sender: TObject); //***12.02.18
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -363,6 +368,7 @@ type
     fBlinkVIP, fBlinkCheck : Boolean;
     time_onBlink, time_onBlinkCheck :TDateTime;
     MovementId_BlinkVIP:String;
+    FSaveCheckToMemData: boolean;
     procedure SetBlinkVIP (isRefresh : boolean);
     procedure SetBlinkCheck (isRefresh : boolean);
 
@@ -385,7 +391,7 @@ type
     procedure Add_Log_XML(AMessage: String);
     // Пробивает чек через ЭККА
     function PutCheckToCash(SalerCash: Currency; PaidType: TPaidType;
-      out AFiscalNumber, ACheckNumber: String): boolean;
+      out AFiscalNumber, ACheckNumber: String; isFiscal: boolean = true): boolean;
     //подключение к локальной базе данных
     function InitLocalStorage: Boolean;
     procedure LoadFromLocalStorage;
@@ -462,6 +468,14 @@ begin
       3:  // получен запрос на обновление всего
         begin
           LoadFromLocalStorage;
+        end;
+      4:  // получен запрос на сохранение в отдельную таблицу отгруженных чеков
+        begin
+          FSaveCheckToMemData := true;
+        end;
+      5:  // получен запрос на отмену сохранения в отдельную таблицу отгруженных чеков
+        begin
+          FSaveCheckToMemData := false;
         end;
     end;
 end;
@@ -877,7 +891,7 @@ begin
 
 
  //проверили что этот чек Не был проведен другой кассой - 04.02.2017
-  if not gc_User.Local then
+  if not gc_User.Local and (FormParams.ParamByName('CheckId').Value <> 0) then
   begin
     dsdSave := TdsdStoredProc.Create(nil);
     try
@@ -961,7 +975,8 @@ var
 begin
   startSplash('Начало обновления данных с сервера');
   try
-    if gc_User.Local AND RemainsCDS.IsEmpty then
+    // во 2-1 форме возможен только оффлайн режим
+    if true then
     begin
 //      ShowMessage('Загрузка из Remains');
       MainGridDBTableView.BeginUpdate;
@@ -984,6 +999,18 @@ begin
         RemainsCDS.EnableControls;
         AlternativeCDS.EnableControls;
         MainGridDBTableView.EndUpdate;
+      end;
+      ChangeStatus('Загрузка приходных накладных от дистрибьютора в медреестр Pfizer МДМ');
+      lMsg:= '';
+      if not DiscountServiceForm.fPfizer_Send(lMsg) then
+      begin
+           ChangeStatus('Ошибка в медреестре Pfizer МДМ :' + lMsg);
+           sleep(3000);
+      end
+      else
+      begin
+           ChangeStatus('Накладные зарегистрированы в медреестре Pfizer МДМ успешно :' + lMsg);
+           sleep(2000);
       end;
     end
     else
@@ -1017,7 +1044,7 @@ begin
         if not DiscountServiceForm.fPfizer_Send(lMsg) then
         begin
              ChangeStatus('Ошибка в медреестре Pfizer МДМ :' + lMsg);
-             sleep(10000);
+             sleep(3000);
         end
         else
         begin
@@ -1077,14 +1104,14 @@ var
   text   : string;
 
 begin
-  // Попытка открыть Test.txt файл для записи
-  AssignFile(myFile, 'CashSessionId.ini');
-  ReWrite(myFile);
-  // Запись нескольких известных слов в этот файл
-  WriteLn(myFile, FormParams.ParamByName('CashSessionId').Value);
-  // Закрытие файла
-  CloseFile(myFile);
-  PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 2);  // отправляем сообщение что можно забирать вайлс с кешсешнид
+//  // Попытка открыть Test.txt файл для записи
+//  AssignFile(myFile, 'CashSessionId.ini');
+//  ReWrite(myFile);
+//  // Запись нескольких известных слов в этот файл
+//  WriteLn(myFile, FormParams.ParamByName('CashSessionId').Value);
+//  // Закрытие файла
+//  CloseFile(myFile);
+//  PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 2);  // отправляем сообщение что можно забирать вайлс с кешсешнид
 end;
 
 
@@ -1945,6 +1972,12 @@ begin
   PanelMCSAuto.Visible:= not PanelMCSAuto.Visible;
   MainGridDBTableView.Columns[MainGridDBTableView.GetColumnByFieldName('MCSValue').Index].Options.Editing:= PanelMCSAuto.Visible;
 end;
+procedure TMainCashForm2.miPrintNotFiscalCheckClick(Sender: TObject);
+var CheckNumber: string;
+begin
+  PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.PaidType, FiscalNumber, CheckNumber, false);
+end;
+
 procedure TMainCashForm2.FormCreate(Sender: TObject);
 var
   F: String;
@@ -1952,6 +1985,9 @@ begin
   inherited;
 
   Application.OnMessage := AppMsgHandler;   // только 2 форма
+  // мемдата для сохранения отгруженных чеков во время получение полных остатков
+  FSaveCheckToMemData := false;
+  mdCheck.Active := true;
   isScaner:= false;
   //
   edDays.Value:=7;
@@ -1973,7 +2009,8 @@ begin
 
   //сгенерили гуид для определения сессии
   ChangeStatus('Установка первоначальных параметров');
-  FormParams.ParamByName('CashSessionId').Value := GenerateGUID;
+  // CashSessionId только в службе
+  //FormParams.ParamByName('CashSessionId').Value := iniLocalGUIDSave(GenerateGUID);
   actSaveCashSesionIdToFile.Execute;  // только 2 форма
   FormParams.ParamByName('ClosedCheckId').Value := 0;
   FormParams.ParamByName('CheckId').Value := 0;
@@ -2107,6 +2144,7 @@ begin
         exit;
       end;
   end;
+
   //
   // потому что криво, надо правильно определить ТОВАР + цена БЕЗ скидки
   if SoldRegim = TRUE
@@ -2211,7 +2249,28 @@ begin
     CheckCDS.DisableControls;
     try
       CheckCDS.Filtered := False;
-      if not checkCDS.Locate('GoodsId;PriceSale',VarArrayOf([SourceClientDataSet.FieldByName('Id').asInteger,lPriceSale]),[]) then
+      // попытка добавить препарат с другой ценой. обновляем цену у уже существующего и обнуляем суммы для пересчета
+      if checkCDS.Locate('GoodsId',VarArrayOf([SourceClientDataSet.FieldByName('Id').asInteger]),[])
+        and (checkCDS.FieldByName('PriceSale').asCurrency <> lPriceSale) then
+      Begin
+        if (FormParams.ParamByName('DiscountExternalId').Value > 0) and
+          (SourceClientDataSet.FindField('MorionCode') <> nil) then
+        begin
+          if DiscountServiceForm.gCode = 3 then
+            MCDesigner.CasualCache.Delete(SourceClientDataSet.FieldByName('Id').AsInteger, checkCDS.FieldByName('PriceSale').asCurrency);
+          if DiscountServiceForm.gCode = 3 then
+            MCDesigner.CasualCache.Save(SourceClientDataSet.FieldByName('Id').AsInteger, lPriceSale);
+        end;
+
+        checkCDS.Edit;
+        checkCDS.FieldByName('Price').asCurrency             := lPrice;
+        checkCDS.FieldByName('Summ').asCurrency              := 0;
+        checkCDS.FieldByName('PriceSale').asCurrency         := lPriceSale;
+        checkCDS.FieldByName('ChangePercent').asCurrency     := lChangePercent;
+        checkCDS.FieldByName('SummChangePercent').asCurrency := 0;
+        checkCDS.Post;
+      End
+      else if not checkCDS.Locate('GoodsId;PriceSale',VarArrayOf([SourceClientDataSet.FieldByName('Id').asInteger,lPriceSale]),[]) then
       Begin
         checkCDS.Append;
         checkCDS.FieldByName('Id').AsInteger:=0;
@@ -2705,7 +2764,7 @@ begin
 end;
 
 function TMainCashForm2.PutCheckToCash(SalerCash: Currency;
-  PaidType: TPaidType; out AFiscalNumber, ACheckNumber: String): boolean;
+  PaidType: TPaidType; out AFiscalNumber, ACheckNumber: String; isFiscal: boolean = true): boolean;
 var str_log_xml : String;
     i : Integer;
 {------------------------------------------------------------------------------}
@@ -2729,12 +2788,12 @@ var str_log_xml : String;
 begin
   ACheckNumber := '';
   try
-    if Assigned(Cash) AND NOT Cash.AlwaysSold then
+    if Assigned(Cash) AND NOT Cash.AlwaysSold and isFiscal then
       AFiscalNumber := Cash.FiscalNumber
     else
       AFiscalNumber := '';
     str_log_xml:=''; i:=0;
-    result := not Assigned(Cash) or Cash.AlwaysSold or Cash.OpenReceipt;
+    result := not Assigned(Cash) or Cash.AlwaysSold or Cash.OpenReceipt(isFiscal);
     with CheckCDS do
     begin
       First;
@@ -3257,44 +3316,61 @@ begin
         str_log_xml:=''; i:=0;
         while not ADS.Eof do
         Begin
-          FLocalDataBaseBody.AppendRecord([ADS.FieldByName('Id').AsInteger,         //id записи
-                                           AUID,                                    //uid чека
-                                           ADS.FieldByName('GoodsId').AsInteger,    //ид товара
-                                           ADS.FieldByName('GoodsCode').AsInteger,  //Код товара
-                                           ADS.FieldByName('GoodsName').AsString,   //наименование товара
-                                           ADS.FieldByName('NDS').asCurrency,          //НДС товара
-                                           ADS.FieldByName('Amount').asCurrency,       //Кол-во
-                                           ADS.FieldByName('Price').asCurrency,        //Цена, с 20.07.16 если есть скидка по Проекту дисконта, здесь будет цена с учетом скидки
-                                           //***20.07.16
-                                           ADS.FieldByName('PriceSale').asCurrency,         // Цена без скидки
-                                           ADS.FieldByName('ChangePercent').asCurrency,     // % Скидки
-                                           ADS.FieldByName('SummChangePercent').asCurrency, // Сумма Скидки
-                                           //***19.08.16
-                                           ADS.FieldByName('AmountOrder').asCurrency, // Кол-во заявка
-                                           //***10.08.16
-                                           ADS.FieldByName('List_UID').AsString // UID строки продажи
-                                           ]);
-                  //сохранили строку в лог
-                  i:= i + 1;
-                  if str_log_xml<>'' then str_log_xml:=str_log_xml + #10 + #13;
-                  try
-                  str_log_xml:= str_log_xml
-                              + '<Items num="' +IntToStr(i)+ '">'
-                              + '<GoodsCode>"' + ADS.FieldByName('GoodsCode').asString + '"</GoodsCode>'
-                              + '<GoodsName>"' + AnsiUpperCase(ADS.FieldByName('GoodsName').Text) + '"</GoodsName>'
-                              + '<Amount>"' + FloatToStr(ADS.FieldByName('Amount').asCurrency) + '"</Amount>'
-                              + '<Price>"' + FloatToStr(ADS.FieldByName('Price').asCurrency) + '"</Price>'
-                              + '<List_UID>"' + ADS.FieldByName('List_UID').AsString + '"</List_UID>'
-                              + '</Items>';
-                  except
-                  str_log_xml:= str_log_xml
-                              + '<Items num="' +IntToStr(i)+ '">'
-                              + '<GoodsCode>"' + ADS.FieldByName('GoodsCode').asString + '"</GoodsCode>'
-                              + '<GoodsName>"???"</GoodsName>'
-                              + '<List_UID>"' + ADS.FieldByName('List_UID').AsString + '"</List_UID>'
-                              + '</Items>';
-                  end;
-        ADS.Next;
+          if ADS.FieldByName('Amount').asCurrency <> 0.0 then
+          begin
+            FLocalDataBaseBody.AppendRecord([ADS.FieldByName('Id').AsInteger,         //id записи
+                                             AUID,                                    //uid чека
+                                             ADS.FieldByName('GoodsId').AsInteger,    //ид товара
+                                             ADS.FieldByName('GoodsCode').AsInteger,  //Код товара
+                                             ADS.FieldByName('GoodsName').AsString,   //наименование товара
+                                             ADS.FieldByName('NDS').asCurrency,          //НДС товара
+                                             ADS.FieldByName('Amount').asCurrency,       //Кол-во
+                                             ADS.FieldByName('Price').asCurrency,        //Цена, с 20.07.16 если есть скидка по Проекту дисконта, здесь будет цена с учетом скидки
+                                             //***20.07.16
+                                             ADS.FieldByName('PriceSale').asCurrency,         // Цена без скидки
+                                             ADS.FieldByName('ChangePercent').asCurrency,     // % Скидки
+                                             ADS.FieldByName('SummChangePercent').asCurrency, // Сумма Скидки
+                                             //***19.08.16
+                                             ADS.FieldByName('AmountOrder').asCurrency, // Кол-во заявка
+                                             //***10.08.16
+                                             ADS.FieldByName('List_UID').AsString // UID строки продажи
+                                             ]);
+            // сохранили отгруженные препараты для корректировки полных остатков
+            if FSaveCheckToMemData then
+            begin
+              if mdCheck.Locate('ID', ADS.FieldByName('GoodsId').AsInteger, []) then
+                mdCheck.Edit
+              else
+              begin
+                mdCheck.Append;
+                mdCheck.FieldByName('ID').AsInteger := ADS.FieldByName('GoodsId').AsInteger;
+              end;
+              mdCheck.FieldByName('Amount').AsCurrency := mdCheck.FieldByName('Amount').AsCurrency
+                                                          + ADS.FieldByName('Amount').asCurrency;
+              mdCheck.Post;
+            end;
+                    //сохранили строку в лог
+                    i:= i + 1;
+                    if str_log_xml<>'' then str_log_xml:=str_log_xml + #10 + #13;
+                    try
+                    str_log_xml:= str_log_xml
+                                + '<Items num="' +IntToStr(i)+ '">'
+                                + '<GoodsCode>"' + ADS.FieldByName('GoodsCode').asString + '"</GoodsCode>'
+                                + '<GoodsName>"' + AnsiUpperCase(ADS.FieldByName('GoodsName').Text) + '"</GoodsName>'
+                                + '<Amount>"' + FloatToStr(ADS.FieldByName('Amount').asCurrency) + '"</Amount>'
+                                + '<Price>"' + FloatToStr(ADS.FieldByName('Price').asCurrency) + '"</Price>'
+                                + '<List_UID>"' + ADS.FieldByName('List_UID').AsString + '"</List_UID>'
+                                + '</Items>';
+                    except
+                    str_log_xml:= str_log_xml
+                                + '<Items num="' +IntToStr(i)+ '">'
+                                + '<GoodsCode>"' + ADS.FieldByName('GoodsCode').asString + '"</GoodsCode>'
+                                + '<GoodsName>"???"</GoodsName>'
+                                + '<List_UID>"' + ADS.FieldByName('List_UID').AsString + '"</List_UID>'
+                                + '</Items>';
+                    end;
+          end;
+          ADS.Next;
         End;
 
       Except ON E:Exception do
@@ -3620,14 +3696,23 @@ end;
 procedure TMainCashForm2.LoadFromLocalStorage;
 var
   lMsg: String;
+  nRemainsID, nAlternativeID, nCheckID, I: integer;
 begin
-  startSplash('Начало обновления данных с сервера');
+  startSplash('Начало обновления данных с сервера !!');
 
   try
     MainGridDBTableView.BeginUpdate;
     RemainsCDS.DisableControls;
     AlternativeCDS.DisableControls;
-
+    nRemainsID := 0;
+    if RemainsCDS.Active and (RemainsCDS.RecordCount > 0) then
+      nRemainsID := RemainsCDS.FieldByName('Id').asInteger;
+    nAlternativeID := 0;
+    if AlternativeCDS.Active and (AlternativeCDS.RecordCount > 0) then
+      nAlternativeID := AlternativeCDS.FieldByName('Id').asInteger;
+    nCheckID := 0;
+    if CheckCDS.Active and (CheckCDS.RecordCount > 0) then
+      nCheckID := CheckCDS.FieldByName('Id').asInteger;
     try
       if not FileExists(Remains_lcl) or not FileExists(Alternative_lcl) then
         ShowMessage('Нет локального хранилища.');
@@ -3638,7 +3723,41 @@ begin
       WaitForSingleObject(MutexAlternative, INFINITE);
       LoadLocalData(AlternativeCDS, Alternative_lcl);
       ReleaseMutex(MutexAlternative);
+      // корректируем новые остатки с учетом того, что уже было в чеке
+      CheckCDS.First;
+      while not CheckCDS.EOF do
+      begin
+        if RemainsCDS.Locate('Id', CheckCDS.FieldByName('GoodsId').asInteger, []) then
+        begin
+          RemainsCDS.Edit;
+          RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency
+                                                        - CheckCDS.FieldByName('Amount').asCurrency;
+          RemainsCDS.Post;
+        end;
+        CheckCDS.Next;
+      end;
+      // корректируем новые остатки с учетом того, что было отгружено во время получения остатков
+      mdCheck.First;
+      while not mdCheck.EOF do
+      begin
+        if RemainsCDS.Locate('Id', mdCheck.FieldByName('ID').asInteger, []) then
+        begin
+          RemainsCDS.Edit;
+          RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency
+                                                        - mdCheck.FieldByName('AMOUNT').asCurrency;
+          RemainsCDS.Post;
+        end;
+        mdCheck.Next;
+      end;
+      mdCheck.Close;
+      mdCheck.Open;
     finally
+      if nRemainsID <> 0 then
+        RemainsCDS.Locate('Id', nRemainsID, []);
+      if nAlternativeID <> 0 then
+        AlternativeCDS.Locate('Id', nAlternativeID, []);
+      if nCheckID <> 0 then
+        CheckCDS.Locate('Id', nCheckID, []);
       RemainsCDS.EnableControls;
       AlternativeCDS.EnableControls;
       MainGridDBTableView.EndUpdate;

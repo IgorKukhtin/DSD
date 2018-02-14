@@ -95,6 +95,9 @@ type
     N1: TMenuItem;
     ExecuteDialog: TExecuteDialog;
     actRefreshStart: TdsdDataSetRefresh;
+    actPrintCheck: TdsdPrintAction;
+    bbPrintCheck: TdxBarButton;
+    spSelectPrint_Check: TdsdStoredProc;
   private
   public
   end;

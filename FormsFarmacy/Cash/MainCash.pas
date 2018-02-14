@@ -298,6 +298,7 @@ type
     lblPromoCode: TLabel;
     Label12: TLabel;
     edPromoCodeChangePrice: TcxCurrencyEdit;
+    miPrintNotFiscalCheck: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -351,6 +352,7 @@ type
     procedure miMCSAutoClick(Sender: TObject);
     procedure actSetFilterExecute(Sender: TObject); //***10.08.16
     procedure actSetPromoCodeExecute(Sender: TObject); //***05.02.18
+    procedure miPrintNotFiscalCheckClick(Sender: TObject); //***13.02.18
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -392,7 +394,7 @@ type
     procedure Add_Log_XML(AMessage: String);
     // Пробивает чек через ЭККА
     function PutCheckToCash(SalerCash: Currency; PaidType: TPaidType;
-      out AFiscalNumber, ACheckNumber: String): boolean;
+      out AFiscalNumber, ACheckNumber: String; isFiscal: boolean = true): boolean;
     //подключение к локальной базе данных
     function InitLocalStorage: Boolean;
     //Сохранение чека в локальной базе. возвращает УИД
@@ -1546,6 +1548,12 @@ begin
   MainGridDBTableView.Columns[MainGridDBTableView.GetColumnByFieldName('MCSValue').Index].Options.Editing:= PanelMCSAuto.Visible;
 end;
 
+procedure TMainCashForm.miPrintNotFiscalCheckClick(Sender: TObject);
+var CheckNumber: string;
+begin
+  PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.PaidType, FiscalNumber, CheckNumber, false);
+end;
+
 procedure TMainCashForm.FormCreate(Sender: TObject);
 var
   F: String;
@@ -2285,7 +2293,7 @@ begin
 end;
 
 function TMainCashForm.PutCheckToCash(SalerCash: Currency;
-  PaidType: TPaidType; out AFiscalNumber, ACheckNumber: String): boolean;
+  PaidType: TPaidType; out AFiscalNumber, ACheckNumber: String; isFiscal: boolean = true): boolean;
 var str_log_xml : String;
     i : Integer;
 {------------------------------------------------------------------------------}
@@ -2309,12 +2317,12 @@ var str_log_xml : String;
 begin
   ACheckNumber := '';
   try
-    if Assigned(Cash) AND NOT Cash.AlwaysSold then
+    if Assigned(Cash) AND NOT Cash.AlwaysSold and isFiscal then
       AFiscalNumber := Cash.FiscalNumber
     else
       AFiscalNumber := '';
     str_log_xml:=''; i:=0;
-    result := not Assigned(Cash) or Cash.AlwaysSold or Cash.OpenReceipt;
+    result := not Assigned(Cash) or Cash.AlwaysSold or Cash.OpenReceipt(isFiscal);
     with CheckCDS do
     begin
       First;

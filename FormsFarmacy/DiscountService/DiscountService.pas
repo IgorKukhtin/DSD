@@ -803,8 +803,8 @@ begin
             i := i + 1;
 
           except
-                ShowMessage ('Ошибка при заполнении структуры SendList.' + #10+ #13
-                + #10+ #13 + 'Товар (' + UnloadItemCDS.FieldByName('GoodsCode').AsString + ')' + UnloadItemCDS.FieldByName('GoodsName').AsString);
+                //ShowMessage ('Ошибка при заполнении структуры SendList.' + #10+ #13
+                //+ #10+ #13 + 'Товар (' + UnloadItemCDS.FieldByName('GoodsCode').AsString + ')' + UnloadItemCDS.FieldByName('GoodsName').AsString);
                 //ошибка
                 lMsg:='Error';
                 exit;
@@ -818,6 +818,7 @@ begin
 
     //Второе - отправка
     try
+
           //эту инфу и будем отправлять
           aOrderRequest.Items := SendList;
 
@@ -837,17 +838,15 @@ begin
           lMsg:= Res.ResultDescription;
           Result:= LowerCase(lMsg) = LowerCase('OK');
           //
-          if not Result
-          then ShowMessage ('Ошибка <' + gService + '>.' + #10+ #13 + lMsg)
-
-          else //запишем в Документе - Загружена приходная накладная от дистрибьютора в медреестр Pfizer МДМ
+          if Result then
+            //запишем в Документе - Загружена приходная накладная от дистрибьютора в медреестр Pfizer МДМ
                with spUpdateUnload do begin
                   ParamByName('inMovementId').Value := lMovementId;
                   Execute;
                end;
 
     except
-        ShowMessage ('Ошибка на сервере <' + gURL + '>.' + #10+ #13);
+        //ShowMessage ('Ошибка на сервере <' + gURL + '>.' + #10+ #13);
         //ошибка
         lMsg:='Error';
     end; // if i > 1 // если была хоть одна продажа со штрих-кодом
