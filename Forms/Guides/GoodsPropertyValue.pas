@@ -83,6 +83,7 @@ type
     bbProtocolOpenForm: TdxBarButton;
     BarCodeShort: TcxGridDBColumn;
     BoxCount: TcxGridDBColumn;
+    GoodsBoxChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

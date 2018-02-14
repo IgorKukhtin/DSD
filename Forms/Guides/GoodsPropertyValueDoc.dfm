@@ -98,6 +98,31 @@ object GoodsPropertyValueDocForm: TGoodsPropertyValueDocForm
         Options.Editing = False
         Width = 67
       end
+      object GoodsBoxCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1075#1086#1092#1088'.'
+        DataBinding.FieldName = 'GoodsBoxCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1076' '#1075#1086#1092#1088#1086#1103#1097#1080#1082
+        Options.Editing = False
+        Width = 27
+      end
+      object GoodsBoxName: TcxGridDBColumn
+        Caption = #1043#1086#1092#1088#1086#1103#1097#1080#1082
+        DataBinding.FieldName = 'GoodsBoxName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Caption = 'GoodsBoxChoiceForm'
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 64
+      end
       object clGoodsKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsKindName'

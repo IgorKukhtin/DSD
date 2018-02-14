@@ -60,12 +60,12 @@ BEGIN
                             -- AND Movement.StatusId = zc_Enum_Status_Complete()
                             AND (Movement.Id = inMovementId_by OR COALESCE (inMovementId_by, 0) = 0)
                          )
-        , tmpMovementCount AS (SELECT Count(*) AS WeighingCount
-                               FROM Movement
-                               WHERE Movement.ParentId = inMovementId
-                                 AND Movement.DescId = zc_Movement_WeighingPartner()
-                                 AND Movement.StatusId = zc_Enum_Status_Complete()
-                              )
+     , tmpMovementCount AS (SELECT Count(*) AS WeighingCount
+                            FROM Movement
+                            WHERE Movement.ParentId = inMovementId
+                              AND Movement.DescId = zc_Movement_WeighingPartner()
+                              AND Movement.StatusId = zc_Enum_Status_Complete()
+                           )
        -- список Артикулы покупателя для товаров + GoodsKindId
      , tmpObject_GoodsPropertyValue AS (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                              , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
@@ -74,6 +74,8 @@ BEGIN
                                              , ObjectString_BarCode.ValueData       AS BarCode
                                              , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
                                              , ObjectString_Article.ValueData       AS Article
+                                             , COALESCE (ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId, 0)  AS GoodsBoxId
+                                             , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END AS GoodsBox_Weight 
                                         FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
                                              ) AS tmpGoodsProperty
                                              INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
@@ -96,6 +98,17 @@ BEGIN
                                              LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
                                                                   ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+
+                                             LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsBox
+                                                                  ON ObjectLink_GoodsPropertyValue_GoodsBox.ObjectId = Object_GoodsPropertyValue.Id
+                                                                 AND ObjectLink_GoodsPropertyValue_GoodsBox.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsBox()
+                                             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                                   ON ObjectFloat_Weight.ObjectId = ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId
+                                                                  AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
+                                             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                                  ON ObjectLink_Goods_Measure.ObjectId = ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId
+                                                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                                                                 
                                        )
        -- список Артикулы для товаров (нужны если не найдем по GoodsKindId)
      , tmpObject_GoodsPropertyValueGroup AS (SELECT tmpObject_GoodsPropertyValue.GoodsId
@@ -194,6 +207,8 @@ BEGIN
            , Object_From.ValueData             		                            AS FromName
            , Object_To.ValueData                                                    AS ToName
 
+           , View_Contract.InvNumber        	                                    AS ContractName
+           , ObjectDate_Signing.ValueData                                           AS ContractSigningDate
 
            , ObjectString_Goods_GoodsGroupFull.ValueData                            AS GoodsGroupNameFull
            , Object_Goods.ObjectCode                                                AS GoodsCode
@@ -206,11 +221,12 @@ BEGIN
            , COALESCE (tmpObject_GoodsPropertyValue.BarCode, COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode, '')) AS BarCode_Juridical
            , tmpMovementItem.LevelNumber                                            AS LevelNumber
            , tmpMovementItem.BoxCount                                               AS BoxCount
+           , (COALESCE (tmpMovementItem.BoxCount, 0) * COALESCE (tmpObject_GoodsPropertyValue.GoodsBox_Weight, 0)):: TFloat AS BoxWeight
 
            , tmpMovementItem.AmountPartner                                :: TFloat AS AmountPartner
            , tmpMovementItem.AmountPartnerWeight                          :: TFloat AS AmountPartnerWeight
            , tmpMovementItem.AmountPartnerSh                              :: TFloat AS AmountPartnerSh
-
+           , tmpMovementItem.AmountPartnerWeight + (COALESCE (tmpMovementItem.BoxCount, 0) * COALESCE (tmpObject_GoodsPropertyValue.GoodsBox_Weight, 0)) :: TFloat AS AmountPartnerWeightWithBox
 
               -- Штрих-код GS1-128
            ,  -- 01 - EAN код товару на палеті - 14
@@ -316,11 +332,11 @@ BEGIN
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
             LEFT JOIN MovementFloat AS MovementFloat_WeighingNumber
-                                    ON MovementFloat_WeighingNumber.MovementId =  tmpMovement.Id
+                                    ON MovementFloat_WeighingNumber.MovementId = tmpMovement.Id
                                    AND MovementFloat_WeighingNumber.DescId = zc_MovementFloat_WeighingNumber()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
-                                    ON MovementFloat_TotalCountKg.MovementId =  tmpMovement.Id
+                                    ON MovementFloat_TotalCountKg.MovementId = tmpMovement.Id
                                    AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
 
             LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = Object_Goods.Id
@@ -351,6 +367,11 @@ BEGIN
                                          ON MovementLinkObject_Contract.MovementId = Movement_Sale.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = MovementLinkObject_Contract.ObjectId
+
+            LEFT JOIN ObjectDate AS ObjectDate_Signing
+                                 ON ObjectDate_Signing.ObjectId = View_Contract.ContractId
+                                AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
+                                AND View_Contract.InvNumber <> '-'
 
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
                                                                 ON OH_JuridicalDetails_From.JuridicalId = COALESCE (ObjectLink_Unit_Juridical.ChildObjectId, View_Contract.JuridicalBasisId)

@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPropertyValue (Integer, TVarChar, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPropertyValue (Integer, TVarChar, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPropertyValue (Integer, TVarChar, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPropertyValue (Integer, TVarChar, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsPropertyValue(
  INOUT ioId                  Integer   ,    -- ключ объекта <Значения свойств товаров для классификатора>
@@ -19,6 +20,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsPropertyValue(
     IN inGoodsPropertyId     Integer   ,    -- Классификатор свойств товаров
     IN inGoodsId             Integer   ,    -- Товары
     IN inGoodsKindId         Integer   ,    -- Виды товара
+    IN inGoodsBoxId          Integer   ,    -- Товары (гофроящик)
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -100,6 +102,9 @@ $BODY$
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsPropertyValue_Goods(), ioId, inGoodsId);
    -- сохранили связь
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsPropertyValue_GoodsKind(), ioId, inGoodsKindId);
+   -- сохранили связь
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsPropertyValue_GoodsBox(), ioId, inGoodsBoxId);
+
 
    -- обновили
    PERFORM lpUpdate_Object_GoodsPropertyValue_BarCodeShort (inGoodsPropertyId, ioId, vbUserId);
@@ -121,6 +126,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.02.18         * 
  27.06.17         * del inAmountDoc
  22.06.17         * add inAmountDoc
  17.09.15         * add BoxCount

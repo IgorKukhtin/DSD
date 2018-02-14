@@ -2,7 +2,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
   Left = 0
   Top = 0
   Caption = #1047#1085#1072#1095#1077#1085#1080#1103' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
-  ClientHeight = 361
+  ClientHeight = 401
   ClientWidth = 563
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
   end
   object cxButton1: TcxButton
     Left = 167
-    Top = 320
+    Top = 364
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
   end
   object cxButton2: TcxButton
     Left = 311
-    Top = 320
+    Top = 364
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -50,27 +50,27 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
   end
   object cxLabel3: TcxLabel
     Left = 18
-    Top = 97
+    Top = 153
     Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
   end
   object cxLabel5: TcxLabel
     Left = 17
-    Top = 152
+    Top = 208
     Caption = #1064#1090#1088#1080#1093'-'#1082#1086#1076
   end
   object cxLabel6: TcxLabel
     Left = 290
-    Top = 154
+    Top = 210
     Caption = #1064#1090#1088#1080#1093'-'#1082#1086#1076' GLN'
   end
   object cxLabel7: TcxLabel
     Left = 16
-    Top = 205
+    Top = 261
     Caption = #1040#1088#1090#1080#1082#1091#1083
   end
   object cxLabel8: TcxLabel
     Left = 290
-    Top = 205
+    Top = 261
     Caption = #1040#1088#1090#1080#1082#1091#1083' GLN'
   end
   object cxLabel9: TcxLabel
@@ -79,8 +79,8 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
     Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090#1091#1082' '#1087#1088#1080' '#1089#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1080
   end
   object ceGoodsProperty: TcxButtonEdit
-    Left = 17
-    Top = 120
+    Left = 16
+    Top = 176
     Properties.Buttons = <
       item
         Default = True
@@ -99,37 +99,37 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
     Width = 163
   end
   object ceBarCode: TcxTextEdit
-    Left = 17
-    Top = 175
+    Left = 16
+    Top = 231
     TabOrder = 12
     Width = 267
   end
   object ceBarCodeGLN: TcxTextEdit
     Left = 290
-    Top = 175
+    Top = 231
     TabOrder = 13
     Width = 262
   end
   object ceArticle: TcxTextEdit
-    Left = 17
-    Top = 224
+    Left = 16
+    Top = 280
     TabOrder = 14
     Width = 267
   end
   object ceArticleGLN: TcxTextEdit
     Left = 290
-    Top = 224
+    Top = 280
     TabOrder = 15
     Width = 262
   end
   object cxLabel2: TcxLabel
     Left = 290
-    Top = 97
+    Top = 153
     Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
   end
   object ceGoodsKind: TcxButtonEdit
     Left = 290
-    Top = 120
+    Top = 176
     Properties.Buttons = <
       item
         Default = True
@@ -144,7 +144,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
     Caption = #1058#1086#1074#1072#1088
   end
   object ceGoods: TcxButtonEdit
-    Left = 17
+    Left = 16
     Top = 77
     Properties.Buttons = <
       item
@@ -153,16 +153,16 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 19
-    Width = 356
+    Width = 357
   end
   object cxLabel10: TcxLabel
     Left = 18
-    Top = 253
+    Top = 309
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1087#1087#1099
   end
   object ceGroupName: TcxTextEdit
-    Left = 18
-    Top = 272
+    Left = 16
+    Top = 328
     TabOrder = 21
     Width = 267
   end
@@ -181,21 +181,38 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
   end
   object cxLabel12: TcxLabel
     Left = 291
-    Top = 253
+    Top = 309
     Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074#1083#1086#1078#1077#1085#1080#1077
   end
   object ceAmountDoc: TcxCurrencyEdit
-    Left = 291
-    Top = 272
+    Left = 290
+    Top = 328
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
     TabOrder = 25
-    Width = 261
+    Width = 262
+  end
+  object cxLabel13: TcxLabel
+    Left = 18
+    Top = 104
+    Caption = #1058#1086#1074#1072#1088' ('#1075#1086#1092#1088#1086#1103#1097#1080#1082')'
+  end
+  object edGoodsBox: TcxButtonEdit
+    Left = 16
+    Top = 123
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 27
+    Width = 536
   end
   object ActionList: TActionList
     Left = 408
-    Top = 318
+    Top = 362
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -327,10 +344,18 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsBoxId'
+        Value = Null
+        Component = GuidesGoodsBox
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 88
-    Top = 317
+    Top = 361
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -340,8 +365,8 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 512
-    Top = 246
+    Left = 488
+    Top = 310
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_GoodsPropertyValue'
@@ -465,10 +490,25 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsBoxId'
+        Value = Null
+        Component = GuidesGoodsBox
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsBoxName'
+        Value = Null
+        Component = GuidesGoodsBox
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 251
-    Top = 318
+    Top = 362
   end
   object dsdGoodsPropertyGuides: TdsdGuides
     KeyField = 'Id'
@@ -497,7 +537,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         MultiSelectSeparator = ','
       end>
     Left = 108
-    Top = 110
+    Top = 166
   end
   object GoodsKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -526,7 +566,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         MultiSelectSeparator = ','
       end>
     Left = 372
-    Top = 102
+    Top = 158
   end
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
@@ -556,5 +596,34 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
       end>
     Left = 180
     Top = 62
+  end
+  object GuidesGoodsBox: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsBox
+    FormNameParam.Value = 'TGoods_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoods_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoodsBox
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsBox
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 197
+    Top = 100
   end
 end

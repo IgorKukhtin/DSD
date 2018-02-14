@@ -10,7 +10,8 @@ RETURNS TABLE (Id Integer, Name TVarChar, isErased Boolean,
                Amount TFloat, BoxCount TFloat, AmountDoc TFloat,
                BarCode TVarChar, Article TVarChar,
                BarCodeGLN TVarChar, ArticleGLN TVarChar, GroupName TVarChar,GoodsPropertyId Integer, GoodsPropertyName TVarChar,
-               GoodsId Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar
+               GoodsId Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar,
+               GoodsBoxId Integer, GoodsBoxName TVarChar
               )
 AS
 $BODY$
@@ -39,6 +40,8 @@ BEGIN
            , '' :: TVarChar   AS GoodsName
            , 0 :: Integer     AS GoodsKindId
            , '' :: TVarChar   AS GoodsKindName
+           , 0  :: Integer    AS GoodsBoxId
+           , '' :: TVarChar   AS GoodsBoxName
 
        /*FROM Object
        WHERE Object.DescId = zc_Object_GoodsPropertyValue()*/;
@@ -63,6 +66,8 @@ BEGIN
            , Goods.ValueData         AS GoodsName
            , GoodsKind.Id            AS GoodsKindId
            , GoodsKind.ValueData     AS GoodsKindName
+           , GoodsBox.Id             AS GoodsBoxId
+           , GoodsBox.ValueData      AS GoodsBoxName           
        FROM Object
            LEFT JOIN ObjectFloat AS ObjectFloat_Amount 
                                  ON ObjectFloat_Amount.ObjectId = Object.Id
@@ -108,6 +113,11 @@ BEGIN
                                AND GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
            LEFT JOIN Object AS GoodsKind ON GoodsKind.Id = GoodsPropertyValue_GoodsKind.ChildObjectId
 
+           LEFT JOIN ObjectLink AS GoodsPropertyValue_GoodsBox
+                                ON GoodsPropertyValue_GoodsBox.ObjectId = Object.Id
+                               AND GoodsPropertyValue_GoodsBox.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsBox()
+           LEFT JOIN Object AS GoodsBox ON GoodsBox.Id = GoodsPropertyValue_GoodsBox.ChildObjectId
+
        WHERE Object.Id = inId;
 
    END IF;
@@ -120,6 +130,7 @@ ALTER FUNCTION gpGet_Object_GoodsPropertyValue(integer, TVarChar) OWNER TO postg
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 14.02.18         * add GoodsBox
  22.06.17         * add AmountDoc
  17.09.15         * add BoxCount
  10.10.14                                                       *
