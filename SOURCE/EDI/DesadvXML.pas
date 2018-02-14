@@ -92,6 +92,7 @@ type
     function Get_PRODUCT: UnicodeString;
     function Get_PRODUCTIDSUPPLIER: UnicodeString;
     function Get_PRODUCTIDBUYER: UnicodeString;
+    function Get_DESCRIPTION: UnicodeString;
     function Get_DELIVEREDQUANTITY: UnicodeString;
     function Get_DELIVEREDUNIT: UnicodeString;
     function Get_ORDEREDQUANTITY: UnicodeString;
@@ -101,6 +102,7 @@ type
     procedure Set_PRODUCT(Value: UnicodeString);
     procedure Set_PRODUCTIDSUPPLIER(Value: UnicodeString);
     procedure Set_PRODUCTIDBUYER(Value: UnicodeString);
+    procedure Set_DESCRIPTION(Value: UnicodeString);
     procedure Set_DELIVEREDQUANTITY(Value: UnicodeString);
     procedure Set_DELIVEREDUNIT(Value: UnicodeString);
     procedure Set_ORDEREDQUANTITY(Value: UnicodeString);
@@ -111,6 +113,7 @@ type
     property PRODUCT: UnicodeString read Get_PRODUCT write Set_PRODUCT;
     property PRODUCTIDSUPPLIER: UnicodeString read Get_PRODUCTIDSUPPLIER write Set_PRODUCTIDSUPPLIER;
     property PRODUCTIDBUYER: UnicodeString read Get_PRODUCTIDBUYER write Set_PRODUCTIDBUYER;
+    property DESCRIPTION: UnicodeString read Get_DESCRIPTION write Set_DESCRIPTION;
     property DELIVEREDQUANTITY: UnicodeString read Get_DELIVEREDQUANTITY write Set_DELIVEREDQUANTITY;
     property DELIVEREDUNIT: UnicodeString read Get_DELIVEREDUNIT write Set_DELIVEREDUNIT;
     property ORDEREDQUANTITY: UnicodeString read Get_ORDEREDQUANTITY write Set_ORDEREDQUANTITY;
@@ -205,6 +208,7 @@ type
     function Get_PRODUCT: UnicodeString;
     function Get_PRODUCTIDSUPPLIER: UnicodeString;
     function Get_PRODUCTIDBUYER: UnicodeString;
+    function Get_DESCRIPTION: UnicodeString;
     function Get_DELIVEREDQUANTITY: UnicodeString;
     function Get_DELIVEREDUNIT: UnicodeString;
     function Get_ORDEREDQUANTITY: UnicodeString;
@@ -214,6 +218,7 @@ type
     procedure Set_PRODUCT(Value: UnicodeString);
     procedure Set_PRODUCTIDSUPPLIER(Value: UnicodeString);
     procedure Set_PRODUCTIDBUYER(Value: UnicodeString);
+    procedure Set_DESCRIPTION(Value: UnicodeString);
     procedure Set_DELIVEREDQUANTITY(Value: UnicodeString);
     procedure Set_DELIVEREDUNIT(Value: UnicodeString);
     procedure Set_ORDEREDQUANTITY(Value: UnicodeString);
@@ -474,6 +479,17 @@ procedure TXMLPOSITIONType.Set_PRODUCTIDBUYER(Value: UnicodeString);
 begin
   ChildNodes['PRODUCTIDBUYER'].NodeValue := Value;
 end;
+
+procedure TXMLPOSITIONType.Set_DESCRIPTION(Value: UnicodeString);
+begin
+  ChildNodes['DESCRIPTION'].NodeValue := Value;
+end;
+
+function TXMLPOSITIONType.Get_DESCRIPTION: UnicodeString;
+begin
+  Result := ChildNodes['DESCRIPTION'].Text;
+end;
+
 
 function TXMLPOSITIONType.Get_DELIVEREDQUANTITY: UnicodeString;
 begin

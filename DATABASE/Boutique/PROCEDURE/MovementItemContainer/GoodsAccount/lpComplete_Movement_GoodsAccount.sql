@@ -1591,6 +1591,14 @@ UNION SELECT 895555
                      INNER JOIN Container AS Container_Find
                                           ON Container_Find.ParentId = Container.Id
                                          AND Container_Find.Amount   <> 0
+                WHERE _tmpItem.GoodsId <> zc_Enum_Goods_Debt()
+                   OR (vbOperDate <> '19.04.2007'
+                   AND vbOperDate <> '30.04.2007'
+                   AND vbOperDate <> '16.11.2007'
+                   AND vbOperDate <> '25.12.2007'
+                   AND vbOperDate <> '22.03.2008'
+                   AND vbOperDate <> '20.09.2008'
+                      )
                )
      THEN
          RAISE EXCEPTION 'Ошибка.По Сумме Долг Покупателя <> 0, Сумма = <%> для <%>.'
