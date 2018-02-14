@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, MeasureName TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
+             , GoodsBoxId Integer, GoodsBoxCode Integer, GoodsBoxName TVarChar
              , isOrder Boolean
              , isErased Boolean)
 AS
@@ -65,6 +66,10 @@ BEGIN
        , Object_GoodsGroup.ValueData          AS GoodsGroupName 
        , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
+       , Object_GoodsBox.Id                   AS GoodsBoxId
+       , Object_GoodsBox.ObjectCode           AS GoodsBoxCode
+       , Object_GoodsBox.ValueData            AS GoodsBoxName
+
        , COALESCE (tmpGoodsByGoodsKind.isOrder, FALSE) :: Boolean AS isOrder
        , Object_GoodsPropertyValue.isErased   AS isErased
 
@@ -109,7 +114,6 @@ BEGIN
                                ON ObjectString_GroupName.ObjectId = Object_GoodsPropertyValue.Id
                               AND ObjectString_GroupName.DescId = zc_ObjectString_GoodsPropertyValue_GroupName()
 
-
         LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
                              ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = Object_GoodsPropertyValue.Id
                             AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
@@ -119,6 +123,11 @@ BEGIN
                              ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = Object_GoodsPropertyValue.Id
                             AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_GoodsPropertyValue_Goods.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsBox
+                             ON ObjectLink_GoodsPropertyValue_GoodsBox.ObjectId = Object_GoodsPropertyValue.Id
+                            AND ObjectLink_GoodsPropertyValue_GoodsBox.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsBox()
+        LEFT JOIN Object AS Object_GoodsBox ON Object_GoodsBox.Id = ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId
 
         LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                              ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
@@ -218,6 +227,10 @@ BEGIN
        , tmpGoods.GoodsGroupName 
        , tmpGoods.GoodsGroupNameFull
 
+       , tmpObjectLink.GoodsBoxId
+       , tmpObjectLink.GoodsBoxCode
+       , tmpObjectLink.GoodsBoxName
+
        , COALESCE (tmpGoodsByGoodsKind.isOrder, FALSE) :: Boolean AS isOrder
        ,tmpObjectLink.isErased
 
@@ -243,6 +256,9 @@ BEGIN
                         , Object_GoodsKind.Id                  AS GoodsKindId
                         , Object_GoodsKind.ValueData           AS GoodsKindName
 
+                        , Object_GoodsBox.Id                   AS GoodsBoxId
+                        , Object_GoodsBox.ObjectCode           AS GoodsBoxCode
+                        , Object_GoodsBox.ValueData            AS GoodsBoxName
                    FROM ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
                       LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                            ON ObjectLink_GoodsPropertyValue_Goods.ObjectId =  ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
@@ -254,9 +270,13 @@ BEGIN
                       LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
                                            ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = Object_GoodsPropertyValue.Id
                                           AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
-                            
                       LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId
-        
+
+                      LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsBox
+                                           ON ObjectLink_GoodsPropertyValue_GoodsBox.ObjectId = Object_GoodsPropertyValue.Id
+                                          AND ObjectLink_GoodsPropertyValue_GoodsBox.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsBox()
+                      LEFT JOIN Object AS Object_GoodsBox ON Object_GoodsBox.Id = ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId
+
                       LEFT JOIN ObjectFloat AS ObjectFloat_Amount
                                             ON ObjectFloat_Amount.ObjectId = Object_GoodsPropertyValue.Id 
                                            AND ObjectFloat_Amount.DescId = zc_ObjectFloat_GoodsPropertyValue_Amount()
@@ -308,6 +328,7 @@ END;$BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 14.02.18         * add GoodsBox
  22.06.17         * add AmountDoc
  03.05.17         * add GoodsGroupName, GoodsGroupNameFull
  01.02.17         * add isOrder 
