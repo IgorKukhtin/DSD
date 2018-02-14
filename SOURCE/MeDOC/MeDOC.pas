@@ -1704,15 +1704,21 @@ begin
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A4', FieldByName('MeasureName').AsString);
            //Код одиниці виміру товару
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A41', FieldByName('MeasureCode').AsString);
-           //Коригування кількості (зміна кількості, об'єму, обсягу)
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A5', ReplaceStr(FormatFloat('0.####', -1 * FieldByName('Amount').AsFloat), FormatSettings.DecimalSeparator, '.'));
-           //Коригування кількості  (ціна постачання одиниці товару\послуги):
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A6', ReplaceStr(FormatFloat('0.00', FieldByName('Price').AsFloat), FormatSettings.DecimalSeparator, '.'));
 
-           //Коригування кількості (зміна кількості, об'єму, обсягу)
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A7', ReplaceStr(FormatFloat('0.00', -1 * FieldByName('Price_for_PriceCor').AsFloat), FormatSettings.DecimalSeparator, '.'));
-           //Коригування кількості  (ціна постачання одиниці товару\послуги):
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A8', ReplaceStr(FormatFloat('0.####', 1 * FieldByName('Amount_for_PriceCor').AsFloat), FormatSettings.DecimalSeparator, '.'));
+           if FieldByName('Price_for_PriceCor').AsFloat <> 0 then
+           begin
+               //Коригування кількості (зміна кількості, об'єму, обсягу)
+               CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A7', ReplaceStr(FormatFloat('0.00', -1 * FieldByName('Price_for_PriceCor').AsFloat), FormatSettings.DecimalSeparator, '.'));
+               //Коригування кількості  (ціна постачання одиниці товару\послуги):
+               CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A8', ReplaceStr(FormatFloat('0.####', 1 * FieldByName('Amount_for_PriceCor').AsFloat), FormatSettings.DecimalSeparator, '.'));
+           end
+           else
+           begin
+               //Коригування кількості (зміна кількості, об'єму, обсягу)
+               CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A5', ReplaceStr(FormatFloat('0.####', -1 * FieldByName('Amount').AsFloat), FormatSettings.DecimalSeparator, '.'));
+               //Коригування кількості  (ціна постачання одиниці товару\послуги):
+               CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A6', ReplaceStr(FormatFloat('0.00', FieldByName('Price').AsFloat), FormatSettings.DecimalSeparator, '.'));
+           end;
 
            //Код ставки
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A011', ReplaceStr(FormatFloat('0.###', HeaderDataSet.FieldByName('VatPercent').AsFloat), FormatSettings.DecimalSeparator, '.'));
@@ -1842,15 +1848,20 @@ begin
           with ZVIT.DECLARBODY.RXXXXG4S.Add do begin ROWNUM := I; NodeValue := FieldByName('MeasureName').AsString; end;
           with ZVIT.DECLARBODY.RXXXXG105_2S.Add do begin ROWNUM := I; NodeValue := FieldByName('MeasureCode').AsString; end;
 
-          //Кількість
-          with ZVIT.DECLARBODY.RXXXXG5.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.####', 1 * FieldByName('Amount').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
-          //Ціна постачання одиниці товару\послуги
-          with ZVIT.DECLARBODY.RXXXXG6.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.00', FieldByName('Price').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
-
-          //Коригування кількості (зміна кількості, об'єму, обсягу) - ReplaceStr(FormatFloat('0.00', -1 * FieldByName('Price_for_PriceCor').AsFloat), FormatSettings.DecimalSeparator, '.')
-          with ZVIT.DECLARBODY.RXXXXG7.Add do begin ROWNUM := I; SetAttributeNS('nil', NS_URI, true); end;
-          //Коригування кількості  (ціна постачання одиниці товару\послуги) - ReplaceStr(FormatFloat('0.####', 1 * FieldByName('Amount_for_PriceCor').AsFloat), FormatSettings.DecimalSeparator, '.')
-          with ZVIT.DECLARBODY.RXXXXG8.Add do begin ROWNUM := I; SetAttributeNS('nil', NS_URI, true); end;
+           if FieldByName('Price_for_PriceCor').AsFloat <> 0 then
+          begin
+              //Коригування кількості (зміна кількості, об'єму, обсягу) - ReplaceStr(FormatFloat('0.00', -1 * FieldByName('Price_for_PriceCor').AsFloat), FormatSettings.DecimalSeparator, '.')
+              with ZVIT.DECLARBODY.RXXXXG7.Add do begin ROWNUM := I; SetAttributeNS('nil', NS_URI, true); end;
+              //Коригування кількості  (ціна постачання одиниці товару\послуги) - ReplaceStr(FormatFloat('0.####', 1 * FieldByName('Amount_for_PriceCor').AsFloat), FormatSettings.DecimalSeparator, '.')
+              with ZVIT.DECLARBODY.RXXXXG8.Add do begin ROWNUM := I; SetAttributeNS('nil', NS_URI, true); end;
+          end
+          else
+          begin
+              //Кількість
+              with ZVIT.DECLARBODY.RXXXXG5.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.####', 1 * FieldByName('Amount').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
+              //Ціна постачання одиниці товару\послуги
+              with ZVIT.DECLARBODY.RXXXXG6.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.00', FieldByName('Price').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
+          end;
 
           //Код ставки
           with ZVIT.DECLARBODY.RXXXXG008.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.00', FieldByName('VatPercent').AsFloat), FormatSettings.DecimalSeparator, '.'); end;

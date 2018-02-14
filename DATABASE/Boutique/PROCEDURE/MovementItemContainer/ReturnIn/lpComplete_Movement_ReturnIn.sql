@@ -1021,6 +1021,11 @@ BEGIN
                      INNER JOIN Container ON Container.Id     = _tmpItem_SummClient.ContainerId_Goods
                                          AND Container.Amount < 0
                )
+    AND EXISTS (SELECT 1
+                FROM _tmpItem
+                WHERE _tmpItem.GoodsId <> (SELECT Object.Id FROM Object WHERE Object.ObjectCode = 103288 AND Object.Descid = zc_Object_Goods())
+                  AND _tmpItem.GoodsId <> (SELECT Object.Id FROM Object WHERE Object.ObjectCode = 139794 AND Object.Descid = zc_Object_Goods())
+               )
      THEN
          RAISE EXCEPTION 'Ошибка.По Кол-ву НЕ может быть Долга Покупателю, Кол-во = <%> для <%>.'
              , (SELECT zfConvert_FloatToString (Container.Amount)
@@ -1046,7 +1051,53 @@ BEGIN
      END IF;
 
 
-     -- 6.2.2. ПРОВЕРКА - ОБЯЗАТЕЛЬНО после lpComplete + "пересчета" - !!!Сложный расчет ДОЛГА - с учетом ВОЗВРАТА!!!
+     -- 6.2.2. ПРОВЕРКА - ОБЯЗАТЕЛЬНО после lpComplete + "пересчета" - !!!по Кол-ву = 0 И Сумма Долга Покупателя <> 0!!!
+     IF EXISTS (SELECT 1
+                FROM _tmpItem
+                     INNER JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
+                     -- Долги по Кол-ву у Покупателя
+                     INNER JOIN Container ON Container.Id     = _tmpItem_SummClient.ContainerId_Goods
+                                         AND Container.Amount = 0
+                     -- Долги по Сумме у Покупателя
+                     INNER JOIN Container AS Container_Find
+                                          ON Container_Find.ParentId = Container.Id
+                                         AND Container_Find.Amount   <> 0
+               )
+     THEN
+         RAISE EXCEPTION 'Ошибка.По Сумме Долг Покупателя <> 0, Сумма = <%> для <%>.'
+             , (SELECT zfConvert_FloatToString (Container_Find.Amount)
+                FROM _tmpItem
+                     INNER JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
+                     -- Долги по Кол-ву у Покупателя
+                     INNER JOIN Container ON Container.Id     = _tmpItem_SummClient.ContainerId_Goods
+                                         AND Container.Amount = 0
+                     -- Долги по Сумме у Покупателя
+                     INNER JOIN Container AS Container_Find
+                                          ON Container_Find.ParentId = Container.Id
+                                         AND Container_Find.Amount   <> 0
+                ORDER BY Container_Find.Id
+                LIMIT 1
+               )
+            , (SELECT '(' || Object_Goods.ObjectCode :: TVarChar || ')' ||  Object_Goods.ValueData || CASE WHEN Object_GoodsSize.ValueData <> '' THEN ' р.' || Object_GoodsSize.ValueData ELSE '' END || '(' || Container.Id :: TVarChar || ')'
+                    || ' Счет:' || Object_Account.ObjectCode :: TVarChar || ')' ||  Object_Account.ValueData
+                FROM _tmpItem
+                     INNER JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
+                     -- Долги по Кол-ву у Покупателя
+                     INNER JOIN Container ON Container.Id     = _tmpItem_SummClient.ContainerId_Goods
+                                         AND Container.Amount = 0
+                     -- Долги по Сумме у Покупателя
+                     INNER JOIN Container AS Container_Find
+                                          ON Container_Find.ParentId = Container.Id
+                                         AND Container_Find.Amount   <> 0
+                     LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = _tmpItem_SummClient.GoodsId
+                     LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = _tmpItem_SummClient.GoodsSizeId
+                     LEFT JOIN Object AS Object_Account   ON Object_Account.Id   = Container_Find.ObjectId
+                ORDER BY Container_Find.Id
+                LIMIT 1
+               );
+     END IF;
+
+     -- 6.2.3. ПРОВЕРКА - ОБЯЗАТЕЛЬНО после lpComplete + "пересчета" - !!!Сложный расчет ДОЛГА - с учетом ВОЗВРАТА!!!
      IF EXISTS (WITH tmpRes AS (SELECT -- Сумма по Прайсу
                                        zfCalc_SummPriceList (MI_Sale.Amount, MIFloat_OperPriceList.ValueData)
 

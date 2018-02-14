@@ -1580,6 +1580,53 @@ UNION SELECT 895555
                                 , inUserId     := inUserId
                                  );
 
+     -- 6.0.1. ПРОВЕРКА - ОБЯЗАТЕЛЬНО после lpComplete + "пересчета" - !!!по Кол-ву = 0 И Сумма Долга Покупателя <> 0!!!
+     IF EXISTS (SELECT 1
+                FROM _tmpItem
+                     INNER JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
+                     -- Долги по Кол-ву у Покупателя
+                     INNER JOIN Container ON Container.Id     = _tmpItem_SummClient.ContainerId_Goods
+                                         AND Container.Amount = 0
+                     -- Долги по Сумме у Покупателя
+                     INNER JOIN Container AS Container_Find
+                                          ON Container_Find.ParentId = Container.Id
+                                         AND Container_Find.Amount   <> 0
+               )
+     THEN
+         RAISE EXCEPTION 'Ошибка.По Сумме Долг Покупателя <> 0, Сумма = <%> для <%>.'
+             , (SELECT zfConvert_FloatToString (Container_Find.Amount)
+                FROM _tmpItem
+                     INNER JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
+                     -- Долги по Кол-ву у Покупателя
+                     INNER JOIN Container ON Container.Id     = _tmpItem_SummClient.ContainerId_Goods
+                                         AND Container.Amount = 0
+                     -- Долги по Сумме у Покупателя
+                     INNER JOIN Container AS Container_Find
+                                          ON Container_Find.ParentId = Container.Id
+                                         AND Container_Find.Amount   <> 0
+                ORDER BY Container_Find.Id
+                LIMIT 1
+               )
+            , (SELECT '(' || Object_Goods.ObjectCode :: TVarChar || ')' ||  Object_Goods.ValueData || CASE WHEN Object_GoodsSize.ValueData <> '' THEN ' р.' || Object_GoodsSize.ValueData ELSE '' END || '(' || Container.Id :: TVarChar || ')'
+                    || ' Счет:' || Object_Account.ObjectCode :: TVarChar || ')' ||  Object_Account.ValueData
+                FROM _tmpItem
+                     INNER JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
+                     -- Долги по Кол-ву у Покупателя
+                     INNER JOIN Container ON Container.Id     = _tmpItem_SummClient.ContainerId_Goods
+                                         AND Container.Amount = 0
+                     -- Долги по Сумме у Покупателя
+                     INNER JOIN Container AS Container_Find
+                                          ON Container_Find.ParentId = Container.Id
+                                         AND Container_Find.Amount   <> 0
+                     LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = _tmpItem_SummClient.GoodsId
+                     LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = _tmpItem_SummClient.GoodsSizeId
+                     LEFT JOIN Object AS Object_Account   ON Object_Account.Id   = Container_Find.ObjectId
+                ORDER BY Container_Find.Id
+                LIMIT 1
+               );
+     END IF;
+
+
      -- 6.1. пересчитали "итоговые" суммы по элементам партии продажи - ОБЯЗАТЕЛЬНО после lpComplete
      PERFORM lpUpdate_MI_Partion_Total_byMovement (inMovementId);
 

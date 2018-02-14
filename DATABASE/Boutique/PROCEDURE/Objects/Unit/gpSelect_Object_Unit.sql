@@ -51,7 +51,7 @@ BEGIN
                        THEN '2007-04-01' -- 5 Elem  -- 28025(36) in (36477)
 
                   WHEN Object_Unit.ValueData = 'магазин CHADO'
-                       THEN '2007-12-03' -- Chado   -- 70064 + 39629(I) in (169245,67594) 
+                       THEN '2007-12-03' -- Chado   -- 70064 + 39629(I) + 103288(m12) in (169245,67594,284803) 
 
                   WHEN Object_Unit.ValueData = 'магазин SAVOY'
                        THEN '2008-03-31' -- Savoy   -- OK

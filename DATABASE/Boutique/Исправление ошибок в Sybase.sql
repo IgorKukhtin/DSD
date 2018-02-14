@@ -14,6 +14,10 @@
  update DiscountKlientAccountMoney set isErased = 0  where ReplId = 94257 and DatabaseId = 4;
  
 -- delete from DiscountKlientAccountMoney  where  id = 59840; commit;
+-- update DiscountKlientAccountMoney set summa = -3600.16  where ReplId = 84838 and DatabaseId = 4; commit;
+-- update DiscountKlientAccountMoney set summa = 4.78 + 1  where ReplId = 87277 and DatabaseId = 4; commit;
+-- update DiscountKlientAccountMoney set summa = 4073.22 + 1  where ReplId = 87279 and DatabaseId = 4; commit;
+-- update DiscountKlientAccountMoney set summa = 6.52 + 1  where ReplId = 87278 and DatabaseId = 4; commit;
  
 select DiscountMovementItem_byBarCode .*, DiscountMovement.*, DiscountKlientAccountMoney.*
 from DiscountMovementItem_byBarCode 
