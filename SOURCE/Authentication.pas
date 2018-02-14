@@ -45,9 +45,50 @@ type
 
 implementation
 
-uses Xml.XMLDoc, UtilConst, SysUtils, IdIPWatch, Xml.XmlIntf, CommonData, WinAPI.Windows,
-  vcl.Forms;
+uses iniFiles, Xml.XMLDoc, UtilConst, SysUtils, IdIPWatch, Xml.XmlIntf, CommonData, WinAPI.Windows,
+  vcl.Forms, vcl.Dialogs;
 
+{------------------------------------------------------------------------------}
+function GetIniFile(out AIniFileName: String):boolean;
+const
+  FileName: String = '\Boutique.ini';
+var
+  dir: string;
+  f: TIniFile;
+Begin
+  result := False;
+  dir := ExtractFilePath(Application.exeName)+'ini';
+  AIniFileName := dir + FileName;
+  //
+  if not DirectoryExists(dir) AND not ForceDirectories(dir) then
+  Begin
+    ShowMessage('Пользователь не может получить доступ к файлу настроек:'+#13
+              + AIniFileName+#13
+              + 'Дальнейшая работа программы невозможна.'+#13
+              + 'Обратитесь к администратору.');
+    exit;
+  End;
+  //
+  if not FileExists (AIniFileName) then
+  Begin
+    f := TiniFile.Create(AIniFileName);
+    try
+      try
+        F.WriteString('Common','BoutiqueName','BoutiqueName');
+      Except
+        ShowMessage('Пользователь не может получить доступ к файлу настроек:'+#13
+                  + AIniFileName+#13
+                  + 'Дальнейшая работа программы невозможна.'+#13
+                  + 'Обратитесь к администратору.');
+        exit;
+      end;
+    finally
+      f.Free;
+    end;
+  end;
+  //
+  result := True;
+End;
 {------------------------------------------------------------------------------}
 constructor TUser.Create(ASession: String; ALocal: Boolean = false);
 begin
@@ -59,18 +100,47 @@ class function TAuthentication.CheckLogin(pStorage: IStorage;
   const pUserName, pPassword: string; var pUser: TUser;
   ANeedShowException: Boolean = True): boolean;
 var IP_str:string;
-  N: IXMLNode;
-const
-  {создаем XML вызова процедуры на сервере}
-  pXML =
-  '<xml Session = "" >' +
-    '<gpCheckLogin OutputType="otResult">' +
-      '<inUserLogin    DataType="ftString" Value="%s" />' +
-      '<inUserPassword DataType="ftString" Value="%s" />' +
-      '<inIP           DataType="ftString" Value="%s" />' +
-    '</gpCheckLogin>' +
-  '</xml>';
+    N: IXMLNode;
+    pXML : String;
+    BoutiqueName, IniFileName: String;
+    f: TIniFile;
 begin
+  {создаем XML вызова процедуры на сервере}
+  if AnsiUpperCase(gc_ProgramName) =  AnsiUpperCase('Boutique.exe')
+  then begin
+      //
+      if GetIniFile (IniFileName) then
+        try BoutiqueName:= '';
+            f := TiniFile.Create(IniFileName);
+            BoutiqueName:= f.ReadString('Common','BoutiqueName','');
+        finally
+            f.Free;
+        end
+      else begin
+        result:=false;
+        exit;
+      end;
+
+      // для Бутиков - еще 1 параметр
+      pXML :=
+      '<xml Session = "" >' +
+        '<gpCheckLogin OutputType="otResult">' +
+          '<inUserLogin    DataType="ftString" Value="%s" />' +
+          '<inUserPassword DataType="ftString" Value="%s" />' +
+          '<inIP           DataType="ftString" Value="%s" />' +
+          '<inBoutiqueName DataType="ftString" Value="%s" />' +
+        '</gpCheckLogin>' +
+      '</xml>';
+  end
+  else
+      pXML :=
+      '<xml Session = "" >' +
+        '<gpCheckLogin OutputType="otResult">' +
+          '<inUserLogin    DataType="ftString" Value="%s" />' +
+          '<inUserPassword DataType="ftString" Value="%s" />' +
+          '<inIP           DataType="ftString" Value="%s" />' +
+        '</gpCheckLogin>' +
+      '</xml>';
 
   with TIdIPWatch.Create(nil) do
   begin
@@ -79,7 +149,13 @@ begin
         Free;
   end;
 
-  N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, IP_str]), False, 4, ANeedShowException)).DocumentElement;
+  if AnsiUpperCase(gc_ProgramName) =  AnsiUpperCase('Boutique.exe')
+  then
+       // для Бутиков - еще 1 параметр
+       N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, IP_str, BoutiqueName]), False, 4, ANeedShowException)).DocumentElement
+  else
+       N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, IP_str]), False, 4, ANeedShowException)).DocumentElement;
+  //
   if Assigned(N) then
        pUser := TUser.Create(N.GetAttribute(AnsiLowerCase(gcSession)));
   result := pUser <> nil
