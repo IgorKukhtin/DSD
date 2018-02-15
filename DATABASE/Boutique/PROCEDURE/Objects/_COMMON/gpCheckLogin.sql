@@ -19,15 +19,6 @@ $BODY$
   DECLARE vbUnitId_user Integer;
 BEGIN
 
-     -- нашли Магазин
-     vbUnitId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Unit() AND TRIM (LOWER (Object.ValueData)) = TRIM (LOWER (inBoutiqueName)) AND Object.isErased = FALSE);
-     -- Проверка
-     IF COALESCE (vbUnitId, 0) = 0 AND inBoutiqueName <> ''
-     THEN
-         RAISE EXCEPTION 'Ошибка.Выбранный магазин <%> не Найден.', inBoutiqueName;
-     END IF;
-
-
      -- Определися пользователь + сессия (потом будем шифровать)
      SELECT Object_User.Id, Object_User.Id, ObjectLink_Unit.ChildObjectId
           INTO Session, vbUserId, vbUnitId_user
@@ -43,6 +34,14 @@ BEGIN
       AND Object_User.isErased  = FALSE
       AND Object_User.DescId    = zc_Object_User();
 
+
+     -- нашли Магазин
+     vbUnitId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Unit() AND TRIM (LOWER (Object.ValueData)) = TRIM (LOWER (inBoutiqueName)) AND Object.isErased = FALSE);
+     -- Проверка
+     IF COALESCE (vbUnitId, 0) = 0 AND inBoutiqueName <> '' AND vbUserId <> zfCalc_UserAdmin() :: Integer
+     THEN
+         RAISE EXCEPTION 'Ошибка.Выбранный магазин <%> не Найден.', inBoutiqueName;
+     END IF;
 
     -- Проверка
     IF NOT FOUND THEN
