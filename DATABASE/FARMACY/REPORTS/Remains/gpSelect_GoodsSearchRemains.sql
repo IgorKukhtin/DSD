@@ -64,6 +64,7 @@ BEGIN
                                                                   ON MIContainer.ContainerId = ContainerCount.ContainerId
                                                                  AND MIContainer.OperDate >= vbRemainsDate
                               GROUP BY ContainerCount.ContainerId, ContainerCount.Amount, ContainerCount.GoodsId , ContainerCount.UnitId 
+                              HAVING (ContainerCount.Amount - COALESCE(SUM(MIContainer.Amount), 0)) <> 0
                              )
 
 
