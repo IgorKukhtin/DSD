@@ -14,6 +14,9 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
            , ''::TVarChar                 AS ContractTagName
            , ''::TVarChar                 AS ContractKindName
            , 0::Integer                   AS ContractStateKindCode
+           
+           , ObjectDate_Signing.ValueData  AS SigningDate
+           
            , NULL::TDateTime              AS startdate
            , NULL::TDateTime              AS enddate
 

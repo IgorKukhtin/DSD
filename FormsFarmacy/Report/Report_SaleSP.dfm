@@ -120,6 +120,11 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
               Format = ',0.####'
               Kind = skSum
               Column = SummaComp
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = UnitName
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -185,11 +190,21 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Options.Editing = False
             Width = 128
           end
+          object Contract_SigningDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1086#1076#1087'. '#1076#1086#1075'.'
+            DataBinding.FieldName = 'Contract_SigningDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1087#1086#1076#1087#1080#1089#1072#1085#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+            Options.Editing = False
+            Width = 74
+          end
           object Contract_StartDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1075'.'
             DataBinding.FieldName = 'Contract_StartDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object ContractName: TcxGridDBColumn

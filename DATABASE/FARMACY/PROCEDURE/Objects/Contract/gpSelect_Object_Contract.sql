@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                Deferment Integer, Percent TFloat, PercentSP TFloat, 
                OrderSumm TFloat, OrderSummComment TVarChar, OrderTime TVarChar,
                Comment TVarChar,
-               StartDate TDateTime, EndDate TDateTime,
+               SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime,
                isReport Boolean,
                isErased Boolean) AS
 $BODY$
@@ -53,8 +53,10 @@ BEGIN
            
            , Object_Contract_View.Comment
 
+           , COALESCE (ObjectDate_Signing.ValueData, Null) :: TDateTime AS SigningDate
            , ObjectDate_Start.ValueData   AS StartDate 
            , ObjectDate_End.ValueData     AS EndDate   
+ 
            , COALESCE (ObjectBoolean_Report.ValueData, FALSE)  AS isReport
            , Object_Contract_View.isErased
        FROM Object_Contract_View
@@ -64,6 +66,10 @@ BEGIN
             LEFT JOIN ObjectDate AS ObjectDate_End
                                  ON ObjectDate_End.ObjectId = Object_Contract_View.ContractId
                                 AND ObjectDate_End.DescId = zc_ObjectDate_Contract_End()  
+
+           LEFT JOIN ObjectDate AS ObjectDate_Signing
+                                ON ObjectDate_Signing.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
 
            LEFT JOIN ObjectFloat AS ObjectFloat_OrderSumm
                                  ON ObjectFloat_OrderSumm.ObjectId = Object_Contract_View.ContractId
@@ -101,6 +107,7 @@ ALTER FUNCTION gpSelect_Object_Contract(TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 14.02.18         *
  08.08.17         * add OrderTime_inf
                         OrderSumm_inf
                         OrderSumm

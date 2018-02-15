@@ -84,6 +84,15 @@ inherited ContractForm: TContractForm
             Options.Editing = False
             Width = 120
           end
+          object SigningDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1086#1076#1087#1080#1089'.'
+            DataBinding.FieldName = 'SigningDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1087#1086#1076#1087#1080#1089#1072#1085#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+            Options.Editing = False
+            Width = 69
+          end
           object StartDate: TcxGridDBColumn
             Caption = #1044#1077#1081#1089#1090#1074'. '#1089
             DataBinding.FieldName = 'StartDate'

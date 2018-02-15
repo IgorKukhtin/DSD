@@ -77,10 +77,11 @@ RETURNS TABLE (MovementId     Integer
 
              , MedicFIO TVarChar
 
-             , ContractId         Integer
-             , ContractName       TVarChar
-             , Contract_StartDate TDateTime
-             , InvNumber_Invoice  TVarChar
+             , ContractId             Integer
+             , ContractName           TVarChar
+             , Contract_StartDate     TDateTime
+             , Contract_SigningDate   TDateTime
+             , InvNumber_Invoice      TVarChar
              , InvNumber_Invoice_Full TVarChar
              )
 AS
@@ -353,6 +354,7 @@ BEGIN
                               , COALESCE(ObjectLink_Contract_JuridicalBasis.ChildObjectId,0)  AS Contract_JuridicalBasisId
                               , COALESCE(ObjectLink_Contract_GroupMemberSP.ChildObjectId,0)   AS Contract_GroupMemberSPId
 
+                              , ObjectDate_Signing.ValueData                                  AS SigningDate_Contract
                               , ObjectDate_Start.ValueData                                    AS StartDate_Contract
                               , ObjectDate_End.ValueData                                      AS EndDate_Contract
 
@@ -377,6 +379,9 @@ BEGIN
                               LEFT JOIN ObjectDate AS ObjectDate_End
                                                    ON ObjectDate_End.ObjectId = ObjectLink_Contract_Juridical.ObjectId
                                                   AND ObjectDate_End.DescId = zc_ObjectDate_Contract_End() 
+                              LEFT JOIN ObjectDate AS ObjectDate_Signing
+                                                   ON ObjectDate_Signing.ObjectId = ObjectLink_Contract_Juridical.ObjectId
+                                                  AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
 
                          WHERE ObjectLink_PartnerMedical_Juridical.DescId = zc_ObjectLink_PartnerMedical_Juridical()
                            AND ( (COALESCE(ObjectLink_Contract_GroupMemberSP.ChildObjectId,0) = inGroupMemberSPId AND inisGroupMemberSP = FALSE AND COALESCE(inGroupMemberSPId,0) <> 0)
@@ -424,13 +429,14 @@ BEGIN
                           , ObjectHistory_PartnerMedicalDetails.AccounterName     AS PartnerMedical_AccounterName
                           , ObjectHistory_PartnerMedicalDetails.INN               AS PartnerMedical_INN
                           , ObjectHistory_PartnerMedicalDetails.NumberVAT         AS PartnerMedical_NumberVAT
-                          , COALESCE (Object_BankAccount.ValueData,ObjectHistory_PartnerMedicalDetails.BankAccount)       AS PartnerMedical_BankAccount
-                          , COALESCE (Object_Bank.ValueData,tmpPartnerMedicalBankAccount.BankName)                 AS PartnerMedical_BankName
+                          , COALESCE (Object_BankAccount.ValueData,ObjectHistory_PartnerMedicalDetails.BankAccount)     AS PartnerMedical_BankAccount
+                          , COALESCE (Object_Bank.ValueData,tmpPartnerMedicalBankAccount.BankName)                      AS PartnerMedical_BankName
                           , COALESCE (ObjectString_MFO.ValueData,tmpPartnerMedicalBankAccount.MFO)                      AS PartnerMedical_MFO
                           , ObjectString_PartnerMedical_FIO.ValueData             AS MedicFIO
                           , COALESCE (tmpContract.PartnerMedical_ContractId,0)    AS PartnerMedical_ContractId
                           , tmpContract.PercentSP
                           , tmpContract.StartDate_Contract
+                          , tmpContract.SigningDate_Contract
 
                      FROM tmpSale
                        LEFT JOIN ObjectString AS ObjectString_PartnerMedical_FIO
@@ -548,9 +554,10 @@ BEGIN
            , tmpMovDetails.PartnerMedical_BankName
            , tmpMovDetails.PartnerMedical_MFO
            , tmpMovDetails.MedicFIO
-           , Object_Contract.Id               AS ContractId
-           , Object_Contract.ValueData        AS ContractName
-           , tmpMovDetails.StartDate_Contract AS Contract_StartDate 
+           , Object_Contract.Id                  AS ContractId
+           , Object_Contract.ValueData           AS ContractName
+           , tmpMovDetails.StartDate_Contract    AS Contract_StartDate 
+           , tmpMovDetails.SigningDate_Contract  AS Contract_SigningDate
            , tmpData.InvNumber_Invoice
            , tmpData.InvNumber_Invoice_Full
 
@@ -592,6 +599,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ¬ÓÓ·Í‡ÎÓ ¿.¿.
+ 14.02.18         * add SigningDate_Contract
  24.05.17         * add zc_Movement_Check
  10.02.17         *
 */

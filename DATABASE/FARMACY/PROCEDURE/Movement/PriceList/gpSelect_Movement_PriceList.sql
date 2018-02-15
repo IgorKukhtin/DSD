@@ -84,7 +84,8 @@ BEGIN
                                    AND LoadPriceList.ContractId           = Object_Contract.Id
                                    AND COALESCE (LoadPriceList.AreaId, 0) = COALESCE (Object_Area.Id, 0)
             
-     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_PriceList();
+     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate  
+       AND Movement.DescId = zc_Movement_PriceList();
 
 END;
 $BODY$
