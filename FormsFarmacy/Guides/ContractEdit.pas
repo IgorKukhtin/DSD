@@ -60,6 +60,8 @@ type
     ceOrderSummComment: TcxTextEdit;
     cxLabel16: TcxLabel;
     ceOrderTime: TcxTextEdit;
+    edSigningDate: TcxDateEdit;
+    cxLabel17: TcxLabel;
   private
     { Private declarations }
   public
