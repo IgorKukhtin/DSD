@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
-  ClientHeight = 274
+  ClientHeight = 292
   ClientWidth = 303
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 45
-    Top = 226
+    Top = 258
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 189
-    Top = 226
+    Top = 258
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -75,6 +75,7 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 7
     Width = 273
   end
@@ -89,6 +90,23 @@
     Left = 13
     Top = 101
     Caption = #1055#1072#1088#1086#1083#1100
+  end
+  object cxLabel4: TcxLabel
+    Left = 13
+    Top = 201
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+  end
+  object edUnit: TcxButtonEdit
+    Left = 13
+    Top = 221
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 273
   end
   object ActionList: TActionList
     Left = 269
@@ -162,7 +180,15 @@
       item
         Name = 'inMemberId'
         Value = ''
-        Component = MemberGuides
+        Component = GuidesMember
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -211,14 +237,14 @@
       item
         Name = 'MemberId'
         Value = ''
-        Component = MemberGuides
+        Component = GuidesMember
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MemberName'
         Value = ''
-        Component = MemberGuides
+        Component = GuidesMember
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -247,12 +273,27 @@
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 165
     Top = 136
   end
-  object MemberGuides: TdsdGuides
+  object GuidesMember: TdsdGuides
     KeyField = 'Id'
     LookupControl = edMember
     FormNameParam.Value = 'TMemberForm'
@@ -264,19 +305,19 @@
       item
         Name = 'Key'
         Value = ''
-        Component = MemberGuides
+        Component = GuidesMember
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = MemberGuides
+        Component = GuidesMember
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 109
+    Left = 125
     Top = 133
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -297,5 +338,32 @@
     StorageType = stStream
     Left = 229
     Top = 136
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnitForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnitForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 125
+    Top = 215
   end
 end

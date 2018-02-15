@@ -7,9 +7,10 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_User(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , MemberId Integer, MemberName TVarChar
+             , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , User_ TVarChar
-             , UnitCode Integer
-             , UnitName TVarChar
+             , UnitCode_Personal Integer
+             , UnitName_Personal TVarChar
              , PositionName TVarChar
               )
 AS
@@ -43,14 +44,18 @@ END IF;
        , Object_User.ObjectCode
        , Object_User.ValueData
        , Object_User.isErased
-       , Object_Member.Id AS MemberId
-       , Object_Member.ValueData AS MemberName
+       , Object_Member.Id                 AS MemberId
+       , Object_Member.ValueData          AS MemberName
 
+       , Object_Unit.Id                   AS UnitId
+       , Object_Unit.ObjectCode           AS UnitCode
+       , Object_Unit.ValueData            AS UnitName
+       
        , ObjectString_User_.ValueData     AS User_
 
-       , Object_Unit.ObjectCode    AS UnitCode
-       , Object_Unit.ValueData     AS UnitName
-       , Object_Position.ValueData AS PositionName
+       , Object_Unit_Personal.ObjectCode  AS UnitCode_Personal
+       , Object_Unit_Personal.ValueData   AS UnitName_Personal
+       , Object_Position.ValueData        AS PositionName
 
    FROM Object AS Object_User
          LEFT JOIN ObjectString AS ObjectString_User_
@@ -62,9 +67,14 @@ END IF;
                             AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
         LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
 
+        LEFT JOIN ObjectLink AS ObjectLink_User_Unit
+                             ON ObjectLink_User_Unit.ObjectId = Object_User.Id
+                            AND ObjectLink_User_Unit.DescId = zc_ObjectLink_User_Unit()
+        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_User_Unit.ChildObjectId
+        
         LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
         LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
-        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
+        LEFT JOIN Object AS Object_Unit_Personal ON Object_Unit_Personal.Id = tmpPersonal.UnitId
 
    WHERE Object_User.DescId = zc_Object_User();
   
@@ -77,6 +87,7 @@ ALTER FUNCTION gpSelect_Object_User (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   œÓÎˇÚ˚ÍËÌ ¿.¿.
+ 15.02.18         * add UnitId_User
  05.05.16                                                         *
  12.09.16         *
  07.06.13                                        * lpCheckRight
