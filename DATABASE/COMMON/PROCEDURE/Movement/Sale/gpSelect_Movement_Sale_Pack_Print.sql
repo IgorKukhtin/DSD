@@ -75,7 +75,7 @@ BEGIN
                                              , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
                                              , ObjectString_Article.ValueData       AS Article
                                              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId, 0)  AS GoodsBoxId
-                                             , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END AS GoodsBox_Weight 
+                                             , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END AS GoodsBox_Weight
                                         FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
                                              ) AS tmpGoodsProperty
                                              INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
@@ -123,6 +123,8 @@ BEGIN
        -- строчная часть документов Взвешивания или одного - inMovementId_by
      , tmpMovementItem AS (SELECT MovementItem.MovementId                           AS MovementId
                                 , MovementItem.ObjectId                             AS GoodsId
+                                , SUM (MovementItem.Amount)                         AS Amount
+                                , SUM (MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) AS AmountWeight
                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)     AS GoodsKindId
                                 , MAX (COALESCE (MIFloat_LevelNumber.ValueData, 0)) AS LevelNumber
                                 , SUM (COALESCE (MIFloat_BoxCount.ValueData, 0))    AS BoxCount
@@ -223,10 +225,23 @@ BEGIN
            , tmpMovementItem.BoxCount                                               AS BoxCount
            , (COALESCE (tmpMovementItem.BoxCount, 0) * COALESCE (tmpObject_GoodsPropertyValue.GoodsBox_Weight, 0)):: TFloat AS BoxWeight
 
+           , tmpMovementItem.Amount                                       :: TFloat AS Amount
+           , tmpMovementItem.AmountWeight                                 :: TFloat AS AmountWeight
            , tmpMovementItem.AmountPartner                                :: TFloat AS AmountPartner
            , tmpMovementItem.AmountPartnerWeight                          :: TFloat AS AmountPartnerWeight
            , tmpMovementItem.AmountPartnerSh                              :: TFloat AS AmountPartnerSh
-           , tmpMovementItem.AmountPartnerWeight + (COALESCE (tmpMovementItem.BoxCount, 0) * COALESCE (tmpObject_GoodsPropertyValue.GoodsBox_Weight, 0)) :: TFloat AS AmountPartnerWeightWithBox
+             -- ВЕС БРУТТО
+           , (-- "чистый" вес со склада
+              tmpMovementItem.AmountWeight
+            + -- плюс Вес "гофроящиков"
+              COALESCE (tmpMovementItem.BoxCount, 0) * COALESCE (tmpObject_GoodsPropertyValue.GoodsBox_Weight, 0)
+            + -- плюс Вес Упаковок (пакетов)
+              CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
+                        THEN CAST (tmpMovementItem.AmountWeight / ObjectFloat_WeightTotal.ValueData AS NUMERIC (16, 0))
+                           * COALESCE (ObjectFloat_WeightPackage.ValueData, 0)
+                   ELSE 0
+              END
+             ) :: TFloat AS AmountPartnerWeightWithBox
 
               -- Штрих-код GS1-128
            ,  -- 01 - EAN код товару на палеті - 14
@@ -279,6 +294,18 @@ BEGIN
              ) :: TVarChar AS BarCode_128_str
              
            , tmpStickerProperty.Value5 :: Integer AS Value5_termin
+
+             -- Кол-во Упаковок (пакетов)
+           , CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
+                       THEN CAST (tmpMovementItem.AmountWeight / ObjectFloat_WeightTotal.ValueData AS NUMERIC (16, 0))
+                  ELSE 0
+             END :: TFloat AS CountPackage_calc
+             -- Вес Упаковок (пакетов)
+           , CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
+                       THEN CAST (tmpMovementItem.AmountWeight / ObjectFloat_WeightTotal.ValueData AS NUMERIC (16, 0))
+                          * COALESCE (ObjectFloat_WeightPackage.ValueData, 0)
+                  ELSE 0
+             END :: TFloat AS WeightPackage_calc
 
            , CASE WHEN MovementLinkObject_Contract.ObjectId > 0
                        AND Object_InfoMoney_View.InfoMoneyDestinationId NOT IN (zc_Enum_InfoMoneyDestination_20500() -- Общефирменные + Оборотная тара
@@ -391,6 +418,19 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_ToAddress
                                    ON ObjectString_ToAddress.ObjectId = MovementLinkObject_To.ObjectId
                                   AND ObjectString_ToAddress.DescId = zc_ObjectString_Partner_Address()
+
+           -- Товар и Вид товара
+           LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId     = tmpMovementItem.GoodsId
+                                                 AND Object_GoodsByGoodsKind_View.GoodsKindId = tmpMovementItem.GoodsKindId
+           -- вес 1-ого пакета
+           LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage
+                                 ON ObjectFloat_WeightPackage.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                AND ObjectFloat_WeightPackage.DescId   = zc_ObjectFloat_GoodsByGoodsKind_WeightPackage()
+           -- вес в упаковке: "чистый" вес + вес 1-ого пакета
+           LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
+                                 ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                AND ObjectFloat_WeightTotal.DescId   = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
+
       -- ORDER BY MovementFloat_WeighingNumber
              -- , tmpMovementItem.MovementId
              -- , tmpMovementItem.BoxNumber
