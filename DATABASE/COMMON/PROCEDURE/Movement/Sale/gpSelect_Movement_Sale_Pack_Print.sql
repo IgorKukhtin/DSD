@@ -292,6 +292,10 @@ BEGIN
                       THEN TRUE
                   ELSE FALSE
              END AS isAshan
+           , CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId = 310854 -- Ôîçç³
+                      THEN TRUE
+                  ELSE FALSE
+             END AS isFozzi
 
        FROM tmpMovement
             INNER JOIN tmpMovementItem ON tmpMovementItem.MovementId = tmpMovement.Id AND tmpMovementItem.AmountPartner <> 0
