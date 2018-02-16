@@ -133,22 +133,24 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Width = 48
           end
           object Weight: TcxGridDBColumn
-            Caption = #1042#1077#1089
+            Caption = #1042#1077#1089' '#1090#1086#1074'.'
             DataBinding.FieldName = 'Weight'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1077#1089' '#1090#1086#1074#1072#1088#1072
             Options.Editing = False
             Width = 45
           end
           object WeightPackage: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1087#1072#1082#1077#1090#1072
+            Caption = #1042#1077#1089' '#1087#1072#1082'. '#1076#1083#1103' '#1091#1087#1072#1082'.'
             DataBinding.FieldName = 'WeightPackage'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = '0.####;-0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1077#1089' '#1087#1072#1082#1077#1090#1072' '#1076#1083#1103' '#1059#1055#1040#1050#1054#1042#1050#1048
             Width = 54
           end
           object WeightTotal: TcxGridDBColumn

@@ -318,7 +318,7 @@ end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.myActiveControl;
 begin
-     if PanelPartionGoods.Visible
+     if (PanelPartionGoods.Visible)and(ActiveControl<>EditBarCode)
      then ActiveControl:=EditPartionGoods
      else if BarCodePanel.Visible
           then ActiveControl:=EditBarCode
