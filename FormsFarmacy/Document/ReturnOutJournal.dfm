@@ -5,7 +5,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 823
-  ExplicitHeight = 508
+  ExplicitHeight = 507
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -484,6 +484,20 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'IncomeMovementId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartData'
+          Value = 'NULL'
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndData'
+          Value = 'NULL'
+          Component = deEnd
+          DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
       isShowModal = True
