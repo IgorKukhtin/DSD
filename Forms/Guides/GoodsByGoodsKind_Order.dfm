@@ -28,7 +28,6 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = True
-          OptionsView.ColumnAutoWidth = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -178,6 +177,7 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
           object isScaleCeh: TcxGridDBColumn
             Caption = #1048#1089#1087#1086#1083#1100#1079#1091#1077#1090#1089#1103' '#1074' ScaleCeh'
             DataBinding.FieldName = 'isScaleCeh'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -232,7 +232,7 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 43
+            Width = 80
           end
           object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085

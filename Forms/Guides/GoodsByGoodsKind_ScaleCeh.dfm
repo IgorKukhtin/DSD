@@ -28,7 +28,6 @@ inherited GoodsByGoodsKind_ScaleCehForm: TGoodsByGoodsKind_ScaleCehForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = True
-          OptionsView.ColumnAutoWidth = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -187,6 +186,7 @@ inherited GoodsByGoodsKind_ScaleCehForm: TGoodsByGoodsKind_ScaleCehForm
           object isNotMobile: TcxGridDBColumn
             Caption = #1053#1045' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1074' '#1052#1086#1073#1080#1083#1100#1085#1086#1084' '#1072#1075#1077#1085#1090#1077
             DataBinding.FieldName = 'isNotMobile'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
