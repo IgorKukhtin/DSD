@@ -25,6 +25,7 @@ type
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
     JuridicalName: TcxGridDBColumn;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public
