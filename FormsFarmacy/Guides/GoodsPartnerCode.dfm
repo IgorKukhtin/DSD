@@ -1,11 +1,11 @@
 inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
-  Caption = #1050#1086#1076#1099' '#1087#1088#1086#1076#1072#1074#1094#1086#1074
+  Caption = #1050#1086#1076#1099' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
   ClientHeight = 529
   ClientWidth = 1000
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1016
-  ExplicitHeight = 567
+  ExplicitHeight = 564
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -432,6 +432,24 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
           MultiSelectSeparator = ','
         end>
     end
+    inherited ProtocolOpenForm: TdsdOpenForm
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'GoodsMainName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
     object mactDelete: TMultiAction
       Category = 'Delete'
       MoveParams = <>
@@ -668,6 +686,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         end
         item
           Name = 'inAreaId'
+          Value = Null
           Component = GuidesArea
           ComponentItem = 'Key'
           ParamType = ptInput
@@ -765,6 +784,36 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
+    object ProtocolOpenTwoForm: TdsdOpenForm
+      Category = #1055#1088#1086#1090#1086#1082#1086#1083
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072'2'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072'2'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -843,6 +892,22 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenTwoForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -860,7 +925,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         end
         item
           Visible = True
-          ItemName = 'bbisUpdate'
+          ItemName = 'bbIsUpdate'
         end
         item
           Visible = True
@@ -910,6 +975,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     inherited dxBarStatic: TdxBarStatic
       Caption = '    '
       Hint = '    '
+      ShowCaption = False
     end
     inherited bbInsert: TdxBarButton
       Visible = ivNever
@@ -924,24 +990,24 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
       Action = mactSetLink
       Category = 0
     end
-    object dxBarControlContainerItem1: TdxBarControlContainerItem
-      Caption = 'New Item'
+    object bbLabel: TdxBarControlContainerItem
+      Caption = 'bbLabel'
       Category = 0
-      Hint = 'New Item'
+      Hint = 'bbLabel'
       Visible = ivAlways
       Control = cxLabel1
     end
-    object dxBarControlContainerItem2: TdxBarControlContainerItem
-      Caption = 'New Item'
+    object bbPartnerCode: TdxBarControlContainerItem
+      Caption = 'bbPartnerCode'
       Category = 0
-      Hint = 'New Item'
+      Hint = 'bbPartnerCode'
       Visible = ivAlways
       Control = edPartnerCode
     end
-    object bbisUpdate: TdxBarControlContainerItem
-      Caption = 'New Item'
+    object bbIsUpdate: TdxBarControlContainerItem
+      Caption = 'bbIsUpdate'
       Category = 0
-      Hint = 'New Item'
+      Hint = 'bbIsUpdate'
       Visible = ivAlways
       Control = cbUpdate
     end
@@ -974,6 +1040,10 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     end
     object bbShowErased: TdxBarButton
       Action = actShowErased
+      Category = 0
+    end
+    object bbProtocolOpenTwoForm: TdxBarButton
+      Action = ProtocolOpenTwoForm
       Category = 0
     end
   end

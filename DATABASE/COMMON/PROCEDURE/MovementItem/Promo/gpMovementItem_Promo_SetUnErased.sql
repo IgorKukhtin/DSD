@@ -7,32 +7,17 @@ CREATE OR REPLACE FUNCTION gpMovementItem_Promo_SetUnErased(
    OUT outIsErased           Boolean              , -- новое значение
     IN inSession             TVarChar               -- текущий пользователь
 )
-  RETURNS Boolean
+RETURNS Boolean
 AS
 $BODY$
-   DECLARE vbMovementId Integer;
-   DECLARE vbStatusId Integer;
    DECLARE vbUserId Integer;
 BEGIN
-    --vbUserId := lpCheckRight(inSession, zc_Enum_Process_SetUnErased_MI_PromoGoods());
-    vbUserId := inSession;
-    -- устанавливаем новое значение
-    outIsErased := FALSE;
+  -- проверка прав пользовател€ на вызов процедуры
+  -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_SetUnErased_MI_PromoGoods());
+  vbUserId := inSession;
 
-    -- ќб€зательно мен€ем
-    UPDATE MovementItem SET isErased = FALSE WHERE Id = inMovementItemId
-    RETURNING MovementId INTO vbMovementId;
-
-    -- проверка - св€занные документы »змен€ть нельз€
-    -- PERFORM lfCheck_Movement_Parent (inMovementId:= vbMovementId, inComment:= 'изменение');
-
-    -- определ€ем <—татус>
-    vbStatusId := (SELECT StatusId FROM Movement WHERE Id = vbMovementId);
-    -- проверка - проведенные/удаленные документы »змен€ть нельз€
-    IF vbStatusId <> zc_Enum_Status_UnComplete()
-    THEN
-        RAISE EXCEPTION 'ќшибка.»зменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
-    END IF;
+  -- устанавливаем новое значение
+  outIsErased:= lpSetUnErased_MovementItem (inMovementItemId:= inMovementItemId, inUserId:= vbUserId);
 
 END;
 $BODY$

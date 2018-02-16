@@ -47,8 +47,8 @@ type
     spInserUpdateGoodsLink: TdsdStoredProc;
     actSetLink: TdsdExecStoredProc;
     bbSetLink: TdxBarButton;
-    dxBarControlContainerItem1: TdxBarControlContainerItem;
-    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    bbLabel: TdxBarControlContainerItem;
+    bbPartnerCode: TdxBarControlContainerItem;
     dsdUpdateDataSet: TdsdUpdateDataSet;
     MinimumLot: TcxGridDBColumn;
     spUpdate_Goods_MinimumLot: TdsdStoredProc;
@@ -97,7 +97,7 @@ type
     spUpdate_Goods_ConditionsKeep: TdsdStoredProc;
     spGetImportSetting_Goods_ConditionsKeep: TdsdStoredProc;
     bbStartLoadConditionsKeep: TdxBarButton;
-    bbisUpdate: TdxBarControlContainerItem;
+    bbIsUpdate: TdxBarControlContainerItem;
     cbUpdate: TcxCheckBox;
     spUpdate_Goods_isUploadBadm: TdsdStoredProc;
     isUploadTeva: TcxGridDBColumn;
@@ -107,6 +107,8 @@ type
     cxLabel6: TcxLabel;
     edArea: TcxButtonEdit;
     GuidesArea: TdsdGuides;
+    ProtocolOpenTwoForm: TdsdOpenForm;
+    bbProtocolOpenTwoForm: TdxBarButton;
   private
     { Private declarations }
   public

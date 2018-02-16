@@ -19,9 +19,9 @@ type
     clCodeInt: TcxGridDBColumn;
     clName: TcxGridDBColumn;
     edPartnerCode: TcxButtonEdit;
-    cxLabel1: TcxLabel;
+    cxLabel: TcxLabel;
     bbLabel: TdxBarControlContainerItem;
-    bbJuridical: TdxBarControlContainerItem;
+    bbPartnerCode: TdxBarControlContainerItem;
     PartnerCodeGuides: TdsdGuides;
     clCode: TcxGridDBColumn;
     cxGridGoodsLink: TcxGrid;
@@ -29,7 +29,7 @@ type
     cxGridDBColumn1: TcxGridDBColumn;
     cxGridDBColumn3: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
-    spGoodsLink: TdsdStoredProc;
+    spSelect_PartnerGoods: TdsdStoredProc;
     cxSplitter: TcxSplitter;
     GoodsLinkCDS: TClientDataSet;
     GoodsLinkDS: TDataSource;
@@ -39,7 +39,7 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     mactDelete: TMultiAction;
     DataSetDelete: TDataSetDelete;
-    dsdStoredProc1: TdsdStoredProc;
+    spDeleteLinkGoods: TdsdStoredProc;
     dsdExecStoredProc1: TdsdExecStoredProc;
     clMakerName: TcxGridDBColumn;
     mactListDelete: TMultiAction;
