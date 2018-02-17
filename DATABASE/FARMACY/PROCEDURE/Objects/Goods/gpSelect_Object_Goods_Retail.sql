@@ -308,6 +308,10 @@ BEGIN
                                AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
            LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId 
 
+           LEFT JOIN ObjectFloat AS ObjectFloat_CountPrice
+                                 ON ObjectFloat_CountPrice.ObjectId = Object_Goods_View.Id --ObjectLink_Main.ChildObjectId   -- теперь это свойство товара сети
+                                AND ObjectFloat_CountPrice.DescId = zc_ObjectFloat_Goods_CountPrice()
+                                
            -- получается GoodsMainId
            LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = Object_Goods_View.Id --Object_Goods.Id
                                                     AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
@@ -325,10 +329,6 @@ BEGIN
            LEFT JOIN ObjectDate AS ObjectDate_LastPriceOld
                                 ON ObjectDate_LastPriceOld.ObjectId = ObjectLink_Main.ChildObjectId
                                AND ObjectDate_LastPriceOld.DescId = zc_ObjectDate_Goods_LastPriceOld()
-
-           LEFT JOIN ObjectFloat AS ObjectFloat_CountPrice
-                                 ON ObjectFloat_CountPrice.ObjectId = ObjectLink_Main.ChildObjectId
-                                AND ObjectFloat_CountPrice.DescId = zc_ObjectFloat_Goods_CountPrice()
 
            -- условия хранения
            LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
