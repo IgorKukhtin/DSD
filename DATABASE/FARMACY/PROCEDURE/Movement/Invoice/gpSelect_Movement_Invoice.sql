@@ -104,7 +104,7 @@ BEGIN
       , MovementLinkObject_Contract.ObjectId                   AS ContractId
       , Object_Contract.ValueData                              AS ContractName
       , MovementDate_OperDateStart.ValueData                   AS OperDateStart
-      , MovementDate_OperDateEnd.ValueData                     AS OperDateStart
+      , MovementDate_OperDateEnd.ValueData                     AS OperDateEnd
 
       , MovementDate_DateRegistered.ValueData                  AS DateRegistered
       , MovementString_InvNumberRegistered.ValueData           AS InvNumberRegistered
