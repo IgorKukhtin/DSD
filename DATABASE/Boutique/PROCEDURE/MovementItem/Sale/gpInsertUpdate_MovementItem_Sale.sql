@@ -155,6 +155,10 @@ BEGIN
      THEN
          -- !!!для SYBASE - потом убрать!!!
          IF 1=0 THEN RAISE EXCEPTION 'Ошибка.Параметр только для загрузки из Sybase.'; END IF;
+         -- !!!для SYBASE - потом убрать!!!
+         IF EXISTS (SELECT 1 FROM Object WHERE Object.Id = vbUnitId AND Object.ValueData = 'магазин Chado-Outlet')
+         THEN ioDiscountSaleKindId:= zc_Enum_DiscountSaleKind_Outlet();
+         END IF;
 
      ELSE
          -- расчет

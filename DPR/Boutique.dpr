@@ -78,8 +78,8 @@ uses
 
 begin
   Application.Initialize;
-  Logger.Enabled := FindCmdLineSwitch('log');
   ConnectionPath := '..\INIT\boutique_init.php';
+  Logger.Enabled := FindCmdLineSwitch('log');
   gc_ProgramName := 'Boutique.exe';
 
   TdsdApplication.Create;

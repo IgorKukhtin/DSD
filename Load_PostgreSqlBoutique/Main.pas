@@ -3776,14 +3776,19 @@ begin
         Add('    , 0 as SummChangePercent');
         Add('    , BillItems.OperPrice as OperPriceList');
         Add('    , 0 as ChangePercent');
+        Add('    , 0 as DiscountTax');
         Add('    , '''' as BarCode');
         Add('    , '''' as CommentInfo');
+        Add('    , Unit_From.UnitName as UnitNameFrom');
+        Add('    , Unit_To.UnitName as UnitNameTo');
         Add('    , zc_rvYes() as isBill');
         Add('    , zc_rvYes() as isClose');
         Add('from DBA.Bill');
         Add('    join BillItems  on BillItems.BillId = Bill.Id');
         Add('    left outer join BillItemsIncome on BillItemsIncome.id  = BillItems.BillItemsIncomeId');
         Add('    left outer join goods on goods.id  = BillItemsIncome.goodsId');
+        Add('    left outer join DBA.Unit as Unit_From on Unit_From.Id = Bill.FromID');
+        Add('    left outer join DBA.Unit as Unit_To on Unit_To.Id = Bill.ToId');
         Add('where Bill.BillKind = zc_bkSaleFromUnitToClient() and Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add('  and Bill.DatabaseId = 0');
         if cbSaleErr.Checked then Add(' and 1=0 ');
@@ -3803,8 +3808,11 @@ begin
         Add('    , 0 as SummChangePercent');
         Add('    , BillItems.OperPrice as OperPriceList');
         Add('    , 0 as ChangePercent');
+        Add('    , 0 as DiscountTax');
         Add('    , '''' as BarCode');
         Add('    , '''' as CommentInfo');
+        Add('    , Unit_From.UnitName as UnitNameFrom');
+        Add('    , Unit_To.UnitName as UnitNameTo');
         Add('    , zc_rvYes() as isBill');
         Add('    , zc_rvYes() as isClose');
         Add('from DBA.Bill');
@@ -3812,6 +3820,8 @@ begin
         Add('    left outer join _dataBI_all  on _dataBI_all.ReplId = BillItems.ReplId and _dataBI_all.DatabaseId = BillItems.DatabaseId ');
         Add('    left outer join BillItemsIncome on BillItemsIncome.id  = BillItems.BillItemsIncomeId');
         Add('    left outer join goods on goods.id  = BillItemsIncome.goodsId');
+        Add('    left outer join DBA.Unit as Unit_From on Unit_From.Id = Bill.FromID');
+        Add('    left outer join DBA.Unit as Unit_To on Unit_To.Id = Bill.ToId');
         Add('where Bill.BillKind = zc_bkSaleFromUnitToClient() and Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add('  and Bill.DatabaseId > 0');
         Add('  and _dataBI_all.ReplId is null');
@@ -3826,8 +3836,8 @@ begin
         Add('    , DiscountMovement.OperDate as OperDate');
         Add('    , BillItemsIncome.GoodsId_Postgres as GoodsId');
         Add('    , BillItemsIncome.Id_Postgres as PartionId');
-        Add('    , case when DiscountMovement.UnitId in (978, 4647, 11425, 7360,  29018, 11772, 969) then '+ IntToStr(zc_Enum_DiscountSaleKind_Outlet));
-        Add('           when DiscountMovementItem_byBarCode.DiscountTax >= DiscountKlient.DiscountTax then '+ IntToStr(zc_Enum_DiscountSaleKind_Period));
+        Add('    , case when DiscountMovement.UnitId in (978, 4647, 11425, 7360,  29018, 11772, 969, 11932) then '+ IntToStr(zc_Enum_DiscountSaleKind_Outlet));
+        Add('           when DiscountMovementItem_byBarCode.DiscountTax > DiscountKlient.DiscountTax and DiscountMovementItem_byBarCode.DiscountTax > 0 then '+ IntToStr(zc_Enum_DiscountSaleKind_Period));
         Add('           when DiscountMovementItem_byBarCode.DiscountTax > 0 then '+ IntToStr(zc_Enum_DiscountSaleKind_Client));
         Add('           else 0');
         Add('      end as DiscountSaleKindId');
@@ -3836,8 +3846,11 @@ begin
         Add('    , DiscountMovementItem_byBarCode.SummDiscountManual - isnull(_pgSummDiscountManual.SummDiscountManual, 0) as SummChangePercent');
         Add('    , DiscountMovementItem_byBarCode.OperPrice as OperPriceList');
         Add('    , DiscountMovementItem_byBarCode.DiscountTax AS ChangePercent');
+        Add('    , DiscountKlient.DiscountTax');
         Add('    , DiscountMovementItem_byBarCode.BarCode_byClient as BarCode');
         Add('    , trim (DiscountMovementItem_byBarCode.CommentInfo) as CommentInfo');
+        Add('    , Unit_From.UnitName as UnitNameFrom');
+        Add('    , Unit_To.UnitName as UnitNameTo');
         Add('    , zc_rvNo() as isBill');
         Add('    , case when coalesce (_data_all.BillItemsId, 0) > 0 then zc_rvYes() else zc_rvNo() end  as isClose');
         Add('FROM dba.DiscountMovementItem_byBarCode');
@@ -3848,6 +3861,8 @@ begin
         Add('    left outer join _data_all on _data_all.DatabaseId  = DiscountMovementItem_byBarCode.DatabaseId');
         Add('                             and _data_all.ReplId      = DiscountMovementItem_byBarCode.ReplId');
         Add('    left outer join goods on goods.id  = BillItemsIncome.goodsId');
+        Add('    left outer join DBA.Unit as Unit_From on Unit_From.Id = DiscountMovement.UnitID');
+        Add('    left outer join DBA.Unit as Unit_To on Unit_To.id = DiscountKlient.ClientId');
         Add('WHERE DiscountMovement.descId = 1  AND DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add('  and DiscountMovement.isErased = zc_rvNo()');
         if cbSaleErr.Checked then Add(' and 1=0 ');
@@ -7217,6 +7232,7 @@ begin
         Add('            when ObjectId = 978 then -1');      //магазин Vintag      -
         Add('            when ObjectId = 11772 then -1');    //магазин Терри-Out   - Склад Terri
         Add('            when ObjectId = 29018 then -1');    //магазин Savoy-O     -
+        Add('            when ObjectId = 11932 then -1');    //магазин CHADO-O     -
         Add('            else 0');
         Add('       end as DiscountTax');
 
@@ -7239,6 +7255,7 @@ begin
         Add('       when ObjectId = 11772 then 979');  //магазин Терри-Out   - Склад Terri
         Add('       when ObjectId = 20484 then 0');    //магазин ESCADA      -
         Add('       when ObjectId = 29018 then 0')  ;  //магазин Savoy-O     -
+        Add('       when ObjectId = 11932 then 0');    //магазин CHADO-O     -
         Add('       else 0');
         Add('       end as IDChildId');
         Add('     , Child.Id_Postgres as ChildId');

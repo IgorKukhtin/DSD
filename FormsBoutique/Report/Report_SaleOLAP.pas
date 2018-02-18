@@ -40,7 +40,7 @@ type
     actExportToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    Panel1: TPanel;
+    PanelHead: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
     cxDBPivotGrid: TcxDBPivotGrid;
@@ -91,10 +91,10 @@ type
     pvGroupsName2: TcxDBPivotGridField;
     pvGroupsName3: TcxDBPivotGridField;
     pvGroupsName4: TcxDBPivotGridField;
-    PeriodName_doc: TcxDBPivotGridField;
-    PeriodYear_doc: TcxDBPivotGridField;
-    MonthName_doc: TcxDBPivotGridField;
-    DayName_doc: TcxDBPivotGridField;
+    pvPeriodName_doc: TcxDBPivotGridField;
+    pvPeriodYear_doc: TcxDBPivotGridField;
+    pvMonthName_doc: TcxDBPivotGridField;
+    pvDayName_doc: TcxDBPivotGridField;
     cxLabel7: TcxLabel;
     edUnit: TcxButtonEdit;
     cbOperPrice: TcxCheckBox;
@@ -104,6 +104,16 @@ type
     cbOperDate_doc: TcxCheckBox;
     cbDay_doc: TcxCheckBox;
     dxBarStatic: TdxBarStatic;
+    cbDiscount: TcxCheckBox;
+    GuidesUnit: TdsdGuides;
+    pvDiscountSaleKindName: TcxDBPivotGridField;
+    pvChangePercent: TcxDBPivotGridField;
+    pvSale_SummCost_diff: TcxDBPivotGridField;
+    pvReturn_SummCost_diff: TcxDBPivotGridField;
+    pvResult_SummCost_diff: TcxDBPivotGridField;
+    pvSale_Summ_prof: TcxDBPivotGridField;
+    pvReturn_Summ_prof: TcxDBPivotGridField;
+    pvResult_Summ_prof: TcxDBPivotGridField;
   private
   public
   end;

@@ -11,7 +11,8 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SaleSumm_10300(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 131, inName:= 'Сумма с/с, реализация ',                   inEnumName:= 'zc_Enum_AnalyzerId_SaleSumm_10300');
 
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_ReturnCount_10500(), inDescId:= zc_Object_AnalyzerId(), inCode:= 201, inName:= 'Кол-во, возврат',                        inEnumName:= 'zc_Enum_AnalyzerId_ReturnCount_10500');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_ReturnSumm_10500(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 211, inName:= 'Сумма, возврат (со скидкой)',            inEnumName:= 'zc_Enum_AnalyzerId_ReturnSumm_10500');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_ReturnSumm_10501(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 211, inName:= 'Сумма, возврат (по прайсу)',             inEnumName:= 'zc_Enum_AnalyzerId_ReturnSumm_10501');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_ReturnSumm_10502(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 212, inName:= 'Сумма, возврат, скидка',                 inEnumName:= 'zc_Enum_AnalyzerId_ReturnSumm_10502');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_ReturnSumm_10600(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 231, inName:= 'Сумма с/с, возврат',                     inEnumName:= 'zc_Enum_AnalyzerId_ReturnSumm_10600');
 END $$;
 
@@ -155,6 +156,7 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10301, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_10301');
      
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10501, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_10501');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10502, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_10502');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10601, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_10601');
 END $$;
 

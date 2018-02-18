@@ -3,7 +3,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' ('#1054#1051#1040#1055')>'
-  ClientHeight = 381
+  ClientHeight = 409
   ClientWidth = 400
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 110
-    Top = 340
+    Top = 365
     Width = 75
     Height = 24
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
   end
   object cxButton2: TcxButton
     Left = 239
-    Top = 340
+    Top = 365
     Width = 75
     Height = 24
     Caption = #1054#1090#1084#1077#1085#1072
@@ -37,7 +37,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     TabOrder = 1
   end
   object deEnd: TcxDateEdit
-    Left = 300
+    Left = 125
     Top = 30
     EditValue = 42736d
     Properties.ShowTime = False
@@ -45,7 +45,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     Width = 85
   end
   object deStart: TcxDateEdit
-    Left = 200
+    Left = 25
     Top = 30
     EditValue = 42736d
     Properties.ShowTime = False
@@ -53,12 +53,12 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     Width = 85
   end
   object cxLabel6: TcxLabel
-    Left = 200
+    Left = 25
     Top = 10
     Caption = #1055#1077#1088#1080#1086#1076' '#1089' ...'
   end
   object cxLabel7: TcxLabel
-    Left = 300
+    Left = 125
     Top = 10
     Caption = #1055#1077#1088#1080#1086#1076' '#1087#1086' ...'
   end
@@ -119,12 +119,12 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     Width = 350
   end
   object cxLabel5: TcxLabel
-    Left = 25
+    Left = 230
     Top = 10
     Caption = #1043#1086#1076' '#1089' ...'
   end
   object edStartYear: TcxCurrencyEdit
-    Left = 25
+    Left = 230
     Top = 30
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
@@ -133,7 +133,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     Width = 70
   end
   object edEndYear: TcxCurrencyEdit
-    Left = 100
+    Left = 305
     Top = 30
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
@@ -142,13 +142,13 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     Width = 70
   end
   object cxLabel8: TcxLabel
-    Left = 100
+    Left = 305
     Top = 10
     Caption = #1043#1086#1076' '#1087#1086' ...'
   end
   object cbSize: TcxCheckBox
     Left = 25
-    Top = 300
+    Top = 325
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1056#1072#1079#1084#1077#1088#1099
     ParentShowHint = False
@@ -158,7 +158,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
   end
   object cbGoods: TcxCheckBox
     Left = 25
-    Top = 275
+    Top = 300
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1058#1086#1074#1072#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1058#1086#1074#1072#1088#1099
     ParentShowHint = False
@@ -167,7 +167,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     Width = 85
   end
   object cbPeriodAll: TcxCheckBox
-    Left = 239
+    Left = 64
     Top = 55
     Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1079#1072' '#1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1079#1072' '#1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
@@ -178,7 +178,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     Width = 105
   end
   object cbYear: TcxCheckBox
-    Left = 34
+    Left = 239
     Top = 55
     Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052
@@ -209,7 +209,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
   end
   object cbClient_doc: TcxCheckBox
     Left = 140
-    Top = 275
+    Top = 300
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
     ParentShowHint = False
@@ -219,7 +219,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
   end
   object cbOperPrice: TcxCheckBox
     Left = 140
-    Top = 300
+    Top = 325
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1062#1077#1085#1072' '#1074#1093'. '#1074' '#1074#1072#1083'. ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1062#1077#1085#1072' '#1074#1093'.'
     ParentShowHint = False
@@ -229,7 +229,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
   end
   object cbOperDate_doc: TcxCheckBox
     Left = 270
-    Top = 275
+    Top = 300
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1043#1086#1076' / '#1052#1077#1089#1103#1094' '#1055#1088#1086#1076#1072#1078#1080' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1043#1086#1076' / '#1052#1077#1089#1103#1094
     ParentShowHint = False
@@ -239,7 +239,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
   end
   object cbDay_doc: TcxCheckBox
     Left = 270
-    Top = 300
+    Top = 325
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' '#1055#1088#1086#1076#1072#1078#1080' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080
     ParentShowHint = False
@@ -247,11 +247,21 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     TabOrder = 25
     Width = 100
   end
+  object cbDiscount: TcxCheckBox
+    Left = 25
+    Top = 275
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' % '#1089#1082#1080#1076#1082#1080' ('#1044#1072'/'#1053#1077#1090')'
+    Caption = '% '#1057#1082#1080#1076#1082#1080
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 26
+    Width = 75
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 345
-    Top = 41
+    Left = 161
+    Top = 49
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 287
@@ -268,7 +278,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 329
-    Top = 333
+    Top = 358
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -286,6 +296,21 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -412,9 +437,16 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
         Component = cbOperPrice
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDiscount'
+        Value = Null
+        Component = cbDiscount
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 47
-    Top = 327
+    Top = 352
   end
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'
@@ -521,5 +553,49 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
       end>
     Left = 183
     Top = 139
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 209
+    Top = 233
   end
 end

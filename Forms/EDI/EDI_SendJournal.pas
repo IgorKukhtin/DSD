@@ -29,6 +29,7 @@ type
     ExecuteDialog: TExecuteDialog;
     OperDatePartner_Parent: TcxGridDBColumn;
     RetailName: TcxGridDBColumn;
+    MovementDescName: TcxGridDBColumn;
   private
     { Private declarations }
   public

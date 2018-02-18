@@ -3,7 +3,6 @@ inherited EDI_SendJournalForm: TEDI_SendJournalForm
   ClientHeight = 431
   ClientWidth = 941
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -168
   ExplicitWidth = 957
   ExplicitHeight = 466
   PixelsPerInch = 96
@@ -51,6 +50,40 @@ inherited EDI_SendJournalForm: TEDI_SendJournalForm
           inherited colOperDate: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
+          end
+          object MovementDescName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'MovementDescName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colStatus_sale: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1091#1089' ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'StatusCode_sale'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = 1
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object InvNumber_Parent: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1087#1088#1086#1076#1072#1078#1080

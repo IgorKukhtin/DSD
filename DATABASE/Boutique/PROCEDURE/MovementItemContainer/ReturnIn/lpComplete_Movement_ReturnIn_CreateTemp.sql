@@ -41,8 +41,8 @@ BEGIN
                                               , GoodsId Integer, PartionId Integer, GoodsSizeId Integer, PartionId_MI Integer
                                               , OperCount TFloat, OperSumm TFloat, OperSumm_ToPay TFloat, TotalPay TFloat
                                               , OperCount_sale TFloat, OperSumm_sale TFloat
-                                              , Summ_10501 TFloat
-                                              , ContainerId_ProfitLoss_10501 Integer, ContainerId_ProfitLoss_10601 Integer
+                                              , Summ_10501 TFloat, Summ_10502 TFloat
+                                              , ContainerId_ProfitLoss_10501 Integer, ContainerId_ProfitLoss_10502 Integer, ContainerId_ProfitLoss_10601 Integer
                                                ) ON COMMIT DROP;
 
          -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках

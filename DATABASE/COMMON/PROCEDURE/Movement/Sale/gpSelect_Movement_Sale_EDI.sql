@@ -915,5 +915,4 @@ ALTER FUNCTION gpSelect_Movement_Sale_EDI (Integer,TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale_EDI (inMovementId := 135428, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpSelect_Movement_Sale_EDI (inMovementId := 377284, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_Sale_EDI (inMovementId := 8467386, inSession:= zfCalc_UserAdmin());

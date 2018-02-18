@@ -46,6 +46,8 @@ type
     cbOperPrice: TcxCheckBox;
     cbOperDate_doc: TcxCheckBox;
     cbDay_doc: TcxCheckBox;
+    GuidesUnit: TdsdGuides;
+    cbDiscount: TcxCheckBox;
   private
     { Private declarations }
   public

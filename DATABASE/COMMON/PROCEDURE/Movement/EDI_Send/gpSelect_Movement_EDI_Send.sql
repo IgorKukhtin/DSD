@@ -16,6 +16,8 @@ RETURNS TABLE (Id Integer, ParentId Integer
              , PaidKindId Integer, PaidKindName TVarChar
              , JuridicalName_To TVarChar
              , StatusCode Integer, StatusName TVarChar
+             , StatusCode_sale Integer, StatusName_sale TVarChar
+             , MovementDescName TVarChar
              , Comment TVarChar
               )
 AS
@@ -54,6 +56,9 @@ BEGIN
 
                , Object_Status.ObjectCode    		        AS StatusCode
                , Object_Status.ValueData     		        AS StatusName
+               , Object_Status_sale.ObjectCode    		AS StatusCode_sale
+               , Object_Status_sale.ValueData     		AS StatusName_sale
+               , MovementDesc.ItemName     		        AS MovementDescName
                , MovementString_Comment.ValueData               AS Comment
 
            FROM (SELECT Movement.*
@@ -85,6 +90,8 @@ BEGIN
                                          AND MovementBoolean_EdiDesadv.DescId     = zc_MovementBoolean_EdiDesadv()
 
                 LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
+                LEFT JOIN MovementDesc ON MovementDesc.Id = Movement_Parent.DescId
+                LEFT JOIN Object AS Object_Status_sale ON Object_Status_sale.Id = Movement_Parent.StatusId
                 LEFT JOIN MovementDate AS MovementDate_OperDatePartner_Parent
                                        ON MovementDate_OperDatePartner_Parent.MovementId = Movement_Parent.Id
                                       AND MovementDate_OperDatePartner_Parent.DescId = zc_MovementDate_OperDatePartner()

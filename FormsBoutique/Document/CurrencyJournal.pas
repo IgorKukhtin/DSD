@@ -22,11 +22,8 @@ type
     N13: TMenuItem;
     clParValue: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
-    cxLabel27: TcxLabel;
-    edJuridicalBasis: TcxButtonEdit;
-    JuridicalBasisGuides: TdsdGuides;
-    spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    colEndDate: TcxGridDBColumn;
   private
     { Private declarations }
   public
