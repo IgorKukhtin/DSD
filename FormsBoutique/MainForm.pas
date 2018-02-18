@@ -133,7 +133,7 @@ type
     actReport_ProfitLoss: TdsdOpenForm;
     actReport_Cash: TdsdOpenForm;
     miFinance: TMenuItem;
-    miLine11: TMenuItem;
+    miLine12: TMenuItem;
     miLine31: TMenuItem;
     miReport_Basis: TMenuItem;
     miReport_Balance: TMenuItem;
@@ -142,12 +142,12 @@ type
     miReport_ProfitLoss: TMenuItem;
     miGoodsAll: TMenuItem;
     miLine711: TMenuItem;
-    miLine71: TMenuItem;
-    miLine72: TMenuItem;
-    miLine73: TMenuItem;
-    miLine74: TMenuItem;
+    miLine81: TMenuItem;
+    miLine82: TMenuItem;
+    miLine83: TMenuItem;
+    miLine84: TMenuItem;
     actReport_Goods_RemainsCurrent: TdsdOpenForm;
-    miLine41: TMenuItem;
+    miLine51: TMenuItem;
     miReport_Goods_RemainsCurrent: TMenuItem;
     actReport_Goods: TdsdOpenForm;
     miReport_Goods: TMenuItem;
@@ -157,7 +157,7 @@ type
     miReport_SaleReturnIn: TMenuItem;
     actReport_ClientDebt: TdsdOpenForm;
     miReport_PartnerDebt: TMenuItem;
-    miLine51: TMenuItem;
+    miLine61: TMenuItem;
     actGoodsAccount_ReturnIn: TdsdOpenForm;
     miGoodsAccount_ReturnIn: TMenuItem;
     actGoodsPrint: TdsdOpenForm;
@@ -188,6 +188,11 @@ type
     miReport_CollationByPartner: TMenuItem;
     miReport_SaleOLAP: TMenuItem;
     actReport_SaleOLAP: TdsdOpenForm;
+    miReport_Unit: TMenuItem;
+    miLine11: TMenuItem;
+    miLine41: TMenuItem;
+    miLine42: TMenuItem;
+    miLine71: TMenuItem;
   private
     { Private declarations }
   public

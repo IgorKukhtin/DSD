@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 723
   KeyPreview = True
   ExplicitWidth = 739
-  ExplicitHeight = 226
+  ExplicitHeight = 223
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -90,8 +90,8 @@ inherited MainForm: TMainForm
     object actGoodsAccountMovement: TdsdOpenForm [7]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
-      Caption = #1056#1072#1089#1095#1077#1090#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1087#1086' '#1055#1088#1086#1076#1072#1078#1072#1084' ('#1044#1086#1082#1091#1084#1077#1085#1090')'
-      Hint = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
+      Caption = #1056#1072#1089#1095#1077#1090#1099
+      Hint = #1057#1086#1079#1076#1072#1085#1080#1077' - '#1056#1072#1089#1095#1077#1090#1099' '#1089' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1084' '#1079#1072' '#1055#1088#1086#1076#1072#1078#1091
       FormName = 'TGoodsAccountForm'
       FormNameParam.Value = 'TGoodsAccountForm'
       FormNameParam.DataType = ftString
@@ -102,8 +102,8 @@ inherited MainForm: TMainForm
     object actReturnInMovement: TdsdOpenForm [8]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
-      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1044#1086#1082#1091#1084#1077#1085#1090')'
-      Hint = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+      Caption = #1042#1086#1079#1074#1088#1072#1090
+      Hint = #1057#1086#1079#1076#1072#1085#1080#1077' - '#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
       FormName = 'TReturnInForm'
       FormNameParam.Value = 'TReturnInForm'
       FormNameParam.DataType = ftString
@@ -114,8 +114,8 @@ inherited MainForm: TMainForm
     object actSaleMovement: TdsdOpenForm [9]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
-      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1044#1086#1082#1091#1084#1077#1085#1090')'
-      Hint = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
+      Caption = #1055#1088#1086#1076#1072#1078#1072
+      Hint = #1057#1086#1079#1076#1072#1085#1080#1077' - '#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
       FormName = 'TSaleForm'
       FormNameParam.Value = 'TSaleForm'
       FormNameParam.DataType = ftString
@@ -137,7 +137,7 @@ inherited MainForm: TMainForm
     object actReport_ClientDebt: TdsdOpenForm [11]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
-      Caption = #1058#1077#1082#1091#1097#1080#1077' '#1076#1086#1083#1075#1080
+      Caption = #1044#1086#1083#1075#1080' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
       FormName = 'TReport_ClientDebtForm'
       FormNameParam.Value = 'TReport_ClientDebtForm'
       FormNameParam.DataType = ftString
@@ -148,8 +148,8 @@ inherited MainForm: TMainForm
     object actGoodsAccount: TdsdOpenForm [12]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
-      Caption = #1056#1072#1089#1095#1077#1090#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1087#1086' '#1055#1088#1086#1076#1072#1078#1072#1084
-      Hint = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
+      Caption = #1056#1072#1089#1095#1077#1090#1099' '#1079#1072' '#1055#1088#1086#1076#1072#1078#1091' ('#1074#1089#1077')'
+      Hint = #1056#1072#1089#1095#1077#1090#1099' '#1089' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1084' '#1079#1072' '#1055#1088#1086#1076#1072#1078#1091' ('#1078#1091#1088#1085#1072#1083')'
       FormName = 'TGoodsAccountJournalForm'
       FormNameParam.Value = 'TGoodsAccountJournalForm'
       FormNameParam.DataType = ftString
@@ -160,8 +160,8 @@ inherited MainForm: TMainForm
     object actGoodsAccount_ReturnIn: TdsdOpenForm [13]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
-      Caption = #1056#1072#1089#1095#1077#1090#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1087#1086' '#1042#1086#1079#1074#1088#1072#1090#1072#1084
-      Hint = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
+      Caption = #1056#1072#1089#1095#1077#1090#1099' '#1079#1072' '#1042#1086#1079#1074#1088#1072#1090' ('#1074#1089#1077')'
+      Hint = #1056#1072#1089#1095#1077#1090#1099' '#1089' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1084' '#1079#1072' '#1042#1086#1079#1074#1088#1072#1090' ('#1078#1091#1088#1085#1072#1083')'
       FormName = 'TGoodsAccount_ReturnInJournalForm'
       FormNameParam.Value = 'TGoodsAccount_ReturnInJournalForm'
       FormNameParam.DataType = ftString
@@ -241,7 +241,7 @@ inherited MainForm: TMainForm
     object actReport_Goods_RemainsCurrent: TdsdOpenForm [20]
       Category = #1054#1090#1095#1077#1090#1099
       MoveParams = <>
-      Caption = #1058#1077#1082#1091#1097#1080#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1090#1086#1074#1072#1088#1072
+      Caption = #1056#1077#1077#1089#1090#1088' '#1090#1086#1074#1072#1088#1086#1074
       FormName = 'TReport_Goods_RemainsCurrentForm'
       FormNameParam.Value = 'TReport_Goods_RemainsCurrentForm'
       FormNameParam.DataType = ftString
@@ -275,8 +275,8 @@ inherited MainForm: TMainForm
     object actReturnIn: TdsdOpenForm [23]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
-      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
-      Hint = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')'
+      Hint = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1078#1091#1088#1085#1072#1083')'
       FormName = 'TReturnInJournalForm'
       FormNameParam.Value = 'TReturnInJournalForm'
       FormNameParam.DataType = ftString
@@ -299,8 +299,8 @@ inherited MainForm: TMainForm
     object actSale: TdsdOpenForm [25]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
-      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
-      Hint = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
+      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1074#1089#1077')'
+      Hint = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1078#1091#1088#1085#1072#1083')'
       FormName = 'TSaleJournalForm'
       FormNameParam.Value = 'TSaleJournalForm'
       FormNameParam.DataType = ftString
@@ -892,23 +892,20 @@ inherited MainForm: TMainForm
       object miSend: TMenuItem
         Action = actSend
       end
-      object miSale: TMenuItem
-        Action = actSale
-      end
-      object miSaleMovement: TMenuItem
-        Action = actSaleMovement
-      end
-      object miReturnIn: TMenuItem
-        Action = actReturnIn
-      end
-      object miReturnInMovement: TMenuItem
-        Action = actReturnInMovement
+      object miLoss: TMenuItem
+        Action = actLoss
       end
       object miLine11: TMenuItem
         Caption = '-'
       end
-      object miLoss: TMenuItem
-        Action = actLoss
+      object miSale: TMenuItem
+        Action = actSale
+      end
+      object miReturnIn: TMenuItem
+        Action = actReturnIn
+      end
+      object miLine12: TMenuItem
+        Caption = '-'
       end
       object miInventory: TMenuItem
         Action = actInventory
@@ -919,9 +916,6 @@ inherited MainForm: TMainForm
       Caption = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       object miGoodsAccount: TMenuItem
         Action = actGoodsAccount
-      end
-      object miGoodsAccountMovement: TMenuItem
-        Action = actGoodsAccountMovement
       end
       object miGoodsAccount_ReturnIn: TMenuItem
         Action = actGoodsAccount_ReturnIn
@@ -945,7 +939,40 @@ inherited MainForm: TMainForm
         Action = actDiscountPeriodItem
       end
     end
-    object miReport: TMenuItem [3]
+    object miSaleMovement: TMenuItem [3]
+      Action = actSaleMovement
+    end
+    object miReturnInMovement: TMenuItem [4]
+      Action = actReturnInMovement
+    end
+    object miGoodsAccountMovement: TMenuItem [5]
+      Action = actGoodsAccountMovement
+    end
+    object miReport_Unit: TMenuItem [6]
+      Caption = #1054#1090#1095#1077#1090#1099' ('#1084#1072#1075'.)'
+      object miReport_SaleReturnIn: TMenuItem
+        Action = actReport_SaleReturnIn
+      end
+      object miReport_GoodsMI_Account: TMenuItem
+        Action = actReport_GoodsMI_Account
+      end
+      object miLine41: TMenuItem
+        Caption = '-'
+      end
+      object miReport_CollationByPartner: TMenuItem
+        Action = actReport_CollationByClient
+      end
+      object miReport_PartnerDebt: TMenuItem
+        Action = actReport_ClientDebt
+      end
+      object miLine42: TMenuItem
+        Caption = '-'
+      end
+      object miReport_Goods_RemainsCurrent: TMenuItem
+        Action = actReport_Goods_RemainsCurrent
+      end
+    end
+    object miReport: TMenuItem [7]
       Caption = #1054#1090#1095#1077#1090#1099
       object miReport_MovementIncome: TMenuItem
         Action = actReport_MovementIncome
@@ -959,47 +986,35 @@ inherited MainForm: TMainForm
       object miReport_MovementLoss: TMenuItem
         Action = actReport_MovementLoss
       end
-      object miLine41: TMenuItem
+      object miLine51: TMenuItem
         Caption = '-'
-      end
-      object miReport_Goods_RemainsCurrent: TMenuItem
-        Action = actReport_Goods_RemainsCurrent
       end
       object miReport_Goods: TMenuItem
         Action = actReport_Goods
       end
-      object miReport_SaleReturnIn: TMenuItem
-        Action = actReport_SaleReturnIn
-      end
     end
-    object miReport_Finance: TMenuItem [4]
+    object miReport_Finance: TMenuItem [8]
       Caption = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       object miReport_Cash: TMenuItem
         Action = actReport_Cash
       end
-      object miLine51: TMenuItem
+      object miLine61: TMenuItem
         Caption = '-'
-      end
-      object miReport_GoodsMI_Account: TMenuItem
-        Action = actReport_GoodsMI_Account
-      end
-      object miReport_PartnerDebt: TMenuItem
-        Action = actReport_ClientDebt
       end
       object miReport_MotionByPartner: TMenuItem
         Action = actReport_MotionByClient
       end
-      object miReport_CollationByPartner: TMenuItem
-        Action = actReport_CollationByClient
-      end
     end
-    object miReport_Basis: TMenuItem [5]
+    object miReport_Basis: TMenuItem [9]
       Caption = #1054#1090#1095#1077#1090#1099' ('#1059#1055')'
       object miReport_Balance: TMenuItem
         Action = actReport_Balance
       end
       object miReport_ProfitLoss: TMenuItem
         Action = actReport_ProfitLoss
+      end
+      object miLine71: TMenuItem
+        Caption = '-'
       end
       object miReport_SaleOLAP: TMenuItem
         Action = actReport_SaleOLAP
@@ -1063,7 +1078,7 @@ inherited MainForm: TMainForm
       object miPriceList: TMenuItem
         Action = actPriceList
       end
-      object miLine71: TMenuItem
+      object miLine81: TMenuItem
         Caption = '-'
       end
       object miPartner: TMenuItem
@@ -1081,7 +1096,7 @@ inherited MainForm: TMainForm
       object miFabrika: TMenuItem
         Action = actFabrika
       end
-      object miLine72: TMenuItem
+      object miLine82: TMenuItem
         Caption = '-'
       end
       object miClient: TMenuItem
@@ -1096,7 +1111,7 @@ inherited MainForm: TMainForm
       object miDiscountTools: TMenuItem
         Action = actDiscountTools
       end
-      object miLine73: TMenuItem
+      object miLine83: TMenuItem
         Caption = '-'
       end
       object miCash: TMenuItem
@@ -1111,7 +1126,7 @@ inherited MainForm: TMainForm
       object miCurrency: TMenuItem
         Action = actCurrency
       end
-      object miLine74: TMenuItem
+      object miLine84: TMenuItem
         Caption = '-'
       end
       object miPersonal: TMenuItem

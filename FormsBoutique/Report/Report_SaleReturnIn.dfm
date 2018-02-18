@@ -1,5 +1,5 @@
 inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
-  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084'/ '#1074#1086#1079#1074#1088#1072#1090#1072#1084'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' / '#1074#1086#1079#1074#1088#1072#1090#1072#1084'>'
   ClientHeight = 425
   ClientWidth = 1065
   AddOnFormData.RefreshAction = actRefreshStart
@@ -7,7 +7,7 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1081
-  ExplicitHeight = 463
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -787,6 +787,7 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
+      ReportNameParam.Value = ''
       ReportNameParam.Component = FormParams
       ReportNameParam.ComponentItem = 'ReportNameCheck'
       ReportNameParam.DataType = ftString
@@ -1520,6 +1521,7 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
     Params = <
       item
         Name = 'ReportNameCheck'
+        Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

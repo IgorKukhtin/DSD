@@ -1,12 +1,12 @@
 inherited Report_ClientDebtForm: TReport_ClientDebtForm
-  Caption = #1054#1090#1095#1077#1090' <'#1058#1077#1082#1091#1097#1080#1077' '#1076#1086#1083#1075#1080' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1044#1086#1083#1075#1080' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081'>'
   ClientHeight = 425
   ClientWidth = 1065
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1081
-  ExplicitHeight = 463
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
