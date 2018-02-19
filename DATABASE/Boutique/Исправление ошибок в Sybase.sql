@@ -42,7 +42,16 @@ order by InsertDate, DiscountMovement.OperDate
   '2008-03-31' -- Savoy-2 -- OK
   '2014-01-13' -- Sopra   -- OK
   '2014-01-13' -- 11      -- OK
-
+--
+select DiscountMovement.DataBaseId, Unit.Id AS UnitId, Unit.UnitName, Users.Id as UserId, Users.UsersName, count(*), max (operDate)
+from DBA.DiscountMovement
+           left outer join DBA.Unit on Unit.Id = DiscountMovement.UnitID
+           left outer join DBA.Users on Users.id = DiscountMovement.InsertUserID
+where DiscountMovement.descId = 1  and DiscountMovement.OperDate between '2005-01-01' and '2019-01-01'
+  and DiscountMovement.isErased = zc_rvNo()
+group by DiscountMovement.DataBaseId, Unit.Id , Unit.UnitName, Users.Id, Users.UsersName
+order by Users.UsersName
+  
 -- select * from DiscountMovement inner join DiscountMovementItem_byBarCode on DiscountMovementId = DiscountMovement.Id where DiscountMovement.OperDate < _zz_zc_StartDate() and DiscountMovement.isErased = 1
 -- select * from DiscountMovement inner join DiscountMovementItemReturn_byBarCode on DiscountMovementId = DiscountMovement.Id where OperDate < _zz_zc_StartDate() and isErased = 1
 -- select * from DiscountKlientAccountMoney where OperDate < _zz_zc_StartDate() and isErased = 1

@@ -2599,6 +2599,31 @@ begin
         Add('where Bill.BillKind = zc_bkSaleFromUnitToClient() and Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text)));
         Add('  and Bill.DatabaseId = 0');
         Add('  and Bill.Id_Postgres > 0');
+
+        Add('union all');
+        Add('select DISTINCT');
+        Add('      Bill.Id as ObjectId');
+        Add('    , Bill.Id_Postgres as Id_Postgres');
+        Add('    , 0 as InvNumber');
+        Add('    , Bill.BillDate as OperDate');
+        Add('    , Bill.BillDate as OperDateInsert');
+        Add('    , Unit_From.Id_Postgres as FromId ');
+        Add('    , Unit_From.UnitName as UnitNameFrom');
+        Add('    , Unit_To.Id_Postgres as ToId');
+        Add('    , Unit_To.UnitName as UnitNameTo');
+        Add('    , '''' as UsersName');
+        Add('    , 0 as UserId_pg');
+        Add('    , zc_rvYes() as isBill');
+        Add('from DBA.Bill');
+        Add('    left outer join DBA.Unit as Unit_From on Unit_From.Id = Bill.FromID');
+        Add('    left outer join DBA.Unit as Unit_To on Unit_To.Id = Bill.ToId');
+        Add('    join BillItems  on BillItems.BillId = Bill.Id');
+        Add('    left outer join _dataBI_all  on _dataBI_all.ReplId = BillItems.ReplId and _dataBI_all.DatabaseId = BillItems.DatabaseId ');
+        Add('where Bill.BillKind = zc_bkSaleFromUnitToClient() and Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add('  and Bill.DatabaseId > 0');
+        Add('  and _dataBI_all.ReplId is null');
+        Add('  and Bill.BillDate < ' + FormatToDateServer_notNULL(StrToDate('11.11.2012')));
+
         Add('union all');
         Add('select');
         Add('      DiscountMovement.Id as ObjectId');
@@ -2702,6 +2727,31 @@ begin
         Add(' where Bill.BillKind = zc_bkReturnFromClientToUnit() and Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text)));
         Add('   and Bill.DatabaseId = 0');
         Add('   and Bill.Id_Postgres > 0');
+
+        Add('union all');
+        Add('select DISTINCT');
+        Add('      Bill.Id as ObjectId');
+        Add('    , Bill.Id_Postgres as Id_Postgres');
+        Add('    , 0 as InvNumber');
+        Add('    , Bill.BillDate as OperDate');
+        Add('    , Bill.BillDate as OperDateInsert');
+        Add('    , Unit_From.Id_Postgres as FromId ');
+        Add('    , Unit_From.UnitName as ClientNameFrom');
+        Add('    , Unit_To.Id_Postgres as ToId');
+        Add('    , Unit_To.UnitName as UnitNameTo');
+        Add('    , '''' as UsersName');
+        Add('    , 0 as UserId_pg');
+        Add('    , zc_rvYes() as isBill');
+        Add('from DBA.Bill');
+        Add('    left outer join DBA.Unit as Unit_From on Unit_From.Id = Bill.FromID');
+        Add('    left outer join DBA.Unit as Unit_To on Unit_To.Id = Bill.ToId');
+        Add('    join BillItems  on BillItems.BillId = Bill.Id');
+        Add('    left outer join _dataBI_all  on _dataBI_all.ReplId = BillItems.ReplId and _dataBI_all.DatabaseId = BillItems.DatabaseId ');
+        Add('where Bill.BillKind = zc_bkReturnFromClientToUnit() and Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add('  and Bill.DatabaseId > 0');
+        Add('  and _dataBI_all.ReplId is null');
+        Add('  and Bill.BillDate < ' + FormatToDateServer_notNULL(StrToDate('11.11.2012')));
+
         Add('union all');
         Add(' select');
         Add('      DiscountMovement.Id as ObjectId');
@@ -3837,7 +3887,9 @@ begin
         Add('    , BillItemsIncome.GoodsId_Postgres as GoodsId');
         Add('    , BillItemsIncome.Id_Postgres as PartionId');
         Add('    , case when DiscountMovement.UnitId in (978, 4647, 11425, 7360,  29018, 11772, 969, 11932) then '+ IntToStr(zc_Enum_DiscountSaleKind_Outlet));
-        Add('           when DiscountMovementItem_byBarCode.DiscountTax > DiscountKlient.DiscountTax and DiscountMovementItem_byBarCode.DiscountTax > 0 then '+ IntToStr(zc_Enum_DiscountSaleKind_Period));
+        //Add('           when DiscountMovementItem_byBarCode.DiscountTax > DiscountKlient.DiscountTax and DiscountMovementItem_byBarCode.DiscountTax > 0 and DiscountKlient.DiscountTax > 0 then '+ IntToStr(zc_Enum_DiscountSaleKind_Period));
+        Add('           when coalesce (DiscountTaxItems.PercentTax,0) > 0 and  DiscountMovementItem_byBarCode.DiscountTax = coalesce (DiscountTaxItems.PercentTax,0) then '+ IntToStr(zc_Enum_DiscountSaleKind_Period));
+        Add('           when DiscountMovementItem_byBarCode.DiscountTax > DiscountKlient.DiscountTax and DiscountMovementItem_byBarCode.DiscountTax > 35  then '+ IntToStr(zc_Enum_DiscountSaleKind_Period));
         Add('           when DiscountMovementItem_byBarCode.DiscountTax > 0 then '+ IntToStr(zc_Enum_DiscountSaleKind_Client));
         Add('           else 0');
         Add('      end as DiscountSaleKindId');
@@ -3863,6 +3915,12 @@ begin
         Add('    left outer join goods on goods.id  = BillItemsIncome.goodsId');
         Add('    left outer join DBA.Unit as Unit_From on Unit_From.Id = DiscountMovement.UnitID');
         Add('    left outer join DBA.Unit as Unit_To on Unit_To.id = DiscountKlient.ClientId');
+
+        Add('     left outer join DiscountTaxItems on DiscountTaxItems.BillItemsIncomeID = BillItemsIncome.ID');
+        Add('                                     and date(DiscountMovement.OperDate) between DiscountTaxItems.StartDate and DiscountTaxItems.EndDate');
+        Add('                                     and DiscountTaxItems.PercentTax > 0');
+        Add('                                     and DiscountTaxItems.UnitID = DiscountMovement.UnitID');
+
         Add('WHERE DiscountMovement.descId = 1  AND DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add('  and DiscountMovement.isErased = zc_rvNo()');
         if cbSaleErr.Checked then Add(' and 1=0 ');
@@ -6732,6 +6790,7 @@ begin
 end;
 procedure TMainForm.pLoadGuide_Member;
 var PersonalId : Integer;
+    UnitId : Integer;
 begin
      if (not cbMember.Checked)or(not cbMember.Enabled) then exit;
      //
@@ -6745,10 +6804,12 @@ begin
         Add('     , Users.UsersName as ObjectName');
         Add('     , zc_erasedDel() as zc_erasedDel');
         Add('     , Users.Erased as Erased');
+        Add('     , Users.UserId_Postgres');
         Add('     , Users.MemberId_Postgres as Id_Postgres');
         Add('from dba.Users  ');
         //Add('     left outer join dba.Unit on Unit.Id = case when   ');
         Add('where haschildren = -1');
+        Add('  and Users.Id not in (1,145, 119, 121)');
         Add('order by ObjectId');
         Open;
         //
@@ -6800,12 +6861,17 @@ begin
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.Users set MemberId_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
+             //
+             fOpenSqToQuery ('SELECT coalesce((SELECT ChildObjectId from ObjectLink where descId = zc_ObjectLink_User_Unit() and ObjectId =  ' + IntToStr(FieldByName('UserId_Postgres').AsInteger)+ '), 0) as RetV ');
+             UnitId:= toSqlQuery.FieldByName('RetV').AsInteger;
+             //
+             //
              toStoredProc_two.Params.ParamByName('ioId').Value:=PersonalId;
              toStoredProc_two.Params.ParamByName('ioCode').Value:=0;
              toStoredProc_two.Params.ParamByName('inName').Value:='';
              toStoredProc_two.Params.ParamByName('inMemberId').Value:=toStoredProc.Params.ParamByName('ioId').Value;
              toStoredProc_two.Params.ParamByName('inPositionId').Value:=0;
-             toStoredProc_two.Params.ParamByName('inUnitId').Value:=0;
+             toStoredProc_two.Params.ParamByName('inUnitId').Value:=UnitId;
              if not myExecToStoredProc_two then ;//exit;
              //
              Next;
@@ -7321,8 +7387,12 @@ begin
 end;
 
 procedure TMainForm.pLoadGuide_User;
+var AdminId : Integer;
 begin
-       if (not cbUser.Checked)or(not cbUser.Enabled) then exit;
+     if (not cbUser.Checked)or(not cbUser.Enabled) then exit;
+     //
+     fOpenSqToQuery (' SELECT zfCalc_UserAdmin() as RetV');
+     AdminId:=toSqlQuery.FieldByName('RetV').AsInteger;
      //
      myEnabledCB(cbUser);
      //
@@ -7336,9 +7406,66 @@ begin
         Add('     , zc_erasedDel() as zc_erasedDel');
         Add('     , Users.Erased as Erased');
         Add('     , Users.MemberId_Postgres as MemberId');
-        Add('     , Users.UserId_Postgres as Id_Postgres');
-        Add('from dba.Users where haschildren = -1');
-        Add('order by ObjectId');
+        Add('     , Unit.Id_Postgres AS UnitId');
+        Add('     , case when Users.Id in (1,145) then ' + IntToStr(AdminId) + ' else Users.UserId_Postgres end as Id_Postgres');
+        Add('from dba.Users');
+        Add('     left outer join dba.Unit on Unit.Id = ');
+        Add('   case when Users.Id = 119 then 5727  ' ); // магазин Savoy-P.Z.	Savoy_PZ1	801
+        Add('        when Users.Id = 121 then 5727  ' ); // магазин Savoy-P.Z.	Savoy_PZ2	801
+        Add('        when Users.Id = 130 then 1121  ' ); // магазин CHADO	Адаменко А.В.	1761
+        Add('        when Users.Id = 133 then 1121  ' ); // магазин CHADO	Алистратова И.	9829
+        Add('        when Users.Id = 152 then 969   ' ); // магазин Terry-Vintage	Андрусевич А.	2213
+        Add('        when Users.Id = 143 then 234   ' ); // магазин SAVOY	Байнак А.А.	8726
+//        Add('        when Users.Id = 143 then 29018 ' ); // магазин Savoy-O	Байнак А.А.	23
+        Add('        when Users.Id = 139 then 978   ' ); // магазин Vintag	Балкова О.	3146
+        Add('        when Users.Id = 117 then 240   ' ); // магазин 5 Элемент	Бедина Е.	5193
+//        Add('        when Users.Id = 140 then 978   ' ); // магазин Vintag	Безкаравайная И.	3527
+        Add('        when Users.Id = 140 then 29018 ' ); // магазин Savoy-O	Безкаравайная И.	1294
+        Add('        when Users.Id = 127 then 204   ' ); // магазин Terri-Luxury	Биндарь С.И.	2797
+//        Add('        when Users.Id = 127 then 11772 ' ); // магазин Терри-Out	Биндарь С.И.	93
+        Add('        when Users.Id = 157 then 11932 ' ); // магазин Chado-Outlet	Бондаренко О.	39
+        Add('        when Users.Id = 153 then 969   ' ); // магазин Terry-Vintage	Гаджиева Н.	1438
+        Add('        when Users.Id = 118 then 1121  ' ); // магазин CHADO	Галимуллина О.	6462
+//        Add('        when Users.Id = 142 then 978   ' ); // магазин Vintag	Голощанова А.	1178
+        Add('        when Users.Id = 142 then 29018 ' ); // магазин Savoy-O	Голощанова А.	1249
+        Add('        when Users.Id = 124 then 240   ' ); // магазин 5 Элемент	Григорьева Е	6000
+        Add('        when Users.Id = 132 then 240   ' ); // магазин 5 Элемент	Игнатенко К.	5349
+//        Add('        when Users.Id = 132 then 1121  ' ); // магазин CHADO	Игнатенко К.	507
+        Add('        when Users.Id = 125 then 235   ' ); // магазин MaxMara	Касаджикова Т.В.	5940
+        Add('        when Users.Id = 155 then 969   ' ); // магазин Terry-Vintage	Керимова К.	235
+        Add('        when Users.Id = 134 then 240   ' ); // магазин 5 Элемент	Клёва А.	1585
+        Add('        when Users.Id = 131 then 1121  ' ); // магазин CHADO	Коваленко С.Ю.	6588
+//        Add('        when Users.Id = 131 then 11932 ' ); // магазин Chado-Outlet	Коваленко С.Ю.	152
+        Add('        when Users.Id = 150 then 29018 ' ); // магазин Savoy-O	Когосова Л.	80
+        Add('        when Users.Id = 136 then 204   ' ); // магазин Terri-Luxury	Кононенко Л.	10352
+//        Add('        when Users.Id = 136 then 11772 ' ); // магазин Терри-Out	Кононенко Л.	13
+        Add('        when Users.Id = 151 then 969   ' ); // магазин Terry-Vintage	Кохан Т.	2636
+        Add('        when Users.Id = 9   then 235   ' ); // магазин MaxMara	Красина А.В.	125
+        Add('        when Users.Id = 138 then 11772 ' ); // магазин Терри-Out	Маменко В.	5856
+        Add('        when Users.Id = 8   then 235   ' ); // магазин MaxMara	Маслова Ю.А.	11311
+        Add('        when Users.Id = 135 then 204   ' ); // магазин Terri-Luxury	Микулина Л.	5655
+//        Add('        when Users.Id = 135 then 11772 ' ); // магазин Терри-Out	Микулина Л.	55
+        Add('        when Users.Id = 156 then 204   ' ); // магазин Terri-Luxury	Михайлюк Я.	217
+        Add('        when Users.Id = 154 then 11772 ' ); // магазин Терри-Out	Михайлюк Яна	348
+        Add('        when Users.Id = 116 then 234   ' ); // магазин SAVOY	Некрасовская Н.	5128
+        Add('        when Users.Id = 122 then 240   ' ); // магазин 5 Элемент	Новикова О	1778
+        Add('        when Users.Id = 126 then 235   ' ); // магазин MaxMara	Новикова Ю	66
+        Add('        when Users.Id = 144 then 234   ' ); // магазин SAVOY	Погребова Е.А.	3978
+//        Add('        when Users.Id = 144 then 29018 ' ); // магазин Savoy-O	Погребова Е.А.	147
+        Add('        when Users.Id = 147 then 20484 ' ); // магазин ESCADA	Рожкова И	2867
+        Add('        when Users.Id = 158 then 11932 ' ); // магазин Chado-Outlet	Сорина Г.	45
+        Add('        when Users.Id = 123 then 240   ' ); // магазин 5 Элемент	Чалык Е.	1512
+        Add('        when Users.Id = 128 then 204   ' ); // магазин Terri-Luxury	Шатова С.П.	2470
+//        Add('        when Users.Id = 128 then 11772 ' ); // магазин Терри-Out	Шатова С.П.	411
+        Add('        when Users.Id = 148 then 20484 ' ); // магазин ESCADA	Шматченко О.	1997
+        Add('        when Users.Id = 149 then 234   ' ); // магазин SAVOY	Юношева О.	72
+
+        Add('        when Users.Id = 129 then 1121   ' ); // Лагутенко Т.А.
+
+        Add('      end ');
+
+        Add(' where Users.haschildren = -1');
+        Add(' order by ObjectId');
         Open;
         //
         fStop:=cbOnlyOpen.Checked;
@@ -7355,9 +7482,8 @@ begin
         toStoredProc.Params.AddParam ('inUserName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inPassword',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inMemberId',ftInteger,ptInput, 0);
-
+        toStoredProc.Params.AddParam ('inUnitId',ftInteger,ptInput, 0);
         //
-
         while not EOF do
         begin
              //!!!
@@ -7368,11 +7494,17 @@ begin
              toStoredProc.Params.ParamByName('inUserName').Value:=FieldByName('UserName').AsString;
              toStoredProc.Params.ParamByName('inPassword').Value:=FieldByName('Password').AsString;
              toStoredProc.Params.ParamByName('inMemberId').Value:=FieldByName('MemberId').AsInteger;
-             if not myExecToStoredProc then ;//exit;
-             if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
-             //
-             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.Users set UserId_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             toStoredProc.Params.ParamByName('inUnitId').Value:=FieldByName('UnitId').AsInteger;
+
+             if FieldByName('Id_Postgres').AsInteger <> AdminId
+             then begin
+                     if not myExecToStoredProc then ;//exit;
+                     if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
+                     //
+                     if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+                     then fExecSqFromQuery('update dba.Users set UserId_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             end
+             else fExecSqFromQuery('update dba.Users set UserId_Postgres = '+IntToStr(AdminId)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;
