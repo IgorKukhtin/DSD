@@ -70,6 +70,15 @@ BEGIN
     vbUserId:= lpGetUserBySession (inSession);
     vbEndDate := inEndDate + interval '1 day';
 
+    -- подразделение пользователя
+    vbUnitId := lpGetUnitByUser(vbUserId);
+
+    -- если у пользователя = 0, тогда может смотреть любой магазин, иначе только свой
+    IF COALESCE (vbUnitId, 0 ) <> 0 AND COALESCE (vbUnitId) <> inUnitId
+    THEN
+        RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав просмотра данных по подразделению <%> .', lfGet_Object_ValueData (vbUserId), lfGet_Object_ValueData (inUnitId);
+    END IF;
+
     -- Результат
     RETURN QUERY
     WITH

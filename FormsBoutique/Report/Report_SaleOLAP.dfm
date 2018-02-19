@@ -117,30 +117,10 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Top = 6
       Caption = #1043#1086#1076' '#1089' ...'
     end
-    object edStartYear: TcxCurrencyEdit
-      Left = 856
-      Top = 5
-      EditValue = 2018.000000000000000000
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = '0'
-      Properties.ReadOnly = True
-      TabOrder = 11
-      Width = 40
-    end
     object cxLabel8: TcxLabel
       Left = 801
       Top = 31
       Caption = #1043#1086#1076' '#1087#1086' ...'
-    end
-    object edEndYear: TcxCurrencyEdit
-      Left = 856
-      Top = 30
-      EditValue = 2018.000000000000000000
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = '0'
-      Properties.ReadOnly = True
-      TabOrder = 13
-      Width = 40
     end
     object cbSize: TcxCheckBox
       Left = 1055
@@ -149,7 +129,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Caption = #1056#1072#1079#1084#1077#1088#1099
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 14
+      TabOrder = 12
       Width = 75
     end
     object cbGoods: TcxCheckBox
@@ -159,7 +139,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Caption = #1058#1086#1074#1072#1088#1099
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 15
+      TabOrder = 13
       Width = 75
     end
     object cxLabel7: TcxLabel
@@ -178,7 +158,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Properties.Nullstring = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
       Properties.ReadOnly = True
       Properties.UseNullString = True
-      TabOrder = 17
+      TabOrder = 15
       Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
       Width = 200
     end
@@ -189,18 +169,18 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Caption = #1062#1077#1085#1072' '#1074#1093'.'
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 18
+      TabOrder = 16
       Width = 70
     end
     object cbYear: TcxCheckBox
-      Left = 900
+      Left = 915
       Top = 30
       Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052' ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052
       ParentShowHint = False
       ShowHint = True
       State = cbsChecked
-      TabOrder = 19
+      TabOrder = 17
       Width = 130
     end
     object cbPeriodAll: TcxCheckBox
@@ -212,7 +192,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Properties.ReadOnly = False
       ShowHint = True
       State = cbsChecked
-      TabOrder = 20
+      TabOrder = 18
       Width = 105
     end
     object cbClient_doc: TcxCheckBox
@@ -222,7 +202,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 21
+      TabOrder = 19
       Width = 85
     end
     object cbOperDate_doc: TcxCheckBox
@@ -232,7 +212,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Caption = #1043#1086#1076' / '#1052#1077#1089#1103#1094
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 22
+      TabOrder = 20
       Width = 100
     end
     object cbDay_doc: TcxCheckBox
@@ -242,18 +222,43 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 23
+      TabOrder = 21
       Width = 100
     end
     object cbDiscount: TcxCheckBox
-      Left = 900
+      Left = 915
       Top = 5
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' % '#1089#1082#1080#1076#1082#1080' ('#1044#1072'/'#1053#1077#1090')'
       Caption = '% '#1057#1082#1080#1076#1082#1080
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 24
+      TabOrder = 22
       Width = 75
+    end
+    object edStartYear: TcxButtonEdit
+      Left = 855
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 23
+      Width = 50
+    end
+    object edEndYear: TcxButtonEdit
+      Left = 855
+      Top = 31
+      TabStop = False
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 24
+      Width = 50
     end
   end
   object cxDBPivotGrid: TcxDBPivotGrid
@@ -771,16 +776,6 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
           'Date')
       end
       item
-        Component = edEndYear
-        Properties.Strings = (
-          'Value')
-      end
-      item
-        Component = edStartYear
-        Properties.Strings = (
-          'Value')
-      end
-      item
         Component = GuidesBrand
         Properties.Strings = (
           'Key'
@@ -1025,7 +1020,6 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
           Name = 'StartYear'
           Value = Null
           Component = edStartYear
-          DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
@@ -1033,7 +1027,6 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
           Name = 'EndYear'
           Value = Null
           Component = edEndYear
-          DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
@@ -1469,5 +1462,43 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       end>
     Left = 457
     Top = 65529
+  end
+  object GuidesStartYear: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edStartYear
+    Key = '0'
+    FormNameParam.Value = 'TPeriodYear_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodYear_ChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'PeriodYear'
+        Value = ''
+        Component = edStartYear
+        MultiSelectSeparator = ','
+      end>
+    Left = 806
+    Top = 74
+  end
+  object GuidesEndYear: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edEndYear
+    Key = '0'
+    FormNameParam.Value = 'TPeriodYear_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodYear_ChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'PeriodYear'
+        Value = ''
+        Component = edEndYear
+        MultiSelectSeparator = ','
+      end>
+    Left = 870
+    Top = 74
   end
 end

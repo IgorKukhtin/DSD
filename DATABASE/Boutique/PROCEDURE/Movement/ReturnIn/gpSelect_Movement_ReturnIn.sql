@@ -1,11 +1,13 @@
 -- Function: gpSelect_Movement_ReturnIn()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ReturnIn(
     IN inStartDate         TDateTime , -- Дата нач. периода
     IN inEndDate           TDateTime , -- Дата оконч. периода
     IN inIsErased          Boolean   , -- показывать удаленные Да/Нет
+    IN inUnitId            Integer   , -- подразделение
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
@@ -17,12 +19,22 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , InsertName TVarChar, InsertDate TDateTime
              )
 AS
-$BODY$
-   DECLARE vbUserId Integer;
+$BODY$ 
+   DECLARE vbUserId      Integer;
+   DECLARE vbUnitId_User Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ReturnIn());
      vbUserId:= lpGetUserBySession (inSession);
+
+     -- подразделение пользователя
+     vbUnitId_User := lpGetUnitByUser(vbUserId);
+
+     -- если у пользователя подразделение = 0, тогда может смотреть любой магазин, иначе только свой
+     IF vbUnitId_User <> 0 AND inUnitId <> vbUnitId_User
+     THEN
+         RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав просмотра данных по подразделению <%> .', lfGet_Object_ValueData (vbUserId), lfGet_Object_ValueData (inUnitId);
+     END IF;
 
      -- Результат
      RETURN QUERY 
@@ -52,14 +64,18 @@ BEGIN
            , Object_Insert.ValueData                     AS InsertName
            , MovementDate_Insert.ValueData               AS InsertDate         
 
-       FROM (SELECT Movement.id
+       FROM (SELECT Movement.*
+                  , MovementLinkObject_To.ObjectId AS ToId
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate 
                                AND Movement.DescId = zc_Movement_ReturnIn()
                                AND Movement.StatusId = tmpStatus.StatusId
-             ) AS tmpMovement
+                  INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                ON MovementLinkObject_To.MovementId = Movement.Id
+                                               AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                               AND (MovementLinkObject_To.ObjectId = inUnitId OR inUnitId = 0)
+             ) AS Movement
 
-            LEFT JOIN Movement ON Movement.id = tmpMovement.id
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementString AS MovementString_Comment 
@@ -87,10 +103,10 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+            /*LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()*/
+            LEFT JOIN Object AS Object_To ON Object_To.Id = Movement.ToId  --MovementLinkObject_To.ObjectId
 
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id
@@ -113,4 +129,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ReturnIn (inStartDate:= '01.01.2015', inEndDate:= '01.02.2015', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_ReturnIn (inStartDate:= '01.01.2015', inEndDate:= '01.02.2015', inIsErased:= FALSE, inUnitId:=0, nSession:= zfCalc_UserAdmin())

@@ -123,26 +123,8 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     Top = 10
     Caption = #1043#1086#1076' '#1089' ...'
   end
-  object edStartYear: TcxCurrencyEdit
-    Left = 230
-    Top = 30
-    EditValue = 0.000000000000000000
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 13
-    Width = 70
-  end
-  object edEndYear: TcxCurrencyEdit
-    Left = 305
-    Top = 30
-    EditValue = 0.000000000000000000
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 14
-    Width = 70
-  end
   object cxLabel8: TcxLabel
-    Left = 305
+    Left = 306
     Top = 10
     Caption = #1043#1086#1076' '#1087#1086' ...'
   end
@@ -153,7 +135,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     Caption = #1056#1072#1079#1084#1077#1088#1099
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 16
+    TabOrder = 14
     Width = 85
   end
   object cbGoods: TcxCheckBox
@@ -163,7 +145,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     Caption = #1058#1086#1074#1072#1088#1099
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 17
+    TabOrder = 15
     Width = 85
   end
   object cbPeriodAll: TcxCheckBox
@@ -174,7 +156,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     ParentShowHint = False
     Properties.ReadOnly = False
     ShowHint = True
-    TabOrder = 18
+    TabOrder = 16
     Width = 105
   end
   object cbYear: TcxCheckBox
@@ -184,7 +166,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     Caption = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 19
+    TabOrder = 17
     Width = 130
   end
   object cxLabel3: TcxLabel
@@ -203,7 +185,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     Properties.Nullstring = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
     Properties.ReadOnly = True
     Properties.UseNullString = True
-    TabOrder = 21
+    TabOrder = 19
     Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
     Width = 350
   end
@@ -214,7 +196,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 22
+    TabOrder = 20
     Width = 100
   end
   object cbOperPrice: TcxCheckBox
@@ -224,7 +206,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     Caption = #1062#1077#1085#1072' '#1074#1093'.'
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 23
+    TabOrder = 21
     Width = 100
   end
   object cbOperDate_doc: TcxCheckBox
@@ -234,7 +216,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     Caption = #1043#1086#1076' / '#1052#1077#1089#1103#1094
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 24
+    TabOrder = 22
     Width = 100
   end
   object cbDay_doc: TcxCheckBox
@@ -244,7 +226,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 25
+    TabOrder = 23
     Width = 100
   end
   object cbDiscount: TcxCheckBox
@@ -254,8 +236,30 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     Caption = '% '#1057#1082#1080#1076#1082#1080
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 26
+    TabOrder = 24
     Width = 75
+  end
+  object edStartYear: TcxButtonEdit
+    Left = 230
+    Top = 30
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 25
+    Width = 69
+  end
+  object edEndYear: TcxButtonEdit
+    Left = 306
+    Top = 30
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 26
+    Width = 69
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -597,5 +601,43 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
       end>
     Left = 209
     Top = 233
+  end
+  object GuidesStartYear: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edStartYear
+    Key = '0'
+    FormNameParam.Value = 'TPeriodYear_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodYear_ChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'PeriodYear'
+        Value = ''
+        Component = edStartYear
+        MultiSelectSeparator = ','
+      end>
+    Left = 298
+    Top = 73
+  end
+  object GuidesEndYear: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edEndYear
+    Key = '0'
+    FormNameParam.Value = 'TPeriodYear_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodYear_ChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'PeriodYear'
+        Value = ''
+        Component = edEndYear
+        MultiSelectSeparator = ','
+      end>
+    Left = 365
+    Top = 67
   end
 end

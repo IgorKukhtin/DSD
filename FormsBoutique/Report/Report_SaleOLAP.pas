@@ -78,9 +78,7 @@ type
     edPeriod: TcxButtonEdit;
     GuidesPeriod: TdsdGuides;
     cxLabel6: TcxLabel;
-    edStartYear: TcxCurrencyEdit;
     cxLabel8: TcxLabel;
-    edEndYear: TcxCurrencyEdit;
     cbSize: TcxCheckBox;
     cbGoods: TcxCheckBox;
     pvCurrencyName: TcxDBPivotGridField;
@@ -114,6 +112,10 @@ type
     pvSale_Summ_prof: TcxDBPivotGridField;
     pvReturn_Summ_prof: TcxDBPivotGridField;
     pvResult_Summ_prof: TcxDBPivotGridField;
+    edStartYear: TcxButtonEdit;
+    GuidesStartYear: TdsdGuides;
+    edEndYear: TcxButtonEdit;
+    GuidesEndYear: TdsdGuides;
   private
   public
   end;

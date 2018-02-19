@@ -33,8 +33,6 @@ type
     edPeriod: TcxButtonEdit;
     GuidesPeriod: TdsdGuides;
     cxLabel5: TcxLabel;
-    edStartYear: TcxCurrencyEdit;
-    edEndYear: TcxCurrencyEdit;
     cxLabel8: TcxLabel;
     cbSize: TcxCheckBox;
     cbGoods: TcxCheckBox;
@@ -48,6 +46,10 @@ type
     cbDay_doc: TcxCheckBox;
     GuidesUnit: TdsdGuides;
     cbDiscount: TcxCheckBox;
+    edStartYear: TcxButtonEdit;
+    GuidesStartYear: TdsdGuides;
+    edEndYear: TcxButtonEdit;
+    GuidesEndYear: TdsdGuides;
   private
     { Private declarations }
   public

@@ -68,11 +68,20 @@ RETURNS TABLE (PartionId            Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbUnitId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_...());
     vbUserId:= lpGetUserBySession (inSession);
 
+    -- подразделение пользователя
+    vbUnitId := lpGetUnitByUser(vbUserId);
+
+     -- если у пользователя = 0, тогда может смотреть любой магазин, иначе только свой
+     IF COALESCE (vbUnitId, 0 ) <> 0 AND COALESCE (vbUnitId) <> inUnitId
+     THEN
+         RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав просмотра данных по подразделению <%> .', lfGet_Object_ValueData (vbUserId), lfGet_Object_ValueData (inUnitId);
+     END IF;
 
     -- таблица подразделений
     CREATE TEMP TABLE _tmpUnit (UnitId Integer) ON COMMIT DROP;
@@ -88,7 +97,6 @@ BEGIN
           SELECT Object_Unit.Id FROM Object AS Object_Unit WHERE Object_Unit.DescId = zc_Object_Unit()
          ;
     END IF;
-
 
     -- Результат
     RETURN QUERY
@@ -118,7 +126,7 @@ BEGIN
                            , Object_PartionGoods.CurrencyId
 
                            , Object_PartionGoods.MovementId
-                           , Object_PartionGoods.OperPrice
+                           , CASE WHEN vbUnitId = 0 THEN Object_PartionGoods.OperPrice ELSE 0 END AS OperPrice
                            , Object_PartionGoods.CountForPrice
                            , Object_PartionGoods.PriceSale  AS OperPriceList
                            , Object_PartionGoods.Amount     AS Amount_in
@@ -377,6 +385,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 19.02.18         *
  22.06.17         *
 */
 

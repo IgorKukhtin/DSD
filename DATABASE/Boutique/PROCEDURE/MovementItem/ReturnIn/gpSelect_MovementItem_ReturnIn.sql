@@ -64,16 +64,14 @@ RETURNS TABLE (Id Integer, PartionId Integer
               )
 AS
 $BODY$
-  DECLARE vbUserId Integer;
-
-  DECLARE vbStatusId Integer;
-  DECLARE vbUnitId   Integer;
-  DECLARE vbClientId Integer;
+  DECLARE vbUserId      Integer;
+  DECLARE vbStatusId    Integer;
+  DECLARE vbUnitId      Integer;
+  DECLARE vbClientId    Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_ReturnIn());
      vbUserId:= lpGetUserBySession (inSession);
-
 
      -- Параметры документа
      SELECT Movement.StatusId                AS StatusId
