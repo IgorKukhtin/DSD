@@ -17,7 +17,7 @@ BEGIN
      vbStartDate:= DATE_TRUNC ('DAY', inOperDate);
      vbEndDate:=   DATE_TRUNC ('DAY', inOperDate) + INTERVAL '1 DAY';
      
-     vbAreaId := COALESCE ((SELECT COALESCE (LoadPriceList.AreaId, 0) FROM LoadPriceList WHERE LoadPriceList.Id = inPriceListId), 0);
+     vbAreaId := 0;--COALESCE ((SELECT COALESCE (LoadPriceList.AreaId, 0) FROM LoadPriceList WHERE LoadPriceList.Id = inPriceListId), 0);
 
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpDataCount'))
      THEN
@@ -28,7 +28,7 @@ BEGIN
      INSERT INTO _tmpDataCount (GoodsId, CountPrice)
             WITH
             -- Получаем регионы для Сетей
-            tmpRetail AS (SELECT DISTINCT ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
+            /*tmpRetail AS (SELECT DISTINCT ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
                                , ObjectLink_Unit_Area.ChildObjectId                 AS AreaId
                           FROM Object AS Object_Unit
                               INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
@@ -47,7 +47,7 @@ BEGIN
                             AND (COALESCE (ObjectLink_Unit_Area.ChildObjectId, 0) = vbAreaId OR vbAreaId = 0)
                           )
           -- товары сети по главному товару, для которых нужно обновить свойство
-          , tmpGoods AS (SELECT DISTINCT ObjectLink_Goods_Object1.ObjectId AS GoodsId -- товар сети
+          , */tmpGoods AS (SELECT DISTINCT ObjectLink_Goods_Object1.ObjectId AS GoodsId -- товар сети
                              -- , tmpRetail.AreaId                           AS AreaId
                               , Object_Retail.Id                           AS RetailId
                          FROM  ObjectLink AS ObjectLink_Main_R  
@@ -62,7 +62,7 @@ BEGIN
                               INNER JOIN Object AS Object_Retail
                                                 ON Object_Retail.Id = ObjectLink_Goods_Object1.ChildObjectId
                                                AND Object_Retail.DescId = zc_Object_Retail()
-                              INNER JOIN tmpRetail ON tmpRetail.RetailId = Object_Retail.Id 
+                             -- INNER JOIN tmpRetail ON tmpRetail.RetailId = Object_Retail.Id 
                          WHERE ObjectLink_Main_R.ChildObjectId = inGoodsId
                            AND ObjectLink_Main_R.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
                          )
@@ -88,8 +88,27 @@ BEGIN
          SELECT tmp.GoodsId, SUM (tmp.CountPrice) AS CountPrice
          FROM (SELECT tmpGoods.GoodsId, tmpCount.CountPrice
                FROM tmpGoods
-                    INNER JOIN tmpRetail ON tmpRetail.RetailId = tmpGoods.RetailId
+                    INNER JOIN (SELECT DISTINCT ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
+                                     , ObjectLink_Unit_Area.ChildObjectId                 AS AreaId
+                                FROM Object AS Object_Unit
+                                    INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                                         ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
+                                                        AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                                    INNER JOIN ObjectLink AS ObjectLink_Unit_Area
+                                                         ON ObjectLink_Unit_Area.ObjectId = Object_Unit.Id 
+                                                        AND ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
+                                                           AND COALESCE ( ObjectLink_Unit_Area.ChildObjectId, 0) <> 0
+                                    INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                         ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                                        AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                                        AND COALESCE (ObjectLink_Juridical_Retail.ChildObjectId, 0) <> 0
+                                WHERE Object_Unit.DescId = zc_Object_Unit()
+                                  AND Object_Unit.isErased = False
+                                  AND (COALESCE (ObjectLink_Unit_Area.ChildObjectId, 0) = vbAreaId OR vbAreaId = 0)
+                                ) AS tmpRetail ON tmpRetail.RetailId = tmpGoods.RetailId
+
                     LEFT JOIN tmpCount ON (tmpCount.AreaId = tmpRetail.AreaId)
+                    
                WHERE COALESCE (tmpCount.AreaId, 0) <> 0
                UNION ALL
                SELECT tmpGoods.GoodsId, tmpCount.CountPrice
