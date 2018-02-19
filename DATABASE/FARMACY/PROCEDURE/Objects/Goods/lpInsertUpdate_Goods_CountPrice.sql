@@ -19,8 +19,13 @@ BEGIN
      
      vbAreaId := COALESCE ((SELECT COALESCE (LoadPriceList.AreaId, 0) FROM LoadPriceList WHERE LoadPriceList.Id = inPriceListId), 0);
 
-     CREATE TEMP TABLE _tmpData (GoodsId Integer, CountPrice  TFloat) ON COMMIT DROP;
-     INSERT INTO _tmpData (GoodsId, CountPrice)
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpDataCount'))
+     THEN
+         DROP TABLE _tmpDataCount;
+     END IF;
+
+     CREATE TEMP TABLE _tmpDataCount (GoodsId Integer, CountPrice  TFloat) ON COMMIT DROP;
+     INSERT INTO _tmpDataCount (GoodsId, CountPrice)
             WITH
             -- ѕолучаем регионы дл€ —етей
             tmpRetail AS (SELECT DISTINCT ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
@@ -95,10 +100,9 @@ BEGIN
          GROUP BY tmp.GoodsId;
    
    -- записываем свойство кол-во прайсов товару сети
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_CountPrice(), _tmpData.GoodsId, COALESCE (_tmpData.CountPrice, 0) + 1)
-   FROM _tmpData;
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_CountPrice(), _tmpDataCount.GoodsId, COALESCE (_tmpDataCount.CountPrice, 0) + 1)
+   FROM _tmpDataCount;
    
-
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
   
@@ -110,3 +114,4 @@ END;$BODY$
 */
 -- тест
 -- SELECT * FROM lpInsertUpdate_Goods_CountPrice
+
