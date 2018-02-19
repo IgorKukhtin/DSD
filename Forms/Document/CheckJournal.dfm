@@ -861,7 +861,7 @@ inherited CheckJournalForm: TCheckJournalForm
       item
         Component = UnitGuides
       end>
-    Left = 296
+    Left = 264
     Top = 24
   end
   object spGet_UserUnit: TdsdStoredProc

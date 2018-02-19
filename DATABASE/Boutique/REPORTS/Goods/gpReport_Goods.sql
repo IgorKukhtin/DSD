@@ -18,16 +18,25 @@ CREATE OR REPLACE FUNCTION gpReport_Goods (
 RETURNS SETOF refcursor
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbIsBranch Boolean;
-   DECLARE Cursor1 refcursor;
-   DECLARE Cursor2 refcursor;
+   DECLARE vbUserId      Integer;
+   DECLARE vbUnitId      Integer;
+   DECLARE vbIsBranch    Boolean;
+   DECLARE Cursor1       refcursor;
+   DECLARE Cursor2       refcursor;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_Goods());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- подразделение пользователя
+     vbUnitId := lpGetUnitByUser(vbUserId);
+
+     -- если у пользователя подразделение = 0, тогда может смотреть любой магазин, иначе только свой
+     IF vbUnitId <> 0 AND inUnitId <> vbUnitId
+     THEN
+         RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав просмотра данных по подразделению <%> .', lfGet_Object_ValueData (vbUserId), lfGet_Object_ValueData (inUnitId);
+     END IF;
 
     -- !!!замена!!!
     inPartionId:= 0;
@@ -432,7 +441,7 @@ BEGIN
            , Object_Currency.ValueData           AS CurrencyName
 
            , Object_PartionGoods.Amount    :: TFLoat AS Amount
-           , Object_PartionGoods.OperPrice :: TFLoat AS OperPrice
+           , CASE WHEN vbUnitId_User <> 0 THEN 0 ELSE Object_PartionGoods.OperPrice END   :: TFLoat AS OperPrice     --  продавцам в магазинах ограничиваем инфу
 
              -- !!!ВРЕМЕННО!!!
            , CASE WHEN COALESCE (Object_PartionGoods.PriceSale, 0) <> COALESCE (tmpPrice.Price, 0)  THEN -1 * CASE WHEN tmpPrice.Price > 0 THEN tmpPrice.Price ELSE Object_PartionGoods.PriceSale END ELSE Object_PartionGoods.PriceSale END :: TFLoat AS OperPriceList
@@ -474,6 +483,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.02.18         *
  26.06.17         *
 */
 

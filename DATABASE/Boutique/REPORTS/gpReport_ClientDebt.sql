@@ -56,8 +56,10 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
 
-     -- определяем магазин по принадлежности пользователя к сотруднику
-     vbUnitId:= lpGetUnitBySession (inSession);
+    -- определяем магазин по принадлежности пользователя к сотруднику
+    --vbUnitId:= lpGetUnitBySession (inSession);
+    -- подразделение пользователя
+    vbUnitId := lpGetUnitByUser(vbUserId);
      
      -- если у пользователя = 0, тогда может смотреть любой магазин, иначе только свой
      IF COALESCE (vbUnitId, 0 ) <> 0 AND COALESCE (vbUnitId) <> inUnitId

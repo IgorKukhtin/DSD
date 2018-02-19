@@ -20,17 +20,21 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
                )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbUnitId Integer;
-   DECLARE vbClientId Integer;
+   DECLARE vbUserId      Integer;
+   DECLARE vbUnitId_User Integer;
+   DECLARE vbUnitId      Integer;
+   DECLARE vbClientId    Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_Movement_ReturnIn());
      vbUserId:= lpGetUserBySession (inSession);
      
      -- определять магазин по принадлежности пользователя к сотруднику
-     vbUnitId:= lpGetUnitBySession (inSession);
+     --vbUnitId:= lpGetUnitBySession (inSession);
      
+     -- подразделение пользователя
+     vbUnitId_User := lpGetUnitByUser(vbUserId);
+
      IF inOperDate < '01.01.2017' THEN inOperDate := CURRENT_DATE; END IF;
      -- пытаемся найти последний непроведенный документ
      IF COALESCE (inMovementId, 0) = 0
@@ -42,7 +46,7 @@ BEGIN
                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                             ON MovementLinkObject_To.MovementId = Movement.Id
                                            AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                           AND MovementLinkObject_To.ObjectId = vbUnitId
+                                           AND MovementLinkObject_To.ObjectId = vbUnitId_User
                                WHERE Movement.DescId   = zc_Movement_ReturnIn()
                                  AND Movement.StatusId = zc_Enum_Status_UnComplete()
                                ) AS tmp
@@ -98,8 +102,14 @@ BEGIN
              
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
-               LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = vbUnitId;
+               LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = vbUnitId_User;
      ELSE
+       -- если у пользователя подразделение = 0, тогда может смотреть любой магазин, иначе только свой
+       IF vbUnitId_User <> 0 AND vbUnitId <> vbUnitId_User
+       THEN
+           RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав просмотра данных по подразделению <%> .', lfGet_Object_ValueData (vbUserId), lfGet_Object_ValueData (inUnitId);
+       END IF;
+     
        RETURN QUERY 
            WITH
            -- выбираю все контейнеры по покупателю и подразделению , если выбрано 
@@ -241,22 +251,10 @@ BEGIN
                                   ON ObjectFloat_DiscountTax.ObjectId = Object_From.Id 
                                  AND ObjectFloat_DiscountTax.DescId = zc_ObjectFloat_Client_DiscountTax()
 
-            /*LEFT JOIN ObjectFloat AS ObjectFloat_TotalSummPay 
-                                  ON ObjectFloat_TotalSummPay.ObjectId = Object_From.Id 
-                                 AND ObjectFloat_TotalSummPay.DescId = zc_ObjectFloat_Client_TotalSummPay()
-
-            LEFT JOIN ObjectFloat AS ObjectFloat_TotalSumm
-                                  ON ObjectFloat_TotalSumm.ObjectId = Object_From.Id
-                                 AND ObjectFloat_TotalSumm.DescId = zc_ObjectFloat_Client_TotalSumm()*/
-
             LEFT JOIN ObjectFloat AS ObjectFloat_TotalSummDiscount
                                   ON ObjectFloat_TotalSummDiscount.ObjectId = Object_From.Id
                                  AND ObjectFloat_TotalSummDiscount.DescId = zc_ObjectFloat_Client_TotalSummDiscount()
                                  
-            /*LEFT JOIN ObjectDate AS ObjectDate_LastDate 
-                                 ON ObjectDate_LastDate.ObjectId = Object_From.Id 
-                                AND ObjectDate_LastDate.DescId = zc_ObjectDate_Client_LastDate()*/
-
             LEFT JOIN ObjectString AS ObjectString_Address 
                                    ON ObjectString_Address.ObjectId = Object_From.Id 
                                   AND ObjectString_Address.DescId = zc_ObjectString_Client_Address()
@@ -283,6 +281,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И. 
+ 19.02.18         *
  12.02.18         *
  15.05.17         *
 */

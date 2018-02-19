@@ -98,6 +98,10 @@ type
     actPrintCheck: TdsdPrintAction;
     bbPrintCheck: TdxBarButton;
     spSelectPrint_Check: TdsdStoredProc;
+    cxLabel3: TcxLabel;
+    ceUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
+    spGet_UserUnit: TdsdStoredProc;
   private
   public
   end;

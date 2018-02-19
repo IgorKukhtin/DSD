@@ -42,16 +42,19 @@ RETURNS TABLE (Id Integer, PartionId Integer
               )
 AS
 $BODY$
-  DECLARE vbUserId Integer;
-
-  DECLARE vbUnitId Integer;
+  DECLARE vbUserId      Integer;
+  DECLARE vbUnitId_User Integer;
+  DECLARE vbUnitId      Integer;
   DECLARE vbPriceListId Integer;
-  DECLARE vbOperDate TDateTime;
+  DECLARE vbOperDate    TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_Sale());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- если у пользователя подразделение = 0, тогда может смотреть вх.цену, сумму, прибыль, иначе нет
+     -- подразделение пользователя
+     vbUnitId_User := lpGetUnitByUser(vbUserId);
 
      -- Параметры документа
      SELECT Movement.OperDate
@@ -105,6 +108,7 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
                                                         ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
                                                        AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
+                                                       AND vbUnitId_User = 0                                          --  продавцам в магазинах ограничиваем инфу
                             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                         ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                                        AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()

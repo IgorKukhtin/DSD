@@ -62,16 +62,19 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
+   
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
 
      -- определяем магазин по принадлежности пользователя к сотруднику
-     vbUnitId:= lpGetUnitBySession (inSession);
-     
+     --vbUnitId:= lpGetUnitBySession (inSession);
+     -- подразделение пользователя
+     vbUnitId := lpGetUnitByUser(vbUserId);
+
      -- если у пользователя = 0, тогда может смотреть любой магазин, иначе только свой
-     IF COALESCE (vbUnitId, 0 ) <> 0 AND COALESCE (vbUnitId) <> inUnitId
+     IF vbUnitId <> 0 AND vbUnitId <> inUnitId
      THEN
          RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав просмотра данных по подразделению <%> .', lfGet_Object_ValueData (vbUserId), lfGet_Object_ValueData (inUnitId);
      END IF;
@@ -139,6 +142,7 @@ BEGIN
                      LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
                                                  ON MIFloat_OperPrice.MovementItemId = MI_Master.Id
                                                 AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
+                                                AND vbUnitId = 0                                             --  продавцам в магазинах ограничиваем инфу
                      LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                  ON MIFloat_OperPriceList.MovementItemId = MI_Master.Id
                                                 AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList() 
@@ -214,7 +218,8 @@ BEGIN
                          LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
                                                      ON MIFloat_OperPrice.MovementItemId = MI_Master.Id
                                                     AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
-                                                    
+                                                    AND vbUnitId = 0                                             --  продавцам в магазинах ограничиваем инфу
+
                          LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                      ON MIFloat_OperPriceList.MovementItemId = MI_Master.Id
                                                     AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList() 
@@ -422,6 +427,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 19.02.18         *
  04.07.17         *
 */
 

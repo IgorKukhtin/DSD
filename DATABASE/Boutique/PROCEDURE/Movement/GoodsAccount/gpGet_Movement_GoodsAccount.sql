@@ -20,17 +20,21 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
                )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbUnitId Integer;
-   DECLARE vbClientId Integer;
+   DECLARE vbUserId      Integer;
+   DECLARE vbUnitId_User Integer;
+   DECLARE vbUnitId      Integer;
+   DECLARE vbClientId    Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_Movement_GoodsAccount());
      vbUserId:= lpGetUserBySession (inSession);
 
      -- определять магазин по принадлежности пользователя к сотруднику
-     vbUnitId:= lpGetUnitBySession (inSession);
-     
+     --vbUnitId:= lpGetUnitBySession (inSession);
+
+     -- подразделение пользователя
+     vbUnitId_User := lpGetUnitByUser(vbUserId);
+          
      IF inOperDate < '01.01.2017' THEN inOperDate := CURRENT_DATE; END IF;
      -- пытаемся найти последний непроведенный документ
      IF COALESCE (inMovementId, 0) = 0
@@ -42,7 +46,7 @@ BEGIN
                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                             ON MovementLinkObject_To.MovementId = Movement.Id
                                            AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                           AND MovementLinkObject_To.ObjectId = vbUnitId
+                                           AND MovementLinkObject_To.ObjectId = vbUnitId_User
                                WHERE Movement.DescId   = zc_Movement_GoodsAccount()
                                  AND Movement.StatusId = zc_Enum_Status_UnComplete()
                                ) AS tmp
@@ -97,8 +101,14 @@ BEGIN
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
-               LEFT JOIN Object AS Object_Unit   ON Object_Unit.Id   = vbUnitId;
+               LEFT JOIN Object AS Object_Unit   ON Object_Unit.Id   = vbUnitId_User;
      ELSE
+       -- если у пользователя подразделение = 0, тогда может смотреть любой магазин, иначе только свой
+       IF vbUnitId_User <> 0 AND vbUnitId <> vbUnitId_User
+       THEN
+           RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав просмотра данных по подразделению <%> .', lfGet_Object_ValueData (vbUserId), lfGet_Object_ValueData (inUnitId);
+       END IF;
+
        RETURN QUERY 
        WITH
            -- выбираю все контейнеры по покупателю и подразделению , если выбрано 
@@ -265,6 +275,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И. 
+ 19.02.18         * 
  14.07.17         * add To
  18.05.17         *
 */
