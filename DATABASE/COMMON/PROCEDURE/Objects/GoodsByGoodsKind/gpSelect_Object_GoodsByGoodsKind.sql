@@ -15,7 +15,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , MeasureName TVarChar
              , Weight TFloat
-             , WeightPackage TFloat, WeightTotal TFloat, ChangePercentAmount TFloat
+             , WeightPackage TFloat, WeightPackageSticker TFloat
+             , WeightTotal TFloat, ChangePercentAmount TFloat
              , isOrder Boolean, isScaleCeh Boolean, isNotMobile Boolean
              , GoodsSubId Integer, GoodsSubCode Integer, GoodsSubName TVarChar, MeasureSubName TVarChar
              , GoodsKindSubId Integer, GoodsKindSubName TVarChar 
@@ -38,7 +39,7 @@ BEGIN
            , Object_GoodsByGoodsKind_View.GoodsKindId
            , Object_GoodsByGoodsKind_View.GoodsKindName
            
-           , Object_GoodsGroup.ValueData AS GoodsGroupName 
+           , Object_GoodsGroup.ValueData     AS GoodsGroupName 
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
            , Object_GoodsGroupAnalyst.ValueData AS GoodsGroupAnalystName
@@ -53,11 +54,12 @@ BEGIN
 
            , Object_Measure.ValueData        AS MeasureName
 
-           , ObjectFloat_Weight.ValueData AS Weight
+           , ObjectFloat_Weight.ValueData    AS Weight
 
-           , COALESCE (ObjectFloat_WeightPackage.ValueData,0)::TFloat  AS WeightPackage
-           , COALESCE (ObjectFloat_WeightTotal.ValueData,0)  ::TFloat  AS WeightTotal
-           , COALESCE (ObjectFloat_ChangePercentAmount.ValueData,0)  ::TFloat  AS ChangePercentAmount
+           , COALESCE (ObjectFloat_WeightPackage.ValueData,0)       ::TFloat  AS WeightPackage
+           , COALESCE (ObjectFloat_WeightPackageSticker.ValueData,0)::TFloat  AS WeightPackageSticker
+           , COALESCE (ObjectFloat_WeightTotal.ValueData,0)         ::TFloat  AS WeightTotal
+           , COALESCE (ObjectFloat_ChangePercentAmount.ValueData,0) ::TFloat  AS ChangePercentAmount
            , COALESCE (ObjectBoolean_Order.ValueData, False)           AS isOrder
            , COALESCE (ObjectBoolean_ScaleCeh.ValueData, False)        AS isScaleCeh
            , COALESCE (ObjectBoolean_NotMobile.ValueData, False)       AS isNotMobile
@@ -84,6 +86,10 @@ BEGIN
            LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage
                                  ON ObjectFloat_WeightPackage.ObjectId = Object_GoodsByGoodsKind_View.Id 
                                 AND ObjectFloat_WeightPackage.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightPackage()
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackageSticker
+                                 ON ObjectFloat_WeightPackageSticker.ObjectId = Object_GoodsByGoodsKind_View.Id 
+                                AND ObjectFloat_WeightPackageSticker.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightPackageSticker()
 
            LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
                                  ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id 
@@ -196,7 +202,8 @@ ALTER FUNCTION gpSelect_Object_GoodsByGoodsKind (TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-              Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    
+              Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  
+ 18.02.18        * add WeightPackageSticker  
  21.12.17        * add GoodsSPack, GoodsKindPack
  09.06.17        * add NotMobile
  22.02.17        * add ChangePercentAmount
