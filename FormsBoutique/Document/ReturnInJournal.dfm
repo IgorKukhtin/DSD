@@ -54,6 +54,26 @@ object ReturnInJournalForm: TReturnInJournalForm
       Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
+    object cxLabel3: TcxLabel
+      Left = 465
+      Top = 6
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+    end
+    object ceUnit: TcxButtonEdit
+      Left = 555
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.Nullstring = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
+      Properties.ReadOnly = True
+      Properties.UseNullString = True
+      TabOrder = 5
+      Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
+      Width = 288
+    end
   end
   object cxGrid: TcxGrid
     Left = 0
@@ -974,10 +994,10 @@ object ReturnInJournalForm: TReturnInJournalForm
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelect
+      StoredProc = spGet_UserUnit
       StoredProcList = <
         item
-          StoredProc = spSelect
+          StoredProc = spGet_UserUnit
         end
         item
           StoredProc = spSelect
@@ -1017,6 +1037,14 @@ object ReturnInJournalForm: TReturnInJournalForm
         Value = Null
         Component = actShowErased
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1157,6 +1185,7 @@ object ReturnInJournalForm: TReturnInJournalForm
         Component = PeriodChoice
       end
       item
+        Component = GuidesUnit
       end>
     Left = 448
     Top = 56
@@ -1255,5 +1284,56 @@ object ReturnInJournalForm: TReturnInJournalForm
     PackSize = 1
     Left = 624
     Top = 240
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceUnit
+    FormNameParam.Value = 'TUnitForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnitForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 664
+    Top = 8
+  end
+  object spGet_UserUnit: TdsdStoredProc
+    StoredProcName = 'gpGet_UserUnit'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'UnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 752
+    Top = 177
   end
 end
