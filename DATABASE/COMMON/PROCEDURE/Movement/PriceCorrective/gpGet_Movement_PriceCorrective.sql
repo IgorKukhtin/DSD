@@ -44,10 +44,10 @@ BEGIN
              , CAST (0 as TFloat)                       AS TotalCount
              , CAST (0 as TFloat)                       AS TotalSummMVAT
              , CAST (0 as TFloat)                       AS TotalSummPVAT
-             
+
              , CAST ('' as TVarChar) 	                AS InvNumberPartner
              , CAST ('' as TVarChar) 	                AS InvNumberMark
-             
+
              , 0                     	                AS FromId
              , CAST ('' as TVarChar) 	                AS FromName
              , 0                                        AS ToId
@@ -69,6 +69,15 @@ BEGIN
      ELSE
 
      RETURN QUERY
+       WITH tmpMovementTax AS (SELECT Movement.*
+                                    , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
+                               FROM Movement
+                                    LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                                             ON MovementString_InvNumberPartner.MovementId = Movement.Id
+                                                            AND MovementString_InvNumberPartner.DescId     = zc_MovementString_InvNumberPartner()
+                               WHERE Movement.Id = (SELECT DISTINCT Movement.ParentId FROM Movement WHERE Movement.Id = inMovementId)
+                              )
+       -- Результат
        SELECT
              Movement.Id
            , Movement.InvNumber
@@ -79,24 +88,24 @@ BEGIN
            , Object_Status.ValueData         	    AS StatusName
 
            , Movement.ParentId                      AS MovementId_Tax
-           , (zfConvert_StringToNumber (MovementString_InvNumberPartner_Tax.ValueData) || ' от ' || Movement_Parent.OperDate :: Date :: TVarChar ) :: TVarChar AS InvNumber_Tax
+           , (zfConvert_StringToNumber (Movement_Parent.InvNumberPartner) || ' от ' || Movement_Parent.OperDate :: Date :: TVarChar ) :: TVarChar AS InvNumber_Tax
 
            , MovementBoolean_PriceWithVAT.ValueData AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData     AS VATPercent
-        
+
            , MovementFloat_TotalCount.ValueData     AS TotalCount
            , MovementFloat_TotalSummMVAT.ValueData  AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData  AS TotalSummPVAT
 
            , COALESCE(MovementString_InvNumberPartner.ValueData, CAST ('' as TVarChar)) AS InvNumberPartner
            , COALESCE(MovementString_InvNumberMark.ValueData, CAST ('' as TVarChar))    AS InvNumberMark
-             
+
            , Object_From.Id                    	    AS FromId
            , Object_From.ValueData             	    AS FromName
            , Object_To.Id                      	    AS ToId
            , Object_To.ValueData               	    AS ToName
            , Object_Partner.Id                     	AS PartnerId
-           , Object_Partner.ValueData              	AS PartnerName      
+           , Object_Partner.ValueData              	AS PartnerName
            , Object_PaidKind.Id                	    AS PaidKindId
            , Object_PaidKind.ValueData         	    AS PaidKindName
            , View_Contract_InvNumber.ContractId     AS ContractId
@@ -108,7 +117,7 @@ BEGIN
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-            
+
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
@@ -128,16 +137,16 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
                                     ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
-                                   
+
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
-            
+
             LEFT JOIN MovementString AS MovementString_InvNumberMark
                                      ON MovementString_InvNumberMark.MovementId =  Movement.Id
                                     AND MovementString_InvNumberMark.DescId = zc_MovementString_InvNumberMark()
 
-            LEFT JOIN MovementString AS MovementString_Comment 
+            LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
@@ -154,7 +163,7 @@ BEGIN
                                          ON MovementLinkObject_Partner.MovementId = Movement.Id
                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
-            
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
@@ -171,14 +180,14 @@ BEGIN
                                         AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
 
             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
--- Налоговая накладная
-            LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.id = Movement.ParentId
-            LEFT JOIN MovementString AS MovementString_InvNumberPartner_Tax
-                                     ON MovementString_InvNumberPartner_Tax.MovementId = Movement_Parent.Id
-                                    AND MovementString_InvNumberPartner_Tax.DescId = zc_MovementString_InvNumberPartner()
-                                    
+
+            -- Налоговая
+            LEFT JOIN tmpMovementTax AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
+
        WHERE Movement.Id =  inMovementId
-         AND Movement.DescId = zc_Movement_PriceCorrective();
+         AND Movement.DescId = zc_Movement_PriceCorrective()
+       ;
+
      END IF;
 
 END;
@@ -189,11 +198,11 @@ ALTER FUNCTION gpGet_Movement_PriceCorrective (Integer, TDateTime, TVarChar) OWN
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.     Манько Д.А.
- 17.06.14         * add inInvNumberPartner 
-                      , inInvNumberMark  
- 29.05.14         * 
+ 17.06.14         * add inInvNumberPartner
+                      , inInvNumberMark
+ 29.05.14         *
 
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_PriceCorrective (inMovementId:= 0, inOperDate := '25.05.2014', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Movement_PriceCorrective (inMovementId:= 8491746, inOperDate := '25.05.2014', inSession:= zfCalc_UserAdmin())

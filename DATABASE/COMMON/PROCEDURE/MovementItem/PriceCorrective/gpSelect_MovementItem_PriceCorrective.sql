@@ -1,9 +1,11 @@
 -- Function: gpSelect_MovementItem_PriceCorrective()
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_PriceCorrective (Integer, TDateTime, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_PriceCorrective (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PriceCorrective(
     IN inMovementId  Integer      , -- ключ Документа
+    IN inMovementId_Parent  Integer      , -- ключ Документа
     IN inOperDate    TDateTime    , -- Дата документа
     IN inShowAll     Boolean      , --
     IN inisErased    Boolean      , --
@@ -18,15 +20,18 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
 AS
 $BODY$
   DECLARE vbUserId Integer;
-  DECLARE vbMovementId_Parent Integer;
+  DECLARE vbShowAll Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- 
+     vbShowAll:= inShowAll;
+
      -- находим ...
-     vbMovementId_parent:= (SELECT COALESCE (Movement.ParentId, 0) FROM Movement WHERE Movement.Id = inMovementId);
+     inMovementId_Parent:= (SELECT COALESCE (Movement.ParentId, 0) FROM Movement WHERE Movement.Id = inMovementId);
      -- меняется параметр
-     IF inShowAll = TRUE AND vbMovementId_parent > 0
+     IF inShowAll = TRUE AND inMovementId_Parent > 0
      THEN
          inShowAll:= FALSE;
      ELSE
@@ -190,7 +195,7 @@ BEGIN
                              LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                        WHERE MovementItem.MovementId = vbMovementId_Parent
+                        WHERE MovementItem.MovementId = inMovementId_Parent
                           AND MovementItem.DescId     = zc_MI_Master()
                           AND MovementItem.isErased   = FALSE
                         GROUP BY MovementItem.ObjectId
@@ -200,19 +205,19 @@ BEGIN
 
      , tmpMI_Parent_find AS (SELECT tmp.MovementItemId
                                   , tmpMI_parent.GoodsId
-                                  , tmpMI_parent.Amount
+                                  -- , tmpMI_parent.Amount
                                   , tmpMI_parent.GoodsKindId
                                   , tmpMI_parent.Price
                              FROM tmpMI_Parent
                                   LEFT JOIN (SELECT MAX (tmpMI.MovementItemId) AS MovementItemId, tmpMI.GoodsId, tmpMI.GoodsKindId, tmpMI.Price FROM tmpMI WHERE tmpMI.isErased = FALSE GROUP BY tmpMI.GoodsId, tmpMI.GoodsKindId, tmpMI.Price
                                             ) AS tmp ON tmp.GoodsId     = tmpMI_parent.GoodsId
                                                     AND tmp.GoodsKindId = tmpMI_parent.GoodsKindId
-                                                    --AND tmp.Price       = tmpMI_parent.Price
+                                                    AND tmp.Price       = tmpMI_parent.Price
                             )
 
      , tmpResult AS (SELECT tmpMI.MovementItemId
                           , COALESCE (tmpMI.GoodsId, tmpMI_Parent_find.GoodsId)         AS GoodsId
-                          , CASE WHEN tmpMI.Amount <> 0 THEN tmpMI.Amount ELSE tmpMI_Parent_find.Amount END AS Amount
+                          , CASE WHEN tmpMI.Amount <> 0 THEN tmpMI.Amount ELSE 0 /*tmpMI_Parent_find.Amount*/ END AS Amount
                           , COALESCE (tmpMI.GoodsKindId, tmpMI_Parent_find.GoodsKindId) AS GoodsKindId
                           , COALESCE (tmpMI.Price, tmpMI_Parent_find.Price)             AS Price
                           , COALESCE (tmpMI.CountForPrice, 1)                           AS CountForPrice
@@ -247,7 +252,7 @@ BEGIN
             
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpResult.GoodsId
-                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                                AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpResult.GoodsKindId
@@ -255,7 +260,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-            ;
+       WHERE vbShowAll = TRUE OR tmpResult.MovementItemId > 0
+           ;
+
      END IF;
 
 END;
@@ -271,5 +278,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_PriceCorrective (inMovementId:= 25173, inOperDate:='01.01.2014'::TDateTime, inShowAll:= TRUE, inisErased:= TRUE, inSession:= '2')
--- select * from gpSelect_MovementItem_PriceCorrective(inMovementId := 5277597 , inOperDate := ('31.01.2017')::TDateTime , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '5');
+-- SELECT * FROM gpSelect_MovementItem_PriceCorrective (inMovementId:= 8491746, inMovementId_Parent:= 8322508, inOperDate:= '31.01.2017', inShowAll:= TRUE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());

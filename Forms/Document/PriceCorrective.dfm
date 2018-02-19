@@ -3,7 +3,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
   ClientHeight = 542
   ClientWidth = 1042
   ExplicitWidth = 1058
-  ExplicitHeight = 580
+  ExplicitHeight = 577
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -163,6 +163,9 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -761,6 +764,18 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         end>
       RefreshOnTabSetChanges = True
     end
+    inherited actInsertUpdateMovement: TdsdExecStoredProc
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spGet
+        end>
+    end
     object actUpdateTaxCorrectiveDS: TdsdUpdateDataSet [8]
       Category = 'DSDLib'
       MoveParams = <>
@@ -1257,6 +1272,14 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Parent'
+        Value = Null
+        Component = GuidesDocumentTax
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1874,6 +1897,9 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       end
       item
         Guides = GuidesTo
+      end
+      item
+        Guides = GuidesDocumentTax
       end>
     Left = 160
     Top = 192
@@ -2093,9 +2119,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     IdParam.Value = Null
     IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefreshPrice
-    ComponentList = <
-      item
-      end>
+    ComponentList = <>
     Left = 448
     Top = 320
   end
