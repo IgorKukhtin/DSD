@@ -937,6 +937,8 @@ type
     N192: TMenuItem;
     actEDI_Send: TdsdOpenForm;
     miEDI_Send: TMenuItem;
+    actGoodsByGoodsKind_Sticker: TdsdOpenForm;
+    N2: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

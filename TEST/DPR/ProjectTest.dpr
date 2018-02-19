@@ -998,7 +998,8 @@ uses
   Sticker_List in '..\..\Forms\Guides\Sticker_List.pas' {Sticker_ListForm: TParentForm},
   ProductionSeparateStorageLine in '..\..\Forms\Document\ProductionSeparateStorageLine.pas' {ProductionSeparateStorageLineForm: TParentForm},
   Report_Transport_ProfitLoss in '..\..\Forms\Report\Report_Transport_ProfitLoss.pas' {Report_Transport_ProfitLossForm: TParentForm},
-  EDI_SendJournal in '..\..\Forms\EDI\EDI_SendJournal.pas' {EDI_SendJournalForm: TParentForm};
+  EDI_SendJournal in '..\..\Forms\EDI\EDI_SendJournal.pas' {EDI_SendJournalForm: TParentForm},
+  GoodsByGoodsKind_Sticker in '..\..\Forms\Guides\GoodsByGoodsKind_Sticker.pas' {GoodsByGoodsKind_StickerForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
