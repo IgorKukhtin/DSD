@@ -2,8 +2,9 @@ inherited GoodsByGoodsKind_ScaleCehForm: TGoodsByGoodsKind_ScaleCehForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1058#1086#1074#1072#1088' '#1080' '#1042#1080#1076' '#1090#1086#1074#1072#1088#1072'> (ScaleCeh)'
   ClientHeight = 420
   ClientWidth = 1030
+  ExplicitLeft = -257
   ExplicitWidth = 1046
-  ExplicitHeight = 458
+  ExplicitHeight = 455
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -150,7 +151,7 @@ inherited GoodsByGoodsKind_ScaleCehForm: TGoodsByGoodsKind_ScaleCehForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1077#1089' '#1087#1072#1082#1077#1090#1072' '#1076#1083#1103' '#1059#1055#1040#1050#1054#1042#1050#1048
+            HeaderHint = #1042#1077#1089' 1-'#1086#1075#1086' '#1087#1072#1082#1077#1090#1072' '#1076#1083#1103' '#1059#1055#1040#1050#1054#1042#1050#1048
             Options.Editing = False
             Width = 50
           end
@@ -163,7 +164,7 @@ inherited GoodsByGoodsKind_ScaleCehForm: TGoodsByGoodsKind_ScaleCehForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1077#1089' '#1087#1072#1082#1077#1090#1072' '#1076#1083#1103' '#1087#1077#1095'. '#1069#1058#1048#1050#1045#1058#1050#1048
+            HeaderHint = #1042#1077#1089' 1-'#1086#1075#1086' '#1087#1072#1082#1077#1090#1072' '#1076#1083#1103' '#1087#1077#1095'. '#1069#1058#1048#1050#1045#1058#1050#1048
             Options.Editing = False
             Width = 54
           end
