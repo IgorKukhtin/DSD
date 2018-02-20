@@ -69,7 +69,8 @@ WITH
                               AND tmpContract.PartnerMedical_JuridicalId = ObjectLink_PartnerMedical_Juridical.ChildObjectId 
                               AND tmpContract.Contract_JuridicalBasisId = MovementLinkObject_Juridical.ObjectId
                               AND COALESCE (tmpContract.Contract_GroupMemberSPId,0) = CASE WHEN COALESCE(MovementFloat_SP.ValueData,0) = 1 THEN 4515699  -- соц.проект
-                                                                                           WHEN COALESCE(MovementFloat_SP.ValueData,0) = 2 THEN 0
+                                                                                           /*WHEN COALESCE(MovementFloat_SP.ValueData,0) = 2 THEN 0*/
+                                                                                           else 0
                                                                                       END
                               --выбираем дог. согласно датам , по дате нач.периода отчета
                               --AND tmpContract.StartDate_Contract <= MovementDate_OperDateStart.ValueData AND tmpContract.EndDate_Contract >= MovementDate_OperDateStart.ValueData 
