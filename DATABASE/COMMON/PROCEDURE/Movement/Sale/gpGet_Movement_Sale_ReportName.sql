@@ -16,17 +16,45 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Sale());
 
-       SELECT
-            CASE -- !!!захардкодил для Contract - JuridicalInvoice!!!
-                 WHEN ObjectLink_Contract_JuridicalInvoice.ChildObjectId > 0
-                      THEN 'PrintMovement_SaleJuridicalInvoice'
-                 -- !!!захардкодил временно для Запорожье!!!
-                 WHEN MovementLinkObject_From.ObjectId IN (301309) -- Склад ГП ф.Запорожье
-                  AND MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm()
-                      THEN PrintForms_View_Default.PrintFormName
-                 ELSE COALESCE (PrintForms_View.PrintFormName, PrintForms_View_Default.PrintFormName)
-            END
-            INTO vbPrintFormName
+     vbPrintFormName:=
+      (WITH tmpPack AS (SELECT SUM (CASE WHEN (MovementItem.Amount <> 0 OR MIFloat_AmountPartner.ValueData <> 0) THEN 1 ELSE 0 END) AS Ord1
+                             , SUM (CASE WHEN (MovementItem.Amount <> 0 OR MIFloat_AmountPartner.ValueData <> 0)
+                                          AND ObjectLink_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_10202() -- Прочее сырье + Оболочка
+                                                                                   , zc_Enum_InfoMoney_10203() -- Прочее сырье + Упаковка
+                                                                                   , zc_Enum_InfoMoney_10204() -- Прочее сырье + Прочее сырье
+                                                                                   , zc_Enum_InfoMoney_20501() -- Общефирменные + "Оборотная тара"
+                                                                                   , zc_Enum_InfoMoney_20601() -- Общефирменные + "Прочие материалы"
+                                                                                    )
+                                         THEN 1
+                                         ELSE 0
+                                    END) AS Ord2
+                        FROM MovementItem
+                             LEFT JOIN ObjectLink AS ObjectLink_InfoMoney
+                                                  ON ObjectLink_InfoMoney.ObjectId = MovementItem.ObjectId
+                                                 AND ObjectLink_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                         ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
+                        WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
+                       )
+       -- Результат
+       SELECT CASE -- !!!захардкодил для Contract - JuridicalInvoice!!!
+                   WHEN ObjectLink_Contract_JuridicalInvoice.ChildObjectId > 0
+                        THEN 'PrintMovement_SaleJuridicalInvoice'
+
+                   -- !!!захардкодил для Гофротары!!!
+                   WHEN EXISTS (SELECT 1 FROM tmpPack WHERE tmpPack.Ord1 = tmpPack.Ord2)
+                    AND Movement.DescId <> zc_Movement_Loss()
+                        THEN 'PrintMovement_SalePackWeight'
+
+                   -- !!!захардкодил временно для Запорожье!!!
+                   WHEN MovementLinkObject_From.ObjectId IN (301309) -- Склад ГП ф.Запорожье
+                    AND MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm()
+                        THEN PrintForms_View_Default.PrintFormName
+
+                   ELSE COALESCE (PrintForms_View.PrintFormName, PrintForms_View_Default.PrintFormName)
+              END AS PrintFormName
+
        FROM Movement
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -62,8 +90,10 @@ BEGIN
      --             AND PrintForms_View_Default.DescId = zc_Movement_Sale()
 
 
-       WHERE Movement.Id =  inMovementId;
---         AND Movement.DescId = zc_Movement_Sale();
+       WHERE Movement.Id =  inMovementId
+--         AND Movement.DescId = zc_Movement_Sale()
+       LIMIT 1
+      );
 
      RETURN (vbPrintFormName);
 

@@ -430,7 +430,7 @@ BEGIN
            -- вес 1-ого пакета
            LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage
                                  ON ObjectFloat_WeightPackage.ObjectId = Object_GoodsByGoodsKind_View.Id
-                                AND ObjectFloat_WeightPackage.DescId   = zc_ObjectFloat_GoodsByGoodsKind_WeightPackage()
+                                AND ObjectFloat_WeightPackage.DescId   = zc_ObjectFloat_GoodsByGoodsKind_WeightPackageSticker()
            -- вес в упаковке: "чистый" вес + вес 1-ого пакета
            LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
                                  ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
