@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 723
   KeyPreview = True
   ExplicitWidth = 739
-  ExplicitHeight = 226
+  ExplicitHeight = 223
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -96,7 +96,24 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TGoodsAccountForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = 0
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 43101d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
       isShowModal = False
     end
     object actReturnInMovement: TdsdOpenForm [8]
@@ -108,7 +125,24 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReturnInForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = 0
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 43101d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
       isShowModal = False
     end
     object actSaleMovement: TdsdOpenForm [9]
@@ -120,7 +154,24 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TSaleForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = 0
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 43101d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
       isShowModal = False
     end
     object actReport_MotionByClient: TdsdOpenForm [10]

@@ -1,4 +1,4 @@
- -- Function: gpInsertUpdate_Object_Goods_Retail()
+  -- Function: gpInsertUpdate_Object_Goods_Retail()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Goods_CountPrice (Integer, TDateTime, Integer);
 

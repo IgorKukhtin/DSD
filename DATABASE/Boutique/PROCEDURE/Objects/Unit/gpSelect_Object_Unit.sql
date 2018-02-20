@@ -123,9 +123,13 @@ BEGIN
                                 AND ObjectLink_Unit_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()
             LEFT JOIN Object AS Object_AccountDirection ON Object_AccountDirection.Id = ObjectLink_Unit_AccountDirection.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_User_Unit
+                                 ON ObjectLink_User_Unit.ObjectId = vbUserId
+                                AND ObjectLink_User_Unit.DescId   = zc_ObjectLink_User_Unit()
+
      WHERE Object_Unit.DescId = zc_Object_Unit()
        AND (Object_Unit.isErased = FALSE OR inIsShowAll = TRUE)
-
+       -- AND (Object_Unit.Id = ObjectLink_User_Unit.ChildObjectId OR ObjectLink_User_Unit.ChildObjectId IS NULL)
     ;
 
 END;

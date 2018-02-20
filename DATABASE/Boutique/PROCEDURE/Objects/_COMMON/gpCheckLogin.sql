@@ -49,7 +49,7 @@ BEGIN
     ELSE
 
         -- Проверка - Подразделение НЕ может стать "пустым"
-        IF vbUnitId_user > 0 AND COALESCE (vbUnitId, 0) = 0
+        IF vbUnitId_user > 0 AND COALESCE (vbUnitId, 0) = 0 AND vbUserId <> zfCalc_UserAdmin() :: Integer
         THEN
             RAISE EXCEPTION 'Ошибка.Логин был выполнен без указания Магазина.Необходимо запустить приложение для Магазина <%>. ', lfGet_Object_ValueData_sh (vbUnitId);
         END IF;

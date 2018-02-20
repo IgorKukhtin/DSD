@@ -31,8 +31,10 @@ $BODY$
 
     DECLARE vbPriceWithVAT Boolean;
     DECLARE vbVATPercent TFloat;
-    DECLARE vbNotNDSPayer_INN TVarChar;
- 
+
+    DECLARE vbNotNDSPayer_INN  TVarChar;
+    DECLARE vbCalcNDSPayer_INN TVarChar;
+
    DECLARE vbUserSign TVarChar;
    DECLARE vbUserSeal TVarChar;
    DECLARE vbUserKey  TVarChar;
@@ -44,6 +46,38 @@ BEGIN
 
      -- !!!хардкод!!!
      vbNotNDSPayer_INN := '100000000000';
+     -- !!!хардкод!!!
+     vbCalcNDSPayer_INN:= (SELECT CASE WHEN Movement.OperDate BETWEEN '01.08.2017' AND '01.01.2018'
+                                        AND OH_JuridicalDetails_To.INN IN ('416995514032'
+                                                                         , '2642315140')
+                                        AND MovementString_InvNumberPartner.ValueData IN ('13015'
+                                                                                         ,'13016'
+                                                                                         ,'8190'
+                                                                                         ,'8185'
+                                                                                         ,'8183'
+                                                                                         ,'4787'
+                                                                                         ,'11995'
+                                                                                         ,'11994'
+                                                                                         ,'11993'
+                                                                                         ,'12959'
+                                                                                         ,'12957'
+                                                                                         ,'14513'
+                                                                                         ,'14514'
+                                                                                         )
+                                  THEN vbNotNDSPayer_INN ELSE '' END
+                           FROM Movement
+                                LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                                         ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                                        AND MovementString_InvNumberPartner.DescId     = zc_MovementString_InvNumberPartner()
+                                LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                             ON MovementLinkObject_To.MovementId = Movement.Id
+                                                            AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
+                                                                                    ON OH_JuridicalDetails_To.JuridicalId = MovementLinkObject_To.ObjectId
+                                                                                   AND Movement.OperDate >= OH_JuridicalDetails_To.StartDate AND Movement.OperDate < OH_JuridicalDetails_To.EndDate
+                           WHERE Movement.Id = inMovementId
+                          );
+
 
      -- определяется
      SELECT CASE WHEN ObjectString_UserSign.ValueData <> '' THEN ObjectString_UserSign.ValueData ELSE 'Ключ - Неграш О.В..ZS2'                                                   END AS UserSign
@@ -52,13 +86,13 @@ BEGIN
             INTO vbUserSign, vbUserSeal, vbUserKey
      FROM Object AS Object_User
           LEFT JOIN ObjectString AS ObjectString_UserSign
-                                 ON ObjectString_UserSign.DescId = zc_ObjectString_User_Sign() 
+                                 ON ObjectString_UserSign.DescId = zc_ObjectString_User_Sign()
                                 AND ObjectString_UserSign.ObjectId = Object_User.Id
           LEFT JOIN ObjectString AS ObjectString_UserSeal
-                                 ON ObjectString_UserSeal.DescId = zc_ObjectString_User_Seal() 
+                                 ON ObjectString_UserSeal.DescId = zc_ObjectString_User_Seal()
                                 AND ObjectString_UserSeal.ObjectId = Object_User.Id
-          LEFT JOIN ObjectString AS ObjectString_UserKey 
-                                 ON ObjectString_UserKey.DescId = zc_ObjectString_User_Key() 
+          LEFT JOIN ObjectString AS ObjectString_UserKey
+                                 ON ObjectString_UserKey.DescId = zc_ObjectString_User_Key()
                                 AND ObjectString_UserKey.ObjectId = Object_User.Id
      WHERE Object_User.Id = vbUserId;
 
@@ -77,7 +111,7 @@ BEGIN
 
           , CASE WHEN MovementDate_DateRegistered.ValueData > Movement_Tax.OperDate THEN MovementDate_DateRegistered.ValueData ELSE Movement_Tax.OperDate END AS OperDate_begin
           , COALESCE (ObjectBoolean_isLongUKTZED.ValueData, TRUE)    AS isLongUKTZED
-          
+
             INTO vbMovementId_Tax, vbStatusId_Tax, vbDocumentTaxKindId, vbPriceWithVAT, vbVATPercent, vbCurrencyPartnerId, vbGoodsPropertyId, vbGoodsPropertyId_basis
                , vbOperDate_begin, vbIsLongUKTZED
      FROM (SELECT CASE WHEN Movement.DescId = zc_Movement_Tax()
@@ -119,7 +153,7 @@ BEGIN
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
 
           LEFT JOIN ObjectBoolean AS ObjectBoolean_isLongUKTZED
-                                  ON ObjectBoolean_isLongUKTZED.ObjectId = MovementLinkObject_To.ObjectId 
+                                  ON ObjectBoolean_isLongUKTZED.ObjectId = MovementLinkObject_To.ObjectId
                                  AND ObjectBoolean_isLongUKTZED.DescId = zc_ObjectBoolean_Juridical_isLongUKTZED()
 
           /*LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
@@ -176,19 +210,19 @@ BEGIN
                   ELSE 'J1201009'
              END ::TVarChar AS CHARCODE
            -- , 'Неграш О.В.'::TVarChar                    AS N10
-           , CASE WHEN Object_PersonalSigning.PersonalName <> '' 
+           , CASE WHEN Object_PersonalSigning.PersonalName <> ''
                   THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1, FALSE)
-                  ELSE CASE WHEN Object_PersonalBookkeeper_View.PersonalName <> '' 
+                  ELSE CASE WHEN Object_PersonalBookkeeper_View.PersonalName <> ''
                             THEN zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1, FALSE)
-                            ELSE 'Рудик Н.В.' 
-                       END 
+                            ELSE 'Рудик Н.В.'
+                       END
              END                            :: TVarChar AS N10
-           , CASE WHEN Object_PersonalSigning.PersonalName <> '' 
+           , CASE WHEN Object_PersonalSigning.PersonalName <> ''
                   THEN UPPER (zfConvert_FIO (Object_PersonalSigning.PersonalName, 1, TRUE))
-                  ELSE CASE WHEN Object_PersonalBookkeeper_View.PersonalName <> '' 
+                  ELSE CASE WHEN Object_PersonalBookkeeper_View.PersonalName <> ''
                             THEN UPPER (zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1, TRUE))
                             ELSE UPPER ('Н. В. Рудик' )
-                       END 
+                       END
              END                            :: TVarChar AS N10_ifin
            , 'оплата з поточного рахунка'::TVarChar     AS N9
 /*
@@ -224,16 +258,20 @@ BEGIN
 
            --, OH_JuridicalDetails_To.FullName            AS JuridicalName_To
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+                    OR vbCalcNDSPayer_INN <> ''
                   THEN 'Неплатник'
-             ELSE OH_JuridicalDetails_To.FullName END   AS JuridicalName_To
-           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
-                  THEN ''
-             ELSE OH_JuridicalDetails_To.JuridicalAddress END AS JuridicalAddress_To
+                  ELSE OH_JuridicalDetails_To.FullName
+             END AS JuridicalName_To
 
+           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+                    OR vbCalcNDSPayer_INN <> ''
+                  THEN ''
+                  ELSE OH_JuridicalDetails_To.JuridicalAddress
+             END AS JuridicalAddress_To
 
 --           , OH_JuridicalDetails_To.JuridicalAddress    AS JuridicalAddress_To
            , OH_JuridicalDetails_To.OKPO                AS OKPO_To
-           , OH_JuridicalDetails_To.INN                 AS INN_To
+           , CASE WHEN vbCalcNDSPayer_INN <> '' THEN vbCalcNDSPayer_INN ELSE OH_JuridicalDetails_To.INN END AS INN_To
            , OH_JuridicalDetails_To.NumberVAT           AS NumberVAT_To
            , OH_JuridicalDetails_To.AccounterName       AS AccounterName_To
            , OH_JuridicalDetails_To.BankAccount         AS BankAccount_To
@@ -243,6 +281,7 @@ BEGIN
            , OH_JuridicalDetails_To.InvNumberBranch     AS InvNumberBranch_To
 
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+                    OR vbCalcNDSPayer_INN <> ''
                   THEN ''
              ELSE OH_JuridicalDetails_To.Phone END      AS Phone_To
 
@@ -266,18 +305,18 @@ BEGIN
            , (REPEAT ('0', 10 - LENGTH (OH_JuridicalDetails_From.OKPO)) ||  OH_JuridicalDetails_From.OKPO) :: TVarChar AS OKPO_From_ifin
            , OH_JuridicalDetails_From.INN               AS INN_From
            , OH_JuridicalDetails_From.NumberVAT         AS NumberVAT_From
-           , CASE WHEN Object_PersonalSigning.PersonalName <> '' 
+           , CASE WHEN Object_PersonalSigning.PersonalName <> ''
                   THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1, FALSE)
-                  ELSE CASE WHEN Object_PersonalBookkeeper_View.PersonalName <> '' 
+                  ELSE CASE WHEN Object_PersonalBookkeeper_View.PersonalName <> ''
                             THEN zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1, FALSE)
-                            ELSE 'Рудик Н.В.' 
+                            ELSE 'Рудик Н.В.'
                        END
               END                           :: TVarChar AS AccounterName_From
-           , CASE WHEN Object_PersonalSigning.PersonalName <> '' 
+           , CASE WHEN Object_PersonalSigning.PersonalName <> ''
                   THEN PersonalSigning_INN.ValueData
-                  ELSE CASE WHEN Object_PersonalBookkeeper_View.PersonalName <> '' 
+                  ELSE CASE WHEN Object_PersonalBookkeeper_View.PersonalName <> ''
                             THEN PersonalBookkeeper_INN.ValueData
-                            ELSE '2649713447' 
+                            ELSE '2649713447'
                        END
              END                            :: TVarChar AS AccounterINN_From
            , OH_JuridicalDetails_From.BankAccount       AS BankAccount_From
@@ -300,22 +339,26 @@ BEGIN
              -- Не підлягає наданню отримувачу (покупцю)
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
                     OR vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
+                    OR vbCalcNDSPayer_INN <> ''
                   THEN 'X' ELSE '' END                  AS NotNDSPayer
 
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
                     OR vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
+                    OR vbCalcNDSPayer_INN <> ''
                   THEN TRUE ELSE FALSE END :: Boolean   AS isNotNDSPayer
 
              -- 1 - (зазначається відповідний тип причини)
            , CASE WHEN vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
                        THEN '0'
                   WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+                    OR vbCalcNDSPayer_INN <> ''
                        THEN '0'
              END AS NotNDSPayerC1
              -- 2 - (зазначається відповідний тип причини)
            , CASE WHEN vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
                        THEN '7'
                   WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+                    OR vbCalcNDSPayer_INN <> ''
                        THEN '2'
              END AS NotNDSPayerC2
 
@@ -349,7 +392,7 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_Amount
                                     ON MovementFloat_Amount.MovementId =  MovementLinkMovement_Sale.MovementChildId
                                    AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
- 
+
             LEFT JOIN Movement AS Movement_EDI ON Movement_EDI.Id =  MovementLinkMovement_Sale.MovementChildId
 
             LEFT JOIN MovementDate AS MovementDate_COMDOC
@@ -392,7 +435,7 @@ BEGIN
             LEFT JOIN Object_Personal_View AS Object_PersonalBookkeeper_View ON Object_PersonalBookkeeper_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId
 
             LEFT JOIN ObjectString AS PersonalBookkeeper_INN
-                                   ON PersonalBookkeeper_INN.ObjectId = Object_PersonalBookkeeper_View.MemberId 
+                                   ON PersonalBookkeeper_INN.ObjectId = Object_PersonalBookkeeper_View.MemberId
                                   AND PersonalBookkeeper_INN.DescId = zc_ObjectString_Member_INN()
 
 
@@ -456,15 +499,15 @@ BEGIN
                                 AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
                                 AND View_Contract.InvNumber <> '-'
             -- ставка 0 таможня
-           
+
 
             LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalSigning
                                  ON ObjectLink_Contract_PersonalSigning.ObjectId = View_Contract.ContractId
                                 AND ObjectLink_Contract_PersonalSigning.DescId = zc_ObjectLink_Contract_PersonalSigning()
-            LEFT JOIN Object_Personal_View AS Object_PersonalSigning ON Object_PersonalSigning.PersonalId = ObjectLink_Contract_PersonalSigning.ChildObjectId   
+            LEFT JOIN Object_Personal_View AS Object_PersonalSigning ON Object_PersonalSigning.PersonalId = ObjectLink_Contract_PersonalSigning.ChildObjectId
 
             LEFT JOIN ObjectString AS PersonalSigning_INN
-                                   ON PersonalSigning_INN.ObjectId = Object_PersonalSigning.MemberId 
+                                   ON PersonalSigning_INN.ObjectId = Object_PersonalSigning.MemberId
                                   AND PersonalSigning_INN.DescId = zc_ObjectString_Member_INN()
             -- ставка 0 таможня
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Vat
@@ -740,7 +783,7 @@ BEGIN
 
             LEFT JOIN Movement ON Movement.Id = tmpMI.MovementId
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             -- LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
@@ -879,7 +922,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 /*
 
 по законодательству, все налоговые документы, которые ВЫГРУЖАЮТСЯ в Медок  и регистрируются с 01.04 - должны быть в новой форме.
-С 01.04 мы также будем продолжать регистрировать и документы марта. Все сводные 100%. 
+С 01.04 мы также будем продолжать регистрировать и документы марта. Все сводные 100%.
 Форма действует на на документы с датой с 01.04, а не регистрацию всех документов с 01.04
 
 1) п.1.Если в сводной нн этого месяца нет №пп этой позиции, значит она отгружалась в предыдущих месяцах.
@@ -900,4 +943,4 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Tax_Print (inMovementId:= 171760, inisClientCopy:= FALSE ,inSession:= zfCalc_UserAdmin()); FETCH ALL "<unnamed portal 1>";
+-- SELECT * FROM gpSelect_Movement_Tax_Print (inMovementId:= 171760, inisClientCopy:= FALSE ,inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 1>";
