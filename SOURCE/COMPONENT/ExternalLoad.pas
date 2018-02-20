@@ -643,12 +643,12 @@ begin
         FExternalLoad.Next;
       end;
 
-      with TStringList.Create do
+      {with TStringList.Create do
       begin
         Text := JSONArray.ToString;
         SaveToFile('price.json');
         Free;
-      end;
+      end;}
 
       if FImportSettings.JSONParamName <> '' then
       begin
@@ -715,7 +715,7 @@ var i: integer;
     else if TryStrToInt(AValue, intValue) then
       JSONObject.AddPair(cParamName, TJSONNumber.Create(intValue))
     else
-      JSONObject.AddPair(cParamName, String(AValue));
+      JSONObject.AddPair(cParamName, ReplaceText(String(AValue), '\', '\\'));
   end;
 
 begin
