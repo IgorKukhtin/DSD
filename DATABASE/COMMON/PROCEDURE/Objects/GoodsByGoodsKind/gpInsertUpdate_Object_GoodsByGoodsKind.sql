@@ -3,19 +3,21 @@
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind(
- INOUT ioId                  Integer  , -- ключ объекта <Товар>
-    IN inGoodsId             Integer  , -- Товары
-    IN inGoodsKindId         Integer  , -- Виды товаров
-    IN inGoodsSubId          Integer  , -- Товары
-    IN inGoodsKindSubId      Integer  , -- Виды товаров
-    IN inGoodsPackId         Integer  , -- Главный Товар в планировании прихода с упаковки
-    IN inGoodsKindPackId     Integer  , -- Главный Вид в планировании прихода с упаковки
-    IN inReceiptId           Integer  , -- Рецептуры
-    IN inWeightPackage       TFloat   , -- вес пакета
-    IN inWeightTotal         TFloat   , -- вес в упаковки  
-    IN inChangePercentAmount TFloat   , -- % скидки для кол-ва
+ INOUT ioId                   Integer  , -- ключ объекта <Товар>
+    IN inGoodsId              Integer  , -- Товары
+    IN inGoodsKindId          Integer  , -- Виды товаров
+    IN inGoodsSubId           Integer  , -- Товары
+    IN inGoodsKindSubId       Integer  , -- Виды товаров
+    IN inGoodsPackId          Integer  , -- Главный Товар в планировании прихода с упаковки
+    IN inGoodsKindPackId      Integer  , -- Главный Вид в планировании прихода с упаковки
+    IN inReceiptId            Integer  , -- Рецептуры
+    IN inWeightPackage        TFloat   , -- вес пакета
+    IN inWeightPackageSticker TFloat   , -- вес 1-ого пакета
+    IN inWeightTotal          TFloat   , -- вес в упаковки  
+    IN inChangePercentAmount  TFloat   , -- % скидки для кол-ва
    -- IN inIsOrder             Boolean  , -- используется в заявках
 
     IN inSession             TVarChar 
@@ -91,6 +93,8 @@ BEGIN
 
    -- сохранили свойство <вес пакета>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_WeightPackage(), ioId, inWeightPackage);
+   -- сохранили свойство <вес 1-ого пакета>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_WeightPackageSticker(), ioId, inWeightPackageSticker);
    -- сохранили свойство <вес в упаковки>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_WeightTotal(), ioId, inWeightTotal); 
    -- сохранили свойство <вес в упаковки>                                                                                                                              
@@ -110,6 +114,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  
+ 20.02.18         * inWeightPackageSticker 
  21.12.17         * 
  22.02.17         * ChangePercentAmount
  27.10.16         * Receipt

@@ -2,7 +2,6 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1058#1086#1074#1072#1088' '#1080' '#1042#1080#1076' '#1090#1086#1074#1072#1088#1072'>'
   ClientHeight = 420
   ClientWidth = 1030
-  ExplicitLeft = -50
   ExplicitWidth = 1046
   ExplicitHeight = 458
   PixelsPerInch = 96
@@ -154,7 +153,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Width = 54
           end
           object WeightPackageSticker: TcxGridDBColumn
-            Caption = #1042#1077#1089' 1-'#1086#1075#1086' '#1087#1072#1082#1077#1090#1072
+            Caption = #1042#1077#1089' '#1087#1072#1082'. '#1076#1083#1103' '#1069#1058'.'
             DataBinding.FieldName = 'WeightPackageSticker'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -162,7 +161,6 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1077#1089' '#1087#1072#1082#1077#1090#1072' '#1076#1083#1103' '#1087#1077#1095'. '#1069#1058#1048#1050#1045#1058#1050#1048
-            Options.Editing = False
             Width = 54
           end
           object WeightTotal: TcxGridDBColumn
@@ -867,6 +865,15 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'WeightPackage'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeightPackageSticker'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightPackageSticker'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
