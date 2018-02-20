@@ -14,7 +14,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                StartRow Integer, HDR Boolean, 
                Directory TVarChar, Query TBlob, 
                isErased boolean, 
-               ProcedureName TVarChar) AS
+               ProcedureName TVarChar,
+               JSONParamName TVarChar) AS
 $BODY$
 BEGIN
 
@@ -46,6 +47,7 @@ BEGIN
            
            , Object_ImportSettings_View.isErased
            , Object_ImportSettings_View.ProcedureName
+           , Object_ImportSettings_View.JSONParamName
            
        FROM Object_ImportSettings_View WHERE Object_ImportSettings_View.Id = inId;
   
@@ -58,7 +60,8 @@ ALTER FUNCTION gpGet_Object_ImportSettings(Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Подмогильный В.В.
+ 09.02.18                                                           * 
  04.09.14                        *
  02.07.14         *
 

@@ -45,6 +45,10 @@ WITH
         LEFT JOIN MovementDate AS MovementDate_OperDateStart
                                ON MovementDate_OperDateStart.MovementId = Movement.Id
                               AND MovementDate_OperDateStart.DescId = zc_MovementDate_OperDateStart()
+        LEFT JOIN MovementDate AS MovementDate_OperDateEnd
+                               ON MovementDate_OperDateEnd.MovementId = Movement.Id
+                              AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
+
         LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                      ON MovementLinkObject_Juridical.MovementId = Movement.Id
                                     AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
@@ -65,11 +69,21 @@ WITH
                               AND tmpContract.PartnerMedical_JuridicalId = ObjectLink_PartnerMedical_Juridical.ChildObjectId 
                               AND tmpContract.Contract_JuridicalBasisId = MovementLinkObject_Juridical.ObjectId
                               AND COALESCE (tmpContract.Contract_GroupMemberSPId,0) = CASE WHEN COALESCE(MovementFloat_SP.ValueData,0) = 1 THEN 4515699  -- соц.проект
-                                                                                           WHEN COALESCE(MovementFloat_SP.ValueData,0) = 2 THEN 0
+                                                                                           /*WHEN COALESCE(MovementFloat_SP.ValueData,0) = 2 THEN 0*/
+                                                                                           else 0
                                                                                       END
                               --выбираем дог. согласно датам , по дате нач.периода отчета
-                              AND tmpContract.StartDate_Contract <= MovementDate_OperDateStart.ValueData AND tmpContract.EndDate_Contract >= MovementDate_OperDateStart.ValueData  
+                              --AND tmpContract.StartDate_Contract <= MovementDate_OperDateStart.ValueData AND tmpContract.EndDate_Contract >= MovementDate_OperDateStart.ValueData 
+                              AND tmpContract.StartDate_Contract <= MovementDate_OperDateEnd.ValueData AND tmpContract.EndDate_Contract >= MovementDate_OperDateEnd.ValueData 
             
     WHERE Movement.StatusId <> zc_Enum_Status_Erased()
                            AND Movement.DescId = zc_Movement_Invoice()
                            AND Movement.OperDate < '01.01.2018'
+
+--эти 5 счетов остаются без договора 
+/*select * from Movement where id in (5298386,
+5307916,
+5298802,
+5298804,
+5298803
+)*/

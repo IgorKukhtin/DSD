@@ -5,25 +5,28 @@ inherited ImportSettingsForm: TImportSettingsForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 1200
-  ExplicitHeight = 374
+  ExplicitHeight = 377
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1184
-    Height = 313
+    Height = 311
+    ExplicitTop = 28
     ExplicitWidth = 1184
-    ExplicitHeight = 313
-    ClientRectBottom = 313
-    ClientRectRight = 1184
+    ExplicitHeight = 311
+    ClientRectBottom = 307
+    ClientRectRight = 1180
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1184
-      ExplicitHeight = 313
+      ExplicitLeft = 4
+      ExplicitTop = 4
+      ExplicitWidth = 1176
+      ExplicitHeight = 303
       inherited cxGrid: TcxGrid
         Width = 697
-        Height = 313
+        Height = 303
         Align = alLeft
         ExplicitWidth = 697
-        ExplicitHeight = 313
+        ExplicitHeight = 303
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Inserting = True
           Styles.Content = nil
@@ -36,14 +39,12 @@ inherited ImportSettingsForm: TImportSettingsForm
             DataBinding.FieldName = 'Code'
             Visible = False
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 34
           end
           object clName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 97
           end
           object clDirectory: TcxGridDBColumn
@@ -57,7 +58,6 @@ inherited ImportSettingsForm: TImportSettingsForm
                 Kind = bkEllipsis
               end>
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 84
           end
           object clJuridicalName: TcxGridDBColumn
@@ -72,7 +72,6 @@ inherited ImportSettingsForm: TImportSettingsForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 67
           end
           object clContractName: TcxGridDBColumn
@@ -87,7 +86,6 @@ inherited ImportSettingsForm: TImportSettingsForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 61
           end
           object clFileTypeName: TcxGridDBColumn
@@ -101,7 +99,6 @@ inherited ImportSettingsForm: TImportSettingsForm
                 Kind = bkEllipsis
               end>
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 90
           end
           object clImportTypeName: TcxGridDBColumn
@@ -116,14 +113,12 @@ inherited ImportSettingsForm: TImportSettingsForm
               end>
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 56
           end
           object clStartRow: TcxGridDBColumn
             Caption = #8470' '#1089#1090#1088#1086#1082#1080' '#1076#1083#1103' Excel'
             DataBinding.FieldName = 'StartRow'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 71
           end
           object clQuery: TcxGridDBColumn
@@ -132,13 +127,11 @@ inherited ImportSettingsForm: TImportSettingsForm
             PropertiesClassName = 'TcxBlobEditProperties'
             Properties.BlobPaintStyle = bpsText
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 58
           end
           object clHDR: TcxGridDBColumn
             DataBinding.FieldName = 'HDR'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 46
           end
           object clStartTime: TcxGridDBColumn
@@ -148,7 +141,6 @@ inherited ImportSettingsForm: TImportSettingsForm
             Properties.TimeFormat = tfHourMin
             Properties.UseLeftAlignmentOnEditing = False
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1088#1077#1084#1103' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1090#1080#1074#1085#1086#1081' '#1087#1088#1086#1074#1077#1088#1082#1080
             Width = 77
           end
@@ -158,7 +150,6 @@ inherited ImportSettingsForm: TImportSettingsForm
             PropertiesClassName = 'TcxTimeEditProperties'
             Properties.TimeFormat = tfHourMin
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1088#1077#1084#1103' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1090#1080#1074#1085#1086#1081' '#1087#1088#1086#1074#1077#1088#1082#1080
             Width = 83
           end
@@ -168,7 +159,6 @@ inherited ImportSettingsForm: TImportSettingsForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             HeaderHint = #1057' '#1082#1072#1082#1086#1081' '#1087#1077#1088#1080#1086#1076#1080#1095#1085#1086#1089#1090#1100#1102' '#1087#1088#1086#1074#1077#1088#1103#1090#1100' '#1087#1086#1095#1090#1091' '#1074' '#1072#1082#1090#1080#1074#1085#1086#1084' '#1087#1077#1088#1080#1086#1076#1077', '#1084#1080#1085
             Width = 99
           end
@@ -184,14 +174,12 @@ inherited ImportSettingsForm: TImportSettingsForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object clContactPersonMail: TcxGridDBColumn
             Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1095#1090#1072
             DataBinding.FieldName = 'ContactPersonMail'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
@@ -207,14 +195,12 @@ inherited ImportSettingsForm: TImportSettingsForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object clEmailKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1087#1086#1095#1090#1099
             DataBinding.FieldName = 'EmailKindName'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
           end
@@ -222,7 +208,6 @@ inherited ImportSettingsForm: TImportSettingsForm
             Caption = #1047#1072#1075#1088#1091#1078#1072#1090#1100' '#1055#1088#1072#1081#1089' > 1 '#1088#1072#1079#1072
             DataBinding.FieldName = 'isMultiLoad'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object clisErased: TcxGridDBColumn
@@ -230,7 +215,6 @@ inherited ImportSettingsForm: TImportSettingsForm
             DataBinding.FieldName = 'isErased'
             Visible = False
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 53
           end
         end
@@ -238,8 +222,8 @@ inherited ImportSettingsForm: TImportSettingsForm
       object cxGrid1: TcxGrid
         Left = 700
         Top = 0
-        Width = 484
-        Height = 313
+        Width = 476
+        Height = 303
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
@@ -308,6 +292,10 @@ inherited ImportSettingsForm: TImportSettingsForm
             Options.Editing = False
             Width = 48
           end
+          object colConvertFormatInExcel: TcxGridDBColumn
+            Caption = #1050#1086#1085#1074#1077#1088#1090#1080#1088#1086#1074#1072#1090#1100' '#1092#1086#1088#1084#1072#1090' '#1074' Excel'
+            DataBinding.FieldName = 'ConvertFormatInExcel'
+          end
         end
         object cxGridLevel1: TcxGridLevel
           GridView = cxGridDBTableView1
@@ -317,7 +305,7 @@ inherited ImportSettingsForm: TImportSettingsForm
         Left = 697
         Top = 0
         Width = 3
-        Height = 313
+        Height = 303
         AutoPosition = False
         Control = cxGrid
       end
@@ -718,7 +706,7 @@ inherited ImportSettingsForm: TImportSettingsForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1043,6 +1031,14 @@ inherited ImportSettingsForm: TImportSettingsForm
         Component = ChildCDS
         ComponentItem = 'DefaultValue'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inConvertFormatInExcel'
+        Component = ChildCDS
+        ComponentItem = 'ConvertFormatInExcel'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

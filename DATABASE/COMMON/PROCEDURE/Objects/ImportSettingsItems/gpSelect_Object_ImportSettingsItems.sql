@@ -14,7 +14,8 @@ RETURNS TABLE (Id Integer, ParamValue TVarChar, DefaultValue TVarChar,
                ParamType TVarChar,
                ParamNumber Integer,
                UserParamName TVarChar,
-               isErased boolean) AS
+               isErased boolean,
+               ConvertFormatInExcel Boolean) AS
 $BODY$
 BEGIN
 
@@ -32,7 +33,8 @@ BEGIN
        Object_ImportTypeItems_View.ParamType,
        Object_ImportTypeItems_View.ParamNumber,
        Object_ImportTypeItems_View.UserParamName,
-       Object_ImportSettingsItems_View.isErased
+       Object_ImportSettingsItems_View.isErased,
+       Object_ImportSettingsItems_View.ConvertFormatInExcel
 
 FROM Object_ImportSettings_View
    LEFT JOIN Object_ImportTypeItems_View ON Object_ImportTypeItems_View.ImportTypeId = Object_ImportSettings_View.ImportTypeId
@@ -49,7 +51,8 @@ ALTER FUNCTION gpSelect_Object_ImportSettingsItems(Integer, TVarChar) OWNER TO p
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Подмогильный В.В.
+ 09.02.18                                                           * 
  10.09.14                         *
  03.07.14         *
 

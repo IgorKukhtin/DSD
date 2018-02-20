@@ -75,6 +75,7 @@ type
     clEmailKindName: TcxGridDBColumn;
     EmailChoiceForm: TOpenChoiceForm;
     isMultiLoad: TcxGridDBColumn;
+    colConvertFormatInExcel: TcxGridDBColumn;
   private
     { Private declarations }
   public
