@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ImportType(
     IN inCode                    Integer   ,    -- Код объекта <>
     IN inName                    TVarChar  ,    -- Название объекта <>
     IN inProcedureName           TVarChar  ,    --  
+    IN inJSONParamName           TVarChar  ,    -- название параметра JSON 
     IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS Integer AS
@@ -34,18 +35,22 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ImportType_ProcedureName(), ioId, inProcedureName);
    
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ImportType_JSONParamName(), ioId, inJSONParamName);
+   
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_ImportType (Integer, Integer, TVarChar, TVarChar, tvarchar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_ImportType (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Подмогильный В.В.
+ 09.02.18                                                           *               
  02.07.14         * 
 
 */

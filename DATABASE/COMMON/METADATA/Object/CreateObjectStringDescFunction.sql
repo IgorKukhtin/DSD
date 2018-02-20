@@ -706,9 +706,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Fiscal_InvNumber() RETURNS Integer AS
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Fiscal_InvNumber', zc_Object_Fiscal(), 'номер фискальный' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Fiscal_InvNumber');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_ImportType_JSONParamName() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ImportType_JSONParamName'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_ImportType_JSONParamName', zc_Object_ImportType(), 'Имя процедуры' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ImportType_JSONParamName');
+  
+  
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.
+ 09.02.18                                                                                       * zc_ObjectString_ImportType_JSONParamName               
  27.12.17         * zc_ObjectString_Fiscal_InvNumber
                     zc_ObjectString_Fiscal_SerialNumber
  13.12.17         * zc_ObjectString_PromoCode_Comment

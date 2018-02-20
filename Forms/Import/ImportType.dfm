@@ -5,25 +5,28 @@ inherited ImportTypeForm: TImportTypeForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 955
-  ExplicitHeight = 374
+  ExplicitHeight = 377
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 939
-    Height = 313
+    Height = 311
+    ExplicitTop = 28
     ExplicitWidth = 939
-    ExplicitHeight = 313
-    ClientRectBottom = 313
-    ClientRectRight = 939
+    ExplicitHeight = 311
+    ClientRectBottom = 307
+    ClientRectRight = 935
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 939
-      ExplicitHeight = 313
+      ExplicitLeft = 4
+      ExplicitTop = 4
+      ExplicitWidth = 931
+      ExplicitHeight = 303
       inherited cxGrid: TcxGrid
         Width = 465
-        Height = 313
+        Height = 303
         Align = alLeft
         ExplicitWidth = 465
-        ExplicitHeight = 313
+        ExplicitHeight = 303
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -40,21 +43,18 @@ inherited ImportTypeForm: TImportTypeForm
             DataBinding.FieldName = 'Code'
             Visible = False
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 34
           end
           object clName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 113
           end
           object clProcedureName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1088#1086#1094#1077#1076#1091#1088#1099' '#1080#1084#1087#1086#1088#1090#1072
             DataBinding.FieldName = 'ProcedureName'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 124
           end
           object clEnumName: TcxGridDBColumn
@@ -67,7 +67,6 @@ inherited ImportTypeForm: TImportTypeForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object clisErased: TcxGridDBColumn
@@ -75,17 +74,21 @@ inherited ImportTypeForm: TImportTypeForm
             DataBinding.FieldName = 'isErased'
             Visible = False
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 52
+          end
+          object clJSONParamName: TcxGridDBColumn
+            Caption = #1048#1084#1103' JSON '#1087#1072#1088#1072#1084#1077#1090#1088#1072
+            DataBinding.FieldName = 'JSONParamName'
+            Width = 83
           end
         end
       end
       object cxGrid1: TcxGrid
         Left = 468
         Top = 0
-        Width = 471
-        Height = 313
+        Width = 463
+        Height = 303
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
@@ -112,19 +115,16 @@ inherited ImportTypeForm: TImportTypeForm
           object clNumber: TcxGridDBColumn
             Caption = #8470' '#1087#1087
             DataBinding.FieldName = 'ParamNumber'
-            HeaderAlignmentVert = vaCenter
             Width = 55
           end
           object clIName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1072#1088#1072#1084#1077#1090#1088#1072
             DataBinding.FieldName = 'Name'
-            HeaderAlignmentVert = vaCenter
             Width = 115
           end
           object clUserParamName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
             DataBinding.FieldName = 'UserParamName'
-            HeaderAlignmentVert = vaCenter
             Width = 107
           end
           object clParamType: TcxGridDBColumn
@@ -137,14 +137,12 @@ inherited ImportTypeForm: TImportTypeForm
               'ftFloat'
               'ftInteger'
               'ftString')
-            HeaderAlignmentVert = vaCenter
             Width = 124
           end
           object clIisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             Visible = False
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 56
           end
@@ -157,7 +155,7 @@ inherited ImportTypeForm: TImportTypeForm
         Left = 465
         Top = 0
         Width = 3
-        Height = 313
+        Height = 303
         Control = cxGrid
       end
     end
@@ -331,7 +329,7 @@ inherited ImportTypeForm: TImportTypeForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -452,6 +450,14 @@ inherited ImportTypeForm: TImportTypeForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ProcedureName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJSONParamName'
+        Component = MasterCDS
+        ComponentItem = 'JSONParamName'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
