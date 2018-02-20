@@ -155,7 +155,7 @@ inherited GoodsByGoodsKind_ScaleCehForm: TGoodsByGoodsKind_ScaleCehForm
             Width = 50
           end
           object WeightPackageSticker: TcxGridDBColumn
-            Caption = #1042#1077#1089' 1-'#1086#1075#1086' '#1087#1072#1082#1077#1090#1072
+            Caption = #1042#1077#1089' '#1087#1072#1082'. '#1076#1083#1103' '#1069#1058'.'
             DataBinding.FieldName = 'WeightPackageSticker'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
