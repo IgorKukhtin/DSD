@@ -21,19 +21,10 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbUnitId_User Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
      vbUserId:= lpGetUserBySession (inSession);
-     -- подразделение пользователя
-     vbUnitId_User := lpGetUnitByUser(vbUserId);
-
-     -- если у пользователя подразделение = 0, тогда может смотреть любой магазин, иначе только свой
-     IF vbUnitId_User <> 0 AND inUnitId <> vbUnitId_User
-     THEN
-         RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав просмотра данных по подразделению <%> .', lfGet_Object_ValueData (vbUserId), lfGet_Object_ValueData (inUnitId);
-     END IF;
           
      -- Результат
      RETURN QUERY 
