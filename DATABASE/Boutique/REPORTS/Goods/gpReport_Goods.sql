@@ -31,9 +31,11 @@ BEGIN
 
      -- подразделение пользователя
      vbUnitId := lpGetUnitByUser(vbUserId);
+     
+     
 
      -- если у пользователя подразделение = 0, тогда может смотреть любой магазин, иначе только свой
-     IF vbUnitId <> 0 AND inUnitId <> vbUnitId
+     IF (vbUnitId <> 0 AND vbUnitId <> inUnitId AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Child() AND OL.ChildObjectid = inUnitId AND OL.Objectid = vbUnitId) )
      THEN
          RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав просмотра данных по подразделению <%> .', lfGet_Object_ValueData (vbUserId), lfGet_Object_ValueData (inUnitId);
      END IF;
@@ -441,7 +443,7 @@ BEGIN
            , Object_Currency.ValueData           AS CurrencyName
 
            , Object_PartionGoods.Amount    :: TFLoat AS Amount
-           , CASE WHEN vbUnitId_User <> 0 THEN 0 ELSE Object_PartionGoods.OperPrice END   :: TFLoat AS OperPrice     --  продавцам в магазинах ограничиваем инфу
+           , CASE WHEN vbUnitId <> 0 THEN 0 ELSE Object_PartionGoods.OperPrice END   :: TFLoat AS OperPrice     --  продавцам в магазинах ограничиваем инфу
 
              -- !!!ВРЕМЕННО!!!
            , CASE WHEN COALESCE (Object_PartionGoods.PriceSale, 0) <> COALESCE (tmpPrice.Price, 0)  THEN -1 * CASE WHEN tmpPrice.Price > 0 THEN tmpPrice.Price ELSE Object_PartionGoods.PriceSale END ELSE Object_PartionGoods.PriceSale END :: TFLoat AS OperPriceList

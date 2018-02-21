@@ -62,7 +62,7 @@ BEGIN
     vbUnitId := lpGetUnitByUser(vbUserId);
      
      -- если у пользователя = 0, тогда может смотреть любой магазин, иначе только свой
-     IF COALESCE (vbUnitId, 0 ) <> 0 AND COALESCE (vbUnitId) <> inUnitId
+     IF COALESCE (vbUnitId, 0 ) <> 0 AND COALESCE (vbUnitId) <> inUnitId AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Child() AND OL.ChildObjectid = inUnitId AND OL.Objectid = vbUnitId)
      THEN
          RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав просмотра данных по подразделению <%> .', lfGet_Object_ValueData (vbUserId), lfGet_Object_ValueData (inUnitId);
      END IF;
@@ -84,7 +84,7 @@ BEGIN
                                 , CLO_PartionMI.ObjectId                                                                     AS PartionMI_Id
                                 , SUM (CASE WHEN Container.DescId = zc_Container_count() THEN Container.Amount ELSE 0 END )  AS Amount
                                 , SUM (CASE WHEN Container.DescId = zc_Container_Summ() AND Container.ObjectId <> zc_Enum_Account_20102() THEN Container.Amount ELSE 0 END ) AS AmountSum
-                                , SUM (CASE WHEN Container.DescId = zc_Container_Summ() AND Container.ObjectId =  zc_Enum_Account_20102() THEN Container.Amount ELSE 0 END ) AS AmountSum_profit
+                                , SUM (CASE WHEN Container.DescId = zc_Container_Summ() AND Container.ObjectId =  zc_Enum_Account_20102() AND vbUnitId = 0 THEN Container.Amount ELSE 0 END ) AS AmountSum_profit    --  vbUnitId = 0 продавцам в магазинах ограничиваем инфу
                            FROM Container
                                 INNER JOIN ContainerLinkObject AS CLO_Client
                                                                ON CLO_Client.ContainerId = Container.Id
@@ -251,6 +251,7 @@ BEGIN
              , tmpData.CountDebt                ::TFloat
              , tmpData.SummDebt                 ::TFloat
              , tmpData.SummDebt_profit          ::TFloat
+            
         FROM tmpData
             LEFT JOIN Object_PartionGoods      ON Object_PartionGoods.MovementItemId  = tmpData.PartionId
 
