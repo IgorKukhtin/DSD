@@ -39,6 +39,7 @@ $BODY$
   DECLARE vbPartnerId_From Integer;
   DECLARE vbMemberId_From Integer;
   DECLARE vbCardFuelId_From Integer;
+  DECLARE vbPriceListId_Fuel Integer;
   DECLARE vbTicketFuelId_From Integer;
   DECLARE vbInfoMoneyGroupId_From Integer;
   DECLARE vbInfoMoneyDestinationId_From Integer;
@@ -354,10 +355,129 @@ BEGIN
              RAISE EXCEPTION 'Ошибка.Для физ. лицо <%> не определен <Сотрудник>.', lfGet_Object_ValueData (vbMemberId_To);
          END IF;
      END IF;
-     
-     
+
+
      -- Пересчитали цену - для ГСМ
-               AND vbCarId <> 0
+     IF vbCardFuelId_From <> 0
+     THEN
+         -- нашли Прайс
+         vbPriceListId_Fuel:= (SELECT CASE WHEN vbOperDate >= ObjectDate_Juridical_StartPromo.ValueData THEN ObjectLink_Juridical_PriceList.ChildObjectId ELSE 0 END
+                               FROM ObjectLink AS ObjectLink_CardFuel_Juridical
+                                    LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
+                                                         ON ObjectLink_Juridical_PriceList.ObjectId = ObjectLink_CardFuel_Juridical.ChildObjectId
+                                                        AND ObjectLink_Juridical_PriceList.DescId   = zc_ObjectLink_Juridical_PriceList()
+                                    LEFT JOIN ObjectDate AS ObjectDate_Juridical_StartPromo
+                                                         ON ObjectDate_Juridical_StartPromo.ObjectId = ObjectLink_CardFuel_Juridical.ChildObjectId
+                                                        AND ObjectDate_Juridical_StartPromo.DescId   = zc_ObjectDate_Juridical_StartPromo()
+                               WHERE ObjectLink_CardFuel_Juridical.ObjectId = vbCardFuelId_From
+                                 AND ObjectLink_CardFuel_Juridical.DescId   = zc_ObjectLink_CardFuel_Juridical()
+                                 -- AND inUserId = 5
+                              );
+
+         IF vbPriceListId_Fuel > 0
+         THEN
+             -- сохранили свойство <Цена>
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), tmp.MovementItemId, tmp.ValuePrice)
+             FROM (WITH tmpMI AS (SELECT MovementItem.*
+                                  FROM MovementItem
+                                  WHERE MovementItem.MovementId = inMovementId
+                                    AND MovementItem.DescId     = zc_MI_Master()
+                                    AND MovementItem.isErased   = FALSE
+                                 )
+                   , tmpPrice AS (SELECT tmpMI.Id AS MovementItemId
+                                       , COALESCE (ObjectHistoryFloat_Value.ValueData, 0) AS ValuePrice
+                                  FROM tmpMI
+                                       INNER JOIN ObjectLink AS ObjectLink_Goods
+                                                            ON ObjectLink_Goods.ChildObjectId = tmpMI.ObjectId
+                                                           AND ObjectLink_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
+                                       INNER JOIN ObjectLink AS ObjectLink_PriceList
+                                                             ON ObjectLink_PriceList.ObjectId      = ObjectLink_Goods.ObjectId
+                                                            AND ObjectLink_PriceList.ChildObjectId = vbPriceListId_Fuel
+                                                            AND ObjectLink_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                                       INNER JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                                                ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_Goods.ObjectId
+                                                               AND ObjectHistory_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
+                                                               AND vbOperDate >= ObjectHistory_PriceListItem.StartDate AND vbOperDate < ObjectHistory_PriceListItem.EndDate
+                                       LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value
+                                                                    ON ObjectHistoryFloat_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                                   AND ObjectHistoryFloat_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                                 )
+                   SELECT tmpMI.Id AS MovementItemId, COALESCE (tmpPrice.ValuePrice, 0) AS ValuePrice
+                   FROM tmpMI
+                        LEFT JOIN tmpPrice ON tmpPrice.MovementItemId = tmpMI.Id
+                  ) AS tmp;
+
+              -- проверка - для Цены ГСМ из Прайса
+              IF EXISTS (SELECT 1 FROM (WITH tmpMI AS (SELECT MovementItem.*
+                                                       FROM MovementItem
+                                                       WHERE MovementItem.MovementId = inMovementId
+                                                         AND MovementItem.DescId     = zc_MI_Master()
+                                                         AND MovementItem.isErased   = FALSE
+                                                      )
+                                        , tmpPrice AS (SELECT tmpMI.Id AS MovementItemId
+                                                            , COALESCE (ObjectHistoryFloat_Value.ValueData, 0) AS ValuePrice
+                                                       FROM tmpMI
+                                                            INNER JOIN ObjectLink AS ObjectLink_Goods
+                                                                                 ON ObjectLink_Goods.ChildObjectId = tmpMI.ObjectId
+                                                                                AND ObjectLink_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
+                                                            INNER JOIN ObjectLink AS ObjectLink_PriceList
+                                                                                  ON ObjectLink_PriceList.ObjectId      = ObjectLink_Goods.ObjectId
+                                                                                 AND ObjectLink_PriceList.ChildObjectId = vbPriceListId_Fuel
+                                                                                 AND ObjectLink_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                                                            INNER JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                                                                     ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_Goods.ObjectId
+                                                                                    AND ObjectHistory_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
+                                                                                    AND vbOperDate >= ObjectHistory_PriceListItem.StartDate AND vbOperDate < ObjectHistory_PriceListItem.EndDate
+                                                            LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value
+                                                                                         ON ObjectHistoryFloat_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                                                        AND ObjectHistoryFloat_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                                                      )
+                                        SELECT tmpMI.Id AS MovementItemId, COALESCE (tmpPrice.ValuePrice, 0) AS ValuePrice
+                                        FROM tmpMI
+                                             LEFT JOIN tmpPrice ON tmpPrice.MovementItemId = tmpMI.Id
+                                        WHERE COALESCE (tmpPrice.ValuePrice, 0) = 0
+                                       ) AS tmp
+                        )
+              THEN
+                  RAISE EXCEPTION 'Ошибка.Для Топлива <%> НЕ установлена цена в прайсе <%>.'
+                                , lfGet_Object_ValueData_sh ((SELECT tmp.ObjectId
+                                                              FROM (WITH tmpMI AS (SELECT MovementItem.*
+                                                                                   FROM MovementItem
+                                                                                   WHERE MovementItem.MovementId = inMovementId
+                                                                                     AND MovementItem.DescId     = zc_MI_Master()
+                                                                                     AND MovementItem.isErased   = FALSE
+                                                                                  )
+                                                                    , tmpPrice AS (SELECT tmpMI.Id AS MovementItemId
+                                                                                        , COALESCE (ObjectHistoryFloat_Value.ValueData, 0) AS ValuePrice
+                                                                                   FROM tmpMI
+                                                                                        INNER JOIN ObjectLink AS ObjectLink_Goods
+                                                                                                             ON ObjectLink_Goods.ChildObjectId = tmpMI.ObjectId
+                                                                                                            AND ObjectLink_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
+                                                                                        INNER JOIN ObjectLink AS ObjectLink_PriceList
+                                                                                                              ON ObjectLink_PriceList.ObjectId      = ObjectLink_Goods.ObjectId
+                                                                                                             AND ObjectLink_PriceList.ChildObjectId = vbPriceListId_Fuel
+                                                                                                             AND ObjectLink_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                                                                                        INNER JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                                                                                                 ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_Goods.ObjectId
+                                                                                                                AND ObjectHistory_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
+                                                                                                                AND vbOperDate >= ObjectHistory_PriceListItem.StartDate AND vbOperDate < ObjectHistory_PriceListItem.EndDate
+                                                                                        LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value
+                                                                                                                     ON ObjectHistoryFloat_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                                                                                    AND ObjectHistoryFloat_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                                                                                  )
+                                                                    SELECT tmpMI.ObjectId, COALESCE (tmpPrice.ValuePrice, 0) AS ValuePrice
+                                                                    FROM tmpMI
+                                                                         LEFT JOIN tmpPrice ON tmpPrice.MovementItemId = tmpMI.Id
+                                                                    WHERE COALESCE (tmpPrice.ValuePrice, 0) = 0
+                                                                    LIMIT 1
+                                                                   ) AS tmp
+                                                            ))
+                                , lfGet_Object_ValueData_sh (vbPriceListId_Fuel);
+              END IF;
+
+         END IF;
+
+     END IF;
 
 
      -- определяется Управленческие назначения, параметр нужен для для формирования Аналитик в проводках
@@ -1275,7 +1395,7 @@ BEGIN
                        WHEN vbIsCorporate_To = TRUE AND zc_Enum_InfoMoney_21151() = vbInfoMoneyId_CorporateTo
                             THEN zc_Enum_Account_30205() -- ЕКСПЕРТ-АГРОТРЕЙД
                        WHEN vbIsCorporate_To = TRUE
-                            THEN 0 -- будет ошибка 
+                            THEN 0 -- будет ошибка
                        ELSE lpInsertFind_Object_Account (inAccountGroupId         := _tmpItem_group.AccountGroupId
                                                        , inAccountDirectionId     := _tmpItem_group.AccountDirectionId
                                                        , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId
@@ -1353,7 +1473,7 @@ BEGIN
                                                                       WHEN vbIsCorporate_To = TRUE AND zc_Enum_InfoMoney_21151() = vbInfoMoneyId_CorporateTo
                                                                            THEN zc_Enum_ProfitLoss_70104() -- ЕКСПЕРТ-АГРОТРЕЙД
                                                                       WHEN vbIsCorporate_To = TRUE
-                                                                           THEN 0 -- будет ошибка 
+                                                                           THEN 0 -- будет ошибка
                                                                       ELSE zc_Enum_ProfitLoss_70201() -- Дополнительная прибыль + Прочее + Товары
                                                                  END
                                         , inDescId_2          := zc_ContainerLinkObject_Branch()

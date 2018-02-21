@@ -1,7 +1,5 @@
 -- Function: gpInsertUpdate_Movement_TransportIncome()
 
- DROP FUNCTION IF EXISTS gpinsertupdate_movement_transportincome (integer, integer, tvarchar, tvarchar, tdatetime, boolean, tfloat, integer, integer, integer, tvarchar, integer, tvarchar, integer, tvarchar, integer, integer, integer, integer, tvarchar, tvarchar, tfloat, tfloat, tfloat, tvarchar);
- DROP FUNCTION IF EXISTS gpinsertupdate_movement_transportincome (integer, integer, tvarchar, tvarchar, tdatetime, boolean, tfloat, tfloat, integer, integer, integer, tvarchar, integer, tvarchar, integer, tvarchar, integer, integer, integer, integer, tvarchar, tvarchar, tfloat, tfloat, tfloat, tvarchar);
  DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportIncome (integer, integer, tvarchar, tdatetime, tdatetime, tvarchar, boolean, tfloat, tfloat, integer, integer, integer, tvarchar, integer, tvarchar, integer, tvarchar, integer, integer, integer, integer, tvarchar, tvarchar, tfloat, tfloat, tfloat, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransportIncome(
@@ -30,7 +28,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransportIncome(
  INOUT ioGoodsName           TVarChar  , -- Название Товар
  INOUT ioFuelName            TVarChar  , -- Название Вид топлива
     IN inAmount              TFloat    , -- Количество
-    IN ioPrice               TFloat    , -- Цена
+ INOUT ioPrice               TFloat    , -- Цена
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
    OUT outAmountSummTotal    TFloat    , -- Сумма с НДС (итог)
@@ -230,8 +228,8 @@ BEGIN
                                                         );
 
      -- сохранили <Элемент документа> и вернули параметры
-     SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
-            INTO ioMovementItemId, ioCountForPrice, outAmountSumm
+     SELECT tmp.ioId, tmp.ioPrice, tmp.ioCountForPrice, tmp.outAmountSumm
+            INTO ioMovementItemId, ioPrice, ioCountForPrice, outAmountSumm
      FROM lpInsertUpdate_MovementItem_IncomeFuel (ioId            := ioMovementItemId
                                                 , inMovementId    := ioMovementId
                                                 , inGoodsId       := ioGoodsId
