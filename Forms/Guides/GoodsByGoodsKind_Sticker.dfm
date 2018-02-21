@@ -2,9 +2,8 @@ inherited GoodsByGoodsKind_StickerForm: TGoodsByGoodsKind_StickerForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1058#1086#1074#1072#1088' '#1080' '#1042#1080#1076' '#1090#1086#1074#1072#1088#1072'> ('#1101#1090#1080#1082#1077#1090#1082#1080')'
   ClientHeight = 420
   ClientWidth = 1030
-  ExplicitLeft = -257
   ExplicitWidth = 1046
-  ExplicitHeight = 455
+  ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -23,6 +22,12 @@ inherited GoodsByGoodsKind_StickerForm: TGoodsByGoodsKind_StickerForm
         ExplicitWidth = 1030
         ExplicitHeight = 394
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = GoodsName
+            end>
           OptionsData.Appending = True
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
