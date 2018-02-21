@@ -4019,12 +4019,12 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPrice'
+        Name = 'ioPrice'
         Value = Null
         Component = IncomeCDS
         ComponentItem = 'Price'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item

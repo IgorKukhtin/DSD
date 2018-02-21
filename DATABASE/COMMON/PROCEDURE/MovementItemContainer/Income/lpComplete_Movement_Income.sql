@@ -354,6 +354,11 @@ BEGIN
              RAISE EXCEPTION 'Ошибка.Для физ. лицо <%> не определен <Сотрудник>.', lfGet_Object_ValueData (vbMemberId_To);
          END IF;
      END IF;
+     
+     
+     -- Пересчитали цену - для ГСМ
+               AND vbCarId <> 0
+
 
      -- определяется Управленческие назначения, параметр нужен для для формирования Аналитик в проводках
      SELECT lfGet_InfoMoney.InfoMoneyGroupId, lfGet_InfoMoney.InfoMoneyDestinationId INTO vbInfoMoneyGroupId_From, vbInfoMoneyDestinationId_From FROM lfGet_Object_InfoMoney (vbInfoMoneyId_From) AS lfGet_InfoMoney;

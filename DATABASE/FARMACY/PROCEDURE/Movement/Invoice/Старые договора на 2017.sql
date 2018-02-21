@@ -39,7 +39,9 @@ WITH
 
     SELECT Movement.Id, tmpContract.PartnerMedical_ContractId
        -- сохранили связь с <>
-       -- lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), Movement.Id, tmpContract.PartnerMedical_ContractId);
+       --, lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), Movement.Id, tmpContract.PartnerMedical_ContractId)
+--       , lpInsertUpdate_MovementFloat (zc_MovementFloat_SP(), Movement.Id, 2)
+, MovementFloat_SP.*
     FROM Movement 
       
         LEFT JOIN MovementDate AS MovementDate_OperDateStart
@@ -65,20 +67,23 @@ WITH
                                 ON MovementFloat_SP.MovementId = Movement.Id
                                AND MovementFloat_SP.DescId = zc_MovementFloat_SP()
 
-        INNER JOIN tmpContract ON tmpContract.PartnerMedicalId = MovementLinkObject_PartnerMedical.ObjectId
+        LEFT JOIN tmpContract ON tmpContract.PartnerMedicalId = MovementLinkObject_PartnerMedical.ObjectId
                               AND tmpContract.PartnerMedical_JuridicalId = ObjectLink_PartnerMedical_Juridical.ChildObjectId 
                               AND tmpContract.Contract_JuridicalBasisId = MovementLinkObject_Juridical.ObjectId
                               AND COALESCE (tmpContract.Contract_GroupMemberSPId,0) = CASE WHEN COALESCE(MovementFloat_SP.ValueData,0) = 1 THEN 4515699  -- соц.проект
-                                                                                           /*WHEN COALESCE(MovementFloat_SP.ValueData,0) = 2 THEN 0*/
-                                                                                           else 0
+                                                                                           WHEN COALESCE(MovementFloat_SP.ValueData,0) = 2 THEN 0
+                                                                                           -- else 0
                                                                                       END
                               --выбираем дог. согласно датам , по дате нач.периода отчета
                               --AND tmpContract.StartDate_Contract <= MovementDate_OperDateStart.ValueData AND tmpContract.EndDate_Contract >= MovementDate_OperDateStart.ValueData 
-                              AND tmpContract.StartDate_Contract <= MovementDate_OperDateEnd.ValueData AND tmpContract.EndDate_Contract >= MovementDate_OperDateEnd.ValueData 
+                              -- AND tmpContract.StartDate_Contract <= MovementDate_OperDateEnd.ValueData AND tmpContract.EndDate_Contract >= MovementDate_OperDateEnd.ValueData 
+                              AND tmpContract.StartDate_Contract < '01.01.2018'
             
     WHERE Movement.StatusId <> zc_Enum_Status_Erased()
                            AND Movement.DescId = zc_Movement_Invoice()
                            AND Movement.OperDate < '01.01.2018'
+-- AND Movement.Id = 5003839
+-- and tmpContract.PartnerMedicalId is null
 
 --эти 5 счетов остаются без договора 
 /*select * from Movement where id in (5298386,

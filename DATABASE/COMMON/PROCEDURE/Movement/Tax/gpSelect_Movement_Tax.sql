@@ -81,7 +81,24 @@ BEGIN
            , Object_To.Id                      		    AS ToId
            , Object_To.ValueData               		    AS ToName
            , ObjectHistory_JuridicalDetails_View.OKPO   AS OKPO_To
-           , ObjectHistory_JuridicalDetails_View.INN    AS INN_To
+           , CASE WHEN Movement.Id IN (-- Tax
+                                       6922620
+                                     , 6922564
+                                     , 6922609
+                                     , 6922233
+                                     , 6921599
+                                     , 6922367
+                                     , 6922254
+                                     , 6922275
+                                     , 8484674
+                                     , 8486085
+                                     , 8486839
+                                     , 8487001
+                                     , 8487359
+                                      )
+                  THEN '100000000000'
+                  ELSE ObjectHistory_JuridicalDetails_View.INN
+             END :: TVarChar AS INN_To
 
            , Object_From_Master.ObjectCode              AS UnitCode
            , Object_From_Master.ValueData               AS UnitName
@@ -301,4 +318,4 @@ ALTER FUNCTION gpSelect_Movement_Tax (TDateTime, TDateTime, Integer, Boolean, Bo
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Tax (inStartDate:= '01.02.2016', inEndDate:= '01.02.2016', inJuridicalBasisId:= 0, inIsRegisterDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Tax (inStartDate:= '01.02.2018', inEndDate:= '01.02.2018', inJuridicalBasisId:= 0, inIsRegisterDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())

@@ -10,7 +10,29 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_PriceListGoodsItem(
 RETURNS TABLE (Id Integer, StartDate TDateTime, EndDate TDateTime, ValuePrice TFloat, isErased Boolean)
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpGetUserBySession (inSession);
+
+     -- Ограничение - если роль Бухгалтер ПАВИЛЬОНЫ
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 80548 AND UserId = vbUserId)
+        AND COALESCE (inPriceListId, 0) NOT IN (140208 -- Пав-ны приход
+                                              , 140209 -- Пав-ны продажа
+                                               )
+     THEN
+         RAISE EXCEPTION 'Ошибка. Нет прав корректировать прайс <%>', lfGet_Object_ValueData (inPriceListId);
+     END IF;
+
+
+     -- Ограничение - если роль Начисления транспорт-меню
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 78489 AND UserId = vbUserId)
+        AND COALESCE (inPriceListId, 0) NOT IN (zc_PriceList_Fuel()
+                                               )
+     THEN
+         RAISE EXCEPTION 'Ошибка. Нет прав корректировать прайс <%>', lfGet_Object_ValueData (inPriceListId);
+     END IF;
+
 
      -- Выбираем данные
      RETURN QUERY 
@@ -50,5 +72,5 @@ ALTER FUNCTION gpSelect_ObjectHistory_PriceListGoodsItem (Integer, Integer, TVar
 */
 
 -- тест
--- SELECT * FROM gpSelect_ObjectHistory_PriceListGoodsItem (zc_PriceList_ProductionSeparate(), CURRENT_TIMESTAMP)
--- SELECT * FROM gpSelect_ObjectHistory_PriceListGoodsItem (zc_PriceList_Basis(), CURRENT_TIMESTAMP)
+-- SELECT * FROM gpSelect_ObjectHistory_PriceListGoodsItem (zc_PriceList_ProductionSeparate(), 0, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_ObjectHistory_PriceListGoodsItem (zc_PriceList_Basis(), 0, zfCalc_UserAdmin())

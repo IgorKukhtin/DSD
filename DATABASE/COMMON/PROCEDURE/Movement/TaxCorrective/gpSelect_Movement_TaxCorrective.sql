@@ -81,7 +81,24 @@ BEGIN
            , Object_From.Id                    		    AS FromId
            , Object_From.ValueData             		    AS FromName
            , ObjectHistory_JuridicalDetails_View.OKPO   AS OKPO_From
-           , ObjectHistory_JuridicalDetails_View.INN    AS INN_From 
+           , CASE WHEN Movement.Id IN (-- Corr
+                                       7943509
+                                     , 8066170
+                                     , 8066171
+                                     , 8066169
+                                     , 8464974
+                                     , 8465476
+                                     , 8465802
+                                     , 8479936
+                                     , 8462887
+                                     , 8462999
+                                     , 8463007
+                                     , 8488900
+                                     , 8464619
+                                      )
+                  THEN '100000000000'
+                  ELSE ObjectHistory_JuridicalDetails_View.INN
+             END :: TVarChar AS INN_From 
            , Object_To.Id                      		    AS ToId
            , Object_To.ValueData               		    AS ToName
            , Object_Partner.ObjectCode                  AS PartnerCode
@@ -338,4 +355,4 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective (TDateTime, TDateTime, Integer, B
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_TaxCorrective (inStartDate:= '01.02.2016', inEndDate:= '01.02.2016', inJuridicalBasisId:= 0, inIsRegisterDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_TaxCorrective (inStartDate:= '01.02.2018', inEndDate:= '01.02.2018', inJuridicalBasisId:= 0, inIsRegisterDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())

@@ -76,7 +76,39 @@ BEGIN
            , (MovementString_InvNumberPartner.ValueData || CASE WHEN MovementString_InvNumberBranch.ValueData <> '' THEN '/' || MovementString_InvNumberBranch.ValueData ELSE '' END) :: TVarChar  AS InvNumber
            , Movement.OperDate				AS OperDate
            , ObjectHistoryString_JuridicalDetails_FullName.ValueData   AS ToName
-           , ObjectHistoryString_JuridicalDetails_INN.ValueData        AS INN
+           , CASE WHEN Movement.Id IN (-- Tax
+                                       6922620
+                                     , 6922564
+                                     , 6922609
+                                     , 6922233
+                                     , 6921599
+                                     , 6922367
+                                     , 6922254
+                                     , 6922275
+                                     , 8484674
+                                     , 8486085
+                                     , 8486839
+                                     , 8487001
+                                     , 8487359
+                                       -- Corr
+                                     , 7943509
+                                     , 8066170
+                                     , 8066171
+                                     , 8066169
+                                     , 8464974
+                                     , 8465476
+                                     , 8465802
+                                     , 8479936
+                                     , 8462887
+                                     , 8462999
+                                     , 8463007
+                                     , 8488900
+                                     , 8464619
+                                      )
+                  THEN '100000000000'
+                  ELSE ObjectHistoryString_JuridicalDetails_INN.ValueData
+                                      
+             END :: TVarChar AS INN
            , CASE Movement.DescId 
                   WHEN zc_Movement_Tax() THEN MovementFloat_TotalSummPVAT.ValueData      
                   ELSE - MovementFloat_TotalSummPVAT.ValueData
@@ -188,4 +220,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Tax_Load (inStartDate:= '01.10.2017', inEndDate:= '31.10.2017', inStartDateReg:= '01.10.2017', inEndDateReg:= '31.10.2017', inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inIsTaxCorrectiveOnly:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Tax_Load (inStartDate:= '31.10.2017', inEndDate:= '31.10.2017', inStartDateReg:= '01.10.2017', inEndDateReg:= '31.10.2017', inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inIsTaxCorrectiveOnly:= TRUE, inSession:= zfCalc_UserAdmin())

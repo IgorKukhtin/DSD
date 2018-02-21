@@ -30,7 +30,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransportIncome(
  INOUT ioGoodsName           TVarChar  , -- Название Товар
  INOUT ioFuelName            TVarChar  , -- Название Вид топлива
     IN inAmount              TFloat    , -- Количество
-    IN inPrice               TFloat    , -- Цена
+    IN ioPrice               TFloat    , -- Цена
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
    OUT outAmountSummTotal    TFloat    , -- Сумма с НДС (итог)
@@ -236,7 +236,7 @@ BEGIN
                                                 , inMovementId    := ioMovementId
                                                 , inGoodsId       := ioGoodsId
                                                 , inAmount        := inAmount
-                                                , inPrice         := inPrice
+                                                , ioPrice         := ioPrice
                                                 , ioCountForPrice := ioCountForPrice
                                                 , inUserId        := vbUserId
                                                  ) AS tmp;

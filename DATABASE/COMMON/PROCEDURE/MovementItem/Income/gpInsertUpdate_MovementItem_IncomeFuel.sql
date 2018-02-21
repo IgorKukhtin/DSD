@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_IncomeFuel(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
-    IN inPrice               TFloat    , -- Цена
+    IN ioPrice               TFloat    , -- Цена
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
     IN inSession             TVarChar    -- сессия пользователя
@@ -29,7 +29,7 @@ BEGIN
                                                 , inMovementId    := inMovementId
                                                 , inGoodsId       := inGoodsId
                                                 , inAmount        := inAmount
-                                                , inPrice         := inPrice
+                                                , ioPrice         := ioPrice
                                                 , ioCountForPrice := ioCountForPrice
                                                 , inUserId        := vbUserId
                                                  ) AS tmp;

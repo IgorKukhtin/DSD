@@ -7,20 +7,45 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_IncomeFuel(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
-    IN inPrice               TFloat    , -- Цена
+ INOUT ioPrice               TFloat    , -- Цена
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
     IN inUserId              Integer     -- Пользователь
-)                              
+)
 RETURNS RECORD
 AS
 $BODY$
+   DECLARE vbOperDate Boolean;
    DECLARE vbIsInsert Boolean;
 BEGIN
+     -- находим Дату
+     vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+
+     -- находим в Прайсе
+     /*ioPrice:= (SELECT COALESCE (ObjectHistoryFloat_Value.ValueData, 0) AS ValuePrice
+                FROM ObjectLink AS ObjectLink_Goods
+                     INNER JOIN ObjectLink AS ObjectLink_PriceList
+                                           ON ObjectLink_PriceList.ObjectId      = ObjectLink_Goods.ObjectId
+                                          AND ObjectLink_PriceList.ChildObjectId = zc_PriceList_Fuel()
+                                          AND ObjectLink_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                     INNER JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                              ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_Goods.ObjectId
+                                             AND ObjectHistory_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
+                                             AND vbOperDate >= ObjectHistory_PriceListItem.StartDate AND vbOperDate < ObjectHistory_PriceListItem.EndDate
+                     LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value
+                                                  ON ObjectHistoryFloat_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                 AND ObjectHistoryFloat_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                WHERE ObjectLink_Goods.ChildObjectId = inGoodsId
+                  AND ObjectLink_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
+               );*/
+
      -- проверка - для <Талоны на топливо> цена должна быть = 0, т.к. это типа Перемещение
-     IF inPrice <> 0 AND EXISTS (SELECT tmpFrom.ObjectId FROM (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_From()) AS tmpFrom JOIN Object ON Object.Id = tmpFrom.ObjectId AND Object.DescId = zc_Object_TicketFuel())
+     IF ioPrice <> 0 AND EXISTS (SELECT tmpFrom.ObjectId FROM (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_From()) AS tmpFrom JOIN Object ON Object.Id = tmpFrom.ObjectId AND Object.DescId = zc_Object_TicketFuel())
      THEN
          RAISE EXCEPTION 'Ошибка.Для <Талоны на топливо> цену вводить не надо.';
+     ELSEIF COALESCE (ioPrice, 0) = 0 AND 1=0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Для Топлива <%> НЕ установлена цена в прайсе.', lfGet_Object_ValueData_sh (inGoodsId);
      END IF;
 
      -- определяется признак Создание/Корректировка
@@ -28,12 +53,12 @@ BEGIN
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
-   
+
      -- сохранили свойство <Количество у контрагента>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), ioId, inAmount);
 
      -- сохранили свойство <Цена>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, ioPrice);
      -- расчитали/сохранили свойство <Цена за количество>
      IF COALESCE (ioCountForPrice, 0) = 0 THEN ioCountForPrice := 1; END IF;
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, ioCountForPrice);

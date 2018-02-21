@@ -47,9 +47,45 @@ BEGIN
      -- !!!хардкод!!!
      vbNotNDSPayer_INN := '100000000000';
      -- !!!хардкод!!!
-     vbCalcNDSPayer_INN:= (SELECT CASE WHEN Movement.OperDate BETWEEN '01.08.2017' AND '01.01.2018'
-                                        AND OH_JuridicalDetails_To.INN IN ('416995514032'
-                                                                         , '2642315140')
+     vbCalcNDSPayer_INN:= (SELECT CASE WHEN inMovementId IN (-- Tax
+                                                             6922620
+                                                           , 6922564
+                                                           , 6922609
+                                                           , 6922233
+                                                           , 6921599
+                                                           , 6922367
+                                                           , 6922254
+                                                           , 6922275
+                                                           , 8484674
+                                                           , 8486085
+                                                           , 8486839
+                                                           , 8487001
+                                                           , 8487359
+                                                            )
+                                  THEN vbNotNDSPayer_INN
+                                  ELSE ''
+                           END);
+/*SELECT Movement.*, MovementString_InvNumberPartner.ValueData, OH_JuridicalDetails_To.INN
+                           FROM Movement
+                                LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                                         ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                                        AND MovementString_InvNumberPartner.DescId     = zc_MovementString_InvNumberPartner()
+                                LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                             ON MovementLinkObject_To.MovementId = Movement.Id
+                                                             -- AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                                            AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_From()
+                                LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
+                                                                                    ON OH_JuridicalDetails_To.JuridicalId = MovementLinkObject_To.ObjectId
+                                                                                   AND Movement.OperDate >= OH_JuridicalDetails_To.StartDate AND Movement.OperDate < OH_JuridicalDetails_To.EndDate
+                           -- WHERE Movement.DescId = zc_Movement_Tax()
+                           WHERE Movement.DescId = zc_Movement_TaxCorrective()
+-- and Movement.OperDate BETWEEN '01.08.2017' AND '01.01.2018'
+and (Movement.OperDate BETWEEN '01.12.2017' AND '01.01.2018'
+or Movement.OperDate BETWEEN '01.02.2018' AND '02.02.2018')
+                                        AND TRIM (OH_JuridicalDetails_To.INN) IN ('416995514032'
+                                                                         , '2642315140'
+                                                                 --        , '100000000000'
+                                                )
                                         AND MovementString_InvNumberPartner.ValueData IN ('13015'
                                                                                          ,'13016'
                                                                                          ,'8190'
@@ -64,19 +100,22 @@ BEGIN
                                                                                          ,'14513'
                                                                                          ,'14514'
                                                                                          )
-                                  THEN vbNotNDSPayer_INN ELSE '' END
-                           FROM Movement
-                                LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                                                         ON MovementString_InvNumberPartner.MovementId =  Movement.Id
-                                                        AND MovementString_InvNumberPartner.DescId     = zc_MovementString_InvNumberPartner()
-                                LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                             ON MovementLinkObject_To.MovementId = Movement.Id
-                                                            AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
-                                LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
-                                                                                    ON OH_JuridicalDetails_To.JuridicalId = MovementLinkObject_To.ObjectId
-                                                                                   AND Movement.OperDate >= OH_JuridicalDetails_To.StartDate AND Movement.OperDate < OH_JuridicalDetails_To.EndDate
-                           WHERE Movement.Id = inMovementId
-                          );
+                                        AND MovementString_InvNumberPartner.ValueData IN ('5383'
+                                                                                         ,'5402'
+                                                                                         ,'5408'
+                                                                                         ,'5418'
+                                                                                         ,'5780'
+                                                                                         ,'5972'
+                                                                                         ,'5971'
+                                                                                         ,'5974'
+                                                                                         ,'6202'
+                                                                                         ,'8629'
+                                                                                         ,'13971'
+                                                                                         ,'13972'
+                                                                                         ,'13973'
+                                                                                         )
+
+order by 4*/
 
 
      -- определяется

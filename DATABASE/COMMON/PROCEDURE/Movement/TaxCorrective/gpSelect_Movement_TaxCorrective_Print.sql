@@ -34,34 +34,22 @@ BEGIN
      -- !!!хардкод!!!
      vbNotNDSPayer_INN := '100000000000';
      -- !!!хардкод!!!
-     vbCalcNDSPayer_INN:= (SELECT CASE WHEN Movement.OperDate BETWEEN '01.12.2017' AND '02.02.2018'
-                                        AND OH_JuridicalDetails_From.INN IN ('416995514032')
-                                        AND MovementString_InvNumberPartner.ValueData IN ('5383'
-                                                                                         ,'5402'
-                                                                                         ,'5408'
-                                                                                         ,'5418'
-                                                                                         ,'5780'
-                                                                                         ,'5972'
-                                                                                         ,'5971'
-                                                                                         ,'5974'
-                                                                                         ,'6202'
-                                                                                         ,'8629'
-                                                                                         ,'13971'
-                                                                                         ,'13972'
-                                                                                         ,'13973'
-                                                                                         )
+     vbCalcNDSPayer_INN:= (SELECT CASE WHEN inMovementId IN (-- Corr
+                                                             7943509
+                                                           , 8066170
+                                                           , 8066171
+                                                           , 8066169
+                                                           , 8464974
+                                                           , 8465476
+                                                           , 8465802
+                                                           , 8479936
+                                                           , 8462887
+                                                           , 8462999
+                                                           , 8463007
+                                                           , 8488900
+                                                           , 8464619
+                                                            )
                                   THEN vbNotNDSPayer_INN ELSE '' END
-                           FROM Movement
-                                LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                                                         ON MovementString_InvNumberPartner.MovementId =  Movement.Id
-                                                        AND MovementString_InvNumberPartner.DescId     = zc_MovementString_InvNumberPartner()
-                                LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                             ON MovementLinkObject_From.MovementId = Movement.Id
-                                                            AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
-                                LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
-                                                                                    ON OH_JuridicalDetails_From.JuridicalId = MovementLinkObject_From.ObjectId
-                                                                                   AND Movement.OperDate >= OH_JuridicalDetails_From.StartDate AND Movement.OperDate < OH_JuridicalDetails_From.EndDate
-                           WHERE Movement.Id = inMovementId
                           );
 
      -- определяется <Налоговый документ> и его параметры
@@ -642,13 +630,13 @@ BEGIN
            , CASE WHEN tmpMI.OperDate < '01.01.2015' AND (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
                   THEN TRUE
                   WHEN tmpMI.OperDate >= '01.01.2015' AND tmpMLM_Child.OperDate_Child >= '01.01.2015'
-                   AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN AND vbCalcNDSPayer_INN <> ''
+                   AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN AND vbCalcNDSPayer_INN = ''
                        AND COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) >= 0
                   THEN TRUE
                   ELSE FALSE
              END :: Boolean AS isERPN -- Підлягає реєстрації в ЄРПН покупцем !!!так криво для медка до 01.04.2016!!!
 
-           , CASE WHEN vbOperDate_begin >= '01.04.2016' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN AND vbCalcNDSPayer_INN <> ''
+           , CASE WHEN vbOperDate_begin >= '01.04.2016' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN AND vbCalcNDSPayer_INN = ''
                        AND COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) < 0
                        THEN 'X'
                   WHEN vbOperDate_begin >= '01.04.2016' AND (OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> '')
@@ -657,12 +645,12 @@ BEGIN
                         THEN ''
                   WHEN tmpMI.OperDate < '01.01.2015' AND (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
                        THEN 'X'
-                  WHEN tmpMI.OperDate >= '01.01.2015' AND tmpMLM_Child.OperDate_Child >= '01.01.2015' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN AND vbCalcNDSPayer_INN <> ''
+                  WHEN tmpMI.OperDate >= '01.01.2015' AND tmpMLM_Child.OperDate_Child >= '01.01.2015' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN AND vbCalcNDSPayer_INN = ''
                        THEN 'X'
                   ELSE ''
              END :: TVarChar AS ERPN -- Підлягає реєстрації в ЄРПН постачальником (продавцем)
 
-           , CASE WHEN OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN AND vbCalcNDSPayer_INN <> '' AND tmpMLM_Child.OperDate_Child >= '01.02.2015'
+           , CASE WHEN OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN AND vbCalcNDSPayer_INN = '' AND tmpMLM_Child.OperDate_Child >= '01.02.2015'
                   THEN CASE WHEN COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) < 0 THEN '' ELSE 'X' END
                   ELSE ''
              END :: TVarChar AS ERPN2 -- Підлягає реєстрації в ЄРПН покупцем
