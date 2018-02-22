@@ -671,6 +671,13 @@ end;
 //
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReturnInForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ReturnInForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleDialogForm');
   //Движ. по покупателю
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CollationByClientForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CollationByClientForm');
