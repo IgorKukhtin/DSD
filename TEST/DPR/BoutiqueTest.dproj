@@ -982,6 +982,14 @@
 				<Form>Report_SaleDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_OH_DiscountPeriod.pas">
+				<Form>Report_OH_DiscountPeriodForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_OH_DiscountPeriodDialog.pas">
+				<Form>Report_OH_DiscountPeriodDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
