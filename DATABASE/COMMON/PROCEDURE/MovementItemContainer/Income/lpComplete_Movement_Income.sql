@@ -407,6 +407,9 @@ BEGIN
                         LEFT JOIN tmpPrice ON tmpPrice.MovementItemId = tmpMI.Id
                   ) AS tmp;
 
+              -- пересчитали Итоговые суммы по накладной
+              PERFORM lpInsertUpdate_MovemenTFloat_TotalSumm (inMovementId);
+
               -- проверка - для Цены ГСМ из Прайса
               IF EXISTS (SELECT 1 FROM (WITH tmpMI AS (SELECT MovementItem.*
                                                        FROM MovementItem
