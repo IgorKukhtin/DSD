@@ -61,7 +61,7 @@ object SaleForm: TSaleForm
           Kind = bkEllipsis
         end>
       TabOrder = 3
-      Width = 238
+      Width = 454
     end
     object edFrrom: TcxButtonEdit
       Left = 340
@@ -121,8 +121,8 @@ object SaleForm: TSaleForm
       Top = 23
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
-      Properties.DecimalPlaces = 4
-      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Properties.DecimalPlaces = 1
+      Properties.DisplayFormat = '0.0 %'
       Properties.ReadOnly = True
       TabOrder = 11
       Width = 79
@@ -153,7 +153,7 @@ object SaleForm: TSaleForm
       Width = 92
     end
     object edHappyDate: TcxDateEdit
-      Left = 252
+      Left = 475
       Top = 63
       EditValue = 42864d
       Properties.DisplayFormat = 'DD.MM'
@@ -164,7 +164,7 @@ object SaleForm: TSaleForm
       Width = 82
     end
     object cxLabel8: TcxLabel
-      Left = 252
+      Left = 475
       Top = 45
       Caption = #1044#1077#1085#1100' '#1088#1086#1078#1076#1077#1085#1080#1103
     end
@@ -209,6 +209,17 @@ object SaleForm: TSaleForm
       Properties.ReadOnly = True
       TabOrder = 22
       Width = 185
+    end
+    object edDiscountTaxTwo: TcxCurrencyEdit
+      Left = 880
+      Top = 63
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 1
+      Properties.DisplayFormat = '0.0 %'
+      Properties.ReadOnly = True
+      TabOrder = 23
+      Width = 170
     end
   end
   object cxPageControl: TcxPageControl
@@ -1217,32 +1228,20 @@ object SaleForm: TSaleForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0.'
     Properties.ReadOnly = True
-    TabOrder = 6
+    TabOrder = 5
     Width = 85
   end
-  object cxLabel9: TcxLabel
-    Left = 342
+  object cxLabel10: TcxLabel
+    Left = 880
     Top = 45
-    Caption = #1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090
+    Caption = '% '#1089#1082#1080#1076#1082#1080' '#1054#1073#1091#1074#1100' '#1076#1077#1090#1089#1082'.'
   end
-  object ceCity: TcxTextEdit
-    Left = 342
+  object ceComment_Client: TcxTextEdit
+    Left = 566
     Top = 63
     Properties.ReadOnly = True
     TabOrder = 8
-    Width = 215
-  end
-  object cxLabel10: TcxLabel
-    Left = 566
-    Top = 45
-    Caption = #1040#1076#1088#1077#1089
-  end
-  object ceAddress: TcxTextEdit
-    Left = 566
-    Top = 63
-    Properties.ReadOnly = True
-    TabOrder = 10
-    Width = 484
+    Width = 308
   end
   object cxLabel13: TcxLabel
     Left = 8
@@ -1253,7 +1252,7 @@ object SaleForm: TSaleForm
     Left = 8
     Top = 103
     Properties.ReadOnly = True
-    TabOrder = 12
+    TabOrder = 10
     Width = 117
   end
   object cxLabel17: TcxLabel
@@ -1265,7 +1264,7 @@ object SaleForm: TSaleForm
     Left = 130
     Top = 103
     Properties.ReadOnly = True
-    TabOrder = 14
+    TabOrder = 12
     Width = 117
   end
   object cxLabel14: TcxLabel
@@ -1279,8 +1278,13 @@ object SaleForm: TSaleForm
     EditValue = 42864d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 19
+    TabOrder = 17
     Width = 104
+  end
+  object cxLabel9: TcxLabel
+    Left = 566
+    Top = 45
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -2371,8 +2375,8 @@ object SaleForm: TSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 408
-    Top = 8
+    Left = 368
+    Top = 32
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -2898,16 +2902,16 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'CityName'
+        Name = 'DiscountTaxTwo'
         Value = ''
-        Component = ceCity
-        DataType = ftString
+        Component = edDiscountTaxTwo
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Address'
+        Name = 'Comment_Client'
         Value = ''
-        Component = ceAddress
+        Component = ceComment_Client
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -3114,14 +3118,13 @@ object SaleForm: TSaleForm
       item
         Name = 'CityName'
         Value = Null
-        Component = ceCity
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'Address'
         Value = Null
-        Component = ceAddress
+        Component = ceComment_Client
         DataType = ftString
         MultiSelectSeparator = ','
       end

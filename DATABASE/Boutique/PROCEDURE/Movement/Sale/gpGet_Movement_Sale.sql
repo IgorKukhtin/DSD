@@ -10,11 +10,12 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Sale(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , LastDate TDateTime, TotalSumm TFloat, TotalSummPay TFloat, TotalDebt TFloat
-             , DiscountTax TFloat
+             , DiscountTax TFloat, DiscountTaxTwo TFloat
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
-             , HappyDate TDateTime, CityName TVarChar, Address TVarChar, PhoneMobile TVarChar, Phone TVarChar
-             , Comment TVarChar
+             , HappyDate TDateTime
+             , PhoneMobile TVarChar, Phone TVarChar
+             , Comment TVarChar, Comment_Client TVarChar
              , InsertName TVarChar, InsertDate TDateTime
                )
 AS
@@ -80,6 +81,7 @@ BEGIN
              , CAST (0 as TFloat)               AS TotalSummPay
              , CAST (0 as TFloat)               AS TotalDebt
              , CAST (0 as TFloat)               AS DiscountTax
+             , CAST (0 as TFloat)               AS DiscountTaxTwo
 
              , Object_Unit.Id                                   AS FromId
              , COALESCE (Object_Unit.ValueData, '') :: TVarChar AS FromName
@@ -87,11 +89,10 @@ BEGIN
              , CAST ('' as TVarChar)            AS ToName
 
              , CAST (NULL AS TDateTime)         AS HappyDate
-             , CAST ('' as TVarChar)            AS CityName
-             , CAST ('' as TVarChar)            AS Address
              , CAST ('' as TVarChar)            AS PhoneMobile
              , CAST ('' as TVarChar)            AS Phone
              , CAST ('' as TVarChar)            AS Comment
+             , CAST ('' as TVarChar)            AS Comment_Client
 
              , COALESCE(Object_Insert.ValueData,'')  ::TVarChar AS InsertName
              , CURRENT_TIMESTAMP ::TDateTime    AS InsertDate
@@ -188,11 +189,12 @@ BEGIN
              , Object_Status.ObjectCode               AS StatusCode
              , Object_Status.ValueData                AS StatusName
 
-             , tmpData.LastDate          :: TDateTime AS LastDate
+             , tmpData.LastDate             :: TDateTime AS LastDate
              , COALESCE (tmpData.TotalSumm, 0) :: TFloat AS TotalSumm
              , COALESCE (tmpData.TotalPay, 0)  :: TFloat AS TotalSummPay
              , COALESCE (tmpData.SummDedt, 0)  :: TFloat AS TotalDebt
-             , ObjectFloat_DiscountTax.ValueData      AS DiscountTax
+             , ObjectFloat_DiscountTax.ValueData         AS DiscountTax
+             , ObjectFloat_DiscountTaxTwo.ValueData      AS DiscountTaxTwo
 
              , Object_From.Id                         AS FromId
              , Object_From.ValueData                  AS FromName
@@ -200,12 +202,11 @@ BEGIN
              , Object_To.ValueData                    AS ToName
 
              , ObjectDate_HappyDate.ValueData         AS HappyDate
-             , Object_City.ValueData                  AS CityName
-             , ObjectString_Address.ValueData         AS Address
              , ObjectString_PhoneMobile.ValueData     AS PhoneMobile
              , ObjectString_Phone.ValueData           AS Phone
 
              , MovementString_Comment.ValueData       AS Comment
+             , ObjectString_Comment.ValueData         AS Comment_Client
 
              , Object_Insert.ValueData                AS InsertName
              , COALESCE (MovementDate_Insert.ValueData, CURRENT_TIMESTAMP)  :: TDateTime AS InsertDate
@@ -235,14 +236,17 @@ BEGIN
                                         AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
 
-            LEFT JOIN ObjectLink AS ObjectLink_Client_City
-                                 ON ObjectLink_Client_City.ObjectId = Object_To.Id
-                                AND ObjectLink_Client_City.DescId = zc_ObjectLink_Client_City()
-            LEFT JOIN Object AS Object_City ON Object_City.Id = ObjectLink_Client_City.ChildObjectId
-
             LEFT JOIN ObjectFloat AS ObjectFloat_DiscountTax
                                   ON ObjectFloat_DiscountTax.ObjectId = Object_To.Id
                                  AND ObjectFloat_DiscountTax.DescId = zc_ObjectFloat_Client_DiscountTax()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_DiscountTaxTwo 
+                                  ON ObjectFloat_DiscountTaxTwo.ObjectId = Object_To.Id
+                                 AND ObjectFloat_DiscountTaxTwo.DescId = zc_ObjectFloat_Client_DiscountTaxTwo()
+
+            LEFT JOIN ObjectString AS  ObjectString_Comment 
+                                   ON  ObjectString_Comment.ObjectId = Object_To.Id
+                                  AND  ObjectString_Comment.DescId = zc_ObjectString_Client_Comment()
 
             LEFT JOIN ObjectFloat AS ObjectFloat_TotalSummPay
                                   ON ObjectFloat_TotalSummPay.ObjectId = Object_To.Id
@@ -257,10 +261,6 @@ BEGIN
             LEFT JOIN ObjectDate AS ObjectDate_LastDate
                                  ON ObjectDate_LastDate.ObjectId = Object_To.Id
                                 AND ObjectDate_LastDate.DescId = zc_ObjectDate_Client_LastDate()
-
-            LEFT JOIN ObjectString AS ObjectString_Address
-                                   ON ObjectString_Address.ObjectId = Object_To.Id
-                                  AND ObjectString_Address.DescId = zc_ObjectString_Client_Address()
 
             LEFT JOIN ObjectDate AS ObjectDate_HappyDate
                                  ON ObjectDate_HappyDate.ObjectId = Object_To.Id
