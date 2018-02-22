@@ -275,6 +275,14 @@ object OrderSheduleForm: TOrderSheduleForm
         Options.Editing = False
         Width = 107
       end
+      object OrderSummComment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1082' '#1084#1080#1085'. '#1089#1091#1084#1084#1077' '#1079#1072#1082#1072#1079#1072
+        DataBinding.FieldName = 'OrderSummComment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 142
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

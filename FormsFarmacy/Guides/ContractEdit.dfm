@@ -208,7 +208,7 @@ inherited ContractEditForm: TContractEditForm
     Caption = #1052#1080#1085'. '#1079#1072#1082#1072#1079', '#1075#1088#1085
   end
   object ceOrderSumm: TcxCurrencyEdit [29]
-    Left = 8
+    Left = 7
     Top = 282
     Properties.DisplayFormat = ',0.##'
     TabOrder = 29
@@ -381,6 +381,7 @@ inherited ContractEditForm: TContractEditForm
       end
       item
         Name = 'inSigningDate'
+        Value = 'NULL'
         Component = edSigningDate
         DataType = ftDateTime
         ParamType = ptInput

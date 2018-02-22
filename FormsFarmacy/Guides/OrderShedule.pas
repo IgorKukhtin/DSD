@@ -81,6 +81,7 @@ type
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     ProvinceCityName: TcxGridDBColumn;
+    OrderSummComment: TcxGridDBColumn;
   private
     { Private declarations }
   public
