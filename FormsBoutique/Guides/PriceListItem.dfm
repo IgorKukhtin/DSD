@@ -42,12 +42,20 @@ object PriceListItemForm: TPriceListItemForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object GoodsGroupNameFull: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+        Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'GoodsGroupNameFull'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 100
+      end
+      object GoodsGroupName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' ('#1090#1086#1074'.)'
+        DataBinding.FieldName = 'GoodsGroupName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 144
       end
       object GoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076
@@ -58,7 +66,7 @@ object PriceListItemForm: TPriceListItemForm
         Width = 35
       end
       object Name: TcxGridDBColumn
-        Caption = #1058#1086#1074#1072#1088
+        Caption = #1040#1088#1090#1080#1082#1091#1083
         DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -73,16 +81,8 @@ object PriceListItemForm: TPriceListItemForm
         Options.Editing = False
         Width = 35
       end
-      object GoodsGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'GoodsGroupName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 144
-      end
       object CompositionGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' '#1089#1086#1089#1090#1072#1074#1072' '#1090#1086#1074#1072#1088#1072
+        Caption = #1043#1088#1091#1087#1087#1072' '#1089#1086#1089#1090#1072#1074#1072
         DataBinding.FieldName = 'CompositionGroupName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -90,7 +90,7 @@ object PriceListItemForm: TPriceListItemForm
         Width = 105
       end
       object CompositionName: TcxGridDBColumn
-        Caption = #1057#1086#1089#1090#1072#1074' '#1090#1086#1074#1072#1088#1072
+        Caption = #1057#1086#1089#1090#1072#1074
         DataBinding.FieldName = 'CompositionName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -98,7 +98,7 @@ object PriceListItemForm: TPriceListItemForm
         Width = 82
       end
       object GoodsInfoName: TcxGridDBColumn
-        Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+        Caption = #1054#1087#1080#1089#1072#1085#1080#1077
         DataBinding.FieldName = 'GoodsInfoName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -106,7 +106,7 @@ object PriceListItemForm: TPriceListItemForm
         Width = 80
       end
       object LineFabricaName: TcxGridDBColumn
-        Caption = #1051#1080#1085#1080#1103' '#1082#1086#1083#1083#1077#1082#1094#1080#1080
+        Caption = #1051#1080#1085#1080#1103
         DataBinding.FieldName = 'LineFabricaName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -114,7 +114,7 @@ object PriceListItemForm: TPriceListItemForm
         Width = 76
       end
       object LabelName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1094#1077#1085#1085#1080#1082#1072
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'LabelName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -137,14 +137,14 @@ object PriceListItemForm: TPriceListItemForm
         Options.Editing = False
         Width = 55
       end
-      object Price: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072
+      object ValuePrice: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1043#1056#1053
         DataBinding.FieldName = 'ValuePrice'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 83
       end
       object GoodsisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -688,7 +688,7 @@ object PriceListItemForm: TPriceListItemForm
         Column = GoodsCode
       end
       item
-        Column = Price
+        Column = ValuePrice
       end>
     SummaryItemList = <>
     Left = 192

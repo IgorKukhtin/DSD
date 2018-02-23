@@ -25,8 +25,6 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 72
-    ExplicitHeight = 326
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -44,6 +42,73 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object UnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object BrandName: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
+        DataBinding.FieldName = 'BrandName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 65
+      end
+      object PeriodName: TcxGridDBColumn
+        Caption = #1057#1077#1079#1086#1085
+        DataBinding.FieldName = 'PeriodName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 65
+      end
+      object PeriodYear: TcxGridDBColumn
+        Caption = #1043#1086#1076
+        DataBinding.FieldName = 'PeriodYear'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 65
+      end
+      object PartnerName: TcxGridDBColumn
+        Caption = #1055#1086'c'#1090#1072#1074#1097#1080#1082
+        DataBinding.FieldName = 'PartnerName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 74
+      end
+      object GroupNameFull: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072
+        DataBinding.FieldName = 'GroupNameFull'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 135
+      end
+      object GoodsGroupName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' ('#1090#1086#1074'.)'
+        DataBinding.FieldName = 'GoodsGroupName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 93
+      end
+      object LabelName: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'LabelName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 155
+      end
       object GoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'GoodsCode'
@@ -53,12 +118,73 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         Width = 35
       end
       object Name: TcxGridDBColumn
-        Caption = #1058#1086#1074#1072#1088
+        Caption = #1040#1088#1090#1080#1082#1091#1083
         DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 150
+      end
+      object CompositionGroupName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1089#1086#1089#1090#1072#1074#1072
+        DataBinding.FieldName = 'CompositionGroupName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 170
+      end
+      object CompositionName: TcxGridDBColumn
+        Caption = #1057#1086#1089#1090#1072#1074
+        DataBinding.FieldName = 'CompositionName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 94
+      end
+      object GoodsInfoName: TcxGridDBColumn
+        Caption = #1054#1087#1080#1089#1072#1085#1080#1077
+        DataBinding.FieldName = 'GoodsInfoName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 110
+      end
+      object LineFabricaName: TcxGridDBColumn
+        Caption = #1051#1080#1085#1080#1103
+        DataBinding.FieldName = 'LineFabricaName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 111
+      end
+      object FabrikaName: TcxGridDBColumn
+        Caption = #1060#1072#1073#1088#1080#1082#1072
+        DataBinding.FieldName = 'FabrikaName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 107
+      end
+      object GoodsSizeName: TcxGridDBColumn
+        Caption = #1056#1072#1079#1084#1077#1088
+        DataBinding.FieldName = 'GoodsSizeName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 97
+      end
+      object MeasureName: TcxGridDBColumn
+        Caption = #1045#1076'. '#1080#1079#1084'.'
+        DataBinding.FieldName = 'MeasureName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 99
       end
       object StartDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1089
@@ -76,8 +202,32 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         Options.Editing = False
         Width = 55
       end
-      object Price: TcxGridDBColumn
-        Caption = '% '#1089#1082#1080#1076#1082#1080
+      object OperDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080
+        DataBinding.FieldName = 'OperDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 89
+      end
+      object CurrencyName: TcxGridDBColumn
+        Caption = #1042#1072#1083'. '#1074#1093'.'
+        DataBinding.FieldName = 'CurrencyName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 114
+      end
+      object OperPrice: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1074#1093'.'
+        DataBinding.FieldName = 'OperPrice'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 65
+      end
+      object ValuePrice: TcxGridDBColumn
+        Caption = '% '#1089#1082'.'
         DataBinding.FieldName = 'ValuePrice'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
@@ -86,16 +236,17 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         Options.Editing = False
         Width = 70
       end
+      object PriceSale: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1043#1056#1053
+        DataBinding.FieldName = 'PriceSale'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 65
+      end
       object GoodsisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
-        Visible = False
-        Options.Editing = False
-        VisibleForCustomization = False
-        Width = 20
-      end
-      object ObjectId: TcxGridDBColumn
-        DataBinding.FieldName = 'ObjectId'
         Visible = False
         Options.Editing = False
         VisibleForCustomization = False
@@ -135,165 +286,12 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         Options.Editing = False
         Width = 80
       end
-      object PartnerName: TcxGridDBColumn
-        Caption = #1055#1086'c'#1090#1072#1074#1097#1080#1082
-        DataBinding.FieldName = 'PartnerName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
+      object ObjectId: TcxGridDBColumn
+        DataBinding.FieldName = 'ObjectId'
+        Visible = False
         Options.Editing = False
-        Width = 74
-      end
-      object UnitName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'UnitName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 100
-      end
-      object OperDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1087#1088#1080#1093#1086#1076#1072
-        DataBinding.FieldName = 'OperDate'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 89
-      end
-      object GroupNameFull: TcxGridDBColumn
-        Caption = #1055#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1087#1087#1099
-        DataBinding.FieldName = 'GroupNameFull'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 135
-      end
-      object CurrencyName: TcxGridDBColumn
-        Caption = #1042#1072#1083#1102#1090#1072' '#1076#1083#1103' '#1094#1077#1085#1099' '#1087#1088#1080#1093#1086#1076#1072
-        DataBinding.FieldName = 'CurrencyName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 114
-      end
-      object OperPrice: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072
-        DataBinding.FieldName = 'OperPrice'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 65
-      end
-      object PriceSale: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
-        DataBinding.FieldName = 'PriceSale'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 65
-      end
-      object BrandName: TcxGridDBColumn
-        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
-        DataBinding.FieldName = 'BrandName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 65
-      end
-      object PeriodName: TcxGridDBColumn
-        Caption = #1057#1077#1079#1086#1085
-        DataBinding.FieldName = 'PeriodName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 65
-      end
-      object PeriodYear: TcxGridDBColumn
-        Caption = #1043#1086#1076
-        DataBinding.FieldName = 'PeriodYear'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 65
-      end
-      object FabrikaName: TcxGridDBColumn
-        Caption = #1060#1072#1073#1088#1080#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
-        DataBinding.FieldName = 'FabrikaName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 107
-      end
-      object GoodsGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'GoodsGroupName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 93
-      end
-      object MeasureName: TcxGridDBColumn
-        Caption = #1045#1076#1080#1085#1080#1094#1072' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
-        DataBinding.FieldName = 'MeasureName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 99
-      end
-      object CompositionGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' '#1076#1083#1103' '#1089#1086#1089#1090#1072#1074#1072' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'CompositionGroupName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 170
-      end
-      object CompositionName: TcxGridDBColumn
-        Caption = #1057#1086#1089#1090#1072#1074' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'CompositionName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 94
-      end
-      object GoodsInfoName: TcxGridDBColumn
-        Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'GoodsInfoName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 110
-      end
-      object LineFabricaName: TcxGridDBColumn
-        Caption = #1051#1080#1085#1080#1103' '#1082#1086#1083#1083#1077#1082#1094#1080#1080
-        DataBinding.FieldName = 'LineFabricaName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 111
-      end
-      object LabelName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1094#1077#1085#1085#1080#1082#1072
-        DataBinding.FieldName = 'LabelName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 155
-      end
-      object GoodsSizeName: TcxGridDBColumn
-        Caption = #1056#1072#1079#1084#1077#1088' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'GoodsSizeName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 97
+        VisibleForCustomization = False
+        Width = 20
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -325,7 +323,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       Width = 202
     end
     object edShowDate: TcxDateEdit
-      Left = 670
+      Left = 641
       Top = 9
       EditValue = 42856d
       Properties.SaveTime = False
@@ -334,12 +332,12 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       Width = 82
     end
     object cxLabel2: TcxLabel
-      Left = 560
+      Left = 531
       Top = 10
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1089#1082#1080#1076#1086#1082' '#1085#1072':'
     end
     object edPersent: TcxCurrencyEdit
-      Left = 815
+      Left = 786
       Top = 36
       EditValue = '0'
       Properties.AssignedValues.MinValue = True
@@ -381,44 +379,52 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         end>
       Properties.ReadOnly = True
       TabOrder = 8
-      Width = 173
+      Width = 175
     end
     object cxLabel7: TcxLabel
-      Left = 297
+      Left = 303
       Top = 37
-      Caption = #1043#1086#1076' ('#1085#1072#1095'.):'
-    end
-    object edPeriodYearStart: TcxCurrencyEdit
-      Left = 357
-      Top = 36
-      EditValue = 0.000000000000000000
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = '0'
-      TabOrder = 10
-      Width = 40
-    end
-    object edPeriodYearEnd: TcxCurrencyEdit
-      Left = 472
-      Top = 36
-      EditValue = 2017.000000000000000000
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = '0'
-      TabOrder = 11
-      Width = 40
+      Caption = #1043#1086#1076' '#1089' ...'
     end
     object cxLabel8: TcxLabel
-      Left = 405
+      Left = 407
       Top = 37
-      Caption = #1043#1086#1076' ('#1086#1082#1086#1085'.):'
+      Caption = #1043#1086#1076' '#1087#1086' ...'
+    end
+    object edStartYear: TcxButtonEdit
+      Left = 349
+      Top = 36
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 11
+      Text = '2000'
+      Width = 49
+    end
+    object edEndYear: TcxButtonEdit
+      Left = 462
+      Top = 36
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 12
+      Text = '2018'
+      Width = 52
     end
   end
   object cxLabel3: TcxLabel
-    Left = 560
+    Left = 531
     Top = 63
     Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1089#1082#1080#1076#1082#1080' '#1089':'
   end
   object edOperDate: TcxDateEdit
-    Left = 670
+    Left = 641
     Top = 62
     EditValue = 42856d
     Properties.SaveTime = False
@@ -427,7 +433,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
     Width = 82
   end
   object cxLabel4: TcxLabel
-    Left = 758
+    Left = 729
     Top = 63
     Caption = '% '#1089#1082#1080#1076#1082#1080':'
   end
@@ -467,6 +473,16 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
           'Left'
           'Top'
           'Width')
+      end
+      item
+        Component = edStartYear
+        Properties.Strings = (
+          'Text')
+      end
+      item
+        Component = edEndYear
+        Properties.Strings = (
+          'Text')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -897,17 +913,15 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PeriodYearStart'
+          Name = 'StartYear'
           Value = '0'
-          Component = edPeriodYearStart
           DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PeriodYearEnd'
+          Name = 'EndYear'
           Value = ''
-          Component = edPeriodYearEnd
           DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -958,17 +972,17 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPeriodYearStart'
+        Name = 'inStartYear'
         Value = Null
-        Component = edPeriodYearStart
+        Component = edStartYear
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPeriodYearEnd'
+        Name = 'inEndYear'
         Value = Null
-        Component = edPeriodYearEnd
+        Component = edEndYear
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -983,7 +997,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       end>
     PackSize = 1
     Left = 144
-    Top = 104
+    Top = 128
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1005,7 +1019,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         Column = GoodsCode
       end
       item
-        Column = Price
+        Column = ValuePrice
       end>
     SummaryItemList = <>
     Left = 192
@@ -1133,10 +1147,8 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         Component = GuidesPeriod
       end
       item
-        Component = edPeriodYearEnd
       end
       item
-        Component = edPeriodYearStart
       end
       item
         Component = edShowDate
@@ -1311,5 +1323,43 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       end>
     Left = 278
     Top = 26
+  end
+  object GuidesStartYear: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edStartYear
+    Key = '0'
+    FormNameParam.Value = 'TPeriodYear_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodYear_ChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'PeriodYear'
+        Value = ''
+        Component = edStartYear
+        MultiSelectSeparator = ','
+      end>
+    Left = 442
+    Top = 89
+  end
+  object GuidesEndYear: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edEndYear
+    Key = '0'
+    FormNameParam.Value = 'TPeriodYear_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodYear_ChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'PeriodYear'
+        Value = ''
+        Component = edEndYear
+        MultiSelectSeparator = ','
+      end>
+    Left = 493
+    Top = 99
   end
 end

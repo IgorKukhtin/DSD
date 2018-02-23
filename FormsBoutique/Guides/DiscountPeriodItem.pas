@@ -56,7 +56,7 @@ type
     cxLabel3: TcxLabel;
     edOperDate: TcxDateEdit;
     EndDate: TcxGridDBColumn;
-    Price: TcxGridDBColumn;
+    ValuePrice: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
     actDiscountPeriodGoods: TdsdOpenForm;
     bbPriceListGoodsItem: TdxBarButton;
@@ -91,11 +91,13 @@ type
     cxLabel6: TcxLabel;
     edPeriod: TcxButtonEdit;
     cxLabel7: TcxLabel;
-    edPeriodYearStart: TcxCurrencyEdit;
-    edPeriodYearEnd: TcxCurrencyEdit;
     cxLabel8: TcxLabel;
     GuidesPeriod: TdsdGuides;
     bbExecuteDialog: TdxBarButton;
+    edStartYear: TcxButtonEdit;
+    GuidesStartYear: TdsdGuides;
+    edEndYear: TcxButtonEdit;
+    GuidesEndYear: TdsdGuides;
   private
     { Private declarations }
   public

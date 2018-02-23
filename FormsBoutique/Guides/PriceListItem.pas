@@ -56,7 +56,7 @@ type
     cxLabel3: TcxLabel;
     edOperDate: TcxDateEdit;
     EndDate: TcxGridDBColumn;
-    Price: TcxGridDBColumn;
+    ValuePrice: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
     actPriceListGoods: TdsdOpenForm;
     bbPriceListGoodsItem: TdxBarButton;
