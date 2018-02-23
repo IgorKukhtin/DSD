@@ -1,30 +1,30 @@
 inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077'>'
-  ClientHeight = 455
+  ClientHeight = 429
   ClientWidth = 1020
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1036
-  ExplicitHeight = 493
+  ExplicitHeight = 467
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1020
-    Height = 398
+    Height = 372
     TabOrder = 3
     ExplicitWidth = 1020
-    ExplicitHeight = 416
-    ClientRectBottom = 398
+    ExplicitHeight = 398
+    ClientRectBottom = 372
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
-      ExplicitHeight = 416
+      ExplicitHeight = 398
       inherited cxGrid: TcxGrid
         Width = 1020
-        Height = 398
+        Height = 372
         ExplicitWidth = 1020
-        ExplicitHeight = 416
+        ExplicitHeight = 398
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -1501,6 +1501,49 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
       ImageIndex = 16
     end
+    object actPrintPackGross: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_Pack
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Pack
+        end>
+      Caption = #1059#1087#1072#1082'. '#1051#1080#1089#1090' '#1074#1077#1089' '#1041#1056#1059#1058#1058#1054
+      Hint = #1059#1087#1072#1082'. '#1051#1080#1089#1090' '#1074#1077#1089' '#1041#1056#1059#1058#1058#1054
+      ImageIndex = 16
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_SalePackGross'
+      ReportNameParam.Name = 'PrintMovement_SalePackGross'
+      ReportNameParam.Value = 'PrintMovement_SalePackGross'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1665,6 +1708,14 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintPackGross'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -1738,6 +1789,10 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     end
     object bbPrint_QualityDoc: TdxBarButton
       Action = mactPrint_QualityDoc
+      Category = 0
+    end
+    object bbPrintPackGross: TdxBarButton
+      Action = actPrintPackGross
       Category = 0
     end
   end
@@ -2262,5 +2317,32 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     PackSize = 1
     Left = 711
     Top = 240
+  end
+  object spSelectPrint_Pack: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_Pack_Print'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_by'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 327
+    Top = 304
   end
 end

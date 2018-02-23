@@ -88,6 +88,9 @@ type
     actDialog_TTN: TdsdOpenForm;
     mactPrint_TTN: TMultiAction;
     bbPrint_TTN: TdxBarButton;
+    spSelectPrint_Pack: TdsdStoredProc;
+    actPrintPackGross: TdsdPrintAction;
+    bbPrintPackGross: TdxBarButton;
   private
     { Private declarations }
   public

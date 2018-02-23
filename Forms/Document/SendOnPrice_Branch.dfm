@@ -2,10 +2,8 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077' ('#1092#1080#1083#1080#1072#1083')>'
   ClientHeight = 668
   ClientWidth = 944
-  ExplicitLeft = -171
-  ExplicitTop = -122
   ExplicitWidth = 960
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -763,7 +761,44 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object actPrintOut: TdsdPrintAction [13]
+    object actPrintPackGross: TdsdPrintAction [13]
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrint_Pack
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Pack
+        end>
+      Caption = #1059#1087#1072#1082'. '#1051#1080#1089#1090' '#1074#1077#1089' '#1041#1056#1059#1058#1058#1054
+      Hint = #1059#1087#1072#1082'. '#1051#1080#1089#1090' '#1074#1077#1089' '#1041#1056#1059#1058#1058#1054
+      ImageIndex = 16
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'WeighingNumber;NumOrder'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PrintParam'
+          Value = '1'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_SalePackGross'
+      ReportNameParam.Value = 'PrintMovement_SalePackGross'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintOut: TdsdPrintAction [14]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintOut
@@ -820,7 +855,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [18]
+    object actGoodsKindChoice: TOpenChoiceForm [19]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -847,7 +882,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         end>
       isShowModal = True
     end
-    object UnitChoiceForm: TOpenChoiceForm [22]
+    object UnitChoiceForm: TOpenChoiceForm [23]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1203,6 +1238,14 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintPackGross'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -1244,6 +1287,10 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     end
     object bbPrint_TTN: TdxBarButton
       Action = mactPrint_TTN
+      Category = 0
+    end
+    object bbPrintPackGross: TdxBarButton
+      Action = actPrintPackGross
       Category = 0
     end
   end
@@ -2578,5 +2625,32 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     PackSize = 1
     Left = 787
     Top = 360
+  end
+  object spSelectPrint_Pack: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_Pack_Print'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_by'
+        Value = 0
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 775
+    Top = 456
   end
 end

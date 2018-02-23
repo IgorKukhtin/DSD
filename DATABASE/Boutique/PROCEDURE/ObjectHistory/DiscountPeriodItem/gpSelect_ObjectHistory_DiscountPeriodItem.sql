@@ -8,8 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_DiscountPeriodItem(
     IN inBrandId            Integer   , -- торговая марка 
     IN inPeriodId           Integer   , -- сезон
     IN inOperDate           TDateTime , -- Дата действия
-    IN inPeriodYearStart    TFloat    , -- год
-    IN inPeriodYearEnd      TFloat    , -- год    
+    IN inStartYear          TFloat    , -- год
+    IN inEndYear            TFloat    , -- год    
     IN inShowAll            Boolean,   
     IN inSession            TVarChar    -- сессия пользователя
 )                              
@@ -115,8 +115,8 @@ BEGIN
                       AND Object_PartionGoods.UnitId = inUnitId
                       AND (Object_PartionGoods.BrandId = inBrandId OR inBrandId = 0)
                       AND (Object_PartionGoods.PeriodId = inPeriodId OR inPeriodId = 0)   
-                      AND (Object_PartionGoods.PeriodYear >= inPeriodYearStart OR inPeriodYearStart = 0)
-                      AND (Object_PartionGoods.PeriodYear <= inPeriodYearEnd OR inPeriodYearEnd = 0)                   
+                      AND (Object_PartionGoods.PeriodYear >= inStartYear OR inStartYear = 0)
+                      AND (Object_PartionGoods.PeriodYear <= inEndYear OR inEndYear = 0)                   
                     ) 
                  
        SELECT
@@ -253,8 +253,8 @@ BEGIN
                       AND Object_PartionGoods.UnitId = inUnitId
                       AND (Object_PartionGoods.BrandId = inBrandId OR inBrandId = 0)
                       AND (Object_PartionGoods.PeriodId = inPeriodId OR inPeriodId = 0)   
-                      AND (Object_PartionGoods.PeriodYear >= inPeriodYearStart OR inPeriodYearStart =0)
-                      AND (Object_PartionGoods.PeriodYear <= inPeriodYearEnd OR inPeriodYearEnd = 0) 
+                      AND (Object_PartionGoods.PeriodYear >= inStartYear OR inStartYear =0)
+                      AND (Object_PartionGoods.PeriodYear <= inEndYear OR inEndYear = 0) 
                     ) 
 
        SELECT
@@ -330,6 +330,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.02.18         *
  01.07.17         *
  28.04.17         * битики + св-ва товара
  20.08.15         * add inShowAll
@@ -337,4 +338,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- select * from gpSelect_ObjectHistory_DiscountPeriodItem(inUnitId := 506 , inBrandId := 0 , inPeriodId := 0 , inOperDate := ('01.07.2017')::TDateTime , inPeriodYearStart := 0 ::TFloat, inPeriodYearEnd := 2017 ::TFloat, inShowAll := 'False' ::Boolean,  inSession := '2');
+-- select * from gpSelect_ObjectHistory_DiscountPeriodItem(inUnitId := 506 , inBrandId := 0 , inPeriodId := 0 , inOperDate := ('01.07.2017')::TDateTime , inStartYear := 0 ::TFloat, inEndYear := 2017 ::TFloat, inShowAll := 'False' ::Boolean,  inSession := '2');
