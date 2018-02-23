@@ -278,7 +278,12 @@ uses
   Unit_Dialog in '..\..\FormsBoutique\Guides\Unit_Dialog.pas' {Unit_DialogForm: TParentForm},
   Report_SaleOLAPDialog in '..\..\FormsBoutique\Report\Report_SaleOLAPDialog.pas' {Report_SaleOLAPDialogForm: TParentForm},
   Report_SaleOLAP in '..\..\FormsBoutique\Report\Report_SaleOLAP.pas' {Report_SaleOLAPForm: TParentForm},
-  PeriodYear_Choice in '..\..\FormsBoutique\Guides\PeriodYear_Choice.pas' {PeriodYear_ChoiceForm: TParentForm};
+  PeriodYear_Choice in '..\..\FormsBoutique\Guides\PeriodYear_Choice.pas' {PeriodYear_ChoiceForm: TParentForm},
+  Report_ReturnIn in '..\..\FormsBoutique\Report\Report_ReturnIn.pas' {Report_ReturnInForm: TParentForm},
+  Report_Sale in '..\..\FormsBoutique\Report\Report_Sale.pas' {Report_SaleForm: TParentForm},
+  Report_SaleDialog in '..\..\FormsBoutique\Report\Report_SaleDialog.pas' {Report_SaleDialogForm: TParentForm},
+  Report_OH_DiscountPeriod in '..\..\FormsBoutique\Report\Report_OH_DiscountPeriod.pas' {Report_OH_DiscountPeriodForm: TParentForm},
+  Report_OH_DiscountPeriodDialog in '..\..\FormsBoutique\Report\Report_OH_DiscountPeriodDialog.pas' {Report_OH_DiscountPeriodDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

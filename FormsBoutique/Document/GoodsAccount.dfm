@@ -28,6 +28,8 @@ object GoodsAccountForm: TGoodsAccountForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitLeft = 40
+    ExplicitTop = -6
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -211,6 +213,34 @@ object GoodsAccountForm: TGoodsAccountForm
         end>
       TabOrder = 22
       Width = 305
+    end
+    object cxLabel9: TcxLabel
+      Left = 677
+      Top = 45
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103
+    end
+    object ceComment_Client: TcxTextEdit
+      Left = 677
+      Top = 63
+      Properties.ReadOnly = True
+      TabOrder = 24
+      Width = 241
+    end
+    object cxLabel10: TcxLabel
+      Left = 923
+      Top = 45
+      Caption = '% '#1089#1082#1080#1076#1082#1080' '#1054#1073#1091#1074#1100' '#1076#1077#1090#1089#1082'.'
+    end
+    object edDiscountTaxTwo: TcxCurrencyEdit
+      Left = 923
+      Top = 63
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 1
+      Properties.DisplayFormat = '0.0 %'
+      Properties.ReadOnly = True
+      TabOrder = 26
+      Width = 127
     end
   end
   object cxPageControl: TcxPageControl
@@ -1009,32 +1039,8 @@ object GoodsAccountForm: TGoodsAccountForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0.'
     Properties.ReadOnly = True
-    TabOrder = 6
+    TabOrder = 5
     Width = 85
-  end
-  object cxLabel9: TcxLabel
-    Left = 655
-    Top = 45
-    Caption = #1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090
-  end
-  object ceCity: TcxTextEdit
-    Left = 655
-    Top = 63
-    Properties.ReadOnly = True
-    TabOrder = 8
-    Width = 121
-  end
-  object cxLabel10: TcxLabel
-    Left = 782
-    Top = 45
-    Caption = #1040#1076#1088#1077#1089
-  end
-  object ceAddress: TcxTextEdit
-    Left = 782
-    Top = 63
-    Properties.ReadOnly = True
-    TabOrder = 10
-    Width = 268
   end
   object cxLabel13: TcxLabel
     Left = 9
@@ -1045,7 +1051,7 @@ object GoodsAccountForm: TGoodsAccountForm
     Left = 9
     Top = 103
     Properties.ReadOnly = True
-    TabOrder = 12
+    TabOrder = 8
     Width = 117
   end
   object cxLabel17: TcxLabel
@@ -1057,7 +1063,7 @@ object GoodsAccountForm: TGoodsAccountForm
     Left = 130
     Top = 103
     Properties.ReadOnly = True
-    TabOrder = 14
+    TabOrder = 10
     Width = 117
   end
   object cxLabel14: TcxLabel
@@ -1071,7 +1077,7 @@ object GoodsAccountForm: TGoodsAccountForm
     EditValue = 42864d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 15
+    TabOrder = 11
     Width = 104
   end
   object FormParams: TdsdFormParams
@@ -2461,16 +2467,16 @@ object GoodsAccountForm: TGoodsAccountForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'CityName'
+        Name = 'DiscountTaxTwo'
         Value = ''
-        Component = ceCity
-        DataType = ftString
+        Component = edDiscountTaxTwo
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Address'
+        Name = 'Comment_Client'
         Value = ''
-        Component = ceAddress
+        Component = ceComment_Client
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -2678,14 +2684,12 @@ object GoodsAccountForm: TGoodsAccountForm
       item
         Name = 'CityName'
         Value = Null
-        Component = ceCity
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'Address'
         Value = Null
-        Component = ceAddress
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -2987,14 +2991,12 @@ object GoodsAccountForm: TGoodsAccountForm
       item
         Name = 'CityName'
         Value = ''
-        Component = ceCity
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'Address'
         Value = ''
-        Component = ceAddress
         DataType = ftString
         MultiSelectSeparator = ','
       end

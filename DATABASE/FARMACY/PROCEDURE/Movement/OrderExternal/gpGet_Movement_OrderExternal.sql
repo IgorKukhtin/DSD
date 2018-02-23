@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Comment TVarChar
              , Zakaz_Text TVarChar
              , Dostavka_Text TVarChar
-             , OrderSumm TVarChar, OrderTime TVarChar
+             , OrderSumm TVarChar, OrderTime TVarChar, OrderSummComment TVarChar
              , isDeferred Boolean
               )
 AS
@@ -51,6 +51,7 @@ BEGIN
              , CAST ('' AS TVarChar) 		                AS Dostavka_Text
              , CAST ('' AS TVarChar) 		                AS OrderSumm
              , CAST ('' AS TVarChar) 		                AS OrderTime
+             , CAST ('' AS TVarChar) 		                AS OrderSummComment
              , FALSE                                            AS isDeferred
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
@@ -108,7 +109,7 @@ BEGIN
           , COALESCE (tmpOrderShedule.Zakaz_Text, '')   ::TVarChar   AS Zakaz_Text   --День заказа (информативно)
           , COALESCE (tmpOrderShedule.Dostavka_Text,'') ::TVarChar   AS Dostavka_Text   --День доставки (информативно)
 
-           , CASE WHEN COALESCE (ObjectFloat_OrderSumm_Contract.ValueData, 0) = 0 
+          /* , CASE WHEN COALESCE (ObjectFloat_OrderSumm_Contract.ValueData, 0) = 0 
                   THEN CASE WHEN COALESCE (ObjectFloat_OrderSumm.ValueData, 0) = 0 
                             THEN CASE WHEN COALESCE (ObjectString_OrderSumm_Contract.ValueData, '') <> '' 
                                       THEN ObjectString_OrderSumm_Contract.ValueData 
@@ -119,14 +120,15 @@ BEGIN
                   ELSE CAST (ObjectFloat_OrderSumm_Contract.ValueData AS NUMERIC (16, 2)) ||' ' || COALESCE (ObjectString_OrderSumm_Contract.ValueData,'')
              END                                          ::TVarChar AS OrderSumm
              
-           /*, CASE WHEN COALESCE (ObjectFloat_OrderSumm.ValueData,0) = 0 THEN COALESCE (ObjectString_OrderSumm.ValueData,'') 
-                  ELSE CAST (ObjectFloat_OrderSumm.ValueData AS NUMERIC (16, 2)) ||' ' || COALESCE (ObjectString_OrderSumm.ValueData,'')
-             END                                          ::TVarChar AS OrderSumm
-             */
            , CASE WHEN COALESCE (ObjectString_OrderTime_Contract.ValueData,'')  <> ''  
                   THEN ObjectString_OrderTime_Contract.ValueData 
                   ELSE COALESCE (ObjectString_OrderTime.ValueData,'') 
              END                                          ::TVarChar AS OrderTime
+           */
+             
+           , CAST (ObjectFloat_OrderSumm_Contract.ValueData AS NUMERIC (16, 2)) ::TVarChar AS OrderSumm
+           , COALESCE (ObjectString_OrderTime_Contract.ValueData,'')            ::TVarChar AS OrderTime
+           , COALESCE (ObjectString_OrderSumm_Contract.ValueData,'')            ::TVarChar AS OrderSummComment
 
            , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) :: Boolean  AS isDeferred
 
@@ -169,7 +171,7 @@ BEGIN
                                         AND MovementLinkObject_OrderKind.DescId = zc_MovementLinkObject_OrderKind()
             LEFT JOIN Object AS Object_OrderKind ON Object_OrderKind.Id = MovementLinkObject_OrderKind.ObjectId
             --
-            LEFT JOIN ObjectFloat AS ObjectFloat_OrderSumm
+/*            LEFT JOIN ObjectFloat AS ObjectFloat_OrderSumm
                                   ON ObjectFloat_OrderSumm.ObjectId = Object_From.Id
                                  AND ObjectFloat_OrderSumm.DescId = zc_ObjectFloat_Juridical_OrderSumm()
             LEFT JOIN ObjectString AS ObjectString_OrderSumm
@@ -178,6 +180,7 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_OrderTime
                                   ON ObjectString_OrderTime.ObjectId = Object_From.Id
                                  AND ObjectString_OrderTime.DescId = zc_ObjectString_Juridical_OrderTime()
+*/
             --
             LEFT JOIN ObjectFloat AS ObjectFloat_OrderSumm_Contract
                                   ON ObjectFloat_OrderSumm_Contract.ObjectId = Object_Contract.Id
@@ -208,6 +211,7 @@ ALTER FUNCTION gpGet_Movement_OrderExternal (Integer, TDateTime, TVarChar) OWNER
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.02.18         *
  22.12.16         * add Deferred
  10.05.16         *
  01.07.14                                                        *

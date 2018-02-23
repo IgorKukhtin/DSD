@@ -3,10 +3,8 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
   ClientHeight = 535
   ClientWidth = 1073
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -405
-  ExplicitTop = -81
   ExplicitWidth = 1089
-  ExplicitHeight = 574
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -234,6 +232,15 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Options.Editing = False
             Width = 55
           end
+          object OperDate_Dostavka: TcxGridDBColumn
+            Caption = #1041#1083#1080#1078'. '#1076#1086#1089#1090#1072#1074#1082#1072
+            DataBinding.FieldName = 'OperDate_Dostavka'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1073#1083#1080#1078#1072#1081#1097#1077#1081' '#1076#1086#1089#1090#1072#1074#1082#1080
+            Options.Editing = False
+            Width = 60
+          end
           object isDostavkaToday: TcxGridDBColumn
             Caption = #1044#1086#1089#1090'. '#1089#1077#1075#1086#1076#1085#1103
             DataBinding.FieldName = 'isDostavkaToday'
@@ -249,15 +256,6 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1072#1090#1072' '#1073#1083#1080#1078#1072#1081#1097#1077#1075#1086' '#1079#1072#1082#1072#1079#1072
-            Options.Editing = False
-            Width = 60
-          end
-          object OperDate_Dostavka: TcxGridDBColumn
-            Caption = #1041#1083#1080#1078'. '#1076#1086#1089#1090#1072#1074#1082#1072
-            DataBinding.FieldName = 'OperDate_Dostavka'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072' '#1073#1083#1080#1078#1072#1081#1097#1077#1081' '#1076#1086#1089#1090#1072#1074#1082#1080
             Options.Editing = False
             Width = 60
           end

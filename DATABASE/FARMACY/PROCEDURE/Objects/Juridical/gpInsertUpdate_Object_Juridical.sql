@@ -6,6 +6,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarC
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
@@ -15,9 +16,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
     IN inRetailId                Integer   ,    -- ссылка на подразделение
     IN inPercent                 TFloat    ,    
     IN inPayOrder                TFloat    ,    -- Очередь платежа
-    IN inOrderSumm               TFloat    ,    -- минимальная сумма для заказа
-    IN inOrderSummComment        TVarChar  ,    -- Примечание к минимальной сумме для заказа
-    IN inOrderTime               TVarChar  ,    -- информативно - максимальное время отправки
     IN inisLoadBarcode           Boolean   ,    -- импорт штрих-кодов
     IN inisDeferred              Boolean   ,    -- Исключение - заказ всегда "Отложен"
     IN inSession                 TVarChar       -- сессия пользователя
@@ -56,12 +54,6 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Juridical_PayOrder(), ioId, inPayOrder);
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Juridical_OrderSumm(), ioId, inOrderSumm);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Juridical_OrderSumm(), ioId, inOrderSummComment);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Juridical_OrderTime(), ioId, inOrderTime);
-   -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_LoadBarcode(), ioId, inisLoadBarcode);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_Deferred(), ioId, inisDeferred);
@@ -71,13 +63,13 @@ BEGIN
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, tvarchar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.  Ярошенко Р.Ф.
+ 22.02.18         * dell inOrderSumm, inOrderSummComment, inOrderTime
  17.08.17         *              
  27.06.17                                                                        *
  14.01.17         *
@@ -88,4 +80,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- select * from gpInsertUpdate_Object_Juridical(ioId := 0 , inCode := 1 , inName := 'sdggsd' , inRetailId := 0 , inisCorporate := 'False' ,  inSession := '8');
+--

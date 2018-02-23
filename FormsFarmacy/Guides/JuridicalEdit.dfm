@@ -48,8 +48,8 @@
     Width = 273
   end
   object cbisCorporate: TcxCheckBox [6]
-    Left = 9
-    Top = 146
+    Left = 8
+    Top = 134
     Caption = #1053#1072#1096#1077' '#1102#1088'.'#1083'.'
     TabOrder = 1
     Width = 93
@@ -399,78 +399,43 @@
     Width = 273
   end
   object cePercent: TcxCurrencyEdit [10]
-    Left = 112
-    Top = 146
+    Left = 8
+    Top = 182
     Properties.DisplayFormat = ',0.##'
     TabOrder = 12
-    Width = 166
+    Width = 270
   end
   object cxLabel2: TcxLabel [11]
-    Left = 112
-    Top = 128
+    Left = 8
+    Top = 161
     Caption = '% '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' '#1085#1072#1094#1077#1085#1082#1080
   end
   object cxLabel3: TcxLabel [12]
     Left = 8
-    Top = 173
+    Top = 206
     Caption = #1054#1095#1077#1088#1077#1076#1100' '#1087#1083#1072#1090#1077#1078#1072':'
   end
   object cePayOrder: TcxCurrencyEdit [13]
-    Left = 112
-    Top = 173
+    Left = 8
+    Top = 226
     Properties.AssignedValues.MinValue = True
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0'
-    TabOrder = 14
-    Width = 166
-  end
-  object cxLabel4: TcxLabel [14]
-    Left = 8
-    Top = 203
-    Caption = #1052#1080#1085'. '#1079#1072#1082#1072#1079', '#1075#1088#1085
-  end
-  object ceOrderSumm: TcxCurrencyEdit [15]
-    Left = 8
-    Top = 221
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 16
-    Width = 97
-  end
-  object cxLabel5: TcxLabel [16]
-    Left = 111
-    Top = 203
-    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1084#1080#1085'. '#1089#1091#1084#1084#1077' '#1079#1072#1082#1072#1079#1072
-  end
-  object ceOrderSummComment: TcxTextEdit [17]
-    Left = 111
-    Top = 221
-    TabOrder = 17
-    Width = 167
-  end
-  object ceOrderTime: TcxTextEdit [18]
-    Left = 8
-    Top = 264
-    TabOrder = 21
+    TabOrder = 13
     Width = 270
   end
-  object cxLabel14: TcxLabel [19]
+  object chisLoadBarcode: TcxCheckBox [14]
     Left = 8
-    Top = 246
-    Caption = #1052#1072#1082#1089#1080#1084#1072#1083#1100#1085#1086#1077' '#1074#1088#1077#1084#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' ('#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086')'
-  end
-  object chisLoadBarcode: TcxCheckBox [20]
-    Left = 8
-    Top = 298
+    Top = 279
     Caption = #1088#1072#1079#1088#1077#1096#1080#1090#1100' '#1080#1084#1087#1086#1088#1090' '#1096#1090#1088#1080#1093'-'#1082#1086#1076#1086#1074
-    TabOrder = 24
+    TabOrder = 17
     Width = 270
   end
-  object cbisDeferred: TcxCheckBox [21]
+  object cbisDeferred: TcxCheckBox [15]
     Left = 8
-    Top = 325
+    Top = 306
     Caption = #1080#1089#1082#1083#1102#1095#1077#1085#1080#1077' - '#1079#1072#1082#1072#1079' '#1074#1089#1077#1075#1076#1072' "'#1054#1090#1083#1086#1078#1077#1085'"'
-    TabOrder = 25
+    TabOrder = 19
     Width = 270
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -761,25 +726,22 @@
       item
         Name = 'inOrderSumm'
         Value = Null
-        Component = ceOrderSumm
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
         Name = 'inOrderSummComment'
         Value = Null
-        Component = ceOrderSummComment
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
         Name = 'inOrderTime'
         Value = Null
-        Component = ceOrderTime
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -866,22 +828,22 @@
       item
         Name = 'OrderSumm'
         Value = Null
-        Component = ceOrderSumm
         DataType = ftFloat
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
         Name = 'OrderSummComment'
         Value = Null
-        Component = ceOrderSummComment
         DataType = ftString
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
         Name = 'OrderTime'
         Value = Null
-        Component = ceOrderTime
         DataType = ftString
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item

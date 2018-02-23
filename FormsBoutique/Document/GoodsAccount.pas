@@ -127,10 +127,6 @@ type
     PartionId: TcxGridDBColumn;
     edHappyDate: TcxDateEdit;
     cxLabel8: TcxLabel;
-    cxLabel9: TcxLabel;
-    ceCity: TcxTextEdit;
-    cxLabel10: TcxLabel;
-    ceAddress: TcxTextEdit;
     cxLabel13: TcxLabel;
     cePhoneMobile: TcxTextEdit;
     cxLabel17: TcxLabel;
@@ -171,6 +167,10 @@ type
     bbPrintCheck: TdxBarButton;
     actPrintCheck: TdsdPrintAction;
     spSelectPrint_Check: TdsdStoredProc;
+    cxLabel9: TcxLabel;
+    ceComment_Client: TcxTextEdit;
+    cxLabel10: TcxLabel;
+    edDiscountTaxTwo: TcxCurrencyEdit;
   private
   public
   end;

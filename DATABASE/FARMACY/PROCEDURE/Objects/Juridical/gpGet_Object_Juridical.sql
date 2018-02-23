@@ -11,8 +11,6 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isCorporate boolean,
                Percent TFloat, 
                PayOrder TFloat,
-               OrderSumm TFloat, OrderSummComment TVarChar,
-               OrderTime TVarChar,
                isLoadBarcode Boolean,
                isDeferred Boolean,
                isErased boolean) AS
@@ -36,10 +34,6 @@ BEGIN
            , 0::TFloat               AS Percent    
            , NULL::TFloat            AS PayOrder
        
-           , CAST (0 as TFloat)      AS OrderSumm
-           , CAST ('' as TVarChar)   AS OrderSummComment
-           , CAST ('' as TVarChar)   AS OrderTime
-
            , FALSE                   AS isLoadBarcode  
            , FALSE                   AS isDeferred
 
@@ -58,10 +52,6 @@ BEGIN
            , ObjectBoolean_isCorporate.ValueData AS isCorporate
            , ObjectFloat_Percent.ValueData       AS Percent
            , ObjectFloat_PayOrder.ValueData      AS PayOrder
-
-           , COALESCE (ObjectFloat_OrderSumm.ValueData, 0)  ::TFloat   AS OrderSumm
-           , COALESCE (ObjectString_OrderSumm.ValueData,'') ::TVarChar AS OrderSummComment
-           , COALESCE (ObjectString_OrderTime.ValueData,'') ::TVarChar AS OrderTime
 
            , COALESCE (ObjectBoolean_LoadBarcode.ValueData, FALSE)     AS isLoadBarcode
            , COALESCE (ObjectBoolean_Deferred.ValueData, FALSE)        AS isDeferred
@@ -87,15 +77,6 @@ BEGIN
                                    ON ObjectBoolean_isCorporate.ObjectId = Object_Juridical.Id
                                   AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
 
-           LEFT JOIN ObjectFloat AS ObjectFloat_OrderSumm
-                                 ON ObjectFloat_OrderSumm.ObjectId = Object_Juridical.Id
-                                AND ObjectFloat_OrderSumm.DescId = zc_ObjectFloat_Juridical_OrderSumm()
-           LEFT JOIN ObjectString AS ObjectString_OrderSumm
-                                  ON ObjectString_OrderSumm.ObjectId = Object_Juridical.Id
-                                 AND ObjectString_OrderSumm.DescId = zc_ObjectString_Juridical_OrderSumm()
-           LEFT JOIN ObjectString AS ObjectString_OrderTime
-                                  ON ObjectString_OrderTime.ObjectId = Object_Juridical.Id
-                                 AND ObjectString_OrderTime.DescId = zc_ObjectString_Juridical_OrderTime()
            LEFT JOIN ObjectBoolean AS ObjectBoolean_LoadBarcode 
                                    ON ObjectBoolean_LoadBarcode.ObjectId = Object_Juridical.Id
                                   AND ObjectBoolean_LoadBarcode.DescId = zc_ObjectBoolean_Juridical_LoadBarcode()
@@ -110,13 +91,12 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_Juridical (integer, TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.
+ 22.02.18         * dell OrderSumm, OrderSummComment, OrderTime
  17.08.17         * add isDeferred
  27.06.17                                                                       * isLoadBarcode
  14.01.17         * 

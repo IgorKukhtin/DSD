@@ -26,6 +26,8 @@ object ReturnInForm: TReturnInForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitLeft = -88
+    ExplicitTop = 5
     object edInvNumber: TcxTextEdit
       Left = 177
       Top = 23
@@ -61,7 +63,7 @@ object ReturnInForm: TReturnInForm
           Kind = bkEllipsis
         end>
       TabOrder = 3
-      Width = 238
+      Width = 325
     end
     object edTo: TcxButtonEdit
       Left = 340
@@ -153,7 +155,7 @@ object ReturnInForm: TReturnInForm
       Width = 92
     end
     object edHappyDate: TcxDateEdit
-      Left = 252
+      Left = 340
       Top = 63
       EditValue = 42864d
       Properties.DisplayFormat = 'DD.MM'
@@ -164,13 +166,13 @@ object ReturnInForm: TReturnInForm
       Width = 82
     end
     object cxLabel8: TcxLabel
-      Left = 252
+      Left = 340
       Top = 45
       Caption = #1044#1077#1085#1100' '#1088#1086#1078#1076#1077#1085#1080#1103
     end
     object cbisPay: TcxCheckBox
-      Left = 923
-      Top = 63
+      Left = 939
+      Top = 58
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089' '#1086#1087#1083#1072#1090#1086#1081
       Properties.ReadOnly = False
       TabOrder = 18
@@ -218,6 +220,34 @@ object ReturnInForm: TReturnInForm
       Left = 880
       Top = 85
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+    end
+    object cxLabel9: TcxLabel
+      Left = 429
+      Top = 45
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103
+    end
+    object ceComment_Client: TcxTextEdit
+      Left = 429
+      Top = 63
+      Properties.ReadOnly = True
+      TabOrder = 25
+      Width = 347
+    end
+    object cxLabel10: TcxLabel
+      Left = 782
+      Top = 45
+      Caption = '% '#1089#1082#1080#1076#1082#1080' '#1054#1073#1091#1074#1100' '#1076#1077#1090#1089#1082'.'
+    end
+    object edDiscountTaxTwo: TcxCurrencyEdit
+      Left = 782
+      Top = 63
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 1
+      Properties.DisplayFormat = '0.0 %'
+      Properties.ReadOnly = True
+      TabOrder = 27
+      Width = 132
     end
   end
   object cxPageControl: TcxPageControl
@@ -1197,32 +1227,8 @@ object ReturnInForm: TReturnInForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0.'
     Properties.ReadOnly = True
-    TabOrder = 6
+    TabOrder = 5
     Width = 85
-  end
-  object cxLabel9: TcxLabel
-    Left = 342
-    Top = 45
-    Caption = #1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090
-  end
-  object ceCity: TcxTextEdit
-    Left = 342
-    Top = 63
-    Properties.ReadOnly = True
-    TabOrder = 8
-    Width = 215
-  end
-  object cxLabel10: TcxLabel
-    Left = 566
-    Top = 45
-    Caption = #1040#1076#1088#1077#1089
-  end
-  object ceAddress: TcxTextEdit
-    Left = 566
-    Top = 63
-    Properties.ReadOnly = True
-    TabOrder = 10
-    Width = 308
   end
   object cxLabel13: TcxLabel
     Left = 8
@@ -1233,7 +1239,7 @@ object ReturnInForm: TReturnInForm
     Left = 8
     Top = 103
     Properties.ReadOnly = True
-    TabOrder = 12
+    TabOrder = 8
     Width = 117
   end
   object cxLabel17: TcxLabel
@@ -1245,7 +1251,7 @@ object ReturnInForm: TReturnInForm
     Left = 130
     Top = 103
     Properties.ReadOnly = True
-    TabOrder = 14
+    TabOrder = 10
     Width = 117
   end
   object cxLabel14: TcxLabel
@@ -1259,7 +1265,7 @@ object ReturnInForm: TReturnInForm
     EditValue = 42864d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 16
+    TabOrder = 12
     Width = 104
   end
   object cxLabel15: TcxLabel
@@ -1273,7 +1279,7 @@ object ReturnInForm: TReturnInForm
     EditValue = '09.05.2017'
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 21
+    TabOrder = 17
     Width = 83
   end
   object FormParams: TdsdFormParams
@@ -2418,7 +2424,7 @@ object ReturnInForm: TReturnInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 408
+    Left = 384
     Top = 8
   end
   object PopupMenu: TPopupMenu
@@ -2820,6 +2826,13 @@ object ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'Comment_Client'
+        Value = ''
+        Component = ceComment_Client
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'LastDate'
         Value = 'NULL'
         Component = edLastDate
@@ -2855,24 +2868,17 @@ object ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'DiscountTaxTwo'
+        Value = ''
+        Component = edDiscountTaxTwo
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'HappyDate'
         Value = ''
         Component = edHappyDate
         DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CityName'
-        Value = ''
-        Component = ceCity
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Address'
-        Value = ''
-        Component = ceAddress
-        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -3092,14 +3098,12 @@ object ReturnInForm: TReturnInForm
       item
         Name = 'CityName'
         Value = Null
-        Component = ceCity
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'Address'
         Value = Null
-        Component = ceAddress
         DataType = ftString
         MultiSelectSeparator = ','
       end

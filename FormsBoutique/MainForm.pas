@@ -193,6 +193,13 @@ type
     miLine41: TMenuItem;
     miLine42: TMenuItem;
     miLine71: TMenuItem;
+    actReport_Sale: TdsdOpenForm;
+    miReport_Sale: TMenuItem;
+    actReport_ReturnIn: TdsdOpenForm;
+    miReport_ReturnIn: TMenuItem;
+    actReport_OH_DiscountPeriod: TdsdOpenForm;
+    miReport_OH_DiscountPeriod: TMenuItem;
+    N1: TMenuItem;
   private
     { Private declarations }
   public

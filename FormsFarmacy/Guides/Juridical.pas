@@ -32,8 +32,6 @@ type
     isErased: TcxGridDBColumn;
     PayOrder: TcxGridDBColumn;
     Percent: TcxGridDBColumn;
-    OrderSumm: TcxGridDBColumn;
-    OrderTime: TcxGridDBColumn;
     OKPO: TcxGridDBColumn;
     isLoadBarcode: TcxGridDBColumn;
     isDeferred: TcxGridDBColumn;

@@ -22,7 +22,7 @@ RETURNS TABLE (Id Integer, Code Integer,
                Inf_Text1 TVarChar, Inf_Text2 TVarChar,
                Color_Calc1 Integer, Color_Calc2 Integer, Color_Calc3 Integer, Color_Calc4 Integer,
                Color_Calc5 Integer, Color_Calc6 Integer, Color_Calc7 Integer,
-               OrderSumm TVarChar, OrderTime TVarChar
+               OrderSumm TVarChar, OrderTime TVarChar, OrderSummComment TVarChar
                ) AS
 $BODY$
 BEGIN
@@ -131,7 +131,7 @@ BEGIN
            , CASE WHEN Object_OrderShedule.Value6 = 1 THEN zc_Color_Yelow() WHEN Object_OrderShedule.Value6 = 2 THEN zc_Color_Aqua() WHEN Object_OrderShedule.Value6 = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_Calc6
            , CASE WHEN Object_OrderShedule.Value7 = 1 THEN zc_Color_Yelow() WHEN Object_OrderShedule.Value7 = 2 THEN zc_Color_Aqua() WHEN Object_OrderShedule.Value7 = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_Calc7
 
-           , CASE WHEN COALESCE (ObjectFloat_OrderSumm_Contract.ValueData, 0) = 0 
+/*           , CASE WHEN COALESCE (ObjectFloat_OrderSumm_Contract.ValueData, 0) = 0 
                   THEN CASE WHEN COALESCE (ObjectFloat_OrderSumm.ValueData, 0) = 0 
                             THEN CASE WHEN COALESCE (ObjectString_OrderSumm_Contract.ValueData, '') <> '' 
                                       THEN ObjectString_OrderSumm_Contract.ValueData 
@@ -142,14 +142,14 @@ BEGIN
                   ELSE CAST (ObjectFloat_OrderSumm_Contract.ValueData AS NUMERIC (16, 2)) ||' ' || COALESCE (ObjectString_OrderSumm_Contract.ValueData,'')
              END                                            ::TVarChar AS OrderSumm
 
-            /*CASE WHEN COALESCE (ObjectFloat_OrderSumm.ValueData,0) = 0 THEN COALESCE (ObjectString_OrderSumm.ValueData,'') 
-                  ELSE CAST (ObjectFloat_OrderSumm.ValueData AS NUMERIC (16, 2)) ||' ' || COALESCE (ObjectString_OrderSumm.ValueData,'')
-             END                                            ::TVarChar AS OrderSumm 
-             */
            , CASE WHEN COALESCE (ObjectString_OrderTime_Contract.ValueData,'')  <> ''  
                   THEN ObjectString_OrderTime_Contract.ValueData 
                   ELSE COALESCE (ObjectString_OrderTime.ValueData,'') 
              END ::TVarChar AS OrderTime
+*/
+           , CAST (ObjectFloat_OrderSumm_Contract.ValueData AS NUMERIC (16, 2)) ::TVarChar AS OrderSumm
+           , COALESCE (ObjectString_OrderTime_Contract.ValueData,'')            ::TVarChar AS OrderTime
+           , COALESCE (ObjectString_OrderSumm_Contract.ValueData,'')            ::TVarChar AS OrderSummComment
 
        FROM tmpObject AS Object_OrderShedule
            FULL JOIN tmpAll ON tmpAll.UnitId = Object_OrderShedule.UnitId
@@ -177,7 +177,7 @@ BEGIN
            LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Unit_Area.ChildObjectId
            
             --
-           LEFT JOIN ObjectFloat AS ObjectFloat_OrderSumm
+/*           LEFT JOIN ObjectFloat AS ObjectFloat_OrderSumm
                                  ON ObjectFloat_OrderSumm.ObjectId = Object_Contract_Juridical.Id
                                 AND ObjectFloat_OrderSumm.DescId = zc_ObjectFloat_Juridical_OrderSumm()
            LEFT JOIN ObjectString AS ObjectString_OrderSumm
@@ -186,6 +186,7 @@ BEGIN
            LEFT JOIN ObjectString AS ObjectString_OrderTime
                                   ON ObjectString_OrderTime.ObjectId = Object_Contract_Juridical.Id
                                  AND ObjectString_OrderTime.DescId = zc_ObjectString_Juridical_OrderTime()
+*/
            --
            LEFT JOIN ObjectFloat AS ObjectFloat_OrderSumm_Contract
                                  ON ObjectFloat_OrderSumm_Contract.ObjectId = Object_Contract.Id
@@ -207,6 +208,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 22.02.18         *
  23.01.18         *
  08.08.17         *
  22.06.17         *
