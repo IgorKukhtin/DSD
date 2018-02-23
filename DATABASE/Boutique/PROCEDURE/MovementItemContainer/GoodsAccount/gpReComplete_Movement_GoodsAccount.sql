@@ -12,8 +12,8 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_GoodsAccount());
-    vbUserId:= lpGetUserBySession (inSession);
+    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_GoodsAccount());
+    --vbUserId:= lpGetUserBySession (inSession);
     
     -- только если документ проведен
     IF EXISTS (SELECT 1 FROM Movement WHERE Id = inMovementId AND StatusId = zc_Enum_Status_Complete())
