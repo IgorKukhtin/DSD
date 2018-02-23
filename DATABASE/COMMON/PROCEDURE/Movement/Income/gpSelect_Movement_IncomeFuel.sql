@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, InvNumberMaste
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePrice TFloat
              , TotalCount TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummVAT TFloat
-             , FromName TVarChar, ToName TVarChar, ItemName TVarChar
+             , JuridicalName_from TVarChar, FromName TVarChar, ToName TVarChar, ItemName TVarChar
              , PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
@@ -94,7 +94,7 @@ BEGIN
            , MovementFloat_TotalSumm.ValueData           AS TotalSumm
            , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
 
-
+           , Object_JuridicalFrom.ValueData    AS JuridicalName_from
            , Object_From.ValueData             AS FromName
            , Object_To.ValueData               AS ToName
            , ObjectDesc_To.ItemName
@@ -365,6 +365,10 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_CardFuel_Juridical
+                                 ON ObjectLink_CardFuel_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                                AND ObjectLink_CardFuel_Juridical.DescId   = zc_ObjectLink_CardFuel_Juridical()
+            LEFT JOIN Object AS Object_JuridicalFrom ON Object_JuridicalFrom.Id = ObjectLink_CardFuel_Juridical.ChildObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
@@ -430,4 +434,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_IncomeFuel (inStartDate:= '01.02.2016', inEndDate:= '01.02.2016', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_IncomeFuel (inStartDate:= '01.02.2018', inEndDate:= '01.02.2018', inJuridicalBasisId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

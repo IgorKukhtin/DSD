@@ -361,7 +361,7 @@ BEGIN
      IF vbCardFuelId_From <> 0
      THEN
          -- нашли Прайс
-         vbPriceListId_Fuel:= (SELECT CASE WHEN vbOperDate >= ObjectDate_Juridical_StartPromo.ValueData THEN ObjectLink_Juridical_PriceList.ChildObjectId ELSE 0 END
+         vbPriceListId_Fuel:= (SELECT CASE WHEN vbOperDatePartner >= ObjectDate_Juridical_StartPromo.ValueData THEN ObjectLink_Juridical_PriceList.ChildObjectId ELSE 0 END
                                FROM ObjectLink AS ObjectLink_CardFuel_Juridical
                                     LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
                                                          ON ObjectLink_Juridical_PriceList.ObjectId = ObjectLink_CardFuel_Juridical.ChildObjectId
@@ -397,7 +397,7 @@ BEGIN
                                        INNER JOIN ObjectHistory AS ObjectHistory_PriceListItem
                                                                 ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_Goods.ObjectId
                                                                AND ObjectHistory_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
-                                                               AND vbOperDate >= ObjectHistory_PriceListItem.StartDate AND vbOperDate < ObjectHistory_PriceListItem.EndDate
+                                                               AND vbOperDatePartner >= ObjectHistory_PriceListItem.StartDate AND vbOperDatePartner < ObjectHistory_PriceListItem.EndDate
                                        LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value
                                                                     ON ObjectHistoryFloat_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                                                    AND ObjectHistoryFloat_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
@@ -430,7 +430,7 @@ BEGIN
                                                             INNER JOIN ObjectHistory AS ObjectHistory_PriceListItem
                                                                                      ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_Goods.ObjectId
                                                                                     AND ObjectHistory_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
-                                                                                    AND vbOperDate >= ObjectHistory_PriceListItem.StartDate AND vbOperDate < ObjectHistory_PriceListItem.EndDate
+                                                                                    AND vbOperDatePartner >= ObjectHistory_PriceListItem.StartDate AND vbOperDatePartner < ObjectHistory_PriceListItem.EndDate
                                                             LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value
                                                                                          ON ObjectHistoryFloat_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                                                                         AND ObjectHistoryFloat_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
@@ -463,7 +463,7 @@ BEGIN
                                                                                         INNER JOIN ObjectHistory AS ObjectHistory_PriceListItem
                                                                                                                  ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_Goods.ObjectId
                                                                                                                 AND ObjectHistory_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
-                                                                                                                AND vbOperDate >= ObjectHistory_PriceListItem.StartDate AND vbOperDate < ObjectHistory_PriceListItem.EndDate
+                                                                                                                AND vbOperDatePartner >= ObjectHistory_PriceListItem.StartDate AND vbOperDatePartner < ObjectHistory_PriceListItem.EndDate
                                                                                         LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value
                                                                                                                      ON ObjectHistoryFloat_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                                                                                                     AND ObjectHistoryFloat_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()

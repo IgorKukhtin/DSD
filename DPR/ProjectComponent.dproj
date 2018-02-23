@@ -40,7 +40,7 @@
 			<Base>true</Base>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base)'!=''">
-			<DCC_UsePackage>rtl;dsnap;dbrtl;IndyCore;IndySystem;IndyProtocols;soaprtl;inet;kbmMemRunDXE2Pro;xmlrtl;$(DCC_UsePackage)</DCC_UsePackage>
+			<DCC_UsePackage>rtl;dsnap;dbrtl;IndyCore;IndySystem;IndyProtocols;soaprtl;inet;kbmMemRunDXE2Pro;xmlrtl;DbxCommonDriver;$(DCC_UsePackage)</DCC_UsePackage>
 			<DCC_CBuilderOutput>All</DCC_CBuilderOutput>
 			<DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
 			<GenPackage>true</GenPackage>
@@ -123,6 +123,7 @@
 			<DCCReference Include="vclie.dcp"/>
 			<DCCReference Include="GMLib_DXE2.dcp"/>
 			<DCCReference Include="GMLib_DXE2_VCL.dcp"/>
+			<DCCReference Include="DbxCommonDriver.dcp"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
 			<DCCReference Include="..\SOURCE\UtilConst.pas"/>
 			<DCCReference Include="..\SOURCE\CommonData.pas"/>

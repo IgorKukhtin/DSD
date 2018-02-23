@@ -578,7 +578,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure ExecuteReport(AReportName: String; ADataSets: TdsdDataSets;
-      AParams: TdsdParams; ACopiesCount: Integer = 1; AWithOutPreview:Boolean = False;
+      AParams: TdsdParams; ACopiesCount: Integer = 1; APrinter : String = ''; AWithOutPreview:Boolean = False;
       ADesignReport:Boolean = False; AModal:Boolean = False; APreviewWindowMaximized:Boolean = True);
   end;
   // Действие печати
@@ -591,6 +591,7 @@ type
 //    FDataSetList: TList;
     FWithOutPreview: Boolean;
     FCopiesCount: Integer;
+    FPrinter: String;
     FModalPreview: Boolean;
     FPreviewWindowMaximized: Boolean;
     function GetReportName: String;
@@ -612,6 +613,8 @@ type
     property DataSets: TdsdDataSets read FDataSets write FDataSets;
     // Количество копий
     property CopiesCount: Integer read FCopiesCount write FCopiesCount Default 1;
+    // Название Принтера
+    property Printer: String read FPrinter write FPrinter;
     property Params: TdsdParams read FParams write FParams;
     property ReportName: String read GetReportName write SetReportName;
     // Название отчета
@@ -1758,6 +1761,7 @@ begin
   FDataSets := TdsdDataSets.Create(Self, TAddOnDataSet);
   WithOutPreview := false;
   FCopiesCount := 1;
+  FPrinter := '';
   FModalPreview := false;
   FPreviewWindowMaximized := True;
 end;
@@ -1804,7 +1808,7 @@ begin
 
   result := true;
   With TfrxReportExt.Create(Self) do
-    ExecuteReport(Self.ReportName,Self.DataSets,Self.Params,Self.CopiesCount, Self.WithOutPreview,
+    ExecuteReport(Self.ReportName,Self.DataSets,Self.Params,Self.CopiesCount, Self.Printer, Self.WithOutPreview,
       ShiftDown, Self.ModalPreview, Self.PreviewWindowMaximized);
 end;
 
@@ -2668,7 +2672,7 @@ begin
 end;
 
 procedure TfrxReportExt.ExecuteReport(AReportName: String; ADataSets: TdsdDataSets;
-  AParams: TdsdParams; ACopiesCount: Integer = 1; AWithOutPreview:Boolean = False;
+  AParams: TdsdParams; ACopiesCount: Integer = 1; APrinter : String = ''; AWithOutPreview:Boolean = False;
   ADesignReport:Boolean = False; AModal:Boolean = False; APreviewWindowMaximized:Boolean = True);
 var
   I: Integer;
@@ -2861,6 +2865,8 @@ begin
             PrintOptions.ShowDialog := false;
             PrintOptions.Printer := GetDefaultPrinter;
             PrintOptions.Copies := ACopiesCount;
+            if trim (APrinter) <> ''
+            then PrintOptions.Printer := APrinter;
             PrepareReport;
             Print;
             self.Free;

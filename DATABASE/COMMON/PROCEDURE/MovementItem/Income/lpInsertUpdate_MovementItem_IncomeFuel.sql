@@ -20,7 +20,12 @@ $BODY$
    DECLARE vbIsInsert         Boolean;
 BEGIN
      -- находим Дату
-     vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+     vbOperDate:= (SELECT COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)
+                   FROM Movement
+                        LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                               ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                              AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
+                   WHERE Movement.Id = inMovementId);
      -- находим PriceListId - Fuel
      vbPriceListId_Fuel:= (SELECT CASE WHEN vbOperDate >= ObjectDate_Juridical_StartPromo.ValueData THEN ObjectLink_Juridical_PriceList.ChildObjectId ELSE 0 END
                            FROM MovementLinkObject AS MovementLinkObject_From
