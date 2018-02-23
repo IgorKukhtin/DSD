@@ -16,13 +16,13 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Ограничение - если роль Бухгалтер ПАВИЛЬОНЫ
-     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 80548 AND UserId = vbUserId)
+     /*IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 80548 AND UserId = vbUserId)
         AND COALESCE (inPriceListId, 0) NOT IN (140208 -- Пав-ны приход
                                               , 140209 -- Пав-ны продажа
                                                )
      THEN
-         RAISE EXCEPTION 'Ошибка. Нет прав корректировать прайс <%>', lfGet_Object_ValueData (inPriceListId);
-     END IF;
+         RAISE EXCEPTION 'Ошибка. Нет прав на Просмотр прайса <%>', lfGet_Object_ValueData (inPriceListId);
+     END IF;*/
 
 
      -- Ограничение - если роль Начисления транспорт-меню
@@ -30,7 +30,7 @@ BEGIN
         AND COALESCE (inPriceListId, 0) NOT IN (zc_PriceList_Fuel()
                                                )
      THEN
-         RAISE EXCEPTION 'Ошибка. Нет прав корректировать прайс <%>', lfGet_Object_ValueData (inPriceListId);
+         RAISE EXCEPTION 'Ошибка. Нет прав на Просмотр прайса <%>', lfGet_Object_ValueData (inPriceListId);
      END IF;
 
 

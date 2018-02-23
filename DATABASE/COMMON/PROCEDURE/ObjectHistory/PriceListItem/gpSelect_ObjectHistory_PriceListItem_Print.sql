@@ -41,7 +41,7 @@ BEGIN
                                               , 140209 -- Пав-ны продажа
                                                )
      THEN
-         RAISE EXCEPTION 'Ошибка. Нет прав корректировать прайс <%>', lfGet_Object_ValueData (inPriceListId);
+         RAISE EXCEPTION 'Ошибка. Нет прав на Просмотр прайса <%>', lfGet_Object_ValueData (inPriceListId);
      END IF;
 
 
@@ -50,7 +50,7 @@ BEGIN
         AND COALESCE (inPriceListId, 0) NOT IN (zc_PriceList_Fuel()
                                                )
      THEN
-         RAISE EXCEPTION 'Ошибка. Нет прав корректировать прайс <%>', lfGet_Object_ValueData (inPriceListId);
+         RAISE EXCEPTION 'Ошибка. Нет прав на Просмотр прайса <%>', lfGet_Object_ValueData (inPriceListId);
      END IF;
 
 

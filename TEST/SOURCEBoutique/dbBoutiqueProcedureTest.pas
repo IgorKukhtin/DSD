@@ -329,7 +329,7 @@ end;
 
  procedure TdbObjectProcedureTest.CreateGoodsPrint;
 begin
-  DirectoryLoad(CommonProcedurePath + 'OBJECTS\GoodsPrint\');
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\GoodsPrint - !!!\');
 end;
 
 procedure TdbObjectProcedureTest.CreateGoodsSize;
