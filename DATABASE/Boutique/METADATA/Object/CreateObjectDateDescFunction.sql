@@ -15,9 +15,17 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_Client_HappyDate() RETURNS Integer AS $
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Client(), 'zc_ObjectDate_Client_HappyDate', 'День рождения' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Client_HappyDate');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_DiscountPeriod_StartDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_DiscountPeriod_StartDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_DiscountPeriod(), 'zc_ObjectDate_DiscountPeriod_StartDate', 'Дата с ...' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_DiscountPeriod_StartDate');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_DiscountPeriod_EndDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_DiscountPeriod_EndDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_DiscountPeriod(), 'zc_ObjectDate_DiscountPeriod_EndDate', 'Дата по ...' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_DiscountPeriod_EndDate');
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.  Воробкало А.А.
-28.02.2017                                                         *
+23.02.18          * zc_ObjectDate_DiscountPeriod_StartDate
+                    zc_ObjectDate_DiscountPeriod_EndDate
+28.02.17                                                         *
 */
