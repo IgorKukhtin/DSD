@@ -185,6 +185,8 @@ type
     bbPrint_Account_List: TdxBarButton;
     PersonalName: TcxGridDBColumn;
     RouteGroupName: TcxGridDBColumn;
+    actPrintPackGross: TdsdPrintAction;
+    bbPrintPackGross: TdxBarButton;
   private
     { Private declarations }
   public

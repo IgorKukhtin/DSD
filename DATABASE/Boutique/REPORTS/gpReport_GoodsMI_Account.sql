@@ -115,7 +115,7 @@ BEGIN
                      INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                    ON MovementLinkObject_From.MovementId = Movement_Sale.Id
                                                   AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                  AND MovementLinkObject_From.ObjectId = inUnitId
+                                                  AND (MovementLinkObject_From.ObjectId = inUnitId OR inUnitId = 0)
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                   ON MovementLinkObject_To.MovementId = Movement_Sale.Id
                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -201,7 +201,7 @@ BEGIN
                          INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                        ON MovementLinkObject_To.MovementId = Movement_ReturnIn.Id
                                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                      AND MovementLinkObject_To.ObjectId = inUnitId
+                                                      AND (MovementLinkObject_To.ObjectId = inUnitId OR inUnitId = 0)
                          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                       ON MovementLinkObject_From.MovementId = Movement_ReturnIn.Id
                                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -312,7 +312,7 @@ BEGIN
                                                                                                          THEN zc_MovementLinkObject_From()
                                                                                                          ELSE zc_MovementLinkObject_To()
                                                                                                     END 
-                                                          AND MovementLinkObject_From_Sale.ObjectId = inUnitId
+                                                          AND (MovementLinkObject_From_Sale.ObjectId = inUnitId OR inUnitId = 0)
 
                              LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                           ON MovementLinkObject_From.MovementId = Movement_GoodsAccount.Id

@@ -24,7 +24,7 @@ BEGIN
      SELECT CASE WHEN Object_From.DescId = zc_Object_Client() THEN MovementLinkObject_From.ObjectId ELSE MovementLinkObject_To.ObjectId   END AS ClientId
           , CASE WHEN Object_To.DescId   = zc_Object_Unit()   THEN MovementLinkObject_To.ObjectId   ELSE MovementLinkObject_From.ObjectId END AS UnitId
           , Movement.StatusId                AS StatusId
-            INTO vbClientId, vbUnitId, vbStatusId
+           INTO vbClientId, vbUnitId, vbStatusId
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
@@ -150,8 +150,8 @@ BEGIN
            , tmpData.TotalSumm                                 ::TFloat  AS TotalSumm
            , tmpData.SummDebt                                  ::TFloat  AS SummDebt
            , (tmpDiscount.StartSumm_Next - tmpData.TotalSumm)  ::TFloat  AS Discount_diff
-         
-       FROM  Movement
+           , CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN TRUE ELSE FALSE END :: Boolean AS isReturnIn
+       FROM Movement
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPriceList
                                     ON MovementFloat_TotalSummPriceList.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummPriceList.DescId = zc_MovementFloat_TotalSummPriceList()
