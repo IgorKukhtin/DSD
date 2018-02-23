@@ -2,7 +2,7 @@
   Left = 202
   Top = 180
   Caption = 'LoadBoutique - MainForm'
-  ClientHeight = 560
+  ClientHeight = 585
   ClientWidth = 1025
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@
   object Splitter1: TSplitter
     Left = 442
     Top = 0
-    Height = 496
+    Height = 521
     Align = alRight
     ExplicitLeft = 683
     ExplicitTop = 32
@@ -28,7 +28,7 @@
     Left = 0
     Top = 0
     Width = 442
-    Height = 496
+    Height = 521
     Align = alClient
     DataSource = DataSource
     TabOrder = 0
@@ -40,13 +40,14 @@
   end
   object ButtonPanel: TPanel
     Left = 0
-    Top = 496
+    Top = 521
     Width = 1025
     Height = 64
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
     OnDblClick = ButtonPanelDblClick
+    ExplicitTop = 496
     object Gauge: TGauge
       Left = 0
       Top = 0
@@ -139,20 +140,23 @@
     Left = 445
     Top = 0
     Width = 580
-    Height = 496
+    Height = 521
     ActivePage = TabSheet1
     Align = alRight
     TabOrder = 2
+    ExplicitHeight = 496
     object TabSheet1: TTabSheet
       Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080' - '#1044#1086#1082#1091#1084#1077#1085#1090#1099
+      ExplicitHeight = 468
       object GuidePanel: TPanel
         Left = 0
         Top = 0
         Width = 182
-        Height = 468
+        Height = 493
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 0
+        ExplicitHeight = 468
         object cbAllGuide: TCheckBox
           Tag = 1
           Left = 15
@@ -606,15 +610,32 @@
           ParentFont = False
           TabOrder = 28
         end
+        object cbDiscountPeriod: TCheckBox
+          Tag = 10
+          Left = 15
+          Top = 464
+          Width = 178
+          Height = 24
+          Caption = '1.27. '#1055#1077#1088#1080#1086#1076#1099' '#1089#1082#1080#1076#1086#1082
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 29
+          WordWrap = True
+        end
       end
       object DocumentPanel: TPanel
         Left = 182
         Top = 0
         Width = 200
-        Height = 468
+        Height = 493
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 1
+        ExplicitHeight = 468
         object Label1: TLabel
           Left = 6
           Top = 22
@@ -993,10 +1014,11 @@
         Left = 382
         Top = 0
         Width = 190
-        Height = 468
+        Height = 493
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 2
+        ExplicitHeight = 468
         object Label5: TLabel
           Left = 6
           Top = 22
@@ -1279,15 +1301,11 @@
     object TabSheet2: TTabSheet
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' '#1092#1072#1081#1083#1086#1074
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 0
         Width = 572
-        Height = 468
+        Height = 493
         Align = alClient
         TabOrder = 0
         object Label3: TLabel

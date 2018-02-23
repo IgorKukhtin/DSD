@@ -3,14 +3,18 @@
 DROP FUNCTION IF EXISTS gpSelect_Object_DiscountPeriod (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_DiscountPeriod(
-    IN inIsShowAll   Boolean,            -- признак показать удаленные да / нет 
-    IN inSession     TVarChar            -- сессия пользователя   
+    IN inIsShowAll   Boolean,            -- признак показать удаленные да / нет
+    IN inSession     TVarChar            -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , PeriodId Integer, PeriodCode Integer, PeriodName TVarChar
-             , StartDate TDateTime, EndDate TDateTime
-             , isErased boolean)
+             , StartDate            TDateTime
+             , EndDate              TDateTime
+             , YEAR_Start           Integer
+             , YEAR_End             Integer
+             , isErased             Boolean
+              )
 AS
 $BODY$
 BEGIN
@@ -31,6 +35,8 @@ BEGIN
            , Object_Period.ValueData               AS PeriodName
            , ObjectDate_StartDate.ValueData        AS StartDate
            , ObjectDate_EndDate.ValueData          AS EndDate
+           , EXTRACT (YEAR FROM ObjectDate_StartDate.ValueData) :: Integer AS YEAR_Start
+           , EXTRACT (YEAR FROM ObjectDate_EndDate.ValueData)   :: Integer AS YEAR_End
            , Object_DiscountPeriod.isErased        AS isErased
 
        FROM Object as Object_DiscountPeriod
@@ -44,11 +50,11 @@ BEGIN
                                 AND ObjectLink_DiscountPeriod_Period.DescId = zc_ObjectLink_DiscountPeriod_Period()
             LEFT JOIN Object AS Object_Period ON Object_Period.Id = ObjectLink_DiscountPeriod_Period.ChildObjectId
 
-            LEFT JOIN ObjectDate AS ObjectDate_StartDate 
+            LEFT JOIN ObjectDate AS ObjectDate_StartDate
                                  ON ObjectDate_StartDate.ObjectId = Object_DiscountPeriod.Id
                                 AND ObjectDate_StartDate.DescId = zc_ObjectDate_DiscountPeriod_StartDate()
 
-            LEFT JOIN ObjectDate AS ObjectDate_EndDate 
+            LEFT JOIN ObjectDate AS ObjectDate_EndDate
                                  ON ObjectDate_EndDate.ObjectId = Object_DiscountPeriod.Id
                                 AND ObjectDate_EndDate.DescId = zc_ObjectDate_DiscountPeriod_EndDate()
 

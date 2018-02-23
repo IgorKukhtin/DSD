@@ -169,6 +169,7 @@ type
     cbSaleErr: TCheckBox;
     cbReturnInErr: TCheckBox;
     cbNEW: TCheckBox;
+    cbDiscountPeriod: TCheckBox;
 
     procedure btnAddGuideId_PostgresClick(Sender: TObject);
     procedure btnAddlDocId_PostgresClick(Sender: TObject);
@@ -216,6 +217,7 @@ type
     function FormatToVarCharServer_notNULL(_Value:string):string;
     function FormatToVarCharServer_isSpace(_Value:string):string;
     function FormatToDateServer_notNULL(_Date:TDateTime):string;
+    function FormatToDatePostgres_notNULL(_Date:TDateTime):string;
     function FormatToDateTimeServer(_Date:TDateTime):string;
     function FormatToDateTimeServerNOSec(_Date:TDateTime):string;
 
@@ -262,6 +264,7 @@ type
     procedure pLoadGuide_PriceList;
     procedure pLoadGuide_Member;
     procedure pLoadGuide_User;
+    procedure pDiscountPeriod;
 
    // Documents
     procedure pLoadDocument_Currency;
@@ -818,6 +821,14 @@ var
 begin
      DecodeDate(_Date,Year,Month,Day);
      result:=chr(39)+IntToStr(Year)+'-'+IntToStr(Month)+'-'+IntToStr(Day)+chr(39);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.FormatToDatePostgres_notNULL(_Date:TDateTime):string;
+var
+  Year, Month, Day: Word;
+begin
+     DecodeDate(_Date,Year,Month,Day);
+     result:=chr(39)+IntToStr(Day)+'.'+IntToStr(Month)+'.'+IntToStr(Year)+chr(39);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.FormatToDateTimeServer(_Date:TDateTime):string;
@@ -2087,6 +2098,7 @@ begin
      if not fStop then pLoadGuide_Member;
      if not fStop then pLoadGuide_User;
      if not fStop then pLoadGuide_Client;
+     if not fStop then pDiscountPeriod;
      //
      //
      Gauge.Visible:=false;
@@ -7614,6 +7626,92 @@ begin
      myDisabledCB(cbValuta);
 end;
 
+procedure TMainForm.pDiscountPeriod;
+var Period1, Period2 : Integer;
+begin
+     if (not cbDiscountPeriod.Checked)or(not cbDiscountPeriod.Enabled) then exit;
+     //
+     myEnabledCB(cbDiscountPeriod);
+     //
+     fOpenSqToQuery (' SELECT max(case when ObjectCode = 1 then Object.Id else 0 end)  as  Period1'
+                   + '      , max(case when ObjectCode = 2 then Object.Id else 0 end)  as  Period2'
+                   + ' from Object'
+                   + ' where DescId = zc_Object_Period()'
+                    );
+     Period1 :=toSqlQuery.FieldByName('Period1').AsInteger;
+     Period2 :=toSqlQuery.FieldByName('Period2').AsInteger;
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select case when PeriodId = 1 then ' + IntToStr(Period1)+ ' else  ' + IntToStr(Period2)+ ' end as PeriodId');
+        Add('     , 0 as UnitId');
+        Add('     , cast (ReportAnaliz_Period_byDiscount.StartDate as date) AS StartDate');
+        Add('     , cast (ReportAnaliz_Period_byDiscount.EndDate as date) AS EndDate');
+        Add('from dba.ReportAnaliz_Period_byDiscount');
+        Add('order by 1, StartDate');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_DiscountPeriod';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('ioCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inUnitId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPeriodId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inStartDate',ftDateTime,ptInput, '');
+        toStoredProc.Params.AddParam ('inEndDate',ftDateTime,ptInput, '');
+        //
+
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin   exit; end;
+             //
+             fOpenSqToQuery (' SELECT tmp.Id, tmp.Code'
+                           + ' from gpSelect_Object_DiscountPeriod (TRUE, zfCalc_UserAdmin()) AS tmp'
+                           + ' where coalesce (tmp.UnitId, 0) = 0'
+                           + '   and tmp.PeriodId = ' + IntToStr(FieldByName('PeriodId').AsInteger)
+                           + '   and tmp.StartDate = ' + FormatToDatePostgres_notNULL(FieldByName('StartDate').AsDateTime)
+                            );
+             if cbErr.Checked = TRUE
+             then ShowMessage (' SELECT tmp.Id, tmp.Code'
+                             + ' from gpSelect_Object_DiscountPeriod (TRUE, zfCalc_UserAdmin()) AS tmp'
+                             + ' where coalesce (tmp.UnitId, 0) = 0'
+                             + '   and tmp.PeriodId = ' + IntToStr(FieldByName('PeriodId').AsInteger)
+                             + '   and tmp.StartDate = ' + FormatToDatePostgres_notNULL(FieldByName('StartDate').AsDateTime));
+
+             if toSqlQuery.RecordCount > 1
+             then begin ShowMessage ('toSqlQuery.RecorCount <> 1 : ReportAnaliz_Period_byDiscount '); exit; end;
+             if cbErr.Checked = TRUE
+             then begin ShowMessage ('FindId = ' + IntToStr(toSqlQuery.FieldByName('Id').AsInteger)); exit; end;
+
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=toSqlQuery.FieldByName('Id').AsInteger;
+             toStoredProc.Params.ParamByName('ioCode').Value:=toSqlQuery.FieldByName('Code').AsInteger;
+             toStoredProc.Params.ParamByName('inUnitId').Value:=FieldByName('UnitId').AsInteger;
+             toStoredProc.Params.ParamByName('inPeriodId').Value:=FieldByName('PeriodId').AsInteger;
+             toStoredProc.Params.ParamByName('inStartDate').Value:=FormatToDatePostgres_notNULL(FieldByName('StartDate').AsDateTime);
+             toStoredProc.Params.ParamByName('inEndDate').Value:=FormatToDatePostgres_notNULL(FieldByName('EndDate').AsDateTime);
+             if not myExecToStoredProc then ;//exit;
+
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+
+     end;
+     //
+     myDisabledCB(cbDiscountPeriod);
+end;
 
 procedure TMainForm.pLoad_Chado;
 begin

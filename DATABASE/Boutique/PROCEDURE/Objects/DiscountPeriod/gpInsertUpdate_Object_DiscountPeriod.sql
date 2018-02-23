@@ -23,10 +23,32 @@ BEGIN
 
    -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
    IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) <> 0 THEN ioCode := NEXTVAL ('Object_DiscountPeriod_seq'); 
+
+   -- ВРЕМЕННО - для Sybase найдем Id
+   ELSEIF vbUserId = zc_User_Sybase() AND COALESCE (ioId, 0) = 0
+          THEN ioCode := NEXTVAL ('Object_DiscountPeriod_seq'); 
+   ELSEIF vbUserId = zc_User_Sybase()
+          THEN ioCode := COALESCE ((SELECT ObjectCode FROM Object WHERE Id = ioId), 0);
    END IF; 
 
    -- проверка уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_DiscountPeriod(), ioCode);
+
+
+   -- проверка
+   IF EXISTS (SELECT
+              FROM gpSelect_Object_DiscountPeriod (inIsShowAll:= TRUE, inSession:= inSession) AS tmp
+              WHERE tmp.Id                     <> COALESCE (ioId, 0)
+                AND COALESCE (tmp.UnitId, 0)    = COALESCE (inUnitId, 0)
+                AND COALESCE (tmp.PeriodId, 0)  = COALESCE (inPeriodId, 0)
+                AND (tmp.YEAR_Start             = EXTRACT (YEAR FROM inStartDate)
+                  OR tmp.YEAR_End               = EXTRACT (YEAR FROM inEndDate)
+                    )
+             )
+   THEN
+       RAISE EXCEPTION 'Ошибка.Период уже существует для сезона <% : % - %>  <%>.', lfGet_Object_ValueData_sh (inPeriodId), EXTRACT (YEAR FROM inStartDate), EXTRACT (YEAR FROM inEndDate), lfGet_Object_ValueData_sh (inUnitId);
+   END IF;
+
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_DiscountPeriod(), ioCode, '');

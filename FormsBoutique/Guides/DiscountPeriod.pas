@@ -70,6 +70,8 @@ type
     actUpdateDataSet: TdsdUpdateDataSet;
     OpenChoiceUnit: TOpenChoiceForm;
     OpenChoicePeriod: TOpenChoiceForm;
+    YEAR_Start: TcxGridDBColumn;
+    YEAR_End: TcxGridDBColumn;
   private
     { Private declarations }
   public

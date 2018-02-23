@@ -2863,16 +2863,18 @@ begin
           if AWithOutPreview then
           begin
             PrintOptions.ShowDialog := false;
-            PrintOptions.Printer := GetDefaultPrinter;
-            PrintOptions.Copies := ACopiesCount;
             if trim (APrinter) <> ''
-            then PrintOptions.Printer := APrinter;
+            then PrintOptions.Printer := APrinter
+            else PrintOptions.Printer := GetDefaultPrinter;
+            PrintOptions.Copies := ACopiesCount;
             PrepareReport;
             Print;
             self.Free;
           end
           else
           begin
+            if trim (APrinter) <> ''
+            then PrintOptions.Printer := APrinter;
             PrepareReport;
             ShowPreparedReport;
           end;

@@ -3,7 +3,7 @@ object DiscountPeriodForm: TDiscountPeriodForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1077#1088#1080#1086#1076#1099' '#1089#1077#1079#1086#1085#1085#1099#1093' '#1089#1082#1080#1076#1086#1082'>'
   ClientHeight = 376
-  ClientWidth = 687
+  ClientWidth = 790
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,13 @@ object DiscountPeriodForm: TDiscountPeriodForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 687
+    Width = 790
     Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 403
+    ExplicitWidth = 687
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -52,6 +52,52 @@ object DiscountPeriodForm: TDiscountPeriodForm
         Options.Editing = False
         Width = 51
       end
+      object YEAR_Start: TcxGridDBColumn
+        Caption = #1043#1086#1076' '#1089'...'
+        DataBinding.FieldName = 'YEAR_Start'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object YEAR_End: TcxGridDBColumn
+        Caption = #1043#1086#1076' '#1087#1086' ...'
+        DataBinding.FieldName = 'YEAR_End'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object PeriodName: TcxGridDBColumn
+        Caption = #1057#1077#1079#1086#1085
+        DataBinding.FieldName = 'PeriodName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = OpenChoicePeriod
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 150
+      end
+      object StartDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1089' ...'
+        DataBinding.FieldName = 'StartDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object EndDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1087#1086' ...'
+        DataBinding.FieldName = 'EndDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
       object UnitCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
         DataBinding.FieldName = 'UnitCode'
@@ -75,37 +121,7 @@ object DiscountPeriodForm: TDiscountPeriodForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 261
-      end
-      object PeriodName: TcxGridDBColumn
-        Caption = #1057#1077#1079#1086#1085
-        DataBinding.FieldName = 'PeriodName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = OpenChoicePeriod
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 188
-      end
-      object StartDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1089'...'
-        DataBinding.FieldName = 'StartDate'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 85
-      end
-      object EndDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1087#1086' ...'
-        DataBinding.FieldName = 'EndDate'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 84
+        Width = 150
       end
       object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

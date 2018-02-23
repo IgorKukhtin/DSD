@@ -50,8 +50,11 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
 
+
      -- при сканировании вызывается лишний раз
-     IF COALESCE (ioId, 0) = 0 AND COALESCE (inBarCode, '') = '' And COALESCE (inPartionId, 0) = 0 THEN
+     IF COALESCE (ioId, 0) = 0 AND COALESCE (inBarCode, '') = '' And COALESCE (inPartionId, 0) = 0
+        AND vbUserId <> zc_User_Sybase() 
+     THEN
         RETURN;
      END IF;
      

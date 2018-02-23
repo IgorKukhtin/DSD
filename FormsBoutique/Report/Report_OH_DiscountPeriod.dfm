@@ -5,13 +5,13 @@ inherited Report_OH_DiscountPeriodForm: TReport_OH_DiscountPeriodForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 945
-  ExplicitHeight = 463
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
     Width = 929
     Height = 59
-    ExplicitWidth = 1119
+    ExplicitWidth = 929
     ExplicitHeight = 59
     inherited deStart: TcxDateEdit
       Left = 29
@@ -144,17 +144,16 @@ inherited Report_OH_DiscountPeriodForm: TReport_OH_DiscountPeriodForm
     Height = 340
     TabOrder = 3
     ExplicitTop = 85
-    ExplicitWidth = 1119
+    ExplicitWidth = 929
     ExplicitHeight = 340
     ClientRectBottom = 340
     ClientRectRight = 929
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1119
+      ExplicitWidth = 929
       ExplicitHeight = 340
       inherited cxGrid: TcxGrid
         Width = 929
         Height = 340
-        ExplicitLeft = -3
         ExplicitWidth = 929
         ExplicitHeight = 340
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -231,61 +230,6 @@ inherited Report_OH_DiscountPeriodForm: TReport_OH_DiscountPeriodForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object UnitName: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-            DataBinding.FieldName = 'UnitName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 100
-          end
-          object BrandName: TcxGridDBColumn
-            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
-            DataBinding.FieldName = 'BrandName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 95
-          end
-          object PeriodName: TcxGridDBColumn
-            Caption = #1057#1077#1079#1086#1085
-            DataBinding.FieldName = 'PeriodName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 95
-          end
-          object StartDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1085#1072#1095'.'
-            DataBinding.FieldName = 'StartDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 87
-          end
-          object EndDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095'.'
-            DataBinding.FieldName = 'EndDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object PeriodYear: TcxGridDBColumn
-            Caption = #1043#1086#1076
-            DataBinding.FieldName = 'PeriodYear'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object myCount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'myCount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 78
-          end
           object YEAR_Start: TcxGridDBColumn
             Caption = #1043#1086#1076' '#1089' ...'
             DataBinding.FieldName = 'YEAR_Start'
@@ -302,17 +246,50 @@ inherited Report_OH_DiscountPeriodForm: TReport_OH_DiscountPeriodForm
             Options.Editing = False
             Width = 95
           end
+          object PeriodName: TcxGridDBColumn
+            Caption = #1057#1077#1079#1086#1085
+            DataBinding.FieldName = 'PeriodName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 150
+          end
+          object StartDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1089' ...'
+            DataBinding.FieldName = 'StartDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object EndDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1086' ...'
+            DataBinding.FieldName = 'EndDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object myCount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1101#1083'-'#1090#1086#1074
+            DataBinding.FieldName = 'myCount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1101#1083#1077#1084#1077#1085#1090#1086#1074
+            Width = 55
+          end
           object ValueDiscount: TcxGridDBColumn
-            Caption = '% '#1089#1082#1080#1076#1082#1080
+            Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             DataBinding.FieldName = 'ValueDiscount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 69
+            Width = 80
           end
           object ValueDiscount_min: TcxGridDBColumn
-            Caption = '% '#1089#1082#1080#1076#1082#1080' '#1084#1080#1085'.'
+            Caption = '% '#1089#1082#1080#1076#1082#1080' '#1089' ...'
             DataBinding.FieldName = 'ValueDiscount_min'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -320,16 +297,40 @@ inherited Report_OH_DiscountPeriodForm: TReport_OH_DiscountPeriodForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 71
           end
           object ValueDiscount_max: TcxGridDBColumn
-            Caption = '% '#1089#1082#1080#1076#1082#1080' '#1084#1072#1082#1089'.'
+            Caption = '% '#1089#1082#1080#1076#1082#1080' '#1087#1086' ...'
             DataBinding.FieldName = 'ValueDiscount_max'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 73
+            Width = 71
+          end
+          object BrandName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
+            DataBinding.FieldName = 'BrandName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 95
+          end
+          object PeriodYear: TcxGridDBColumn
+            Caption = #1043#1086#1076' ('#1058#1052')'
+            DataBinding.FieldName = 'PeriodYear'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
           end
         end
       end
