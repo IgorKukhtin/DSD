@@ -506,8 +506,8 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 248
-    Top = 112
+    Left = 224
+    Top = 136
     DockControlHeights = (
       0
       0
@@ -636,7 +636,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 320
-    Top = 112
+    Top = 136
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
