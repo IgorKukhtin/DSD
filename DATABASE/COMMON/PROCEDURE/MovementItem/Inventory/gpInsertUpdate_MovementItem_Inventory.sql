@@ -31,6 +31,35 @@ BEGIN
      -- меняем параметр
      IF inPartionGoodsDate <= '01.01.1900' THEN inPartionGoodsDate:= NULL; END IF;
 
+
+
+     -- Проверка
+     IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.OperDate >= CURRENT_DATE - INTERVAL '1 DAY')
+    AND EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId
+                                                          AND MLO.ObjectId IN (8459 -- Склад Реализации
+                                                                             , 8458 -- Склад База ГП
+                                                                               )
+                                                          AND MLO.DescId = zc_MovementLinkObject_From()
+               )
+    AND EXISTS (SELECT 1
+                FROM MovementItem
+                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                     AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                WHERE MovementItem.MovementId = inMovementId
+                  AND MovementItem.DescId     = zc_MI_Master()
+                  AND MovementItem.isErased   = FALSE
+                  AND MovementItem.Amount <> 0
+                  AND MovementItem.Id <> COALESCE (ioId, 0)
+                  AND MovementItem.ObjectId                         = COALESCE (inGoodsId, 0)
+                  AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = COALESCE (inGoodsKindId, 0)
+               )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Товар <%> <%> уже существует в документе.Дублирование заблокировано', lfGet_Object_ValueData_sh (inGoodsId), lfGet_Object_ValueData_sh (inGoodsKindId);
+         -- select goodsId, goodsKindId, goodsCode, goodsName, goodsKindName from gpSelect_MovementItem_Inventory(inMovementId := 8538761 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '5') where amount <> 0 group by goodsId, goodsKindId, goodsCode, goodsName, goodsKindName having count(*) > 1
+     END IF;
+
+
      -- сохранили
      ioId:= lpInsertUpdate_MovementItem_Inventory (ioId                 := ioId
                                                  , inMovementId         := inMovementId

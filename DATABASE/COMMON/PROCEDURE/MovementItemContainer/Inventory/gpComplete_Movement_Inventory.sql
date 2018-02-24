@@ -148,7 +148,7 @@ BEGIN
           
      WHERE Movement.Id = inMovementId
        AND Movement.DescId = zc_Movement_Inventory()
-       AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
+       AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
 
      -- !!!Если документ проведен - выход!!!

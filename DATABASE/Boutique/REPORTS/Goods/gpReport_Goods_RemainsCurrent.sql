@@ -129,10 +129,11 @@ BEGIN
                            , CASE WHEN vbUnitId = 0 THEN Object_PartionGoods.OperPrice ELSE 0 END AS OperPrice
                            , Object_PartionGoods.CountForPrice
                            , Object_PartionGoods.PriceSale  AS OperPriceList
-                           , Object_PartionGoods.Amount     AS Amount_in
+                           -- , CASE WHEN Container.WhereObjectId = Object_PartionGoods.UnitId THEN Object_PartionGoods.Amount ELSE 0 END AS Amount_in
+                           , Object_PartionGoods.Amount AS Amount_in
                            , Object_PartionGoods.UnitId     AS UnitId_in
                              --  № п/п - только для = 1 возьмем Amount_in
-                           , ROW_NUMBER() OVER (PARTITION BY Container.PartionId) AS Ord
+                           , ROW_NUMBER() OVER (PARTITION BY Container.PartionId ORDER BY CASE WHEN Container.WhereObjectId = Object_PartionGoods.UnitId THEN 0 ELSE 1 END ASC) AS Ord
 
                       FROM Container
                            -- INNER JOIN _tmpUnit ON _tmpUnit.UnitId = Container.WhereObjectId
