@@ -109,7 +109,7 @@ BEGIN
                      , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN MI_Child.Amount ELSE 0 END) AS TotalPay_EUR
                      , SUM (CASE WHEN Object.DescId = zc_Object_BankAccount() THEN MI_Child.Amount ELSE 0 END) AS TotalPay_Card
                      , COALESCE (MIFloat_TotalPay.ValueData, 0)           AS TotalPay
-                     
+                     , CASE WHEN MI_Child.ParentId IS NULL THEN MIFloat_CurrencyValue.ValueData ELSE 0 END   AS CurrencyValue
                 FROM Movement AS Movement_Sale
                      INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement_Sale.StatusId
                      INNER JOIN MovementLinkObject AS MovementLinkObject_From
@@ -166,6 +166,7 @@ BEGIN
                        , COALESCE (MIFloat_OperPriceList.ValueData, 0)
                        , COALESCE (MIFloat_TotalPay.ValueData, 0)
                        , COALESCE (MIFloat_SummChangePercent.ValueData, 0)
+                       , CASE WHEN MI_Child.ParentId IS NULL THEN MIFloat_CurrencyValue.ValueData ELSE 0 END
               )     
 
   , tmpReturnIn AS (SELECT Movement_ReturnIn.Id                AS MovementId
@@ -194,6 +195,7 @@ BEGIN
                          , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN (-1) * MI_Child.Amount ELSE 0 END) AS TotalPay_EUR
                          , SUM (CASE WHEN Object.DescId = zc_Object_BankAccount() THEN (-1) * MI_Child.Amount ELSE 0 END) AS TotalPay_Card
                          , (COALESCE (MIFloat_TotalPay.ValueData, 0)) * (-1)  AS TotalPay
+                         , CASE WHEN MI_Child.ParentId IS NULL THEN MIFloat_CurrencyValue.ValueData ELSE 0 END   AS CurrencyValue
 
                     FROM Movement AS Movement_ReturnIn
                          INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement_ReturnIn.StatusId
@@ -265,6 +267,7 @@ BEGIN
                            , COALESCE (MIFloat_OperPriceList.ValueData, 0)
                            , COALESCE (MIFloat_TotalPay.ValueData, 0)
                            , COALESCE (MIFloat_SummChangePercent.ValueData, 0)
+                           , CASE WHEN MI_Child.ParentId IS NULL THEN MIFloat_CurrencyValue.ValueData ELSE 0 END
                   )
 
   , tmpGoodsAccount AS (SELECT Movement_GoodsAccount.Id            AS MovementId
@@ -292,6 +295,7 @@ BEGIN
                              , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN MI_Child.Amount ELSE 0 END) AS TotalPay_EUR
                              , SUM (CASE WHEN Object.DescId = zc_Object_BankAccount() THEN MI_Child.Amount ELSE 0 END) AS TotalPay_Card
                              , (COALESCE (MIFloat_TotalPay.ValueData, 0))         AS TotalPay
+                             , CASE WHEN MI_Child.ParentId IS NULL THEN MIFloat_CurrencyValue.ValueData ELSE 0 END   AS CurrencyValue
 
                         FROM Movement AS Movement_GoodsAccount
                              INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement_GoodsAccount.StatusId
@@ -366,22 +370,24 @@ BEGIN
                                , COALESCE (MIFloat_OperPriceList.ValueData, 0)
                                , COALESCE (MIFloat_TotalPay.ValueData, 0)
                                , COALESCE (MIFloat_SummChangePercent.ValueData, 0)
+                               , CASE WHEN MI_Child.ParentId IS NULL THEN MIFloat_CurrencyValue.ValueData ELSE 0 END
                       )
 
-     , tmpData  AS  (SELECT tmp.MovementId
-                          , tmp.MovementDescId
-                          , tmp.StatusCode
-                          , tmp.OperDate
-                          , tmp.Invnumber
-                          , tmp.MovementId_Sale
-                          , tmp.MovementDescId_Sale
-                          , tmp.OperDate_Sale
-                          , tmp.Invnumber_Sale
-                          , tmp.PartnerId
+     , tmpData  AS  (SELECT CASE WHEN tmp.GoodsId = -1 THEN 0 ELSE tmp.MovementId END         AS MovementId
+                          , CASE WHEN tmp.GoodsId = -1 THEN 0 ELSE tmp.MovementDescId END     AS MovementDescId
+                          , CASE WHEN tmp.GoodsId = -1 THEN 0 ELSE tmp.StatusCode END         AS StatusCode
+                          , CASE WHEN tmp.GoodsId = -1 THEN NULL ELSE tmp.OperDate END           AS OperDate
+                          , CASE WHEN tmp.GoodsId = -1 THEN '' ELSE tmp.Invnumber END            AS Invnumber
+                          , CASE WHEN tmp.GoodsId = -1 THEN 0 ELSE tmp.MovementId_Sale END      AS MovementId_Sale
+                          , CASE WHEN tmp.GoodsId = -1 THEN 0 ELSE tmp.MovementDescId_Sale END  AS MovementDescId_Sale
+                          , CASE WHEN tmp.GoodsId = -1 THEN NULL ELSE tmp.OperDate_Sale END     AS OperDate_Sale
+                          , CASE WHEN tmp.GoodsId = -1 THEN '' ELSE tmp.Invnumber_Sale END     AS Invnumber_Sale
+                          , CASE WHEN tmp.GoodsId = -1 THEN 0 ELSE tmp.PartnerId END          AS PartnerId
+                          , CASE WHEN tmp.GoodsId = -1 THEN 0 ELSE tmp.PartionId END          AS PartionId
+                          , CASE WHEN tmp.GoodsId = -1 THEN 0 ELSE tmp.ChangePercent END      AS ChangePercent
+                          , CASE WHEN tmp.GoodsId = -1 THEN 0 ELSE tmp.OperPriceList END      AS OperPriceList
                           , tmp.GoodsId
-                          , tmp.PartionId
-                          , tmp.ChangePercent
-                          , tmp.OperPriceList
+                          , tmp.CurrencyValue
                           , SUM (tmp.SummChangePercent) AS SummChangePercent
                           , SUM (tmp.Amount)            AS Amount
                           , SUM (tmp.TotalPay_Grn)      AS TotalPay_Grn
@@ -389,109 +395,152 @@ BEGIN
                           , SUM (tmp.TotalPay_EUR)      AS TotalPay_EUR
                           , SUM (tmp.TotalPay_Card)     AS TotalPay_Card
                           , SUM (tmp.TotalPay)          AS TotalPay
-                     FROM tmpSale AS tmp
-                     GROUP BY tmp.MovementId
-                            , tmp.MovementDescId
-                            , tmp.StatusCode
-                            , tmp.OperDate
-                            , tmp.Invnumber
-                            , tmp.MovementId_Sale
-                            , tmp.MovementDescId_Sale
-                            , tmp.OperDate_Sale
-                            , tmp.Invnumber_Sale
-                            , tmp.PartnerId
-                            , tmp.GoodsId
-                            , tmp.PartionId
-                            , tmp.ChangePercent
-                            , tmp.OperPriceList
-                   UNION ALL
-                     SELECT tmp.MovementId
-                          , tmp.MovementDescId
-                          , tmp.StatusCode
-                          , tmp.OperDate
-                          , tmp.Invnumber
-                          , tmp.MovementId_Sale
-                          , tmp.MovementDescId_Sale
-                          , tmp.OperDate_Sale
-                          , tmp.Invnumber_Sale
-                          , tmp.PartnerId
+                     FROM (SELECT tmp.MovementId
+                                , tmp.MovementDescId
+                                , tmp.StatusCode
+                                , tmp.OperDate
+                                , tmp.Invnumber
+                                , tmp.MovementId_Sale
+                                , tmp.MovementDescId_Sale
+                                , tmp.OperDate_Sale
+                                , tmp.Invnumber_Sale
+                                , tmp.PartnerId
+                                , tmp.GoodsId
+                                , tmp.PartionId
+                                , tmp.ChangePercent
+                                , tmp.OperPriceList
+                                , tmp.CurrencyValue
+                                , SUM (tmp.SummChangePercent) AS SummChangePercent
+                                , SUM (tmp.Amount)            AS Amount
+                                , SUM (tmp.TotalPay_Grn)      AS TotalPay_Grn
+                                , SUM (tmp.TotalPay_USD)      AS TotalPay_USD
+                                , SUM (tmp.TotalPay_EUR)      AS TotalPay_EUR
+                                , SUM (tmp.TotalPay_Card)     AS TotalPay_Card
+                                , SUM (tmp.TotalPay)          AS TotalPay
+                           FROM tmpSale AS tmp
+                           GROUP BY tmp.MovementId
+                                  , tmp.MovementDescId
+                                  , tmp.StatusCode
+                                  , tmp.OperDate
+                                  , tmp.Invnumber
+                                  , tmp.MovementId_Sale
+                                  , tmp.MovementDescId_Sale
+                                  , tmp.OperDate_Sale
+                                  , tmp.Invnumber_Sale
+                                  , tmp.PartnerId
+                                  , tmp.GoodsId
+                                  , tmp.PartionId
+                                  , tmp.ChangePercent
+                                  , tmp.OperPriceList
+                                  , tmp.CurrencyValue
+                         UNION ALL
+                           SELECT tmp.MovementId
+                                , tmp.MovementDescId
+                                , tmp.StatusCode
+                                , tmp.OperDate
+                                , tmp.Invnumber
+                                , tmp.MovementId_Sale
+                                , tmp.MovementDescId_Sale
+                                , tmp.OperDate_Sale
+                                , tmp.Invnumber_Sale
+                                , tmp.PartnerId
+                                , tmp.GoodsId
+                                , tmp.PartionId
+                                , tmp.ChangePercent
+                                , tmp.OperPriceList
+                                , tmp.CurrencyValue
+                                , SUM (tmp.SummChangePercent) AS SummChangePercent
+                                , SUM (tmp.Amount)            AS Amount
+                                , SUM (tmp.TotalPay_Grn)      AS TotalPay_Grn
+                                , SUM (tmp.TotalPay_USD)      AS TotalPay_USD
+                                , SUM (tmp.TotalPay_EUR)      AS TotalPay_EUR
+                                , SUM (tmp.TotalPay_Card)     AS TotalPay_Card
+                                , SUM (tmp.TotalPay)          AS TotalPay
+                           FROM tmpReturnIn AS tmp
+                           GROUP BY tmp.MovementId
+                                  , tmp.MovementDescId
+                                  , tmp.StatusCode
+                                  , tmp.OperDate
+                                  , tmp.Invnumber
+                                  , tmp.MovementId_Sale
+                                  , tmp.MovementDescId_Sale
+                                  , tmp.OperDate_Sale
+                                  , tmp.Invnumber_Sale
+                                  , tmp.PartnerId
+                                  , tmp.GoodsId
+                                  , tmp.PartionId
+                                  , tmp.ChangePercent
+                                  , tmp.OperPriceList
+                                  , tmp.CurrencyValue
+                         UNION ALL
+                           SELECT tmp.MovementId
+                                , tmp.MovementDescId
+                                , tmp.StatusCode
+                                , tmp.OperDate
+                                , tmp.Invnumber
+                                , tmp.MovementId_Sale
+                                , tmp.MovementDescId_Sale
+                                , tmp.OperDate_Sale
+                                , tmp.Invnumber_Sale
+                                , tmp.PartnerId
+                                , tmp.GoodsId
+                                , tmp.PartionId
+                                , tmp.ChangePercent
+                                , tmp.OperPriceList
+                                , tmp.CurrencyValue
+                                , SUM (tmp.SummChangePercent) AS SummChangePercent
+                                , SUM (tmp.Amount)            AS Amount
+                                , SUM (tmp.TotalPay_Grn)      AS TotalPay_Grn
+                                , SUM (tmp.TotalPay_USD)      AS TotalPay_USD
+                                , SUM (tmp.TotalPay_EUR)      AS TotalPay_EUR
+                                , SUM (tmp.TotalPay_Card)     AS TotalPay_Card
+                                , SUM (tmp.TotalPay)          AS TotalPay
+                           FROM tmpGoodsAccount AS tmp
+                           GROUP BY tmp.MovementId
+                                  , tmp.MovementDescId
+                                  , tmp.StatusCode
+                                  , tmp.OperDate
+                                  , tmp.Invnumber
+                                  , tmp.MovementId_Sale
+                                  , tmp.MovementDescId_Sale
+                                  , tmp.OperDate_Sale
+                                  , tmp.Invnumber_Sale
+                                  , tmp.PartnerId
+                                  , tmp.GoodsId
+                                  , tmp.PartionId
+                                  , tmp.ChangePercent
+                                  , tmp.OperPriceList
+                                  , tmp.CurrencyValue
+                           ) AS tmp
+                     GROUP BY CASE WHEN tmp.GoodsId = -1 THEN 0 ELSE tmp.MovementId END 
+                          , CASE WHEN tmp.GoodsId = -1 THEN 0 ELSE tmp.MovementDescId END 
+                          , CASE WHEN tmp.GoodsId = -1 THEN 0 ELSE tmp.StatusCode END
+                          , CASE WHEN tmp.GoodsId = -1 THEN NULL ELSE tmp.OperDate END 
+                          , CASE WHEN tmp.GoodsId = -1 THEN '' ELSE tmp.Invnumber END 
+                          , CASE WHEN tmp.GoodsId = -1 THEN 0 ELSE tmp.MovementId_Sale END
+                          , CASE WHEN tmp.GoodsId = -1 THEN 0 ELSE tmp.MovementDescId_Sale END
+                          , CASE WHEN tmp.GoodsId = -1 THEN NULL ELSE tmp.OperDate_Sale END
+                          , CASE WHEN tmp.GoodsId = -1 THEN '' ELSE tmp.Invnumber_Sale END
+                          , CASE WHEN tmp.GoodsId = -1 THEN 0 ELSE tmp.PartnerId END
+                          , CASE WHEN tmp.GoodsId = -1 THEN 0 ELSE tmp.PartionId END
+                          , CASE WHEN tmp.GoodsId = -1 THEN 0 ELSE tmp.ChangePercent END 
+                          , CASE WHEN tmp.GoodsId = -1 THEN 0 ELSE tmp.OperPriceList END
                           , tmp.GoodsId
-                          , tmp.PartionId
-                          , tmp.ChangePercent
-                          , tmp.OperPriceList
-                          , SUM (tmp.SummChangePercent) AS SummChangePercent
-                          , SUM (tmp.Amount)            AS Amount
-                          , SUM (tmp.TotalPay_Grn)      AS TotalPay_Grn
-                          , SUM (tmp.TotalPay_USD)      AS TotalPay_USD
-                          , SUM (tmp.TotalPay_EUR)      AS TotalPay_EUR
-                          , SUM (tmp.TotalPay_Card)     AS TotalPay_Card
-                          , SUM (tmp.TotalPay)          AS TotalPay
-                     FROM tmpReturnIn AS tmp
-                     GROUP BY tmp.MovementId
-                            , tmp.MovementDescId
-                            , tmp.StatusCode
-                            , tmp.OperDate
-                            , tmp.Invnumber
-                            , tmp.MovementId_Sale
-                            , tmp.MovementDescId_Sale
-                            , tmp.OperDate_Sale
-                            , tmp.Invnumber_Sale
-                            , tmp.PartnerId
-                            , tmp.GoodsId
-                            , tmp.PartionId
-                            , tmp.ChangePercent
-                            , tmp.OperPriceList
-                   UNION ALL
-                     SELECT tmp.MovementId
-                          , tmp.MovementDescId
-                          , tmp.StatusCode
-                          , tmp.OperDate
-                          , tmp.Invnumber
-                          , tmp.MovementId_Sale
-                          , tmp.MovementDescId_Sale
-                          , tmp.OperDate_Sale
-                          , tmp.Invnumber_Sale
-                          , tmp.PartnerId
-                          , tmp.GoodsId
-                          , tmp.PartionId
-                          , tmp.ChangePercent
-                          , tmp.OperPriceList
-                          , SUM (tmp.SummChangePercent) AS SummChangePercent
-                          , SUM (tmp.Amount)            AS Amount
-                          , SUM (tmp.TotalPay_Grn)      AS TotalPay_Grn
-                          , SUM (tmp.TotalPay_USD)      AS TotalPay_USD
-                          , SUM (tmp.TotalPay_EUR)      AS TotalPay_EUR
-                          , SUM (tmp.TotalPay_Card)     AS TotalPay_Card
-                          , SUM (tmp.TotalPay)          AS TotalPay
-                     FROM tmpGoodsAccount AS tmp
-                     GROUP BY tmp.MovementId
-                            , tmp.MovementDescId
-                            , tmp.StatusCode
-                            , tmp.OperDate
-                            , tmp.Invnumber
-                            , tmp.MovementId_Sale
-                            , tmp.MovementDescId_Sale
-                            , tmp.OperDate_Sale
-                            , tmp.Invnumber_Sale
-                            , tmp.PartnerId
-                            , tmp.GoodsId
-                            , tmp.PartionId
-                            , tmp.ChangePercent
-                            , tmp.OperPriceList
+                          , tmp.CurrencyValue
                     )
             
 
-        SELECT tmpData.MovementId
-             , tmpData.StatusCode             AS StatusCode
-             , MovementDesc.ItemName          AS DescName
-             , tmpData.OperDate
-             , tmpData.Invnumber
-             , tmpData.MovementId_Sale
-             , MovementDesc_Sale.ItemName     AS DescName_Sale
-             , tmpData.OperDate_Sale
-             , tmpData.Invnumber_Sale
+        SELECT tmpData.MovementId     ::Integer
+             , tmpData.StatusCode     ::Integer        AS StatusCode
+             , MovementDesc.ItemName  ::TVarChar       AS DescName
+             , tmpData.OperDate       ::TDateTime
+             , tmpData.Invnumber      ::TVarChar
+             , tmpData.MovementId_Sale ::Integer
+             , MovementDesc_Sale.ItemName   ::TVarChar  AS DescName_Sale
+             , tmpData.OperDate_Sale  ::TDateTime
+             , tmpData.Invnumber_Sale ::TVarChar
              
-             , Object_Partner.ValueData       AS PartnerName
+             , Object_Partner.ValueData  ::TVarChar     AS PartnerName
              , tmpData.PartionId
              , Object_Goods.Id                AS GoodsId
              , Object_Goods.ObjectCode        AS GoodsCode
@@ -524,10 +573,10 @@ BEGIN
              , tmpData.TotalPay_Card       ::TFloat
              , COALESCE (tmpData.TotalPay,0)           ::TFloat
 
-             , CASE WHEN COALESCE (tmpData.TotalPay_USD, 0) <> 0 THEN tmpData.TotalPay_Grn / tmpData.TotalPay_USD * (-1)
+             , /*CASE WHEN COALESCE (tmpData.TotalPay_USD, 0) <> 0 THEN tmpData.TotalPay_Grn / tmpData.TotalPay_USD * (-1)
                     WHEN COALESCE (tmpData.TotalPay_EUR, 0) <> 0 THEN tmpData.TotalPay_Grn / tmpData.TotalPay_EUR * (-1)
                     ELSE 0
-               END                         ::TFloat AS CurrencyValue
+               END    */            tmpData.CurrencyValue         ::TFloat AS CurrencyValue
 
              , MovementDate_Insert.ValueData        AS InsertDate
              -- разные группы обмены и продажи
@@ -575,3 +624,6 @@ $BODY$
 
 -- тест
 -- select * from gpReport_GoodsMI_Account(inStartDate := ('01.01.2017')::TDateTime , inEndDate := ('13.07.2017')::TDateTime , inUnitId := 506 , inIsShowAll:= 'TRUE'::Boolean, inSession := '2');
+
+--select * from gpReport_GoodsMI_Account(inStartDate := ('05.02.2018')::TDateTime , inEndDate := ('11.02.2018')::TDateTime , inUnitId := 1479 , inIsShowAll := 'False' ,  inSession := '5')  as tt
+--order by goodsname
