@@ -51,7 +51,7 @@ type
     bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
     GoodsName: TcxGridDBColumn;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     ProtocolOpenForm: TdsdOpenForm;
@@ -77,7 +77,7 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     spUnErased: TdsdStoredProc;
     InvNumber_Partion: TcxGridDBColumn;
-    Id: TcxGridDBColumn;
+    Ord: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
     GuidesUser: TdsdGuides;
     Panel: TPanel;
@@ -87,8 +87,9 @@ type
     edUnit: TcxButtonEdit;
     spDelete_Object_GoodsPrint: TdsdStoredProc;
     actDeleteGoodsPrint: TdsdExecStoredProc;
-    spGet_GoodsPrint_User: TdsdStoredProc;
+    spGet_User_curr: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    isReprice: TcxGridDBColumn;
   private
     { Private declarations }
   public

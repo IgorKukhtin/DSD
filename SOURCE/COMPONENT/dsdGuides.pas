@@ -655,12 +655,18 @@ begin
 end;
 
 procedure TCustomGuides.SetKey(const Value: String);
+var isChange_my:Boolean; // add 25.02.2018
 begin
+  isChange_my:= TRUE;  // add 25.02.2018
+  //
   if Value = '' then
      FKey := '0'
-  else
+  else begin
+     try isChange_my:= FKey <> Value; except isChange_my:= TRUE; end; // add 25.02.2018
      FKey := Value;
-  if Assigned(FOnChange) then
+  end;
+
+  if Assigned(FOnChange) and (isChange_my = TRUE) then
      FOnChange(Self);
   if Assigned(LookupControl) then begin
      if LookupControl is TcxLookupComboBox then

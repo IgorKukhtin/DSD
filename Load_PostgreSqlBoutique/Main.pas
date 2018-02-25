@@ -170,6 +170,7 @@ type
     cbReturnInErr: TCheckBox;
     cbNEW: TCheckBox;
     cbDiscountPeriod: TCheckBox;
+    cbObmen: TCheckBox;
 
     procedure btnAddGuideId_PostgresClick(Sender: TObject);
     procedure btnAddlDocId_PostgresClick(Sender: TObject);
@@ -296,6 +297,8 @@ type
     function  pLoadDocument_GoodsAccount:Integer;
     function  pLoadDocumentItem_GoodsAccount(SaveCount:Integer):Integer;
     procedure pLoadDocument_GoodsAccount_Child(SaveCount1, SaveCount2:Integer);
+
+    procedure  pLoadDocumentItem_Obmen;
 
     procedure pLoadDocuments_PriceListItem;
     procedure pLoadDocuments_DiscountPeriodItem;
@@ -2177,6 +2180,8 @@ begin
      if not fStop then myRecordCount1:=pLoadDocument_GoodsAccount;
      if not fStop then myRecordCount2:=pLoadDocumentItem_GoodsAccount(myRecordCount1);
      if not fStop then pLoadDocument_GoodsAccount_Child(myRecordCount1,myRecordCount2);
+
+     if not fStop then pLoadDocumentItem_Obmen;
      //
      //
      if not fStop then pLoadDocuments_PriceListItem;
@@ -3039,6 +3044,9 @@ begin
         try fExecSqFromQuery_noErr('alter table dba.DiscountKlientAccountMoney add MovementId_pg integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.DiscountKlientAccountMoney add MovementItemId_pg integer null;'); except end;
 
+      // 1.14. Обмены
+      try fExecSqFromQuery_noErr('alter table dba.DiscountKassaMoveMoney add Id_Postgres integer null;'); except end;
+
      end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3146,6 +3154,8 @@ begin
       //
       // 1.12. Оплаты покупателей
         try fExecSqFromQuery('update dba.DiscountKlientAccountMoney set MovementId_pg = null, MovementItemId_pg = null where MovementId_pg is not null or MovementItemId_pg is not null'); except end;
+      // 1.14. Обмены
+        try fExecSqFromQuery_noErr('update dba.DiscountKassaMoveMoney set Id_Postgres = null where Id_Postgres is not null '); except end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pLoadDocumentItem_GoodsAccount(SaveCount:Integer):Integer;
@@ -4334,6 +4344,118 @@ begin
 
      //
      myDisabledCB(cbGoodsAccount);
+end;
+
+procedure  TMainForm.pLoadDocumentItem_Obmen;
+begin
+     //
+     if (not cbObmen.Checked)or(not cbObmen.Enabled) then exit;
+     //
+     myEnabledCB(cbObmen);
+     //
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add(' SELECT ');
+        Add('      DiscountKassaMoveMoney.Id as ObjectId');
+        Add('    , DiscountKassaMoveMoney.OperDate');
+        Add('    , DiscountKassaMoveMoney.InsertDate'
+             + ' , KassaPropertyFrom.Id_Postgres as FromId_Postgres'
+             + ' , KassaPropertyTo.Id_Postgres as ToId_Postgres'
+             + ' , DiscountKassaMoveMoney.SummaFrom as SummaFrom'
+             + ' , DiscountKassaMoveMoney.SummaTo as SummaTo'
+             + ' , DiscountKassaMoveMoney.Kurs '
+             + ' , DiscountKassaMoveMoney.NominalKurs'
+             + ' , valutaFrom.Id_Postgres as FromCurrencyId'
+             + ' , valutaTo.Id_Postgres as ToCurrencyId'
+             + ' , valutaFrom.ValutaName as FromValutaName'
+             + ' , valutaTo.ValutaName as ToValutaName'
+               );
+        Add('    , DiscountMovement.OperDate');
+        Add('    , DiscountMovement.SaleId_Postgres');
+        Add('    , DiscountMovement.ReturnInId_Postgres');
+        Add('    , DiscountKlientAccountMoney.OperDate');
+        Add('    , DiscountKlientAccountMoney.MovementId_pg as AccountId_pg');
+        Add('    , coalesce (DiscountMovement.SaleId_Postgres, DiscountMovement.ReturnInId_Postgres, DiscountKlientAccountMoney.MovementId_pg) as MovementId');
+        Add('    , DiscountKassaMoveMoney.Id_Postgres');
+
+        Add('  FROM DiscountKassaMoveMoney'
+             + '    left outer join dba.DiscountMovement on DiscountMovement.Id = DiscountKassaMoveMoney.DiscountMovementId'
+             + '    left outer join Kassa as KassaFrom on KassaFrom.Id = DiscountKassaMoveMoney.FromKassaID'
+             + '    left outer join Kassa as KassaTo   on KassaTo.Id   = DiscountKassaMoveMoney.ToKassaID'
+             + '    left outer join KassaProperty as KassaPropertyFrom on KassaPropertyFrom.KassaID = KassaFrom.ID'
+             + '    left outer join KassaProperty as KassaPropertyTo   on KassaPropertyTo.KassaID   = KassaTo.ID'
+             + '    left outer join valuta as valutaFrom on valutaFrom.id = KassaPropertyFrom.valutaID'
+             + '    left outer join valuta as valutaTo   on valutaTo.id   = KassaPropertyTo.valutaID'
+
+             + '    left outer join DiscountKlientAccountMoney on DiscountKlientAccountMoney.ID = DiscountKassaMoveMoney.DiscountKlientAccountMoneyId'
+
+             + ' WHERE DiscountKassaMoveMoney.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+             + '   and DiscountKlientAccountMoney.isCurrent = zc_rvNo()'
+             + '   and DiscountKlientAccountMoney.discountMovementItemReturnId  is null'
+             + '   and DiscountKlientAccountMoney.isErased = zc_rvNo()'
+             + '   and (DiscountKlientAccountMoney.Summa <> 0 or DiscountKlientAccountMoney.SummDiscountManual <> 0)'
+            );
+        Add('order by DiscountKassaMoveMoney.InsertDate');
+        Open;
+
+        cbObmen.Caption:='1.14. ('+IntToStr(RecordCount)+') Обмены';
+        //
+        //
+        fStop:=(cbOnlyOpen.Checked);
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_MI_Child_Sybase';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        //
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCashId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCurrencyId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCashId_Exc',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCurrencyValue',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inParValue',ftFloat,ptInput, 0);
+        //
+
+        while not EOF do
+        begin
+             //!!!
+            if fStop then begin exit; end;
+             //
+
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
+             toStoredProc.Params.ParamByName('inCashId').Value:=FieldByName('ToId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCurrencyId').Value:=FieldByName('ToCurrencyId').AsInteger;
+             toStoredProc.Params.ParamByName('inCashId_Exc').Value:=FieldByName('FromId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('SummaTo').AsFloat;
+             toStoredProc.Params.ParamByName('inCurrencyValue').Value:=FieldByName('Kurs').AsFloat;
+             toStoredProc.Params.ParamByName('inParValue').Value:=FieldByName('NominalKurs').AsFloat;
+
+             if not myExecToStoredProc then ;//exit;
+             //
+             if FieldByName('Id_Postgres').AsInteger=0
+             then
+               fExecSqFromQuery('update dba.DiscountKassaMoveMoney set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+
+     end;
+
+     //
+     myDisabledCB(cbObmen);
 end;
 
 procedure TMainForm.pLoadDocument_Currency;

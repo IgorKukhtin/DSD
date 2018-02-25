@@ -1,3 +1,5 @@
+-- Function: gpGet_UserUnit()
+
 DROP FUNCTION IF EXISTS gpGet_UserUnit (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_UserUnit(
@@ -28,7 +30,6 @@ $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpGet_UserUnit (TVarChar) OWNER TO postgres;
 
-
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
@@ -37,4 +38,4 @@ ALTER FUNCTION gpGet_UserUnit (TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpGet_UserUnit (inSession:= '2')
+-- SELECT * FROM gpGet_UserUnit (inSession:= zfCalc_UserAdmin())

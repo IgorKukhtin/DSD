@@ -3,7 +3,7 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1077#1089#1089#1080#1103' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103' '#1044#1083#1103' '#1087#1077#1095#1072#1090#1080' '#1094#1077#1085#1085#1080#1082#1086#1074'>'
   ClientHeight = 336
-  ClientWidth = 611
+  ClientWidth = 658
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 611
+    Width = 658
     Height = 310
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 611
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -42,7 +43,7 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cxGridDBTableViewColumn1
+          Column = Amount
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -60,7 +61,7 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cxGridDBTableViewColumn1
+          Column = Amount
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -76,36 +77,51 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object Id: TcxGridDBColumn
+      object Ord: TcxGridDBColumn
         Caption = #8470' '#1087'/'#1087
-        DataBinding.FieldName = 'Id'
+        DataBinding.FieldName = 'Ord'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 58
+        Width = 35
       end
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1077#1089#1089#1080#1080
         DataBinding.FieldName = 'InsertDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 169
+        Width = 100
       end
-      object cxGridDBTableViewColumn1: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1087#1077#1095#1072#1090#1080
+      object isReprice: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072
+        DataBinding.FieldName = 'isReprice'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object Amount: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1087#1077#1095#1072#1090#1080
         DataBinding.FieldName = 'Amount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1087#1077#1095#1072#1090#1080' '#1094#1077#1085#1085#1080#1082#1086#1074
         Width = 70
+      end
+      object UnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
       end
       object UserName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
         DataBinding.FieldName = 'UserName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 272
+        Width = 100
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -375,10 +391,25 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
       MoveParams = <>
       Params = <
         item
+          Name = 'UserId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UserId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UserName'
+          Value = 'NULL'
+          Component = MasterCDS
+          ComponentItem = 'UserName'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'Id'
+          ComponentItem = 'Ord'
           MultiSelectSeparator = ','
         end
         item
@@ -387,21 +418,6 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UserId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'UserId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InsertDate'
-          Value = 'NULL'
-          Component = MasterCDS
-          ComponentItem = 'InsertDate'
-          DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -598,8 +614,6 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
     ComponentList = <
       item
         Component = GuidesUser
-      end
-      item
       end>
     Left = 304
     Top = 120

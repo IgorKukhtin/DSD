@@ -26,7 +26,7 @@ type
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     PeriodChoice: TPeriodChoice;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     FormParams: TdsdFormParams;
     edUnit: TcxButtonEdit;

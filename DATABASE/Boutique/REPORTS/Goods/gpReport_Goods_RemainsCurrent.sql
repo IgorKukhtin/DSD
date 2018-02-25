@@ -74,14 +74,26 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_...());
     vbUserId:= lpGetUserBySession (inSession);
 
+    -- !!!замена!!!
+    IF inIsPartion = TRUE THEN
+       inIsPartner:= TRUE;
+       inIsSize   := TRUE;
+    END IF;
+    -- !!!замена!!!
+    IF inIsYear = TRUE AND COALESCE (inEndYear, 0) = 0 THEN
+       inEndYear:= 1000000;
+    END IF;
+
     -- подразделение пользовател€
-    vbUnitId := lpGetUnitByUser(vbUserId);
+    vbUnitId := lpGetUnitByUser (vbUserId);
+    -- RAISE EXCEPTION 'ќшибка.по подразделению <%> .', lfGet_Object_ValueData (vbUnitId);
 
      -- если у пользовател€ = 0, тогда может смотреть любой магазин, иначе только свой
-     IF COALESCE (vbUnitId, 0 ) <> 0 AND COALESCE (vbUnitId) <> inUnitId AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Child() AND OL.ChildObjectid = inUnitId AND OL.Objectid = vbUnitId)
+     IF COALESCE (vbUnitId, 0) <> 0 AND COALESCE (vbUnitId, 0) <> inUnitId AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Child() AND OL.ChildObjectid = inUnitId AND OL.Objectid = vbUnitId)
      THEN
          RAISE EXCEPTION 'ќшибка.” ѕользовател€ <%> нет прав просмотра данных по подразделению <%> .', lfGet_Object_ValueData (vbUserId), lfGet_Object_ValueData (inUnitId);
      END IF;
+
 
     -- таблица подразделений
     CREATE TEMP TABLE _tmpUnit (UnitId Integer) ON COMMIT DROP;
@@ -159,7 +171,9 @@ BEGIN
                                               -- AND 1=0
                       WHERE Container.DescId = zc_Container_Count()
                         AND Container.WhereObjectId = inUnitId
-                        AND (Container.Amount <> 0 OR Container_SummDebt.Amount <> 0 OR Container_SummDebt_profit.Amount <> 0)
+                        AND (Container.Amount <> 0 OR Container_SummDebt.Amount <> 0 OR Container_SummDebt_profit.Amount <> 0
+                          OR inPartnerId <> 0 OR (inIsYear = TRUE AND inStartYear = inEndYear) -- OR inBrandId <> 0 -- OR (inIsYear = TRUE AND inStartYear >0)
+                            )
                         AND (ObjectLink_Partner_Period.ChildObjectId = inPeriodId   OR inPeriodId  = 0)
                         AND (Object_PartionGoods.BrandId             = inBrandId    OR inBrandId   = 0)
                         AND (Object_PartionGoods.PartnerId           = inPartnerId  OR inPartnerId = 0)

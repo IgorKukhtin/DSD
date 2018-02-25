@@ -1,8 +1,9 @@
--- Function: gpGet_Object_Goods_BarCode()
+-- Function: gpGet_Object_User_curr()
 
-DROP FUNCTION IF EXISTS gpGet_Object_GoodsPrint_User(TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_GoodsPrint_User (TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_User_curr (TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_Object_GoodsPrint_User(
+CREATE OR REPLACE FUNCTION gpGet_Object_User_curr(
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (UserId Integer
@@ -18,11 +19,9 @@ BEGIN
 
       -- Результат
       RETURN QUERY
-      SELECT vbUserId                          ::Integer  AS vbUserId
-           , lfGet_Object_ValueData (vbUserId) ::TVarChar AS UserName
+      SELECT COALESCE (vbUserId, 0)               :: Integer  AS UserId
+           , lfGet_Object_ValueData_sh (vbUserId) :: TVarChar AS UserName
       ; 
-
-   
   
 END;
 $BODY$
@@ -32,8 +31,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.
+ 24.02.18                                         *
  18.08.17         *
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_GoodsPrint_User (zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Object_User_curr (zfCalc_UserAdmin())

@@ -47,7 +47,6 @@
     BevelOuter = bvNone
     TabOrder = 1
     OnDblClick = ButtonPanelDblClick
-    ExplicitTop = 496
     object Gauge: TGauge
       Left = 0
       Top = 0
@@ -144,10 +143,8 @@
     ActivePage = TabSheet1
     Align = alRight
     TabOrder = 2
-    ExplicitHeight = 496
     object TabSheet1: TTabSheet
       Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080' - '#1044#1086#1082#1091#1084#1077#1085#1090#1099
-      ExplicitHeight = 468
       object GuidePanel: TPanel
         Left = 0
         Top = 0
@@ -156,7 +153,6 @@
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitHeight = 468
         object cbAllGuide: TCheckBox
           Tag = 1
           Left = 15
@@ -635,7 +631,6 @@
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitHeight = 468
         object Label1: TLabel
           Left = 6
           Top = 22
@@ -741,7 +736,7 @@
         object cbDiscountPeriodItem: TCheckBox
           Tag = 20
           Left = 6
-          Top = 329
+          Top = 351
           Width = 204
           Height = 17
           Caption = '3. '#1048#1089#1090#1086#1088#1080#1103' '#1089#1082#1080#1076#1086#1082
@@ -757,7 +752,7 @@
         object cbPriceListItem: TCheckBox
           Tag = 20
           Left = 6
-          Top = 313
+          Top = 335
           Width = 204
           Height = 17
           Caption = '2. '#1048#1089#1090#1086#1088#1080#1103' '#1094#1077#1085#1099
@@ -818,7 +813,7 @@
         object cbSale_Child: TCheckBox
           Tag = 20
           Left = 6
-          Top = 214
+          Top = 211
           Width = 235
           Height = 17
           Caption = '1.10. '#1054#1087#1083#1072#1090#1099' '#1074' '#1087#1088#1086#1076#1072#1078#1072#1093
@@ -833,7 +828,7 @@
         object cbReturnIn_Child: TCheckBox
           Tag = 20
           Left = 6
-          Top = 231
+          Top = 228
           Width = 235
           Height = 17
           Caption = '1.11. '#1054#1087#1083#1072#1090#1099' '#1074' '#1074#1086#1079#1074#1088#1072#1090#1072#1093
@@ -847,7 +842,7 @@
         end
         object cbTest: TCheckBox
           Left = 19
-          Top = 423
+          Top = 445
           Width = 142
           Height = 17
           Caption = #1058#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1058#1077#1089#1090' Id :'
@@ -861,7 +856,7 @@
         end
         object TestEdit: TEdit
           Left = 19
-          Top = 444
+          Top = 466
           Width = 104
           Height = 21
           TabOrder = 15
@@ -869,7 +864,7 @@
         object cbGoodsAccount: TCheckBox
           Tag = 20
           Left = 6
-          Top = 254
+          Top = 251
           Width = 195
           Height = 19
           Caption = '1.12. '#1056#1072#1089#1095#1077#1090#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
@@ -899,7 +894,7 @@
         end
         object cbLast: TCheckBox
           Left = 6
-          Top = 296
+          Top = 318
           Width = 142
           Height = 17
           Caption = #1058#1086#1083#1100#1082#1086' Last :'
@@ -913,7 +908,7 @@
         end
         object cbErr: TCheckBox
           Left = 6
-          Top = 384
+          Top = 406
           Width = 142
           Height = 17
           Caption = #1058#1086#1083#1100#1082#1086' Err  :'
@@ -927,7 +922,7 @@
         end
         object cbMovementNotOne: TCheckBox
           Left = 54
-          Top = 273
+          Top = 295
           Width = 51
           Height = 17
           Caption = '1 '#1053#1045#1058
@@ -941,7 +936,7 @@
         end
         object cbMINotTwo: TCheckBox
           Left = 111
-          Top = 273
+          Top = 295
           Width = 51
           Height = 17
           Caption = '2 '#1053#1045#1058
@@ -955,7 +950,7 @@
         end
         object cbSelect_MovementItem_Sale_Sybase_Check: TCheckBox
           Left = 8
-          Top = 357
+          Top = 379
           Width = 177
           Height = 17
           Caption = '!!!gpSale_Sybase_Check!!!'
@@ -997,7 +992,7 @@
         end
         object cbNEW: TCheckBox
           Left = 6
-          Top = 402
+          Top = 424
           Width = 142
           Height = 17
           Caption = #1058#1086#1083#1100#1082#1086' !!! NEW !!!'
@@ -1009,6 +1004,22 @@
           ParentFont = False
           TabOrder = 25
         end
+        object cbObmen: TCheckBox
+          Tag = 20
+          Left = 7
+          Top = 275
+          Width = 195
+          Height = 19
+          Caption = '1.14. '#1054#1073#1084#1077#1085#1099
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 26
+          WordWrap = True
+        end
       end
       object CompleteDocumentPanel: TPanel
         Left = 382
@@ -1018,7 +1029,6 @@
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitHeight = 468
         object Label5: TLabel
           Left = 6
           Top = 22

@@ -3,7 +3,7 @@ object PeriodYear_ChoiceForm: TPeriodYear_ChoiceForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1086#1076'>'
   ClientHeight = 376
-  ClientWidth = 202
+  ClientWidth = 239
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,14 +20,12 @@ object PeriodYear_ChoiceForm: TPeriodYear_ChoiceForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 202
+    Width = 239
     Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = -216
-    ExplicitTop = 42
-    ExplicitWidth = 422
+    ExplicitWidth = 202
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -52,6 +50,7 @@ object PeriodYear_ChoiceForm: TPeriodYear_ChoiceForm
       object PeriodYear: TcxGridDBColumn
         Caption = #1043#1086#1076
         DataBinding.FieldName = 'PeriodYear'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 123
       end
@@ -209,7 +208,7 @@ object PeriodYear_ChoiceForm: TPeriodYear_ChoiceForm
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PeriodYear'
+          ComponentItem = 'Name'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -218,7 +217,6 @@ object PeriodYear_ChoiceForm: TPeriodYear_ChoiceForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PeriodYear'
-          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
