@@ -55,6 +55,11 @@ BEGIN
    END IF; 
 
 
+   -- Проверка
+   IF TRIM (inName) = '' THEN
+      RAISE EXCEPTION 'Ошибка.Необходимо ввести Название.';
+   END IF;
+
    -- проверка прав уникальности для свойства <Название>
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Client(), inName);
 

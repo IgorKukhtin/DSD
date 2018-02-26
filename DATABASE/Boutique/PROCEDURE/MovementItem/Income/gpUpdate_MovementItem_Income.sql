@@ -4,8 +4,9 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income (Integer, Integer, In
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income (Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MovementItem_Income (Integer, TFloat, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income(
+CREATE OR REPLACE FUNCTION gpUpdate_MovementItem_Income(
     IN inId                   Integer   , -- Ключ объекта <Элемент документа>
     IN inAmount               TFloat    , -- Количество
    OUT outTotalSumm           TFloat    , -- Сумма вх.
@@ -113,4 +114,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_Income(inId := 154 , inAmount := 11 ,  inSession := '2');
+-- SELECT * FROM gpUpdate_MovementItem_Income (inId := 154 , inAmount := 11 ,  inSession := '2');

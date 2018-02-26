@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 723
   KeyPreview = True
   ExplicitWidth = 739
-  ExplicitHeight = 226
+  ExplicitHeight = 223
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -22,9 +22,9 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actReport_OH_DiscountPeriod: TdsdOpenForm [1]
-      Category = #1054#1090#1095#1077#1090#1099
+      Category = #1048#1089#1090#1086#1088#1080#1080
       MoveParams = <>
-      Caption = #1055#1077#1088#1080#1086#1076#1099' '#1089#1077#1079#1086#1085#1085#1099#1093' '#1089#1082#1080#1076#1086#1082
+      Caption = #1054#1090#1095#1077#1090' <'#1055#1077#1088#1080#1086#1076#1099' '#1089#1077#1079#1086#1085#1085#1099#1093' '#1089#1082#1080#1076#1086#1082'>'
       FormName = 'TReport_OH_DiscountPeriodForm'
       FormNameParam.Value = 'TReport_OH_DiscountPeriodForm'
       FormNameParam.DataType = ftString
@@ -230,9 +230,9 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actDiscountPeriod: TdsdOpenForm [15]
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Category = #1048#1089#1090#1086#1088#1080#1080
       MoveParams = <>
-      Caption = #1055#1077#1088#1080#1086#1076#1099' '#1089#1077#1079#1086#1085#1085#1099#1093' '#1089#1082#1080#1076#1086#1082
+      Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1077#1088#1080#1086#1076#1099' '#1089#1077#1079#1086#1085#1085#1099#1093' '#1089#1082#1080#1076#1086#1082'>'
       FormName = 'TDiscountPeriodForm'
       FormNameParam.Value = 'TDiscountPeriodForm'
       FormNameParam.DataType = ftString
@@ -382,8 +382,8 @@ inherited MainForm: TMainForm
     object actDiscountPeriodItem: TdsdOpenForm [28]
       Category = #1048#1089#1090#1086#1088#1080#1080
       MoveParams = <>
-      Caption = #1048#1089#1090#1086#1088#1080#1080' '#1089#1077#1079#1086#1085#1085#1099#1093' '#1089#1082#1080#1076#1086#1082
-      Hint = #1048#1089#1090#1086#1088#1080#1080' '#1057#1077#1079#1086#1085#1085#1099#1093' '#1089#1082#1080#1076#1086#1082
+      Caption = #1048#1089#1090#1086#1088#1080#1103' '#1089#1077#1079#1086#1085#1085#1099#1093' '#1089#1082#1080#1076#1086#1082
+      Hint = #1048#1089#1090#1086#1088#1080#1103' '#1089#1077#1079#1086#1085#1085#1099#1093' '#1089#1082#1080#1076#1086#1082
       FormName = 'TDiscountPeriodItemForm'
       FormNameParam.Value = 'TDiscountPeriodItemForm'
       FormNameParam.DataType = ftString
@@ -857,8 +857,8 @@ inherited MainForm: TMainForm
     object actPriceListItem: TdsdOpenForm
       Category = #1048#1089#1090#1086#1088#1080#1080
       MoveParams = <>
-      Caption = #1048#1089#1090#1086#1088#1080#1080' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1086#1074
-      Hint = #1048#1089#1090#1086#1088#1080#1080' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1086#1074
+      Caption = #1048#1089#1090#1086#1088#1080#1103' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1086#1074
+      Hint = #1048#1089#1090#1086#1088#1080#1103' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1086#1074
       FormName = 'TPriceListItemForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -1027,11 +1027,20 @@ inherited MainForm: TMainForm
       object miPriceListItem: TMenuItem
         Action = actPriceListItem
       end
+      object miGoodsPrint: TMenuItem
+        Action = actGoodsPrint
+      end
       object miLine31: TMenuItem
         Caption = '-'
       end
       object miDiscountPeriodItem: TMenuItem
         Action = actDiscountPeriodItem
+      end
+      object miDiscountPeriod: TMenuItem
+        Action = actDiscountPeriod
+      end
+      object miReport_OH_DiscountPeriod: TMenuItem
+        Action = actReport_OH_DiscountPeriod
       end
     end
     object miSaleMovement: TMenuItem [3]
@@ -1093,12 +1102,6 @@ inherited MainForm: TMainForm
       object miReport_Goods: TMenuItem
         Action = actReport_Goods
       end
-      object N1: TMenuItem
-        Caption = '-'
-      end
-      object miReport_OH_DiscountPeriod: TMenuItem
-        Action = actReport_OH_DiscountPeriod
-      end
     end
     object miReport_Finance: TMenuItem [8]
       Caption = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
@@ -1147,9 +1150,6 @@ inherited MainForm: TMainForm
         end
         object miPartionGoods: TMenuItem
           Action = actPartionGoods
-        end
-        object miGoodsPrint: TMenuItem
-          Action = actGoodsPrint
         end
         object miLine711: TMenuItem
           Caption = '-'
@@ -1217,9 +1217,6 @@ inherited MainForm: TMainForm
       end
       object miDiscountTools: TMenuItem
         Action = actDiscountTools
-      end
-      object miDiscountPeriod: TMenuItem
-        Action = actDiscountPeriod
       end
       object miLine83: TMenuItem
         Caption = '-'

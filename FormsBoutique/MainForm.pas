@@ -199,7 +199,6 @@ type
     miReport_ReturnIn: TMenuItem;
     actReport_OH_DiscountPeriod: TdsdOpenForm;
     miReport_OH_DiscountPeriod: TMenuItem;
-    N1: TMenuItem;
     actDiscountPeriod: TdsdOpenForm;
     miDiscountPeriod: TMenuItem;
   private

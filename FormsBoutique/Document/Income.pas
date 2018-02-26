@@ -61,7 +61,7 @@ type
     TotalSumm: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     actUpdateMasterDS: TdsdUpdateDataSet;
-    spInsertUpdateMIMaster: TdsdStoredProc;
+    spUpdateMIMaster: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     CountForPrice: TcxGridDBColumn;

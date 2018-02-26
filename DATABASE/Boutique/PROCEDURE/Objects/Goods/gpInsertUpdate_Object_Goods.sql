@@ -53,6 +53,16 @@ BEGIN
    --       THEN ioCode := COALESCE ((SELECT ObjectCode FROM Object WHERE Id = ioId), 0);
    -- END IF; 
 
+   -- Проверка
+   IF TRIM (inName) = '' THEN
+      RAISE EXCEPTION 'Ошибка.Необходимо ввести Название.';
+   END IF;
+
+   -- Проверка
+   IF COALESCE (inGoodsGroupId, 0) = 0 THEN
+      RAISE EXCEPTION 'Ошибка.Необходимо ввести Группу.';
+   END IF;
+
    -- проверка прав уникальности для свойства <Название>
    -- PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Goods(), inName);
 

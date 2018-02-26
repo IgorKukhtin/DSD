@@ -31,6 +31,7 @@ $BODY$
    DECLARE vbCompositionId Integer;
    DECLARE vbGoodsSizeId   Integer;
    DECLARE vbGoodsId       Integer;
+   DECLARE vbGoodsId_find  Integer;
    DECLARE vbGoodsInfoId   Integer;
    DECLARE vbGoodsItemId   Integer;
    DECLARE vbLabelId       Integer;
@@ -194,6 +195,39 @@ BEGIN
                       WHERE Object.DescId    = zc_Object_Goods()
                         AND Object.ValueData = inGoodsName
                      );
+
+         -- Если НЕ нашли - продолжаем Поиск "свободных"
+         IF COALESCE (vbGoodsId, 0) = 0
+         THEN
+             vbGoodsId:= (SELECT Object.Id
+                          FROM Object
+                               INNER JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                                     ON ObjectLink_Goods_GoodsGroup.ObjectId      = Object.Id
+                                                    AND ObjectLink_Goods_GoodsGroup.DescId        = zc_ObjectLink_Goods_GoodsGroup()
+                                                    AND ObjectLink_Goods_GoodsGroup.ChildObjectId = inGoodsGroupId
+                               -- партии
+                               LEFT JOIN Object_PartionGoods ON Object_PartionGoods.GoodsId   = Object.Id
+                          WHERE Object.DescId    = zc_Object_Goods()
+                            AND Object.ValueData = inGoodsName
+                            AND Object_PartionGoods.GoodsId IS NULL
+                         );
+         END IF;
+
+         -- Если НЕ нашли И Корректировка + ОН ОДИН - ОСТАВЛЯЕМ тот же самый
+         IF COALESCE (vbGoodsId, 0) = 0 AND ioId <> 0
+         THEN
+             -- взяли из партии
+             vbGoodsId_find = (SELECT Object_PartionGoods.GoodsId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = ioId);
+                         
+             -- сколько партий с этим товаром
+             IF 1 = (SELECT COUNT (*) FROM Object_PartionGoods WHERE Object_PartionGoods.GoodsId = vbGoodsId_find)
+             THEN
+                 -- ОСТАВЛЯЕМ тот же самый
+                 vbGoodsId:= vbGoodsId_find;
+             END IF;
+             
+         END IF;
+
      END IF;
 
 
