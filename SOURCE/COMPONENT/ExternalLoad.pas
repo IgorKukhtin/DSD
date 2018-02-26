@@ -877,7 +877,9 @@ begin
                        except
                            on E: Exception do begin
                               fErr:= true;
-                              TextMessage:=trim (Copy(E.Message, 1, pos('context', AnsilowerCase(E.Message)) - 1));
+                              TextMessage := E.Message;
+                              if pos('context', AnsilowerCase(TextMessage)) > 0 then
+                                TextMessage:=trim (Copy(TextMessage, 1, pos('context', AnsilowerCase(TextMessage)) - 1));
                               if TextMessage <> ''
                               then TextMessage := ' - ' + ReplaceStr(TextMessage, 'ERROR:', 'ОШИБКА:');
                               //добавили в список не загруженных файлов

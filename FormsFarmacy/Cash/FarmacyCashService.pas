@@ -154,6 +154,7 @@ type
     procedure ChangeStatus(AStatus: String);
     function InitLocalStorage: Boolean;
     function ExistNotCompletedCheck: boolean;
+    procedure Add_Log(AMessage: String);
 
   end;
 
@@ -356,6 +357,7 @@ begin   //yes
   // посылаем сообщение о начале получения полных остатков
   PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 4);
   tiServise.Hint := 'Получение остатков';
+  Add_Log('Refresh all start');
   Application.ProcessMessages;
   try
     if not gc_User.Local  then
@@ -389,6 +391,7 @@ begin   //yes
       end;
     End;
   finally
+    Add_Log('Refresh all end');
     tiServise.Hint := '';
     PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 5);
     ReleaseMutex(MutexRemains);
@@ -643,6 +646,7 @@ begin
   WaitForSingleObject(MutexAllowedConduct, INFINITE); // для отмены проведения из приложения при закрытии
   FNeedGetDiff := false;
   try
+    Add_Log('SaveReal start');
     tiServise.Hint := 'Проведение чеков';
     while True do
     Begin
@@ -665,7 +669,9 @@ begin
         UID := '';
         while not FLocalDataBaseHead.eof do
         Begin
-          if not FLocalDataBaseHead.Deleted then
+          if not FLocalDataBaseHead.Deleted and
+            (FLocalDataBaseHead.FieldByName('NEEDCOMPL').AsBoolean
+             or not FLocalDataBaseHead.FieldByName('SAVE').AsBoolean) then
           Begin
             UID := trim(FLocalDataBaseHead.FieldByName('UID').AsString);
             break;
@@ -782,6 +788,7 @@ begin
               dsdSave.Execute(False, False);
               if VarToStr(dsdSave.Params.ParamByName('outState').Value) = '2' then // проведен
               Begin
+                Add_Log('CheckState: Чек уже проведен');
                 Head.SAVE := True;
                 Head.NEEDCOMPL := False;
 
@@ -933,6 +940,8 @@ begin
             except
               ON E: Exception do
               Begin
+                Add_Log('InsertUpdate Check: ' + E.Message);
+
                 if gc_User.Local then
                 begin
                   tiServise.BalloonHint := 'Останавливаем проведение чеков';
@@ -951,34 +960,29 @@ begin
         Begin
           dsdSave := TdsdStoredProc.Create(nil);
           try
-            DiffCDS := TClientDataSet.Create(nil);
+            dsdSave.StoredProcName := 'gpComplete_Movement_Check_ver2_NoDiff';
+            dsdSave.OutputType := otResult;
+            dsdSave.Params.Clear;
+            dsdSave.Params.AddParam('inMovementId', ftInteger, ptInput, Head.ID);
+            dsdSave.Params.AddParam('inPaidType', ftInteger, ptInput, Head.PAIDTYPE);
+            dsdSave.Params.AddParam('inCashRegister', ftString, ptInput, Head.CASH);
+            dsdSave.Params.AddParam('inCashSessionId', ftString, ptInput, FormParams.ParamByName('CashSessionId').Value);
+            dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
             try
-              dsdSave.StoredProcName := 'gpComplete_Movement_Check_ver2_NoDiff';
-              dsdSave.OutputType := otResult;
-              dsdSave.Params.Clear;
-              dsdSave.Params.AddParam('inMovementId', ftInteger, ptInput, Head.ID);
-              dsdSave.Params.AddParam('inPaidType', ftInteger, ptInput, Head.PAIDTYPE);
-              dsdSave.Params.AddParam('inCashRegister', ftString, ptInput, Head.CASH);
-              dsdSave.Params.AddParam('inCashSessionId', ftString, ptInput, FormParams.ParamByName('CashSessionId').Value);
-              dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
-              try
-                dsdSave.Execute(False, False);
-                Head.COMPL := True;
-              except
-                on E: Exception do
-                Begin
-                  // -nw                 SendError(E.Message);
-                  if gc_User.Local then
-                  begin
-                    tiServise.BalloonHint := 'Останавливаем проведение чеков';
-                    tiServise.ShowBalloonHint;
-                    Exit;
-                  end;
-                End;
-              end;
-            finally
-              // DiffCDS.SaveToFile('diff.local'); // для тестирования
-              DiffCDS.free;
+              dsdSave.Execute(False, False);
+              Head.COMPL := True;
+            except
+              on E: Exception do
+              Begin
+                Add_Log('Complete NoDIFF: ' + E.Message);
+                // -nw                 SendError(E.Message);
+                if gc_User.Local then
+                begin
+                  tiServise.BalloonHint := 'Останавливаем проведение чеков';
+                  tiServise.ShowBalloonHint;
+                  Exit;
+                end;
+              End;
             end;
           finally
             freeAndNil(dsdSave);
@@ -1052,12 +1056,16 @@ begin
             // Отправка сообщения приложению про надобность обновить остатки из файла
             PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 1);
           end;
-        except
-          if gc_User.Local then
+        except on E: Exception do
           begin
-            tiServise.BalloonHint := 'Останавливаем проведение чеков';
-            tiServise.ShowBalloonHint;
-            Exit;
+            Add_Log('Receiving DIFF: ' + E.Message);
+
+            if gc_User.Local then
+            begin
+              tiServise.BalloonHint := 'Останавливаем проведение чеков';
+              tiServise.ShowBalloonHint;
+              Exit;
+            end;
           end;
         end;
       finally
@@ -1075,10 +1083,31 @@ begin
       end;
     end;
   finally
+    Add_Log('SaveReal end');
     tiServise.Hint := '';
     ReleaseMutex(MutexAllowedConduct);
     ReleaseMutex(MutexRefresh);
     MainCashForm2.tiServise.IconIndex := 0;
+  end;
+end;
+
+// что б отловить ошибки - запишим в лог чек - во время пробития чека через ЭККА
+procedure TMainCashForm2.Add_Log(AMessage: String);
+var F: TextFile;
+begin
+  try
+    AssignFile(F,ChangeFileExt(Application.ExeName,'.log'));
+    if not fileExists(ChangeFileExt(Application.ExeName,'.log')) then
+    begin
+      Rewrite(F);
+    end
+    else
+      Append(F);
+    //
+    try  Writeln(F,DateTimeToStr(Now) + ': ' + AMessage);
+    finally CloseFile(F);
+    end;
+  except
   end;
 end;
 

@@ -1837,6 +1837,7 @@ end;
 
 procedure TMainCashForm2.actUpdateRemainsExecute(Sender: TObject);
 begin
+  Exit;
   UpdateRemainsFromDiff(nil);
 end;
 
@@ -1989,6 +1990,7 @@ begin
   FSaveCheckToMemData := false;
   mdCheck.Active := true;
   isScaner:= false;
+  difUpdate := true;
   //
   edDays.Value:=7;
   PanelMCSAuto.Visible:=false;
@@ -2010,7 +2012,7 @@ begin
   //сгенерили гуид для определения сессии
   ChangeStatus('Установка первоначальных параметров');
   // CashSessionId только в службе
-  //FormParams.ParamByName('CashSessionId').Value := iniLocalGUIDSave(GenerateGUID);
+  FormParams.ParamByName('CashSessionId').Value := iniLocalGUIDGet;
   actSaveCashSesionIdToFile.Execute;  // только 2 форма
   FormParams.ParamByName('ClosedCheckId').Value := 0;
   FormParams.ParamByName('CheckId').Value := 0;
