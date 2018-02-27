@@ -397,6 +397,7 @@ begin
                                    ,ParamsMovement.ParamByName('isTransport').asBoolean
                                    ,ParamsMovement.ParamByName('isQuality').asBoolean
                                    ,ParamsMovement.ParamByName('isPack').asBoolean
+                                   ,FALSE //ParamsMovement.ParamByName('isPackGross').asBoolean
                                    ,ParamsMovement.ParamByName('isSpec').asBoolean
                                    ,ParamsMovement.ParamByName('isTax').asBoolean
                                    )
@@ -484,6 +485,15 @@ begin
                             , ParamsMovement.ParamByName('CountPack').AsInteger
                             , DialogPrintForm.cbPrintPreview.Checked
                              );
+     //
+     //PackGross
+     if (DialogPrintForm.cbPrintPackGross.Checked) and (Result = TRUE)
+     then Result:=Print_PackGross (ParamsMovement.ParamByName('MovementDescId').AsInteger
+                                 , ParamsMovement.ParamByName('MovementId_begin').AsInteger // MovementId
+                                 , ParamsMovement.ParamByName('MovementId').AsInteger       // MovementId_by
+                                 , ParamsMovement.ParamByName('CountPack').AsInteger
+                                 , DialogPrintForm.cbPrintPreview.Checked
+                                  );
      //
      //Spec
      if (DialogPrintForm.cbPrintSpec.Checked) and (Result = TRUE)

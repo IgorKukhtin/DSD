@@ -98,6 +98,8 @@ type
     PrintItemsTwoCDS: TClientDataSet;
     spInsert_Movement_EDI_Send: TdsdStoredProc;
     actInsert_Movement_EDI_Send: TdsdExecStoredProc;
+    actPrint_PackGross2: TdsdPrintAction;
+    actPrint_PackGross: TdsdPrintAction;
   private
   end;
 
@@ -108,6 +110,7 @@ type
   function Print_Account  (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Spec     (MovementDescId,MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Pack     (MovementDescId,MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
+  function Print_PackGross(MovementDescId,MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Transport(MovementDescId,MovementId,MovementId_sale:Integer; OperDate:TDateTime; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Quality  (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Sale_Order(MovementId_order,MovementId_by:Integer; isDiff:Boolean):Boolean;
@@ -221,6 +224,17 @@ begin
   UtilPrintForm.actPrint_Pack.CopiesCount:=myPrintCount;
   UtilPrintForm.actPrint_Pack.WithOutPreview:= not isPreview;
   UtilPrintForm.actPrint_Pack.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+procedure Print_PackDocumentGross (MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean);
+begin
+  if myPrintCount <= 0 then myPrintCount:=1;
+  //
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.FormParams.ParamByName('MovementId_by').Value := MovementId_by;
+  UtilPrintForm.actPrint_PackGross.CopiesCount:=myPrintCount;
+  UtilPrintForm.actPrint_PackGross.WithOutPreview:= not isPreview;
+  UtilPrintForm.actPrint_PackGross.Execute;
 end;
 //------------------------------------------------------------------------------------------------
 procedure Print_SpecDocument (MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean);
@@ -387,10 +401,30 @@ begin
           try
              //Print
              if (MovementDescId = zc_Movement_Sale)or(MovementDescId = zc_Movement_SendOnPrice)
-             then Print_PackDocument(MovementId,MovementId_by,myPrintCount,isPreview)
+             then Print_PackDocument (MovementId,MovementId_by,myPrintCount,isPreview)
              else begin ShowMessage ('Ошибка.Форма печати <Упаковочный лист> не найдена.');exit;end;
           except
-                ShowMessage('Ошибка.Печать не <Упаковочный лист> сформирована.');
+                ShowMessage('Ошибка.Печать <Упаковочный лист> НЕ сформирована.');
+                exit;
+          end;
+     Result:=true;
+end;
+//------------------------------------------------------------------------------------------------
+function Print_PackGross (MovementDescId,MovementId,MovementId_by:Integer;myPrintCount:Integer;isPreview:Boolean):Boolean;
+begin
+     UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsSverkaCDS.IndexFieldNames:='';
+     //
+     Result:=false;
+          //
+          try
+             //Print
+             if 1=1 // (MovementDescId = zc_Movement_Sale)or(MovementDescId = zc_Movement_SendOnPrice)
+             then Print_PackDocumentGross (MovementId,MovementId_by,myPrintCount,isPreview)
+             else begin ShowMessage ('Ошибка.Форма печати <Упак. Лист вес БРУТТО> не найдена.');exit;end;
+          except
+                ShowMessage('Ошибка.Печать <Упак. Лист вес БРУТТО> НЕ сформирована.');
                 exit;
           end;
      Result:=true;

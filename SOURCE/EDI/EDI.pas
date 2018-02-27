@@ -2948,7 +2948,7 @@ begin
       begin
         ParamByName('inMovementId').Value := MovementId;
         ParamByName('inGoodsPropertyId').Value := GoodsPropertyId;
-        ParamByName('inGoodsName').Value := Найменування;
+        ParamByName('inGoodsName').Value := Copy(TRIM(Найменування),1,254);
         ParamByName('inGLNCode').Value := АртикулПокупця;
         if ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '012' then
           ParamByName('inAmountPartner').Value :=

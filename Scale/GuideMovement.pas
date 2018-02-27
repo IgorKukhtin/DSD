@@ -114,6 +114,7 @@ type
     miRefresh: TMenuItem;
     miChangeMember: TMenuItem;
     actChangeMember: TAction;
+    cbPrintPackGross: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -201,6 +202,7 @@ begin
      cbPrintTax.Checked:=false;
      cbPrintAccount.Checked:=false;
      cbPrintPack.Checked:=false;
+     cbPrintPackGross.Checked:=false;
      cbPrintSpec.Checked:=false;
      //ט מעלוקאול ןנמסלמענ
      cbPrintPreview.Checked:=true;
@@ -517,6 +519,7 @@ begin
        and not(cbPrintTax.Checked)
        and not(cbPrintAccount.Checked)
        and not(cbPrintPack.Checked)
+       and not(cbPrintPackGross.Checked)
        and not(cbPrintSpec.Checked)
        and not(cbPrintTransport.Checked)
        and not(cbPrintQuality.Checked)
@@ -556,6 +559,14 @@ begin
                     , 1    // myPrintCount
                     , TRUE // isPreview
                      );
+     //
+     if cbPrintPackGross.Checked
+     then Print_PackGross (CDS.FieldByName('MovementDescId').AsInteger
+                         , CDS.FieldByName('MovementId_parent').AsInteger// MovementId
+                         , CDS.FieldByName('Id').AsInteger               // MovementId_by
+                         , 1    // myPrintCount
+                         , TRUE // isPreview
+                          );
      //
      if cbPrintSpec.Checked
      then Print_Spec (CDS.FieldByName('MovementDescId').AsInteger

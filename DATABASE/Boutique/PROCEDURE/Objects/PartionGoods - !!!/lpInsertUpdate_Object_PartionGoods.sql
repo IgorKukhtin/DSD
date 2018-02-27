@@ -192,8 +192,8 @@ BEGIN
 
      -- 2.1. НАЧАЛО: Определили - можно ли изменять св-ва - !!!Кроме Sybase!!!
      -- cохранили Цену в истории
-     IF inUserId <> zc_User_Sybase()
-     AND inGoodsId <> inGoodsId_old AND inGoodsId_old > 0
+     -- IF inUserId <> zc_User_Sybase()
+     -- AND inGoodsId <> inGoodsId_old AND inGoodsId_old > 0
 
 
      -- изменили элемент - по значению <Ключ партии>
