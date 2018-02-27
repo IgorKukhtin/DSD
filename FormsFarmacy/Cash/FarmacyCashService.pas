@@ -788,9 +788,24 @@ begin
               dsdSave.Execute(False, False);
               if VarToStr(dsdSave.Params.ParamByName('outState').Value) = '2' then // проведен
               Begin
-                Add_Log('CheckState: Чек уже проведен');
+                Add_Log('CheckState: Чек '+ IntToStr(Head.ID) +'уже проведен');
                 Head.SAVE := True;
                 Head.NEEDCOMPL := False;
+
+                WaitForSingleObject(MutexDBF, INFINITE);
+                FLocalDataBaseHead.Active := True;
+                try
+                  if FLocalDataBaseHead.Locate('ID', Head.ID, [loPartialKey]) then
+                  Begin
+                    FLocalDataBaseHead.Edit;
+                    FLocalDataBaseHead.FieldByName('NEEDCOMPL').AsBoolean := false;
+                    FLocalDataBaseHead.FieldByName('SAVE').AsBoolean := true;
+                    FLocalDataBaseHead.Post;
+                  End;
+                finally
+                  FLocalDataBaseHead.Active := False;
+                  ReleaseMutex(MutexDBF);
+                end;
 
                 // т.е. чек НЕЛЬЗЯ потом удалить из ДБФ
                 fError_isComplete := True; // 04.02.2017

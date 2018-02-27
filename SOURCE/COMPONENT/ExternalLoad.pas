@@ -712,6 +712,13 @@ var i: integer;
       JSONObject.AddPair(AName, FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz', AValue))
     else if ADataType = ftFloat then
       JSONObject.AddPair(AName, TJSONNumber.Create(AValue))
+    else if ADataType = ftInteger then
+    begin
+      if TryStrToInt(AValue, intValue) then
+        JSONObject.AddPair(cParamName, TJSONNumber.Create(intValue))
+      else
+        JSONObject.AddPair(AName, TJSONNull.Create);
+    end
     else if TryStrToInt(AValue, intValue) then
       JSONObject.AddPair(cParamName, TJSONNumber.Create(intValue))
     else
