@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                       Integer   ,    -- Ключ объекта <Подразделения> 
@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inName                     TVarChar  ,    -- Название объекта <Подразделения>
     IN inAddress                  TVarChar  ,    -- Адрес
     IN inPhone                    TVarChar  ,    -- Телефон
+    IN inPrinter                  TVarChar  ,    -- Принтер (печать чеков)
     IN inDiscountTax              TFloat    ,    -- % скидки ВИНТАЖ
     IN inJuridicalId              Integer   ,    -- ключ объекта <Юридические лица> 
     IN inParentId                 Integer   ,    -- ключ объекта <Група> 
@@ -50,6 +51,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_Address(), ioId, inAddress);
    -- сохранили Телефон
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_Phone(), ioId, inPhone);
+   -- сохранили Принтер
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_Printer(), ioId, inPrinter);
 
    -- сохранили % скидки ВИНТАЖ
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Unit_DiscountTax(), ioId, inDiscountTax);
@@ -78,6 +81,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятикин А.А.
+27.02.18          * Printer
 07.06.17          * add AccountDirection
 23.05.17                                                           *
 13.05.17                                                           *

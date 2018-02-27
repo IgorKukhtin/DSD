@@ -780,6 +780,7 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      Printer = 'PrinterName'
       Params = <
         item
           Name = 'Id'
@@ -1142,6 +1143,9 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
       MoveParams = <>
       ActionList = <
         item
+          Action = actGet_Printer
+        end
+        item
           Action = actGetReportName
         end
         item
@@ -1150,6 +1154,17 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
       Caption = #1055#1077#1095#1072#1090#1100' '#1063#1077#1082
       Hint = #1055#1077#1095#1072#1090#1100' '#1063#1077#1082
       ImageIndex = 3
+    end
+    object actGet_Printer: TdsdExecStoredProc
+      Category = 'Print'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Printer
+      StoredProcList = <
+        item
+          StoredProc = spGet_Printer
+        end>
+      Caption = 'Get_Printer'
     end
   end
   inherited MasterDS: TDataSource
@@ -1527,10 +1542,38 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'PrinterName'
         Value = Null
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 416
     Top = 208
+  end
+  object spGet_Printer: TdsdStoredProc
+    StoredProcName = 'gpGet_PrinterByUnit'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_PrinterByUnit'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PrinterName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 928
+    Top = 184
   end
 end

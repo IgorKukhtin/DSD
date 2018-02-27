@@ -59,6 +59,8 @@ type
     cxLabel10: TcxLabel;
     ceAccountDirection: TcxButtonEdit;
     AccountDirectionGuides: TdsdGuides;
+    cxLabel11: TcxLabel;
+    edPrinter: TcxTextEdit;
   private
     { Private declarations }
   public

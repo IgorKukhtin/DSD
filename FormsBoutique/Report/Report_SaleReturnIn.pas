@@ -66,6 +66,8 @@ type
     actGetReportName: TdsdExecStoredProc;
     mactPrint_Check: TMultiAction;
     FormParams: TdsdFormParams;
+    spGet_Printer: TdsdStoredProc;
+    actGet_Printer: TdsdExecStoredProc;
   private
     { Private declarations }
   public

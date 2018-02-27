@@ -1,4 +1,4 @@
-unit ReturnInJournal;
+unit LossPersonalJournal;
 
 interface
 
@@ -25,10 +25,10 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel,
-  dsdGuides, cxButtonEdit;
+  cxButtonEdit, dsdGuides;
 
 type
-  TReturnInJournalForm = class(TParentForm)
+  TLossPersonalJournalForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -39,23 +39,23 @@ type
     actRefresh: TdsdDataSetRefresh;
     actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
-    spSelect: TdsdStoredProc;
+    dsdStoredProc: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
-    Status: TcxGridDBColumn;
+    StatusCode: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
-    FromName: TcxGridDBColumn;
-    ToName: TcxGridDBColumn;
+    JuridicalBasisName: TcxGridDBColumn;
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
     actComplete: TdsdChangeMovementStatus;
     spMovementComplete: TdsdStoredProc;
     PopupMenu: TPopupMenu;
+    N1: TMenuItem;
     bbComplete: TdxBarButton;
     actUnComplete: TdsdChangeMovementStatus;
     spMovementUnComplete: TdsdStoredProc;
@@ -64,47 +64,29 @@ type
     bbDelete: TdxBarButton;
     actSetErased: TdsdChangeMovementStatus;
     spMovementSetErased: TdsdStoredProc;
-    TotalCount: TcxGridDBColumn;
-    TotalSummPriceList: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
     bbStatic: TdxBarStatic;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
+    spMovementReCompleteAll: TdsdStoredProc;
+    bbReCompleteAll: TdxBarButton;
+    actReCompleteAll: TdsdExecStoredProc;
+    BusinessName: TcxGridDBColumn;
+    AccountName: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
     MovementProtocolOpenForm: TdsdOpenForm;
     bbMovementProtocol: TdxBarButton;
-    spSelectPrint: TdsdStoredProc;
-    bbPrint: TdxBarButton;
-    PrintHeaderCDS: TClientDataSet;
-    PrintItemsCDS: TClientDataSet;
-    actPrint: TdsdPrintAction;
-    FormParams: TdsdFormParams;
-    actShowErased: TBooleanStoredProcAction;
-    bbShowErased: TdxBarButton;
-    Comment: TcxGridDBColumn;
-    spMovementReComplete: TdsdStoredProc;
-    spReCompete: TdsdExecStoredProc;
-    actSimpleReCompleteList: TMultiAction;
-    actReCompleteList: TMultiAction;
-    N1: TMenuItem;
     ExecuteDialog: TExecuteDialog;
+    isList: TcxGridDBColumn;
     actRefreshStart: TdsdDataSetRefresh;
-    spSelectPrint_Check: TdsdStoredProc;
-    actPrintCheck: TdsdPrintAction;
-    bbPrintCheck: TdxBarButton;
-    cxLabel3: TcxLabel;
-    ceUnit: TcxButtonEdit;
-    GuidesUnit: TdsdGuides;
-    spGet_UserUnit: TdsdStoredProc;
-    spGet_Printer: TdsdStoredProc;
-    actGet_Printer: TdsdExecStoredProc;
-    macPrintCheck: TMultiAction;
   private
   public
   end;
@@ -114,6 +96,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReturnInJournalForm);
+  RegisterClass(TLossPersonalJournalForm);
 
 end.

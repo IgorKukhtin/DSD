@@ -334,7 +334,7 @@ BEGIN
     END IF;
     
     -- удаляем нулевые цены
-    DELETE FROm tblJSON 
+    DELETE FROM tblJSON 
     WHERE COALESCE(inPrice, 0) = 0;
     
     -- обновляем старое
@@ -346,9 +346,17 @@ BEGIN
     
     -- добавляем новое
     INSERT INTO LoadPriceListItem (LoadPriceListId, CommonCode, BarCode, CodeUKTZED, GoodsCode, GoodsName, GoodsNDS, GoodsId, Price, PriceOriginal, ExpirationDate, PackCount, ProducerName)
-    SELECT vbLoadPriceListId, inCommonCode, COALESCE(inBarCode, ''), COALESCE(inCodeUKTZED, ''), inGoodsCode, inGoodsName, inGoodsNDS, GoodsId, inPrice, PriceOriginal, inExpirationDate, COALESCE(inPackCount, ''), COALESCE(inProducerName, '')
-    FROM tblJSON
-    WHERE COALESCE (inPrice, 0) <> 0 AND NOT EXISTS(SELECT * FROM LoadPriceListItem WHERE LoadPriceListId = vbLoadPriceListId AND GoodsCode = inGoodsCode);    
+    SELECT LoadPriceListId, inCommonCode, inBarCode, inCodeUKTZED, inGoodsCode, inGoodsName, inGoodsNDS, GoodsId, inPrice, PriceOriginal, inExpirationDate, inPackCount, inProducerName
+    FROM
+    (
+        SELECT 
+            vbLoadPriceListId as LoadPriceListId, inCommonCode, COALESCE(inBarCode, '') as inBarCode, COALESCE(inCodeUKTZED, '') as inCodeUKTZED, inGoodsCode, inGoodsName, inGoodsNDS, GoodsId, 
+            inPrice, PriceOriginal, inExpirationDate, COALESCE(inPackCount, '') as inPackCount, COALESCE(inProducerName, '') as inProducerName,
+            ROW_NUMBER() OVER(PARTITION BY GoodsId ORDER BY inExpirationDate, inCommonCode DESC) as RN
+        FROM tblJSON
+        WHERE COALESCE (inPrice, 0) <> 0 AND NOT EXISTS(SELECT * FROM LoadPriceListItem WHERE LoadPriceListId = vbLoadPriceListId AND GoodsCode = inGoodsCode)
+    ) T
+    WHERE RN = 1;    
     
 END;
 $BODY$

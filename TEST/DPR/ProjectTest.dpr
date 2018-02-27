@@ -999,7 +999,9 @@ uses
   ProductionSeparateStorageLine in '..\..\Forms\Document\ProductionSeparateStorageLine.pas' {ProductionSeparateStorageLineForm: TParentForm},
   Report_Transport_ProfitLoss in '..\..\Forms\Report\Report_Transport_ProfitLoss.pas' {Report_Transport_ProfitLossForm: TParentForm},
   EDI_SendJournal in '..\..\Forms\EDI\EDI_SendJournal.pas' {EDI_SendJournalForm: TParentForm},
-  GoodsByGoodsKind_Sticker in '..\..\Forms\Guides\GoodsByGoodsKind_Sticker.pas' {GoodsByGoodsKind_StickerForm: TParentForm};
+  GoodsByGoodsKind_Sticker in '..\..\Forms\Guides\GoodsByGoodsKind_Sticker.pas' {GoodsByGoodsKind_StickerForm: TParentForm},
+  LossPersonalJournal in '..\..\Forms\Document\LossPersonalJournal.pas' {LossPersonalJournalForm: TParentForm},
+  LossPersonal in '..\..\Forms\Document\LossPersonal.pas' {LossPersonalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
