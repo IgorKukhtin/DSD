@@ -187,6 +187,12 @@ type
     ceComment_Client: TcxTextEdit;
     cxLabel10: TcxLabel;
     edDiscountTaxTwo: TcxCurrencyEdit;
+    spComplete_User: TdsdStoredProc;
+    spGet_New: TdsdStoredProc;
+    actGet_New: TdsdExecStoredProc;
+    actComplete_User: TdsdExecStoredProc;
+    mac_User: TMultiAction;
+    bbmac_User: TdxBarButton;
   private
   public
   end;

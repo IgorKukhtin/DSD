@@ -244,6 +244,8 @@ object SaleForm: TSaleForm
         Height = 207
         Align = alClient
         TabOrder = 0
+        ExplicitLeft = -16
+        ExplicitTop = 80
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1437,6 +1439,14 @@ object SaleForm: TSaleForm
         end
         item
           Visible = True
+          ItemName = 'bbmac_User'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMIContainer'
         end
         item
@@ -1592,6 +1602,10 @@ object SaleForm: TSaleForm
     end
     object bbPrintCheck: TdxBarButton
       Action = actPrintCheck
+      Category = 0
+    end
+    object bbmac_User: TdxBarButton
+      Action = mac_User
       Category = 0
     end
   end
@@ -2335,6 +2349,48 @@ object SaleForm: TSaleForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actGet_New: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_New
+      StoredProcList = <
+        item
+          StoredProc = spGet_New
+        end>
+      Caption = 'actComplete_User'
+    end
+    object actComplete_User: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spComplete_User
+      StoredProcList = <
+        item
+          StoredProc = spComplete_User
+        end>
+      Caption = 'actComplete_User'
+    end
+    object mac_User: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actComplete_User
+        end
+        item
+          Action = actPrintCheck
+        end
+        item
+          Action = actGet_New
+        end
+        item
+          Action = actRefreshMI
+        end>
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1086#1087#1077#1088#1072#1094#1080#1102
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1086#1087#1077#1088#1072#1094#1080#1102
+      ImageIndex = 10
     end
   end
   object MasterDS: TDataSource
@@ -3651,13 +3707,210 @@ object SaleForm: TSaleForm
       item
         Name = 'inMovementId'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MovementId_Sale'
+        Component = FormParams
+        ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 624
     Top = 200
+  end
+  object spComplete_User: TdsdStoredProc
+    StoredProcName = 'gpComplete_Movement_Sale_User'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 64
+    Top = 407
+  end
+  object spGet_New: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Sale'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 0c
+        Component = FormParams
+        ComponentItem = 'inOperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber'
+        Value = ''
+        Component = edInvNumber
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate'
+        Value = 42864d
+        Component = edOperDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StatusCode'
+        Value = ''
+        Component = StatusGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StatusName'
+        Value = ''
+        Component = StatusGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ToId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ToName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FromId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FromName'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = ''
+        Component = ceComment
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LastDate'
+        Value = 42864d
+        Component = edLastDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSumm'
+        Value = 0.000000000000000000
+        Component = edTotalSumm
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSummPay'
+        Value = 0.000000000000000000
+        Component = edTotalSummPay
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalDebt'
+        Value = 0.000000000000000000
+        Component = edTotalDebt
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountTax'
+        Value = 0.000000000000000000
+        Component = edDiscountTax
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'HappyDate'
+        Value = 42864d
+        Component = edHappyDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountTaxTwo'
+        Value = 0.000000000000000000
+        Component = edDiscountTaxTwo
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment_Client'
+        Value = ''
+        Component = ceComment_Client
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PhoneMobile'
+        Value = ''
+        Component = cePhoneMobile
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Phone'
+        Value = ''
+        Component = cePhone
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsertName'
+        Value = ''
+        Component = edInsertName
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsertDate'
+        Value = 42132d
+        Component = edInsertDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 304
+    Top = 384
   end
 end
