@@ -1,9 +1,9 @@
 object LossPersonalForm: TLossPersonalForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1079#1072#1076#1086#1083#1078#1077#1085#1085#1086#1089#1090#1080' ('#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072')>'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1079#1072#1076#1086#1083#1078#1077#1085#1085#1086#1089#1090#1080' ('#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080' '#1047#1055')>'
   ClientHeight = 405
-  ClientWidth = 892
+  ClientWidth = 820
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,14 +21,13 @@ object LossPersonalForm: TLossPersonalForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 892
-    Height = 90
+    Width = 820
+    Height = 57
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1049
     object edInvNumber: TcxTextEdit
-      Left = 8
+      Left = 216
       Top = 23
       Enabled = False
       Properties.ReadOnly = True
@@ -37,12 +36,12 @@ object LossPersonalForm: TLossPersonalForm
       Width = 90
     end
     object cxLabel1: TcxLabel
-      Left = 8
+      Left = 216
       Top = 5
       Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
     object edOperDate: TcxDateEdit
-      Left = 108
+      Left = 312
       Top = 23
       EditValue = 41640d
       Properties.SaveTime = False
@@ -51,36 +50,18 @@ object LossPersonalForm: TLossPersonalForm
       Width = 100
     end
     object cxLabel2: TcxLabel
-      Left = 108
+      Left = 312
       Top = 5
       Caption = #1044#1072#1090#1072
     end
-    object edJuridicalBasis: TcxButtonEdit
-      Left = 222
-      Top = 23
-      Enabled = False
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 2
-      Width = 191
-    end
-    object cxLabel3: TcxLabel
-      Left = 222
-      Top = 5
-      Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
-    end
     object cxLabel4: TcxLabel
-      Left = 8
-      Top = 43
+      Left = 10
+      Top = 5
       Caption = #1057#1090#1072#1090#1091#1089
     end
     object ceStatus: TcxButtonEdit
-      Left = 8
-      Top = 61
+      Left = 10
+      Top = 23
       Properties.Buttons = <
         item
           Action = CompleteMovement
@@ -97,85 +78,58 @@ object LossPersonalForm: TLossPersonalForm
         end>
       Properties.Images = dmMain.ImageList
       Properties.ReadOnly = True
-      TabOrder = 7
+      TabOrder = 5
       Width = 200
     end
-    object cxLabel5: TcxLabel
-      Left = 422
+    object cxLabel3: TcxLabel
+      Left = 449
       Top = 5
-      Caption = #1041#1080#1079#1085#1077#1089
+      Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
     end
-    object edBusiness: TcxButtonEdit
-      Left = 422
+    object deServiceDate: TcxDateEdit
+      Left = 449
       Top = 23
-      Enabled = False
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
+      EditValue = 43160d
+      Properties.DisplayFormat = 'mmmm yyyy'
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 7
+      Width = 97
+    end
+    object cxLabel13: TcxLabel
+      Left = 557
+      Top = 5
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    end
+    object edComment: TcxTextEdit
+      Left = 557
+      Top = 23
       TabOrder = 9
-      Width = 155
-    end
-    object cxLabel6: TcxLabel
-      Left = 587
-      Top = 5
-      Caption = #1057#1095#1077#1090
-    end
-    object edAccount: TcxButtonEdit
-      Left = 587
-      Top = 23
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      TabOrder = 11
-      Width = 201
-    end
-    object cxLabel7: TcxLabel
-      Left = 799
-      Top = 5
-      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-    end
-    object edPaidKind: TcxButtonEdit
-      Left = 799
-      Top = 23
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      TabOrder = 13
-      Width = 88
+      Width = 257
     end
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 116
-    Width = 892
-    Height = 289
+    Top = 83
+    Width = 820
+    Height = 322
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 1049
-    ClientRectBottom = 289
-    ClientRectRight = 892
+    ClientRectBottom = 322
+    ClientRectRight = 820
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 1049
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 892
-        Height = 265
+        Width = 820
+        Height = 298
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1049
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -200,22 +154,19 @@ object LossPersonalForm: TLossPersonalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountDebet
+              Column = Amount
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountKredit
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SummKredit
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SummDebet
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -228,7 +179,7 @@ object LossPersonalForm: TLossPersonalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountDebet
+              Column = Amount
             end
             item
               Format = ',0.###;-,0.###; ;'
@@ -241,17 +192,19 @@ object LossPersonalForm: TLossPersonalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountKredit
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SummKredit
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SummDebet
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = PersonalName
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -266,6 +219,74 @@ object LossPersonalForm: TLossPersonalForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object PersonalCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'PersonalCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 30
+          end
+          object PersonalName: TcxGridDBColumn
+            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
+            DataBinding.FieldName = 'PersonalName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = PersonalChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 134
+          end
+          object PositionName: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+            DataBinding.FieldName = 'PositionName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = PositionChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object Amount: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1082#1086#1088'.'
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.UseDisplayFormatWhenEditing = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
+            Width = 80
+          end
+          object PersonalServiceListName: TcxGridDBColumn
+            Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095'.'
+            DataBinding.FieldName = 'PersonalServiceListName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = PersonalServiceListChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
+            Width = 189
+          end
           object BranchName: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083
             DataBinding.FieldName = 'BranchName'
@@ -281,246 +302,27 @@ object LossPersonalForm: TLossPersonalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object JuridicalGroupName: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072
-            DataBinding.FieldName = 'JuridicalGroupName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object JuridicalCode: TcxGridDBColumn
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'JuridicalCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 30
-          end
-          object JuridicalName: TcxGridDBColumn
-            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
-            DataBinding.FieldName = 'JuridicalName'
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
+                Action = UnitChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 150
+            Width = 105
           end
-          object PartnerCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088'.'
-            DataBinding.FieldName = 'PartnerCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object PartnerName: TcxGridDBColumn
-            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
-            DataBinding.FieldName = 'PartnerName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = PartnerChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 150
-          end
-          object OKPO: TcxGridDBColumn
-            Caption = #1054#1050#1055#1054
-            DataBinding.FieldName = 'OKPO'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object PaidKindName: TcxGridDBColumn
-            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'PaidKindName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = PaidKindChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object ContainerId: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103' '#1076#1086#1083#1075#1072
-            DataBinding.FieldName = 'ContainerId'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = ContainerChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object IsCalculated: TcxGridDBColumn
-            Caption = #1087#1086' '#1076#1086#1083#1075#1091' ('#1076#1072'/'#1085#1077#1090') '
-            DataBinding.FieldName = 'isCalculated'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object SummDebet: TcxGridDBColumn
-            Caption = #1044#1077#1073#1077#1090' '#1076#1086#1083#1075' '#1085#1072' '#1076#1072#1090#1091
-            DataBinding.FieldName = 'SummDebet'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
-          end
-          object SummKredit: TcxGridDBColumn
-            Caption = #1050#1088#1077#1076#1080#1090' '#1076#1086#1083#1075' '#1085#1072' '#1076#1072#1090#1091
-            DataBinding.FieldName = 'SummKredit'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object AmountDebet: TcxGridDBColumn
-            Caption = #1044#1077#1073#1077#1090' '#1089#1091#1084#1084#1072
-            DataBinding.FieldName = 'AmountDebet'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.AssignedValues.EditFormat = True
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.UseDisplayFormatWhenEditing = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object AmountKredit: TcxGridDBColumn
-            Caption = #1050#1088#1077#1076#1080#1090' '#1089#1091#1084#1084#1072
-            DataBinding.FieldName = 'AmountKredit'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object AmountCurrencyDebet: TcxGridDBColumn
-            Caption = #1044#1077#1073#1077#1090' '#1089#1091#1084#1084#1072' ('#1074' '#1074#1072#1083#1102#1090#1077')'
-            DataBinding.FieldName = 'AmountCurrencyDebet'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.AssignedValues.EditFormat = True
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.UseDisplayFormatWhenEditing = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 90
-          end
-          object AmountCurrencyKredit: TcxGridDBColumn
-            Caption = #1050#1088#1077#1076#1080#1090' '#1089#1091#1084#1084#1072' ('#1074' '#1074#1072#1083#1102#1090#1077')'
-            DataBinding.FieldName = 'AmountCurrencyKredit'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 90
-          end
-          object CurrencyName: TcxGridDBColumn
-            Caption = #1042#1072#1083#1102#1090#1072
-            DataBinding.FieldName = 'CurrencyName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = CurrencyChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object CurrencyPartnerValue: TcxGridDBColumn
-            Caption = #1050#1091#1088#1089
-            DataBinding.FieldName = 'CurrencyPartnerValue'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.AssignedValues.EditFormat = True
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.UseDisplayFormatWhenEditing = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object ParPartnerValue: TcxGridDBColumn
-            Caption = #1053#1086#1084#1080#1085#1072#1083
-            DataBinding.FieldName = 'ParPartnerValue'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.AssignedValues.EditFormat = True
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.UseDisplayFormatWhenEditing = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 62
-          end
-          object ContractCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1076#1086#1075'.'
-            DataBinding.FieldName = 'ContractCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object ContractName: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1075'.'
-            DataBinding.FieldName = 'ContractName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = ContractChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 50
-          end
-          object ContractTagName: TcxGridDBColumn
-            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
-            DataBinding.FieldName = 'ContractTagName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
           end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -528,7 +330,7 @@ object LossPersonalForm: TLossPersonalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 45
+            Width = 52
           end
           object InfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -559,21 +361,6 @@ object LossPersonalForm: TLossPersonalForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object UnitName: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-            DataBinding.FieldName = 'UnitName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -624,14 +411,6 @@ object LossPersonalForm: TLossPersonalForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inShowAll'
-        Value = False
-        Component = actShowAll
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -771,6 +550,7 @@ object LossPersonalForm: TLossPersonalForm
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
+      UnclickAfterDoing = False
     end
     object bbStatic: TdxBarStatic
       Caption = '     '
@@ -926,8 +706,6 @@ object LossPersonalForm: TLossPersonalForm
         item
           Name = 'From'
           Value = ''
-          Component = GuidesJuridicalBasis
-          ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1026,96 +804,59 @@ object LossPersonalForm: TLossPersonalForm
         end>
       isShowModal = True
     end
-    object ContainerChoiceForm: TOpenChoiceForm
+    object PersonalChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'Juridical_ContainerForm'
-      FormName = 'TJuridical_ContainerForm'
-      FormNameParam.Value = 'TJuridical_ContainerForm'
+      Caption = 'PersonalForm'
+      FormName = 'TPersonal_ObjectForm'
+      FormNameParam.Value = 'TPersonal_ObjectForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'MasterJuridicalId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'JuridicalId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MasterJuridicalName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MasterAccountId'
-          Value = Null
-          Component = GuidesAccount
-          ComponentItem = 'Key'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MasterAccountName'
-          Value = Null
-          Component = GuidesAccount
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ContainerId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'ContainerId'
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'JuridicalId'
+          ComponentItem = 'PersonalId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'JuridicalName'
+          ComponentItem = 'PersonalName'
           DataType = ftString
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PaidKindId'
+          Name = 'PositionId'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PaidKindId'
+          ComponentItem = 'PositionId'
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PaidKindName'
+          Name = 'PositionName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PaidKindName'
+          ComponentItem = 'PositionName'
           DataType = ftString
           MultiSelectSeparator = ','
         end
         item
-          Name = 'BranchName'
+          Name = 'UnitId'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'BranchName'
-          DataType = ftString
+          ComponentItem = 'UnitId'
           MultiSelectSeparator = ','
         end
         item
-          Name = 'BranchId'
+          Name = 'UnitName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'BranchId'
+          ComponentItem = 'UnitName'
+          DataType = ftString
           MultiSelectSeparator = ','
         end
         item
@@ -1126,80 +867,20 @@ object LossPersonalForm: TLossPersonalForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'InfoMoneyCode'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyCode'
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'InfoMoneyName'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PartnerId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PartnerId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PartnerName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PartnerName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PartnerCode'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PartnerCode'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ContractId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'ContractId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ContractNumber'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'ContractName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ContractCode'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'ContractCode'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'OKPO'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'OKPO'
-          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
-    object PaidKindChoiceForm: TOpenChoiceForm
+    object PositionChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      FormName = 'TPaidKindForm'
-      FormNameParam.Value = 'TPaidKindForm'
+      FormName = 'TPositionForm'
+      FormNameParam.Value = 'TPositionForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1207,14 +888,14 @@ object LossPersonalForm: TLossPersonalForm
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PaidKindId'
+          ComponentItem = 'PositionId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PaidKindName'
+          ComponentItem = 'PositionName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -1268,13 +949,13 @@ object LossPersonalForm: TLossPersonalForm
       Status = mtDelete
       Guides = StatusGuides
     end
-    object CurrencyChoiceForm: TOpenChoiceForm
+    object UnitChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'CurrencyChoiceForm'
-      FormName = 'TCurrency_ObjectForm'
-      FormNameParam.Value = 'TCurrency_ObjectForm'
+      Caption = 'UnitChoiceForm'
+      FormName = 'TUnit_ObjectForm'
+      FormNameParam.Value = 'TUnit_ObjectForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1282,26 +963,26 @@ object LossPersonalForm: TLossPersonalForm
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'CurrencyId'
+          ComponentItem = 'UnitId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'CurrencyName'
+          ComponentItem = 'UnitName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
-    object PartnerChoiceForm: TOpenChoiceForm
+    object PersonalServiceListChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'PartnerChoiceForm'
-      FormName = 'TPartner_ObjectForm'
-      FormNameParam.Value = 'TPartner_ObjectForm'
+      Caption = 'PersonalServiceListChoiceForm'
+      FormName = 'TPersonalServiceListForm'
+      FormNameParam.Value = 'TPersonalServiceListForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1309,44 +990,14 @@ object LossPersonalForm: TLossPersonalForm
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PartnerId'
+          ComponentItem = 'PersonalServiceListId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PartnerName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'JuridicalId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'JuridicalId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'JuridicalName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MasterJuridicalId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'JuridicalId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MasterJuridicalName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'JuridicalName'
+          ComponentItem = 'PersonalServiceListName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -1356,7 +1007,7 @@ object LossPersonalForm: TLossPersonalForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'PartnerChoiceForm'
+      Caption = 'BranchChoiceForm'
       FormName = 'TBranch_ObjectForm'
       FormNameParam.Value = 'TBranch_ObjectForm'
       FormNameParam.DataType = ftString
@@ -1490,36 +1141,6 @@ object LossPersonalForm: TLossPersonalForm
     Left = 26
     Top = 224
   end
-  object GuidesJuridicalBasis: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edJuridicalBasis
-    FormNameParam.Value = 'TJuridical_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesJuridicalBasis
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesJuridicalBasis
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 304
-    Top = 8
-  end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
     Left = 240
@@ -1550,18 +1171,19 @@ object LossPersonalForm: TLossPersonalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inJuridicalId'
+        Name = 'inPersonalId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'JuridicalId'
+        ComponentItem = 'PersonalId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PartnerId'
+        Name = 'inAmount'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'PartnerId'
+        ComponentItem = 'Amount'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1574,115 +1196,26 @@ object LossPersonalForm: TLossPersonalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inContainerId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'ContainerId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioAmountDebet'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountDebet'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioAmountKredit'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountKredit'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioSummDebet'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummDebet'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioSummKredit'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummKredit'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCurrencyPartnerValue'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'CurrencyPartnerValue'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inParPartnerValue'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'ParPartnerValue'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioAmountCurrencyDebet'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountCurrencyDebet'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioAmountCurrencyKredit'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountCurrencyKredit'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioIsCalculated'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isCalculated'
-        DataType = ftBoolean
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inContractId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'ContractId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPaidKindId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PaidKindId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inInfoMoneyId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'InfoMoneyId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPositionId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PositionId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalServiceListId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PersonalServiceListId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1695,10 +1228,11 @@ object LossPersonalForm: TLossPersonalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCurrencyId'
+        Name = 'inComment'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'CurrencyId'
+        ComponentItem = 'Comment'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1756,47 +1290,24 @@ object LossPersonalForm: TLossPersonalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inBusinessId'
+        Name = 'ioServiceDate'
         Value = ''
-        Component = GuidesBusiness
-        ComponentItem = 'Key'
-        ParamType = ptInput
+        Component = deServiceDate
+        DataType = ftDateTime
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inJuridicalBasisId'
+        Name = 'inComment'
         Value = ''
-        Component = GuidesJuridicalBasis
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAccountId'
-        Value = ''
-        Component = GuidesAccount
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPaidKindId'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisList'
-        Value = Null
-        DataType = ftBoolean
+        Component = edComment
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 443
-    Top = 225
+    Left = 467
+    Top = 185
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -1812,16 +1323,12 @@ object LossPersonalForm: TLossPersonalForm
         Control = edOperDate
       end
       item
-        Control = edJuridicalBasis
       end
       item
-        Control = edBusiness
       end
       item
-        Control = edAccount
       end
       item
-        Control = edPaidKind
       end
       item
       end>
@@ -1887,72 +1394,22 @@ object LossPersonalForm: TLossPersonalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisId'
+        Name = 'ServiceDate'
         Value = ''
-        Component = GuidesJuridicalBasis
-        ComponentItem = 'Key'
+        Component = deServiceDate
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'Comment'
         Value = ''
-        Component = GuidesJuridicalBasis
-        ComponentItem = 'TextValue'
+        Component = edComment
         DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'BusinessId'
-        Value = ''
-        Component = GuidesBusiness
-        ComponentItem = 'TextValue'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'BusinessName'
-        Value = ''
-        Component = GuidesBusiness
-        ComponentItem = 'TextValue'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AccountId'
-        Value = ''
-        Component = GuidesAccount
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AccountName'
-        Value = ''
-        Component = GuidesAccount
-        ComponentItem = 'TextValue'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isList'
-        Value = Null
-        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 408
-    Top = 192
+    Left = 360
+    Top = 168
   end
   object RefreshAddOn: TRefreshAddOn
     FormName = 'LossDebtJournalForm'
@@ -2023,7 +1480,7 @@ object LossPersonalForm: TLossPersonalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 630
+    Left = 670
     Top = 224
   end
   object StatusGuides: TdsdGuides
@@ -2034,8 +1491,8 @@ object LossPersonalForm: TLossPersonalForm
     FormNameParam.MultiSelectSeparator = ','
     PositionDataSet = 'ClientDataSet'
     Params = <>
-    Left = 44
-    Top = 56
+    Left = 52
+    Top = 16
   end
   object spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_LossDebt'
@@ -2059,95 +1516,7 @@ object LossPersonalForm: TLossPersonalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 76
-    Top = 56
-  end
-  object GuidesBusiness: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edBusiness
-    FormNameParam.Value = 'TBusiness_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TBusiness_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesBusiness
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesBusiness
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 488
-    Top = 8
-  end
-  object GuidesAccount: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edAccount
-    FormNameParam.Value = 'TAccountForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TAccountForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesAccount
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesAccount
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 648
-    Top = 8
-  end
-  object PaidKindGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edPaidKind
-    FormNameParam.Value = 'TPaidKindForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPaidKindForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 824
-    Top = 8
+    Left = 108
+    Top = 16
   end
 end

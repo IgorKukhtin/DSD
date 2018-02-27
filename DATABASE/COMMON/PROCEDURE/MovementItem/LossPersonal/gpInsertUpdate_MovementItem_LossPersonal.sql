@@ -26,7 +26,7 @@ BEGIN
      ioId:= lpInsertUpdate_MovementItem_LossPersonal (ioId                    := ioId
                                                     , inMovementId            := inMovementId
                                                     , inPersonalId            := inPersonalId
-                                                    , inAmount                := vbAmount
+                                                    , inAmount                := inAmount
                                                     , inBranchId              := inBranchId
                                                     , inInfoMoneyId           := inInfoMoneyId
                                                     , inPositionId            := inPositionId

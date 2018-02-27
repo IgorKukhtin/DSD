@@ -6,11 +6,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_LossPersonal(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
-    IN inServiceDate         TDateTime , -- Месяц начислений
+ INOUT ioServiceDate         TDateTime , -- Месяц начислений
     IN inComment             TVarChar  , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )                              
-RETURNS Integer AS
+RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
@@ -24,8 +24,9 @@ BEGIN
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_LossPersonal(), inInvNumber, inOperDate, NULL);
 
+     ioServiceDate := DATE_TRUNC ('Month', ioServiceDate) :: TDateTime;
      -- Месяц начислений
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_ServiceDate(), ioId, inServiceDate);
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_ServiceDate(), ioId, ioServiceDate);
      -- Примечание
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
