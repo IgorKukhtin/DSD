@@ -1329,8 +1329,8 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
       item
         Component = GuidesUnit
       end>
-    Left = 688
-    Top = 280
+    Left = 720
+    Top = 288
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -1524,6 +1524,10 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
         MultiSelectSeparator = ','
       end>
     Left = 416

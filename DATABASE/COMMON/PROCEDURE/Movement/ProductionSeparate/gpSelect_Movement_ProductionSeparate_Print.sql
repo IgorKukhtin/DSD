@@ -145,6 +145,18 @@ BEGIN
                              LEFT JOIN Container ON Container.Id =  CLO_PartionGoods.ContainerId
                        )
 
+     , tmpIncome_Container AS (SELECT MIContainer.*
+                               FROM MovementItemContainer AS MIContainer
+                               WHERE MIContainer.ContainerId IN (SELECT tmpContainer.ContainerId FROM tmpContainer)
+                                 AND MIContainer.MovementDescId = zc_Movement_Income()
+                               )
+
+     , tmpMI_Float AS (SELECT MovementItemFloat.*
+                       FROM MovementItemFloat
+                       WHERE MovementItemFloat.DescId IN ( zc_MIFloat_AmountPacker(), zc_MIFloat_HeadCount())
+                         AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpIncome_Container.MovementItemId FROM tmpIncome_Container)
+                       )
+
         -- приход от поставщика : кол. и сумм.
      , tmpIncome AS (-- находим по партиям из проводкок
                       /*SELECT tmpContainer.DescId
@@ -181,20 +193,18 @@ BEGIN
                            , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN (MIContainer.Amount) ELSE 0 END) AS Amount_summ
                            , SUM (COALESCE (MIFloat_AmountPacker.ValueData, 0)) AS CountPacker
                            , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0))    AS HeadCount
-                      FROM MovementItemContainer AS MIContainer
-                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPacker
+                      FROM tmpIncome_Container AS MIContainer
+                           LEFT JOIN tmpMI_Float AS MIFloat_AmountPacker
                                                        ON MIFloat_AmountPacker.MovementItemId = MIContainer.MovementItemId
                                                       AND MIFloat_AmountPacker.DescId = zc_MIFloat_AmountPacker()
                                                       AND MIContainer.DescId = zc_MIContainer_Count()
                                                       AND COALESCE (MIContainer.AnalyzerId, 0) = 0
-                           LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
+                           LEFT JOIN tmpMI_Float AS MIFloat_HeadCount
                                                        ON MIFloat_HeadCount.MovementItemId = MIContainer.MovementItemId
                                                       AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
                                                       AND MIContainer.DescId = zc_MIContainer_Count()
                                                       AND COALESCE (MIContainer.AnalyzerId, 0) = 0
 
-                      WHERE MIContainer.ContainerId IN (SELECT tmpContainer.ContainerId FROM tmpContainer)
-                        AND MIContainer.MovementDescId = zc_Movement_Income()
                       GROUP BY MIContainer.DescId
                              , MIContainer.ContainerId
                              , MIContainer.MovementId
@@ -248,16 +258,16 @@ BEGIN
                        GROUP BY MIContainer.MovementId
                       )
 
-            -- разделение - сумма приход (для расчета цены голов)
-     , tmpSeparateH_All AS ( SELECT  MIContainer.*
-                             FROM tmpSeparate
-                                  INNER JOIN MovementItemContainer AS MIContainer
-                                                                   ON MIContainer.MovementId = tmpSeparate.MovementId
-                                                                  AND MIContainer.DescId = zc_MIContainer_Summ()
-                                                                  AND MIContainer.isActive = TRUE
-                                   LEFT JOIN tmpGoods ON tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
-                             WHERE tmpGoods.GoodsId IS NULL
+       -- разделение - сумма приход (для расчета цены голов)
+     , tmpSeparateH_All AS (SELECT  MIContainer.*
+                            FROM MovementItemContainer AS MIContainer
+                                 LEFT JOIN tmpGoods ON tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
+                            WHERE MIContainer.DescId = zc_MIContainer_Summ()
+                              AND MIContainer.isActive = TRUE
+                              AND MIContainer.MovementId IN (SELECT tmpSeparate.MovementId FROM tmpSeparate)
+                              AND tmpGoods.GoodsId IS NULL
                             )
+
      , tmpSeparateH AS (SELECT SUM (tmpSeparateH_All.Amount) AS Amount_summ
                         FROM tmpSeparateH_All
                         )
@@ -266,12 +276,12 @@ BEGIN
       -- разделение - кол-во приход товаров (если не головы)
      , tmpSeparateS AS (SELECT MAX (MIContainer.ObjectId_analyzer)  AS GoodsId
                              , SUM (MIContainer.Amount)    AS Amount_count
-                        FROM tmpSeparate
-                             INNER JOIN MovementItemContainer AS MIContainer
-                                                              ON MIContainer.MovementId = tmpSeparate.MovementId
-                                                             AND MIContainer.DescId = zc_MIContainer_Count()
-                                                             AND MIContainer.isActive = TRUE
+                        FROM MovementItemContainer AS MIContainer
                              INNER JOIN tmpGoods ON tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
+                        WHERE MIContainer.DescId = zc_MIContainer_Count()
+                          AND MIContainer.isActive = TRUE
+                          AND MIContainer.MovementId IN (SELECT tmpSeparate.MovementId FROM tmpSeparate)
+                          AND tmpGoods.GoodsId IS NULL
                        )
 
       -- Результат
@@ -437,3 +447,6 @@ $BODY$
 -- тест
 --select * from gpSelect_Movement_ProductionSeparate_Print(inMovementId := 7220837 ,  inSession := '5');
 --FETCH ALL "<unnamed portal 4>";
+
+--SELECT * FROM gpSelect_Movement_ProductionSeparate_Print(inMovementId:= 8332288, inSession:= zfCalc_UserAdmin());
+--FETCH ALL "<unnamed portal 21>";

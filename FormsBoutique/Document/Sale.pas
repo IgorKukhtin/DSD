@@ -177,6 +177,12 @@ type
     spSelectPrint_Check: TdsdStoredProc;
     edDiscountTaxTwo: TcxCurrencyEdit;
     cxLabel9: TcxLabel;
+    spComplete_User: TdsdStoredProc;
+    spGet_New: TdsdStoredProc;
+    actComplete_User: TdsdExecStoredProc;
+    actGet_New: TdsdExecStoredProc;
+    mac_User: TMultiAction;
+    bbmac_User: TdxBarButton;
   private
   public
   end;

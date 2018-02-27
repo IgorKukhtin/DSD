@@ -18,9 +18,9 @@ BEGIN
      -- определяем вид документа
      vbDescId := (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId);
      
-     PERFORM CASE WHEN vbDescId = zc_Movement_Sale()         THEN gpComplete_Movement_Sale (inMovementId, inSession)
-                  WHEN vbDescId = zc_Movement_ReturnIn()     THEN gpComplete_Movement_ReturnIn (inMovementId, inSession)
-                  WHEN vbDescId = zc_Movement_GoodsAccount() THEN gpComplete_Movement_GoodsAccount (inMovementId, inSession)
+     PERFORM CASE WHEN vbDescId = zc_Movement_Sale()         THEN gpComplete_Movement_Sale_User (inMovementId, inSession)
+                  WHEN vbDescId = zc_Movement_ReturnIn()     THEN gpComplete_Movement_ReturnIn_User (inMovementId, inSession)
+                  WHEN vbDescId = zc_Movement_GoodsAccount() THEN gpComplete_Movement_GoodsAccount_User (inMovementId, inSession)
              END;
 
      outStatusCode := (SELECT Object_Status.ObjectCode  AS StatusCode
@@ -35,6 +35,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.02.18         * _User
  19.01.18         *
 */
 
