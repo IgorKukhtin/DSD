@@ -1100,6 +1100,13 @@ object GoodsAccountForm: TGoodsAccountForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PrinterName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 246
     Top = 351
@@ -1403,7 +1410,7 @@ object GoodsAccountForm: TGoodsAccountForm
       Category = 0
     end
     object bbPrintCheck: TdxBarButton
-      Action = actPrintCheck
+      Action = macPrintCheck
       Category = 0
     end
     object bbmac_User: TdxBarButton
@@ -1610,6 +1617,7 @@ object GoodsAccountForm: TGoodsAccountForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      Printer = 'PrinterName'
       Params = <
         item
           Name = 'InvNumber'
@@ -2162,6 +2170,31 @@ object GoodsAccountForm: TGoodsAccountForm
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1086#1087#1077#1088#1072#1094#1080#1102
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1086#1087#1077#1088#1072#1094#1080#1102
       ImageIndex = 10
+    end
+    object actGet_Printer: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Printer
+      StoredProcList = <
+        item
+          StoredProc = spGet_Printer
+        end>
+      Caption = 'Get_Printer'
+    end
+    object macPrintCheck: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Printer
+        end
+        item
+          Action = actPrintCheck
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
+      ImageIndex = 15
     end
   end
   object MasterDS: TDataSource
@@ -3315,5 +3348,30 @@ object GoodsAccountForm: TGoodsAccountForm
     PackSize = 1
     Left = 168
     Top = 400
+  end
+  object spGet_Printer: TdsdStoredProc
+    StoredProcName = 'gpGet_PrinterByUnit'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_PrinterByUnit'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PrinterName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 976
+    Top = 256
   end
 end

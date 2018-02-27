@@ -102,6 +102,9 @@ type
     ceUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
     spGet_UserUnit: TdsdStoredProc;
+    spGet_Printer: TdsdStoredProc;
+    actGet_Printer: TdsdExecStoredProc;
+    macPrintCheck: TMultiAction;
   private
   public
   end;

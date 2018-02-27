@@ -244,8 +244,6 @@ object SaleForm: TSaleForm
         Height = 207
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = -16
-        ExplicitTop = 80
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1310,6 +1308,13 @@ object SaleForm: TSaleForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PrinterName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 246
     Top = 351
@@ -1601,7 +1606,7 @@ object SaleForm: TSaleForm
       Category = 0
     end
     object bbPrintCheck: TdxBarButton
-      Action = actPrintCheck
+      Action = macPrintCheck
       Category = 0
     end
     object bbmac_User: TdxBarButton
@@ -1788,6 +1793,7 @@ object SaleForm: TSaleForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      Printer = 'PrinterName'
       Params = <
         item
           Name = 'InvNumber'
@@ -1813,11 +1819,21 @@ object SaleForm: TSaleForm
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PrinterName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PrinterName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = 'Print_Check'
       ReportNameParam.Value = 'Print_Check'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PreviewWindowMaximized = False
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -2380,7 +2396,7 @@ object SaleForm: TSaleForm
           Action = actComplete_User
         end
         item
-          Action = actPrintCheck
+          Action = macPrintCheck
         end
         item
           Action = actGet_New
@@ -2391,6 +2407,31 @@ object SaleForm: TSaleForm
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1086#1087#1077#1088#1072#1094#1080#1102
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1086#1087#1077#1088#1072#1094#1080#1102
       ImageIndex = 10
+    end
+    object actGet_Printer: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Printer
+      StoredProcList = <
+        item
+          StoredProc = spGet_Printer
+        end>
+      Caption = 'Get_Printer'
+    end
+    object macPrintCheck: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Printer
+        end
+        item
+          Action = actPrintCheck
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
+      ImageIndex = 15
     end
   end
   object MasterDS: TDataSource
@@ -3912,5 +3953,30 @@ object SaleForm: TSaleForm
     PackSize = 1
     Left = 304
     Top = 384
+  end
+  object spGet_Printer: TdsdStoredProc
+    StoredProcName = 'gpGet_PrinterByUnit'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_PrinterByUnit'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PrinterName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 784
+    Top = 336
   end
 end

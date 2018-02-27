@@ -85,7 +85,7 @@ object UnitEditForm: TUnitEditForm
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = '0'
     TabOrder = 3
-    Width = 273
+    Width = 95
   end
   object edAddress: TcxTextEdit
     Left = 10
@@ -182,6 +182,17 @@ object UnitEditForm: TUnitEditForm
     TabOrder = 21
     Width = 275
   end
+  object cxLabel11: TcxLabel
+    Left = 113
+    Top = 177
+    Caption = #1055#1088#1080#1085#1090#1077#1088' ('#1087#1077#1095#1072#1090#1100' '#1095#1077#1082#1086#1074')'
+  end
+  object edPrinter: TcxTextEdit
+    Left = 113
+    Top = 195
+    TabOrder = 23
+    Width = 170
+  end
   object ActionList: TActionList
     Left = 176
     Top = 8
@@ -254,6 +265,14 @@ object UnitEditForm: TUnitEditForm
         Name = 'inPhone'
         Value = Null
         Component = edPhone
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrinter'
+        Value = Null
+        Component = edPrinter
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -359,6 +378,13 @@ object UnitEditForm: TUnitEditForm
         Name = 'Phone'
         Value = Null
         Component = edPhone
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Printer'
+        Value = Null
+        Component = edPrinter
         DataType = ftString
         MultiSelectSeparator = ','
       end

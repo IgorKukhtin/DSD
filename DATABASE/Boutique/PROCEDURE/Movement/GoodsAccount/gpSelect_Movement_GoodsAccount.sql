@@ -12,8 +12,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , TotalSummPay TFloat
              , TotalSummChange TFloat
-             , FromName TVarChar
-             , ToName TVarChar
+             , FromId Integer, FromName TVarChar
+             , ToId Integer, ToName TVarChar
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              )
@@ -42,7 +42,9 @@ BEGIN
            , MovementFloat_TotalSummPay.ValueData        AS TotalSummPay
            , MovementFloat_TotalSummChange.ValueData     AS TotalSummChange
        
+           , Object_From.Id                              AS FromId
            , Object_From.ValueData                       AS FromName
+           , Object_To.Id                                AS ToId
            , Object_To.ValueData                         AS ToName
            , MovementString_Comment.ValueData            AS Comment
 

@@ -183,6 +183,9 @@ type
     actGet_New: TdsdExecStoredProc;
     mac_User: TMultiAction;
     bbmac_User: TdxBarButton;
+    spGet_Printer: TdsdStoredProc;
+    macPrintCheck: TMultiAction;
+    actGet_Printer: TdsdExecStoredProc;
   private
   public
   end;
