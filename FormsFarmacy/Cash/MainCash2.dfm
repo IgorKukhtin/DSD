@@ -23,7 +23,6 @@ inherited MainCashForm2: TMainCashForm2
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitTop = 315
     object CheckGrid: TcxGrid
       Left = 0
       Top = 0
@@ -208,7 +207,6 @@ inherited MainCashForm2: TMainCashForm2
     Height = 3
     AlignSplitter = salBottom
     Control = BottomPanel
-    ExplicitTop = 312
   end
   object MainPanel: TPanel [2]
     Left = 0
@@ -218,7 +216,6 @@ inherited MainCashForm2: TMainCashForm2
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitHeight = 214
     object MainGrid: TcxGrid
       Left = 0
       Top = 0
@@ -226,7 +223,6 @@ inherited MainCashForm2: TMainCashForm2
       Height = 207
       Align = alClient
       TabOrder = 0
-      ExplicitHeight = 181
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnFocusedRecordChanged = MainGridDBTableViewFocusedRecordChanged
@@ -716,7 +712,6 @@ inherited MainCashForm2: TMainCashForm2
       Height = 33
       Align = alBottom
       TabOrder = 1
-      ExplicitTop = 181
       object ShapeState: TShape
         Left = 751
         Top = 13
@@ -1752,6 +1747,7 @@ inherited MainCashForm2: TMainCashForm2
     object actUpdateRemains: TAction
       Category = 'DSDLib'
       Caption = 'actUpdateRemains'
+      Enabled = False
       OnExecute = actUpdateRemainsExecute
     end
     object actCalcTotalSumm: TAction
@@ -1791,11 +1787,8 @@ inherited MainCashForm2: TMainCashForm2
     object actRefreshLite: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelect_CashRemains_Diff
-      StoredProcList = <
-        item
-          StoredProc = spSelect_CashRemains_Diff
-        end>
+      Enabled = False
+      StoredProcList = <>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1086#1089#1090#1072#1090#1086#1082
       Hint = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1086#1089#1090#1072#1090#1086#1082
       ShortCut = 116
@@ -2054,7 +2047,6 @@ inherited MainCashForm2: TMainCashForm2
     Top = 120
   end
   object spSelectRemains: TdsdStoredProc
-    StoredProcName = 'gpSelect_CashRemains_ver2'
     DataSet = RemainsCDS
     DataSets = <
       item

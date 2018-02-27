@@ -643,12 +643,12 @@ begin
         FExternalLoad.Next;
       end;
 
-      with TStringList.Create do
+      {with TStringList.Create do
       begin
         Text := JSONArray.ToString;
         SaveToFile('price.json');
         Free;
-      end;
+      end;}
 
       if FImportSettings.JSONParamName <> '' then
       begin
@@ -715,7 +715,7 @@ var i: integer;
     else if TryStrToInt(AValue, intValue) then
       JSONObject.AddPair(cParamName, TJSONNumber.Create(intValue))
     else
-      JSONObject.AddPair(cParamName, String(AValue));
+      JSONObject.AddPair(cParamName, ReplaceText(String(AValue), '\', '\\'));
   end;
 
 begin
@@ -877,7 +877,9 @@ begin
                        except
                            on E: Exception do begin
                               fErr:= true;
-                              TextMessage:=trim (Copy(E.Message, 1, pos('context', AnsilowerCase(E.Message)) - 1));
+                              TextMessage := E.Message;
+                              if pos('context', AnsilowerCase(TextMessage)) > 0 then
+                                TextMessage:=trim (Copy(TextMessage, 1, pos('context', AnsilowerCase(TextMessage)) - 1));
                               if TextMessage <> ''
                               then TextMessage := ' - ' + ReplaceStr(TextMessage, 'ERROR:', 'ОШИБКА:');
                               //добавили в список не загруженных файлов

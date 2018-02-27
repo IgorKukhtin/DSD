@@ -159,7 +159,7 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
             item
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = PartnerName
+              Column = ClientName
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -245,9 +245,9 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
             HeaderAlignmentVert = vaCenter
             Width = 73
           end
-          object PartnerName: TcxGridDBColumn
+          object ClientName: TcxGridDBColumn
             Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
-            DataBinding.FieldName = 'PartnerName'
+            DataBinding.FieldName = 'ClientName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -823,9 +823,7 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
         item
           DataSet = MasterCDS
           UserName = 'frxDBDItems'
-          IndexFieldNames = 
-            'NumGroup;PartnerName;OperDate;DescName;InvNumber;LabelName;Goods' +
-            'SizeName'
+          IndexFieldNames = 'NumGroup;ClientName;GoodsCode;LabelName;GoodsSizeName'
         end>
       Params = <
         item
