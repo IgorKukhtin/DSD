@@ -7541,7 +7541,10 @@ begin
         Add('select Users.Id as ObjectId');
         Add('     , 0 as ObjectCode');
         Add('     , Users.UsersName as UserName');
-        Add('     , ' + chr(39) + 'int'+char(39)+'+Users.UsersPassword as Password');
+        Add('     , ' + chr(39) + 'int'+char(39)
+           +'       +case when 1=0'
+           +'             else Users.UsersPassword'
+           +'       end as Password');
         Add('     , zc_erasedDel() as zc_erasedDel');
         Add('     , Users.Erased as Erased');
         Add('     , Users.MemberId_Postgres as MemberId');

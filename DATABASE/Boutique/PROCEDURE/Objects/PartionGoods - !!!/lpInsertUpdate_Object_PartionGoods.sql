@@ -65,9 +65,54 @@ $BODY$
    DECLARE vbRePrice_exists   Boolean;
    DECLARE vbId_income_ch     Integer;
    DECLARE vbId_sale_ch       Integer;
+   DECLARE vbId_income_part   Integer;
+   DECLARE vbId_sale_part     Integer;
 BEGIN
      -- заменили
      IF COALESCE (inCountForPrice, 0) = 0 THEN inCountForPrice:= 1; END IF;
+
+
+     -- 1.0. ДЛЯ ПАРТИИ
+     IF -- inUserId <> zc_User_Sybase() AND  - !!!Кроме Sybase!!!
+        inMovementItemId > 0 AND (inGoodsSizeId <> (SELECT COALESCE (Object_PartionGoods.GoodsSizeId, 0) FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
+                               OR inGoodsId     <> inGoodsId_old
+                                 )
+     THEN
+        -- есть ли ПРОВЕДЕННЫЕ документы - все
+        vbId_sale_part:= (SELECT MovementItem.Id
+                          FROM MovementItem
+                               INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                  AND Movement.StatusId = zc_Enum_Status_Complete() -- !!!только проведенные!!!
+                                                  AND Movement.DescId   <> zc_Movement_Income()     -- !!!только НЕ Приход от постав.!!!
+                          WHERE MovementItem.PartionId = inMovementItemId
+                            AND MovementItem.isErased  = FALSE -- !!!только НЕ удаленные!!!
+                            -- AND MovementItem.DescId = ...   -- !!!любой Desc!!!
+                          ORDER BY Movement.OperDate DESC
+                          LIMIT 1
+                         );
+         -- Проверка сразу - ДЛЯ ПАРТИИ
+        IF vbId_sale_part > 0
+        THEN
+            RAISE EXCEPTION 'Ошибка.Найдено движение <%> № <%> от <%>.Нельзя корректировать <Артикул> или <Размер>.'
+                          , (SELECT MovementDesc.ItemName
+                             FROM MovementItem
+                                  INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                  INNER JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+                             WHERE MovementItem.Id = vbId_sale_part
+                            )
+                          , (SELECT Movement.InvNumber
+                             FROM MovementItem
+                                  INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                             WHERE MovementItem.Id = select * from users order by usersName
+                            )
+                          , (SELECT zfConvert_DateToString (Movement.OperDate)
+                             FROM MovementItem
+                                  INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                             WHERE MovementItem.Id = select * from users order by usersName
+                            )
+                           ;
+        END IF;
+     END IF;
 
 
      -- 1.1. есть ли ПЕРЕОЦЕНКА
@@ -191,9 +236,14 @@ BEGIN
 
 
      -- 2.1. НАЧАЛО: Определили - можно ли изменять св-ва - !!!Кроме Sybase!!!
-     -- cохранили Цену в истории
-     -- IF inUserId <> zc_User_Sybase()
-     -- AND inGoodsId <> inGoodsId_old AND inGoodsId_old > 0
+     IF inUserId <> zc_User_Sybase() AND
+        inMovementItemId > 0 AND (inGoodsSizeId <> (SELECT COALESCE (Object_PartionGoods.GoodsSizeId, 0) FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
+                               OR inGoodsId     <> inGoodsId_old
+                                 )
+     THEN
+        -- есть ли ПРОВЕДЕННЫЕ документы - все
+     END IF;
+     -- 2. ЗАВЕРШЕНО: Определили - можно ли изменять св-ва - !!!Кроме Sybase!!!
 
 
      -- изменили элемент - по значению <Ключ партии>

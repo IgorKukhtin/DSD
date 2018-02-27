@@ -15,6 +15,7 @@ $BODY$
     DECLARE vbUserId Integer;
 
     DECLARE vbGoodsPropertyId Integer;
+    DECLARE vbIsContract_30201 Boolean;
 
     DECLARE Cursor1 refcursor;
     DECLARE vbOperDatePartner TDateTime;
@@ -31,6 +32,21 @@ BEGIN
                                                      AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
                           WHERE Movement.Id = inMovementId
                          );
+                         
+     vbIsContract_30201:= (SELECT CASE WHEN Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
+                                            THEN TRUE
+                                       ELSE FALSE
+                                  END
+                           FROM Movement
+                                LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                             ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                            AND MovementLinkObject_Contract.DescId     = zc_MovementLinkObject_Contract()
+                                LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                                     ON ObjectLink_Contract_InfoMoney.ObjectId = MovementLinkObject_Contract.ObjectId
+                                                    AND ObjectLink_Contract_InfoMoney.DescId   = zc_ObjectLink_Contract_InfoMoney()
+                                LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Contract_InfoMoney.ChildObjectId
+                           WHERE Movement.Id = inMovementId
+                          );
 
 
 
@@ -315,19 +331,21 @@ BEGIN
            , CASE WHEN MovementLinkObject_Contract.ObjectId > 0
                        AND Object_InfoMoney_View.InfoMoneyDestinationId NOT IN (zc_Enum_InfoMoneyDestination_20500() -- Общефирменные + Оборотная тара
                                                                               , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
-                                                                                )
+                                                                               )
                       THEN FALSE
                   ELSE TRUE
-             END AS isBranch
+             END :: Boolean AS isBranch
 
            , CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId = 310853 -- Ашан
                       THEN TRUE
                   ELSE FALSE
-             END AS isAshan
+             END :: Boolean AS isAshan
            , CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId = 310854 -- Фоззі
                       THEN TRUE
                   ELSE FALSE
-             END AS isFozzi
+             END :: Boolean AS isFozzi
+             
+           , vbIsContract_30201 :: Boolean AS isContract_30201
 
        FROM tmpMovement
             INNER JOIN tmpMovementItem ON tmpMovementItem.MovementId = tmpMovement.Id AND tmpMovementItem.AmountPartner <> 0
@@ -401,7 +419,7 @@ BEGIN
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement_Sale.Id
-                                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                        AND MovementLinkObject_Contract.DescId     = zc_MovementLinkObject_Contract()
             LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = MovementLinkObject_Contract.ObjectId
 
             LEFT JOIN ObjectDate AS ObjectDate_Signing

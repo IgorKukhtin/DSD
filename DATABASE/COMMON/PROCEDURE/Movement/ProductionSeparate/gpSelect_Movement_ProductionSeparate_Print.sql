@@ -445,8 +445,5 @@ $BODY$
 */
 
 -- тест
---select * from gpSelect_Movement_ProductionSeparate_Print(inMovementId := 7220837 ,  inSession := '5');
---FETCH ALL "<unnamed portal 4>";
-
---SELECT * FROM gpSelect_Movement_ProductionSeparate_Print(inMovementId:= 8332288, inSession:= zfCalc_UserAdmin());
---FETCH ALL "<unnamed portal 21>";
+-- SELECT * FROM gpSelect_Movement_ProductionSeparate_Print (inMovementId:= 8332288, inSession:= zfCalc_UserAdmin());
+-- FETCH ALL "<unnamed portal 4>";
