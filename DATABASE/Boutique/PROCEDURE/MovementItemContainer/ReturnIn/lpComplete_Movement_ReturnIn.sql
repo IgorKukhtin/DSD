@@ -113,7 +113,7 @@ BEGIN
                -- Сумма по Вх. в zc_Currency_Basis
              , CASE WHEN tmp.isGoods_Debt = TRUE
                          THEN 0 -- !!!это долги!!!
-                    -- Сумма по Вх. - с округлением до 2-х знаков
+                    -- с округлением до 2-х знаков
                     ELSE zfCalc_SummIn (tmp.OperCount, tmp.OperPrice_basis, tmp.CountForPrice)
                END AS OperSumm
 
@@ -167,7 +167,7 @@ BEGIN
                    , CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END AS CountForPrice
                    , Object_PartionGoods.CurrencyId   AS CurrencyId
 
-                     -- Цена Вх. в Валюте - сначала переводим в zc_Currency_Basis - с округлением до 2-х знаков
+                     -- Цена Вх. - именно её переводим в zc_Currency_Basis - с округлением до 2-х знаков
                    , zfCalc_PriceIn_Basis (Object_PartionGoods.CurrencyId, Object_PartionGoods.OperPrice, MIFloat_CurrencyValue.ValueData, MIFloat_ParValue.ValueData) AS OperPrice_basis
                      -- Сумма по Вх. в Валюте - с округлением до 2-х знаков
                    , zfCalc_SummIn (MovementItem.Amount, Object_PartionGoods.OperPrice, Object_PartionGoods.CountForPrice) AS OperSumm_Currency
@@ -1055,13 +1055,19 @@ BEGIN
       ;
 
 
-     -- 5.0. Пересохраним св-ва из партии: <Цена> + <Цена за количество> + Курс - из партии продажи
+     -- 5.0.1.  Пересохраним св-ва из партии: <Цена> + <Цена за количество> + Курс - из партии продажи
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPrice(),     _tmpItem.MovementItemId, _tmpItem.OperPrice)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), _tmpItem.MovementItemId, _tmpItem.CountForPrice)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(), _tmpItem.MovementItemId, COALESCE (_tmpItem.OperPriceList, 0))
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_CurrencyValue(), _tmpItem.MovementItemId, COALESCE (_tmpItem.CurrencyValue, 0))
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ParValue(),      _tmpItem.MovementItemId, COALESCE (_tmpItem.ParValue, 0))
      FROM _tmpItem;
+     -- 5.0.2. Пересохраним св-ва из партии: <Товар>
+     UPDATE MovementItem SET ObjectId = _tmpItem.GoodsId
+     FROM _tmpItem
+     WHERE _tmpItem.MovementItemId = MovementItem.Id
+       AND _tmpItem.GoodsId        <> MovementItem.ObjectId
+     ;
 
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки

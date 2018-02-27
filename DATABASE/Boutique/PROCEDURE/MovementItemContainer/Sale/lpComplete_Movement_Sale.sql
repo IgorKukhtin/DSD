@@ -161,7 +161,7 @@ UNION SELECT 895555
              , CASE WHEN tmp.isGoods_Debt = TRUE
                          THEN 0 -- !!!это долги!!!
 
-                    -- Сумма по Вх. - с округлением до 2-х знаков
+                    -- с округлением до 2-х знаков
                     ELSE zfCalc_SummIn (tmp.OperCount, tmp.OperPrice_basis, tmp.CountForPrice)
 
                END AS OperSumm
@@ -233,7 +233,7 @@ UNION SELECT 895555
                                THEN 1000 * tmpCurrency.ParValue
                      END AS ParValue
 
-                     -- Цена Вх. в Валюте - сначала переводим в zc_Currency_Basis - с округлением до 2-х знаков
+                     -- Цена Вх. - именно её переводим в zc_Currency_Basis - с округлением до 2-х знаков
                    , zfCalc_PriceIn_Basis (Object_PartionGoods.CurrencyId, Object_PartionGoods.OperPrice
                                          , CASE WHEN Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyToId
                                                      THEN tmpCurrency.Amount
@@ -1244,12 +1244,18 @@ UNION SELECT 895555
 
 
 
-     -- 5.0. Пересохраним св-ва из партии: <Цена> + <Цена за количество> + Курс - из истории
+     -- 5.0.1. Пересохраним св-ва из партии: <Цена> + <Цена за количество> + Курс - из истории
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPrice(),     _tmpItem.MovementItemId, _tmpItem.OperPrice)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), _tmpItem.MovementItemId, _tmpItem.CountForPrice)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_CurrencyValue(), _tmpItem.MovementItemId, _tmpItem.CurrencyValue)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ParValue(),      _tmpItem.MovementItemId, _tmpItem.ParValue)
      FROM _tmpItem;
+     -- 5.0.2. Пересохраним св-ва из партии: <Товар>
+     UPDATE MovementItem SET ObjectId = _tmpItem.GoodsId
+     FROM _tmpItem
+     WHERE _tmpItem.MovementItemId = MovementItem.Id
+       AND _tmpItem.GoodsId        <> MovementItem.ObjectId
+     ;
 
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки

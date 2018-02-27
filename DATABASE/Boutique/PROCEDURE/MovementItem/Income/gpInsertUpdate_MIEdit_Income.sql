@@ -31,13 +31,15 @@ $BODY$
    DECLARE vbCompositionId Integer;
    DECLARE vbGoodsSizeId   Integer;
    DECLARE vbGoodsId       Integer;
-   DECLARE vbGoodsId_find  Integer;
+   DECLARE vbGoodsId_old   Integer;
    DECLARE vbGoodsInfoId   Integer;
    DECLARE vbGoodsItemId   Integer;
    DECLARE vbLabelId       Integer;
 
    DECLARE vbOperDate  TDateTime;
    DECLARE vbPartnerId Integer;
+
+   DECLARE vbOperPriceList_old TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Income());
@@ -106,7 +108,7 @@ BEGIN
      IF COALESCE (TRIM (inGoodsInfoName), '') <> ''
      THEN
          -- Поиск !!!без Группы!!!
-         vbGoodsInfoId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsInfo() AND LOWER (Object.ValueData) = LOWER (inGoodsInfoName));   --  '\%'  так как ошибка для  inGoodsInfoName = '\текст  '   так как обратный слеше не экранирован в параметре постгреса 
+         vbGoodsInfoId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsInfo() AND LOWER (Object.ValueData) = LOWER (inGoodsInfoName));   --  '\%'  так как ошибка для  inGoodsInfoName = '\текст  '   так как обратный слеше не экранирован в параметре постгреса
          --
          IF COALESCE (vbGoodsInfoId, 0) = 0
          THEN
@@ -167,8 +169,13 @@ BEGIN
      IF inGoodsName = '' THEN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Товар>.';
      END IF;
-     
-     -- для загрузки из Sybase т.к. там код НЕ = 0 
+     -- проверка - свойство должно быть установлено
+     IF COALESCE (inOperPriceList, 0) = 0 THEN
+        RAISE EXCEPTION 'Ошибка.Не установлено значение <Цена продажи>.';
+     END IF;
+
+
+     -- для загрузки из Sybase т.к. там код НЕ = 0
      IF vbUserId = zc_User_Sybase()
      THEN
          -- Поиск - !!!без группы!!! + inGoodsName + ioGoodsCode
@@ -182,6 +189,12 @@ BEGIN
                         AND Object.ObjectCode = -1 * ioGoodsCode
                      );
      ELSE
+         -- Запомнили !!!ДО изменений!!!
+         IF ioId > 0
+         THEN -- Товар - у текущего Элемента
+              vbGoodsId_old = (SELECT Object_PartionGoods.GoodsId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = ioId);
+         END IF;
+
          -- Поиск
          vbGoodsId:= (SELECT DISTINCT Object.Id
                       FROM Object
@@ -216,16 +229,20 @@ BEGIN
          -- Если НЕ нашли И Корректировка + ОН ОДИН - ОСТАВЛЯЕМ тот же самый
          IF COALESCE (vbGoodsId, 0) = 0 AND ioId <> 0
          THEN
-             -- взяли из партии
-             vbGoodsId_find = (SELECT Object_PartionGoods.GoodsId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = ioId);
-                         
              -- сколько партий с этим товаром
-             IF 1 = (SELECT COUNT (*) FROM Object_PartionGoods WHERE Object_PartionGoods.GoodsId = vbGoodsId_find)
+             IF 1 = (SELECT COUNT (*) FROM Object_PartionGoods WHERE Object_PartionGoods.GoodsId = vbGoodsId_old)
              THEN
                  -- ОСТАВЛЯЕМ тот же самый
-                 vbGoodsId:= vbGoodsId_find;
+                 vbGoodsId:= vbGoodsId_old;
+                 -- Меняем ему название, если надо
+                 UPDATE Object SET ValueData = inGoodsName WHERE Object.Id = vbGoodsId AND Object.DescId = zc_Object_Goods() AND Object.ValueData <> inGoodsName;
+                 -- если изменение - БЫЛО
+                 IF FOUND THEN
+                   -- сохранили протокол
+                   PERFORM lpInsert_ObjectProtocol (vbGoodsId, vbUserId);
+                 END IF;
              END IF;
-             
+
          END IF;
 
      END IF;
@@ -234,7 +251,7 @@ BEGIN
      IF COALESCE (vbGoodsId, 0) = 0
      THEN
          -- Создание
-         SELECT tmp.ioId, tmp.ioCode 
+         SELECT tmp.ioId, tmp.ioCode
                 INTO vbGoodsId, ioGoodsCode
          FROM gpInsertUpdate_Object_Goods (ioId            := vbGoodsId
                                          , ioCode          := ioGoodsCode
@@ -303,7 +320,21 @@ BEGIN
                                                   , inUserId       := vbUserId
                                                    );
 
+     -- Запомнили !!!ДО изменений!!!
+     IF ioId > 0
+     THEN -- Цену - у текущего Элемента
+          vbOperPriceList_old:= (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_OperPriceList());
 
+     ELSE -- Цену - у любого Элемента
+          vbOperPriceList_old:= (SELECT DISTINCT MIF.ValueData
+                                 FROM MovementItem
+                                      LEFT JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_OperPriceList()
+                                 WHERE MovementItem.MovementId = inMovementId
+                                   AND MovementItem.DescId     = zc_MI_Master()
+                                   AND MovementItem.ObjectId   = vbGoodsId
+                                   AND MovementItem.isErased   = FALSE
+                                );
+     END IF;
 
      -- Заменили свойство <Цена за количество>
      IF COALESCE (inCountForPrice, 0) = 0 THEN inCountForPrice := 1; END IF;
@@ -319,39 +350,52 @@ BEGIN
                                               , inUserId             := vbUserId
                                                );
 
-     -- cохраняем Object_PartionGoods + Update св-ва у остальных партий этого vbGoodsId
-     PERFORM lpInsertUpdate_Object_PartionGoods (inMovementItemId := ioId
-                                               , inMovementId     := inMovementId
-                                               , inPartnerId      := vbPartnerId
-                                               , inUnitId         := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
-                                               , inOperDate       := vbOperDate
-                                               , inGoodsId        := vbGoodsId
-                                               , inGoodsItemId    := vbGoodsItemId
-                                               , inCurrencyId     := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_CurrencyDocument())
-                                               , inAmount         := inAmount
-                                               , inOperPrice      := inOperPrice
-                                               , inCountForPrice  := inCountForPrice
-                                               , inPriceSale      := inOperPriceList -- !!!если не было переоценки!!!
-                                               , inBrandId        := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbPartnerId AND OL.DescId = zc_ObjectLink_Partner_Brand())
-                                               , inPeriodId       := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbPartnerId AND OL.DescId = zc_ObjectLink_Partner_Period())
-                                               , inPeriodYear     := (SELECT ObF.ValueData FROM ObjectFloat AS ObF WHERE ObF.ObjectId = vbPartnerId AND ObF.DescId = zc_ObjectFloat_Partner_PeriodYear()) :: Integer
-                                               , inFabrikaId      := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbPartnerId AND OL.DescId = zc_ObjectLink_Partner_Fabrika())
-                                               , inGoodsGroupId   := inGoodsGroupId
-                                               , inMeasureId      := inMeasureId
-                                               , inCompositionId  := vbCompositionId
-                                               , inGoodsInfoId    := vbGoodsInfoId
-                                               , inLineFabricaId  := vbLineFabricaId
-                                               , inLabelId        := vbLabelId
+     -- cохраняем Object_PartionGoods + Update св-ва у остальных партий этого vbGoodsId + Update Цены в истории
+     PERFORM lpInsertUpdate_Object_PartionGoods (inMovementItemId     := ioId
+                                               , inMovementId         := inMovementId
+                                               , inPartnerId          := vbPartnerId
+                                               , inUnitId             := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
+                                               , inOperDate           := vbOperDate
+                                               , inGoodsId            := COALESCE (vbGoodsId, 0)
+                                               , inGoodsId_old        := COALESCE (vbGoodsId_old, 0)
+                                               , inGoodsItemId        := vbGoodsItemId
+                                               , inCurrencyId         := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_CurrencyDocument())
+                                               , inAmount             := inAmount
+                                               , inOperPrice          := inOperPrice
+                                               , inCountForPrice      := inCountForPrice
+                                               , inOperPriceList      := COALESCE (inOperPriceList, 0)
+                                               , inOperPriceList_old  := COALESCE (vbOperPriceList_old, 0)
+                                               , inBrandId            := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbPartnerId AND OL.DescId = zc_ObjectLink_Partner_Brand())
+                                               , inPeriodId           := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbPartnerId AND OL.DescId = zc_ObjectLink_Partner_Period())
+                                               , inPeriodYear         := (SELECT ObF.ValueData FROM ObjectFloat AS ObF WHERE ObF.ObjectId = vbPartnerId AND ObF.DescId = zc_ObjectFloat_Partner_PeriodYear()) :: Integer
+                                               , inFabrikaId          := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbPartnerId AND OL.DescId = zc_ObjectLink_Partner_Fabrika())
+                                               , inGoodsGroupId       := inGoodsGroupId
+                                               , inMeasureId          := inMeasureId
+                                               , inCompositionId      := vbCompositionId
+                                               , inGoodsInfoId        := vbGoodsInfoId
+                                               , inLineFabricaId      := vbLineFabricaId
+                                               , inLabelId            := vbLabelId
                                                , inCompositionGroupId := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbCompositionId AND OL.DescId = zc_ObjectLink_Composition_CompositionGroup())
-                                               , inGoodsSizeId    := vbGoodsSizeId
-                                               , inJuridicalId    := inJuridicalId
-                                               , inUserId         := vbUserId
+                                               , inGoodsSizeId        := vbGoodsSizeId
+                                               , inJuridicalId        := inJuridicalId
+                                               , inUserId             := vbUserId
                                                 );
 
-     -- !!!Кроме Sybase!!! - !!!не забыли - проверили что НЕТ движения и Переоценки, тогда Цену в истории можно менять!!!
-     -- PERFORM lpCheck ...
-     -- !!!Кроме Sybase!!! - !!!не забыли - cохранили Цену в истории!!!
-     -- PERFORM lpUpdate_ObjectHistory ...
+
+     -- по товарам исправили OperPriceList - НЕ для загрузки из Sybase т.к. там код НЕ = 0
+     IF vbUserId <> zc_User_Sybase()
+     THEN
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(), MovementItem.Id, inOperPriceList)
+         FROM MovementItem
+              LEFT JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_OperPriceList()
+         WHERE MovementItem.MovementId = inMovementId
+           AND MovementItem.DescId     = zc_MI_Master()
+           AND MovementItem.ObjectId   = vbGoodsId
+           AND MovementItem.Id         <> ioId
+           AND COALESCE (MIF.ValueData, 0) <> inOperPriceList
+        ;
+     END IF;
+
 
      -- дописали - партию = Id
      UPDATE MovementItem SET PartionId = ioId WHERE MovementItem.Id = ioId AND MovementItem.PartionId IS NULL;

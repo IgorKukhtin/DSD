@@ -19,9 +19,10 @@ BEGIN
          CREATE TEMP TABLE _tmpItem (MovementItemId Integer
                                    , ContainerId_Summ Integer, ContainerId_Goods Integer
                                    , GoodsId Integer, PartionId Integer, GoodsSizeId Integer
-                                   , OperCount TFloat, OperSumm TFloat, OperSumm_Currency TFloat
+                                   , OperCount TFloat, OperPrice TFloat, CountForPrice TFloat, OperSumm TFloat, OperSumm_Currency TFloat
                                    , AccountId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                    , ProfitLossId_30200 Integer, ContainerId_ProfitLoss_30200 Integer
+                                   , CurrencyValue TFloat, ParValue TFloat
                                     ) ON COMMIT DROP;
      END IF;
 

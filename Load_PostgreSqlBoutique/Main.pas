@@ -4392,10 +4392,9 @@ begin
              + '    left outer join DiscountKlientAccountMoney on DiscountKlientAccountMoney.ID = DiscountKassaMoveMoney.DiscountKlientAccountMoneyId'
 
              + ' WHERE DiscountKassaMoveMoney.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
-             + '   and DiscountKlientAccountMoney.isCurrent = zc_rvNo()'
-             + '   and DiscountKlientAccountMoney.discountMovementItemReturnId  is null'
-             + '   and DiscountKlientAccountMoney.isErased = zc_rvNo()'
-             + '   and (DiscountKlientAccountMoney.Summa <> 0 or DiscountKlientAccountMoney.SummDiscountManual <> 0)'
+             //+ '   and DiscountKlientAccountMoney.isCurrent = zc_rvNo()'
+             //+ '   and DiscountKlientAccountMoney.discountMovementItemReturnId  is null'
+             + '   and DiscountKassaMoveMoney.isErased = zc_rvNo()'
             );
         Add('order by DiscountKassaMoveMoney.InsertDate');
         Open;

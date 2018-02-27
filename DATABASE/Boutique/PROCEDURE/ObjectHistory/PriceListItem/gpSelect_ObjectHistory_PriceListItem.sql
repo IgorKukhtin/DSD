@@ -158,7 +158,6 @@ BEGIN
             LEFT JOIN Object AS Object_Label ON Object_Label.Id = ObjectLink_Goods_Label.ChildObjectId
 
        where  Object_Goods.DescId = zc_Object_Goods()
-      
        ;
 
    ELSE
@@ -279,10 +278,8 @@ BEGIN
 
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_ObjectHistory_PriceListItem (Integer, TDateTime, Boolean, TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -293,4 +290,4 @@ ALTER FUNCTION gpSelect_ObjectHistory_PriceListItem (Integer, TDateTime, Boolean
 */
 
 -- ÚÂÒÚ
---select * from gpSelect_ObjectHistory_PriceListItem(inPriceListId := 0 , inOperDate := ('11.05.2017')::TDateTime , inShowAll := 'False' ,  inSession := '2');
+-- SELECT * FROM gpSelect_ObjectHistory_PriceListItem (inPriceListId:= 0, inOperDate:= '11.05.2017', inShowAll:= FALSE, inSession := zfCalc_UserAdmin());

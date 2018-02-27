@@ -20,8 +20,9 @@ BEGIN
                                    , ContainerId_SummFrom Integer, ContainerId_GoodsFrom Integer
                                    , ContainerId_SummTo   Integer, ContainerId_GoodsTo   Integer
                                    , GoodsId Integer, PartionId Integer, GoodsSizeId Integer
-                                   , OperCount TFloat, OperSumm TFloat, OperSumm_Currency TFloat
+                                   , OperCount TFloat, OperPrice TFloat, CountForPrice TFloat, OperSumm TFloat, OperSumm_Currency TFloat
                                    , AccountId_From Integer, AccountId_To Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                                   , CurrencyValue TFloat, ParValue TFloat
                                     ) ON COMMIT DROP;
      END IF;
 

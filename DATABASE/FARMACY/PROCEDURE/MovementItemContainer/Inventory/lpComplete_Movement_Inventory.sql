@@ -162,49 +162,50 @@ BEGIN
                                                                                  ),
                                              True
                                             )
-        FROM (
-            SELECT 
-                T0.ObjectId
-               ,SUM(T0.Amount) as Amount
-            FROM(
-                SELECT 
-                    Container.Id 
-                   ,Container.ObjectId --Товар
-                   ,Container.Amount - COALESCE(SUM(MovementItemContainer.amount),0.0) as Amount  --Тек. остаток - Движение после даты переучета
-                FROM 
-                    Container
-                    LEFT OUTER JOIN MovementItemContainer ON Container.Id = MovementItemContainer.ContainerId
-                                                          AND date_trunc('day', MovementItemContainer.Operdate) > vbInventoryDate
-                               JOIN containerlinkObject AS CLI_Unit ON CLI_Unit.containerid = Container.Id
-                                                                   AND CLI_Unit.descid = zc_ContainerLinkObject_Unit()
-                                                                   AND CLI_Unit.ObjectId = vbUnitId                                   
-                WHERE Container.DescID = zc_Container_Count()
-                GROUP BY 
-                    Container.Id 
-                   ,Container.ObjectId
-                ) as T0
-            GROUP By T0.ObjectId
-            ) as Saldo
-            LEFT OUTER JOIN MovementItem AS MovementItem_Inventory
-                                         ON MovementItem_Inventory.ObjectId   = Saldo.ObjectId
-                                        AND MovementItem_Inventory.MovementId = inMovementId
-                                        AND MovementItem_Inventory.DescId     = zc_MI_Master()
-            LEFT OUTER JOIN (SELECT Price_Goods.ChildObjectId               AS GoodsId
-                                  , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
-                             FROM ObjectLink AS ObjectLink_Price_Unit
-                                LEFT JOIN ObjectLink AS Price_Goods
-                                       ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                      AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
-                                LEFT JOIN ObjectFloat AS Price_Value
-                                       ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
-                             WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                               AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId                
-                            ) AS Object_Price ON Object_Price.GoodsId = Saldo.ObjectId
-        WHERE Saldo.Amount > 0
+        FROM (SELECT T0.ObjectId     AS ObjectId
+                   , SUM (T0.Amount) AS Amount
+
+              FROM (SELECT Container.Id 
+                         , Container.ObjectId --Товар
+                         , Container.Amount - COALESCE(SUM(MovementItemContainer.amount),0.0) as Amount  --Тек. остаток - Движение после даты переучета
+                    FROM Container
+                         JOIN containerlinkObject AS CLI_Unit ON CLI_Unit.containerid = Container.Id
+                                                             AND CLI_Unit.descid = zc_ContainerLinkObject_Unit()
+                                                             AND CLI_Unit.ObjectId = vbUnitId                                   
+                         LEFT OUTER JOIN MovementItemContainer ON Container.Id = MovementItemContainer.ContainerId
+                                                               -- AND date_trunc('day', MovementItemContainer.Operdate) > vbInventoryDate
+                                                               AND MovementItemContainer.Operdate >= vbInventoryDate + INTERVAL '1 DAY'
+                    WHERE Container.DescID = zc_Container_Count()
+                    GROUP BY Container.Id 
+                           , Container.ObjectId
+                    HAVING Container.Amount - COALESCE(SUM(MovementItemContainer.amount),0.0) <> 0
+                   ) AS T0
+              GROUP By T0.ObjectId
+             ) AS Saldo
+             LEFT OUTER JOIN MovementItem AS MovementItem_Inventory
+                                          ON MovementItem_Inventory.ObjectId   = Saldo.ObjectId
+                                         AND MovementItem_Inventory.MovementId = inMovementId
+                                         AND MovementItem_Inventory.DescId     = zc_MI_Master()
+                                         AND MovementItem_Inventory.isErased   = FALSE
+             LEFT OUTER JOIN (SELECT Price_Goods.ChildObjectId               AS GoodsId
+                                   , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
+                              FROM ObjectLink AS ObjectLink_Price_Unit
+                                   LEFT JOIN ObjectLink AS Price_Goods
+                                                        ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                       AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                   LEFT JOIN ObjectFloat AS Price_Value
+                                                         ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                        AND Price_Value.DescId   = zc_ObjectFloat_Price_Value()
+                              WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                                AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId                
+                             ) AS Object_Price ON Object_Price.GoodsId = Saldo.ObjectId
+ 
+        WHERE Saldo.Amount <> 0 -- !!!26.02.2018 - добавил еще если есть с МИНУСОМ!!!
           AND MovementItem_Inventory.Id IS NULL
        ;
     END IF;
     
+
     WITH -- расч. Остаток на конец vbInventoryDate (т.е. после даты переучета)
          tmpRemains AS (SELECT Container.Id 
                              , Container.ObjectId -- Товар
@@ -222,42 +223,45 @@ BEGIN
                        )
       -- разница в остатке = переучет(факт) - расчет : (-)недостача, (+)Излишек
     , DiffRemains AS (SELECT MovementItem.Id       AS MovementItemId
-                         , MovementItem.ObjectId AS ObjectId
-                         , COALESCE (MovementItem.Amount, 0.0) - COALESCE (Saldo.Amount,0.0) AS Amount
-                    FROM MovementItem
-                        LEFT OUTER JOIN (SELECT T0.ObjectId, SUM (T0.Amount) as Amount FROM tmpRemains AS T0 GROUP BY ObjectId
-                                        ) AS Saldo ON Saldo.ObjectId = MovementItem.ObjectId
-                    WHERE MovementItem.MovementId = inMovementId
-                      AND MovementItem.DescId = zc_MI_Master()
-                      AND MovementItem.IsErased = FALSE
-                      AND COALESCE(MovementItem.Amount,0.0) - COALESCE(Saldo.Amount,0.0) <> 0.0
-                   )
+                           , MovementItem.ObjectId AS ObjectId
+                           , COALESCE (MovementItem.Amount, 0.0) - COALESCE (Saldo.Amount, 0.0) AS Amount
+                      FROM MovementItem
+                           LEFT OUTER JOIN (SELECT T0.ObjectId, SUM (T0.Amount) as Amount FROM tmpRemains AS T0 GROUP BY ObjectId
+                                           ) AS Saldo ON Saldo.ObjectId = MovementItem.ObjectId
+                      WHERE MovementItem.MovementId = inMovementId
+                        AND MovementItem.DescId = zc_MI_Master()
+                        AND MovementItem.IsErased = FALSE
+                        AND COALESCE(MovementItem.Amount, 0.0) <> COALESCE(Saldo.Amount, 0.0)
+                     )
 , DD AS (-- для "недостачи" - поиск партий
          SELECT 
             DiffRemains.MovementItemId 
           , DiffRemains.Amount 
           , Container.Amount AS ContainerAmount 
-          , vbInventoryDate as OperDate 
-          , Container.Id
+          , vbInventoryDate  AS OperDate 
+          , Container.Id     AS ContainerId
           , SUM (Container.Amount) OVER (PARTITION BY Container.ObjectId ORDER BY Movement.OperDate, Container.Id) 
           FROM tmpRemains AS Container 
                JOIN DiffRemains ON DiffRemains.ObjectId = Container.ObjectId 
                JOIN containerlinkObject AS CLI_MI
                                         ON CLI_MI.containerid = Container.Id
-                                       AND CLI_MI.descid = zc_ContainerLinkObject_PartionMovementItem()
+                                       AND CLI_MI.descid     = zc_ContainerLinkObject_PartionMovementItem()
                JOIN containerlinkObject AS CLI_Unit 
 		                        ON CLI_Unit.containerid = Container.Id
-                                       AND CLI_Unit.descid = zc_ContainerLinkObject_Unit()
-                                       AND CLI_Unit.ObjectId = vbUnitId
+                                       AND CLI_Unit.descid      = zc_ContainerLinkObject_Unit()
+                                       AND CLI_Unit.ObjectId    = vbUnitId
                JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
-               JOIN MovementItem ON MovementItem.Id     = Object_PartionMovementItem.ObjectCode
-               JOIN Movement ON Movement.Id = movementitem.movementid
-          WHERE Container.Amount > 0.0 AND DiffRemains.Amount < 0.0
+               -- Партия Прихода
+               JOIN MovementItem ON MovementItem.Id = Object_PartionMovementItem.ObjectCode
+               JOIN Movement ON Movement.Id = MovementItem.MovementId
+
+          WHERE Container.Amount > 0.0
+            AND DiffRemains.Amount < 0.0
          )
   
        , tmpItem AS (-- 
-		     SELECT Id
-		          , MovementItemId
+		     SELECT ContainerId     AS Id
+		          , MovementItemId  AS MovementItemId
 			  , OperDate
 			  , CASE WHEN -Amount - SUM > 0.0 THEN ContainerAmount 
                                  ELSE -Amount - SUM + ContainerAmount

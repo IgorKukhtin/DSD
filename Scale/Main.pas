@@ -261,6 +261,7 @@ type
     Scale_DB: TCasDB;
     Scale_Zeus: TZeus;
     err_count: Integer;
+    fStartBarCode : Boolean;
 
     function Save_Movement_all:Boolean;
     function Print_Movement_afterSave:Boolean;
@@ -318,7 +319,7 @@ end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.myActiveControl;
 begin
-     if (PanelPartionGoods.Visible)and(ActiveControl<>EditBarCode)
+     if (PanelPartionGoods.Visible)and(fStartBarCode = false)
      then ActiveControl:=EditPartionGoods
      else if BarCodePanel.Visible
           then ActiveControl:=EditBarCode
@@ -1062,6 +1063,9 @@ begin
                   ActiveControl:=EditBarCode;
                   exit;
                end;
+
+               try
+               fStartBarCode:= true;
                //если в ШК - Id товара или товар+вид товара
                if Pos(zc_BarCodePref_Object,EditBarCode.Text)=1
                then begin
@@ -1080,6 +1084,9 @@ begin
                              GetParams_Goods (TRUE, EditBarCode.Text, TRUE);//isRetail=TRUE
                              EditBarCode.Text:='';
                         end;
+               finally
+                 fStartBarCode:= false;
+               end;
      end;
 end;
 //---------------------------------------------------------------------------------------------
@@ -1191,6 +1198,7 @@ end;
 //---------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
+  fStartBarCode:= false;
   // определили IP
   with TIdIPWatch.Create(nil) do
   begin
