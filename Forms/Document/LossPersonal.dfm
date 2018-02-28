@@ -1495,7 +1495,7 @@ object LossPersonalForm: TLossPersonalForm
     Top = 16
   end
   object spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_LossDebt'
+    StoredProcName = 'gpUpdate_Status_LossPersonal'
     DataSets = <>
     OutputType = otResult
     Params = <

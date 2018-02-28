@@ -24,7 +24,6 @@ object LossPersonalJournalForm: TLossPersonalJournalForm
     Height = 31
     Align = alTop
     TabOrder = 1
-    ExplicitTop = -6
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -59,7 +58,6 @@ object LossPersonalJournalForm: TLossPersonalJournalForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 945
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -767,8 +765,8 @@ object LossPersonalJournalForm: TLossPersonalJournalForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 248
-    Top = 216
+    Left = 240
+    Top = 224
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
