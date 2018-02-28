@@ -109,6 +109,9 @@ type
     deServiceDate: TcxDateEdit;
     cxLabel13: TcxLabel;
     edComment: TcxTextEdit;
+    spInsertUpdateMI_Amount: TdsdStoredProc;
+    actspInsertUpdateMI_Amount: TdsdExecStoredProc;
+    bbInsertUpdateMI_Amount: TdxBarButton;
   private
   public
   end;

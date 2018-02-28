@@ -503,6 +503,14 @@ object LossPersonalForm: TLossPersonalForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertUpdateMI_Amount'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMIContainer'
         end
         item
@@ -576,6 +584,12 @@ object LossPersonalForm: TLossPersonalForm
     object bbMIContainer: TdxBarButton
       Action = actMIContainer
       Category = 0
+    end
+    object bbInsertUpdateMI_Amount: TdxBarButton
+      Action = actspInsertUpdateMI_Amount
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1084#1080
+      Category = 0
+      ImageIndex = 27
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -1129,6 +1143,20 @@ object LossPersonalForm: TLossPersonalForm
         end>
       isShowModal = True
     end
+    object actspInsertUpdateMI_Amount: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMI_Amount
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMI_Amount
+        end
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = 'actspInsertUpdateMI_Amount'
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -1323,6 +1351,7 @@ object LossPersonalForm: TLossPersonalForm
         Control = edOperDate
       end
       item
+        Control = deServiceDate
       end
       item
       end
@@ -1333,8 +1362,8 @@ object LossPersonalForm: TLossPersonalForm
       item
       end>
     GetStoredProc = spGet
-    Left = 306
-    Top = 193
+    Left = 314
+    Top = 241
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_LossPersonal'
@@ -1518,5 +1547,22 @@ object LossPersonalForm: TLossPersonalForm
     PackSize = 1
     Left = 108
     Top = 16
+  end
+  object spInsertUpdateMI_Amount: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_LossPersonal_Amount'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 94
+    Top = 296
   end
 end
