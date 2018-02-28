@@ -42,7 +42,7 @@ BEGIN
      END IF;
      IF COALESCE (inBranchId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Не установлена <Ведомость начисления>.';
+         RAISE EXCEPTION 'Ошибка.Не установлен <Филиал>.';
      END IF;
      
      -- проверка

@@ -1,11 +1,9 @@
 object LossPersonalJournalForm: TLossPersonalJournalForm
   Left = 0
   Top = 0
-  Caption = 
-    #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1079#1072#1076#1086#1083#1078#1077#1085#1085#1086#1089#1090#1080' ('#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072 +
-    ')>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1079#1072#1076#1086#1083#1078#1077#1085#1085#1086#1089#1090#1080' ('#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080' '#1047#1055')>'
   ClientHeight = 427
-  ClientWidth = 945
+  ClientWidth = 658
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,8 +19,8 @@ object LossPersonalJournalForm: TLossPersonalJournalForm
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 26
-    Width = 945
+    Top = 0
+    Width = 658
     Height = 31
     Align = alTop
     TabOrder = 1
@@ -55,7 +53,7 @@ object LossPersonalJournalForm: TLossPersonalJournalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 945
+    Width = 658
     Height = 370
     Align = alClient
     TabOrder = 0
@@ -189,37 +187,17 @@ object LossPersonalJournalForm: TLossPersonalJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 121
       end
-      object JuridicalBasisName: TcxGridDBColumn
-        Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
-        DataBinding.FieldName = 'JuridicalBasisName'
+      object ServiceDate: TcxGridDBColumn
+        Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
+        DataBinding.FieldName = 'ServiceDate'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'MMMM YYYY'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 204
       end
-      object PaidKindName: TcxGridDBColumn
-        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-        DataBinding.FieldName = 'PaidKindName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 65
-      end
-      object BusinessName: TcxGridDBColumn
-        Caption = #1041#1080#1079#1085#1077#1089
-        DataBinding.FieldName = 'BusinessName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 96
-      end
-      object AccountName: TcxGridDBColumn
-        Caption = #1057#1095#1077#1090
-        DataBinding.FieldName = 'AccountName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 121
-      end
       object TotalSumm: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072
+        Caption = #1057#1091#1084#1084#1072' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
         DataBinding.FieldName = 'TotalSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -228,13 +206,13 @@ object LossPersonalJournalForm: TLossPersonalJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 123
       end
-      object isList: TcxGridDBColumn
-        Caption = #1044#1083#1103' '#1089#1087#1080#1089#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
-        DataBinding.FieldName = 'isList'
+      object Comment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 58
+        Width = 96
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -698,12 +676,6 @@ object LossPersonalJournalForm: TLossPersonalJournalForm
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inJuridicalBasisId'
-        Value = Null
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 24
@@ -793,8 +765,8 @@ object LossPersonalJournalForm: TLossPersonalJournalForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 248
-    Top = 216
+    Left = 240
+    Top = 224
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart

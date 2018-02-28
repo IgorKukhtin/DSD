@@ -48,7 +48,7 @@ type
     StatusCode: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
-    JuridicalBasisName: TcxGridDBColumn;
+    ServiceDate: TcxGridDBColumn;
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
@@ -77,15 +77,12 @@ type
     spMovementReCompleteAll: TdsdStoredProc;
     bbReCompleteAll: TdxBarButton;
     actReCompleteAll: TdsdExecStoredProc;
-    BusinessName: TcxGridDBColumn;
-    AccountName: TcxGridDBColumn;
-    PaidKindName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
     MovementProtocolOpenForm: TdsdOpenForm;
     bbMovementProtocol: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
-    isList: TcxGridDBColumn;
     actRefreshStart: TdsdDataSetRefresh;
   private
   public
