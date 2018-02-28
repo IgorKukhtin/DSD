@@ -1309,8 +1309,29 @@ object ReturnInForm: TReturnInForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SaleMI_Id'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperPriceList'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
-    Left = 246
+    Left = 22
     Top = 351
   end
   object spSelectMI: TdsdStoredProc
@@ -2129,7 +2150,7 @@ object ReturnInForm: TReturnInForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PriceSale'
+          Name = 'OperPriceList'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'OperPriceList'
@@ -3547,16 +3568,16 @@ object ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PriceSale'
+        Name = 'OperPriceList'
         Value = Null
         Component = FormParams
-        ComponentItem = 'PriceSale'
+        ComponentItem = 'OperPriceList'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 56
-    Top = 368
+    Left = 144
+    Top = 176
   end
   object spInsertUpdateMIMaster_BarCode: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_ReturnIn'
@@ -3648,7 +3669,7 @@ object ReturnInForm: TReturnInForm
         Name = 'ioOperPriceList'
         Value = Null
         Component = FormParams
-        ComponentItem = 'PriceSale'
+        ComponentItem = 'OperPriceList'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -69,7 +69,7 @@ type
     CurrencyName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     OperPrice: TcxGridDBColumn;
-    PriceSale: TcxGridDBColumn;
+    OperPriceList: TcxGridDBColumn;
     BrandName: TcxGridDBColumn;
     PeriodName: TcxGridDBColumn;
     PeriodYear: TcxGridDBColumn;

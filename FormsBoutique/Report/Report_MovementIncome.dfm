@@ -4,8 +4,10 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
   ClientWidth = 1065
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -292
+  ExplicitTop = -59
   ExplicitWidth = 1081
-  ExplicitHeight = 526
+  ExplicitHeight = 523
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -152,7 +154,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummSale
+              Column = TotalSummPriceListLast
             end
             item
               Format = ',0.####'
@@ -183,7 +185,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummSale
+              Column = TotalSummPriceListLast
             end
             item
               Format = ',0.####'
@@ -357,7 +359,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             Width = 80
           end
           object OperPriceList: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' ('#1087#1088#1072#1081#1089')'
+            Caption = #1062#1077#1085#1072' '#1055#1088#1072#1081#1089' ('#1076#1086#1082'.)'
             DataBinding.FieldName = 'OperPriceList'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -366,7 +368,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             Width = 58
           end
           object TotalSummPriceList: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' ('#1087#1088#1072#1081#1089')'
+            Caption = #1057#1091#1084#1084#1072' '#1055#1088#1072#1081#1089' ('#1076#1086#1082'.)'
             DataBinding.FieldName = 'TotalSummPriceList'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -374,26 +376,24 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 110
           end
-          object PriceSale: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1090#1077#1082'. ('#1087#1088#1072#1081#1089') '
-            DataBinding.FieldName = 'PriceSale'
+          object OperPriceListLast: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1055#1088#1072#1081#1089' ('#1089#1077#1075#1086#1076#1085#1103')'
+            DataBinding.FieldName = 'OperPriceListLast'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1077#1085#1072' '#1090#1077#1082#1091#1097#1072#1103' ('#1087#1088#1072#1081#1089') '
             Width = 79
           end
-          object TotalSummSale: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1090#1077#1082'. ('#1087#1088#1072#1081#1089')'
-            DataBinding.FieldName = 'TotalSummSale'
+          object TotalSummPriceListLast: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1055#1088#1072#1081#1089' ('#1089#1077#1075#1086#1076#1085#1103')'
+            DataBinding.FieldName = 'TotalSummPriceListLast'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1090#1077#1082#1091#1097#1072#1103' ('#1087#1088#1072#1081#1089')'
             Width = 102
           end
           object CompositionGroupName: TcxGridDBColumn

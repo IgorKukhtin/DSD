@@ -7,10 +7,10 @@ CREATE OR REPLACE FUNCTION gpGet_MIReturnIn_Partion_byBarcode(
     IN inBarCode           TVarChar   , --
     IN inSession           TVarChar     -- сессия пользователя
 )
-RETURNS TABLE (GoodsId    Integer
-             , PartionId  Integer
-             , SaleMI_Id  Integer
-             , PriceSale  TFloat
+RETURNS TABLE (GoodsId        Integer
+             , PartionId      Integer
+             , SaleMI_Id      Integer
+             , OperPriceList  TFloat
               )
 AS
 $BODY$
@@ -103,10 +103,10 @@ BEGIN
      -- Результат
      RETURN QUERY
        
-       SELECT _tmpData.GoodsId            AS GoodsId
-            , _tmpData.PartionId          AS PartionId
-            , _tmpData.MI_Id              AS SaleMI_Id
-            , _tmpData.PriceSale ::TFloat AS PriceSale
+       SELECT _tmpData.GoodsId                 AS GoodsId
+            , _tmpData.PartionId               AS PartionId
+            , _tmpData.MI_Id                   AS SaleMI_Id
+            , _tmpData.OperPriceList :: TFloat AS OperPriceList
        FROM _tmpData;
 
 END;

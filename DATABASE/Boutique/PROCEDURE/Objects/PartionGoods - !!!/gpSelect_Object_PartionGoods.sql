@@ -22,7 +22,7 @@ RETURNS TABLE (
            , CurrencyName         TVarChar  
            , Amount               TFloat
            , OperPrice            TFloat  
-           , PriceSale            TFloat  
+           , OperPriceList        TFloat  
            , BrandName            TVarChar  
            , PeriodName           TVarChar  
            , PeriodYear           Integer  
@@ -67,7 +67,7 @@ BEGIN
            , Object_Currency.ValueData           AS CurrencyName
            , Object_PartionGoods.Amount          AS Amount
            , Object_PartionGoods.OperPrice       AS OperPrice
-           , Object_PartionGoods.PriceSale       AS PriceSale
+           , Object_PartionGoods.OperPriceList   AS OperPriceList
            , Object_Brand.ValueData              AS BrandName
            , Object_Period.ValueData             AS PeriodName
            , Object_PartionGoods.PeriodYear      AS PeriodYear

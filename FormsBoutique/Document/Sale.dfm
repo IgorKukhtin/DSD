@@ -1315,6 +1315,22 @@ object SaleForm: TSaleForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperPriceList'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 246
     Top = 351
@@ -1690,10 +1706,10 @@ object SaleForm: TSaleForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGet_Partion_byBarcode
+      StoredProc = spGet_Partion_byBarCode
       StoredProcList = <
         item
-          StoredProc = spGet_Partion_byBarcode
+          StoredProc = spGet_Partion_byBarCode
         end
         item
           StoredProc = spInsertUpdateMIMaster_BarCode
@@ -2145,7 +2161,7 @@ object SaleForm: TSaleForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PriceSale'
+          Name = 'OperPriceList'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'OperPriceList'
@@ -3448,14 +3464,6 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioDiscountSaleKindId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'DiscountSaleKindId'
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inIsPay'
         Value = 'False'
         Component = cbisPay
@@ -3478,15 +3486,6 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioChangePercent'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'ChangePercent'
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'ioSummChangePercent'
         Value = '0'
         DataType = ftFloat
@@ -3494,183 +3493,12 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioSummChangePercent'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummChangePercent'
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outOperPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'OperPrice'
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outCountForPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'CountForPrice'
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outTotalSumm'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'TotalSumm'
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outTotalSummBalance'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'TotalSummBalance'
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'ioOperPriceList'
         Value = Null
         Component = FormParams
-        ComponentItem = 'PriceSale'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioOperPriceList'
-        Value = Null
-        Component = MasterCDS
         ComponentItem = 'OperPriceList'
         DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outTotalSummPriceList'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'TotalSummPriceList'
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outCurrencyValue'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'CurrencyValue'
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outParValue'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'ParValue'
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outTotalChangePercent'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'TotalChangePercent'
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outTotalChangePercentPay'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'TotalChangePercentPay'
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outTotalPay'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'TotalPay'
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outTotalPayOth'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'TotalPayOth'
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outTotalCountReturn'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'TotalCountReturn'
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outTotalReturn'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'TotalReturn'
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outTotalPayReturn'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'TotalPayReturn'
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outTotalSummToPay'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'TotalSummToPay'
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outTotalSummDebt'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'TotalSummDebt'
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outDiscountSaleKindName'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'DiscountSaleKindName'
-        DataType = ftString
-        ParamType = ptUnknown
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -3690,11 +3518,11 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 54
+    Left = 78
     Top = 359
   end
-  object spGet_Partion_byBarcode: TdsdStoredProc
-    StoredProcName = 'gpGet_MISale_Partion_byBarcode'
+  object spGet_Partion_byBarCode: TdsdStoredProc
+    StoredProcName = 'gpGet_MISale_Partion_byBarCode'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -3722,16 +3550,16 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PriceSale'
+        Name = 'OperPriceList'
         Value = 42864d
         Component = FormParams
-        ComponentItem = 'PriceSale'
+        ComponentItem = 'OperPriceList'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
-    Top = 400
+    Top = 376
   end
   object spSelectPrint_Check: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Check_Print'
@@ -3771,8 +3599,8 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 64
-    Top = 407
+    Left = 328
+    Top = 87
   end
   object spGet_New: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale'

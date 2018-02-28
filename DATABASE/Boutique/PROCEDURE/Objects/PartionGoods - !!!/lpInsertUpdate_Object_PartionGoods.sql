@@ -299,7 +299,7 @@ BEGIN
               , Amount               = inAmount
               , OperPrice            = inOperPrice
               , CountForPrice        = inCountForPrice
-              , PriceSale            = CASE WHEN vbPriceList_change = TRUE THEN inOperPriceList ELSE Object_PartionGoods.PriceSale END
+              , OperPriceList        = CASE WHEN vbPriceList_change = TRUE THEN inOperPriceList ELSE Object_PartionGoods.OperPriceList END
               , BrandId              = inBrandId
               , PeriodId             = inPeriodId
               , PeriodYear           = inPeriodYear
@@ -320,7 +320,7 @@ BEGIN
      IF NOT FOUND THEN
         -- добавили новый элемент
         INSERT INTO Object_PartionGoods (MovementItemId, MovementId, PartnerId, UnitId, OperDate, GoodsId, GoodsItemId
-                                       , CurrencyId, Amount, OperPrice, CountForPrice, PriceSale, BrandId, PeriodId, PeriodYear
+                                       , CurrencyId, Amount, OperPrice, CountForPrice, OperPriceList, BrandId, PeriodId, PeriodYear
                                        , FabrikaId, GoodsGroupId, MeasureId
                                        , CompositionId, GoodsInfoId, LineFabricaId
                                        , LabelId, CompositionGroupId, GoodsSizeId, JuridicalId)
@@ -351,8 +351,8 @@ BEGIN
                                     -- только для документа inMovementId
                                   , JuridicalId            = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN zfConvert_IntToNull (inJuridicalId) ELSE Object_PartionGoods.JuridicalId   END
                                   -- , OperPrice              = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN inOperPrice                         ELSE Object_PartionGoods.OperPrice     END
-                                  -- , CountForPrice          = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN inCountForPrice                     ELSE Object_PartionGoods.CountForPrice END
-                                  , PriceSale              = CASE WHEN vbPriceList_change = TRUE THEN inOperPriceList ELSE Object_PartionGoods.PriceSale END
+                                  -- , CountForPrice       = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN inCountForPrice                     ELSE Object_PartionGoods.CountForPrice END
+                                  , OperPriceList          = CASE WHEN vbPriceList_change = TRUE THEN inOperPriceList ELSE Object_PartionGoods.OperPriceList END
      WHERE Object_PartionGoods.MovementItemId <> inMovementItemId
        AND Object_PartionGoods.GoodsId        = inGoodsId;
 
@@ -360,6 +360,7 @@ BEGIN
      -- cохранили Цену в истории - !!!Кроме Sybase!!!
      IF vbPriceList_change = TRUE AND inUserId <> zc_User_Sybase()
      THEN
+         -- Здесь еще Update - Object_PartionGoods.OperPriceList
          PERFORM gpInsertUpdate_ObjectHistory_PriceListItemLast (ioId         := NULL                  -- сам найдет нужный Id
                                                                , inPriceListId:= zc_PriceList_Basis()  -- !!!Базовый Прайс!!!
                                                                , inGoodsId    := inGoodsId
@@ -369,6 +370,7 @@ BEGIN
                                                                , inSession    := inUserId :: TVarChar
                                                                 );
      END IF;
+
 
 END;
 $BODY$

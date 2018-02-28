@@ -819,7 +819,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PriceSale'
+          Name = 'OperPriceList'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'OperPriceList'

@@ -226,9 +226,9 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         Options.Editing = False
         Width = 65
       end
-      object ValuePrice: TcxGridDBColumn
+      object ValueDiscount: TcxGridDBColumn
         Caption = '% '#1089#1082'.'
-        DataBinding.FieldName = 'ValuePrice'
+        DataBinding.FieldName = 'ValueDiscount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taCenter
@@ -236,15 +236,15 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         Options.Editing = False
         Width = 70
       end
-      object PriceSale: TcxGridDBColumn
+      object OperPriceList: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1043#1056#1053
-        DataBinding.FieldName = 'PriceSale'
+        DataBinding.FieldName = 'OperPriceList'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 65
       end
-      object GoodsisErased: TcxGridDBColumn
+      object GoodsIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         Visible = False
@@ -766,10 +766,10 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProcPrint
+      StoredProc = spSelect_Print
       StoredProcList = <
         item
-          StoredProc = dsdStoredProcPrint
+          StoredProc = spSelect_Print
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1087#1088#1072#1081#1089#1072
       Hint = #1055#1077#1095#1072#1090#1100' '#1087#1088#1072#1081#1089#1072
@@ -1019,13 +1019,13 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         Column = GoodsCode
       end
       item
-        Column = ValuePrice
+        Column = ValueDiscount
       end>
     SummaryItemList = <>
     Left = 192
     Top = 256
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 296
     Top = 200
   end
@@ -1100,7 +1100,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         Name = 'inValue'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'ValuePrice'
+        ComponentItem = 'ValueDiscount'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1156,7 +1156,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
     Left = 536
     Top = 168
   end
-  object dsdStoredProcPrint: TdsdStoredProc
+  object spSelect_Print: TdsdStoredProc
     StoredProcName = 'gpSelect_ObjectHistory_DiscountPeriodItem_Print'
     DataSet = PrintItemsCDS
     DataSets = <

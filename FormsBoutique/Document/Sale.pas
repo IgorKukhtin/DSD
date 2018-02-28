@@ -170,7 +170,7 @@ type
     actUpdateDataSource: TdsdUpdateDataSet;
     spInsertUpdateMIMaster_BarCode: TdsdStoredProc;
     clBarCode: TcxGridDBColumn;
-    spGet_Partion_byBarcode: TdsdStoredProc;
+    spGet_Partion_byBarCode: TdsdStoredProc;
     BarCode_str: TcxGridDBColumn;
     actPrintCheck: TdsdPrintAction;
     bbPrintCheck: TdxBarButton;

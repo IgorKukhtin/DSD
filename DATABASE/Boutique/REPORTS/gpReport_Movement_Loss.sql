@@ -50,11 +50,12 @@ RETURNS TABLE (
                OperPrice           TFloat,
                CountForPrice       TFloat,
                OperPriceList       TFloat,
-               PriceSale           TFloat,
+               OperPriceListLast   TFloat,
                Amount              TFloat,
-               TotalSumm           TFloat,
-               TotalSummPriceList  TFloat,
-               TotalSummSale       TFloat
+
+               TotalSumm              TFloat,
+               TotalSummPriceList     TFloat,
+               TotalSummPriceListLast TFloat
   )
 AS
 $BODY$
@@ -118,14 +119,11 @@ BEGIN
                           , Object_PartionGoods.PeriodYear
 
                           , COALESCE (MIFloat_CountForPrice.ValueData, 1)      AS CountForPrice
-                          , SUM (COALESCE (MI_Loss.Amount, 0))            AS Amount
-                          , SUM (CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 1) <> 0
-                                          THEN CAST (COALESCE (MI_Loss.Amount, 0) * COALESCE (MIFloat_OperPrice.ValueData, 0) / COALESCE (MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
-                                      ELSE CAST ( COALESCE (MI_Loss.Amount, 0) * COALESCE (MIFloat_OperPrice.ValueData, 0) AS NUMERIC (16, 2))
-                                 END) AS TotalSumm
+                          , SUM (COALESCE (MI_Loss.Amount, 0))                 AS Amount
 
-                          , SUM (COALESCE (MI_Loss.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0))  AS TotalSummPriceList
-                          , SUM (COALESCE (MI_Loss.Amount, 0) * COALESCE (Object_PartionGoods.PriceSale,0))     AS TotalSummSale
+                          , SUM (zfCalc_SummIn (MI_Loss.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData)) AS TotalSumm
+                          , SUM (zfCalc_SummPriceList (MI_Loss.Amount, MIFloat_OperPriceList.ValueData))                       AS TotalSummPriceList
+                          , SUM (zfCalc_SummPriceList (MI_Loss.Amount, Object_PartionGoods.OperPriceList))                     AS TotalSummPriceListLast
                      FROM tmpMovementLoss
                           INNER JOIN MovementItem AS MI_Loss 
                                                   ON MI_Loss.MovementId = tmpMovementLoss.MovementId
@@ -219,12 +217,12 @@ BEGIN
            
            , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSumm  / tmpData.Amount ELSE 0 END          ::TFloat AS OperPrice
            , tmpData.CountForPrice          ::TFloat
-           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSummPriceList  / tmpData.Amount ELSE 0 END ::TFloat AS OperPriceList
-           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSummSale  / tmpData.Amount ELSE 0 END      ::TFloat AS PriceSale
+           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSummPriceList     / tmpData.Amount ELSE 0 END ::TFloat AS OperPriceList
+           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSummPriceListLast / tmpData.Amount ELSE 0 END ::TFloat AS OperPriceListLast
            , tmpData.Amount                 ::TFloat
            , tmpData.TotalSumm              ::TFloat
-           , tmpData.TotalSummPriceList     ::TFloat 
-           , tmpData.TotalSummSale          ::TFloat 
+           , tmpData.TotalSummPriceList     ::TFloat AS TotalSummPriceList
+           , tmpData.TotalSummPriceListLast ::TFloat AS TotalSummPriceListLast 
            
         FROM tmpData
             LEFT JOIN Object AS Object_From    ON Object_From.Id    = tmpData.FromId

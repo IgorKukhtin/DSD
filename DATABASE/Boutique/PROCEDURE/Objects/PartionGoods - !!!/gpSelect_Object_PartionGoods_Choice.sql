@@ -43,7 +43,6 @@ RETURNS TABLE (Id                   Integer
              , DiscountTax          TFloat
              , PartionId            Integer
              , SybaseId             Integer
-
               )
 AS
 $BODY$
@@ -111,7 +110,7 @@ BEGIN
             , (tmpContainer.Amount + tmpContainer.AmountDebt) :: TFloat AS RemainsWithDebt
 
             , Object_PartionGoods.OperPrice       AS OperPrice
-            , Object_PartionGoods.PriceSale       AS OperPriceList
+            , Object_PartionGoods.OperPriceList   AS OperPriceList
             , Object_Brand.ValueData              AS BrandName
             , Object_Period.ValueData             AS PeriodName
             , Object_PartionGoods.PeriodYear      AS PeriodYear

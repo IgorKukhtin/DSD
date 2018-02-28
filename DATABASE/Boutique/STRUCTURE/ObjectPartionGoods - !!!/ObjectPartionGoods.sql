@@ -22,7 +22,7 @@ CREATE TABLE Object_PartionGoods(
    Amount              TFloat  NOT NULL,
    OperPrice	       TFloat  NOT NULL,
    CountForPrice       TFloat  NOT NULL DEFAULT 1,
-   PriceSale           TFloat  NOT NULL,
+   OperPriceList       TFloat  NOT NULL,
    -- DiscountPeriod      TFloat  NOT NULL,
    BrandId             Integer ,
    PeriodId            Integer ,

@@ -6,10 +6,10 @@ CREATE OR REPLACE FUNCTION gpGet_MISale_Partion_byBarcode(
     IN inBarCode           TVarChar   , --
     IN inSession           TVarChar     -- сессия пользователя
 )
-RETURNS TABLE (PartionId   Integer
-             , GoodsId     Integer
-             , GoodsSizeId Integer
-             , PriceSale   TFloat
+RETURNS TABLE (PartionId     Integer
+             , GoodsId       Integer
+             , GoodsSizeId   Integer
+             , OperPriceList TFloat
               )
 AS
 $BODY$
@@ -104,7 +104,7 @@ BEGIN
        SELECT Object_PartionGoods.MovementItemId       AS PartionId
             , Object_PartionGoods.GoodsId              AS GoodsId
             , Object_PartionGoods.GoodsSizeId          AS GoodsSizeId
-            , Object_PartionGoods.PriceSale :: TFloat  AS PriceSale
+            , Object_PartionGoods.OperPriceList        AS OperPriceList
        FROM Object_PartionGoods
        WHERE Object_PartionGoods.MovementItemId = vbPartionId;
 

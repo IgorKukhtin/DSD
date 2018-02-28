@@ -239,9 +239,9 @@ object PartionGoodsForm: TPartionGoodsForm
         HeaderAlignmentVert = vaCenter
         Width = 65
       end
-      object PriceSale: TcxGridDBColumn
+      object OperPriceList: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
-        DataBinding.FieldName = 'PriceSale'
+        DataBinding.FieldName = 'OperPriceList'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 65

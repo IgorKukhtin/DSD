@@ -1,8 +1,9 @@
--- Function: lpUpdate_Object_PartionGoods_Goods
+-- Function: lpUpdate_Object_PartionGoods_OperPriceList
 
 DROP FUNCTION IF EXISTS lpUpdate_Object_PartionGoods_PriceSale (Integer, Integer);
+DROP FUNCTION IF EXISTS lpUpdate_Object_PartionGoods_OperPriceList (Integer, Integer);
 
-CREATE OR REPLACE FUNCTION lpUpdate_Object_PartionGoods_PriceSale(
+CREATE OR REPLACE FUNCTION lpUpdate_Object_PartionGoods_OperPriceList(
     IN inGoodsId                Integer,       -- “овар
     IN inUserId                 Integer        --
 )
@@ -12,7 +13,7 @@ $BODY$
 BEGIN
 
        -- изменили во ¬сех парти€х “овара
-       UPDATE Object_PartionGoods SET PriceSale = COALESCE (OHF_PriceListItem_Value.ValueData, 0)
+       UPDATE Object_PartionGoods SET OperPriceList = COALESCE (OHF_PriceListItem_Value.ValueData, 0)
        FROM ObjectLink AS OL_PriceListItem_Goods
             INNER JOIN ObjectLink AS OL_PriceListItem_PriceList
                                   ON OL_PriceListItem_PriceList.ObjectId      = OL_PriceListItem_Goods.ObjectId
@@ -28,7 +29,7 @@ BEGIN
        WHERE Object_PartionGoods.GoodsId          = inGoodsId
          AND OL_PriceListItem_Goods.ChildObjectId = Object_PartionGoods.GoodsId
          AND OL_PriceListItem_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
-         AND Object_PartionGoods.PriceSale        <> COALESCE (OHF_PriceListItem_Value.ValueData, 0) -- мен€ем - только если значение отличаетс€
+         AND Object_PartionGoods.OperPriceList    <> COALESCE (OHF_PriceListItem_Value.ValueData, 0) -- мен€ем - только если значение отличаетс€
       ;
 
                                      
@@ -44,7 +45,7 @@ $BODY$
 */
 /*
        -- изменили во ¬сех парти€х “овара
-       UPDATE Object_PartionGoods SET PriceSale = COALESCE (OHF_PriceListItem_Value.ValueData, 0)
+       UPDATE Object_PartionGoods SET OperPriceList = COALESCE (OHF_PriceListItem_Value.ValueData, 0)
        FROM ObjectLink AS OL_PriceListItem_Goods
             INNER JOIN ObjectLink AS OL_PriceListItem_PriceList
                                   ON OL_PriceListItem_PriceList.ObjectId      = OL_PriceListItem_Goods.ObjectId
@@ -59,8 +60,8 @@ $BODY$
                                         AND OHF_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
        WHERE OL_PriceListItem_Goods.ChildObjectId = Object_PartionGoods.GoodsId
          AND OL_PriceListItem_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
-         AND COALESCE (Object_PartionGoods.PriceSale, 0)        <> COALESCE (OHF_PriceListItem_Value.ValueData, 0) -- мен€ем - только если значение отличаетс€
+         AND COALESCE (Object_PartionGoods.OperPriceList, 0)        <> COALESCE (OHF_PriceListItem_Value.ValueData, 0) -- мен€ем - только если значение отличаетс€
       ;
 */
 -- тест
--- SELECT * FROM lpUpdate_Object_PartionGoods_PriceSale()
+-- SELECT * FROM lpUpdate_Object_PartionGoods_OperPriceList()

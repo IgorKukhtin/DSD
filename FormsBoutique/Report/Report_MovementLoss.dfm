@@ -4,8 +4,9 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
   ClientWidth = 1103
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -330
   ExplicitWidth = 1119
-  ExplicitHeight = 463
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -159,7 +160,7 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummSale
+              Column = TotalSummPriceListLast
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -180,7 +181,7 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummSale
+              Column = TotalSummPriceListLast
             end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
@@ -340,7 +341,7 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
             Width = 102
           end
           object OperPriceList: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' ('#1087#1088#1072#1081#1089')'
+            Caption = #1062#1077#1085#1072' '#1055#1088#1072#1081#1089' ('#1076#1086#1082'.)'
             DataBinding.FieldName = 'OperPriceList'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -349,7 +350,7 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
             Width = 58
           end
           object TotalSummPriceList: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' ('#1087#1088#1072#1081#1089')'
+            Caption = #1057#1091#1084#1084#1072' '#1055#1088#1072#1081#1089' ('#1076#1086#1082'.)'
             DataBinding.FieldName = 'TotalSummPriceList'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -357,9 +358,9 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
             HeaderAlignmentVert = vaCenter
             Width = 110
           end
-          object PriceSale: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1090#1077#1082'. ('#1087#1088#1072#1081#1089') '
-            DataBinding.FieldName = 'PriceSale'
+          object OperPriceListLast: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1055#1088#1072#1081#1089' ('#1089#1077#1075#1086#1076#1085#1103')'
+            DataBinding.FieldName = 'OperPriceListLast'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Visible = False
@@ -367,9 +368,9 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
             HeaderAlignmentVert = vaCenter
             Width = 79
           end
-          object TotalSummSale: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1090#1077#1082'. ('#1087#1088#1072#1081#1089')'
-            DataBinding.FieldName = 'TotalSummSale'
+          object TotalSummPriceListLast: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1055#1088#1072#1081#1089' ('#1089#1077#1075#1086#1076#1085#1103')'
+            DataBinding.FieldName = 'TotalSummPriceListLast'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Visible = False

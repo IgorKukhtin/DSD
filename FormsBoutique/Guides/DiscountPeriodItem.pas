@@ -46,7 +46,7 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     Name: TcxGridDBColumn;
     StartDate: TcxGridDBColumn;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     Panel: TPanel;
     cxLabel1: TcxLabel;
     edUnit: TcxButtonEdit;
@@ -56,7 +56,7 @@ type
     cxLabel3: TcxLabel;
     edOperDate: TcxDateEdit;
     EndDate: TcxGridDBColumn;
-    ValuePrice: TcxGridDBColumn;
+    ValueDiscount: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
     actDiscountPeriodGoods: TdsdOpenForm;
     bbPriceListGoodsItem: TdxBarButton;
@@ -65,7 +65,7 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    GoodsisErased: TcxGridDBColumn;
+    GoodsIsErased: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocol: TdxBarButton;
     ObjectId: TcxGridDBColumn;
@@ -74,7 +74,7 @@ type
     UpdateDate: TcxGridDBColumn;
     InsertDate: TcxGridDBColumn;
     InsertName: TcxGridDBColumn;
-    dsdStoredProcPrint: TdsdStoredProc;
+    spSelect_Print: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     PrintItemsCDS: TClientDataSet;
     bbPrint: TdxBarButton;

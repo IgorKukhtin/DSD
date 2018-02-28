@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_DiscountPeriodItem(
 )                              
 RETURNS TABLE  (  Id Integer , ObjectId Integer
                 , StartDate TDateTime, EndDate TDateTime
-                , ValuePrice TFloat
+                , ValueDiscount TFloat
                 , InsertName TVarChar, UpdateName TVarChar
                 , InsertDate TDateTime, UpdateDate TDateTime
 
@@ -27,7 +27,7 @@ RETURNS TABLE  (  Id Integer , ObjectId Integer
                 , GroupNameFull        TVarChar  
                 , CurrencyName         TVarChar  
                 , OperPrice            TFloat  
-                , PriceSale            TFloat  
+                , OperPriceList        TFloat  
                 , BrandName            TVarChar  
                 , PeriodName           TVarChar  
                 , PeriodYear           Integer  
@@ -57,7 +57,7 @@ BEGIN
            
                         , ObjectHistory_DiscountPeriodItem.StartDate
                         , ObjectHistory_DiscountPeriodItem.EndDate
-                        , ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData AS ValuePrice
+                        , ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData AS ValueDiscount
 
                    FROM ObjectLink AS ObjectLink_DiscountPeriodItem_Unit
                         LEFT JOIN ObjectLink AS ObjectLink_DiscountPeriodItem_Goods
@@ -83,7 +83,7 @@ BEGIN
                          , Object_PartionGoods.GoodsId         AS GoodsId
                          , Object_Currency.ValueData           AS CurrencyName
                          , Object_PartionGoods.OperPrice       AS OperPrice
-                         , Object_PartionGoods.PriceSale       AS PriceSale
+                         , Object_PartionGoods.OperPriceList   AS OperPriceList
                          , Object_Brand.ValueData              AS BrandName
                          , Object_Period.ValueData             AS PeriodName
                          , Object_PartionGoods.PeriodYear      AS PeriodYear
@@ -125,7 +125,7 @@ BEGIN
 
            , tmpDiscount.StartDate
            , tmpDiscount.EndDate
-           , COALESCE(tmpDiscount.ValuePrice, NULL) ::TFloat  AS ValuePrice
+           , COALESCE(tmpDiscount.ValueDiscount, NULL) ::TFloat  AS ValueDiscount
 
            , Object_Insert.ValueData   AS InsertName
            , Object_Update.ValueData   AS UpdateName
@@ -141,8 +141,8 @@ BEGIN
            , Object_Goods.isErased               AS Goods_isErased 
            , Object_GroupNameFull.ValueData      As GroupNameFull
            , tmpPartionGoods.CurrencyName
-           , tmpPartionGoods.OperPrice    ::Tfloat
-           , tmpPartionGoods.PriceSale    ::Tfloat
+           , tmpPartionGoods.OperPrice     :: TFloat
+           , tmpPartionGoods.OperPriceList :: TFloat
            , tmpPartionGoods.BrandName
            , tmpPartionGoods.PeriodName
            , tmpPartionGoods.PeriodYear
@@ -193,7 +193,7 @@ BEGIN
            
                         , ObjectHistory_DiscountPeriodItem.StartDate
                         , ObjectHistory_DiscountPeriodItem.EndDate
-                        , ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData AS ValuePrice
+                        , ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData AS ValueDiscount
 
                    FROM ObjectLink AS ObjectLink_DiscountPeriodItem_Unit
                         LEFT JOIN ObjectLink AS ObjectLink_DiscountPeriodItem_Goods
@@ -220,7 +220,7 @@ BEGIN
                          , Object_PartionGoods.GoodsId         AS GoodsId
                          , Object_Currency.ValueData           AS CurrencyName
                          , Object_PartionGoods.OperPrice       AS OperPrice
-                         , Object_PartionGoods.PriceSale       AS PriceSale
+                         , Object_PartionGoods.OperPriceList   AS OperPriceList
                          , Object_Brand.ValueData              AS BrandName
                          , Object_Period.ValueData             AS PeriodName
                          , Object_PartionGoods.PeriodYear      AS PeriodYear
@@ -263,7 +263,7 @@ BEGIN
 
            , tmpDiscount.StartDate
            , tmpDiscount.EndDate
-           , tmpDiscount.ValuePrice
+           , tmpDiscount.ValueDiscount
 
            , Object_Insert.ValueData   AS InsertName
            , Object_Update.ValueData   AS UpdateName
@@ -279,8 +279,8 @@ BEGIN
            , Object_Goods.isErased 
            , Object_GroupNameFull.ValueData      As GroupNameFull
            , tmpPartionGoods.CurrencyName
-           , tmpPartionGoods.OperPrice    ::Tfloat
-           , tmpPartionGoods.PriceSale    ::Tfloat
+           , tmpPartionGoods.OperPrice     :: TFloat
+           , tmpPartionGoods.OperPriceList :: TFloat
            , tmpPartionGoods.BrandName
            , tmpPartionGoods.PeriodName
            , tmpPartionGoods.PeriodYear

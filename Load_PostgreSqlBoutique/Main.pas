@@ -7460,6 +7460,49 @@ begin
         Add('     , Child.Id_Postgres as ChildId');
         Add('     , case when ObjectId = 4646 then 0 else ' + IntToStr(BankAccountId) + ' end as BankAccountId');
 
+        Add('     , case');
+        Add('       when ObjectId = 235   then ''бутик "MaxMara"''');   //магазин MaxMara
+        Add('       when ObjectId = 204   then ''бутик "Terri"''');     //магазин Terri-Luxury
+        Add('       when ObjectId = 240   then ''бутик "5 Элемент"'''); //магазин 5 Элемент
+        Add('       when ObjectId = 1121  then ''бутик "ЧАДО"''');      //магазин CHADO
+        Add('       when ObjectId = 234   then ''бутик "Caboy"''');     //магазин SAVOY
+        Add('       when ObjectId = 11772 then ''бутик "Terri"''');  //магазин Терри-Out
+        Add('       when ObjectId = 978   then ''магазин "Vintag"''');  //магазин Vintag
+        Add('       when ObjectId = 20484 then ''бутик "ESCADA"''');  //магазин ESCADA
+        Add('       when ObjectId = 29018 then ''магазин "Saboy-O"''');  //магазин Savoy-O
+        Add('       when ObjectId = 969   then ''магазин "Терри-Винтаж"''');  //магазин Sopra
+        Add('       when ObjectId = 11932 then ''магазин "Чадо-Винтаж"''');  //магазин CHADO-O
+        Add('       else ''''');
+        Add('       end as NamePrint');
+        Add('     , case');
+        Add('       when ObjectId = 235   then ''ТДК "Босфор", бульвар Катеринославский 2''');   //магазин MaxMara
+        Add('       when ObjectId = 204   then ''ул.Дзержинского,7''');     //магазин Terri-Luxury
+        Add('       when ObjectId = 240   then '''''); //магазин 5 Элемент
+        Add('       when ObjectId = 1121  then ''ул.Дзержинского 35а''');      //магазин CHADO
+        Add('       when ObjectId = 234   then ''ул.Дзержинского,27''');     //магазин SAVOY
+        Add('       when ObjectId = 11772 then ''пр.Карла Маркса 30''');  //магазин Терри-Out
+        Add('       when ObjectId = 978   then ''''');  //магазин Vintag
+        Add('       when ObjectId = 20484 then ''ул.Дзержинского,7''');  //магазин ESCADA
+        Add('       when ObjectId = 29018 then ''''');  //магазин Savoy-O
+        Add('       when ObjectId = 969   then ''ул.Ленина''');  //магазин Sopra
+        Add('       when ObjectId = 11932 then ''''');  //магазин CHADO-O
+        Add('       else ''''');
+        Add('       end as Address');
+        Add('     , case');
+        Add('       when ObjectId = 235   then ''(8056) 374-45-98''');   //магазин MaxMara
+        Add('       when ObjectId = 204   then ''(80562) 36-21-58''');     //магазин Terri-Luxury
+        Add('       when ObjectId = 240   then '''''); //магазин 5 Элемент
+        Add('       when ObjectId = 1121  then ''(8056) 370 45 45''');      //магазин CHADO
+        Add('       when ObjectId = 234   then ''(8056) 3777-555''');     //магазин SAVOY
+        Add('       when ObjectId = 11772 then ''(80562) 36-21-58''');  //магазин Терри-Out
+        Add('       when ObjectId = 978   then ''''');  //магазин Vintag
+        Add('       when ObjectId = 20484 then ''(8056) 373-29-61''');  //магазин ESCADA
+        Add('       when ObjectId = 29018 then ''''');  //магазин Savoy-O
+        Add('       when ObjectId = 969   then ''(80562) 34-72-23''');  //магазин Sopra
+        Add('       when ObjectId = 11932 then ''''');  //магазин CHADO-O
+        Add('       else ''''');
+        Add('       end as Phone');
+
         Add('from dba.Unit');
         Add('     left outer join Unit as Parent on Parent.id = IDParentId ');
         Add('     left outer join Unit as Child on Child.Id = IDChildId');
@@ -7481,6 +7524,7 @@ begin
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inAddress',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inPhone',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inPrint',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inDiscountTax',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
@@ -7498,6 +7542,10 @@ begin
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inAddress').Value:=FieldByName('Address').AsString;
+             toStoredProc.Params.ParamByName('inPhone').Value:=FieldByName('Phone').AsString;
+             toStoredProc.Params.ParamByName('inPrint').Value:=FieldByName('NamePrint').AsString;
+
              toStoredProc.Params.ParamByName('inDiscountTax').Value:=FieldByName('DiscountTax').AsFloat;
              toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('ParentId').AsInteger;
              toStoredProc.Params.ParamByName('inChildId').Value:=FieldByName('ChildId').AsInteger;

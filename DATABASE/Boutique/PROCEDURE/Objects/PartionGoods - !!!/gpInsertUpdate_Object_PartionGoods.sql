@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PartionGoods(
     IN inAmount                 TFloat,        -- Кол-во приход
     IN inOperPrice              TFloat,        -- Цена прихода
     IN inCountForPrice          TFloat,        -- Цена за количество
-    IN inPriceSale              TFloat,        -- Цена продажи, !!!грн!!!
+    IN inOperPriceList          TFloat,        -- Цена продажи, !!!грн!!!
     IN inBrandId                Integer,       -- Торговая марка
     IN inPeriodId               Integer,       -- Сезон
     IN inPeriodYear             Integer,       -- Год
@@ -61,7 +61,7 @@ BEGIN
                                                , inAmount         := inAmount
                                                , inOperPrice      := inOperPrice
                                                , inCountForPrice  := inCountForPrice
-                                               , inPriceSale      := inOperPriceList
+                                               , inOperPriceList  := inOperPriceList
                                                , inBrandId        := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbPartnerId AND OL.DescId = zc_ObjectLink_Partner_Brand())
                                                , inPeriodId       := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbPartnerId AND OL.DescId = zc_ObjectLink_Partner_Period())
                                                , inPeriodYear     := (SELECT ObF.ValueData FROM ObjectFloat AS ObF WHERE ObF.ObjectId = vbPartnerId AND ObF.DescId = zc_ObjectFloat_Partner_PeriodYear()) :: Integer

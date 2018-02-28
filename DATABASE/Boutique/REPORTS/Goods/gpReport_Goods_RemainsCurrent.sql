@@ -140,7 +140,7 @@ BEGIN
                            , Object_PartionGoods.MovementId
                            , CASE WHEN vbUnitId = 0 THEN Object_PartionGoods.OperPrice ELSE 0 END AS OperPrice
                            , Object_PartionGoods.CountForPrice
-                           , Object_PartionGoods.PriceSale  AS OperPriceList
+                           , Object_PartionGoods.OperPriceList
                            -- , CASE WHEN Container.WhereObjectId = Object_PartionGoods.UnitId THEN Object_PartionGoods.Amount ELSE 0 END AS Amount_in
                            , Object_PartionGoods.Amount AS Amount_in
                            , Object_PartionGoods.UnitId     AS UnitId_in

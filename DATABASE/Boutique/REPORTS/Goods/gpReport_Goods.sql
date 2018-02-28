@@ -446,7 +446,7 @@ BEGIN
            , CASE WHEN vbUnitId <> 0 THEN 0 ELSE Object_PartionGoods.OperPrice END   :: TFLoat AS OperPrice     --  продавцам в магазинах ограничиваем инфу
 
              -- !!!ВРЕМЕННО!!!
-           , CASE WHEN COALESCE (Object_PartionGoods.PriceSale, 0) <> COALESCE (tmpPrice.Price, 0)  THEN -1 * CASE WHEN tmpPrice.Price > 0 THEN tmpPrice.Price ELSE Object_PartionGoods.PriceSale END ELSE Object_PartionGoods.PriceSale END :: TFLoat AS OperPriceList
+           , CASE WHEN COALESCE (Object_PartionGoods.OperPriceList, 0) <> COALESCE (tmpPrice.Price, 0)  THEN -1 * CASE WHEN tmpPrice.Price > 0 THEN tmpPrice.Price ELSE Object_PartionGoods.OperPriceList END ELSE Object_PartionGoods.OperPriceList END :: TFLoat AS OperPriceList
 
       FROM Object_PartionGoods
            LEFT JOIN tmpPrice ON 1=1
