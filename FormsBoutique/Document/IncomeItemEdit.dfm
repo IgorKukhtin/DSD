@@ -63,7 +63,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
   object cxLabel7: TcxLabel
     Left = 10
     Top = 186
-    Caption = #1051#1080#1085#1080#1103' '#1082#1086#1083#1083#1077#1082#1094#1080#1080
+    Caption = #1051#1080#1085#1080#1103
   end
   object cxLabel9: TcxLabel
     Left = 289

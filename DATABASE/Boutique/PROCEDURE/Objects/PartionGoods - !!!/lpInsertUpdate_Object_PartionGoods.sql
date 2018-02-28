@@ -65,7 +65,6 @@ $BODY$
    DECLARE vbRePrice_exists   Boolean;
    DECLARE vbId_income_ch     Integer;
    DECLARE vbId_sale_ch       Integer;
-   DECLARE vbId_income_part   Integer;
    DECLARE vbId_sale_part     Integer;
 BEGIN
      -- заменили
@@ -74,8 +73,10 @@ BEGIN
 
      -- 1.0. ДЛЯ ПАРТИИ
      IF -- inUserId <> zc_User_Sybase() AND  - !!!Кроме Sybase!!!
-        inMovementItemId > 0 AND (inGoodsSizeId <> (SELECT COALESCE (Object_PartionGoods.GoodsSizeId, 0) FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
-                               OR inGoodsId     <> inGoodsId_old
+        inMovementItemId > 0 AND (inOperPrice     <> (SELECT COALESCE (Object_PartionGoods.OperPrice, 0)     FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
+                               OR inCountForPrice <> (SELECT COALESCE (Object_PartionGoods.CountForPrice, 0) FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
+                               OR inGoodsSizeId   <> (SELECT COALESCE (Object_PartionGoods.GoodsSizeId, 0)   FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
+                               OR inGoodsId       <> inGoodsId_old
                                  )
      THEN
         -- есть ли ПРОВЕДЕННЫЕ документы - все
@@ -93,7 +94,7 @@ BEGIN
          -- Проверка сразу - ДЛЯ ПАРТИИ
         IF vbId_sale_part > 0
         THEN
-            RAISE EXCEPTION 'Ошибка.Найдено движение <%> № <%> от <%>.Нельзя корректировать <Артикул> или <Размер>.'
+            RAISE EXCEPTION 'Ошибка.Найдено движение <%> № <%> от <%>.Нельзя корректировать <Цена вх.> или <Артикул> или <Размер>.'
                           , (SELECT MovementDesc.ItemName
                              FROM MovementItem
                                   INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
@@ -103,12 +104,12 @@ BEGIN
                           , (SELECT Movement.InvNumber
                              FROM MovementItem
                                   INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
-                             WHERE MovementItem.Id = select * from users order by usersName
+                             WHERE MovementItem.Id = vbId_sale_part
                             )
                           , (SELECT zfConvert_DateToString (Movement.OperDate)
                              FROM MovementItem
                                   INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
-                             WHERE MovementItem.Id = select * from users order by usersName
+                             WHERE MovementItem.Id = vbId_sale_part
                             )
                            ;
         END IF;
@@ -130,7 +131,7 @@ BEGIN
                                   AND ObjectLink_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
                                );
 
-     IF vbRePrice_exists = FALSE THEN
+     IF 1=1 THEN
         -- есть ли ПАРТИИ в ДРУГИХ ПРОВЕДЕННЫХ документах - все
         vbId_income_ch:= (SELECT MovementItem.Id
                           FROM Object_PartionGoods
@@ -146,7 +147,7 @@ BEGIN
                          );
      END IF;
 
-     IF vbRePrice_exists = FALSE AND COALESCE (vbId_income_ch, 0) = 0 THEN
+     IF 1=1 THEN
         -- есть ли ПРОВЕДЕННЫЕ документы - все
         vbId_sale_ch:= (SELECT MovementItem.Id
                         FROM MovementItem
@@ -236,12 +237,52 @@ BEGIN
 
 
      -- 2.1. НАЧАЛО: Определили - можно ли изменять св-ва - !!!Кроме Sybase!!!
-     IF inUserId <> zc_User_Sybase() AND
-        inMovementItemId > 0 AND (inGoodsSizeId <> (SELECT COALESCE (Object_PartionGoods.GoodsSizeId, 0) FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
-                               OR inGoodsId     <> inGoodsId_old
-                                 )
+     IF inUserId <> zc_User_Sybase()
+        AND (vbId_income_ch <> 0 OR vbId_sale_ch <> 0)
+        AND inMovementItemId > 0
+        AND (inCompositionId <> (SELECT COALESCE (Object_PartionGoods.CompositionId, 0) FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
+          OR inGoodsInfoId   <> (SELECT COALESCE (Object_PartionGoods.GoodsInfoId, 0)   FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
+          OR inLineFabricaId <> (SELECT COALESCE (Object_PartionGoods.LineFabricaId, 0) FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
+          OR inLabelId       <> (SELECT COALESCE (Object_PartionGoods.LabelId, 0)       FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
+            )
      THEN
-        -- есть ли ПРОВЕДЕННЫЕ документы - все
+        -- 2.1.1. есть ли ПРОВЕДЕННЫЕ документы - все
+         IF vbId_income_ch > 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Уже есть приход № <%> от <%>.Нельзя корректировать <Цена вх.> или <Состав> или <Описание> или <Линия> или <Название>.'
+                           , (SELECT Movement.InvNumber
+                              FROM MovementItem
+                                   INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                              WHERE MovementItem.Id = vbId_income_ch
+                             )
+                           , (SELECT zfConvert_DateToString (Movement.OperDate)
+                              FROM MovementItem
+                                   INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                              WHERE MovementItem.Id = vbId_income_ch
+                             )
+                            ;
+    
+         -- 2.1.2. есть ли ПРОВЕДЕННЫЕ документы - все
+         ELSE
+             RAISE EXCEPTION 'Ошибка.Найдено движение <%> № <%> от <%>.Нельзя корректировать <Состав> или <Описание> или <Линия> или <Название>.'
+                           , (SELECT MovementDesc.ItemName
+                              FROM MovementItem
+                                   INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                   INNER JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+                              WHERE MovementItem.Id = vbId_sale_ch
+                             )
+                           , (SELECT Movement.InvNumber
+                              FROM MovementItem
+                                   INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                              WHERE MovementItem.Id = vbId_sale_ch
+                             )
+                           , (SELECT zfConvert_DateToString (Movement.OperDate)
+                              FROM MovementItem
+                                   INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                              WHERE MovementItem.Id = vbId_sale_ch
+                             )
+                            ;
+         END IF;
      END IF;
      -- 2. ЗАВЕРШЕНО: Определили - можно ли изменять св-ва - !!!Кроме Sybase!!!
 

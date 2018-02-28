@@ -362,7 +362,28 @@ BEGIN
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), _tmpItem.MovementItemId, _tmpItem.CountForPrice)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_CurrencyValue(), _tmpItem.MovementItemId, _tmpItem.CurrencyValue)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ParValue(),      _tmpItem.MovementItemId, _tmpItem.ParValue)
-     FROM _tmpItem;
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(), _tmpItem.MovementItemId, tmpPrice.ValuePrice)
+     FROM _tmpItem
+          LEFT JOIN (SELECT _tmpItem.GoodsId
+                          , ObjectHistoryFloat_Value.ValueData AS ValuePrice
+                     FROM _tmpItem
+                         INNER JOIN ObjectLink AS ObjectLink_Goods
+                                               ON ObjectLink_Goods.ChildObjectId = _tmpItem.GoodsId
+                                              AND ObjectLink_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
+                         INNER JOIN ObjectLink AS ObjectLink_PriceList
+                                               ON ObjectLink_PriceList.ObjectId      = ObjectLink_Goods.ObjectId
+                                              AND ObjectLink_PriceList.ChildObjectId = zc_PriceList_Basis()  -- !!!Базовый Прайс!!!
+                                              AND ObjectLink_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+             
+                         INNER JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                                  ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_Goods.ObjectId
+                                                 AND ObjectHistory_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
+                                                 AND vbOperDate >= ObjectHistory_PriceListItem.StartDate AND vbOperDate < ObjectHistory_PriceListItem.EndDate
+                         LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value
+                                                      ON ObjectHistoryFloat_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                     AND ObjectHistoryFloat_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                    ) AS tmpPrice ON tmpPrice.GoodsId = _tmpItem.GoodsId
+     ;
      -- 5.0.2. Пересохраним св-ва из партии: <Товар>
      UPDATE MovementItem SET ObjectId = _tmpItem.GoodsId
      FROM _tmpItem

@@ -1091,11 +1091,12 @@ BEGIN
                      INNER JOIN Container ON Container.Id     = _tmpItem_SummClient.ContainerId_Goods
                                          AND Container.Amount < 0
                )
-    -- AND EXISTS (SELECT 1
-    --             FROM _tmpItem
-    --             WHERE _tmpItem.GoodsId <> (SELECT Object.Id FROM Object WHERE Object.ObjectCode = 103288 AND Object.Descid = zc_Object_Goods())
+     AND EXISTS (SELECT 1
+                 FROM _tmpItem
+                 WHERE _tmpItem.GoodsId <> (SELECT Object.Id FROM Object WHERE Object.ObjectCode = 97352 AND Object.Descid = zc_Object_Goods())
+    --               AND _tmpItem.GoodsId <> (SELECT Object.Id FROM Object WHERE Object.ObjectCode = 103288 AND Object.Descid = zc_Object_Goods())
     --               AND _tmpItem.GoodsId <> (SELECT Object.Id FROM Object WHERE Object.ObjectCode = 139794 AND Object.Descid = zc_Object_Goods())
-    --            )
+                )
      THEN
          RAISE EXCEPTION 'Ошибка.По Кол-ву НЕ может быть Долга Покупателю, Кол-во = <%> для <%>.'
              , (SELECT zfConvert_FloatToString (Container.Amount)
