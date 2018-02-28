@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PartionGoods (Integer, Integer, Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PartionGoods (Integer, Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PartionGoods (Integer, Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PartionGoods(
  INOUT ioMovementItemId         Integer,       -- Ключ партии            
@@ -30,7 +31,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PartionGoods(
     IN inGoodsSizeId            Integer,       -- Размер товара
     IN inSession                TVarChar       -- сессия пользователя
 )
-RETURNS integer
+RETURNS Integer
 AS
 $BODY$
   DECLARE vbUserId Integer;

@@ -102,9 +102,9 @@ BEGIN
                           , CASE WHEN inisPartner = TRUE THEN Object_PartionGoods.PartnerId ELSE 0 END                           AS PartnerId
                           , tmpMovementSend.FromId
                           , tmpMovementSend.ToId
-                          , CASE WHEN inisPartner = TRUE THEN Object_PartionGoods.BrandId              ELSE 0 END     AS BrandId
-                          , CASE WHEN inisPartner = TRUE THEN ObjectLink_Partner_Fabrika.ChildObjectId ELSE 0 END     AS FabrikaId
-                          , CASE WHEN inisPartner = TRUE THEN ObjectLink_Partner_Period.ChildObjectId  ELSE 0 END     AS PeriodId
+                          , Object_PartionGoods.BrandId
+                          , Object_PartionGoods.FabrikaId
+                          , Object_PartionGoods.PeriodId
                           , MI_Send.ObjectId                             AS GoodsId
                           , CASE WHEN inisSize = TRUE THEN Object_PartionGoods.GoodsSizeId  ELSE 0 END  AS GoodsSizeId
                           , Object_PartionGoods.MeasureId
@@ -164,9 +164,9 @@ BEGIN
                             , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE CAST (NULL AS TVarChar)  END
                             , CASE WHEN inisPartion = TRUE THEN Movement_Partion.OperDate     ELSE CAST (NULL AS TDateTime) END
                             , CASE WHEN inisPartner = TRUE THEN Object_PartionGoods.PartnerId ELSE 0 END
-                            , CASE WHEN inisPartner = TRUE THEN Object_PartionGoods.BrandId   ELSE 0 END
-                            , CASE WHEN inisPartner = TRUE THEN ObjectLink_Partner_Fabrika.ChildObjectId ELSE 0 END
-                            , CASE WHEN inisPartner = TRUE THEN ObjectLink_Partner_Period.ChildObjectId  ELSE 0 END
+                            , Object_PartionGoods.BrandId
+                            , Object_PartionGoods.FabrikaId
+                            , Object_PartionGoods.PeriodId
                             , tmpMovementSend.FromId
                             , tmpMovementSend.ToId
                             , MI_Send.ObjectId
@@ -249,8 +249,8 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpData.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
+           ;
 
-;
  END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -262,4 +262,4 @@ $BODY$
 */
 
 -- тест
---select * from gpReport_Movement_Send(inStartDate := ('01.01.2017')::TDateTime , inEndDate := ('09.07.2017')::TDateTime , inUnitId_From := 506 , inUnitId_To := 520 , inBrandId := 0 , inPartnerId := 504 , inPeriodId := 0 , inStartYear := 0 , inEndYear := 2017 , inisPartion := 'False' , inisSize := 'False' , inisPartner := 'False' , inisMovement := 'False' ,  inSession := '2');
+-- SELECT * FROM gpReport_Movement_Send (inStartDate := ('01.01.2017')::TDateTime , inEndDate := ('09.07.2017')::TDateTime , inUnitId_From := 506 , inUnitId_To := 520 , inBrandId := 0 , inPartnerId := 504 , inPeriodId := 0 , inStartYear := 0 , inEndYear := 2017 , inisPartion := 'False' , inisSize := 'False' , inisPartner := 'False' , inisMovement := 'False' ,  inSession := '2');

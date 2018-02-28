@@ -50,10 +50,13 @@ RETURNS TABLE (
                OperPrice           TFloat,
                CountForPrice       TFloat,
                OperPriceList       TFloat,
-               Amount              TFloat,
-               TotalSumm           TFloat,
-               TotalSummPriceList  TFloat
-  )
+               OperPriceListLast   TFloat,
+
+               Amount                  TFloat,
+               TotalSumm               TFloat,
+               TotalSummPriceList      TFloat,
+               TotalSummPriceListLast  TFloat
+              )
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -80,7 +83,7 @@ BEGIN
                                      INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                                    ON MovementLinkObject_From.MovementId = Movement_ReturnOut.Id
                                                                   AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                                  AND (MovementLinkObject_From.ObjectId = inUnitId)
+                                                                  AND (MovementLinkObject_From.ObjectId = inUnitId OR inUnitId = 0)
                                      INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                    ON MovementLinkObject_To.MovementId = Movement_ReturnOut.Id
                                                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -253,8 +256,7 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpData.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
-
-;
+           ;
  END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -266,9 +268,4 @@ $BODY$
 */
 
 -- тест
---SELECT * from gpReport_Movement_ReturnOut(    inStartDate := '01.12.2016' :: TDateTime, inEndDate:= '01.12.2018' :: TDateTime, inUnitId :=311,inBrandId  := 0 ,inPartnerId  := 0 , inPeriodId := 0 , inStartYear := 0 , inEndYear := 2017 , inisPartion  := TRUE,inisSize:=  TRUE, inisPartner := TRUE, inisMovement := 'False', inSession := '2':: TVarChar )
---SELECT * from gpReport_Movement_ReturnOut(    inStartDate := '01.12.2016' :: TDateTime, inEndDate:= '01.12.2018' :: TDateTime, inUnitId :=230,inBrandId  := 0 ,inPartnerId  := 0 , inPeriodId := 0 , inStartYear := 0 , inEndYear := 2017 , inisPartion  :=False,inisSize:=  False, inisPartner := False, inisMovement := 'False', inSession := '2':: TVarChar )
-
- 
---select * from gpGet_Movement_ReturnOut(inMovementId := 22 , inOperDate := ('04.02.2018')::TDateTime ,  inSession := '2');
---select * from gpGet_Movement_ReturnOut(inMovementId := 22 , inOperDate := ('04.02.2018')::TDateTime ,  inSession := '2');
+-- SELECT * FROM gpReport_Movement_ReturnOut (inStartDate := '01.12.2016' :: TDateTime, inEndDate:= '01.12.2018' :: TDateTime, inUnitId :=230,inBrandId  := 0 ,inPartnerId  := 0 , inPeriodId := 0 , inStartYear := 0 , inEndYear := 2017 , inisPartion  :=False,inisSize:=  False, inisPartner := False, inisMovement := 'False', inSession := '2':: TVarChar )
