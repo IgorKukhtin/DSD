@@ -864,14 +864,17 @@ begin
           TStringList(saFound).Sort;
           for I := 0 to saFound.Count - 1 do
           begin
-              // конвертируем формат для штрихкодов
-              if Copy(saFound[i], 1, 3) = '..\' then
-                CheckExcelFloat(AnsiReplaceText(UpperCase(ExtractFilePath(Application.ExeName)),
-                                                '\BIN\',
-                                                Copy(saFound[i], 3, Length(saFound[i]))),
-                                ImportSettings)
-              else
-                CheckExcelFloat(saFound[i], ImportSettings);
+              // конвертируем формат для штрихкодов (только для Excel)
+              if ImportSettings.FileType = dtXLS then
+              begin
+                if Copy(saFound[i], 1, 3) = '..\' then
+                  CheckExcelFloat(AnsiReplaceText(UpperCase(ExtractFilePath(Application.ExeName)),
+                                                  '\BIN\',
+                                                  Copy(saFound[i], 3, Length(saFound[i]))),
+                                  ImportSettings)
+                else
+                  CheckExcelFloat(saFound[i], ImportSettings);
+              end;
 
               with TExecuteProcedureFromExternalDataSet.Create(ImportSettings.FileType, saFound[i], ImportSettings, ExternalParams) do
                 try
