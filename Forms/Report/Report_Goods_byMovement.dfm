@@ -5,10 +5,8 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -257
-  ExplicitTop = -88
   ExplicitWidth = 910
-  ExplicitHeight = 581
+  ExplicitHeight = 577
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -16,7 +14,6 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     Width = 894
     Height = 248
     TabOrder = 3
-    Properties.ActivePage = tsDetail
     ExplicitTop = 80
     ExplicitWidth = 894
     ExplicitHeight = 248
@@ -149,10 +146,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     object tsPivot: TcxTabSheet
       Caption = #1058#1091#1096#1077#1085#1082#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
-      object cxGrid1: TcxGrid
+      object cxGridPivot: TcxGrid
         Left = 0
         Top = 0
         Width = 894
@@ -1573,14 +1567,14 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 59
-      EditValue = 42705d
+      EditValue = 43101d
       Properties.SaveTime = False
       ExplicitLeft = 59
     end
     inherited deEnd: TcxDateEdit
       Left = 59
       Top = 30
-      EditValue = 42705d
+      EditValue = 43101d
       Properties.SaveTime = False
       ExplicitLeft = 59
       ExplicitTop = 30
@@ -1965,6 +1959,9 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
       end>
   end
   inherited ActionList: TActionList
+    inherited actGridToExcel: TdsdGridToExcel
+      TabSheet = tsMain
+    end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
@@ -2134,6 +2131,28 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end
+    object actPivotToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      TabSheet = tsPivot
+      MoveParams = <>
+      Enabled = False
+      Grid = cxGridPivot
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
+    end
+    object actDetailToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      TabSheet = tsDetail
+      MoveParams = <>
+      Enabled = False
+      Grid = cxGridDetail
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
+    end
   end
   inherited MasterDS: TDataSource
     Left = 88
@@ -2268,6 +2287,14 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
         end
         item
           Visible = True
+          ItemName = 'bbPivotToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDetailToExcel'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end>
     end
@@ -2285,6 +2312,14 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
       Hint = #1055#1077#1095#1072#1090#1100
       Visible = ivAlways
       ImageIndex = 16
+    end
+    object bbPivotToExcel: TdxBarButton
+      Action = actPivotToExcel
+      Category = 0
+    end
+    object bbDetailToExcel: TdxBarButton
+      Action = actDetailToExcel
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
