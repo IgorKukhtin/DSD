@@ -4,7 +4,6 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
   ClientWidth = 1160
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -57
   ExplicitWidth = 1176
   ExplicitHeight = 463
   PixelsPerInch = 96
@@ -174,7 +173,6 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
       inherited cxGrid: TcxGrid
         Width = 1160
         Height = 340
-        ExplicitLeft = 3
         ExplicitWidth = 1160
         ExplicitHeight = 340
         inherited cxGridDBTableView: TcxGridDBTableView

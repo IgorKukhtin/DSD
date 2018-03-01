@@ -280,13 +280,13 @@ uses
   Report_SaleOLAP in '..\..\FormsBoutique\Report\Report_SaleOLAP.pas' {Report_SaleOLAPForm: TParentForm},
   PeriodYear_Choice in '..\..\FormsBoutique\Guides\PeriodYear_Choice.pas' {PeriodYear_ChoiceForm: TParentForm},
   Report_ReturnIn in '..\..\FormsBoutique\Report\Report_ReturnIn.pas' {Report_ReturnInForm: TParentForm},
-  Report_Sale in '..\..\FormsBoutique\Report\Report_Sale.pas' {Report_SaleForm: TParentForm},
   Report_SaleDialog in '..\..\FormsBoutique\Report\Report_SaleDialog.pas' {Report_SaleDialogForm: TParentForm},
   Report_OH_DiscountPeriod in '..\..\FormsBoutique\Report\Report_OH_DiscountPeriod.pas' {Report_OH_DiscountPeriodForm: TParentForm},
   Report_OH_DiscountPeriodDialog in '..\..\FormsBoutique\Report\Report_OH_DiscountPeriodDialog.pas' {Report_OH_DiscountPeriodDialogForm: TParentForm},
   DiscountPeriod in '..\..\FormsBoutique\Guides\DiscountPeriod.pas' {DiscountPeriodForm: TParentForm},
   DiscountPeriodEdit in '..\..\FormsBoutique\Guides\DiscountPeriodEdit.pas' {DiscountPeriodEditForm: TParentForm},
-  PriceListItemDialog in '..\..\FormsBoutique\Guides\PriceListItemDialog.pas' {PriceListItemDialogForm: TParentForm};
+  PriceListItemDialog in '..\..\FormsBoutique\Guides\PriceListItemDialog.pas' {PriceListItemDialogForm: TParentForm},
+  Report_Sale in '..\..\FormsBoutique\Report\Report_Sale.pas' {Report_SaleForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

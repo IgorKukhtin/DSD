@@ -18,14 +18,19 @@ RETURNS TABLE (Id Integer , ObjectId Integer
                 , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
                 , isErased Boolean, GoodsGroupNameFull TVarChar
                 , MeasureName TVarChar
+                , GoodsGroupId         Integer
                 , GoodsGroupName       TVarChar
                 , CompositionGroupName TVarChar
                 , CompositionName      TVarChar
                 , GoodsInfoName        TVarChar
+                , LineFabricaId        Integer
                 , LineFabricaName      TVarChar
                 , LabelName            TVarChar
-                , UnitName         TVarChar  
-                , BrandName            TVarChar  
+                , UnitId               Integer  
+                , UnitName             TVarChar  
+                , BrandId              Integer
+                , BrandName            TVarChar 
+                , PeriodId             Integer 
                 , PeriodName           TVarChar  
                 , PeriodYear           Integer  
                 , FabrikaName          TVarChar  
@@ -34,6 +39,7 @@ RETURNS TABLE (Id Integer , ObjectId Integer
                 , OperPriceList        TFloat  
                 , OperPrice            TFloat 
                 , Remains              TFloat 
+                , AmountDebt           TFloat 
 
                 , StartDate TDateTime, EndDate TDateTime
                 , ValuePrice TFloat
@@ -83,14 +89,18 @@ BEGIN
                                , Object_Currency.ValueData           AS CurrencyName
                                , Object_PartionGoods.OperPrice       AS OperPrice
                                , Object_PartionGoods.OperPriceList   AS OperPriceList
+                               , Object_Brand.Id                     AS BrandId
                                , Object_Brand.ValueData              AS BrandName
+                               , Object_Period.Id                    AS PeriodId
                                , Object_Period.ValueData             AS PeriodName
                                , Object_PartionGoods.PeriodYear      AS PeriodYear
                                , Object_Fabrika.ValueData            AS FabrikaName
+                               , Object_GoodsGroup.Id                AS GoodsGroupId
                                , Object_GoodsGroup.ValueData         AS GoodsGroupName
                                , Object_Measure.ValueData            AS MeasureName    
                                , Object_Composition.ValueData        AS CompositionName
                                , Object_GoodsInfo.ValueData          AS GoodsInfoName
+                               , Object_LineFabrica.Id               AS LineFabricaId
                                , Object_LineFabrica.ValueData        AS LineFabricaName
                                , Object_Label.ValueData              AS LabelName
                                , Object_CompositionGroup.ValueData   AS CompositionGroupName
@@ -121,7 +131,8 @@ BEGIN
     , tmpContainer AS (SELECT Container.PartionId     AS PartionId
                             , Container.ObjectId      AS GoodsId
                             , Container.WhereObjectId AS UnitId
-                            , SUM (COALESCE (Container.Amount, 0))  AS Amount
+                            , SUM (CASE WHEN CLO_Client.ContainerId IS NULL THEN COALESCE (Container.Amount, 0) ELSE 0 END)  AS Amount
+                            , SUM (CASE WHEN CLO_Client.ContainerId > 0     THEN COALESCE (Container.Amount, 0) ELSE 0 END)  AS AmountDebt
                        FROM Container
                             INNER JOIN (SELECT DISTINCT tmpPartionGoods.GoodsId 
                                         FROM tmpPartionGoods
@@ -140,44 +151,55 @@ BEGIN
                       )
 
     , tmpGoods AS (SELECT tmpPartionGoods.PartnerName
+                        , tmpPartionGoods.UnitId
                         , tmpPartionGoods.UnitName
                         , tmpPartionGoods.OperDate
                         , tmpPartionGoods.GoodsId
                         , tmpPartionGoods.CurrencyName
                         , tmpPartionGoods.OperPrice
                         , tmpPartionGoods.OperPriceList
+                        , tmpPartionGoods.BrandId
                         , tmpPartionGoods.BrandName
+                        , tmpPartionGoods.PeriodId
                         , tmpPartionGoods.PeriodName
                         , tmpPartionGoods.PeriodYear
                         , tmpPartionGoods.FabrikaName
+                        , tmpPartionGoods.GoodsGroupId
                         , tmpPartionGoods.GoodsGroupName
                         , tmpPartionGoods.MeasureName    
                         , tmpPartionGoods.CompositionName
                         , tmpPartionGoods.GoodsInfoName
+                        , tmpPartionGoods.LineFabricaId
                         , tmpPartionGoods.LineFabricaName
                         , tmpPartionGoods.LabelName
                         , tmpPartionGoods.CompositionGroupName
                         , tmpPartionGoods.GoodsSizeName
-                        , SUM (COALESCE (tmpContainer.Amount, 0))    AS Remains
+                        , SUM (COALESCE (tmpContainer.Amount, 0))        AS Remains
+                        , SUM (COALESCE (tmpContainer.AmountDebt, 0))    AS AmountDebt
                    FROM tmpPartionGoods
                         LEFT JOIN tmpContainer ON tmpContainer.GoodsId   = tmpPartionGoods.GoodsId
                                               AND tmpContainer.PartionId = tmpPartionGoods.PartionId
                                               AND tmpContainer.UnitId    = tmpPartionGoods.UnitId
                    GROUP BY tmpPartionGoods.PartnerName
+                          , tmpPartionGoods.UnitId
                           , tmpPartionGoods.UnitName
                           , tmpPartionGoods.OperDate
                           , tmpPartionGoods.GoodsId
                           , tmpPartionGoods.CurrencyName
                           , tmpPartionGoods.OperPrice
                           , tmpPartionGoods.OperPriceList
+                          , tmpPartionGoods.BrandId
                           , tmpPartionGoods.BrandName
+                          , tmpPartionGoods.PeriodId
                           , tmpPartionGoods.PeriodName
                           , tmpPartionGoods.PeriodYear
                           , tmpPartionGoods.FabrikaName
+                          , tmpPartionGoods.GoodsGroupId
                           , tmpPartionGoods.GoodsGroupName
                           , tmpPartionGoods.MeasureName    
                           , tmpPartionGoods.CompositionName
                           , tmpPartionGoods.GoodsInfoName
+                          , tmpPartionGoods.LineFabricaId
                           , tmpPartionGoods.LineFabricaName
                           , tmpPartionGoods.LabelName
                           , tmpPartionGoods.CompositionGroupName
@@ -194,23 +216,30 @@ BEGIN
            
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , tmpPartionGoods.MeasureName          AS MeasureName
+           , tmpPartionGoods.GoodsGroupId         AS GoodsGroupId
            , tmpPartionGoods.GoodsGroupName       AS GoodsGroupName
            , tmpPartionGoods.CompositionGroupName AS CompositionGroupName    
            , tmpPartionGoods.CompositionName      AS CompositionName
            , tmpPartionGoods.GoodsInfoName        AS GoodsInfoName
+           , tmpPartionGoods.LineFabricaId        AS LineFabricaId
            , tmpPartionGoods.LineFabricaName      AS LineFabricaName
            , tmpPartionGoods.LabelName            AS LabelName
            
+           , tmpPartionGoods.UnitId
            , tmpPartionGoods.UnitName
+           , tmpPartionGoods.BrandId
            , tmpPartionGoods.BrandName
+           , tmpPartionGoods.PeriodId
            , tmpPartionGoods.PeriodName
            , tmpPartionGoods.PeriodYear
            , tmpPartionGoods.FabrikaName
            , tmpPartionGoods.GoodsSizeName
            , tmpPartionGoods.CurrencyName
-           , tmpPartionGoods.OperPriceList      ::Tfloat
-           , tmpPartionGoods.OperPrice          ::Tfloat
-           , 0 :: TFloat AS Remains
+           , tmpPartionGoods.OperPriceList   ::Tfloat
+           , tmpPartionGoods.OperPrice       ::Tfloat
+           , tmpPartionGoods.Remains         ::Tfloat
+           , tmpPartionGoods.AmountDebt      ::Tfloat
+
            , tmpPrice.StartDate
            , tmpPrice.EndDate
            , COALESCE(tmpPrice.ValuePrice, NULL) ::TFloat  AS ValuePrice
@@ -286,14 +315,18 @@ BEGIN
                                , Object_Currency.ValueData           AS CurrencyName
                                , Object_PartionGoods.OperPrice       AS OperPrice
                                , Object_PartionGoods.OperPriceList   AS OperPriceList
+                               , Object_Brand.Id                     AS BrandId
                                , Object_Brand.ValueData              AS BrandName
+                               , Object_Period.Id                    AS PeriodId
                                , Object_Period.ValueData             AS PeriodName
                                , Object_PartionGoods.PeriodYear      AS PeriodYear
                                , Object_Fabrika.ValueData            AS FabrikaName
+                               , Object_GoodsGroup.Id                AS GoodsGroupId
                                , Object_GoodsGroup.ValueData         AS GoodsGroupName
                                , Object_Measure.ValueData            AS MeasureName    
                                , Object_Composition.ValueData        AS CompositionName
                                , Object_GoodsInfo.ValueData          AS GoodsInfoName
+                               , Object_LineFabrica.Id               AS LineFabricaId
                                , Object_LineFabrica.ValueData        AS LineFabricaName
                                , Object_Label.ValueData              AS LabelName
                                , Object_CompositionGroup.ValueData   AS CompositionGroupName
@@ -324,7 +357,8 @@ BEGIN
     , tmpContainer AS (SELECT Container.PartionId     AS PartionId
                             , Container.ObjectId      AS GoodsId
                             , Container.WhereObjectId AS UnitId
-                            , SUM (Container.Amount)  AS Amount
+                            , SUM (CASE WHEN CLO_Client.ContainerId IS NULL THEN COALESCE (Container.Amount, 0) ELSE 0 END)  AS Amount
+                            , SUM (CASE WHEN CLO_Client.ContainerId > 0     THEN COALESCE (Container.Amount, 0) ELSE 0 END)  AS AmountDebt
                        FROM Container
                             INNER JOIN (SELECT DISTINCT tmpPartionGoods.GoodsId 
                                         FROM tmpPartionGoods
@@ -334,7 +368,6 @@ BEGIN
                                                          AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
                        WHERE Container.DescId        = zc_Container_Count()
                          AND (Container.WhereObjectId = inUnitId OR inUnitId = 0)
-                         AND CLO_Client.ContainerId IS NULL
                          AND Container.Amount       <> 0
                        GROUP BY Container.PartionId
                               , Container.ObjectId
@@ -343,44 +376,55 @@ BEGIN
                       )
 
     , tmpGoods AS (SELECT tmpPartionGoods.PartnerName
+                        , tmpPartionGoods.UnitId
                         , tmpPartionGoods.UnitName
                         , tmpPartionGoods.OperDate
                         , tmpPartionGoods.GoodsId
                         , tmpPartionGoods.CurrencyName
                         , tmpPartionGoods.OperPrice
                         , tmpPartionGoods.OperPriceList
+                        , tmpPartionGoods.BrandId
                         , tmpPartionGoods.BrandName
+                        , tmpPartionGoods.PeriodId
                         , tmpPartionGoods.PeriodName
                         , tmpPartionGoods.PeriodYear
                         , tmpPartionGoods.FabrikaName
+                        , tmpPartionGoods.GoodsGroupId
                         , tmpPartionGoods.GoodsGroupName
                         , tmpPartionGoods.MeasureName    
                         , tmpPartionGoods.CompositionName
                         , tmpPartionGoods.GoodsInfoName
+                        , tmpPartionGoods.LineFabricaId
                         , tmpPartionGoods.LineFabricaName
                         , tmpPartionGoods.LabelName
                         , tmpPartionGoods.CompositionGroupName
                         , tmpPartionGoods.GoodsSizeName
-                        , SUM (COALESCE (tmpContainer.Amount, 0))    AS Remains
+                        , SUM (COALESCE (tmpContainer.Amount, 0))        AS Remains
+                        , SUM (COALESCE (tmpContainer.AmountDebt, 0))    AS AmountDebt
                    FROM tmpPartionGoods
                         LEFT JOIN tmpContainer ON tmpContainer.GoodsId = tmpPartionGoods.GoodsId
                                               AND tmpContainer.PartionId = tmpPartionGoods.PartionId
                                               AND tmpContainer.UnitId    = tmpPartionGoods.UnitId
                    GROUP BY tmpPartionGoods.PartnerName
+                          , tmpPartionGoods.UnitId
                           , tmpPartionGoods.UnitName
                           , tmpPartionGoods.OperDate
                           , tmpPartionGoods.GoodsId
                           , tmpPartionGoods.CurrencyName
                           , tmpPartionGoods.OperPrice
                           , tmpPartionGoods.OperPriceList
+                          , tmpPartionGoods.BrandId
                           , tmpPartionGoods.BrandName
+                          , tmpPartionGoods.PeriodId
                           , tmpPartionGoods.PeriodName
                           , tmpPartionGoods.PeriodYear
                           , tmpPartionGoods.FabrikaName
+                          , tmpPartionGoods.GoodsGroupId
                           , tmpPartionGoods.GoodsGroupName
                           , tmpPartionGoods.MeasureName    
                           , tmpPartionGoods.CompositionName
                           , tmpPartionGoods.GoodsInfoName
+                          , tmpPartionGoods.LineFabricaId
                           , tmpPartionGoods.LineFabricaName
                           , tmpPartionGoods.LabelName
                           , tmpPartionGoods.CompositionGroupName
@@ -396,15 +440,20 @@ BEGIN
            
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , tmpPartionGoods.MeasureName          AS MeasureName
+           , tmpPartionGoods.GoodsGroupId         AS GoodsGroupId
            , tmpPartionGoods.GoodsGroupName       AS GoodsGroupName
            , tmpPartionGoods.CompositionGroupName AS CompositionGroupName    
            , tmpPartionGoods.CompositionName      AS CompositionName
            , tmpPartionGoods.GoodsInfoName        AS GoodsInfoName
+           , tmpPartionGoods.LineFabricaId        AS LineFabricaId
            , tmpPartionGoods.LineFabricaName      AS LineFabricaName
            , tmpPartionGoods.LabelName            AS LabelName
            
+           , tmpPartionGoods.UnitId
            , tmpPartionGoods.UnitName
+           , tmpPartionGoods.BrandId
            , tmpPartionGoods.BrandName
+           , tmpPartionGoods.PeriodId
            , tmpPartionGoods.PeriodName
            , tmpPartionGoods.PeriodYear
            , tmpPartionGoods.FabrikaName
@@ -413,6 +462,7 @@ BEGIN
            , tmpPartionGoods.OperPriceList   ::Tfloat
            , tmpPartionGoods.OperPrice       ::Tfloat
            , tmpPartionGoods.Remains         ::Tfloat
+           , tmpPartionGoods.AmountDebt      ::Tfloat
            
            , tmpPrice.StartDate
            , tmpPrice.EndDate

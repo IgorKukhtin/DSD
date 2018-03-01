@@ -3,6 +3,7 @@ inherited Report_SaleForm: TReport_SaleForm
   ClientHeight = 425
   ClientWidth = 1160
   AddOnFormData.RefreshAction = actRefreshStart
+  AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1176
   ExplicitHeight = 463
@@ -184,33 +185,7 @@ inherited Report_SaleForm: TReport_SaleForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Sale_SummCost
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = CompositionName
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = CompositionGroupName
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
+              Column = Income_Amount
             end
             item
               Format = ',0.####'
@@ -220,7 +195,22 @@ inherited Report_SaleForm: TReport_SaleForm
             item
               Format = ',0.####'
               Kind = skSum
+              Column = Sale_Summ_prof
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
               Column = Sale_Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_SummCost
             end
             item
               Format = ',0.####'
@@ -255,14 +245,18 @@ inherited Report_SaleForm: TReport_SaleForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Sale_Summ_prof
+              Column = Sale_SummCost_diff
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Sale_Amount
-            end>
-          DataController.Summary.FooterSummaryItems = <
+              Column = Income_Amount
+            end
             item
               Format = ',0.####'
               Kind = skSum
@@ -271,61 +265,62 @@ inherited Report_SaleForm: TReport_SaleForm
             item
               Format = ',0.####'
               Kind = skSum
+              Column = Sale_Summ_prof
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_SummCost
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_Summ_10100
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_Summ_10201
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_Summ_10202
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_Summ_10203
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_Summ_10204
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_Summ_10200
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_SummCost_diff
             end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Sale_SummCost
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Sale_Summ
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Sale_Summ_10100
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Sale_Summ_10201
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Sale_Summ_10202
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Sale_Summ_10203
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Sale_Summ_10204
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Sale_Summ_10200
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Sale_Summ_prof
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Sale_Amount
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -376,9 +371,9 @@ inherited Report_SaleForm: TReport_SaleForm
             Options.Editing = False
             Width = 70
           end
-          object GoodsGroupNameFull: TcxGridDBColumn
+          object GoodsGroupName_all: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
-            DataBinding.FieldName = 'GoodsGroupNameFull'
+            DataBinding.FieldName = 'GoodsGroupName_all'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -500,13 +495,6 @@ inherited Report_SaleForm: TReport_SaleForm
             HeaderAlignmentVert = vaCenter
             Width = 87
           end
-          object MeasureName: TcxGridDBColumn
-            Caption = #1045#1076'. '#1080#1079#1084'.'
-            DataBinding.FieldName = 'MeasureName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
           object CurrencyName: TcxGridDBColumn
             Caption = #1042#1072#1083'. '#1074#1093'.'
             DataBinding.FieldName = 'CurrencyName'
@@ -547,6 +535,13 @@ inherited Report_SaleForm: TReport_SaleForm
             HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 102
+          end
+          object DiscountSaleKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'DiscountSaleKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
           end
           object Sale_Summ_prof: TcxGridDBColumn
             Caption = #1055#1088#1080#1073#1099#1083#1100' '#1087#1088#1086#1076#1072#1078#1072
@@ -595,13 +590,6 @@ inherited Report_SaleForm: TReport_SaleForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
-          end
-          object DiscountSaleKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1089#1082#1080#1076#1082#1080
-            DataBinding.FieldName = 'DiscountSaleKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 85
           end
           object Sale_Summ_10201: TcxGridDBColumn
             Caption = #1057#1077#1079#1086#1085#1085#1072#1103' '#1089#1082#1080#1076#1082#1072
