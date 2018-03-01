@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Unit(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , Address TVarChar, Phone TVarChar, Printer TVarChar
+             , Address TVarChar, Phone TVarChar
+             , Printer TVarChar, PrintName TVarChar
              , DiscountTax TFloat
              , JuridicalName TVarChar, ParentName TVarChar, ChildName TVarChar
              , BankAccountName TVarChar, BankName TVarChar
@@ -34,6 +35,7 @@ BEGIN
            , OS_Unit_Address.ValueData       AS Address
            , OS_Unit_Phone.ValueData         AS Phone
            , OS_Unit_Printer.ValueData       AS Printer
+           , OS_Unit_Print.ValueData         AS PrintName
            , OS_Unit_DiscountTax.ValueData   AS DiscountTax
            , Object_Juridical.ValueData      AS JuridicalName
            , Object_Parent.ValueData         AS ParentName
@@ -99,6 +101,9 @@ BEGIN
             LEFT JOIN ObjectString AS OS_Unit_Printer
                                    ON OS_Unit_Printer.ObjectId = Object_Unit.Id
                                   AND OS_Unit_Printer.DescId = zc_ObjectString_Unit_Printer()
+            LEFT JOIN ObjectString AS OS_Unit_Print
+                                   ON OS_Unit_Print.ObjectId = Object_Unit.Id
+                                  AND OS_Unit_Print.DescId = zc_ObjectString_Unit_Print()
 
             LEFT JOIN ObjectFloat AS OS_Unit_DiscountTax
                                   ON OS_Unit_DiscountTax.ObjectId = Object_Unit.Id

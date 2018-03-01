@@ -61,6 +61,8 @@ type
     AccountDirectionGuides: TdsdGuides;
     cxLabel11: TcxLabel;
     edPrinter: TcxTextEdit;
+    cxLabel12: TcxLabel;
+    edPrintName: TcxTextEdit;
   private
     { Private declarations }
   public

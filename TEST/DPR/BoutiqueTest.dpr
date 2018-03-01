@@ -285,7 +285,8 @@ uses
   Report_OH_DiscountPeriod in '..\..\FormsBoutique\Report\Report_OH_DiscountPeriod.pas' {Report_OH_DiscountPeriodForm: TParentForm},
   Report_OH_DiscountPeriodDialog in '..\..\FormsBoutique\Report\Report_OH_DiscountPeriodDialog.pas' {Report_OH_DiscountPeriodDialogForm: TParentForm},
   DiscountPeriod in '..\..\FormsBoutique\Guides\DiscountPeriod.pas' {DiscountPeriodForm: TParentForm},
-  DiscountPeriodEdit in '..\..\FormsBoutique\Guides\DiscountPeriodEdit.pas' {DiscountPeriodEditForm: TParentForm};
+  DiscountPeriodEdit in '..\..\FormsBoutique\Guides\DiscountPeriodEdit.pas' {DiscountPeriodEditForm: TParentForm},
+  PriceListItemDialog in '..\..\FormsBoutique\Guides\PriceListItemDialog.pas' {PriceListItemDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

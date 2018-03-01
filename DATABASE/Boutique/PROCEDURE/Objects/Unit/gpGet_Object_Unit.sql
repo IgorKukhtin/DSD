@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Unit(
     IN inSession     TVarChar       -- сессия пользователя
 ) 
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , Address TVarChar, Phone TVarChar, Printer TVarChar
+             , Address TVarChar, Phone TVarChar
+             , Printer TVarChar, PrintName TVarChar
              , DiscountTax TFloat
              , JuridicalId Integer, JuridicalName TVarChar
              , ParentId Integer, ParentName TVarChar
@@ -32,6 +33,7 @@ BEGIN
            , '' :: TVarChar                         AS Address
            , '' :: TVarChar                         AS Phone
            , '' :: TVarChar                         AS Printer
+           , '' :: TVarChar                         AS PrintName
            ,  0 :: TFloat                           AS DiscountTax
            ,  0 :: Integer                          AS JuridicalId      
            , '' :: TVarChar                         AS JuridicalName    
@@ -53,6 +55,7 @@ BEGIN
            , OS_Unit_Address.ValueData       AS Address
            , OS_Unit_Phone.ValueData         AS Phone
            , OS_Unit_Printer.ValueData       AS Printer
+           , OS_Unit_Print.ValueData         AS PrintName
            , OS_Unit_DiscountTax.ValueData   AS DiscountTax
            , Object_Juridical.Id             AS JuridicalId
            , Object_Juridical.ValueData      AS JuridicalName
@@ -75,6 +78,9 @@ BEGIN
             LEFT JOIN ObjectString AS OS_Unit_Printer
                                    ON OS_Unit_Printer.ObjectId = Object_Unit.Id
                                   AND OS_Unit_Printer.DescId = zc_ObjectString_Unit_Printer()
+            LEFT JOIN ObjectString AS OS_Unit_Print
+                                   ON OS_Unit_Print.ObjectId = Object_Unit.Id
+                                  AND OS_Unit_Print.DescId = zc_ObjectString_Unit_Print()
 
             LEFT JOIN ObjectFloat AS OS_Unit_DiscountTax
                                   ON OS_Unit_DiscountTax.ObjectId = Object_Unit.Id

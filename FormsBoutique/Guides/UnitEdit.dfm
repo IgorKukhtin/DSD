@@ -2,7 +2,7 @@ object UnitEditForm: TUnitEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
-  ClientHeight = 476
+  ClientHeight = 515
   ClientWidth = 302
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@ object UnitEditForm: TUnitEditForm
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 443
+    Top = 485
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object UnitEditForm: TUnitEditForm
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 443
+    Top = 485
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -63,12 +63,12 @@ object UnitEditForm: TUnitEditForm
   end
   object cxLabel3: TcxLabel
     Left = 10
-    Top = 219
+    Top = 261
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
   object ceJuridical: TcxButtonEdit
     Left = 8
-    Top = 235
+    Top = 277
     Properties.Buttons = <
       item
         Default = True
@@ -80,7 +80,7 @@ object UnitEditForm: TUnitEditForm
   end
   object edDiscountTax: TcxCurrencyEdit
     Left = 10
-    Top = 195
+    Top = 237
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = '0'
@@ -89,39 +89,39 @@ object UnitEditForm: TUnitEditForm
   end
   object edAddress: TcxTextEdit
     Left = 10
-    Top = 112
+    Top = 154
     TabOrder = 1
     Width = 273
   end
   object cxLabel4: TcxLabel
     Left = 10
-    Top = 94
+    Top = 136
     Caption = #1040#1076#1088#1077#1089
   end
   object edPhone: TcxTextEdit
     Left = 10
-    Top = 152
+    Top = 194
     TabOrder = 2
     Width = 273
   end
   object cxLabel5: TcxLabel
     Left = 10
-    Top = 134
+    Top = 176
     Caption = #1058#1077#1083#1077#1092#1086#1085
   end
   object cxLabel6: TcxLabel
     Left = 10
-    Top = 175
+    Top = 217
     Caption = '% '#1089#1082#1080#1076#1082#1080' OUTLET'
   end
   object cxLabel7: TcxLabel
     Left = 10
-    Top = 261
+    Top = 303
     Caption = #1043#1088#1091#1087#1087#1072
   end
   object ceParent: TcxButtonEdit
     Left = 8
-    Top = 277
+    Top = 319
     Properties.Buttons = <
       item
         Default = True
@@ -133,12 +133,12 @@ object UnitEditForm: TUnitEditForm
   end
   object cxLabel8: TcxLabel
     Left = 10
-    Top = 304
+    Top = 346
     Caption = #1057#1082#1083#1072#1076
   end
   object ceChild: TcxButtonEdit
     Left = 8
-    Top = 320
+    Top = 362
     Properties.Buttons = <
       item
         Default = True
@@ -150,12 +150,12 @@ object UnitEditForm: TUnitEditForm
   end
   object cxLabel9: TcxLabel
     Left = 10
-    Top = 344
+    Top = 386
     Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
   end
   object ceBankAccount: TcxButtonEdit
     Left = 8
-    Top = 360
+    Top = 402
     Properties.Buttons = <
       item
         Default = True
@@ -167,12 +167,12 @@ object UnitEditForm: TUnitEditForm
   end
   object cxLabel10: TcxLabel
     Left = 10
-    Top = 387
+    Top = 429
     Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1095#1077#1090#1086#1074' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
   end
   object ceAccountDirection: TcxButtonEdit
     Left = 8
-    Top = 403
+    Top = 445
     Properties.Buttons = <
       item
         Default = True
@@ -184,14 +184,25 @@ object UnitEditForm: TUnitEditForm
   end
   object cxLabel11: TcxLabel
     Left = 113
-    Top = 177
+    Top = 219
     Caption = #1055#1088#1080#1085#1090#1077#1088' ('#1087#1077#1095#1072#1090#1100' '#1095#1077#1082#1086#1074')'
   end
   object edPrinter: TcxTextEdit
     Left = 113
-    Top = 195
+    Top = 237
     TabOrder = 23
     Width = 170
+  end
+  object cxLabel12: TcxLabel
+    Left = 10
+    Top = 96
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1088#1080' '#1087#1077#1095#1072#1090#1080
+  end
+  object edPrintName: TcxTextEdit
+    Left = 10
+    Top = 114
+    TabOrder = 25
+    Width = 273
   end
   object ActionList: TActionList
     Left = 176
@@ -273,6 +284,14 @@ object UnitEditForm: TUnitEditForm
         Name = 'inPrinter'
         Value = Null
         Component = edPrinter
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrint'
+        Value = Null
+        Component = edPrintName
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -389,6 +408,13 @@ object UnitEditForm: TUnitEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'PrintName'
+        Value = Null
+        Component = edPrintName
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'DiscountTax'
         Value = Null
         Component = edDiscountTax
@@ -492,7 +518,7 @@ object UnitEditForm: TUnitEditForm
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 200
-    Top = 104
+    Top = 146
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -521,7 +547,7 @@ object UnitEditForm: TUnitEditForm
         MultiSelectSeparator = ','
       end>
     Left = 200
-    Top = 216
+    Top = 258
   end
   object ParentGuides: TdsdGuides
     KeyField = 'Id'
@@ -550,7 +576,7 @@ object UnitEditForm: TUnitEditForm
         MultiSelectSeparator = ','
       end>
     Left = 192
-    Top = 250
+    Top = 292
   end
   object ChildGuides: TdsdGuides
     KeyField = 'Id'
@@ -579,7 +605,7 @@ object UnitEditForm: TUnitEditForm
         MultiSelectSeparator = ','
       end>
     Left = 192
-    Top = 293
+    Top = 335
   end
   object BankAccountGuides: TdsdGuides
     KeyField = 'Id'
@@ -608,7 +634,7 @@ object UnitEditForm: TUnitEditForm
         MultiSelectSeparator = ','
       end>
     Left = 184
-    Top = 325
+    Top = 367
   end
   object AccountDirectionGuides: TdsdGuides
     KeyField = 'Id'
@@ -637,6 +663,6 @@ object UnitEditForm: TUnitEditForm
         MultiSelectSeparator = ','
       end>
     Left = 152
-    Top = 397
+    Top = 439
   end
 end

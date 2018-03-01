@@ -140,6 +140,7 @@ BEGIN
            , MovementFloat_TotalSummPayReturn.ValueData  AS TotalSummPayReturn
 
            , Object_From.ValueData                       AS FromName
+           , OS_Unit_Print.ValueData                     AS PrintName
            , OS_Unit_Address.ValueData                   AS Address_Unit
            , OS_Unit_Phone.ValueData                     As Phone_Unit
            , Object_To.ValueData                         AS ToName
@@ -191,7 +192,10 @@ BEGIN
             LEFT JOIN ObjectString AS OS_Unit_Phone
                                    ON OS_Unit_Phone.ObjectId = vbUnitId
                                   AND OS_Unit_Phone.DescId = zc_ObjectString_Unit_Phone()
-
+            -- Ќазвание ћагазина в печати чека - выводитс€ в самом верхнем углу
+            LEFT JOIN ObjectString AS OS_Unit_Print
+                                   ON OS_Unit_Print.ObjectId = vbUnitId
+                                  AND OS_Unit_Print.DescId = zc_ObjectString_Unit_Print()
             -- вид скидки клиента
             LEFT JOIN ObjectLink AS ObjectLink_Client_DiscountKind
                                  ON ObjectLink_Client_DiscountKind.ObjectId = vbClientId

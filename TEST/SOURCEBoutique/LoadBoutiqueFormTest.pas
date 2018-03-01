@@ -646,6 +646,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListItemForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceListItemDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListGoodsItemForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListGoodsItemForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListGoodsItemEditForm'));

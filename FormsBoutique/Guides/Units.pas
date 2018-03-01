@@ -70,6 +70,7 @@ type
     BankAccountName: TcxGridDBColumn;
     BankName: TcxGridDBColumn;
     AccountDirectionName: TcxGridDBColumn;
+    PrintName: TcxGridDBColumn;
   private
     { Private declarations }
   public
