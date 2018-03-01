@@ -39,7 +39,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ReturnIn());
      -- !!!временно - для Sybase!!!
-     vbUserId := zc_User_Sybase();
+     -- vbUserId := zc_User_Sybase();
 
      -- !!!временно - для Sybase!!!
      IF vbUserId = zc_User_Sybase() AND EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.Id = ioId AND MovementItem.isErased = TRUE)
