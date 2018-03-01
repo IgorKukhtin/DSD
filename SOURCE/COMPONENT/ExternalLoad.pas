@@ -719,8 +719,6 @@ var i: integer;
       else
         JSONObject.AddPair(AName, TJSONNull.Create);
     end
-    else if TryStrToInt(AValue, intValue) then
-      JSONObject.AddPair(cParamName, TJSONNumber.Create(intValue))
     else
       JSONObject.AddPair(cParamName, ReplaceText(String(AValue), '\', '\\'));
   end;

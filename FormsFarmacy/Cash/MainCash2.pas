@@ -3318,60 +3318,57 @@ begin
         str_log_xml:=''; i:=0;
         while not ADS.Eof do
         Begin
-          if ADS.FieldByName('Amount').asCurrency <> 0.0 then
+          FLocalDataBaseBody.AppendRecord([ADS.FieldByName('Id').AsInteger,         //id записи
+                                           AUID,                                    //uid чека
+                                           ADS.FieldByName('GoodsId').AsInteger,    //ид товара
+                                           ADS.FieldByName('GoodsCode').AsInteger,  //Код товара
+                                           ADS.FieldByName('GoodsName').AsString,   //наименование товара
+                                           ADS.FieldByName('NDS').asCurrency,          //НДС товара
+                                           ADS.FieldByName('Amount').asCurrency,       //Кол-во
+                                           ADS.FieldByName('Price').asCurrency,        //Цена, с 20.07.16 если есть скидка по Проекту дисконта, здесь будет цена с учетом скидки
+                                           //***20.07.16
+                                           ADS.FieldByName('PriceSale').asCurrency,         // Цена без скидки
+                                           ADS.FieldByName('ChangePercent').asCurrency,     // % Скидки
+                                           ADS.FieldByName('SummChangePercent').asCurrency, // Сумма Скидки
+                                           //***19.08.16
+                                           ADS.FieldByName('AmountOrder').asCurrency, // Кол-во заявка
+                                           //***10.08.16
+                                           ADS.FieldByName('List_UID').AsString // UID строки продажи
+                                           ]);
+          // сохранили отгруженные препараты для корректировки полных остатков
+          if FSaveCheckToMemData then
           begin
-            FLocalDataBaseBody.AppendRecord([ADS.FieldByName('Id').AsInteger,         //id записи
-                                             AUID,                                    //uid чека
-                                             ADS.FieldByName('GoodsId').AsInteger,    //ид товара
-                                             ADS.FieldByName('GoodsCode').AsInteger,  //Код товара
-                                             ADS.FieldByName('GoodsName').AsString,   //наименование товара
-                                             ADS.FieldByName('NDS').asCurrency,          //НДС товара
-                                             ADS.FieldByName('Amount').asCurrency,       //Кол-во
-                                             ADS.FieldByName('Price').asCurrency,        //Цена, с 20.07.16 если есть скидка по Проекту дисконта, здесь будет цена с учетом скидки
-                                             //***20.07.16
-                                             ADS.FieldByName('PriceSale').asCurrency,         // Цена без скидки
-                                             ADS.FieldByName('ChangePercent').asCurrency,     // % Скидки
-                                             ADS.FieldByName('SummChangePercent').asCurrency, // Сумма Скидки
-                                             //***19.08.16
-                                             ADS.FieldByName('AmountOrder').asCurrency, // Кол-во заявка
-                                             //***10.08.16
-                                             ADS.FieldByName('List_UID').AsString // UID строки продажи
-                                             ]);
-            // сохранили отгруженные препараты для корректировки полных остатков
-            if FSaveCheckToMemData then
+            if mdCheck.Locate('ID', ADS.FieldByName('GoodsId').AsInteger, []) then
+              mdCheck.Edit
+            else
             begin
-              if mdCheck.Locate('ID', ADS.FieldByName('GoodsId').AsInteger, []) then
-                mdCheck.Edit
-              else
-              begin
-                mdCheck.Append;
-                mdCheck.FieldByName('ID').AsInteger := ADS.FieldByName('GoodsId').AsInteger;
-              end;
-              mdCheck.FieldByName('Amount').AsCurrency := mdCheck.FieldByName('Amount').AsCurrency
-                                                          + ADS.FieldByName('Amount').asCurrency;
-              mdCheck.Post;
+              mdCheck.Append;
+              mdCheck.FieldByName('ID').AsInteger := ADS.FieldByName('GoodsId').AsInteger;
             end;
-                    //сохранили строку в лог
-                    i:= i + 1;
-                    if str_log_xml<>'' then str_log_xml:=str_log_xml + #10 + #13;
-                    try
-                    str_log_xml:= str_log_xml
-                                + '<Items num="' +IntToStr(i)+ '">'
-                                + '<GoodsCode>"' + ADS.FieldByName('GoodsCode').asString + '"</GoodsCode>'
-                                + '<GoodsName>"' + AnsiUpperCase(ADS.FieldByName('GoodsName').Text) + '"</GoodsName>'
-                                + '<Amount>"' + FloatToStr(ADS.FieldByName('Amount').asCurrency) + '"</Amount>'
-                                + '<Price>"' + FloatToStr(ADS.FieldByName('Price').asCurrency) + '"</Price>'
-                                + '<List_UID>"' + ADS.FieldByName('List_UID').AsString + '"</List_UID>'
-                                + '</Items>';
-                    except
-                    str_log_xml:= str_log_xml
-                                + '<Items num="' +IntToStr(i)+ '">'
-                                + '<GoodsCode>"' + ADS.FieldByName('GoodsCode').asString + '"</GoodsCode>'
-                                + '<GoodsName>"???"</GoodsName>'
-                                + '<List_UID>"' + ADS.FieldByName('List_UID').AsString + '"</List_UID>'
-                                + '</Items>';
-                    end;
+            mdCheck.FieldByName('Amount').AsCurrency := mdCheck.FieldByName('Amount').AsCurrency
+                                                        + ADS.FieldByName('Amount').asCurrency;
+            mdCheck.Post;
           end;
+                  //сохранили строку в лог
+                  i:= i + 1;
+                  if str_log_xml<>'' then str_log_xml:=str_log_xml + #10 + #13;
+                  try
+                  str_log_xml:= str_log_xml
+                              + '<Items num="' +IntToStr(i)+ '">'
+                              + '<GoodsCode>"' + ADS.FieldByName('GoodsCode').asString + '"</GoodsCode>'
+                              + '<GoodsName>"' + AnsiUpperCase(ADS.FieldByName('GoodsName').Text) + '"</GoodsName>'
+                              + '<Amount>"' + FloatToStr(ADS.FieldByName('Amount').asCurrency) + '"</Amount>'
+                              + '<Price>"' + FloatToStr(ADS.FieldByName('Price').asCurrency) + '"</Price>'
+                              + '<List_UID>"' + ADS.FieldByName('List_UID').AsString + '"</List_UID>'
+                              + '</Items>';
+                  except
+                  str_log_xml:= str_log_xml
+                              + '<Items num="' +IntToStr(i)+ '">'
+                              + '<GoodsCode>"' + ADS.FieldByName('GoodsCode').asString + '"</GoodsCode>'
+                              + '<GoodsName>"???"</GoodsName>'
+                              + '<List_UID>"' + ADS.FieldByName('List_UID').AsString + '"</List_UID>'
+                              + '</Items>';
+                  end;
           ADS.Next;
         End;
 
