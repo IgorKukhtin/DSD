@@ -124,8 +124,11 @@ begin
       //if ShowModal <> mrOk then exit;   // для тестирования // НЕ закомменчено
       gc_User.Local:=TRUE;// !!!НЕ ЗАГРУЖАЕТСЯ БАЗА!!!
     end
-    else
-      if ShowModal <> mrOk then exit;
+    else if ShowModal <> mrOk then
+    begin
+      Free;
+      exit;
+    end;
 
     //then
     begin

@@ -974,10 +974,6 @@
 				<Form>Report_ReturnInForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Report\Report_Sale.pas">
-				<Form>Report_SaleForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Report\Report_SaleDialog.pas">
 				<Form>Report_SaleDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1000,6 +996,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Guides\PriceListItemDialog.pas">
 				<Form>PriceListItemDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_Sale.pas">
+				<Form>Report_SaleForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

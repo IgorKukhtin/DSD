@@ -35,6 +35,11 @@ object PriceListItemForm: TPriceListItemForm
           Format = ',0.####'
           Kind = skSum
           Column = Remains
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountDebt
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -46,6 +51,11 @@ object PriceListItemForm: TPriceListItemForm
           Format = ',0.####'
           Kind = skSum
           Column = Remains
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountDebt
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -259,6 +269,18 @@ object PriceListItemForm: TPriceListItemForm
         HeaderHint = #1050#1086#1083'-'#1074#1086' '#1086#1089#1090#1072#1090#1086#1082' '#1074' '#1084#1072#1075#1072#1079#1080#1085#1077
         Options.Editing = False
         Width = 70
+      end
+      object AmountDebt: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1076#1086#1083#1075
+        DataBinding.FieldName = 'AmountDebt'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1086#1083#1075#1080' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+        Options.Editing = False
+        Width = 60
       end
       object ObjectId: TcxGridDBColumn
         DataBinding.FieldName = 'ObjectId'
@@ -820,6 +842,89 @@ object PriceListItemForm: TPriceListItemForm
           Value = 'NULL'
           Component = edOperDate
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BrandId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'BrandId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BrandName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'BrandName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PeriodId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PeriodName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodYear'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PeriodYear'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LineFabricaId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'LineFabricaId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LineFabricaName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'LineFabricaName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsGroupId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsGroupName'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False

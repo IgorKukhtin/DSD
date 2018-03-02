@@ -1,8 +1,8 @@
-﻿object PriceListTaxDialogForm: TPriceListTaxDialogForm
+object PriceListTaxDialogForm: TPriceListTaxDialogForm
   Left = 0
   Top = 0
   Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080
-  ClientHeight = 288
+  ClientHeight = 399
   ClientWidth = 350
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -17,8 +17,8 @@
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 85
-    Top = 234
+    Left = 77
+    Top = 363
     Width = 75
     Height = 25
     Action = mactUpdate
@@ -27,8 +27,8 @@
     TabOrder = 1
   end
   object cxButton2: TcxButton
-    Left = 189
-    Top = 234
+    Left = 181
+    Top = 363
     Width = 75
     Height = 25
     Action = actFormClose
@@ -38,53 +38,36 @@
     TabOrder = 2
   end
   object cxLabel3: TcxLabel
-    Left = 189
-    Top = 59
+    Left = 20
+    Top = 298
     Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1094#1077#1085#1099' '#1089':'
   end
   object edOperDate: TcxDateEdit
-    Left = 189
-    Top = 82
+    Left = 20
+    Top = 318
     EditValue = 42236d
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 0
     Width = 113
   end
-  object Код: TcxLabel
-    Left = 24
-    Top = 9
-    Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' '#1086#1089#1085#1086#1074#1072#1085#1080#1077':'
-  end
-  object edPriceListFrom: TcxButtonEdit
-    Left = 24
-    Top = 31
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = False
-    TabOrder = 5
-    Width = 278
-  end
   object cePriceTax: TcxCurrencyEdit
-    Left = 24
-    Top = 135
+    Left = 181
+    Top = 318
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.UseDisplayFormatWhenEditing = True
-    TabOrder = 6
+    TabOrder = 4
     Width = 144
   end
   object cxLabel4: TcxLabel
-    Left = 24
-    Top = 163
+    Left = 20
+    Top = 10
     Caption = ' '#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' '#1088#1077#1079#1091#1083#1100#1090#1072#1090':'
   end
-  object edPriceListTo: TcxButtonEdit
-    Left = 24
-    Top = 186
+  object edPriceList: TcxButtonEdit
+    Left = 20
+    Top = 29
     Properties.Buttons = <
       item
         Default = True
@@ -92,31 +75,118 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 8
-    Width = 278
+    TabOrder = 6
+    Width = 305
   end
   object cxLabel8: TcxLabel
-    Left = 24
-    Top = 115
-    Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
+    Left = 181
+    Top = 297
+    Caption = #1050#1086#1101#1092#1092'. '#1086#1090' '#1074#1093#1086#1076#1085#1086#1081' '#1094#1077#1085#1099
   end
-  object cxLabel1: TcxLabel
-    Left = 24
-    Top = 59
-    Caption = #1044#1072#1090#1072' '#1094#1077#1085#1099' '#1086#1089#1085#1086#1074#1072#1085#1080#1103':'
+  object cxLabel2: TcxLabel
+    Left = 20
+    Top = 55
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' :'
   end
-  object edOperDateFrom: TcxDateEdit
-    Left = 24
-    Top = 82
-    EditValue = 42236d
-    Properties.SaveTime = False
-    Properties.ShowTime = False
+  object edUnit: TcxButtonEdit
+    Left = 20
+    Top = 75
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Width = 305
+  end
+  object cxLabel5: TcxLabel
+    Left = 20
+    Top = 152
+    Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072' :'
+  end
+  object edBrand: TcxButtonEdit
+    Left = 20
+    Top = 172
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
     TabOrder = 11
-    Width = 121
+    Width = 305
+  end
+  object cxLabel6: TcxLabel
+    Left = 20
+    Top = 103
+    Caption = #1043#1088#1091#1087#1087#1072' ('#1090#1086#1074'.) :'
+  end
+  object edGoodsGroup: TcxButtonEdit
+    Left = 20
+    Top = 123
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 13
+    Width = 305
+  end
+  object cxLabel7: TcxLabel
+    Left = 20
+    Top = 199
+    Caption = #1057#1077#1079#1086#1085' :'
+  end
+  object edPeriod: TcxButtonEdit
+    Left = 20
+    Top = 219
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 15
+    Width = 225
+  end
+  object cxLabel9: TcxLabel
+    Left = 256
+    Top = 199
+    Caption = #1043#1086#1076
+  end
+  object edinPeriodYear: TcxButtonEdit
+    Left = 256
+    Top = 219
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 17
+    Width = 69
+  end
+  object cxLabel10: TcxLabel
+    Left = 20
+    Top = 250
+    Caption = #1051#1080#1085#1080#1103' :'
+  end
+  object edLineFabrica: TcxButtonEdit
+    Left = 20
+    Top = 268
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 19
+    Width = 305
   end
   object ActionList: TActionList
-    Left = 304
-    Top = 8
+    Left = 300
+    Top = 65526
     object actDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -160,25 +230,49 @@
     OutputType = otResult
     Params = <
       item
-        Name = 'inId'
-        Value = Null
-        Component = dsdFormParams
-        ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPriceListFromId'
+        Name = 'inPriceListId'
         Value = ''
-        Component = PriceListGuidesFrom
+        Component = PriceListGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPriceListToId'
-        Value = ''
-        Component = PriceListGuidesTo
+        Name = 'inUnitId'
+        Value = 'NULL'
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGroupGoodsId'
+        Value = Null
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBrandId'
+        Value = Null
+        Component = GuidesBrand
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriodId'
+        Value = Null
+        Component = GuidesPeriod
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLineFabricaId'
+        Value = Null
+        Component = GuidesLineFabrica
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -192,10 +286,10 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperDateFrom'
-        Value = 'NULL'
-        Component = edOperDateFrom
-        DataType = ftDateTime
+        Name = 'inPeriodYear'
+        Value = Null
+        Component = edinPeriodYear
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -208,15 +302,15 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 275
-    Top = 102
+    Left = 271
+    Top = 84
   end
   object dsdFormParams: TdsdFormParams
     Params = <
       item
         Name = 'PriceListId'
         Value = Null
-        Component = PriceListGuidesTo
+        Component = PriceListGuides
         ComponentItem = 'Key'
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -224,7 +318,7 @@
       item
         Name = 'PriceListName'
         Value = Null
-        Component = PriceListGuidesTo
+        Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInputOutput
@@ -239,15 +333,100 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'OperDate'
+        Name = 'PeriodYear'
         Value = 'NULL'
-        Component = edOperDateFrom
-        DataType = ftDateTime
+        Component = edinPeriodYear
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupId'
+        Value = Null
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupName'
+        Value = Null
+        Component = GuidesGoodsGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PeriodId'
+        Value = Null
+        Component = GuidesPeriod
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PeriodName'
+        Value = Null
+        Component = GuidesPeriod
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LineFabricaId'
+        Value = Null
+        Component = GuidesLineFabrica
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LineFabricaName'
+        Value = Null
+        Component = GuidesLineFabrica
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BrandId'
+        Value = Null
+        Component = GuidesBrand
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BrandName'
+        Value = Null
+        Component = GuidesBrand
+        ComponentItem = 'TextValue'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 208
-    Top = 136
+    Left = 300
+    Top = 126
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -261,45 +440,16 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 288
-    Top = 208
+    Left = 132
+    Top = 320
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 136
-    Top = 184
-  end
-  object PriceListGuidesFrom: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edPriceListFrom
-    FormNameParam.Value = 'TPriceListForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPriceListForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = PriceListGuidesFrom
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = PriceListGuidesFrom
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
     Left = 200
-    Top = 8
+    Top = 313
   end
-  object PriceListGuidesTo: TdsdGuides
+  object PriceListGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edPriceListTo
+    LookupControl = edPriceList
     FormNameParam.Value = 'TPriceListForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -309,7 +459,7 @@
       item
         Name = 'Key'
         Value = ''
-        Component = PriceListGuidesTo
+        Component = PriceListGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -317,13 +467,187 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = PriceListGuidesTo
+        Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 56
-    Top = 160
+    Left = 244
+    Top = 15
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    Key = '0'
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 194
+    Top = 60
+  end
+  object GuidesBrand: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBrand
+    Key = '0'
+    FormNameParam.Value = 'TBrandForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBrandForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesBrand
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBrand
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 130
+    Top = 171
+  end
+  object GuidesGoodsGroup: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsGroup
+    Key = '0'
+    FormNameParam.Value = 'TGoodsGroup_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsGroup_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 162
+    Top = 116
+  end
+  object GuidesPeriod: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPeriod
+    Key = '0'
+    FormNameParam.Value = 'TPeriodForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesPeriod
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPeriod
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 162
+    Top = 203
+  end
+  object GuidesinPeriodYear: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edinPeriodYear
+    Key = '0'
+    FormNameParam.Value = 'TPeriodYear_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodYear_ChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'PeriodYear'
+        Value = ''
+        Component = edinPeriodYear
+        MultiSelectSeparator = ','
+      end>
+    Left = 276
+    Top = 205
+  end
+  object GuidesLineFabrica: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edLineFabrica
+    Key = '0'
+    FormNameParam.Value = 'TLineFabricaForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TLineFabricaForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesLineFabrica
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesLineFabrica
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 122
+    Top = 251
   end
 end

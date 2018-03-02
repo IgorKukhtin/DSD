@@ -69,19 +69,6 @@ type
     GuidesStartYear: TdsdGuides;
     cbClient: TcxCheckBox;
     actRefreshClient: TdsdDataSetRefresh;
-    Sale_Summ_10100: TcxGridDBColumn;
-    Sale_Summ_10201: TcxGridDBColumn;
-    Sale_Summ_10202: TcxGridDBColumn;
-    Sale_Summ_10203: TcxGridDBColumn;
-    Sale_Summ_10204: TcxGridDBColumn;
-    Sale_Summ_10200: TcxGridDBColumn;
-    Sale_SummCost_diff: TcxGridDBColumn;
-    OperDate_doc: TcxGridDBColumn;
-    GroupsName1: TcxGridDBColumn;
-    GroupsName2: TcxGridDBColumn;
-    GroupsName3: TcxGridDBColumn;
-    GroupsName4: TcxGridDBColumn;
-    DiscountSaleKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public
