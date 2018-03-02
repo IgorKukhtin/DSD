@@ -245,14 +245,14 @@ BEGIN
            , tmpMovementItem.AmountPartnerSh                              :: TFloat AS AmountPartnerSh
 
              -- ВЕС БРУТТО
-           , (-- "чистый" вес "у покупателя" - ???почему по ТЗ скидка за вес не должна учитываться???
+           , (-- "чистый" вес "у покупателя" - ???почему по ТЗ скидка за вес НЕ должна учитываться???
               tmpMovementItem.AmountPartnerWeight
             + -- плюс Вес "гофроящиков"
               COALESCE (tmpMovementItem.BoxCount, 0) * COALESCE (tmpObject_GoodsPropertyValue.GoodsBox_Weight, 0)
             + -- плюс Вес Упаковок (пакетов)
-              CASE WHEN COALESCE (ObjectFloat_WeightTotal.ValueData, 0) - COALESCE (ObjectFloat_WeightPackage.ValueData, 0) > 0
+              CASE WHEN COALESCE (ObjectFloat_WeightTotal.ValueData, 0) /*- COALESCE (ObjectFloat_WeightPackage.ValueData, 0)*/ > 0
                         THEN -- "чистый" вес "у покупателя" ДЕЛИМ НА вес в упаковке: "чистый" вес + вес 1-ого пакета МИНУС вес 1-ого пакета
-                             CAST (tmpMovementItem.AmountPartnerWeight / (COALESCE (ObjectFloat_WeightTotal.ValueData, 0) - COALESCE (ObjectFloat_WeightPackage.ValueData, 0)) AS NUMERIC (16, 0))
+                             CAST (tmpMovementItem.AmountPartnerWeight / (COALESCE (ObjectFloat_WeightTotal.ValueData, 0) /*- COALESCE (ObjectFloat_WeightPackage.ValueData, 0)*/) AS NUMERIC (16, 0))
                            * -- вес 1-ого пакета
                              COALESCE (ObjectFloat_WeightPackage.ValueData, 0)
                    ELSE 0
@@ -260,15 +260,15 @@ BEGIN
              ) :: TFloat AS AmountPartnerWeightWithBox
 
              -- Кол-во Упаковок (пакетов)
-           , CASE WHEN COALESCE (ObjectFloat_WeightTotal.ValueData, 0) - COALESCE (ObjectFloat_WeightPackage.ValueData, 0) > 0
+           , CASE WHEN COALESCE (ObjectFloat_WeightTotal.ValueData, 0) /*- COALESCE (ObjectFloat_WeightPackage.ValueData, 0)*/ > 0
                        THEN -- "чистый" вес "у покупателя" ДЕЛИМ НА вес в упаковке: "чистый" вес + вес 1-ого пакета МИНУС вес 1-ого пакета
-                            CAST (tmpMovementItem.AmountPartnerWeight / (COALESCE (ObjectFloat_WeightTotal.ValueData, 0) - COALESCE (ObjectFloat_WeightPackage.ValueData, 0)) AS NUMERIC (16, 0))
+                            CAST (tmpMovementItem.AmountPartnerWeight / (COALESCE (ObjectFloat_WeightTotal.ValueData, 0) /*- COALESCE (ObjectFloat_WeightPackage.ValueData, 0)*/) AS NUMERIC (16, 0))
                   ELSE 0
              END :: TFloat AS CountPackage_calc
              -- Вес Упаковок (пакетов)
-           , CASE WHEN COALESCE (ObjectFloat_WeightTotal.ValueData, 0) - COALESCE (ObjectFloat_WeightPackage.ValueData, 0) > 0
+           , CASE WHEN COALESCE (ObjectFloat_WeightTotal.ValueData, 0) /*- COALESCE (ObjectFloat_WeightPackage.ValueData, 0)*/ > 0
                        THEN -- "чистый" вес "у покупателя" ДЕЛИМ НА вес в упаковке: "чистый" вес + вес 1-ого пакета МИНУС вес 1-ого пакета
-                            CAST (tmpMovementItem.AmountPartnerWeight / (COALESCE (ObjectFloat_WeightTotal.ValueData, 0) - COALESCE (ObjectFloat_WeightPackage.ValueData, 0)) AS NUMERIC (16, 0))
+                            CAST (tmpMovementItem.AmountPartnerWeight / (COALESCE (ObjectFloat_WeightTotal.ValueData, 0) /*- COALESCE (ObjectFloat_WeightPackage.ValueData, 0)*/) AS NUMERIC (16, 0))
                           * -- вес 1-ого пакета
                             COALESCE (ObjectFloat_WeightPackage.ValueData, 0)
                   ELSE 0

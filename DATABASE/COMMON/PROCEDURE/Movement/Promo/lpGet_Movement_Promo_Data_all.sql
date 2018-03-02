@@ -85,6 +85,7 @@ BEGIN
                             , Movement.DescId
                        FROM Movement
                        WHERE Movement.ParentId IN (SELECT DISTINCT tmpMovement.MovementId FROM tmpMovement)
+                         AND Movement.StatusId <> zc_Enum_Status_Erased()
                          -- AND Movement.DescId = zc_Movement_PromoPartner()
                       )
            , tmpMLO AS 

@@ -2764,9 +2764,11 @@ begin
         Add('    left outer join DBA.Unit as Unit_To on Unit_To.Id = Bill.ToId');
         Add('    join BillItems  on BillItems.BillId = Bill.Id');
         Add('    left outer join _dataBI_all  on _dataBI_all.ReplId = BillItems.ReplId and _dataBI_all.DatabaseId = BillItems.DatabaseId ');
+        Add('    left outer join DiscountMovementItemReturn_byBarCode on DiscountMovementItemReturn_byBarCode.BillItemsId = BillItems.Id');
         Add('where Bill.BillKind = zc_bkReturnFromClientToUnit() and Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add('  and Bill.DatabaseId > 0');
         Add('  and _dataBI_all.ReplId is null');
+        Add('  and DiscountMovementItemReturn_byBarCode.BillItemsId is null');
         Add('  and Bill.BillDate < ' + FormatToDateServer_notNULL(StrToDate('11.11.2012')));
 
         Add('union all');
@@ -3634,9 +3636,11 @@ begin
         Add('    left outer join _dataBI_all  on _dataBI_all.ReplId = BillItems.ReplId and _dataBI_all.DatabaseId = BillItems.DatabaseId ');
         Add('    left outer join BillItems as BillItems_parent on BillItems_parent.Id = BillItems.ParentBillItemsId');
         Add('    left outer join BillItemsIncome on BillItemsIncome.id  = BillItems.BillItemsIncomeId');
+        Add('    left outer join DiscountMovementItemReturn_byBarCode on DiscountMovementItemReturn_byBarCode.BillItemsId = BillItems.Id');
         Add('where Bill.BillKind = zc_bkReturnFromClientToUnit() and Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add('  and Bill.DatabaseId > 0');
         Add('  and _dataBI_all.ReplId is null');
+        Add('  and DiscountMovementItemReturn_byBarCode.BillItemsId is null');
         Add('  and Bill.BillDate < ' + FormatToDateServer_notNULL(StrToDate('11.11.2012')));
         if cbNEW.Checked         then Add(' and BillItems.Id_Postgres is null');
 
@@ -4870,10 +4874,12 @@ begin
         Add('    left outer join DBA.Unit as Unit_From on Unit_From.Id = Bill.FromID');
         Add('    left outer join DBA.Unit as Unit_To on Unit_To.Id = Bill.ToId');
         Add('    join BillItems  on BillItems.BillId = Bill.Id');
-        Add('    left outer join _dataBI_all  on _dataBI_all.ReplId = BillItems.ReplId and _dataBI_all.DatabaseId = BillItems.DatabaseId ');
+        Add('    left outer join _dataBI_all  on _dataBI_all.ReplId = BillItems.ReplId and _dataBI_all.DatabaseId = BillItems.DatabaseId');
+        Add('    left outer join DiscountMovementItemReturn_byBarCode on DiscountMovementItemReturn_byBarCode.BillItemsId = BillItems.Id');
         Add('where Bill.BillKind = zc_bkReturnFromClientToUnit() and Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add('  and Bill.DatabaseId > 0');
         Add('  and _dataBI_all.ReplId is null');
+        Add('  and DiscountMovementItemReturn_byBarCode.BillItemsId is null');
         Add('  and Bill.BillDate < ' + FormatToDateServer_notNULL(StrToDate('11.11.2012')));
         if cbErr.Checked         then Add(' and Unit_From.Id_Postgres is null ');
         if cbNEW.Checked         then Add(' and Bill.Id_Postgres is null');
