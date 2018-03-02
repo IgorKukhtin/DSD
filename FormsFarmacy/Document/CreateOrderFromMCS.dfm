@@ -44,6 +44,7 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'. '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
+            Options.Editing = False
             Width = 78
           end
           object UnitName: TcxGridDBColumn

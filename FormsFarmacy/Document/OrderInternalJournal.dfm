@@ -138,6 +138,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             Caption = #1070#1088'. '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 76
           end
           object UnitName: TcxGridDBColumn
