@@ -127,7 +127,8 @@ begin
                     TMenuItem(Components[i]).Visible := true;
                     break;
                  end;
-
+  if not SameText(gc_User.Login, '') then
+    Caption := Caption + ' - Пользователь: ' + gc_User.Login;
 end;
 
 end.

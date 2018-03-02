@@ -2,14 +2,22 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
   Caption = #1057#1086#1079#1076#1072#1085#1080#1077' '#1079#1072#1103#1074#1086#1082' '#1085#1072' '#1086#1089#1085#1086#1074#1077' '#1053#1058#1047
   AddOnFormData.Params = FormParams
   ExplicitWidth = 591
-  ExplicitHeight = 347
+  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    ExplicitTop = 28
+    ExplicitHeight = 280
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 575
-      ExplicitHeight = 282
+      ExplicitLeft = 4
+      ExplicitTop = 4
+      ExplicitWidth = 567
+      ExplicitHeight = 272
       inherited cxGrid: TcxGrid
+        Width = 567
+        Height = 272
+        ExplicitWidth = 567
+        ExplicitHeight = 272
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.ShowEditButtons = gsebAlways
           Styles.Content = nil
@@ -32,6 +40,11 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
             HeaderHint = #1050#1086#1076' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
             Options.Editing = False
             Width = 36
+          end
+          object JuridicalName: TcxGridDBColumn
+            Caption = #1070#1088'. '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName'
+            Width = 78
           end
           object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -195,7 +208,7 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <

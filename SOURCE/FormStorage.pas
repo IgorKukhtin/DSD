@@ -193,6 +193,8 @@ begin
       MemoryStream.Position := 0;
       // Прочитать компонент из потока
       MemoryStream.ReadComponent(Result);
+      if not SameText(gc_User.Login, '') then
+        Result.Caption := Result.Caption + ' - Пользователь: ' + gc_User.Login;
       break;
     finally
       StringStream.Clear;

@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderInternal(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSumm TFloat
              , UnitId Integer, UnitName TVarChar, OrderKindId Integer,  OrderKindName TVarChar
-             , isDocument Boolean
+             , isDocument Boolean, JuridicalId Integer, JuridicalName TVarChar
              )
              
 AS
@@ -60,6 +60,8 @@ BEGIN
            , Object_OrderKind.Id                                AS OrderKindId
            , Object_OrderKind.ValueData                         AS OrderKindName
            , COALESCE(MovementBoolean_Document.ValueData, False) :: Boolean AS isDocument
+           , Object_Juridical.Id                        AS JuridicalId
+           , Object_Juridical.Valuedata                 AS JuridicalName
 
       FROM (SELECT Movement.id
                   , MovementLinkObject_Unit.ObjectId AS UnitId
@@ -102,6 +104,11 @@ BEGIN
                                         AND MovementLinkObject_OrderKind.DescId = zc_MovementLinkObject_OrderKind()
 
             LEFT JOIN Object AS Object_OrderKind ON Object_OrderKind.Id = MovementLinkObject_OrderKind.ObjectId
+            
+            LEFT JOIN ObjectLink AS ObjectLinkJuridical 
+                                 ON Object_Unit.id = ObjectLinkJuridical.objectid 
+                                AND ObjectLinkJuridical.descid = zc_ObjectLink_Unit_Juridical()
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.id = ObjectLinkJuridical.childobjectid
 
             ;
 
@@ -113,7 +120,8 @@ ALTER FUNCTION gpSelect_Movement_OrderInternal (TDateTime, TDateTime, Boolean, T
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Подмогильный В.В.
+ 02.03.18                                                                       *
  15.07.16         *
  04.05.16         *
  15.07.14                                                        *

@@ -18,6 +18,7 @@ type
 
   private
     FSession: String;
+    FLogin: String;
     procedure SetLocal(const Value: Boolean);
     function GetLocal: Boolean;
     procedure SetLocalMaxAtempt(const Value: Byte = 10);
@@ -26,6 +27,7 @@ type
     property Session: String read FSession;
     Property Local: Boolean read GetLocal Write SetLocal;
     Property LocalMaxAtempt: Byte read GetLocalMaxAtempt Write SetLocalMaxAtempt;
+    property Login: String read FLogin;
     constructor Create(ASession: String; ALocal: Boolean = false);
   end;
 
@@ -94,6 +96,7 @@ constructor TUser.Create(ASession: String; ALocal: Boolean = false);
 begin
   FSession := ASession;
   FLocal := ALocal;
+  FLogin := '';
 end;
 {------------------------------------------------------------------------------}
 class function TAuthentication.CheckLogin(pStorage: IStorage;
@@ -157,7 +160,10 @@ begin
        N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, IP_str]), False, 4, ANeedShowException)).DocumentElement;
   //
   if Assigned(N) then
+  begin
        pUser := TUser.Create(N.GetAttribute(AnsiLowerCase(gcSession)));
+       pUser.FLogin := pUserName;
+  end;
   result := pUser <> nil
 end;
 

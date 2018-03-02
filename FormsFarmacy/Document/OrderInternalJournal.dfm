@@ -3,27 +3,29 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
   ClientHeight = 535
   ClientWidth = 828
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitTop = -81
   ExplicitWidth = 844
-  ExplicitHeight = 574
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 828
-    Height = 478
+    Height = 476
     TabOrder = 3
+    ExplicitTop = 59
     ExplicitWidth = 828
-    ExplicitHeight = 478
-    ClientRectBottom = 478
-    ClientRectRight = 828
+    ExplicitHeight = 476
+    ClientRectBottom = 472
+    ClientRectRight = 824
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 828
-      ExplicitHeight = 478
+      ExplicitLeft = 4
+      ExplicitTop = 4
+      ExplicitWidth = 820
+      ExplicitHeight = 468
       inherited cxGrid: TcxGrid
-        Width = 828
-        Height = 478
-        ExplicitWidth = 828
-        ExplicitHeight = 478
+        Width = 820
+        Height = 468
+        ExplicitWidth = 820
+        ExplicitHeight = 468
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -121,30 +123,34 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
-            Width = 95
+            Width = 87
           end
           inherited colOperDate: TcxGridDBColumn [1]
             HeaderAlignmentHorz = taCenter
-            Width = 88
+            Width = 80
           end
           inherited colInvNumber: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
-            Width = 95
+            Width = 86
+          end
+          object JuridicalName: TcxGridDBColumn
+            Caption = #1070#1088'. '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            Width = 76
           end
           object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 156
+            Width = 139
           end
           object OrderKind: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1079#1072#1082#1072#1079#1072
             DataBinding.FieldName = 'OrderKindName'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 77
+            Width = 69
           end
           object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -153,8 +159,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 121
+            Width = 107
           end
           object TotalSumm: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072
@@ -163,17 +168,15 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 122
+            Width = 108
           end
           object isDocument: TcxGridDBColumn
             Caption = #1044#1072#1085#1085#1099#1077' '#1089#1086#1093#1088#1072#1085#1077#1085#1099
             DataBinding.FieldName = 'isDocument'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1072#1085#1085#1099#1077' '#1089#1086#1093#1088#1072#1085#1077#1085#1099
             Options.Editing = False
-            Width = 60
+            Width = 54
           end
         end
       end
@@ -420,7 +423,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
