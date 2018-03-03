@@ -4,9 +4,8 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   ClientWidth = 1118
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog1
-  ExplicitLeft = -340
   ExplicitWidth = 1134
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -203,6 +202,15 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 45
+          end
+          object isINN: TcxGridDBColumn
+            Caption = #1048#1053#1053' '#1079#1072#1087'.'
+            DataBinding.FieldName = 'isINN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1053#1053' '#1079#1072#1087#1080#1089#1072#1085
+            Options.Editing = False
+            Width = 40
           end
           object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
@@ -1253,6 +1261,61 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end>
       Caption = 'actGetDirectoryIFIN'
     end
+    object actUpdateINN: TdsdDataSetRefresh
+      Category = 'INN'
+      MoveParams = <>
+      StoredProc = spUpdate_INN
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_INN
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 26
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
+    object ExecuteDialogINN: TExecuteDialog
+      Category = 'INN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1048#1053#1053
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1048#1053#1053
+      ImageIndex = 26
+      FormName = 'TMovementString_INNEditForm'
+      FormNameParam.Value = 'TMovementString_INNEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inINN'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'INN_From'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macUpdateINN: TMultiAction
+      Category = 'INN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogINN
+        end
+        item
+          Action = actUpdateINN
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1048#1053#1053
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1048#1053#1053
+      ImageIndex = 76
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1401,6 +1464,14 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateINN'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbDocument'
         end
         item
@@ -1541,6 +1612,10 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     end
     object bbIFinALL: TdxBarButton
       Action = mactIFinALL
+      Category = 0
+    end
+    object bbUpdateINN: TdxBarButton
+      Action = macUpdateINN
       Category = 0
     end
   end
@@ -2029,5 +2104,39 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     PackSize = 1
     Left = 512
     Top = 192
+  end
+  object spUpdate_INN: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_INN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inINN'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'INN_From'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisINN'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isINN'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 906
+    Top = 216
   end
 end

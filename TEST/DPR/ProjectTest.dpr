@@ -1001,7 +1001,8 @@ uses
   EDI_SendJournal in '..\..\Forms\EDI\EDI_SendJournal.pas' {EDI_SendJournalForm: TParentForm},
   GoodsByGoodsKind_Sticker in '..\..\Forms\Guides\GoodsByGoodsKind_Sticker.pas' {GoodsByGoodsKind_StickerForm: TParentForm},
   LossPersonalJournal in '..\..\Forms\Document\LossPersonalJournal.pas' {LossPersonalJournalForm: TParentForm},
-  LossPersonal in '..\..\Forms\Document\LossPersonal.pas' {LossPersonalForm: TParentForm};
+  LossPersonal in '..\..\Forms\Document\LossPersonal.pas' {LossPersonalForm: TParentForm},
+  MovementString_INNEdit in '..\..\Forms\Document\MovementString_INNEdit.pas' {MovementString_INNEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

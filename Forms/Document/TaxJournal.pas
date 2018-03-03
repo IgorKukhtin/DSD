@@ -140,6 +140,12 @@ type
     bbIFinALL: TdxBarButton;
     spGetDirectoryNameIFIN: TdsdStoredProc;
     actGetDirectoryIFIN: TdsdExecStoredProc;
+    isINN: TcxGridDBColumn;
+    spUpdate_INN: TdsdStoredProc;
+    actUpdateINN: TdsdDataSetRefresh;
+    ExecuteDialogINN: TExecuteDialog;
+    macUpdateINN: TMultiAction;
+    bbUpdateINN: TdxBarButton;
   private
     { Private declarations }
   public

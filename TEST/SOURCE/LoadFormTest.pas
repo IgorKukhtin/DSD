@@ -998,6 +998,9 @@ begin
   //09.06.15
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxJournalDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxJournalDialogForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementString_INNEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementString_INNEditForm');
 end;
 
 procedure TLoadFormTest.LoadTaxCorrectiveTest;
