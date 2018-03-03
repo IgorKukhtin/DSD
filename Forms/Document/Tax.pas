@@ -100,6 +100,14 @@ type
     edStartDateTax: TcxDateEdit;
     cxLabel26: TcxLabel;
     edReestrKind: TcxButtonEdit;
+    cxLabel11: TcxLabel;
+    edINN: TcxTextEdit;
+    cbINN: TcxCheckBox;
+    macUpdateINN: TMultiAction;
+    ExecuteDialogINN: TExecuteDialog;
+    spUpdate_INN: TdsdStoredProc;
+    actUpdateINN: TdsdDataSetRefresh;
+    bbUpdateINN: TdxBarButton;
   private
     { Private declarations }
   public

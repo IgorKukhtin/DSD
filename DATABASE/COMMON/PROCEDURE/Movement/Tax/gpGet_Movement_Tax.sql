@@ -16,13 +16,16 @@ RETURNS TABLE (Id Integer, isMask Boolean, InvNumber TVarChar, OperDate TDateTim
              , TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat
              , InvNumberPartner TVarChar
-             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, PartnerId Integer, PartnerName TVarChar
+             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , INN_To TVarChar
+             , PartnerId Integer, PartnerName TVarChar
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
              , ReestrKindId Integer, ReestrKindName TVarChar
              , StartDateTax TDateTime
              , InvNumberBranch TVarChar
              , Comment TVarChar
+             , isINN Boolean
               )
 AS
 $BODY$
@@ -66,6 +69,7 @@ BEGIN
              , Object_Juridical_Basis.ValueData		AS FromName
              , 0                     			AS ToId
              , CAST ('' as TVarChar) 			AS ToName
+             , CAST ('' as TVarChar) 			AS INN_To
              , 0                               	        AS PartnerId
              , CAST ('' as TVarChar)           	        AS PartnerName
              , 0                     			AS ContractId
@@ -78,6 +82,7 @@ BEGIN
              , (DATE_TRUNC ('MONTH', inOperDate) - INTERVAL '4 MONTH') :: TDateTime AS StartDateTax
              , tmpInvNumber.InvNumberBranch
              , CAST ('' as TVarChar) 		        AS Comment
+             , CAST (False as Boolean)         		AS isINN
 
           FROM (SELECT CAST (NEXTVAL ('movement_tax_seq') AS TVarChar) AS InvNumber
                      , CASE WHEN inOperDate >= '01.01.2016'
@@ -137,6 +142,26 @@ BEGIN
            , Object_From.ValueData             			AS FromName--
            , Object_To.Id                      			AS ToId
            , Object_To.ValueData               			AS ToName
+           , CASE WHEN Movement.Id IN (-- Tax
+                                       6922620
+                                     , 6922564
+                                     , 6922609
+                                     , 6922233
+                                     , 6921599
+                                     , 6922367
+                                     , 6922254
+                                     , 6922275
+                                     , 8484674
+                                     , 8486085
+                                     , 8486839
+                                     , 8487001
+                                     , 8487359
+                                      )
+                  THEN '100000000000'
+                  ELSE COALESCE (MovementString_ToINN.ValueData, ObjectHistory_JuridicalDetails_View.INN)
+             END :: TVarChar AS INN_To
+
+
            , Object_Partner.Id                     		AS PartnerId
            , Object_Partner.ValueData              		AS PartnerName
            , Object_Contract.ContractId        			AS ContractId
@@ -151,47 +176,52 @@ BEGIN
            , (DATE_TRUNC ('MONTH', Movement.OperDate) - INTERVAL '4 MONTH') :: TDateTime AS StartDateTax
            , MovementString_InvNumberBranch.ValueData           AS InvNumberBranch
            , MovementString_Comment.ValueData                   AS Comment
+           , CASE WHEN COALESCE (MovementString_ToINN.ValueData, '') <> '' THEN TRUE ELSE FALSE END AS isINN
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Document
-                                      ON MovementBoolean_Document.MovementId =  Movement.Id
+                                      ON MovementBoolean_Document.MovementId = Movement.Id
                                      AND MovementBoolean_Document.DescId = zc_MovementBoolean_Document()
             LEFT JOIN MovementBoolean AS MovementBoolean_Electron
                                       ON MovementBoolean_Electron.MovementId = Movement.Id
                                      AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
 
             LEFT JOIN MovementDate AS MovementDate_DateRegistered
-                                   ON MovementDate_DateRegistered.MovementId =  Movement.Id
+                                   ON MovementDate_DateRegistered.MovementId = Movement.Id
                                   AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                      ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
 
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                                     ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                     ON MovementString_InvNumberPartner.MovementId = Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
+            LEFT JOIN MovementString AS MovementString_ToINN
+                                     ON MovementString_ToINN.MovementId = Movement.Id
+                                    AND MovementString_ToINN.DescId = zc_MovementString_ToINN()
+
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
-                                    ON MovementFloat_VATPercent.MovementId =  Movement.Id
+                                    ON MovementFloat_VATPercent.MovementId = Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                    ON MovementFloat_TotalCount.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalCount.MovementId = Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
-                                    ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSummMVAT.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
-                                    ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSummPVAT.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -203,6 +233,7 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+            LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_To.Id
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                          ON MovementLinkObject_Partner.MovementId = Movement.Id
@@ -251,6 +282,7 @@ ALTER FUNCTION gpGet_Movement_Tax (Integer, Boolean, TDateTime, TVarChar) OWNER 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 02.03.18         * MovementString_ToINN
  01.12.16         * add ReestrKind
  10.05.16         * add StartDateTax
  26.01.15         * add Mask
