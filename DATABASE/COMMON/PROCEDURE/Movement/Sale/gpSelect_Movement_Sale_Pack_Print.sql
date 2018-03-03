@@ -477,4 +477,4 @@ ALTER FUNCTION gpSelect_Movement_Sale_Pack_Print (Integer, Integer, TVarChar) OW
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale_Pack_Print (inMovementId := 130359, inMovementId_by:=0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_Sale_Pack_Print (inMovementId := 130359, inMovementId_by:=0, inSession:= zfCalc_UserAdmin());; -- FETCH ALL "<unnamed portal 1>";

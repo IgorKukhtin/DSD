@@ -4847,6 +4847,7 @@ begin
         Add('    , '''' as UsersName');
         Add('    , 0 as UserId_pg');
         Add('    , zc_rvYes() as isBill');
+        Add('    , zc_rvNo() as isErased');
         Add('from DBA.Bill');
         Add('    left outer join DBA.Unit as Unit_From on Unit_From.Id = Bill.FromID');
         Add('    left outer join DBA.Unit as Unit_To on Unit_To.Id = Bill.ToId');
@@ -4870,6 +4871,7 @@ begin
         Add('    , '''' as UsersName');
         Add('    , 0 as UserId_pg');
         Add('    , zc_rvYes() as isBill');
+        Add('    , zc_rvNo() as isErased');
         Add('from DBA.Bill');
         Add('    left outer join DBA.Unit as Unit_From on Unit_From.Id = Bill.FromID');
         Add('    left outer join DBA.Unit as Unit_To on Unit_To.Id = Bill.ToId');
@@ -4898,13 +4900,14 @@ begin
         Add('    , Users.UsersName as UsersName');
         Add('    , Users.UserId_Postgres as UserId_pg');
         Add('    , zc_rvNo() as isBill');
+        Add('    , DiscountMovement.isErased as isErased');
         Add('from DBA.DiscountMovement');
         Add('    left outer join DBA.DiscountKlient as DiscountKlient on DiscountKlient.Id = DiscountMovement.DiscountKlientID');
         Add('    left outer join DBA.Unit as Unit_From on Unit_From.id = DiscountKlient.ClientId');
         Add('    left outer join DBA.Unit as Unit_To on Unit_To.Id = DiscountMovement.UnitID');
         Add('    left outer join DBA.Users on Users.id = DiscountMovement.InsertUserID');
         Add('where DiscountMovement.descId = 2  and DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
-        Add('  and DiscountMovement.isErased = zc_rvNo()');
+        //Add('  and DiscountMovement.isErased = zc_rvNo()');
         if cbErr.Checked         then Add(' and Unit_From.Id_Postgres is null ');
         if cbReturnInErr.Checked then Add(' and 1=0 ');
         if cbNEW.Checked         then Add(' and DiscountMovement.ReturnInId_Postgres is null');
@@ -4950,6 +4953,11 @@ begin
 
              if not myExecToStoredProc then ;//exit;
              //
+             if (FieldByName('Id_Postgres').AsInteger>0) and(FieldByName('isErased').AsInteger=zc_rvYes)
+             then
+                 fOpenSqToQuery ('select gpSetErased_Movement_ReturnIn ('+IntToStr(FieldByName('Id_Postgres').AsInteger)+',zfCalc_UserAdmin())'
+                                 )
+             else
              if (FieldByName('Id_Postgres').AsInteger=0) and(FieldByName('isBill').AsInteger=zc_rvNo)
              then
                fExecSqFromQuery('update dba.DiscountMovement set ReturnInId_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString)
@@ -5189,6 +5197,7 @@ begin
         Add('    , '''' as UsersName');
         Add('    , 0 as UserId_pg');
         Add('    , zc_rvYes() as isBill');
+        Add('    , zc_rvNo() as isErased');
         Add('from DBA.Bill');
         Add('    left outer join DBA.Unit as Unit_From on Unit_From.Id = Bill.FromID');
         Add('    left outer join DBA.Unit as Unit_To on Unit_To.Id = Bill.ToId');
@@ -5214,6 +5223,7 @@ begin
         Add('    , '''' as UsersName');
         Add('    , 0 as UserId_pg');
         Add('    , zc_rvYes() as isBill');
+        Add('    , zc_rvNo() as isErased');
         Add('from DBA.Bill');
         Add('    left outer join DBA.Unit as Unit_From on Unit_From.Id = Bill.FromID');
         Add('    left outer join DBA.Unit as Unit_To on Unit_To.Id = Bill.ToId');
@@ -5241,6 +5251,7 @@ begin
         Add('    , Users.UsersName  as UsersName');
         Add('    , Users.UserId_Postgres as UserId_pg');
         Add('    , zc_rvNo() as isBill');
+        Add('    , DiscountMovement.isErased');
         Add('from DBA.DiscountMovement');
         Add('    left outer join DBA.Unit as Unit_From on Unit_From.Id = DiscountMovement.UnitID');
         Add('    left outer join DBA.DiscountKlient as DiscountKlient on DiscountKlient.Id = DiscountMovement.DiscountKlientID');
@@ -5248,7 +5259,7 @@ begin
         Add('    left outer join DBA.Users on Users.id = DiscountMovement.InsertUserID');
 
         Add('where DiscountMovement.descId = 1  and DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
-        Add('  and DiscountMovement.isErased = zc_rvNo()');
+        //Add('  and DiscountMovement.isErased = zc_rvNo()');
         if cbTest.Checked    then Add(' and DiscountMovement.Id = ' + TestEdit.Text);
         if cbErr.Checked     then Add(' and Unit_To.Id_Postgres is null ');
         if cbSaleErr.Checked then Add(' and 1=0 ');
@@ -5295,6 +5306,11 @@ begin
 
              if not myExecToStoredProc then ;//exit;
              //
+             if (FieldByName('Id_Postgres').AsInteger>0) and(FieldByName('isErased').AsInteger=zc_rvYes)
+             then
+                 fOpenSqToQuery ('select gpSetErased_Movement_Sale ('+IntToStr(FieldByName('Id_Postgres').AsInteger)+',zfCalc_UserAdmin())'
+                                 )
+             else
              if (FieldByName('Id_Postgres').AsInteger=0) and(FieldByName('isBill').AsInteger=zc_rvNo)
              then
                fExecSqFromQuery('update dba.DiscountMovement set SaleId_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString)

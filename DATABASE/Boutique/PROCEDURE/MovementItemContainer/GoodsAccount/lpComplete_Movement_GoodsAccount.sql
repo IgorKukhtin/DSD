@@ -36,10 +36,36 @@ BEGIN
                , vbUnitId
                , vbClientId
                , vbAccountDirectionId_From
-     FROM (SELECT Movement.DescId AS MovementDescId
+     FROM (WITH tmpFind AS (SELECT DISTINCT
+                                   Movement.Id AS MovementId
+                                 , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit()   THEN Object_From.Id ELSE 0 END, 0) AS UnitId
+                                 , COALESCE (CASE WHEN Object_To.DescId   = zc_Object_Client() THEN Object_To.Id   ELSE 0 END, 0) AS ClientId
+                            FROM Movement
+                                 JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                  AND MovementItem.DescId     = zc_MI_Master()
+                                                  AND MovementItem.isErased   = FALSE
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
+                                                                  ON MILinkObject_PartionMI.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_PartionMI.DescId         = zc_MILinkObject_PartionMI()
+                                 LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = MILinkObject_PartionMI.ObjectId
+                 
+                                 LEFT JOIN MovementItem AS MI_Sale ON MI_Sale.Id = Object_PartionMI.ObjectCode
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                              ON MovementLinkObject_From.MovementId = MI_Sale.MovementId
+                                                             AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                                 LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                              ON MovementLinkObject_To.MovementId = MI_Sale.MovementId
+                                                             AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                 LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+                            WHERE Movement.Id       = inMovementId
+                              AND Movement.DescId   = zc_Movement_GoodsAccount()
+                           )
+           -- Результат
+           SELECT Movement.DescId AS MovementDescId
                 , Movement.OperDate
-                , COALESCE (CASE WHEN Object_To.DescId   = zc_Object_Unit()   THEN Object_To.Id   ELSE 0 END, 0) AS UnitId
-                , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Client() THEN Object_From.Id ELSE 0 END, 0) AS ClientId
+                , COALESCE (CASE WHEN tmpFind.UnitId   > 0 THEN tmpFind.UnitId   WHEN Object_To.DescId   = zc_Object_Unit()   THEN Object_To.Id   ELSE 0 END, 0) AS UnitId
+                , COALESCE (CASE WHEN tmpFind.ClientId > 0 THEN tmpFind.ClientId WHEN Object_From.DescId = zc_Object_Client() THEN Object_From.Id ELSE 0 END, 0) AS ClientId
 
                   -- !!!ВСЕГДА - zc_Enum_AccountDirection_20100!!! Дебиторы + Покупатели
                 , zc_Enum_AccountDirection_20100() AS AccountDirectionId_From
@@ -54,6 +80,8 @@ BEGIN
                                              ON MovementLinkObject_To.MovementId = Movement.Id
                                             AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
                 LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+                
+                LEFT JOIN tmpFind ON tmpFind.MovementId = Movement.Id
 
            WHERE Movement.Id       = inMovementId
              AND Movement.DescId   = zc_Movement_GoodsAccount()
