@@ -109,7 +109,7 @@ BEGIN
          END IF;
 
          -- ѕроверка - т.к. MovementId - !!!Ќ≈ ћ≈Ќя≈“—я!!!
-         IF COALESCE (inMovementId, -1) <> COALESCE (vbMovementId, -2)
+         IF COALESCE (inMovementId, -1) <> COALESCE (vbMovementId, -2) AND (inUserId <> zc_User_Sybase() OR COALESCE (inMovementId, -1) < 0)
          THEN
              RAISE EXCEPTION 'ќшибка изменени€ MovementId с <%> на <%>', vbMovementId, inMovementId;
          END IF;

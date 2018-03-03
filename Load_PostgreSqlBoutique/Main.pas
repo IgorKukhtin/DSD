@@ -3210,8 +3210,7 @@ begin
         Add('    , BillItemsIncome.GoodsId_Postgres');
         Add('    , BillItemsIncome.Id_Postgres ');
         Add('    , DiscountMovementItem_byBarCode.Id_Postgres');
-
-        Add('    , DiscountMovementItem_byBarCode.TotalSummToPay , DiscountMovementItem_byBarCode.SummDiscountManual, DiscountMovementItem_byBarCode.OperCount');
+        Add('    , DiscountMovementItem_byBarCode.TotalSummToPay, DiscountMovementItem_byBarCode.SummDiscountManual, DiscountMovementItem_byBarCode.OperCount');
         Add('    , DiscountKlientAccountMoney.MovementItemId_pg ');
         Add('order by 4, 3');
         Open;
@@ -3244,15 +3243,16 @@ begin
              if fStop then begin exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
+             if toStoredProc.Params.ParamByName('inMovementId').Value < 0
+             then toStoredProc.Params.ParamByName('inMovementId').Value:=0
+             else toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
              toStoredProc.Params.ParamByName('inPartionId').Value:=FieldByName('PartionId').AsInteger;
              //toStoredProc.Params.ParamByName('inPartionMI_Id').Value:=FieldByName('PartionMI_Id').AsInteger;
              toStoredProc.Params.ParamByName('inSaleMI_Id').Value:=FieldByName('SaleMI_Id').AsInteger;
              //toStoredProc.Params.ParamByName('inIsPay').Value:=Boolean(FieldByName('isPay').AsInteger);
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
              toStoredProc.Params.ParamByName('inComment').Value:=FieldByName('CommentInfo').AsString;
-
-
+             //
              if not myExecToStoredProc then ;//exit;
              //
              if FieldByName('Id_Postgres').AsInteger=0 then
@@ -4127,6 +4127,7 @@ begin
         Add('    , Users.UserId_Postgres as UserId_pg');
         Add('    , DiscountMovement.UnitID');
         Add('    , DiscountMovement.DiscountKlientID');
+        Add('    , DiscountKlientAccountMoney.isErased');
         Add('    , DiscountKlientAccountMoney.MovementId_pg as Id_Postgres');
 
         Add('  FROM DiscountKlientAccountMoney'
@@ -4145,7 +4146,7 @@ begin
              + ' WHERE DiscountKlientAccountMoney.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
              + '   and DiscountKlientAccountMoney.isCurrent = zc_rvNo()'
              + '   and DiscountKlientAccountMoney.discountMovementItemReturnId  is null'
-             + '   and DiscountKlientAccountMoney.isErased = zc_rvNo()'
+             //+ '   and DiscountKlientAccountMoney.isErased = zc_rvNo()'
             );
 
         if cbErr.Checked then Add(' and Unit_From.Id_Postgres is null ');
@@ -4161,6 +4162,7 @@ begin
         Add('    , Users.UserId_Postgres ');
         Add('    , DiscountMovement.UnitID');
         Add('    , DiscountMovement.DiscountKlientID');
+        Add('    , DiscountKlientAccountMoney.isErased');
         Add('    , DiscountKlientAccountMoney.MovementId_pg ');
         Add('    , OperDateInsert');
         // !!!Обязательно сортировка по OperDateInsert!!!
@@ -4196,7 +4198,9 @@ begin
              //!!!
             if fStop then begin exit; end;
              //
-             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             if FieldByName('Id_Postgres').AsInteger < 0
+             then toStoredProc.Params.ParamByName('ioId').Value:= 0
+             else toStoredProc.Params.ParamByName('ioId').Value:= FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('ioInvNumber').Value:=FieldByName('InvNumber').AsString;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
              toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId').AsInteger;
@@ -4204,9 +4208,30 @@ begin
              toStoredProc.Params.ParamByName('inUserId_insert').Value:= FieldByName('UserId_pg').AsInteger;
              toStoredProc.Params.ParamByName('inOperDate_insert').Value:=FormatToDateTimeServer(FieldByName('OperDateInsert').AsDateTime);
 
-             if not myExecToStoredProc then ;//exit;
              //
-             if FieldByName('Id_Postgres').AsInteger=0
+             if (FieldByName('Id_Postgres').AsInteger<>0) and(FieldByName('isErased').AsInteger=zc_rvYes)
+             then begin
+                 fOpenSqToQuery ('select gpSetErased_Movement_GoodsAccount ('+IntToStr(abs(FieldByName('Id_Postgres').AsInteger))+',zfCalc_UserAdmin())'
+                                 );
+                 fExecSqFromQuery(' update dba.DiscountKlientAccountMoney set MovementId_pg = -1 * abs (DiscountKlientAccountMoney.MovementId_pg)'
+                                 +' from dba.DiscountMovementItem_byBarCode'
+                                 +'      join dba.DiscountMovement on DiscountMovement.Id     = DiscountMovementItem_byBarCode.DiscountMovementId'
+                                 +'                               and DiscountMovement.UnitID = ' + IntToStr(FieldByName('UnitID').AsInteger)
+                                 +'                               and DiscountMovement.DiscountKlientID = ' + IntToStr(FieldByName('DiscountKlientID').AsInteger)
+                                 +' where DiscountKlientAccountMoney.OperDate = '+FormatToDateTimeServer(FieldByName('OperDate').AsDateTime)
+                                 +'   and DiscountMovementItem_byBarCode.Id = DiscountKlientAccountMoney.DiscountMovementItemId'
+                                 +'   and DiscountKlientAccountMoney.isCurrent = zc_rvNo()'
+                                 +'   and DiscountKlientAccountMoney.discountMovementItemReturnId is null'
+                                 +'   and DiscountKlientAccountMoney.MovementId_pg = ' + IntToStr(FieldByName('Id_Postgres').AsInteger)
+                                 );
+             end
+             else
+                 if (FieldByName('isErased').AsInteger=zc_rvNo)
+                 then
+                     if not myExecToStoredProc then ;//exit;
+             //
+             if (FieldByName('Id_Postgres').AsInteger=0)
+                or ((FieldByName('Id_Postgres').AsInteger<0) and (FieldByName('isErased').AsInteger=zc_rvNo))
              then
                  fExecSqFromQuery(' update dba.DiscountKlientAccountMoney set MovementId_pg = '+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
                                  +' from dba.DiscountMovementItem_byBarCode'
@@ -4951,21 +4976,26 @@ begin
              toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId').AsInteger;
              toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId').AsInteger;
 
-             if not myExecToStoredProc then ;//exit;
+             //
              //
              if (FieldByName('Id_Postgres').AsInteger>0) and(FieldByName('isErased').AsInteger=zc_rvYes)
              then
                  fOpenSqToQuery ('select gpSetErased_Movement_ReturnIn ('+IntToStr(FieldByName('Id_Postgres').AsInteger)+',zfCalc_UserAdmin())'
                                  )
              else
-             if (FieldByName('Id_Postgres').AsInteger=0) and(FieldByName('isBill').AsInteger=zc_rvNo)
+                 if (FieldByName('isErased').AsInteger=zc_rvNo)
+                 then
+                     if not myExecToStoredProc then ;//exit;
+             //
+             //
+             if (FieldByName('isErased').AsInteger=zc_rvNo)and(FieldByName('Id_Postgres').AsInteger=0) and(FieldByName('isBill').AsInteger=zc_rvNo)
              then
                fExecSqFromQuery('update dba.DiscountMovement set ReturnInId_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString)
              else
-                 if (FieldByName('Id_Postgres').AsInteger=0) and(FieldByName('isBill').AsInteger=zc_rvYes) then
+                 if (FieldByName('isErased').AsInteger=zc_rvNo)and(FieldByName('Id_Postgres').AsInteger=0) and(FieldByName('isBill').AsInteger=zc_rvYes) then
                    fExecSqFromQuery('update dba.Bill set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
-             if (FieldByName('Id_Postgres').AsInteger=0)
+             if (FieldByName('Id_Postgres').AsInteger=0)and(FieldByName('isErased').AsInteger=zc_rvNo)
              then
                  fOpenSqToQuery ('select lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), '+ IntToStr(toStoredProc.Params.ParamByName('ioId').Value) +', ' + FormatToDateTimeServer(FieldByName('OperDateInsert').AsDateTime) +') '
                                + '     , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), '+ IntToStr(toStoredProc.Params.ParamByName('ioId').Value) +', ' + IntToStr(FieldByName('UserId_pg').AsInteger) + ')'
@@ -5304,21 +5334,27 @@ begin
              toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId').AsInteger;
              toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId').AsInteger;
 
-             if not myExecToStoredProc then ;//exit;
+             //
              //
              if (FieldByName('Id_Postgres').AsInteger>0) and(FieldByName('isErased').AsInteger=zc_rvYes)
              then
                  fOpenSqToQuery ('select gpSetErased_Movement_Sale ('+IntToStr(FieldByName('Id_Postgres').AsInteger)+',zfCalc_UserAdmin())'
                                  )
              else
-             if (FieldByName('Id_Postgres').AsInteger=0) and(FieldByName('isBill').AsInteger=zc_rvNo)
+                 if (FieldByName('isErased').AsInteger=zc_rvNo)
+                 then
+                     if not myExecToStoredProc then ;//exit;
+             //
+             //
+             if (FieldByName('isErased').AsInteger=zc_rvNo)and(FieldByName('Id_Postgres').AsInteger=0) and(FieldByName('isBill').AsInteger=zc_rvNo)
              then
                fExecSqFromQuery('update dba.DiscountMovement set SaleId_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString)
              else
-                 if (FieldByName('Id_Postgres').AsInteger=0) and(FieldByName('isBill').AsInteger=zc_rvYes) then
+                 if (FieldByName('isErased').AsInteger=zc_rvNo)and(FieldByName('Id_Postgres').AsInteger=0) and(FieldByName('isBill').AsInteger=zc_rvYes) then
                    fExecSqFromQuery('update dba.Bill set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+
              //
-             if (FieldByName('Id_Postgres').AsInteger=0)
+             if (FieldByName('Id_Postgres').AsInteger=0)and(FieldByName('isErased').AsInteger=zc_rvNo)
              then
                  fOpenSqToQuery ('select lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), '+ IntToStr(toStoredProc.Params.ParamByName('ioId').Value) +', ' + FormatToDateTimeServer(FieldByName('OperDateInsert').AsDateTime) +') '
                                + '     , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), '+ IntToStr(toStoredProc.Params.ParamByName('ioId').Value) +', ' + IntToStr(FieldByName('UserId_pg').AsInteger) + ')'

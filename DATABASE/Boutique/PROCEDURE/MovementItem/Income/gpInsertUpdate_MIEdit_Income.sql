@@ -188,6 +188,8 @@ BEGIN
                         AND Object.ValueData  = inGoodsName
                         AND Object.ObjectCode = -1 * ioGoodsCode
                      );
+         -- Товар - у текущего Элемента
+         vbGoodsId_old = (SELECT Object_PartionGoods.GoodsId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = ioId);
      ELSE
          -- Запомнили !!!ДО изменений!!!
          IF ioId > 0

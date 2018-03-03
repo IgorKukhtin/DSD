@@ -13,6 +13,7 @@ $BODY$
    DECLARE vbServiceDate           TDateTime;
    DECLARE vbPersonalServiceListId Integer;
    DECLARE vbMovementItemId_err    Integer;
+   DECLARE vbInsertDate            TDateTime;
 BEGIN
      -- таблица - по документам, для lpComplete_Movement_PersonalService_Recalc
      CREATE TEMP TABLE _tmpMovement_Recalc (MovementId Integer, StatusId Integer, PersonalServiceListId Integer, PaidKindId Integer, ServiceDate TDateTime) ON COMMIT DROP;
@@ -58,7 +59,10 @@ BEGIN
                   AND OL_PaidKind.DescId        = zc_ObjectLink_PersonalServiceList_PaidKind()
                   AND OL_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm() -- !!!вот он БН!!!
                )
+        AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin() AND ObjectLink_UserRole_View.UserId = inUserId)
+        AND inUserId <> zfCalc_UserAdmin() :: Integer
      THEN
+         vbInsertDate:= (SELECT MIN (tmp.OperDate) FROM (SELECT MIN (MovementProtocol.OperDate) AS OperDate FROM MovementProtocol WHERE MovementProtocol.MovementId = inMovementId UNION ALL SELECT MIN (MovementProtocol.OperDate) AS OperDate FROM MovementProtocol_arc AS MovementProtocol WHERE MovementProtocol.MovementId = inMovementId) AS tmp);
          -- для ведомости БН - нельзя "текущий" месяц
          vbMovementItemId_err:= (SELECT MovementItem.Id
                                  FROM MovementItem
@@ -68,17 +72,20 @@ BEGIN
                                  WHERE MovementItem.MovementId = inMovementId
                                    AND MovementItem.DescId     = zc_MI_Master()
                                    AND MovementItem.isErased   = FALSE
-                                   -- т.е. раньше чем 1-ое число след. месяца
-                                   AND COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) < DATE_TRUNC ('MONTH', vbServiceDate) + INTERVAL'1 MONTH'
-                                 LIMIT 1
+                                   -- т.е. раньше чем Дата созданиня ДОК.
+                                   AND COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) <= vbInsertDate
+                                   -- !!!пока убрал!!! - т.е. раньше чем 1-ое число след. месяца
+                                   -- AND COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) < DATE_TRUNC ('MONTH', vbServiceDate) + INTERVAL'1 MONTH'
+                                LIMIT 1
                                 );
          IF vbMovementItemId_err > 0
-         THEN RAISE EXCEPTION 'Ошибка.Сотрудник <%> <%> <%> уволен <%>. Необходимо его удалить в ведомости за <%>.'
+         THEN RAISE EXCEPTION 'Ошибка.Сотрудник <%> <%> <%> уволен <%>. Необходимо его удалить в ведомости за <%> которая создана <%>.'
                        , lfGet_Object_ValueData_sh ((SELECT MI.ObjectId FROM MovementItem AS MI WHERE MI.Id = vbMovementItemId_err))
                        , lfGet_Object_ValueData_sh ((SELECT MILO.ObjectId FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = vbMovementItemId_err AND MILO.DescId = zc_MILinkObject_Position()))
                        , lfGet_Object_ValueData_sh ((SELECT MILO.ObjectId FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = vbMovementItemId_err AND MILO.DescId = zc_MILinkObject_Unit()))
                        , zfConvert_DateToString ((SELECT ObjectDate_DateOut.ValueData FROM MovementItem AS MI LEFT JOIN ObjectDate AS ObjectDate_DateOut ON ObjectDate_DateOut.ObjectId = MI.ObjectId AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out() WHERE MI.Id = vbMovementItemId_err))
                        , zfCalc_MonthYearName (vbServiceDate)
+                       , zfConvert_DateTimeToString (vbInsertDate)
                         ;
          END IF;
 

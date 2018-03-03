@@ -12,15 +12,8 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_Inventory());
-    vbUserId:= lpGetUserBySession (inSession);
+    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_Inventory());
 
-    -- убираем ссылки на этот док в продажах
-    PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Child(), MLM_Child.MovementId, Null)
-    FROM MovementLinkMovement AS MLM_Child
-    WHERE MLM_Child.descId = zc_MovementLinkMovement_Child()
-      AND MLM_Child.MovementChildId = inMovementId;
-    
     -- Удаляем Документ
     PERFORM lpSetErased_Movement (inMovementId := inMovementId
                                 , inUserId     := vbUserId);

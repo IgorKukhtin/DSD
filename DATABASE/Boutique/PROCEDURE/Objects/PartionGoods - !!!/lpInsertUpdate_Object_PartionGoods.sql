@@ -94,7 +94,7 @@ BEGIN
          -- Проверка сразу - ДЛЯ ПАРТИИ
         IF vbId_sale_part > 0
         THEN
-            RAISE EXCEPTION 'Ошибка.Найдено движение <%> № <%> от <%>.Нельзя корректировать <Цена вх.> или <Артикул> или <Размер>.'
+            RAISE EXCEPTION 'Ошибка.Найдено движение <%> № <%> от <%>.Нельзя корректировать <Цена вх.> или <Артикул> или <Размер>.(<%><%>)(<%><%>)(<%><%>)(<%><%>)(<%>)'
                           , (SELECT MovementDesc.ItemName
                              FROM MovementItem
                                   INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
@@ -111,6 +111,11 @@ BEGIN
                                   INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
                              WHERE MovementItem.Id = vbId_sale_part
                             )
+                          , inOperPrice,     (SELECT COALESCE (Object_PartionGoods.OperPrice, 0)     FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
+                          , inCountForPrice, (SELECT COALESCE (Object_PartionGoods.CountForPrice, 0) FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
+                          , inGoodsSizeId,   (SELECT COALESCE (Object_PartionGoods.GoodsSizeId, 0)   FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
+                          , inGoodsId,       inGoodsId_old
+                          , inMovementItemId
                            ;
         END IF;
      END IF;
