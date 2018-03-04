@@ -177,6 +177,7 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_INN
                                      ON MovementString_INN.MovementId = Movement.Id
                                     AND MovementString_INN.DescId = CASE WHEN Movement.DescId = zc_Movement_Tax() THEN zc_MovementString_ToINN() ELSE zc_MovementString_FromINN() END
+                                    AND MovementString_INN.ValueData  <> ''
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Electron
                                       ON MovementBoolean_Electron.MovementId =  Movement.Id

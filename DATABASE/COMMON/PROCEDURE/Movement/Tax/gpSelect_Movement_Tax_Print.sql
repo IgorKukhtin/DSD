@@ -458,6 +458,7 @@ order by 4*/
             LEFT JOIN MovementString AS MovementString_ToINN
                                      ON MovementString_ToINN.MovementId = Movement.Id
                                     AND MovementString_ToINN.DescId = zc_MovementString_ToINN()
+                                    AND MovementString_ToINN.ValueData  <> ''
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
                                     ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id

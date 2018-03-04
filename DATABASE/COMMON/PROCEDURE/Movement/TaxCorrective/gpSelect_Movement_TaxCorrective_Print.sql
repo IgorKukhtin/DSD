@@ -551,6 +551,7 @@ BEGIN
                             LEFT JOIN MovementString AS MovementString_FromINN
                                                      ON MovementString_FromINN.MovementId = tmpMovement.Id
                                                     AND MovementString_FromINN.DescId = zc_MovementString_FromINN()
+                                                    AND MovementString_FromINN.ValueData  <> ''
 
                             LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                  ON ObjectLink_Juridical_Retail.ObjectId = MovementLinkObject_From.ObjectId
