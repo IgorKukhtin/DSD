@@ -106,7 +106,7 @@ BEGIN
                                      , 8464619
                                       )
                   THEN '100000000000'
-                  ELSE ObjectHistoryString_JuridicalDetails_INN.ValueData
+                  ELSE COALESCE (MovementString_INN.ValueData, ObjectHistoryString_JuridicalDetails_INN.ValueData)
                                       
              END :: TVarChar AS INN
            , CASE Movement.DescId 
@@ -174,6 +174,10 @@ BEGIN
                                      ON MovementString_InvNumberPartner.MovementId = Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
+            LEFT JOIN MovementString AS MovementString_INN
+                                     ON MovementString_INN.MovementId = Movement.Id
+                                    AND MovementString_INN.DescId = CASE WHEN Movement.DescId = zc_Movement_Tax() THEN zc_MovementString_ToINN() ELSE zc_MovementString_FromINN() END
+
             LEFT JOIN MovementBoolean AS MovementBoolean_Electron
                                       ON MovementBoolean_Electron.MovementId =  Movement.Id
                                      AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
@@ -211,6 +215,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.03.18         *
  15.08.14                                        * add MovementBoolean_Electron
  27.06.14                         * add inInfoMoneyId, inPaidKindId
  19.05.14                                        * add BAZOP0

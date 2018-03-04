@@ -514,6 +514,7 @@ BEGIN
                             , ObjectString_JuridicalTo_GLNCode.ValueData      AS JuridicalTo_GLNCode
                             , MovementLinkObject_DocumentTaxKind.ObjectId     AS DocumentTaxKind
                             , MovementLinkObject_Branch.ObjectId              AS BranchId
+                            , MovementString_FromINN.ValueData                AS INN_From
                        FROM tmpMovement
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                          ON MovementLinkObject_From.MovementId = tmpMovement.Id
@@ -546,7 +547,11 @@ BEGIN
                             LEFT JOIN ObjectString AS ObjectString_Partner_GLNCodeCorporate
                                                    ON ObjectString_Partner_GLNCodeCorporate.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_From.ObjectId)
                                                   AND ObjectString_Partner_GLNCodeCorporate.DescId = zc_ObjectString_Partner_GLNCodeCorporate()
-                
+
+                            LEFT JOIN MovementString AS MovementString_FromINN
+                                                     ON MovementString_FromINN.MovementId = tmpMovement.Id
+                                                    AND MovementString_FromINN.DescId = zc_MovementString_FromINN()
+
                             LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                  ON ObjectLink_Juridical_Retail.ObjectId = MovementLinkObject_From.ObjectId
                                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
@@ -615,7 +620,7 @@ BEGIN
            , tmpContract.ContractKindName                                   AS ContractKind
 
            , CAST (REPEAT (' ', 7 - LENGTH (tmpMLM_Child.InvNumberPartner_Child)) || tmpMLM_Child.InvNumberPartner_Child AS TVarChar) AS InvNumber_Child
-           , tmpMLM_Child.OperDate_Child                                        AS OperDate_Child
+           , tmpMLM_Child.OperDate_Child                                    AS OperDate_Child
 
            , CASE WHEN inisClientCopy=TRUE
                   THEN 'X' ELSE '' END                                      AS CopyForClient
@@ -630,38 +635,38 @@ BEGIN
            , CASE WHEN tmpMI.OperDate < '01.01.2015' AND (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
                   THEN TRUE
                   WHEN tmpMI.OperDate >= '01.01.2015' AND tmpMLM_Child.OperDate_Child >= '01.01.2015'
-                   AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN AND vbCalcNDSPayer_INN = ''
+                   AND COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) <> vbNotNDSPayer_INN AND vbCalcNDSPayer_INN = ''
                        AND COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) >= 0
                   THEN TRUE
                   ELSE FALSE
              END :: Boolean AS isERPN -- Підлягає реєстрації в ЄРПН покупцем !!!так криво для медка до 01.04.2016!!!
 
-           , CASE WHEN vbOperDate_begin >= '01.04.2016' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN AND vbCalcNDSPayer_INN = ''
+           , CASE WHEN vbOperDate_begin >= '01.04.2016' AND COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) <> vbNotNDSPayer_INN AND vbCalcNDSPayer_INN = ''
                        AND COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) < 0
                        THEN 'X'
-                  WHEN vbOperDate_begin >= '01.04.2016' AND (OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> '')
+                  WHEN vbOperDate_begin >= '01.04.2016' AND (COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> '')
                        THEN 'X'
                   WHEN vbOperDate_begin >= '01.04.2016' 
                         THEN ''
                   WHEN tmpMI.OperDate < '01.01.2015' AND (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
                        THEN 'X'
-                  WHEN tmpMI.OperDate >= '01.01.2015' AND tmpMLM_Child.OperDate_Child >= '01.01.2015' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN AND vbCalcNDSPayer_INN = ''
+                  WHEN tmpMI.OperDate >= '01.01.2015' AND tmpMLM_Child.OperDate_Child >= '01.01.2015' AND COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) <> vbNotNDSPayer_INN AND vbCalcNDSPayer_INN = ''
                        THEN 'X'
                   ELSE ''
              END :: TVarChar AS ERPN -- Підлягає реєстрації в ЄРПН постачальником (продавцем)
 
-           , CASE WHEN OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN AND vbCalcNDSPayer_INN = '' AND tmpMLM_Child.OperDate_Child >= '01.02.2015'
+           , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) <> vbNotNDSPayer_INN AND vbCalcNDSPayer_INN = '' AND tmpMLM_Child.OperDate_Child >= '01.02.2015'
                   THEN CASE WHEN COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) < 0 THEN '' ELSE 'X' END
                   ELSE ''
              END :: TVarChar AS ERPN2 -- Підлягає реєстрації в ЄРПН покупцем
 
-           , CASE WHEN OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
+           , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
                   THEN 'X' ELSE '' END                                      AS NotNDSPayer
-           , CASE WHEN OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
+           , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
                   THEN TRUE ELSE FALSE END :: Boolean                       AS isNotNDSPayer
-           , CASE WHEN OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
+           , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
                   THEN '0' ELSE '' END                                      AS NotNDSPayerC1
-           , CASE WHEN OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
+           , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
                   THEN '2' ELSE '' END                                      AS NotNDSPayerC2
 
            , tmpMovement_Data.FromAddress                                   AS PartnerAddress_From
@@ -708,22 +713,22 @@ BEGIN
                                      ) AS SupplierGLNCode
 
 
-           , CASE WHEN OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
+           , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
                   THEN 'Неплатник'
              ELSE OH_JuridicalDetails_From.FullName END                     AS JuridicalName_From
-           , CASE WHEN OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
+           , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
                   THEN 'Неплатник'
              ELSE OH_JuridicalDetails_From.JuridicalAddress END             AS JuridicalAddress_From
 
            , OH_JuridicalDetails_From.OKPO                                  AS OKPO_From
-           , CASE WHEN vbCalcNDSPayer_INN <> '' THEN vbCalcNDSPayer_INN ELSE OH_JuridicalDetails_From.INN END AS INN_From
+           , CASE WHEN vbCalcNDSPayer_INN <> '' THEN vbCalcNDSPayer_INN ELSE COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) END AS INN_From
            , OH_JuridicalDetails_From.InvNumberBranch                       AS InvNumberBranch_From
            , OH_JuridicalDetails_From.NumberVAT                             AS NumberVAT_From
            , OH_JuridicalDetails_From.AccounterName                         AS AccounterName_From
            , OH_JuridicalDetails_From.BankAccount                           AS BankAccount_From
            , OH_JuridicalDetails_From.BankName                              AS BankName_From
            , OH_JuridicalDetails_From.MFO                                   AS BankMFO_From
-           , CASE WHEN OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
+           , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
                   THEN ''
              ELSE OH_JuridicalDetails_From.Phone END                        AS Phone_From
 
@@ -1069,6 +1074,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.03.18         *
  06.11.17         *
  28.08.17         *
  29.01.16         *

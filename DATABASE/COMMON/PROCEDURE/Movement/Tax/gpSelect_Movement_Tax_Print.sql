@@ -296,13 +296,13 @@ order by 4*/
            , ObjectString_ToAddress.ValueData           AS PartnerAddress_To
 
            --, OH_JuridicalDetails_To.FullName            AS JuridicalName_To
-           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+           , CASE WHEN COALESCE (MovementString_ToINN.ValueData,OH_JuridicalDetails_To.INN) = vbNotNDSPayer_INN
                     OR vbCalcNDSPayer_INN <> ''
                   THEN 'Неплатник'
                   ELSE OH_JuridicalDetails_To.FullName
              END AS JuridicalName_To
 
-           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+           , CASE WHEN COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) = vbNotNDSPayer_INN
                     OR vbCalcNDSPayer_INN <> ''
                   THEN ''
                   ELSE OH_JuridicalDetails_To.JuridicalAddress
@@ -310,7 +310,7 @@ order by 4*/
 
 --           , OH_JuridicalDetails_To.JuridicalAddress    AS JuridicalAddress_To
            , OH_JuridicalDetails_To.OKPO                AS OKPO_To
-           , CASE WHEN vbCalcNDSPayer_INN <> '' THEN vbCalcNDSPayer_INN ELSE OH_JuridicalDetails_To.INN END AS INN_To
+           , CASE WHEN vbCalcNDSPayer_INN <> '' THEN vbCalcNDSPayer_INN ELSE COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) END AS INN_To
            , OH_JuridicalDetails_To.NumberVAT           AS NumberVAT_To
            , OH_JuridicalDetails_To.AccounterName       AS AccounterName_To
            , OH_JuridicalDetails_To.BankAccount         AS BankAccount_To
@@ -319,7 +319,7 @@ order by 4*/
 --           , OH_JuridicalDetails_To.Phone               AS Phone_To
            , OH_JuridicalDetails_To.InvNumberBranch     AS InvNumberBranch_To
 
-           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+           , CASE WHEN COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) = vbNotNDSPayer_INN
                     OR vbCalcNDSPayer_INN <> ''
                   THEN ''
              ELSE OH_JuridicalDetails_To.Phone END      AS Phone_To
@@ -376,12 +376,12 @@ order by 4*/
                   THEN 'X' ELSE '' END                  AS ERPN
 
              -- Не підлягає наданню отримувачу (покупцю)
-           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+           , CASE WHEN COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) = vbNotNDSPayer_INN
                     OR vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
                     OR vbCalcNDSPayer_INN <> ''
                   THEN 'X' ELSE '' END                  AS NotNDSPayer
 
-           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+           , CASE WHEN COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) = vbNotNDSPayer_INN
                     OR vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
                     OR vbCalcNDSPayer_INN <> ''
                   THEN TRUE ELSE FALSE END :: Boolean   AS isNotNDSPayer
@@ -389,14 +389,14 @@ order by 4*/
              -- 1 - (зазначається відповідний тип причини)
            , CASE WHEN vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
                        THEN '0'
-                  WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+                  WHEN COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) = vbNotNDSPayer_INN
                     OR vbCalcNDSPayer_INN <> ''
                        THEN '0'
              END AS NotNDSPayerC1
              -- 2 - (зазначається відповідний тип причини)
            , CASE WHEN vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
                        THEN '7'
-                  WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+                  WHEN COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) = vbNotNDSPayer_INN
                     OR vbCalcNDSPayer_INN <> ''
                        THEN '2'
              END AS NotNDSPayerC2
@@ -429,7 +429,7 @@ order by 4*/
                                           AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
 
             LEFT JOIN MovementFloat AS MovementFloat_Amount
-                                    ON MovementFloat_Amount.MovementId =  MovementLinkMovement_Sale.MovementChildId
+                                    ON MovementFloat_Amount.MovementId = MovementLinkMovement_Sale.MovementChildId
                                    AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
 
             LEFT JOIN Movement AS Movement_EDI ON Movement_EDI.Id =  MovementLinkMovement_Sale.MovementChildId
@@ -440,20 +440,24 @@ order by 4*/
 
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartnerEDI
-                                   ON MovementDate_OperDatePartnerEDI.MovementId =  MovementLinkMovement_Sale.MovementChildId
+                                   ON MovementDate_OperDatePartnerEDI.MovementId = MovementLinkMovement_Sale.MovementChildId
                                   AND MovementDate_OperDatePartnerEDI.DescId = zc_MovementDate_OperDatePartner()
 
             LEFT JOIN MovementString AS MovementString_InvNumberPartnerEDI
-                                     ON MovementString_InvNumberPartnerEDI.MovementId =  MovementLinkMovement_Sale.MovementChildId
+                                     ON MovementString_InvNumberPartnerEDI.MovementId = MovementLinkMovement_Sale.MovementChildId
                                     AND MovementString_InvNumberPartnerEDI.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN MovementString AS MovementString_InvNumberBranch
-                                     ON MovementString_InvNumberBranch.MovementId =  Movement.Id
+                                     ON MovementString_InvNumberBranch.MovementId = Movement.Id
                                     AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
 
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                                     ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                     ON MovementString_InvNumberPartner.MovementId = Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+
+            LEFT JOIN MovementString AS MovementString_ToINN
+                                     ON MovementString_ToINN.MovementId = Movement.Id
+                                    AND MovementString_ToINN.DescId = zc_MovementString_ToINN()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
                                     ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
@@ -930,6 +934,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.03.18         * MovementString_ToINN.ValueData
  10.03.17         *
  06.01.17         * GoodsCodeUKTZED
  29.01.16         *
