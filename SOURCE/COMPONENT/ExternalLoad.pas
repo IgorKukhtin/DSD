@@ -1071,7 +1071,7 @@ begin
     for i := 0 to FExternalParams.Count - 1 do
         if AnsiUpperCase(FExternalParams[i].Name) =  AnsiUpperCase('Directory_add')
         then
-           lDirectory_add:=FExternalParams[i].Value;
+           lDirectory_add:=VarToStr(FExternalParams[i].Value);
   //
   TExecuteImportSettings.Execute(TImportSettingsFactory.CreateImportSettings(ImportSettingsId.Value, lDirectory_add),FExternalParams);
   result := true;
