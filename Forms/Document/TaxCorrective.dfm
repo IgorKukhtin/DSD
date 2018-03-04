@@ -3,7 +3,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   ClientHeight = 668
   ClientWidth = 1114
   ExplicitWidth = 1130
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -449,12 +449,15 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     object cxLabel14: TcxLabel
       Left = 767
       Top = 85
-      Caption = #1048#1053#1053
+      Caption = #1048#1053#1053' '#1076#1083#1103' '#1042#1089#1077#1093' '#1080#1083#1080' 1-'#1086#1075#1086' '#1076#1086#1082'.'
     end
     object cbINN: TcxCheckBox
       Left = 901
       Top = 103
+      Hint = #1048#1053#1053' '#1080#1089#1087#1088#1072#1074#1083#1077#1085' '#1076#1083#1103' 1-'#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
+      ParentShowHint = False
       Properties.ReadOnly = True
+      ShowHint = True
       TabOrder = 36
       Width = 24
     end
@@ -763,7 +766,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 26
-      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object ExecuteDialogINN: TExecuteDialog
@@ -799,8 +801,8 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         item
           Action = actUpdateINN
         end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1048#1053#1053
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1048#1053#1053
+      Caption = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1048#1053#1053' '#1076#1083#1103' 1-'#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1048#1053#1053' '#1076#1083#1103' 1-'#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 76
     end
   end
@@ -2302,15 +2304,15 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inINN'
+        Name = 'ioINN'
         Value = ''
         Component = edINN
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outisINN'
+        Name = 'outIsINN'
         Value = 'False'
         Component = cbINN
         DataType = ftBoolean

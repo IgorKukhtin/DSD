@@ -3,7 +3,7 @@ inherited TaxForm: TTaxForm
   ClientHeight = 668
   ClientWidth = 1067
   ExplicitWidth = 1083
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -407,6 +407,7 @@ inherited TaxForm: TTaxForm
     object cbINN: TcxCheckBox
       Left = 959
       Top = 103
+      Hint = #1048#1053#1053' '#1080#1089#1087#1088#1072#1074#1083#1077#1085' '#1076#1083#1103' 1-'#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
       TabOrder = 32
       Width = 24
@@ -429,7 +430,7 @@ inherited TaxForm: TTaxForm
   object cxLabel11: TcxLabel [4]
     Left = 821
     Top = 85
-    Caption = #1048#1053#1053
+    Caption = #1048#1053#1053' '#1076#1083#1103' '#1042#1089#1077#1093' '#1080#1083#1080' 1-'#1086#1075#1086' '#1076#1086#1082'.'
   end
   object edINN: TcxTextEdit [5]
     Left = 821
@@ -775,8 +776,8 @@ inherited TaxForm: TTaxForm
         item
           Action = actUpdateINN
         end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1048#1053#1053
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1048#1053#1053
+      Caption = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1048#1053#1053' '#1076#1083#1103' 1-'#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1048#1053#1053' '#1076#1083#1103' 1-'#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 76
     end
     object MedocAction: TMedocAction
@@ -799,7 +800,6 @@ inherited TaxForm: TTaxForm
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 26
-      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object mactMeDoc: TMultiAction
@@ -2307,15 +2307,15 @@ inherited TaxForm: TTaxForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inINN'
+        Name = 'ioINN'
         Value = ''
         Component = edINN
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outisINN'
+        Name = 'outIsINN'
         Value = Null
         Component = cbINN
         DataType = ftBoolean

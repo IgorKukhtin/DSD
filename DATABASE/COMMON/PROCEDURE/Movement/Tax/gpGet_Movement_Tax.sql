@@ -206,7 +206,8 @@ BEGIN
 
             LEFT JOIN MovementString AS MovementString_ToINN
                                      ON MovementString_ToINN.MovementId = Movement.Id
-                                    AND MovementString_ToINN.DescId = zc_MovementString_ToINN()
+                                    AND MovementString_ToINN.DescId     = zc_MovementString_ToINN()
+                                    AND MovementString_ToINN.ValueData  <> ''
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId = Movement.Id

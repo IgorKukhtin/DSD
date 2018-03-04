@@ -24,7 +24,7 @@ BEGIN
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_LossPersonal(), inInvNumber, inOperDate, NULL);
 
-     ioServiceDate := DATE_TRUNC ('Month', ioServiceDate) :: TDateTime;
+     ioServiceDate := DATE_TRUNC ('MONTH', ioServiceDate) :: TDateTime;
      -- Месяц начислений
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_ServiceDate(), ioId, ioServiceDate);
      -- Примечание

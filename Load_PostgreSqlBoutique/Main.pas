@@ -7588,6 +7588,7 @@ begin
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inAddress',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inPhone',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inPrinter',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inPrint',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inDiscountTax',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
@@ -7608,6 +7609,7 @@ begin
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
              toStoredProc.Params.ParamByName('inAddress').Value:=FieldByName('Address').AsString;
              toStoredProc.Params.ParamByName('inPhone').Value:=FieldByName('Phone').AsString;
+             toStoredProc.Params.ParamByName('inPrinter').Value:='';
              toStoredProc.Params.ParamByName('inPrint').Value:=FieldByName('NamePrint').AsString;
 
              toStoredProc.Params.ParamByName('inDiscountTax').Value:=FieldByName('DiscountTax').AsFloat;

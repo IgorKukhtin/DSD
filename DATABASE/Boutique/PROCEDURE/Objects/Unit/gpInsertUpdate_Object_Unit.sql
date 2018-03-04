@@ -43,6 +43,12 @@ BEGIN
          THEN ioCode := COALESCE ((SELECT ObjectCode FROM Object WHERE Id = ioId), 0);
    END IF; 
    
+   -- для загрузки из Sybase
+   IF vbUserId = zc_User_Sybase() AND ioId > 0
+   THEN
+        inPrinter:= (SELECT OS.ValueData FROM ObjectString AS OS WHERE OS.ObjectId = ioId AND OS.DescId = zc_ObjectString_Unit_Printer());
+   END IF;
+   
    -- проверка прав уникальности для свойства <Наименование >
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Unit(), inName);
 

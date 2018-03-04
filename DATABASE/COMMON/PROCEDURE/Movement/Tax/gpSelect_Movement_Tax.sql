@@ -100,6 +100,7 @@ BEGIN
                                       )
                   THEN '100000000000'
                   ELSE COALESCE (MovementString_ToINN.ValueData, ObjectHistory_JuridicalDetails_View.INN)
+                  -- ELSE ObjectHistory_JuridicalDetails_View.INN
              END :: TVarChar AS INN_To
 
            , Object_From_Master.ObjectCode              AS UnitCode
@@ -168,6 +169,7 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_ToINN
                                      ON MovementString_ToINN.MovementId = Movement.Id
                                     AND MovementString_ToINN.DescId = zc_MovementString_ToINN()
+                                    AND MovementString_ToINN.ValueData  <> ''
 
             LEFT JOIN MovementBoolean AS MovementBoolean_isCopy
                                       ON MovementBoolean_isCopy.MovementId = Movement.Id

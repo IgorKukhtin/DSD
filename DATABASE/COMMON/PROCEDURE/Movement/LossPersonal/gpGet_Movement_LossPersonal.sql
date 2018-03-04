@@ -74,4 +74,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_LossPersonal (inMovementId:= 0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Movement_LossPersonal (inMovementId:= 1, inOperDate:= CURRENT_DATE, inSession:= zfCalc_UserAdmin())

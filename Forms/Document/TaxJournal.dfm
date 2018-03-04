@@ -4,8 +4,9 @@ inherited TaxJournalForm: TTaxJournalForm
   ClientWidth = 1110
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog1
+  ExplicitLeft = -109
   ExplicitWidth = 1126
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -190,11 +191,11 @@ inherited TaxJournalForm: TTaxJournalForm
             Width = 50
           end
           object isINN: TcxGridDBColumn
-            Caption = #1048#1053#1053' '#1079#1072#1087'.'
+            Caption = #1048#1053#1053' '#1076#1086#1082'.'
             DataBinding.FieldName = 'isINN'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1048#1053#1053' '#1079#1072#1087#1080#1089#1072#1085
+            HeaderHint = #1048#1053#1053' '#1080#1089#1087#1088#1072#1074#1083#1077#1085' '#1076#1083#1103' 1-'#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
             Width = 40
           end
@@ -1332,7 +1333,6 @@ inherited TaxJournalForm: TTaxJournalForm
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 26
-      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object ExecuteDialogINN: TExecuteDialog
@@ -1369,8 +1369,8 @@ inherited TaxJournalForm: TTaxJournalForm
         item
           Action = actUpdateINN
         end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1048#1053#1053
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1048#1053#1053
+      Caption = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1048#1053#1053' '#1076#1083#1103' 1-'#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1048#1053#1053' '#1076#1083#1103' 1-'#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 76
     end
   end
@@ -2340,7 +2340,7 @@ inherited TaxJournalForm: TTaxJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inINN'
+        Name = 'ioINN'
         Value = ''
         Component = MasterCDS
         ComponentItem = 'INN_To'
@@ -2349,7 +2349,7 @@ inherited TaxJournalForm: TTaxJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outisINN'
+        Name = 'outIsINN'
         Value = 'False'
         Component = MasterCDS
         ComponentItem = 'isINN'

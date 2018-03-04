@@ -1,45 +1,66 @@
 -- Function: gpUpdate_Movement_INN()
 DROP FUNCTION IF EXISTS gpUpdate_Movement_INN (Integer, TVarChar, TVarChar);
-  
+
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_INN(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inINN                 TVarChar  , -- 
-   OUT outisINN              Boolean   , -- 
+ INOUT ioINN                 TVarChar  , --
+   OUT outisINN              Boolean   , --
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Boolean
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbDescId Integer;
 BEGIN
-    -- проверка прав пользователя на вызов процедуры
-    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_...());
-    vbUserId := lpGetUserBySession (inSession);
-
+    -- Сначала
     vbDescId := (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId);
 
-    IF vbDescId = zc_Movement_Tax() 
-    THEN
-        -- сохранили <>
-        PERFORM lpInsertUpdate_MovementString (zc_MovementString_ToINN(), inMovementId, inINN);
-    END IF;
-    IF vbDescId = zc_Movement_TaxCorrective() 
-    THEN
-        -- сохранили <>
-        PERFORM lpInsertUpdate_MovementString (zc_MovementString_FromINN(), inMovementId, inINN);
-    END IF;
-    
-    IF COALESCE (inINN, '') <> '' 
+
+    IF COALESCE (ioINN, '') <> ''
     THEN
         outisINN := TRUE;
-    ELSE 
-       outisINN := FALSE;
+    ELSE
+        outisINN := FALSE;
     END IF;
-    
+
+
+    IF vbDescId = zc_Movement_Tax()
+    THEN
+        -- проверка прав пользователя на вызов процедуры
+        vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Tax());
+
+        -- сохранили <>
+        PERFORM lpInsertUpdate_MovementString (zc_MovementString_ToINN(), inMovementId, ioINN);
+        
+        --
+        IF ioINN = '' THEN
+          ioINN:= (SELECT ObjectHistory_JuridicalDetails_View.OKPO FROM MovementLinkObject AS MLO LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = MLO.ObjectId WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To());
+        END IF;
+            
+
+    ELSEIF vbDescId = zc_Movement_TaxCorrective()
+    THEN
+        -- проверка прав пользователя на вызов процедуры
+        vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_TaxCorrective());
+
+        -- сохранили <>
+        PERFORM lpInsertUpdate_MovementString (zc_MovementString_FromINN(), inMovementId, ioINN);
+
+        --
+        IF ioINN = '' THEN
+          ioINN:= (SELECT ObjectHistory_JuridicalDetails_View.OKPO FROM MovementLinkObject AS MLO LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = MLO.ObjectId WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From());
+        END IF;
+
+    ELSE
+        RAISE EXCEPTION 'Ошибка.Для документа <%>', (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = vbDescId);
+
+    END IF;
+
+
     -- сохранили протокол
-    PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, False);
-   
+    PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

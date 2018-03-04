@@ -202,6 +202,7 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_FromINN
                                      ON MovementString_FromINN.MovementId = Movement.Id
                                     AND MovementString_FromINN.DescId = zc_MovementString_FromINN()
+                                    AND MovementString_FromINN.ValueData  <> ''
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Medoc
                                       ON MovementBoolean_Medoc.MovementId =  Movement.Id
