@@ -47,8 +47,8 @@ type
     GuidesUnit: TdsdGuides;
     cbDiscount: TcxCheckBox;
     edStartYear: TcxButtonEdit;
-    GuidesStartYear: TdsdGuides;
     edEndYear: TcxButtonEdit;
+    GuidesStartYear: TdsdGuides;
     GuidesEndYear: TdsdGuides;
   private
     { Private declarations }

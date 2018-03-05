@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , BankAccountName TVarChar, BankName TVarChar
              , AccountDirectionName TVarChar
              , StartDate_sybase TDateTime
+             , isPartnerBarCode Boolean
              , isErased boolean)
 AS
 $BODY$
@@ -90,7 +91,10 @@ BEGIN
 
              END :: TDateTime AS StartDate_sybase
 
+           , COALESCE (ObjectBoolean_PartnerBarCode.ValueData, FALSE) :: Boolean  AS isPartnerBarCode
+
            , Object_Unit.isErased            AS isErased
+
        FROM Object AS Object_Unit
             LEFT JOIN ObjectString AS OS_Unit_Address
                                    ON OS_Unit_Address.ObjectId = Object_Unit.Id
@@ -108,6 +112,10 @@ BEGIN
             LEFT JOIN ObjectFloat AS OS_Unit_DiscountTax
                                   ON OS_Unit_DiscountTax.ObjectId = Object_Unit.Id
                                  AND OS_Unit_DiscountTax.DescId = zc_ObjectFloat_Unit_DiscountTax()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_PartnerBarCode 
+                                    ON ObjectBoolean_PartnerBarCode.ObjectId = Object_Unit.Id 
+                                   AND ObjectBoolean_PartnerBarCode.DescId = zc_ObjectBoolean_Unit_PartnerBarCode()
 
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                  ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
@@ -155,6 +163,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
+05.03.18          *
 27.02.18          * Printer
 07.06.17          * add AccountDirection
 10.05.17                                                           *

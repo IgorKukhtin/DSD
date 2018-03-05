@@ -65,8 +65,6 @@ type
     GuidesPeriod: TdsdGuides;
     edStartYear: TcxButtonEdit;
     edEndYear: TcxButtonEdit;
-    GuidesEndYear: TdsdGuides;
-    GuidesStartYear: TdsdGuides;
     cbClient: TcxCheckBox;
     actRefreshClient: TdsdDataSetRefresh;
     Return_Summ_10200: TcxGridDBColumn;
@@ -78,6 +76,8 @@ type
     GroupsName3: TcxGridDBColumn;
     GroupsName4: TcxGridDBColumn;
     DiscountSaleKindName: TcxGridDBColumn;
+    GuidesStartYear: TdsdGuides;
+    GuidesEndYear: TdsdGuides;
   private
     { Private declarations }
   public

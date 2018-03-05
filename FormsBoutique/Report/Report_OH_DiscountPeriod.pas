@@ -58,8 +58,8 @@ type
     GuidesPeriod: TdsdGuides;
     edStartYear: TcxButtonEdit;
     edEndYear: TcxButtonEdit;
-    GuidesEndYear: TdsdGuides;
     GuidesStartYear: TdsdGuides;
+    GuidesEndYear: TdsdGuides;
   private
     { Private declarations }
   public

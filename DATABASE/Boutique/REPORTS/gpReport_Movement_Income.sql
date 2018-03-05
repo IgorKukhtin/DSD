@@ -61,6 +61,11 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
     vbUserId:= lpGetUserBySession (inSession);
 
+    -- !!!замена!!!
+    IF COALESCE (inEndYear, 0) = 0 THEN
+       inEndYear:= 1000000;
+    END IF;
+
     -- Результат
     RETURN QUERY
     WITH
@@ -162,8 +167,7 @@ BEGIN
                           LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                       ON MIFloat_OperPriceList.MovementItemId = MI_Income.Id
                                                      AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
-                     WHERE (Object_PartionGoods.PeriodYear >= inStartYear OR inStartYear = 0)
-                       AND (Object_PartionGoods.PeriodYear <= inEndYear   OR inEndYear = 0)
+                     WHERE (Object_PartionGoods.PeriodYear BETWEEN inStartYear AND inEndYear)
                      GROUP BY CASE WHEN inIsPartion = TRUE THEN tmpMovementIncome.MovementId ELSE -1 END
                             , tmpMovementIncome.InvNumber
                             , tmpMovementIncome.OperDate

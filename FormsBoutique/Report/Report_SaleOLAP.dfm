@@ -800,6 +800,18 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
           'Left'
           'Top'
           'Width')
+      end
+      item
+        Component = GuidesStartYear
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesEndYear
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -1018,15 +1030,35 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
         end
         item
           Name = 'StartYear'
+          Value = '0'
+          Component = GuidesStartYear
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartYearText'
           Value = Null
-          Component = edStartYear
+          Component = GuidesStartYear
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'EndYear'
+          Value = ''
+          Component = GuidesEndYear
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndYearText'
           Value = Null
-          Component = edEndYear
+          Component = GuidesEndYear
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
@@ -1159,14 +1191,16 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       item
         Name = 'inStartYear'
         Value = Null
-        Component = edStartYear
+        Component = GuidesStartYear
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inEndYear'
         Value = Null
-        Component = edEndYear
+        Component = GuidesEndYear
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1296,6 +1330,12 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       end
       item
         Component = cbOperPrice
+      end
+      item
+        Component = GuidesStartYear
+      end
+      item
+        Component = GuidesEndYear
       end>
     Left = 496
     Top = 224
@@ -1474,13 +1514,24 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PeriodYear'
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesStartYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
         Value = ''
-        Component = edStartYear
+        Component = GuidesStartYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 806
-    Top = 74
+    Left = 746
+    Top = 65
   end
   object GuidesEndYear: TdsdGuides
     KeyField = 'Id'
@@ -1493,12 +1544,21 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PeriodYear'
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesEndYear
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
         Value = ''
-        Component = edEndYear
+        Component = GuidesEndYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 870
-    Top = 74
+    Left = 853
+    Top = 59
   end
 end

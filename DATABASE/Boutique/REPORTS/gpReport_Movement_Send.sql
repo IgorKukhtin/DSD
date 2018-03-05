@@ -66,6 +66,11 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Send());
     vbUserId:= lpGetUserBySession (inSession);
 
+    -- !!!замена!!!
+    IF COALESCE (inEndYear, 0) = 0 THEN
+       inEndYear:= 1000000;
+    END IF;
+
     -- Результат
     RETURN QUERY
     WITH
@@ -152,8 +157,7 @@ BEGIN
                                                ON ObjectLink_Partner_Period.ObjectId = Object_PartionGoods.PartnerId
                                               AND ObjectLink_Partner_Period.DescId = zc_ObjectLink_Partner_Period()
                                               
-                     WHERE (Object_PartionGoods.PeriodYear >= inStartYear OR inStartYear = 0)
-                       AND (Object_PartionGoods.PeriodYear <= inEndYear OR inEndYear = 0) 
+                     WHERE (Object_PartionGoods.PeriodYear BETWEEN inStartYear AND inEndYear)
                        AND (ObjectLink_Partner_Period.ChildObjectId = inPeriodId OR inPeriodId = 0)
                        
                      GROUP BY tmpMovementSend.InvNumber

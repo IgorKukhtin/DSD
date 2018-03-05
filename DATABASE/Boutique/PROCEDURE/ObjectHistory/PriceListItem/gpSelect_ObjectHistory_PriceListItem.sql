@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpSelect_ObjectHistory_PriceListItem (Integer, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_ObjectHistory_PriceListItem (Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_ObjectHistory_PriceListItem (Integer, Integer, Integer, Integer, TDateTime, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_PriceListItem(
     IN inPriceListId        Integer   , -- ключ 
@@ -9,8 +10,8 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_PriceListItem(
     IN inBrandId            Integer   , -- торговая марка 
     IN inPeriodId           Integer   , -- сезон
     IN inOperDate           TDateTime , -- Дата действия
-    IN inStartYear          TFloat    , -- год
-    IN inEndYear            TFloat    , -- год   
+    IN inStartYear          Integer    , -- год с
+    IN inEndYear            Integer    , -- год по
     IN inShowAll            Boolean,   
     IN inSession            TVarChar    -- сессия пользователя
 )                              
@@ -49,7 +50,11 @@ RETURNS TABLE (Id Integer , ObjectId Integer
 AS
 $BODY$
 BEGIN
-
+    -- !!!замена!!!
+    IF COALESCE (inEndYear, 0) = 0 THEN
+       inEndYear:= 1000000;
+    END IF;
+    
    IF inShowAll THEN 
 
     -- Выбираем данные
@@ -124,8 +129,8 @@ BEGIN
                             AND (Object_PartionGoods.UnitId = inUnitId OR inUnitId = 0)
                             AND (Object_PartionGoods.BrandId = inBrandId OR inBrandId = 0)
                             AND (Object_PartionGoods.PeriodId = inPeriodId OR inPeriodId = 0)   
-                            AND (Object_PartionGoods.PeriodYear >= inStartYear OR inStartYear = 0)
-                            AND (Object_PartionGoods.PeriodYear <= inEndYear OR inEndYear = 0)                   
+                            AND (Object_PartionGoods.PeriodYear BETWEEN inStartYear AND inEndYear)
+                           -- AND (Object_PartionGoods.PeriodYear <= inEndYear OR inEndYear = 0)                   
                           )
     -- остаток
     , tmpContainer AS (SELECT Container.PartionId     AS PartionId
@@ -350,8 +355,8 @@ BEGIN
                             AND (Object_PartionGoods.UnitId = inUnitId OR inUnitId = 0)
                             AND (Object_PartionGoods.BrandId = inBrandId OR inBrandId = 0)
                             AND (Object_PartionGoods.PeriodId = inPeriodId OR inPeriodId = 0)   
-                            AND (Object_PartionGoods.PeriodYear >= inStartYear OR inStartYear = 0)
-                            AND (Object_PartionGoods.PeriodYear <= inEndYear OR inEndYear = 0)                   
+                            AND (Object_PartionGoods.PeriodYear BETWEEN inStartYear AND inEndYear)
+                            --AND (Object_PartionGoods.PeriodYear <= inEndYear OR inEndYear = 0)                   
                           )
     -- остаток
     , tmpContainer AS (SELECT Container.PartionId     AS PartionId
@@ -509,6 +514,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.03.18         *
  01.03.18         * новые вх.параметры
  28.04.17         * битики + св-ва товара
  20.08.15         * add inShowAll

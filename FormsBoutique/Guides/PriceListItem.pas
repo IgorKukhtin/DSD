@@ -98,6 +98,13 @@ type
     edEndYear: TcxButtonEdit;
     GuidesStartYear: TdsdGuides;
     GuidesEndYear: TdsdGuides;
+    spInsertUpdate_Price: TdsdStoredProc;
+    actInsertUpdate_Price: TdsdExecStoredProc;
+    macInsertUpdate_Price_List: TMultiAction;
+    cxLabel9: TcxLabel;
+    edPriceTax: TcxCurrencyEdit;
+    macInsertUpdate_Price: TMultiAction;
+    bbInsertUpdate_Price: TdxBarButton;
   private
     { Private declarations }
   public

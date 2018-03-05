@@ -138,6 +138,7 @@ object Report_OH_DiscountPeriodDialogForm: TReport_OH_DiscountPeriodDialogForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 15
     Width = 111
   end
@@ -149,6 +150,7 @@ object Report_OH_DiscountPeriodDialogForm: TReport_OH_DiscountPeriodDialogForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 16
     Width = 111
   end
@@ -260,14 +262,34 @@ object Report_OH_DiscountPeriodDialogForm: TReport_OH_DiscountPeriodDialogForm
       item
         Name = 'StartYear'
         Value = Null
-        Component = edStartYear
+        Component = GuidesStartYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartYearText'
+        Value = Null
+        Component = GuidesStartYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndYear'
         Value = Null
-        Component = edEndYear
+        Component = GuidesEndYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndYearText'
+        Value = Null
+        Component = GuidesEndYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -427,13 +449,24 @@ object Report_OH_DiscountPeriodDialogForm: TReport_OH_DiscountPeriodDialogForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PeriodYear'
-        Value = Null
-        Component = edStartYear
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesStartYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesStartYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 110
-    Top = 186
+    Left = 74
+    Top = 203
   end
   object GuidesEndYear: TdsdGuides
     KeyField = 'Id'
@@ -446,12 +479,23 @@ object Report_OH_DiscountPeriodDialogForm: TReport_OH_DiscountPeriodDialogForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PeriodYear'
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesEndYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
         Value = ''
-        Component = edEndYear
+        Component = GuidesEndYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 198
-    Top = 202
+    Left = 165
+    Top = 205
   end
 end

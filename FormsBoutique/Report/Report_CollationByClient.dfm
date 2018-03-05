@@ -1200,10 +1200,8 @@ inherited Report_CollationByClientForm: TReport_CollationByClientForm
         Component = PeriodChoice
       end
       item
-        Component = deStart
       end
       item
-        Component = deEnd
       end
       item
         Component = GuidesClient

@@ -1255,6 +1255,7 @@ inherited Report_MotionByClientForm: TReport_MotionByClientForm
         Component = GuidesUnit
       end
       item
+        Component = GuidesClient
       end>
     Left = 688
     Top = 280

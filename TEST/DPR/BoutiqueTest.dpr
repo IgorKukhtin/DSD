@@ -217,7 +217,6 @@ uses
   GoodsAccount in '..\..\FormsBoutique\Document\GoodsAccount.pas' {GoodsAccountForm: TParentForm},
   GoodsAccountJournal in '..\..\FormsBoutique\Document\GoodsAccountJournal.pas' {GoodsAccountJournalForm: TParentForm},
   Report_MovementReturnOutDialog in '..\..\FormsBoutique\Report\Report_MovementReturnOutDialog.pas' {Report_MovementReturnOutDialogForm: TParentForm},
-  Report_MovementReturnOut in '..\..\FormsBoutique\Report\Report_MovementReturnOut.pas' {Report_MovementReturnOutForm: TParentForm},
   Report_MovementSend in '..\..\FormsBoutique\Report\Report_MovementSend.pas' {Report_MovementSendForm: TParentForm},
   Report_MovementSendDialog in '..\..\FormsBoutique\Report\Report_MovementSendDialog.pas' {Report_MovementSendDialogForm: TParentForm},
   Report_MovementLoss in '..\..\FormsBoutique\Report\Report_MovementLoss.pas' {Report_MovementLossForm: TParentForm},
@@ -286,7 +285,8 @@ uses
   DiscountPeriod in '..\..\FormsBoutique\Guides\DiscountPeriod.pas' {DiscountPeriodForm: TParentForm},
   DiscountPeriodEdit in '..\..\FormsBoutique\Guides\DiscountPeriodEdit.pas' {DiscountPeriodEditForm: TParentForm},
   PriceListItemDialog in '..\..\FormsBoutique\Guides\PriceListItemDialog.pas' {PriceListItemDialogForm: TParentForm},
-  Report_Sale in '..\..\FormsBoutique\Report\Report_Sale.pas' {Report_SaleForm: TParentForm};
+  Report_Sale in '..\..\FormsBoutique\Report\Report_Sale.pas' {Report_SaleForm: TParentForm},
+  Report_MovementReturnOut in '..\..\FormsBoutique\Report\Report_MovementReturnOut.pas' {Report_MovementReturnOutForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

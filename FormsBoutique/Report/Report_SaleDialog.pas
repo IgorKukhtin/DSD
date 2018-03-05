@@ -56,10 +56,10 @@ type
     cxLabel8: TcxLabel;
     cxLabel9: TcxLabel;
     edStartYear: TcxButtonEdit;
-    GuidesStartYear: TdsdGuides;
     edEndYear: TcxButtonEdit;
-    GuidesEndYear: TdsdGuides;
     cbClient: TcxCheckBox;
+    GuidesStartYear: TdsdGuides;
+    GuidesEndYear: TdsdGuides;
   private
     { Private declarations }
   public
