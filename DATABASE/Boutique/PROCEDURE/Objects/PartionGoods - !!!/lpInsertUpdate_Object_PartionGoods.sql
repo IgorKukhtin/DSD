@@ -71,9 +71,54 @@ BEGIN
      IF COALESCE (inCountForPrice, 0) = 0 THEN inCountForPrice:= 1; END IF;
 
 
-     -- 1.0. ДЛЯ ПАРТИИ
+     -- 1.0. ДЛЯ ВСЕХ ПАРТИЙ - inGoodsId
      IF -- inUserId <> zc_User_Sybase() AND  - !!!Кроме Sybase!!!
         inMovementItemId > 0 AND (inOperPrice     <> (SELECT COALESCE (Object_PartionGoods.OperPrice, 0)     FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
+                               OR inCountForPrice <> (SELECT COALESCE (Object_PartionGoods.CountForPrice, 0) FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
+                                 )
+     THEN
+        -- есть ли ПРОВЕДЕННЫЕ документы - все
+        vbId_sale_part:= (SELECT MovementItem.Id
+                          FROM Object_PartionGoods
+                               INNER JOIN MovementItem ON MovementItem.PartionId = Object_PartionGoods.MovementItemId
+                                                      AND MovementItem.isErased  = FALSE -- !!!только НЕ удаленные!!!
+                                                      -- AND MovementItem.DescId = ...   -- !!!любой Desc!!!
+                               INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                  AND Movement.StatusId = zc_Enum_Status_Complete() -- !!!только проведенные!!!
+                                                  AND Movement.DescId   <> zc_Movement_Income()     -- !!!только НЕ Приход от постав.!!!
+                          WHERE Object_PartionGoods.MovementId = inMovementId
+                            AND Object_PartionGoods.GoodsId    = inGoodsId
+                          ORDER BY Movement.OperDate DESC
+                          LIMIT 1
+                         );
+        -- Проверка сразу - ДЛЯ ВСЕХ ПАРТИЙ - inGoodsId
+        IF vbId_sale_part > 0
+        THEN
+            RAISE EXCEPTION 'Ошибка.Найдено движение <%> № <%> от <%>.Нельзя корректировать <Цена вх.>.(<%><%>)(<%>)'
+                          , (SELECT MovementDesc.ItemName
+                             FROM MovementItem
+                                  INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                  INNER JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+                             WHERE MovementItem.Id = vbId_sale_part
+                            )
+                          , (SELECT Movement.InvNumber
+                             FROM MovementItem
+                                  INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                             WHERE MovementItem.Id = vbId_sale_part
+                            )
+                          , (SELECT zfConvert_DateToString (Movement.OperDate)
+                             FROM MovementItem
+                                  INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                             WHERE MovementItem.Id = vbId_sale_part
+                            )
+                          , inOperPrice, (SELECT COALESCE (Object_PartionGoods.OperPrice, 0) FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
+                          , inMovementItemId
+                           ;
+        END IF;
+     -- 1.0. ДЛЯ 1-ой ПАРТИИ
+     ELSEIF -- inUserId <> zc_User_Sybase() AND  - !!!Кроме Sybase!!!
+        inMovementItemId > 0 AND (-- и еще раз проверим Цену - т.к. в партии inMovementItemId все еще может быть другой GoodsId
+                                  inOperPrice     <> (SELECT COALESCE (Object_PartionGoods.OperPrice, 0)     FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
                                OR inCountForPrice <> (SELECT COALESCE (Object_PartionGoods.CountForPrice, 0) FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
                                OR inGoodsSizeId   <> (SELECT COALESCE (Object_PartionGoods.GoodsSizeId, 0)   FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
                                OR inGoodsId       <> inGoodsId_old
@@ -91,7 +136,7 @@ BEGIN
                           ORDER BY Movement.OperDate DESC
                           LIMIT 1
                          );
-         -- Проверка сразу - ДЛЯ ПАРТИИ
+         -- Проверка сразу - ДЛЯ 1-ой ПАРТИИ
         IF vbId_sale_part > 0
         THEN
             RAISE EXCEPTION 'Ошибка.Найдено движение <%> № <%> от <%>.Нельзя корректировать <Цена вх.> или <Артикул> или <Размер>.(<%><%>)(<%><%>)(<%><%>)(<%><%>)(<%>)'
@@ -301,7 +346,7 @@ BEGIN
               , GoodsId              = inGoodsId
               , GoodsItemId          = inGoodsItemId -- ***
               , CurrencyId           = inCurrencyId
-              , Amount               = inAmount
+              --, Amount               = inAmount
               , OperPrice            = inOperPrice
               , CountForPrice        = inCountForPrice
               , OperPriceList        = CASE WHEN vbPriceList_change = TRUE THEN inOperPriceList ELSE Object_PartionGoods.OperPriceList END
@@ -328,15 +373,18 @@ BEGIN
                                        , CurrencyId, Amount, OperPrice, CountForPrice, OperPriceList, BrandId, PeriodId, PeriodYear
                                        , FabrikaId, GoodsGroupId, MeasureId
                                        , CompositionId, GoodsInfoId, LineFabricaId
-                                       , LabelId, CompositionGroupId, GoodsSizeId, JuridicalId)
+                                       , LabelId, CompositionGroupId, GoodsSizeId, JuridicalId
+                                       , isErased, isArc)
                                  VALUES (inMovementItemId, inMovementId, inPartnerId, inUnitId, inOperDate, inGoodsId, inGoodsItemId
-                                       , inCurrencyId, inAmount, inOperPrice, inCountForPrice
+                                       , inCurrencyId, 0 /*inAmount*/, inOperPrice, inCountForPrice
                                          -- "сложно" получили цену
                                        , inOperPriceList
                                        , inBrandId, inPeriodId, inPeriodYear
                                        , zfConvert_IntToNull (inFabrikaId), inGoodsGroupId, inMeasureId
                                        , zfConvert_IntToNull (inCompositionId), zfConvert_IntToNull (inGoodsInfoId), zfConvert_IntToNull (inLineFabricaId)
-                                       , inLabelId, zfConvert_IntToNull (inCompositionGroupId), inGoodsSizeId, zfConvert_IntToNull (inJuridicalId));
+                                       , inLabelId, zfConvert_IntToNull (inCompositionGroupId), inGoodsSizeId, zfConvert_IntToNull (inJuridicalId)
+                                       , TRUE, TRUE
+                                        );
      ELSE
          -- !!!не забыли - проверили что НЕТ движения, тогда инфу в партии можно менять!!!
          -- PERFORM lpCheck ...
@@ -355,8 +403,11 @@ BEGIN
                                   , CompositionGroupId     = zfConvert_IntToNull (inCompositionGroupId)
                                     -- только для документа inMovementId
                                   , JuridicalId            = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN zfConvert_IntToNull (inJuridicalId) ELSE Object_PartionGoods.JuridicalId   END
-                                  -- , OperPrice              = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN inOperPrice                         ELSE Object_PartionGoods.OperPrice     END
-                                  -- , CountForPrice       = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN inCountForPrice                     ELSE Object_PartionGoods.CountForPrice END
+                                    -- только для документа inMovementId - еще и Цену вх.
+                                  , OperPrice              = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN inOperPrice                         ELSE Object_PartionGoods.OperPrice     END
+                                    -- только для документа inMovementId - еще и Цену вх.
+                                  , CountForPrice          = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN inCountForPrice                     ELSE Object_PartionGoods.CountForPrice END
+                                    -- еще и Цену Прайса - если она ПОСЛЕДЕНЯЯ
                                   , OperPriceList          = CASE WHEN vbPriceList_change = TRUE THEN inOperPriceList ELSE Object_PartionGoods.OperPriceList END
      WHERE Object_PartionGoods.MovementItemId <> inMovementItemId
        AND Object_PartionGoods.GoodsId        = inGoodsId;

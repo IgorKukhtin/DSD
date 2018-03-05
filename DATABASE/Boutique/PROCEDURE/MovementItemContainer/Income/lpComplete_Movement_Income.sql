@@ -423,6 +423,12 @@ BEGIN
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
+     -- дописали - КОЛ-ВО
+     UPDATE Object_PartionGoods SET Amount = _tmpItem.OperCount, isErased = FALSE, isArc = FALSE
+     FROM _tmpItem
+     WHERE Object_PartionGoods.MovementItemId = _tmpItem.MovementItemId
+    ;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

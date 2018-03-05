@@ -327,7 +327,43 @@ BEGIN
      THEN -- Цену - у текущего Элемента
           vbOperPriceList_old:= (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_OperPriceList());
 
-     ELSE -- Цену - у любого Элемента
+     ELSE 
+         -- Проверка
+         IF 1 < (SELECT COUNT(*) FROM (SELECT DISTINCT MIF.ValueData
+                                        FROM MovementItem
+                                             LEFT JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_OperPriceList()
+                                        WHERE MovementItem.MovementId = inMovementId
+                                          AND MovementItem.DescId     = zc_MI_Master()
+                                          AND MovementItem.ObjectId   = vbGoodsId
+                                          AND MovementItem.isErased   = FALSE
+                                       ) AS tmp)
+          THEN
+             RAISE EXCEPTION 'Ошибка.Разница Цен продажи: <%> и <%> для <%> в Документе № <%> от <%>.'
+                           , (SELECT MIN (tmp.OperPriceList)
+                              FROM (SELECT DISTINCT COALESCE (MIF.ValueData, 0) AS OperPriceList
+                                    FROM MovementItem
+                                         LEFT JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_OperPriceList()
+                                    WHERE MovementItem.MovementId = inMovementId
+                                      AND MovementItem.DescId     = zc_MI_Master()
+                                      AND MovementItem.ObjectId   = vbGoodsId
+                                      AND MovementItem.isErased   = FALSE
+                                   ) AS tmp)
+                           , (SELECT MAX (tmp.OperPriceList)
+                              FROM (SELECT DISTINCT COALESCE (MIF.ValueData, 0) AS OperPriceList
+                                    FROM MovementItem
+                                         LEFT JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_OperPriceList()
+                                    WHERE MovementItem.MovementId = inMovementId
+                                      AND MovementItem.DescId     = zc_MI_Master()
+                                      AND MovementItem.ObjectId   = vbGoodsId
+                                      AND MovementItem.isErased   = FALSE
+                                   ) AS tmp)
+                           , lfGet_Object_ValueData (vbGoodsId)
+                           , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId)
+                           , (SELECT zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId)
+                            ;
+          END IF;
+          
+          -- Цену - у любого Элемента
           vbOperPriceList_old:= (SELECT DISTINCT MIF.ValueData
                                  FROM MovementItem
                                       LEFT JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_OperPriceList()
@@ -384,8 +420,8 @@ BEGIN
                                                 );
 
 
-     -- по товарам исправили OperPriceList - НЕ для загрузки из Sybase т.к. там код НЕ = 0
-     IF vbUserId <> zc_User_Sybase()
+     -- по товарам исправили OperPriceList - НЕ для загрузки из Sybase т.к. там ???
+     IF 1=1 -- vbUserId <> zc_User_Sybase()
      THEN
          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(), MovementItem.Id, inOperPriceList)
          FROM MovementItem

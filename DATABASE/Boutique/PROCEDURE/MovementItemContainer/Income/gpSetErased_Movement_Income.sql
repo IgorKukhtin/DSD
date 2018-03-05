@@ -18,6 +18,11 @@ BEGIN
     PERFORM lpSetErased_Movement (inMovementId := inMovementId
                                 , inUserId     := vbUserId);
 
+     -- обнулили - КОЛ-ВО
+     UPDATE Object_PartionGoods SET Amount = 0, isErased = TRUE, isArc = TRUE
+     WHERE Object_PartionGoods.MovementId = inMovementId
+    ;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
