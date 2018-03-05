@@ -17,6 +17,15 @@ BEGIN
     vbDescId := (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId);
 
 
+     -- проверка
+     IF NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.StatusId = zc_Enum_Status_UnComplete())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.'
+                       , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId)
+                       , lfGet_Object_ValueData ((SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId));
+     END IF;
+
+
     IF COALESCE (ioINN, '') <> ''
     THEN
         outisINN := TRUE;

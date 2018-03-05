@@ -14,11 +14,12 @@ RETURNS TABLE (Id Integer, ParamValue TVarChar, DefaultValue TVarChar,
                ParamType TVarChar,
                ParamNumber Integer,
                UserParamName TVarChar,
-               isErased boolean,
-               ConvertFormatInExcel Boolean) AS
+               ConvertFormatInExcel Boolean,
+               isErased Boolean
+              )
+AS
 $BODY$
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_ImportSettingsItems());
 
@@ -33,8 +34,8 @@ BEGIN
        Object_ImportTypeItems_View.ParamType,
        Object_ImportTypeItems_View.ParamNumber,
        Object_ImportTypeItems_View.UserParamName,
-       Object_ImportSettingsItems_View.isErased,
-       Object_ImportSettingsItems_View.ConvertFormatInExcel
+       COALESCE (Object_ImportSettingsItems_View.ConvertFormatInExcel, FALSE) :: Boolean AS ConvertFormatInExcel,
+       Object_ImportSettingsItems_View.isErased
 
 FROM Object_ImportSettings_View
    LEFT JOIN Object_ImportTypeItems_View ON Object_ImportTypeItems_View.ImportTypeId = Object_ImportSettings_View.ImportTypeId
@@ -44,9 +45,8 @@ WHERE ((0 = inImportSettingsId) OR (Object_ImportSettings_View.Id = inImportSett
   
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_ImportSettingsItems(Integer, TVarChar) OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpSelect_Object_ImportSettingsItems (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

@@ -81,8 +81,8 @@ BEGIN
              , '' :: TVarChar                           AS ReestrKindName 
              , (DATE_TRUNC ('MONTH', inOperDate) - INTERVAL '4 MONTH') :: TDateTime AS StartDateTax
              , tmpInvNumber.InvNumberBranch
-             , CAST ('' as TVarChar) 		        AS Comment
-             , CAST (False as Boolean)         		AS isINN
+             , ''                           :: TVarChar AS Comment
+             , FALSE                        :: Boolean  AS isINN
 
           FROM (SELECT CAST (NEXTVAL ('movement_tax_seq') AS TVarChar) AS InvNumber
                      , CASE WHEN inOperDate >= '01.01.2016'

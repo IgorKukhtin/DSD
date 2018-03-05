@@ -10,8 +10,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ImportSettingsItems(
     IN inImportSettingsId        Integer   ,    -- ссылка на настройки импорта
     IN inImportTypeItemsId       Integer   ,    -- ссылка на параметры
     IN inDefaultValue            TVarChar  ,    -- Значение параметра по умолчанию
-    IN inConvertFormatInExcel    Boolean ,      -- Конвертировать формат в Excel
-    IN inSession                 TVarChar       -- сессия пользователя
+    IN inConvertFormatInExcel    Boolean   DEFAULT FALSE,  -- Конвертировать формат в Excel
+    IN inSession                 TVarChar  DEFAULT ''      -- сессия пользователя
 )
   RETURNS Integer AS
 $BODY$

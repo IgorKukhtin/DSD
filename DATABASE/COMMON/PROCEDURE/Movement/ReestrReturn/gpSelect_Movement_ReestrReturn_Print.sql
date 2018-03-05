@@ -5,9 +5,9 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_ReestrReturn_Print (Integer, Integer, 
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ReestrReturn_Print(
     IN inMovementId        Integer   ,
-    IN inPersonalId        Integer   ,
-    IN inPersonalTradeId   Integer   ,
-    IN inSession           TVarChar    -- сессия пользователя
+    IN inPersonalId        Integer   DEFAULT 0,
+    IN inPersonalTradeId   Integer   DEFAULT 0,
+    IN inSession           TVarChar  DEFAULT ''  -- сессия пользователя
 )
 RETURNS SETOF refcursor
 AS

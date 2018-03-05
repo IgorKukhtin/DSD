@@ -38,7 +38,7 @@ BEGIN
      THEN
      inMovementId := gpInsert_Movement_TaxCorrective_Mask (ioId        := inMovementId
                                                          , inOperDate  := inOperDate
-                                                         , inSession   := inSession); 
+                                                         , inSession   := inSession);
      END If;
 
 
@@ -80,7 +80,8 @@ BEGIN
              , 0                                    AS DocumentChildId
              , CAST ('' as TVarChar)                AS DocumentChildName
              , tmpInvNumber.InvNumberBranch         AS InvNumberBranch
-             , CAST ('' as TVarChar)                AS Comment
+             , ''                       :: TVarChar AS Comment
+             , FALSE                    :: Boolean  AS isINN
 
           FROM (SELECT CAST (NEXTVAL ('movement_taxcorrective_seq') AS TVarChar) AS InvNumber
                      , CASE WHEN inOperDate >= '01.01.2016'
@@ -95,7 +96,7 @@ BEGIN
                             WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentZaporozhye()
                                  THEN (SELECT ObjectString.ValueData FROM Object JOIN ObjectString ON ObjectString.DescId = zc_objectString_Branch_InvNumber() AND ObjectString.ObjectId = Object.Id WHERE Object.DescId = zc_object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportZaporozhye())
 
-                            WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentKrRog() 
+                            WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentKrRog()
                                  THEN (SELECT ObjectString.ValueData FROM Object JOIN ObjectString ON ObjectString.DescId = zc_objectString_Branch_InvNumber() AND ObjectString.ObjectId = Object.Id WHERE Object.DescId = zc_object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportKrRog())
 
                             WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentNikolaev()
@@ -154,7 +155,7 @@ BEGIN
                                       )
                   THEN '100000000000'
                   ELSE COALESCE (MovementString_FromINN.ValueData, ObjectHistory_JuridicalDetails_View.INN)
-             END :: TVarChar AS INN_From 
+             END :: TVarChar AS INN_From
 
            , Object_Partner.Id                 			                    AS PartnerId
            , Object_Partner.ValueData          			                    AS PartnerName
@@ -201,7 +202,7 @@ BEGIN
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
-            LEFT JOIN MovementString AS MovementString_Comment 
+            LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 

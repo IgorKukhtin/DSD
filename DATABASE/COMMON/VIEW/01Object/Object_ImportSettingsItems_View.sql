@@ -1,4 +1,4 @@
--- View: Object_Goods_View
+-- View: Object_ImportSettingsItems_View
 
 DROP VIEW IF EXISTS Object_ImportSettingsItems_View;
 
@@ -9,7 +9,7 @@ SELECT Object_ImportSettingsItems.Id,
        ObjectString_ImportSettingsItems_DefaultValue.ValueData AS DefaultValue,
        ObjectLink_ImportSettingsItems_ImportSettings.ChildObjectId AS ImportSettingsId,
        ObjectLink_ImportSettingsItems_ImportTypeItems.ChildObjectId AS ImportTypeItemsId,
-       COALESCE(ObjectBoolean_ImportSettingsItems_ConvertFormatInExcel.ValueData, False) AS ConvertFormatInExcel
+       COALESCE (ObjectBoolean_ImportSettingsItems_ConvertFormatInExcel.ValueData, FALSE) AS ConvertFormatInExcel
 FROM 
 
  Object AS Object_ImportSettingsItems 
@@ -34,7 +34,6 @@ WHERE Object_ImportSettingsItems.DescId = zc_Object_ImportSettingsItems();
 
 ALTER TABLE Object_ImportSettingsItems_View  OWNER TO postgres;
 
-
 /*-------------------------------------------------------------------------------*/
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -44,4 +43,4 @@ ALTER TABLE Object_ImportSettingsItems_View  OWNER TO postgres;
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM Object_Goods_View
+-- SELECT * FROM Object_ImportSettingsItems_View

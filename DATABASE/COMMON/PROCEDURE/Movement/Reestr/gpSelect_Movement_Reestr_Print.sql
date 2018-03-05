@@ -5,11 +5,11 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_Reestr_Print (Integer, Integer, Intege
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Reestr_Print(
     IN inMovementId        Integer   ,
-    IN inPersonalId        Integer   ,
-    IN inPersonalTradeId   Integer   ,
-    IN inReestrKindId      Integer   ,
-    IN inIsReestrKind      Boolean   ,
-    IN inSession           TVarChar    -- сессия пользователя
+    IN inPersonalId        Integer   DEFAULT 0,
+    IN inPersonalTradeId   Integer   DEFAULT 0,
+    IN inReestrKindId      Integer   DEFAULT 0,
+    IN inIsReestrKind      Boolean   DEFAULT FALSE,
+    IN inSession           TVarChar  DEFAULT ''  -- сессия пользователя
 )
 RETURNS SETOF refcursor
 AS
