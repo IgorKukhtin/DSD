@@ -60,23 +60,19 @@ inherited Report_MovementReturnOutForm: TReport_MovementReturnOutForm
     object cbPartion: TcxCheckBox
       Left = 803
       Top = 5
-      Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1086' '#1042#1089#1077#1084' '#1055#1072#1088#1090#1080#1103#1084' ('#1044#1072'/'#1053#1077#1090')'
       Action = actRefreshIsPartion
-      Caption = #1087#1086' '#1042#1089#1077#1084' '#1055#1072#1088#1090#1080#1103#1084
       TabOrder = 6
-      Width = 110
+      Width = 128
     end
     object cbSize: TcxCheckBox
       Left = 803
       Top = 32
-      Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1086' '#1042#1089#1077#1084' '#1056#1072#1079#1084#1077#1088#1072#1084' ('#1044#1072'/'#1053#1077#1090')'
       Action = actRefreshSize
-      Caption = #1087#1086' '#1042#1089#1077#1084' '#1056#1072#1079#1084#1077#1088#1072#1084
       TabOrder = 7
-      Width = 113
+      Width = 70
     end
     object cbPartner: TcxCheckBox
-      Left = 919
+      Left = 931
       Top = 5
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
       Action = actRefreshPartner
@@ -85,7 +81,7 @@ inherited Report_MovementReturnOutForm: TReport_MovementReturnOutForm
       Width = 108
     end
     object cbMovement: TcxCheckBox
-      Left = 919
+      Left = 931
       Top = 33
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090'> ('#1044#1072'/'#1053#1077#1090')'
       Action = actRefreshMovement
@@ -605,6 +601,26 @@ inherited Report_MovementReturnOutForm: TReport_MovementReturnOutForm
         Properties.Strings = (
           'Key'
           'TextValue')
+      end
+      item
+        Component = cbMovement
+        Properties.Strings = (
+          'Checked')
+      end
+      item
+        Component = cbPartion
+        Properties.Strings = (
+          'Checked')
+      end
+      item
+        Component = cbPartner
+        Properties.Strings = (
+          'Checked')
+      end
+      item
+        Component = cbSize
+        Properties.Strings = (
+          'Checked')
       end>
   end
   inherited ActionList: TActionList
@@ -817,8 +833,8 @@ inherited Report_MovementReturnOutForm: TReport_MovementReturnOutForm
         item
           StoredProc = spSelect
         end>
-      Caption = #1087#1086' '#1056#1072#1079#1084#1077#1088#1072#1084
-      Hint = #1087#1086' '#1056#1072#1079#1084#1077#1088#1072#1084
+      Caption = #1056#1072#1079#1084#1077#1088#1099
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -843,8 +859,8 @@ inherited Report_MovementReturnOutForm: TReport_MovementReturnOutForm
         item
           StoredProc = spSelect
         end>
-      Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
-      Hint = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end

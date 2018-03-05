@@ -6,6 +6,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -30
   ExplicitWidth = 1185
   ExplicitHeight = 471
   PixelsPerInch = 96
@@ -787,6 +788,26 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         Properties.Strings = (
           'Key'
           'TextValue')
+      end
+      item
+        Component = cbPartion
+        Properties.Strings = (
+          'Checked')
+      end
+      item
+        Component = cbPartner
+        Properties.Strings = (
+          'Checked')
+      end
+      item
+        Component = cbSize
+        Properties.Strings = (
+          'Checked')
+      end
+      item
+        Component = cbYear
+        Properties.Strings = (
+          'Checked')
       end>
   end
   inherited ActionList: TActionList
