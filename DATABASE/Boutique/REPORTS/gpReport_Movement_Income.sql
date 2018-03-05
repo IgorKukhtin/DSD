@@ -56,15 +56,20 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
     -- проверка прав пользователя на вызов процедуры
-    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
+    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_...());
     vbUserId:= lpGetUserBySession (inSession);
 
+    -- !!!замена!!!
+    IF inIsPartion = TRUE THEN
+       inIsPartner:= TRUE;
+       inIsSize   := TRUE;
+    END IF;
     -- !!!замена!!!
     IF COALESCE (inEndYear, 0) = 0 THEN
        inEndYear:= 1000000;
     END IF;
+
 
     -- Результат
     RETURN QUERY

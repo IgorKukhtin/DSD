@@ -88,11 +88,11 @@ BEGIN
     vbUnitId := lpGetUnitByUser (vbUserId);
     -- RAISE EXCEPTION 'Ошибка.по подразделению <%> .', lfGet_Object_ValueData (vbUnitId);
 
-     -- если у пользователя = 0, тогда может смотреть любой магазин, иначе только свой
-     IF COALESCE (vbUnitId, 0) <> 0 AND COALESCE (vbUnitId, 0) <> inUnitId AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Child() AND OL.ChildObjectid = inUnitId AND OL.Objectid = vbUnitId)
-     THEN
-         RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав просмотра данных по подразделению <%> .', lfGet_Object_ValueData (vbUserId), lfGet_Object_ValueData (inUnitId);
-     END IF;
+    -- если у пользователя = 0, тогда может смотреть любой магазин, иначе только свой
+    IF COALESCE (vbUnitId, 0) <> 0 AND COALESCE (vbUnitId, 0) <> inUnitId AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Child() AND OL.ChildObjectid = inUnitId AND OL.Objectid = vbUnitId)
+    THEN
+        RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав просмотра данных по подразделению <%> .', lfGet_Object_ValueData (vbUserId), lfGet_Object_ValueData (inUnitId);
+    END IF;
 
 
     -- таблица подразделений
