@@ -445,7 +445,7 @@ BEGIN
                            , SUM (CASE WHEN Object.DescId = zc_Object_BankAccount() THEN MovementItem.Amount ELSE 0 END) AS Amount_Bank
                            , CASE WHEN MovementItem.ParentId IS NULL THEN MIFloat_CurrencyValue.ValueData ELSE 0 END AS CurrencyValue
                            --, MovementItem.isErased
-                      FROM (SELECT DISTINCT tmpData_1.MovementId FROM tmpData_1) AS tmpData
+                      FROM (SELECT DISTINCT tmpData_MI.MovementId FROM tmpData_MI) AS tmpData
                             JOIN MovementItem ON MovementItem.MovementId = tmpData.MovementId
                                              AND MovementItem.DescId     = zc_MI_Child()
                                              AND MovementItem.isErased   = FALSE
@@ -511,7 +511,7 @@ BEGIN
                                 , (tmpMI_Child.Amount_EUR * (CASE WHEN tmp.MovementDescId = zc_Movement_ReturnIn() THEN -1 ELSE 1 END)) :: TFloat AS TotalPay_EUR
                                 , (tmpMI_Child.Amount_Bank* (CASE WHEN tmp.MovementDescId = zc_Movement_ReturnIn() THEN -1 ELSE 1 END)) :: TFloat AS TotalPay_Card
 
-                           FROM tmpData_1 AS tmp
+                           FROM tmpData_MI AS tmp
                                 LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmp.MI_Id
                            WHERE COALESCE (tmp.TotalPay, 0) <> 0
                        UNION ALL
@@ -545,7 +545,7 @@ BEGIN
                                       , tmp.OperDate
                                       , tmp.Invnumber
                                       , tmp.ClientId
-                                 FROM tmpData_1 AS tmp) AS tmp
+                                 FROM tmpData_MI AS tmp) AS tmp
                                INNER JOIN tmpMI_Child AS tmpMI_Child_Exc
                                                       ON tmpMI_Child_Exc.MovementId = tmp.MovementId
                                                      AND tmpMI_Child_Exc.ParentId = 0
