@@ -71,6 +71,7 @@ type
     BankName: TcxGridDBColumn;
     AccountDirectionName: TcxGridDBColumn;
     PrintName: TcxGridDBColumn;
+    isPartnerBarCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

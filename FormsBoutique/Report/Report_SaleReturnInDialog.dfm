@@ -13,7 +13,6 @@ object Report_SaleReturnInDialogForm: TReport_SaleReturnInDialogForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13

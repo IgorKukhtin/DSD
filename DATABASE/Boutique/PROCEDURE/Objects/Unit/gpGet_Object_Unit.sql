@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ChildId Integer, ChildName  TVarChar
              , BankAccountId Integer, BankAccountName  TVarChar
              , AccountDirectionId Integer, AccountDirectionName TVarChar
+             , isPartnerBarCode Boolean
 ) 
 AS
 $BODY$
@@ -45,6 +46,7 @@ BEGIN
            , '' :: TVarChar                         AS BankAccountName        
            ,  0 :: Integer                          AS AccountDirectionId
            , '' :: TVarChar                         AS AccountDirectionName 
+           , FALSE :: Boolean                       AS isPartnerBarCode
        ;
    ELSE
        RETURN QUERY
@@ -67,7 +69,9 @@ BEGIN
            , Object_BankAccount.ValueData    AS BankAccountName
 
            , Object_AccountDirection.Id         AS AccountDirectionId
-           , Object_AccountDirection.ValueData  AS AccountDirectionName       
+           , Object_AccountDirection.ValueData  AS AccountDirectionName  
+
+           , COALESCE (ObjectBoolean_PartnerBarCode.ValueData, FALSE) :: Boolean  AS isPartnerBarCode     
        FROM Object AS Object_Unit
             LEFT JOIN ObjectString AS OS_Unit_Address
                                    ON OS_Unit_Address.ObjectId = Object_Unit.Id
@@ -81,6 +85,10 @@ BEGIN
             LEFT JOIN ObjectString AS OS_Unit_Print
                                    ON OS_Unit_Print.ObjectId = Object_Unit.Id
                                   AND OS_Unit_Print.DescId = zc_ObjectString_Unit_Print()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_PartnerBarCode 
+                                    ON ObjectBoolean_PartnerBarCode.ObjectId = Object_Unit.Id 
+                                   AND ObjectBoolean_PartnerBarCode.DescId = zc_ObjectBoolean_Unit_PartnerBarCode()
 
             LEFT JOIN ObjectFloat AS OS_Unit_DiscountTax
                                   ON OS_Unit_DiscountTax.ObjectId = Object_Unit.Id
@@ -124,6 +132,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+05.03.18          *
 27.02.18          * Printer
 07.06.17          * add AccountDirection
 10.05.17                                                          *

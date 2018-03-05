@@ -62,7 +62,7 @@ object Report_BalanceForm: TReport_BalanceForm
     Align = alClient
     DataSource = DataSource
     Groups = <>
-    TabOrder = 3
+    TabOrder = 2
     object pvRootName: TcxDBPivotGridField
       Area = faRow
       AreaIndex = 0

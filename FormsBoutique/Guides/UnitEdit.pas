@@ -19,7 +19,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, cxCheckBox;
 
 type
   TUnitEditForm = class(TParentForm)
@@ -63,6 +63,7 @@ type
     edPrinter: TcxTextEdit;
     cxLabel12: TcxLabel;
     edPrintName: TcxTextEdit;
+    cbisPartnerBarCode: TcxCheckBox;
   private
     { Private declarations }
   public

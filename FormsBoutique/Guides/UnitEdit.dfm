@@ -59,7 +59,7 @@ object UnitEditForm: TUnitEditForm
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
     TabOrder = 10
-    Width = 273
+    Width = 142
   end
   object cxLabel3: TcxLabel
     Left = 10
@@ -204,9 +204,16 @@ object UnitEditForm: TUnitEditForm
     TabOrder = 25
     Width = 273
   end
+  object cbisPartnerBarCode: TcxCheckBox
+    Left = 170
+    Top = 30
+    Caption = #1064'/'#1050' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+    TabOrder = 26
+    Width = 113
+  end
   object ActionList: TActionList
-    Left = 176
-    Top = 8
+    Left = 144
+    Top = 80
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -297,6 +304,14 @@ object UnitEditForm: TUnitEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisPartnerBarCode'
+        Value = Null
+        Component = cbisPartnerBarCode
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inDiscountTax'
         Value = Null
         Component = edDiscountTax
@@ -356,8 +371,8 @@ object UnitEditForm: TUnitEditForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 96
-    Top = 8
+    Left = 32
+    Top = 64
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Unit'
@@ -496,10 +511,17 @@ object UnitEditForm: TUnitEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPartnerBarCode'
+        Value = Null
+        Component = cbisPartnerBarCode
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 240
-    Top = 8
+    Left = 232
+    Top = 88
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <

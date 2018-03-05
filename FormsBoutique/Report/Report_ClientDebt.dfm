@@ -6,7 +6,7 @@ inherited Report_ClientDebtForm: TReport_ClientDebtForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1081
-  ExplicitHeight = 460
+  ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -1107,7 +1107,7 @@ inherited Report_ClientDebtForm: TReport_ClientDebtForm
       item
         Component = GuidesUnit
       end>
-    Left = 688
+    Left = 680
     Top = 280
   end
   object GuidesUnit: TdsdGuides

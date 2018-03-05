@@ -158,6 +158,14 @@ object UnitForm: TUnitForm
         HeaderAlignmentVert = vaCenter
         Width = 78
       end
+      object isPartnerBarCode: TcxGridDBColumn
+        Caption = #1064'/'#1050' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+        DataBinding.FieldName = 'isPartnerBarCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

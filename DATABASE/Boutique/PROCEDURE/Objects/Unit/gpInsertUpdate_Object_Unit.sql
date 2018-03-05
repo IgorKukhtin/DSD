@@ -7,6 +7,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                       Integer   ,    -- Ключ объекта <Подразделения> 
@@ -16,6 +17,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inPhone                    TVarChar  ,    -- Телефон
     IN inPrinter                  TVarChar  ,    -- Принтер (печать чеков)
     IN inPrint                    TVarChar  ,    -- Название при печати
+    IN inIsPartnerBarCode         Boolean   ,    -- Ш/К поставщика
     IN inDiscountTax              TFloat    ,    -- % скидки ВИНТАЖ
     IN inJuridicalId              Integer   ,    -- ключ объекта <Юридические лица> 
     IN inParentId                 Integer   ,    -- ключ объекта <Група> 
@@ -67,6 +69,9 @@ BEGIN
    -- сохранили % скидки ВИНТАЖ
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Unit_DiscountTax(), ioId, inDiscountTax);
 
+   -- сохранили Признак Ш/К поставщика
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_PartnerBarCode(), ioId, inisPartnerBarCode);
+   
    -- сохранили связь с <Юридические лица>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_Juridical(), ioId, inJuridicalId);
    -- сохранили связь с <Група>
@@ -91,6 +96,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятикин А.А.
+05.03.18          *
 27.02.18          * Printer
 07.06.17          * add AccountDirection
 23.05.17                                                           *

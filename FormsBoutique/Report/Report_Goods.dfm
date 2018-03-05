@@ -1599,10 +1599,8 @@ inherited Report_GoodsForm: TReport_GoodsForm
         Component = PeriodChoice
       end
       item
-        Component = deStart
       end
       item
-        Component = deEnd
       end
       item
         Component = GuidesGoodsSize

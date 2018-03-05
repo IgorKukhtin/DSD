@@ -3109,8 +3109,8 @@ object ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 422
-    Top = 384
+    Left = 438
+    Top = 376
   end
   object StatusGuides: TdsdGuides
     KeyField = 'Id'
