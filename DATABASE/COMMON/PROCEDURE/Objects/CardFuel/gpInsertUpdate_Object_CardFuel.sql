@@ -25,6 +25,12 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_CardFuel());
 
+
+   -- проверка
+   -- IF COALESCE (inCarId, 0) = 0 THEN
+   --   RAISE EXCEPTION 'Не установлен автомобиль. Сохранение не возможно';
+   -- END IF;
+
    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
 
@@ -36,9 +42,6 @@ BEGIN
    -- проверка уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_CardFuel(), vbCode_calc);
 
-   IF COALESCE(inCarId, 0) = 0 THEN
-      RAISE EXCEPTION 'Не установлен автомобиль. Сохранение не возможно';
-   END IF;
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_CardFuel(), vbCode_calc, inName

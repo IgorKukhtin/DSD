@@ -79,6 +79,7 @@ BEGIN
                        , Object_Status.ObjectCode  AS StatusCode
                   FROM (SELECT zc_Enum_Status_Complete()   AS StatusId
                         UNION SELECT zc_Enum_Status_UnComplete() AS StatusId WHERE inIsShowAll = TRUE
+                        UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsShowAll = TRUE
                         ) AS tmp
                         LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmp.StatusId
                  )
