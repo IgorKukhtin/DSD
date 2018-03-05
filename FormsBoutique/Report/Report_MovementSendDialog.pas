@@ -56,8 +56,8 @@ type
     cxLabel8: TcxLabel;
     cxLabel9: TcxLabel;
     edStartYear: TcxButtonEdit;
-    GuidesStartYear: TdsdGuides;
     edEndYear: TcxButtonEdit;
+    GuidesStartYear: TdsdGuides;
     GuidesEndYear: TdsdGuides;
   private
     { Private declarations }

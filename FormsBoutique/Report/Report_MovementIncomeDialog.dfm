@@ -171,6 +171,7 @@ object Report_MovementIncomeDialogForm: TReport_MovementIncomeDialogForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 19
     Width = 111
   end
@@ -182,6 +183,7 @@ object Report_MovementIncomeDialogForm: TReport_MovementIncomeDialogForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 20
     Width = 111
   end
@@ -321,14 +323,34 @@ object Report_MovementIncomeDialogForm: TReport_MovementIncomeDialogForm
       item
         Name = 'StartYear'
         Value = Null
-        Component = edStartYear
+        Component = GuidesStartYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartYearText'
+        Value = Null
+        Component = GuidesStartYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndYear'
         Value = Null
-        Component = edEndYear
+        Component = GuidesEndYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndYearText'
+        Value = Null
+        Component = GuidesEndYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -470,13 +492,24 @@ object Report_MovementIncomeDialogForm: TReport_MovementIncomeDialogForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PeriodYear'
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesStartYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
         Value = ''
-        Component = edStartYear
+        Component = GuidesStartYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 54
-    Top = 306
+    Left = 82
+    Top = 307
   end
   object GuidesEndYear: TdsdGuides
     KeyField = 'Id'
@@ -489,12 +522,23 @@ object Report_MovementIncomeDialogForm: TReport_MovementIncomeDialogForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PeriodYear'
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesEndYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
         Value = ''
-        Component = edEndYear
+        Component = GuidesEndYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 190
-    Top = 298
+    Left = 173
+    Top = 309
   end
 end

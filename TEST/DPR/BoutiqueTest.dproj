@@ -731,10 +731,6 @@
 				<Form>Report_MovementReturnOutDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Report\Report_MovementReturnOut.pas">
-				<Form>Report_MovementReturnOutForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Report\Report_MovementSend.pas">
 				<Form>Report_MovementSendForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1000,6 +996,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Report\Report_Sale.pas">
 				<Form>Report_SaleForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_MovementReturnOut.pas">
+				<Form>Report_MovementReturnOutForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

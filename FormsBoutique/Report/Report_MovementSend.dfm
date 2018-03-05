@@ -4,9 +4,8 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
   ClientWidth = 1119
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -346
   ExplicitWidth = 1135
-  ExplicitHeight = 460
+  ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -634,6 +633,18 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
         Properties.Strings = (
           'Key'
           'TextValue')
+      end
+      item
+        Component = GuidesStartYear
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesEndYear
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end>
   end
   inherited ActionList: TActionList
@@ -806,15 +817,35 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
         end
         item
           Name = 'StartYear'
+          Value = '0'
+          Component = GuidesStartYear
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartYearText'
           Value = Null
-          Component = edStartYear
+          Component = GuidesStartYear
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'EndYear'
+          Value = ''
+          Component = GuidesEndYear
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndYearText'
           Value = Null
-          Component = edEndYear
+          Component = GuidesEndYear
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -1149,14 +1180,16 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
       item
         Name = 'inStartYear'
         Value = Null
-        Component = edStartYear
+        Component = GuidesStartYear
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inEndYear'
         Value = Null
-        Component = edEndYear
+        Component = GuidesEndYear
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1295,8 +1328,10 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
         Component = GuidesPeriod
       end
       item
+        Component = GuidesStartYear
       end
       item
+        Component = GuidesEndYear
       end>
     Left = 384
     Top = 176
@@ -1450,25 +1485,6 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
     Left = 782
     Top = 74
   end
-  object GuidesEndYear: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edEndYear
-    Key = '0'
-    FormNameParam.Value = 'TPeriodYear_ChoiceForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPeriodYear_ChoiceForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'PeriodYear'
-        Value = ''
-        Component = edEndYear
-        MultiSelectSeparator = ','
-      end>
-    Left = 838
-    Top = 74
-  end
   object GuidesStartYear: TdsdGuides
     KeyField = 'Id'
     LookupControl = edStartYear
@@ -1480,12 +1496,51 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PeriodYear'
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesStartYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
         Value = ''
-        Component = edStartYear
+        Component = GuidesStartYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 710
-    Top = 66
+    Left = 746
+    Top = 65
+  end
+  object GuidesEndYear: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edEndYear
+    Key = '0'
+    FormNameParam.Value = 'TPeriodYear_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodYear_ChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesEndYear
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesEndYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 853
+    Top = 59
   end
 end

@@ -66,9 +66,9 @@ type
     edStartYear: TcxButtonEdit;
     edEndYear: TcxButtonEdit;
     GuidesEndYear: TdsdGuides;
-    GuidesStartYear: TdsdGuides;
     cbClient: TcxCheckBox;
     actRefreshClient: TdsdDataSetRefresh;
+    GuidesStartYear: TdsdGuides;
   private
     { Private declarations }
   public

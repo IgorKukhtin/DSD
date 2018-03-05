@@ -33,6 +33,12 @@ RETURNS TABLE  (  UnitId               Integer
 AS
 $BODY$
 BEGIN
+
+    -- !!!замена!!!
+    IF inIsYear = TRUE AND COALESCE (inEndYear, 0) = 0 THEN
+       inEndYear:= 1000000;
+    END IF;
+
     -- Выбираем данные
      RETURN QUERY
        WITH tmpDiscount AS

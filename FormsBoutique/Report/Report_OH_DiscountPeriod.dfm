@@ -382,6 +382,18 @@ inherited Report_OH_DiscountPeriodForm: TReport_OH_DiscountPeriodForm
         Properties.Strings = (
           'Key'
           'TextValue')
+      end
+      item
+        Component = GuidesStartYear
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesEndYear
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end>
   end
   inherited ActionList: TActionList
@@ -520,15 +532,35 @@ inherited Report_OH_DiscountPeriodForm: TReport_OH_DiscountPeriodForm
         end
         item
           Name = 'StartYear'
+          Value = '0'
+          Component = GuidesStartYear
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartYearText'
           Value = Null
-          Component = edStartYear
+          Component = GuidesStartYear
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'EndYear'
+          Value = ''
+          Component = GuidesEndYear
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndYearText'
           Value = Null
-          Component = edEndYear
+          Component = GuidesEndYear
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -745,14 +777,16 @@ inherited Report_OH_DiscountPeriodForm: TReport_OH_DiscountPeriodForm
       item
         Name = 'inStartYear'
         Value = Null
-        Component = edStartYear
+        Component = GuidesStartYear
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inEndYear'
         Value = Null
-        Component = edEndYear
+        Component = GuidesEndYear
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -876,8 +910,10 @@ inherited Report_OH_DiscountPeriodForm: TReport_OH_DiscountPeriodForm
         Component = GuidesPeriod
       end
       item
+        Component = GuidesStartYear
       end
       item
+        Component = GuidesEndYear
       end>
     Left = 384
     Top = 176
@@ -972,25 +1008,6 @@ inherited Report_OH_DiscountPeriodForm: TReport_OH_DiscountPeriodForm
     Left = 782
     Top = 74
   end
-  object GuidesEndYear: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edEndYear
-    Key = '0'
-    FormNameParam.Value = 'TPeriodYear_ChoiceForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPeriodYear_ChoiceForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'PeriodYear'
-        Value = ''
-        Component = edEndYear
-        MultiSelectSeparator = ','
-      end>
-    Left = 838
-    Top = 74
-  end
   object GuidesStartYear: TdsdGuides
     KeyField = 'Id'
     LookupControl = edStartYear
@@ -1002,12 +1019,51 @@ inherited Report_OH_DiscountPeriodForm: TReport_OH_DiscountPeriodForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PeriodYear'
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesStartYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
         Value = ''
-        Component = edStartYear
+        Component = GuidesStartYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 710
-    Top = 66
+    Left = 530
+    Top = 73
+  end
+  object GuidesEndYear: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edEndYear
+    Key = '0'
+    FormNameParam.Value = 'TPeriodYear_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodYear_ChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesEndYear
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesEndYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 661
+    Top = 67
   end
 end

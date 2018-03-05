@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListTax(Integer, Integ
 DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListTax(Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_PriceListTax(
-    IN inPriceListId              Integer,    -- Прайс-лист результат
+    IN inPriceListId                Integer,    -- Прайс-лист результат
     IN inUnitId                     Integer,    -- Подразделение
     IN inGroupGoodsId               Integer,    -- Группа тов.
     IN inBrandId                    Integer,    -- Торг. марка
@@ -25,15 +25,9 @@ BEGIN
    vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_ObjectHistory_PriceListItem());
 
    -- Проверка
-   IF COALESCE (inPriceListFromId, 0) = 0
-   THEN
-       RAISE EXCEPTION 'Ошибка.Не определено значение <Прайс-лист основание>.';
-   END IF;
-
-   -- Проверка
    IF COALESCE (inPriceListId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Ошибка.Не определено значение <Прайс-лист результат>.';
+       RAISE EXCEPTION 'Ошибка.Не определено значение <Прайс-лист>.';
    END IF;
 
    -- Проверка

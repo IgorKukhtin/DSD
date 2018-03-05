@@ -240,13 +240,14 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     Width = 75
   end
   object edStartYear: TcxButtonEdit
-    Left = 230
-    Top = 30
+    Left = 231
+    Top = 28
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 25
     Width = 69
   end
@@ -258,6 +259,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 26
     Width = 69
   end
@@ -371,16 +373,34 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
       item
         Name = 'StartYear'
         Value = Null
-        Component = edStartYear
-        DataType = ftFloat
+        Component = GuidesStartYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartYearText'
+        Value = Null
+        Component = GuidesStartYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndYear'
         Value = Null
-        Component = edEndYear
-        DataType = ftFloat
+        Component = GuidesEndYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndYearText'
+        Value = Null
+        Component = GuidesEndYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -613,13 +633,24 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PeriodYear'
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesStartYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
         Value = ''
-        Component = edStartYear
+        Component = GuidesStartYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 298
-    Top = 73
+    Left = 266
+    Top = 3
   end
   object GuidesEndYear: TdsdGuides
     KeyField = 'Id'
@@ -632,12 +663,23 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PeriodYear'
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesEndYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
         Value = ''
-        Component = edEndYear
+        Component = GuidesEndYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 365
-    Top = 67
+    Left = 357
+    Top = 5
   end
 end

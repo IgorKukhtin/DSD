@@ -117,6 +117,7 @@ object PriceListItemDialogForm: TPriceListItemDialogForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 12
     Width = 69
   end
@@ -128,6 +129,7 @@ object PriceListItemDialogForm: TPriceListItemDialogForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 13
     Width = 69
   end
@@ -233,16 +235,34 @@ object PriceListItemDialogForm: TPriceListItemDialogForm
       item
         Name = 'StartYear'
         Value = Null
-        Component = edStartYear
-        DataType = ftFloat
+        Component = GuidesStartYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartYearText'
+        Value = Null
+        Component = GuidesStartYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndYear'
         Value = Null
-        Component = edEndYear
-        DataType = ftFloat
+        Component = GuidesEndYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndYearText'
+        Value = Null
+        Component = GuidesEndYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -262,7 +282,7 @@ object PriceListItemDialogForm: TPriceListItemDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 262
+    Left = 270
     Top = 245
   end
   object GuidesUnit: TdsdGuides
@@ -369,9 +389,20 @@ object PriceListItemDialogForm: TPriceListItemDialogForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PeriodYear'
+        Name = 'Key'
         Value = ''
-        Component = edStartYear
+        Component = GuidesStartYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = Null
+        Component = GuidesStartYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 50
@@ -388,13 +419,24 @@ object PriceListItemDialogForm: TPriceListItemDialogForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PeriodYear'
+        Name = 'Key'
         Value = ''
-        Component = edEndYear
+        Component = GuidesEndYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = Null
+        Component = GuidesEndYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 101
-    Top = 229
+    Left = 141
+    Top = 237
   end
   object GuidesPriceList: TdsdGuides
     KeyField = 'Id'

@@ -66,6 +66,11 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ReturnOut());
     vbUserId:= lpGetUserBySession (inSession);
 
+    -- !!!замена!!!
+    IF COALESCE (inEndYear, 0) = 0 THEN
+       inEndYear:= 1000000;
+    END IF;
+
     -- Результат
     RETURN QUERY
     WITH
@@ -161,8 +166,7 @@ BEGIN
                                                       ON MIFloat_OperPriceList.MovementItemId = MI_ReturnOut.Id
                                                      AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
                                                      
-                     WHERE (Object_PartionGoods.PeriodYear >= inStartYear OR inStartYear = 0)
-                       AND (Object_PartionGoods.PeriodYear <= inEndYear OR inEndYear = 0) 
+                     WHERE (Object_PartionGoods.PeriodYear BETWEEN inStartYear AND inEndYear)
                                                                            
                      GROUP BY tmpMovementReturnOut.InvNumber
                             , tmpMovementReturnOut.OperDate

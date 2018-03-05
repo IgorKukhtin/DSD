@@ -3,7 +3,7 @@ object PriceListItemForm: TPriceListItemForm
   Top = 0
   Caption = #1055#1088#1072#1081#1089' '#1083#1080#1089#1090' - '#1055#1088#1086#1089#1084#1086#1090#1088' / '#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1086#1089#1083#1077#1076#1085#1080#1093' '#1094#1077#1085
   ClientHeight = 398
-  ClientWidth = 846
+  ClientWidth = 988
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,14 @@ object PriceListItemForm: TPriceListItemForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 88
-    Width = 846
+    Width = 988
     Height = 310
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitLeft = 168
+    ExplicitTop = 120
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -115,6 +117,7 @@ object PriceListItemForm: TPriceListItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 144
       end
       object GoodsCode: TcxGridDBColumn
@@ -330,11 +333,12 @@ object PriceListItemForm: TPriceListItemForm
   object Panel: TPanel
     Left = 0
     Top = 26
-    Width = 846
+    Width = 988
     Height = 62
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitWidth = 846
     object cxLabel1: TcxLabel
       Left = 3
       Top = 10
@@ -451,6 +455,20 @@ object PriceListItemForm: TPriceListItemForm
       Text = '2018'
       Width = 52
     end
+    object cxLabel9: TcxLabel
+      Left = 849
+      Top = 16
+      Caption = #1050#1086#1101#1092#1092'. '#1086#1090' '#1074#1093'. '#1094#1077#1085#1099
+    end
+    object edPriceTax: TcxCurrencyEdit
+      Left = 849
+      Top = 36
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.UseDisplayFormatWhenEditing = True
+      TabOrder = 15
+      Width = 105
+    end
   end
   object cxLabel3: TcxLabel
     Left = 642
@@ -522,14 +540,16 @@ object PriceListItemForm: TPriceListItemForm
           'TextValue')
       end
       item
-        Component = edStartYear
+        Component = GuidesStartYear
         Properties.Strings = (
-          'Text')
+          'Key'
+          'TextValue')
       end
       item
-        Component = edEndYear
+        Component = GuidesEndYear
         Properties.Strings = (
-          'Text')
+          'Key'
+          'TextValue')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -618,6 +638,14 @@ object PriceListItemForm: TPriceListItemForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertUpdate_Price'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocol'
         end
         item
@@ -677,6 +705,10 @@ object PriceListItemForm: TPriceListItemForm
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object bbInsertUpdate_Price: TdxBarButton
+      Action = macInsertUpdate_Price
       Category = 0
     end
   end
@@ -1041,16 +1073,34 @@ object PriceListItemForm: TPriceListItemForm
         item
           Name = 'StartYear'
           Value = '0'
-          Component = edStartYear
-          DataType = ftFloat
+          Component = GuidesStartYear
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartYearText'
+          Value = Null
+          Component = GuidesStartYear
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'EndYear'
           Value = ''
-          Component = edEndYear
-          DataType = ftFloat
+          Component = GuidesEndYear
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndYearText'
+          Value = Null
+          Component = GuidesEndYear
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
@@ -1074,6 +1124,46 @@ object PriceListItemForm: TPriceListItemForm
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actInsertUpdate_Price: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_Price
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_Price
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1086#1074#1091#1102' '#1094#1077#1085#1091
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1086#1074#1091#1102' '#1094#1077#1085#1091
+    end
+    object macInsertUpdate_Price: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macInsertUpdate_Price_List
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1062#1077#1085#1099' '#1073#1091#1076#1091#1090' '#1086#1073#1085#1086#1074#1083#1077#1085#1099', '#1087#1088#1086#1076#1086#1083#1078#1080#1090#1100'?'
+      InfoAfterExecute = #1054#1073#1085#1086#1074#1083#1077#1085#1080#1077' '#1094#1077#1085' '#1086#1082#1086#1085#1095#1077#1085#1086'.'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1086#1074#1091#1102' '#1094#1077#1085#1091
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1086#1074#1091#1102' '#1094#1077#1085#1091' ('#1074#1093'.'#1094#1077#1085#1072' * '#1082#1086#1101#1092'.)'
+      ImageIndex = 76
+    end
+    object macInsertUpdate_Price_List: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdate_Price
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1086#1074#1091#1102' '#1094#1077#1085#1091
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1086#1074#1091#1102' '#1094#1077#1085#1091' ('#1074#1093'.'#1094#1077#1085#1072' * '#1082#1086#1101#1092'.)'
+      ImageIndex = 76
     end
   end
   object spSelect: TdsdStoredProc
@@ -1127,16 +1217,16 @@ object PriceListItemForm: TPriceListItemForm
       item
         Name = 'inStartYear'
         Value = Null
-        Component = edStartYear
-        DataType = ftFloat
+        Component = GuidesStartYear
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inEndYear'
         Value = Null
-        Component = edEndYear
-        DataType = ftFloat
+        Component = GuidesEndYear
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1448,9 +1538,20 @@ object PriceListItemForm: TPriceListItemForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PeriodYear'
+        Name = 'Key'
         Value = '2000'
-        Component = edStartYear
+        Component = GuidesStartYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = Null
+        Component = GuidesStartYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 402
@@ -1467,12 +1568,71 @@ object PriceListItemForm: TPriceListItemForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PeriodYear'
+        Name = 'Key'
         Value = '2018'
-        Component = edEndYear
+        Component = GuidesEndYear
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = Null
+        Component = GuidesEndYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 493
     Top = 123
+  end
+  object spInsertUpdate_Price: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_OH_PriceListItemTax'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inPriceListId'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = 'FALSE'
+        Component = ClientDataSet
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperPrice'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'OperPrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTax'
+        Value = Null
+        Component = edPriceTax
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 512
+    Top = 275
   end
 end

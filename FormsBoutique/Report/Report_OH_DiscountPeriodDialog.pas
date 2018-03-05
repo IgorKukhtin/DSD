@@ -47,12 +47,12 @@ type
     cxLabel8: TcxLabel;
     cxLabel9: TcxLabel;
     edStartYear: TcxButtonEdit;
-    GuidesStartYear: TdsdGuides;
     edEndYear: TcxButtonEdit;
-    GuidesEndYear: TdsdGuides;
     cbYear: TcxCheckBox;
     cbDiscount: TcxCheckBox;
     cbPeriodYear: TcxCheckBox;
+    GuidesStartYear: TdsdGuides;
+    GuidesEndYear: TdsdGuides;
   private
     { Private declarations }
   public

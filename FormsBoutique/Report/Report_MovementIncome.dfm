@@ -4,10 +4,8 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
   ClientWidth = 1065
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -292
-  ExplicitTop = -59
   ExplicitWidth = 1081
-  ExplicitHeight = 523
+  ExplicitHeight = 526
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -577,6 +575,18 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         Properties.Strings = (
           'Key'
           'TextValue')
+      end
+      item
+        Component = GuidesStartYear
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesEndYear
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end>
   end
   inherited ActionList: TActionList
@@ -724,15 +734,35 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         end
         item
           Name = 'StartYear'
+          Value = '0'
+          Component = GuidesStartYear
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartYearText'
           Value = Null
-          Component = edStartYear
+          Component = GuidesStartYear
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'EndYear'
+          Value = ''
+          Component = GuidesEndYear
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndYearText'
           Value = Null
-          Component = edEndYear
+          Component = GuidesEndYear
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -973,14 +1003,16 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       item
         Name = 'inStartYear'
         Value = Null
-        Component = edStartYear
+        Component = GuidesStartYear
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inEndYear'
         Value = Null
-        Component = edEndYear
+        Component = GuidesEndYear
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1108,8 +1140,10 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         Component = GuidesPeriod
       end
       item
+        Component = GuidesStartYear
       end
       item
+        Component = GuidesEndYear
       end>
     Left = 688
     Top = 280
@@ -1247,13 +1281,24 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PeriodYear'
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesStartYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
         Value = ''
-        Component = edStartYear
+        Component = GuidesStartYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 758
-    Top = 50
+    Left = 746
+    Top = 65
   end
   object GuidesEndYear: TdsdGuides
     KeyField = 'Id'
@@ -1266,12 +1311,21 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PeriodYear'
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesEndYear
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
         Value = ''
-        Component = edEndYear
+        Component = GuidesEndYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 910
-    Top = 50
+    Left = 853
+    Top = 59
   end
 end

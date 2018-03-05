@@ -101,6 +101,11 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
 
+    -- !!!замена!!!
+    IF inIsYear = TRUE AND COALESCE (inEndYear, 0) = 0 THEN
+       inEndYear:= 1000000;
+    END IF;
+
     -- Результат
     RETURN QUERY
       WITH tmpCurrency_all AS (SELECT Movement.Id                    AS MovementId

@@ -113,8 +113,8 @@ type
     pvReturn_Summ_prof: TcxDBPivotGridField;
     pvResult_Summ_prof: TcxDBPivotGridField;
     edStartYear: TcxButtonEdit;
-    GuidesStartYear: TdsdGuides;
     edEndYear: TcxButtonEdit;
+    GuidesStartYear: TdsdGuides;
     GuidesEndYear: TdsdGuides;
   private
   public
