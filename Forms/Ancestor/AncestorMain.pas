@@ -128,7 +128,8 @@ begin
                     break;
                  end;
   if not SameText(gc_User.Login, '') then
-    Caption := Caption + ' - Пользователь: ' + gc_User.Login;
+    // Caption := Caption + ' - Пользователь: ' + gc_User.Login;
+    Caption := Caption + ' <' + gc_User.Login + '>';
 end;
 
 end.

@@ -107,5 +107,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_LossPersonal (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= '2')
--- SELECT * FROM gpSelect_MovementItem_LossPersonal (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_LossPersonal (inMovementId:= 25173, inIsErased:= TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_LossPersonal (inMovementId:= 25173, inIsErased:= FALSE, inSession:= '2')

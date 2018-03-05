@@ -27,14 +27,14 @@ object LossPersonalJournalForm: TLossPersonalJournalForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 41579d
+      EditValue = 43101d
       TabOrder = 0
       Width = 85
     end
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41639d
+      EditValue = 43101d
       Properties.ShowTime = False
       TabOrder = 1
       Width = 85
@@ -318,11 +318,6 @@ object LossPersonalJournalForm: TLossPersonalJournalForm
           ItemName = 'bbDelete'
         end
         item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbReCompleteAll'
-        end
-        item
           Visible = True
           ItemName = 'bbStatic'
         end
@@ -394,13 +389,10 @@ object LossPersonalJournalForm: TLossPersonalJournalForm
       Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
-      Category = 0
-    end
-    object bbReCompleteAll: TdxBarButton
-      Action = actReCompleteAll
       Category = 0
     end
     object bbMIContainer: TdxBarButton
@@ -419,10 +411,10 @@ object LossPersonalJournalForm: TLossPersonalJournalForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -551,21 +543,6 @@ object LossPersonalJournalForm: TLossPersonalJournalForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object actReCompleteAll: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spMovementReCompleteAll
-      StoredProcList = <
-        item
-          StoredProc = spMovementReCompleteAll
-        end>
-      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      ImageIndex = 10
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076'?'
-      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099'.'
-    end
     object actMIContainer: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -639,21 +616,8 @@ object LossPersonalJournalForm: TLossPersonalJournalForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
-    object actRefreshStart: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = dsdStoredProc
-      StoredProcList = <
-        item
-          StoredProc = dsdStoredProc
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_LossPersonal'
     DataSet = ClientDataSet
     DataSets = <
@@ -747,7 +711,7 @@ object LossPersonalJournalForm: TLossPersonalJournalForm
     Left = 72
     Top = 320
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
+  object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
@@ -787,31 +751,8 @@ object LossPersonalJournalForm: TLossPersonalJournalForm
     Left = 576
     Top = 24
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 240
     Top = 168
-  end
-  object spMovementReCompleteAll: TdsdStoredProc
-    StoredProcName = 'gpCompletePeriod_Movement_LossPersonal'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inStartDate'
-        Value = 41579d
-        Component = deStart
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndtDate'
-        Value = 41639d
-        Component = deEnd
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 240
-    Top = 288
   end
 end

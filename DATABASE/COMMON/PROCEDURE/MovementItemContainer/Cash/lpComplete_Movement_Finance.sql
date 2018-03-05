@@ -334,6 +334,9 @@ BEGIN
      UPDATE _tmpItem SET ObjectId = CASE WHEN _tmpItem.MovementDescId = zc_Movement_Currency()
                                               THEN zc_Enum_ProfitLoss_80103() -- Курсовая разница
 
+                                         WHEN _tmpItem.MovementDescId = zc_Movement_LossPersonal()
+                                              THEN zc_Enum_ProfitLoss_70501() -- Списание задолженности по ЗП
+
                                          WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Инвестиции + Капитальные инвестиции
                                           AND _tmpItem.ProfitLossGroupId IN (zc_Enum_ProfitLossGroup_20000(), zc_Enum_ProfitLossGroup_30000()) -- Общепроизводственные расходы
 

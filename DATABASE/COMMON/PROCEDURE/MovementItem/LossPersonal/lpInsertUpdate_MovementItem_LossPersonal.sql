@@ -36,43 +36,43 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Не установлена <Должность>.';
      END IF;
-     IF COALESCE (inPersonalServiceListId, 0) = 0
-     THEN
-         RAISE EXCEPTION 'Ошибка.Не установлена <Ведомость начисления>.';
-     END IF;
-     IF COALESCE (inBranchId, 0) = 0
-     THEN
-         RAISE EXCEPTION 'Ошибка.Не установлен <Филиал>.';
-     END IF;
+     -- IF COALESCE (inPersonalServiceListId, 0) = 0
+     -- THEN
+     --     RAISE EXCEPTION 'Ошибка.Не установлена <Ведомость начисления>.';
+     -- END IF;
+     -- IF COALESCE (inBranchId, 0) = 0
+     -- THEN
+     --     RAISE EXCEPTION 'Ошибка.Не установлен <Филиал>.';
+     -- END IF;
      
      -- проверка
      IF EXISTS (SELECT MovementItem.Id
                 FROM MovementItem
-                     JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                     LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                  ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                                 AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-                                                AND MILinkObject_InfoMoney.ObjectId = inInfoMoneyId
-                     JOIN MovementItemLinkObject AS MILinkObject_Unit
+                     LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                                  ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                                 AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
-                                                AND MILinkObject_Unit.ObjectId = inUnitId
-                     JOIN MovementItemLinkObject AS MILinkObject_Position
+                     LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
                                                  ON MILinkObject_Position.MovementItemId = MovementItem.Id
                                                 AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
-                                                AND MILinkObject_Position.ObjectId = inPositionId
-                     JOIN MovementItemLinkObject AS MILinkObject_PersonalServiceList
+                     LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalServiceList
                                                  ON MILinkObject_PersonalServiceList.MovementItemId = MovementItem.Id
                                                 AND MILinkObject_PersonalServiceList.DescId = zc_MILinkObject_PersonalServiceList()
-                                                AND MILinkObject_PersonalServiceList.ObjectId = inPersonalServiceListId   
-                     JOIN MovementItemLinkObject AS MILinkObject_Branch
+                     LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
                                                  ON MILinkObject_Branch.MovementItemId = MovementItem.Id
                                                 AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
-                                                AND MILinkObject_Branch.ObjectId = inBranchId
                 WHERE MovementItem.MovementId = inMovementId
-                  AND MovementItem.ObjectId = inPersonalId
-                  AND MovementItem.DescId = zc_MI_Master()
-                  AND MovementItem.Id <> COALESCE (ioId, 0)
-                  AND MovementItem.isErased = FALSE
+                  AND MovementItem.ObjectId   = inPersonalId
+                  AND MovementItem.DescId     = zc_MI_Master()
+                  AND MovementItem.Id         <> COALESCE (ioId, 0)
+                  AND MovementItem.isErased   = FALSE
+                  AND COALESCE (MILinkObject_InfoMoney.ObjectId, 0)           = inInfoMoneyId
+                  AND COALESCE (MILinkObject_Unit.ObjectId, 0)                = inUnitId
+                  AND COALESCE (MILinkObject_Position.ObjectId, 0)            = inPositionId
+                  AND COALESCE (MILinkObject_PersonalServiceList.ObjectId, 0) = inPersonalServiceListId   
+                  AND COALESCE (MILinkObject_Branch.ObjectId, 0)              = inBranchId
                 )
      THEN
          RAISE EXCEPTION 'Ошибка.В документе уже существует <%> <%> <%> <%> <%> <%>.Дублирование запрещено.', lfGet_Object_ValueData (inPersonalId)
@@ -89,7 +89,7 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inPersonalId, inMovementId, inAmount, NULL);
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inPersonalId, inMovementId, inAmount, NULL, inUserId);
 
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PersonalServiceList(), ioId, inPersonalServiceListId);

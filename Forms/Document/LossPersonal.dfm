@@ -271,6 +271,13 @@ object LossPersonalForm: TLossPersonalForm
             HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
             Width = 80
           end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object PersonalServiceListName: TcxGridDBColumn
             Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095'.'
             DataBinding.FieldName = 'PersonalServiceListName'
@@ -316,13 +323,6 @@ object LossPersonalForm: TLossPersonalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 105
-          end
-          object Comment: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-            DataBinding.FieldName = 'Comment'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
           end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -387,12 +387,6 @@ object LossPersonalForm: TLossPersonalForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPaidKindId'
-        Value = '0'
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 240
@@ -519,14 +513,6 @@ object LossPersonalForm: TLossPersonalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbGridToExel'
         end
         item
@@ -555,15 +541,11 @@ object LossPersonalForm: TLossPersonalForm
       Action = actRefresh
       Category = 0
     end
-    object bbPrint: TdxBarButton
-      Action = actPrint
-      Category = 0
-      UnclickAfterDoing = False
-    end
     object bbStatic: TdxBarStatic
       Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbGridToExel: TdxBarButton
       Action = GridToExcel
@@ -587,9 +569,7 @@ object LossPersonalForm: TLossPersonalForm
     end
     object bbInsertUpdateMI_Amount: TdxBarButton
       Action = actspInsertUpdateMI_Amount
-      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1084#1080
       Category = 0
-      ImageIndex = 27
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -694,48 +674,6 @@ object LossPersonalForm: TLossPersonalForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
-    end
-    object actPrint: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
-      ImageIndex = 3
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = MasterCDS
-          UserName = 'frxDBDataset'
-        end>
-      Params = <
-        item
-          Name = 'InvNumber'
-          Value = '0'
-          Component = edInvNumber
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'From'
-          Value = ''
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'OperDate'
-          Value = 41640d
-          Component = edOperDate
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = ''
-      ReportNameParam.DataType = ftString
-      ReportNameParam.MultiSelectSeparator = ','
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -1155,7 +1093,11 @@ object LossPersonalForm: TLossPersonalForm
         item
           StoredProc = spSelectMI
         end>
-      Caption = 'actspInsertUpdateMI_Amount'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' - '#1044#1086#1083#1075#1080' '#1079#1072' '#1084#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' - '#1044#1086#1083#1075#1080' '#1079#1072' '#1084#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
+      ImageIndex = 27
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' - '#1044#1086#1083#1075#1080' '#1079#1072' '#1084#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081'?'
+      InfoAfterExecute = #1044#1086#1073#1072#1074#1083#1077#1085#1099' '#1076#1072#1085#1085#1099#1077' - '#1044#1086#1083#1075#1080' '#1079#1072' '#1084#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
     end
   end
   object MasterDS: TDataSource
@@ -1354,12 +1296,7 @@ object LossPersonalForm: TLossPersonalForm
         Control = deServiceDate
       end
       item
-      end
-      item
-      end
-      item
-      end
-      item
+        Control = edComment
       end>
     GetStoredProc = spGet
     Left = 314

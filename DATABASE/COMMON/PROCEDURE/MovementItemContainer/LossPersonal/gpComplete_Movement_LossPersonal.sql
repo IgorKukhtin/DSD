@@ -19,7 +19,7 @@ BEGIN
 
      -- проводим Документ
      PERFORM lpComplete_Movement_LossPersonal (inMovementId := inMovementId
-                                         , inUserId     := vbUserId);
+                                             , inUserId     := vbUserId);
 
 END;
 $BODY$

@@ -55,8 +55,6 @@ type
     cxGridLevel: TcxGridLevel;
     actUpdateMasterDS: TdsdUpdateDataSet;
     spInsertUpdateMIMaster: TdsdStoredProc;
-    actPrint: TdsdPrintAction;
-    bbPrint: TdxBarButton;
     bbStatic: TdxBarStatic;
     MasterViewAddOn: TdsdDBViewAddOn;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
