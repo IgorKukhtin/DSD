@@ -4,7 +4,6 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
   ClientWidth = 1168
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -57
   ExplicitWidth = 1184
   ExplicitHeight = 463
   PixelsPerInch = 96
@@ -12,7 +11,7 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
   inherited Panel: TPanel [0]
     Width = 1168
     Height = 59
-    ExplicitWidth = 1160
+    ExplicitWidth = 1168
     ExplicitHeight = 59
     inherited deStart: TcxDateEdit
       Left = 29
@@ -159,18 +158,17 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
     Height = 340
     TabOrder = 3
     ExplicitTop = 85
-    ExplicitWidth = 1160
+    ExplicitWidth = 1168
     ExplicitHeight = 340
     ClientRectBottom = 340
     ClientRectRight = 1168
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1160
+      ExplicitWidth = 1168
       ExplicitHeight = 340
       inherited cxGrid: TcxGrid
         Width = 1168
         Height = 340
-        ExplicitLeft = 3
-        ExplicitWidth = 1160
+        ExplicitWidth = 1168
         ExplicitHeight = 340
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -513,6 +511,15 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 69
+          end
+          object isChecked: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088'. > 31'#1076'.'
+            DataBinding.FieldName = 'isChecked'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1079#1088#1077#1096#1077#1085' '#1042#1086#1079#1074#1088#1072#1090' >31 '#1076'. ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 50
           end
           object Income_Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1087#1088#1080#1093#1086#1076

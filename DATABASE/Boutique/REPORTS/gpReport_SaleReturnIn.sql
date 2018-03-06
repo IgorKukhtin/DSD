@@ -23,19 +23,19 @@ RETURNS TABLE (MovementId            Integer
              , PartionId             Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar
-             , CompositionName  TVarChar
-             , GoodsInfoName    TVarChar
-             , LineFabricaName  TVarChar
-             , LabelName        TVarChar
+             , CompositionName     TVarChar
+             , GoodsInfoName       TVarChar
+             , LineFabricaName     TVarChar
+             , LabelName           TVarChar
              , GoodsSizeId Integer, GoodsSizeName    TVarChar
-             , BrandName        TVarChar
-             , FabrikaName      TVarChar
-             , PeriodName       TVarChar
-             , PeriodYear       Integer
+             , BrandName           TVarChar
+             , FabrikaName         TVarChar
+             , PeriodName          TVarChar
+             , PeriodYear          Integer
 
-             , ChangePercent    TFloat
-             , OperPriceList    TFloat
-             , Amount           TFloat
+             , ChangePercent       TFloat
+             , OperPriceList       TFloat
+             , Amount              TFloat
              , TotalSummPriceList  TFloat
              , TotalPay            TFloat
              , SummChangePercent   TFloat
@@ -53,6 +53,7 @@ RETURNS TABLE (MovementId            Integer
              , TotalSummToPay      TFloat
              , TotalSummDebt       TFloat
              , InsertDate          TDateTime
+             , isChecked           Boolean
   )
 AS
 $BODY$
@@ -111,6 +112,8 @@ BEGIN
                      , COALESCE (MIFloat_TotalCountReturn.ValueData, 0)      AS TotalCountReturn
                      , COALESCE (MIFloat_TotalReturn.ValueData, 0)           AS TotalReturn
                      , COALESCE (MIFloat_TotalPayReturn.ValueData, 0)        AS TotalPayReturn
+                     
+                     , COALESCE (MIBoolean_Checked.ValueData, FALSE)         AS isChecked
 
                 FROM Movement AS Movement_Sale
                      INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement_Sale.StatusId
@@ -145,7 +148,6 @@ BEGIN
                                                  ON MIFloat_TotalPay.MovementItemId = MI_Master.Id
                                                 AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
 
-
                      LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
                                                  ON MIFloat_SummChangePercent.MovementItemId = MI_Master.Id
                                                 AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
@@ -167,6 +169,9 @@ BEGIN
                      LEFT JOIN MovementItemFloat AS MIFloat_TotalPayReturn
                                                  ON MIFloat_TotalPayReturn.MovementItemId = MI_Master.Id
                                                 AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()
+                     LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
+                                                   ON MIBoolean_Checked.MovementItemId = MI_Master.Id
+                                                  AND MIBoolean_Checked.DescId         = zc_MIBoolean_Checked()
                 WHERE Movement_Sale.DescId = zc_Movement_Sale()
                   AND Movement_Sale.OperDate BETWEEN inStartDate AND inEndDate
                   --AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
@@ -190,6 +195,8 @@ BEGIN
                          , COALESCE (MIFloat_SummChangePercent.ValueData, 0)     AS SummChangePercent
                          , COALESCE (MIFloat_TotalChangePercent.ValueData, 0)    AS TotalChangePercent
                          , COALESCE (MIFloat_TotalPayOth.ValueData, 0)           AS TotalPayOth
+                         
+                         , COALESCE (MIBoolean_Checked.ValueData, FALSE)         AS isChecked
                     FROM Movement AS Movement_ReturnIn
                          INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement_ReturnIn.StatusId
                          INNER JOIN MovementLinkObject AS MovementLinkObject_To
@@ -239,6 +246,9 @@ BEGIN
                          LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
                                                      ON MIFloat_TotalChangePercent.MovementItemId = MI_Sale.Id
                                                     AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()
+                         LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
+                                                       ON MIBoolean_Checked.MovementItemId = MI_Sale.Id
+                                                      AND MIBoolean_Checked.DescId         = zc_MIBoolean_Checked()
                     WHERE Movement_ReturnIn.DescId = zc_Movement_ReturnIn()
                       AND Movement_ReturnIn.OperDate BETWEEN inStartDate AND inEndDate
                       --AND Movement_ReturnIn.StatusId = zc_Enum_Status_Complete()
@@ -266,6 +276,7 @@ BEGIN
                           , tmp.TotalCountReturn
                           , tmp.TotalReturn
                           , tmp.TotalPayReturn
+                          , tmp.isChecked
                      FROM tmpSale AS tmp
                    UNION ALL
                      SELECT tmp.MovementId
@@ -290,6 +301,7 @@ BEGIN
                           , 0 :: TFloat AS TotalCountReturn
                           , 0 :: TFloat AS TotalReturn
                           , 0 :: TFloat AS TotalPayReturn
+                          , tmp.isChecked
                      FROM tmpReturnIn AS tmp
                     )
     -- cуммы оплат / возврата по валютам
@@ -374,6 +386,8 @@ BEGIN
              , CASE WHEN tmpData.MovementDescId = zc_Movement_Sale() THEN (zfCalc_SummPriceList (tmpData.Amount, tmpData.OperPriceList) - tmpData.TotalChangePercent - tmpData.TotalPay) ELSE 0 END :: TFloat AS TotalSummDebt
 
              , MovementDate_Insert.ValueData               AS InsertDate
+
+             , tmpData.isChecked :: Boolean
 
         FROM tmpData
             LEFT JOIN MovementDesc ON MovementDesc.Id = tmpData.MovementDescId
