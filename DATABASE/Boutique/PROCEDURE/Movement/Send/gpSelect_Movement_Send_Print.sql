@@ -104,6 +104,7 @@ BEGIN
            , Object_LineFabrica.ValueData   AS LineFabricaName
            , Object_Label.ValueData         AS LabelName
            , Object_GoodsSize.ValueData     AS GoodsSizeName 
+           , Object_Currency.ValueData      AS CurrencyName
 
            , tmpMI.Amount
            , Object_PartionGoods.OperPrice      ::TFloat
@@ -124,6 +125,7 @@ BEGIN
             LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = Object_PartionGoods.LineFabricaId 
             LEFT JOIN Object AS Object_Label            ON Object_Label.Id            = Object_PartionGoods.LabelId
             LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = Object_PartionGoods.GoodsSizeId
+            LEFT JOIN Object AS Object_Currency         ON Object_Currency.Id         = Object_PartionGoods.CurrencyId
            
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
@@ -140,6 +142,7 @@ ALTER FUNCTION gpSelect_Movement_Send_Print (Integer,  TVarChar) OWNER TO postgr
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+ 06.03.18         *
  27.04.17                                                          *
  05.06.15         * 
 */
