@@ -79,7 +79,8 @@ BEGIN
                                , PartionId  = inPartionId
                                , Amount     = inAmount
                                , ParentId   = inParentId
-                            -- , MovementId = inMovementId
+                                 -- !!!временно для Sybase!!!
+                               , MovementId = inMovementId
                             -- , DescId     = inDescId
          WHERE Id = ioId
          RETURNING isErased, MovementId, DescId INTO vbIsErased, vbMovementId, vbDescId

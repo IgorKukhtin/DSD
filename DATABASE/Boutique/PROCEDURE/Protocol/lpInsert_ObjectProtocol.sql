@@ -34,14 +34,22 @@ BEGIN
                 JOIN ObjectFloatDesc ON ObjectFloatDesc.Id = ObjectFloat.DescId
            WHERE ObjectFloat.ObjectId = inObjectId
              AND inIsErased IS NULL
+
           UNION
-           SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectDateDesc.ItemName) || '" FieldValue = "' ||  DATE (ObjectDate.ValueData) :: TVarChar || '"/>' AS FieldXML 
+           SELECT '<Field FieldName = "' || zfStrToXmlStr (ObjectDateDesc.ItemName)
+               || '" FieldValue = "' || COALESCE (CASE WHEN ObjectDate.DescId IN (zc_ObjectDate_Protocol_Insert()
+                                                                                , zc_ObjectDate_Protocol_Update()
+                                                                                 )
+                                                            THEN TO_CHAR (ObjectDate.ValueData , 'dd.mm.yy hh:mm:ss')
+                                                       ELSE TO_CHAR (ObjectDate.ValueData , 'dd.mm.yyyy')
+                                                  END, 'NULL') || '"/>' AS FieldXML 
                 , 3 AS GroupId
                 , ObjectDate.DescId
            FROM ObjectDate
                 JOIN ObjectDateDesc ON ObjectDateDesc.Id = ObjectDate.DescId
            WHERE ObjectDate.ObjectId = inObjectId
              AND inIsErased IS NULL
+
           UNION
            SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectLinkDesc.ItemName) || '" FieldValue = "' || zfStrToXmlStr (CASE WHEN Object.ValueData = '' THEN Object.Id :: TVarChar ELSE COALESCE (Object.ValueData, 'NULL') END) || '"/>' AS FieldXML 
                 , 4 AS GroupId

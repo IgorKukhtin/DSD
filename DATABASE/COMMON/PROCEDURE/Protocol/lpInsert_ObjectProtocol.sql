@@ -37,14 +37,26 @@ BEGIN
            WHERE ObjectFloat.ObjectId = inObjectId
              AND inIsErased IS NULL
              AND ObjectFloat.DescId <> zc_ObjectFloat_Member_ScalePSW()
+
           UNION
-           SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectDateDesc.ItemName) || '" FieldValue = "' || COALESCE (CASE WHEN ObjectDate.DescId IN (zc_ObjectDate_ImportSettings_StartTime(), zc_ObjectDate_ImportSettings_EndTime()) THEN TO_CHAR (ObjectDate.ValueData , 'hh:mm') ELSE DATE (ObjectDate.ValueData) :: TVarChar END, 'NULL') || '"/>' AS FieldXML 
+           SELECT '<Field FieldName = "' || zfStrToXmlStr (ObjectDateDesc.ItemName)
+               || '" FieldValue = "' || COALESCE (CASE WHEN ObjectDate.DescId IN (zc_ObjectDate_ImportSettings_StartTime()
+                                                                                , zc_ObjectDate_ImportSettings_EndTime()
+                                                                                , zc_ObjectDate_User_UpdateMobileFrom()
+                                                                                , zc_ObjectDate_User_UpdateMobileTo()
+                                                                                , zc_ObjectDate_Protocol_Insert()
+                                                                                , zc_ObjectDate_Protocol_Update()
+                                                                                 )
+                                                            THEN TO_CHAR (ObjectDate.ValueData , 'dd.mm.yy hh:mm:ss')
+                                                       ELSE TO_CHAR (ObjectDate.ValueData , 'dd.mm.yyyy')
+                                                  END, 'NULL') || '"/>' :: TVarChar AS FieldXML 
                 , 3 AS GroupId
                 , ObjectDate.DescId
            FROM ObjectDate
                 JOIN ObjectDateDesc ON ObjectDateDesc.Id = ObjectDate.DescId
            WHERE ObjectDate.ObjectId = inObjectId
              AND inIsErased IS NULL
+
           UNION
            SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectLinkDesc.ItemName) || '" FieldValue = "' || zfStrToXmlStr(COALESCE (Object.ValueData, 'NULL')) || '"/>' AS FieldXML 
                 , 4 AS GroupId

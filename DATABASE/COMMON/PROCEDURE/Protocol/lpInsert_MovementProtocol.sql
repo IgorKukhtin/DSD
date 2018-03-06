@@ -33,7 +33,14 @@ BEGIN
          INNER JOIN MovementFloatDesc ON MovementFloatDesc.Id = MovementFloat.DescId
     WHERE MovementFloat.MovementId = inMovementId
    UNION
-    SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementDateDesc.ItemName) || '" FieldValue = "' || COALESCE (DATE (MovementDate.ValueData) :: TVarChar, 'NULL') || '"/>' AS FieldXML 
+    SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementDateDesc.ItemName)
+        || '" FieldValue = "' || COALESCE (CASE WHEN MovementDate.DescId IN (zc_MovementDate_Insert()
+                                                                           , zc_MovementDate_Update()
+                                                                            )
+                                                     THEN TO_CHAR (MovementDate.ValueData , 'dd.mm.yy hh:mm:ss')
+                                                ELSE TO_CHAR (MovementDate.ValueData , 'dd.mm.yyyy')
+                                           END, 'NULL') || '"/>'  AS FieldXML 
+
          , 3 AS GroupId
          , MovementDate.DescId
     FROM MovementDate
@@ -78,7 +85,7 @@ BEGIN
 
   -- Сохранили
   INSERT INTO MovementProtocol (MovementId, OperDate, UserId, ProtocolData, isInsert)
-                        VALUES (inMovementId, current_timestamp, inUserId, vbProtocolXML, inIsInsert);
+                        VALUES (inMovementId, CURRENT_TIMESTAMP, inUserId, vbProtocolXML, inIsInsert);
   
 END;           
 $BODY$
