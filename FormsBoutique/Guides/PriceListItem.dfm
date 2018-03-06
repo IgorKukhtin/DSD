@@ -26,8 +26,6 @@ object PriceListItemForm: TPriceListItemForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = 168
-    ExplicitTop = 120
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -143,15 +141,6 @@ object PriceListItemForm: TPriceListItemForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 35
-      end
-      object GoodsSizeName: TcxGridDBColumn
-        Caption = #1056#1072#1079#1084#1077#1088
-        DataBinding.FieldName = 'GoodsSizeName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 97
       end
       object CompositionGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1089#1086#1089#1090#1072#1074#1072
@@ -338,7 +327,6 @@ object PriceListItemForm: TPriceListItemForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitWidth = 846
     object cxLabel1: TcxLabel
       Left = 3
       Top = 10

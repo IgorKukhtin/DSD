@@ -68,6 +68,7 @@ begin
   LoadReportFromFile('PrintMovement_IncomeIn', ReportPath + '\Приход от поставщика вх цена.fr3');
   LoadReportFromFile('PrintMovement_ReturnOut', ReportPath + '\Возврат поставщику.fr3');
   LoadReportFromFile('PrintMovement_Send', ReportPath + '\Перемещение.fr3');
+  LoadReportFromFile('PrintMovement_SendIn', ReportPath + '\Перемещение вх цена.fr3');
   LoadReportFromFile('PrintMovement_Loss', ReportPath + '\Списание.fr3');
   LoadReportFromFile('PrintMovement_IncomeSticker', ReportPath + '\Печать стикера самоклейки.fr3');
 end;

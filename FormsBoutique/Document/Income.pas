@@ -142,6 +142,8 @@ type
     macInsertMaskAction: TMultiAction;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
+    actPrintInSecond: TdsdPrintAction;
+    bbPrintInSecond: TdxBarButton;
   private
   public
   end;

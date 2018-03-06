@@ -414,6 +414,14 @@ object SendJournalForm: TSendJournalForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -485,6 +493,10 @@ object SendJournalForm: TSendJournalForm
       Action = actShowErased
       Category = 0
     end
+    object bb: TdxBarButton
+      Action = actPrintIn
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -512,6 +524,51 @@ object SendJournalForm: TSendJournalForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
+    end
+    object actPrintIn: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1074#1093'.'#1094#1077#1085#1072#1084
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1074#1093'.'#1094#1077#1085#1072#1084
+      ImageIndex = 21
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 'GoodsCode;GoodsSizeName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_SendIn'
+      ReportNameParam.Value = 'PrintMovement_SendIn'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
