@@ -40,8 +40,8 @@ BEGIN
                || '" FieldValue = "' || COALESCE (CASE WHEN ObjectDate.DescId IN (zc_ObjectDate_Protocol_Insert()
                                                                                 , zc_ObjectDate_Protocol_Update()
                                                                                  )
-                                                            THEN TO_CHAR (ObjectDate.ValueData , 'dd.mm.yy hh:mm:ss')
-                                                       ELSE TO_CHAR (ObjectDate.ValueData , 'dd.mm.yyyy')
+                                                            THEN zfConvert_DateTimeShortToString (ObjectDate.ValueData)
+                                                       ELSE zfConvert_DateToString (ObjectDate.ValueData)
                                                   END, 'NULL') || '"/>' AS FieldXML 
                 , 3 AS GroupId
                 , ObjectDate.DescId

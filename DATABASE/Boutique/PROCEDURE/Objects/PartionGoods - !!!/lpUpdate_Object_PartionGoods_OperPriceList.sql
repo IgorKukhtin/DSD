@@ -32,11 +32,37 @@ BEGIN
          AND Object_PartionGoods.OperPriceList    <> COALESCE (OHF_PriceListItem_Value.ValueData, 0) -- меняем - только если значение отличается
       ;
 
-                                     
-END;                                 
-$BODY$                               
-  LANGUAGE plpgsql VOLATILE;           
-                                     
+      -- Если было изменение - надо записать в Object_GoodsPrint - потом распечатают Ценник с Новой ценой
+      IF FOUND
+      THEN
+          -- ? по ВСЕМ товарам ?
+          PERFORM lpInsertUpdate_Object_GoodsPrint (ioOrd       := 0
+                                                  , ioUserId    := inUserId
+                                                  , inUnitId    := Container.WhereObjectId
+                                                  , inPartionId := Object_PartionGoods.MOvementItemId
+                                                  , inAmount    := Container.Amount
+                                                  , inIsReprice := TRUE      -- ПЕРЕОЦЕНКА
+                                                  , inUserId    := inUserId
+                                                   )
+          FROM Object_PartionGoods
+               INNER JOIN Container ON Container.PartionId = Object_PartionGoods.MOvementItemId
+                                   AND Container.DescId    = zc_Container_Count()
+                                   AND Container.Amount    > 0
+               LEFT JOIN ContainerLinkObject AS CLO_Client
+                                             ON CLO_Client.ContainerId = Container.Id
+                                            AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
+          WHERE Object_PartionGoods.GoodsId  = inGoodsId
+            -- AND Object_PartionGoods.isErased = FALSE
+            AND CLO_Client.ContainerId       IS NULL -- !!!отбросили Долги Покупателей!!!
+         ;
+
+      END IF; -- if NOT FOUND
+
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+
 /*------------------------------     -------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

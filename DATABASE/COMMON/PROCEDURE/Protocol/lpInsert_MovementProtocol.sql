@@ -37,8 +37,8 @@ BEGIN
         || '" FieldValue = "' || COALESCE (CASE WHEN MovementDate.DescId IN (zc_MovementDate_Insert()
                                                                            , zc_MovementDate_Update()
                                                                             )
-                                                     THEN TO_CHAR (MovementDate.ValueData , 'dd.mm.yy hh:mm:ss')
-                                                ELSE TO_CHAR (MovementDate.ValueData , 'dd.mm.yyyy')
+                                                     THEN zfConvert_DateTimeShortToString (MovementDate.ValueData)
+                                                ELSE zfConvert_DateToString (MovementDate.ValueData)
                                            END, 'NULL') || '"/>'  AS FieldXML 
 
          , 3 AS GroupId

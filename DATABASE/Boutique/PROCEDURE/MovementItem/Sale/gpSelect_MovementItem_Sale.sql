@@ -108,7 +108,7 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
                                                         ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
                                                        AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
-                                                       AND vbUnitId_User = 0                                          --  продавцам в магазинах ограничиваем инфу
+                                                       AND vbUnitId_User = 0 --  продавцам в магазинах ограничиваем инфу
                             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                         ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                                        AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()

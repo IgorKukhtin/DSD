@@ -32,7 +32,7 @@ BEGIN
            , SUM (Object_GoodsPrint.Amount) :: TFloat AS Amount
            , ('Кол-во: <' || (SUM (Object_GoodsPrint.Amount) :: Integer) :: TVarChar || '>'
                    ||' <' || COALESCE (Object_Unit.ValueData, '???') || '>'
-                   ||' <' || zfConvert_DateTimeToString (Object_GoodsPrint.InsertDate) || '>'
+                   ||' <' || zfConvert_DateTimeShortToString (Object_GoodsPrint.InsertDate) || '>'
                    ||' <' || Object_User.ValueData || '>'
               ) :: TVarChar AS Name
            , Object_GoodsPrint.UserId      AS UserId
