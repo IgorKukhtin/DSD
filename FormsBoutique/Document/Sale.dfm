@@ -675,6 +675,15 @@ object SaleForm: TSaleForm
             Options.Editing = False
             Width = 55
           end
+          object isChecked: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088'. > 31'#1076'.'
+            DataBinding.FieldName = 'isChecked'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1079#1088#1077#1096#1077#1085' '#1042#1086#1079#1074#1088#1072#1090' >31 '#1076'. ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 50
+          end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
@@ -1444,6 +1453,14 @@ object SaleForm: TSaleForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_isChecked'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -1621,6 +1638,11 @@ object SaleForm: TSaleForm
     object bbmac_User: TdxBarButton
       Action = mac_User
       Category = 0
+    end
+    object bbUpdate_isChecked: TdxBarButton
+      Action = actUpdate_isChecked
+      Category = 0
+      ImageIndex = 77
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -2443,6 +2465,19 @@ object SaleForm: TSaleForm
       Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
       Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
       ImageIndex = 15
+    end
+    object actUpdate_isChecked: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isChecked
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isChecked
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100'/ '#1086#1090#1084#1077#1085#1080#1090#1100' '#1042#1086#1079#1074#1088#1072#1090' > 31'#1076'.'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100'/ '#1086#1090#1084#1077#1085#1080#1090#1100' '#1042#1086#1079#1074#1088#1072#1090' > 31 '#1076#1077#1085#1100
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100'/ '#1086#1090#1084#1077#1085#1080#1090#1100' '#1087#1086' '#1090#1077#1082#1091#1097#1077#1084#1091' '#1090#1086#1074#1072#1088#1091' '#1042#1086#1079#1074#1088#1072#1090' '#1079#1072' > 31 '#1076#1077#1085#1100'?'
     end
   end
   object MasterDS: TDataSource
@@ -3801,5 +3836,39 @@ object SaleForm: TSaleForm
     PackSize = 1
     Left = 784
     Top = 336
+  end
+  object spUpdate_isChecked: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Checked'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChecked'
+        Value = 'FALSE'
+        Component = MasterCDS
+        ComponentItem = 'isChecked'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisChecked'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isChecked'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 720
+    Top = 371
   end
 end

@@ -5,7 +5,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1081
-  ExplicitHeight = 523
+  ExplicitHeight = 526
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -62,7 +62,8 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
     object cbPartion: TcxCheckBox
       Left = 694
       Top = 5
-      Action = actRefreshIsPartion
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470
       TabOrder = 6
       Width = 131
     end
@@ -70,7 +71,6 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       Left = 834
       Top = 5
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
-      Action = actRefreshSize
       Caption = #1056#1072#1079#1084#1077#1088#1099
       TabOrder = 7
       Width = 67
@@ -79,7 +79,6 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       Left = 918
       Top = 5
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
-      Action = actRefreshPartner
       Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082#1080
       TabOrder = 8
       Width = 105
@@ -802,6 +801,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         end>
       Caption = #1087#1086' '#1056#1072#1079#1084#1077#1088#1072#1084
       Hint = #1087#1086' '#1056#1072#1079#1084#1077#1088#1072#1084
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefreshPartner: TdsdDataSetRefresh
@@ -814,6 +814,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         end>
       Caption = #1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
       Hint = #1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefreshIsPartion: TdsdDataSetRefresh
@@ -826,6 +827,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         end>
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actOpenForm: TdsdInsertUpdateAction

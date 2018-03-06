@@ -60,28 +60,32 @@ inherited Report_OH_DiscountPeriodForm: TReport_OH_DiscountPeriodForm
     object cbDiscount: TcxCheckBox
       Left = 824
       Top = 5
-      Action = actRefreshDiscount
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' % '#1089#1082#1080#1076#1082#1080' ('#1044#1072'/'#1053#1077#1090')'
+      Caption = '% '#1057#1082#1080#1076#1082#1080
       TabOrder = 6
-      Width = 110
+      Width = 80
     end
     object cbPeriodYear: TcxCheckBox
       Left = 824
       Top = 32
-      Action = actRefreshPeriodYear
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1043#1086#1076' ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1043#1086#1076
       TabOrder = 7
-      Width = 113
+      Width = 56
     end
     object cbBrand: TcxCheckBox
       Left = 689
       Top = 32
-      Action = actRefreshBrand
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072'> ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
       TabOrder = 8
       Width = 107
     end
     object cbYear: TcxCheckBox
       Left = 689
       Top = 5
-      Action = actRefreshYear
+      Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052' ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052
       TabOrder = 9
       Width = 129
     end

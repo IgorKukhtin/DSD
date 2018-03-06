@@ -186,6 +186,10 @@ type
     spGet_Printer: TdsdStoredProc;
     macPrintCheck: TMultiAction;
     actGet_Printer: TdsdExecStoredProc;
+    spUpdate_isChecked: TdsdStoredProc;
+    actUpdate_isChecked: TdsdExecStoredProc;
+    bbUpdate_isChecked: TdxBarButton;
+    isChecked: TcxGridDBColumn;
   private
   public
   end;

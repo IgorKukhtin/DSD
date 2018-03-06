@@ -1,19 +1,17 @@
 inherited Report_SaleForm: TReport_SaleForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1055#1088#1086#1076#1072#1078#1072#1084' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 425
-  ClientWidth = 1160
+  ClientWidth = 1176
   AddOnFormData.RefreshAction = actRefreshStart
-  AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -21
-  ExplicitWidth = 1176
+  ExplicitWidth = 1192
   ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
-    Width = 1160
+    Width = 1176
     Height = 59
-    ExplicitWidth = 1160
+    ExplicitWidth = 1176
     ExplicitHeight = 59
     inherited deStart: TcxDateEdit
       Left = 29
@@ -60,44 +58,44 @@ inherited Report_SaleForm: TReport_SaleForm
       Width = 185
     end
     object cbPartion: TcxCheckBox
-      Left = 961
+      Left = 953
       Top = 5
-      Action = actRefreshIsPartion
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470
       TabOrder = 6
-      Width = 128
+      Width = 129
     end
     object cbSize: TcxCheckBox
-      Left = 961
+      Left = 953
       Top = 32
-      Action = actRefreshSize
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1056#1072#1079#1084#1077#1088#1099
       TabOrder = 7
       Width = 72
     end
     object cbPartner: TcxCheckBox
-      Left = 1089
+      Left = 1083
       Top = 5
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
-      Action = actRefreshPartner
       Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
       TabOrder = 8
       Width = 92
     end
     object cbMovement: TcxCheckBox
-      Left = 1089
+      Left = 1083
       Top = 32
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090'> ('#1044#1072'/'#1053#1077#1090')'
-      Action = actRefreshMovement
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#8470
       TabOrder = 9
       Width = 91
     end
     object cxLabel7: TcxLabel
-      Left = 681
+      Left = 675
       Top = 6
       Caption = #1057#1077#1079#1086#1085':'
     end
     object edPeriod: TcxButtonEdit
-      Left = 720
+      Left = 714
       Top = 5
       Properties.Buttons = <
         item
@@ -109,17 +107,17 @@ inherited Report_SaleForm: TReport_SaleForm
       Width = 131
     end
     object cxLabel8: TcxLabel
-      Left = 856
+      Left = 849
       Top = 6
       Caption = #1043#1086#1076' '#1089' ...'
     end
     object cxLabel9: TcxLabel
-      Left = 856
+      Left = 849
       Top = 33
       Caption = #1043#1086#1076' '#1087#1086' ...'
     end
     object edStartYear: TcxButtonEdit
-      Left = 906
+      Left = 899
       Top = 5
       Properties.Buttons = <
         item
@@ -132,7 +130,7 @@ inherited Report_SaleForm: TReport_SaleForm
       Width = 50
     end
     object edEndYear: TcxButtonEdit
-      Left = 906
+      Left = 899
       Top = 32
       TabStop = False
       Properties.Buttons = <
@@ -146,10 +144,9 @@ inherited Report_SaleForm: TReport_SaleForm
       Width = 50
     end
     object cbClient: TcxCheckBox
-      Left = 720
+      Left = 714
       Top = 32
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103'> ('#1044#1072'/'#1053#1077#1090')'
-      Action = actRefreshClient
       Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
       TabOrder = 16
       Width = 113
@@ -157,21 +154,21 @@ inherited Report_SaleForm: TReport_SaleForm
   end
   inherited PageControl: TcxPageControl [1]
     Top = 85
-    Width = 1160
+    Width = 1176
     Height = 340
     TabOrder = 3
     ExplicitTop = 85
-    ExplicitWidth = 1160
+    ExplicitWidth = 1176
     ExplicitHeight = 340
     ClientRectBottom = 340
-    ClientRectRight = 1160
+    ClientRectRight = 1176
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1160
+      ExplicitWidth = 1176
       ExplicitHeight = 340
       inherited cxGrid: TcxGrid
-        Width = 1160
+        Width = 1176
         Height = 340
-        ExplicitWidth = 1160
+        ExplicitWidth = 1176
         ExplicitHeight = 340
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -793,14 +790,16 @@ inherited Report_SaleForm: TReport_SaleForm
           'TextValue')
       end
       item
-        Component = edStartYear
+        Component = GuidesStartYear
         Properties.Strings = (
-          'Text')
+          'Key'
+          'TextValue')
       end
       item
-        Component = edEndYear
+        Component = GuidesEndYear
         Properties.Strings = (
-          'Text')
+          'Key'
+          'TextValue')
       end
       item
         Component = cbClient
@@ -841,9 +840,8 @@ inherited Report_SaleForm: TReport_SaleForm
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
+      StoredProc = spSelect
       StoredProcList = <
-        item
-        end
         item
           StoredProc = spSelect
         end>
@@ -1533,10 +1531,6 @@ inherited Report_SaleForm: TReport_SaleForm
       end
       item
         Component = GuidesPeriod
-      end
-      item
-      end
-      item
       end>
     Left = 384
     Top = 176
@@ -1737,7 +1731,7 @@ inherited Report_SaleForm: TReport_SaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 746
+    Left = 738
     Top = 65
   end
 end

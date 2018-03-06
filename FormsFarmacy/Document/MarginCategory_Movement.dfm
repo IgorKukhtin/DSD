@@ -22,8 +22,6 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
       inherited cxGrid: TcxGrid
         Width = 1121
         Height = 280
-        ExplicitLeft = 64
-        ExplicitTop = 16
         ExplicitWidth = 1121
         ExplicitHeight = 280
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -2331,8 +2329,8 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 760
-    Top = 427
+    Left = 688
+    Top = 395
   end
   object spUpdate_isChecked_No: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_MarginCategory_Checked'

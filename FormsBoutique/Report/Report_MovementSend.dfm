@@ -60,14 +60,16 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
     object cbPartion: TcxCheckBox
       Left = 887
       Top = 5
-      Action = actRefreshIsPartion
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470
       TabOrder = 6
       Width = 131
     end
     object cbSize: TcxCheckBox
       Left = 887
       Top = 32
-      Action = actRefreshSize
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1056#1072#1079#1084#1077#1088#1099
       TabOrder = 7
       Width = 74
     end
@@ -75,7 +77,6 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
       Left = 1015
       Top = 5
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
-      Action = actRefreshPartner
       Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
       TabOrder = 8
       Width = 92
@@ -84,7 +85,6 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
       Left = 1013
       Top = 32
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090'> ('#1044#1072'/'#1053#1077#1090')'
-      Action = actRefreshMovement
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#8470
       TabOrder = 9
       Width = 94
@@ -676,9 +676,8 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
+      StoredProc = spSelect
       StoredProcList = <
-        item
-        end
         item
           StoredProc = spSelect
         end>
@@ -1127,8 +1126,8 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 48
-    Top = 160
+    Left = 64
+    Top = 176
   end
   inherited MasterCDS: TClientDataSet
     Left = 16
@@ -1241,8 +1240,8 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 72
-    Top = 160
+    Left = 216
+    Top = 192
   end
   inherited BarManager: TdxBarManager
     Left = 120

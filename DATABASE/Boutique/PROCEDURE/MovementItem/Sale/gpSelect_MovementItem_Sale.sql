@@ -38,6 +38,7 @@ RETURNS TABLE (Id Integer, PartionId Integer
              , BarCode TVarChar
              , Comment TVarChar
              , isClose Boolean
+             , isChecked Boolean
              , isErased Boolean
               )
 AS
@@ -95,6 +96,7 @@ BEGIN
                            , MIString_BarCode.ValueData                            AS BarCode
                            , MIString_Comment.ValueData                            AS Comment
                            , COALESCE (MIBoolean_Close.ValueData, FALSE)           AS isClose
+                           , COALESCE (MIBoolean_Checked.ValueData, FALSE)         AS isChecked
                            , MovementItem.isErased
                            , ROW_NUMBER() OVER (PARTITION BY MovementItem.isErased ORDER BY MovementItem.Id ASC) AS Ord
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -154,6 +156,10 @@ BEGIN
                             LEFT JOIN MovementItemBoolean AS MIBoolean_Close
                                                           ON MIBoolean_Close.MovementItemId = MovementItem.Id
                                                          AND MIBoolean_Close.DescId         = zc_MIBoolean_Close()
+                            LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
+                                                          ON MIBoolean_Checked.MovementItemId = MovementItem.Id
+                                                         AND MIBoolean_Checked.DescId         = zc_MIBoolean_Checked()
+
                             LEFT JOIN MovementItemString AS MIString_BarCode
                                                          ON MIString_BarCode.MovementItemId = MovementItem.Id
                                                         AND MIString_BarCode.DescId         = zc_MIString_BarCode()
@@ -263,7 +269,8 @@ BEGIN
 
            , tmpMI.BarCode
            , tmpMI.Comment
-           , tmpMI.isClose :: Boolean AS isClose
+           , tmpMI.isClose   :: Boolean AS isClose
+           , tmpMI.isChecked :: Boolean AS isChecked
            , tmpMI.isErased
 
        FROM tmpMI_Master AS tmpMI
@@ -301,6 +308,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 06.03.18         *
  10.05.17         *
 */
 
