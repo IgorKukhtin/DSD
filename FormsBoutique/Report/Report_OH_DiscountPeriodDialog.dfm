@@ -100,6 +100,8 @@ object Report_OH_DiscountPeriodDialogForm: TReport_OH_DiscountPeriodDialogForm
     Top = 291
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072'> ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 10
     Width = 130
   end

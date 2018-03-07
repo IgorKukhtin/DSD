@@ -62,6 +62,8 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
       Top = 5
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 6
       Width = 128
     end
@@ -70,6 +72,8 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
       Top = 32
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1056#1072#1079#1084#1077#1088#1099
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 7
       Width = 72
     end
@@ -78,6 +82,8 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
       Top = 5
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 8
       Width = 92
     end
@@ -86,6 +92,8 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
       Top = 32
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090'> ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#8470
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 9
       Width = 91
     end
@@ -148,6 +156,8 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
       Top = 32
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103'> ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 16
       Width = 113
     end
@@ -502,15 +512,12 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
             Options.Editing = False
             Width = 95
           end
-          object OperPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1074#1093'.'
-            DataBinding.FieldName = 'OperPrice'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            Visible = False
+          object DiscountSaleKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'DiscountSaleKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 69
+            Width = 85
           end
           object isChecked: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088'. > 31'#1076'.'
@@ -521,14 +528,25 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
             Options.Editing = False
             Width = 50
           end
+          object OperPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1074#1093'.'
+            DataBinding.FieldName = 'OperPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object Income_Amount: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1087#1088#1080#1093#1086#1076
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'Income_Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
             Options.Editing = False
             Width = 80
           end
@@ -536,25 +554,18 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
             Caption = #1050#1086#1083'. '#1044#1086#1083#1075
             DataBinding.FieldName = 'Debt_Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
-            Width = 102
-          end
-          object DiscountSaleKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1089#1082#1080#1076#1082#1080
-            DataBinding.FieldName = 'DiscountSaleKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 85
+            Width = 80
           end
           object Return_Summ_prof: TcxGridDBColumn
             Caption = #1055#1088#1080#1073#1099#1083#1100' '#1074#1086#1079#1074#1088#1072#1090
             DataBinding.FieldName = 'Return_Summ_prof'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 63
@@ -563,7 +574,7 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
             Caption = #1050#1086#1083'. '#1074#1086#1079#1074#1088#1072#1090
             DataBinding.FieldName = 'Return_Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 79
@@ -572,7 +583,7 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
             Caption = #1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090
             DataBinding.FieldName = 'Return_Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 102
@@ -591,7 +602,7 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
             Caption = #1057#1082#1080#1076#1082#1072' '#1074#1086#1079#1074#1088#1072#1090
             DataBinding.FieldName = 'Return_Summ_10200'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -600,7 +611,7 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
             Caption = #1050#1091#1088#1089'. '#1088#1072#1079#1085'. '#1074#1086#1079#1074#1088#1072#1090
             DataBinding.FieldName = 'Return_SummCost_diff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80

@@ -83,6 +83,8 @@ object Report_MovementLossDialogForm: TReport_MovementLossDialogForm
     Top = 63
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 8
     Width = 136
   end
@@ -91,6 +93,8 @@ object Report_MovementLossDialogForm: TReport_MovementLossDialogForm
     Top = 63
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1056#1072#1079#1084#1077#1088#1099
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 9
     Width = 73
   end
@@ -133,6 +137,8 @@ object Report_MovementLossDialogForm: TReport_MovementLossDialogForm
     Top = 63
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 14
     Width = 91
   end
@@ -141,6 +147,8 @@ object Report_MovementLossDialogForm: TReport_MovementLossDialogForm
     Top = 27
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090'> ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#8470
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 15
     Width = 92
   end
