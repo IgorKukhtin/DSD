@@ -103,6 +103,11 @@ BEGIN
     vbUserId:= lpGetUserBySession (inSession);
 
     -- !!!замена!!!
+    IF inIsPartion = TRUE THEN
+       inIsPartner:= TRUE;
+       inIsSize   := TRUE;
+    END IF;
+    -- !!!замена!!!
     IF COALESCE (inEndYear, 0) = 0 THEN
        inEndYear:= 1000000;
     END IF;
