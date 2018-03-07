@@ -73,7 +73,7 @@ BEGIN
     FROM gpGet_Object_PriceList(vbPriceList,inSession) AS PriceList;
     
     -- поиск цены по базовому прайсу
-    IF COALESCE (ioPrice,0) = 0
+    IF COALESCE (ioPrice, 0) = 0 OR COALESCE (ioId, 0) = 0
     THEN
         SELECT Price.ValuePrice
                INTO ioPrice

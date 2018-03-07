@@ -27,7 +27,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 336
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
@@ -36,7 +35,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitWidth = 982
       object bbExit: TSpeedButton
         Left = 511
         Top = 3
@@ -99,8 +97,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       Height = 380
       Align = alClient
       TabOrder = 1
-      ExplicitWidth = 982
-      ExplicitHeight = 302
       object cxDBGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DS
@@ -220,7 +216,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitHeight = 256
     object PreviewPanel: TPanel
       Left = 0
       Top = 0
@@ -228,9 +223,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       Height = 244
       Align = alClient
       TabOrder = 2
-      ExplicitLeft = 8
-      ExplicitWidth = 201
-      ExplicitHeight = 256
       object frxPreview1: TfrxPreview
         Left = 1
         Top = 1
@@ -241,8 +233,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         OutlineWidth = 120
         ThumbnailVisible = False
         UseReportHints = True
-        ExplicitWidth = 375
-        ExplicitHeight = 254
       end
     end
     object cxSplitter1: TcxSplitter
@@ -253,8 +243,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       AlignSplitter = salRight
       AllowHotZoneDrag = False
       Control = ParamsAllPanel
-      ExplicitLeft = -8
-      ExplicitHeight = 256
     end
     object ParamsPanel: TPanel
       Left = 328
@@ -264,7 +252,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitHeight = 256
       object infoPanelTare: TPanel
         Left = 240
         Top = 0
@@ -274,8 +261,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         BevelOuter = bvNone
         TabOrder = 2
         Visible = False
-        ExplicitLeft = 760
-        ExplicitHeight = 256
         object rgTareWeight: TRadioGroup
           Left = 0
           Top = 82
@@ -294,7 +279,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           ParentFont = False
           TabOrder = 2
           OnClick = rgTareWeightClick
-          ExplicitHeight = 89
         end
         object PanelTare: TPanel
           Left = 0
@@ -354,7 +338,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           Align = alBottom
           BevelOuter = bvNone
           TabOrder = 3
-          ExplicitTop = 171
           object rgChangePercentAmount: TRadioGroup
             Left = 0
             Top = 41
@@ -420,8 +403,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         BevelOuter = bvNone
         TabOrder = 3
         Visible = False
-        ExplicitLeft = 897
-        ExplicitHeight = 256
         object rgPriceList: TRadioGroup
           Left = 0
           Top = 41
@@ -434,7 +415,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           TabOrder = 1
           OnClick = rgPriceListClick
           OnEnter = rgPriceListClick
-          ExplicitHeight = 215
         end
         object gbPriceListCode: TGroupBox
           Left = 0
@@ -466,7 +446,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitHeight = 256
         object gbGoodsName: TGroupBox
           Left = 0
           Top = 41
@@ -569,8 +548,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitWidth = 625
-        ExplicitHeight = 256
         object rgGoodsKind: TRadioGroup
           Left = 0
           Top = 41
@@ -589,10 +566,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           ParentFont = False
           TabOrder = 1
           OnClick = rgGoodsKindClick
-          ExplicitLeft = 1
-          ExplicitTop = 43
-          ExplicitWidth = 144
-          ExplicitHeight = 215
         end
         object gbGoodsKindCode: TGroupBox
           Left = 0
@@ -602,7 +575,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           Align = alTop
           Caption = #1050#1086#1076' '#1087#1072#1082#1091#1074#1072#1085#1085#1103
           TabOrder = 0
-          ExplicitWidth = 625
           object EditGoodsKindCode: TEdit
             Left = 5
             Top = 17
@@ -627,7 +599,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
     AlignSplitter = salBottom
     InvertDirection = True
     Control = GridPanel
-    ExplicitTop = -8
   end
   object DS: TDataSource
     DataSet = CDS
@@ -723,6 +694,81 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         Name = 'inIsLength'
         Value = False
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDataProduction'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsTara'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsGoodsName'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDataPartion'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDataTara'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateStart'
+        Value = 43101d
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateUpack'
+        Value = 43101d
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateTara'
+        Value = 43101d
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateProduction'
+        Value = 43101d
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumUpack'
+        Value = 0
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumTech'
+        Value = 0
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_StickerProperty_Print(
     IN inIsDataPartion     Boolean  , -- печатать ПАРТИЮ для тары
     IN inDateStart         TDateTime, -- нач. дата
     IN inDateUpack         TDateTime, -- дата упаковки
-    IN inDateTara          TDateTime, -- дата для тары 
+    IN inDateTara          TDateTime, -- дата для тары
     IN inDateProduction    TDateTime, -- дата произв-ва
     IN inNumUpack          TFloat   , -- № партии  упаковки, по умолчанию = 1
     IN inNumTech           TFloat   , -- № смены технологов, по умолчанию = 1
@@ -58,7 +58,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-     --проверка 
+     --проверка
      IF (inIsDataProduction = TRUE AND inIsTara = TRUE) OR (inIsTara = TRUE AND inIsDataTara = TRUE AND inIsDataPartion = TRUE)
         THEN
          RAISE EXCEPTION 'Ошибка.Переданы некорректные параметры печати.';
@@ -185,18 +185,18 @@ BEGIN
                                 ) AS Info
 
             , inIsDataProduction  :: Boolean   AS IsDataProduction
-            , inIsTara            :: Boolean   AS IsTara          
-            , inIsGoodsName       :: Boolean   AS IsGoodsName     
-            , inIsDataTara        :: Boolean   AS IsDataTara      
-            , inIsDataPartion     :: Boolean   AS IsDataPartion   
-            , CASE WHEN inIsDataProduction = TRUE THEN inDateStart ELSE NULL END        :: TDateTime AS DateStart       
+            , inIsTara            :: Boolean   AS IsTara
+            , inIsGoodsName       :: Boolean   AS IsGoodsName
+            , inIsDataTara        :: Boolean   AS IsDataTara
+            , inIsDataPartion     :: Boolean   AS IsDataPartion
+            , CASE WHEN inIsDataProduction = TRUE THEN inDateStart ELSE NULL END        :: TDateTime AS DateStart
             ,  CASE WHEN inIsDataProduction = TRUE THEN (inDateStart + ((ObjectFloat_Value5.ValueData - 1) ||' day') :: INTERVAL) ELSE NULL END :: TDateTime AS DateEnd
             , inDateUpack         :: TDateTime AS DateUpack
             , inDateTara          :: TDateTime AS DateTara
             , inDateProduction    :: TDateTime AS DateProduction
             , inNumUpack          :: TFloat    AS NumUpack
             , inNumTech           :: TFloat    AS NumTech
-            
+
        FROM Object AS Object_StickerProperty
              LEFT JOIN Object AS Object_StickerFile ON Object_StickerFile.Id = vbStickerFileId
 
@@ -312,7 +312,7 @@ BEGIN
 
           WHERE Object_StickerProperty.Id = inObjectId
             AND Object_StickerProperty.DescId = zc_Object_StickerProperty()
-      ;
+         ;
 
 END;
 $BODY$
@@ -326,5 +326,4 @@ $BODY$
 */
 
 -- тест
---
---select * from gpSelect_Object_StickerProperty_Print(inObjectId := 1006470 , inIsLength := 'False' , inIsDataProduction := 'False' , inIsTara := 'False' , inIsGoodsName := 'False' , inIsDataTara := 'False' , inIsDataPartion := 'False' , inDateStart := ('01.01.2016')::TDateTime , inDateUpack := ('01.01.2016')::TDateTime , inDateTara := ('01.01.2016')::TDateTime , inDateProduction := ('01.01.2016')::TDateTime , inNumUpack := 1 , inNumTech := 1 ,  inSession := zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Object_StickerProperty_Print (inObjectId:= 1006470, inIsLength:= FALSE, inIsDataProduction:= FALSE, inIsTara:= FALSE, inIsGoodsName:= FALSE, inIsDataTara:= FALSE, inIsDataPartion:= FALSE, inDateStart:= '01.01.2016', inDateUpack:= '01.01.2016', inDateTara:= '01.01.2016', inDateProduction:= '01.01.2016', inNumUpack:= 1, inNumTech:= 1, inSession:= zfCalc_UserAdmin());
