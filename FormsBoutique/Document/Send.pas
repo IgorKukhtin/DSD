@@ -127,6 +127,8 @@ type
     bbOpenReportForm: TdxBarButton;
     actOpenReportTo: TdsdOpenForm;
     bbOpenReportTo: TdxBarButton;
+    bbPrintIn: TdxBarButton;
+    actPrintIn: TdsdPrintAction;
   private
   public
   end;

@@ -35,7 +35,7 @@ RETURNS TABLE (Id Integer , ObjectId Integer
                 , PeriodName           TVarChar  
                 , PeriodYear           Integer  
                 , FabrikaName          TVarChar  
-                , GoodsSizeName        TVarChar 
+                --, GoodsSizeName        TVarChar 
                 , CurrencyName         TVarChar
                 , OperPriceList        TFloat  
                 , OperPrice            TFloat 
@@ -109,7 +109,7 @@ BEGIN
                                , Object_LineFabrica.ValueData        AS LineFabricaName
                                , Object_Label.ValueData              AS LabelName
                                , Object_CompositionGroup.ValueData   AS CompositionGroupName
-                               , Object_GoodsSize.ValueData          AS GoodsSizeName
+                               --, Object_GoodsSize.ValueData          AS GoodsSizeName
                           FROM Object_PartionGoods
                                LEFT JOIN Object AS Object_Partner     ON Object_Partner.Id = Object_PartiONGoods.PartnerId
                                LEFT JOIN Object AS Object_Unit        ON Object_Unit.Id    = Object_PartionGoods.UnitId
@@ -124,7 +124,7 @@ BEGIN
                                LEFT JOIN Object AS Object_LineFabrica ON Object_LineFabrica.Id = Object_PartionGoods.LineFabricaId
                                LEFT JOIN Object AS Object_Label       ON Object_Label.Id       = Object_PartionGoods.LabelId
                                LEFT JOIN Object AS Object_CompositionGroup ON Object_CompositionGroup.Id = Object_PartionGoods.CompositionGroupId
-                               LEFT JOIN Object AS Object_GoodsSize   ON Object_GoodsSize.Id   = Object_PartionGoods.GoodsSizeId
+                               --LEFT JOIN Object AS Object_GoodsSize   ON Object_GoodsSize.Id   = Object_PartionGoods.GoodsSizeId
                           WHERE Object_PartionGoods.isErased = FALSE 
                             AND (Object_PartionGoods.UnitId = inUnitId OR inUnitId = 0)
                             AND (Object_PartionGoods.BrandId = inBrandId OR inBrandId = 0)
@@ -178,7 +178,7 @@ BEGIN
                         , tmpPartionGoods.LineFabricaName
                         , tmpPartionGoods.LabelName
                         , tmpPartionGoods.CompositionGroupName
-                        , tmpPartionGoods.GoodsSizeName
+                        --, tmpPartionGoods.GoodsSizeName
                         , SUM (COALESCE (tmpContainer.Amount, 0))        AS Remains
                         , SUM (COALESCE (tmpContainer.AmountDebt, 0))    AS AmountDebt
                    FROM tmpPartionGoods
@@ -208,16 +208,16 @@ BEGIN
                           , tmpPartionGoods.LineFabricaName
                           , tmpPartionGoods.LabelName
                           , tmpPartionGoods.CompositionGroupName
-                          , tmpPartionGoods.GoodsSizeName
+                          --, tmpPartionGoods.GoodsSizeName
                    )
 
        SELECT
-             tmpPrice.PriceListItemId AS Id
-           , tmpPrice.PriceListItemObjectId AS ObjectId
-           , Object_Goods.Id          AS GoodsId               
-           , Object_Goods.ObjectCode  AS GoodsCode
-           , Object_Goods.ValueData   AS GoodsName
-           , Object_Goods.isErased    AS isErased 
+             tmpPrice.PriceListItemId             AS Id
+           , tmpPrice.PriceListItemObjectId       AS ObjectId
+           , Object_Goods.Id                      AS GoodsId               
+           , Object_Goods.ObjectCode              AS GoodsCode
+           , Object_Goods.ValueData               AS GoodsName
+           , Object_Goods.isErased                AS isErased 
            
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , tmpPartionGoods.MeasureName          AS MeasureName
@@ -238,7 +238,7 @@ BEGIN
            , tmpPartionGoods.PeriodName
            , tmpPartionGoods.PeriodYear
            , tmpPartionGoods.FabrikaName
-           , tmpPartionGoods.GoodsSizeName
+           --, tmpPartionGoods.GoodsSizeName
            , tmpPartionGoods.CurrencyName
            , tmpPartionGoods.OperPriceList   ::Tfloat
            , tmpPartionGoods.OperPrice       ::Tfloat
@@ -335,7 +335,7 @@ BEGIN
                                , Object_LineFabrica.ValueData        AS LineFabricaName
                                , Object_Label.ValueData              AS LabelName
                                , Object_CompositionGroup.ValueData   AS CompositionGroupName
-                               , Object_GoodsSize.ValueData          AS GoodsSizeName
+                               --, Object_GoodsSize.ValueData          AS GoodsSizeName
                           FROM Object_PartionGoods
                                LEFT JOIN Object AS Object_Partner     ON Object_Partner.Id     = Object_PartiONGoods.PartnerId
                                LEFT JOIN Object AS Object_Unit        ON Object_Unit.Id        = Object_PartionGoods.UnitId
@@ -350,7 +350,7 @@ BEGIN
                                LEFT JOIN Object AS Object_LineFabrica ON Object_LineFabrica.Id = Object_PartionGoods.LineFabricaId
                                LEFT JOIN Object AS Object_Label       ON Object_Label.Id       = Object_PartionGoods.LabelId
                                LEFT JOIN Object AS Object_CompositionGroup ON Object_CompositionGroup.Id = Object_PartionGoods.CompositionGroupId
-                               LEFT JOIN Object AS Object_GoodsSize   ON Object_GoodsSize.Id   = Object_PartionGoods.GoodsSizeId
+                               --LEFT JOIN Object AS Object_GoodsSize   ON Object_GoodsSize.Id   = Object_PartionGoods.GoodsSizeId
                           WHERE Object_PartionGoods.isErased = FALSE 
                             AND (Object_PartionGoods.UnitId = inUnitId OR inUnitId = 0)
                             AND (Object_PartionGoods.BrandId = inBrandId OR inBrandId = 0)
@@ -403,7 +403,7 @@ BEGIN
                         , tmpPartionGoods.LineFabricaName
                         , tmpPartionGoods.LabelName
                         , tmpPartionGoods.CompositionGroupName
-                        , tmpPartionGoods.GoodsSizeName
+                        --, tmpPartionGoods.GoodsSizeName
                         , SUM (COALESCE (tmpContainer.Amount, 0))        AS Remains
                         , SUM (COALESCE (tmpContainer.AmountDebt, 0))    AS AmountDebt
                    FROM tmpPartionGoods
@@ -433,7 +433,7 @@ BEGIN
                           , tmpPartionGoods.LineFabricaName
                           , tmpPartionGoods.LabelName
                           , tmpPartionGoods.CompositionGroupName
-                          , tmpPartionGoods.GoodsSizeName
+                          --, tmpPartionGoods.GoodsSizeName
                    )
        SELECT
              tmpPrice.PriceListItemId             AS Id
@@ -462,7 +462,7 @@ BEGIN
            , tmpPartionGoods.PeriodName
            , tmpPartionGoods.PeriodYear
            , tmpPartionGoods.FabrikaName
-           , tmpPartionGoods.GoodsSizeName
+           --, tmpPartionGoods.GoodsSizeName
            , tmpPartionGoods.CurrencyName
            , tmpPartionGoods.OperPriceList   ::Tfloat
            , tmpPartionGoods.OperPrice       ::Tfloat
@@ -514,6 +514,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.03.18         *
  05.03.18         *
  01.03.18         * новые вх.параметры
  28.04.17         * битики + св-ва товара

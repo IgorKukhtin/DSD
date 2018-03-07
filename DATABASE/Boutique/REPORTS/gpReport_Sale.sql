@@ -92,6 +92,7 @@ RETURNS TABLE (PartionId             Integer
              , DescName_doc         TVarChar
              , OperDate_doc         TDateTime
              , InvNumber_doc        TVarChar
+             , isChecked            Boolean
               )
 AS
 $BODY$
@@ -128,18 +129,18 @@ BEGIN
                                WHERE Movement.DescId   = zc_Movement_Currency()
                                  AND Movement.StatusId = zc_Enum_Status_Complete()
                               )
-             , tmpCurrency AS (SELECT tmpCurrency_all.OperDate                           AS StartDate
-                                    , COALESCE (tmpCurrency_next.OperDate, zc_DateEnd()) AS EndDate
-                                    , tmpCurrency_all.Amount
-                                    , tmpCurrency_all.ParValue
-                                    , tmpCurrency_all.CurrencyFromId
-                                    , tmpCurrency_all.CurrencyToId
-                               FROM tmpCurrency_all
-                                    LEFT JOIN tmpCurrency_all AS tmpCurrency_next
-                                                              ON tmpCurrency_next.CurrencyFromId = tmpCurrency_all.CurrencyFromId
-                                                             AND tmpCurrency_next.CurrencyToId   = tmpCurrency_all.CurrencyToId
-                                                             AND tmpCurrency_next.Ord            = tmpCurrency_all.Ord + 1
-                              )
+         , tmpCurrency AS (SELECT tmpCurrency_all.OperDate                           AS StartDate
+                                , COALESCE (tmpCurrency_next.OperDate, zc_DateEnd()) AS EndDate
+                                , tmpCurrency_all.Amount
+                                , tmpCurrency_all.ParValue
+                                , tmpCurrency_all.CurrencyFromId
+                                , tmpCurrency_all.CurrencyToId
+                           FROM tmpCurrency_all
+                                LEFT JOIN tmpCurrency_all AS tmpCurrency_next
+                                                          ON tmpCurrency_next.CurrencyFromId = tmpCurrency_all.CurrencyFromId
+                                                         AND tmpCurrency_next.CurrencyToId   = tmpCurrency_all.CurrencyToId
+                                                         AND tmpCurrency_next.Ord            = tmpCurrency_all.Ord + 1
+                          )
          , tmpContainer AS (SELECT Container.Id         AS ContainerId
                                  , CLO_Client.ObjectId  AS ClientId
                             FROM Container
@@ -242,6 +243,7 @@ BEGIN
                                   --  № п/п
                                 , ROW_NUMBER() OVER (PARTITION BY Object_PartionGoods.MovementItemId ORDER BY CASE WHEN Object_PartionGoods.UnitId = COALESCE (MIConatiner.ObjectExtId_Analyzer, Object_PartionGoods.UnitId) THEN 0 ELSE 1 END ASC) AS Ord
 
+                                , COALESCE (MIBoolean_Checked.ValueData, FALSE)         AS isChecked
                            FROM Object_PartionGoods
 
                                 LEFT JOIN MovementItemContainer AS MIConatiner
@@ -264,6 +266,10 @@ BEGIN
                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_DiscountSaleKind
                                                                  ON MILinkObject_DiscountSaleKind.MovementItemId = COALESCE (Object_PartionMI.ObjectCode, MIConatiner.MovementItemId)
                                                                 AND MILinkObject_DiscountSaleKind.DescId         = zc_MILinkObject_DiscountSaleKind()
+
+                                LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
+                                                              ON MIBoolean_Checked.MovementItemId = COALESCE (Object_PartionMI.ObjectCode, MIConatiner.MovementItemId)
+                                                             AND MIBoolean_Checked.DescId         = zc_MIBoolean_Checked()
 
                            WHERE (Object_PartionGoods.PartnerId  = inPartnerId        OR inPartnerId   = 0)
                              AND (Object_PartionGoods.BrandId    = inBrandId          OR inBrandId     = 0)
@@ -307,6 +313,7 @@ BEGIN
                                   , Object_PartionGoods.Amount
                                   , Object_PartionGoods.OperPrice
                                   , Object_PartionGoods.CountForPrice
+                                  , COALESCE (MIBoolean_Checked.ValueData, FALSE)
                             HAVING SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ()  AND COALESCE (MIConatiner.AnalyzerId, 0) <> zc_Enum_AnalyzerId_SaleSumm_10300() AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END) <> 0
                                OR (SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount > 0 AND MIConatiner.MovementDescId IN (zc_Movement_ReturnIn()) THEN 1 * MIConatiner.Amount ELSE 0 END) <> 0
                                   -- С\с возврат - calc
@@ -351,6 +358,7 @@ BEGIN
                           , tmpData_all.CurrencyId
 
                           , tmpData_all.OperPrice
+                          , tmpData_all.isChecked
                           , SUM (CASE WHEN tmpData_all.Ord = 1 THEN tmpData_all.Income_Amount ELSE 0 END) AS Income_Amount
 
                           , SUM (tmpData_all.Debt_Amount)           AS Debt_Amount
@@ -454,6 +462,7 @@ BEGIN
                             , tmpData_all.UnitId_in
                             , tmpData_all.CurrencyId
                             , tmpData_all.OperPrice
+                            , tmpData_all.isChecked
 
                             , ObjectLink_Parent0.ChildObjectId
                             , ObjectLink_Parent1.ChildObjectId
@@ -476,6 +485,7 @@ BEGIN
                       FROM (SELECT GENERATE_SERIES (CURRENT_DATE, CURRENT_DATE + INTERVAL '6 DAY', '1 DAY' :: INTERVAL) AS OperDate) AS tmp
                            CROSS JOIN zfCalc_DayOfWeekName_cross (tmp.OperDate) AS zfCalc
                      )*/
+
         -- Результат
         SELECT tmpData.PartionId
              , Object_Brand.ValueData    :: VarChar (100) AS BrandName
@@ -642,6 +652,8 @@ BEGIN
              , MovementDesc_Doc.ItemName          AS DescName_doc
              , Movement_Doc.OperDate              AS OperDate_doc
              , Movement_Doc.InvNumber             AS InvNumber_doc
+             
+             , tmpData.isChecked
         FROM tmpData
             --LEFT JOIN tmpDayOfWeek ON tmpDayOfWeek.Ord_dow = tmpData.OrdDay_doc
 

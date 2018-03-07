@@ -402,6 +402,10 @@ object IncomeJournalForm: TIncomeJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintInSecond'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -493,6 +497,10 @@ object IncomeJournalForm: TIncomeJournalForm
       Action = actPrintSticker
       Category = 0
     end
+    object bbPrintInSecond: TdxBarButton
+      Action = actPrintInSecond
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -566,6 +574,47 @@ object IncomeJournalForm: TIncomeJournalForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
+    object actPrintInSecond: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1074#1093'.'#1094#1077#1085#1072#1084' (2)'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1074#1093'.'#1094#1077#1085#1072#1084' (2)'
+      ImageIndex = 21
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 'GoodsCode;GoodsSizeName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isSecond'
+          Value = 'TRUE'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_IncomeIn'
+      ReportNameParam.Value = 'PrintMovement_IncomeIn'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+    end
     object actPrintIn: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -592,6 +641,13 @@ object IncomeJournalForm: TIncomeJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isSecond'
+          Value = 'FALSE'
+          DataType = ftBoolean
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_IncomeIn'

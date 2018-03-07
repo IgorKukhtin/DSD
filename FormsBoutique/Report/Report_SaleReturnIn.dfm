@@ -417,6 +417,15 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
             HeaderHint = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1072#1103' '#1089#1082#1080#1076#1082#1072' '#1074' '#1087#1088#1086#1076#1072#1078#1077' '#1043#1056#1053
             Width = 80
           end
+          object isChecked: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088'. > 31'#1076'.'
+            DataBinding.FieldName = 'isChecked'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1079#1088#1077#1096#1077#1085' '#1042#1086#1079#1074#1088#1072#1090' >31 '#1076'. ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 50
+          end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'.'
             DataBinding.FieldName = 'Amount'
