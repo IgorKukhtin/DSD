@@ -91,10 +91,24 @@ end;
 
 procedure TLoadReportTest.LoadSticker;
 begin
+  // 1
   LoadReportFromFile('ШАБЛОН + тм АЛАН - Український.Sticker',          ReportPath + '\Этикетки\ШАБЛОН + тм АЛАН - Український.fr3');
-  LoadReportFromFile('ШАБЛОН + тм ВАРТО (Варус) - Український.Sticker', ReportPath + '\Этикетки\ШАБЛОН + тм ВАРТО (Варус) - Український.fr3');
-  LoadReportFromFile('ШАБЛОН + тм НАШИ КОВБАСИ - Український.Sticker',  ReportPath + '\Этикетки\ШАБЛОН + тм НАШИ КОВБАСИ - Український.fr3');
+  // 2
   LoadReportFromFile('ШАБЛОН + тм СПЕЦ ЦЕХ - Український.Sticker',      ReportPath + '\Этикетки\ШАБЛОН + тм СПЕЦ ЦЕХ - Український.fr3');
+  // 3
+  LoadReportFromFile('ШАБЛОН + тм ВАРТО (Варус) - Український.Sticker', ReportPath + '\Этикетки\ШАБЛОН + тм ВАРТО (Варус) - Український.fr3');
+  // 4
+  LoadReportFromFile('ШАБЛОН + тм НАШИ КОВБАСИ - Український.Sticker',  ReportPath + '\Этикетки\ШАБЛОН + тм НАШИ КОВБАСИ - Український.fr3');
+  // 5+
+  // 6+
+  LoadReportFromFile('ШАБЛОН + тм Фітнес Формат - Український.Sticker',  ReportPath + '\Этикетки\ШАБЛОН + тм Фітнес Формат - Український.fr3');
+  // 7+
+  LoadReportFromFile('ШАБЛОН + тм Повна Чаша (Фоззи) - Український.Sticker',  ReportPath + '\Этикетки\ШАБЛОН + тм Повна Чаша (Фоззи) - Український.fr3');
+  // 8+
+  LoadReportFromFile('ШАБЛОН + тм Премія (Фоззи) - Український.Sticker',  ReportPath + '\Этикетки\ШАБЛОН + тм Премія (Фоззи) - Український.fr3');
+  // 9+
+  LoadReportFromFile('ШАБЛОН + тм Ашан - Український.Sticker',  ReportPath + '\Этикетки\ШАБЛОН + тм Ашан - Український.fr3');
+
 end;
 
 

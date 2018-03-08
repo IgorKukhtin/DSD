@@ -13,7 +13,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Scale_Sticker(
     IN inBranchCode            Integer,      --
     IN inSession               TVarChar      -- сессия пользователя
 )
-RETURNS TABLE (GoodsGroupNameFull TVarChar
+RETURNS TABLE (Id Integer
+             , GoodsGroupNameFull TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , MeasureId Integer, MeasureName TVarChar
                -- на самом деле здесь StickerPack
@@ -22,6 +23,8 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar
              , GoodsKindId_complete Integer, GoodsKindCode_complete Integer, GoodsKindName_complete TVarChar
                -- Оболочка
              , StickerSkinName TVarChar
+               -- название файла fr3 в БАЗЕ
+             , StickerFileName TVarChar
                -- сколько уже прошло в печати
              , Count_begin TFloat
               )
@@ -72,18 +75,41 @@ BEGIN
                              GROUP BY MovementItem.ObjectId
                                     , MILinkObject_GoodsKind.ObjectId
                             )
-            , tmpSticker AS (SELECT ObjectLink_Sticker_Goods.ChildObjectId AS GoodsId
-                                    -- заменяем Вид пакування -> Вид товара 
+              -- Шаблоны "по умолчанию" - для конкретной ТМ
+            , tmpStickerFile AS (SELECT Object_StickerFile.Id                          AS StickerFileId
+                                                        , ObjectLink_StickerFile_TradeMark.ChildObjectId AS TradeMarkId
+                                 FROM Object AS Object_StickerFile
+                                      LEFT JOIN ObjectLink AS ObjectLink_StickerFile_Juridical
+                                                           ON ObjectLink_StickerFile_Juridical.ObjectId = Object_StickerFile.Id
+                                                          AND ObjectLink_StickerFile_Juridical.DescId   = zc_ObjectLink_StickerFile_Juridical()
+                                      INNER JOIN ObjectLink AS ObjectLink_StickerFile_TradeMark
+                                                            ON ObjectLink_StickerFile_TradeMark.ObjectId = Object_StickerFile.Id
+                                                           AND ObjectLink_StickerFile_TradeMark.DescId = zc_ObjectLink_StickerFile_TradeMark()
+
+                                      INNER JOIN ObjectBoolean AS ObjectBoolean_Default
+                                                               ON ObjectBoolean_Default.ObjectId  = Object_StickerFile.Id
+                                                              AND ObjectBoolean_Default.DescId    = zc_ObjectBoolean_StickerFile_Default()
+                                                              AND ObjectBoolean_Default.ValueData = TRUE
+
+                                 WHERE Object_StickerFile.DescId   = zc_Object_StickerFile()
+                                   AND Object_StickerFile.isErased = FALSE
+                                   AND ObjectLink_StickerFile_Juridical.ChildObjectId IS NULL -- !!!обязательно БЕЗ Покупателя!!!
+                                )
+            , tmpSticker AS (SELECT Object_StickerProperty.Id
+                                  , ObjectLink_Sticker_Goods.ChildObjectId AS GoodsId
+                                    -- заменяем Вид пакування -> Вид товара
                                   , Object_StickerPack.Id         AS GoodsKindId
                                   , Object_StickerPack.ObjectCode AS GoodsKindCode
                                   , Object_StickerPack.ValueData  AS GoodsKindName
-                                    -- Вид товара 
+                                    -- Вид товара
                                   , Object_GoodsKind.Id           AS GoodsKindId_complete
                                   , Object_GoodsKind.ObjectCode   AS GoodsKindCode_complete
                                   , Object_GoodsKind.ValueData    AS GoodsKindName_complete
                                     -- Оболочка
                                   , Object_StickerSkin.ValueData  AS StickerSkinName
-                                  
+                                    -- название файла fr3 в БАЗЕ
+                                  , Object_StickerFile.ValueData  AS StickerFileName
+
                              FROM Object AS Object_StickerProperty
                                   -- Свойства этикетки
                                   -- Вид товара
@@ -113,11 +139,30 @@ BEGIN
                                                       ON ObjectLink_Sticker_Goods.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
                                                      AND ObjectLink_Sticker_Goods.DescId = zc_ObjectLink_Sticker_Goods()
 
+                                 -- Печать - индивидуальный - Свойства этикетки
+                                 LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_StickerFile
+                                                      ON ObjectLink_StickerProperty_StickerFile.ObjectId = Object_StickerProperty.Id
+                                                     AND ObjectLink_StickerProperty_StickerFile.DescId   = zc_ObjectLink_StickerProperty_StickerFile()
+
+                                 -- Печать - индивидуальный - Этикетка
+                                 LEFT JOIN ObjectLink AS ObjectLink_Sticker_StickerFile
+                                                      ON ObjectLink_Sticker_StickerFile.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                                     AND ObjectLink_Sticker_StickerFile.DescId = zc_ObjectLink_Sticker_StickerFile()
+
+                                 LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                                      ON ObjectLink_Goods_TradeMark.ObjectId = ObjectLink_Sticker_Goods.ChildObjectId
+                                                     AND ObjectLink_Goods_TradeMark.DescId   = zc_ObjectLink_Goods_TradeMark()
+                                 -- Печать - "по умолчанию" - для конкретной ТМ
+                                 LEFT JOIN tmpStickerFile ON tmpStickerFile.TradeMarkId = ObjectLink_Goods_TradeMark.ChildObjectId
+
+                                 LEFT JOIN Object AS Object_StickerFile ON Object_StickerFile.Id = COALESCE (ObjectLink_StickerProperty_StickerFile.ChildObjectId, COALESCE (ObjectLink_Sticker_StickerFile.ChildObjectId, tmpStickerFile.StickerFileId))
+
                              WHERE Object_StickerProperty.DescId   = zc_Object_StickerProperty()
                                AND Object_StickerProperty.isErased = FALSE
                             )
        -- Результат - по заявке
-       SELECT ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+       SELECT tmpSticker.Id
+            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , tmpGoods.GoodsId
             , tmpGoods.GoodsCode
             , tmpGoods.GoodsName
@@ -132,6 +177,9 @@ BEGIN
             , tmpSticker.GoodsKindName_complete
 
             , tmpSticker.StickerSkinName
+            
+              -- название файла fr3 в БАЗЕ
+            , (tmpSticker.StickerFileName || '.Sticker') :: TVarChar AS StickerFileName
 
             , tmpMI_Weighing.Count_begin :: TFloat AS Count_begin
 

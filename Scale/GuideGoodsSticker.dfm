@@ -202,6 +202,14 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           VisibleForCustomization = False
           Width = 50
         end
+        object StickerFileName: TcxGridDBColumn
+          Caption = #1064#1040#1041#1051#1054#1053
+          DataBinding.FieldName = 'StickerFileName'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 70
+        end
       end
       object cxDBGridLevel: TcxGridLevel
         GridView = cxDBGridDBTableView
@@ -685,8 +693,7 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
     Params = <
       item
         Name = 'inObjectId'
-        Value = '1370933'
-        ComponentItem = 'Id'
+        Value = 0
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

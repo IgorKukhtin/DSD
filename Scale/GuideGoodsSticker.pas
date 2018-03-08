@@ -78,6 +78,7 @@ type
     cxSplitter2: TcxSplitter;
     GoodsKindCode: TcxGridDBColumn;
     StickerSkinName: TcxGridDBColumn;
+    StickerFileName: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -127,12 +128,16 @@ type
     procedure actSaveExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
+    FReport : TfrxReport;
     fCloseOK : Boolean;
     fModeSave : Boolean;
     fStartWrite : Boolean;
     fEnterGoodsCode:Boolean;
     fEnterGoodsName:Boolean;
     fEnterGoodsKindCode:Boolean;
+
+    fStickerPropertyId : Integer;
+    fStickerFileName : String;
 
     GoodsCode_FilterValue:String;
     GoodsName_FilterValue:String;
@@ -141,6 +146,7 @@ type
     function Checked: boolean;
     procedure InitializeStickerPack(StickerPackGroupId:Integer);
     procedure InitializePriceList(execParams:TParams);
+    procedure pShowReport;
   public
     //GoodsWeight:Double;
     function Execute (execParamsMovement : TParams; isModeSave : Boolean) : Boolean;
@@ -155,19 +161,29 @@ implementation
 
  uses dmMainScale, Main, DialogWeight, DialogStringValue,FormStorage;
 {------------------------------------------------------------------------------}
-function TGuideGoodsStickerForm.Execute (execParamsMovement : TParams; isModeSave : Boolean) : Boolean;
-var  FReport : TfrxReport;
-
+procedure TGuideGoodsStickerForm.pShowReport;
 begin
+     if fStickerPropertyId = CDS.FieldByName('Id').asInteger
+     then exit;
+     fStickerPropertyId:= CDS.FieldByName('Id').asInteger;
      //
-     //
-     //
+     if CDS.FieldByName('StickerFileName').asString <> ''
+     then spSelectPrint.ParamByName('inObjectId').Value:=CDS.FieldByName('Id').asInteger
+     else spSelectPrint.ParamByName('inObjectId').Value:=0;
      spSelectPrint.Execute;
      //
-     FReport := TFrxReport.Create(nil);
+     if (CDS.FieldByName('StickerFileName').asString <> '') and (fStickerFileName <> CDS.FieldByName('StickerFileName').asString) then
+     begin
+         fReport.Preview:=nil;
+         FReport.Free;
+         FReport:= TFrxReport.Create(nil);
+
      with FReport do
      Begin
-          LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport('ШАБЛОН + тм АЛАН - Український.Sticker'));
+          fStickerFileName:= CDS.FieldByName('StickerFileName').asString;
+          //
+          Clear;
+          LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport(CDS.FieldByName('StickerFileName').asString));
           fReport.Preview:=frxPreview1;
           //fReport.DataSet:=frxDBDHeader1;
           //fReport.DataSetName:='frxDBDHeader';
@@ -178,8 +194,11 @@ begin
           //FReport.PreviewOptions.Maximized := true;
           fReport.ShowPreparedReport;
      End;
-     //
-     //
+     end;
+end;
+{------------------------------------------------------------------------------}
+function TGuideGoodsStickerForm.Execute (execParamsMovement : TParams; isModeSave : Boolean) : Boolean;
+begin
      //
      fModeSave:= isModeSave;
      fCloseOK:=false;
@@ -1047,6 +1066,8 @@ begin
         else
             ParamByName('RealWeight').AsFloat:=0;
      end;
+     //
+     pShowReport;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsStickerForm.DBGridDrawColumnCell(Sender: TObject;const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
@@ -1135,12 +1156,19 @@ begin
                      then begin ShowMessage ('Пароль неверный.Отменить взвешивание нельзя.');exit;end
                      else CanClose:=true;
                 end;
+     //
+     if CanClose = TRUE then FReport.Free;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsStickerForm.FormCreate(Sender: TObject);
 var i:Integer;
 begin
   fStartWrite:=true;
+  //
+  fStickerPropertyId:=-1;
+  fStickerFileName:='';
+  FReport:= TFrxReport.Create(nil);
+  //
 
   //вес тары (ручной режим)
   //***gbTareWeightEnter.Visible:=GetArrayList_Value_byName(Default_Array,'isTareWeightEnter')=AnsiUpperCase('TRUE');
