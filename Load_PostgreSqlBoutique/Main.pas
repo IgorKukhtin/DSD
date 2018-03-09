@@ -7590,6 +7590,7 @@ begin
         toStoredProc.Params.AddParam ('inPhone',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inPrinter',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inPrint',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inIsPartnerBarCode',ftBoolean,ptInput, '');
         toStoredProc.Params.AddParam ('inDiscountTax',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
@@ -7611,7 +7612,7 @@ begin
              toStoredProc.Params.ParamByName('inPhone').Value:=FieldByName('Phone').AsString;
              toStoredProc.Params.ParamByName('inPrinter').Value:='';
              toStoredProc.Params.ParamByName('inPrint').Value:=FieldByName('NamePrint').AsString;
-
+             toStoredProc.Params.ParamByName('inIsPartnerBarCode').Value:=FALSE;
              toStoredProc.Params.ParamByName('inDiscountTax').Value:=FieldByName('DiscountTax').AsFloat;
              toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('ParentId').AsInteger;
              toStoredProc.Params.ParamByName('inChildId').Value:=FieldByName('ChildId').AsInteger;
@@ -7656,7 +7657,7 @@ begin
         Add('     , 0 as ObjectCode');
         Add('     , Users.UsersName as UserName');
         Add('     , ' + chr(39) + 'int'+char(39)
-           +'       +case when 1=0'
+           +'       +case when 1=0 then '''''
            +'             else Users.UsersPassword'
            +'       end as Password');
         Add('     , zc_erasedDel() as zc_erasedDel');

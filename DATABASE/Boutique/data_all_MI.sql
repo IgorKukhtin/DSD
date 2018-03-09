@@ -309,7 +309,7 @@ go
 --
 
 --
--- 3. Загрузили в 1 Таблицу все Возвраты 
+-- 3. Загрузили в 2 Таблицу все Возвраты 
 --
 
 LOAD TABLE DBA._dataRet_all
@@ -388,7 +388,7 @@ go
 
 
 --
--- 4. Загрузили в 1 Таблицу все Оплаты
+-- 4. Загрузили в 3 Таблицу все Оплаты
 --
 
 LOAD TABLE DBA._dataPay_all
@@ -467,7 +467,7 @@ go
 
 
 --
--- 2. Загрузили в 1 Таблицу все BI - Продажи
+-- 2. Загрузили в 4 Таблицу все BI - Продажи
 --
 LOAD TABLE DBA._DataBI_all
 	FROM 'C:\\PROFIMANAGER\\01mmBI.dat'
@@ -545,75 +545,75 @@ go
 
 
 --
--- 3. Загрузили в 1 Таблицу все Mov - Обмены
+-- 3. Загрузили в 5 Таблицу все Mov - Обмены
 --
-LOAD TABLE DBA._DataMov_all
+LOAD TABLE DBA._DataMove_all
 	FROM 'C:\\PROFIMANAGER\\01mmMov.dat'
 	FORMAT 'ASCII'
 	QUOTES ON ESCAPES ON STRIP OFF
 	DELIMITED BY ','
 go
-LOAD TABLE DBA._DataMov_all
+LOAD TABLE DBA._DataMove_all
 	FROM 'C:\\PROFIMANAGER\\02tlMov.dat'
 	FORMAT 'ASCII'
 	QUOTES ON ESCAPES ON STRIP OFF
 	DELIMITED BY ','
 go
-LOAD TABLE DBA._DataMov_all
-	FROM 'C:\\PROFIMANAGER\\03elemMov.dat'
-	FORMAT 'ASCII'
-	QUOTES ON ESCAPES ON STRIP OFF
-	DELIMITED BY ','
-go
-LOAD TABLE DBA._DataMov_all
+--LOAD TABLE DBA._DataMove_all
+--	FROM 'C:\\PROFIMANAGER\\03elemMov.dat'
+--	FORMAT 'ASCII'
+--	QUOTES ON ESCAPES ON STRIP OFF
+--	DELIMITED BY ','
+--go
+LOAD TABLE DBA._DataMove_all
 	FROM 'C:\\PROFIMANAGER\\04chadoMov.dat'
 	FORMAT 'ASCII'
 	QUOTES ON ESCAPES ON STRIP OFF
 	DELIMITED BY ','
 go
-LOAD TABLE DBA._DataMov_all
+LOAD TABLE DBA._DataMove_all
 	FROM 'C:\\PROFIMANAGER\\05savMov.dat'
 	FORMAT 'ASCII'
 	QUOTES ON ESCAPES ON STRIP OFF
 	DELIMITED BY ','
 go
-LOAD TABLE DBA._DataMov_all
+LOAD TABLE DBA._DataMove_all
 	FROM 'C:\\PROFIMANAGER\\05pzMov.dat'
 	FORMAT 'ASCII'
 	QUOTES ON ESCAPES ON STRIP OFF
 	DELIMITED BY ','
 go
-LOAD TABLE DBA._DataMov_all
+LOAD TABLE DBA._DataMove_all
 	FROM 'C:\\PROFIMANAGER\\06ter_VinMov.dat'
 	FORMAT 'ASCII'
 	QUOTES ON ESCAPES ON STRIP OFF
 	DELIMITED BY ','
 go
-LOAD TABLE DBA._DataMov_all
+LOAD TABLE DBA._DataMove_all
 	FROM 'C:\\PROFIMANAGER\\07VintagMov.dat'
 	FORMAT 'ASCII'
 	QUOTES ON ESCAPES ON STRIP OFF
 	DELIMITED BY ','
 go
-LOAD TABLE DBA._DataMov_all
+LOAD TABLE DBA._DataMove_all
 	FROM 'C:\\PROFIMANAGER\\08escadaMov.dat'
 	FORMAT 'ASCII'
 	QUOTES ON ESCAPES ON STRIP OFF
 	DELIMITED BY ','
 go
-LOAD TABLE DBA._DataMov_all
+LOAD TABLE DBA._DataMove_all
 	FROM 'C:\\PROFIMANAGER\\09sv_vintagMov.dat'
 	FORMAT 'ASCII'
 	QUOTES ON ESCAPES ON STRIP OFF
 	DELIMITED BY ','
 go
-LOAD TABLE DBA._DataMov_all
-	FROM 'C:\\PROFIMANAGER\\10sopraMov.dat'
-	FORMAT 'ASCII'
-	QUOTES ON ESCAPES ON STRIP OFF
-	DELIMITED BY ','
-go
-LOAD TABLE DBA._DataMov_all
+--LOAD TABLE DBA._DataMove_all
+--	FROM 'C:\\PROFIMANAGER\\10sopraMov.dat'
+--	FORMAT 'ASCII'
+--	QUOTES ON ESCAPES ON STRIP OFF
+--	DELIMITED BY ','
+--go
+LOAD TABLE DBA._DataMove_all
 	FROM 'C:\\PROFIMANAGER\\11ChadoOutMov.dat'
 	FORMAT 'ASCII'
 	QUOTES ON ESCAPES ON STRIP OFF

@@ -115,10 +115,10 @@ BEGIN
                        );
 
      -- Проверка
-     IF COALESCE (vbStickerFileId, 0) = 0
-     THEN
-          RAISE EXCEPTION 'Ошибка.Шаблон не установлен';
-     END IF;
+--     IF COALESCE (vbStickerFileId, 0) = 0
+--     THEN
+--          RAISE EXCEPTION 'Ошибка.Шаблон не установлен';
+--     END IF;
 /*
 [frxDBDHeader."stickertypename"] [frxDBDHeader."stickersortname"] [frxDBDHeader."stickernormname"]
 СКЛАД: [frxDBDHeader."info"]

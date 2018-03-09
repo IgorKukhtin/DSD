@@ -16,7 +16,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL IMMUTABLE;
-ALTER FUNCTION zfConvert_DateTimeToString (TDateTime) OWNER TO postgres;
+ALTER FUNCTION zfConvert_DateTimeShortToString (TDateTime) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
