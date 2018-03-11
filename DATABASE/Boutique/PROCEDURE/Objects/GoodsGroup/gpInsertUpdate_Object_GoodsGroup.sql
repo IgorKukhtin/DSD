@@ -21,8 +21,12 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
 
+   IF vbUserId = zc_User_Sybase() AND ioId > 0 AND NOT EXISTS (SELECT 1 FROM Object WHERE Id = ioId)
+   THEN ioId:= 0;
+   END IF;
+
    -- Поиск для Sybase
-   IF vbUserId = zc_User_Sybase()
+   IF vbUserId = zc_User_Sybase() AND COALESCE (ioId, 0) = 0
    THEN ioId:= (SELECT Object.Id
                 FROM Object
                      LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_Parent
@@ -32,7 +36,7 @@ BEGIN
                   AND COALESCE (ObjectLink_GoodsGroup_Parent.ChildObjectId, 0) = COALESCE (inParentId, 0)
                 ORDER BY Object.Id
                 -- !!!ПОТОМ УБРАТЬ!!!
-                LIMIT 1
+                -- LIMIT 1
                );
    END IF;
 
@@ -58,8 +62,8 @@ BEGIN
    END IF;
 
    -- проверка уникальность <Название> для !!!<Группа>!!
-   IF vbUserId <> zc_User_Sybase() -- !!!ПОТОМ УБРАТЬ!!!
-   THEN
+   -- IF vbUserId <> zc_User_Sybase() -- !!!ПОТОМ УБРАТЬ!!!
+   -- THEN
    IF EXISTS (SELECT Object.Id
               FROM Object
                    LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_Parent
@@ -73,7 +77,7 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Группа товара <%> для <%> уже существует.', TRIM (inName), lfGet_Object_ValueData_sh (inParentId);
    END IF;
 
-   END IF;
+   -- END IF;
 
 
    -- проверка прав уникальности для свойства <Код>
@@ -181,4 +185,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpInsertUpdate_Object_GoodsGroup(ioId := 0 , ioCode := 0 , inName := 'Группа товара 2' ::TVarChar, inParentId := 0 , inInfoMoneyId := 0 ,  inSession := '2'::TVarChar);
+-- SELECT * FROM gpInsertUpdate_Object_GoodsGroup (ioId := 0 , ioCode := 0 , inName := 'Группа товара 2' ::TVarChar, inParentId := 0 , inInfoMoneyId := 0 ,  inSession := '2'::TVarChar);

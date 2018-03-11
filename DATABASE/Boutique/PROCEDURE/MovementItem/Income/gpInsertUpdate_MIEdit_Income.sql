@@ -1,6 +1,5 @@
 -- Function: gpInsertUpdate_MIEdit_Income()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MIEdit_Income (Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar ,TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MIEdit_Income (Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar ,TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MIEdit_Income(
@@ -188,8 +187,9 @@ BEGIN
                         AND Object.ValueData  = inGoodsName
                         AND Object.ObjectCode = -1 * ioGoodsCode
                      );
-         -- Товар - у текущего Элемента
+         -- Поиск Товар - у текущего Элемента
          vbGoodsId_old = (SELECT Object_PartionGoods.GoodsId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = ioId);
+
      ELSE
          -- Запомнили !!!ДО изменений!!!
          IF ioId > 0

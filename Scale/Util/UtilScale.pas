@@ -24,6 +24,13 @@ type
     Value:  string;
   end;
 
+  TStickerFileItem = record
+    Report:   TStream;
+    Id:       Integer;
+    Code:     Integer;
+    FileName: String;
+  end;
+
   TScaleType = (stBI, stDB, stZeus);
 
   TListItemScale = record
@@ -33,6 +40,7 @@ type
     COMPort  : Integer;
   end;
 
+  TArrayStickerFileList = array of TStickerFileItem;
   TArrayList = array of TListItem;
   TArrayListScale = array of TListItemScale;
 
@@ -53,6 +61,8 @@ type
   function gpCheck_BranchCode: Boolean;
 
   function Recalc_PartionGoods(Edit:TEdit):Boolean;
+
+  function GetArrayStickerFileList_Index_byName (ArrayList:TArrayStickerFileList;FileName:String):Integer;
 
   function GetArrayList_Value_byName   (ArrayList:TArrayList;Name:String):String;
   function GetArrayList_Index_byNumber (ArrayList:TArrayList;Number:Integer):Integer;
@@ -97,6 +107,7 @@ var
   ParamsMovement: TParams;
   ParamsMI: TParams;
 
+  StickerFile_Array   :TArrayStickerFileList;
   Scale_Array         :TArrayListScale;
 
   Default_Array       :TArrayList;
@@ -368,6 +379,14 @@ begin
   Result:='';
   for i := 0 to Length(ArrayList)-1 do
     if ArrayList[i].Name = Name then begin Result:=AnsiUpperCase(ArrayList[i].Value);break;end;
+end;
+{------------------------------------------------------------------------}
+function GetArrayStickerFileList_Index_byName (ArrayList:TArrayStickerFileList;FileName:String):Integer;
+var i: Integer;
+begin
+  Result:=-1;
+  for i := 0 to Length(ArrayList)-1 do
+    if ArrayList[i].FileName = FileName then begin Result:=i;break;end;
 end;
 {------------------------------------------------------------------------}
 function GetArrayList_Index_byNumber(ArrayList:TArrayList;Number:Integer):Integer;

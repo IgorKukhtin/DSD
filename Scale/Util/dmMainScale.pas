@@ -17,7 +17,8 @@ type
     function gpGet_ToolsWeighing_Value(inLevel1,inLevel2,inLevel3,inItemName,inDefaultValue:String):String;
     function gpGet_Scale_User:String;
     function gpGet_Scale_OperDate(var execParams:TParams):TDateTime;
-    // Scale
+    // Scale - Sticker
+    function gpSelect_Scale_StickerFile (inBranchCode : Integer) : TArrayStickerFileList;
     function gpSelect_Scale_StickerPack: TArrayList;
     // Scale + ScaleCeh
     function gpSelect_Scale_GoodsKindWeighing: TArrayList;
@@ -68,7 +69,7 @@ var
   DMMainScaleForm: TDMMainScaleForm;
 
 implementation
-uses Inifiles,TypInfo,DialogMovementDesc,UtilConst;
+uses Forms,FormStorage,Inifiles,TypInfo,DialogMovementDesc,UtilConst;
 {$R *.dfm}
 {------------------------------------------------------------------------}
 procedure TDMMainScaleForm.DataModuleCreate(Sender: TObject);
@@ -669,6 +670,66 @@ begin
          ShowMessage('Ошибка получения - gpSelect_Scale_GoodsKindWeighing');
        end;}
     end;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpSelect_Scale_StickerFile (inBranchCode : Integer): TArrayStickerFileList;
+var i: integer;
+    tmpStringStream : TStringStream;
+begin
+    with spSelect do
+    begin
+       StoredProcName:='gpSelect_Scale_StickerFile';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inBranchCode', ftInteger, ptInput, inBranchCode);
+       //try
+         Execute;
+         DataSet.First;
+         SetLength(Result, DataSet.RecordCount);
+         for i:= 0 to DataSet.RecordCount-1 do
+         begin
+          Result[i].Id       := DataSet.FieldByName('Id').asInteger;
+          Result[i].Code     := DataSet.FieldByName('Code').asInteger;
+          Result[i].FileName := DataSet.FieldByName('FileName').asString;
+
+          tmpStringStream:= TStringStream.Create;
+          tmpStringStream.WriteString (ReConvertConvert(DataSet.FieldByName('FileValue').asString));
+          if tmpStringStream.Size = 0 then
+             raise Exception.Create('Форма "' + DataSet.FieldByName('FileName').asString + '" не загружена из базы данных');
+
+          tmpStringStream.Position := 0;
+          Result[i].Report:= tmpStringStream;
+
+
+          DataSet.Next;
+         end;
+       {except
+         SetLength(Result, 0);
+         ShowMessage('Ошибка получения - gpSelect_Scale_GoodsKindWeighing');
+       end;}
+    end;
+    //
+ {   ShowMessage('start');
+    //
+    for i := 0 to Length(Result)-1 do
+    begin
+        tmpStream:= TStream.Create;
+        tmpStringStream:= TStringStream.Create;
+
+        Application.ProcessMessages;
+        tmpStream:= TdsdFormStorageFactory.GetStorage.LoadReport(Result[i].FileName);
+        Application.ProcessMessages;
+        Sleep(100);
+        Application.ProcessMessages;
+
+        tmpStream.Position := 0;
+        tmpStringStream.CopyFrom(tmpStream, tmpStream.Size);
+
+        tmpStringStream.Position := 0;
+
+        Result[i].Report:= tmpStringStream;
+    end;
+    ShowMessage('ok');}
 end;
 {------------------------------------------------------------------------}
 function TDMMainScaleForm.gpSelect_Scale_StickerPack: TArrayList;

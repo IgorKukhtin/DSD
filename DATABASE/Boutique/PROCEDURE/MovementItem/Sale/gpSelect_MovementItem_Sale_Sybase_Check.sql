@@ -1,6 +1,6 @@
 -- Function: gpSelect_MovementItem_Sale_Sybase_Check()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_Sale_Sybase_Check ();
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_Sale_Sybase_Check();
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Sale_Sybase_Check()
 RETURNS TABLE (isErased Boolean, MovementItemId Integer, MovementId Integer, InvNumber Integer, OperDate TDateTime, StartDate_sybase TDateTime
@@ -130,7 +130,7 @@ BEGIN
              FROM tmpData;
 
 
-/*
+
      -- !!! 1. эти были закрыты ƒќ StartDate_sybase!!! - ”ƒјЋя≈ћ
      vbTmp:= (WITH tmpRet AS (SELECT Movement.OperDate, tmpData.*
                               FROM _tmpData AS tmpData
@@ -258,7 +258,7 @@ BEGIN
                    ) AS tmp
              );
      -- !!! END !!! 1. эти были закрыты ƒќ StartDate_sybase!!! - ”ƒјЋя≈ћ
-*/     
+
 
 
 

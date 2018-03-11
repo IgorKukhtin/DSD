@@ -442,3 +442,65 @@ where _data_all.BillItemsIncomeID  <> DiscountMovementItem_byBarCode.BillItemsIn
   and _data_all.ReplId = DiscountMovementItem_byBarCode.ReplId and _data_all.DatabaseId = DiscountMovementItem_byBarCode.DatabaseId 
   and _data_all.BillItemsId > 0
 -- and _data_all.BillItemsIncomeID = 220466
+
+
+
+
+with _tmpData  as
+(SELECT * FROM Object WHERE Object.Id IN (SELECT -12345 AS PartionId_MI
+                   UNION SELECT 483329 -- select ObP.*, MovementItem.* , Movement.* from MovementItem join Object as ObP on ObP.ObjectCode = MovementItem.Id and ObP.DescId = zc_Object_PartionMI() join Movement on Movement.Id = MovementId and Movement.DescId = zc_Movement_Sale() and Movement.Operdate = '14.05.2012' where PartionId = (SELECT MovementItemId FROM Object_PartionGoods join Object on Object.Id = GoodsId and Object.ObjectCode = 69023 join Object as o2 on o2.Id = GoodsSizeId and o2.ValueData = '40')
+                   UNION SELECT 498838
+                   UNION SELECT 581629
+                   UNION SELECT 581618
+                   UNION SELECT 761634
+                   UNION SELECT 483304
+                   UNION SELECT 484088
+                   UNION SELECT 498134
+                   UNION SELECT 581631
+                   UNION SELECT 581633
+                   UNION SELECT 581620
+                   UNION SELECT 581624
+                   UNION SELECT 761635
+                   UNION SELECT 764551
+                   UNION SELECT 483331
+                   UNION SELECT 483333
+                   UNION SELECT 483076
+                   UNION SELECT 497389
+                   UNION SELECT 761636
+                   UNION SELECT 483048
+                   UNION SELECT 483114
+                   UNION SELECT 483312
+                   UNION SELECT 581622
+                   UNION SELECT 581627
+                   UNION SELECT 761637
+                   UNION SELECT 765099
+                         -- FROM gpSelect_MovementItem_Sale_Sybase_Check()
+                        )
+)
+
+        , tmpAcc_PREV AS (SELECT distinct Movement.*
+                             FROM _tmpData AS tmpData
+                                  INNER JOIN MovementItemLinkObject AS MIL_PartionMI
+                                                          ON MIL_PartionMI.ObjectId = tmpData.Id
+                                                         AND MIL_PartionMI.DescId   = zc_MILinkObject_PartionMI()
+                                  INNER JOIN MovementItem ON MovementItem.Id       = MIL_PartionMI.MovementItemId
+                                                         AND MovementItem.DescId   = zc_MI_Master()
+                                                         AND MovementItem.isErased = FALSE
+                                  INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                     AND Movement.DescId   = zc_Movement_GoodsAccount()
+                                                     AND Movement.StatusId = zc_Enum_Status_Complete()
+                            /*UNION ALL
+                             SELECT distinct Movement.*
+                             FROM _tmpData AS tmpData
+                                  INNER JOIN MovementItem ON MovementItem.Id       = tmpData.ObjectCode
+                                                         AND MovementItem.DescId   = zc_MI_Master()
+                                                         AND MovementItem.isErased = FALSE
+                                  INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                     AND Movement.DescId   = zc_Movement_Sale()
+                                                     AND Movement.StatusId = zc_Enum_Status_Complete()*/
+                            )
+
+select * 
+-- , gpReComplete_Movement_Sale (Id, zfCalc_UserAdmin())
+, gpReComplete_Movement_GoodsAccount (Id, zfCalc_UserAdmin())
+from tmpAcc_PREV 

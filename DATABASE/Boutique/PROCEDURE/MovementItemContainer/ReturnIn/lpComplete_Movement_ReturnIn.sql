@@ -1083,6 +1083,7 @@ BEGIN
      PERFORM lpUpdate_MI_Partion_Total_byMovement (inMovementId);
 
 
+
      -- 6.2.1. ПРОВЕРКА - ОБЯЗАТЕЛЬНО после lpComplete + "пересчета" - !!!по Кол-ву не Может быть Долга Покупателю!!!
      IF EXISTS (SELECT 1
                 FROM _tmpItem
@@ -1091,12 +1092,12 @@ BEGIN
                      INNER JOIN Container ON Container.Id     = _tmpItem_SummClient.ContainerId_Goods
                                          AND Container.Amount < 0
                )
-     AND EXISTS (SELECT 1
-                 FROM _tmpItem
-                 WHERE _tmpItem.GoodsId <> (SELECT Object.Id FROM Object WHERE Object.ObjectCode = 97352 AND Object.Descid = zc_Object_Goods())
+    -- AND EXISTS (SELECT 1
+    --             FROM _tmpItem
+    --             WHERE _tmpItem.GoodsId <> (SELECT Object.Id FROM Object WHERE Object.ObjectCode = 97352 AND Object.Descid = zc_Object_Goods())
     --               AND _tmpItem.GoodsId <> (SELECT Object.Id FROM Object WHERE Object.ObjectCode = 103288 AND Object.Descid = zc_Object_Goods())
     --               AND _tmpItem.GoodsId <> (SELECT Object.Id FROM Object WHERE Object.ObjectCode = 139794 AND Object.Descid = zc_Object_Goods())
-                )
+    --            )
      THEN
          RAISE EXCEPTION 'Ошибка.По Кол-ву НЕ может быть Долга Покупателю, Кол-во = <%> для <%>.'
              , (SELECT zfConvert_FloatToString (Container.Amount)
@@ -1134,6 +1135,31 @@ BEGIN
                                           ON Container_Find.ParentId = Container.Id
                                          AND Container_Find.Amount   <> 0
                )
+        -- Не проведенные Расчеты
+        AND NOT EXISTS (WITH tmpRes AS (SELECT _tmpItem.*
+                                        FROM _tmpItem
+                                             INNER JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
+                                             -- Долги по Кол-ву у Покупателя
+                                             INNER JOIN Container ON Container.Id     = _tmpItem_SummClient.ContainerId_Goods
+                                                                 AND Container.Amount = 0
+                                             -- Долги по Сумме у Покупателя
+                                             INNER JOIN Container AS Container_Find
+                                                                  ON Container_Find.ParentId = Container.Id
+                                                                 AND Container_Find.Amount   <> 0
+                                       )
+                        SELECT tmp.MovementItemId
+                        FROM tmpRes AS tmp
+                             INNER JOIN MovementItemLinkObject AS MIL_PartionMI
+                                                               ON MIL_PartionMI.DescId   = zc_MILinkObject_PartionMI()
+                                                              AND MIL_PartionMI.ObjectId = tmp.PartionId_MI
+                             INNER JOIN MovementItem ON MovementItem.Id       = MIL_PartionMI.MovementItemId
+                                                    AND MovementItem.DescId   = zc_MI_Master()
+                                                    AND MovementItem.isErased = FALSE
+                             INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                AND Movement.DescId   = zc_Movement_GoodsAccount()
+                                                AND Movement.StatusId IN (zc_Enum_Status_UnComplete())
+                        WHERE inUserId = zc_User_Sybase()
+                       )
      THEN
          RAISE EXCEPTION 'Ошибка.По Сумме Долг Покупателя <> 0, Сумма = <%> для <%>.'
              , (SELECT zfConvert_FloatToString (Container_Find.Amount)

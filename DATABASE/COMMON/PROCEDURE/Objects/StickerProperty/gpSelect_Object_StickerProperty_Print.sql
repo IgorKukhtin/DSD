@@ -6,18 +6,22 @@ DROP FUNCTION IF EXISTS gpSelect_Object_StickerProperty_Print(Integer, Boolean, 
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_StickerProperty_Print(
     IN inObjectId          Integer  , -- ключ Этикетки
+    IN inIsJPG             Boolean  , --
     IN inIsLength          Boolean  , --
-    IN inIsDataProduction  Boolean  , -- печатать дату произв-ва на этикетке
-    IN inIsTara            Boolean  , -- печатать для ТАРЫ
-    IN inIsGoodsName       Boolean  , -- печатать название тов.
-    IN inIsDataTara        Boolean  , -- печатать дату для тары
-    IN inIsDataPartion     Boolean  , -- печатать ПАРТИЮ для тары
-    IN inDateStart         TDateTime, -- нач. дата
-    IN inDateUpack         TDateTime, -- дата упаковки
-    IN inDateTara          TDateTime, -- дата для тары
-    IN inDateProduction    TDateTime, -- дата произв-ва
-    IN inNumUpack          TFloat   , -- № партии  упаковки, по умолчанию = 1
-    IN inNumTech           TFloat   , -- № смены технологов, по умолчанию = 1
+
+    IN inIsStartEnd        Boolean  , -- 1 - печатать дату нач/конечн произв-ва на этикетке
+    IN inIsTare            Boolean  , -- 2 - печатать для ТАРЫ
+    IN inIsPartion         Boolean  , -- 3 - печатать ПАРТИЮ для тары
+    IN inIsGoodsName       Boolean  , -- печатать название тов. (для режим 2,3)
+
+    IN inDateStart         TDateTime, -- нач. дата (для режим 1)
+    IN inDateTare          TDateTime, -- дата для тары  (для режим 2)
+
+    IN inDatePack          TDateTime, -- дата упаковки  (для режим 3)
+    IN inDateProduction    TDateTime, -- дата произв-ва (для режим 3)
+    IN inNumPack           TFloat   , -- № партии  упаковки, по умолчанию = 1 (для режим 3)
+    IN inNumTech           TFloat   , -- № смены технологов, по умолчанию = 1 (для режим 3)
+
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
@@ -29,24 +33,28 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , StickerSkinId Integer, StickerSkinName TVarChar
              , isFix Boolean
              , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat, Value6 TFloat, Value7 TFloat
+             , BarCode TVarChar
              , Sticker_Value1 TFloat, Sticker_Value2 TFloat, Sticker_Value3 TFloat, Sticker_Value4 TFloat, Sticker_Value5 TFloat
              , StickerGroupName TVarChar
-             , StickerTypeName TVarChar
-             , StickerTagName TVarChar
-             , StickerSortName TVarChar
-             , StickerNormName TVarChar
+             , StickerTypeName  TVarChar
+             , StickerTagName   TVarChar
+             , StickerSortName  TVarChar
+             , StickerNormName  TVarChar
              , Info Text
-             , IsDataProduction  Boolean
-             , IsTara            Boolean
-             , IsGoodsName       Boolean
-             , IsDataTara        Boolean
-             , IsDataPartion     Boolean
+
+             , isJPG             Boolean
+             , isStartEnd        Boolean
+             , isTare            Boolean
+             , isPartion         Boolean
+             , isGoodsName       Boolean
+
              , DateStart         TDateTime
              , DateEnd           TDateTime
-             , DateUpack         TDateTime
-             , DateTara          TDateTime
+
+             , DateTare          TDateTime
+             , DatePack          TDateTime
              , DateProduction    TDateTime
-             , NumUpack          TFloat
+             , NumPack           TFloat
              , NumTech           TFloat
               )
 AS
@@ -58,11 +66,12 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-     --проверка
-     IF (inIsDataProduction = TRUE AND inIsTara = TRUE) OR (inIsTara = TRUE AND inIsDataTara = TRUE AND inIsDataPartion = TRUE)
-        THEN
-         RAISE EXCEPTION 'Ошибка.Переданы некорректные параметры печати.';
-     END IF;
+     -- проверка
+     -- IF inIsTare = TRUE AND inIsPartion = TRUE
+     --   THEN
+     --    RAISE EXCEPTION 'Ошибка.Переданы некорректные параметры печати.';
+     --END IF;
+
 
      -- поиск ШАБЛОНА
      vbStickerFileId:= (WITH -- Шаблоны "по умолчанию" - для конкретной ТМ
@@ -160,6 +169,9 @@ BEGIN
             , ObjectFloat_Value5.ValueData       AS Value5
             , ObjectFloat_Value6.ValueData       AS Value6
             , ObjectFloat_Value7.ValueData       AS Value7
+            , ObjectString_BarCode.ValueData     AS BarCode
+-- <&#8364> <b>жирный текст</b>
+-- <&#8800> <b>жирный текст</b>
 
             , Sticker_Value1.ValueData           AS Sticker_Value1
             , Sticker_Value2.ValueData           AS Sticker_Value2
@@ -184,17 +196,19 @@ BEGIN
                                       END
                                 ) AS Info
 
-            , inIsDataProduction  :: Boolean   AS IsDataProduction
-            , inIsTara            :: Boolean   AS IsTara
-            , inIsGoodsName       :: Boolean   AS IsGoodsName
-            , inIsDataTara        :: Boolean   AS IsDataTara
-            , inIsDataPartion     :: Boolean   AS IsDataPartion
-            , CASE WHEN inIsDataProduction = TRUE THEN inDateStart ELSE NULL END        :: TDateTime AS DateStart
-            ,  CASE WHEN inIsDataProduction = TRUE THEN (inDateStart + ((ObjectFloat_Value5.ValueData - 1) ||' day') :: INTERVAL) ELSE NULL END :: TDateTime AS DateEnd
-            , inDateUpack         :: TDateTime AS DateUpack
-            , inDateTara          :: TDateTime AS DateTara
+            , inIsJPG                              :: Boolean   AS isJPG
+            , (inIsStartEnd  AND inIsTare = FALSE) :: Boolean   AS isStartEnd
+            , inIsTare                             :: Boolean   AS isTara
+            , (inIsPartion   AND inIsTare = TRUE)  :: Boolean   AS isPartion
+            , (inIsGoodsName AND inIsTare = TRUE)  :: Boolean   AS isGoodsName
+
+            , inDateStart                                                          :: TDateTime AS DateStart
+            , (inDateStart + (ObjectFloat_Value5.ValueData ||' DAY') :: INTERVAL)  :: TDateTime AS DateEnd
+
+            , inDatePack          :: TDateTime AS DatePack
+            , inDateTare          :: TDateTime AS DateTara
             , inDateProduction    :: TDateTime AS DateProduction
-            , inNumUpack          :: TFloat    AS NumUpack
+            , inNumPack           :: TFloat    AS NumPack
             , inNumTech           :: TFloat    AS NumTech
 
        FROM Object AS Object_StickerProperty
@@ -250,6 +264,9 @@ BEGIN
              LEFT JOIN ObjectBoolean AS ObjectBoolean_Fix
                                      ON ObjectBoolean_Fix.ObjectId = Object_StickerProperty.Id
                                     AND ObjectBoolean_Fix.DescId = zc_ObjectBoolean_StickerProperty_Fix()
+             LEFT JOIN ObjectString AS ObjectString_BarCode
+                                    ON ObjectString_BarCode.ObjectId = Object_StickerProperty.Id
+                                   AND ObjectString_BarCode.DescId   = zc_ObjectString_StickerProperty_BarCode()
 
              LEFT JOIN ObjectLink AS ObjectLink_StickerFile_TradeMark
                                   ON ObjectLink_StickerFile_TradeMark.ObjectId = Object_StickerFile.Id
@@ -326,4 +343,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_StickerProperty_Print (inObjectId:= 1006470, inIsLength:= FALSE, inIsDataProduction:= FALSE, inIsTara:= FALSE, inIsGoodsName:= FALSE, inIsDataTara:= FALSE, inIsDataPartion:= FALSE, inDateStart:= '01.01.2016', inDateUpack:= '01.01.2016', inDateTara:= '01.01.2016', inDateProduction:= '01.01.2016', inNumUpack:= 1, inNumTech:= 1, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Object_StickerProperty_Print (inObjectId:= 1006470, inIsJPG:= TRUE, inIsLength:= FALSE, inIsStartEnd:= FALSE, inIsTare:= FALSE, inIsPartion:= FALSE, inIsGoodsName:= FALSE, inDateStart:= '01.01.2016', inDateTare:= '01.01.2016', inDatePack:= '01.01.2016', inDateProduction:= '01.01.2016', inNumPack:= 1, inNumTech:= 1, inSession:= zfCalc_UserAdmin());

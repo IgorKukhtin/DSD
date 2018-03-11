@@ -13,13 +13,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
   AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbAccessKeyAll Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_GoodsGroup());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_GoodsGroup());
      vbUserId:= lpGetUserBySession (inSession);
-     -- определяется - может ли пользовать видеть весь справочник
-     -- vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
 
      -- Результат
      RETURN QUERY 
@@ -45,14 +42,12 @@ BEGIN
             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_GoodsGroup_InfoMoney.ChildObjectId
 
      WHERE Object_GoodsGroup.DescId = zc_Object_GoodsGroup()
-              AND (Object_GoodsGroup.isErased = FALSE OR inIsShowAll = TRUE)
-
+       AND (Object_GoodsGroup.isErased = FALSE OR inIsShowAll = TRUE)
     ;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

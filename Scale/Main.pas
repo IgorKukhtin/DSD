@@ -1228,6 +1228,8 @@ begin
   //global Initialize
   gpInitialize_Const;
   //global Initialize Array
+  if SettingMain.isSticker = TRUE
+  then StickerFile_Array:=  DMMainScaleForm.gpSelect_Scale_StickerFile (SettingMain.BranchCode);
   Service_Array:=       DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'Service');
   Default_Array:=       DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'Default');
   gpInitialize_SettingMain_Default; //!!!обязатльно после получения Default_Array!!!

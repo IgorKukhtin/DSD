@@ -147,33 +147,33 @@ type
     macStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
     BarCode: TcxGridDBColumn;
-    macPrintTwo: TMultiAction;
-    actPrintTwo: TdsdPrintAction;
-    bbPrintTwo: TdxBarButton;
-    spSelectPrintLen: TdsdStoredProc;
-    macPrintTwoLen: TMultiAction;
-    actPrintTwoLen: TdsdPrintAction;
-    bbPrintTwoLen: TdxBarButton;
+    macPrintJPG: TMultiAction;
+    actPrintJPG: TdsdPrintAction;
+    bbPrintJPG: TdxBarButton;
+    macPrintJPGLen: TMultiAction;
+    actPrintJPGLen: TdsdPrintAction;
+    bbPrintJPGLen: TdxBarButton;
     Panel1: TPanel;
     deDateStart: TcxDateEdit;
-    deDateUpack: TcxDateEdit;
+    deDatePack: TcxDateEdit;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
     edPartion: TcxLabel;
-    edIsDataProduction: TcxCheckBox;
-    edIsTara: TcxCheckBox;
-    edIsGoodsName: TcxCheckBox;
-    edIsDataTara: TcxCheckBox;
-    edIsDataPartion: TcxCheckBox;
-    ceNumUpack: TcxCurrencyEdit;
+    cbStartEnd: TcxCheckBox;
+    cbTare: TcxCheckBox;
+    cbGoodsName: TcxCheckBox;
+    cbPartion: TcxCheckBox;
+    ceNumPack: TcxCurrencyEdit;
     cxLabel4: TcxLabel;
     deDateProduction: TcxDateEdit;
     cxLabel5: TcxLabel;
     ceNumTech: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
-    deDateTara: TcxDateEdit;
+    deDateTare: TcxDateEdit;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    spSelectPrintJPG: TdsdStoredProc;
+    spSelectPrintJPGLen: TdsdStoredProc;
 
   private
     { Private declarations }

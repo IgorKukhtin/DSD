@@ -99,48 +99,32 @@ BEGIN
                             )
             -- для Sybase
           , tmpCheck AS (SELECT Object.ObjectCode AS PartionId_MI FROM Object WHERE Object.Id IN (SELECT -12345 AS PartionId_MI
-                   /*UNION SELECT 366872
-                   UNION SELECT 374215
-                   UNION SELECT 739198
-                   UNION SELECT 739264
-                   UNION SELECT 739269
-                   UNION SELECT 739270
-                   UNION SELECT 739271
-                   UNION SELECT 744408
-                   UNION SELECT 744677
-                   UNION SELECT 739173
-                   UNION SELECT 739185*/
-
-UNION SELECT 923274 -- select ObP.*, MovementItem.* , Movement.* from MovementItem join Object as ObP on ObP.ObjectCode = MovementItem.Id and ObP.DescId = zc_Object_PartionMI() join Movement on Movement.Id = MovementId and Movement.DescId = zc_Movement_Sale() and Movement.Operdate = '14.05.2012' where PartionId = (SELECT MovementItemId FROM Object_PartionGoods join Object on Object.Id = GoodsId and Object.ObjectCode = 69023 join Object as o2 on o2.Id = GoodsSizeId and o2.ValueData = '40')
-UNION SELECT 793448
-UNION SELECT 793469
-UNION SELECT 793471
-UNION SELECT 821522
-UNION SELECT 821528
-UNION SELECT 793544
-UNION SELECT 793184
-UNION SELECT 793202
-UNION SELECT 476394
-UNION SELECT 483737
-UNION SELECT 793470
-
-UNION SELECT 476871
-UNION SELECT 476872
-UNION SELECT 479822
-UNION SELECT 480378
-UNION SELECT 793598
-UNION SELECT 895551
-UNION SELECT 895554
-UNION SELECT 476874
-UNION SELECT 895549
-UNION SELECT 895552
-UNION SELECT 476394
-UNION SELECT 476873
-UNION SELECT 895553
-UNION SELECT 895548
-UNION SELECT 895550
-UNION SELECT 895555
-
+                   UNION SELECT 483329 -- select ObP.*, MovementItem.* , Movement.* from MovementItem join Object as ObP on ObP.ObjectCode = MovementItem.Id and ObP.DescId = zc_Object_PartionMI() join Movement on Movement.Id = MovementId and Movement.DescId = zc_Movement_Sale() and Movement.Operdate = '14.05.2012' where PartionId = (SELECT MovementItemId FROM Object_PartionGoods join Object on Object.Id = GoodsId and Object.ObjectCode = 69023 join Object as o2 on o2.Id = GoodsSizeId and o2.ValueData = '40')
+                   UNION SELECT 498838
+                   UNION SELECT 581629
+                   UNION SELECT 581618
+                   UNION SELECT 761634
+                   UNION SELECT 483304
+                   UNION SELECT 484088
+                   UNION SELECT 498134
+                   UNION SELECT 581631
+                   UNION SELECT 581633
+                   UNION SELECT 581620
+                   UNION SELECT 581624
+                   UNION SELECT 761635
+                   UNION SELECT 764551
+                   UNION SELECT 483331
+                   UNION SELECT 483333
+                   UNION SELECT 483076
+                   UNION SELECT 497389
+                   UNION SELECT 761636
+                   UNION SELECT 483048
+                   UNION SELECT 483114
+                   UNION SELECT 483312
+                   UNION SELECT 581622
+                   UNION SELECT 581627
+                   UNION SELECT 761637
+                   UNION SELECT 765099
                          -- FROM gpSelect_MovementItem_Sale_Sybase_Check()
                         ))
         -- результат

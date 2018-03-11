@@ -6318,8 +6318,8 @@ begin
            +'                           left outer join dba.Goods as Goods_parent2 on Goods_parent2.Id = Goods_parent1.ParentId'
            +'                      where Goods_find.HasChildren = zc_hsLeaf()'
            +'                         and Goods_find.ParentId <> 500000'
-           +'                         and Goods_parent1.ParentId <> 500000'
-           +'                         and Goods_parent2.ParentId <> 500000');
+           +'                         and coalesce (Goods_parent1.ParentId, 0) <> 500000'
+           +'                         and coalesce (Goods_parent2.ParentId, 0) <> 500000');
      //
      with fromQuery,Sql do begin
         Close;
