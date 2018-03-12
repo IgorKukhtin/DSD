@@ -44,7 +44,7 @@ type
     bbToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     cxGridDBTableView: TcxGridDBTableView;
-    Name: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
     StartDate: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     Panel: TPanel;
@@ -67,7 +67,7 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    GoodsisErased: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocol: TdxBarButton;
     ObjectId: TcxGridDBColumn;
