@@ -25,7 +25,6 @@ object StickerForm: TStickerForm
     Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 80
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -78,7 +77,7 @@ object StickerForm: TStickerForm
         Width = 40
       end
       object ItemName: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+        Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1087#1086#1082'.)'
         DataBinding.FieldName = 'ItemName'
         Visible = False
         GroupSummaryAlignment = taCenter
