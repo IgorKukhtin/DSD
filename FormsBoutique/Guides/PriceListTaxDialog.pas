@@ -61,6 +61,9 @@ type
     cxLabel10: TcxLabel;
     edLineFabrica: TcxButtonEdit;
     GuidesLineFabrica: TdsdGuides;
+    cxLabel1: TcxLabel;
+    ceLabel: TcxButtonEdit;
+    GuidesLabel: TdsdGuides;
   private
     { Private declarations }
   public

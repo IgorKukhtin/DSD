@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer , ObjectId Integer
                 , GoodsInfoName        TVarChar
                 , LineFabricaId        Integer
                 , LineFabricaName      TVarChar
+                , LabelId              Integer
                 , LabelName            TVarChar
                 , UnitId               Integer  
                 , UnitName             TVarChar  
@@ -107,6 +108,7 @@ BEGIN
                                , Object_GoodsInfo.ValueData          AS GoodsInfoName
                                , Object_LineFabrica.Id               AS LineFabricaId
                                , Object_LineFabrica.ValueData        AS LineFabricaName
+                               , Object_PartionGoods.LabelId         AS LabelId
                                , Object_Label.ValueData              AS LabelName
                                , Object_CompositionGroup.ValueData   AS CompositionGroupName
                                --, Object_GoodsSize.ValueData          AS GoodsSizeName
@@ -176,6 +178,7 @@ BEGIN
                         , tmpPartionGoods.GoodsInfoName
                         , tmpPartionGoods.LineFabricaId
                         , tmpPartionGoods.LineFabricaName
+                        , tmpPartionGoods.LabelId
                         , tmpPartionGoods.LabelName
                         , tmpPartionGoods.CompositionGroupName
                         --, tmpPartionGoods.GoodsSizeName
@@ -206,6 +209,7 @@ BEGIN
                           , tmpPartionGoods.GoodsInfoName
                           , tmpPartionGoods.LineFabricaId
                           , tmpPartionGoods.LineFabricaName
+                          , tmpPartionGoods.LabelId
                           , tmpPartionGoods.LabelName
                           , tmpPartionGoods.CompositionGroupName
                           --, tmpPartionGoods.GoodsSizeName
@@ -228,6 +232,7 @@ BEGIN
            , tmpPartionGoods.GoodsInfoName        AS GoodsInfoName
            , tmpPartionGoods.LineFabricaId        AS LineFabricaId
            , tmpPartionGoods.LineFabricaName      AS LineFabricaName
+           , tmpPartionGoods.LabelId              AS LabelId
            , tmpPartionGoods.LabelName            AS LabelName
            
            , tmpPartionGoods.UnitId
@@ -266,19 +271,19 @@ BEGIN
            LEFT JOIN ObjectDate AS ObjectDate_Protocol_Insert
                                 ON ObjectDate_Protocol_Insert.ObjectId = tmpPrice.PriceListItemObjectId
                                AND ObjectDate_Protocol_Insert.DescId = zc_ObjectDate_Protocol_Insert()
-          LEFT JOIN ObjectDate AS ObjectDate_Protocol_Update
-                               ON ObjectDate_Protocol_Update.ObjectId = tmpPrice.PriceListItemObjectId
-                              AND ObjectDate_Protocol_Update.DescId = zc_ObjectDate_Protocol_Update()
-
-          LEFT JOIN ObjectLink AS ObjectLink_Insert
-                               ON ObjectLink_Insert.ObjectId = tmpPrice.PriceListItemObjectId
-                              AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
-          LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId   
-
-          LEFT JOIN ObjectLink AS ObjectLink_Update
-                               ON ObjectLink_Update.ObjectId = tmpPrice.PriceListItemObjectId
-                              AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
-          LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId              
+           LEFT JOIN ObjectDate AS ObjectDate_Protocol_Update
+                                ON ObjectDate_Protocol_Update.ObjectId = tmpPrice.PriceListItemObjectId
+                               AND ObjectDate_Protocol_Update.DescId = zc_ObjectDate_Protocol_Update()
+ 
+           LEFT JOIN ObjectLink AS ObjectLink_Insert
+                                ON ObjectLink_Insert.ObjectId = tmpPrice.PriceListItemObjectId
+                               AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
+           LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId   
+ 
+           LEFT JOIN ObjectLink AS ObjectLink_Update
+                                ON ObjectLink_Update.ObjectId = tmpPrice.PriceListItemObjectId
+                               AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
+           LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId              
         ;
 
    ELSE
@@ -333,6 +338,7 @@ BEGIN
                                , Object_GoodsInfo.ValueData          AS GoodsInfoName
                                , Object_LineFabrica.Id               AS LineFabricaId
                                , Object_LineFabrica.ValueData        AS LineFabricaName
+                               , Object_PartionGoods.LabelId         AS LabelId
                                , Object_Label.ValueData              AS LabelName
                                , Object_CompositionGroup.ValueData   AS CompositionGroupName
                                --, Object_GoodsSize.ValueData          AS GoodsSizeName
@@ -401,6 +407,7 @@ BEGIN
                         , tmpPartionGoods.GoodsInfoName
                         , tmpPartionGoods.LineFabricaId
                         , tmpPartionGoods.LineFabricaName
+                        , tmpPartionGoods.LabelId
                         , tmpPartionGoods.LabelName
                         , tmpPartionGoods.CompositionGroupName
                         --, tmpPartionGoods.GoodsSizeName
@@ -431,6 +438,7 @@ BEGIN
                           , tmpPartionGoods.GoodsInfoName
                           , tmpPartionGoods.LineFabricaId
                           , tmpPartionGoods.LineFabricaName
+                          , tmpPartionGoods.LabelId
                           , tmpPartionGoods.LabelName
                           , tmpPartionGoods.CompositionGroupName
                           --, tmpPartionGoods.GoodsSizeName
@@ -452,6 +460,7 @@ BEGIN
            , tmpPartionGoods.GoodsInfoName        AS GoodsInfoName
            , tmpPartionGoods.LineFabricaId        AS LineFabricaId
            , tmpPartionGoods.LineFabricaName      AS LineFabricaName
+           , tmpPartionGoods.LabelId              AS LabelId
            , tmpPartionGoods.LabelName            AS LabelName
            
            , tmpPartionGoods.UnitId

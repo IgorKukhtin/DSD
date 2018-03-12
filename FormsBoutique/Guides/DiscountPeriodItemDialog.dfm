@@ -361,7 +361,7 @@ object DiscountPeriodItemDialogForm: TDiscountPeriodItemDialogForm
         Component = edEndYear
         MultiSelectSeparator = ','
       end>
-    Left = 101
-    Top = 179
+    Left = 109
+    Top = 163
   end
 end

@@ -941,6 +941,21 @@ object PriceListItemForm: TPriceListItemForm
           ComponentItem = 'GoodsGroupName'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LabelId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'LabelId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LabelName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'LabelName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end

@@ -686,10 +686,6 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintInSecond'
-        end
-        item
-          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1019,6 +1015,13 @@ object IncomeForm: TIncomeForm
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isOperPrice'
+          Value = 'False'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_Income'
       ReportNameParam.Value = 'PrintMovement_Income'
@@ -1090,8 +1093,8 @@ object IncomeForm: TIncomeForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1074#1093'.'#1094#1077#1085#1072#1084
-      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1074#1093'.'#1094#1077#1085#1072#1084
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1074#1093'.'#1094#1077#1085#1072#1084' '#1074' '#1074#1072#1083#1102#1090#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1074#1093'.'#1094#1077#1085#1072#1084' '#1074' '#1074#1072#1083#1102#1090#1077
       ImageIndex = 16
       DataSets = <
         item
@@ -1127,14 +1130,14 @@ object IncomeForm: TIncomeForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'isSecond'
-          Value = 'FALSE'
+          Name = 'isOperPrice'
+          Value = 'True'
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_IncomeIn'
-      ReportNameParam.Value = 'PrintMovement_IncomeIn'
+      ReportName = 'PrintMovement_Income'
+      ReportNameParam.Value = 'PrintMovement_Income'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end

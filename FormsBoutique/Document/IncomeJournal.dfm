@@ -402,10 +402,6 @@ object IncomeJournalForm: TIncomeJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintInSecond'
-        end
-        item
-          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -567,6 +563,13 @@ object IncomeJournalForm: TIncomeJournalForm
           Component = FormParams
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isOperPrice'
+          Value = 'False'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_Income'
       ReportNameParam.Value = 'PrintMovement_Income'
@@ -644,14 +647,14 @@ object IncomeJournalForm: TIncomeJournalForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'isSecond'
-          Value = 'FALSE'
+          Name = 'isOperPrice'
+          Value = 'True'
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_IncomeIn'
-      ReportNameParam.Value = 'PrintMovement_IncomeIn'
+      ReportName = 'PrintMovement_Income'
+      ReportNameParam.Value = 'PrintMovement_Income'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end

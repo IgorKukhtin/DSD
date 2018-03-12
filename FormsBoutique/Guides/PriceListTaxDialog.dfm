@@ -2,7 +2,7 @@ object PriceListTaxDialogForm: TPriceListTaxDialogForm
   Left = 0
   Top = 0
   Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080
-  ClientHeight = 399
+  ClientHeight = 446
   ClientWidth = 350
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@ object PriceListTaxDialogForm: TPriceListTaxDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 77
-    Top = 363
+    Top = 411
     Width = 75
     Height = 25
     Action = mactUpdate
@@ -28,7 +28,7 @@ object PriceListTaxDialogForm: TPriceListTaxDialogForm
   end
   object cxButton2: TcxButton
     Left = 181
-    Top = 363
+    Top = 411
     Width = 75
     Height = 25
     Action = actFormClose
@@ -39,12 +39,12 @@ object PriceListTaxDialogForm: TPriceListTaxDialogForm
   end
   object cxLabel3: TcxLabel
     Left = 20
-    Top = 298
+    Top = 346
     Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1094#1077#1085#1099' '#1089':'
   end
   object edOperDate: TcxDateEdit
     Left = 20
-    Top = 318
+    Top = 366
     EditValue = 42236d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -53,7 +53,7 @@ object PriceListTaxDialogForm: TPriceListTaxDialogForm
   end
   object cePriceTax: TcxCurrencyEdit
     Left = 181
-    Top = 318
+    Top = 366
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.UseDisplayFormatWhenEditing = True
@@ -80,7 +80,7 @@ object PriceListTaxDialogForm: TPriceListTaxDialogForm
   end
   object cxLabel8: TcxLabel
     Left = 181
-    Top = 297
+    Top = 345
     Caption = #1050#1086#1101#1092#1092'. '#1086#1090' '#1074#1093#1086#1076#1085#1086#1081' '#1094#1077#1085#1099
   end
   object cxLabel2: TcxLabel
@@ -184,6 +184,23 @@ object PriceListTaxDialogForm: TPriceListTaxDialogForm
     TabOrder = 19
     Width = 305
   end
+  object cxLabel1: TcxLabel
+    Left = 20
+    Top = 302
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' :'
+  end
+  object ceLabel: TcxButtonEdit
+    Left = 20
+    Top = 318
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 21
+    Width = 305
+  end
   object ActionList: TActionList
     Left = 300
     Top = 65526
@@ -273,6 +290,14 @@ object PriceListTaxDialogForm: TPriceListTaxDialogForm
         Name = 'inLineFabricaId'
         Value = Null
         Component = GuidesLineFabrica
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLabelId'
+        Value = Null
+        Component = GuidesLabel
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -424,6 +449,23 @@ object PriceListTaxDialogForm: TPriceListTaxDialogForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LabelId'
+        Value = Null
+        Component = GuidesLabel
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LabelName'
+        Value = Null
+        Component = GuidesLabel
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 300
     Top = 126
@@ -441,11 +483,11 @@ object PriceListTaxDialogForm: TPriceListTaxDialogForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 132
-    Top = 320
+    Top = 368
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 200
-    Top = 313
+    Top = 361
   end
   object PriceListGuides: TdsdGuides
     KeyField = 'Id'
@@ -649,5 +691,34 @@ object PriceListTaxDialogForm: TPriceListTaxDialogForm
       end>
     Left = 122
     Top = 251
+  end
+  object GuidesLabel: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceLabel
+    FormNameParam.Value = 'TLabelForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TLabelForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesLabel
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesLabel
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 209
+    Top = 294
   end
 end
