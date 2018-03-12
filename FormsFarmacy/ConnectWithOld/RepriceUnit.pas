@@ -140,6 +140,8 @@ type
     cxLabel3: TcxLabel;
     PriceMaxEdit: TcxCurrencyEdit;
     cdsResultNewPrice_to: TCurrencyField;
+    edJuridical: TcxButtonEdit;
+    GuidesJuridical: TdsdGuides;
     procedure FormCreate(Sender: TObject);
     procedure btnRepriceClick(Sender: TObject);
     procedure btnSelectNewPriceClick(Sender: TObject);
