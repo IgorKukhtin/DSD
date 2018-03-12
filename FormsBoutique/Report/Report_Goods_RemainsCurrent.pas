@@ -75,7 +75,7 @@ type
     PrintHeaderCDS: TClientDataSet;
     spSelectPrintSticker: TdsdStoredProc;
     mactGoodsPrintList_Print: TMultiAction;
-    bb: TdxBarButton;
+    bbGoodsPrintList_Print: TdxBarButton;
     cbYear: TcxCheckBox;
     UnitName_in: TcxGridDBColumn;
     Amount_in: TcxGridDBColumn;
@@ -89,6 +89,10 @@ type
     edEndYear: TcxButtonEdit;
     GuidesStartYear: TdsdGuides;
     GuidesEndYear: TdsdGuides;
+    actPrint: TdsdPrintAction;
+    bbPrint: TdxBarButton;
+    actPrintIn: TdsdPrintAction;
+    bbPrintIn: TdxBarButton;
   private
     { Private declarations }
   public

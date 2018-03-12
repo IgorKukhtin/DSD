@@ -44,7 +44,7 @@ type
     bbToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     cxGridDBTableView: TcxGridDBTableView;
-    Name: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
     StartDate: TcxGridDBColumn;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     Panel: TPanel;

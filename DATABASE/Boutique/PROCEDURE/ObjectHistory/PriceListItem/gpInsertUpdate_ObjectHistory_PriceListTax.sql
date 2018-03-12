@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListTax(Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListTax(Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListTax(Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_PriceListTax(
     IN inPriceListId                Integer,    -- Прайс-лист результат
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_PriceListTax(
     IN inBrandId                    Integer,    -- Торг. марка
     IN inPeriodId                   Integer,    -- Сезон
     IN inLineFabricaId              Integer,    -- Линия
+    IN inLabelId                    Integer,    -- Название для ценника
     IN inOperDate                   TDateTime,  -- Изменение цены с
     IN inPeriodYear                 TFloat,     -- Год
     IN inTax                        TFloat,     -- коэфф от входной цены
@@ -62,6 +64,7 @@ BEGIN
                                  AND Object_PartionGoods.BrandId    = inBrandId
                                  AND Object_PartionGoods.PeriodId   = inPeriodId
                                  AND Object_PartionGoods.PeriodYear = inPeriodYear
+                                 AND Object_PartionGoods.LabelId    = inLabelId
                                )
 
            -- определяем остаток товара.  
@@ -96,6 +99,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 12.03.18         * add inLabelId
  01.03.18         *
  21.08.15         *
 */
