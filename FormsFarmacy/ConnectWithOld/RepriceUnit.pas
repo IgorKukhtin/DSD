@@ -142,6 +142,8 @@ type
     cdsResultNewPrice_to: TCurrencyField;
     edJuridical: TcxButtonEdit;
     GuidesJuridical: TdsdGuides;
+    BtnUnitsList: TButton;
+    actChoiceJuridical: TOpenChoiceForm;
     procedure FormCreate(Sender: TObject);
     procedure btnRepriceClick(Sender: TObject);
     procedure btnSelectNewPriceClick(Sender: TObject);
@@ -150,6 +152,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure btnRepriceSelYesClick(Sender: TObject);
     procedure btnRepriceSelNoClick(Sender: TObject);
+    procedure BtnUnitsListClick(Sender: TObject);
   private
     FStartReprice: Boolean;
     { Private declarations }
@@ -481,6 +484,21 @@ begin
   end;
 end;
 
+
+procedure TRepriceUnitForm.BtnUnitsListClick(Sender: TObject);
+begin
+    //if actChoiceJuridical.Execute then
+    //begin
+          GetUnitsList.Execute;
+          UnitsCDS.First;
+          CheckListBox.Items.Clear;
+          while not UnitsCDS.Eof do
+          begin
+            CheckListBox.Items.AddObject(UnitsCDS.FieldByName('UnitName').asString,TObject(UnitsCDS.FieldByName('Id').AsInteger));
+            UnitsCDS.Next;
+          end;
+    //end;
+end;
 
 procedure TRepriceUnitForm.cdsResultCalcFields(DataSet: TDataSet);
 begin

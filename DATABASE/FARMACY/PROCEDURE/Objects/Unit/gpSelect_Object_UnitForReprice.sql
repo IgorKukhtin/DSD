@@ -1,7 +1,7 @@
 -- Function: gpSelect_Object_Unit()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_UnitForReprice(TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_UnitForReprice(Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Object_UnitForReprice (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_UnitForReprice (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_UnitForReprice(
     IN inJuridicalId   Integer,       -- наше юр.лицо
@@ -17,8 +17,8 @@ BEGIN
     RETURN QUERY 
      
         SELECT Object_Unit.Id          AS Id  
-             , (COALESCE (Object_Juridical.ValueData, '') ||' '|| 
-                COALESCE (Object_Unit.ValueData, '') ||' '|| 
+             , (COALESCE (Object_Juridical.ValueData, '') ||'  **  '|| 
+                COALESCE (Object_Unit.ValueData, '') ||'  **  '|| 
                 COALESCE (Object_ProvinceCity.ValueData, '')) :: TVarChar AS Name
         FROM Object AS Object_Unit
 
@@ -49,8 +49,7 @@ BEGIN
        ;
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------*/
 /*
