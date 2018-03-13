@@ -28,7 +28,7 @@ RETURNS TABLE (PartionId             Integer
              , PartnerId             Integer
              , PartnerName           VarChar (100)
 
-             , GoodsGroupName_all    TVarChar
+             , GoodsGroupNameFull    TVarChar
              , GoodsGroupName        TVarChar
              , LabelName             VarChar (100)
              , CompositionGroupName  TVarChar
@@ -41,6 +41,7 @@ RETURNS TABLE (PartionId             Integer
              , LineFabricaName       TVarChar
              , GoodsSizeId           Integer
              , GoodsSizeName         VarChar (25)
+             , MeasureName           TVarChar
 
              , UnitName              VarChar (100)
              , ClientName            VarChar (100)
@@ -51,6 +52,7 @@ RETURNS TABLE (PartionId             Integer
              , CurrencyName          VarChar (10)
 
              , OperPrice             TFloat
+             , OperPriceList         TFloat
              , Income_Amount         TFloat
 
              , Debt_Amount           TFloat
@@ -179,6 +181,7 @@ BEGIN
                                 , Object_PartionGoods.GoodsInfoId
                                 , Object_PartionGoods.LineFabricaId
                                 , Object_PartionGoods.GoodsSizeId
+                                , Object_PartionGoods.MeasureId
 
                                 , COALESCE (MIConatiner.ObjectExtId_Analyzer, Object_PartionGoods.UnitId) :: Integer AS UnitId
                                 , CASE WHEN inisMovement = TRUE THEN MIConatiner.OperDate ELSE NULL :: TDateTime END AS OperDate_doc
@@ -190,7 +193,8 @@ BEGIN
 
                                 , Object_PartionGoods.UnitId     AS UnitId_in
                                 , Object_PartionGoods.CurrencyId AS CurrencyId
-                                , Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END :: TFloat  AS OperPrice
+                                , Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END                   :: TFloat  AS OperPrice
+                                , (COALESCE (MIFloat_OperPriceList.ValueData, 0) / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END) :: TFloat  AS OperPriceList
                                   -- Кол-во Приход от поставщика - только для UnitId
                                 , Object_PartionGoods.Amount AS Income_Amount
 
@@ -275,6 +279,9 @@ BEGIN
                                 LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
                                                               ON MIBoolean_Checked.MovementItemId = COALESCE (Object_PartionMI.ObjectCode, MIConatiner.MovementItemId)
                                                              AND MIBoolean_Checked.DescId         = zc_MIBoolean_Checked()
+                                LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
+                                                            ON MIFloat_OperPriceList.MovementItemId = COALESCE (Object_PartionMI.ObjectCode, MIConatiner.MovementItemId)
+                                                           AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
 
                            WHERE (Object_PartionGoods.PartnerId  = inPartnerId        OR inPartnerId   = 0)
                              AND (Object_PartionGoods.BrandId    = inBrandId          OR inBrandId     = 0)
@@ -304,6 +311,7 @@ BEGIN
                                   , Object_PartionGoods.GoodsInfoId
                                   , Object_PartionGoods.LineFabricaId
                                   , Object_PartionGoods.GoodsSizeId
+                                  , Object_PartionGoods.MeasureId
 
                                   , MIConatiner.ObjectExtId_Analyzer
                                   , CASE WHEN inisMovement = TRUE THEN MIConatiner.OperDate ELSE NULL :: TDateTime END 
@@ -319,6 +327,7 @@ BEGIN
                                   , Object_PartionGoods.OperPrice
                                   , Object_PartionGoods.CountForPrice
                                   , COALESCE (MIBoolean_Checked.ValueData, FALSE)
+                                  , COALESCE (MIFloat_OperPriceList.ValueData, 0)
                             HAVING SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ()  AND COALESCE (MIConatiner.AnalyzerId, 0) <> zc_Enum_AnalyzerId_SaleSumm_10300() AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END) <> 0
                                OR (SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount > 0 AND MIConatiner.MovementDescId IN (zc_Movement_ReturnIn()) THEN 1 * MIConatiner.Amount ELSE 0 END) <> 0
                                   -- С\с возврат - calc
@@ -351,6 +360,7 @@ BEGIN
                           , tmpData_all.GoodsInfoId
                           , tmpData_all.LineFabricaId
                           , CASE WHEN inIsSize  = TRUE THEN tmpData_all.GoodsSizeId ELSE 0 END AS GoodsSizeId
+                          , tmpData_all.MeasureId
 
                           , tmpData_all.OperDate_doc
                           , tmpData_all.MovementId_doc
@@ -363,6 +373,7 @@ BEGIN
                           , tmpData_all.CurrencyId
 
                           , tmpData_all.OperPrice
+                          , tmpData_all.OperPriceList
                           , tmpData_all.isChecked
                           , SUM (CASE WHEN tmpData_all.Ord = 1 THEN tmpData_all.Income_Amount ELSE 0 END) AS Income_Amount
 
@@ -456,6 +467,7 @@ BEGIN
                             , tmpData_all.GoodsInfoId
                             , tmpData_all.LineFabricaId
                             , CASE WHEN inIsSize  = TRUE THEN tmpData_all.GoodsSizeId ELSE 0 END
+                            , tmpData_all.MeasureId
 
                             , tmpData_all.OperDate_doc
                             , tmpData_all.MovementId_doc
@@ -467,6 +479,7 @@ BEGIN
                             , tmpData_all.UnitId_in
                             , tmpData_all.CurrencyId
                             , tmpData_all.OperPrice
+                            , tmpData_all.OperPriceList
                             , tmpData_all.isChecked
 
                             , ObjectLink_Parent0.ChildObjectId
@@ -499,7 +512,7 @@ BEGIN
              , Object_Partner.Id                          AS PartnerId
              , Object_Partner.ValueData  :: VarChar (100) AS PartnerName
 
-             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupName_all
+             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
              , Object_GoodsGroup.ValueData                AS GoodsGroupName
              , Object_Label.ValueData    :: VarChar (100) AS LabelName
              , Object_CompositionGroup.ValueData  AS CompositionGroupName
@@ -512,6 +525,7 @@ BEGIN
              , Object_LineFabrica.ValueData               AS LineFabricaName
              , Object_GoodsSize.Id                        AS GoodsSizeId
              , Object_GoodsSize.ValueData :: VarChar (25) AS GoodsSizeName
+             , Object_Measure.ValueData                   AS MeasureName
 
              , Object_Unit.ValueData        :: VarChar (100) AS UnitName
              , Object_Client.ValueData      :: VarChar (100) AS ClientName
@@ -522,6 +536,7 @@ BEGIN
              , Object_Currency.ValueData    :: VarChar (10)  AS CurrencyName
 
              , tmpData.OperPrice            :: TFloat
+             , tmpData.OperPriceList        :: TFloat
              , tmpData.Income_Amount        :: TFloat
                                             
              , tmpData.Debt_Amount          :: TFloat
@@ -689,6 +704,7 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = tmpData.GoodsSizeId
             LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = tmpData.BrandId
             LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = tmpData.PeriodId
+            LEFT JOIN Object AS Object_Measure          ON Object_Measure.Id          = tmpData.MeasureId
 
             LEFT JOIN Object AS Object_GoodsGroup1 ON Object_GoodsGroup1.Id = tmpData.GroupId1
             LEFT JOIN Object AS Object_GoodsGroup2 ON Object_GoodsGroup2.Id = tmpData.GroupId2

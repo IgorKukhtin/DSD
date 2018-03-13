@@ -40,6 +40,11 @@ object PriceListItemForm: TPriceListItemForm
           Format = ',0.####'
           Kind = skSum
           Column = AmountDebt
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = RemainsAll
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -56,6 +61,11 @@ object PriceListItemForm: TPriceListItemForm
           Format = ',0.####'
           Kind = skSum
           Column = AmountDebt
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = RemainsAll
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -181,6 +191,19 @@ object PriceListItemForm: TPriceListItemForm
         HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1086#1083#1075#1080' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
         Options.Editing = False
         Width = 60
+      end
+      object RemainsAll: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1080#1090#1086#1075#1086
+        DataBinding.FieldName = 'RemainsAll'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1086#1089#1090#1072#1090#1086#1082' '#1080#1090#1086#1075#1086
+        Options.Editing = False
+        Width = 70
       end
       object OperPrice: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1074#1093'.'

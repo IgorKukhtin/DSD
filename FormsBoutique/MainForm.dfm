@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 723
   KeyPreview = True
   ExplicitWidth = 739
-  ExplicitHeight = 223
+  ExplicitHeight = 226
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
