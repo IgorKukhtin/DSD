@@ -28,20 +28,21 @@ RETURNS TABLE (Id Integer , ObjectId Integer
                 , LineFabricaName      TVarChar
                 , LabelId              Integer
                 , LabelName            TVarChar
-                , UnitId               Integer  
-                , UnitName             TVarChar  
+                , UnitId               Integer
+                , UnitName             TVarChar
                 , BrandId              Integer
-                , BrandName            TVarChar 
-                , PeriodId             Integer 
-                , PeriodName           TVarChar  
-                , PeriodYear           Integer  
-                , FabrikaName          TVarChar  
-                --, GoodsSizeName        TVarChar 
+                , BrandName            TVarChar
+                , PeriodId             Integer
+                , PeriodName           TVarChar
+                , PeriodYear           Integer
+                , FabrikaName          TVarChar
+                --, GoodsSizeName        TVarChar
                 , CurrencyName         TVarChar
-                , OperPriceList        TFloat  
-                , OperPrice            TFloat 
-                , Remains              TFloat 
-                , AmountDebt           TFloat 
+                , OperPriceList        TFloat
+                , OperPrice            TFloat
+                , Remains              TFloat
+                , AmountDebt           TFloat
+                , RemainsAll           TFloat
 
                 , StartDate TDateTime, EndDate TDateTime
                 , ValuePrice TFloat
@@ -249,6 +250,7 @@ BEGIN
            , tmpPartionGoods.OperPrice       ::Tfloat
            , tmpPartionGoods.Remains         ::Tfloat
            , tmpPartionGoods.AmountDebt      ::Tfloat
+           , (COALESCE(tmpPartionGoods.Remains, 0) + COALESCE(tmpPartionGoods.AmountDebt, 0)) ::Tfloat  AS RemainsAll
 
            , tmpPrice.StartDate
            , tmpPrice.EndDate
@@ -477,6 +479,7 @@ BEGIN
            , tmpPartionGoods.OperPrice       ::Tfloat
            , tmpPartionGoods.Remains         ::Tfloat
            , tmpPartionGoods.AmountDebt      ::Tfloat
+           , (COALESCE(tmpPartionGoods.Remains, 0) + COALESCE(tmpPartionGoods.AmountDebt, 0)) ::Tfloat  AS RemainsAll
            
            , tmpPrice.StartDate
            , tmpPrice.EndDate
