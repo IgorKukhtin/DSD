@@ -41,16 +41,16 @@ $BODY$
    
 BEGIN
 
-       SELECT CASE WHEN ObjectFloat_Width1.ValueData > 0  THEN ObjectFloat_Width1.ValueData  ELSE 1000 END AS Width1
-            , CASE WHEN ObjectFloat_Width2.ValueData > 0  THEN ObjectFloat_Width2.ValueData  ELSE 1000 END AS Width2
-            , CASE WHEN ObjectFloat_Width3.ValueData > 0  THEN ObjectFloat_Width3.ValueData  ELSE 1000 END AS Width3
-            , CASE WHEN ObjectFloat_Width4.ValueData > 0  THEN ObjectFloat_Width4.ValueData  ELSE 1000 END AS Width4
-            , CASE WHEN ObjectFloat_Width5.ValueData > 0  THEN ObjectFloat_Width5.ValueData  ELSE 1000 END AS Width5
-            , CASE WHEN ObjectFloat_Width6.ValueData > 0  THEN ObjectFloat_Width6.ValueData  ELSE 1000 END AS Width6
-            , CASE WHEN ObjectFloat_Width7.ValueData > 0  THEN ObjectFloat_Width7.ValueData  ELSE 1000 END AS Width7
-            , CASE WHEN ObjectFloat_Width8.ValueData > 0  THEN ObjectFloat_Width8.ValueData  ELSE 1000 END AS Width8
-            , CASE WHEN ObjectFloat_Width9.ValueData > 0  THEN ObjectFloat_Width9.ValueData  ELSE 1000 END AS Width9
-            , CASE WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData ELSE 1000 END AS Width10
+       SELECT CASE WHEN ObjectFloat_Width1.ValueData > 0  THEN ObjectFloat_Width1.ValueData  :: Integer ELSE 1000 END AS Width1
+            , CASE WHEN ObjectFloat_Width2.ValueData > 0  THEN ObjectFloat_Width2.ValueData  :: Integer ELSE 1000 END AS Width2
+            , CASE WHEN ObjectFloat_Width3.ValueData > 0  THEN ObjectFloat_Width3.ValueData  :: Integer ELSE 1000 END AS Width3
+            , CASE WHEN ObjectFloat_Width4.ValueData > 0  THEN ObjectFloat_Width4.ValueData  :: Integer ELSE 1000 END AS Width4
+            , CASE WHEN ObjectFloat_Width5.ValueData > 0  THEN ObjectFloat_Width5.ValueData  :: Integer ELSE 1000 END AS Width5
+            , CASE WHEN ObjectFloat_Width6.ValueData > 0  THEN ObjectFloat_Width6.ValueData  :: Integer ELSE 1000 END AS Width6
+            , CASE WHEN ObjectFloat_Width7.ValueData > 0  THEN ObjectFloat_Width7.ValueData  :: Integer ELSE 1000 END AS Width7
+            , CASE WHEN ObjectFloat_Width8.ValueData > 0  THEN ObjectFloat_Width8.ValueData  :: Integer ELSE 1000 END AS Width8
+            , CASE WHEN ObjectFloat_Width9.ValueData > 0  THEN ObjectFloat_Width9.ValueData  :: Integer ELSE 1000 END AS Width9
+            , CASE WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer ELSE 1000 END AS Width10
               INTO vbLen1
                  , vbLen2
                  , vbLen3
