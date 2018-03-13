@@ -213,8 +213,9 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_Transport_AddLong(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1202, inName:= 'Сумма дальнобойные (тоже командировочные) из Путевой лист', inEnumName:= 'zc_Enum_AnalyzerId_Transport_AddLong');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_Transport_Taxi(),    inDescId:= zc_Object_AnalyzerId(), inCode:= 1203, inName:= 'Сумма на такси из Путевой лист',                            inEnumName:= 'zc_Enum_AnalyzerId_Transport_Taxi');
 
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_PersonalService_Nalog(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1301, inName:= 'Сумма Налоги - удержания с ЗП',                         inEnumName:= 'zc_Enum_AnalyzerId_PersonalService_Nalog');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_MobileBills_Personal(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1302, inName:= 'Сумма мобильная связь - удержания с ЗП',                 inEnumName:= 'zc_Enum_AnalyzerId_MobileBills_Personal');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_PersonalService_Nalog(),    inDescId:= zc_Object_AnalyzerId(), inCode:= 1301, inName:= 'Сумма Налоги - удержания с ЗП',                      inEnumName:= 'zc_Enum_AnalyzerId_PersonalService_Nalog');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_PersonalService_NalogRet(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1302, inName:= 'Сумма Налоги - возмещение к ЗП',                     inEnumName:= 'zc_Enum_AnalyzerId_PersonalService_NalogRet');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_MobileBills_Personal(),     inDescId:= zc_Object_AnalyzerId(), inCode:= 1303, inName:= 'Сумма мобильная связь - удержания с ЗП',             inEnumName:= 'zc_Enum_AnalyzerId_MobileBills_Personal');
      --
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_TareReturning(), inDescId:= zc_Object_AnalyzerId(), inCode:= 2001, inName:= 'Кол-во, возвратная тара', inEnumName:= 'zc_Enum_AnalyzerId_TareReturning');
      
@@ -608,6 +609,9 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20401, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_20401');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 21425, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_21425');
 
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20501, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_20501');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20601, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_20601');
+
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20801, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_20801');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20901, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_20901');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 21001, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_21001');
@@ -712,6 +716,7 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 70200, inDescId:= zc_Object_ProfitLossDirection(), inEnumName:= 'zc_Enum_ProfitLossDirection_70200');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 70300, inDescId:= zc_Object_ProfitLossDirection(), inEnumName:= 'zc_Enum_ProfitLossDirection_70300');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 70400, inDescId:= zc_Object_ProfitLossDirection(), inEnumName:= 'zc_Enum_ProfitLossDirection_70400');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 70500, inDescId:= zc_Object_ProfitLossDirection(), inEnumName:= 'zc_Enum_ProfitLossDirection_70500');
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 80100, inDescId:= zc_Object_ProfitLossDirection(), inEnumName:= 'zc_Enum_ProfitLossDirection_80100');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 80200, inDescId:= zc_Object_ProfitLossDirection(), inEnumName:= 'zc_Enum_ProfitLossDirection_80200');
@@ -761,6 +766,8 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 70201, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_70201');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 70202, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_70202');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 70203, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_70203');
+
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 70501, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_70501');
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 80103, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_80103');
 

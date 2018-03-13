@@ -503,8 +503,8 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 128
-    Top = 48
+    Left = 152
+    Top = 192
   end
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'

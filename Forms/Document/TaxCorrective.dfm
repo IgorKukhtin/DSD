@@ -2,10 +2,8 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 668
   ClientWidth = 1114
-  ExplicitLeft = -455
-  ExplicitTop = -237
   ExplicitWidth = 1130
-  ExplicitHeight = 707
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -441,6 +439,28 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       TabOrder = 33
       Width = 571
     end
+    object edINN: TcxTextEdit
+      Left = 767
+      Top = 103
+      Properties.ReadOnly = True
+      TabOrder = 34
+      Width = 132
+    end
+    object cxLabel14: TcxLabel
+      Left = 767
+      Top = 85
+      Caption = #1048#1053#1053' '#1076#1083#1103' '#1042#1089#1077#1093' '#1080#1083#1080' 1-'#1086#1075#1086' '#1076#1086#1082'.'
+    end
+    object cbINN: TcxCheckBox
+      Left = 901
+      Top = 103
+      Hint = #1048#1053#1053' '#1080#1089#1087#1088#1072#1074#1083#1077#1085' '#1076#1083#1103' 1-'#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 36
+      Width = 24
+    end
   end
   object cbPartner: TcxCheckBox [2]
     Left = 8
@@ -732,6 +752,59 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Category = 'DSDLib'
       MoveParams = <>
     end
+    object actUpdateINN: TdsdDataSetRefresh
+      Category = 'INN'
+      MoveParams = <>
+      StoredProc = spUpdate_INN
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_INN
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 26
+      RefreshOnTabSetChanges = True
+    end
+    object ExecuteDialogINN: TExecuteDialog
+      Category = 'INN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1048#1053#1053
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1048#1053#1053
+      ImageIndex = 26
+      FormName = 'TMovementString_INNEditForm'
+      FormNameParam.Value = 'TMovementString_INNEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inINN'
+          Value = ''
+          Component = edINN
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macUpdateINN: TMultiAction
+      Category = 'INN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogINN
+        end
+        item
+          Action = actUpdateINN
+        end>
+      Caption = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1048#1053#1053' '#1076#1083#1103' 1-'#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1048#1053#1053' '#1076#1083#1103' 1-'#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 76
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -821,6 +894,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateINN'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -829,7 +910,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -890,6 +971,10 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     end
     object bbOpenTax: TdxBarButton
       Action = actOpenTax
+      Category = 0
+    end
+    object bbUpdateINN: TdxBarButton
+      Action = macUpdateINN
       Category = 0
     end
   end
@@ -1248,6 +1333,20 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Value = Null
         Component = cbPartner
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isINN'
+        Value = Null
+        Component = cbINN
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'INN_From'
+        Value = Null
+        Component = edINN
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 208
@@ -2190,5 +2289,37 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     PackSize = 1
     Left = 226
     Top = 472
+  end
+  object spUpdate_INN: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_INN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioINN'
+        Value = ''
+        Component = edINN
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsINN'
+        Value = 'False'
+        Component = cbINN
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 682
+    Top = 304
   end
 end

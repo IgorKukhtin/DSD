@@ -40,10 +40,10 @@ inherited ContractEditForm: TContractEditForm
     Caption = #1053#1086#1084#1077#1088' '#1076#1086#1075#1086#1074#1086#1088#1072
   end
   object edName: TcxTextEdit [5]
-    Left = 8
+    Left = 12
     Top = 32
     TabOrder = 3
-    Width = 168
+    Width = 121
   end
   object cxLabel4: TcxLabel [6]
     Left = 8
@@ -133,16 +133,16 @@ inherited ContractEditForm: TContractEditForm
     Width = 103
   end
   object cxLabel9: TcxLabel [18]
-    Left = 182
+    Left = 238
     Top = 11
-    Caption = '% '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' '#1085#1072#1094#1077#1085#1082#1080
+    Caption = '% '#1082#1086#1088#1088#1077#1082#1090'. '#1085#1072#1094#1077#1085#1082#1080
   end
   object cePercent: TcxCurrencyEdit [19]
-    Left = 182
+    Left = 238
     Top = 32
     Properties.DisplayFormat = ',0.##'
     TabOrder = 19
-    Width = 165
+    Width = 109
   end
   object cxLabel10: TcxLabel [20]
     Left = 8
@@ -208,7 +208,7 @@ inherited ContractEditForm: TContractEditForm
     Caption = #1052#1080#1085'. '#1079#1072#1082#1072#1079', '#1075#1088#1085
   end
   object ceOrderSumm: TcxCurrencyEdit [29]
-    Left = 8
+    Left = 7
     Top = 282
     Properties.DisplayFormat = ',0.##'
     TabOrder = 29
@@ -236,6 +236,20 @@ inherited ContractEditForm: TContractEditForm
     TabOrder = 33
     Width = 339
   end
+  object edSigningDate: TcxDateEdit [34]
+    Left = 137
+    Top = 32
+    EditValue = 0d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 34
+    Width = 93
+  end
+  object cxLabel17: TcxLabel [35]
+    Left = 137
+    Top = 11
+    Caption = #1044#1072#1090#1072' '#1087#1086#1076#1087#1080#1089#1072#1085#1080#1103
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 291
     Top = 73
@@ -245,12 +259,12 @@ inherited ContractEditForm: TContractEditForm
     Top = 357
   end
   inherited ActionList: TActionList
-    Left = 119
-    Top = 8
+    Left = 23
+    Top = 136
   end
   inherited FormParams: TdsdFormParams
-    Left = 248
-    Top = 21
+    Left = 160
+    Top = 365
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Contract'
@@ -366,6 +380,14 @@ inherited ContractEditForm: TContractEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inSigningDate'
+        Value = 'NULL'
+        Component = edSigningDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inStartDate'
         Value = 42370d
         Component = edStartDate
@@ -464,6 +486,13 @@ inherited ContractEditForm: TContractEditForm
         Name = 'Deferment'
         Value = 0.000000000000000000
         Component = ceDeferment
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SigningDate'
+        Value = 'NULL'
+        Component = edSigningDate
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
@@ -595,8 +624,8 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 226
-    Top = 68
+    Left = 210
+    Top = 76
   end
   object GroupMemberSPGuides: TdsdGuides
     KeyField = 'Id'
@@ -625,7 +654,7 @@ inherited ContractEditForm: TContractEditForm
         MultiSelectSeparator = ','
       end>
     Left = 72
-    Top = 164
+    Top = 172
   end
   object BankAccountGuides: TdsdGuides
     KeyField = 'Id'

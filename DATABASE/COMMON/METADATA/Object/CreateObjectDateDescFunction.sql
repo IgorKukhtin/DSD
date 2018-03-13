@@ -272,8 +272,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_User_In() RETURNS Integer AS $BODY$BEGI
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_User(), 'zc_ObjectDate_User_In', 'Дата принятия на работу' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_User_In');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_MemberSP_HappyDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_MemberSP_HappyDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_MemberSP(), 'zc_ObjectDate_MemberSP_HappyDate', 'Дата рождения' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_MemberSP_HappyDate');
+
+
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 18.01.18         * zc_ObjectDate_MemberSP_HappyDate
  02.11.17         * zc_ObjectDate_GoodsReportSaleInf_Start
                     zc_ObjectDate_GoodsReportSaleInf_End
  15.09.17         * zc_ObjectDate_Unit_Create

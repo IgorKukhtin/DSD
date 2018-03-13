@@ -38,23 +38,18 @@ BEGIN
            , Object_Status.ObjectCode                    AS StatusCode
            , Object_Status.ValueData                     AS StatusName
 
-           , MF_TotalCount.ValueData          AS TotalCount
-           , MF_TotalSumm.ValueData           AS TotalSumm
-
-           , CASE WHEN MLO_CurrencyDocument.ObjectId = zc_Currency_Basis()
-                       THEN MF_TotalSumm.ValueData
-                  ELSE zfCalc_CurrencyFrom (MF_TotalSumm.ValueData, MF_CurrencyValue.ValueData, MF_ParValue.ValueData) 
-             END :: TFloat AS TotalSummBalance
-           
-           , MF_TotalSummPriceList.ValueData  AS TotalSummPriceList
-
-           , MF_CurrencyValue.ValueData       AS CurrencyValue
-           , MF_ParValue.ValueData            AS ParValue
+           , MF_TotalCount.ValueData                     AS TotalCount
+           , MF_TotalSumm.ValueData                      AS TotalSumm
+           , MovementFloat_TotalSummBalance.ValueData    AS TotalSummBalance
+           , MF_TotalSummPriceList.ValueData             AS TotalSummPriceList
+                                                         
+           , MF_CurrencyValue.ValueData                  AS CurrencyValue
+           , MF_ParValue.ValueData                       AS ParValue
 
            , Object_From.ValueData                       AS FromName
            , Object_To.ValueData                         AS ToName
            , Object_CurrencyDocument.ValueData           AS CurrencyDocumentName
-           , MS_Comment.ValueData            AS Comment
+           , MS_Comment.ValueData                        AS Comment
          
        FROM (SELECT Movement.Id
              FROM tmpStatus
@@ -75,6 +70,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MF_TotalSumm
                                     ON MF_TotalSumm.MovementId = Movement.Id
                                    AND MF_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummBalance
+                                    ON MovementFloat_TotalSummBalance.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummBalance.DescId = zc_MovementFloat_TotalSummBalance()
             LEFT JOIN MovementFloat AS MF_TotalSummPriceList
                                     ON MF_TotalSummPriceList.MovementId = Movement.Id
                                    AND MF_TotalSummPriceList.DescId = zc_MovementFloat_TotalSummPriceList()

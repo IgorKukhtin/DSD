@@ -87,21 +87,21 @@ BEGIN
                                          , Price_Goods.ChildObjectId               AS GoodsId
                                          , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
                                          , MCS_Value.ValueData                     AS MCSValue 
-                                    FROM ObjectLink        AS ObjectLink_Price_Unit
-                                         LEFT JOIN ObjectBoolean      AS MCS_isClose
-                                                 ON MCS_isClose.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                                AND MCS_isClose.DescId = zc_ObjectBoolean_Price_MCSIsClose()
+                                    FROM ObjectLink AS ObjectLink_Price_Unit
+                                         LEFT JOIN ObjectBoolean AS MCS_isClose
+                                                                 ON MCS_isClose.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                                AND MCS_isClose.DescId = zc_ObjectBoolean_Price_MCSIsClose()
                                          LEFT JOIN ObjectLink AS Price_Goods
-                                                ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                               AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                                              ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                             AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
                                          INNER JOIN Object AS Object_Goods ON Object_Goods.Id = Price_Goods.ChildObjectId
                                                                           AND Object_Goods.isErased = False
                                          LEFT JOIN ObjectFloat AS Price_Value
-                                                ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                               AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                                                               ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                              AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
                                          LEFT JOIN ObjectFloat AS MCS_Value
-                                                 ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                                AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
+                                                               ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                              AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
                                     WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                                       AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
                                       AND COALESCE(MCS_isClose.ValueData,False) = False
@@ -158,12 +158,12 @@ BEGIN
                                                                ON MovementBoolean_isAuto.MovementId = Movement.Id
                                                               AND MovementBoolean_isAuto.DescId     = zc_MovementBoolean_isAuto()
                                                               AND MovementBoolean_isAuto.ValueData  = TRUE*/
-                                    LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                    /*LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                                               ON MovementBoolean_Deferred.MovementId = Movement.Id
-                                                             AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                                             AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()*/
                              WHERE Movement.DescId = zc_Movement_Send()
                                   AND Movement.StatusId = zc_Enum_Status_UnComplete()
-                                  AND COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = FALSE
+                                  --AND COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = FALSE
                                   -- AND Movement.OperDate >= CURRENT_DATE - INTERVAL '14 DAY' AND Movement.OperDate < CURRENT_DATE + INTERVAL '14 DAY'
                                   AND Movement.OperDate >= CURRENT_DATE - INTERVAL '30 DAY' AND Movement.OperDate < CURRENT_DATE + INTERVAL '30 DAY'
                              GROUP BY MovementItem.ObjectId

@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , MCSPeriod TFloat, MCSDay TFloat, StartDate TDateTime
              , MCSPeriodEnd TFloat, MCSDayEnd TFloat, StartDateEnd TDateTime
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , GoodsGroupName TVarChar, NDSKindName TVarChar
+             , GoodsGroupName TVarChar, NDSKindName TVarChar, NDS TFloat
              , ConditionsKeepName TVarChar
              , Goods_isTop Boolean, Goods_PercentMarkup TFloat
              , DateChange TDateTime, MCSDateChange TDateTime
@@ -66,6 +66,7 @@ BEGIN
                ,NULL::TVarChar                   AS GoodsName
                ,NULL::TVarChar                   AS GoodsGroupName
                ,NULL::TVarChar                   AS NDSKindName
+               ,NULL::TFloat                     AS NDS
                ,NULL::TVarChar                   AS ConditionsKeepName
                ,NULL::Boolean                    AS Goods_isTop
                ,NULL::TFloat                     AS Goods_PercentMarkup
@@ -203,6 +204,7 @@ BEGIN
                , Object_Goods_View.GoodsName                     AS GoodsName
                , Object_Goods_View.GoodsGroupName                AS GoodsGroupName
                , Object_Goods_View.NDSKindName                   AS NDSKindName
+               , Object_Goods_View.NDS                           AS NDS
                , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
                , Object_Goods_View.isTop                         AS Goods_isTop
                , Object_Goods_View.PercentMarkup                 AS Goods_PercentMarkup
@@ -411,6 +413,7 @@ BEGIN
                , Object_Goods_View.GoodsName               AS GoodsName
                , Object_Goods_View.GoodsGroupName          AS GoodsGroupName
                , Object_Goods_View.NDSKindName             AS NDSKindName
+               , Object_Goods_View.NDS                     AS NDS
                , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
                , Object_Goods_View.isTop                   AS Goods_isTop
                , Object_Goods_View.PercentMarkup           AS Goods_PercentMarkup
@@ -516,6 +519,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».  ¬ÓÓ·Í‡ÎÓ ¿.¿. 
+ 05.01.18         *
  12.06.17         *
  12.11.17         *
  04.07.16         *

@@ -114,6 +114,9 @@ type
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     FormParams: TdsdFormParams;
+    StartBegin: TcxGridDBColumn;
+    EndBegin: TcxGridDBColumn;
+    diffBegin_sec: TcxGridDBColumn;
   private
   public
   end;

@@ -133,7 +133,7 @@ BEGIN
                , Object_CountryBrand.ValueData  AS CountryBrandName
                , zfFormat_BarCode (zc_BarCodePref_Object(), tmpGoodsPrint.PartionId) AS IdBarCode
     
-               , Object_PartionGoods.PriceSale  :: TFloat AS OperPriceList
+               , Object_PartionGoods.OperPriceList :: TFloat AS OperPriceList
     
                , (SUBSTR ((Object_PartionGoods.PeriodYear :: Integer) :: TVarChar, 3, 1)
                || CASE WHEN Object_Period.ObjectCode = 1 THEN 'L' ELSE 'Z' END

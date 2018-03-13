@@ -1,6 +1,5 @@
 -- Function: gpInsertUpdate_MovementItem_Sale()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
@@ -51,8 +50,11 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
 
+
      -- при сканировании вызывается лишний раз
-     IF COALESCE (ioId, 0) = 0 AND COALESCE (inBarCode, '') = '' THEN
+     IF COALESCE (ioId, 0) = 0 AND COALESCE (inBarCode, '') = '' And COALESCE (inPartionId, 0) = 0
+        AND vbUserId <> zc_User_Sybase() 
+     THEN
         RETURN;
      END IF;
      
@@ -63,6 +65,13 @@ BEGIN
      -- проверка - свойство должно быть установлено
      IF COALESCE (inPartionId, 0) = 0 THEN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Партия>.';
+     END IF;
+
+
+     -- !!!временно - для Sybase!!!
+     IF vbUserId = zc_User_Sybase() AND EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.Id = ioId AND MovementItem.isErased = TRUE)
+     THEN
+         RETURN;
      END IF;
 
 
@@ -115,10 +124,10 @@ BEGIN
 
 
      -- Если НЕ Базовая Валюта
-     IF vbCurrencyId <> zc_Currency_Basis()
+     IF COALESCE (vbCurrencyId, 0) <> zc_Currency_Basis()
      THEN
          -- Определили курс на Дату документа
-         SELECT COALESCE (tmp.Amount, 1), COALESCE (tmp.ParValue, 0)
+         SELECT COALESCE (tmp.Amount, 0), COALESCE (tmp.ParValue, 0)
                 INTO outCurrencyValue, outParValue
          FROM lfSelect_Movement_Currency_byDate (inOperDate      := vbOperDate
                                                , inCurrencyFromId:= zc_Currency_Basis()
@@ -149,6 +158,10 @@ BEGIN
      THEN
          -- !!!для SYBASE - потом убрать!!!
          IF 1=0 THEN RAISE EXCEPTION 'Ошибка.Параметр только для загрузки из Sybase.'; END IF;
+         -- !!!для SYBASE - потом убрать!!!
+         IF EXISTS (SELECT 1 FROM Object WHERE Object.Id = vbUnitId AND Object.ValueData = 'магазин Chado-Outlet')
+         THEN ioDiscountSaleKindId:= zc_Enum_DiscountSaleKind_Outlet();
+         END IF;
 
      ELSE
          -- расчет
@@ -196,6 +209,35 @@ BEGIN
      outTotalSummDebt := COALESCE (outTotalSummToPay, 0) - COALESCE (outTotalPay, 0) ;
 
 
+    -- !!!для SYBASE - потом убрать!!!
+    /*IF vbUserId = zc_User_Sybase() AND ioId > 0 AND inIsPay = FALSE
+    THEN PERFORM gpInsertUpdate_MI_Sale_Child(
+                       inMovementId            := inMovementId
+                     , inParentId              := ioId
+                     , inAmountGRN             := 0
+                     , inAmountUSD             := 0
+                     , inAmountEUR             := 0
+                     , inAmountCard            := 0
+                     , inAmountDiscount        := 0
+                     , inCurrencyValueUSD      := 0
+                     , inParValueUSD           := 0
+                     , inCurrencyValueEUR      := 0
+                     , inParValueEUR           := 0
+                     , inSession               := inSession
+                 );
+        -- в мастер записать - Дополнительная скидка в продаже ГРН - т.к. могли обнулить
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), ioId, COALESCE (ioSummChangePercent, 0));
+
+        -- в мастер записать - Итого оплата в продаже ГРН
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), ioId, 0);
+
+        -- пересчитали Итоговые суммы по накладной
+        PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+
+    END IF;*/
+
+
+
      -- сохранили
      ioId:= lpInsertUpdate_MovementItem_Sale   (ioId                    := ioId
                                               , inMovementId            := inMovementId
@@ -227,6 +269,7 @@ BEGIN
                                               , inUserId                := vbUserId
                                                );
 
+    
     -- !!!для SYBASE - потом убрать!!!
     IF vbUserId = zc_User_Sybase() AND inIsPay = FALSE
     THEN
@@ -261,7 +304,7 @@ BEGIN
         IF COALESCE (vbCashId, 0) = 0 THEN
           -- Для Sybase - ВРЕМЕННО
           IF vbUserId = zc_User_Sybase() 
-          THEN vbCashId:= 4219;
+          THEN vbCashId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Cash() AND Object.ObjectCode = 1);
           ELSE RAISE EXCEPTION 'Ошибка.Для магазина <%> Не установлено значение <Касса> в грн. (%)', lfGet_Object_ValueData (vbUnitId), vbUnitId;
           END IF;
         END IF;

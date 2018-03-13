@@ -16,6 +16,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract
      (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TDateTime, TDateTime, Tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract 
      (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract 
+     (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Договор>
@@ -32,6 +34,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inOrderSummComment        TVarChar  ,    -- Примечание к минимальной сумме для заказа
     IN inOrderTime               TVarChar  ,    -- информативно - максимальное время отправки
     IN inComment                 TVarChar  ,    -- примечание
+    IN inSigningDate             TDateTime,     -- Дата подписания договора
     IN inStartDate               TDateTime,     -- Дата с которой действует договор
     IN inEndDate                 TDateTime,     -- Дата до которой действует договор    
     IN inSession                 TVarChar       -- сессия пользователя
@@ -51,7 +54,7 @@ BEGIN
    -- !!! IF COALESCE (inCode, 0) = 0  THEN vbCode_calc := NULL; ELSE vbCode_calc := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
    
    -- проверка уникальности <Наименование>
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Contract(), inName);
+   -- PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Contract(), inName);
    -- проверка уникальности <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Contract(), vbCode_calc);
 
@@ -76,7 +79,8 @@ BEGIN
    -- сохранили свойство <минимальная сумма для заказа>
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Contract_OrderSumm(), ioId, inOrderSumm);
    
-   
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_Signing(), ioId, inSigningDate);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_Start(), ioId, inStartDate);
    -- сохранили свойство <>
@@ -99,6 +103,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.02.18         *
  08.08.17         *
  03.05.17         * add BankAccountId
  16.03.17         * inPercentSP

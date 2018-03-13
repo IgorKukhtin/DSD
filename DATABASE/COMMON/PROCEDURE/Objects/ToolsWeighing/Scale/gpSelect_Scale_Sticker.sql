@@ -13,15 +13,21 @@ CREATE OR REPLACE FUNCTION gpSelect_Scale_Sticker(
     IN inBranchCode            Integer,      --
     IN inSession               TVarChar      -- сессия пользователя
 )
-RETURNS TABLE (GoodsGroupNameFull TVarChar
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (Id Integer
+             , GoodsGroupNameFull TVarChar
+             , TradeMarkName_goods TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsName_original TVarChar
              , MeasureId Integer, MeasureName TVarChar
                -- на самом деле здесь StickerPack
              , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar
                -- а здесь GoodsKindId - из StickerProperty
              , GoodsKindId_complete Integer, GoodsKindCode_complete Integer, GoodsKindName_complete TVarChar
+               -- Сортность
+             , StickerSortName TVarChar
                -- Оболочка
              , StickerSkinName TVarChar
+               -- название файла fr3 в БАЗЕ
+             , StickerFileName TVarChar
                -- сколько уже прошло в печати
              , Count_begin TFloat
               )
@@ -42,9 +48,10 @@ BEGIN
                                                                 , zc_Enum_InfoMoney_30201() -- Доходы + Мясное сырье
                                                                  )
                             )
-              , tmpGoods AS (SELECT Object_Goods.Id                               AS GoodsId
-                                  , Object_Goods.ObjectCode                       AS GoodsCode
-                                  , Object_Goods.ValueData                        AS GoodsName
+              , tmpGoods AS (SELECT Object_Goods.Id                          AS GoodsId
+                                  , Object_Goods.ObjectCode                  AS GoodsCode
+                                  , Object_Goods.ValueData                   AS GoodsName
+                                  , Object_TradeMark_Goods.ValueData         AS TradeMarkName_goods
                                   , tmpInfoMoney.InfoMoneyId
                                   , tmpInfoMoney.InfoMoneyDestinationId
                              FROM tmpInfoMoney
@@ -54,6 +61,10 @@ BEGIN
                                   JOIN Object AS Object_Goods ON Object_Goods.Id         = ObjectLink_Goods_InfoMoney.ObjectId
                                                              AND Object_Goods.isErased   = FALSE
                                                              AND Object_Goods.ObjectCode <> 0
+                                  LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                                       ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id
+                                                      AND ObjectLink_Goods_TradeMark.DescId   = zc_ObjectLink_Goods_TradeMark()
+                                  LEFT JOIN Object AS Object_TradeMark_Goods ON Object_TradeMark_Goods.Id = ObjectLink_Goods_TradeMark.ChildObjectId
                             )
         , tmpMI_Weighing AS (SELECT MovementItem.ObjectId                         AS GoodsId
                                   , SUM (COALESCE (MIFloat_Count.ValueData, 0))   AS Count_begin
@@ -72,18 +83,45 @@ BEGIN
                              GROUP BY MovementItem.ObjectId
                                     , MILinkObject_GoodsKind.ObjectId
                             )
-            , tmpSticker AS (SELECT ObjectLink_Sticker_Goods.ChildObjectId AS GoodsId
-                                    -- заменяем Вид пакування -> Вид товара 
+              -- Шаблоны "по умолчанию" - для конкретной ТМ
+            , tmpStickerFile AS (SELECT Object_StickerFile.Id                          AS StickerFileId
+                                                        , ObjectLink_StickerFile_TradeMark.ChildObjectId AS TradeMarkId
+                                 FROM Object AS Object_StickerFile
+                                      LEFT JOIN ObjectLink AS ObjectLink_StickerFile_Juridical
+                                                           ON ObjectLink_StickerFile_Juridical.ObjectId = Object_StickerFile.Id
+                                                          AND ObjectLink_StickerFile_Juridical.DescId   = zc_ObjectLink_StickerFile_Juridical()
+                                      INNER JOIN ObjectLink AS ObjectLink_StickerFile_TradeMark
+                                                            ON ObjectLink_StickerFile_TradeMark.ObjectId = Object_StickerFile.Id
+                                                           AND ObjectLink_StickerFile_TradeMark.DescId = zc_ObjectLink_StickerFile_TradeMark()
+
+                                      INNER JOIN ObjectBoolean AS ObjectBoolean_Default
+                                                               ON ObjectBoolean_Default.ObjectId  = Object_StickerFile.Id
+                                                              AND ObjectBoolean_Default.DescId    = zc_ObjectBoolean_StickerFile_Default()
+                                                              AND ObjectBoolean_Default.ValueData = TRUE
+
+                                 WHERE Object_StickerFile.DescId   = zc_Object_StickerFile()
+                                   AND Object_StickerFile.isErased = FALSE
+                                   AND ObjectLink_StickerFile_Juridical.ChildObjectId IS NULL -- !!!обязательно БЕЗ Покупателя!!!
+                                )
+            , tmpSticker AS (SELECT Object_StickerProperty.Id
+                                  , ObjectLink_Sticker_Goods.ChildObjectId   AS GoodsId
+                                  , Object_StickerGroup.ValueData            AS StickerGroupName
+                                  , Object_StickerType.ValueData             AS StickerTypeName
+                                  , Object_StickerTag.ValueData              AS StickerTagName
+                                  , Object_StickerSort.ValueData             AS StickerSortName
+                                    -- заменяем Вид пакування -> Вид товара
                                   , Object_StickerPack.Id         AS GoodsKindId
                                   , Object_StickerPack.ObjectCode AS GoodsKindCode
                                   , Object_StickerPack.ValueData  AS GoodsKindName
-                                    -- Вид товара 
+                                    -- Вид товара
                                   , Object_GoodsKind.Id           AS GoodsKindId_complete
                                   , Object_GoodsKind.ObjectCode   AS GoodsKindCode_complete
                                   , Object_GoodsKind.ValueData    AS GoodsKindName_complete
                                     -- Оболочка
                                   , Object_StickerSkin.ValueData  AS StickerSkinName
-                                  
+                                    -- название файла fr3 в БАЗЕ
+                                  , Object_StickerFile.ValueData  AS StickerFileName
+
                              FROM Object AS Object_StickerProperty
                                   -- Свойства этикетки
                                   -- Вид товара
@@ -108,19 +146,67 @@ BEGIN
                                   LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_Sticker
                                                        ON ObjectLink_StickerProperty_Sticker.ObjectId = Object_StickerProperty.Id
                                                       AND ObjectLink_StickerProperty_Sticker.DescId = zc_ObjectLink_StickerProperty_Sticker()
+                                  INNER JOIN Object AS Object_Sticker ON Object_Sticker.Id       = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                                                     AND Object_Sticker.isErased = FALSE
 
-                                 LEFT JOIN ObjectLink AS ObjectLink_Sticker_Goods
-                                                      ON ObjectLink_Sticker_Goods.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
-                                                     AND ObjectLink_Sticker_Goods.DescId = zc_ObjectLink_Sticker_Goods()
+                                  -- Товар
+                                  LEFT JOIN ObjectLink AS ObjectLink_Sticker_Goods
+                                                       ON ObjectLink_Sticker_Goods.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                                      AND ObjectLink_Sticker_Goods.DescId   = zc_ObjectLink_Sticker_Goods()
+
+                                  -- Вид продукта (Группа)
+                                  LEFT JOIN ObjectLink AS ObjectLink_Sticker_StickerGroup
+                                                       ON ObjectLink_Sticker_StickerGroup.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                                      AND ObjectLink_Sticker_StickerGroup.DescId   = zc_ObjectLink_Sticker_StickerGroup()
+                                  LEFT JOIN Object AS Object_StickerGroup ON Object_StickerGroup.Id = ObjectLink_Sticker_StickerGroup.ChildObjectId
+                                  -- Способ изготовления продукта
+                                  LEFT JOIN ObjectLink AS ObjectLink_Sticker_StickerType
+                                                       ON ObjectLink_Sticker_StickerType.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                                      AND ObjectLink_Sticker_StickerType.DescId   = zc_ObjectLink_Sticker_StickerType()
+                                  LEFT JOIN Object AS Object_StickerType ON Object_StickerType.Id = ObjectLink_Sticker_StickerType.ChildObjectId
+                                  -- Название продукта
+                                  LEFT JOIN ObjectLink AS ObjectLink_Sticker_StickerTag
+                                                       ON ObjectLink_Sticker_StickerTag.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                                      AND ObjectLink_Sticker_StickerTag.DescId   = zc_ObjectLink_Sticker_StickerTag()
+                                  LEFT JOIN Object AS Object_StickerTag ON Object_StickerTag.Id = ObjectLink_Sticker_StickerTag.ChildObjectId
+                                  -- Название продукта
+                                  LEFT JOIN ObjectLink AS ObjectLink_Sticker_StickerSort
+                                                       ON ObjectLink_Sticker_StickerSort.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                                      AND ObjectLink_Sticker_StickerSort.DescId   = zc_ObjectLink_Sticker_StickerSort()
+                                  LEFT JOIN Object AS Object_StickerSort ON Object_StickerSort.Id = ObjectLink_Sticker_StickerSort.ChildObjectId
+
+                                  -- Печать - индивидуальный - Свойства этикетки
+                                  LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_StickerFile
+                                                       ON ObjectLink_StickerProperty_StickerFile.ObjectId = Object_StickerProperty.Id
+                                                      AND ObjectLink_StickerProperty_StickerFile.DescId   = zc_ObjectLink_StickerProperty_StickerFile()
+
+                                  -- Печать - индивидуальный - Этикетка
+                                  LEFT JOIN ObjectLink AS ObjectLink_Sticker_StickerFile
+                                                       ON ObjectLink_Sticker_StickerFile.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                                      AND ObjectLink_Sticker_StickerFile.DescId = zc_ObjectLink_Sticker_StickerFile()
+
+                                  LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                                       ON ObjectLink_Goods_TradeMark.ObjectId = ObjectLink_Sticker_Goods.ChildObjectId
+                                                      AND ObjectLink_Goods_TradeMark.DescId   = zc_ObjectLink_Goods_TradeMark()
+                                  -- Печать - "по умолчанию" - для конкретной ТМ
+                                  LEFT JOIN tmpStickerFile ON tmpStickerFile.TradeMarkId = ObjectLink_Goods_TradeMark.ChildObjectId
+
+                                  LEFT JOIN Object AS Object_StickerFile ON Object_StickerFile.Id = COALESCE (ObjectLink_StickerProperty_StickerFile.ChildObjectId, COALESCE (ObjectLink_Sticker_StickerFile.ChildObjectId, tmpStickerFile.StickerFileId))
 
                              WHERE Object_StickerProperty.DescId   = zc_Object_StickerProperty()
                                AND Object_StickerProperty.isErased = FALSE
                             )
        -- Результат - по заявке
-       SELECT ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+       SELECT tmpSticker.Id
+            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+            , tmpGoods.TradeMarkName_goods
             , tmpGoods.GoodsId
             , tmpGoods.GoodsCode
-            , tmpGoods.GoodsName
+            , CASE WHEN tmpSticker.StickerGroupName <> '' OR tmpSticker.StickerTypeName <> '' OR  tmpSticker.StickerTagName <> ''
+                        THEN COALESCE (tmpSticker.StickerGroupName, '' ) || ' ' || COALESCE (tmpSticker.StickerTypeName, '') || ' ' || COALESCE (tmpSticker.StickerTagName, '')
+                   ELSE tmpGoods.GoodsName
+              END :: TVarChar AS GoodsName
+            , tmpGoods.GoodsName       AS GoodsName_original
             , Object_Measure.Id        AS MeasureId
             , Object_Measure.ValueData AS MeasureName
 
@@ -131,12 +217,16 @@ BEGIN
             , tmpSticker.GoodsKindCode_complete
             , tmpSticker.GoodsKindName_complete
 
+            , tmpSticker.StickerSortName
             , tmpSticker.StickerSkinName
+
+              -- название файла fr3 в БАЗЕ
+            , (tmpSticker.StickerFileName || '.Sticker') :: TVarChar AS StickerFileName
 
             , tmpMI_Weighing.Count_begin :: TFloat AS Count_begin
 
        FROM tmpGoods
-            LEFT JOIN tmpSticker ON tmpSticker.GoodsId = tmpGoods.GoodsId
+            INNER JOIN tmpSticker ON tmpSticker.GoodsId = tmpGoods.GoodsId
             LEFT JOIN tmpMI_Weighing ON tmpMI_Weighing.GoodsId     = tmpSticker.GoodsId
                                     AND tmpMI_Weighing.GoodsKindId = tmpSticker.GoodsKindId
 
@@ -153,7 +243,9 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-       ORDER BY tmpGoods.GoodsName
+       ORDER BY COALESCE (tmpSticker.StickerGroupName, '' ) || ' ' || COALESCE (tmpSticker.StickerTypeName, '') || ' ' || COALESCE (tmpSticker.StickerTagName, '')
+              , tmpGoods.GoodsName
+              , tmpSticker.GoodsKindCode
               , tmpSticker.GoodsKindName
               -- , ObjectString_Goods_GoodsGroupFull.ValueData
       ;

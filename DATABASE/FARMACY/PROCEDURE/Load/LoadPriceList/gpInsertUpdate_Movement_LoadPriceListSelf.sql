@@ -30,20 +30,19 @@ BEGIN
     (SELECT Id FROM LoadPriceList WHERE JuridicalId = inJuridicalId 
                                     AND OperDate < CURRENT_DATE);
    
-  SELECT Id INTO vbLoadPriceListId 
-    FROM LoadPriceList
-   WHERE JuridicalId = inJuridicalId AND OperDate = Current_Date;
+  -- Поиск "шапки" за "сегодня"
+  vbLoadPriceListId := (SELECT LoadPriceList.Id FROM LoadPriceList WHERE JuridicalId = inJuridicalId AND OperDate = CURRENT_DATE);
 
   IF COALESCE(vbLoadPriceListId, 0) = 0 THEN
      INSERT INTO LoadPriceList (JuridicalId, ContractId, OperDate, NDSinPrice, UserId_Insert, Date_Insert)
              VALUES(inJuridicalId, NULL, Current_Date, True, vbUserId, CURRENT_TIMESTAMP);
   ELSE
-     UPDATE LoadPriceList SET UserId_Insert = vbUserId, Date_Insert = CURRENT_TIMESTAMP WHERE Id = vbLoadPriceListId;
+     UPDATE LoadPriceList SET UserId_Insert = vbUserId, Date_Update /*Date_Insert*/ = CURRENT_TIMESTAMP WHERE Id = vbLoadPriceListId;
   END IF;
 
-  SELECT Id INTO vbLoadPriceListItemsId 
-    FROM LoadPriceListItem 
-   WHERE LoadPriceListId = vbLoadPriceListId AND GoodsCode = inGoodsCode::TVarChar;
+
+   -- Поиск "элемента"
+   SELECT Id INTO vbLoadPriceListItemsId FROM LoadPriceListItem WHERE LoadPriceListId = vbLoadPriceListId AND GoodsCode = inGoodsCode :: TVarChar;
 
    IF COALESCE(vbLoadPriceListItemsId, 0) = 0 THEN
       INSERT INTO LoadPriceListItem (LoadPriceListId, CommonCode, BarCode, GoodsCode, GoodsName, GoodsNDS, GoodsId, Price, ExpirationDate, PackCount, ProducerName, Remains)

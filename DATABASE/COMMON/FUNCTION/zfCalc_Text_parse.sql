@@ -4,12 +4,18 @@ DROP FUNCTION IF EXISTS zfCalc_Text_parse (Text);
 DROP FUNCTION IF EXISTS zfCalc_Text_parse (Integer, Text);
 DROP FUNCTION IF EXISTS zfCalc_Text_parse (Integer, Text, Boolean);
 DROP FUNCTION IF EXISTS zfCalc_Text_parse (Integer, Text, Boolean, Boolean);
+DROP FUNCTION IF EXISTS zfCalc_Text_parse (Integer, Integer, Text, Boolean, Boolean);
+DROP FUNCTION IF EXISTS zfCalc_Text_parse (Integer, Integer, Integer, Text, Boolean, Boolean);
+DROP FUNCTION IF EXISTS zfCalc_Text_parse (Integer, Integer, Integer, Integer, Text, Boolean, Boolean);
 
 CREATE OR REPLACE FUNCTION zfCalc_Text_parse(
-    IN inTradeMarkId Integer,
-    IN inValue       Text,
-    IN inIsLength    Boolean,
-    IN inIsLimit     Boolean
+    IN inStickerFileId Integer,
+    IN inTradeMarkId   Integer,
+    IN inAddLeft       Integer, -- Сколько пробелов добавим слева, т.е. это когда слева - Фирменный знак
+    IN inAddLine       Integer, -- Был Ли перевод в несколько строк для Level1 или Level2, тогда по следующим строкам НУЖЕН сдвиг
+    IN inValue         Text,
+    IN inIsLength      Boolean,
+    IN inIsLimit       Boolean  -- т.к. Раньше УМОВИ ... были в 8-ой строке, НУЖЕН был сдвиг вниз, т.е. в Info добавлялись пустые строки
 )
 RETURNS Text
 AS
@@ -35,7 +41,74 @@ $BODY$
    
 BEGIN
 
-    IF inTradeMarkId = 293382 -- select * from object where Id = 293382
+       SELECT CASE WHEN ObjectFloat_Width1.ValueData > 0  THEN ObjectFloat_Width1.ValueData  :: Integer ELSE 1000 END AS Width1
+            , CASE WHEN ObjectFloat_Width2.ValueData > 0  THEN ObjectFloat_Width2.ValueData  :: Integer ELSE 1000 END AS Width2
+            , CASE WHEN ObjectFloat_Width3.ValueData > 0  THEN ObjectFloat_Width3.ValueData  :: Integer ELSE 1000 END AS Width3
+            , CASE WHEN ObjectFloat_Width4.ValueData > 0  THEN ObjectFloat_Width4.ValueData  :: Integer ELSE 1000 END AS Width4
+            , CASE WHEN ObjectFloat_Width5.ValueData > 0  THEN ObjectFloat_Width5.ValueData  :: Integer ELSE 1000 END AS Width5
+            , CASE WHEN ObjectFloat_Width6.ValueData > 0  THEN ObjectFloat_Width6.ValueData  :: Integer ELSE 1000 END AS Width6
+            , CASE WHEN ObjectFloat_Width7.ValueData > 0  THEN ObjectFloat_Width7.ValueData  :: Integer ELSE 1000 END AS Width7
+            , CASE WHEN ObjectFloat_Width8.ValueData > 0  THEN ObjectFloat_Width8.ValueData  :: Integer ELSE 1000 END AS Width8
+            , CASE WHEN ObjectFloat_Width9.ValueData > 0  THEN ObjectFloat_Width9.ValueData  :: Integer ELSE 1000 END AS Width9
+            , CASE WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer ELSE 1000 END AS Width10
+              INTO vbLen1
+                 , vbLen2
+                 , vbLen3
+                 , vbLen4
+                 , vbLen5
+                 , vbLen6
+                 , vbLen7
+                 , vbLen8
+                 , vbLen9
+                 , vbLen10
+       FROM Object AS Object_StickerFile
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width1
+                                  ON ObjectFloat_Width1.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width1.DescId = zc_ObjectFloat_StickerFile_Width1()
+                                 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width2
+                                  ON ObjectFloat_Width2.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width2.DescId = zc_ObjectFloat_StickerFile_Width2()
+ 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width3
+                                  ON ObjectFloat_Width3.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width3.DescId = zc_ObjectFloat_StickerFile_Width3()
+ 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width4
+                                  ON ObjectFloat_Width4.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width4.DescId = zc_ObjectFloat_StickerFile_Width4()
+ 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width5
+                                  ON ObjectFloat_Width5.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width5.DescId = zc_ObjectFloat_StickerFile_Width5()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width6
+                                  ON ObjectFloat_Width6.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width6.DescId = zc_ObjectFloat_StickerFile_Width6()
+ 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width7
+                                  ON ObjectFloat_Width7.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width7.DescId = zc_ObjectFloat_StickerFile_Width7()
+ 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width8
+                                  ON ObjectFloat_Width8.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width8.DescId = zc_ObjectFloat_StickerFile_Width8()
+ 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width9
+                                  ON ObjectFloat_Width9.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width9.DescId = zc_ObjectFloat_StickerFile_Width9()
+ 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width10
+                                  ON ObjectFloat_Width10.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width10.DescId = zc_ObjectFloat_StickerFile_Width10() 
+       WHERE Object_StickerFile.Id     = inStickerFileId
+         AND Object_StickerFile.DescId = zc_Object_StickerFile()
+         ;
+
+
+    -- RAISE EXCEPTION '<%>', inTradeMarkId;
+
+    IF COALESCE (vbLen1, 1000) = 1000 AND inTradeMarkId = 293382 -- select * from object where Id = 293382
     THEN
          -- тм СПЕЦ ЦЕХ
          vbLen1  := 40;
@@ -49,21 +122,21 @@ BEGIN
          vbLen9  := 1000;
          vbLen10 := 1000;
 
-    ELSEIF inTradeMarkId = 293383 -- select * from object where Id = 293383
+    ELSEIF COALESCE (vbLen1, 1000) = 1000 AND inTradeMarkId = 293383 -- select * from object where Id = 293383
     THEN
          -- тм ВАРТО (Варус)
          vbLen1  := 40;
          vbLen2  := 50;
          vbLen3  := 50;
-         vbLen4  := 50;
-         vbLen5  := 50;
-         vbLen6  := 50;
+         vbLen4  := 57;
+         vbLen5  := 62;
+         vbLen6  := 1000;
          vbLen7  := 1000;
          vbLen8  := 1000;
          vbLen9  := 1000;
          vbLen10 := 1000;
 
-    ELSEIF inTradeMarkId = 293384 -- select * from object where Id = 293384
+    ELSEIF COALESCE (vbLen1, 1000) = 1000 AND inTradeMarkId = 293384 -- select * from object where Id = 293384
     THEN
          -- тм НАШИ КОВБАСИ
          vbLen1  := 40;
@@ -77,16 +150,59 @@ BEGIN
          vbLen9  := 1000;
          vbLen10 := 1000;
 
-    ELSE
+    ELSEIF COALESCE (vbLen1, 1000) = 1000 AND inTradeMarkId = 340617 -- select * from object where Id = 340617
+    THEN
+         -- тм Повна Чаша (Фоззи)
+         vbLen1  := 50;
+         vbLen2  := 50;
+         vbLen3  := 50;
+         vbLen4  := 50;
+         vbLen5  := 50;
+         vbLen6  := 1000;
+         vbLen7  := 1000;
+         vbLen8  := 1000;
+         vbLen9  := 1000;
+         vbLen10 := 1000;
+
+    ELSEIF COALESCE (vbLen1, 1000) = 1000 AND inTradeMarkId = 340618 -- select * from object where Id = 340617
+    THEN
+         -- тм Премія (Фоззи)
+         vbLen1  := 35;
+         vbLen2  := 35;
+         vbLen3  := 35;
+         vbLen4  := 35;
+         vbLen5  := 35;
+         vbLen6  := 1000;
+         vbLen7  := 1000;
+         vbLen8  := 1000;
+         vbLen9  := 1000;
+         vbLen10 := 1000;
+
+    ELSEIF COALESCE (vbLen1, 1000) = 1000 AND inTradeMarkId = 342992 -- select * from object where Id = 342992
+    THEN
+         -- тм Ашан
+         vbLen1  := 40;
+         vbLen2  := 1000;
+         vbLen3  := 1000;
+         vbLen4  := 1000;
+         vbLen5  := 1000;
+         vbLen6  := 1000;
+         vbLen7  := 1000;
+         vbLen8  := 1000;
+         vbLen9  := 1000;
+         vbLen10 := 1000;
+
+    ELSEIF COALESCE (vbLen1, 1000) = 1000
+    THEN
          -- тм АЛАН
          vbLen1  := 40;
          vbLen2  := 48;
-         vbLen3  := 47;
-         vbLen4  := 47;
+         vbLen3  := 43;
+         vbLen4  := 43;
          vbLen5  := 47;
-         vbLen6  := 52;
-         vbLen7  := 51;
-         vbLen8  := 60;
+         vbLen6  := 47;
+         vbLen7  := 47;
+         vbLen8  := 50;
          vbLen9  := 1000;
          vbLen10 := 1000;
 
@@ -98,11 +214,11 @@ BEGIN
     vbResult:= '';
 
     -- старт
-    WHILE vbIndex < LENGTH (inValue) OR (vbLine <= 8 AND inTradeMarkId = 293385 AND inIsLimit = TRUE) -- тм АЛАН -- select * from object where Id = 293385
-                                     OR (vbLine <= 7 AND inTradeMarkId = 293385) -- тм АЛАН -- select * from object where Id = 293385
+    WHILE vbIndex < LENGTH (inValue) -- OR (vbLine <= 8 AND inTradeMarkId = 293385 AND inIsLimit = TRUE) -- тм АЛАН -- select * from object where Id = 293385
+                                     -- OR (vbLine <= 7 AND inTradeMarkId = 293385) -- тм АЛАН -- select * from object where Id = 293385
     LOOP
        --
-       vbLen:= CASE vbLine
+       vbLen:= CASE vbLine + inAddLine
                     WHEN 1  THEN vbLen1
                     WHEN 2  THEN vbLen2
                     WHEN 3  THEN vbLen3
@@ -131,7 +247,7 @@ BEGIN
        WHILE vbI <= vbLen
        LOOP
 
-           IF SUBSTRING (inValue FROM vbIndex + 1 + vbI FOR 1) IN (' ', '.', ',', '-', '/', '(', ')')
+           IF SUBSTRING (inValue FROM vbIndex + 1 + vbI FOR 1) IN (' ', '.', ',', '-', '/', ':') -- , '(', ')'
            THEN vbI_save:= vbI + 1;
            END IF;
 
@@ -145,8 +261,9 @@ BEGIN
 
        vbResult:= vbResult
                || CASE WHEN vbLine = 1 THEN '' ELSE CHR (13) END
+               || CASE WHEN vbLen < 1000 THEN REPEAT (' ', inAddLeft) ELSE '' END
                || TRIM (SUBSTRING (inValue FROM vbIndex + 1 FOR vbLen))
-               || CASE WHEN inIsLength = TRUE THEN ' ' || LENGTH ( TRIM (SUBSTRING (inValue FROM vbIndex + 1 FOR vbLen))) :: TVarChar || '-' || vbLine :: TVarChar ELSE '' END
+               || CASE WHEN inIsLength = TRUE THEN ' ' || LENGTH ( TRIM (SUBSTRING (inValue FROM vbIndex + 1 FOR vbLen))) :: TVarChar || '-' || (vbLine + inAddLine) :: TVarChar ELSE '' END
                -- || CASE WHEN inIsLength = TRUE THEN '*' || (vbIndex + vbLen) :: TVarChar || '*' || LENGTH (inValue) :: TVarChar ELSE '' END
                  ;
 
@@ -170,4 +287,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM zfCalc_Text_parse (inTradeMarkId:= 1, inValue:= 'asdsadasdasdasdasdasdasdasdasdasd', inIsLength:= TRUE, inIsLimit:= TRUE)
+-- SELECT * FROM zfCalc_Text_parse (inStickerFileId:= 0, inTradeMarkId:= 1, inAddLeft:= 0, inAddLine:= 0, inValue:= 'asdsadasdasdasdasdasdasdasdasdasd', inIsLength:= TRUE, inIsLimit:= TRUE)

@@ -302,9 +302,9 @@ object IncomeForm: TIncomeForm
           OptionsBehavior.GoToNextCellOnEnter = True
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsData.Appending = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
           OptionsView.HeaderAutoHeight = True
@@ -319,7 +319,7 @@ object IncomeForm: TIncomeForm
             Width = 150
           end
           object LabelName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074' '#1094#1077#1085#1085#1080#1082#1077
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'LabelName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -335,7 +335,7 @@ object IncomeForm: TIncomeForm
             Width = 50
           end
           object Name: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            Caption = #1040#1088#1090#1080#1082#1091#1083
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -394,6 +394,7 @@ object IncomeForm: TIncomeForm
           object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -657,7 +658,7 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenReportForm'
+          ItemName = 'bbReport_Goods'
         end
         item
           Visible = True
@@ -827,8 +828,12 @@ object IncomeForm: TIncomeForm
       Action = actPrintSticker
       Category = 0
     end
-    object bbOpenReportForm: TdxBarButton
-      Action = actOpenReportForm
+    object bbReport_Goods: TdxBarButton
+      Action = actReport_Goods
+      Category = 0
+    end
+    object bbPrintInSecond: TdxBarButton
+      Action = actPrintInSecond
       Category = 0
     end
   end
@@ -909,10 +914,10 @@ object IncomeForm: TIncomeForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateMIMaster
+      StoredProc = spUpdateMIMaster
       StoredProcList = <
         item
-          StoredProc = spInsertUpdateMIMaster
+          StoredProc = spUpdateMIMaster
         end
         item
           StoredProc = spGetTotalSumm
@@ -1010,9 +1015,73 @@ object IncomeForm: TIncomeForm
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isOperPrice'
+          Value = 'False'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_Income'
       ReportNameParam.Value = 'PrintMovement_Income'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintInSecond: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1074#1093'.'#1094#1077#1085#1072#1084' (2)'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1074#1093'.'#1094#1077#1085#1072#1084' (2)'
+      ImageIndex = 21
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 'GoodsCode;GoodsSizeName'
+        end>
+      Params = <
+        item
+          Name = 'InvNumber'
+          Value = ''
+          Component = edInvNumber
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'From'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = 42160d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isSecond'
+          Value = 'TRUE'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_IncomeIn'
+      ReportNameParam.Value = 'PrintMovement_IncomeIn'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end
@@ -1024,8 +1093,8 @@ object IncomeForm: TIncomeForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1074#1093'.'#1094#1077#1085#1072#1084
-      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1074#1093'.'#1094#1077#1085#1072#1084
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1074#1093'.'#1094#1077#1085#1072#1084' '#1074' '#1074#1072#1083#1102#1090#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1074#1093'.'#1094#1077#1085#1072#1084' '#1074' '#1074#1072#1083#1102#1090#1077
       ImageIndex = 16
       DataSets = <
         item
@@ -1059,9 +1128,16 @@ object IncomeForm: TIncomeForm
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isOperPrice'
+          Value = 'True'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_IncomeIn'
-      ReportNameParam.Value = 'PrintMovement_IncomeIn'
+      ReportName = 'PrintMovement_Income'
+      ReportNameParam.Value = 'PrintMovement_Income'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end
@@ -1441,9 +1517,8 @@ object IncomeForm: TIncomeForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ImageIndex = 0
-      ShortCut = 45
     end
-    object actOpenReportForm: TdsdOpenForm
+    object actReport_Goods: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>'
@@ -1592,8 +1667,8 @@ object IncomeForm: TIncomeForm
       Action = actRefresh
     end
   end
-  object spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Income'
+  object spUpdateMIMaster: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Income'
     DataSets = <>
     OutputType = otResult
     Params = <

@@ -13,6 +13,7 @@ RETURNS TABLE ( GoodsCode       Integer      --Код товара
               , GoodsName       TVarChar     --Наименование товара
               , MakerName       TVarChar     --Производитель
               , NDSKindName     TVarChar     --вид ндс
+              , NDS             TFloat
               , JuridicalName   TVarChar     --
               , DateMinPrice    TDateTime
               , DateMaxPrice    TDateTime
@@ -220,6 +221,7 @@ BEGIN
             , Object_Goods.ValueData                   AS GoodsName
             , ObjectString_Goods_Maker.ValueData       AS MakerName
             , Object_NDSKind.ValueData                 AS NDSKindName
+            , ObjectFloat_NDSKind_NDS.ValueData        AS NDS
             , Object_Juridical.ValueData               AS JuridicalName  -- поставщик цены сегодня
             
             , tmpData.DateMinPrice         ::TDateTime AS DateMinPrice
@@ -254,6 +256,10 @@ BEGIN
                             AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
         LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
 
+        LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                              ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
+                             AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId
         
         LEFT JOIN _tmpPromo ON _tmpPromo.MovementId_Promo = tmpData.MovementId_Promo
@@ -269,6 +275,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 07.01.18         *
  14.11.16         *
 */
 

@@ -632,10 +632,10 @@
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceContract
-    FormNameParam.Value = 'TContractChoiceForm'
+    FormNameParam.Value = 'TContract_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TContractChoiceForm'
+    FormName = 'TContract_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item

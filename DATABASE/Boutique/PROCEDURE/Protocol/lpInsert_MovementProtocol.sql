@@ -32,15 +32,23 @@ BEGIN
     FROM MovementFloat
          INNER JOIN MovementFloatDesc ON MovementFloatDesc.Id = MovementFloat.DescId
     WHERE MovementFloat.MovementId = inMovementId
+
    UNION
-    SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementDateDesc.ItemName) || '" FieldValue = "' || COALESCE (DATE (MovementDate.ValueData) :: TVarChar, 'NULL') || '"/>' AS FieldXML 
+    SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementDateDesc.ItemName)
+        || '" FieldValue = "' || COALESCE (CASE WHEN MovementDate.DescId IN (zc_MovementDate_Insert()
+                                                                           , zc_MovementDate_Update()
+                                                                            )
+                                                     THEN zfConvert_DateTimeShortToString (MovementDate.ValueData)
+                                                ELSE zfConvert_DateToString (MovementDate.ValueData)
+                                           END, 'NULL') || '"/>' AS FieldXML 
          , 3 AS GroupId
          , MovementDate.DescId
     FROM MovementDate
          INNER JOIN MovementDateDesc ON MovementDateDesc.Id = MovementDate.DescId
     WHERE MovementDate.MovementId = inMovementId
+
    UNION
-    SELECT '<Field FieldName = "' || zfStrToXmlStr (COALESCE (ObjectDesc.ItemName, MovementLinkObjectDesc.ItemName)) || '" FieldValue = "' || zfStrToXmlStr(COALESCE (Object.ValueData, 'NULL')) || '"/>' AS FieldXML 
+    SELECT '<Field FieldName = "' || zfStrToXmlStr (COALESCE (ObjectDesc.ItemName, MovementLinkObjectDesc.ItemName)) || '" FieldValue = "' || zfStrToXmlStr (CASE WHEN Object.ValueData = '' THEN Object.Id :: TVarChar ELSE COALESCE (Object.ValueData, 'NULL') END) || '"/>' AS FieldXML 
          , 4 AS GroupId
          , MovementLinkObject.DescId
     FROM MovementLinkObject
@@ -78,7 +86,7 @@ BEGIN
 
   -- Сохранили
   INSERT INTO MovementProtocol (MovementId, OperDate, UserId, ProtocolData, isInsert)
-                        VALUES (inMovementId, current_timestamp, inUserId, vbProtocolXML, inIsInsert);
+                        VALUES (inMovementId, CURRENT_TIMESTAMP, inUserId, vbProtocolXML, inIsInsert);
   
 END;           
 $BODY$

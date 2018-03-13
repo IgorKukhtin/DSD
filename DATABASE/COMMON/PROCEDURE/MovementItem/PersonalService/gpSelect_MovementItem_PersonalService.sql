@@ -18,7 +18,9 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , Amount TFloat, AmountToPay TFloat, AmountCash TFloat, SummService TFloat
              , SummCard TFloat, SummCardRecalc TFloat, SummCardSecond TFloat, SummCardSecondRecalc TFloat, SummCardSecondCash TFloat
-             , SummNalog TFloat, SummNalogRecalc TFloat, SummMinus TFloat, SummAdd TFloat
+             , SummNalog TFloat, SummNalogRecalc TFloat
+             , SummNalogRet TFloat, SummNalogRetRecalc TFloat
+             , SummMinus TFloat, SummAdd TFloat
              , SummHoliday TFloat, SummSocialIn TFloat, SummSocialAdd TFloat
              , SummChild TFloat, SummChildRecalc TFloat, SummMinusExt TFloat, SummMinusExtRecalc TFloat
              , SummTransport TFloat, SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
@@ -194,29 +196,31 @@ BEGIN
                              + COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)
                       END 
               ) :: TFloat AS AmountCash
-            , MIFloat_SummService.ValueData     AS SummService
-            , MIFloat_SummCard.ValueData        AS SummCard
-            , MIFloat_SummCardRecalc.ValueData  AS SummCardRecalc
+            , MIFloat_SummService.ValueData           AS SummService
+            , MIFloat_SummCard.ValueData              AS SummCard
+            , MIFloat_SummCardRecalc.ValueData        AS SummCardRecalc
             , MIFloat_SummCardSecond.ValueData        AS SummCardSecond
             , MIFloat_SummCardSecondRecalc.ValueData  AS SummCardSecondRecalc
             , MIFloat_SummCardSecondCash.ValueData    AS SummCardSecondCash
-            , MIFloat_SummNalog.ValueData       AS SummNalog
-            , MIFloat_SummNalogRecalc.ValueData AS SummNalogRecalc
-            , MIFloat_SummMinus.ValueData       AS SummMinus
-            , MIFloat_SummAdd.ValueData         AS SummAdd
-            , MIFloat_SummHoliday.ValueData     AS SummHoliday
-            , MIFloat_SummSocialIn.ValueData    AS SummSocialIn
-            , MIFloat_SummSocialAdd.ValueData   AS SummSocialAdd
-            , MIFloat_SummChild.ValueData       AS SummChild
-            , MIFloat_SummChildRecalc.ValueData    AS SummChildRecalc
-            , MIFloat_SummMinusExt.ValueData       AS SummMinusExt
-            , MIFloat_SummMinusExtRecalc.ValueData AS SummMinusExtRecalc
+            , MIFloat_SummNalog.ValueData             AS SummNalog
+            , MIFloat_SummNalogRecalc.ValueData       AS SummNalogRecalc
+            , MIFloat_SummNalogRet.ValueData          AS SummNalogRet
+            , MIFloat_SummNalogRetRecalc.ValueData    AS SummNalogRetRecalc
+            , MIFloat_SummMinus.ValueData             AS SummMinus
+            , MIFloat_SummAdd.ValueData               AS SummAdd
+            , MIFloat_SummHoliday.ValueData           AS SummHoliday
+            , MIFloat_SummSocialIn.ValueData          AS SummSocialIn
+            , MIFloat_SummSocialAdd.ValueData         AS SummSocialAdd
+            , MIFloat_SummChild.ValueData             AS SummChild
+            , MIFloat_SummChildRecalc.ValueData       AS SummChildRecalc
+            , MIFloat_SummMinusExt.ValueData          AS SummMinusExt
+            , MIFloat_SummMinusExtRecalc.ValueData    AS SummMinusExtRecalc
 
-            , MIFloat_SummTransport.ValueData        AS SummTransport
-            , MIFloat_SummTransportAdd.ValueData     AS SummTransportAdd
-            , MIFloat_SummTransportAddLong.ValueData AS SummTransportAddLong
-            , MIFloat_SummTransportTaxi.ValueData    AS SummTransportTaxi
-            , MIFloat_SummPhone.ValueData            AS SummPhone
+            , MIFloat_SummTransport.ValueData         AS SummTransport
+            , MIFloat_SummTransportAdd.ValueData      AS SummTransportAdd
+            , MIFloat_SummTransportAddLong.ValueData  AS SummTransportAddLong
+            , MIFloat_SummTransportTaxi.ValueData     AS SummTransportTaxi
+            , MIFloat_SummPhone.ValueData             AS SummPhone
 
             , COALESCE (tmpMIChild.Amount, 0)                                                :: TFloat AS TotalSummChild
             , (COALESCE (tmpMIChild.Amount, 0) - COALESCE (MIFloat_SummService.ValueData, 0)) :: TFloat AS SummDiff
@@ -266,6 +270,13 @@ BEGIN
                                         ON MIFloat_SummNalogRecalc.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummNalogRecalc.DescId = zc_MIFloat_SummNalogRecalc()
 
+            LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRet
+                                        ON MIFloat_SummNalogRet.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummNalogRet.DescId = zc_MIFloat_SummNalogRet()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRetRecalc
+                                        ON MIFloat_SummNalogRetRecalc.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummNalogRetRecalc.DescId = zc_MIFloat_SummNalogRetRecalc()
+                                       
             LEFT JOIN MovementItemFloat AS MIFloat_SummMinus
                                         ON MIFloat_SummMinus.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummMinus.DescId = zc_MIFloat_SummMinus()
@@ -355,6 +366,8 @@ ALTER FUNCTION gpSelect_MovementItem_PersonalService (Integer, Boolean, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 05.01.18         * add SummNalogRet
+                        SummNalogRetRecalc
  20.06.17         * add SummCardSecondCash
  24.02.17         *
  20.02.17         *

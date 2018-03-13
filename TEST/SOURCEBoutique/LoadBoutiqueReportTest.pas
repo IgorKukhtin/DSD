@@ -59,12 +59,20 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+  LoadReportFromFile('PrintReport_Sale', ReportPath + '\PrintReport_Sale.fr3');
+  LoadReportFromFile('PrintReport_ReturnIn', ReportPath + '\PrintReport_ReturnIn.fr3');
+  LoadReportFromFile('PrintReport_Uniform', ReportPath + '\PrintReport_Uniform.fr3');
+  LoadReportFromFile('PrintReport_Goods_RemainsCurrent', ReportPath + '\PrintReport_Goods_RemainsCurrent.fr3');
+  LoadReportFromFile('Print_Check_GoodsAccount', ReportPath + '\Печать чека оплаты.fr3');
+  LoadReportFromFile('Print_Check', ReportPath + '\Печать чека.fr3');
+  LoadReportFromFile('Движение по покупателю (Акт сверки)', ReportPath + '\Движение по покупателю (Акт сверки).fr3');
   LoadReportFromFile('Движение по покупателю', ReportPath + '\Движение по покупателю.fr3');
   LoadReportFromFile('Отчет по расчетам', ReportPath + '\Отчет по расчетам.fr3');
   LoadReportFromFile('PrintMovement_Income', ReportPath + '\Приход от поставщика.fr3');
   LoadReportFromFile('PrintMovement_IncomeIn', ReportPath + '\Приход от поставщика вх цена.fr3');
   LoadReportFromFile('PrintMovement_ReturnOut', ReportPath + '\Возврат поставщику.fr3');
   LoadReportFromFile('PrintMovement_Send', ReportPath + '\Перемещение.fr3');
+  LoadReportFromFile('PrintMovement_SendIn', ReportPath + '\Перемещение вх цена.fr3');
   LoadReportFromFile('PrintMovement_Loss', ReportPath + '\Списание.fr3');
   LoadReportFromFile('PrintMovement_IncomeSticker', ReportPath + '\Печать стикера самоклейки.fr3');
 end;

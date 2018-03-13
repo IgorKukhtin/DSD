@@ -1,12 +1,14 @@
 -- Function: gpSelect_Object_ToolsWeighing_Tree()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_ToolsWeighing_Tree(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ToolsWeighing_Tree (TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_ToolsWeighing_Tree(
+CREATE OR REPLACE FUNCTION gpSelect_Object_ToolsWeighing_Tree (
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
-               ParentId Integer, isErased boolean) AS
+               BranchCode Integer, ParentId Integer, isErased boolean
+              )
+AS
 $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
@@ -16,17 +18,84 @@ BEGIN
        SELECT
              Object_ToolsWeighing_View.Id
            , Object_ToolsWeighing_View.Code
-           , Object_ToolsWeighing_View.Name
+
+           , CASE WHEN Object_ToolsWeighing_View.Name = 'Scale_1'
+                       THEN 'Экспедиция - (001)Филиал Днепр'
+
+                  WHEN Object_ToolsWeighing_View.Name = 'Scale_101'
+                       THEN 'Экспедиция - (101)???' -- || COALESCE (Object_ToolsWeighing_View.BranchCode :: TVarChar, '???')
+
+                  WHEN Object_ToolsWeighing_View.Name = 'Scale_201'
+                       THEN 'Экспедиция - (201)Сырье'
+
+                  WHEN Object_ToolsWeighing_View.Name = 'Scale_301'
+                       THEN 'Экспедиция - (301)Склад специй'
+
+
+                  WHEN Object_ToolsWeighing_View.Name = 'ScaleCeh_1'
+                       THEN 'Производство - (001)Склад Реализации'
+
+                  WHEN Object_ToolsWeighing_View.Name = 'ScaleCeh_101'
+                       THEN 'Производство - (101)Склад База ГП'
+
+                  WHEN Object_ToolsWeighing_View.Name = 'ScaleCeh_102'
+                       THEN 'Производство - (102)ЦЕХ колбасный'
+
+
+                  WHEN Object_ToolsWeighing_View.Name = 'ScaleCeh_201'
+                       THEN 'Производство - (201)Сырье'
+
+                  WHEN Object_ToolsWeighing_View.Name = 'ScaleCeh_301'
+                       THEN 'Производство - (301)Склад специй'
+
+                  WHEN POSITION ('Scale_' IN Object_ToolsWeighing_View.Name) = 1
+                   AND Object_ToolsWeighing_View.BranchCode > 0
+                   AND Object_ToolsWeighing_View.BranchCode < 1000
+                       THEN 'Экспедиция - ' || '(' || CASE WHEN Object_ToolsWeighing_View.BranchCode < 10 THEN '00' WHEN Object_ToolsWeighing_View.BranchCode < 100 THEN '0' ELSE '' END
+                                            || Object_ToolsWeighing_View.BranchCode :: TVarChar || ')'
+                                            || COALESCE ((SELECT Object.ValueData FROM Object
+                                                          WHERE Object.DescId = zc_Object_Branch() AND Object.ObjectCode = Object_ToolsWeighing_View.BranchCode)
+                                                       , Object_ToolsWeighing_View.Name)
+
+                  WHEN POSITION ('Scale_' IN Object_ToolsWeighing_View.Name) = 1
+                   AND Object_ToolsWeighing_View.BranchCode > 1000
+                       THEN 'Этикетки - ' || '(' || CASE WHEN Object_ToolsWeighing_View.BranchCode - 1000 < 10 THEN '00' WHEN Object_ToolsWeighing_View.BranchCode - 1000 < 100 THEN '0' ELSE '' END
+                                          || (Object_ToolsWeighing_View.BranchCode - 1000) :: TVarChar || ')'
+                                          || COALESCE ((SELECT Object.ValueData FROM Object
+                                                        WHERE Object.DescId = zc_Object_Branch() AND Object.ObjectCode = Object_ToolsWeighing_View.BranchCode - 1000)
+                                                     , Object_ToolsWeighing_View.Name)
+
+                  ELSE Object_ToolsWeighing_View.Name
+
+             END :: TvarChar AS Name
+
+           , Object_ToolsWeighing_View.BranchCode
            , COALESCE (Object_ToolsWeighing_View.ParentId, 0) AS ParentId
            , Object_ToolsWeighing_View.isErased
-       FROM Object_ToolsWeighing_View
-       WHERE isLeaf = FALSE
 
-      UNION
+       FROM (SELECT Object_ToolsWeighing_View.*
+                  , CASE WHEN POSITION ('Scale_' IN Object_ToolsWeighing_View.Name) = 1
+                              THEN zfConvert_StringToNumber (SUBSTRING (Object_ToolsWeighing_View.Name
+                                                             FROM LENGTH ('Scale_') + 1
+                                                             FOR LENGTH (Object_ToolsWeighing_View.Name) - LENGTH ('Scale_')
+                                                            ))
+                         WHEN POSITION ('ScaleCeh_' IN Object_ToolsWeighing_View.Name) = 1
+                              THEN zfConvert_StringToNumber (SUBSTRING (Object_ToolsWeighing_View.Name
+                                                             FROM LENGTH ('ScaleCeh_') + 1
+                                                             FOR LENGTH (Object_ToolsWeighing_View.Name) - LENGTH ('ScaleCeh_')
+                                                            ))
+                         ELSE 0
+                    END :: Integer AS BranchCode
+             FROM Object_ToolsWeighing_View
+             WHERE Object_ToolsWeighing_View.isLeaf = FALSE
+            ) AS Object_ToolsWeighing_View
+
+      UNION ALL
        SELECT
              0 AS Id,
              0 AS Code,
              CAST('ВСЕ' AS TVarChar) AS Name,
+             0 AS BranchCode,
              0 AS ParentId,
              FALSE AS isErased
        ORDER BY 4, 3
@@ -34,9 +103,7 @@ BEGIN
 
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_ToolsWeighing_Tree(TVarChar) OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -46,4 +113,4 @@ ALTER FUNCTION gpSelect_Object_ToolsWeighing_Tree(TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ToolsWeighing_Tree ('2')
+-- SELECT * FROM gpSelect_Object_ToolsWeighing_Tree ('2') WHERE ParentId = 0 ORDER BY 3

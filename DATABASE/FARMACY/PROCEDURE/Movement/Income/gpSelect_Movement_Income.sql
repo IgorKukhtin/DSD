@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PriceWithVAT Boolean
              , FromId Integer, FromName TVarChar, FromOKPO TVarChar
              , ToId Integer, ToName TVarChar, JuridicalName TVarChar
-             , NDSKindId Integer, NDSKindName TVarChar
+             , NDSKindId Integer, NDSKindName TVarChar, NDS TFloat
              , ContractId Integer, ContractName TVarChar
              , PaymentDate TDateTime, PaySumm TFloat, SaleSumm TFloat
              , InvNumberBranch TVarChar, BranchDate TDateTime
@@ -166,6 +166,7 @@ BEGIN
              , Object_Juridical.ValueData                 AS JuridicalName
              , MovementLinkObject_NDSKind.ObjectId        AS NDSKindId
              , Object_NDSKind.ValueData                   AS NDSKindName
+             , ObjectFloat_NDSKind_NDS.ValueData          AS NDS
              , MovementLinkObject_Contract.ObjectId       AS ContractId
              , Object_Contract.ValueData                  AS ContractName
              , Movement_Income.PaymentDate 
@@ -221,6 +222,10 @@ BEGIN
                                     AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
         LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = MovementLinkObject_NDSKind.ObjectId
 
+        LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                              ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId 
+                             AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
+                             
         LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                      ON MovementLinkObject_Contract.MovementId = Movement_Income.Id
                                     AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
@@ -316,7 +321,8 @@ BEGIN
                , Object_To.Name                           
                , Object_Juridical.ValueData               
                , MovementLinkObject_NDSKind.ObjectId      
-               , Object_NDSKind.ValueData                 
+               , Object_NDSKind.ValueData     
+               , ObjectFloat_NDSKind_NDS.ValueData            
                , MovementLinkObject_Contract.ObjectId 
                , Object_Contract.ValueData    
                , Movement_Income.PaymentDate 
@@ -348,6 +354,7 @@ ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 05.01.18         * add NDS
  15.01.17         * без вьюх
  18.10.16         * add isRegistered
  04.08.16         *

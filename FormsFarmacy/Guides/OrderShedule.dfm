@@ -64,6 +64,15 @@ object OrderSheduleForm: TOrderSheduleForm
         Options.Editing = False
         Width = 89
       end
+      object AreaName: TcxGridDBColumn
+        Caption = #1056#1077#1075#1080#1086#1085
+        DataBinding.FieldName = 'AreaName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1056#1077#1075#1080#1086#1085' '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+        Options.Editing = False
+        Width = 69
+      end
       object UnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName'
@@ -161,12 +170,32 @@ object OrderSheduleForm: TOrderSheduleForm
         Width = 25
       end
       object isErased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
+        Caption = #1059#1076#1072#1083#1077#1085' ()'
         DataBinding.FieldName = 'isErased'
         Visible = False
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        VisibleForCustomization = False
+        Width = 60
+      end
+      object isErased_OrderShedule: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased_OrderShedule'
+        Visible = False
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
+      object isErased_Contract: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1086#1075'.)'
+        DataBinding.FieldName = 'isErased_Contract'
+        Visible = False
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1059#1076#1072#1083#1077#1085' ('#1076#1086#1075#1086#1074#1086#1088')'
         Width = 60
       end
       object Color_Calc1: TcxGridDBColumn
@@ -245,6 +274,14 @@ object OrderSheduleForm: TOrderSheduleForm
         HeaderHint = #1052#1072#1082#1089#1080#1084#1072#1083#1100#1085#1086#1077' '#1074#1088#1077#1084#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' ('#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086')'
         Options.Editing = False
         Width = 107
+      end
+      object OrderSummComment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1082' '#1084#1080#1085'. '#1089#1091#1084#1084#1077' '#1079#1072#1082#1072#1079#1072
+        DataBinding.FieldName = 'OrderSummComment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 142
       end
     end
     object cxGridLevel: TcxGridLevel

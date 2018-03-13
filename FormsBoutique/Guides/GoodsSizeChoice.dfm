@@ -3,7 +3,7 @@ object GoodsSizeChoiceForm: TGoodsSizeChoiceForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1056#1072#1079#1084#1077#1088#1099' '#1090#1086#1074#1072#1088#1072'>'
   ClientHeight = 289
-  ClientWidth = 470
+  ClientWidth = 463
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,7 +12,6 @@ object GoodsSizeChoiceForm: TGoodsSizeChoiceForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
@@ -21,14 +20,13 @@ object GoodsSizeChoiceForm: TGoodsSizeChoiceForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 470
+    Width = 463
     Height = 263
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 774
-    ExplicitHeight = 350
+    ExplicitWidth = 470
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -55,7 +53,7 @@ object GoodsSizeChoiceForm: TGoodsSizeChoiceForm
         Width = 90
       end
       object Name: TcxGridDBColumn
-        Caption = #1056#1072#1079#1084#1077#1088' '#1090#1086#1074#1072#1088#1072
+        Caption = #1056#1072#1079#1084#1077#1088
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -70,7 +68,7 @@ object GoodsSizeChoiceForm: TGoodsSizeChoiceForm
   object cxLabel6: TcxLabel
     Left = 172
     Top = 78
-    Caption = #1058#1086#1074#1072#1088':'
+    Caption = #1040#1088#1090#1080#1082#1091#1083' : '
   end
   object edGoods: TcxButtonEdit
     Left = 247
@@ -82,7 +80,7 @@ object GoodsSizeChoiceForm: TGoodsSizeChoiceForm
       end>
     Properties.ReadOnly = True
     TabOrder = 6
-    Width = 203
+    Width = 122
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -189,6 +187,10 @@ object GoodsSizeChoiceForm: TGoodsSizeChoiceForm
         item
           Visible = True
           ItemName = 'bbToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -494,7 +496,7 @@ object GoodsSizeChoiceForm: TGoodsSizeChoiceForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 440
-    Top = 152
+    Left = 272
+    Top = 120
   end
 end

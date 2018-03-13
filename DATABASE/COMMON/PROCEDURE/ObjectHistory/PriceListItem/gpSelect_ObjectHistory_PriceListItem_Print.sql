@@ -4,10 +4,10 @@
 DROP FUNCTION IF EXISTS gpSelect_ObjectHistory_PriceListItem_Print (Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_PriceListItem_Print(
-    IN inPriceListId        Integer   , -- ключ 
+    IN inPriceListId        Integer   , -- ключ
     IN inOperDate           TDateTime , -- Дата действия
     IN inSession            TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS TABLE (Id Integer , ObjectId Integer
                 , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsGroupNameFull TVarChar
                 , TradeMarkName TVarChar
@@ -16,24 +16,46 @@ RETURNS TABLE (Id Integer , ObjectId Integer
                 , ValuePrice_kg TFloat, ValuePriceWithVAT_kg TFloat
                 , Weight TFloat
                 , Value1 TVarChar, Value2_4 TVarChar, Value5_6 TVarChar
-                
-                
+
+
                )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
    DECLARE vbPriceWithVAT_pl Boolean;
    DECLARE vbVATPercent_pl TFloat;
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpGetUserBySession (inSession);
 
+
+     -- Определили
      vbPriceWithVAT_pl:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = inPriceListId AND ObjectBoolean.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT());
-     -- 
+     -- Определили
      vbVATPercent_pl:= (SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inPriceListId AND ObjectFloat.DescId = zc_ObjectFloat_PriceList_VATPercent());
+
+
+     -- Ограничение - если роль Бухгалтер ПАВИЛЬОНЫ
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 80548 AND UserId = vbUserId)
+        AND COALESCE (inPriceListId, 0) NOT IN (140208 -- Пав-ны приход
+                                              , 140209 -- Пав-ны продажа
+                                               )
+     THEN
+         RAISE EXCEPTION 'Ошибка. Нет прав на Просмотр прайса <%>', lfGet_Object_ValueData (inPriceListId);
+     END IF;
+
+
+     -- Ограничение - если роль Начисления транспорт-меню
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 78489 AND UserId = vbUserId)
+        AND COALESCE (inPriceListId, 0) NOT IN (zc_PriceList_Fuel()
+                                               )
+     THEN
+         RAISE EXCEPTION 'Ошибка. Нет прав на Просмотр прайса <%>', lfGet_Object_ValueData (inPriceListId);
+     END IF;
+
+
      -- Выбираем данные
-     RETURN QUERY 
-
-
---select * from Object where Id = 44483
-                 
+     RETURN QUERY
        SELECT
              ObjectHistory_PriceListItem.Id
            , ObjectHistory_PriceListItem.ObjectId
@@ -41,7 +63,7 @@ BEGIN
            , ObjectLink_PriceListItem_Goods.ChildObjectId AS GoodsId
            , Object_Goods.ObjectCode AS GoodsCode
            , Object_Goods.ValueData  AS GoodsName
-                    
+
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_TradeMark.ValueData      AS TradeMarkName
            , Object_Measure.ValueData        AS MeasureName
@@ -49,24 +71,24 @@ BEGIN
            , CASE WHEN vbPriceWithVAT_pl = TRUE THEN COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) / (1 + vbVATPercent_pl / 100) ELSE COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) END :: TFloat  AS ValuePrice
            , CASE WHEN vbPriceWithVAT_pl = FALSE THEN COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) * (1 + vbVATPercent_pl / 100) ELSE COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) END :: TFloat AS ValuePriceWithVAT
 
-           , CASE WHEN Object_Measure.Id = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData<>0 
+           , CASE WHEN Object_Measure.Id = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData<>0
                      THEN (CASE WHEN vbPriceWithVAT_pl = TRUE THEN COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) / (1 + vbVATPercent_pl / 100) ELSE COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) END) / ObjectFloat_Weight.ValueData
-                     ELSE (CASE WHEN vbPriceWithVAT_pl = TRUE THEN COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) / (1 + vbVATPercent_pl / 100) ELSE COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) END) 
+                     ELSE (CASE WHEN vbPriceWithVAT_pl = TRUE THEN COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) / (1 + vbVATPercent_pl / 100) ELSE COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) END)
              END   :: TFloat AS ValuePrice_kg
-           , CASE WHEN Object_Measure.Id = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData<>0 
+           , CASE WHEN Object_Measure.Id = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData<>0
                      THEN (CASE WHEN vbPriceWithVAT_pl = FALSE THEN COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) * (1 + vbVATPercent_pl / 100) ELSE COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) END) / ObjectFloat_Weight.ValueData
-                     ELSE (CASE WHEN vbPriceWithVAT_pl = FALSE THEN COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) * (1 + vbVATPercent_pl / 100) ELSE COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) END) 
+                     ELSE (CASE WHEN vbPriceWithVAT_pl = FALSE THEN COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) * (1 + vbVATPercent_pl / 100) ELSE COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) END)
              END   :: TFloat AS ValuePriceWithVAT_kg
-             
+
            , ObjectFloat_Weight.ValueData AS Weight
            , ObjectString_Value1.ValueData AS Value1
            , (COALESCE (ObjectString_Value2.ValueData,'')||' / '||COALESCE (ObjectString_Value4.ValueData,'') )::  TVarChar AS Value2_4
            , (COALESCE (ObjectString_Value5.ValueData,'')||' / '||COALESCE (ObjectString_Value6.ValueData,'') )::  TVarChar AS Value5_6
 
-           
+
        FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
 
-                                   
+
             LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
                                  ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                                 AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
@@ -91,54 +113,50 @@ BEGIN
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
-                                 ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id 
+                                 ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
             LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
 
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
-                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()     
+                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
+                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
             LEFT JOIN ObjectLink AS GoodsQuality_Goods
-                                 ON GoodsQuality_Goods.ChildObjectId = Object_Goods.Id 
-                                AND GoodsQuality_Goods.DescId = zc_ObjectLink_GoodsQuality_Goods()  
-            LEFT JOIN ObjectString AS ObjectString_Value1							-- Вид упаковки 
+                                 ON GoodsQuality_Goods.ChildObjectId = Object_Goods.Id
+                                AND GoodsQuality_Goods.DescId = zc_ObjectLink_GoodsQuality_Goods()
+            LEFT JOIN ObjectString AS ObjectString_Value1							-- Вид упаковки
                                    ON ObjectString_Value1.ObjectId = GoodsQuality_Goods.ObjectId
-                                  AND ObjectString_Value1.DescId = zc_ObjectString_GoodsQuality_Value1() 
-            LEFT JOIN ObjectString AS ObjectString_Value2							-- Термін зберігання 
+                                  AND ObjectString_Value1.DescId = zc_ObjectString_GoodsQuality_Value1()
+            LEFT JOIN ObjectString AS ObjectString_Value2							-- Термін зберігання
                                    ON ObjectString_Value2.ObjectId = GoodsQuality_Goods.ObjectId
-                                  AND ObjectString_Value2.DescId = zc_ObjectString_GoodsQuality_Value2() 
+                                  AND ObjectString_Value2.DescId = zc_ObjectString_GoodsQuality_Value2()
             LEFT JOIN ObjectString AS ObjectString_Value4							-- Термін зберігання в газ.середовищ, №8
                                    ON ObjectString_Value4.ObjectId = GoodsQuality_Goods.ObjectId
                                   AND ObjectString_Value4.DescId = zc_ObjectString_GoodsQuality_Value4()
             LEFT JOIN ObjectString AS ObjectString_Value5							-- Вакуумна упаковка - Термін зберігання цілим виробом, №10
                                    ON ObjectString_Value5.ObjectId = GoodsQuality_Goods.ObjectId
-                                  AND ObjectString_Value5.DescId = zc_ObjectString_GoodsQuality_Value5()                             
+                                  AND ObjectString_Value5.DescId = zc_ObjectString_GoodsQuality_Value5()
             LEFT JOIN ObjectString AS ObjectString_Value6							-- Вакуумна упаковка - Термін зберігання порційна нарізка, №11
                                    ON ObjectString_Value6.ObjectId = GoodsQuality_Goods.ObjectId
-                                  AND ObjectString_Value6.DescId = zc_ObjectString_GoodsQuality_Value6()                           
-                      
+                                  AND ObjectString_Value6.DescId = zc_ObjectString_GoodsQuality_Value6()
+
 
        WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
          AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
          AND (ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0 ) --OR ObjectHistory_PriceListItem.StartDate <> zc_DateStart())
          AND Object_Goods.isErased = FAlSE
        ;
-       
+
    END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 03.12.15         * 
+ 03.12.15         *
 */
 
 -- тест
 -- SELECT * FROM gpSelect_ObjectHistory_PriceListItem_Print (zc_PriceList_ProductionSeparate(), CURRENT_TIMESTAMP, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_ObjectHistory_PriceListItem_Print (zc_PriceList_Basis(), CURRENT_TIMESTAMP, inSession:= zfCalc_UserAdmin())
-
---select * from gpSelect_ObjectHistory_PriceListItem_Print(inPriceListId := 18879 , inOperDate := '11.11.2015' ,  inSession := '5');

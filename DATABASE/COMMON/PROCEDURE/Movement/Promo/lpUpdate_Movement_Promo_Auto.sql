@@ -41,7 +41,7 @@ end if;
                                                                              AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
                                         WHERE Movement_PromoPartner.ParentId = inMovementId
                                           AND Movement_PromoPartner.DescId = zc_Movement_PromoPartner()
-                                          AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
+                                          -- AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
                                        )
                 SELECT MIN (tmp.tmpId)
                 FROM (SELECT CASE WHEN tmpPartner_new.MovementId > 0 AND COALESCE (tmpPartner_old.MovementItemId, 0) = 0

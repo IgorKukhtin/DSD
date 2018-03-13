@@ -112,6 +112,10 @@ BEGIN
         THEN
             RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> не проведен.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), (SELECT DATE (OperDate) FROM Movement WHERE Id = inMovementId);
         END IF;
+        IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_SendOnPrice())
+        THEN
+            RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> не может участвовать в схеме EDI.', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_SendOnPrice()), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), (SELECT DATE (OperDate) FROM Movement WHERE Id = inMovementId);
+        END IF;
         -- это уже странная ошибка
         RAISE EXCEPTION 'Ошибка.Документ <%>.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId);
     END IF;
@@ -221,7 +225,7 @@ BEGIN
     OPEN Cursor1 FOR
 --     WITH tmpObject_GoodsPropertyValue AS
 
-
+       -- Результат
        SELECT
              Movement.Id                                AS Id
 --           , Movement.InvNumber                         AS InvNumber
@@ -247,7 +251,7 @@ BEGIN
            , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)     AS OperDatePartner
            , MovementDate_Payment.ValueData             AS PaymentDate
            , CASE WHEN MovementDate_Payment.ValueData IS NOT NULL THEN TRUE ELSE FALSE END AS isPaymentDate
-           , COALESCE (Movement_order.OperDate, Movement.OperDate) AS OperDateOrder
+           , COALESCE (Movement_EDI.OperDate, COALESCE (Movement_order.OperDate, Movement.OperDate)) AS OperDateOrder
            , vbPriceWithVAT                             AS PriceWithVAT
            , vbVATPercent                               AS VATPercent
            , vbExtraChargesPercent - vbDiscountPercent  AS ChangePercent
@@ -394,6 +398,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner_order
                                      ON MovementString_InvNumberPartner_order.MovementId =  Movement_order.Id
                                     AND MovementString_InvNumberPartner_order.DescId = zc_MovementString_InvNumberPartner()
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order_edi
+                                           ON MovementLinkMovement_Order_edi.MovementId = Movement_order.Id
+                                          AND MovementLinkMovement_Order_edi.DescId = zc_MovementLinkMovement_Order()
+            LEFT JOIN Movement AS Movement_EDI ON Movement_EDI.Id = MovementLinkMovement_Order_edi.MovementChildId
 
             LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                      ON MovementString_InvNumberOrder.MovementId =  Movement.Id
@@ -907,5 +915,4 @@ ALTER FUNCTION gpSelect_Movement_Sale_EDI (Integer,TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale_EDI (inMovementId := 135428, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpSelect_Movement_Sale_EDI (inMovementId := 377284, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_Sale_EDI (inMovementId := 8467386, inSession:= zfCalc_UserAdmin());

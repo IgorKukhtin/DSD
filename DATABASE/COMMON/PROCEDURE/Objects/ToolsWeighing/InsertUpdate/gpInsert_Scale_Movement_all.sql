@@ -1,5 +1,8 @@
 -- Function: gpInsert_Scale_Movement_all()
 
+-- DROP FUNCTION IF EXISTS lpComplete_Movement_Sale_test (Integer, Integer, Boolean);
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Tax_From_Kind_test (Integer, Integer, Integer, TDateTime, Integer);
+
 DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Scale_Movement_all(
@@ -35,16 +38,27 @@ $BODY$
    DECLARE vbOperDate_order TDateTime;
    DECLARE vbId_tmp Integer;
    DECLARE vbGoodsId_ReWork Integer;
+
+   DECLARE vbOperDate_StartBegin TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Scale_Movement());
      vbUserId:= lpGetUserBySession (inSession);
 
-/*
---для теста
-if inMovementId in (5712201 , 5716456)
+
+     -- сразу запомнили время начала выполнения Проц.
+     vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
+
+
+
+-- для теста
+/*if inMovementId in (8351040)
 then
-    update Movement set statusId = zc_Enum_Status_UnComplete() where  Id = inMovementId;
+    --
+    update MovementLinkMovement set MovementChildId = null where MovementLinkMovement.DescId = zc_MovementLinkMovement_Order() and
+           MovementLinkMovement.MovementId = (select Movement.ParentId from Movement where Movement.Id = inMovementId);
+    --
+    update Movement set statusId = zc_Enum_Status_UnComplete(), ParentId = null where Movement.Id = inMovementId;
 end if;*/
 
 
@@ -1223,6 +1237,12 @@ end if;*/
           ) AS tmp;
 
 
+--для теста
+/* if inMovementId in (8351040) then
+    RAISE EXCEPTION 'inSession  - Errr _end <%>', vbMovementId_begin;
+ end if;*/
+
+
      -- добавили расход на переработку
      IF vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE
      THEN
@@ -1479,21 +1499,22 @@ end if;*/
 
      END IF;
 
-/*
+
 --для теста
-if inMovementId in (5712201 , 5716456)
-then
-    RAISE EXCEPTION 'inSession  - Errr _end <%>', vbMovementId_begin;
-    -- 'Повторите действие через 3 мин.'
+/*if inMovementId in (8351040) then
+    RAISE EXCEPTION ' !!! --- END ALL --- !!! Errr <%>', vbMovementId_begin;
 end if;*/
 
 -- !!! ВРЕМЕННО !!!
-if inSession = '5' AND 1=1
-then
-    RAISE EXCEPTION 'Admin - Test = OK';
-    -- 'Повторите действие через 3 мин.'
+if inSession = '5' AND 1=1 then
+    RAISE EXCEPTION 'Admin - Test = OK'; -- 'Повторите действие через 3 мин.'
 end if;
 
+
+     -- дописали св-во <Дата/время создания>
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartBegin(), inMovementId, vbOperDate_StartBegin);
+     -- дописали св-во <Дата/время создания>
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndBegin(), inMovementId, CLOCK_TIMESTAMP());
 
      -- Результат
      RETURN QUERY
@@ -1513,4 +1534,5 @@ $BODY$
  03.02.15                                        *
 */
 -- тест
--- SELECT * FROM gpInsert_Scale_Movement_all (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inAmountPacker:= 0, inPrice:= 1, inCountForPrice:= 1, inLiveWeight:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inAssetId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsert_Scale_Movement_all (inBranchCode:= 2, inMovementId:= 8351040, inOperDate:= CURRENT_DATE, inSession:= '992376') -- Калугин С.В.
+-- SELECT * FROM gpInsert_Scale_Movement_all (inBranchCode:= 2, inMovementId:= 8351040, inOperDate:= CURRENT_DATE, inSession:= '539736') -- Чёрный А.А.

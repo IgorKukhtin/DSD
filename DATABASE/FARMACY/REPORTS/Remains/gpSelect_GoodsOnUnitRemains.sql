@@ -16,7 +16,8 @@ CREATE OR REPLACE FUNCTION gpSelect_GoodsOnUnitRemains(
 )
 RETURNS TABLE (ContainerId Integer
              , Id Integer, GoodsCode Integer, GoodsName TVarChar, GoodsGroupName TVarChar
-             , NDSKindName TVarChar, isSP Boolean, isPromo boolean
+             , NDSKindName TVarChar, NDS TFloat
+             , isSP Boolean, isPromo boolean
              , ConditionsKeepName TVarChar
              , Amount TFloat, Price TFloat, PriceWithVAT TFloat, PriceWithOutVAT TFloat, PriceSale  TFloat
              
@@ -237,6 +238,7 @@ BEGIN
              , Object_Goods.ValueData                                     AS GoodsName
              , Object_GoodsGroup.ValueData                                AS GoodsGroupName
              , Object_NDSKind_Income.ValueData                            AS NDSKindName
+             , ObjectFloat_NDSKind_NDS.ValueData                          AS NDS
              , tmpGoods.isSP                                 :: Boolean   AS isSP
              , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END :: Boolean AS isPromo
              , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar   AS ConditionsKeepName
@@ -289,6 +291,7 @@ BEGIN
 */
             LEFT JOIN Object AS Object_From_Income ON Object_From_Income.Id = tmpData.JuridicalId_Income
             LEFT JOIN Object AS Object_NDSKind_Income ON Object_NDSKind_Income.Id = COALESCE (tmpData.NDSKindId_Income, ObjectLink_Goods_NDSKind.ChildObjectId)
+            
             LEFT JOIN Object AS Object_To_Income ON Object_To_Income.Id = tmpData.ToId_Income
             LEFT JOIN Object AS Object_OurJuridical_Income ON Object_OurJuridical_Income.Id = tmpData.OurJuridicalId_Income
 
@@ -337,6 +340,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.01.18         *
  12.08.17         *
  24.05.17         *
  12.01.17         *

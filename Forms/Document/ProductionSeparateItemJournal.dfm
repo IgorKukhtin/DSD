@@ -4,10 +4,8 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
   ClientWidth = 1073
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -300
-  ExplicitTop = -113
   ExplicitWidth = 1089
-  ExplicitHeight = 570
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -269,7 +267,8 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
       isShowModal = True
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TProductionSeparateForm'
+      FormName = 'TProductionSeparateStorageLineForm'
+      FormNameParam.Value = 'TProductionSeparateStorageLineForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -512,7 +511,7 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -890,6 +889,13 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
         Component = MasterCDS
         ComponentItem = 'StorageLineId_old'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDescMaster'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1

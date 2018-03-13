@@ -321,6 +321,38 @@ inherited ReestrReturnJournalForm: TReestrReturnJournalForm
             Options.Editing = False
             Width = 60
           end
+          object PersonalName: TcxGridDBColumn
+            Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088')'
+            DataBinding.FieldName = 'PersonalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
+          object UnitName_Personal: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'  ('#1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088')'
+            DataBinding.FieldName = 'UnitName_Personal'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 128
+          end
+          object PersonalTradeName: TcxGridDBColumn
+            Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1058#1055')'
+            DataBinding.FieldName = 'PersonalTradeName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
+          object UnitName_PersonalTrade: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1058#1055')'
+            DataBinding.FieldName = 'UnitName_PersonalTrade'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 128
+          end
           object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1076#1086#1073#1072#1074#1083#1077#1085' '#1087#1077#1088#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1074' '#1088#1077#1077#1089#1090#1088')'
             DataBinding.FieldName = 'InsertDate'
@@ -401,12 +433,12 @@ inherited ReestrReturnJournalForm: TReestrReturnJournalForm
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 112
-      EditValue = 42736d
+      EditValue = 43101d
       ExplicitLeft = 112
     end
     inherited deEnd: TcxDateEdit
       Left = 312
-      EditValue = 42736d
+      EditValue = 43101d
       ExplicitLeft = 312
     end
     inherited cxLabel1: TcxLabel
@@ -516,6 +548,12 @@ inherited ReestrReturnJournalForm: TReestrReturnJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGroup'
+          Value = 'FALSE'
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_ReestrReturn'
@@ -942,6 +980,18 @@ inherited ReestrReturnJournalForm: TReestrReturnJournalForm
         Value = '0'
         Component = MasterCDS
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalTradeId'
+        Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

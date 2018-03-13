@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_MovementItem_PromoGoods()
+-- Function: gpUpdate_MI_PromoGoods_Calc()
 
 DROP FUNCTION IF EXISTS gpUpdate_MI_PromoGoods_Calc (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 

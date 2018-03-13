@@ -27,7 +27,7 @@ type
     actSetGoodsLink: TdsdExecStoredProc;
     bbGoodsPriceListLink: TdxBarButton;
     mactChoiceGoodsForm: TMultiAction;
-    colNDSkindName: TcxGridDBColumn;
+    colNDS: TcxGridDBColumn;
     actRefreshSearch: TdsdExecStoredProc;
     Panel1: TPanel;
     actDeleteLink: TdsdExecStoredProc;

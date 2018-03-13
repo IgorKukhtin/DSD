@@ -51,6 +51,7 @@ type
     edEmail: TcxTextEdit;
     cbisDefault: TcxCheckBox;
     cbisGoodsCode: TcxCheckBox;
+    cbisOnly: TcxCheckBox;
   private
     { Private declarations }
   public

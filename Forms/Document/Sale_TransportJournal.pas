@@ -212,6 +212,8 @@ type
     bbPrint_Sale_Total_List: TdxBarButton;
     InvNumber_reestr: TcxGridDBColumn;
     OperDate_reestr: TcxGridDBColumn;
+    actPrintPackGross: TdsdPrintAction;
+    bbPrintPackGross: TdxBarButton;
   private
     { Private declarations }
   public

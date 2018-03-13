@@ -148,6 +148,14 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummNalogRecalc() RETURNS Integ
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_TotalSummNalogRecalc', 'Налоги - удержания с ЗП (ввод)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummNalogRecalc');
   
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummNalogRet() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummNalogRet'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TotalSummNalogRet', 'Налоги - возмещение к ЗП' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummNalogRet');
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummNalogRetRecalc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummNalogRetRecalc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TotalSummNalogRetRecalc', 'Налоги - возмещение к ЗП (ввод)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummNalogRetRecalc');
+ 
 CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummChild() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummChild'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_TotalSummChild', 'Алименты - удержание' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummChild');
@@ -357,6 +365,8 @@ INSERT INTO MovementFloatDesc(Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 05.01.18         * zc_MovementFloat_TotalSummNalogRet
+                    zc_MovementFloat_TotalSummNalogRetRecalc
  22.11.17         * zc_MovementFloat_PriceMin
                     zc_MovementFloat_PriceMax
  20.06.17         * zc_MovementFloat_TotalSummCardSecondCash

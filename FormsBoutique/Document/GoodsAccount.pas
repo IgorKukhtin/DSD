@@ -117,7 +117,7 @@ type
     bbactSetErasedCost: TdxBarButton;
     bbShowErasedCost: TdxBarButton;
     cxLabel5: TcxLabel;
-    edTotalLastSumm: TcxCurrencyEdit;
+    edTotalSumm: TcxCurrencyEdit;
     cxLabel6: TcxLabel;
     edTotalSummPay: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
@@ -127,10 +127,6 @@ type
     PartionId: TcxGridDBColumn;
     edHappyDate: TcxDateEdit;
     cxLabel8: TcxLabel;
-    cxLabel9: TcxLabel;
-    ceCity: TcxTextEdit;
-    cxLabel10: TcxLabel;
-    ceAddress: TcxTextEdit;
     cxLabel13: TcxLabel;
     cePhoneMobile: TcxTextEdit;
     cxLabel17: TcxLabel;
@@ -149,7 +145,7 @@ type
     SaleMI_Id: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
     OperDate_Sale: TcxGridDBColumn;
-    InvNumber_Sale_Full: TcxGridDBColumn;
+    InvNumber_Sale: TcxGridDBColumn;
     DescName: TcxGridDBColumn;
     cxLabel18: TcxLabel;
     edInsertDate: TcxDateEdit;
@@ -164,6 +160,26 @@ type
     TotalPayOth_Sale: TcxGridDBColumn;
     SummChangePercent_sale: TcxGridDBColumn;
     TotalChangePercentPay: TcxGridDBColumn;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
+    ClientDataSet1: TClientDataSet;
+    ClientDataSet2: TClientDataSet;
+    bbPrintCheck: TdxBarButton;
+    actPrintCheck: TdsdPrintAction;
+    spSelectPrint_Check: TdsdStoredProc;
+    cxLabel9: TcxLabel;
+    ceComment_Client: TcxTextEdit;
+    cxLabel10: TcxLabel;
+    edDiscountTaxTwo: TcxCurrencyEdit;
+    spComplete_User: TdsdStoredProc;
+    actGet_New: TdsdExecStoredProc;
+    spGet_New: TdsdStoredProc;
+    actComplete_User: TdsdExecStoredProc;
+    mac_User: TMultiAction;
+    bbmac_User: TdxBarButton;
+    spGet_Printer: TdsdStoredProc;
+    actGet_Printer: TdsdExecStoredProc;
+    macPrintCheck: TMultiAction;
   private
   public
   end;

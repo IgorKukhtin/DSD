@@ -10,16 +10,24 @@ BEGIN
      -- таблица - ѕроводки
      PERFORM lpComplete_Movement_All_CreateTemp();
 
-     -- таблица - элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках
-     CREATE TEMP TABLE _tmpItem (MovementItemId Integer
-                               , ContainerId_SummFrom Integer, ContainerId_GoodsFrom Integer
-                               , ContainerId_SummTo   Integer, ContainerId_GoodsTo   Integer
-                               , GoodsId Integer, PartionId Integer, GoodsSizeId Integer
-                               , OperCount TFloat, OperSumm TFloat, OperSumm_Currency TFloat
-                               , AccountId_From Integer, AccountId_To Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                                ) ON COMMIT DROP;
 
-END;$BODY$
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem'))
+     THEN
+         DELETE FROM _tmpItem;
+     ELSE
+         -- таблица - элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках
+         CREATE TEMP TABLE _tmpItem (MovementItemId Integer
+                                   , ContainerId_SummFrom Integer, ContainerId_GoodsFrom Integer
+                                   , ContainerId_SummTo   Integer, ContainerId_GoodsTo   Integer
+                                   , GoodsId Integer, PartionId Integer, GoodsSizeId Integer
+                                   , OperCount TFloat, OperPrice TFloat, CountForPrice TFloat, OperSumm TFloat, OperSumm_Currency TFloat
+                                   , AccountId_From Integer, AccountId_To Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                                   , CurrencyValue TFloat, ParValue TFloat
+                                    ) ON COMMIT DROP;
+     END IF;
+
+END;
+$BODY$
   LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------

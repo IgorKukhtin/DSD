@@ -83,7 +83,12 @@ BEGIN
      -- !!!замена для акции!!
      IF outMovementId_Promo > 0
      THEN
-        IF COALESCE (ioId, 0) = 0 AND vbTaxPromo <> 0
+        IF NOT EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = outMovementId_Promo AND MB.DescId = zc_MovementBoolean_Promo() AND MB.ValueData = TRUE)
+        THEN
+              -- меняется значение - для Тенедер
+             ioPrice:= outPricePromo;
+
+        ELSEIF COALESCE (ioId, 0) = 0 AND vbTaxPromo <> 0
         THEN
               -- меняется значение
              ioPrice:= outPricePromo;

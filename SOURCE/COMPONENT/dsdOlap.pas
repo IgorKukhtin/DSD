@@ -138,6 +138,7 @@ type
     function GetDoc_Date: string;
   public
     FromDate, ToDate: TDateTime;
+    isPeriodYear: Boolean;
     // Тип сумм
     property SummaryType: TSummaryType read FSummaryType write FSummaryType;
     // Флаг указывает где строится OLAP представление на сервере или на клиенте
@@ -238,6 +239,8 @@ var
   PivotDimensionSQL: TStringList;
 
   lSelectGroupSQL,lGroupBySQL,lJoinSQL : string;
+
+  YearStart, YearEnd, Month, Day: Word;
 begin
   if not CheckReportOption (OlapReportOption, LMessage) then
      raise Exception.Create(LMessage);
@@ -283,12 +286,25 @@ begin
      // Убираем первый OR
      WhereCondition := ' HAVING ' + Copy(WhereCondition, Pos('OR', WhereCondition) + 3, Length(WhereCondition));
 
-  result := 'SELECT ' + SelectSQL + ' FROM ( SELECT ' + SelectGroupSQL +
-    ' FROM SoldTable' +
-    ' WHERE ' + OlapReportOption.GetDoc_Date + ' BETWEEN ''' +
-               FormatDateTime('dd.mm.yyyy', OlapReportOption.FromDate) + ''' AND ''' +
-               FormatDateTime('dd.mm.yyyy', OlapReportOption.ToDate) + '''' + FilterSQL +
-    ' GROUP BY ' + GroupBySQL + WhereCondition + ' ) OlapTable ' + JoinSQL;
+
+  DecodeDate(OlapReportOption.FromDate, YearStart, Month, Day);
+  DecodeDate(OlapReportOption.ToDate, YearEnd, Month, Day);
+
+  if OlapReportOption.isPeriodYear = TRUE
+  then
+      result := 'SELECT ' + SelectSQL + ' FROM ( SELECT ' + SelectGroupSQL
+             + ' FROM SoldTable'
+             + ' WHERE SoldTable.PeriodYear BETWEEN '
+                       + IntToStr(YearStart) + ' AND ' + IntToStr(YearEnd)
+                       + FilterSQL
+             + ' GROUP BY ' + GroupBySQL + WhereCondition + ' ) OlapTable ' + JoinSQL
+  else
+      result := 'SELECT ' + SelectSQL + ' FROM ( SELECT ' + SelectGroupSQL +
+        ' FROM SoldTable' +
+        ' WHERE ' + OlapReportOption.GetDoc_Date + ' BETWEEN ''' +
+                   FormatDateTime('dd.mm.yyyy', OlapReportOption.FromDate) + ''' AND ''' +
+                   FormatDateTime('dd.mm.yyyy', OlapReportOption.ToDate) + '''' + FilterSQL +
+        ' GROUP BY ' + GroupBySQL + WhereCondition + ' ) OlapTable ' + JoinSQL;
 
   if OlapReportOption.isOLAPonServer then begin
      PivotDimensionSQL := TStringList.Create;
@@ -325,6 +341,7 @@ var
   FieldNameList: TStringList;
   i: integer;
 begin
+  isPeriodYear := false;
   isOLAPonServer := false;
   isCreateDate := false;
   SummaryType := stNone;

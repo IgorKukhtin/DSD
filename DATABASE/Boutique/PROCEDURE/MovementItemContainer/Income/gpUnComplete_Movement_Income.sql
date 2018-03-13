@@ -12,12 +12,17 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_Income());
-    vbUserId:= lpGetUserBySession (inSession);
+    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_UnComplete_Income());
 
     -- Распроводим Документ
     PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                  , inUserId     := vbUserId);
+
+     -- обнулили - КОЛ-ВО
+     UPDATE Object_PartionGoods SET Amount = 0, isErased = TRUE, isArc = TRUE
+     WHERE Object_PartionGoods.MovementId = inMovementId
+    ;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -156,6 +156,12 @@ BEGIN
                                                             AND ObjectBoolean_Top.DescId = zc_ObjectBoolean_Price_Top()
                                                             AND ObjectBoolean_Top.ValueData = TRUE
                               )
+
+              , tmpLoadPriceList AS (SELECT DISTINCT LoadPriceList.JuridicalId
+                                          , LoadPriceList.ContractId
+                                          , LoadPriceList.AreaId
+                                     FROM LoadPriceList
+                                     )
        -- Результат
        SELECT row_number() OVER ()
             , ddd.Id AS MovementItemId 
@@ -229,7 +235,7 @@ BEGIN
                   , MovementItemLastPriceList_View.GoodsId         
                   , MovementItemLastPriceList_View.GoodsCode
                   , MovementItemLastPriceList_View.GoodsName
-                  , MovementItemLastPriceList_View.MakerName
+                  , MovementItemLastPriceList_View.MakerName 
                   , MainGoods.valuedata AS MainGoodsName
                   , Juridical.ID AS JuridicalId
                   , Juridical.ValueData AS JuridicalName
@@ -245,23 +251,14 @@ BEGIN
                FROM MovementItemOrder 
                     LEFT OUTER JOIN MovementItemLastPriceList_View ON MovementItemLastPriceList_View.GoodsId = MovementItemOrder.GoodsId
                     
-                    JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = MovementItemLastPriceList_View.JuridicalId 
-                                         AND tmpJuridicalArea.AreaId      = MovementItemLastPriceList_View.AreaId 
-                   
-        /*          LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods -- товары в прайс-листе
-                                            ON MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-                                           AND MILinkObject_Goods.ObjectId = MovementItemOrder.GoodsId 
-        
-                    JOIN MovementItem AS PriceList  -- Прайс-лист
-                                      ON PriceList.Id = MILinkObject_Goods.MovementItemId
-                    JOIN LastPriceList_View  -- Прайс-лист
-                                            ON LastPriceList_View.MovementId  = PriceList.MovementId
-        
-                    LEFT JOIN MovementItemDate AS MIDate_PartionGoods
-                                      ON MIDate_PartionGoods.MovementItemId =  PriceList.Id
-                                     AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
-        */
-                   
+                    JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = MovementItemLastPriceList_View.JuridicalId
+                                         AND tmpJuridicalArea.AreaId      = MovementItemLastPriceList_View.AreaId
+
+                    INNER JOIN tmpLoadPriceList ON tmpLoadPriceList.JuridicalId = MovementItemLastPriceList_View.JuridicalId
+                                               AND tmpLoadPriceList.ContractId  = MovementItemLastPriceList_View.ContractId
+                                               AND (tmpLoadPriceList.AreaId = MovementItemLastPriceList_View.AreaId OR COALESCE (tmpLoadPriceList.AreaId, 0) = 0)
+
+
                     LEFT JOIN JuridicalSettings ON JuridicalSettings.JuridicalId = MovementItemLastPriceList_View.JuridicalId 
                                                AND JuridicalSettings.ContractId  = MovementItemLastPriceList_View.ContractId
                                                              

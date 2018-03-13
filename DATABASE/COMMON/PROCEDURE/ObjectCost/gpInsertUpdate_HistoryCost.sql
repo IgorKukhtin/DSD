@@ -26,7 +26,11 @@ BEGIN
      -- ïðîâåðêà ïðàâ ïîëüçîâàòåëÿ íà âûçîâ ïðîöåäóðû
      -- PERFORM lpCheckRight (inSession, zc_Enum_InsertUpdate_HistoryCost());
 
--- !!!ÂÐÅÌÅÍÍÎ!!!
+     -- !!!ÂÐÅÌÅÍÍÎ!!!
+     /*IF inStartDate >= '01.02.2018' THEN 
+          return;
+     END IF;*/
+
 -- RETURN;
 -- IF inBranchId <> 8379 THEN RETURN; END IF;
 

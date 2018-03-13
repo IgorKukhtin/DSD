@@ -17,15 +17,15 @@ type
     actRole: TdsdOpenForm;
     miUser: TMenuItem;
     miRole: TMenuItem;
-    N20: TMenuItem;
+    miGuide_Basis: TMenuItem;
     miAccountGroup: TMenuItem;
     miAccountDirection: TMenuItem;
     miAccount: TMenuItem;
-    N24: TMenuItem;
+    miLine8001: TMenuItem;
     miInfoMoneyGroup: TMenuItem;
     miInfoMoneyDestination: TMenuItem;
     miInfoMoney: TMenuItem;
-    N28: TMenuItem;
+    miLine8002: TMenuItem;
     miProfitLossGroup: TMenuItem;
     miProfitLossDirection: TMenuItem;
     miProfitLoss: TMenuItem;
@@ -88,7 +88,7 @@ type
     actPersonal: TdsdOpenForm;
     miPersonal: TMenuItem;
     actIncome: TdsdOpenForm;
-    N44: TMenuItem;
+    miMovement: TMenuItem;
     miIncome: TMenuItem;
     actReturnOut: TdsdOpenForm;
     miReturnOut: TMenuItem;
@@ -115,7 +115,7 @@ type
     actSale: TdsdOpenForm;
     miSale: TMenuItem;
     actBankAccount: TdsdOpenForm;
-    N57: TMenuItem;
+    miBankAccount: TMenuItem;
     actReturnIn: TdsdOpenForm;
     miReturnIn: TMenuItem;
     actGoodsAccount: TdsdOpenForm;
@@ -132,22 +132,22 @@ type
     actReport_Balance: TdsdOpenForm;
     actReport_ProfitLoss: TdsdOpenForm;
     actReport_Cash: TdsdOpenForm;
-    N49: TMenuItem;
-    miLine11: TMenuItem;
+    miFinance: TMenuItem;
+    miLine12: TMenuItem;
     miLine31: TMenuItem;
-    N45: TMenuItem;
+    miReport_Basis: TMenuItem;
     miReport_Balance: TMenuItem;
-    N46: TMenuItem;
+    miReport_Finance: TMenuItem;
     miReport_Cash: TMenuItem;
     miReport_ProfitLoss: TMenuItem;
     miGoodsAll: TMenuItem;
     miLine711: TMenuItem;
-    miLine71: TMenuItem;
-    miLine72: TMenuItem;
-    miLine73: TMenuItem;
-    miLine74: TMenuItem;
+    miLine81: TMenuItem;
+    miLine82: TMenuItem;
+    miLine83: TMenuItem;
+    miLine84: TMenuItem;
     actReport_Goods_RemainsCurrent: TdsdOpenForm;
-    N6: TMenuItem;
+    miLine51: TMenuItem;
     miReport_Goods_RemainsCurrent: TMenuItem;
     actReport_Goods: TdsdOpenForm;
     miReport_Goods: TMenuItem;
@@ -155,14 +155,14 @@ type
     actReport_GoodsMI_Account: TdsdOpenForm;
     actReport_SaleReturnIn: TdsdOpenForm;
     miReport_SaleReturnIn: TMenuItem;
-    actReport_PartnerDebt: TdsdOpenForm;
+    actReport_ClientDebt: TdsdOpenForm;
     miReport_PartnerDebt: TMenuItem;
-    N58: TMenuItem;
+    miLine61: TMenuItem;
     actGoodsAccount_ReturnIn: TdsdOpenForm;
     miGoodsAccount_ReturnIn: TMenuItem;
     actGoodsPrint: TdsdOpenForm;
     miGoodsPrint: TMenuItem;
-    actReport_MotionByPartner: TdsdOpenForm;
+    actReport_MotionByClient: TdsdOpenForm;
     miReport_MotionByPartner: TMenuItem;
     actSaleMovement: TdsdOpenForm;
     actReturnInMovement: TdsdOpenForm;
@@ -170,10 +170,37 @@ type
     miGoodsAccountMovement: TMenuItem;
     miReturnInMovement: TMenuItem;
     miSaleMovement: TMenuItem;
-    actGoodsAccount_TotalError: TdsdOpenForm;
+    actReport_GoodsAccount_TotalError: TdsdOpenForm;
     miTotalError: TMenuItem;
-    N4: TMenuItem;
+    miLine803: TMenuItem;
     miGoodsAccount_TotalError: TMenuItem;
+    actReport_ReturnIn_TotalError: TdsdOpenForm;
+    miReturnIn_TotalError: TMenuItem;
+    actReport_Sale_TotalError: TdsdOpenForm;
+    miSale_TotalError: TMenuItem;
+    actReport_Client_TotalError: TdsdOpenForm;
+    miObject_Client_TotalError: TMenuItem;
+    actReport_Client_LastError: TdsdOpenForm;
+    miObject_Client_LastError: TMenuItem;
+    actReport_Sale_ContainerError: TdsdOpenForm;
+    miReport_Sale_ContainerError: TMenuItem;
+    actReport_CollationByClient: TdsdOpenForm;
+    miReport_CollationByPartner: TMenuItem;
+    miReport_SaleOLAP: TMenuItem;
+    actReport_SaleOLAP: TdsdOpenForm;
+    miReport_Unit: TMenuItem;
+    miLine11: TMenuItem;
+    miLine41: TMenuItem;
+    miLine42: TMenuItem;
+    miLine71: TMenuItem;
+    actReport_Sale: TdsdOpenForm;
+    miReport_Sale: TMenuItem;
+    actReport_ReturnIn: TdsdOpenForm;
+    miReport_ReturnIn: TMenuItem;
+    actReport_OH_DiscountPeriod: TdsdOpenForm;
+    miReport_OH_DiscountPeriod: TMenuItem;
+    actDiscountPeriod: TdsdOpenForm;
+    miDiscountPeriod: TMenuItem;
   private
     { Private declarations }
   public
@@ -184,9 +211,7 @@ var
   MainFormInstance: TMainForm;
 
 implementation
-uses // UploadUnloadData,
- Dialogs, Forms, SysUtils, IdGlobal
-// , RepriceUnit
+uses Dialogs, Forms, SysUtils, IdGlobal
  ;
 {$R *.dfm}
 

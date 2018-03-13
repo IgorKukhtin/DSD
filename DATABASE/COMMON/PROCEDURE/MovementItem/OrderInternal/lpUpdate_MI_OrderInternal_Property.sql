@@ -396,32 +396,32 @@ BEGIN
          -- сохранили связь с <Рецептуры>
          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Receipt(), ioId, tmp.ReceiptId)
                  -- то из чего делается упаковка - НУЛЕВОЙ уровень - Здесь то что делается из ПФ_ГП
-               , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(),             ioId, CASE WHEN tmp.GoodsKindId = zc_GoodsKind_WorkProgress()
+               , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(),             ioId, CASE WHEN tmpGoods.GoodsKindId = zc_GoodsKind_WorkProgress()
                                                                                                              THEN NULL
                                                                                                         -- если след уровень - ПФ_ГП, тогда сейчас товар типа "ВЕС"
                                                                                                         WHEN ObjectLink_Receipt_GoodsKind_Parent_0.ChildObjectId = zc_GoodsKind_WorkProgress()
-                                                                                                             THEN NULL -- tmp.GoodsId
+                                                                                                             THEN NULL -- tmpGoods.GoodsId
                                                                                                         -- если ЭТО ИРНА
                                                                                                         WHEN ObjectLink_Receipt_Parent_0.ChildObjectId IS NULL
                                                                                                          AND tmp.ReceiptId > 0
-                                                                                                         AND tmp.GoodsKindId <> zc_GoodsKind_WorkProgress()
-                                                                                                             THEN tmp.GoodsId
+                                                                                                         AND tmpGoods.GoodsKindId <> zc_GoodsKind_WorkProgress()
+                                                                                                             THEN tmpGoods.GoodsId
                                                                                                         -- иначе следуюющий товар типа "ВЕС"
                                                                                                         ELSE ObjectLink_Receipt_Goods_Parent_0.ChildObjectId
                                                                                                    END)
-               , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKindComplete(), ioId, CASE WHEN tmp.GoodsKindId = zc_GoodsKind_WorkProgress()
+               , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKindComplete(), ioId, CASE WHEN tmpGoods.GoodsKindId = zc_GoodsKind_WorkProgress()
                                                                                                              THEN NULL
                                                                                                         WHEN ObjectLink_Receipt_GoodsKind_Parent_0.ChildObjectId = zc_GoodsKind_WorkProgress()
                                                                                                               THEN NULL -- tmp.GoodsKindId
                                                                                                         -- если ЭТО ИРНА
                                                                                                         WHEN ObjectLink_Receipt_Parent_0.ChildObjectId IS NULL
                                                                                                          AND tmp.ReceiptId > 0
-                                                                                                         AND tmp.GoodsKindId <> zc_GoodsKind_WorkProgress()
+                                                                                                         AND tmpGoods.GoodsKindId <> zc_GoodsKind_WorkProgress()
                                                                                                              THEN zc_GoodsKind_Basis()
                                                                                                         ELSE ObjectLink_Receipt_GoodsKind_Parent_0.ChildObjectId
                                                                                                    END)
                  -- Товар <пф-гп>
-               , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ReceiptBasis(),      ioId, CASE WHEN tmp.GoodsKindId = zc_GoodsKind_WorkProgress()
+               , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ReceiptBasis(),      ioId, CASE WHEN tmpGoods.GoodsKindId = zc_GoodsKind_WorkProgress()
                                                                                                              THEN tmp.ReceiptId
                                                                                                         WHEN ObjectLink_Receipt_GoodsKind_Parent_0.ChildObjectId = zc_GoodsKind_WorkProgress()
                                                                                                              THEN ObjectLink_Receipt_GoodsKind_Parent_0.ObjectId
@@ -430,8 +430,8 @@ BEGIN
                                                                                                         WHEN ObjectLink_Receipt_GoodsKind_Parent_2.ChildObjectId = zc_GoodsKind_WorkProgress()
                                                                                                              THEN ObjectLink_Receipt_GoodsKind_Parent_2.ObjectId
                                                                                                    END)
-               , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsBasis(),        ioId, CASE WHEN tmp.GoodsKindId = zc_GoodsKind_WorkProgress()
-                                                                                                             THEN tmp.GoodsId
+               , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsBasis(),        ioId, CASE WHEN tmpGoods.GoodsKindId = zc_GoodsKind_WorkProgress()
+                                                                                                             THEN tmpGoods.GoodsId
                                                                                                         WHEN ObjectLink_Receipt_GoodsKind_Parent_0.ChildObjectId = zc_GoodsKind_WorkProgress()
                                                                                                              THEN ObjectLink_Receipt_Goods_Parent_0.ChildObjectId
                                                                                                         WHEN ObjectLink_Receipt_GoodsKind_Parent_1.ChildObjectId = zc_GoodsKind_WorkProgress()
@@ -440,14 +440,16 @@ BEGIN
                                                                                                              THEN ObjectLink_Receipt_Goods_Parent_2.ChildObjectId
                                                                                                    END)
                  -- Срок пр-ва
-               , lpInsertUpdate_MovementItemFloat_byDesc (CASE WHEN tmp.GoodsKindId = zc_GoodsKind_WorkProgress() THEN zc_MIFloat_TermProduction() ELSE NULL END
+               , lpInsertUpdate_MovementItemFloat_byDesc (CASE WHEN tmpGoods.GoodsKindId = zc_GoodsKind_WorkProgress() THEN zc_MIFloat_TermProduction() ELSE NULL END
                                                         , ioId
                                                         , COALESCE (ObjectFloat_TermProduction.ValueData, 1)
                                                          )
-         FROM -- Рецепт для Товара, т.е. из чего он делается (как правило это Упаковка)
-              (SELECT inGoodsId         AS GoodsId
+         FROM (SELECT inGoodsId         AS GoodsId
                     , inGoodsKindId     AS GoodsKindId
-                    , Object_Receipt.Id AS ReceiptId
+              ) AS tmpGoods
+              LEFT JOIN
+               -- Рецепт для Товара, т.е. из чего он делается (как правило это Упаковка)
+              (SELECT Object_Receipt.Id AS ReceiptId
                FROM ObjectLink AS ObjectLink_Receipt_Goods
                     INNER JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
                                           ON ObjectLink_Receipt_GoodsKind.ObjectId      = ObjectLink_Receipt_Goods.ObjectId
@@ -463,7 +465,7 @@ BEGIN
                                             AND ObjectBoolean_Main.ValueData = TRUE
                WHERE ObjectLink_Receipt_Goods.ChildObjectId = inGoodsId
                  AND ObjectLink_Receipt_Goods.DescId        = zc_ObjectLink_Receipt_Goods()
-              ) AS tmp
+              ) AS tmp ON tmp.ReceiptId > 0
 
               -- Поднялись на 0 уровень - т.е. из чего делается Товар для Упаковки (как правило это уже ВЕС из ПФ_ГП)
               LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent_0
@@ -498,7 +500,7 @@ BEGIN
 
               -- Параметры Пр-ва
               LEFT JOIN ObjectLink AS ObjectLink_OrderType_Goods
-                                   ON ObjectLink_OrderType_Goods.ChildObjectId = tmp.GoodsId
+                                   ON ObjectLink_OrderType_Goods.ChildObjectId = tmpGoods.GoodsId
                                   AND ObjectLink_OrderType_Goods.DescId        = zc_ObjectLink_OrderType_Goods()
               LEFT JOIN ObjectFloat AS ObjectFloat_TermProduction
                                     ON ObjectFloat_TermProduction.ObjectId = ObjectLink_OrderType_Goods.ObjectId

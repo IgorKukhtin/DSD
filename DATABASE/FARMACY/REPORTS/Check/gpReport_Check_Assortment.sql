@@ -16,6 +16,7 @@ RETURNS TABLE (
   GoodsName      TVarChar,
   GoodsGroupName TVarChar, 
   NDSKindName    TVarChar,
+  NDS            TFloat,
   ConditionsKeepName    TVarChar,
   Amount                TFloat,
   PriceSale             TFloat,
@@ -219,6 +220,7 @@ BEGIN
            , Object_Goods.ValueData                                            AS GoodsName
            , Object_GoodsGroup.ValueData                                       AS GoodsGroupName
            , Object_NDSKind.ValueData                                          AS NDSKindName
+           , ObjectFloat_NDSKind_NDS.ValueData                                 AS NDS
            , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar          AS ConditionsKeepName           
 
            , tmpData.Amount                                        :: TFloat   AS Amount
@@ -264,7 +266,11 @@ BEGIN
                                   ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
              LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
-             
+
+             LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                   ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
+                                  AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
+
              LEFT JOIN ObjectDate AS ObjectDate_Update
                                   ON ObjectDate_Update.ObjectId = Object_Goods.Id
                                  AND ObjectDate_Update.DescId = zc_ObjectDate_Protocol_Update()  
@@ -299,6 +305,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 07.01.18         *
  29.08.17         *
 */
 

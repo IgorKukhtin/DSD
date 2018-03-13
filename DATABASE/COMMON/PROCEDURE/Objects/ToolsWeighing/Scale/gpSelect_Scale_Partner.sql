@@ -51,6 +51,138 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
 
+   IF (inBranchCode > 1000)
+   THEN 
+
+
+    -- Результат
+    RETURN QUERY
+       WITH tmpInfoMoney AS (-- 2.1.
+                             SELECT View_InfoMoney_find.InfoMoneyId
+                                  , View_InfoMoney_find.InfoMoneyGroupId
+                                  , zc_Movement_Sale() AS MovementDescId
+                             FROM Object_InfoMoney_View AS View_InfoMoney_find
+                             WHERE (View_InfoMoney_find.InfoMoneyId IN (zc_Enum_InfoMoney_30101()) -- Доходы + Продукция + Готовая продукция
+                                 OR View_InfoMoney_find.InfoMoneyId IN (zc_Enum_InfoMoney_30103()) -- Доходы + Продукция + Хлеб
+                                 OR View_InfoMoney_find.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30300() -- Доходы + Переработка
+                                                                                  )
+                                   )
+                            )
+          , tmpPartner AS (SELECT DISTINCT
+                                  Object_Partner.Id         AS PartnerId
+                                , Object_Partner.ObjectCode AS PartnerCode
+                                , Object_Partner.ValueData  AS PartnerName
+                                , View_Contract.JuridicalId AS JuridicalId
+                                , View_Contract.PaidKindId  AS PaidKindId
+                                  /*-- преобразование, т.к. в гриде будет фильтр или для УП-приход, или УП-реализация
+                                , CASE WHEN tmpInfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_10000() -- Основное сырье
+                                            THEN zc_Enum_InfoMoney_10101() -- Основное сырье + Мясное сырье + Живой вес
+                                       WHEN tmpInfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000() -- Доходы !!!не лишнее, т.к. ниже может понадобиться OR!!!
+                                        AND tmpInfoMoney.InfoMoneyId = zc_Enum_InfoMoney_30101() -- Доходы + Продукция + Готовая продукция
+                                            THEN zc_Enum_InfoMoney_30101()
+                                       ELSE tmpInfoMoney.InfoMoneyId
+                                  END AS InfoMoneyId*/
+                                , View_Contract.InfoMoneyId
+                                , zc_Movement_Sale() AS MovementDescId
+                                , (View_Contract.ContractId) AS ContractId
+                           FROM Object AS Object_Partner
+                                LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                     ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
+                                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                                                                               -- AND View_Contract.isErased = FALSE
+                                                                               -- AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+
+where Object_Partner.DescId = zc_Object_Partner()
+   and Object_Partner.Id = 256487 
+                           LIMIT 1
+                          )
+          , tmpPrintKindItem AS (SELECT * FROM lpSelect_Object_PrintKindItem())
+
+       SELECT tmpPartner.PartnerId
+            , tmpPartner.PartnerCode
+            , tmpPartner.PartnerName
+            , Object_Juridical.ValueData           AS JuridicalName
+            , Object_PaidKind.Id                   AS PaidKindId
+            , Object_PaidKind.ValueData            AS PaidKindName
+
+            , Object_Contract_View.ContractId      AS ContractId
+            , Object_Contract_View.ContractCode    AS ContractCode
+            , Object_Contract_View.InvNumber       AS ContractNumber
+            , Object_Contract_View.ContractTagName AS ContractTagName
+
+            , tmpPartner.InfoMoneyId
+            , View_InfoMoney.InfoMoneyCode
+            , View_InfoMoney.InfoMoneyName
+
+            , Object_ContractCondition_PercentView.ChangePercent :: TFloat AS ChangePercent
+            , CASE WHEN View_InfoMoney.InfoMoneyGroupId IN (zc_Enum_InfoMoneyGroup_10000() -- Основное сырье
+                                                          , zc_Enum_InfoMoneyGroup_20000() -- Общефирменные
+                                                           )
+                        THEN 0 -- !!!поставщики!!!!
+                   WHEN inIsGoodsComplete = FALSE
+                    AND tmpPartner.JuridicalId = 15384 -- Фізична особа-підприємець Соколюк Аліса Борисівна
+                        THEN 1 -- покупатели сырья, захардкодил
+                   WHEN inIsGoodsComplete = FALSE
+                        THEN 0 -- покупатели сырья, ВСЕ
+                   WHEN tmpPartner.PartnerCode IN (12345678) -- ???
+                        THEN 1 -- покупатели гп, может надо будет захардкодить
+                   ELSE 1 -- покупатели гп, ВСЕ
+              END :: TFloat AS ChangePercentAmount
+
+            , COALESCE (ObjectBoolean_Partner_EdiOrdspr.ValueData, FALSE)  :: Boolean AS isEdiOrdspr
+            , COALESCE (ObjectBoolean_Partner_EdiInvoice.ValueData, FALSE) :: Boolean AS isEdiInvoice
+            , COALESCE (ObjectBoolean_Partner_EdiDesadv.ValueData, FALSE)  :: Boolean AS isEdiDesadv
+
+            , CASE WHEN tmpPrintKindItem.isPack = TRUE OR tmpPrintKindItem.isSpec = TRUE THEN COALESCE (tmpPrintKindItem.isMovement, FALSE) ELSE TRUE END :: Boolean AS isMovement
+            , CASE WHEN tmpPrintKindItem.CountMovement > 0 THEN tmpPrintKindItem.CountMovement ELSE 2 END :: TFloat AS CountMovement
+            , COALESCE (tmpPrintKindItem.isAccount, FALSE)   :: Boolean AS isAccount,   COALESCE (tmpPrintKindItem.CountAccount, 0)   :: TFloat AS CountAccount
+            , COALESCE (tmpPrintKindItem.isTransport, FALSE) :: Boolean AS isTransport, COALESCE (tmpPrintKindItem.CountTransport, 0) :: TFloat AS CountTransport
+            , COALESCE (tmpPrintKindItem.isQuality, FALSE)   :: Boolean AS isQuality  , COALESCE (tmpPrintKindItem.CountQuality, 0)   :: TFloat AS CountQuality
+            , COALESCE (tmpPrintKindItem.isPack, FALSE)      :: Boolean AS isPack     , COALESCE (tmpPrintKindItem.CountPack, 0)      :: TFloat AS CountPack
+            , COALESCE (tmpPrintKindItem.isSpec, FALSE)      :: Boolean AS isSpec     , COALESCE (tmpPrintKindItem.CountSpec, 0)      :: TFloat AS CountSpec
+            , COALESCE (tmpPrintKindItem.isTax, FALSE)       :: Boolean AS isTax      , COALESCE (tmpPrintKindItem.CountTax, 0)       :: TFloat AS CountTax
+
+            , ObjectDesc.Id AS ObjectDescId
+            , tmpPartner.MovementDescId
+            , ObjectDesc.ItemName
+
+       FROM tmpPartner
+            LEFT JOIN ObjectDesc ON ObjectDesc.Id = zc_Object_Partner()
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                 ON ObjectLink_Juridical_Retail.ObjectId = tmpPartner.JuridicalId
+                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+            LEFT JOIN ObjectLink AS ObjectLink_Retail_PrintKindItem
+                                 ON ObjectLink_Retail_PrintKindItem.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
+                                AND ObjectLink_Retail_PrintKindItem.DescId = zc_ObjectLink_Retail_PrintKindItem()
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_PrintKindItem
+                                 ON ObjectLink_Juridical_PrintKindItem.ObjectId = tmpPartner.JuridicalId
+                                AND ObjectLink_Juridical_PrintKindItem.DescId = zc_ObjectLink_Juridical_PrintKindItem()
+            LEFT JOIN tmpPrintKindItem ON tmpPrintKindItem.Id = CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId > 0 THEN ObjectLink_Retail_PrintKindItem.ChildObjectId ELSE ObjectLink_Juridical_PrintKindItem.ChildObjectId END
+
+            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpPartner.InfoMoneyId
+            LEFT JOIN Object_ContractCondition_PercentView ON Object_ContractCondition_PercentView.ContractId = tmpPartner.ContractId
+
+            LEFT JOIN Object_Contract_View ON Object_Contract_View.ContractId = tmpPartner.ContractId
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpPartner.PaidKindId
+
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpPartner.JuridicalId
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiOrdspr
+                                    ON ObjectBoolean_Partner_EdiOrdspr.ObjectId =  tmpPartner.PartnerId
+                                   AND ObjectBoolean_Partner_EdiOrdspr.DescId = zc_ObjectBoolean_Partner_EdiOrdspr()
+                                   AND 1=0 -- убрал, т.к. проверка по связи заявки с EDI
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiInvoice
+                                    ON ObjectBoolean_Partner_EdiInvoice.ObjectId =  tmpPartner.PartnerId
+                                   AND ObjectBoolean_Partner_EdiInvoice.DescId = zc_ObjectBoolean_Partner_EdiInvoice()
+                                   AND 1=0 -- убрал, т.к. проверка по связи заявки с EDI
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiDesadv
+                                    ON ObjectBoolean_Partner_EdiDesadv.ObjectId =  tmpPartner.PartnerId
+                                   AND ObjectBoolean_Partner_EdiDesadv.DescId = zc_ObjectBoolean_Partner_EdiDesadv()
+                                   AND 1=0 -- убрал, т.к. проверка по связи заявки с EDI
+           ;
+   ELSE
+   
    -- определяется уровень доступа
    vbObjectId_Constraint:= COALESCE ((SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.JuridicalGroupId), 0);
    vbBranchId_Constraint:= COALESCE ((SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId), 0);
@@ -485,6 +617,8 @@ BEGIN
               , 12 -- View_InfoMoney.InfoMoneyCode
               , 8 -- Object_Contract_View.ContractCode
       ;
+
+   END IF;
 
 END;
 $BODY$

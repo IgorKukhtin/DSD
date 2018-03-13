@@ -25,6 +25,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Sale(
 RETURNS Integer AS
 $BODY$
    DECLARE vbIsInsert Boolean;
+   DECLARE vbMovementId Integer;
 BEGIN
     -- проверка
     inOperDate:= DATE_TRUNC ('DAY', inOperDate);
@@ -71,7 +72,50 @@ BEGIN
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_GroupMemberSP(), ioId, inGroupMemberSPId);
 
     -- сохранили <>
+
+                      
+    IF COALESCE(inInvNumberSP, '') <> ''  
+       THEN
+           vbMovementId := (SELECT Movement.Id
+                            FROM Movement 
+                              INNER JOIN MovementString AS MovementString_InvNumberSP
+                                                        ON MovementString_InvNumberSP.MovementId = Movement.Id
+                                                       AND MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
+                                                       AND MovementString_InvNumberSP.ValueData = inInvNumberSP
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_PartnerMedical
+                                                            ON MovementLinkObject_PartnerMedical.MovementId = Movement.Id
+                                                           AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()
+                                                           AND MovementLinkObject_PartnerMedical.ObjectId = inPartnerMedicalId
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_MedicSP
+                                                            ON MovementLinkObject_MedicSP.MovementId = Movement.Id
+                                                           AND MovementLinkObject_MedicSP.DescId = zc_MovementLinkObject_MedicSP()
+                                                           AND MovementLinkObject_MedicSP.ObjectId = inMedicSP
+                              INNER JOIN MovementDate AS MovementDate_OperDateSP
+                                                      ON MovementDate_OperDateSP.MovementId = Movement.Id
+                                                     AND MovementDate_OperDateSP.DescId = zc_MovementDate_OperDateSP()
+                                                     AND MovementDate_OperDateSP.ValueData = inOperDateSP
+                            WHERE Movement.DescId = zc_Movement_Sale()
+                              AND Movement.StatusId <> zc_Enum_Status_Erased()
+                              AND Movement.Id <> ioId
+                            LIMIT 1);
+                            
+           IF vbMovementId <> 0
+              THEN
+                  RAISE EXCEPTION 'Ошибка.По рецепту <%> найдена другая <Продажа> № <%> от <%>. Дублирование запрещено.'
+                                                                                         --, CHR (13)
+                                                                                         , inInvNumberSP
+                                                                                         , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId)
+                                                                                         , DATE ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId))
+                                                                                        -- , lfGet_Object_ValueData ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = vbMovementId AND MLO.DescId = zc_MovementLinkObject_From()))
+                                                                                        -- , COALESCE (' на <' || lfGet_Object_ValueData ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = vbMovementId AND MLO.DescId = zc_MovementLinkObject_To())) || '>', '')
+                                                                                       --  , CHR (13)
+                                                                                        ;
+                                                                                                       
+              END IF;
+    END IF;
+    
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberSP(), ioId, inInvNumberSP);
+    
     -- сохранили <>
     --PERFORM lpInsertUpdate_MovementString (zc_MovementString_MemberSP(), ioId, inMemberSP);
     -- сохранили <>
@@ -93,6 +137,23 @@ BEGIN
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_MemberSP(), ioId, inMemberSP);
 
 
+    -- !!!протокол через свойства конкретного объекта!!!
+     IF vbIsInsert = FALSE
+     THEN
+         -- сохранили свойство <Дата корректировки>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), ioId, CURRENT_TIMESTAMP);
+         -- сохранили свойство <Пользователь (корректировка)>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Update(), ioId, inUserId);
+     ELSE
+         IF vbIsInsert = TRUE
+         THEN
+             -- сохранили свойство <Дата создания>
+             PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
+             -- сохранили свойство <Пользователь (создание)>
+             PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
+         END IF;
+     END IF;
+     
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
 
@@ -103,8 +164,10 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 18.01.18         *
  03.04.17         *
  14.02.17         *
  08.02.17         * add SP
  13.10.15                                                                       *
 */
+--select * from gpInsertUpdate_Movement_Sale(ioId := 3959860 , inInvNumber := '5853' , inOperDate := ('18.01.2018')::TDateTime , inUnitId := 183292 , inJuridicalId := 0 , inPaidKindId := 6 , inPartnerMedicalId := 3690583 , inGroupMemberSPId := 3690580 , inOperDateSP := ('18.01.2018')::TDateTime , inInvNumberSP := '77' , inMedicSP := 'Кукушкин Сергей Иванович' , inMemberSP := 'Зорин' , inComment := '' ,  inSession := '3');

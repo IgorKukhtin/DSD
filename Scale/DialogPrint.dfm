@@ -157,7 +157,7 @@ inherited DialogPrintForm: TDialogPrintForm
     end
     object cbPrintSpec: TCheckBox
       Left = 161
-      Top = 55
+      Top = 80
       Width = 120
       Height = 17
       Caption = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103
@@ -184,6 +184,20 @@ inherited DialogPrintForm: TDialogPrintForm
       ParentFont = False
       TabOrder = 6
       OnClick = cbPrintTaxClick
+    end
+    object cbPrintPackGross: TCheckBox
+      Left = 161
+      Top = 55
+      Width = 129
+      Height = 17
+      Caption = #1059#1087#1072#1082'. '#1076#1083#1103' '#1054#1061#1056#1040#1053#1067
+      Font.Charset = RUSSIAN_CHARSET
+      Font.Color = clBlue
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 7
     end
   end
 end

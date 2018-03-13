@@ -7,7 +7,13 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_DiscountTools(
     IN inSession     TVarChar            -- сессия пользователя
    
 )
-RETURNS TABLE (Id Integer, StartSumm TFloat, EndSumm TFloat, DiscountTax TFloat, DiscountId Integer, DiscountName TVarChar, isErased boolean)
+RETURNS TABLE (Id           Integer
+             , StartSumm    TFloat
+             , EndSumm      TFloat
+             , DiscountTax  TFloat
+             , DiscountId   Integer
+             , DiscountName TVarChar
+             , isErased     Boolean)
 AS
 $BODY$
 BEGIN
@@ -25,21 +31,23 @@ BEGIN
            , Object_Discount.ID                     AS DiscountId
            , Object_Discount.ValueData              AS DiscountName 
            , Object.isErased                        AS isErased
-       FROM Object
-        LEFT JOIN ObjectFloat AS OS_DiscountTools_StartSumm
-                 ON OS_DiscountTools_StartSumm.ObjectId = Object.Id
-                AND OS_DiscountTools_StartSumm.DescId = zc_ObjectFloat_DiscountTools_StartSumm()
-        LEFT JOIN ObjectFloat AS OS_DiscountTools_EndSumm
-                 ON OS_DiscountTools_EndSumm.ObjectId = Object.Id
-                AND OS_DiscountTools_EndSumm.DescId = zc_ObjectFloat_DiscountTools_EndSumm()
-        LEFT JOIN ObjectFloat AS OS_DiscountTools_DiscountTax
-                 ON OS_DiscountTools_DiscountTax.ObjectId = Object.Id
-                AND OS_DiscountTools_DiscountTax.DescId = zc_ObjectFloat_DiscountTools_DiscountTax()
-        LEFT JOIN ObjectLink AS ObjectLink_DiscountTools_Discount ON ObjectLink_DiscountTools_Discount.ObjectId = Object.Id
-                AND ObjectLink_DiscountTools_Discount.DescId = zc_ObjectLink_DiscountTools_Discount()
-        LEFT JOIN Object AS Object_Discount ON Object_Discount.Id = ObjectLink_DiscountTools_Discount.ChildObjectId
-        WHERE Object.DescId = zc_Object_DiscountTools()
-         AND (Object.isErased = FALSE OR inIsShowAll = TRUE)
+      FROM Object
+           LEFT JOIN ObjectFloat AS OS_DiscountTools_StartSumm
+                                 ON OS_DiscountTools_StartSumm.ObjectId = Object.Id
+                                AND OS_DiscountTools_StartSumm.DescId = zc_ObjectFloat_DiscountTools_StartSumm()
+           LEFT JOIN ObjectFloat AS OS_DiscountTools_EndSumm
+                                 ON OS_DiscountTools_EndSumm.ObjectId = Object.Id
+                                AND OS_DiscountTools_EndSumm.DescId = zc_ObjectFloat_DiscountTools_EndSumm()
+           LEFT JOIN ObjectFloat AS OS_DiscountTools_DiscountTax
+                                 ON OS_DiscountTools_DiscountTax.ObjectId = Object.Id
+                                AND OS_DiscountTools_DiscountTax.DescId = zc_ObjectFloat_DiscountTools_DiscountTax()
+           LEFT JOIN ObjectLink AS ObjectLink_DiscountTools_Discount 
+                                ON ObjectLink_DiscountTools_Discount.ObjectId = Object.Id
+                               AND ObjectLink_DiscountTools_Discount.DescId = zc_ObjectLink_DiscountTools_Discount()
+           LEFT JOIN Object AS Object_Discount ON Object_Discount.Id = ObjectLink_DiscountTools_Discount.ChildObjectId
+        
+      WHERE Object.DescId = zc_Object_DiscountTools()
+          AND (Object.isErased = FALSE OR inIsShowAll = TRUE)
        ;
 
 END;

@@ -2,6 +2,7 @@ inherited ProductionUnionForm: TProductionUnionForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
   ClientWidth = 1020
   ExplicitWidth = 1036
+  ExplicitHeight = 709
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -682,6 +683,12 @@ inherited ProductionUnionForm: TProductionUnionForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    inherited actGoodsChoiceMaster: TOpenChoiceForm
+      isShowModal = False
+    end
+    inherited actGoodsChoiceChild: TOpenChoiceForm
+      isShowModal = False
     end
     object actGoodsKindCompleteChoiceChild: TOpenChoiceForm
       Category = 'DSDLib'

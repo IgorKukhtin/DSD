@@ -3,8 +3,9 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
   ClientHeight = 338
   ClientWidth = 802
   AddOnFormData.isAlwaysRefresh = True
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 818
-  ExplicitHeight = 377
+  ExplicitHeight = 376
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -25,6 +26,12 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
         ExplicitWidth = 802
         ExplicitHeight = 281
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = FromName
+            end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
@@ -128,9 +135,9 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 109
           end
-          object NDSKindName: TcxGridDBColumn
+          object NDS: TcxGridDBColumn
             Caption = #1053#1044#1057
-            DataBinding.FieldName = 'NDSKindName'
+            DataBinding.FieldName = 'NDS'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 56
@@ -309,6 +316,25 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
         Component = PeriodChoice
       end>
     Left = 352
+    Top = 152
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'StartData'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndData'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    Left = 576
     Top = 152
   end
 end

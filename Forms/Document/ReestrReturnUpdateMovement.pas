@@ -71,6 +71,18 @@ type
     actDialog_Print: TExecuteDialog;
     macPrintPeriod: TMultiAction;
     edIsShowAll: TcxCheckBox;
+    cxLabel18: TcxLabel;
+    cePersonal: TcxButtonEdit;
+    GuidesPersonal: TdsdGuides;
+    cxLabel19: TcxLabel;
+    cePersonalTrade: TcxButtonEdit;
+    GuidesPersonalTrade: TdsdGuides;
+    spSelectPrintGroupPersonal: TdsdStoredProc;
+    spSelectPrintPeriodGroupPersonal: TdsdStoredProc;
+    actPrintGroupPersonal: TdsdPrintAction;
+    actPrintPeriodGroupPersonal: TdsdPrintAction;
+    bbPrintGroupPersonal: TdxBarButton;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

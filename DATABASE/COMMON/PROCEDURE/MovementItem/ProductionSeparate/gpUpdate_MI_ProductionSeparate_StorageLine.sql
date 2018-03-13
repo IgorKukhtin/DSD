@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpUpdate_MI_ProductionSeparate_StorageLine (Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_MI_ProductionSeparate_StorageLine (Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_MI_ProductionSeparate_StorageLine (Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_ProductionSeparate_StorageLine (Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_ProductionSeparate_StorageLine(
     IN inMovementId          Integer   , -- Id документа
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_ProductionSeparate_StorageLine(
     IN inGoodsKindId         Integer   , -- вид товара
     IN inStorageLineId       Integer   , -- линия пр-ва
  INOUT ioStorageLineId_old   Integer   , -- линия пр-ва сохраненное значение
+    IN inIsDescMaster        Boolean   , -- Для какого грида 
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer
@@ -31,7 +33,9 @@ BEGIN
                                          ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
                                         AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
    WHERE MovementItem.MovementId = inMovementId
-     AND MovementItem.DescId     = zc_MI_Master()
+     AND ((MovementItem.DescId = zc_MI_Master() AND inIsDescMaster = TRUE) 
+       OR (MovementItem.DescId = zc_MI_Child() AND inIsDescMaster = FALSE)
+         )
      AND MovementItem.isErased   = FALSE
      AND MovementItem.ObjectId = inGoodsId
      AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = inGoodsKindId
@@ -48,8 +52,11 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.01.18         * add inIsDescMaster
  14.08.17         *
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MI_ProductionSeparate_Master(inId := 71587375 , inStorageLineId := 0 , inSession := '5');
+-- select * from gpUpdate_MI_ProductionSeparate_StorageLine(inMovementId := 5268188 , inGoodsId := 5246 , inGoodsKindId := 0 , inStorageLineId := 0 , ioStorageLineId_old := 0 , inIsDescMaster := 'TRUE' ,  inSession := '5');
+-- select * from gpUpdate_MI_ProductionSeparate_StorageLine(inMovementId := 5268188 , inGoodsId := 5246 , inGoodsKindId := 0 , inStorageLineId := 1005633 , inIsDescMaster := 'TRUE' ,  inSession := '5');
+   

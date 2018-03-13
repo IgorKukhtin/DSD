@@ -5,25 +5,27 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoGoods(
  INOUT ioId                   Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId           Integer   , -- Ключ объекта <Документ>
     IN inGoodsId              Integer   , -- Товары
     IN inAmount               TFloat    , -- % скидки на товар
- INOUT ioPrice                TFloat    , --Цена в прайсе
-    IN inPriceSale            TFloat    , --Цена на полке
-   OUT outPriceWithOutVAT     TFloat    , --Цена отгрузки без учета НДС, с учетом скидки, грн
-   OUT outPriceWithVAT        TFloat    , --Цена отгрузки с учетом НДС, с учетом скидки, грн
-    IN inAmountReal           TFloat    , --Объем продаж в аналогичный период, кг
-   OUT outAmountRealWeight    TFloat    , --Объем продаж в аналогичный период, кг Вес
-    IN inAmountPlanMin        TFloat    , --Минимум планируемого объема продаж на акционный период (в кг)
-   OUT outAmountPlanMinWeight TFloat   , --Минимум планируемого объема продаж на акционный период (в кг) вес
-    IN inAmountPlanMax        TFloat    , --Максимум планируемого объема продаж на акционный период (в кг)
-   OUT outAmountPlanMaxWeight TFloat   , --Максимум планируемого объема продаж на акционный период (в кг) Вес
-    IN inGoodsKindId          Integer   , --ИД обьекта <Вид товара>
-    IN inGoodsKindCompleteId  Integer   , --ИД обьекта <Вид товара (примечание)>
-    IN inComment              TVarChar  , --Комментарий
+ INOUT ioPrice                TFloat    , -- Цена в прайсе
+    IN inPriceSale            TFloat    , -- Цена на полке
+   OUT outPriceWithOutVAT     TFloat    , -- Цена отгрузки без учета НДС, с учетом скидки, грн
+   OUT outPriceWithVAT        TFloat    , -- Цена отгрузки с учетом НДС, с учетом скидки, грн
+    IN inPriceTender          TFloat    , -- Цена Тендер без учета НДС, с учетом скидки, грн
+    IN inAmountReal           TFloat    , -- Объем продаж в аналогичный период, кг
+   OUT outAmountRealWeight    TFloat    , -- Объем продаж в аналогичный период, кг Вес
+    IN inAmountPlanMin        TFloat    , -- Минимум планируемого объема продаж на акционный период (в кг)
+   OUT outAmountPlanMinWeight TFloat    , -- Минимум планируемого объема продаж на акционный период (в кг) вес
+    IN inAmountPlanMax        TFloat    , -- Максимум планируемого объема продаж на акционный период (в кг)
+   OUT outAmountPlanMaxWeight TFloat    , -- Максимум планируемого объема продаж на акционный период (в кг) Вес
+    IN inGoodsKindId          Integer   , -- ИД обьекта <Вид товара>
+    IN inGoodsKindCompleteId  Integer   , -- ИД обьекта <Вид товара (примечание)>
+    IN inComment              TVarChar  , -- Комментарий
     IN inSession              TVarChar    -- сессия пользователя
 )
 AS
@@ -36,6 +38,13 @@ $BODY$
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := CASE WHEN inSession = '-12345' THEN inSession :: Integer ELSE lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Promo()) END;
+
+
+    -- Проверили inPriceTender
+    IF inPriceTender <> 0 AND EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_Promo() AND MB.ValueData = TRUE)
+    THEN
+        RAISE EXCEPTION 'Ошибка. Значение <Цена Тендер> не может быть введено для документа с признаком <Акция>.';
+    END IF;
 
 
     -- Проверили уникальность товар/вид товара
@@ -64,7 +73,7 @@ BEGIN
     FROM gpGet_Object_PriceList(vbPriceList,inSession) AS PriceList;
     
     -- поиск цены по базовому прайсу
-    IF COALESCE (ioPrice,0) = 0
+    IF COALESCE (ioPrice, 0) = 0 OR COALESCE (ioId, 0) = 0
     THEN
         SELECT Price.ValuePrice
                INTO ioPrice
@@ -80,10 +89,19 @@ BEGIN
         END IF;
     END IF;
     
-    -- расчитать <Цена отгрузки без учета НДС, с учетом скидки, грн>
-    outPriceWithOutVAT := ROUND(ioPrice - COALESCE(ioPrice * inAmount/100.0),2);
-    -- расчитать <Цена отгрузки с учетом НДС, с учетом скидки, грн>
-    outPriceWithVAT := ROUND(outPriceWithOutVAT * ((vbVAT/100.0)+1),2);
+    -- Так для Тендера
+    IF inPriceTender > 0
+    THEN
+        -- расчитать <Цена отгрузки без учета НДС, с учетом скидки, грн>
+        outPriceWithOutVAT := ROUND(inPriceTender, 2);
+        -- расчитать <Цена отгрузки с учетом НДС, с учетом скидки, грн>
+        outPriceWithVAT := ROUND (outPriceWithOutVAT * (1 + vbVAT / 100.0) ,2);
+    ELSE
+        -- расчитать <Цена отгрузки без учета НДС, с учетом скидки, грн>
+        outPriceWithOutVAT := ROUND (ioPrice - COALESCE (ioPrice * inAmount / 100.0), 2);
+        -- расчитать <Цена отгрузки с учетом НДС, с учетом скидки, грн>
+        outPriceWithVAT := ROUND (outPriceWithOutVAT * (1 + vbVAT / 100.0), 2);
+    END IF;
     
     -- расчитать весовые показатели
     SELECT inAmountPlanMin * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END
@@ -109,6 +127,7 @@ BEGIN
                                                   , inPriceSale            := inPriceSale
                                                   , inPriceWithOutVAT      := outPriceWithOutVAT
                                                   , inPriceWithVAT         := outPriceWithVAT
+                                                  , inPriceTender          := inPriceTender
                                                   , inAmountReal           := inAmountReal
                                                   , inAmountPlanMin        := inAmountPlanMin
                                                   , inAmountPlanMax        := inAmountPlanMax
@@ -126,6 +145,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.    Воробкало А.А.
+ 24.01.18         * inPriceTender
  28.11.17         * inGoodsKindCompleteId
  25.11.15                                                                         * Comment
  13.10.15                                                                         *

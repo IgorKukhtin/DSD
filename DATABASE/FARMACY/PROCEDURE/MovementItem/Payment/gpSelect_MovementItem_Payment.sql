@@ -22,6 +22,7 @@ RETURNS TABLE (Id                    Integer
               , Income_UnitId        Integer
               , Income_UnitName      TVarChar
               , Income_NDSKindName   TVarChar
+              , Income_NDS           TFloat
               , Income_ContractName  TVarChar
               , Income_TotalSumm     TFloat
               , Income_PaySumm       TFloat
@@ -86,6 +87,7 @@ BEGIN
                    , MovementLinkObject_To.ObjectId             AS ToId
                    , Object_To.ValueData                        AS ToName
                    , Object_NDSKind.ValueData                   AS NDSKindName
+                   , ObjectFloat_NDSKind_NDS.ValueData          AS NDS
                    , Object_Contract.ValueData                  AS ContractName
                    , MovementFloat_TotalSumm.ValueData          AS TotalSumm
                    , tmpContainer.Amount                        AS PaySumm
@@ -130,6 +132,10 @@ BEGIN
                                                 AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
                     LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = MovementLinkObject_NDSKind.ObjectId
 
+                    LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                          ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId 
+                                         AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+                                         
                     LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                  ON MovementLinkObject_Contract.MovementId = Movement.Id
                                                 AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
@@ -181,6 +187,7 @@ BEGIN
                   , MLO_To.ObjectId                             AS Income_UnitId
                   , Object_To.ValueData                         AS Income_UnitName
                   , Object_NDSKind.ValueData                    AS Income_NDSKindName
+                  , ObjectFloat_NDSKind_NDS.ValueData           AS Income_NDS
                   , Object_Contract.ValueData                   AS Income_ContractName
                   , MovementFloat_TotalSumm.ValueData           AS Income_TotalSumm
                   , Container.Amount                            AS Income_PaySumm
@@ -217,7 +224,11 @@ BEGIN
                                                  ON MovementLinkObject_NDSKind.MovementId = Movement_Income.Id
                                                 AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
                     LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = MovementLinkObject_NDSKind.ObjectId
-                                   
+
+                    LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                          ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId 
+                                         AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
+                                                                            
                     LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                  ON MovementLinkObject_Contract.MovementId = Movement_Income.Id
                                                 AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
@@ -283,6 +294,7 @@ BEGIN
               , Income.ToId          AS Income_UnitId
               , Income.ToName        AS Income_UnitName
               , Income.NDSKindName   AS Income_NDSKindName
+              , Income.NDS           AS Income_NDS
               , Income.ContractName  AS Income_ContractName
               , Income.TotalSumm     AS Income_TotalSumm
               , Income.PaySumm       AS Income_PaySumm
@@ -318,6 +330,7 @@ BEGIN
               , MI_Payment.Income_UnitId
               , MI_Payment.Income_UnitName
               , MI_Payment.Income_NDSKindName
+              , MI_Payment.Income_NDS
               , MI_Payment.Income_ContractName
               , MI_Payment.Income_TotalSumm
               , MI_Payment.Income_PaySumm
@@ -365,6 +378,7 @@ BEGIN
                   , MLO_To.ObjectId                             AS Income_UnitId
                   , Object_To.ValueData                         AS Income_UnitName
                   , Object_NDSKind.ValueData                    AS Income_NDSKindName
+                  , ObjectFloat_NDSKind_NDS.ValueData           AS Income_NDS
                   , Object_Contract.ValueData                   AS Income_ContractName
                   , MovementFloat_TotalSumm.ValueData           AS Income_TotalSumm
                   , Container.Amount                            AS Income_PaySumm
@@ -402,7 +416,11 @@ BEGIN
                                                  ON MovementLinkObject_NDSKind.MovementId = Movement_Income.Id
                                                 AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
                     LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = MovementLinkObject_NDSKind.ObjectId
-                                   
+
+                    LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                          ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId 
+                                         AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
+
                     LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                  ON MovementLinkObject_Contract.MovementId = Movement_Income.Id
                                                 AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
@@ -472,6 +490,7 @@ BEGIN
               , MI_Payment.Income_UnitId
               , MI_Payment.Income_UnitName
               , MI_Payment.Income_NDSKindName
+              , MI_Payment.Income_NDS
               , MI_Payment.Income_ContractName
               , MI_Payment.Income_TotalSumm
               , MI_Payment.Income_PaySumm
@@ -506,6 +525,7 @@ ALTER FUNCTION gpSelect_MovementItem_Payment (Integer, Boolean, Boolean, TDateTi
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».    ¬ÓÓ·Í‡ÎÓ ¿.¿.
+ 05.01.18         * Income_NDS
  06.04.16         *
  21.12.15                                                          *
  07.12.15                                                          *

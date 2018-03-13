@@ -20,6 +20,8 @@ type
     procedure CreateReportProcedure;
     procedure CreateSystemProcedure;
     procedure CreateLoadProcedure;
+    procedure CreateUpdatePromoCodeProcedures;
+    procedure CreateJSONProcedures;
   end;
 
 
@@ -31,6 +33,7 @@ const
   CommonFunctionPath = '..\DATABASE\COMMON\FUNCTION\';
   CommonProcedurePath = '..\DATABASE\COMMON\PROCEDURE\';
   CommonReportsPath = '..\DATABASE\COMMON\REPORTS\';
+  CommonViewPath = '..\DATABASE\COMMON\VIEW\';
 
   FarmacyFunctionPath = '..\DATABASE\Farmacy\FUNCTION\';
   FarmacyProcedurePath = '..\DATABASE\Farmacy\PROCEDURE\';
@@ -84,10 +87,44 @@ begin
 
 end;
 
+procedure TdbProcedureTest.CreateJSONProcedures;
+begin
+  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'Load\LoadPriceList\gpInsertUpdate_Movement_LoadPriceList_JSON_1Contract.sql');
+  ZQuery.ExecSQL;
+
+  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'Load\LoadPriceList\gpInsertUpdate_Movement_LoadPriceList_JSON_2Contract.sql');
+  ZQuery.ExecSQL;
+
+  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'Load\LoadPriceList\gpInsertUpdate_Movement_LoadPriceList_JSON_3Contract.sql');
+  ZQuery.ExecSQL;
+
+  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'Load\LoadPriceList\lpInsertUpdate_Movement_LoadPriceList_JSON.sql');
+  ZQuery.ExecSQL;
+
+  ZQuery.ParamCheck := false;
+  ZQuery.SQL.LoadFromFile(CommonViewPath + '01Object\Object_ImportSettings_View.sql');
+  ZQuery.ExecSQL;
+
+  ZQuery.SQL.LoadFromFile(CommonViewPath + '01Object\Object_ImportSettingsItems_View.sql');
+  ZQuery.ExecSQL;
+end;
+
 procedure TdbProcedureTest.CreateLoadProcedure;
 begin
   ScriptDirectory := FarmacyProcedurePath + 'Load\';
   ProcedureLoad;
+end;
+
+procedure TdbProcedureTest.CreateUpdatePromoCodeProcedures;
+begin
+  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'Movement\Check\gpInsertUpdate_Movement_Check_ver2.sql');
+  ZQuery.ExecSQL;
+
+  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'Movement\PromoCode\gpGet_IsGoodsInPromo.sql');
+  ZQuery.ExecSQL;
+
+  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'Movement\PromoCode\gpGet_PromoCode_by_GUID.sql');
+  ZQuery.ExecSQL;
 end;
 
 procedure TdbProcedureTest.CreateMovementItemContainerProcedure;
@@ -244,6 +281,7 @@ begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\FileTypeKind\');
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\ImportSettings\');
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\ImportSettingsItems\');
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\ImportType\');
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\NDSKind\');
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Role\');
 

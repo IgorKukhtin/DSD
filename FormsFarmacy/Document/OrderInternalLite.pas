@@ -57,7 +57,7 @@ type
     RemainsInUnit: TcxGridDBColumn;
     MCS: TcxGridDBColumn;
     Income_Amount: TcxGridDBColumn;
-    NDSKindName: TcxGridDBColumn;
+    NDS: TcxGridDBColumn;
     GoodsGroupName: TcxGridDBColumn;
     AmountSecond: TcxGridDBColumn;
     AmountAll: TcxGridDBColumn;

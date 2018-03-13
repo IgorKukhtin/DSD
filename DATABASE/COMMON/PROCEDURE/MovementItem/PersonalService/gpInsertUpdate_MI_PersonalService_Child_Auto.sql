@@ -229,6 +229,7 @@ BEGIN
                                                                         , inSummCardSecondRecalc   := 0
                                                                         , inSummCardSecondCash     := 0
                                                                         , inSummNalogRecalc        := 0
+                                                                        , inSummNalogRetRecalc     := 0
                                                                         , inSummMinus              := 0
                                                                         , inSummAdd                := 0
                                                                         , inSummHoliday            := 0
@@ -336,6 +337,7 @@ BEGIN
                                                           , inSummCardSecondRecalc   := COALESCE (MIFloat_SummCardSecondRecalc.ValueData, 0)
                                                           , inSummCardSecondCash     := COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)
                                                           , inSummNalogRecalc        := COALESCE (MIFloat_SummNalogRecalc.ValueData, 0)
+                                                          , inSummNalogRetRecalc     := COALESCE (MIFloat_SummNalogRetRecalc.ValueData, 0)
                                                           , inSummMinus              := COALESCE (MIFloat_SummMinus.ValueData, 0)
                                                           , inSummAdd                := COALESCE (MIFloat_SummAdd.ValueData, 0)
                                                           , inSummHoliday            := COALESCE (MIFloat_SummHoliday.ValueData, 0)
@@ -367,6 +369,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRecalc
                                         ON MIFloat_SummNalogRecalc.MovementItemId = MovementItem.Id
                                        AND MIFloat_SummNalogRecalc.DescId = zc_MIFloat_SummNalogRecalc()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRetRecalc
+                                        ON MIFloat_SummNalogRetRecalc.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummNalogRetRecalc.DescId = zc_MIFloat_SummNalogRetRecalc()
             LEFT JOIN MovementItemFloat AS MIFloat_SummMinus
                                         ON MIFloat_SummMinus.MovementItemId = MovementItem.Id
                                        AND MIFloat_SummMinus.DescId = zc_MIFloat_SummMinus()
@@ -413,6 +418,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 05.01.18         *
  20.06.17         * add inSummCardSecondCash
  21.06.16         *
 */

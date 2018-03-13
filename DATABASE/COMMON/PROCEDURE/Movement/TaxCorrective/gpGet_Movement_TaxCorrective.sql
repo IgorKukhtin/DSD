@@ -15,13 +15,16 @@ RETURNS TABLE (Id Integer, isMask Boolean, InvNumber TVarChar, OperDate TDateTim
              , TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat
              , InvNumberPartner TVarChar
-             , FromId Integer, FromName TVarChar, PartnerId Integer, PartnerName TVarChar, ToId Integer, ToName TVarChar
+             , FromId Integer, FromName TVarChar, INN_From TVarChar
+             , PartnerId Integer, PartnerName TVarChar
+             , ToId Integer, ToName TVarChar
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
              , DocumentMasterId Integer, DocumentMasterName TVarChar, isPartner Boolean
              , DocumentChildId Integer, DocumentChildName TVarChar
              , InvNumberBranch TVarChar
              , Comment TVarChar
+             , isINN Boolean
               )
 AS
 $BODY$
@@ -35,7 +38,7 @@ BEGIN
      THEN
      inMovementId := gpInsert_Movement_TaxCorrective_Mask (ioId        := inMovementId
                                                          , inOperDate  := inOperDate
-                                                         , inSession   := inSession); 
+                                                         , inSession   := inSession);
      END If;
 
 
@@ -43,40 +46,42 @@ BEGIN
      THEN
          RETURN QUERY
          SELECT
-               0 				    AS Id
+               0                                    AS Id
              , FALSE                                AS isMask
              , tmpInvNumber.InvNumber               AS InvNumber
              , inOperDate                           AS OperDate
              , Object_Status.Code                   AS StatusCode
-             , Object_Status.Name              	    AS StatusName
-             , CAST (False as Boolean)         	    AS Checked
-             , CAST (False as Boolean)         	    AS Document
-             , CAST (False as Boolean)        	    AS isElectron
-             , inOperDate         	            AS DateisElectron
+             , Object_Status.Name                   AS StatusName
+             , CAST (False as Boolean)              AS Checked
+             , CAST (False as Boolean)              AS Document
+             , CAST (False as Boolean)              AS isElectron
+             , inOperDate                           AS DateisElectron
              , CAST (False as Boolean)              AS PriceWithVAT
              , CAST (TaxPercent_View.Percent as TFloat) AS VATPercent
              , CAST (0 as TFloat)                   AS TotalCount
              , CAST (0 as TFloat)                   AS TotalSummMVAT
              , CAST (0 as TFloat)                   AS TotalSummPVAT
              , lpInsertFind_Object_InvNumberTax (zc_Movement_TaxCorrective(), inOperDate, tmpInvNumber.InvNumberBranch) :: TVarChar AS InvNumberPartner
-             , 0                     				AS FromId
-             , CAST ('' as TVarChar) 				AS FromName
+             , 0                                    AS FromId
+             , CAST ('' as TVarChar)                AS FromName
+             , CAST ('' as TVarChar)                AS INN_From
              , 0                                    AS PartnerId
-             , CAST ('' as TVarChar)               	AS PartnerName
-             , Object_Juridical_Basis.Id			AS ToId
-             , Object_Juridical_Basis.ValueData		AS ToName
-             , 0                     				AS ContractId
-             , CAST ('' as TVarChar) 				AS ContractName
-             , CAST ('' as TVarChar) 				AS ContractTagName
-             , 0                     				AS TaxKindId
-             , CAST ('' as TVarChar) 				AS TaxKindName
-             , 0                     				AS DocumentMasterId
-             , CAST ('' as TVarChar) 				AS DocumentMasterName
-             , CAST (False as Boolean)                          AS isPartner     -- признак Акт недовоза из документа возврата
-             , 0                     				AS DocumentChildId
-             , CAST ('' as TVarChar) 				AS DocumentChildName
-             , tmpInvNumber.InvNumberBranch
-             , CAST ('' as TVarChar) 		                AS Comment
+             , CAST ('' as TVarChar)                AS PartnerName
+             , Object_Juridical_Basis.Id            AS ToId
+             , Object_Juridical_Basis.ValueData     AS ToName
+             , 0                                    AS ContractId
+             , CAST ('' as TVarChar)                AS ContractName
+             , CAST ('' as TVarChar)                AS ContractTagName
+             , 0                                    AS TaxKindId
+             , CAST ('' as TVarChar)                AS TaxKindName
+             , 0                                    AS DocumentMasterId
+             , CAST ('' as TVarChar)                AS DocumentMasterName
+             , CAST (False as Boolean)              AS isPartner     -- признак Акт недовоза из документа возврата
+             , 0                                    AS DocumentChildId
+             , CAST ('' as TVarChar)                AS DocumentChildName
+             , tmpInvNumber.InvNumberBranch         AS InvNumberBranch
+             , ''                       :: TVarChar AS Comment
+             , FALSE                    :: Boolean  AS isINN
 
           FROM (SELECT CAST (NEXTVAL ('movement_taxcorrective_seq') AS TVarChar) AS InvNumber
                      , CASE WHEN inOperDate >= '01.01.2016'
@@ -91,7 +96,7 @@ BEGIN
                             WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentZaporozhye()
                                  THEN (SELECT ObjectString.ValueData FROM Object JOIN ObjectString ON ObjectString.DescId = zc_objectString_Branch_InvNumber() AND ObjectString.ObjectId = Object.Id WHERE Object.DescId = zc_object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportZaporozhye())
 
-                            WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentKrRog() 
+                            WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentKrRog()
                                  THEN (SELECT ObjectString.ValueData FROM Object JOIN ObjectString ON ObjectString.DescId = zc_objectString_Branch_InvNumber() AND ObjectString.ObjectId = Object.Id WHERE Object.DescId = zc_object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportKrRog())
 
                             WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentNikolaev()
@@ -132,6 +137,26 @@ BEGIN
            , MovementString_InvNumberPartner.ValueData                      AS InvNumberPartner
            , Object_From.Id                    			                    AS FromId
            , Object_From.ValueData             			                    AS FromName
+
+           , CASE WHEN Movement.Id IN (-- Corr
+                                       7943509
+                                     , 8066170
+                                     , 8066171
+                                     , 8066169
+                                     , 8464974
+                                     , 8465476
+                                     , 8465802
+                                     , 8479936
+                                     , 8462887
+                                     , 8462999
+                                     , 8463007
+                                     , 8488900
+                                     , 8464619
+                                      )
+                  THEN '100000000000'
+                  ELSE COALESCE (MovementString_FromINN.ValueData, ObjectHistory_JuridicalDetails_View.INN)
+             END :: TVarChar AS INN_From
+
            , Object_Partner.Id                 			                    AS PartnerId
            , Object_Partner.ValueData          			                    AS PartnerName
            , Object_To.Id                      			                    AS ToId
@@ -149,6 +174,8 @@ BEGIN
            , MovementString_InvNumberBranch.ValueData                         AS InvNumberBranch
 
            , MovementString_Comment.ValueData       AS Comment
+
+           , CASE WHEN COALESCE (MovementString_FromINN.ValueData, '') <> '' THEN TRUE ELSE FALSE END AS isINN
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -175,9 +202,14 @@ BEGIN
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
-            LEFT JOIN MovementString AS MovementString_Comment 
+            LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementString AS MovementString_FromINN
+                                     ON MovementString_FromINN.MovementId = Movement.Id
+                                    AND MovementString_FromINN.DescId = zc_MovementString_FromINN()
+                                    AND MovementString_FromINN.ValueData  <> ''
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
@@ -198,8 +230,8 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+            LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_From.Id
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                          ON MovementLinkObject_Partner.MovementId = Movement.Id

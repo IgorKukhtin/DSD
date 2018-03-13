@@ -5,10 +5,8 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -335
-  ExplicitTop = -113
   ExplicitWidth = 1124
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2429,6 +2427,49 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1089#1087#1080#1089#1082#1091
       ImageIndex = 3
     end
+    object actPrintPackGross: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_Pack
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Pack
+        end>
+      Caption = #1059#1087#1072#1082'. '#1051#1080#1089#1090' '#1074#1077#1089' '#1041#1056#1059#1058#1058#1054
+      Hint = #1059#1087#1072#1082'. '#1051#1080#1089#1090' '#1074#1077#1089' '#1041#1056#1059#1058#1058#1054
+      ImageIndex = 16
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_SalePackGross'
+      ReportNameParam.Name = 'PrintMovement_SalePackGross'
+      ReportNameParam.Value = 'PrintMovement_SalePackGross'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -2661,6 +2702,10 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintPackGross'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2781,6 +2826,10 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     end
     object bbPrint_Account_List: TdxBarButton
       Action = mactPrint_Account_List
+      Category = 0
+    end
+    object bbPrintPackGross: TdxBarButton
+      Action = actPrintPackGross
       Category = 0
     end
   end
@@ -3325,8 +3374,8 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 351
-    Top = 416
+    Left = 375
+    Top = 448
   end
   object spSelectPrint_ExpInvoice: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_ExpInvoice_Print'
@@ -3615,8 +3664,8 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 824
-    Top = 48
+    Left = 888
+    Top = 136
   end
   object spSelectPrint_Total_To: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_TotalPrint'

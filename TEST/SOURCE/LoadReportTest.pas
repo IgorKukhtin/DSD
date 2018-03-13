@@ -91,10 +91,26 @@ end;
 
 procedure TLoadReportTest.LoadSticker;
 begin
+  // 1
   LoadReportFromFile('ШАБЛОН + тм АЛАН - Український.Sticker',          ReportPath + '\Этикетки\ШАБЛОН + тм АЛАН - Український.fr3');
-  LoadReportFromFile('ШАБЛОН + тм ВАРТО (Варус) - Український.Sticker', ReportPath + '\Этикетки\ШАБЛОН + тм ВАРТО (Варус) - Український.fr3');
-  LoadReportFromFile('ШАБЛОН + тм НАШИ КОВБАСИ - Український.Sticker',  ReportPath + '\Этикетки\ШАБЛОН + тм НАШИ КОВБАСИ - Український.fr3');
+  // 2
   LoadReportFromFile('ШАБЛОН + тм СПЕЦ ЦЕХ - Український.Sticker',      ReportPath + '\Этикетки\ШАБЛОН + тм СПЕЦ ЦЕХ - Український.fr3');
+  // 3
+  LoadReportFromFile('ШАБЛОН + тм ВАРТО (Варус) - Український.Sticker', ReportPath + '\Этикетки\ШАБЛОН + тм ВАРТО (Варус) - Український.fr3');
+  // 4
+  LoadReportFromFile('ШАБЛОН + тм НАШИ КОВБАСИ - Український.Sticker',  ReportPath + '\Этикетки\ШАБЛОН + тм НАШИ КОВБАСИ - Український.fr3');
+  // 5+
+  // 6+
+  LoadReportFromFile('ШАБЛОН + тм Фітнес Формат - Український.Sticker',  ReportPath + '\Этикетки\ШАБЛОН + тм Фітнес Формат - Український.fr3');
+  // 7+
+  LoadReportFromFile('ШАБЛОН + тм Повна Чаша (Фоззи) - Український.Sticker',  ReportPath + '\Этикетки\ШАБЛОН + тм Повна Чаша (Фоззи) - Український.fr3');
+  // 8+
+  LoadReportFromFile('ШАБЛОН + тм Премія (Фоззи) - Український.Sticker',  ReportPath + '\Этикетки\ШАБЛОН + тм Премія (Фоззи) - Український.fr3');
+  // 9+
+  LoadReportFromFile('ШАБЛОН + тм Ашан - Український.Sticker',  ReportPath + '\Этикетки\ШАБЛОН + тм Ашан - Український.fr3');
+  // 10+
+  LoadReportFromFile('ШАБЛОН + ТМ Хіт продукт (Вел.Кишеня) - Український.Sticker',  ReportPath + '\Этикетки\ШАБЛОН + ТМ Хіт продукт (Вел.Кишеня) - Український.fr3');
+
 end;
 
 
@@ -258,8 +274,11 @@ begin
    LoadReportFromFile('PrintMovement_ReestrReturnPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrReturnPeriod.fr3');
    LoadReportFromFile('PrintMovement_ReestrReturnStartPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrReturnStartPeriod.fr3');
    exit;
+
    LoadReportFromFile('PrintMovement_Reestr', ReportPath + '\Товарный Учет\PrintMovement_Reestr.fr3');
    LoadReportFromFile('PrintMovement_ReestrPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrPeriod.fr3');
+   exit;
+
    LoadReportFromFile('PrintMovement_ReestrStartPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrStartPeriod.fr3');
 
   LoadReportFromFile('PrintMovement_TransferDebtOut', ReportPath + '\Товарный Учет\PrintMovement_TransferDebtOut.fr3');
@@ -267,6 +286,7 @@ begin
   LoadReportFromFile('PrintMovement_Sale2', ReportPath + '\Товарный Учет\PrintMovement_Sale2.fr3');
   LoadReportFromFile('PrintMovement_Sale2DiscountPrice', ReportPath + '\Товарный Учет\PrintMovement_Sale2DiscountPrice.fr3');
   LoadReportFromFile('PrintMovement_Sale2PriceWithVAT', ReportPath + '\Товарный Учет\PrintMovement_Sale2PriceWithVAT.fr3');
+  LoadReportFromFile('PrintMovement_SalePackWeight', ReportPath + '\Товарный Учет\PrintMovement_SalePackWeight.fr3');
    exit;
   LoadReportFromFile('PrintMovement_SaleInvoice', ReportPath + '\Товарный Учет\PrintMovement_SaleInvoice.fr3');
   LoadReportFromFile('PrintMovement_SaleSpec', ReportPath + '\Товарный Учет\PrintMovement_SaleSpec.fr3');
@@ -302,6 +322,10 @@ begin
   LoadReportFromFile('PrintMovement_TaxCorrectiveReestr', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrectiveReestr.fr3');
   LoadReportFromFile('PrintMovement_TTN', ReportPath + '\Товарный Учет\PrintMovement_TTN.fr3');
   exit;
+  }
+  LoadReportFromFile('PrintMovement_SalePackGross', ReportPath + '\Товарный Учет\PrintMovement_SalePackGross.fr3');
+  exit;
+  {
   LoadReportFromFile('PrintMovement_SalePack21', ReportPath + '\Товарный Учет\PrintMovement_SalePack21.fr3');
   LoadReportFromFile('PrintMovement_SalePack22', ReportPath + '\Товарный Учет\PrintMovement_SalePack22.fr3');
 

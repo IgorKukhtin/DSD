@@ -50,7 +50,7 @@ type
     bbSendData: TdxBarButton;
     spGetDataForSend: TdsdStoredProc;
     TotalSummMVAT: TcxGridDBColumn;
-    NDSKindName: TcxGridDBColumn;
+    NDS: TcxGridDBColumn;
     ContractName: TcxGridDBColumn;
     PaymentDate: TcxGridDBColumn;
     PaySumm: TcxGridDBColumn;

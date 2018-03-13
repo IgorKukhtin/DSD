@@ -91,6 +91,11 @@ BEGIN
                                                            AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue() 
                            )
 
+       , tmpCurrency AS (SELECT * FROM lfSelect_Movement_Currency_byDate (inOperDate      := vbOperDate
+                                                                        , inCurrencyFromId:= zc_Currency_Basis()
+                                                                        , inCurrencyToId  := 0
+                                                                         ) AS lfSelect
+                        )
        , tmpPartion AS (SELECT Object_PartionGoods.MovementItemId AS PartionId
                              , Object_PartionGoods.GoodsId
                              , Object_PartionGoods.GoodsGroupId
@@ -102,7 +107,7 @@ BEGIN
                              , Object_PartionGoods.GoodsSizeId
                              , Object_PartionGoods.OperPrice
                              , Object_PartionGoods.CountForPrice
-                             , Object_PartionGoods.PriceSale
+                             , Object_PartionGoods.OperPriceList
                              , Container.Amount                   AS Remains
                              , COALESCE (tmp.Amount, 1)           AS CurrencyValue
                              , COALESCE (tmp.ParValue,0)          AS ParValue
@@ -111,10 +116,13 @@ BEGIN
                                                  AND Container.WhereObjectId = vbUnitId_From
                                                  AND Container.DescId        = zc_Container_count()
                                                  AND Container.Amount        <> 0
-                             LEFT JOIN lfSelect_Movement_Currency_byDate (inOperDate      := vbOperDate
-                                                                        , inCurrencyFromId:= zc_Currency_Basis()
-                                                                        , inCurrencyToId  := COALESCE (Object_PartionGoods.CurrencyId, zc_Currency_Basis())
-                                                                         ) AS tmp ON 1=1
+                                                 -- !!!обязательно условие, т.к. мог меняться GoodsId и тогда в Container - несколько строк!!!
+                                                 AND Container.ObjectId      = Object_PartionGoods.GoodsId
+                             LEFT JOIN ContainerLinkObject AS CLO_Client
+                                                           ON CLO_Client.ContainerId = Container.Id
+                                                          AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
+                             LEFT JOIN tmpCurrency AS tmp ON 1=0
+                      WHERE CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
                        )
          -- Последняя цена из Прайс-листа - zc_PriceList_Basis
        /*, tmpPriceList AS (SELECT tmp.GoodsId
@@ -160,7 +168,7 @@ BEGIN
                , tmpPartion.OperPrice       :: TFloat AS OperPrice
                , tmpPartion.CountForPrice   :: TFloat AS CountForPrice
                --, tmpPriceList.OperPriceList :: TFloat AS OperPriceList
-               , tmpPartion.PriceSale       :: TFloat AS OperPriceList
+               , tmpPartion.OperPriceList   :: TFloat AS OperPriceList
                , 0                          :: TFloat AS TotalSumm
                , 0                          :: TFloat AS TotalSummBalance
                , 0                          :: TFloat AS TotalSummPriceList
@@ -226,6 +234,7 @@ BEGIN
     
                 LEFT JOIN Container AS Container_From
                                     ON Container_From.PartionId     = tmpMI.PartionId
+                                   AND Container_From.ObjectId      = tmpMI.GoodsId
                                    AND Container_From.WhereObjectId = vbUnitId_From
                                    AND Container_From.DescId        = zc_Container_count()
 
@@ -241,8 +250,8 @@ BEGIN
                 LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                        ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
                                       AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-    
-     ;
+           ;
+
      ELSE 
          -- Результат такой - Показываем только строки документа
          RETURN QUERY 
@@ -282,7 +291,18 @@ BEGIN
                                                             ON MIFloat_ParValue.MovementItemId = MovementItem.Id
                                                            AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue() 
                            )
-  
+   , tmpContainer AS (SELECT DISTINCT Container.*
+                      FROM tmpMI
+                           INNER JOIN Container ON Container.PartionId     = tmpMI.PartionId
+                                               AND Container.WhereObjectId = vbUnitId_From
+                                               AND Container.DescId        = zc_Container_count()
+                                               -- !!!обязательно условие, т.к. мог меняться GoodsId и тогда в Container - несколько строк!!!
+                                               AND Container.ObjectId      = tmpMI.GoodsId
+                           LEFT JOIN ContainerLinkObject AS CLO_Client
+                                                         ON CLO_Client.ContainerId = Container.Id
+                                                        AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
+                      WHERE CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
+                     )
            -- результат
            SELECT
                  tmpMI.Id
@@ -318,10 +338,8 @@ BEGIN
            FROM tmpMI
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
                 LEFT JOIN Object_PartionGoods    ON Object_PartionGoods.MovementItemId = tmpMI.PartionId                                 
-                LEFT JOIN Container AS Container_From
-                                    ON Container_From.PartionId     = tmpMI.PartionId
-                                   AND Container_From.WhereObjectId = vbUnitId_From
-                                   AND Container_From.DescId        = zc_Container_count()
+
+                LEFT JOIN tmpContainer AS Container_From ON Container_From.PartionId = tmpMI.PartionId
 
                 LEFT JOIN Object AS Object_GoodsGroup       ON Object_GoodsGroup.Id       = Object_PartionGoods.GoodsGroupId
                 LEFT JOIN Object AS Object_Measure          ON Object_Measure.Id          = Object_PartionGoods.MeasureId
@@ -334,7 +352,8 @@ BEGIN
                 LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                        ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
                                       AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-;
+          ;
+
      END IF;
 
 
@@ -351,4 +370,4 @@ $BODY$
 */
 
 -- тест
---select * from gpSelect_MovementItem_Send(inMovementId := 12 , inIsErased := 'False' ,  inSession := '2');
+-- SELECT * FROM gpSelect_MovementItem_Send (inMovementId:= 241258, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());

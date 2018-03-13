@@ -4,7 +4,7 @@ inherited TaxJournalForm: TTaxJournalForm
   ClientWidth = 1110
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog1
-  ExplicitLeft = -332
+  ExplicitLeft = -109
   ExplicitWidth = 1126
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -189,6 +189,15 @@ inherited TaxJournalForm: TTaxJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
+          end
+          object isINN: TcxGridDBColumn
+            Caption = #1048#1053#1053' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'isINN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1053#1053' '#1080#1089#1087#1088#1072#1074#1083#1077#1085' '#1076#1083#1103' 1-'#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 40
           end
           object UnitCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
@@ -1310,6 +1319,60 @@ inherited TaxJournalForm: TTaxJournalForm
         end>
       Caption = 'actGetDirectoryIFIN'
     end
+    object actUpdateINN: TdsdDataSetRefresh
+      Category = 'INN'
+      MoveParams = <>
+      StoredProc = spUpdate_INN
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_INN
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 26
+      RefreshOnTabSetChanges = True
+    end
+    object ExecuteDialogINN: TExecuteDialog
+      Category = 'INN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1048#1053#1053
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1048#1053#1053
+      ImageIndex = 26
+      FormName = 'TMovementString_INNEditForm'
+      FormNameParam.Value = 'TMovementString_INNEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inINN'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'INN_To'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macUpdateINN: TMultiAction
+      Category = 'INN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogINN
+        end
+        item
+          Action = actUpdateINN
+        end>
+      Caption = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1048#1053#1053' '#1076#1083#1103' 1-'#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1048#1053#1053' '#1076#1083#1103' 1-'#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 76
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1466,6 +1529,14 @@ inherited TaxJournalForm: TTaxJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateINN'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbDocument'
         end
         item
@@ -1610,6 +1681,10 @@ inherited TaxJournalForm: TTaxJournalForm
     end
     object bbIFinALL: TdxBarButton
       Action = mactIFinALL
+      Category = 0
+    end
+    object bbUpdateINN: TdxBarButton
+      Action = macUpdateINN
       Category = 0
     end
   end
@@ -2250,5 +2325,39 @@ inherited TaxJournalForm: TTaxJournalForm
     PackSize = 1
     Left = 504
     Top = 160
+  end
+  object spUpdate_INN: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_INN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioINN'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'INN_To'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsINN'
+        Value = 'False'
+        Component = MasterCDS
+        ComponentItem = 'isINN'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 722
+    Top = 272
   end
 end

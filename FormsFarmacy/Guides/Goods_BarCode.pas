@@ -27,7 +27,7 @@ type
   TGoods_BarCodeForm = class(TAncestorGuidesForm)
     Code: TcxGridDBColumn;
     Name: TcxGridDBColumn;
-    NDSKindName: TcxGridDBColumn;
+    NDS: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
     isErased: TcxGridDBColumn;
     GoodsGroupName: TcxGridDBColumn;

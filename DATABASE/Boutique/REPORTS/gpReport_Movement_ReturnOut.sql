@@ -11,8 +11,8 @@ CREATE OR REPLACE FUNCTION  gpReport_Movement_ReturnOut(
     IN inPartnerId        Integer  ,  -- Поставщик
     
     IN inPeriodId         Integer  ,  -- 
-    IN inPeriodYearStart  Integer  ,  --
-    IN inPeriodYearEnd    Integer  ,  --
+    IN inStartYear        Integer  ,  --
+    IN inEndYear          Integer  ,  --
     
     IN inisPartion        Boolean,    -- 
     IN inisSize           Boolean,    --
@@ -50,12 +50,13 @@ RETURNS TABLE (
                OperPrice           TFloat,
                CountForPrice       TFloat,
                OperPriceList       TFloat,
-               PriceSale           TFloat,
-               Amount              TFloat,
-               TotalSumm          TFloat,
-               TotalSummPriceList TFloat,
-               TotalSummSale            TFloat
-  )
+               OperPriceListLast   TFloat,
+
+               Amount                  TFloat,
+               TotalSumm               TFloat,
+               TotalSummPriceList      TFloat,
+               TotalSummPriceListLast  TFloat
+              )
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -64,6 +65,16 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ReturnOut());
     vbUserId:= lpGetUserBySession (inSession);
+
+    -- !!!замена!!!
+    IF inIsPartion = TRUE THEN
+       inIsPartner:= TRUE;
+       inIsSize   := TRUE;
+    END IF;
+    -- !!!замена!!!
+    IF COALESCE (inEndYear, 0) = 0 THEN
+       inEndYear:= 1000000;
+    END IF;
 
     -- Результат
     RETURN QUERY
@@ -82,7 +93,7 @@ BEGIN
                                      INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                                    ON MovementLinkObject_From.MovementId = Movement_ReturnOut.Id
                                                                   AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                                  AND (MovementLinkObject_From.ObjectId = inUnitId)
+                                                                  AND (MovementLinkObject_From.ObjectId = inUnitId OR inUnitId = 0)
                                      INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                    ON MovementLinkObject_To.MovementId = Movement_ReturnOut.Id
                                                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -136,13 +147,10 @@ BEGIN
 
                           , COALESCE (MIFloat_CountForPrice.ValueData, 1)      AS CountForPrice
                           , SUM (COALESCE (MI_ReturnOut.Amount, 0))            AS Amount
-                          , SUM (CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 1) <> 0
-                                          THEN CAST (COALESCE (MI_ReturnOut.Amount, 0) * COALESCE (MIFloat_OperPrice.ValueData, 0) / COALESCE (MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
-                                      ELSE CAST ( COALESCE (MI_ReturnOut.Amount, 0) * COALESCE (MIFloat_OperPrice.ValueData, 0) AS NUMERIC (16, 2))
-                                 END)                                          AS TotalSumm
 
-                          , SUM (COALESCE (MI_ReturnOut.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0))  AS TotalSummPriceList
-                          , SUM (COALESCE (MI_ReturnOut.Amount, 0) * COALESCE (Object_PartionGoods.PriceSale,0))     AS TotalSummSale
+                          , SUM (zfCalc_SummIn (MI_ReturnOut.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData)) AS TotalSumm
+                          , SUM (zfCalc_SummPriceList (MI_ReturnOut.Amount, MIFloat_OperPriceList.ValueData))                       AS TotalSummPriceList
+                          , SUM (zfCalc_SummPriceList (MI_ReturnOut.Amount, Object_PartionGoods.OperPriceList))                     AS TotalSummPriceListLast
 
                      FROM tmpMovementReturnOut
                           INNER JOIN MovementItem AS MI_ReturnOut 
@@ -163,8 +171,7 @@ BEGIN
                                                       ON MIFloat_OperPriceList.MovementItemId = MI_ReturnOut.Id
                                                      AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
                                                      
-                     WHERE (Object_PartionGoods.PeriodYear >= inPeriodYearStart OR inPeriodYearStart = 0)
-                       AND (Object_PartionGoods.PeriodYear <= inPeriodYearEnd OR inPeriodYearEnd = 0) 
+                     WHERE (Object_PartionGoods.PeriodYear BETWEEN inStartYear AND inEndYear)
                                                                            
                      GROUP BY tmpMovementReturnOut.InvNumber
                             , tmpMovementReturnOut.OperDate
@@ -226,14 +233,14 @@ BEGIN
            , Object_GoodsSize.ValueData     AS GoodsSizeName
            , Object_Currency.ValueData      AS CurrencyName
            
-           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSumm  / tmpData.Amount ELSE 0 END          ::TFloat AS OperPrice
+           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSumm  / tmpData.Amount ELSE 0 END          :: TFloat AS OperPrice
            , tmpData.CountForPrice           ::TFloat
-           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSummPriceList  / tmpData.Amount ELSE 0 END ::TFloat AS OperPriceList
-           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSummSale  / tmpData.Amount ELSE 0 END      ::TFloat AS PriceSale
-           , tmpData.Amount                  ::TFloat
-           , tmpData.TotalSumm               ::TFloat
-           , tmpData.TotalSummPriceList      ::TFloat
-           , tmpData.TotalSummSale           ::TFloat
+           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSummPriceList     / tmpData.Amount ELSE 0 END ::TFloat AS OperPriceList
+           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSummPriceListLast / tmpData.Amount ELSE 0 END ::TFloat AS OperPriceListLast
+           , tmpData.Amount                 ::TFloat
+           , tmpData.TotalSumm              ::TFloat
+           , tmpData.TotalSummPriceList     ::TFloat AS TotalSummPriceList
+           , tmpData.TotalSummPriceListLast ::TFloat AS TotalSummPriceListLast 
            
         FROM tmpData
             LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.FromId
@@ -258,8 +265,7 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpData.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
-
-;
+           ;
  END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -271,9 +277,4 @@ $BODY$
 */
 
 -- тест
---SELECT * from gpReport_Movement_ReturnOut(    inStartDate := '01.12.2016' :: TDateTime, inEndDate:= '01.12.2018' :: TDateTime, inUnitId :=311,inBrandId  := 0 ,inPartnerId  := 0 , inPeriodId := 0 , inPeriodYearStart := 0 , inPeriodYearEnd := 2017 , inisPartion  := TRUE,inisSize:=  TRUE, inisPartner := TRUE, inisMovement := 'False', inSession := '2':: TVarChar )
---SELECT * from gpReport_Movement_ReturnOut(    inStartDate := '01.12.2016' :: TDateTime, inEndDate:= '01.12.2018' :: TDateTime, inUnitId :=230,inBrandId  := 0 ,inPartnerId  := 0 , inPeriodId := 0 , inPeriodYearStart := 0 , inPeriodYearEnd := 2017 , inisPartion  :=False,inisSize:=  False, inisPartner := False, inisMovement := 'False', inSession := '2':: TVarChar )
-
- 
---select * from gpGet_Movement_ReturnOut(inMovementId := 22 , inOperDate := ('04.02.2018')::TDateTime ,  inSession := '2');
---select * from gpGet_Movement_ReturnOut(inMovementId := 22 , inOperDate := ('04.02.2018')::TDateTime ,  inSession := '2');
+-- SELECT * FROM gpReport_Movement_ReturnOut (inStartDate := '01.12.2016' :: TDateTime, inEndDate:= '01.12.2018' :: TDateTime, inUnitId :=230,inBrandId  := 0 ,inPartnerId  := 0 , inPeriodId := 0 , inStartYear := 0 , inEndYear := 2017 , inisPartion  :=False,inisSize:=  False, inisPartner := False, inisMovement := 'False', inSession := '2':: TVarChar )

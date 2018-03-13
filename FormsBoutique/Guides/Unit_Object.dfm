@@ -59,6 +59,15 @@ object Unit_ObjectForm: TUnit_ObjectForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 339
       end
+      object PrintName: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1088#1080' '#1087#1077#1095#1072#1090#1080
+        DataBinding.FieldName = 'PrintName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1088#1080' '#1087#1077#1095#1072#1090#1080
+        Options.Editing = False
+        Width = 90
+      end
       object Address: TcxGridDBColumn
         Caption = #1040#1076#1088#1077#1089
         DataBinding.FieldName = 'Address'
@@ -73,6 +82,16 @@ object Unit_ObjectForm: TUnit_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Width = 100
+      end
+      object Printer: TcxGridDBColumn
+        Caption = #1055#1088#1080#1085#1090#1077#1088
+        DataBinding.FieldName = 'Printer'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1055#1088#1080#1085#1090#1077#1088' ('#1087#1077#1095#1072#1090#1100' '#1095#1077#1082#1086#1074')'
         Width = 100
       end
       object DiscountTax: TcxGridDBColumn

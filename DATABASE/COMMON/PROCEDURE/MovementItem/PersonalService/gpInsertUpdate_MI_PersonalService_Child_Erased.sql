@@ -64,6 +64,7 @@ BEGIN
                                                              , inSummCardSecondRecalc   := 0
                                                              , inSummCardSecondCash     := MIFloat_SummCardSecondCash.ValueData
                                                              , inSummNalogRecalc        := 0
+                                                             , inSummNalogRetRecalc     := 0
                                                              , inSummMinus              := MIFloat_SummMinus.ValueData
                                                              , inSummAdd                := MIFloat_SummAdd.ValueData
                                                              , inSummHoliday            := MIFloat_SummHoliday.ValueData
@@ -149,6 +150,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.01.18         *
  24.07.17                                        *
 */
 

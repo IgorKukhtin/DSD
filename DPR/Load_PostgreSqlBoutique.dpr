@@ -61,9 +61,10 @@ uses
 {$R *.res}
 
 begin
-  ConnectionPath := '..\INIT\Boutique_init.php';
   Application.Initialize;
+  ConnectionPath := '..\INIT\Boutique_init.php';
   Logger.Enabled := FindCmdLineSwitch('log');
+  gc_ProgramName := 'Boutique.exe';
 
   Application.CreateForm(TMainForm, MainForm);
   MainForm.Show;

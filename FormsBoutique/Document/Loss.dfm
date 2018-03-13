@@ -170,9 +170,9 @@ object LossForm: TLossForm
           OptionsBehavior.GoToNextCellOnEnter = True
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsData.Appending = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
           OptionsView.HeaderAutoHeight = True
@@ -187,7 +187,7 @@ object LossForm: TLossForm
             Width = 120
           end
           object LabelName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074' '#1094#1077#1085#1085#1080#1082#1077
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'LabelName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -203,7 +203,7 @@ object LossForm: TLossForm
             Width = 50
           end
           object GoodsName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            Caption = #1040#1088#1090#1080#1082#1091#1083
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -252,6 +252,7 @@ object LossForm: TLossForm
           object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -637,7 +638,7 @@ object LossForm: TLossForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenReportForm'
+          ItemName = 'bbReport_Goods'
         end
         item
           Visible = True
@@ -780,8 +781,8 @@ object LossForm: TLossForm
       ImageIndex = 1
       ShortCut = 115
     end
-    object bbOpenReportForm: TdxBarButton
-      Action = actOpenReportForm
+    object bbReport_Goods: TdxBarButton
+      Action = actReport_Goods
       Category = 0
     end
   end
@@ -991,7 +992,6 @@ object LossForm: TLossForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -1010,7 +1010,6 @@ object LossForm: TLossForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -1278,7 +1277,7 @@ object LossForm: TLossForm
         end>
       isShowModal = True
     end
-    object actOpenReportForm: TdsdOpenForm
+    object actReport_Goods: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>'

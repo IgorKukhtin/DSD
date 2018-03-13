@@ -327,6 +327,18 @@ inherited OrderExternalForm: TOrderExternalForm
       TabOrder = 12
       Width = 70
     end
+    object cxLabel13: TcxLabel
+      Left = 663
+      Top = 85
+      Caption = #1055#1088#1080#1084#1077#1095'. '#1082' '#1084#1080#1085'. '#1089#1091#1084#1084#1077' '#1079#1072#1082#1072#1079#1072
+    end
+    object edOrderSummComment: TcxTextEdit
+      Left = 663
+      Top = 101
+      Properties.ReadOnly = True
+      TabOrder = 14
+      Width = 149
+    end
   end
   object cxLabel5: TcxLabel [2]
     Left = 656
@@ -408,19 +420,19 @@ inherited OrderExternalForm: TOrderExternalForm
     Top = 101
     Properties.ReadOnly = True
     TabOrder = 17
-    Width = 198
+    Width = 119
   end
   object cxLabel12: TcxLabel [14]
-    Left = 610
+    Left = 533
     Top = 85
     Caption = #1052#1072#1082#1089'. '#1074#1088#1077#1084#1103' '#1086#1090#1087#1088#1072#1074#1082#1080
   end
   object edOrderTime: TcxTextEdit [15]
-    Left = 610
+    Left = 533
     Top = 101
     Properties.ReadOnly = True
     TabOrder = 19
-    Width = 202
+    Width = 117
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -1112,6 +1124,13 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = edOrderTime
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OrderSummComment'
+        Value = Null
+        Component = edOrderSummComment
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1639,8 +1658,8 @@ inherited OrderExternalForm: TOrderExternalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 456
-    Top = 48
+    Left = 432
+    Top = 32
   end
   object spUpdateMovementUserSend: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_OrderExternal_UserSend'

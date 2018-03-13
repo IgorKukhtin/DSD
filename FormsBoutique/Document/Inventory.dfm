@@ -1,7 +1,7 @@
 object InventoryForm: TInventoryForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1087#1080#1089#1072#1085#1080#1077'>'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
   ClientHeight = 466
   ClientWidth = 810
   Color = clBtnFace
@@ -240,9 +240,9 @@ object InventoryForm: TInventoryForm
           OptionsBehavior.GoToNextCellOnEnter = True
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsData.Appending = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
           OptionsView.HeaderAutoHeight = True
@@ -265,7 +265,7 @@ object InventoryForm: TInventoryForm
             Width = 50
           end
           object GoodsName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            Caption = #1040#1088#1090#1080#1082#1091#1083
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -324,7 +324,7 @@ object InventoryForm: TInventoryForm
             Width = 70
           end
           object LabelName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074' '#1094#1077#1085#1085#1080#1082#1077
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'LabelName'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -814,7 +814,7 @@ object InventoryForm: TInventoryForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenReportForm'
+          ItemName = 'bbReport_Goods'
         end
         item
           Visible = True
@@ -955,8 +955,8 @@ object InventoryForm: TInventoryForm
       Action = actUpdateAmountRemains
       Category = 0
     end
-    object bbOpenReportForm: TdxBarButton
-      Action = actOpenReportForm
+    object bbReport_Goods: TdxBarButton
+      Action = actReport_Goods
       Category = 0
     end
   end
@@ -1164,7 +1164,6 @@ object InventoryForm: TInventoryForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -1183,7 +1182,6 @@ object InventoryForm: TInventoryForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -1472,7 +1470,7 @@ object InventoryForm: TInventoryForm
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082'?'
       InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1056#1072#1089#1095#1077#1090#1085#1086#1075#1086' '#1086#1089#1090#1072#1090#1082#1072
     end
-    object actOpenReportForm: TdsdOpenForm
+    object actReport_Goods: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>'

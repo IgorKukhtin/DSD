@@ -284,16 +284,6 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
             Options.Editing = False
             Width = 55
           end
-          object NDSKindName: TcxGridDBColumn
-            Caption = #1053#1044#1057
-            DataBinding.FieldName = 'NDSKindName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 60
-          end
           object IsClose: TcxGridDBColumn
             Caption = #1047#1072#1082#1088#1099#1090' '#1082#1086#1076' '#1087#1086' '#1074#1089#1077#1081' '#1089#1077#1090#1080
             DataBinding.FieldName = 'IsClose'

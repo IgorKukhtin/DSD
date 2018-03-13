@@ -17,6 +17,7 @@ RETURNS TABLE (
   GoodsName      TVarChar,
   GoodsGroupName TVarChar, 
   NDSKindName    TVarChar,
+  NDS            TFloat,
   ExpirationDate TDateTime,
   PartionGoods   TVarChar,
   ConditionsKeepName TVarChar,
@@ -191,6 +192,7 @@ BEGIN
            , Object_Goods_View.GoodsName                    AS GoodsName
            , Object_Goods_View.GoodsGroupName               AS GoodsGroupName
            , Object_Goods_View.NDSKindName                  AS NDSKindName
+           , Object_Goods_View.NDS                          AS NDS
            , tmpData.ExpirationDate    :: TDateTime         AS ExpirationDate
            , tmpData.PartionGoods      :: TVarChar          AS PartionGoods
            , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar   AS ConditionsKeepName
@@ -248,6 +250,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 07.01.18         *
  12.01.17         *
  31.03.16         *
  03.02.16         * 

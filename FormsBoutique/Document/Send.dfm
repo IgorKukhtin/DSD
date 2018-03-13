@@ -2,7 +2,7 @@ object SendForm: TSendForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
-  ClientHeight = 466
+  ClientHeight = 437
   ClientWidth = 811
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,12 +22,12 @@ object SendForm: TSendForm
     Left = 0
     Top = 115
     Width = 811
-    Height = 351
+    Height = 322
     Align = alClient
     TabOrder = 0
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 351
+    ClientRectBottom = 322
     ClientRectRight = 811
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
@@ -37,7 +37,7 @@ object SendForm: TSendForm
         Left = 0
         Top = 0
         Width = 811
-        Height = 327
+        Height = 298
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -178,9 +178,9 @@ object SendForm: TSendForm
           OptionsBehavior.GoToNextCellOnEnter = True
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsData.Appending = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
           OptionsView.HeaderAutoHeight = True
@@ -192,10 +192,10 @@ object SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 120
+            Width = 118
           end
           object LabelName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074' '#1094#1077#1085#1085#1080#1082#1077
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'LabelName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -211,7 +211,7 @@ object SendForm: TSendForm
             Width = 50
           end
           object GoodsName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            Caption = #1040#1088#1090#1080#1082#1091#1083
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -260,6 +260,7 @@ object SendForm: TSendForm
           object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -274,7 +275,7 @@ object SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 40
+            Width = 55
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -284,7 +285,7 @@ object SendForm: TSendForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 46
+            Width = 55
           end
           object OperPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1074#1093'.'
@@ -292,6 +293,7 @@ object SendForm: TSendForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -316,6 +318,7 @@ object SendForm: TSendForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Properties.ReadOnly = False
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -341,6 +344,7 @@ object SendForm: TSendForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Properties.ReadOnly = False
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -353,6 +357,7 @@ object SendForm: TSendForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Properties.ReadOnly = False
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -662,6 +667,14 @@ object SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintIn'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbOpenReportForm'
         end
         item
@@ -801,6 +814,10 @@ object SendForm: TSendForm
       Action = actOpenReportTo
       Category = 0
     end
+    object bbPrintIn: TdxBarButton
+      Action = actPrintIn
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -932,6 +949,56 @@ object SendForm: TSendForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actPrintIn: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1074#1093'.'#1094#1077#1085#1072#1084
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1074#1093'.'#1094#1077#1085#1072#1084
+      ImageIndex = 21
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 'GoodsCode;GoodsSizeName'
+        end>
+      Params = <
+        item
+          Name = 'InvNumber'
+          Value = ''
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'From'
+          Value = ''
+          Component = GuidesTo
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = 0d
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_SendIn'
+      ReportNameParam.Value = 'PrintMovement_SendIn'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -1952,7 +2019,7 @@ object SendForm: TSendForm
       end>
     PackSize = 1
     Left = 422
-    Top = 384
+    Top = 368
   end
   object StatusGuides: TdsdGuides
     KeyField = 'Id'

@@ -68,7 +68,8 @@ requires
   ZLibEx,
   vclie,
   GMLib_DXE2,
-  GMLib_DXE2_VCL;
+  GMLib_DXE2_VCL,
+  DbxCommonDriver;
 
 contains
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',

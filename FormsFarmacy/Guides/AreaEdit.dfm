@@ -139,8 +139,8 @@ object AreaEditForm: TAreaEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 88
-    Top = 80
+    Left = 104
+    Top = 64
   end
   object dsdFormParams: TdsdFormParams
     Params = <

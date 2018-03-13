@@ -1,6 +1,6 @@
 -- Function: gpSelect_MovementItem_PromoGoods()
 
-DROP FUNCTION IF EXISTS gpSelect_MI_PromoGoods_Plan (Integer, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_MI_PromoGoods_Plan (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_PromoGoods (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PromoGoods(
@@ -43,6 +43,8 @@ RETURNS TABLE (
       , AmountPlan5         TFloat -- Кол-во план отгрузки за пт.
       , AmountPlan6         TFloat -- Кол-во план отгрузки за сб.
       , AmountPlan7         TFloat -- Кол-во план отгрузки за вс.
+      
+      , PriceTender         TFloat -- Цена Тендер без учета НДС, с учетом скидки, грн
       
       , GoodsKindId            Integer --ИД обьекта <Вид товара>
       , GoodsKindName          TVarChar --Наименование обьекта <Вид товара>
@@ -163,7 +165,9 @@ BEGIN
              , MIFloat_Plan4.ValueData                AS AmountPlan4
              , MIFloat_Plan5.ValueData                AS AmountPlan5
              , MIFloat_Plan6.ValueData                AS AmountPlan6
-             , MIFloat_Plan7.ValueData                AS AmountPlan7 
+             , MIFloat_Plan7.ValueData                AS AmountPlan7
+
+             , MIFloat_PriceTender.ValueData          AS PriceTender
                  
              , MILinkObject_GoodsKind.ObjectId        AS GoodsKindId                 --ИД обьекта <Вид товара>
              , Object_GoodsKind.ValueData             AS GoodsKindName               --Наименование обьекта <Вид товара>
@@ -231,6 +235,10 @@ BEGIN
                                          ON MIFloat_Plan7.MovementItemId = MovementItem.Id 
                                         AND MIFloat_Plan7.DescId = zc_MIFloat_Plan7() 
 
+             LEFT JOIN MovementItemFloat AS MIFloat_PriceTender
+                                         ON MIFloat_PriceTender.MovementItemId = MovementItem.Id 
+                                        AND MIFloat_PriceTender.DescId = zc_MIFloat_PriceTender() 
+
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind 
@@ -276,6 +284,7 @@ ALTER FUNCTION gpSelect_MovementItem_PromoGoods (Integer, Boolean, TVarChar) OWN
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+ 24.01.18         * add PriceTender
  28.11.17         * add GoodsKindComplete
  10.11.17         *
  05.11.15                                                          *

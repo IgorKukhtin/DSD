@@ -24,6 +24,7 @@ type
     cbPrintSpec: TCheckBox;
     cbPrintTax: TCheckBox;
     cbPrintPreview: TCheckBox;
+    cbPrintPackGross: TCheckBox;
     procedure cbPrintTransportClick(Sender: TObject);
     procedure cbPrintQualityClick(Sender: TObject);
     procedure cbPrintTaxClick(Sender: TObject);
@@ -33,7 +34,7 @@ type
   private
     function Checked: boolean; override;//Проверка корректного ввода в Edit
   public
-    function Execute(MovementDescId:Integer;CountMovement:Integer; isMovement, isAccount, isTransport, isQuality, isPack, isSpec, isTax : Boolean): Boolean; virtual;
+    function Execute(MovementDescId:Integer;CountMovement:Integer; isMovement, isAccount, isTransport, isQuality, isPack, isPackGross, isSpec, isTax : Boolean): Boolean; virtual;
   end;
 
 var
@@ -43,12 +44,14 @@ implementation
 {$R *.dfm}
 uses UtilScale;
 {------------------------------------------------------------------------------}
-function TDialogPrintForm.Execute(MovementDescId:Integer;CountMovement:Integer; isMovement, isAccount, isTransport, isQuality, isPack, isSpec, isTax : Boolean): Boolean; //Проверка корректного ввода в Edit
+function TDialogPrintForm.Execute(MovementDescId:Integer;CountMovement:Integer; isMovement, isAccount, isTransport, isQuality, isPack, isPackGross, isSpec, isTax : Boolean): Boolean; //Проверка корректного ввода в Edit
 begin
      // для ScaleCeh только одна печать
      if (SettingMain.isCeh = TRUE)or((MovementDescId<>zc_Movement_Sale)and(MovementDescId<>zc_Movement_SendOnPrice))
      then cbPrintMovement.Checked:= TRUE
      else cbPrintMovement.Checked:= isMovement;
+     //
+     cbPrintPackGross.Checked:= FALSE;
      //
      cbPrintAccount.Enabled:=(SettingMain.isCeh = FALSE);//or(MovementDescId=zc_Movement_Sale)or(MovementDescId<>zc_Movement_SendOnPrice);
      cbPrintTransport.Enabled:=cbPrintAccount.Enabled;

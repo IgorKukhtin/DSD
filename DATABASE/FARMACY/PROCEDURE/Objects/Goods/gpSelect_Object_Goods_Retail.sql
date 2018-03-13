@@ -2,9 +2,11 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Goods_Retail(Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Goods_Retail(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Goods_Retail(Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Retail(
     IN inContractId  Integer,       -- договор поставщика
+    IN inRetailId    Integer,       -- торговая сеть
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar, Name TVarChar, isErased Boolean
@@ -27,11 +29,13 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , ConditionsKeepName TVarChar
              , MorionCode Integer, BarCode TVarChar, OrdBar Integer
              , NDS_PriceList TFloat, isNDS_dif Boolean
+             , OrdPrice Integer
               ) AS
 $BODY$ 
   DECLARE vbUserId Integer;
 
   DECLARE vbObjectId Integer;
+  DECLARE vbAreaDneprId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_User());
@@ -40,6 +44,15 @@ BEGIN
 
    -- поиск <Торговой сети>
    vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
+   
+   -- если выбрана торг.сеть то выбираем товары по ней 
+   IF COALESCE (inRetailId, 0) <> 0
+   THEN 
+       vbObjectId := inRetailId;
+   END IF;
+   
+   vbAreaDneprId := (SELECT Object.Id FROM Object WHERE Object.Descid = zc_Object_Area() AND Object.ValueData LIKE 'Днепр');
+   
 /*
    -- !!!для Админа!!!
    IF (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
@@ -134,6 +147,7 @@ BEGIN
 
         LEFT JOIN tmpLoadPriceList ON tmpLoadPriceList.MainGoodsId = ObjectLink_Main.ChildObjectId
     WHERE Object_Retail.DescId = zc_Object_Retail()
+      
 ;
 
    ELSE
@@ -203,15 +217,22 @@ BEGIN
                                --GROUP BY ObjectLink_Main_BarCode.ChildObjectId
                               )  
          -- вытягиваем из LoadPriceListItem.GoodsNDS по входящему Договору поставщика (inContractId)
-         , tmpPricelistItems AS (SELECT DISTINCT
-                                        LoadPriceListItem.GoodsId      AS GoodsMainId
-                                      , CAST (REPLACE (REPLACE ( REPLACE (LoadPriceListItem.GoodsNDS , '%', ''), 'НДС', '') , ',', '.') AS TFloat) AS GoodsNDS
-                                 FROM LoadPriceList
-                                      INNER JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
-                                 WHERE (LoadPriceList.ContractId = inContractId AND inContractId <> 0)
-                                   AND COALESCE (LoadPriceListItem.GoodsId, 0) <> 0
+         , tmpPricelistItems AS (SELECT tmp.GoodsMainId
+                                      , tmp.GoodsNDS
+                                      , ROW_NUMBER() OVER (PARTITION BY tmp.GoodsMainId  ORDER BY tmp.GoodsMainId, tmp.GoodsNDS) AS Ord
+                                 FROM
+                                     (SELECT DISTINCT
+                                             LoadPriceListItem.GoodsId      AS GoodsMainId
+                                           , CAST (REPLACE (REPLACE ( REPLACE (LoadPriceListItem.GoodsNDS , '%', ''), 'НДС', '') , ',', '.') AS TFloat) AS GoodsNDS
+                                      FROM LoadPriceList
+                                           INNER JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
+                                      WHERE (LoadPriceList.ContractId = inContractId AND inContractId <> 0)
+                                        AND COALESCE (LoadPriceListItem.GoodsId, 0) <> 0
+                                        AND (COALESCE (LoadPriceList.AreaId, 0) = 0 OR LoadPriceList.AreaId = vbAreaDneprId)
+                                     ) tmp
+                                 GROUP BY tmp.GoodsMainId
+                                        , tmp.GoodsNDS
                                  )
-         
                          
       SELECT Object_Goods_View.Id
            , ObjectLink_Main.ChildObjectId     AS GoodsMainId 
@@ -263,9 +284,10 @@ BEGIN
            , tmpGoodsMorion.MorionCode
            , tmpGoodsBarCode.BarCode
            , tmpGoodsBarCode.Ord        :: Integer AS OrdBar
-           
+
            , tmpPricelistItems.GoodsNDS :: TFloat  AS NDS_PriceList
            , CASE WHEN COALESCE (tmpPricelistItems.GoodsNDS, 0) <> 0 AND inContractId <> 0 AND COALESCE (tmpPricelistItems.GoodsNDS, 0) <> Object_Goods_View.NDS THEN TRUE ELSE FALSE END AS isNDS_dif
+           , tmpPricelistItems.Ord      :: Integer AS OrdPrice
       FROM Object_Goods_View
            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = Object_Goods_View.ObjectId
            LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id 
@@ -286,6 +308,10 @@ BEGIN
                                AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
            LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId 
 
+           LEFT JOIN ObjectFloat AS ObjectFloat_CountPrice
+                                 ON ObjectFloat_CountPrice.ObjectId = Object_Goods_View.Id --ObjectLink_Main.ChildObjectId   -- теперь это свойство товара сети
+                                AND ObjectFloat_CountPrice.DescId = zc_ObjectFloat_Goods_CountPrice()
+                                
            -- получается GoodsMainId
            LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = Object_Goods_View.Id --Object_Goods.Id
                                                     AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
@@ -304,10 +330,6 @@ BEGIN
                                 ON ObjectDate_LastPriceOld.ObjectId = ObjectLink_Main.ChildObjectId
                                AND ObjectDate_LastPriceOld.DescId = zc_ObjectDate_Goods_LastPriceOld()
 
-           LEFT JOIN ObjectFloat AS ObjectFloat_CountPrice
-                                 ON ObjectFloat_CountPrice.ObjectId = ObjectLink_Main.ChildObjectId
-                                AND ObjectFloat_CountPrice.DescId = zc_ObjectFloat_Goods_CountPrice()
-
            -- условия хранения
            LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
                                 ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
@@ -324,7 +346,7 @@ BEGIN
            LEFT JOIN tmpPricelistItems ON tmpPricelistItems.GoodsMainId = ObjectLink_Main.ChildObjectId
            
       WHERE Object_Goods_View.ObjectId = vbObjectId
-;
+      ;
 
   -- END IF;
   
@@ -337,6 +359,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.
+ 05.01.18         * add inRetailId
  03.01.18         * add inContractId, NDS_PriceList, isNDS_dif
  22.08.17         *
  16.08.17         * LastPriceOld
@@ -357,5 +380,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Goods_Retail (inContractId := 0, zfCalc_UserAdmin())
--- select * from gpSelect_Object_Goods_Retail (inContractId := 183257, inSession := '59591')
+-- SELECT * FROM gpSelect_Object_Goods_Retail (inContractId := 0, inRetailId := 0, zfCalc_UserAdmin())
+-- select * from gpSelect_Object_Goods_Retail (inContractId := 183257, inRetailId := 4, inSession := '59591')

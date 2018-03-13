@@ -51,7 +51,7 @@ type
     bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
     GoodsName: TcxGridDBColumn;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     ProtocolOpenForm: TdsdOpenForm;
@@ -66,21 +66,18 @@ type
     LabelName: TcxGridDBColumn;
     GroupNameFull: TcxGridDBColumn;
     GoodsSizeName: TcxGridDBColumn;
-    InvNumber: TcxGridDBColumn;
-    CurrencyName: TcxGridDBColumn;
+    OperDate_Partion: TcxGridDBColumn;
     BrandName: TcxGridDBColumn;
     PeriodName: TcxGridDBColumn;
     PeriodYear: TcxGridDBColumn;
-    FabrikaName: TcxGridDBColumn;
-    CompositionGroupName: TcxGridDBColumn;
     GuidesUnit: TdsdGuides;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     dxBarControlContainerItem2: TdxBarControlContainerItem;
     FormParams: TdsdFormParams;
     RefreshDispatcher: TRefreshDispatcher;
     spUnErased: TdsdStoredProc;
-    InvNumber_full: TcxGridDBColumn;
-    Id: TcxGridDBColumn;
+    InvNumber_Partion: TcxGridDBColumn;
+    Ord: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
     GuidesUser: TdsdGuides;
     Panel: TPanel;
@@ -90,8 +87,9 @@ type
     edUnit: TcxButtonEdit;
     spDelete_Object_GoodsPrint: TdsdStoredProc;
     actDeleteGoodsPrint: TdsdExecStoredProc;
-    spGet_GoodsPrint_User: TdsdStoredProc;
+    spGet_User_curr: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    isReprice: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -27,7 +27,7 @@ $BODY$
    DECLARE vbContainerId Integer;
 BEGIN
 
-     IF inPartionId_MI > 0
+     IF inPartionId_MI > 0 OR inClientId > 0
      THEN
          -- Движение по inClientId - Покупатель
          -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1+2)Товар 3)Покупатель 4)Подразделение 5)Партия продажи 6)Статьи назначения

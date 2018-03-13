@@ -67,13 +67,8 @@ type
     BarCode: TcxGridDBColumn;
     CountDays: TcxGridDBColumn;
     spUpdate_Goods_LastPriceOld: TdsdStoredProc;
-    cxLabel3: TcxLabel;
-    edContract: TcxButtonEdit;
-    GuidesContract: TdsdGuides;
     bbLabel3: TdxBarControlContainerItem;
     bbContract: TdxBarControlContainerItem;
-    NDS_PriceList: TcxGridDBColumn;
-    isNDS_dif: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
     spUpdate_Goods_NDS: TdsdStoredProc;
     macUpdateNDS: TMultiAction;

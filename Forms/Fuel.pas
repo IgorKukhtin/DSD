@@ -21,7 +21,7 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul;
+  DataModul, cxCurrencyEdit;
 
 type
   TFuelForm = class(TParentForm)
@@ -60,6 +60,7 @@ type
     clRateFuelKind: TcxGridDBColumn;
     bbProtocolOpenForm: TdxBarButton;
     ProtocolOpenForm: TdsdOpenForm;
+    ValuePrice: TcxGridDBColumn;
   private
     { Private declarations }
   public

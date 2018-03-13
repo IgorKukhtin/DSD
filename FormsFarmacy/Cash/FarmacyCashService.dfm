@@ -427,9 +427,9 @@ object MainCashForm2: TMainCashForm2
     Left = 16
     Top = 224
   end
-  object Timer2: TTimer
-    Interval = 420000
-    OnTimer = Timer2Timer
+  object TimerGetRemains: TTimer
+    Enabled = False
+    OnTimer = TimerGetRemainsTimer
     Left = 16
     Top = 128
   end
@@ -547,19 +547,15 @@ object MainCashForm2: TMainCashForm2
     object N2: TMenuItem
       Caption = #1058#1072#1081#1084#1077#1088' '#1086#1073#1085#1086#1074#1083#1077#1085#1080#1103' '#1086#1089#1090#1072#1090#1082#1086#1074
       Checked = True
+      Visible = False
       OnClick = N2Click
     end
     object N7: TMenuItem
       Caption = #1058#1072#1081#1084#1077#1088' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103' '#1095#1077#1082#1086#1074
-      Checked = True
       OnClick = N7Click
     end
-    object N6: TMenuItem
-      Caption = #1050#1086#1083#1083#1080#1095#1077#1089#1090#1074#1086' '#1087#1088#1086#1074#1086#1076#1080#1084#1099#1093' '#1095#1077#1082#1086#1074' '#1079#1072' '#1088#1072#1079' 7'
-      OnClick = N6Click
-    end
     object N3: TMenuItem
-      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1095#1077#1082#1080' ('#1082#1086#1083#1083#1080#1095#1077#1089#1090#1074#1086')'
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1095#1077#1082#1080
       OnClick = N3Click
     end
     object N4: TMenuItem
@@ -567,9 +563,9 @@ object MainCashForm2: TMainCashForm2
       OnClick = N4Click
     end
   end
-  object Timer1: TTimer
+  object TimerSaveReal: TTimer
     Interval = 120000
-    OnTimer = Timer1Timer
+    OnTimer = TimerSaveRealTimer
     Left = 92
     Top = 132
   end
@@ -589,7 +585,7 @@ object MainCashForm2: TMainCashForm2
     Left = 432
     Top = 16
     Bitmap = {
-      494C010102003400680080008000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101020034006C0080008000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000000200008000000001002000000000000000
       04000000000000000000000000000000000000FF000000FF000000FF000000FF
       000000FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF

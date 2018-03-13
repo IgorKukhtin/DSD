@@ -44,7 +44,7 @@ type
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
     spGetDataForSend: TdsdStoredProc;
-    NDSKindName: TcxGridDBColumn;
+    NDS: TcxGridDBColumn;
     spGetDataForSendNew: TdsdStoredProc;
     SaleSumm: TcxGridDBColumn;
     actPrintForManager: TdsdPrintAction;

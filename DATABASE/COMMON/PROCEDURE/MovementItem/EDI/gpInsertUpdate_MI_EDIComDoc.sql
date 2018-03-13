@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MI_EDI()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_EDIComDoc(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_EDIComDoc (Integer, Integer, Text, TVarChar, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_EDIComDoc (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_EDIComDoc(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
@@ -20,6 +21,7 @@ $BODY$
    DECLARE vbAmount      TFloat;
    DECLARE vbAmountPartner TFloat;
    DECLARE vbSummPartner TFloat;
+   DECLARE vbGoodsName   TVarChar;
 
    DECLARE vbIsInsert Boolean;
    DECLARE vbUserId Integer;
@@ -31,6 +33,8 @@ BEGIN
 
      -- замена
      inGLNCode:= TRIM (inGLNCode);
+     
+     vbGoodsName:= TRIM (inGoodsName) :: TVarChar;
 
      -- Поиск элемента документа EDI
      vbMovementItemId:= (SELECT MAX (MovementItem.Id)
@@ -70,7 +74,7 @@ BEGIN
      vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), vbGoodsId, inMovementId, vbAmount, NULL);
 
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GLNCode(), vbMovementItemId, inGLNCode);
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GoodsName(), vbMovementItemId, inGoodsName);
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GoodsName(), vbMovementItemId, vbGoodsName);
 
      -- Кол-во у покуп. - !!!будем суммировать!!!
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), vbMovementItemId, COALESCE (inAmountPartner, 0) + COALESCE (vbAmountPartner, 0));
@@ -101,4 +105,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MI_EDI (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountSecond:= 0, inGoodsKindId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_MI_EDIComDoc (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountSecond:= 0, inGoodsKindId:= 0, inSession:= '2')

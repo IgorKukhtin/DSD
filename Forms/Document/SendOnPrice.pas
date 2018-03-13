@@ -103,6 +103,10 @@ type
     actPrint_TTN: TdsdPrintAction;
     mactPrint_TTN: TMultiAction;
     bbPrint_TTN: TdxBarButton;
+    spSelectPrint_Pack: TdsdStoredProc;
+    actPrintPackGross1: TdsdPrintAction;
+    bbPrintPackGross: TdxBarButton;
+    actPrintPackGross: TdsdPrintAction;
   private
     { Private declarations }
   public

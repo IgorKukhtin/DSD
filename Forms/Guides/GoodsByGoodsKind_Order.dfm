@@ -3,7 +3,7 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
   ClientHeight = 420
   ClientWidth = 1030
   ExplicitWidth = 1046
-  ExplicitHeight = 459
+  ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -22,12 +22,17 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
         ExplicitWidth = 1030
         ExplicitHeight = 394
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = GoodsName
+            end>
           OptionsData.Appending = True
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = True
-          OptionsView.ColumnAutoWidth = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -133,16 +138,17 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
             Width = 58
           end
           object Weight: TcxGridDBColumn
-            Caption = #1042#1077#1089
+            Caption = #1042#1077#1089' '#1090#1086#1074'.'
             DataBinding.FieldName = 'Weight'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1077#1089' '#1090#1086#1074#1072#1088#1072
             Options.Editing = False
             Width = 45
           end
           object WeightPackage: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1087#1072#1082#1077#1090#1072
+            Caption = #1042#1077#1089' '#1087#1072#1082'. '#1076#1083#1103' '#1091#1087#1072#1082'.'
             DataBinding.FieldName = 'WeightPackage'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -150,8 +156,22 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1077#1089' 1-'#1086#1075#1086' '#1087#1072#1082#1077#1090#1072' '#1076#1083#1103' '#1059#1055#1040#1050#1054#1042#1050#1048
             Options.Editing = False
             Width = 50
+          end
+          object WeightPackageSticker: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1087#1072#1082'. '#1076#1083#1103' '#1069#1058'.'
+            DataBinding.FieldName = 'WeightPackageSticker'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1077#1089' 1-'#1086#1075#1086' '#1087#1072#1082#1077#1090#1072' '#1076#1083#1103' '#1087#1077#1095'. '#1069#1058#1048#1050#1045#1058#1050#1048
+            Options.Editing = False
+            Width = 54
           end
           object WeightTotal: TcxGridDBColumn
             Caption = #1042#1077#1089' '#1074' '#1091#1087#1072#1082#1086#1074#1082#1077
@@ -175,6 +195,7 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
           object isScaleCeh: TcxGridDBColumn
             Caption = #1048#1089#1087#1086#1083#1100#1079#1091#1077#1090#1089#1103' '#1074' ScaleCeh'
             DataBinding.FieldName = 'isScaleCeh'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -229,7 +250,7 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 43
+            Width = 80
           end
           object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085

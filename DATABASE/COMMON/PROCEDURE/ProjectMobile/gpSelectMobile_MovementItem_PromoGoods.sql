@@ -14,6 +14,7 @@ RETURNS TABLE (Id              Integer -- Уникальный идентификатор, формируется 
              , PriceWithVAT    TFloat  -- Акционная цена с учетом НДС
              , TaxPromo        TFloat  -- % скидки по акции, информативно - какая скидка применялась для расчета Акционной цены, *важно - используется только для просмотра*
              , isSync          Boolean   
+             , Ord Integer
               )
 
 AS
@@ -57,14 +58,18 @@ BEGIN
                                FROM tmpPromoPartner 
                                WHERE tmpPromoPartner.RowNum = 1
                               )
-             SELECT MovementItem_PromoGoods.Id
+             SELECT *
+             FROM
+            (SELECT MovementItem_PromoGoods.Id AS Id
                   , MovementItem_PromoGoods.MovementId
                   , MovementItem_PromoGoods.ObjectId                          AS GoodsId
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)::Integer    AS GoodsKindId
                   , COALESCE (MIFloat_PriceWithOutVAT.ValueData, 0.0)::TFloat AS PriceWithOutVAT
                   , COALESCE (MIFloat_PriceWithVAT.ValueData, 0.0)::TFloat    AS PriceWithVAT
                   , COALESCE (MovementItem_PromoGoods.Amount, 0.0)::TFloat    AS TaxPromo
-                  , (NOT MovementItem_PromoGoods.isErased)                    AS isSync
+                  , TRUE                                                      AS isSync
+                    --  № п/п
+                  , ROW_NUMBER() OVER (PARTITION BY MovementItem_PromoGoods.ObjectId, MovementItem_PromoGoods.MovementId ORDER BY COALESCE (MovementItem_PromoGoods.Amount, 0) DESC) :: Integer AS Ord
              FROM tmpPromo
                   JOIN MovementItem AS MovementItem_PromoGoods 
                                     ON MovementItem_PromoGoods.MovementId = tmpPromo.Id
@@ -79,6 +84,9 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
                                               ON MIFloat_PriceWithVAT.MovementItemId = MovementItem_PromoGoods.Id
                                              AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT() 
+            ) AS tmp
+             WHERE tmp.Ord = 1
+
              ;
             
       END IF;

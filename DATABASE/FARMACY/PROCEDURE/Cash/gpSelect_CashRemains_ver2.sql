@@ -508,16 +508,19 @@ BEGIN
             LEFT JOIN  ObjectLink AS ObjectLink_Goods_IntenalSP
                                   ON ObjectLink_Goods_IntenalSP.ObjectId = ObjectLink_Main.ChildObjectId
                                  AND ObjectLink_Goods_IntenalSP.DescId = zc_ObjectLink_Goods_IntenalSP()
+                                 AND ObjectBoolean_Goods_SP.Valuedata = TRUE
             LEFT JOIN  Object AS Object_IntenalSP ON Object_IntenalSP.Id = ObjectLink_Goods_IntenalSP.ChildobjectId
 
             -- Розмір відшкодування за упаковку (Соц. проект) - (15)
             LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceSP
                                   ON ObjectFloat_Goods_PriceSP.ObjectId = ObjectLink_Main.ChildObjectId
                                  AND ObjectFloat_Goods_PriceSP.DescId = zc_ObjectFloat_Goods_PriceSP()
+                                 AND ObjectBoolean_Goods_SP.Valuedata = TRUE
             -- Сума доплати за упаковку, грн (Соц. проект) - 16)
             LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PaymentSP
                                   ON ObjectFloat_Goods_PaymentSP.ObjectId = ObjectLink_Main.ChildObjectId
                                  AND ObjectFloat_Goods_PaymentSP.DescId = zc_ObjectFloat_Goods_PaymentSP()
+                                 AND ObjectBoolean_Goods_SP.Valuedata = TRUE
 
             -- условия хранения
             LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep

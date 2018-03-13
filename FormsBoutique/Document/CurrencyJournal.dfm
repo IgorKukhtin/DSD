@@ -5,7 +5,7 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 677
-  ExplicitHeight = 342
+  ExplicitHeight = 339
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -13,17 +13,17 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
     Height = 247
     TabOrder = 3
     ExplicitWidth = 661
-    ExplicitHeight = 232
+    ExplicitHeight = 247
     ClientRectBottom = 247
     ClientRectRight = 661
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 661
-      ExplicitHeight = 232
+      ExplicitHeight = 247
       inherited cxGrid: TcxGrid
         Width = 661
         Height = 247
         ExplicitWidth = 661
-        ExplicitHeight = 232
+        ExplicitHeight = 247
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -47,7 +47,17 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
             Width = 55
           end
           inherited colOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1089' ...'
+            DataBinding.FieldName = 'StartDate'
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object colEndDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1086' ...'
+            DataBinding.FieldName = 'EndDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 75
           end
@@ -101,30 +111,11 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
     Width = 661
     ExplicitWidth = 661
     inherited deStart: TcxDateEdit
-      EditValue = 42736d
+      EditValue = 43101d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42736d
+      EditValue = 43101d
     end
-  end
-  object cxLabel27: TcxLabel [2]
-    Left = 422
-    Top = 6
-    Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
-    Visible = False
-  end
-  object edJuridicalBasis: TcxButtonEdit [3]
-    Left = 500
-    Top = 5
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 7
-    Visible = False
-    Width = 150
   end
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
@@ -248,8 +239,8 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 56
-    Top = 96
+    Left = 64
+    Top = 88
   end
   inherited MasterCDS: TClientDataSet
     Left = 24
@@ -257,41 +248,8 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Currency'
-    Params = <
-      item
-        Name = 'inStartDate'
-        Value = 41640d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndDate'
-        Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inJuridicalBasisId'
-        Value = Null
-        Component = JuridicalBasisGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsErased'
-        Value = False
-        Component = actShowErased
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 96
-    Top = 96
+    Left = 112
+    Top = 104
   end
   inherited BarManager: TdxBarManager
     Left = 160
@@ -393,7 +351,6 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
         Component = PeriodChoice
       end
       item
-        Component = JuridicalBasisGuides
       end>
   end
   inherited spMovementComplete: TdsdStoredProc
@@ -421,58 +378,5 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_Currency'
-  end
-  object JuridicalBasisGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edJuridicalBasis
-    Key = '0'
-    FormNameParam.Value = 'TJuridical_BasisForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TJuridical_BasisForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = '0'
-        Component = JuridicalBasisGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = JuridicalBasisGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 567
-  end
-  object spGet_UserJuridicalBasis: TdsdStoredProc
-    StoredProcName = 'gpGet_User_JuridicalBasis'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'JuridicalBasisId'
-        Value = '0'
-        Component = JuridicalBasisGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'JuridicalBasisName'
-        Value = ''
-        Component = JuridicalBasisGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 688
-    Top = 8
   end
 end

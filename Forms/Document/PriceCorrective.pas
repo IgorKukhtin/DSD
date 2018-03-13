@@ -60,10 +60,10 @@ type
     PrintItemsSverkaCDS: TClientDataSet;
     cxLabel10: TcxLabel;
     edPaidKind: TcxButtonEdit;
-    PaidKindGuides: TdsdGuides;
+    GuidesPaidKind: TdsdGuides;
     cxLabel11: TcxLabel;
     edContract: TcxButtonEdit;
-    ContractGuides: TdsdGuides;
+    GuidesContract: TdsdGuides;
     edPartner: TcxButtonEdit;
     cxLabel12: TcxLabel;
     GuidesPartner: TdsdGuides;
@@ -71,7 +71,7 @@ type
     actSPPrintProcName: TdsdExecStoredProc;
     cxLabel13: TcxLabel;
     edDocumentTaxKind: TcxButtonEdit;
-    DocumentTaxKindGuides: TdsdGuides;
+    GuidesDocumentTaxKind: TdsdGuides;
     bbCorrective: TdxBarButton;
     spCorrective: TdsdStoredProc;
     spSelectPrintTaxCorrective_Us: TdsdStoredProc;
@@ -114,6 +114,9 @@ type
     actOpenTax: TdsdOpenForm;
     bbOpenTax: TdxBarButton;
     actShowMessage: TShowMessageAction;
+    cxLabel8: TcxLabel;
+    edDocumentTax: TcxButtonEdit;
+    GuidesDocumentTax: TdsdGuides;
   private
     { Private declarations }
   public

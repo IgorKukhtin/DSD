@@ -43,7 +43,7 @@ type
     edGoodsGroupGP: TcxButtonEdit;
     GoodsGroupGPGuides: TdsdGuides;
     UnitGroupGuides: TdsdGuides;
-    cxGrid1: TcxGrid;
+    cxGridPivot: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
     cxGridLevel1: TcxGridLevel;
     ReturnAmount: TcxGridDBColumn;
@@ -83,6 +83,10 @@ type
     EndDate: TcxGridDBColumn;
     DOW_StartDate: TcxGridDBColumn;
     DOW_EndDate: TcxGridDBColumn;
+    actDetailToExcel: TdsdGridToExcel;
+    actPivotToExcel: TdsdGridToExcel;
+    bbPivotToExcel: TdxBarButton;
+    bbDetailToExcel: TdxBarButton;
   private
     { Private declarations }
   public

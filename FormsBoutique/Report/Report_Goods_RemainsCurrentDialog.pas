@@ -27,7 +27,7 @@ type
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     PeriodChoice: TPeriodChoice;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     FormParams: TdsdFormParams;
     edUnit: TcxButtonEdit;
@@ -46,9 +46,12 @@ type
     edPartner: TcxButtonEdit;
     GuidesPartner: TdsdGuides;
     cxLabel5: TcxLabel;
-    edPeriodYearStart: TcxCurrencyEdit;
     cxLabel6: TcxLabel;
-    edPeriodYearEnd: TcxCurrencyEdit;
+    cbYear: TcxCheckBox;
+    edStartYear: TcxButtonEdit;
+    edEndYear: TcxButtonEdit;
+    GuidesStartYear: TdsdGuides;
+    GuidesEndYear: TdsdGuides;
   private
     { Private declarations }
   public

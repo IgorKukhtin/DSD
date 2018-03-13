@@ -91,15 +91,15 @@ BEGIN
         LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                 ON MovementFloat_TotalCount.MovementId = Movement.Id
                                AND MovementFloat_TotalCount.DescId     = zc_MovementFloat_TotalCount()
-                               
+
         LEFT JOIN MovementFloat AS MovementFloat_TotalSummPriceList
                                 ON MovementFloat_TotalSummPriceList.MovementId = Movement.Id
                                AND MovementFloat_TotalSummPriceList.DescId     = zc_MovementFloat_TotalSummPriceList()
-                               
+
         LEFT JOIN MovementFloat AS MovementFloat_TotalSummChange
                                 ON MovementFloat_TotalSummChange.MovementId = Movement.Id
                                AND MovementFloat_TotalSummChange.DescId     = zc_MovementFloat_TotalSummChange()
-                               
+
         LEFT JOIN MovementFloat AS MovementFloat_TotalSummPay
                                 ON MovementFloat_TotalSummPay.MovementId = Movement.Id
                                AND MovementFloat_TotalSummPay.DescId     = zc_MovementFloat_TotalSummPay()
@@ -111,7 +111,6 @@ BEGIN
                                ON MD_Insert.MovementId = Movement.Id
                               AND MD_Insert.DescId     = zc_MovementDate_Insert()
 
-                                    
         LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
    WHERE Movement.Id = inMovementId;
      
@@ -145,7 +144,7 @@ BEGIN
    IF vbMovementDescId = zc_Movement_Sale() AND inIsComplete = FALSE AND vbOperDate > vbLastDate_Client
    THEN
        -- находим данные по последнему док.продажи
-       SELECT COALESCE (MD_Insert.ValueData, Movement.OperDate)        AS OperDate            -- дата/время создания, а уже потом - дата документа
+       SELECT Movement.OperDate                                        AS OperDate            -- дата/время создания, а уже потом - дата документа
             , COALESCE (MovementFloat_TotalCount.ValueData, 0)         AS TotalCount          -- кол-во
             , COALESCE (MovementFloat_TotalSummPriceList.ValueData, 0) AS TotalSummPriceList  -- Сумма
             , COALESCE (MovementFloat_TotalSummChange.ValueData, 0)    AS TotalSummChange     -- Сумма скидки
@@ -165,7 +164,8 @@ BEGIN
              WHERE Movement.StatusId = zc_Enum_Status_Complete() 
                AND Movement.DescId = zc_Movement_Sale()
              ORDER BY MD_Insert.ValueData DESC -- для скорости - без Movement.OperDate
-             LIMIT 1) AS Movement
+             LIMIT 1
+            ) AS Movement
             
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId = Movement.Id

@@ -99,7 +99,7 @@ BEGIN
                              , Object_PartionGoods.GoodsSizeId
                              , Object_PartionGoods.OperPrice
                              , Object_PartionGoods.CountForPrice
-                             , Object_PartionGoods.PriceSale
+                             , Object_PartionGoods.OperPriceList
                              , Container.Amount                   AS Remains
                              , COALESCE (tmp.Amount, 1)           AS CurrencyValue
                              , COALESCE (tmp.ParValue,0)          AS ParValue
@@ -156,7 +156,7 @@ BEGIN
                 , tmpPartion.OperPrice       :: TFloat AS OperPrice
                 , tmpPartion.CountForPrice   :: TFloat AS CountForPrice
                 --, tmpPriceList.OperPriceList :: TFloat AS OperPriceList
-                , tmpPartion.PriceSale       :: TFloat AS OperPriceList
+                , tmpPartion.OperPriceList   :: TFloat AS OperPriceList
                 , 0                          :: TFloat AS TotalSumm
                 , 0                          :: TFloat AS TotalSummBalance
                 , 0                          :: TFloat AS TotalSummPriceList

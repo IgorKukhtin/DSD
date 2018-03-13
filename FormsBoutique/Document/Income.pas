@@ -61,7 +61,7 @@ type
     TotalSumm: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     actUpdateMasterDS: TdsdUpdateDataSet;
-    spInsertUpdateMIMaster: TdsdStoredProc;
+    spUpdateMIMaster: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     CountForPrice: TcxGridDBColumn;
@@ -140,8 +140,10 @@ type
     TotalSummBalance: TcxGridDBColumn;
     actInsertMaskAction: TdsdInsertUpdateAction;
     macInsertMaskAction: TMultiAction;
-    actOpenReportForm: TdsdOpenForm;
-    bbOpenReportForm: TdxBarButton;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
+    actPrintInSecond: TdsdPrintAction;
+    bbPrintInSecond: TdxBarButton;
   private
   public
   end;

@@ -409,6 +409,12 @@ type
     actFiscal: TdsdOpenForm;
     miFiscal: TMenuItem;
     N162: TMenuItem;
+    actReport_GoodsRemainsCurrent: TdsdOpenForm;
+    miReport_GoodsRemainsCurrent: TMenuItem;
+    actGoodsRetail: TdsdOpenForm;
+    miGoodsRetail: TMenuItem;
+    actGoods_NDS_diff: TdsdOpenForm;
+    miGoods_NDS_diff: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

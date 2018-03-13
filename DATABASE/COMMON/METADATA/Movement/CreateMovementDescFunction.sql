@@ -139,6 +139,10 @@ CREATE OR REPLACE FUNCTION zc_Movement_EDI() RETURNS Integer AS $BODY$BEGIN RETU
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_EDI', 'EDI документ' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_EDI');
 
+CREATE OR REPLACE FUNCTION zc_Movement_EDI_Send() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_EDI_Send'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_EDI_Send', 'Документ для отправки в EDI' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_EDI_Send');
+
 CREATE OR REPLACE FUNCTION zc_Movement_PriceCorrective() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_PriceCorrective'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_PriceCorrective', 'Корректировка цены' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PriceCorrective');
@@ -276,10 +280,16 @@ CREATE OR REPLACE FUNCTION zc_Movement_PromoCode() RETURNS Integer AS $BODY$BEGI
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_PromoCode', 'Промо-коды' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PromoCode');
 
+CREATE OR REPLACE FUNCTION zc_Movement_LossPersonal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_LossPersonal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_LossPersonal', 'Корректировка задолженности (Сотрудники ЗП)' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_LossPersonal');
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 27.02.18         * zc_Movement_LossPersonal
  13.12.17         * zc_Movement_PromoCode
  17.11.17         * zc_Movement_MarginCategory
  27.03.17         * zc_Movement_RouteMember

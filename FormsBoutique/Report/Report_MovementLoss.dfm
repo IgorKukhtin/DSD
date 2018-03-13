@@ -1,17 +1,17 @@
 inherited Report_MovementLossForm: TReport_MovementLossForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1057#1087#1080#1089#1072#1085#1080#1102'>'
   ClientHeight = 425
-  ClientWidth = 1065
+  ClientWidth = 1103
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1081
+  ExplicitWidth = 1119
   ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
-    Width = 1065
+    Width = 1103
     Height = 59
-    ExplicitWidth = 1065
+    ExplicitWidth = 1103
     ExplicitHeight = 59
     inherited deStart: TcxDateEdit
       Left = 29
@@ -58,60 +58,54 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
       Width = 224
     end
     object cbPartion: TcxCheckBox
-      Left = 885
+      Left = 889
       Top = 5
-      Action = actRefreshIsPartion
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 6
-      Width = 83
+      Width = 127
     end
     object cbSize: TcxCheckBox
-      Left = 887
+      Left = 889
       Top = 32
-      Action = actRefreshSize
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1056#1072#1079#1084#1077#1088#1099
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 7
-      Width = 86
+      Width = 66
     end
     object cbPartner: TcxCheckBox
-      Left = 974
+      Left = 1011
       Top = 5
-      Action = actRefreshPartner
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 8
-      Width = 108
+      Width = 91
     end
     object cbMovement: TcxCheckBox
-      Left = 974
+      Left = 1011
       Top = 32
-      Action = actRefreshMovement
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090'> ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#8470
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 9
-      Width = 108
+      Width = 94
     end
     object cxLabel7: TcxLabel
-      Left = 664
+      Left = 669
       Top = 33
-      Caption = #1043#1086#1076' ('#1085#1072#1095'.):'
-    end
-    object edPeriodYearStart: TcxCurrencyEdit
-      Left = 731
-      Top = 32
-      EditValue = 0.000000000000000000
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = '0'
-      TabOrder = 11
-      Width = 40
+      Caption = #1043#1086#1076' '#1089' ...'
     end
     object cxLabel8: TcxLabel
-      Left = 776
+      Left = 779
       Top = 33
-      Caption = #1043#1086#1076' ('#1086#1082#1086#1085'.):'
-    end
-    object edPeriodYearEnd: TcxCurrencyEdit
-      Left = 843
-      Top = 32
-      EditValue = 2017.000000000000000000
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = '0'
-      TabOrder = 13
-      Width = 40
+      Caption = #1043#1086#1076' '#1087#1086' ...'
     end
     object cxLabel9: TcxLabel
       Left = 668
@@ -127,27 +121,27 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 15
+      TabOrder = 13
       Width = 172
     end
   end
   inherited PageControl: TcxPageControl [1]
     Top = 85
-    Width = 1065
+    Width = 1103
     Height = 340
     TabOrder = 3
     ExplicitTop = 85
-    ExplicitWidth = 1065
+    ExplicitWidth = 1103
     ExplicitHeight = 340
     ClientRectBottom = 340
-    ClientRectRight = 1065
+    ClientRectRight = 1103
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1065
+      ExplicitWidth = 1103
       ExplicitHeight = 340
       inherited cxGrid: TcxGrid
-        Width = 1065
+        Width = 1103
         Height = 340
-        ExplicitWidth = 1065
+        ExplicitWidth = 1103
         ExplicitHeight = 340
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -169,7 +163,7 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummSale
+              Column = TotalSummPriceListLast
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -190,7 +184,7 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummSale
+              Column = TotalSummPriceListLast
             end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
@@ -254,17 +248,8 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
             Options.Editing = False
             Width = 100
           end
-          object GoodsGroupName: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' ('#1090#1086#1074'.)'
-            DataBinding.FieldName = 'GoodsGroupName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 95
-          end
           object LabelName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074' '#1094#1077#1085#1085#1080#1082#1077
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'LabelName'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -280,7 +265,7 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
             Width = 50
           end
           object GoodsName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            Caption = #1040#1088#1090#1080#1082#1091#1083
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -323,10 +308,10 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
             Caption = #1062#1077#1085#1072' '#1074#1093'.'
             DataBinding.FieldName = 'OperPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 69
+            Width = 70
           end
           object CountForPrice: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
@@ -344,48 +329,62 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
             Caption = #1057#1091#1084#1084#1072' '#1074#1093'.'
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 102
+            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1086' '#1074#1093#1086#1076#1085#1099#1084' '#1094#1077#1085#1072#1084' '#1074' '#1074#1072#1083#1102#1090#1077
+            Width = 80
           end
           object OperPriceList: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' ('#1087#1088#1072#1081#1089')'
+            Caption = #1062#1077#1085#1072' '#1043#1056#1053
             DataBinding.FieldName = 'OperPriceList'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 58
+            HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
+            Width = 70
           end
           object TotalSummPriceList: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' ('#1087#1088#1072#1081#1089')'
+            Caption = #1057#1091#1084#1084#1072' '#1043#1056#1053
             DataBinding.FieldName = 'TotalSummPriceList'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 110
+            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
+            Width = 100
           end
-          object PriceSale: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1090#1077#1082'. ('#1087#1088#1072#1081#1089') '
-            DataBinding.FieldName = 'PriceSale'
+          object OperPriceListLast: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1043#1056#1053' ('#1089#1077#1075#1086#1076#1085#1103')'
+            DataBinding.FieldName = 'OperPriceListLast'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 79
+            HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1085#1072' '#1089#1077#1075#1086#1076#1085#1103
+            Width = 70
           end
-          object TotalSummSale: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1090#1077#1082'. ('#1087#1088#1072#1081#1089')'
-            DataBinding.FieldName = 'TotalSummSale'
+          object TotalSummPriceListLast: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1043#1056#1053' ('#1089#1077#1075#1086#1076#1085#1103')'
+            DataBinding.FieldName = 'TotalSummPriceListLast'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 102
+            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1085#1072' '#1089#1077#1075#1086#1076#1085#1103
+            Width = 100
+          end
+          object GoodsGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' ('#1090#1086#1074'.)'
+            DataBinding.FieldName = 'GoodsGroupName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 95
           end
           object CompositionGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1089#1086#1089#1090#1072#1074#1072
@@ -477,21 +476,24 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
             Width = 80
           end
           object InvNumber_Partion: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080
+            Caption = #8470' '#1076#1086#1082'. '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'InvNumber_Partion'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 73
+            HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            Width = 55
           end
           object OperDate_Partion: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080
+            Caption = #1044#1072#1090#1072' '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'OperDate_Partion'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
             Width = 70
           end
         end
@@ -552,6 +554,31 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
     Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
     Width = 224
   end
+  object edStartYear: TcxButtonEdit [8]
+    Left = 718
+    Top = 32
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 12
+    Width = 50
+  end
+  object edEndYear: TcxButtonEdit [9]
+    Left = 833
+    Top = 32
+    TabStop = False
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 13
+    Width = 50
+  end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
@@ -593,6 +620,38 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
         Properties.Strings = (
           'Key'
           'TextValue')
+      end
+      item
+        Component = GuidesEndYear
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesStartYear
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = cbMovement
+        Properties.Strings = (
+          'Checked')
+      end
+      item
+        Component = cbPartion
+        Properties.Strings = (
+          'Checked')
+      end
+      item
+        Component = cbPartner
+        Properties.Strings = (
+          'Checked')
+      end
+      item
+        Component = cbSize
+        Properties.Strings = (
+          'Checked')
       end>
   end
   inherited ActionList: TActionList
@@ -764,16 +823,36 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PeriodYearStart'
-          Value = Null
-          Component = edPeriodYearStart
+          Name = 'StartYear'
+          Value = '0'
+          Component = GuidesStartYear
+          ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PeriodYearEnd'
+          Name = 'StartYearText'
           Value = Null
-          Component = edPeriodYearEnd
+          Component = GuidesStartYear
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndYear'
+          Value = ''
+          Component = GuidesEndYear
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndYearText'
+          Value = Null
+          Component = GuidesEndYear
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -802,8 +881,8 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
         item
           StoredProc = spSelect
         end>
-      Caption = #1087#1086' '#1056#1072#1079#1084#1077#1088#1072#1084
-      Hint = #1087#1086' '#1056#1072#1079#1084#1077#1088#1072#1084
+      Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -828,8 +907,8 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
         item
           StoredProc = spSelect
         end>
-      Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
-      Hint = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -935,6 +1014,210 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
         end>
       isShowModal = False
     end
+    object actPrintIn: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1074#1093'. '#1094#1077#1085#1072#1084' '#1074' '#1074#1072#1083#1102#1090#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1074#1093'. '#1094#1077#1085#1072#1084' '#1074' '#1074#1072#1083#1102#1090#1077
+      ImageIndex = 16
+      DataSets = <
+        item
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 'GoodsGroupNameFull;LabelName;GoodsName;GoodsSizeName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = GuidesUnitFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitToName'
+          Value = Null
+          Component = GuidesUnitTo
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerName'
+          Value = ''
+          Component = GuidesPartner
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BrandName'
+          Value = ''
+          Component = GuidesBrand
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodName'
+          Value = ''
+          Component = GuidesPeriod
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartYear'
+          Value = ''
+          Component = GuidesStartYear
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndYear'
+          Value = ''
+          Component = GuidesEndYear
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isOperPrice'
+          Value = 'True'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DescName'
+          Value = 'zc_Movement_Loss'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartDate'
+          Value = 42736d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42736d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintReport_Uniform'
+      ReportNameParam.Value = 'PrintReport_Uniform'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1094#1077#1085#1077' '#1087#1088#1072#1081#1089#1072' '#1043#1056#1053
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1094#1077#1085#1077' '#1087#1088#1072#1081#1089#1072' '#1043#1056#1053
+      ImageIndex = 3
+      DataSets = <
+        item
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 'GoodsGroupNameFull;LabelName;GoodsName;GoodsSizeName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = GuidesUnitFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitToName'
+          Value = Null
+          Component = GuidesUnitTo
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerName'
+          Value = ''
+          Component = GuidesPartner
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BrandName'
+          Value = ''
+          Component = GuidesBrand
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodName'
+          Value = ''
+          Component = GuidesPeriod
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartYear'
+          Value = ''
+          Component = GuidesStartYear
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndYear'
+          Value = ''
+          Component = GuidesEndYear
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isOperPrice'
+          Value = 'False'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DescName'
+          Value = 'zc_Movement_Loss'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartDate'
+          Value = 42736d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42736d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintReport_Uniform'
+      ReportNameParam.Value = 'PrintReport_Uniform'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -1004,16 +1287,18 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPeriodYearStart'
+        Name = 'inStartYear'
         Value = Null
-        Component = edPeriodYearStart
+        Component = GuidesStartYear
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPeriodYearEnd'
+        Name = 'inEndYear'
         Value = Null
-        Component = edPeriodYearEnd
+        Component = GuidesEndYear
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1092,6 +1377,22 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintin'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1112,6 +1413,14 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
     end
     object bbOpenReportForm: TdxBarButton
       Action = actOpenReportForm
+      Category = 0
+    end
+    object bbPrint: TdxBarButton
+      Action = actPrint
+      Category = 0
+    end
+    object bbPrintin: TdxBarButton
+      Action = actPrintIn
       Category = 0
     end
   end
@@ -1140,10 +1449,10 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
         Component = GuidesPeriod
       end
       item
-        Component = edPeriodYearStart
+        Component = GuidesStartYear
       end
       item
-        Component = edPeriodYearEnd
+        Component = GuidesEndYear
       end>
     Left = 384
     Top = 176
@@ -1296,5 +1605,63 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
       end>
     Left = 774
     Top = 65530
+  end
+  object GuidesStartYear: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edStartYear
+    Key = '0'
+    FormNameParam.Value = 'TPeriodYear_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodYear_ChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesStartYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesStartYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 746
+    Top = 65
+  end
+  object GuidesEndYear: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edEndYear
+    Key = '0'
+    FormNameParam.Value = 'TPeriodYear_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodYear_ChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesEndYear
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesEndYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 853
+    Top = 59
   end
 end

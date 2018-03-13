@@ -3,10 +3,8 @@ inherited PaymentForm: TPaymentForm
   ClientHeight = 513
   ClientWidth = 1005
   AddOnFormData.AddOnFormRefresh.ParentList = 'Payment'
-  ExplicitLeft = -337
-  ExplicitTop = -59
   ExplicitWidth = 1021
-  ExplicitHeight = 552
+  ExplicitHeight = 551
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -126,9 +124,9 @@ inherited PaymentForm: TPaymentForm
             Options.Editing = False
             Width = 104
           end
-          object Income_NDSKindName: TcxGridDBColumn
+          object Income_NDS: TcxGridDBColumn
             Caption = #1053#1044#1057
-            DataBinding.FieldName = 'Income_NDSKindName'
+            DataBinding.FieldName = 'Income_NDS'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

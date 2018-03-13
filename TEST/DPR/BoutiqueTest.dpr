@@ -217,7 +217,6 @@ uses
   GoodsAccount in '..\..\FormsBoutique\Document\GoodsAccount.pas' {GoodsAccountForm: TParentForm},
   GoodsAccountJournal in '..\..\FormsBoutique\Document\GoodsAccountJournal.pas' {GoodsAccountJournalForm: TParentForm},
   Report_MovementReturnOutDialog in '..\..\FormsBoutique\Report\Report_MovementReturnOutDialog.pas' {Report_MovementReturnOutDialogForm: TParentForm},
-  Report_MovementReturnOut in '..\..\FormsBoutique\Report\Report_MovementReturnOut.pas' {Report_MovementReturnOutForm: TParentForm},
   Report_MovementSend in '..\..\FormsBoutique\Report\Report_MovementSend.pas' {Report_MovementSendForm: TParentForm},
   Report_MovementSendDialog in '..\..\FormsBoutique\Report\Report_MovementSendDialog.pas' {Report_MovementSendDialogForm: TParentForm},
   Report_MovementLoss in '..\..\FormsBoutique\Report\Report_MovementLoss.pas' {Report_MovementLossForm: TParentForm},
@@ -255,19 +254,39 @@ uses
   Report_GoodsMI_Account in '..\..\FormsBoutique\Report\Report_GoodsMI_Account.pas' {Report_GoodsMI_AccountForm: TParentForm},
   Report_SaleReturnIn in '..\..\FormsBoutique\Report\Report_SaleReturnIn.pas' {Report_SaleReturnInForm: TParentForm},
   Report_SaleReturnInDialog in '..\..\FormsBoutique\Report\Report_SaleReturnInDialog.pas' {Report_SaleReturnInDialogForm: TParentForm},
-  Report_PartnerDebt in '..\..\FormsBoutique\Report\Report_PartnerDebt.pas' {Report_PartnerDebtForm: TParentForm},
-  Report_PartnerDebtDialog in '..\..\FormsBoutique\Report\Report_PartnerDebtDialog.pas' {Report_PartnerDebtDialogForm: TParentForm},
+  Report_ClientDebt in '..\..\FormsBoutique\Report\Report_ClientDebt.pas' {Report_ClientDebtForm: TParentForm},
+  Report_ClientDebtDialog in '..\..\FormsBoutique\Report\Report_ClientDebtDialog.pas' {Report_ClientDebtDialogForm: TParentForm},
   Report_MovementIncomeDialog in '..\..\FormsBoutique\Report\Report_MovementIncomeDialog.pas' {Report_MovementIncomeDialogForm: TParentForm},
   IFIN_J1201009 in '..\..\SOURCE\MeDOC\IFIN_J1201009.pas',
   GoodsAccount_ReturnIn in '..\..\FormsBoutique\Document\GoodsAccount_ReturnIn.pas' {GoodsAccount_ReturnInForm: TParentForm},
   GoodsAccount_ReturnInJournal in '..\..\FormsBoutique\Document\GoodsAccount_ReturnInJournal.pas' {GoodsAccount_ReturnInJournalForm: TParentForm},
   GoodsPrintChoice in '..\..\FormsBoutique\Guides\GoodsPrintChoice.pas' {GoodsPrintChoiceForm: TParentForm},
   GoodsPrint in '..\..\FormsBoutique\Guides\GoodsPrint.pas' {GoodsPrintForm: TParentForm},
-  Report_MotionByPartner in '..\..\FormsBoutique\Report\Report_MotionByPartner.pas' {Report_MotionByPartnerForm: TParentForm},
-  Report_MotionByPartnerDialog in '..\..\FormsBoutique\Report\Report_MotionByPartnerDialog.pas' {Report_MotionByPartnerDialogForm: TParentForm},
+  Report_MotionByClient in '..\..\FormsBoutique\Report\Report_MotionByClient.pas' {Report_MotionByClientForm: TParentForm},
+  Report_MotionByClientDialog in '..\..\FormsBoutique\Report\Report_MotionByClientDialog.pas' {Report_MotionByClientDialogForm: TParentForm},
   IFIN_J1201209 in '..\..\SOURCE\MeDOC\IFIN_J1201209.pas',
   CommonContainerProcedureTest in '..\SOURCEBoutique\Container\CommonContainerProcedureTest.pas',
-  GoodsAccount_TotalError in '..\..\FormsBoutique\Document\GoodsAccount_TotalError.pas' {GoodsAccount_TotalErrorForm: TParentForm};
+  Report_Sale_ContainerError in '..\..\FormsBoutique\Report\Report_Sale_ContainerError.pas' {Report_Sale_ContainerErrorForm: TParentForm},
+  Report_ReturnIn_TotalError in '..\..\FormsBoutique\Report\Report_ReturnIn_TotalError.pas' {Report_ReturnIn_TotalErrorForm: TParentForm},
+  Report_Sale_TotalError in '..\..\FormsBoutique\Report\Report_Sale_TotalError.pas' {Report_Sale_TotalErrorForm: TParentForm},
+  Report_Client_TotalError in '..\..\FormsBoutique\Report\Report_Client_TotalError.pas' {Report_Client_TotalErrorForm: TParentForm},
+  Report_Client_LastError in '..\..\FormsBoutique\Report\Report_Client_LastError.pas' {Report_Client_LastErrorForm: TParentForm},
+  Report_GoodsAccount_TotalError in '..\..\FormsBoutique\Report\Report_GoodsAccount_TotalError.pas' {Report_GoodsAccount_TotalErrorForm: TParentForm},
+  Report_CollationByClientDialog in '..\..\FormsBoutique\Report\Report_CollationByClientDialog.pas' {Report_CollationByClientDialogForm: TParentForm},
+  Report_CollationByClient in '..\..\FormsBoutique\Report\Report_CollationByClient.pas' {Report_CollationByClientForm: TParentForm},
+  Unit_Dialog in '..\..\FormsBoutique\Guides\Unit_Dialog.pas' {Unit_DialogForm: TParentForm},
+  Report_SaleOLAPDialog in '..\..\FormsBoutique\Report\Report_SaleOLAPDialog.pas' {Report_SaleOLAPDialogForm: TParentForm},
+  Report_SaleOLAP in '..\..\FormsBoutique\Report\Report_SaleOLAP.pas' {Report_SaleOLAPForm: TParentForm},
+  PeriodYear_Choice in '..\..\FormsBoutique\Guides\PeriodYear_Choice.pas' {PeriodYear_ChoiceForm: TParentForm},
+  Report_ReturnIn in '..\..\FormsBoutique\Report\Report_ReturnIn.pas' {Report_ReturnInForm: TParentForm},
+  Report_SaleDialog in '..\..\FormsBoutique\Report\Report_SaleDialog.pas' {Report_SaleDialogForm: TParentForm},
+  Report_OH_DiscountPeriod in '..\..\FormsBoutique\Report\Report_OH_DiscountPeriod.pas' {Report_OH_DiscountPeriodForm: TParentForm},
+  Report_OH_DiscountPeriodDialog in '..\..\FormsBoutique\Report\Report_OH_DiscountPeriodDialog.pas' {Report_OH_DiscountPeriodDialogForm: TParentForm},
+  DiscountPeriod in '..\..\FormsBoutique\Guides\DiscountPeriod.pas' {DiscountPeriodForm: TParentForm},
+  DiscountPeriodEdit in '..\..\FormsBoutique\Guides\DiscountPeriodEdit.pas' {DiscountPeriodEditForm: TParentForm},
+  PriceListItemDialog in '..\..\FormsBoutique\Guides\PriceListItemDialog.pas' {PriceListItemDialogForm: TParentForm},
+  Report_Sale in '..\..\FormsBoutique\Report\Report_Sale.pas' {Report_SaleForm: TParentForm},
+  Report_MovementReturnOut in '..\..\FormsBoutique\Report\Report_MovementReturnOut.pas' {Report_MovementReturnOutForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -283,7 +302,7 @@ begin
   dsdProject := prBoutique;
 
   if FindCmdLineSwitch('realboutique', true)
-  then gc_AdminPassword := 'Админ1234'
+  then gc_AdminPassword := 'qsxqsxw1'
   else gc_AdminPassword := 'Админ';
 
   gc_ProgramName := 'Boutique.exe';

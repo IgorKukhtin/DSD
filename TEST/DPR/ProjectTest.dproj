@@ -2307,10 +2307,6 @@
 				<Form>Report_Transport_ProfitLossDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_Transport_ProfitLoss.pas">
-				<Form>Report_Transport_ProfitLossForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\IncomeJournalChoice.pas">
 				<Form>IncomeJournalChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -3335,6 +3331,34 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Sticker_List.pas">
 				<Form>Sticker_ListForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ProductionSeparateStorageLine.pas">
+				<Form>ProductionSeparateStorageLineForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Transport_ProfitLoss.pas">
+				<Form>Report_Transport_ProfitLossForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\EDI\EDI_SendJournal.pas">
+				<Form>EDI_SendJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\GoodsByGoodsKind_Sticker.pas">
+				<Form>GoodsByGoodsKind_StickerForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\LossPersonalJournal.pas">
+				<Form>LossPersonalJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\LossPersonal.pas">
+				<Form>LossPersonalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\MovementString_INNEdit.pas">
+				<Form>MovementString_INNEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -1,12 +1,9 @@
 -- Function: gpSelect_MovementItem_Sale()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_Sale (Integer, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_Sale (Integer, Boolean, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Sale(
     IN inMovementId       Integer      , -- ключ Документа
---    IN inShowAll          Boolean      , --
     IN inIsErased         Boolean      , --
     IN inSession          TVarChar       -- сессия пользователя
 )
@@ -41,20 +38,24 @@ RETURNS TABLE (Id Integer, PartionId Integer
              , BarCode TVarChar
              , Comment TVarChar
              , isClose Boolean
+             , isChecked Boolean
              , isErased Boolean
               )
 AS
 $BODY$
-  DECLARE vbUserId Integer;
-
-  DECLARE vbUnitId Integer;
+  DECLARE vbUserId      Integer;
+  DECLARE vbUnitId_User Integer;
+  DECLARE vbUnitId      Integer;
   DECLARE vbPriceListId Integer;
-  DECLARE vbOperDate TDateTime;
+  DECLARE vbOperDate    TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_Sale());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- если у пользователя подразделение = 0, тогда может смотреть вх.цену, сумму, прибыль, иначе нет
+     -- подразделение пользователя
+     vbUnitId_User := lpGetUnitByUser(vbUserId);
 
      -- Параметры документа
      SELECT Movement.OperDate
@@ -95,6 +96,7 @@ BEGIN
                            , MIString_BarCode.ValueData                            AS BarCode
                            , MIString_Comment.ValueData                            AS Comment
                            , COALESCE (MIBoolean_Close.ValueData, FALSE)           AS isClose
+                           , COALESCE (MIBoolean_Checked.ValueData, FALSE)         AS isChecked
                            , MovementItem.isErased
                            , ROW_NUMBER() OVER (PARTITION BY MovementItem.isErased ORDER BY MovementItem.Id ASC) AS Ord
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -108,6 +110,7 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
                                                         ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
                                                        AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
+                                                       AND vbUnitId_User = 0 --  продавцам в магазинах ограничиваем инфу
                             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                         ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                                        AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
@@ -153,6 +156,10 @@ BEGIN
                             LEFT JOIN MovementItemBoolean AS MIBoolean_Close
                                                           ON MIBoolean_Close.MovementItemId = MovementItem.Id
                                                          AND MIBoolean_Close.DescId         = zc_MIBoolean_Close()
+                            LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
+                                                          ON MIBoolean_Checked.MovementItemId = MovementItem.Id
+                                                         AND MIBoolean_Checked.DescId         = zc_MIBoolean_Checked()
+
                             LEFT JOIN MovementItemString AS MIString_BarCode
                                                          ON MIString_BarCode.MovementItemId = MovementItem.Id
                                                         AND MIString_BarCode.DescId         = zc_MIString_BarCode()
@@ -189,15 +196,17 @@ BEGIN
                                                        AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
                       GROUP BY MovementItem.ParentId
                      )
-   , tmpContainer AS (SELECT Container.*
+   , tmpContainer AS (SELECT DISTINCT Container.*
                       FROM tmpMI_Master
                            INNER JOIN Container ON Container.PartionId     = tmpMI_Master.PartionId
                                                AND Container.WhereObjectId = vbUnitId
                                                AND Container.DescId        = zc_Container_count()
+                                               -- !!!обязательно условие, т.к. мог меняться GoodsId и тогда в Container - несколько строк!!!
+                                               AND Container.ObjectId      = tmpMI_Master.GoodsId
                            LEFT JOIN ContainerLinkObject AS CLO_Client
                                                          ON CLO_Client.ContainerId = Container.Id
                                                         AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
-                      WHERE CLO_Client.ContainerId IS NULL
+                      WHERE CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
                      )
        -- результат
        SELECT
@@ -232,10 +241,11 @@ BEGIN
 
            , tmpMI.CurrencyValue            :: TFloat AS CurrencyValue
            , tmpMI.ParValue                 :: TFloat AS ParValue
-           , tmpMI.ChangePercent            :: TFloat AS ChangePercent         -- % Скидки
-           , tmpMI.SummChangePercent        :: TFloat AS SummChangePercent     -- Дополнительная скидка в продаже ГРН
-           , tmpMI.TotalChangePercent       :: TFloat AS TotalChangePercent    -- Итого скидка в продаже ГРН
-           , tmpMI.TotalChangePercentPay    :: TFloat AS TotalChangePercentPay -- Дополнительная скидка в расчетах ГРН
+
+           , tmpMI.ChangePercent                                  :: TFloat AS ChangePercent         -- % Скидки
+           , tmpMI.SummChangePercent                              :: TFloat AS SummChangePercent     -- Итого сумма Скидки: 2)дополнительная
+           , (tmpMI.TotalChangePercent - tmpMI.SummChangePercent) :: TFloat AS TotalChangePercent    -- Итого сумма Скидки: 1)по %скидки
+           , tmpMI.TotalChangePercentPay                          :: TFloat AS TotalChangePercentPay -- Дополнительная скидка в расчетах ГРН
 
              -- Сумма к оплате ГРН
            , (zfCalc_SummPriceList (tmpMI.Amount, tmpMI.OperPriceList) - tmpMI.TotalChangePercent) :: TFloat AS TotalSummToPay
@@ -259,7 +269,8 @@ BEGIN
 
            , tmpMI.BarCode
            , tmpMI.Comment
-           , tmpMI.isClose :: Boolean AS isClose
+           , tmpMI.isClose   :: Boolean AS isClose
+           , tmpMI.isChecked :: Boolean AS isChecked
            , tmpMI.isErased
 
        FROM tmpMI_Master AS tmpMI
@@ -297,6 +308,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 06.03.18         *
  10.05.17         *
 */
 

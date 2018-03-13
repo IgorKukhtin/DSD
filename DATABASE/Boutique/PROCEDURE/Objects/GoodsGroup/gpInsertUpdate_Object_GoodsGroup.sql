@@ -4,52 +4,81 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer,Integer,TVarCh
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer,Integer,TVarChar,Integer,Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsGroup(
- INOUT ioId                       Integer   ,    -- Ключ объекта <Группа товара> 
+ INOUT ioId                       Integer   ,    -- Ключ объекта <Группа товара>
  INOUT ioCode                     Integer   ,    -- Код объекта <Группа товара>
     IN inName                     TVarChar  ,    -- Название объекта <Группа товара>
-    IN inParentId                 Integer   ,    -- ключ объекта <Группа товара> 
-    IN inInfoMoneyId              Integer   ,    -- ключ объекта <Статьи назначения 	> 
-    IN inSession                  TVarChar       -- сессия пользователя  
+    IN inParentId                 Integer   ,    -- ключ объекта <Группа товара>
+    IN inInfoMoneyId              Integer   ,    -- ключ объекта <Статьи назначения 	>
+    IN inSession                  TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
 AS
 $BODY$
-   DECLARE vbUserId Integer;   
+   DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsGroup());
    vbUserId:= lpGetUserBySession (inSession);
 
-   -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
-   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) <> 0 THEN ioCode := NEXTVAL ('Object_GoodsGroup_seq'); 
-   END IF; 
 
-   -- Нужен для загрузки из Sybase т.к. там код = 0 
-   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) = 0  THEN ioCode := NEXTVAL ('Object_GoodsGroup_seq'); 
-   ELSEIF ioCode = 0
-         THEN ioCode := COALESCE ((SELECT ObjectCode FROM Object WHERE Id = ioId), 0);
-   END IF; 
-   
-   -- проверка прав уникальности для свойства <Наименование >
-   --PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_GoodsGroup(), inName);
-/*
-   -- проверка уникальность <Наименование> для !!!одноq!! <Группа для состава товара>
-   IF TRIM (inName) <> '' AND COALESCE (inParentId, 0) <> 0 
-   THEN
-       IF EXISTS (SELECT Object.Id
-                  FROM Object
-                       JOIN ObjectLink AS ObjectLink_GoodsGroup_Parent
-                                       ON ObjectLink_GoodsGroup_Parent.ObjectId = Object.Id
-                                      AND ObjectLink_GoodsGroup_Parent.DescId = zc_ObjectLink_GoodsGroup_Parent()
-                                      AND ObjectLink_GoodsGroup_Parent.ChildObjectId = inParentId
-                                   
-                  WHERE TRIM (Object.ValueData) = TRIM (inName)
-                   AND Object.Id <> COALESCE (ioId, 0))
-       THEN
-           RAISE EXCEPTION 'Ошибка. Группа для состава товара <%> уже установлена у <%>.', TRIM (inName), lfGet_Object_ValueData (inParentId);
-       END IF;
+   IF vbUserId = zc_User_Sybase() AND ioId > 0 AND NOT EXISTS (SELECT 1 FROM Object WHERE Id = ioId)
+   THEN ioId:= 0;
    END IF;
-*/
+
+   -- Поиск для Sybase
+   IF vbUserId = zc_User_Sybase() AND COALESCE (ioId, 0) = 0
+   THEN ioId:= (SELECT Object.Id
+                FROM Object
+                     LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_Parent
+                                          ON ObjectLink_GoodsGroup_Parent.ObjectId = Object.Id
+                                         AND ObjectLink_GoodsGroup_Parent.DescId   = zc_ObjectLink_GoodsGroup_Parent()
+                WHERE Object.DescId = zc_Object_GoodsGroup() AND TRIM (LOWER (Object.ValueData)) = TRIM (LOWER (inName))
+                  AND COALESCE (ObjectLink_GoodsGroup_Parent.ChildObjectId, 0) = COALESCE (inParentId, 0)
+                ORDER BY Object.Id
+                -- !!!ПОТОМ УБРАТЬ!!!
+                -- LIMIT 1
+               );
+   END IF;
+
+
+   IF vbUserId = zc_User_Sybase() AND COALESCE (ioId, 0) = 0
+   THEN
+       -- Нужен для загрузки из Sybase т.к. там код = 0
+       ioCode := NEXTVAL ('Object_GoodsGroup_seq');
+
+   ELSEIF vbUserId = zc_User_Sybase()
+   THEN
+       -- Нужен для загрузки из Sybase т.к. там код = 0
+       ioCode := COALESCE ((SELECT ObjectCode FROM Object WHERE Id = ioId), 0);
+
+   -- Нужен ВСЕГДА - ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
+   ELSEIF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) <> 0 THEN ioCode := NEXTVAL ('Object_GoodsGroup_seq');
+   END IF;
+
+
+   -- Проверка
+   IF TRIM (inName) = '' THEN
+      RAISE EXCEPTION 'Ошибка.Необходимо ввести Название.';
+   END IF;
+
+   -- проверка уникальность <Название> для !!!<Группа>!!
+   -- IF vbUserId <> zc_User_Sybase() -- !!!ПОТОМ УБРАТЬ!!!
+   -- THEN
+   IF EXISTS (SELECT Object.Id
+              FROM Object
+                   LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_Parent
+                                        ON ObjectLink_GoodsGroup_Parent.ObjectId = Object.Id
+                                       AND ObjectLink_GoodsGroup_Parent.DescId   = zc_ObjectLink_GoodsGroup_Parent()
+              WHERE Object.DescId = zc_Object_GoodsGroup() AND TRIM (LOWER (Object.ValueData)) = TRIM (LOWER (inName))
+                AND COALESCE (ObjectLink_GoodsGroup_Parent.ChildObjectId, 0) = COALESCE (inParentId, 0)
+                AND Object.Id <> COALESCE (ioId, 0)
+             )
+   THEN
+       RAISE EXCEPTION 'Ошибка.Группа товара <%> для <%> уже существует.', TRIM (inName), lfGet_Object_ValueData_sh (inParentId);
+   END IF;
+
+   -- END IF;
+
 
    -- проверка прав уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_GoodsGroup(), ioCode);
@@ -66,7 +95,7 @@ BEGIN
    -- изменили свойство <УП статью> у всех товаров этой группы
    PERFORM CASE WHEN inInfoMoneyId <> 0
                 THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_InfoMoney(), ObjectLink.ObjectId, inInfoMoneyId)
-                ELSE lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_InfoMoney(), ObjectLink.ObjectId, lfGet_Object_GoodsGroup_InfoMoneyId (ObjectLink.ChildObjectId)) 
+                ELSE lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_InfoMoney(), ObjectLink.ObjectId, lfGet_Object_GoodsGroup_InfoMoneyId (ObjectLink.ChildObjectId))
            END
    FROM ObjectLink
    WHERE DescId = zc_ObjectLink_Goods_GoodsGroup()
@@ -138,7 +167,7 @@ BEGIN
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
-   
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -156,4 +185,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpInsertUpdate_Object_GoodsGroup(ioId := 0 , ioCode := 0 , inName := 'Группа товара 2' ::TVarChar, inParentId := 0 , inInfoMoneyId := 0 ,  inSession := '2'::TVarChar);
+-- SELECT * FROM gpInsertUpdate_Object_GoodsGroup (ioId := 0 , ioCode := 0 , inName := 'Группа товара 2' ::TVarChar, inParentId := 0 , inInfoMoneyId := 0 ,  inSession := '2'::TVarChar);

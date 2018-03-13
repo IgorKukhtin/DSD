@@ -15,17 +15,19 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Promo_Data());
 
      -- данные по документам Данные Sale / Order / ReturnIn где установлен признак "акция"
-     CREATE TEMP TABLE _tmpData (GoodsId Integer, GoodsKindId Integer, AmountOrder TFloat, AmountOut TFloat, AmountIn TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpData (GoodsId Integer, GoodsKindId Integer, AmountOrder TFloat, AmountOut TFloat, AmountIn TFloat, ChangePercent TFloat) ON COMMIT DROP;
 
      -- Данные Sale / Order / ReturnIn
-     INSERT INTO _tmpData (GoodsId, GoodsKindId, AmountOrder, AmountOut, AmountIn)
+     INSERT INTO _tmpData (GoodsId, GoodsKindId, AmountOrder, AmountOut, AmountIn, ChangePercent)
         SELECT MovementItem.ObjectId                         AS GoodsId
              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-             , SUM( CASE WHEN Movement.DescId = zc_Movement_OrderExternal() THEN COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountOrder
-             , SUM( CASE WHEN Movement.DescId = zc_Movement_Sale()          THEN COALESCE (MIFloat_AmountPartner.ValueData,0) ELSE 0 END) AS AmountOut
-             , SUM( CASE WHEN Movement.DescId = zc_Movement_ReturnIn()      THEN COALESCE (MIFloat_AmountPartner.ValueData,0) ELSE 0 END) AS AmountIn
+             , SUM (CASE WHEN Movement.DescId = zc_Movement_OrderExternal() THEN COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountOrder
+             , SUM (CASE WHEN Movement.DescId = zc_Movement_Sale()          THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS AmountOut
+             , SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnIn()      THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS AmountIn
+             , MAX (COALESCE (MIFloat_ChangePercent.ValueData, 0)) AS ChangePercent
         FROM MovementItemFloat AS MIFloat_PromoMovement
-             INNER JOIN MovementItem ON MovementItem.Id = MIFloat_PromoMovement.MovementItemId
+             INNER JOIN MovementItem ON MovementItem.Id       = MIFloat_PromoMovement.MovementItemId
+                                    AND MovementItem.isErased = FALSE
              INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
                                AND Movement.StatusId = zc_Enum_Status_Complete()
                                AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_Sale(), zc_Movement_ReturnIn())
@@ -38,6 +40,9 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
                                          ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                         AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+             LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                         ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                        AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
         WHERE MIFloat_PromoMovement.ValueData = inMovementId
           AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
         GROUP BY MovementItem.ObjectId
@@ -45,27 +50,61 @@ BEGIN
                 ;
 
      -- Результат - если нет товара в док.акция записываем новый
-     PERFORM gpInsertUpdate_MovementItem_PromoGoods (ioId                 := 0 :: Integer
+     PERFORM gpInsertUpdate_MovementItem_PromoGoods (ioId                 := 0
                                                    , inMovementId         := inMovementId
-                                                   , inGoodsId            := _tmpData.GoodsId
-                                                   , inAmount             := 0 :: TFloat
-                                                   , ioPrice              := 0 :: TFloat
-                                                   , inPriceSale          := 0 :: TFloat
+                                                   , inGoodsId            := tmp.GoodsId
+                                                   , inAmount             := tmp.Amount
+                                                   , ioPrice              := tmp.Price
+                                                   , inPriceSale          := tmp.PriceSale
+                                                   , inPriceTender        := tmp.PriceTender
                                                    , inAmountReal         := 0 :: TFloat
                                                    , inAmountPlanMin      := 0 :: TFloat
                                                    , inAmountPlanMax      := 0 :: TFloat
-                                                   , inGoodsKindId        := 0 :: Integer
-                                                   , inGoodsKindCompleteId:= _tmpData.GoodsKindId
+                                                   , inGoodsKindId        := tmp.GoodsKindId
+                                                   , inGoodsKindCompleteId:= tmp.GoodsKindCompleteId
                                                    , inComment            := NULL
                                                    , inSession            := CASE WHEN inSession = zfCalc_UserAdmin() THEN '-12345' ELSE inSession END
                                                     )
-     FROM _tmpData
-          LEFT JOIN MovementItem_PromoGoods_View AS MI_PromoGoods 
-                                                 ON MI_PromoGoods.MovementId           = inMovementId
-                                                AND MI_PromoGoods.GoodsId              = _tmpData.GoodsId
-                                                AND (MI_PromoGoods.GoodsKindCompleteId = _tmpData.GoodsKindId OR COALESCE (MI_PromoGoods.GoodsKindCompleteId, 0) = 0)
-                                                AND MI_PromoGoods.isErased             = FALSE
-     WHERE MI_PromoGoods.Id IS NULL
+     FROM (WITH tmpData AS (SELECT _tmpData.*
+                            FROM _tmpData
+                                 LEFT JOIN MovementItem_PromoGoods_View AS MI_PromoGoods 
+                                                                        ON MI_PromoGoods.MovementId           = inMovementId
+                                                                       AND MI_PromoGoods.GoodsId              = _tmpData.GoodsId
+                                                                       AND (MI_PromoGoods.GoodsKindCompleteId = _tmpData.GoodsKindId
+                                                                         OR COALESCE (MI_PromoGoods.GoodsKindCompleteId, 0) = 0
+                                                                           )
+                                                                       AND MI_PromoGoods.isErased             = FALSE
+                            WHERE MI_PromoGoods.Id IS NULL
+                           )
+              , tmpFind AS (SELECT tmpData.GoodsId     AS GoodsId
+                                 , MI_PromoGoods.Amount
+                                 , MI_PromoGoods.Price
+                                 , MI_PromoGoods.PriceSale
+                                 , MIFloat_PriceTender.ValueData AS PriceTender
+                                 , MI_PromoGoods.GoodsKindId
+                                   --  № п/п
+                                 , ROW_NUMBER() OVER (PARTITION BY tmpData.GoodsId ORDER BY MI_PromoGoods.Amount DESC) AS Ord
+                            FROM tmpData
+                                 INNER JOIN MovementItem_PromoGoods_View AS MI_PromoGoods 
+                                                                         ON MI_PromoGoods.MovementId           = inMovementId
+                                                                        AND MI_PromoGoods.GoodsId              = tmpData.GoodsId
+                                                                        AND MI_PromoGoods.isErased             = FALSE
+                                 LEFT JOIN MovementItemFloat AS MIFloat_PriceTender
+                                                             ON MIFloat_PriceTender.MovementItemId = MI_PromoGoods.Id 
+                                                            AND MIFloat_PriceTender.DescId         = zc_MIFloat_PriceTender() 
+                           )
+           -- Результат                
+           SELECT tmpData.GoodsId                                  AS GoodsId
+                , tmpData.GoodsKindId                              AS GoodsKindCompleteId
+                , COALESCE (tmpFind.Amount, tmpData.ChangePercent) AS Amount
+                , COALESCE (tmpFind.Price, 0)                      AS Price
+                , COALESCE (tmpFind.PriceSale, 0)                  AS PriceSale
+                , COALESCE (tmpFind.PriceTender, 0)                AS PriceTender
+                , tmpFind.GoodsKindId
+           FROM tmpData
+                LEFT JOIN tmpFind ON tmpFind.GoodsId = tmpData.GoodsId
+                                 AND tmpFind.Ord     = 1
+          ) AS tmp
     ;    
 
      -- Результат - записываем в MovementItem Акция

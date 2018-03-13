@@ -1,7 +1,5 @@
 -- DROP FUNCTION lpInsert_ObjectProtocol (IN inObjectId Integer, IN inUserId Integer);
 
-DROP FUNCTION IF EXISTS lpInsert_ObjectProtocol (Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsert_ObjectProtocol (Integer, Integer, Boolean);
 DROP FUNCTION IF EXISTS lpInsert_ObjectProtocol (Integer, Integer, Boolean, Boolean);
 
 CREATE OR REPLACE FUNCTION lpInsert_ObjectProtocol(
@@ -36,16 +34,24 @@ BEGIN
                 JOIN ObjectFloatDesc ON ObjectFloatDesc.Id = ObjectFloat.DescId
            WHERE ObjectFloat.ObjectId = inObjectId
              AND inIsErased IS NULL
+
           UNION
-           SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectDateDesc.ItemName) || '" FieldValue = "' ||  DATE (ObjectDate.ValueData) :: TVarChar || '"/>' AS FieldXML 
+           SELECT '<Field FieldName = "' || zfStrToXmlStr (ObjectDateDesc.ItemName)
+               || '" FieldValue = "' || COALESCE (CASE WHEN ObjectDate.DescId IN (zc_ObjectDate_Protocol_Insert()
+                                                                                , zc_ObjectDate_Protocol_Update()
+                                                                                 )
+                                                            THEN zfConvert_DateTimeShortToString (ObjectDate.ValueData)
+                                                       ELSE zfConvert_DateToString (ObjectDate.ValueData)
+                                                  END, 'NULL') || '"/>' AS FieldXML 
                 , 3 AS GroupId
                 , ObjectDate.DescId
            FROM ObjectDate
                 JOIN ObjectDateDesc ON ObjectDateDesc.Id = ObjectDate.DescId
            WHERE ObjectDate.ObjectId = inObjectId
              AND inIsErased IS NULL
+
           UNION
-           SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectLinkDesc.ItemName) || '" FieldValue = "' || zfStrToXmlStr(COALESCE (Object.ValueData, 'NULL')) || '"/>' AS FieldXML 
+           SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectLinkDesc.ItemName) || '" FieldValue = "' || zfStrToXmlStr (CASE WHEN Object.ValueData = '' THEN Object.Id :: TVarChar ELSE COALESCE (Object.ValueData, 'NULL') END) || '"/>' AS FieldXML 
                 , 4 AS GroupId
                 , ObjectLink.DescId
            FROM ObjectLink

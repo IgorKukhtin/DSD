@@ -69,14 +69,18 @@ uses
   RoleUnion in '..\Forms\RoleUnion.pas' {RoleUnionForm: TParentForm},
   Movement_PeriodDialog in '..\FormsBoutique\Document\Movement_PeriodDialog.pas' {Movement_PeriodDialogForm: TParentForm},
   IFIN_J1201009 in '..\SOURCE\MeDOC\IFIN_J1201009.pas',
-  IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas';
+  IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas',
+  dsdOlap in '..\SOURCE\COMPONENT\dsdOlap.pas',
+  dsdOLAPXMLBind in '..\SOURCE\COMPONENT\dsdOLAPXMLBind.pas',
+  GridGroupCalculate in '..\SOURCE\GridGroupCalculate.pas';
 
 {$R *.res}
 
 begin
   Application.Initialize;
-  Logger.Enabled := FindCmdLineSwitch('log');
   ConnectionPath := '..\INIT\boutique_init.php';
+  Logger.Enabled := FindCmdLineSwitch('log');
+  gc_ProgramName := 'Boutique.exe';
 
   TdsdApplication.Create;
 

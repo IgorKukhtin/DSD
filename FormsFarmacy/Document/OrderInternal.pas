@@ -95,7 +95,7 @@ type
     isTopColor: TcxGridDBColumn;
     RemainsInUnit: TcxGridDBColumn;
     MCS: TcxGridDBColumn;
-    NDSKindName: TcxGridDBColumn;
+    NDS: TcxGridDBColumn;
     AmountAll: TcxGridDBColumn;
     CalcAmountAll: TcxGridDBColumn;
     SummAll: TcxGridDBColumn;
@@ -125,6 +125,7 @@ type
     actRefresh_Link: TdsdDataSetRefresh;
     AreaName: TcxGridDBColumn;
     isDefault: TcxGridDBColumn;
+    NDSKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

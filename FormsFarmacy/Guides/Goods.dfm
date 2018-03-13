@@ -4,7 +4,7 @@ inherited GoodsForm: TGoodsForm
   ClientWidth = 883
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 899
-  ExplicitHeight = 481
+  ExplicitHeight = 478
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -95,22 +95,6 @@ inherited GoodsForm: TGoodsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 68
-          end
-          object NDS_PriceList: TcxGridDBColumn
-            Caption = #1053#1044#1057' '#1087#1086#1089#1090'.'
-            DataBinding.FieldName = 'NDS_PriceList'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1053#1044#1057' '#1074' '#1087#1088#1072#1081#1089#1077' '#1042#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-            Width = 49
-          end
-          object isNDS_dif: TcxGridDBColumn
-            Caption = #1054#1090#1082#1083'. '#1087#1086' '#1053#1044#1057
-            DataBinding.FieldName = 'isNDS_dif'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1086' '#1053#1044#1057' '#1074' '#1087#1088#1072#1081#1089#1077' '#1080' '#1090#1086#1074#1072#1088#1077
-            Width = 52
           end
           object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084
@@ -364,23 +348,6 @@ inherited GoodsForm: TGoodsForm
           end
         end
       end
-      object cxLabel3: TcxLabel
-        Left = 343
-        Top = 101
-        Caption = #1044#1086#1075#1086#1074#1086#1088' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-      end
-      object edContract: TcxButtonEdit
-        Left = 343
-        Top = 119
-        Properties.Buttons = <
-          item
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        TabOrder = 2
-        Width = 222
-      end
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -619,9 +586,13 @@ inherited GoodsForm: TGoodsForm
     Params = <
       item
         Name = 'inContractId'
-        Value = Null
-        Component = GuidesContract
-        ComponentItem = 'Key'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailId'
+        Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -685,26 +656,6 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdateNDS'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbLabel3'
-        end
-        item
-          Visible = True
-          ItemName = 'bbContract'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -720,6 +671,9 @@ inherited GoodsForm: TGoodsForm
           ItemName = 'dxBarStatic'
         end>
     end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
+    end
     object bbPublished: TdxBarButton
       Action = actPublishedList
       Category = 0
@@ -729,14 +683,12 @@ inherited GoodsForm: TGoodsForm
       Category = 0
       Hint = 'Label3'
       Visible = ivAlways
-      Control = cxLabel3
     end
     object bbContract: TdxBarControlContainerItem
       Caption = 'Contract'
       Category = 0
       Hint = 'Contract'
       Visible = ivAlways
-      Control = edContract
     end
     object bbUpdateNDS: TdxBarButton
       Action = macUpdateNDS
@@ -1245,43 +1197,11 @@ inherited GoodsForm: TGoodsForm
     Left = 560
     Top = 176
   end
-  object GuidesContract: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edContract
-    FormNameParam.Value = 'TContractForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TContractForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesContract
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesContract
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 424
-    Top = 136
-  end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
     IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
-    ComponentList = <
-      item
-        Component = GuidesContract
-      end>
+    ComponentList = <>
     Left = 544
     Top = 96
   end

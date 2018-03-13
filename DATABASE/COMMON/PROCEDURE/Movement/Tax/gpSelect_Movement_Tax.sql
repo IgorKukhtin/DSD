@@ -17,7 +17,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , TotalCount TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , InvNumberPartner Integer
-             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, OKPO_To TVarChar, INN_To TVarChar
+             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, OKPO_To TVarChar
+             , INN_To TVarChar
              , UnitCode Integer, UnitName TVarChar, PartnerCode Integer, PartnerName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
@@ -28,6 +29,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , isElectron Boolean
              , isMedoc Boolean
              , isCopy Boolean
+             , isINN Boolean
              , Comment TVarChar 
              , PersonalSigningName TVarChar
              , ReestrKindId Integer, ReestrKindName TVarChar
@@ -80,8 +82,26 @@ BEGIN
            , Object_From.ValueData             		    AS FromName
            , Object_To.Id                      		    AS ToId
            , Object_To.ValueData               		    AS ToName
-           , ObjectHistory_JuridicalDetails_View.OKPO   AS OKPO_To
-           , ObjectHistory_JuridicalDetails_View.INN    AS INN_To
+           , ObjectHistory_JuridicalDetails_View.OKPO       AS OKPO_To
+           , CASE WHEN Movement.Id IN (-- Tax
+                                       6922620
+                                     , 6922564
+                                     , 6922609
+                                     , 6922233
+                                     , 6921599
+                                     , 6922367
+                                     , 6922254
+                                     , 6922275
+                                     , 8484674
+                                     , 8486085
+                                     , 8486839
+                                     , 8487001
+                                     , 8487359
+                                      )
+                  THEN '100000000000'
+                  ELSE COALESCE (MovementString_ToINN.ValueData, ObjectHistory_JuridicalDetails_View.INN)
+                  -- ELSE ObjectHistory_JuridicalDetails_View.INN
+             END :: TVarChar AS INN_To
 
            , Object_From_Master.ObjectCode              AS UnitCode
            , Object_From_Master.ValueData               AS UnitName
@@ -92,8 +112,8 @@ BEGIN
            , View_Contract_InvNumber.ContractCode     	AS ContractCode
            , View_Contract_InvNumber.InvNumber         	AS ContractName
            , View_Contract_InvNumber.ContractTagName
-           , Object_TaxKind.Id                		    AS TaxKindId
-           , Object_TaxKind.ValueData         		    AS TaxKindName
+           , Object_TaxKind.Id                	        AS TaxKindId
+           , Object_TaxKind.ValueData         	        AS TaxKindName
            , Movement_DocumentMaster.InvNumber          AS InvNumberPartner_Master
            , CAST (CASE WHEN MovementLinkMovement_Master.MovementChildId IS NOT NULL
                               AND (Movement_DocumentMaster.StatusId <> zc_Enum_Status_Complete()
@@ -112,10 +132,11 @@ BEGIN
            , MovementString_InvNumberBranch.ValueData AS InvNumberBranch
            , Object_Branch.ValueData                  AS BranchName
 
-           , COALESCE (MovementLinkMovement_Tax.MovementChildId, 0) <> 0 AS isEDI
-           , COALESCE (MovementBoolean_Electron.ValueData, FALSE)        AS isElectron
-           , COALESCE (MovementBoolean_Medoc.ValueData, FALSE)           AS isMedoc
+           , COALESCE (MovementLinkMovement_Tax.MovementChildId, 0) <> 0       AS isEDI
+           , COALESCE (MovementBoolean_Electron.ValueData, FALSE)              AS isElectron
+           , COALESCE (MovementBoolean_Medoc.ValueData, FALSE)                 AS isMedoc
            , COALESCE (MovementBoolean_isCopy.ValueData, FALSE)    :: Boolean  AS isCopy
+           , CASE WHEN COALESCE (MovementString_ToINN.ValueData, '') <> '' THEN TRUE ELSE FALSE END AS isINN
            , MovementString_Comment.ValueData         AS Comment
 
            , COALESCE (Object_PersonalSigning.PersonalName, COALESCE (Object_PersonalBookkeeper_View.PersonalName, ''))  ::TVarChar    AS PersonalSigningName
@@ -144,6 +165,11 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementString AS MovementString_ToINN
+                                     ON MovementString_ToINN.MovementId = Movement.Id
+                                    AND MovementString_ToINN.DescId = zc_MovementString_ToINN()
+                                    AND MovementString_ToINN.ValueData  <> ''
 
             LEFT JOIN MovementBoolean AS MovementBoolean_isCopy
                                       ON MovementBoolean_isCopy.MovementId = Movement.Id
@@ -283,6 +309,7 @@ ALTER FUNCTION gpSelect_Movement_Tax (TDateTime, TDateTime, Integer, Boolean, Bo
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 02.03.18         * add MovementString_ToINN
  01.12.16         * add ReestrKind
  06.10.16         * add inJuridicalBasisId
  06.04.15                        * add InvNumberRegistered, DateRegistered
@@ -301,4 +328,4 @@ ALTER FUNCTION gpSelect_Movement_Tax (TDateTime, TDateTime, Integer, Boolean, Bo
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Movement_Tax (inStartDate:= '01.02.2016', inEndDate:= '01.02.2016', inJuridicalBasisId:= 0, inIsRegisterDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Tax (inStartDate:= '01.02.2018', inEndDate:= '01.02.2018', inJuridicalBasisId:= 0, inIsRegisterDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())

@@ -14,10 +14,12 @@ RETURNS TABLE (Id Integer, ParamValue TVarChar, DefaultValue TVarChar,
                ParamType TVarChar,
                ParamNumber Integer,
                UserParamName TVarChar,
-               isErased boolean) AS
+               ConvertFormatInExcel Boolean,
+               isErased Boolean
+              )
+AS
 $BODY$
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_ImportSettingsItems());
 
@@ -32,6 +34,7 @@ BEGIN
        Object_ImportTypeItems_View.ParamType,
        Object_ImportTypeItems_View.ParamNumber,
        Object_ImportTypeItems_View.UserParamName,
+       COALESCE (Object_ImportSettingsItems_View.ConvertFormatInExcel, FALSE) :: Boolean AS ConvertFormatInExcel,
        Object_ImportSettingsItems_View.isErased
 
 FROM Object_ImportSettings_View
@@ -42,14 +45,14 @@ WHERE ((0 = inImportSettingsId) OR (Object_ImportSettings_View.Id = inImportSett
   
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_ImportSettingsItems(Integer, TVarChar) OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpSelect_Object_ImportSettingsItems (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Подмогильный В.В.
+ 09.02.18                                                           * 
  10.09.14                         *
  03.07.14         *
 

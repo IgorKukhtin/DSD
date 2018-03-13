@@ -293,6 +293,7 @@ BEGIN
              , Object_Goods.ValueData                                            AS GoodsName
              , Object_GoodsGroup.ValueData                                       AS GoodsGroupName
              , Object_NDSKind.ValueData                                          AS NDSKindName
+             , ObjectFloat_NDSKind_NDS.ValueData                                 AS NDS
              , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar          AS ConditionsKeepName      
              , COALESCE(ObjectBoolean_Goods_Close.ValueData, False)  :: Boolean  AS isClose
              , COALESCE(ObjectDate_Update.ValueData, Null)          ::TDateTime  AS UpdateDate   
@@ -387,6 +388,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 07.01.18         *
  04.09.17         *
 */
 

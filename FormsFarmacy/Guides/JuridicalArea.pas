@@ -66,6 +66,7 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    isOnly: TcxGridDBColumn;
   private
     { Private declarations }
   public

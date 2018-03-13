@@ -61,7 +61,8 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         Caption = #1062#1077#1085#1072
         DataBinding.FieldName = 'ValuePrice'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 80

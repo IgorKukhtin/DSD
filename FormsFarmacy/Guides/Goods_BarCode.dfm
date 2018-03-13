@@ -85,9 +85,9 @@ inherited Goods_BarCodeForm: TGoods_BarCodeForm
             Options.Editing = False
             Width = 324
           end
-          object NDSKindName: TcxGridDBColumn
+          object NDS: TcxGridDBColumn
             Caption = #1053#1044#1057
-            DataBinding.FieldName = 'NDSKindName'
+            DataBinding.FieldName = 'NDS'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -489,6 +489,12 @@ inherited Goods_BarCodeForm: TGoods_BarCodeForm
         Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 144
     Top = 88
@@ -618,7 +624,7 @@ inherited Goods_BarCodeForm: TGoods_BarCodeForm
         ColorValueList = <>
       end
       item
-        ColorColumn = NDSKindName
+        ColorColumn = NDS
         BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end

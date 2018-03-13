@@ -220,29 +220,128 @@ Begin
   result := AnsiLowerCase(inStr)=gcTrue;
 end;
 {-----------------------------------------------------------------------------------------------}
+// быстрая замена текста
+function FastStringReplace(const S: string; OldPattern: string; const NewPattern: string;
+  Flags: TReplaceFlags = [rfReplaceAll]): string;
+var
+  I, J, Idx: Integer;
+  IsEqual: Boolean;
+  UpperFindStr: string;
+  pS: PChar; // Указатель на массив для сравнения символов
+  CanReplace: Boolean;
+begin
+  if OldPattern = '' then
+  begin
+    Result := S;
+    Exit;
+  end;
+
+  Result := '';
+  if S = '' then Exit;
+
+  if rfIgnoreCase in Flags then
+  begin
+    OldPattern := AnsiUpperCase(OldPattern);
+
+    // Для режима "не учитывать регистр"
+    // потребуется дополнительная строка
+    UpperFindStr := AnsiUpperCase(S);
+
+    pS := PChar(UpperFindStr);
+  end else
+    pS := PChar(S);
+
+  // Если новая подстрока не превышает старой, то...
+  if Length(OldPattern) >= Length(NewPattern) then
+  begin
+    SetLength(Result, Length(S));
+  end else // Точный размер буфера не известен...
+    SetLength(Result, (Length(S) + Length(OldPattern) +
+      Length(NewPattern)) * 2);
+
+  I := 1;
+  Idx := 0;
+  CanReplace := True;
+  while I <= Length(S) do
+  begin
+    IsEqual := False;
+
+    if CanReplace then // Если замена разрешена
+    begin
+      // Если I-й символ совпадает с OldPattern[1]
+      if pS[I - 1] = OldPattern[1] then // Запускаем цикл поиска
+      begin
+        IsEqual := True;
+        for J := 2 to Length(OldPattern) do
+        begin
+          if pS[I + J - 2] <> OldPattern[J] then
+          begin
+            IsEqual := False;
+            Break; // Прерываем внутренний цикл
+          end;
+        end;
+
+        // Совпадение найдено! Выполняем замену
+        if IsEqual then
+        begin
+          for J := 1 to Length(NewPattern) do
+          begin
+            Inc(Idx);
+
+            // Расширяем строку Result при необходимости
+            if Idx > Length(Result) then
+              SetLength(Result, Length(Result) * 2);
+
+            Result[Idx] := NewPattern[J];
+          end;
+
+          // Пропускаем байты в исходной строке
+          Inc(I, Length(OldPattern));
+
+          if not (rfReplaceAll in Flags) then
+            CanReplace := False; // Запрещаем дальнейшую замену
+        end;
+      end;
+    end;
+
+    // Если подстрока не найдена, то просто копируем символ
+    if not IsEqual then
+    begin
+      Inc(Idx);
+      // Расширяем строку Result при необходимости
+      if Idx > Length(Result) then
+        SetLength(Result, Length(Result) * 2);
+      Result[Idx] := S[I];
+      Inc(I);
+    end;
+  end; // while I <= Length(S) do
+  // Ограничиваем длину строки-результата
+  SetLength(Result, Idx);
+end;
+
 {функция конвертирует строку для загрузки в XML}
 function gfStrToXmlStr(const inStr: string): string;
 var pS: string;
 begin
-  pS := StringReplace(inStr, '&', '&amp;', [rfReplaceAll]);
-  pS := StringReplace(pS, char(28), '', [rfReplaceAll]);
-  pS := StringReplace(pS, '''', '&apos;', [rfReplaceAll]);
-  pS := StringReplace(pS, '"', '&quot;', [rfReplaceAll]);
-  pS := StringReplace(pS, #13#10, '&#13;&#10;', [rfReplaceAll]);
-  pS := StringReplace(pS, '<', '&lt;', [rfReplaceAll]);
-  result := StringReplace(pS, '>', '&gt;', [rfReplaceAll]);
+  pS := FastStringReplace(inStr, '&', '&amp;', [rfReplaceAll]);
+  pS := FastStringReplace(pS, char(28), '', [rfReplaceAll]);
+  pS := FastStringReplace(pS, '''', '&apos;', [rfReplaceAll]);
+  pS := FastStringReplace(pS, '"', '&quot;', [rfReplaceAll]);
+  pS := FastStringReplace(pS, #13#10, '&#13;&#10;', [rfReplaceAll]);
+  pS := FastStringReplace(pS, '<', '&lt;', [rfReplaceAll]);
+  result := FastStringReplace(pS, '>', '&gt;', [rfReplaceAll]);
 end;
 {-----------------------------------------------------------------------------------------------}
 {функция конвертирует строку XML в обычную, заменяются спец символы на обычные}
 function gfStrXmlToStr(const inStr: string): string;
 var pS: string;
 begin
-  pS := StringReplace(inStr, '&lt;', '<', [rfReplaceAll]);
-  pS := StringReplace(pS, '&#xA;', #13#10, [rfReplaceAll]);
-  pS := StringReplace(pS, '&quot;', '"', [rfReplaceAll]);
-  pS := StringReplace(pS, '&amp;', '&', [rfReplaceAll]);
-  pS := StringReplace(pS, '&apos;', '''', [rfReplaceAll]);
-  result := StringReplace(pS, '&gt;', '>', [rfReplaceAll]);
+  pS := FastStringReplace(inStr, '&lt;', '<', [rfReplaceAll]);
+  pS := FastStringReplace(pS, '&#xA;', #13#10, [rfReplaceAll]);
+  pS := FastStringReplace(pS, '&quot;', '"', [rfReplaceAll]);
+  pS := FastStringReplace(pS, '&amp;', '&', [rfReplaceAll]);
+  pS := FastStringReplace(pS, '&apos;', '''', [rfReplaceAll]);
+  result := FastStringReplace(pS, '&gt;', '>', [rfReplaceAll]);
 end;
 {-----------------------------------------------------------------------------------------------}
 function gfFieldToString(const inField: TField): String;

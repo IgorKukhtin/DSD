@@ -67,6 +67,7 @@ type
     PrintItemsCDS: TClientDataSet;
     spSelectPrint_SaleOrder: TdsdStoredProc;
     actPrintSaleOrder: TdsdPrintAction;
+    FromDescName: TcxGridDBColumn;
   private
   public
   end;

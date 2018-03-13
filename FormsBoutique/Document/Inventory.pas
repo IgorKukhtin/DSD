@@ -125,8 +125,8 @@ type
     edTo: TcxButtonEdit;
     GuidesTo: TdsdGuides;
     Comment: TcxGridDBColumn;
-    actOpenReportForm: TdsdOpenForm;
-    bbOpenReportForm: TdxBarButton;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
   private
   public
   end;

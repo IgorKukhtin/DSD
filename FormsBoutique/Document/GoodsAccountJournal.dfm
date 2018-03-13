@@ -27,7 +27,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 42736d
+      EditValue = 43101d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -37,7 +37,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 42736d
+      EditValue = 43101d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -222,7 +222,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
         Width = 163
       end
       object TotalSummChange: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080
+        Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1074' '#1043#1056#1053
         DataBinding.FieldName = 'TotalSummChange'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -233,7 +233,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
         Width = 80
       end
       object TotalSummPay: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099
+        Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1074' '#1043#1056#1053')'
         DataBinding.FieldName = 'TotalSummPay'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -249,7 +249,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 100
+        Width = 150
       end
       object InsertName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
@@ -257,7 +257,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 80
+        Width = 100
       end
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
@@ -265,7 +265,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 80
+        Width = 100
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -397,7 +397,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbPrintCheck'
         end
         item
           Visible = True
@@ -455,6 +455,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
       Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
@@ -474,6 +475,10 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
     end
     object bbShowErased: TdxBarButton
       Action = actShowErased
+      Category = 0
+    end
+    object bbPrintCheck: TdxBarButton
+      Action = macPrintCheck
       Category = 0
     end
   end
@@ -525,7 +530,6 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -727,7 +731,10 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = spErased
+          Action = actSimpleErased
+        end
+        item
+          Action = actRefresh
         end>
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
       InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1091#1076#1072#1083#1077#1085#1099
@@ -814,10 +821,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actSimpleErased
-        end
-        item
-          Action = actRefresh
+          Action = spErased
         end>
       View = cxGridDBTableView
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
@@ -928,6 +932,76 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actPrintCheck: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_Check
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Check
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Printer = 'PrinterName'
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'Print_Check_GoodsAccount'
+      ReportNameParam.Value = 'Print_Check_GoodsAccount'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
+    object actGet_Printer: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Printer
+      StoredProcList = <
+        item
+          StoredProc = spGet_Printer
+        end>
+      Caption = 'Get_Printer'
+    end
+    object macPrintCheck: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Printer
+        end
+        item
+          Action = actPrintCheck
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
+      ImageIndex = 15
     end
   end
   object spSelect: TdsdStoredProc
@@ -1153,6 +1227,13 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PrinterName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -1173,5 +1254,54 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
     PackSize = 1
     Left = 233
     Top = 346
+  end
+  object spSelectPrint_Check: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Check_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 416
+    Top = 312
+  end
+  object spGet_Printer: TdsdStoredProc
+    StoredProcName = 'gpGet_PrinterByUnit'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = ClientDataSet
+        ComponentItem = 'ToId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_PrinterByUnit'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PrinterName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 784
+    Top = 240
   end
 end

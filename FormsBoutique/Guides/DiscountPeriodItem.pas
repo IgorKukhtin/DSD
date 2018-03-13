@@ -44,9 +44,9 @@ type
     bbToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     cxGridDBTableView: TcxGridDBTableView;
-    Name: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
     StartDate: TcxGridDBColumn;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     Panel: TPanel;
     cxLabel1: TcxLabel;
     edUnit: TcxButtonEdit;
@@ -56,7 +56,7 @@ type
     cxLabel3: TcxLabel;
     edOperDate: TcxDateEdit;
     EndDate: TcxGridDBColumn;
-    Price: TcxGridDBColumn;
+    ValueDiscount: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
     actDiscountPeriodGoods: TdsdOpenForm;
     bbPriceListGoodsItem: TdxBarButton;
@@ -65,7 +65,7 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    GoodsisErased: TcxGridDBColumn;
+    GoodsIsErased: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocol: TdxBarButton;
     ObjectId: TcxGridDBColumn;
@@ -74,7 +74,7 @@ type
     UpdateDate: TcxGridDBColumn;
     InsertDate: TcxGridDBColumn;
     InsertName: TcxGridDBColumn;
-    dsdStoredProcPrint: TdsdStoredProc;
+    spSelect_Print: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     PrintItemsCDS: TClientDataSet;
     bbPrint: TdxBarButton;
@@ -91,11 +91,13 @@ type
     cxLabel6: TcxLabel;
     edPeriod: TcxButtonEdit;
     cxLabel7: TcxLabel;
-    edPeriodYearStart: TcxCurrencyEdit;
-    edPeriodYearEnd: TcxCurrencyEdit;
     cxLabel8: TcxLabel;
     GuidesPeriod: TdsdGuides;
     bbExecuteDialog: TdxBarButton;
+    edStartYear: TcxButtonEdit;
+    GuidesStartYear: TdsdGuides;
+    edEndYear: TcxButtonEdit;
+    GuidesEndYear: TdsdGuides;
   private
     { Private declarations }
   public

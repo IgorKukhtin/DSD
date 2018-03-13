@@ -1,28 +1,30 @@
 inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
-  Caption = #1050#1086#1076#1099' '#1087#1088#1086#1076#1072#1074#1094#1086#1074
+  Caption = #1050#1086#1076#1099' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
   ClientHeight = 529
   ClientWidth = 1000
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1016
-  ExplicitHeight = 567
+  ExplicitHeight = 564
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 61
     Width = 1000
-    Height = 503
+    Height = 468
+    ExplicitTop = 61
     ExplicitWidth = 1000
-    ExplicitHeight = 503
-    ClientRectBottom = 503
+    ExplicitHeight = 468
+    ClientRectBottom = 468
     ClientRectRight = 1000
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1000
-      ExplicitHeight = 503
+      ExplicitHeight = 468
       inherited cxGrid: TcxGrid
         Width = 1000
-        Height = 503
+        Height = 468
         ExplicitWidth = 1000
-        ExplicitHeight = 503
+        ExplicitHeight = 468
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -194,30 +196,58 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
           end
         end
       end
-      object edPartnerCode: TcxButtonEdit
-        Left = 184
-        Top = 63
-        Properties.Buttons = <
-          item
-            Default = True
-            Kind = bkEllipsis
-          end>
-        TabOrder = 1
-        Width = 187
-      end
-      object cxLabel1: TcxLabel
-        Left = 184
-        Top = 40
-        Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
-      end
       object cbUpdate: TcxCheckBox
-        Left = 273
-        Top = 40
+        Left = 305
+        Top = 64
         Caption = #1054#1073#1085#1086#1074#1083#1103#1090#1100' '#1076#1083#1103' '#1042#1057#1045#1061
         Properties.ReadOnly = False
-        TabOrder = 3
+        TabOrder = 1
         Width = 133
       end
+    end
+  end
+  object Panel: TPanel [1]
+    Left = 0
+    Top = 0
+    Width = 1000
+    Height = 35
+    Align = alTop
+    TabOrder = 5
+    object cxLabel6: TcxLabel
+      Left = 480
+      Top = 9
+      AutoSize = False
+      Caption = #1056#1077#1075#1080#1086#1085' '#1076#1083#1103' '#1079#1072#1075#1088#1091#1079#1082#1080' '#1052#1048#1053' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1103':'
+      Height = 17
+      Width = 201
+    end
+    object edArea: TcxButtonEdit
+      Left = 680
+      Top = 8
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 0
+      Width = 169
+    end
+    object edPartnerCode: TcxButtonEdit
+      Left = 81
+      Top = 8
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 1
+      Width = 217
+    end
+    object cxLabel1: TcxLabel
+      Left = 16
+      Top = 9
+      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
     end
   end
   inherited ActionList: TActionList
@@ -399,6 +429,24 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Code'
+          MultiSelectSeparator = ','
+        end>
+    end
+    inherited ProtocolOpenForm: TdsdOpenForm
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'GoodsMainName'
+          DataType = ftString
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
     end
@@ -635,6 +683,14 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
           ComponentItem = 'ObjectId'
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inAreaId'
+          Value = Null
+          Component = GuidesArea
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
     end
     object actStartLoadIsUpload: TMultiAction
@@ -728,6 +784,36 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
+    object ProtocolOpenTwoForm: TdsdOpenForm
+      Category = #1055#1088#1086#1090#1086#1082#1086#1083
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072'2'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072'2'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -806,6 +892,22 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenTwoForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -819,19 +921,15 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         end
         item
           Visible = True
-          ItemName = 'dxBarControlContainerItem1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarControlContainerItem2'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbisUpdate'
+          ItemName = 'bbIsUpdate'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           UserDefine = [udPaintStyle]
@@ -847,7 +945,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
           UserDefine = [udPaintStyle]
           UserPaintStyle = psCaptionGlyph
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'bbStartLoad'
         end
         item
           Visible = True
@@ -877,6 +975,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     inherited dxBarStatic: TdxBarStatic
       Caption = '    '
       Hint = '    '
+      ShowCaption = False
     end
     inherited bbInsert: TdxBarButton
       Visible = ivNever
@@ -891,28 +990,28 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
       Action = mactSetLink
       Category = 0
     end
-    object dxBarControlContainerItem1: TdxBarControlContainerItem
-      Caption = 'New Item'
+    object bbLabel: TdxBarControlContainerItem
+      Caption = 'bbLabel'
       Category = 0
-      Hint = 'New Item'
+      Hint = 'bbLabel'
       Visible = ivAlways
       Control = cxLabel1
     end
-    object dxBarControlContainerItem2: TdxBarControlContainerItem
-      Caption = 'New Item'
+    object bbPartnerCode: TdxBarControlContainerItem
+      Caption = 'bbPartnerCode'
       Category = 0
-      Hint = 'New Item'
+      Hint = 'bbPartnerCode'
       Visible = ivAlways
       Control = edPartnerCode
     end
-    object bbisUpdate: TdxBarControlContainerItem
-      Caption = 'New Item'
+    object bbIsUpdate: TdxBarControlContainerItem
+      Caption = 'bbIsUpdate'
       Category = 0
-      Hint = 'New Item'
+      Hint = 'bbIsUpdate'
       Visible = ivAlways
       Control = cbUpdate
     end
-    object dxBarButton1: TdxBarButton
+    object bbStartLoad: TdxBarButton
       Action = actStartLoad
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1084#1080#1085'-'#1086#1077' '#1086#1082#1088#1091#1075#1083'.'
       Category = 0
@@ -941,6 +1040,10 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     end
     object bbShowErased: TdxBarButton
       Action = actShowErased
+      Category = 0
+    end
+    object bbProtocolOpenTwoForm: TdxBarButton
+      Action = ProtocolOpenTwoForm
       Category = 0
     end
   end
@@ -1002,7 +1105,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 288
+    Left = 200
     Top = 108
   end
   object RefreshDispatcher: TRefreshDispatcher
@@ -1013,8 +1116,8 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
       item
         Component = PartnerCodeGuides
       end>
-    Left = 216
-    Top = 112
+    Left = 224
+    Top = 168
   end
   object spDeleteLink: TdsdStoredProc
     StoredProcName = 'gpDelete_Object_LinkGoods'
@@ -1133,6 +1236,14 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         Value = Null
         Component = FormParams
         ComponentItem = 'ObjectId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAreaId'
+        Value = Null
+        Component = GuidesArea
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1575,5 +1686,34 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     PackSize = 1
     Left = 616
     Top = 135
+  end
+  object GuidesArea: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edArea
+    Key = '0'
+    FormNameParam.Value = 'TAreaForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TAreaForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesArea
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesArea
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 728
   end
 end

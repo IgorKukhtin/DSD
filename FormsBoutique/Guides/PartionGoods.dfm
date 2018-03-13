@@ -15,6 +15,7 @@ object PartionGoodsForm: TPartionGoodsForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -35,6 +36,14 @@ object PartionGoodsForm: TPartionGoodsForm
           Format = ',0.####'
           Kind = skSum
           Column = Amount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -46,6 +55,14 @@ object PartionGoodsForm: TPartionGoodsForm
           Format = ',0.####'
           Kind = skSum
           Column = Amount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -89,7 +106,7 @@ object PartionGoodsForm: TPartionGoodsForm
         Width = 100
       end
       object GroupNameFull: TcxGridDBColumn
-        Caption = #1055#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1087#1087#1099
+        Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'GroupNameFull'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -106,7 +123,7 @@ object PartionGoodsForm: TPartionGoodsForm
         Width = 93
       end
       object LabelName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1094#1077#1085#1085#1080#1082#1072
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'LabelName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -114,7 +131,7 @@ object PartionGoodsForm: TPartionGoodsForm
         Width = 122
       end
       object GoodsName: TcxGridDBColumn
-        Caption = #1058#1086#1074#1072#1088
+        Caption = #1040#1088#1090#1080#1082#1091#1083
         DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -143,7 +160,7 @@ object PartionGoodsForm: TPartionGoodsForm
         Width = 65
       end
       object CompositionGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' '#1076#1083#1103' '#1089#1086#1089#1090#1072#1074#1072' '#1090#1086#1074#1072#1088#1072
+        Caption = #1043#1088#1091#1087#1087#1072' '#1089#1086#1089#1090#1072#1074#1072
         DataBinding.FieldName = 'CompositionGroupName'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -151,7 +168,7 @@ object PartionGoodsForm: TPartionGoodsForm
         Width = 170
       end
       object CompositionName: TcxGridDBColumn
-        Caption = #1057#1086#1089#1090#1072#1074' '#1090#1086#1074#1072#1088#1072
+        Caption = #1057#1086#1089#1090#1072#1074
         DataBinding.FieldName = 'CompositionName'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -160,7 +177,7 @@ object PartionGoodsForm: TPartionGoodsForm
         Width = 94
       end
       object GoodsInfoName: TcxGridDBColumn
-        Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+        Caption = #1054#1087#1080#1089#1072#1085#1080#1077
         DataBinding.FieldName = 'GoodsInfoName'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -169,7 +186,7 @@ object PartionGoodsForm: TPartionGoodsForm
         Width = 110
       end
       object FabrikaName: TcxGridDBColumn
-        Caption = #1060#1072#1073#1088#1080#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+        Caption = #1060#1072#1073#1088#1080#1082#1072
         DataBinding.FieldName = 'FabrikaName'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -177,7 +194,7 @@ object PartionGoodsForm: TPartionGoodsForm
         Width = 107
       end
       object LineFabricaName: TcxGridDBColumn
-        Caption = #1051#1080#1085#1080#1103' '#1082#1086#1083#1083#1077#1082#1094#1080#1080
+        Caption = #1051#1080#1085#1080#1103
         DataBinding.FieldName = 'LineFabricaName'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -186,7 +203,7 @@ object PartionGoodsForm: TPartionGoodsForm
         Width = 111
       end
       object GoodsSizeName: TcxGridDBColumn
-        Caption = #1056#1072#1079#1084#1077#1088' '#1090#1086#1074#1072#1088#1072
+        Caption = #1056#1072#1079#1084#1077#1088
         DataBinding.FieldName = 'GoodsSizeName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -194,7 +211,7 @@ object PartionGoodsForm: TPartionGoodsForm
         Width = 55
       end
       object MeasureName: TcxGridDBColumn
-        Caption = #1045#1076#1080#1085#1080#1094#1072' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
+        Caption = #1045#1076'. '#1080#1079#1084'.'
         DataBinding.FieldName = 'MeasureName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -222,9 +239,9 @@ object PartionGoodsForm: TPartionGoodsForm
         HeaderAlignmentVert = vaCenter
         Width = 65
       end
-      object PriceSale: TcxGridDBColumn
+      object OperPriceList: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
-        DataBinding.FieldName = 'PriceSale'
+        DataBinding.FieldName = 'OperPriceList'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 65
@@ -251,6 +268,23 @@ object PartionGoodsForm: TPartionGoodsForm
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
     end
+  end
+  object cxLabel6: TcxLabel
+    Left = 172
+    Top = 78
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+  end
+  object edUnit: TcxButtonEdit
+    Left = 279
+    Top = 76
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 6
+    Width = 203
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -332,6 +366,26 @@ object PartionGoodsForm: TPartionGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbLabel6'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnit'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_Goods'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoice'
         end
         item
@@ -402,6 +456,24 @@ object PartionGoodsForm: TPartionGoodsForm
     object bbShowAll: TdxBarButton
       Action = actShowAll
       Category = 0
+    end
+    object bbReport_Goods: TdxBarButton
+      Action = actReport_Goods
+      Category = 0
+    end
+    object bbLabel6: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel6
+    end
+    object bbUnit: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edUnit
     end
   end
   object ActionList: TActionList
@@ -505,6 +577,136 @@ object PartionGoodsForm: TPartionGoodsForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actReport_Goods: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>'
+      ImageIndex = 40
+      FormName = 'TReport_GoodsForm'
+      FormNameParam.Value = 'TReport_GoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'LocationId'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LocationName'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsSizeId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsSizeId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsSizeName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsSizeName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementItemId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPeriod'
+          Value = 'TRUE'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartion'
+          Value = 'False'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099
+      ImageIndex = 35
+      FormName = 'TUnit_DialogForm'
+      FormNameParam.Value = 'TUnit_DialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_PartionGoods'
@@ -514,6 +716,14 @@ object PartionGoodsForm: TPartionGoodsForm
         DataSet = MasterCDS
       end>
     Params = <
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inIsShowAll'
         Value = False
@@ -528,7 +738,7 @@ object PartionGoodsForm: TPartionGoodsForm
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 288
-    Top = 200
+    Top = 152
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -555,5 +765,47 @@ object PartionGoodsForm: TPartionGoodsForm
     SummaryItemList = <>
     Left = 104
     Top = 248
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnitForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnitForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 392
+    Top = 72
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    CheckIdParam = True
+    IdParam.Value = ''
+    IdParam.ComponentItem = 'MasterUnitId'
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = GuidesUnit
+      end>
+    Left = 544
+    Top = 104
   end
 end

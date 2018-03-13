@@ -29,13 +29,26 @@ BEGIN
 
 
    -- сохранили свойство <НДС> для всех сетей
-   PERFORM lpInsertUpdate_ObjectLink(inDescId        := zc_ObjectLink_Goods_NDSKind()
+   PERFORM 
+           -- сохраняем новое значение НДС
+           lpInsertUpdate_ObjectLink(inDescId        := zc_ObjectLink_Goods_NDSKind()
                                    , inObjectId      := COALESCE (tmpGoods.GoodsId, inId)
                                    , inChildObjectId := (SELECT OF_NDSKind_NDS.ObjectId
                                                          FROM ObjectFloat AS OF_NDSKind_NDS
                                                          WHERE OF_NDSKind_NDS.DescId    = zc_ObjectFloat_NDSKind_NDS()
                                                            AND OF_NDSKind_NDS.ValueData = inNDS_PriceList)
                                    ) 
+         -- при уменьшении значения НДС Топ по сети = Да, иначе Нет
+         , CASE WHEN inNDS_PriceList < inNDS 
+                THEN lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_TOP(), COALESCE (tmpGoods.GoodsId, inId), TRUE)
+                ELSE lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_TOP(), COALESCE (tmpGoods.GoodsId, inId), FALSE)
+           END
+         -- при уменьшении значения НДС Наценка = прошлое НДС (inNDS), иначе = 0
+         , CASE WHEN inNDS_PriceList < inNDS 
+                THEN lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_PercentMarkup(), COALESCE (tmpGoods.GoodsId, inId), inNDS)
+                ELSE lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_PercentMarkup(), COALESCE (tmpGoods.GoodsId, inId), 0)
+           END
+
    FROM Object AS Object_Retail
         LEFT JOIN (SELECT DISTINCT
                           COALESCE (ObjectLink_LinkGoods_Goods_find.ChildObjectId, Object_Goods.Id) AS GoodsId

@@ -1,10 +1,11 @@
 -- Function: gpSelect_Object_Unit_JuridicalArea()
 
-DROP FUNCTION IF EXISTS lpSelect_Object_JuridicalArea_byUnit(Integer, Integer);
+DROP FUNCTION IF EXISTS lpSelect_Object_JuridicalArea_byUnit (Integer, Integer, Boolean);
 
 CREATE OR REPLACE FUNCTION lpSelect_Object_JuridicalArea_byUnit(
     IN inUnitId           Integer,
-    IN inJuridicalId      Integer
+    IN inJuridicalId      Integer,
+    IN inisShowAll        Boolean  DEFAULT FALSE
 )
 RETURNS TABLE (UnitId                 Integer
              , UnitCode               Integer
@@ -17,7 +18,9 @@ RETURNS TABLE (UnitId                 Integer
              , UserManagerId_Unit     Integer
              , UserManagerName_Unit   TVarChar
              , JuridicalName_Unit     TVarChar
-             , isErased               Boolean
+             , isErased_Unit          Boolean
+             , isErased_Juridical     Boolean
+             , isErased               Boolean             
              , AreaId_Unit            Integer
              , AreaName_Unit          TVarChar
              , CreateDate_Unit        TDateTime
@@ -31,6 +34,7 @@ RETURNS TABLE (UnitId                 Integer
              , AreaId_Juridical       Integer
              , AreaName_Juridical     TVarChar
              , isDefault_JuridicalArea Boolean
+             , isOnly_JuridicalArea    Boolean
 ) AS     
 $BODY$   
 BEGIN    
@@ -56,8 +60,8 @@ BEGIN
                      , Object_Area.ValueData                                AS AreaName
                      , Object_Retail.Id                                     AS RetailId
                      , Object_Retail.ValueData                              AS RetailName 
-                     , COALESCE( ObjectDate_Create.ValueData, NULL) :: TDateTime  AS CreateDate
-                     , COALESCE(ObjectDate_Close.ValueData, NULL)   :: TDateTime  AS CloseDate
+                     , COALESCE (ObjectDate_Create.ValueData, NULL) :: TDateTime AS CreateDate
+                     , COALESCE (ObjectDate_Close.ValueData, NULL)  :: TDateTime AS CloseDate
                 FROM Object AS Object_Unit
                        INNER JOIN ObjectLink AS ObjectLink_Unit_Parent
                                              ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
@@ -106,7 +110,7 @@ BEGIN
                                            AND ObjectDate_Close.DescId = zc_ObjectDate_Unit_Close()
                                            
                 WHERE Object_Unit.DescId = zc_Object_Unit()
-                  AND Object_Unit.isErased = FALSE
+                  AND (Object_Unit.isErased = FALSE OR inisShowAll = TRUE)
                   AND (Object_Unit.Id = inUnitId OR inUnitId = 0)
                 )
              
@@ -114,12 +118,13 @@ BEGIN
                           , Object_Juridical.ObjectCode         AS Code
                           , Object_Juridical.ValueData          AS Name
                           , ObjectBoolean_isCorporate.ValueData AS isCorporate
+                          , Object_Juridical.isErased           AS isErased
                       FROM Object AS Object_Juridical
                            LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate 
                                                    ON ObjectBoolean_isCorporate.ObjectId = Object_Juridical.Id
                                                   AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
                       WHERE Object_Juridical.DescId = zc_Object_Juridical()
-                        AND Object_Juridical.isErased = FALSE
+                        AND (Object_Juridical.isErased = FALSE OR inisShowAll = TRUE)
                         AND COALESCE (ObjectBoolean_isCorporate.ValueData, FALSE) = FALSE
                         AND (Object_Juridical.Id = inJuridicalId OR inJuridicalId = 0)
                      )
@@ -128,6 +133,7 @@ BEGIN
                               , ObjectLink_JuridicalArea_Area.ChildObjectId                      AS AreaId
                               , Object_Area.ValueData                                            AS AreaName
                               , COALESCE (ObjectBoolean_JuridicalArea_Default.ValueData, FALSE)  AS isDefault
+                              , COALESCE (ObjectBoolean_JuridicalArea_Only.ValueData, FALSE)     AS isOnly
                          FROM Object AS Object_JuridicalArea
                                INNER JOIN ObjectLink AS ObjectLink_JuridicalArea_Juridical
                                                      ON ObjectLink_JuridicalArea_Juridical.ObjectId = Object_JuridicalArea.Id 
@@ -143,6 +149,10 @@ BEGIN
                                LEFT JOIN ObjectBoolean AS ObjectBoolean_JuridicalArea_Default
                                                        ON ObjectBoolean_JuridicalArea_Default.ObjectId = Object_JuridicalArea.Id
                                                       AND ObjectBoolean_JuridicalArea_Default.DescId = zc_ObjectBoolean_JuridicalArea_Default()
+
+                               LEFT JOIN ObjectBoolean AS ObjectBoolean_JuridicalArea_Only
+                                                       ON ObjectBoolean_JuridicalArea_Only.ObjectId = Object_JuridicalArea.Id
+                                                      AND ObjectBoolean_JuridicalArea_Only.DescId = zc_ObjectBoolean_JuridicalArea_Only()
                          WHERE Object_JuridicalArea.DescId = zc_Object_JuridicalArea()
                            AND Object_JuridicalArea.isErased = FALSE
                          )    
@@ -170,8 +180,17 @@ BEGIN
                                , tmpJuridical.Code          AS JuridicalCode
                                , tmpJuridical.Name          AS JuridicalName
                                , tmpJuridical.isCorporate   AS isCorporate_Juridical
+                               , tmpJuridical.isErased      AS isErased_Juridical
                           FROM tmpUnit
                                CROSS JOIN tmpJuridical
+                               LEFT JOIN (SELECT DISTINCT tmpJuridicalArea.JuridicalId FROM tmpJuridicalArea WHERE tmpJuridicalArea.isOnly = TRUE
+                                         ) AS tmpIsOnly ON tmpIsOnly.JuridicalId = tmpJuridical.Id
+                               LEFT JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = tmpJuridical.Id
+                                                         AND tmpJuridicalArea.AreaId      = tmpUnit.AreaId
+                          WHERE -- выбрали если Юр лицу не указан isOnly
+                                tmpIsOnly.JuridicalId IS NULL
+                                -- или он СТРОГО из определенного региона
+                             OR tmpJuridicalArea.JuridicalId > 0
                           )
                            
     SELECT tmpUnitJuridical.UnitId
@@ -186,6 +205,8 @@ BEGIN
          , tmpUnitJuridical.UserManagerName_Unit
          , tmpUnitJuridical.JuridicalName_Unit
          , tmpUnitJuridical.isErased_Unit
+         , tmpUnitJuridical.isErased_Juridical
+         , CASE WHEN tmpUnitJuridical.isErased_Unit = TRUE OR tmpUnitJuridical.isErased_Juridical = TRUE THEN TRUE ELSE FALSE END isErased
          , tmpUnitJuridical.AreaId_Unit
          , tmpUnitJuridical.AreaName_Unit
          , tmpUnitJuridical.CreateDate_Unit
@@ -200,7 +221,8 @@ BEGIN
          
          , COALESCE (tmp1.AreaId, COALESCE (tmp2.AreaId, COALESCE (tmp3.AreaId, 0)))                           AS AreaId_Juridical
          , COALESCE (tmp1.AreaName, COALESCE (tmp2.AreaName, COALESCE (tmp3.AreaName, '')))       :: TVarChar  AS AreaName_Juridical
-         , COALESCE (tmp1.isDefault, COALESCE (tmp2.isDefault, COALESCE (tmp3.isDefault, FALSE))) ::Boolean    AS isDefault_JuridicalArea
+         , COALESCE (tmp1.isDefault, COALESCE (tmp2.isDefault, COALESCE (tmp3.isDefault, FALSE))) :: Boolean   AS isDefault_JuridicalArea
+         , COALESCE (tmp1.isOnly, COALESCE (tmp2.isOnly, COALESCE (tmp3.isOnly, FALSE)))          :: Boolean   AS isOnly_JuridicalArea
          
     From tmpUnitJuridical
          LEFT JOIN tmpJuridicalArea AS tmp1 ON tmp1.juridicalId = tmpUnitJuridical.JuridicalId AND tmp1.areaId = tmpUnitJuridical.AreaId_Unit 
@@ -221,4 +243,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM lpSelect_Object_JuridicalArea_byUnit (0,0, '2')
+-- SELECT * FROM lpSelect_Object_JuridicalArea_byUnit (0, 0)

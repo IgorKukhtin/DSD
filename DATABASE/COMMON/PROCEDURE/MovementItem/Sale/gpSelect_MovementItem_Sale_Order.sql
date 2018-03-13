@@ -448,10 +448,12 @@ BEGIN
                        THEN FALSE
                   WHEN tmpPromo.TaxPromo <> 0 AND tmpPromo.PriceWithOutVAT = tmpMI.Price
                        THEN FALSE
-                  WHEN (COALESCE (tmpMI.Price, 0) = COALESCE (tmpPriceList.Price_Pricelist, 0)     AND vbPriceWithVAT = FALSE)
-                    OR (COALESCE (tmpMI.Price, 0) = COALESCE (tmpPriceList.Price_Pricelist_vat, 0) AND vbPriceWithVAT = TRUE)
+                  WHEN ((COALESCE (tmpMI.Price, 0) = COALESCE (tmpPriceList.Price_Pricelist, 0)     AND vbPriceWithVAT = FALSE)
+                     OR (COALESCE (tmpMI.Price, 0) = COALESCE (tmpPriceList.Price_Pricelist_vat, 0) AND vbPriceWithVAT = TRUE))
                        THEN FALSE
-                  ELSE TRUE
+                    AND COALESCE (tmpMIPromo.MovementId_Promo, 0) = 0
+                    AND COALESCE (tmpPromo.MovementId, 0)         = 0
+
              END :: Boolean AS isCheck_Pricelist
 
            , (CASE WHEN (tmpPromo.isChangePercent = TRUE  AND tmpMI.ChangePercent <> vbChangePercent)
@@ -750,8 +752,10 @@ BEGIN
                        THEN FALSE
                   WHEN tmpPromo.TaxPromo <> 0 AND tmpPromo.PriceWithOutVAT = tmpMI.Price
                        THEN FALSE
-                  WHEN (COALESCE (tmpMI.Price, 0) = COALESCE (tmpPriceList.Price_Pricelist, 0)     AND vbPriceWithVAT = FALSE)
-                    OR (COALESCE (tmpMI.Price, 0) = COALESCE (tmpPriceList.Price_Pricelist_vat, 0) AND vbPriceWithVAT = TRUE)
+                  WHEN ((COALESCE (tmpMI.Price, 0) = COALESCE (tmpPriceList.Price_Pricelist, 0)     AND vbPriceWithVAT = FALSE)
+                     OR (COALESCE (tmpMI.Price, 0) = COALESCE (tmpPriceList.Price_Pricelist_vat, 0) AND vbPriceWithVAT = TRUE))
+                    AND COALESCE (tmpMIPromo.MovementId_Promo, 0) = 0
+                    AND COALESCE (tmpPromo.MovementId, 0)         = 0
                        THEN FALSE
                   ELSE TRUE
              END :: Boolean AS isCheck_Pricelist
@@ -765,8 +769,10 @@ BEGIN
                         THEN tmpPromo.MovementPromo
                    WHEN tmpMIPromo.MovementId_Promo <> COALESCE (tmpPromo.MovementId, 0)
                         THEN 'Œÿ»¡ ¿ ' || zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndSale)
+                          -- || ' 1)' || COALESCE (tmpMIPromo.MovementId_Promo, 0) :: TVarChar || ' <> ' || COALESCE (tmpPromo.MovementId, 0) :: TVarChar
                    WHEN COALESCE (tmpMIPromo.MovementId_Promo, 0) <> tmpPromo.MovementId
                         THEN 'Œÿ»¡ ¿ ' || tmpPromo.MovementPromo
+                          -- || ' 2)' || COALESCE (tmpMIPromo.MovementId_Promo, 0) :: TVarChar || ' <> ' || COALESCE (tmpPromo.MovementId, 0) :: TVarChar
                    ELSE ''
               END) :: TVarChar AS MovementPromo
 

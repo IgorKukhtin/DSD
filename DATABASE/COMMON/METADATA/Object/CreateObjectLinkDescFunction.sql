@@ -210,6 +210,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsPropertyValue_GoodsKind() RETURNS 
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_GoodsPropertyValue_GoodsKind', 'Связь Значения свойств товаров для классификатора с Видами товаров', zc_Object_GoodsPropertyValue(), zc_Object_GoodsKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsPropertyValue_GoodsKind');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsPropertyValue_GoodsBox() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsPropertyValue_GoodsBox'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_GoodsPropertyValue_GoodsBox', 'Связь Значения свойств товаров для классификатора с Товар(гофроящик)', zc_Object_GoodsPropertyValue(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsPropertyValue_GoodsBox');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_ImportExportLink_ObjectMain() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ImportExportLink_ObjectMain'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ImportExportLink_ObjectMain', 'Связи объектов для загрузки, выгрузки c объектом', zc_Object_ImportExportLink(), NULL WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ImportExportLink_ObjectMain');
@@ -1794,6 +1799,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Fiscal_Unit() RETURNS Integer AS $BODY$
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Fiscal_Unit', 'Аптека', zc_Object_Fiscal(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Fiscal_Unit');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_MemberSP_PartnerMedical() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberSP_PartnerMedical'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_MemberSP_PartnerMedical', 'Связь с Мед.учрежд.', zc_Object_MemberSP(), zc_Object_PartnerMedical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberSP_PartnerMedical');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_MemberSP_GroupMemberSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberSP_GroupMemberSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_MemberSP_GroupMemberSP', 'Связь с Категория пациента(Соц. проект)', zc_Object_MemberSP(), zc_Object_GroupMemberSP() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberSP_GroupMemberSP');
+
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1876,6 +1890,9 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 14.02.18         * zc_ObjectLink_GoodsPropertyValue_GoodsBox
+ 18.01.18         * zc_ObjectLink_MemberSP_PartnerMedical
+                    zc_ObjectLink_MemberSP_GroupMemberSP
  21.12.17         * zc_ObjectLink_GoodsByGoodsKind_GoodsPack
                     zc_ObjectLink_GoodsByGoodsKind_GoodsKindPack
  11.11.17         * zc_ObjectLink_ContactPerson_Area

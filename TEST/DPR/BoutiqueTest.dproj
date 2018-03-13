@@ -731,10 +731,6 @@
 				<Form>Report_MovementReturnOutDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Report\Report_MovementReturnOut.pas">
-				<Form>Report_MovementReturnOutForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Report\Report_MovementSend.pas">
 				<Form>Report_MovementSendForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -883,12 +879,12 @@
 				<Form>Report_SaleReturnInDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Report\Report_PartnerDebt.pas">
-				<Form>Report_PartnerDebtForm</Form>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_ClientDebt.pas">
+				<Form>Report_ClientDebtForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Report\Report_PartnerDebtDialog.pas">
-				<Form>Report_PartnerDebtDialogForm</Form>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_ClientDebtDialog.pas">
+				<Form>Report_ClientDebtDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Report\Report_MovementIncomeDialog.pas">
@@ -912,18 +908,98 @@
 				<Form>GoodsPrintForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Report\Report_MotionByPartner.pas">
-				<Form>Report_MotionByPartnerForm</Form>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_MotionByClient.pas">
+				<Form>Report_MotionByClientForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Report\Report_MotionByPartnerDialog.pas">
-				<Form>Report_MotionByPartnerDialogForm</Form>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_MotionByClientDialog.pas">
+				<Form>Report_MotionByClientDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\MeDOC\IFIN_J1201209.pas"/>
 			<DCCReference Include="..\SOURCEBoutique\Container\CommonContainerProcedureTest.pas"/>
-			<DCCReference Include="..\..\FormsBoutique\Document\GoodsAccount_TotalError.pas">
-				<Form>GoodsAccount_TotalErrorForm</Form>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_Sale_ContainerError.pas">
+				<Form>Report_Sale_ContainerErrorForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_ReturnIn_TotalError.pas">
+				<Form>Report_ReturnIn_TotalErrorForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_Sale_TotalError.pas">
+				<Form>Report_Sale_TotalErrorForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_Client_TotalError.pas">
+				<Form>Report_Client_TotalErrorForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_Client_LastError.pas">
+				<Form>Report_Client_LastErrorForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_GoodsAccount_TotalError.pas">
+				<Form>Report_GoodsAccount_TotalErrorForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_CollationByClientDialog.pas">
+				<Form>Report_CollationByClientDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_CollationByClient.pas">
+				<Form>Report_CollationByClientForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\Unit_Dialog.pas">
+				<Form>Unit_DialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_SaleOLAPDialog.pas">
+				<Form>Report_SaleOLAPDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_SaleOLAP.pas">
+				<Form>Report_SaleOLAPForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\PeriodYear_Choice.pas">
+				<Form>PeriodYear_ChoiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_ReturnIn.pas">
+				<Form>Report_ReturnInForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_SaleDialog.pas">
+				<Form>Report_SaleDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_OH_DiscountPeriod.pas">
+				<Form>Report_OH_DiscountPeriodForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_OH_DiscountPeriodDialog.pas">
+				<Form>Report_OH_DiscountPeriodDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\DiscountPeriod.pas">
+				<Form>DiscountPeriodForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\DiscountPeriodEdit.pas">
+				<Form>DiscountPeriodEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\PriceListItemDialog.pas">
+				<Form>PriceListItemDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_Sale.pas">
+				<Form>Report_SaleForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_MovementReturnOut.pas">
+				<Form>Report_MovementReturnOutForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

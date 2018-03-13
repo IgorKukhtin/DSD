@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_GoodsSearchRemains(
 )
 RETURNS TABLE (Id integer, GoodsCode Integer, GoodsName TVarChar
              , NDSkindName TVarChar
+             , NDS TFloat
              , GoodsGroupName TVarChar
              , UnitName TVarChar
              , AreaName TVarChar
@@ -63,6 +64,7 @@ BEGIN
                                                                   ON MIContainer.ContainerId = ContainerCount.ContainerId
                                                                  AND MIContainer.OperDate >= vbRemainsDate
                               GROUP BY ContainerCount.ContainerId, ContainerCount.Amount, ContainerCount.GoodsId , ContainerCount.UnitId 
+                              HAVING (ContainerCount.Amount - COALESCE(SUM(MIContainer.Amount), 0)) <> 0
                              )
 
 
@@ -132,10 +134,11 @@ BEGIN
                     )                          
 
 
-        SELECT Object_Goods_View.Id                         as Id
-             , Object_Goods_View.GoodsCodeInt    :: Integer as GoodsCode
-             , Object_Goods_View.GoodsName                  as GoodsName
+        SELECT Object_Goods_View.Id                         AS Id
+             , Object_Goods_View.GoodsCodeInt    :: Integer AS GoodsCode
+             , Object_Goods_View.GoodsName                  AS GoodsName
              , Object_Goods_View.NDSkindName                as NDSkindName
+             , Object_Goods_View.NDS                        AS NDS
              , Object_Goods_View.GoodsGroupName             AS GoodsGroupName
              , Object_Unit.ValueData                        AS UnitName
              , Object_Area.ValueData                        AS AreaName
@@ -195,6 +198,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.01.18         *
  08.07.16         *
  11.05.16         *
  18.04.16         *

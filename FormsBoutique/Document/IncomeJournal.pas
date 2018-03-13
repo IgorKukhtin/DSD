@@ -104,6 +104,8 @@ type
     spSelectPrintSticker: TdsdStoredProc;
     dxBarButton2: TdxBarButton;
     TotalSummBalance: TcxGridDBColumn;
+    actPrintInSecond: TdsdPrintAction;
+    bbPrintInSecond: TdxBarButton;
   private
   public
   end;

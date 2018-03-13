@@ -74,7 +74,7 @@ type
     CurrencyName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     OperPrice: TcxGridDBColumn;
-    PriceSale: TcxGridDBColumn;
+    OperPriceList: TcxGridDBColumn;
     BrandName: TcxGridDBColumn;
     PeriodName: TcxGridDBColumn;
     PeriodYear: TcxGridDBColumn;
@@ -83,15 +83,18 @@ type
     isArc: TcxGridDBColumn;
     cxLabel6: TcxLabel;
     edUnit: TcxButtonEdit;
-    UnitGuides: TdsdGuides;
+    GuidesUnit: TdsdGuides;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     dxBarControlContainerItem2: TdxBarControlContainerItem;
     FormParams: TdsdFormParams;
     RefreshDispatcher: TRefreshDispatcher;
     spUnErased: TdsdStoredProc;
-    InvNumber_full: TcxGridDBColumn;
-    MovementId: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
+    actReport_Goods: TdsdOpenForm;
+    bbOpenReportForm: TdxBarButton;
+    SybaseId: TcxGridDBColumn;
+    PartionId: TcxGridDBColumn;
+    DiscountTax: TcxGridDBColumn;
   private
     { Private declarations }
   public

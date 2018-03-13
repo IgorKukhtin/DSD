@@ -21,7 +21,7 @@ DECLARE
    DECLARE vbPriceListItemId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_ObjectHistory_PriceListItem());
+   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_ObjectHistory_PriceListItem());
 
 
    -- Ограничение - если роль Бухгалтер ПАВИЛЬОНЫ
@@ -33,6 +33,14 @@ BEGIN
        RAISE EXCEPTION 'Ошибка. Нет прав корректировать прайс <%>', lfGet_Object_ValueData (inPriceListId);
    END IF;
 
+
+   -- Ограничение - если роль Начисления транспорт-меню
+   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 78489 AND UserId = vbUserId)
+      AND COALESCE (inPriceListId, 0) NOT IN (zc_PriceList_Fuel()
+                                             )
+   THEN
+       RAISE EXCEPTION 'Ошибка. Нет прав корректировать прайс <%>', lfGet_Object_ValueData (inPriceListId);
+   END IF;
 
    -- !!!определяется!!!
    IF inIsLast = TRUE THEN ioId:= 0; END IF;

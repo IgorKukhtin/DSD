@@ -23,7 +23,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, Vcl.ExtCtrls;
 
 type
   TGoodsPartnerCodeForm = class(TAncestorGuidesForm)
@@ -47,8 +47,8 @@ type
     spInserUpdateGoodsLink: TdsdStoredProc;
     actSetLink: TdsdExecStoredProc;
     bbSetLink: TdxBarButton;
-    dxBarControlContainerItem1: TdxBarControlContainerItem;
-    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    bbLabel: TdxBarControlContainerItem;
+    bbPartnerCode: TdxBarControlContainerItem;
     dsdUpdateDataSet: TdsdUpdateDataSet;
     MinimumLot: TcxGridDBColumn;
     spUpdate_Goods_MinimumLot: TdsdStoredProc;
@@ -58,7 +58,7 @@ type
     actDoLoad: TExecuteImportSettingsAction;
     spGetImportSetting_Goods_MinimumLot: TdsdStoredProc;
     actGetImportSetting_Goods_MinimumLot: TdsdExecStoredProc;
-    dxBarButton1: TdxBarButton;
+    bbStartLoad: TdxBarButton;
     FormParams: TdsdFormParams;
     IsUpload: TcxGridDBColumn;
     spUpdate_Goods_IsUpload: TdsdStoredProc;
@@ -97,12 +97,18 @@ type
     spUpdate_Goods_ConditionsKeep: TdsdStoredProc;
     spGetImportSetting_Goods_ConditionsKeep: TdsdStoredProc;
     bbStartLoadConditionsKeep: TdxBarButton;
-    bbisUpdate: TdxBarControlContainerItem;
+    bbIsUpdate: TdxBarControlContainerItem;
     cbUpdate: TcxCheckBox;
     spUpdate_Goods_isUploadBadm: TdsdStoredProc;
     isUploadTeva: TcxGridDBColumn;
     spUpdate_Goods_isUploadTeva: TdsdStoredProc;
     AreaName: TcxGridDBColumn;
+    Panel: TPanel;
+    cxLabel6: TcxLabel;
+    edArea: TcxButtonEdit;
+    GuidesArea: TdsdGuides;
+    ProtocolOpenTwoForm: TdsdOpenForm;
+    bbProtocolOpenTwoForm: TdxBarButton;
   private
     { Private declarations }
   public

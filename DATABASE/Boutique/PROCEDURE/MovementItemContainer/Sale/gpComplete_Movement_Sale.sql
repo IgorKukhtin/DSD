@@ -12,7 +12,8 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpGetUserBySession (inSession);
+     --vbUserId:= lpGetUserBySession (inSession);
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Sale());
 
      -- создаются временные таблицы - для формирование данных по проводкам
      PERFORM lpComplete_Movement_Sale_CreateTemp();

@@ -18,7 +18,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
 RETURNS Integer
 AS
 $BODY$
-   DECLARE vbIsInsert Boolean;
+   DECLARE vbIsInsert     Boolean;
+   DECLARE vbId_sale_part Integer;
 BEGIN
      -- проверка
      IF inOperDate <> DATE_TRUNC ('DAY', inOperDate) THEN
@@ -59,7 +60,49 @@ BEGIN
      IF vbIsInsert = FALSE
      THEN
          -- !!!Кроме Sybase!!! - !!!не забыли - проверили что НЕТ движения, тогда инфу в партии можно менять!!!
-         -- PERFORM lpCheck ...
+         -- ДЛЯ всех ПАРТИЙ
+         IF inUserId <> zc_User_Sybase()
+            AND (inFromId             <> (SELECT MAX (COALESCE (Object_PartionGoods.PartnerId, 0))  FROM Object_PartionGoods WHERE Object_PartionGoods.MovementId = ioId AND COALESCE (Object_PartionGoods.PartnerId, 0)  <> inFromId)
+              OR inToId               <> (SELECT MAX (COALESCE (Object_PartionGoods.UnitId, 0))     FROM Object_PartionGoods WHERE Object_PartionGoods.MovementId = ioId AND COALESCE (Object_PartionGoods.UnitId, 0)     <> inToId)
+              OR inCurrencyDocumentId <> (SELECT MAX (COALESCE (Object_PartionGoods.CurrencyId, 0)) FROM Object_PartionGoods WHERE Object_PartionGoods.MovementId = ioId AND COALESCE (Object_PartionGoods.CurrencyId, 0) <> inCurrencyDocumentId)
+                )
+         THEN
+            -- есть ли ПРОВЕДЕННЫЕ документы - все
+            vbId_sale_part:= (SELECT MovementItem.Id
+                              FROM Object_PartionGoods
+                                   INNER JOIN MovementItem ON MovementItem.PartionId = Object_PartionGoods.MovementItemId
+                                                          AND MovementItem.isErased  = FALSE -- !!!только НЕ удаленные!!!
+                                                          -- AND MovementItem.DescId = ...   -- !!!любой Desc!!!
+                                   INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                      AND Movement.StatusId = zc_Enum_Status_Complete() -- !!!только проведенные!!!
+                                                      AND Movement.DescId   <> zc_Movement_Income()     -- !!!только НЕ Приход от постав.!!!
+                              WHERE Object_PartionGoods.MovementId = ioId
+                              ORDER BY Movement.OperDate DESC
+                              LIMIT 1
+                             );
+             -- Проверка - ДЛЯ всех ПАРТИЙ
+            IF vbId_sale_part > 0
+            THEN
+                RAISE EXCEPTION 'Ошибка.Найдено движение <%> № <%> от <%>.Нельзя корректировать <Документ>.'
+                              , (SELECT MovementDesc.ItemName
+                                 FROM MovementItem
+                                      INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                      INNER JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+                                 WHERE MovementItem.Id = vbId_sale_part
+                                )
+                              , (SELECT Movement.InvNumber
+                                 FROM MovementItem
+                                      INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                 WHERE MovementItem.Id = vbId_sale_part
+                                )
+                              , (SELECT zfConvert_DateToString (Movement.OperDate)
+                                 FROM MovementItem
+                                      INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                 WHERE MovementItem.Id = vbId_sale_part
+                                )
+                               ;
+            END IF;
+         END IF;
 
          -- !!!не забыли - изменили свойства в партии!!!
          PERFORM lpUpdate_Object_PartionGoods_Movement (inMovementId := ioId

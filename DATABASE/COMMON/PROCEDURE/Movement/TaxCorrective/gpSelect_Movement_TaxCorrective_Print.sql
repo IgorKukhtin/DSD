@@ -19,7 +19,8 @@ $BODY$
     DECLARE vbGoodsPropertyId Integer;
     DECLARE vbGoodsPropertyId_basis Integer;
 
-    DECLARE vbNotNDSPayer_INN TVarChar;
+    DECLARE vbNotNDSPayer_INN  TVarChar;
+    DECLARE vbCalcNDSPayer_INN TVarChar;
 
     DECLARE vbOperDate_begin TDateTime;
 
@@ -32,6 +33,24 @@ BEGIN
 
      -- !!!хардкод!!!
      vbNotNDSPayer_INN := '100000000000';
+     -- !!!хардкод!!!
+     vbCalcNDSPayer_INN:= (SELECT CASE WHEN inMovementId IN (-- Corr
+                                                             7943509
+                                                           , 8066170
+                                                           , 8066171
+                                                           , 8066169
+                                                           , 8464974
+                                                           , 8465476
+                                                           , 8465802
+                                                           , 8479936
+                                                           , 8462887
+                                                           , 8462999
+                                                           , 8463007
+                                                           , 8488900
+                                                           , 8464619
+                                                            )
+                                  THEN vbNotNDSPayer_INN ELSE '' END
+                          );
 
      -- определяется <Налоговый документ> и его параметры
      SELECT COALESCE (tmpMovement.MovementId_TaxCorrective, 0) AS MovementId_TaxCorrective
@@ -349,30 +368,10 @@ BEGIN
                              WHERE ObjectLink_Contract_PersonalSigning.DescId = zc_ObjectLink_Contract_PersonalSigning()
                             )
     
-    , tmpTotalSumm AS (SELECT MovementFloat_TotalSumm.MovementId
-                            , MovementFloat_TotalSumm.ValueData
-                       FROM MovementFloat AS MovementFloat_TotalSumm
-                       WHERE MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-                         AND MovementFloat_TotalSumm.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
-                       )
-    , tmpVATPercent AS (SELECT MovementFloat_VATPercent.MovementId
-                             , MovementFloat_VATPercent.ValueData
-                        FROM MovementFloat AS MovementFloat_VATPercent
-                        WHERE MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
-                          AND MovementFloat_VATPercent.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
-                       )
-    , tmpTotalSummMVAT AS (SELECT MovementFloat_TotalSummMVAT.MovementId
-                                , MovementFloat_TotalSummMVAT.ValueData
-                           FROM MovementFloat AS MovementFloat_TotalSummMVAT
-                           WHERE MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
-                             AND MovementFloat_TotalSummMVAT.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
-                           )
-    , tmpTotalSummPVAT AS (SELECT MovementFloat_TotalSummPVAT.MovementId
-                                , MovementFloat_TotalSummPVAT.ValueData
-                           FROM MovementFloat AS MovementFloat_TotalSummPVAT
-                           WHERE MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
-                             AND MovementFloat_TotalSummPVAT.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
-                           )
+    , tmpMovementFloat AS (SELECT MovementFloat.*
+                           FROM MovementFloat
+                           WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                          )
     , tmpReturnIn AS (SELECT Movement_ReturnIn.Id
                            , Movement_ReturnIn.InvNumber
                            , Movement_ReturnIn.OperDate
@@ -515,6 +514,7 @@ BEGIN
                             , ObjectString_JuridicalTo_GLNCode.ValueData      AS JuridicalTo_GLNCode
                             , MovementLinkObject_DocumentTaxKind.ObjectId     AS DocumentTaxKind
                             , MovementLinkObject_Branch.ObjectId              AS BranchId
+                            , MovementString_FromINN.ValueData                AS INN_From
                        FROM tmpMovement
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                          ON MovementLinkObject_From.MovementId = tmpMovement.Id
@@ -547,7 +547,12 @@ BEGIN
                             LEFT JOIN ObjectString AS ObjectString_Partner_GLNCodeCorporate
                                                    ON ObjectString_Partner_GLNCodeCorporate.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_From.ObjectId)
                                                   AND ObjectString_Partner_GLNCodeCorporate.DescId = zc_ObjectString_Partner_GLNCodeCorporate()
-                
+
+                            LEFT JOIN MovementString AS MovementString_FromINN
+                                                     ON MovementString_FromINN.MovementId = tmpMovement.Id
+                                                    AND MovementString_FromINN.DescId = zc_MovementString_FromINN()
+                                                    AND MovementString_FromINN.ValueData  <> ''
+
                             LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                  ON ObjectLink_Juridical_Retail.ObjectId = MovementLinkObject_From.ObjectId
                                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
@@ -616,7 +621,7 @@ BEGIN
            , tmpContract.ContractKindName                                   AS ContractKind
 
            , CAST (REPEAT (' ', 7 - LENGTH (tmpMLM_Child.InvNumberPartner_Child)) || tmpMLM_Child.InvNumberPartner_Child AS TVarChar) AS InvNumber_Child
-           , tmpMLM_Child.OperDate_Child                                        AS OperDate_Child
+           , tmpMLM_Child.OperDate_Child                                    AS OperDate_Child
 
            , CASE WHEN inisClientCopy=TRUE
                   THEN 'X' ELSE '' END                                      AS CopyForClient
@@ -630,38 +635,39 @@ BEGIN
 
            , CASE WHEN tmpMI.OperDate < '01.01.2015' AND (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
                   THEN TRUE
-                  WHEN tmpMI.OperDate >= '01.01.2015' AND tmpMLM_Child.OperDate_Child >= '01.01.2015' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN
+                  WHEN tmpMI.OperDate >= '01.01.2015' AND tmpMLM_Child.OperDate_Child >= '01.01.2015'
+                   AND COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) <> vbNotNDSPayer_INN AND vbCalcNDSPayer_INN = ''
                        AND COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) >= 0
                   THEN TRUE
                   ELSE FALSE
              END :: Boolean AS isERPN -- Підлягає реєстрації в ЄРПН покупцем !!!так криво для медка до 01.04.2016!!!
 
-           , CASE WHEN vbOperDate_begin >= '01.04.2016' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN
+           , CASE WHEN vbOperDate_begin >= '01.04.2016' AND COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) <> vbNotNDSPayer_INN AND vbCalcNDSPayer_INN = ''
                        AND COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) < 0
                        THEN 'X'
-                  WHEN vbOperDate_begin >= '01.04.2016' AND OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN
+                  WHEN vbOperDate_begin >= '01.04.2016' AND (COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> '')
                        THEN 'X'
                   WHEN vbOperDate_begin >= '01.04.2016' 
                         THEN ''
                   WHEN tmpMI.OperDate < '01.01.2015' AND (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
                        THEN 'X'
-                  WHEN tmpMI.OperDate >= '01.01.2015' AND tmpMLM_Child.OperDate_Child >= '01.01.2015' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN
+                  WHEN tmpMI.OperDate >= '01.01.2015' AND tmpMLM_Child.OperDate_Child >= '01.01.2015' AND COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) <> vbNotNDSPayer_INN AND vbCalcNDSPayer_INN = ''
                        THEN 'X'
                   ELSE ''
              END :: TVarChar AS ERPN -- Підлягає реєстрації в ЄРПН постачальником (продавцем)
 
-           , CASE WHEN OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN AND tmpMLM_Child.OperDate_Child >= '01.02.2015'
+           , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) <> vbNotNDSPayer_INN AND vbCalcNDSPayer_INN = '' AND tmpMLM_Child.OperDate_Child >= '01.02.2015'
                   THEN CASE WHEN COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) < 0 THEN '' ELSE 'X' END
                   ELSE ''
              END :: TVarChar AS ERPN2 -- Підлягає реєстрації в ЄРПН покупцем
 
-           , CASE WHEN OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN
+           , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
                   THEN 'X' ELSE '' END                                      AS NotNDSPayer
-           , CASE WHEN OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN
+           , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
                   THEN TRUE ELSE FALSE END :: Boolean                       AS isNotNDSPayer
-           , CASE WHEN OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN
+           , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
                   THEN '0' ELSE '' END                                      AS NotNDSPayerC1
-           , CASE WHEN OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN
+           , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
                   THEN '2' ELSE '' END                                      AS NotNDSPayerC2
 
            , tmpMovement_Data.FromAddress                                   AS PartnerAddress_From
@@ -708,22 +714,22 @@ BEGIN
                                      ) AS SupplierGLNCode
 
 
-           , CASE WHEN OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN
+           , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
                   THEN 'Неплатник'
              ELSE OH_JuridicalDetails_From.FullName END                     AS JuridicalName_From
-           , CASE WHEN OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN
+           , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
                   THEN 'Неплатник'
              ELSE OH_JuridicalDetails_From.JuridicalAddress END             AS JuridicalAddress_From
 
            , OH_JuridicalDetails_From.OKPO                                  AS OKPO_From
-           , OH_JuridicalDetails_From.INN                                   AS INN_From
+           , CASE WHEN vbCalcNDSPayer_INN <> '' THEN vbCalcNDSPayer_INN ELSE COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) END AS INN_From
            , OH_JuridicalDetails_From.InvNumberBranch                       AS InvNumberBranch_From
            , OH_JuridicalDetails_From.NumberVAT                             AS NumberVAT_From
            , OH_JuridicalDetails_From.AccounterName                         AS AccounterName_From
            , OH_JuridicalDetails_From.BankAccount                           AS BankAccount_From
            , OH_JuridicalDetails_From.BankName                              AS BankName_From
            , OH_JuridicalDetails_From.MFO                                   AS BankMFO_From
-           , CASE WHEN OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN
+           , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
                   THEN ''
              ELSE OH_JuridicalDetails_From.Phone END                        AS Phone_From
 
@@ -824,14 +830,18 @@ BEGIN
 
             LEFT JOIN tmpMovement_ChildEDI ON tmpMovement_ChildEDI.MovementId = tmpMI.MovementId
            
-            LEFT JOIN tmpTotalSumm AS MovementFloat_TotalSumm
-                                   ON MovementFloat_TotalSumm.MovementId = tmpMI.MovementId
-            LEFT JOIN tmpVATPercent AS MovementFloat_VATPercent
-                                    ON MovementFloat_VATPercent.MovementId =  tmpMI.MovementId
-            LEFT JOIN tmpTotalSummMVAT AS MovementFloat_TotalSummMVAT
+            LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSumm
+                                       ON MovementFloat_TotalSumm.MovementId = tmpMI.MovementId
+                                      AND MovementFloat_TotalSumm.DescId     = zc_MovementFloat_TotalSumm()
+            LEFT JOIN tmpMovementFloat AS MovementFloat_VATPercent
+                                       ON MovementFloat_VATPercent.MovementId =  tmpMI.MovementId
+                                      AND MovementFloat_VATPercent.DescId     = zc_MovementFloat_VATPercent()
+            LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSummMVAT
                                        ON MovementFloat_TotalSummMVAT.MovementId = tmpMI.MovementId
-            LEFT JOIN tmpTotalSummPVAT AS MovementFloat_TotalSummPVAT
+                                      AND MovementFloat_TotalSummMVAT.DescId     = zc_MovementFloat_TotalSummMVAT()
+            LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSummPVAT
                                        ON MovementFloat_TotalSummPVAT.MovementId =  tmpMI.MovementId
+                                      AND MovementFloat_TotalSummPVAT.DescId     = zc_MovementFloat_TotalSummPVAT()
 
             LEFT JOIN tmpContract ON tmpContract.MovementId = tmpMI.MovementId
             LEFT JOIN tmpPersonalSigning ON tmpPersonalSigning.ContractId = tmpContract.ContractId
@@ -872,7 +882,7 @@ BEGIN
                                                         AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = tmpMI.GoodsKindId
             LEFT JOIN tmpGoods ON tmpGoods.GoodsId = tmpMI.GoodsId
 
----- номера строк в НН
+            ---- номера строк в НН
             LEFT JOIN tmpMITax AS tmpMITax1 ON tmpMITax1.Kind        = 1
                                            AND tmpMITax1.GoodsId     = tmpMI.GoodsId
                                            AND tmpMITax1.GoodsKindId = tmpMI.GoodsKindId
@@ -1065,6 +1075,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.03.18         *
  06.11.17         *
  28.08.17         *
  29.01.16         *
@@ -1091,5 +1102,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 7418138, inisClientCopy:= FALSE, inSession:= zfCalc_UserAdmin()); FETCH ALL "<unnamed portal 14>";
--- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 5812683, inisClientCopy:= FALSE ,inSession:= zfCalc_UserAdmin());  FETCH ALL "<unnamed portal 15>";
+-- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 7418138, inisClientCopy:= FALSE, inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 14>";
+-- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 5812683, inisClientCopy:= FALSE ,inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 15>";

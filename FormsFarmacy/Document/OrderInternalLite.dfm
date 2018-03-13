@@ -236,9 +236,9 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             Options.Editing = False
             Width = 108
           end
-          object NDSKindName: TcxGridDBColumn [15]
+          object NDS: TcxGridDBColumn [15]
             Caption = #1057#1090#1072#1074#1082#1072' '#1053#1044#1057
-            DataBinding.FieldName = 'NDSKindName'
+            DataBinding.FieldName = 'NDS'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

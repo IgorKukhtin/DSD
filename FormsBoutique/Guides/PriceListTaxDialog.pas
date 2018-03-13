@@ -37,17 +37,33 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     edOperDate: TcxDateEdit;
     actUpdate: TdsdInsertUpdateGuides;
-    Код: TcxLabel;
-    edPriceListFrom: TcxButtonEdit;
     cePriceTax: TcxCurrencyEdit;
-    PriceListGuidesFrom: TdsdGuides;
     cxLabel4: TcxLabel;
-    edPriceListTo: TcxButtonEdit;
-    PriceListGuidesTo: TdsdGuides;
+    edPriceList: TcxButtonEdit;
+    PriceListGuides: TdsdGuides;
     cxLabel8: TcxLabel;
-    cxLabel1: TcxLabel;
-    edOperDateFrom: TcxDateEdit;
     mactUpdate: TMultiAction;
+    cxLabel2: TcxLabel;
+    edUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
+    cxLabel5: TcxLabel;
+    edBrand: TcxButtonEdit;
+    GuidesBrand: TdsdGuides;
+    cxLabel6: TcxLabel;
+    edGoodsGroup: TcxButtonEdit;
+    GuidesGoodsGroup: TdsdGuides;
+    cxLabel7: TcxLabel;
+    edPeriod: TcxButtonEdit;
+    GuidesPeriod: TdsdGuides;
+    cxLabel9: TcxLabel;
+    edinPeriodYear: TcxButtonEdit;
+    GuidesinPeriodYear: TdsdGuides;
+    cxLabel10: TcxLabel;
+    edLineFabrica: TcxButtonEdit;
+    GuidesLineFabrica: TdsdGuides;
+    cxLabel1: TcxLabel;
+    ceLabel: TcxButtonEdit;
+    GuidesLabel: TdsdGuides;
   private
     { Private declarations }
   public

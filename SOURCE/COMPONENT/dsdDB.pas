@@ -17,6 +17,7 @@ type
     FParamType: TParamType;
     FonChange: TNotifyEvent;
     FMultiSelectSeparator: String;
+    FValueChange: Boolean;  // add 22.01.2018
     function GetValue: Variant;
     procedure SetValue(const Value: Variant);
     procedure SetComponent(const Value: TComponent);
@@ -29,6 +30,7 @@ type
     procedure AssignParam(Param: TdsdParam);
     function GetOwner: TPersistent; override;
   public
+    property isValueChange: Boolean read FValueChange write FValueChange; // add 22.01.2018
     property onChange: TNotifyEvent read FonChange write FonChange;
     function AsString: string;
     function AsFloat: double;
@@ -591,8 +593,12 @@ begin
         if ParamByName(Source[i].Name) = nil then begin
            Add.AssignParam(Source[i])
         end
-        else
+        else begin
+           try ParamByName(Source[i].Name).isValueChange:= ParamByName(Source[i].Name).Value <> Source[i].Value;
+           except ParamByName(Source[i].Name).isValueChange:= true;
+           end;
            ParamByName(Source[i].Name).Value := Source[i].Value
+        end;
 end;
 
 function TdsdParams.GetItem(Index: Integer): TdsdParam;
@@ -736,6 +742,7 @@ begin
   FParamType := ptOutput;
   FDataType := ftInteger;
   FMultiSelectSeparator := ',';
+  FValueChange:= false; // add 22.01.2018
 end;
 
 constructor TdsdParam.Create(Collection: TCollection);
@@ -745,6 +752,7 @@ begin
   FParamType := ptOutput;
   FDataType := ftInteger;
   FMultiSelectSeparator := ',';
+  FValueChange:= false; // add 22.01.2018
 end;
 
 function TdsdParam.GetDisplayName: string;

@@ -103,16 +103,6 @@ inherited Unit_JuridicalAreaForm: TUnit_JuridicalAreaForm
             Options.Editing = False
             Width = 87
           end
-          object IsErased: TcxGridDBColumn
-            Caption = #1059#1076#1072#1083#1077#1085
-            DataBinding.FieldName = 'isErased'
-            PropertiesClassName = 'TcxCheckBoxProperties'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 40
-          end
           object UnitId: TcxGridDBColumn
             DataBinding.FieldName = 'UnitId'
             Visible = False
@@ -197,6 +187,41 @@ inherited Unit_JuridicalAreaForm: TUnit_JuridicalAreaForm
             HeaderHint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
             Options.Editing = False
             Width = 56
+          end
+          object isOnly_JuridicalArea: TcxGridDBColumn
+            Caption = '1 '#1088#1077#1075#1080#1086#1085
+            DataBinding.FieldName = 'isOnly_JuridicalArea'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1086#1083#1100#1082#1086' '#1076#1083#1103' 1-'#1086#1075#1086' '#1088#1077#1075#1080#1086#1085#1072
+            Options.Editing = False
+            Width = 70
+          end
+          object IsErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085
+            DataBinding.FieldName = 'isErased'
+            PropertiesClassName = 'TcxCheckBoxProperties'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 40
+          end
+          object isErased_Unit: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085' '#1087#1086#1076#1088'.'
+            DataBinding.FieldName = 'isErased_Unit'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
+          object isErased_Juridical: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085' '#1102#1088'.'#1083'.'
+            DataBinding.FieldName = 'isErased_Juridical'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
           end
         end
       end

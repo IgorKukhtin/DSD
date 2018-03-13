@@ -58,6 +58,30 @@ object UserForm: TUserForm
         Options.Editing = False
         Width = 87
       end
+      object UnitCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
+        DataBinding.FieldName = 'UnitCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 52
+      end
+      object UnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'UnitName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = ChoiceUnit
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
+        Width = 132
+      end
       object MemberName: TcxGridDBColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'MemberName'
@@ -66,19 +90,21 @@ object UserForm: TUserForm
         Options.Editing = False
         Width = 87
       end
-      object UnitCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1087'.'
-        DataBinding.FieldName = 'UnitCode'
+      object UnitCode_Personal: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1087'. '#1089#1086#1090#1088'.'
+        DataBinding.FieldName = 'UnitCode_Personal'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1076' '#1087#1086#1076#1088'. '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
         Options.Editing = False
         Width = 55
       end
-      object UnitName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'UnitName'
+      object UnitName_Personal: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1089#1086#1090#1088'.'
+        DataBinding.FieldName = 'UnitName_Personal'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
         Options.Editing = False
         Width = 142
       end
@@ -600,19 +626,23 @@ object UserForm: TUserForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      FormName = 'TObject_UnitForm'
-      FormNameParam.Value = ''
+      FormName = 'TUnitForm'
+      FormNameParam.Value = 'TUnitForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -696,8 +726,8 @@ object UserForm: TUserForm
       end>
     Params = <>
     PackSize = 1
-    Left = 56
-    Top = 144
+    Left = 80
+    Top = 152
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -880,37 +910,18 @@ object UserForm: TUserForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inSign'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'UserSign'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inSeal'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'UserSeal'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inKey'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'UserKey'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inMemberId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MemberId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UnitId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

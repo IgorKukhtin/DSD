@@ -14,6 +14,7 @@ CREATE TABLE Object_GoodsPrint(
    UnitId                 Integer   NOT NULL,
    UserId                 Integer   NOT NULL,
    Amount                 TFloat    NOT NULL,
+   isReprice              Boolean   NOT NULL, 
    InsertDate             TDateTime NOT NULL 
    );
 /*-------------------------------------------------------------------------------*/

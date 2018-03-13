@@ -831,6 +831,7 @@ BEGIN
              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
              , Object_GoodsPropertyValue.ValueData  AS Name
              , ObjectFloat_Amount.ValueData         AS Amount
+             , ObjectFloat_AmountDoc.ValueData      AS AmountDoc
              , ObjectFloat_BoxCount.ValueData       AS BoxCount             
              , ObjectString_BarCode.ValueData       AS BarCode
              , ObjectString_Article.ValueData       AS Article
@@ -845,6 +846,9 @@ BEGIN
              LEFT JOIN ObjectFloat AS ObjectFloat_Amount
                                    ON ObjectFloat_Amount.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                   AND ObjectFloat_Amount.DescId = zc_ObjectFloat_GoodsPropertyValue_Amount()
+             LEFT JOIN ObjectFloat AS ObjectFloat_AmountDoc
+                                   ON ObjectFloat_AmountDoc.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                  AND ObjectFloat_AmountDoc.DescId = zc_ObjectFloat_GoodsPropertyValue_AmountDoc()
              LEFT JOIN ObjectFloat AS ObjectFloat_BoxCount
                                    ON ObjectFloat_BoxCount.ObjectId = Object_GoodsPropertyValue.Id
                                   AND ObjectFloat_BoxCount.DescId = zc_ObjectFloat_GoodsPropertyValue_BoxCount()
@@ -993,8 +997,10 @@ BEGIN
             )
       , tmpGoods AS (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
       , tmpUKTZED AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED (tmp.GoodsGroupId) AS CodeUKTZED 
-                      FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
+                      FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp
+                     )
 
+      -- Результат
       SELECT COALESCE (Object_GoodsByGoodsKind_View.Id, Object_Goods.Id) AS Id
            , Object_Goods.ObjectCode         AS GoodsCode
            , tmpObject_GoodsPropertyValue_basis.BarCode AS BarCode_Main
@@ -1018,8 +1024,14 @@ BEGIN
                        THEN CAST (tmpMI.AmountPartner / COALESCE (tmpObject_GoodsPropertyValue.BoxCount, COALESCE (tmpObject_GoodsPropertyValueGroup.BoxCount, 0)) AS NUMERIC (16, 4))
                   ELSE 0
              END AS AmountBox
+           , CASE WHEN COALESCE (tmpObject_GoodsPropertyValue.AmountDoc, 0) > 0
+                       THEN CAST ((tmpMI.AmountPartner / tmpObject_GoodsPropertyValue.AmountDoc) AS NUMERIC (16, 4))
+                  ELSE 0
+             END AS AmountDocBox
+           
            , COALESCE (tmpObject_GoodsPropertyValue.Name, '')       AS GoodsName_Juridical
            , COALESCE (tmpObject_GoodsPropertyValue.Amount, 0)      AS AmountInPack_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValue.AmountDoc, 0)   AS AmountDocInPack_Juridical
            , COALESCE (tmpObject_GoodsPropertyValue.BoxCount, COALESCE (tmpObject_GoodsPropertyValueGroup.BoxCount, 0))      AS BoxCount_Juridical
            , COALESCE (tmpObject_GoodsPropertyValueGroup.Article,    COALESCE (tmpObject_GoodsPropertyValue.Article, ''))    AS Article_Juridical
            , COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode,    COALESCE (tmpObject_GoodsPropertyValue.BarCode, ''))    AS BarCode_Juridical
@@ -1088,6 +1100,7 @@ BEGIN
                    AS NUMERIC (16, 3)) AS AmountSummWVAT
 
            , CAST ((tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat) AS Amount_Weight
+           , CAST (tmpMI.AmountPartner * COALESCE (ObjectFloat_Weight.ValueData, 0) AS TFloat) AS AmountPack_Weight
 --           , CAST ((CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI.AmountPartner ELSE 0 END) AS TFloat) AS Amount_Sh
 
 
@@ -1283,4 +1296,4 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 ++ PrintMovement_Transport36003603.fr3
 */
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId:= 4115668 , inSession:= zfCalc_UserAdmin()); FETCH ALL "<unnamed portal 1>";
+-- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId:= 4115668 , inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 1>";

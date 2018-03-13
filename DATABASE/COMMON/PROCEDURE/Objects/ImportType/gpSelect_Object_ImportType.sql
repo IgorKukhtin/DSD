@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ImportType(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ProcedureName TVarChar, EnumName TVarChar
-             , isErased boolean) AS
+             , isErased boolean, JSONParamName TVarChar) AS
 $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
@@ -23,6 +23,8 @@ BEGIN
            , ObjectString_EnumName.ValueData      AS EnumName
            
            , Object_ImportType.isErased           AS isErased
+           , ObjectString_JSONParamName.ValueData AS JSONParamName           
+           
            
        FROM Object AS Object_ImportType
            LEFT JOIN ObjectString AS ObjectString_ProcedureName 
@@ -31,6 +33,9 @@ BEGIN
            LEFT JOIN ObjectString AS ObjectString_EnumName
                                   ON ObjectString_EnumName.ObjectId = Object_ImportType.Id
                                  AND ObjectString_EnumName.DescId = zc_ObjectString_Enum()
+           LEFT JOIN ObjectString AS ObjectString_JSONParamName 
+                                  ON ObjectString_JSONParamName.ObjectId = Object_ImportType.Id
+                                 AND ObjectString_JSONParamName.DescId = zc_ObjectString_ImportType_JSONParamName()
        WHERE Object_ImportType.DescId = zc_Object_ImportType();
   
 END;
@@ -41,7 +46,8 @@ ALTER FUNCTION gpSelect_Object_ImportType(TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Подмогильный В.В.
+ 09.02.18                                                           *               
  02.07.14         *
 */
 

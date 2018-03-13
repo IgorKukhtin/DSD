@@ -66,6 +66,19 @@ type
     MemberCode_driver: TcxGridDBColumn;
     UnitName_driver: TcxGridDBColumn;
     PositionName_driver: TcxGridDBColumn;
+    cxLabel18: TcxLabel;
+    cePersonal: TcxButtonEdit;
+    GuidesPersonal: TdsdGuides;
+    cxLabel19: TcxLabel;
+    cePersonalTrade: TcxButtonEdit;
+    GuidesPersonalTrade: TdsdGuides;
+    actPrintGroupPersonal: TdsdPrintAction;
+    spSelectPrintGroupPersonal: TdsdStoredProc;
+    actPrintPeriodGroupPersonal: TdsdPrintAction;
+    spSelectPrintPeriodGroupPersonal: TdsdStoredProc;
+    macPrintPeriodGroupPersonal: TMultiAction;
+    bbPrintGroupPersonal: TdxBarButton;
+    bbPrintPeriodGroupPersonal: TdxBarButton;
   private
     { Private declarations }
   public

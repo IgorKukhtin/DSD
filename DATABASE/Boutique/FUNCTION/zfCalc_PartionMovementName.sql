@@ -12,7 +12,10 @@ RETURNS TVarChar AS
 $BODY$
 BEGIN
      -- возвращаем результат
-     RETURN ('№ ' || inInvNumber || ' oт '|| DATE (inOperDate) :: TVarChar || COALESCE ((SELECT ' <' || CASE WHEN inDescId = -1 * zc_Movement_ProductionUnion() THEN 'Пересортица' ELSE ItemName END || '>' FROM MovementDesc WHERE Id = ABS (inDescId)), ''));
+     -- RETURN ('№ ' || inInvNumber || ' oт '|| DATE (inOperDate) :: TVarChar || COALESCE ((SELECT ' <' || CASE WHEN inDescId = -1 * zc_Movement_ProductionUnion() THEN 'Пересортица' ELSE ItemName END || '>' FROM MovementDesc WHERE Id = ABS (inDescId)), ''));
+     RETURN ('№ <'   || CASE WHEN inInvNumber <> '' THEN inInvNumber ELSE '0' END || '>'
+          || ' oт <' || CASE WHEN inOperDate > zc_DateStart() THEN zfConvert_DateToString (inOperDate) ELSE '' END || '>'
+            );
 
 END;
 $BODY$
@@ -23,7 +26,7 @@ ALTER FUNCTION zfCalc_PartionMovementName (Integer, TVarChar, TVarChar, TDateTim
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 30.04.15                                        *
+ 31.01.18                                        *
 */
 
 -- тест

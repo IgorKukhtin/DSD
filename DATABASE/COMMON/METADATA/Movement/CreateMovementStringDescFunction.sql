@@ -138,7 +138,6 @@ CREATE OR REPLACE FUNCTION zc_MovementString_Retail() RETURNS Integer AS $BODY$B
 INSERT INTO MovementStringDesc (Code, ItemName)
   SELECT 'zc_MovementString_Retail', 'Торговая сеть в которой проходит акция' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_Retail');
 
-
   --!!!!!!!!!!!!!!!!!!!!!!!!!!Аптека
 CREATE OR REPLACE FUNCTION zc_MovementString_Bayer() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_Bayer'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementStringDesc (Code, ItemName)

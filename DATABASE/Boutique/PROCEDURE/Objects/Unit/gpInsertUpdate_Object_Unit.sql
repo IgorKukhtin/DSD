@@ -5,7 +5,9 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                       Integer   ,    -- Ключ объекта <Подразделения> 
@@ -13,6 +15,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inName                     TVarChar  ,    -- Название объекта <Подразделения>
     IN inAddress                  TVarChar  ,    -- Адрес
     IN inPhone                    TVarChar  ,    -- Телефон
+    IN inPrinter                  TVarChar  ,    -- Принтер (печать чеков)
+    IN inPrint                    TVarChar  ,    -- Название при печати
+    IN inIsPartnerBarCode         Boolean   ,    -- Ш/К поставщика
     IN inDiscountTax              TFloat    ,    -- % скидки ВИНТАЖ
     IN inJuridicalId              Integer   ,    -- ключ объекта <Юридические лица> 
     IN inParentId                 Integer   ,    -- ключ объекта <Група> 
@@ -40,6 +45,12 @@ BEGIN
          THEN ioCode := COALESCE ((SELECT ObjectCode FROM Object WHERE Id = ioId), 0);
    END IF; 
    
+   -- для загрузки из Sybase
+   IF vbUserId = zc_User_Sybase() AND ioId > 0
+   THEN
+        inPrinter:= (SELECT OS.ValueData FROM ObjectString AS OS WHERE OS.ObjectId = ioId AND OS.DescId = zc_ObjectString_Unit_Printer());
+   END IF;
+   
    -- проверка прав уникальности для свойства <Наименование >
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Unit(), inName);
 
@@ -50,10 +61,17 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_Address(), ioId, inAddress);
    -- сохранили Телефон
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_Phone(), ioId, inPhone);
+   -- сохранили Принтер
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_Printer(), ioId, inPrinter);
+   -- сохранили 
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_Print(), ioId, inPrint);
 
    -- сохранили % скидки ВИНТАЖ
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Unit_DiscountTax(), ioId, inDiscountTax);
 
+   -- сохранили Признак Ш/К поставщика
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_PartnerBarCode(), ioId, inisPartnerBarCode);
+   
    -- сохранили связь с <Юридические лица>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_Juridical(), ioId, inJuridicalId);
    -- сохранили связь с <Група>
@@ -78,6 +96,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятикин А.А.
+05.03.18          *
+27.02.18          * Printer
 07.06.17          * add AccountDirection
 23.05.17                                                           *
 13.05.17                                                           *

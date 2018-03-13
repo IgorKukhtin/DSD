@@ -36,6 +36,9 @@ RETURNS TABLE (Id Integer
              , SPKindName TVarChar
              , isSP Boolean
              , InvNumber_Invoice_Full TVarChar
+
+             , InsertName TVarChar, InsertDate TDateTime
+             , UpdateName TVarChar, UpdateDate TDateTime
               )
 
 AS
@@ -114,6 +117,11 @@ BEGIN
             END ::Boolean AS isSP
 
           , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full 
+
+          , Object_Insert.ValueData              AS InsertName
+          , MovementDate_Insert.ValueData        AS InsertDate
+          , Object_Update.ValueData              AS UpdateName
+          , MovementDate_Update.ValueData        AS UpdateDate
         FROM
             tmpUnit
             LEFT JOIN Movement_Sale_View AS Movement_Sale ON Movement_Sale.UnitId = tmpUnit.UnitId
@@ -124,7 +132,23 @@ BEGIN
                                            ON MLM_Child.MovementId = Movement_Sale.Id
                                           AND MLM_Child.descId = zc_MovementLinkMovement_Child()
             LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MLM_Child.MovementChildId
-        -- ORDER BY InvNumber
+
+            LEFT JOIN MovementDate AS MovementDate_Insert
+                                   ON MovementDate_Insert.MovementId = Movement_Sale.Id
+                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+            LEFT JOIN MovementDate AS MovementDate_Update
+                                   ON MovementDate_Update.MovementId = Movement_Sale.Id
+                                  AND MovementDate_Update.DescId = zc_MovementDate_Update()
+
+            LEFT JOIN MovementLinkObject AS MLO_Insert
+                                         ON MLO_Insert.MovementId = Movement_Sale.Id
+                                        AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
+
+            LEFT JOIN MovementLinkObject AS MLO_Update
+                                         ON MLO_Update.MovementId = Movement_Sale.Id
+                                        AND MLO_Update.DescId = zc_MovementLinkObject_Update()
+            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId  
        ;
 
 END;
@@ -135,6 +159,7 @@ ALTER FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 01.02.18         *
  22.03.17         *
  08.02.17         * add SP
  04.05.16         * 

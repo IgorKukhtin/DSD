@@ -11,7 +11,8 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, cxButtonEdit, Vcl.ExtCtrls, cxSplitter, cxDropDownEdit,
-  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  dxBarBuiltInMenu, cxNavigator;
 
 type
   TImportTypeForm = class(TAncestorDBGridForm)
@@ -49,6 +50,7 @@ type
     clNumber: TcxGridDBColumn;
     clUserParamName: TcxGridDBColumn;
     clEnumName: TcxGridDBColumn;
+    clJSONParamName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -25,22 +25,22 @@ type
     actLookAndFeel: TAction;
     actImportExportLink: TdsdOpenForm;
     MainMenu: TMainMenu;
-    miGuides: TMenuItem;
+    miGuide: TMenuItem;
     miService: TMenuItem;
     miProtocol: TMenuItem;
     miExit: TMenuItem;
-    N2: TMenuItem;
+    miLine801: TMenuItem;
     miMovementProtocol: TMenuItem;
     miUserProtocol: TMenuItem;
-    N3: TMenuItem;
+    miLine802: TMenuItem;
     miLookAndFillSettings: TMenuItem;
     miAbout: TMenuItem;
     miUpdateProgramm: TMenuItem;
     frxXLSExport: TfrxXLSExport;
     actMovementDesc: TdsdOpenForm;
     miMovementDesc: TMenuItem;
-    N116: TMenuItem;
-    N221: TMenuItem;
+    miProtocolAll: TMenuItem;
+    miServiceGuide: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure actUpdateProgramExecute(Sender: TObject);
@@ -127,7 +127,9 @@ begin
                     TMenuItem(Components[i]).Visible := true;
                     break;
                  end;
-
+  if not SameText(gc_User.Login, '') then
+    // Caption := Caption + ' - Пользователь: ' + gc_User.Login;
+    Caption := Caption + ' <' + gc_User.Login + '>';
 end;
 
 end.

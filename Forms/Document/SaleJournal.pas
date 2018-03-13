@@ -243,6 +243,8 @@ type
     actPrint_Account_List: TdsdPrintAction;
     mactPrint_Account_List: TMultiAction;
     bbPrint_Account_List: TdxBarButton;
+    actPrintPackGross: TdsdPrintAction;
+    bbPrintPackGross: TdxBarButton;
   private
     { Private declarations }
   public

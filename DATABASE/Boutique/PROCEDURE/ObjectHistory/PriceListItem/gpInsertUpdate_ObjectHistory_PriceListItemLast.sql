@@ -34,6 +34,7 @@ BEGIN
    -- —охранили цену
    PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_PriceListItem_Value(), ioId, inValue);
 
+
    --
    IF inIsLast = TRUE AND EXISTS (SELECT Id FROM ObjectHistory WHERE DescId = zc_ObjectHistory_PriceListItem() AND ObjectId = vbPriceListItemId AND StartDate > inOperDate)
    THEN
@@ -69,7 +70,7 @@ BEGIN
    -- !!!не забыли - cохранили ѕоследнюю ÷ену в ѕј–“»я’!!!
    IF inPriceListId = zc_PriceList_Basis()
    THEN
-       PERFORM lpUpdate_Object_PartionGoods_PriceSale (inGoodsId:= inGoodsId, inUserId:= vbUserId);
+       PERFORM lpUpdate_Object_PartionGoods_OperPriceList (inGoodsId:= inGoodsId, inUserId:= vbUserId);
    END IF;
 
 

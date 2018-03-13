@@ -418,6 +418,14 @@ object ClientForm: TClientForm
         end
         item
           Visible = True
+          ItemName = 'bbReport_CollationByPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -479,6 +487,10 @@ object ClientForm: TClientForm
     end
     object bbShowAll: TdxBarButton
       Action = actShowAll
+      Category = 0
+    end
+    object bbReport_CollationByPartner: TdxBarButton
+      Action = actReport_CollationByPartner
       Category = 0
     end
   end
@@ -742,6 +754,53 @@ object ClientForm: TClientForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actReport_CollationByPartner: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'> '#1087#1086' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
+      ImageIndex = 55
+      FormName = 'TReport_CollationByClientForm'
+      FormNameParam.Value = 'TReport_CollationByClientForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerName'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Client'
@@ -824,8 +883,8 @@ object ClientForm: TClientForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 104
-    Top = 248
+    Left = 160
+    Top = 272
   end
   object spUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_Client'
@@ -877,7 +936,7 @@ object ClientForm: TClientForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 208
+    Left = 184
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -896,11 +955,14 @@ object ClientForm: TClientForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 416
-    Top = 152
+    Left = 344
+    Top = 144
   end
   object RefreshDispatcher: TRefreshDispatcher
+    CheckIdParam = True
     IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'MasterUnitId'
     IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <

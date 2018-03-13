@@ -377,6 +377,12 @@ object UtilPrintForm: TUtilPrintForm
         Value = False
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DescCode_EDI_Send'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 40
     Top = 16
@@ -657,6 +663,17 @@ object UtilPrintForm: TUtilPrintForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
+    object actInsert_Movement_EDI_Send: TdsdExecStoredProc
+      Category = 'EDI'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_Movement_EDI_Send
+      StoredProcList = <
+        item
+          StoredProc = spInsert_Movement_EDI_Send
+        end>
+      Caption = 'actInsert_Movement_EDI_Send'
+    end
     object mactPrint_ReturnIn: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -901,7 +918,6 @@ object UtilPrintForm: TUtilPrintForm
       Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' ('#1092#1086#1079#1079#1080')'
       Hint = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' ('#1092#1086#1079#1079#1080')'
       ImageIndex = 23
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintItemsCDS
@@ -935,7 +951,6 @@ object UtilPrintForm: TUtilPrintForm
       Caption = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103' ('#1092#1086#1079#1079#1080')'
       Hint = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103' ('#1092#1086#1079#1079#1080')'
       ImageIndex = 17
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintItemsCDS
@@ -1712,6 +1727,81 @@ object UtilPrintForm: TUtilPrintForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
+    object actPrint_PackGross2: TdsdPrintAction
+      Category = 'Print_Fozzy'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_Pack
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Pack
+        end>
+      Caption = #1059#1087#1072#1082'. '#1051#1080#1089#1090' '#1074#1077#1089' '#1041#1056#1059#1058#1058#1054
+      Hint = #1059#1087#1072#1082'. '#1051#1080#1089#1090' '#1074#1077#1089' '#1041#1056#1059#1058#1058#1054
+      ImageIndex = 16
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_SalePackGross'
+      ReportNameParam.Name = 'PrintMovement_SalePackGross'
+      ReportNameParam.Value = 'PrintMovement_SalePackGross'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_PackGross: TdsdPrintAction
+      Category = 'Print_Fozzy'
+      MoveParams = <>
+      StoredProc = spSelectPrint_Pack
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Pack
+        end>
+      Caption = #1059#1087#1072#1082'. '#1051#1080#1089#1090' '#1074#1077#1089' '#1041#1056#1059#1058#1058#1054
+      Hint = #1059#1087#1072#1082'. '#1051#1080#1089#1090' '#1074#1077#1089' '#1041#1056#1059#1058#1058#1054
+      ImageIndex = 23
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 
+            'WeighingNumber;GoodsGroupNameFull;GoodsName_two;GoodsKindName;Nu' +
+            'mOrder'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_SalePackGross'
+      ReportNameParam.Value = 'PrintMovement_SalePackGross'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
   end
   object spSelectPrint_ReturnIn: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ReturnIn_Print'
@@ -2302,5 +2392,37 @@ object UtilPrintForm: TUtilPrintForm
     Params = <>
     Left = 212
     Top = 70
+  end
+  object spInsert_Movement_EDI_Send: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_EDI_Send'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = 0
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_MovementBoolean_EdiInvoice'
+        Component = FormParams
+        ComponentItem = 'DescCode_EDI_Send'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 432
+    Top = 216
   end
 end

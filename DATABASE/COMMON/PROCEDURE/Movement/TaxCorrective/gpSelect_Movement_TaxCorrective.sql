@@ -30,6 +30,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , isElectron Boolean
              , isMedoc Boolean
              , isCopy Boolean
+             , isINN Boolean
              , Comment TVarChar
              , PersonalSigningName TVarChar
               )
@@ -81,7 +82,25 @@ BEGIN
            , Object_From.Id                    		    AS FromId
            , Object_From.ValueData             		    AS FromName
            , ObjectHistory_JuridicalDetails_View.OKPO   AS OKPO_From
-           , ObjectHistory_JuridicalDetails_View.INN    AS INN_From 
+           , CASE WHEN Movement.Id IN (-- Corr
+                                       7943509
+                                     , 8066170
+                                     , 8066171
+                                     , 8066169
+                                     , 8464974
+                                     , 8465476
+                                     , 8465802
+                                     , 8479936
+                                     , 8462887
+                                     , 8462999
+                                     , 8463007
+                                     , 8488900
+                                     , 8464619
+                                      )
+                  THEN '100000000000'
+                  ELSE COALESCE (MovementString_FromINN.ValueData, ObjectHistory_JuridicalDetails_View.INN)
+             END :: TVarChar AS INN_From 
+             
            , Object_To.Id                      		    AS ToId
            , Object_To.ValueData               		    AS ToName
            , Object_Partner.ObjectCode                  AS PartnerCode
@@ -134,6 +153,7 @@ BEGIN
            , COALESCE (MovementBoolean_Electron.ValueData, FALSE) :: Boolean  AS isElectron
            , COALESCE (MovementBoolean_Medoc.ValueData, FALSE)    :: Boolean  AS isMedoc
            , COALESCE(MovementBoolean_isCopy.ValueData, FALSE)    :: Boolean  AS isCopy
+           , CASE WHEN COALESCE (MovementString_FromINN.ValueData, '') <> '' THEN TRUE ELSE FALSE END AS isINN
            , MovementString_Comment.ValueData                                 AS Comment
 
            , COALESCE (Object_PersonalSigning.PersonalName, COALESCE (Object_PersonalBookkeeper_View.PersonalName, ''))  ::TVarChar    AS PersonalSigningName
@@ -178,6 +198,11 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementString AS MovementString_FromINN
+                                     ON MovementString_FromINN.MovementId = Movement.Id
+                                    AND MovementString_FromINN.DescId = zc_MovementString_FromINN()
+                                    AND MovementString_FromINN.ValueData  <> ''
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Medoc
                                       ON MovementBoolean_Medoc.MovementId =  Movement.Id
@@ -338,4 +363,4 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective (TDateTime, TDateTime, Integer, B
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_TaxCorrective (inStartDate:= '01.02.2016', inEndDate:= '01.02.2016', inJuridicalBasisId:= 0, inIsRegisterDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_TaxCorrective (inStartDate:= '01.02.2018', inEndDate:= '01.02.2018', inJuridicalBasisId:= 0, inIsRegisterDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())

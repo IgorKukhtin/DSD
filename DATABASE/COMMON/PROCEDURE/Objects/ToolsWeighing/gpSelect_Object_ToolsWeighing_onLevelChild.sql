@@ -19,6 +19,7 @@ AS
 $BODY$
    DECLARE vbUserId     Integer;
 
+   DECLARE vbIsSticker  Boolean;
    DECLARE vbLevelMain  TVarChar;
    DECLARE vbCount      Integer;
 BEGIN
@@ -27,6 +28,10 @@ BEGIN
 
     -- !!!очень важно - захардкодили главную ветку!!!
     vbLevelMain:= CASE WHEN inIsCeh = TRUE THEN 'ScaleCeh_' || inBranchCode ELSE 'Scale_' || inBranchCode END;
+
+
+    -- !!!важно - Печать этикеток - определили по BranchCode!!!
+    vbIsSticker:= inBranchCode > 1000;
 
 
     IF inLevelChild = 'Service'
@@ -44,134 +49,134 @@ BEGIN
        ;
 
     ELSE
-    IF inLevelChild = 'Default'
-    THEN
-    -- Результат
-    RETURN QUERY
-       SELECT 0 AS Number
-            , 0 AS Id
-            , 0 AS Code
-            , tmp.Name :: TVarChar AS Name
-            , gpGet_ToolsWeighing_Value (vbLevelMain, inLevelChild, '', tmp.Name
-                                       , CASE WHEN STRPOS (tmp.Name, 'Exception_WeightDiff') > 0
-                                                   THEN '0.010'
-                                              WHEN STRPOS (tmp.Name, 'Weight') > 0
-                                                   THEN '0'
-                                              WHEN STRPOS (tmp.Name, 'InfoMoneyId_income') > 0
-                                                   THEN '0'
-                                              WHEN STRPOS (tmp.Name, 'InfoMoneyId_sale') > 0
-                                                   THEN zc_Enum_InfoMoney_30101() :: TVarChar -- Доходы + Продукция + Готовая продукция
-                                              WHEN STRPOS (tmp.Name, 'isPrintPreview') > 0
-                                                   THEN 'TRUE'
-                                              WHEN STRPOS (tmp.Name, 'isBarCode') > 0
-                                                   THEN 'TRUE'
-                                              WHEN STRPOS (tmp.Name, 'isGoodsComplete') > 0
-                                                   THEN 'TRUE'
-                                              WHEN SUBSTRING (tmp.Name FROM 1 FOR 2) = 'is'
-                                                   THEN 'FALSE'
-                                              ELSE '1'
-                                         END
-                                       , inSession) AS Value
-       FROM (SELECT 'MovementNumber'            AS Name
-       UNION SELECT 'TareCount'                 AS Name WHERE inIsCeh = FALSE
-       UNION SELECT 'TareWeightNumber'          AS Name WHERE inIsCeh = FALSE
-       UNION SELECT 'ChangePercentAmountNumber' AS Name WHERE inIsCeh = FALSE
-       UNION SELECT 'PriceListNumber'           AS Name WHERE inIsCeh = FALSE
+        IF inLevelChild = 'Default'
+        THEN
+        -- Результат
+        RETURN QUERY
+           SELECT 0 AS Number
+                , 0 AS Id
+                , 0 AS Code
+                , tmp.Name :: TVarChar AS Name
+                , gpGet_ToolsWeighing_Value (vbLevelMain, inLevelChild, '', tmp.Name
+                                           , CASE WHEN STRPOS (tmp.Name, 'Exception_WeightDiff') > 0
+                                                       THEN '0.010'
+                                                  WHEN STRPOS (tmp.Name, 'Weight') > 0
+                                                       THEN '0'
+                                                  WHEN STRPOS (tmp.Name, 'InfoMoneyId_income') > 0
+                                                       THEN '0'
+                                                  WHEN STRPOS (tmp.Name, 'InfoMoneyId_sale') > 0
+                                                       THEN zc_Enum_InfoMoney_30101() :: TVarChar -- Доходы + Продукция + Готовая продукция
+                                                  WHEN STRPOS (tmp.Name, 'isPrintPreview') > 0
+                                                       THEN 'TRUE'
+                                                  WHEN STRPOS (tmp.Name, 'isBarCode') > 0
+                                                       THEN 'TRUE'
+                                                  WHEN STRPOS (tmp.Name, 'isGoodsComplete') > 0
+                                                       THEN 'TRUE'
+                                                  WHEN SUBSTRING (tmp.Name FROM 1 FOR 2) = 'is'
+                                                       THEN 'FALSE'
+                                                  ELSE '1'
+                                             END
+                                           , inSession) AS Value
+           FROM (SELECT 'MovementNumber'            AS Name
+           UNION SELECT 'TareCount'                 AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'TareWeightNumber'          AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'ChangePercentAmountNumber' AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'PriceListNumber'           AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
 
-       UNION SELECT 'PrintCount'             AS Name
-       UNION SELECT 'isPrintPreview'         AS Name
+           UNION SELECT 'PrintCount'             AS Name
+           UNION SELECT 'isPrintPreview'         AS Name
 
-       UNION SELECT 'isBarCode'              AS Name WHERE inIsCeh = FALSE
-       UNION SELECT 'isTareWeightEnter'      AS Name WHERE inIsCeh = FALSE
-       UNION SELECT 'isPersonalComplete'     AS Name WHERE inIsCeh = FALSE
-       UNION SELECT 'isPersonalLoss'         AS Name WHERE inIsCeh = FALSE
-       UNION SELECT 'isTax'                  AS Name WHERE inIsCeh = FALSE
-       UNION SELECT 'isTransport'            AS Name WHERE inIsCeh = FALSE
-       UNION SELECT 'isEnterPrice'           AS Name WHERE inIsCeh = FALSE
-       UNION SELECT 'isDriverReturn'         AS Name WHERE inIsCeh = FALSE
-       UNION SELECT 'isCheckDelete'          AS Name WHERE inIsCeh = FALSE
-       -- UNION SELECT 'isStorageLine'          AS Name WHERE inIsCeh = TRUE
+           UNION SELECT 'isBarCode'              AS Name WHERE inIsCeh = FALSE
+           UNION SELECT 'isTareWeightEnter'      AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'isPersonalComplete'     AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'isPersonalLoss'         AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'isTax'                  AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'isTransport'            AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'isEnterPrice'           AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'isDriverReturn'         AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'isCheckDelete'          AS Name WHERE inIsCeh = FALSE
+           -- UNION SELECT 'isStorageLine'          AS Name WHERE inIsCeh = TRUE
 
-       UNION SELECT 'DayPrior_PriceReturn' AS Name WHERE inIsCeh = FALSE
+           UNION SELECT 'DayPrior_PriceReturn' AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
 
-       UNION SELECT 'isGoodsComplete'    AS Name
-       UNION SELECT 'InfoMoneyId_income' AS Name WHERE 1=0 AND inIsCeh = FALSE
-       UNION SELECT 'InfoMoneyId_sale'   AS Name WHERE 1=0 AND inIsCeh = FALSE
+           UNION SELECT 'isGoodsComplete'    AS Name
+           UNION SELECT 'InfoMoneyId_income' AS Name WHERE 1=0 AND inIsCeh = FALSE
+           UNION SELECT 'InfoMoneyId_sale'   AS Name WHERE 1=0 AND inIsCeh = FALSE
 
-       UNION SELECT 'isBox'              AS Name WHERE inIsCeh = FALSE
-       UNION SELECT 'BoxCount'           AS Name WHERE inIsCeh = FALSE
-       UNION SELECT 'BoxCode'            AS Name WHERE inIsCeh = FALSE
+           UNION SELECT 'isBox'              AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'BoxCount'           AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'BoxCode'            AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
 
-       UNION SELECT 'Exception_WeightDiff' AS Name WHERE inIsCeh = FALSE
+           UNION SELECT 'Exception_WeightDiff' AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
 
-       UNION SELECT 'WeightSkewer1'        AS Name WHERE inIsCeh = TRUE
-       UNION SELECT 'WeightSkewer2'        AS Name WHERE inIsCeh = TRUE
+           UNION SELECT 'WeightSkewer1'        AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
+           UNION SELECT 'WeightSkewer2'        AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
 
-       UNION SELECT 'PeriodPartionGoodsDate' AS Name WHERE inIsCeh = TRUE
+           UNION SELECT 'PeriodPartionGoodsDate' AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
 
-            ) AS tmp
-       ORDER BY 1
-       ;
+                ) AS tmp
+           ORDER BY 1
+           ;
 
-    ELSE
+        ELSE
 
-    IF inLevelChild = 'TareCount' AND inIsCeh = FALSE
-    THEN
-    -- определяется кол-во
-    vbCount:= (SELECT gpGet_ToolsWeighing_Value (vbLevelMain, inLevelChild, '', 'Count', '1', inSession));
-    -- Результат
-    RETURN QUERY
-       SELECT tmp.Number
-            , 0 AS Id
-            , 0 AS Code
-            , '' :: TVarChar AS Name
-            , '' :: TVarChar AS Value
-       FROM (SELECT GENERATE_SERIES (1, vbCount) AS Number) AS tmp
-      ;
+            IF inLevelChild = 'TareCount' AND inIsCeh = FALSE AND vbIsSticker = FALSE
+            THEN
+            -- определяется кол-во
+            vbCount:= (SELECT gpGet_ToolsWeighing_Value (vbLevelMain, inLevelChild, '', 'Count', '1', inSession));
+            -- Результат
+            RETURN QUERY
+               SELECT tmp.Number
+                    , 0 AS Id
+                    , 0 AS Code
+                    , '' :: TVarChar AS Name
+                    , '' :: TVarChar AS Value
+               FROM (SELECT GENERATE_SERIES (1, vbCount) AS Number) AS tmp
+              ;
 
-    ELSE
+            ELSE
 
-    IF inIsCeh = FALSE
-    THEN
-    -- определяется кол-во
-    vbCount:= (SELECT gpGet_ToolsWeighing_Value (vbLevelMain, inLevelChild, '', 'Count', '1', inSession));
-    -- Результат
-    RETURN QUERY
-       SELECT tmp.Number
-            , Object.Id
-            , CASE WHEN inLevelChild = 'TareWeight'
-                        THEN tmp.Number
-                   WHEN inLevelChild = 'ChangePercentAmount'
-                        THEN tmp.Number
-                   ELSE Object.ObjectCode
-              END :: Integer AS Code
-            , CASE WHEN inLevelChild = 'TareWeight'
-                        THEN tmp.Value || ' ' || Object_Measure.ValueData
-                   WHEN inLevelChild = 'ChangePercentAmount'
-                        THEN tmp.Value || ' %'
-                   ELSE Object.ValueData
-              END :: TVarChar AS Name
-            , tmp.Value
-       FROM (SELECT tmp.Number
-                  , gpGet_ToolsWeighing_Value (vbLevelMain, inLevelChild, '', inLevelChild || CASE WHEN inLevelChild = 'PriceList' THEN 'Id' ELSE '' END || '_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, '0', inSession) AS Value
-             FROM (SELECT GENERATE_SERIES (1, vbCount) AS Number) AS tmp
-            ) AS tmp
-            LEFT JOIN Object ON Object.Id = CAST (CASE WHEN tmp.Value <> '' AND inLevelChild = 'PriceList' THEN tmp.Value END AS Integer)
-            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = zc_Measure_Kg()
-      UNION ALL
-       SELECT 1000 AS Number
-            , 0 AS Id
-            , 0 AS Code
-            , 'ввод вес тары' :: TVarChar  AS Name
-            , '0' :: TVarChar AS Value
-       FROM gpGet_ToolsWeighing_Value (vbLevelMain, 'Default', '', 'isTareWeightEnter', 'FALSE', inSession) AS tmp
-       WHERE inLevelChild = 'TareWeight'
-         AND tmp.tmp = 'TRUE'
-       ORDER BY 1
-       ;
-    END IF;
-    END IF;
-    END IF;
+                IF inIsCeh = FALSE AND vbIsSticker = FALSE
+                THEN
+                    -- определяется кол-во
+                    vbCount:= (SELECT gpGet_ToolsWeighing_Value (vbLevelMain, inLevelChild, '', 'Count', '1', inSession));
+                    -- Результат
+                    RETURN QUERY
+                       SELECT tmp.Number
+                            , Object.Id
+                            , CASE WHEN inLevelChild = 'TareWeight'
+                                        THEN tmp.Number
+                                   WHEN inLevelChild = 'ChangePercentAmount'
+                                        THEN tmp.Number
+                                   ELSE Object.ObjectCode
+                              END :: Integer AS Code
+                            , CASE WHEN inLevelChild = 'TareWeight'
+                                        THEN tmp.Value || ' ' || Object_Measure.ValueData
+                                   WHEN inLevelChild = 'ChangePercentAmount'
+                                        THEN tmp.Value || ' %'
+                                   ELSE Object.ValueData
+                              END :: TVarChar AS Name
+                            , tmp.Value
+                       FROM (SELECT tmp.Number
+                                  , gpGet_ToolsWeighing_Value (vbLevelMain, inLevelChild, '', inLevelChild || CASE WHEN inLevelChild = 'PriceList' THEN 'Id' ELSE '' END || '_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, '0', inSession) AS Value
+                             FROM (SELECT GENERATE_SERIES (1, vbCount) AS Number) AS tmp
+                            ) AS tmp
+                            LEFT JOIN Object ON Object.Id = CAST (CASE WHEN tmp.Value <> '' AND inLevelChild = 'PriceList' THEN tmp.Value END AS Integer)
+                            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = zc_Measure_Kg()
+                      UNION ALL
+                       SELECT 1000 AS Number
+                            , 0 AS Id
+                            , 0 AS Code
+                            , 'ввод вес тары' :: TVarChar  AS Name
+                            , '0' :: TVarChar AS Value
+                       FROM gpGet_ToolsWeighing_Value (vbLevelMain, 'Default', '', 'isTareWeightEnter', 'FALSE', inSession) AS tmp
+                       WHERE inLevelChild = 'TareWeight'
+                         AND tmp.tmp = 'TRUE'
+                       ORDER BY 1
+                       ;
+                END IF;
+            END IF;
+        END IF;
     END IF;
 
 END;
@@ -192,4 +197,4 @@ $BODY$
 --
 -- SELECT * FROM gpSelect_Object_ToolsWeighing_onLevelChild (FALSE, 1, 'PriceList', zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_Object_ToolsWeighing_onLevelChild (FALSE, 4, 'Default', zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_Object_ToolsWeighing_onLevelChild (FALSE, 1, 'Service', zfCalc_UserAdmin()) OREDR BY 4
+-- SELECT * FROM gpSelect_Object_ToolsWeighing_onLevelChild (FALSE, 1, 'Service', zfCalc_UserAdmin()) ORDER BY 4

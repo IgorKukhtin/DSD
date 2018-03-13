@@ -4,7 +4,7 @@ object DiscountPeriodItemDialogForm: TDiscountPeriodItemDialogForm
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' <'#1057#1077#1079#1086#1085#1085#1099#1077' '#1089#1082#1080#1076#1082#1080'>'
   ClientHeight = 278
-  ClientWidth = 329
+  ClientWidth = 328
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -83,9 +83,9 @@ object DiscountPeriodItemDialogForm: TDiscountPeriodItemDialogForm
     Width = 305
   end
   object cxLabel2: TcxLabel
-    Left = 8
+    Left = 10
     Top = 180
-    Caption = #1043#1086#1076' ('#1085#1072#1095'.):'
+    Caption = #1043#1086#1076' '#1089' ...'
   end
   object cxLabel4: TcxLabel
     Left = 10
@@ -104,28 +104,32 @@ object DiscountPeriodItemDialogForm: TDiscountPeriodItemDialogForm
     TabOrder = 10
     Width = 305
   end
-  object edPeriodYearStart: TcxCurrencyEdit
-    Left = 10
-    Top = 200
-    EditValue = 0.000000000000000000
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 11
-    Width = 100
-  end
-  object edPeriodYearEnd: TcxCurrencyEdit
-    Left = 154
-    Top = 200
-    EditValue = 0.000000000000000000
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 12
-    Width = 100
-  end
   object cxLabel5: TcxLabel
     Left = 154
     Top = 180
-    Caption = #1043#1086#1076' ('#1086#1082#1086#1085'.):'
+    Caption = #1043#1086#1076' '#1087#1086' ...'
+  end
+  object edStartYear: TcxButtonEdit
+    Left = 10
+    Top = 203
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 12
+    Width = 69
+  end
+  object edEndYear: TcxButtonEdit
+    Left = 154
+    Top = 203
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 13
+    Width = 69
   end
   object PeriodChoice: TPeriodChoice
     DateStart = edShowDate
@@ -211,23 +215,41 @@ object DiscountPeriodItemDialogForm: TDiscountPeriodItemDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PeriodYearStart'
+        Name = 'StartYear'
         Value = Null
-        Component = edPeriodYearStart
-        DataType = ftFloat
+        Component = GuidesStartYear
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PeriodYearEnd'
+        Name = 'StartYearText'
         Value = Null
-        Component = edPeriodYearEnd
-        DataType = ftFloat
+        Component = GuidesStartYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndYear'
+        Value = Null
+        Component = GuidesEndYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndYearText'
+        Value = Null
+        Component = GuidesEndYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 22
-    Top = 203
+    Left = 262
+    Top = 195
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -244,7 +266,6 @@ object DiscountPeriodItemDialogForm: TDiscountPeriodItemDialogForm
         Value = ''
         Component = GuidesUnit
         ComponentItem = 'Key'
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -288,7 +309,7 @@ object DiscountPeriodItemDialogForm: TDiscountPeriodItemDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 102
+    Left = 110
     Top = 82
   end
   object GuidesPeriod: TdsdGuides
@@ -321,5 +342,65 @@ object DiscountPeriodItemDialogForm: TDiscountPeriodItemDialogForm
       end>
     Left = 150
     Top = 122
+  end
+  object GuidesStartYear: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edStartYear
+    Key = '0'
+    FormNameParam.Value = 'TPeriodYear_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodYear_ChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesStartYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = Null
+        Component = GuidesStartYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 50
+    Top = 185
+  end
+  object GuidesEndYear: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edEndYear
+    Key = '0'
+    FormNameParam.Value = 'TPeriodYear_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodYear_ChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesEndYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = Null
+        Component = GuidesEndYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 109
+    Top = 163
   end
 end

@@ -37,11 +37,14 @@ type
     spInsertUpdate: TdsdStoredProc;
     FormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
-    MemberGuides: TdsdGuides;
+    GuidesMember: TdsdGuides;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     edPassword: TcxTextEdit;
     cxLabel2: TcxLabel;
+    cxLabel4: TcxLabel;
+    edUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
   private
     { Private declarations }
   public

@@ -411,9 +411,9 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
           OptionsBehavior.GoToNextCellOnEnter = True
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsData.Appending = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
           OptionsView.HeaderAutoHeight = True
@@ -429,7 +429,7 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
             Width = 120
           end
           object LabelName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074' '#1094#1077#1085#1085#1080#1082#1077
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'LabelName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -445,7 +445,7 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
             Width = 50
           end
           object GoodsName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            Caption = #1040#1088#1090#1080#1082#1091#1083
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -807,7 +807,7 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
           end
           object InvNumber_ReturnIn_Full: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. ('#1074#1086#1079#1074#1088#1072#1090')'
-            DataBinding.FieldName = 'InvNumber_ReturnIn_Full'
+            DataBinding.FieldName = 'InvNumber_ReturnIn'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -1437,7 +1437,6 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -1456,7 +1455,6 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -1792,7 +1790,6 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1087#1083#1072#1090#1091'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1087#1083#1072#1090#1091'>'
       ImageIndex = 0
-      ShortCut = 45
     end
   end
   object MasterDS: TDataSource

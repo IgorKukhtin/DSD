@@ -7,7 +7,7 @@ inherited SPDialogForm: TSPDialogForm
   ClientWidth = 571
   Position = poDesktopCenter
   ExplicitWidth = 577
-  ExplicitHeight = 194
+  ExplicitHeight = 191
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel [0]
@@ -25,7 +25,7 @@ inherited SPDialogForm: TSPDialogForm
     Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072
   end
   object Label3: TLabel [2]
-    Left = 433
+    Left = 297
     Top = 8
     Width = 89
     Height = 13
@@ -88,15 +88,17 @@ inherited SPDialogForm: TSPDialogForm
     Width = 116
   end
   object cxLabel17: TcxLabel [10]
-    Left = 297
-    Top = 8
+    Left = 406
+    Top = 4
     Caption = #8470' '#1072#1084#1073#1091#1083#1072#1090#1086#1088#1080#1080' '
+    Visible = False
   end
   object edAmbulance: TcxTextEdit [11]
-    Left = 297
-    Top = 27
+    Left = 447
+    Top = 0
     Properties.ReadOnly = False
     TabOrder = 8
+    Visible = False
     Width = 116
   end
   object edMedicSP: TcxButtonEdit [12]
@@ -114,7 +116,7 @@ inherited SPDialogForm: TSPDialogForm
     Width = 265
   end
   object edSPKind: TcxButtonEdit [13]
-    Left = 433
+    Left = 297
     Top = 27
     ParentColor = True
     Properties.Buttons = <
@@ -127,16 +129,26 @@ inherited SPDialogForm: TSPDialogForm
     Properties.UseNullString = True
     TabOrder = 10
     Text = '<'#1044#1083#1103' '#1074#1099#1073#1086#1088#1072' '#1042#1080#1076#1072' '#1089#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072' '#1085#1072#1078#1084#1080#1090#1077' [Ctrl+Enter]>'
-    Width = 130
+    Width = 266
+  end
+  object bbSP_Prior: TcxButton [14]
+    Left = 35
+    Top = 123
+    Width = 97
+    Height = 25
+    Caption = #1040#1074#1090#1086#1079#1072#1087#1086#1083#1085#1080#1090#1100
+    TabOrder = 11
+    OnClick = bbSP_PriorClick
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Top = 104
+    Top = 80
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Top = 104
+    Left = 8
+    Top = 80
   end
   inherited ActionList: TActionList
-    Top = 103
+    Top = 79
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -145,17 +157,28 @@ inherited SPDialogForm: TSPDialogForm
         Value = 0.000000000000000000
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 104
-    Top = 104
+    Top = 80
   end
   object PartnerMedicalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePartnerMedical
-    FormNameParam.Value = 'TPartnerMedicalForm'
+    FormNameParam.Value = 'TPartnerMedical_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPartnerMedicalForm'
+    FormName = 'TPartnerMedical_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -191,6 +214,28 @@ inherited SPDialogForm: TSPDialogForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterOperDate'
+        Value = 'NULL'
+        Component = edOperDateSP
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MasterUnitId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MasterUnitName'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 120
     Top = 16
@@ -199,10 +244,10 @@ inherited SPDialogForm: TSPDialogForm
     KeyField = 'Id'
     LookupControl = edMedicSP
     Key = '0'
-    FormNameParam.Value = 'TMedicSPForm'
+    FormNameParam.Value = 'TMedicSP_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMedicSPForm'
+    FormName = 'TMedicSP_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -252,6 +297,28 @@ inherited SPDialogForm: TSPDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterOperDate'
+        Value = 'NULL'
+        Component = edOperDateSP
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MasterUnitId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MasterUnitName'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 232
@@ -323,5 +390,42 @@ inherited SPDialogForm: TSPDialogForm
     PackSize = 1
     Left = 472
     Top = 104
+  end
+  object spGet_SP_Prior: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Check_SP_Prior'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outPartnerMedicalId'
+        Value = ''
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPartnerMedicalName'
+        Value = ''
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMedicSPId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMedicSPName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outOperDateSP'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 152
+    Top = 96
   end
 end

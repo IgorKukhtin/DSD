@@ -18,7 +18,30 @@ RETURNS TABLE (Id Integer , ObjectId Integer
                )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
+   -- проверка прав пользователя на вызов процедуры
+   vbUserId:= lpGetUserBySession (inSession);
+
+   -- Ограничение - если роль Бухгалтер ПАВИЛЬОНЫ
+   /*IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 80548 AND UserId = vbUserId)
+      AND COALESCE (inPriceListId, 0) NOT IN (140208 -- Пав-ны приход
+                                            , 140209 -- Пав-ны продажа
+                                             )
+   THEN
+       RAISE EXCEPTION 'Ошибка. Нет прав на Просмотр прайса <%>', lfGet_Object_ValueData (inPriceListId);
+   END IF;*/
+
+
+   -- Ограничение - если роль Начисления транспорт-меню
+   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 78489 AND UserId = vbUserId)
+      AND COALESCE (inPriceListId, 0) NOT IN (zc_PriceList_Fuel()
+                                             )
+   THEN
+       RAISE EXCEPTION 'Ошибка. Нет прав на Просмотр прайса <%>', lfGet_Object_ValueData (inPriceListId);
+   END IF;
+
+
 
    IF inShowAll THEN 
 
@@ -180,10 +203,8 @@ BEGIN
 
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_ObjectHistory_PriceListItem (Integer, TDateTime, Boolean, TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -193,7 +214,5 @@ ALTER FUNCTION gpSelect_ObjectHistory_PriceListItem (Integer, TDateTime, Boolean
 */
 
 -- тест
--- SELECT * FROM gpSelect_ObjectHistory_PriceListItem (zc_PriceList_ProductionSeparate(), CURRENT_TIMESTAMP, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_ObjectHistory_PriceListItem (zc_PriceList_Basis(), CURRENT_TIMESTAMP, inSession:= zfCalc_UserAdmin())
-
---select * from gpSelect_ObjectHistory_PriceListItem(inPriceListId := 18879 , inOperDate := ('11.11.2015')::TDateTime , inShowAll := 'False' ,  inSession := '5');
+-- SELECT * FROM gpSelect_ObjectHistory_PriceListItem (zc_PriceList_ProductionSeparate(), CURRENT_TIMESTAMP, FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_ObjectHistory_PriceListItem (zc_PriceList_Basis(), CURRENT_TIMESTAMP, FALSE, inSession:= zfCalc_UserAdmin())

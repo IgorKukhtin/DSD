@@ -3,7 +3,7 @@ object AreaForm: TAreaForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1056#1077#1075#1080#1086#1085#1099'>'
   ClientHeight = 331
-  ClientWidth = 701
+  ClientWidth = 516
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,12 @@ object AreaForm: TAreaForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 701
+    Width = 516
     Height = 305
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 534
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -51,7 +50,7 @@ object AreaForm: TAreaForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 44
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -59,14 +58,14 @@ object AreaForm: TAreaForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 300
+        Width = 188
       end
       object EMail: TcxGridDBColumn
         Caption = #1053#1040#1064' E-Mail '#1085#1072' '#1082#1086#1090#1086#1088#1099#1081' '#1087#1088#1080#1093#1086#1076#1080#1090' '#1055#1056#1040#1049#1057
         DataBinding.FieldName = 'EMail'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 300
+        Width = 276
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

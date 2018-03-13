@@ -2,9 +2,8 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099'>'
   ClientHeight = 542
   ClientWidth = 1042
-  ExplicitTop = -62
   ExplicitWidth = 1058
-  ExplicitHeight = 581
+  ExplicitHeight = 577
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -555,9 +554,9 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     inherited ceStatus: TcxButtonEdit
       Top = 63
       ExplicitTop = 63
-      ExplicitWidth = 183
+      ExplicitWidth = 165
       ExplicitHeight = 22
-      Width = 183
+      Width = 165
     end
     object cxLabel3: TcxLabel
       Left = 358
@@ -593,14 +592,14 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       Caption = #1050#1086#1084#1091
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 568
+      Left = 179
       Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 10
       Width = 128
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 698
+      Left = 309
       Top = 63
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
@@ -608,7 +607,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       Width = 40
     end
     object cxLabel7: TcxLabel
-      Left = 698
+      Left = 309
       Top = 45
       Caption = '% '#1053#1044#1057
     end
@@ -711,6 +710,23 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       TabOrder = 26
       Width = 549
     end
+    object cxLabel8: TcxLabel
+      Left = 568
+      Top = 45
+      Caption = #8470' '#1085#1072#1083#1086#1075#1086#1074#1086#1081
+    end
+    object edDocumentTax: TcxButtonEdit
+      Left = 568
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 28
+      Width = 170
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -747,6 +763,18 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
           StoredProc = spSelectTaxCorrective
         end>
       RefreshOnTabSetChanges = True
+    end
+    inherited actInsertUpdateMovement: TdsdExecStoredProc
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spGet
+        end>
     end
     object actUpdateTaxCorrectiveDS: TdsdUpdateDataSet [8]
       Category = 'DSDLib'
@@ -1248,6 +1276,14 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementId_Parent'
+        Value = Null
+        Component = GuidesDocumentTax
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inOperDate'
         Value = 0d
         Component = edOperDate
@@ -1654,14 +1690,14 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       item
         Name = 'ContractId'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'ContractName'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1669,14 +1705,14 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       item
         Name = 'PaidKindId'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1699,14 +1735,14 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       item
         Name = 'DocumentTaxKindId'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'DocumentTaxKindName'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1715,6 +1751,21 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         Name = 'Comment'
         Value = Null
         Component = ceComment
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_Tax'
+        Value = Null
+        Component = GuidesDocumentTax
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Tax'
+        Value = Null
+        Component = GuidesDocumentTax
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -1730,6 +1781,14 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = GuidesDocumentTax
+        ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -1807,7 +1866,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       item
         Name = 'inPaidKindId'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1815,7 +1874,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       item
         Name = 'inContractId'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1838,6 +1897,9 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       end
       item
         Guides = GuidesTo
+      end
+      item
+        Guides = GuidesDocumentTax
       end>
     Left = 160
     Top = 192
@@ -1879,6 +1941,9 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       end
       item
         Control = ceComment
+      end
+      item
+        Control = edDocumentTax
       end>
     Left = 216
     Top = 225
@@ -1890,8 +1955,8 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_PriceCorrective_SetErased'
-    Left = 718
-    Top = 512
+    Left = 638
+    Top = 464
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_PriceCorrective_SetUnErased'
@@ -2054,9 +2119,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     IdParam.Value = Null
     IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefreshPrice
-    ComponentList = <
-      item
-      end>
+    ComponentList = <>
     Left = 448
     Top = 320
   end
@@ -2140,7 +2203,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       item
         Name = 'Key'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2148,7 +2211,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2175,14 +2238,14 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       item
         Name = 'PaidKindId'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2268,7 +2331,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       end>
     Left = 624
   end
-  object PaidKindGuides: TdsdGuides
+  object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
@@ -2280,7 +2343,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       item
         Name = 'Key'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2288,7 +2351,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2297,7 +2360,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     Left = 792
     Top = 8
   end
-  object ContractGuides: TdsdGuides
+  object GuidesContract: TdsdGuides
     KeyField = 'Id'
     LookupControl = edContract
     FormNameParam.Value = 'TContractForm'
@@ -2309,7 +2372,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       item
         Name = 'Key'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -2318,7 +2381,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2373,7 +2436,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     Left = 488
     Top = 64
   end
-  object DocumentTaxKindGuides: TdsdGuides
+  object GuidesDocumentTaxKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edDocumentTaxKind
     FormNameParam.Value = 'TDocumentTaxKindForm'
@@ -2385,7 +2448,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       item
         Name = 'Key'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -2394,7 +2457,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2419,7 +2482,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       item
         Name = 'inDocumentTaxKindId'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2427,7 +2490,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       item
         Name = 'inDocumentTaxKindId_inf'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2449,14 +2512,14 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       item
         Name = 'outDocumentTaxKindId'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'outDocumentTaxKindName'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2742,5 +2805,64 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     PackSize = 1
     Left = 424
     Top = 272
+  end
+  object GuidesDocumentTax: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edDocumentTax
+    FormNameParam.Value = 'TTaxJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TTaxJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesDocumentTax
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesDocumentTax
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalId'
+        Value = '0'
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerId'
+        Value = '0'
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerName'
+        Value = ' '
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 648
+    Top = 48
   end
 end

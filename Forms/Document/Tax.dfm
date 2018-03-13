@@ -2,10 +2,8 @@ inherited TaxForm: TTaxForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
   ClientHeight = 668
   ClientWidth = 1067
-  ExplicitLeft = -408
-  ExplicitTop = -237
   ExplicitWidth = 1083
-  ExplicitHeight = 707
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -266,12 +264,12 @@ inherited TaxForm: TTaxForm
       Caption = #1044#1086#1075#1086#1074#1086#1088
     end
     object cxLabel6: TcxLabel
-      Left = 746
+      Left = 571
       Top = 85
       Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
     end
     object edDocumentTaxKind: TcxButtonEdit
-      Left = 746
+      Left = 571
       Top = 103
       Properties.Buttons = <
         item
@@ -386,15 +384,15 @@ inherited TaxForm: TTaxForm
       Left = 9
       Top = 103
       TabOrder = 29
-      Width = 413
+      Width = 252
     end
     object cxLabel26: TcxLabel
-      Left = 428
+      Left = 265
       Top = 85
       Caption = #1042#1080#1079#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
     end
     object edReestrKind: TcxButtonEdit
-      Left = 428
+      Left = 265
       Top = 103
       Properties.Buttons = <
         item
@@ -406,20 +404,40 @@ inherited TaxForm: TTaxForm
       TabOrder = 31
       Width = 176
     end
+    object cbINN: TcxCheckBox
+      Left = 959
+      Top = 103
+      Hint = #1048#1053#1053' '#1080#1089#1087#1088#1072#1074#1083#1077#1085' '#1076#1083#1103' 1-'#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
+      TabOrder = 32
+      Width = 24
+    end
   end
   object cxLabel22: TcxLabel [2]
-    Left = 617
+    Left = 447
     Top = 85
     Caption = #1053#1072#1095'. '#1076#1072#1090#1072' '#1085#1072#1083#1086#1075'.'
   end
   object edStartDateTax: TcxDateEdit [3]
-    Left = 617
+    Left = 447
     Top = 103
     EditValue = 42181d
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 7
     Width = 118
+  end
+  object cxLabel11: TcxLabel [4]
+    Left = 821
+    Top = 85
+    Caption = #1048#1053#1053' '#1076#1083#1103' '#1042#1089#1077#1093' '#1080#1083#1080' 1-'#1086#1075#1086' '#1076#1086#1082'.'
+  end
+  object edINN: TcxTextEdit [5]
+    Left = 821
+    Top = 103
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Width = 132
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -748,11 +766,41 @@ inherited TaxForm: TTaxForm
       Category = 'DSDLib'
       MoveParams = <>
     end
+    object macUpdateINN: TMultiAction
+      Category = 'INN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogINN
+        end
+        item
+          Action = actUpdateINN
+        end>
+      Caption = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1048#1053#1053' '#1076#1083#1103' 1-'#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1048#1053#1053' '#1076#1083#1103' 1-'#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 76
+    end
     object MedocAction: TMedocAction
       Category = 'TaxLib'
       MoveParams = <>
       HeaderDataSet = PrintHeaderCDS
       ItemsDataSet = PrintItemsCDS
+    end
+    object actUpdateINN: TdsdDataSetRefresh
+      Category = 'INN'
+      MoveParams = <>
+      StoredProc = spUpdate_INN
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_INN
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 26
+      RefreshOnTabSetChanges = True
     end
     object mactMeDoc: TMultiAction
       Category = 'TaxLib'
@@ -793,6 +841,29 @@ inherited TaxForm: TTaxForm
           StoredProc = spUpdateIsMedoc
         end>
       Caption = 'actUpdateIsMedoc'
+    end
+    object ExecuteDialogINN: TExecuteDialog
+      Category = 'INN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1048#1053#1053
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1048#1053#1053
+      ImageIndex = 26
+      FormName = 'TMovementString_INNEditForm'
+      FormNameParam.Value = 'TMovementString_INNEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inINN'
+          Value = ''
+          Component = edINN
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
     end
   end
   inherited MasterDS: TDataSource
@@ -891,6 +962,14 @@ inherited TaxForm: TTaxForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateINN'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -964,6 +1043,10 @@ inherited TaxForm: TTaxForm
     end
     object bbInsertMask: TdxBarButton
       Action = actInsertMaskMulti
+      Category = 0
+    end
+    object bbUpdateINN: TdxBarButton
+      Action = macUpdateINN
       Category = 0
     end
   end
@@ -1285,6 +1368,20 @@ inherited TaxForm: TTaxForm
         Value = Null
         Component = edReestrKind
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'INN_To'
+        Value = Null
+        Component = edINN
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isINN'
+        Value = Null
+        Component = cbINN
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -1777,8 +1874,8 @@ inherited TaxForm: TTaxForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 904
-    Top = 96
+    Left = 648
+    Top = 88
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -1863,7 +1960,7 @@ inherited TaxForm: TTaxForm
     IdParam.Value = Null
     IdParam.MultiSelectSeparator = ','
     ComponentList = <>
-    Left = 648
+    Left = 464
     Top = 96
   end
   object PrintHeaderCDS: TClientDataSet
@@ -2195,5 +2292,37 @@ inherited TaxForm: TTaxForm
     PackSize = 1
     Left = 536
     Top = 456
+  end
+  object spUpdate_INN: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_INN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioINN'
+        Value = ''
+        Component = edINN
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsINN'
+        Value = Null
+        Component = cbINN
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 594
+    Top = 280
   end
 end

@@ -42,16 +42,24 @@ BEGIN
                 WITH 
                     tmpRemains AS(
                                     SELECT 
-                                        Container.Id
-                                       ,Container.ObjectId
-                                       ,Container.Amount
+                                         Container.Id
+                                       , Container.ObjectId
+                                       , Container.Amount
                                     FROM Container
                                     WHERE Container.DescId = zc_Container_Count()
                                       AND Container.WhereObjectId = vbUnitId
                                       AND Container.Amount > 0
                                  )
-                   ,tmpRemainsInfo AS (
-                                        SELECT
+                   ,tmpRemainsPartion AS (SELECT tmpRemains.*
+                                               , Object_PartionMovementItem.ObjectCode :: Integer AS MI_Id_Income
+                                        FROM
+                                            tmpRemains
+                                            LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
+                                                                                ON CLI_MI.ContainerId = tmpRemains.Id
+                                                                               AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                            LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+                                          )
+                   ,tmpRemainsInfo AS ( SELECT
                                             tmpRemains.ObjectId                   AS GoodsId
                                            ,SUM(tmpRemains.Amount)::TFloat        AS Amount
                                            ,CASE WHEN COALESCE(MovementBoolean_PriceWithVAT.ValueData,FALSE) = TRUE
@@ -60,19 +68,17 @@ BEGIN
                                             END::TFloat AS PriceWithVAT
                                            ,MLO_From.ObjectId                     AS JuridicalId
                                         FROM
-                                            tmpRemains
-                                            LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
-                                                                                ON CLI_MI.ContainerId = tmpRemains.Id
-                                                                               AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
-                                            LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
-                                            LEFT OUTER JOIN MovementItem AS MI_Income
-                                                                         ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                            tmpRemainsPartion AS tmpRemains
+                                            LEFT OUTER JOIN MovementItem AS MI_Income ON MI_Income.Id = tmpRemains.MI_Id_Income
+                                            
                                             LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
-                                                                              ON MIFloat_Price.MovementItemId = MI_Income.Id
-                                                                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                                       ON MIFloat_Price.MovementItemId = MI_Income.Id
+                                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                                      
                                             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                                                      ON MovementBoolean_PriceWithVAT.MovementId =  MI_Income.MovementId
+                                                                      ON MovementBoolean_PriceWithVAT.MovementId = MI_Income.MovementId
                                                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                                                                     
                                             LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
                                                                          ON MovementLinkObject_NDSKind.MovementId = MI_Income.MovementId
                                                                         AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
@@ -256,5 +262,7 @@ ALTER FUNCTION gpSelect_MovementItem_SalePartion (Integer, Boolean, TVarChar) OW
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».    ¬ÓÓ·Í‡ÎÓ ¿.¿.
+ 18.01.18         *
  26.12.15                                                          *
 */
+--select * from gpSelect_MovementItem_SalePartion(inMovementId := 3959856 , inShowAll := 'True' ,  inSession := '3');

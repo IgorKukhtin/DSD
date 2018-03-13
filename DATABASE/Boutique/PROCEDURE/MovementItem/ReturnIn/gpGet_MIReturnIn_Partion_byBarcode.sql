@@ -7,10 +7,10 @@ CREATE OR REPLACE FUNCTION gpGet_MIReturnIn_Partion_byBarcode(
     IN inBarCode           TVarChar   , --
     IN inSession           TVarChar     -- сессия пользователя
 )
-RETURNS TABLE (GoodsId    Integer
-             , PartionId  Integer
-             , SaleMI_Id  Integer
-             , PriceSale  TFloat
+RETURNS TABLE (GoodsId        Integer
+             , PartionId      Integer
+             , SaleMI_Id      Integer
+             , OperPriceList  TFloat
               )
 AS
 $BODY$
@@ -22,18 +22,10 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-     IF COALESCE (inBarcode, '') <> '' 
-     THEN
-         vbPartionId := (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4))) :: Integer;
-     ELSE 
-         RAISE EXCEPTION 'Ошибка.Товар не найден.';
-     END IF;
-     
-     IF NOT EXISTS (SELECT Object_PartionGoods.MovementItemId AS PartionId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = vbPartionId)
-     THEN
-         RAISE EXCEPTION 'Ошибка.Товар не найден.';
-     END IF;
-     
+
+     -- нашли Партию
+     vbPartionId := (SELECT tmp.PartionId FROM gpGet_MISale_Partion_byBarcode (inBarCode, inSession) AS tmp);
+
      
      -- данные из шапки док. возврат
      SELECT MovementLinkObject_To.ObjectId
@@ -101,17 +93,20 @@ BEGIN
      
      IF NOT EXISTS (SELECT _tmpData.PartionId FROM _tmpData)
      THEN
-         RAISE EXCEPTION 'Ошибка.Товар в продаже не найден.';
+         RAISE EXCEPTION 'Ошибка.Товар = <%> р. = <%> в продаже Покупателю <%> не найден.', lfGet_Object_ValueData    ((SELECT Object_PartionGoods.GoodsId     FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = vbPartionId))
+                                                                                          , lfGet_Object_ValueData_sh ((SELECT Object_PartionGoods.GoodsSizeId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = vbPartionId))
+                                                                                          , lfGet_Object_ValueData_sh (vbClientId)
+                                                                                           ;
      END IF;
      
      
      -- Результат
      RETURN QUERY
        
-       SELECT _tmpData.GoodsId            AS GoodsId
-            , _tmpData.PartionId          AS PartionId
-            , _tmpData.MI_Id              AS SaleMI_Id
-            , _tmpData.PriceSale ::TFloat AS PriceSale
+       SELECT _tmpData.GoodsId                 AS GoodsId
+            , _tmpData.PartionId               AS PartionId
+            , _tmpData.MI_Id                   AS SaleMI_Id
+            , _tmpData.OperPriceList :: TFloat AS OperPriceList
        FROM _tmpData;
 
 END;

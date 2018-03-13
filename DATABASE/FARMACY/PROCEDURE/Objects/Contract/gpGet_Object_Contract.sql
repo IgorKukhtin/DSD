@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                Deferment Integer, Percent TFloat, PercentSP TFloat,
                OrderSumm TFloat, OrderSummComment TVarChar, OrderTime TVarChar,
                Comment TVarChar,
-               StartDate TDateTime, EndDate TDateTime,
+               SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime,
                isErased boolean) AS
 $BODY$
 BEGIN
@@ -52,6 +52,7 @@ BEGIN
            
            , CAST (NULL AS TVarChar) AS Comment  
 
+           , CURRENT_DATE :: TDateTime AS SigningDate
            , CURRENT_DATE :: TDateTime AS StartDate
            , CURRENT_DATE :: TDateTime AS EndDate   
        
@@ -87,8 +88,9 @@ BEGIN
            
            , Object_Contract_View.Comment
 
-           , COALESCE (ObjectDate_Start.ValueData, CURRENT_DATE) :: TDateTime   AS StartDate 
-           , COALESCE (ObjectDate_End.ValueData, CURRENT_DATE) :: TDateTime     AS EndDate   
+           , COALESCE (ObjectDate_Signing.ValueData, CURRENT_DATE) :: TDateTime AS SigningDate  
+           , COALESCE (ObjectDate_Start.ValueData, CURRENT_DATE)   :: TDateTime AS StartDate 
+           , COALESCE (ObjectDate_End.ValueData, CURRENT_DATE)     :: TDateTime AS EndDate  
            
            , Object_Contract_View.isErased
        FROM Object_Contract_View
@@ -97,7 +99,12 @@ BEGIN
                                 AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
             LEFT JOIN ObjectDate AS ObjectDate_End
                                  ON ObjectDate_End.ObjectId = Object_Contract_View.ContractId
-                                AND ObjectDate_End.DescId = zc_ObjectDate_Contract_End()     
+                                AND ObjectDate_End.DescId = zc_ObjectDate_Contract_End()   
+
+            LEFT JOIN ObjectDate AS ObjectDate_Signing
+                                 ON ObjectDate_Signing.ObjectId = Object_Contract_View.ContractId
+                                AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
+  
             LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
                                  ON ObjectLink_BankAccount_Bank.ObjectId = Object_Contract_View.BankAccountId
                                 AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
@@ -129,6 +136,7 @@ ALTER FUNCTION gpGet_Object_Contract (integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 14.02.18         *
  08.08.17         *
  03.05.17         * add BankAccount
  08.12.16         *

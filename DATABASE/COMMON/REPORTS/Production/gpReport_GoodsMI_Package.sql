@@ -175,11 +175,13 @@ BEGIN
          , (tmpMI_Union.CountPack * COALESCE (ObjectFloat_WeightPackage.ValueData, 0)) :: TFloat AS WeightPackage
          , ObjectFloat_WeightPackage.ValueData                                                   AS WeightPackage_one
 
+           -- Кол-во Упаковок (пакетов)
          , CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
                      THEN CAST ((tmpMI_Union.Amount_Send_out * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
                               / ObjectFloat_WeightTotal.ValueData AS NUMERIC (16, 0))
                 ELSE 0
            END :: TFloat AS CountPackage_calc
+           -- Вес Упаковок (пакетов)
          , CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
                      THEN CAST ((tmpMI_Union.Amount_Send_out * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
                               / ObjectFloat_WeightTotal.ValueData AS NUMERIC (16, 0))
@@ -202,20 +204,22 @@ BEGIN
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpMI_Union.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI_Union.GoodsKindId
 
-          LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = tmpMI_Union.GoodsId
+           -- Товар и Вид товара
+          LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId     = tmpMI_Union.GoodsId
                                                 AND Object_GoodsByGoodsKind_View.GoodsKindId = tmpMI_Union.GoodsKindId
-         -- а теперь привязываю  zc_ObjectFloat_GoodsByGoodsKind_WeightPackage
+          -- вес 1-ого пакета
           LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage
                                 ON ObjectFloat_WeightPackage.ObjectId = Object_GoodsByGoodsKind_View.Id
                                AND ObjectFloat_WeightPackage.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightPackage()
+          -- вес в упаковке: "чистый" вес + вес 1-ого пакета
           LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
                                 ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
                                AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
 
-
+          -- вес 1 шт, только для штучного товара, ???почему??? = вес в упаковке
           LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                 ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
-                              AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                               AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                                           AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()

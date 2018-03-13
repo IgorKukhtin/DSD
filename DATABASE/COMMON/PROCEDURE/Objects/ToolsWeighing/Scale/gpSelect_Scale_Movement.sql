@@ -49,7 +49,7 @@ BEGIN
 
 
      -- !!!временно!!! менется параметр
-     IF EXISTS (SELECT ObjectLink_UserRole_View.UserId FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin(), 428386, 447972) AND ObjectLink_UserRole_View.UserId = vbUserId) -- ??? + Просмотр СБ
+     IF EXISTS (SELECT ObjectLink_UserRole_View.UserId FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin(), 428386, 447972, 326391) AND ObjectLink_UserRole_View.UserId = vbUserId) -- ??? + Просмотр СБ + Аналитики по продажам
      THEN vbUserId:= 0;
      END IF;
 

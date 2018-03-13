@@ -61,6 +61,9 @@ type
     ceBoxCount: TcxCurrencyEdit;
     cxLabel12: TcxLabel;
     ceAmountDoc: TcxCurrencyEdit;
+    cxLabel13: TcxLabel;
+    edGoodsBox: TcxButtonEdit;
+    GuidesGoodsBox: TdsdGuides;
   private
     { Private declarations }
   public

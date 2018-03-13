@@ -12,8 +12,8 @@ CREATE OR REPLACE FUNCTION  gpReport_Movement_Loss(
     IN inPartnerId        Integer  ,  -- Поставщик
     
     IN inPeriodId         Integer  ,  -- 
-    IN inPeriodYearStart  Integer  ,  --
-    IN inPeriodYearEnd    Integer  ,  --
+    IN inStartYear        Integer  ,  --
+    IN inEndYear          Integer  ,  --
         
     IN inisPartion        Boolean,    -- 
     IN inisSize           Boolean,    --
@@ -50,11 +50,12 @@ RETURNS TABLE (
                OperPrice           TFloat,
                CountForPrice       TFloat,
                OperPriceList       TFloat,
-               PriceSale           TFloat,
+               OperPriceListLast   TFloat,
                Amount              TFloat,
-               TotalSumm           TFloat,
-               TotalSummPriceList  TFloat,
-               TotalSummSale       TFloat
+
+               TotalSumm              TFloat,
+               TotalSummPriceList     TFloat,
+               TotalSummPriceListLast TFloat
   )
 AS
 $BODY$
@@ -64,6 +65,16 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Loss());
     vbUserId:= lpGetUserBySession (inSession);
+
+    -- !!!замена!!!
+    IF inIsPartion = TRUE THEN
+       inIsPartner:= TRUE;
+       inIsSize   := TRUE;
+    END IF;
+    -- !!!замена!!!
+    IF COALESCE (inEndYear, 0) = 0 THEN
+       inEndYear:= 1000000;
+    END IF;
 
     -- Результат
     RETURN QUERY
@@ -118,14 +129,11 @@ BEGIN
                           , Object_PartionGoods.PeriodYear
 
                           , COALESCE (MIFloat_CountForPrice.ValueData, 1)      AS CountForPrice
-                          , SUM (COALESCE (MI_Loss.Amount, 0))            AS Amount
-                          , SUM (CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 1) <> 0
-                                          THEN CAST (COALESCE (MI_Loss.Amount, 0) * COALESCE (MIFloat_OperPrice.ValueData, 0) / COALESCE (MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
-                                      ELSE CAST ( COALESCE (MI_Loss.Amount, 0) * COALESCE (MIFloat_OperPrice.ValueData, 0) AS NUMERIC (16, 2))
-                                 END) AS TotalSumm
+                          , SUM (COALESCE (MI_Loss.Amount, 0))                 AS Amount
 
-                          , SUM (COALESCE (MI_Loss.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0))  AS TotalSummPriceList
-                          , SUM (COALESCE (MI_Loss.Amount, 0) * COALESCE (Object_PartionGoods.PriceSale,0))     AS TotalSummSale
+                          , SUM (zfCalc_SummIn (MI_Loss.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData)) AS TotalSumm
+                          , SUM (zfCalc_SummPriceList (MI_Loss.Amount, MIFloat_OperPriceList.ValueData))                       AS TotalSummPriceList
+                          , SUM (zfCalc_SummPriceList (MI_Loss.Amount, Object_PartionGoods.OperPriceList))                     AS TotalSummPriceListLast
                      FROM tmpMovementLoss
                           INNER JOIN MovementItem AS MI_Loss 
                                                   ON MI_Loss.MovementId = tmpMovementLoss.MovementId
@@ -153,8 +161,7 @@ BEGIN
                                                ON ObjectLink_Partner_Period.ObjectId = Object_PartionGoods.PartnerId
                                               AND ObjectLink_Partner_Period.DescId = zc_ObjectLink_Partner_Period()
                                               
-                     WHERE (Object_PartionGoods.PeriodYear >= inPeriodYearStart OR inPeriodYearStart = 0)
-                       AND (Object_PartionGoods.PeriodYear <= inPeriodYearEnd OR inPeriodYearEnd = 0) 
+                     WHERE (Object_PartionGoods.PeriodYear BETWEEN inStartYear AND inEndYear)
                        AND (ObjectLink_Partner_Period.ChildObjectId = inPeriodId OR inPeriodId = 0)
                      GROUP BY tmpMovementLoss.InvNumber
                             , tmpMovementLoss.OperDate
@@ -219,12 +226,12 @@ BEGIN
            
            , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSumm  / tmpData.Amount ELSE 0 END          ::TFloat AS OperPrice
            , tmpData.CountForPrice          ::TFloat
-           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSummPriceList  / tmpData.Amount ELSE 0 END ::TFloat AS OperPriceList
-           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSummSale  / tmpData.Amount ELSE 0 END      ::TFloat AS PriceSale
+           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSummPriceList     / tmpData.Amount ELSE 0 END ::TFloat AS OperPriceList
+           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSummPriceListLast / tmpData.Amount ELSE 0 END ::TFloat AS OperPriceListLast
            , tmpData.Amount                 ::TFloat
            , tmpData.TotalSumm              ::TFloat
-           , tmpData.TotalSummPriceList     ::TFloat 
-           , tmpData.TotalSummSale          ::TFloat 
+           , tmpData.TotalSummPriceList     ::TFloat AS TotalSummPriceList
+           , tmpData.TotalSummPriceListLast ::TFloat AS TotalSummPriceListLast 
            
         FROM tmpData
             LEFT JOIN Object AS Object_From    ON Object_From.Id    = tmpData.FromId
@@ -249,8 +256,8 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpData.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
+           ;
 
-;
  END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -262,4 +269,4 @@ $BODY$
 */
 
 -- тест
---select * from gpReport_Movement_Loss(inStartDate := ('01.07.2017')::TDateTime , inEndDate := ('09.07.2017')::TDateTime , inUnitId_From := 506 , inUnitId_To := 506 , inBrandId := 0 , inPartnerId := 0 , inPeriodId := 0 , inPeriodYearStart := 0 , inPeriodYearEnd := 2017 , inisPartion := 'False' , inisSize := 'False' , inisPartner := 'False' , inisMovement := 'False' ,  inSession := '2');
+-- SELECT * FROM gpReport_Movement_Loss(inStartDate := ('01.07.2017')::TDateTime , inEndDate := ('09.07.2017')::TDateTime , inUnitId_From := 506 , inUnitId_To := 506 , inBrandId := 0 , inPartnerId := 0 , inPeriodId := 0 , inStartYear := 0 , inEndYear := 2017 , inisPartion := 'False' , inisSize := 'False' , inisPartner := 'False' , inisMovement := 'False' ,  inSession := '2');

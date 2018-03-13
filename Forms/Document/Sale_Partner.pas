@@ -185,6 +185,8 @@ type
     ProductionDocGuides: TdsdGuides;
     actOpenProductionForm: TdsdOpenForm;
     bbOpenProduction: TdxBarButton;
+    actPrintPackGross: TdsdPrintAction;
+    bbPrintPackGross: TdxBarButton;
   private
     { Private declarations }
   public

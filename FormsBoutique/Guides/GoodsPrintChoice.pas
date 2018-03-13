@@ -68,7 +68,10 @@ type
     FormParams: TdsdFormParams;
     RefreshDispatcher: TRefreshDispatcher;
     spUnErased: TdsdStoredProc;
-    Id: TcxGridDBColumn;
+    Ord: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    isReprice: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -40,8 +40,11 @@ type
     edSPKind: TcxButtonEdit;
     SPKindGuides: TdsdGuides;
     spGet_SPKind_def: TdsdStoredProc;
+    bbSP_Prior: TcxButton;
+    spGet_SP_Prior: TdsdStoredProc;
     procedure bbOkClick(Sender: TObject);
     procedure DiscountExternalGuidesAfterChoice(Sender: TObject);
+    procedure bbSP_PriorClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -51,7 +54,7 @@ type
 
 implementation
 {$R *.dfm}
-uses DiscountService;
+uses IniUtils, DiscountService, MainCash, MainCash2;
 
 procedure TSPDialogForm.bbOkClick(Sender: TObject);
 var Key :Integer;
@@ -81,12 +84,13 @@ begin
           ModalResult:=mrNone; // не надо закрывать
           exit;
     end;
-    if trim (edAmbulance.Text) = '' then
+    // 23.01.2018 - «№ амбулатории»  - убрать эту ячейку , она не нужна
+    {if trim (edAmbulance.Text) = '' then
     begin ActiveControl:=edAmbulance;
           ShowMessage ('Ошибка.Значение <№ амбулатории> не определено');
           ModalResult:=mrNone; // не надо закрывать
           exit;
-    end;
+    end;}
     if trim (edMedicSP.Text) = '' then
     begin ActiveControl:=edMedicSP;
           ShowMessage ('Ошибка.Значение <ФИО врача> не определено');
@@ -115,6 +119,58 @@ begin
 
 end;
 
+procedure TSPDialogForm.bbSP_PriorClick(Sender: TObject);
+var APartnerMedicalId: Integer;
+    APartnerMedicalName, AMedicSP : String;
+    AOperDateSP : TDateTime;
+begin
+      ActiveControl:= edInvNumberSP;
+      //
+      if PartnerMedicalGuides.Params.ParamByName('Key').Value <> 0
+      then begin
+                ShowMessage ('Ошибка.Медицинское учреждение уже заполнено.Необходимо сначала обнулить значение');
+                exit;
+          end;
+      if edMedicSP.Text <> ''
+      then begin
+                ShowMessage ('Ошибка.ФИО врача уже заполнено.Необходимо сначала обнулить значение');
+                exit;
+          end;
+      //
+      //Сначала ищем в текущем ДБФ
+      if isMainForm_OLD = TRUE
+      then MainCash.MainCashForm.pGet_OldSP (APartnerMedicalId, APartnerMedicalName, AMedicSP, AOperDateSP)
+      else MainCash2.MainCashForm.pGet_OldSP (APartnerMedicalId, APartnerMedicalName, AMedicSP, AOperDateSP);
+
+      //если не нашли - попробуем в базе
+      if APartnerMedicalId = 0 then
+      begin
+          spGet_SP_Prior.Execute;
+          if spGet_SP_Prior.ParamByName('outPartnerMedicalId').Value = 0
+          then
+               ShowMessage('Данные для заполнения не найдены')
+          else
+          begin
+               PartnerMedicalGuides.Params.ParamByName('Key').Value      := spGet_SP_Prior.ParamByName('outPartnerMedicalId').Value;
+               PartnerMedicalGuides.Params.ParamByName('TextValue').Value:= spGet_SP_Prior.ParamByName('outPartnerMedicalName').Value;
+               cePartnerMedical.Text:= spGet_SP_Prior.ParamByName('outPartnerMedicalName').Value;
+               edMedicSP.Text       := spGet_SP_Prior.ParamByName('outMedicSPName').Value;
+               //вернуть через строчку, т.к. с TDateTime - ошибка
+               AOperDateSP          := StrToDate(spGet_SP_Prior.ParamByName('outOperDateSP').Value);
+               edOperDateSP.Date    := AOperDateSP;
+          end
+      end
+      else
+      begin
+          PartnerMedicalGuides.Params.ParamByName('Key').Value      := APartnerMedicalId;
+          PartnerMedicalGuides.Params.ParamByName('TextValue').Value:= APartnerMedicalName;
+          cePartnerMedical.Text:= APartnerMedicalName;
+          edMedicSP.Text:= AMedicSP;
+          edOperDateSP.Date:= AOperDateSP;
+      end;
+
+end;
+
 function TSPDialogForm.DiscountDialogExecute(var APartnerMedicalId, ASPKindId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP, ASPKindName: String; var AOperDateSP : TDateTime; var ASPTax : Currency): boolean;
 Begin
       edAmbulance.Text:= AAmbulance;
@@ -122,6 +178,8 @@ Begin
       edInvNumberSP.Text:= AInvNumberSP;
       edOperDateSP.Text:= DateToStr(aOperDateSP);
       edSPKind.Text:= AInvNumberSP;
+      FormParams.ParamByName('MasterUnitId').Value  :=IniUtils.gUnitId;
+      FormParams.ParamByName('MasterUnitName').Value:=IniUtils.gUnitName;
       //
       PartnerMedicalGuides.Params.ParamByName('Key').Value      := APartnerMedicalId;
       PartnerMedicalGuides.Params.ParamByName('TextValue').Value:= '';

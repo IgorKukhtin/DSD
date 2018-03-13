@@ -4,7 +4,7 @@ inherited ContactPersonForm: TContactPersonForm
   ClientWidth = 936
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 952
-  ExplicitHeight = 373
+  ExplicitHeight = 374
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -252,5 +252,14 @@ inherited ContactPersonForm: TContactPersonForm
           ItemName = 'dxBarStatic'
         end>
     end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+        Action = actUpdate
+      end>
   end
 end

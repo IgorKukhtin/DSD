@@ -193,6 +193,10 @@ begin
       MemoryStream.Position := 0;
       // Прочитать компонент из потока
       MemoryStream.ReadComponent(Result);
+      if not SameText(gc_User.Login, '') then
+        if (gc_ProgramName = 'Farmacy.exe') or (gc_ProgramName = 'FarmacyCash.exe') then
+           //Result.Caption := Result.Caption + ' - Пользователь: ' + gc_User.Login;
+           Result.Caption := Result.Caption + ' <' + gc_User.Login + '>';
       break;
     finally
       StringStream.Clear;

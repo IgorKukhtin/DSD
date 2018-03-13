@@ -376,8 +376,8 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\CommonObjectProcedureTest.pas"/>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\Goods.pas">
-				<Form>GoodsForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Goods_NDS_diff.pas">
+				<Form>Goods_NDS_diffForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\UnitsTest.pas"/>
@@ -1871,6 +1871,34 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\Fiscal.pas">
 				<Form>FiscalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsRemainsCurrentDialog.pas">
+				<Form>Report_GoodsRemainsCurrentDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsRemainsCurrent.pas">
+				<Form>Report_GoodsRemainsCurrentForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsRetail.pas">
+				<Form>GoodsRetailForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsRetailDialog.pas">
+				<Form>GoodsRetailDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Goods.pas">
+				<Form>GoodsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PartnerMedical_Object.pas">
+				<Form>PartnerMedical_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\MedicSP_Object.pas">
+				<Form>MedicSP_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

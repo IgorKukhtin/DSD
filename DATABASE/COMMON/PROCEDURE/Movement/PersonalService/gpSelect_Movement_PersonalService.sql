@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalSummCardRecalc TFloat, TotalSummCardSecondRecalc TFloat, TotalSummNalogRecalc TFloat, TotalSummSocialIn TFloat, TotalSummSocialAdd TFloat
              , TotalSummChild TFloat, TotalSummChildRecalc TFloat, TotalSummMinusExt TFloat, TotalSummMinusExtRecalc TFloat
              , TotalSummTransport TFloat, TotalSummTransportAdd TFloat, TotalSummTransportAddLong TFloat, TotalSummTransportTaxi TFloat, TotalSummPhone TFloat
+             , TotalSummNalogRet TFloat, TotalSummNalogRetRecalc TFloat
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
@@ -131,6 +132,9 @@ BEGIN
            , MovementFloat_TotalSummTransportTaxi.ValueData    AS TotalSummTransportTaxi
            , MovementFloat_TotalSummPhone.ValueData            AS TotalSummPhone
 
+           , MovementFloat_TotalSummNalogRet.ValueData         AS TotalSummNalogRet
+           , MovementFloat_TotalSummNalogRetRecalc.ValueData   AS TotalSummNalogRetRecalc
+           
            , MovementString_Comment.ValueData           AS Comment
            , Object_PersonalServiceList.Id              AS PersonalServiceListId
            , Object_PersonalServiceList.ValueData       AS PersonalServiceListName
@@ -228,6 +232,13 @@ BEGIN
                                     ON MovementFloat_TotalSummPhone.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummPhone.DescId = zc_MovementFloat_TotalSummPhone()
 
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummNalogRet
+                                    ON MovementFloat_TotalSummNalogRet.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummNalogRet.DescId = zc_MovementFloat_TotalSummNalogRet()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummNalogRetRecalc
+                                    ON MovementFloat_TotalSummNalogRetRecalc.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummNalogRetRecalc.DescId = zc_MovementFloat_TotalSummNalogRetRecalc()
+
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
@@ -257,6 +268,8 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 05.01.18         * add TotalSummNalogRet
+                        TotalSummNalogRetRecalc
  04.12.17         * add Sign
  20.06.17         * add TotalSummCardSecondCash
  24.02.17         *

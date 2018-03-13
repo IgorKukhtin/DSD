@@ -23,12 +23,17 @@ function iniLocalDataBaseDiff: String;
 //Возвращает имя Аптеки
 function iniLocalUnitNameGet: string;
 function iniLocalUnitNameSave(AFarmacyName: string): string;
+//Возвращает GUID
+function iniLocalGUIDGet: string;
+function iniLocalGUIDSave(AGUID: string): string;
 
 function iniCashSerialNumber: String;
 //возвращает номер налоговой группы для FP320
 function iniTaxGroup7:Integer;
 
 var gUnitName, gUserName, gPassValue: string;
+var gUnitId : Integer;
+var isMainForm_OLD : Boolean;
 
 implementation
 
@@ -129,13 +134,13 @@ function iniLocalDataBaseHead: String;
 var
   f: TIniFile;
 begin
-  Result := GetValue('Common','LocalDatBaseHead','');
+  Result := GetValue('Common','LocalDataBaseHead','');
   if Result = '' then
   Begin
     Result := ExtractFilePath(Application.ExeName)+LocalDBNameHead;
     f := TIniFile.Create(ExtractFilePath(Application.ExeName)+'ini\'+FileName);
     try
-      f.WriteString('Common','LocalDatBaseHead',Result);
+      f.WriteString('Common','LocalDataBaseHead',Result);
     finally
       f.Free;
     end;
@@ -146,13 +151,13 @@ function iniLocalDataBaseBody: String;
 var
   f: TIniFile;
 begin
-  Result := GetValue('Common','LocalDatBaseBody','');
+  Result := GetValue('Common','LocalDataBaseBody','');
   if Result = '' then
   Begin
     Result := ExtractFilePath(Application.ExeName)+LocalDBNameBody;
     f := TIniFile.Create(ExtractFilePath(Application.ExeName)+'ini\'+FileName);
     try
-      f.WriteString('Common','LocalDatBaseBody',Result);
+      f.WriteString('Common','LocalDataBaseBody',Result);
     finally
       f.Free;
     end;
@@ -163,13 +168,13 @@ function iniLocalDataBaseDiff: String;
 var
   f: TIniFile;
 begin
-  Result := GetValue('Common','LocalDatBaseDiff','');
+  Result := GetValue('Common','LocalDataBaseDiff','');
   if Result = '' then
   Begin
     Result := ExtractFilePath(Application.ExeName)+LocalDBNameDiff;
     f := TIniFile.Create(ExtractFilePath(Application.ExeName)+'ini\'+FileName);
     try
-      f.WriteString('Common','LocalDatBaseDiff',Result);
+      f.WriteString('Common','LocalDataBaseDiff',Result);
     finally
       f.Free;
     end;
@@ -192,6 +197,28 @@ begin
     f := TIniFile.Create(ExtractFilePath(Application.ExeName)+'ini\'+FileName);
     try
       f.WriteString('Common','FarmacyName',Result);
+    finally
+      f.Free;
+    end;
+  End;
+end;
+
+function iniLocalGUIDGet: string;
+begin
+  Result := GetValue('Common','CashSessionGUID', '');
+end;
+
+function iniLocalGUIDSave(AGUID: string): string;
+var
+  f: TIniFile;
+begin
+  Result := GetValue('Common','CashSessionGUID', '');
+  if Result = '' then
+  Begin
+    Result := AGUID;
+    f := TIniFile.Create(ExtractFilePath(Application.ExeName)+'ini\'+FileName);
+    try
+      f.WriteString('Common','CashSessionGUID',Result);
     finally
       f.Free;
     end;

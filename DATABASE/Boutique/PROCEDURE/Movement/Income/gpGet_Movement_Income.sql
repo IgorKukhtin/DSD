@@ -41,12 +41,13 @@ BEGIN
              , CAST ('' AS TVarChar) AS ToName
 
 
-             , 0                     AS CurrencyDocumentId
-             , CAST ('' AS TVarChar) AS CurrencyDocumentName
+             , Object_CurrencyDocument.Id            AS CurrencyDocumentId
+             , Object_CurrencyDocument.ValueData     AS CurrencyDocumentName
 
              , CAST ('' AS TVarChar) AS Comment
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfGet
+               LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = zc_Currency_EUR()
          ;
      ELSE
 

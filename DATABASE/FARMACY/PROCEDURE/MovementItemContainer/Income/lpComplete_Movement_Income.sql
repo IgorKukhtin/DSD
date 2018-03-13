@@ -409,6 +409,12 @@ BEGIN
                                 , inDescId     := zc_Movement_Income()
                                 , inUserId     := inUserId
                                  );
+
+     -- сохранили свойство <Дата корректировки>
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), inMovementId, CURRENT_TIMESTAMP);
+     -- сохранили свойство <Пользователь (корректировка)>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Update(), inMovementId, inUserId);
+
                                  
 END;
 $BODY$

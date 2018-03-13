@@ -21,13 +21,12 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
   TextHeight = 14
   object GridPanel: TPanel
     Left = 0
-    Top = 252
+    Top = 387
     Width = 790
-    Height = 413
+    Height = 278
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 336
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
@@ -36,7 +35,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitWidth = 982
       object bbExit: TSpeedButton
         Left = 511
         Top = 3
@@ -96,11 +94,10 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       Left = 0
       Top = 33
       Width = 790
-      Height = 380
+      Height = 245
       Align = alClient
       TabOrder = 1
-      ExplicitWidth = 982
-      ExplicitHeight = 302
+      ExplicitHeight = 380
       object cxDBGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DS
@@ -139,32 +136,53 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         OptionsData.DeletingConfirmation = False
         OptionsData.Editing = False
         OptionsData.Inserting = False
-        OptionsView.ColumnAutoWidth = True
         OptionsView.Footer = True
         OptionsView.GroupByBox = False
         OptionsView.HeaderAutoHeight = True
         OptionsView.Indicator = True
         Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+        object TradeMarkName_goods: TcxGridDBColumn
+          Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
+          DataBinding.FieldName = 'TradeMarkName_goods'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 100
+        end
         object GoodsCode: TcxGridDBColumn
           Caption = #1050#1086#1076' '#1090#1086#1074'.'
           DataBinding.FieldName = 'GoodsCode'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 35
+          Width = 55
         end
         object GoodsName: TcxGridDBColumn
-          Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+          Caption = #1055#1088#1086#1076#1091#1082#1090
           DataBinding.FieldName = 'GoodsName'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 100
+          Width = 150
+        end
+        object GoodsName_original: TcxGridDBColumn
+          Caption = #1058#1086#1074#1072#1088
+          DataBinding.FieldName = 'GoodsName_original'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 150
+        end
+        object MeasureName: TcxGridDBColumn
+          Caption = #1045#1076'. '#1080#1079#1084'.'
+          DataBinding.FieldName = 'MeasureName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 35
         end
         object GoodsKindCode: TcxGridDBColumn
           Caption = #1050#1086#1076' '#1087#1072#1082'.'
           DataBinding.FieldName = 'GoodsKindCode'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 25
+          Width = 35
         end
         object GoodsKindName: TcxGridDBColumn
           Caption = #1042#1080#1076' '#1087#1072#1082#1091#1074#1072#1085#1085#1103
@@ -172,28 +190,30 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           VisibleForCustomization = False
-          Width = 55
+          Width = 100
+        end
+        object StickerSortName: TcxGridDBColumn
+          Caption = #1057#1086#1088#1090#1085#1086#1089#1090#1100
+          DataBinding.FieldName = 'StickerSortName'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 70
         end
         object StickerSkinName: TcxGridDBColumn
           Caption = #1054#1073#1086#1083#1086#1095#1082#1072
           DataBinding.FieldName = 'StickerSkinName'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 55
+          Width = 70
         end
         object GoodsKindName_complete: TcxGridDBColumn
           Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
           DataBinding.FieldName = 'GoodsKindName_complete'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 55
-        end
-        object MeasureName: TcxGridDBColumn
-          Caption = #1045#1076'. '#1080#1079#1084'.'
-          DataBinding.FieldName = 'MeasureName'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Width = 25
+          Width = 80
         end
         object Amount_Weighing: TcxGridDBColumn
           Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1087#1077#1095#1072#1090#1080
@@ -201,10 +221,18 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           VisibleForCustomization = False
           Width = 50
+        end
+        object StickerFileName: TcxGridDBColumn
+          Caption = #1064#1040#1041#1051#1054#1053
+          DataBinding.FieldName = 'StickerFileName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 200
         end
       end
       object cxDBGridLevel: TcxGridLevel
@@ -216,71 +244,69 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
     Left = 0
     Top = 0
     Width = 790
-    Height = 244
+    Height = 379
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitHeight = 256
+    ExplicitHeight = 244
     object PreviewPanel: TPanel
       Left = 0
       Top = 0
-      Width = 320
-      Height = 244
+      Width = 392
+      Height = 379
       Align = alClient
       TabOrder = 2
-      ExplicitLeft = 8
-      ExplicitWidth = 201
-      ExplicitHeight = 256
-      object frxPreview1: TfrxPreview
+      ExplicitWidth = 320
+      ExplicitHeight = 244
+      object frxPreview: TfrxPreview
         Left = 1
         Top = 1
-        Width = 318
-        Height = 242
+        Width = 390
+        Height = 377
         Align = alClient
         OutlineVisible = False
         OutlineWidth = 120
         ThumbnailVisible = False
         UseReportHints = True
-        ExplicitWidth = 375
-        ExplicitHeight = 254
+        ExplicitWidth = 318
+        ExplicitHeight = 242
       end
     end
     object cxSplitter1: TcxSplitter
-      Left = 320
+      Left = 392
       Top = 0
       Width = 8
-      Height = 244
+      Height = 379
       AlignSplitter = salRight
       AllowHotZoneDrag = False
       Control = ParamsAllPanel
-      ExplicitLeft = -8
-      ExplicitHeight = 256
+      ExplicitLeft = 320
+      ExplicitHeight = 244
     end
     object ParamsPanel: TPanel
-      Left = 328
+      Left = 400
       Top = 0
-      Width = 462
-      Height = 244
+      Width = 390
+      Height = 379
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitHeight = 256
       object infoPanelTare: TPanel
-        Left = 240
+        Left = 168
         Top = 0
         Width = 137
-        Height = 244
+        Height = 379
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 2
         Visible = False
-        ExplicitLeft = 760
-        ExplicitHeight = 256
+        ExplicitLeft = 240
+        ExplicitHeight = 244
         object rgTareWeight: TRadioGroup
           Left = 0
           Top = 82
           Width = 137
-          Height = 77
+          Height = 212
           Align = alClient
           Caption = #1058#1072#1088#1072' '#1074#1077#1089
           Color = clBtnFace
@@ -294,7 +320,7 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           ParentFont = False
           TabOrder = 2
           OnClick = rgTareWeightClick
-          ExplicitHeight = 89
+          ExplicitHeight = 77
         end
         object PanelTare: TPanel
           Left = 0
@@ -348,13 +374,13 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         end
         object infoPanelChangePercentAmount: TPanel
           Left = 0
-          Top = 159
+          Top = 294
           Width = 137
           Height = 85
           Align = alBottom
           BevelOuter = bvNone
           TabOrder = 3
-          ExplicitTop = 171
+          ExplicitTop = 159
           object rgChangePercentAmount: TRadioGroup
             Left = 0
             Top = 41
@@ -412,21 +438,21 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         end
       end
       object infoPanelPriceList: TPanel
-        Left = 377
+        Left = 305
         Top = 0
         Width = 85
-        Height = 244
+        Height = 379
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 3
         Visible = False
-        ExplicitLeft = 897
-        ExplicitHeight = 256
+        ExplicitLeft = 377
+        ExplicitHeight = 244
         object rgPriceList: TRadioGroup
           Left = 0
           Top = 41
           Width = 85
-          Height = 203
+          Height = 338
           Align = alClient
           Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
           Color = clBtnFace
@@ -434,7 +460,7 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           TabOrder = 1
           OnClick = rgPriceListClick
           OnEnter = rgPriceListClick
-          ExplicitHeight = 215
+          ExplicitHeight = 203
         end
         object gbPriceListCode: TGroupBox
           Left = 0
@@ -462,11 +488,12 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         Left = 0
         Top = 0
         Width = 135
-        Height = 244
+        Height = 379
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitHeight = 256
+        ExplicitLeft = -2
+        ExplicitTop = 2
         object gbGoodsName: TGroupBox
           Left = 0
           Top = 41
@@ -564,18 +591,18 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       object infoPanelGoodsKind: TPanel
         Left = 135
         Top = 0
-        Width = 105
-        Height = 244
+        Width = 33
+        Height = 379
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitWidth = 625
-        ExplicitHeight = 256
+        ExplicitWidth = 105
+        ExplicitHeight = 244
         object rgGoodsKind: TRadioGroup
           Left = 0
           Top = 41
-          Width = 105
-          Height = 203
+          Width = 33
+          Height = 338
           Align = alClient
           Caption = #1055#1072#1082#1091#1074#1072#1085#1085#1103
           Color = clBtnFace
@@ -589,20 +616,18 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           ParentFont = False
           TabOrder = 1
           OnClick = rgGoodsKindClick
-          ExplicitLeft = 1
-          ExplicitTop = 43
-          ExplicitWidth = 144
-          ExplicitHeight = 215
+          ExplicitWidth = 105
+          ExplicitHeight = 203
         end
         object gbGoodsKindCode: TGroupBox
           Left = 0
           Top = 0
-          Width = 105
+          Width = 33
           Height = 41
           Align = alTop
           Caption = #1050#1086#1076' '#1087#1072#1082#1091#1074#1072#1085#1085#1103
           TabOrder = 0
-          ExplicitWidth = 625
+          ExplicitWidth = 105
           object EditGoodsKindCode: TEdit
             Left = 5
             Top = 17
@@ -621,13 +646,13 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
   end
   object cxSplitter2: TcxSplitter
     Left = 0
-    Top = 244
+    Top = 379
     Width = 790
     Height = 8
     AlignSplitter = salBottom
     InvertDirection = True
     Control = GridPanel
-    ExplicitTop = -8
+    ExplicitTop = 244
   end
   object DS: TDataSource
     DataSet = CDS
@@ -714,8 +739,14 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
     Params = <
       item
         Name = 'inObjectId'
-        Value = '1370933'
-        ComponentItem = 'Id'
+        Value = 0
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsJPG'
+        Value = True
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -725,17 +756,110 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsStartEnd'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsTare'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsPartion'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsGoodsName'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateStart'
+        Value = 43101d
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateTare'
+        Value = 43101d
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDatePack'
+        Value = 43101d
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateProduction'
+        Value = 43101d
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumPack'
+        Value = 0
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumTech'
+        Value = 0
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 191
     Top = 96
   end
-  object frxDBDHeader1: TfrxDBDataset
+  object frxDBDHeader: TfrxDBDataset
     UserName = 'frxDBDHeader'
     CloseDataSource = False
     DataSet = PrintHeaderCDS
     BCDToCurrency = False
     Left = 80
     Top = 112
+  end
+  object FReport: TfrxReport
+    Version = '4.15.6'
+    DataSet = frxDBDHeader
+    DataSetName = 'frxDBDHeader'
+    DotMatrixReport = False
+    IniFile = '\Software\Fast Reports'
+    Preview = frxPreview
+    PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
+    PreviewOptions.Zoom = 1.000000000000000000
+    PreviewOptions.ZoomMode = zmWholePage
+    PrintOptions.Printer = 'Default'
+    PrintOptions.PrintOnSheet = 0
+    ReportOptions.CreateDate = 43169.638123020840000000
+    ReportOptions.LastChange = 43169.638123020840000000
+    ScriptLanguage = 'PascalScript'
+    ScriptText.Strings = (
+      'begin'
+      ''
+      'end.')
+    Left = 176
+    Top = 168
+    Datasets = <>
+    Variables = <>
+    Style = <>
   end
 end

@@ -1,4 +1,4 @@
--- Function: lpComplete_Movement_PersonalService (Integer, Boolean)
+-- Function: lpComplete_Movement_PersonalService (Integer, Integer)
 
 DROP FUNCTION IF EXISTS lpComplete_Movement_PersonalService (Integer, Integer);
 
@@ -9,84 +9,152 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_PersonalService(
 RETURNS VOID
 AS
 $BODY$
-   DECLARE vbMovementId_check Integer;
+   DECLARE vbMovementId_check      Integer;
+   DECLARE vbServiceDate           TDateTime;
+   DECLARE vbPersonalServiceListId Integer;
+   DECLARE vbMovementItemId_err    Integer;
+   DECLARE vbInsertDate            TDateTime;
+   DECLARE vbIsNalog               Boolean;
 BEGIN
      -- таблица - по документам, для lpComplete_Movement_PersonalService_Recalc
      CREATE TEMP TABLE _tmpMovement_Recalc (MovementId Integer, StatusId Integer, PersonalServiceListId Integer, PaidKindId Integer, ServiceDate TDateTime) ON COMMIT DROP;
      -- таблица - по элементам, для lpComplete_Movement_PersonalService_Recalc
-     CREATE TEMP TABLE _tmpMI_Recalc (MovementId_from Integer, MovementItemId_from Integer, PersonalServiceListId_from Integer, MovementId_to Integer, MovementItemId_to Integer, PersonalServiceListId_to Integer, ServiceDate TDateTime, UnitId Integer, PersonalId Integer, PositionId Integer, InfoMoneyId Integer, SummCardRecalc TFloat, SummCardSecondRecalc TFloat, SummNalogRecalc TFloat, SummChildRecalc TFloat, SummMinusExtRecalc TFloat, isMovementComplete Boolean) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMI_Recalc (MovementId_from Integer, MovementItemId_from Integer, PersonalServiceListId_from Integer, MovementId_to Integer, MovementItemId_to Integer, PersonalServiceListId_to Integer, ServiceDate TDateTime, UnitId Integer, PersonalId Integer, PositionId Integer, InfoMoneyId Integer, SummCardRecalc TFloat, SummCardSecondRecalc TFloat, SummNalogRecalc TFloat, SummNalogRetRecalc TFloat, SummChildRecalc TFloat, SummMinusExtRecalc TFloat, isMovementComplete Boolean) ON COMMIT DROP;
 
+
+     -- Нашли
+     vbServiceDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MIDate_ServiceDate());
+     -- Нашли
+     vbPersonalServiceListId:= (SELECT MLO.ObjectId AS PersonalServiceListId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList());
 
      -- Проверка - других быть не должно
      vbMovementId_check:= (SELECT MovementDate_ServiceDate.MovementId
-                           FROM (SELECT MovementDate.MovementId     AS MovementId
-                                      , MovementDate.ValueData      AS ServiceDate
-                                      , MovementLinkObject.ObjectId AS PersonalServiceListId
-                                 FROM MovementDate
-                                      LEFT JOIN MovementLinkObject ON MovementLinkObject.MovementId = MovementDate.MovementId
-                                                                  AND MovementLinkObject.DescId = zc_MovementLinkObject_PersonalServiceList()
-                                 WHERE MovementDate.MovementId = inMovementId
-                                   AND MovementDate.DescId = zc_MIDate_ServiceDate()
-                                 ) tmpMovement
-                                INNER JOIN MovementDate AS MovementDate_ServiceDate
-                                                        ON MovementDate_ServiceDate.ValueData = tmpMovement.ServiceDate
-                                                       AND MovementDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
-                                                       AND MovementDate_ServiceDate.MovementId <> tmpMovement.MovementId
-                                INNER JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId
+                           FROM MovementDate AS MovementDate_ServiceDate
+                                INNER JOIN Movement ON Movement.Id       = MovementDate_ServiceDate.MovementId
                                                    AND Movement.StatusId = zc_Enum_Status_Complete()
                                 INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
                                                               ON MovementLinkObject_PersonalServiceList.MovementId = MovementDate_ServiceDate.MovementId
-                                                             AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
-                                                             AND MovementLinkObject_PersonalServiceList.ObjectId = tmpMovement.PersonalServiceListId
+                                                             AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                                                             AND MovementLinkObject_PersonalServiceList.ObjectId   = vbPersonalServiceListId
+                           WHERE MovementDate_ServiceDate.ValueData = vbServiceDate
+                            AND MovementDate_ServiceDate.DescId     = zc_MIDate_ServiceDate()
+                            AND MovementDate_ServiceDate.MovementId <> inMovementId
                            LIMIT 1
                           );
      IF vbMovementId_check <> 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Найдена другая <Ведомость начисления> № <%> от <%> для <%> за <%>.Дублирование запрещено. <%>', (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_check)
-                                                                                                                           , DATE ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_check))
-                                                                                                                           , lfGet_Object_ValueData ((SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = vbMovementId_check AND MovementLinkObject.DescId = zc_MovementLinkObject_PersonalServiceList()))
-                                                                                                                           , zfCalc_MonthYearName ((SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = vbMovementId_check AND MovementDate.DescId = zc_MIDate_ServiceDate()))
-                        , (SELECT MovementDate_ServiceDate.MovementId
-                           FROM (SELECT MovementDate.MovementId     AS MovementId
-                                      , MovementDate.ValueData      AS ServiceDate
-                                      , MovementLinkObject.ObjectId AS PersonalServiceListId
-                                 FROM MovementDate
-                                      LEFT JOIN MovementLinkObject ON MovementLinkObject.MovementId = MovementDate.MovementId
-                                                                  AND MovementLinkObject.DescId = zc_MovementLinkObject_PersonalServiceList()
-                                 WHERE MovementDate.MovementId = inMovementId
-                                   AND MovementDate.DescId = zc_MIDate_ServiceDate()
-                                 ) tmpMovement
-                                INNER JOIN MovementDate AS MovementDate_ServiceDate
-                                                        ON MovementDate_ServiceDate.ValueData = tmpMovement.ServiceDate
-                                                       AND MovementDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
-                                                       AND MovementDate_ServiceDate.MovementId <> tmpMovement.MovementId
-                                INNER JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId
-                                                   AND Movement.StatusId = zc_Enum_Status_Complete()
-                                INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
-                                                              ON MovementLinkObject_PersonalServiceList.MovementId = MovementDate_ServiceDate.MovementId
-                                                             AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
-                                                             AND MovementLinkObject_PersonalServiceList.ObjectId = tmpMovement.PersonalServiceListId
-                           LIMIT 1
-                          )
-                         ;
+         RAISE EXCEPTION 'Ошибка.Найдена другая <Ведомость начисления> № <%> от <%> для <%> за <%>.Дублирование запрещено. <%>'
+                       , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_check)
+                       , DATE ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_check))
+                       , lfGet_Object_ValueData ((SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = vbMovementId_check AND MovementLinkObject.DescId = zc_MovementLinkObject_PersonalServiceList()))
+                       , zfCalc_MonthYearName ((SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = vbMovementId_check AND MovementDate.DescId = zc_MIDate_ServiceDate()))
+                       , vbMovementId_check
+                        ;
+     END IF;
+
+
+     -- Проверка - НЕ должно быть уволенных
+     IF EXISTS (SELECT 1
+                FROM ObjectLink AS OL_PaidKind
+                WHERE OL_PaidKind.ObjectId      = vbPersonalServiceListId
+                  AND OL_PaidKind.DescId        = zc_ObjectLink_PersonalServiceList_PaidKind()
+                  AND OL_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm() -- !!!вот он БН!!!
+               )
+     THEN
+         IF inUserId <> zfCalc_UserAdmin() :: Integer
+            AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin() AND ObjectLink_UserRole_View.UserId = inUserId)
+         THEN
+             -- Нашли
+             vbInsertDate:= (SELECT MIN (tmp.OperDate) FROM (SELECT MIN (MovementProtocol.OperDate) AS OperDate FROM MovementProtocol WHERE MovementProtocol.MovementId = inMovementId UNION ALL SELECT MIN (MovementProtocol.OperDate) AS OperDate FROM MovementProtocol_arc AS MovementProtocol WHERE MovementProtocol.MovementId = inMovementId) AS tmp);
+             -- Нашли
+             vbIsNalog:= EXISTS (SELECT 1
+                                 FROM MovementItem
+                                      LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRecalc
+                                                                  ON MIFloat_SummNalogRecalc.MovementItemId = MovementItem.Id
+                                                                 AND MIFloat_SummNalogRecalc.DescId         = zc_MIFloat_SummNalogRecalc()
+                                      /*LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRetRecalc
+                                                                   ON MIFloat_SummNalogRetRecalc.MovementItemId = MovementItem.Id
+                                                                  AND MIFloat_SummNalogRetRecalc.DescId         = zc_MIFloat_SummNalogRetRecalc()*/
+                                 WHERE MovementItem.MovementId = inMovementId
+                                   AND MovementItem.DescId     = zc_MI_Master()
+                                   AND MovementItem.isErased   = FALSE
+                                   AND (MIFloat_SummNalogRecalc.ValueData <> 0 /*OR MIFloat_SummNalogRetRecalc.ValueData <> 0*/)
+                                );
+             -- для ведомости БН - нельзя "текущий" месяц
+             vbMovementItemId_err:= (SELECT MovementItem.Id
+                                     FROM MovementItem
+                                          LEFT JOIN ObjectDate AS ObjectDate_DateOut
+                                                               ON ObjectDate_DateOut.ObjectId = MovementItem.ObjectId
+                                                              AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out()
+                                     WHERE MovementItem.MovementId = inMovementId
+                                       AND MovementItem.DescId     = zc_MI_Master()
+                                       AND MovementItem.isErased   = FALSE
+                                       -- т.е. раньше чем Дата созданиня ДОК.
+                                       AND COALESCE (CASE WHEN vbIsNalog = TRUE
+                                                               THEN DATE_TRUNC ('MONTH', ObjectDate_DateOut.ValueData) + INTERVAL '1 MONTH'
+                                                          ELSE ObjectDate_DateOut.ValueData
+                                                     END, zc_DateEnd()) <= vbInsertDate
+                                       -- !!!пока убрал!!! - т.е. раньше чем 1-ое число след. месяца
+                                       -- AND COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) < DATE_TRUNC ('MONTH', vbServiceDate) + INTERVAL'1 MONTH'
+                                    LIMIT 1
+                                    );
+             IF vbMovementItemId_err > 0
+             THEN RAISE EXCEPTION 'Ошибка.Сотрудник <%> <%> <%> уволен <%>. Необходимо его удалить в ведомости за <%> которая создана <%>.'
+                           , lfGet_Object_ValueData_sh ((SELECT MI.ObjectId FROM MovementItem AS MI WHERE MI.Id = vbMovementItemId_err))
+                           , lfGet_Object_ValueData_sh ((SELECT MILO.ObjectId FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = vbMovementItemId_err AND MILO.DescId = zc_MILinkObject_Position()))
+                           , lfGet_Object_ValueData_sh ((SELECT MILO.ObjectId FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = vbMovementItemId_err AND MILO.DescId = zc_MILinkObject_Unit()))
+                           , zfConvert_DateToString ((SELECT ObjectDate_DateOut.ValueData FROM MovementItem AS MI LEFT JOIN ObjectDate AS ObjectDate_DateOut ON ObjectDate_DateOut.ObjectId = MI.ObjectId AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out() WHERE MI.Id = vbMovementItemId_err))
+                           , zfCalc_MonthYearName (vbServiceDate)
+                           , zfConvert_DateTimeToString (vbInsertDate)
+                            ;
+             END IF;
+         END IF;
+
+     ELSEIF 1=1 THEN
+         -- для остальных - нельзя "следующий" месяц
+         vbMovementItemId_err:= (SELECT MovementItem.Id
+                                 FROM MovementItem
+                                      LEFT JOIN ObjectDate AS ObjectDate_DateOut
+                                                           ON ObjectDate_DateOut.ObjectId = MovementItem.ObjectId
+                                                          AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out()
+                                 WHERE MovementItem.MovementId = inMovementId
+                                   AND MovementItem.DescId     = zc_MI_Master()
+                                   AND MovementItem.isErased   = FALSE
+                                   -- т.е. раньше чем 1-ое число след. месяца
+                                   AND COALESCE (ObjectDate_DateOut.ValueData + INTERVAL'1 MONTH', zc_DateEnd()) < DATE_TRUNC ('MONTH', vbServiceDate) + INTERVAL'1 MONTH'
+                                 LIMIT 1
+                                );
+         IF vbMovementItemId_err > 0
+         THEN RAISE EXCEPTION 'Ошибка.Сотрудник <%> <%> <%> уволен <%>. Необходимо его удалить в ведомости за <%>.'
+                       , lfGet_Object_ValueData_sh ((SELECT MI.ObjectId FROM MovementItem AS MI WHERE MI.Id = vbMovementItemId_err))
+                       , lfGet_Object_ValueData_sh ((SELECT MILO.ObjectId FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = vbMovementItemId_err AND MILO.DescId = zc_MILinkObject_Position()))
+                       , lfGet_Object_ValueData_sh ((SELECT MILO.ObjectId FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = vbMovementItemId_err AND MILO.DescId = zc_MILinkObject_Unit()))
+                       , zfConvert_DateToString ((SELECT ObjectDate_DateOut.ValueData FROM MovementItem AS MI LEFT JOIN ObjectDate AS ObjectDate_DateOut ON ObjectDate_DateOut.ObjectId = MI.ObjectId AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out() WHERE MI.Id = vbMovementItemId_err))
+                       , zfCalc_MonthYearName (vbServiceDate)
+                        ;
+         END IF;
+
      END IF;
 
 
      -- заменили данные !!!если это <Сумма налогов - удержания с сотрудника для распределения>!!!
      IF EXISTS (SELECT 1
                 FROM MovementItem
-                     INNER JOIN MovementItemFloat AS MIFloat_SummNalogRecalc
-                                                  ON MIFloat_SummNalogRecalc.MovementItemId = MovementItem.Id
-                                                 AND MIFloat_SummNalogRecalc.DescId = zc_MIFloat_SummNalogRecalc()
-                                                 AND MIFloat_SummNalogRecalc.ValueData <> 0
+                     LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRecalc
+                                                 ON MIFloat_SummNalogRecalc.MovementItemId = MovementItem.Id
+                                                AND MIFloat_SummNalogRecalc.DescId         = zc_MIFloat_SummNalogRecalc()
+                     /*LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRetRecalc
+                                                  ON MIFloat_SummNalogRetRecalc.MovementItemId = MovementItem.Id
+                                                 AND MIFloat_SummNalogRetRecalc.DescId         = zc_MIFloat_SummNalogRetRecalc()*/
                 WHERE MovementItem.MovementId = inMovementId
                   AND MovementItem.DescId     = zc_MI_Master()
                   AND MovementItem.isErased   = FALSE
+                  AND (MIFloat_SummNalogRecalc.ValueData <> 0 /*OR MIFloat_SummNalogRetRecalc.ValueData <> 0*/)
                )
      THEN
           PERFORM lpInsertUpdate_MovementItem (tmp.MovementItemId, zc_MI_Master(), tmp.PersonalId, inMovementId, tmp.Amount, tmp.ParentId)
-                , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), tmp.MovementItemId, tmp.UnitId)
-                , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Position(), tmp.MovementItemId, tmp.PositionId)
+                , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(),                tmp.MovementItemId, tmp.UnitId)
+                , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Position(),            tmp.MovementItemId, tmp.PositionId)
                 , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PersonalServiceList(), tmp.MovementItemId, tmp.PersonalServiceListId)
           FROM (WITH tmpMI AS (SELECT MovementItem.Id                          AS MovementItemId
                                     , MovementItem.ParentId                    AS ParentId
@@ -598,7 +666,7 @@ BEGIN
              , _tmpItem.OperDate
              , 0 AS ObjectId
              , 0 AS ObjectDescId
-             , -1 * MIF.ValueData AS OperSumm
+             , -1 * COALESCE (MIF.ValueData, 0) + 1 * COALESCE (MIF_ret.ValueData, 0) AS OperSumm
              , _tmpItem.MovementItemId
 
              , 0 AS ContainerId                                               -- сформируем позже
@@ -645,19 +713,20 @@ BEGIN
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
         FROM _tmpItem
-             INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem.MovementItemId AND MIF.DescId = zc_MIFloat_SummNalog()
+             LEFT JOIN MovementItemFloat AS MIF     ON MIF.MovementItemId     = _tmpItem.MovementItemId AND MIF.DescId     = zc_MIFloat_SummNalog()
+             LEFT JOIN MovementItemFloat AS MIF_ret ON MIF_ret.MovementItemId = _tmpItem.MovementItemId AND MIF_ret.DescId = zc_MIFloat_SummNalogRet()
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Business ON ObjectLink_Unit_Business.ObjectId = _tmpItem.UnitId
                                                              AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_50101() -- Налоговые платежи по ЗП - Отчисления
-        WHERE MIF.ValueData <> 0
+        WHERE MIF.ValueData <> 0 OR MIF_ret.ValueData <> 0
 
        UNION
-        -- 1.3.2. долг сотруднику по ЗП - удержания с ЗП
+        -- 1.3.2.1. долг сотруднику по ЗП - удержания с ЗП
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
              , _tmpItem.ObjectId
              , _tmpItem.ObjectDescId
-             , 1 * MIF.ValueData AS OperSumm
+             , 1 * COALESCE (MIF.ValueData, 0) AS OperSumm
              , _tmpItem.MovementItemId
 
              , 0 AS ContainerId                                                     -- сформируем позже
@@ -700,7 +769,7 @@ BEGIN
              , _tmpItem.IsActive -- всегда такая
              , FALSE AS IsMaster
         FROM _tmpItem
-             INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem.MovementItemId AND MIF.DescId = zc_MIFloat_SummNalog()
+             LEFT JOIN MovementItemFloat AS MIF     ON MIF.MovementItemId     = _tmpItem.MovementItemId AND MIF.DescId     = zc_MIFloat_SummNalog()
 
              LEFT JOIN ObjectLink AS ObjectLink_Personal_Member ON ObjectLink_Personal_Member.ObjectId = _tmpItem.ObjectId
                                                                AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
@@ -708,16 +777,76 @@ BEGIN
                                                                AND ObjectLink_Member_ObjectTo.DescId = zc_ObjectLink_Member_ObjectTo()
              LEFT JOIN Object AS Object_ObjectTo ON Object_ObjectTo.Id     = ObjectLink_Member_ObjectTo.ChildObjectId
                                                 AND Object_ObjectTo.DescId = zc_Object_Founder()
-        WHERE MIF.ValueData <> 0
+        WHERE MIF.ValueData <> 0 
+          AND Object_ObjectTo.Id IS NULL
+
+       UNION
+        -- 1.3.2.2. долг сотруднику по ЗП - возмещение к ЗП
+        SELECT _tmpItem.MovementDescId
+             , _tmpItem.OperDate
+             , _tmpItem.ObjectId
+             , _tmpItem.ObjectDescId
+             , -1 * COALESCE (MIF_ret.ValueData, 0) AS OperSumm
+             , _tmpItem.MovementItemId
+
+             , 0 AS ContainerId                                                     -- сформируем позже
+             , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId         -- сформируем позже
+             , 0 AS ProfitLossGroupId, 0 AS ProfitLossDirectionId                   -- не используется
+
+               -- Управленческие группы назначения
+             , _tmpItem.InfoMoneyGroupId
+               -- Управленческие назначения
+             , _tmpItem.InfoMoneyDestinationId
+               -- Управленческие статьи назначения
+             , _tmpItem.InfoMoneyId
+
+               -- Бизнес Баланс: из какой кассы будет выплачено
+             , 0 AS BusinessId_Balance
+               -- Бизнес ОПиУ: не используется
+             , 0 AS BusinessId_ProfitLoss
+
+               -- Главное Юр.лицо: из какой кассы будет выплачено
+             , _tmpItem.JuridicalId_Basis
+
+             , _tmpItem.UnitId
+             , _tmpItem.PositionId
+             , _tmpItem.PersonalServiceListId
+
+               -- Филиал Баланс: всегда по подразделению !!!в кассе и р/счете - делать аналогично!!!
+             , _tmpItem.BranchId_Balance
+               -- Филиал ОПиУ: не используется !!!в кассе и р/счете - делать аналогично!!!
+             , 0 AS BranchId_ProfitLoss
+
+               -- Месяц начислений: есть
+             , _tmpItem.ServiceDateId
+
+             , 0 AS ContractId -- не используется
+             , 0 AS PaidKindId -- не используется
+
+             , zc_Enum_AnalyzerId_PersonalService_NalogRet() AS AnalyzerId -- надо, т.к. это возмещение к ЗП
+             , _tmpItem.ObjectIntId_Analyzer -- надо, т.к. это возмещение к ЗП
+
+             , _tmpItem.IsActive -- всегда такая
+             , FALSE AS IsMaster
+        FROM _tmpItem
+             LEFT JOIN MovementItemFloat AS MIF_ret ON MIF_ret.MovementItemId = _tmpItem.MovementItemId AND MIF_ret.DescId = zc_MIFloat_SummNalogRet()
+
+             LEFT JOIN ObjectLink AS ObjectLink_Personal_Member ON ObjectLink_Personal_Member.ObjectId = _tmpItem.ObjectId
+                                                               AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+             LEFT JOIN ObjectLink AS ObjectLink_Member_ObjectTo ON ObjectLink_Member_ObjectTo.ObjectId = ObjectLink_Personal_Member.ChildObjectId
+                                                               AND ObjectLink_Member_ObjectTo.DescId = zc_ObjectLink_Member_ObjectTo()
+             LEFT JOIN Object AS Object_ObjectTo ON Object_ObjectTo.Id     = ObjectLink_Member_ObjectTo.ChildObjectId
+                                                AND Object_ObjectTo.DescId = zc_Object_Founder()
+        WHERE MIF_ret.ValueData <> 0
           AND Object_ObjectTo.Id IS NULL
 
        UNION ALL
-         -- 1.3.3. Перевыставление по налогам на Учредителя
+         -- 1.3.3.1. Перевыставление по налогам на Учредителя
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
              , Object_ObjectTo.Id     AS ObjectId
              , Object_ObjectTo.DescId AS ObjectDescId
-             , 1 * MIF.ValueData AS OperSumm
+             , 1 * COALESCE (MIF.ValueData, 0) AS OperSumm
              , _tmpItem.MovementItemId
 
              , 0 AS ContainerId                                               -- сформируем позже
@@ -762,7 +891,8 @@ BEGIN
              , NOT _tmpItem.IsMaster
 
         FROM _tmpItem
-             INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem.MovementItemId AND MIF.DescId = zc_MIFloat_SummNalog()
+             LEFT JOIN MovementItemFloat AS MIF     ON MIF.MovementItemId     = _tmpItem.MovementItemId AND MIF.DescId     = zc_MIFloat_SummNalog()
+
              INNER JOIN ObjectLink AS ObjectLink_Personal_Member ON ObjectLink_Personal_Member.ObjectId = _tmpItem.ObjectId
                                                                 AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
              INNER JOIN ObjectLink AS ObjectLink_Member_ObjectTo ON ObjectLink_Member_ObjectTo.ObjectId = ObjectLink_Personal_Member.ChildObjectId
@@ -770,6 +900,66 @@ BEGIN
              INNER JOIN Object AS Object_ObjectTo ON Object_ObjectTo.Id     = ObjectLink_Member_ObjectTo.ChildObjectId
                                                  AND Object_ObjectTo.DescId = zc_Object_Founder()
         WHERE MIF.ValueData <> 0
+       UNION ALL
+         -- 1.3.3.2. Перевыставление по возмещению налогов на Учредителя
+        SELECT _tmpItem.MovementDescId
+             , _tmpItem.OperDate
+             , Object_ObjectTo.Id     AS ObjectId
+             , Object_ObjectTo.DescId AS ObjectDescId
+             , -1 * COALESCE (MIF_ret.ValueData, 0) AS OperSumm
+             , _tmpItem.MovementItemId
+
+             , 0 AS ContainerId                                               -- сформируем позже
+             , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId   -- сформируем позже
+
+             , 0 AS ProfitLossGroupId, 0 AS ProfitLossDirectionId                   -- не используется
+
+               -- Управленческие группы назначения - не используется
+             , 0 AS InfoMoneyGroupId
+               -- Управленческие назначения - не используется
+             , 0 AS InfoMoneyDestinationId
+               -- Управленческие статьи назначения - не используется
+             , 0 AS InfoMoneyId
+
+               -- Бизнес Баланс: не используется
+             , 0 AS BusinessId_Balance
+               -- Бизнес ОПиУ: не используется
+             , 0 AS BusinessId_ProfitLoss
+
+               -- Главное Юр.лицо
+             , zc_Juridical_Basis() AS JuridicalId_Basis
+
+             , 0 AS UnitId                -- не используется
+             , 0 AS PositionId            -- не используется
+             , 0 AS PersonalServiceListId -- не используется
+
+               -- Филиал Баланс: не используется
+             , 0 AS BranchId_Balance
+               -- Филиал ОПиУ: не используется
+             , 0 AS BranchId_ProfitLoss
+
+               -- Месяц начислений: не используется
+             , 0 AS ServiceDateId
+
+             , 0 AS ContractId
+             , 0 AS PaidKindId
+
+             , zc_Enum_AnalyzerId_PersonalService_NalogRet() AS AnalyzerId -- надо, т.к. это Перевыставление - Налоги
+             , _tmpItem.ObjectIntId_Analyzer -- надо, т.к. это удержания с ЗП
+
+             , NOT _tmpItem.IsActive
+             , NOT _tmpItem.IsMaster
+
+        FROM _tmpItem
+             LEFT JOIN MovementItemFloat AS MIF_ret ON MIF_ret.MovementItemId = _tmpItem.MovementItemId AND MIF_ret.DescId = zc_MIFloat_SummNalogRet()
+
+             INNER JOIN ObjectLink AS ObjectLink_Personal_Member ON ObjectLink_Personal_Member.ObjectId = _tmpItem.ObjectId
+                                                                AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+             INNER JOIN ObjectLink AS ObjectLink_Member_ObjectTo ON ObjectLink_Member_ObjectTo.ObjectId = ObjectLink_Personal_Member.ChildObjectId
+                                                                AND ObjectLink_Member_ObjectTo.DescId = zc_ObjectLink_Member_ObjectTo()
+             INNER JOIN Object AS Object_ObjectTo ON Object_ObjectTo.Id     = ObjectLink_Member_ObjectTo.ChildObjectId
+                                                 AND Object_ObjectTo.DescId = zc_Object_Founder()
+        WHERE MIF_ret.ValueData <> 0
        ;
 
 /*
@@ -856,6 +1046,7 @@ BEGIN
                                                                                                  - tmpMovement.SummPhone
 
                                                                                                  - tmpMovement.SummNalog
+                                                                                                 + tmpMovement.SummNalogRet
                                                                                                  - tmpMovement.SummChild
                                                                                                  - tmpMovement.SummMinusExt
                                               )
@@ -876,6 +1067,7 @@ BEGIN
                                , COALESCE (_tmpItem.OperSumm, 0) AS OperSumm
                                , COALESCE (MIFloat_SummSocialAdd.ValueData, 0) AS SummSocialAdd
                                , COALESCE (MIFloat_SummNalog.ValueData, 0)     AS SummNalog
+                               , COALESCE (MIFloat_SummNalogRet.ValueData, 0)  AS SummNalogRet
                                , COALESCE (MIFloat_SummChild.ValueData, 0)     AS SummChild
                                , COALESCE (MIFloat_SummMinusExt.ValueData, 0)  AS SummMinusExt
                          FROM MovementItem
@@ -885,6 +1077,9 @@ BEGIN
                               LEFT JOIN MovementItemFloat AS MIFloat_SummNalog
                                                           ON MIFloat_SummNalog.MovementItemId = MovementItem.Id
                                                          AND MIFloat_SummNalog.DescId = zc_MIFloat_SummNalog()
+                              LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRet
+                                                          ON MIFloat_SummNalogRet.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_SummNalogRet.DescId         = zc_MIFloat_SummNalogRet()
                               LEFT JOIN MovementItemFloat AS MIFloat_SummChild
                                                           ON MIFloat_SummChild.MovementItemId = MovementItem.Id
                                                          AND MIFloat_SummChild.DescId = zc_MIFloat_SummChild()
@@ -912,6 +1107,7 @@ BEGIN
                 , tmpMI.OperSumm
                 , tmpMI.SummSocialAdd
                 , tmpMI.SummNalog
+                , tmpMI.SummNalogRet
                 , tmpMI.SummChild
                 , tmpMI.SummMinusExt
                 , COALESCE (SUM (CASE WHEN tmpMI.ObjectId = tmpMI.ObjectIntId_Analyzer THEN tmpMIContainer.SummTransport        ELSE 0 END), 0) AS SummTransport
@@ -925,6 +1121,7 @@ BEGIN
                   , tmpMI.OperSumm
                   , tmpMI.SummSocialAdd
                   , tmpMI.SummNalog
+                  , tmpMI.SummNalogRet
                   , tmpMI.SummChild
                   , tmpMI.SummMinusExt
           ) AS tmpMovement

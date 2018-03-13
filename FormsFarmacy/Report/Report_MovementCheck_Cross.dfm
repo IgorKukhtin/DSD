@@ -964,14 +964,13 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
         Component = GuidesUnit
         ComponentItem = 'Key'
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -984,7 +983,8 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 376
+    Left = 344
+    Top = 16
   end
   object CrossDBViewAddOn: TCrossDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1037,6 +1037,13 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         ComponentItem = 'isFarm'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item

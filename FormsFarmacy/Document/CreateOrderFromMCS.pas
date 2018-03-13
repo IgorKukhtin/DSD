@@ -33,6 +33,7 @@ type
     actGet_MovementId_OrderInternal_Auto: TdsdExecStoredProc;
     dxBarButton2: TdxBarButton;
     actSelectAll: TBooleanStoredProcAction;
+    JuridicalName: TcxGridDBColumn;
   private
     { Private declarations }
   public

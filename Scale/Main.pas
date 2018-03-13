@@ -261,6 +261,7 @@ type
     Scale_DB: TCasDB;
     Scale_Zeus: TZeus;
     err_count: Integer;
+    fStartBarCode : Boolean;
 
     function Save_Movement_all:Boolean;
     function Print_Movement_afterSave:Boolean;
@@ -318,7 +319,7 @@ end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.myActiveControl;
 begin
-     if PanelPartionGoods.Visible
+     if (PanelPartionGoods.Visible)and(fStartBarCode = false)
      then ActiveControl:=EditPartionGoods
      else if BarCodePanel.Visible
           then ActiveControl:=EditBarCode
@@ -396,6 +397,7 @@ begin
                                    ,ParamsMovement.ParamByName('isTransport').asBoolean
                                    ,ParamsMovement.ParamByName('isQuality').asBoolean
                                    ,ParamsMovement.ParamByName('isPack').asBoolean
+                                   ,FALSE //ParamsMovement.ParamByName('isPackGross').asBoolean
                                    ,ParamsMovement.ParamByName('isSpec').asBoolean
                                    ,ParamsMovement.ParamByName('isTax').asBoolean
                                    )
@@ -483,6 +485,15 @@ begin
                             , ParamsMovement.ParamByName('CountPack').AsInteger
                             , DialogPrintForm.cbPrintPreview.Checked
                              );
+     //
+     //PackGross
+     if (DialogPrintForm.cbPrintPackGross.Checked) and (Result = TRUE)
+     then Result:=Print_PackGross (ParamsMovement.ParamByName('MovementDescId').AsInteger
+                                 , ParamsMovement.ParamByName('MovementId_begin').AsInteger // MovementId
+                                 , ParamsMovement.ParamByName('MovementId').AsInteger       // MovementId_by
+                                 , ParamsMovement.ParamByName('CountPack').AsInteger
+                                 , DialogPrintForm.cbPrintPreview.Checked
+                                  );
      //
      //Spec
      if (DialogPrintForm.cbPrintSpec.Checked) and (Result = TRUE)
@@ -1062,6 +1073,9 @@ begin
                   ActiveControl:=EditBarCode;
                   exit;
                end;
+
+               try
+               fStartBarCode:= true;
                //если в Ў  - Id товара или товар+вид товара
                if Pos(zc_BarCodePref_Object,EditBarCode.Text)=1
                then begin
@@ -1080,6 +1094,9 @@ begin
                              GetParams_Goods (TRUE, EditBarCode.Text, TRUE);//isRetail=TRUE
                              EditBarCode.Text:='';
                         end;
+               finally
+                 fStartBarCode:= false;
+               end;
      end;
 end;
 //---------------------------------------------------------------------------------------------
@@ -1191,6 +1208,7 @@ end;
 //---------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
+  fStartBarCode:= false;
   // определили IP
   with TIdIPWatch.Create(nil) do
   begin
@@ -1210,6 +1228,8 @@ begin
   //global Initialize
   gpInitialize_Const;
   //global Initialize Array
+  if SettingMain.isSticker = TRUE
+  then StickerFile_Array:=  DMMainScaleForm.gpSelect_Scale_StickerFile (SettingMain.BranchCode);
   Service_Array:=       DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'Service');
   Default_Array:=       DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'Default');
   gpInitialize_SettingMain_Default; //!!!об€затльно после получени€ Default_Array!!!

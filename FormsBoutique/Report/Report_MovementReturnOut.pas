@@ -56,10 +56,16 @@ type
     cxLabel6: TcxLabel;
     edPeriod: TcxButtonEdit;
     cxLabel7: TcxLabel;
-    edPeriodYearStart: TcxCurrencyEdit;
     cxLabel8: TcxLabel;
-    edPeriodYearEnd: TcxCurrencyEdit;
     GuidesPeriod: TdsdGuides;
+    edStartYear: TcxButtonEdit;
+    edEndYear: TcxButtonEdit;
+    GuidesStartYear: TdsdGuides;
+    GuidesEndYear: TdsdGuides;
+    actPrint: TdsdPrintAction;
+    actPrintIn: TdsdPrintAction;
+    bbPrint: TdxBarButton;
+    bbPrintin: TdxBarButton;
   private
     { Private declarations }
   public

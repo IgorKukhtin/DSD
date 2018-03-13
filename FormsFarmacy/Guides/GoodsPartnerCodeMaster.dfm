@@ -81,11 +81,6 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
         TabOrder = 1
         Width = 187
       end
-      object cxLabel1: TcxLabel
-        Left = 184
-        Top = 40
-        Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
-      end
       object cxGridGoodsLink: TcxGrid
         Left = 0
         Top = 0
@@ -145,6 +140,11 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
       end
     end
   end
+  object cxLabel: TcxLabel [1]
+    Left = 241
+    Top = 72
+    Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
+  end
   inherited ActionList: TActionList
     object DataSetDelete: TDataSetDelete [0]
       Category = 'Delete'
@@ -158,7 +158,7 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
           StoredProc = spSelect
         end
         item
-          StoredProc = spGoodsLink
+          StoredProc = spSelect_PartnerGoods
         end>
     end
     object mactListDelete: TMultiAction [2]
@@ -194,10 +194,10 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
     end
     inherited dsdSetErased: TdsdUpdateErased
       Category = 'Delete'
-      StoredProc = dsdStoredProc1
+      StoredProc = spDeleteLinkGoods
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc1
+          StoredProc = spDeleteLinkGoods
         end>
       ImageIndex = -1
       ShortCut = 0
@@ -209,6 +209,7 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -216,21 +217,23 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Code'
+          MultiSelectSeparator = ','
         end>
     end
     object actGoodsLinkRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGoodsLink
+      StoredProc = spSelect_PartnerGoods
       StoredProcList = <
         item
-          StoredProc = spGoodsLink
+          StoredProc = spSelect_PartnerGoods
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -257,10 +260,10 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
       Category = 'Delete'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = dsdStoredProc1
+      StoredProc = spDeleteLinkGoods
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc1
+          StoredProc = spDeleteLinkGoods
         end>
       Caption = 'dsdExecStoredProc1'
     end
@@ -288,6 +291,10 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -298,10 +305,6 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
         item
           Visible = True
           ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGridToExcel'
         end
         item
           BeginGroup = True
@@ -322,8 +325,31 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
         end
         item
           Visible = True
-          ItemName = 'bbJuridical'
+          ItemName = 'bbPartnerCode'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
     end
     inherited bbInsert: TdxBarButton
       Visible = ivNever
@@ -338,16 +364,16 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
       Visible = ivNever
     end
     object bbLabel: TdxBarControlContainerItem
-      Caption = 'New Item'
+      Caption = 'bbLabel'
       Category = 0
-      Hint = 'New Item'
+      Hint = 'bbLabel'
       Visible = ivAlways
-      Control = cxLabel1
+      Control = cxLabel
     end
-    object bbJuridical: TdxBarControlContainerItem
-      Caption = 'New Item'
+    object bbPartnerCode: TdxBarControlContainerItem
+      Caption = 'bbPartnerCode'
       Category = 0
-      Hint = 'New Item'
+      Hint = 'bbPartnerCode'
       Visible = ivAlways
       Control = edPartnerCode
     end
@@ -390,6 +416,7 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
         Component = GoodsLinkCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   object PartnerCodeGuides: TdsdGuides
@@ -397,6 +424,7 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
     LookupControl = edPartnerCode
     FormNameParam.Value = 'TPartnerCodeForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPartnerCodeForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -406,6 +434,7 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
         Component = PartnerCodeGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -414,11 +443,12 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 288
     Top = 108
   end
-  object spGoodsLink: TdsdStoredProc
+  object spSelect_PartnerGoods: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_PartnerGoods'
     DataSet = GoodsLinkCDS
     DataSets = <
@@ -432,6 +462,7 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
         Component = PartnerCodeGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 560
@@ -483,6 +514,7 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actGoodsLinkRefresh
     ComponentList = <
       item
@@ -491,7 +523,7 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
     Left = 200
     Top = 112
   end
-  object dsdStoredProc1: TdsdStoredProc
+  object spDeleteLinkGoods: TdsdStoredProc
     StoredProcName = 'gpDelete_Object_LinkGoods'
     DataSets = <>
     OutputType = otResult
@@ -502,6 +534,7 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
         Component = GoodsLinkCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 192

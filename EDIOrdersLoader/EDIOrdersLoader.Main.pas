@@ -7,7 +7,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, dsdDB, EDI, Vcl.ActnList,
   dsdAction, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit,
   Vcl.ComCtrls, dxCore, cxDateUtils, dxSkinsCore, dxSkinsDefaultPainters, Vcl.Menus, cxButtons,
-  cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, System.IniFiles;
+  cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, System.IniFiles,
+  Data.DB, Datasnap.DBClient;
 
 type
   TMainForm = class(TForm)
@@ -35,6 +36,28 @@ type
     cbPrevDay: TCheckBox;
     spGetStatMovementEDI: TdsdStoredProc;
     actGet_Movement_Edi_stat: TdsdExecStoredProc;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spSelectSale_EDI: TdsdStoredProc;
+    spUpdateEdiOrdspr: TdsdStoredProc;
+    spUpdateEdiInvoice: TdsdStoredProc;
+    spUpdateEdiDesadv: TdsdStoredProc;
+    actExecPrintStoredProc: TdsdExecStoredProc;
+    actUpdateEdiDesadvTrue: TdsdExecStoredProc;
+    actUpdateEdiInvoiceTrue: TdsdExecStoredProc;
+    actUpdateEdiOrdsprTrue: TdsdExecStoredProc;
+    actInvoice: TEDIAction;
+    actOrdSpr: TEDIAction;
+    actDesadv: TEDIAction;
+    mactInvoice: TMultiAction;
+    mactOrdSpr: TMultiAction;
+    mactDesadv: TMultiAction;
+    Send_toEDICDS: TClientDataSet;
+    spSelectSend_toEDI: TdsdStoredProc;
+    spUpdate_EDI_Send: TdsdStoredProc;
+    actUpdate_EDI_Send: TdsdExecStoredProc;
+    cbLoad: TCheckBox;
+    cbSend: TCheckBox;
     procedure TrayIconClick(Sender: TObject);
     procedure AppMinimize(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -50,11 +73,14 @@ type
     FIntervalVal: Integer;
     FProccessing: Boolean;
     isPrevDay_begin: Boolean;
+    fStartTime: TDateTime;
     procedure AddToLog(S: string);
     procedure StartEDI;
     procedure StopEDI;
     procedure ProccessEDI;
     function fGet_Movement_Edi_stat : Integer;
+    function fEdi_LoadData_from : Boolean;
+    function fEdi_SendData_to : Boolean;
   public
     { Public declarations }
     property IntervalVal: Integer read FIntervalVal;
@@ -76,7 +102,7 @@ end;
 
 procedure TMainForm.actStartEDIUpdate(Sender: TObject);
 begin
-  actStartEDI.Enabled := not Timer.Enabled;
+//  actStartEDI.Enabled := not Timer.Enabled;
 end;
 
 procedure TMainForm.actStopEDIExecute(Sender: TObject);
@@ -86,7 +112,7 @@ end;
 
 procedure TMainForm.actStopEDIUpdate(Sender: TObject);
 begin
-  actStopEDI.Enabled := Timer.Enabled;
+//  actStopEDI.Enabled := Timer.Enabled;
 end;
 
 procedure TMainForm.AddToLog(S: string);
@@ -130,6 +156,9 @@ begin
   Timer.Enabled := False;
   Proccessing := False;
 
+  cbLoad.Checked:= TRUE;
+  cbSend.Checked:= TRUE;
+
   // При запуске считаем что пред день НЕ надо, т.е. он уже обработан
   isPrevDay_begin:= True;
 
@@ -148,6 +177,7 @@ begin
   deEnd.EditValue := Date ;
   deStart.Enabled := False;
   deEnd.Enabled := False;
+  fStartTime:= Now;
   OptionsMemo.Lines.Text := 'Текущий интервал: ' + IntToStr(IntervalVal) + ' мин.';
   LogMemo.Clear;
 end;
@@ -164,45 +194,32 @@ begin
      Result:= spGetStatMovementEDI.ParamByName('gpGet_Movement_Edi_stat').Value;
 end;
 
-procedure TMainForm.ProccessEDI;
+function TMainForm.fEdi_LoadData_from : Boolean;
 var Old_stat : Integer;
-    Present: TDateTime;
-    Hour, Min, Sec, MSec: Word;
-    IntervalStr: string;
 begin
-  ActiveControl:= cbPrevDay;
-
-  Present:=Now;
-  DecodeTime(Present, Hour, Min, Sec, MSec);
-
-  if Proccessing then
-    Exit;
-
-  Timer.Enabled:=False;
-  Proccessing := True;
-
-  if ((Hour>=0) and (Hour<7)) or (Hour>=23)
-  then
-  begin
-       AddToLog('..... Нет Загрузки .....');
-       Proccessing := False;
-       Timer.Enabled:=True;
-       isPrevDay_begin := false;
-       exit;
-  end;
-
   if isPrevDay_begin = false then cbPrevDay.Checked:= true;
 
   try
+    Result:= false;
+    //
     AddToLog('.....');
     actSetDefaults.Execute;
     AddToLog('Обновили Default для EDI');
 
     OptionsMemo.Lines.Clear;
-    OptionsMemo.Lines.Add('Текущий интервал: ' + IntToStr(IntervalVal) + ' мин.');
+    OptionsMemo.Lines.Add('Старт: '+FormatDateTime('dd.mm.yy hh:mm', fStartTime));
+    OptionsMemo.Lines.Add('Текущий интервал: ' + IntToStr(IntervalVal));
     OptionsMemo.Lines.Add('Host: ' +  FormParams.ParamByName('Host').AsString);
     OptionsMemo.Lines.Add('UserName: ' +  FormParams.ParamByName('UserName').AsString);
     OptionsMemo.Lines.Add('Password: ' +  FormParams.ParamByName('Password').AsString);
+
+     if cbLoad.Checked = FALSE then
+     begin
+          AddToLog('.....');
+          AddToLog('ОТКЛЮЧИЛИ Загрузку из EDI');
+          Result:= true;
+          exit
+     end;
 
     if cbPrevDay.Checked = TRUE
     then deStart.EditValue := Date - 1
@@ -221,12 +238,127 @@ begin
 
     if cbPrevDay.Checked = true then begin cbPrevDay.Checked:= false; isPrevDay_begin:= true; end;
 
+    //
+    Result:= TRUE;
+
   except
-    on E: Exception do
-      AddToLog(E.Message);
+     on E: Exception do
+        AddToLog(E.Message);
+  end;
+end;
+
+function TMainForm.fEdi_SendData_to : Boolean;
+var Err_str: String;
+    i : Integer;
+begin
+     if cbSend.Checked = FALSE then
+     begin
+          AddToLog('.....');
+          AddToLog('ОТКЛЮЧИЛИ отправку в EDI');
+          Result:= true;
+          exit
+     end;
+
+     Result:= false;
+
+     spSelectSend_toEDI.Execute;
+     Send_toEDICDS.First;
+     if Send_toEDICDS.RecordCount = 0 then
+     begin
+          AddToLog('.....');
+          AddToLog('Нет отправки в EDI <' + IntToStr(Send_toEDICDS.RecordCount) + '>');
+
+          Result:= true;
+          exit
+     end;
+
+     AddToLog('.....');
+     AddToLog('Началась отправка в EDI : <' + IntToStr(Send_toEDICDS.RecordCount) + '>');
+     i:= 1;
+
+     with Send_toEDICDS do
+     while not EOF do
+     begin
+          Application.ProcessMessages;
+          FormParams.ParamByName('MovementId_toEDI').Value   := FieldByName('Id').AsInteger;
+          FormParams.ParamByName('MovementId_sendEDI').Value := FieldByName('MovementId').AsInteger;
+          Application.ProcessMessages;
+          // Попробовали отправить
+          try
+              if FieldByName('isEdiOrdspr').AsBoolean  = true then mactOrdspr.Execute;
+              if FieldByName('isEdiInvoice').AsBoolean = true then mactInvoice.Execute;
+              if FieldByName('isEdiDesadv').AsBoolean  = true then mactDesadv.Execute;
+              FormParams.ParamByName('Err_str_toEDI').Value := '';
+              //
+              Application.ProcessMessages;
+              // Сохранили что отправка прошла
+              AddToLog('отправилось без ошибки № : <' + IntToStr(i) + '>');
+              actUpdate_EDI_Send.Execute;
+          except
+              FormParams.ParamByName('Err_str_toEDI').Value := 'Ошибка при отправке';
+              if FieldByName('isEdiOrdspr').AsBoolean  = true then AddToLog('isEdiOrdspr  =  <true>');
+              if FieldByName('isEdiInvoice').AsBoolean = true then AddToLog('isEdiInvoice =  <true>');
+              if FieldByName('isEdiDesadv').AsBoolean  = true then AddToLog('isEdiDesadv  =  <true>');
+              AddToLog('Ошибка при отправке № : <' + IntToStr(i) + '> <' + FieldByName('Id').AsString + '>');
+              //
+              Application.ProcessMessages;
+              // Сохранили что ошибка
+              actUpdate_EDI_Send.Execute;
+          end;
+          //
+          AddToLog('завершено № : <' + IntToStr(i) + '> из <' + IntToStr(Send_toEDICDS.RecordCount) + '>');
+          //
+          Next;
+          i:= i+1;
+     end;
+
+     AddToLog('Завершилась отправка в EDI : <' + IntToStr(Send_toEDICDS.RecordCount) + '>');
+     AddToLog('.....');
+
+end;
+
+procedure TMainForm.ProccessEDI;
+var Present: TDateTime;
+    Hour, Min, Sec, MSec: Word;
+    IntervalStr: string;
+begin
+  ActiveControl:= cbPrevDay;
+
+  Present:=Now;
+  DecodeTime(Present, Hour, Min, Sec, MSec);
+
+  if Proccessing then
+    Exit;
+
+  Timer.Enabled:=False;
+  Proccessing := True;
+
+  if ((Hour>=0) and (Hour<7)) or (Hour>=23)
+  then
+  begin
+       // !!! Только Отправка !!!
+       fEdi_SendData_to;
+       //
+       //
+       AddToLog('..... Нет Загрузки .....');
+       Proccessing := False;
+       Timer.Enabled:=True;
+       isPrevDay_begin := false;
+       exit;
   end;
 
-  Proccessing := False;
+  //
+  // !!! Только Загрузка !!!
+  try fEdi_LoadData_from;
+  except
+        AddToLog('**** Ошибка *** LoadData - from ***');
+  end;
+  //
+  // !!! Только Отправка !!!
+  try fEdi_SendData_to;
+  except
+        AddToLog('**** Ошибка *** SendData - to ***');
+  end;
   //
   if FindCmdLineSwitch('interval', IntervalStr) then
     FIntervalVal := StrToIntDef(IntervalStr, 1)
@@ -241,6 +373,7 @@ begin
   else
     Timer.Interval := (IntervalVal * 1)  * 60 * 1000;
 
+  Proccessing := False;
   Timer.Enabled:=True;
 
 end;
@@ -250,10 +383,15 @@ begin
   AddToLog('Запуск ...');
 
   if IntervalVal > 0 then
-    ProccessEDI
-    // Timer.Enabled := True
+  begin
+    StartButton.Enabled:= FALSE;
+    StopButton.Enabled := TRUE;
+    //
+    ProccessEDI;
+    // Timer.Enabled := True;
+  end
   else
-    AddToLog('Запуск отменен, т.к. не определен интервал');
+    AddToLog('Запуск не выполнен, т.к. не определен интервал');
 end;
 
 procedure TMainForm.StopEDI;
@@ -265,6 +403,9 @@ begin
 
     Timer.Enabled := False;
     AddToLog('Остановка');
+    //
+    StartButton.Enabled:= TRUE;
+    StopButton.Enabled := FALSE;
   end;
 end;
 

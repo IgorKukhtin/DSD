@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_UnitForOrderInternal(
     IN inSelectAll   Boolean,       -- выделить все подразделения
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (NeedReorder Boolean, UnitId Integer, UnitCode Integer, UnitName TVarChar, ExistsOrderInternal Boolean, MovementId Integer) 
+RETURNS TABLE (NeedReorder Boolean, UnitId Integer, UnitCode Integer, UnitName TVarChar, ExistsOrderInternal Boolean, MovementId Integer, 
+               JuridicalId Integer, JuridicalName TVarChar) 
 AS
 $BODY$
    DECLARE vbOperDate TDateTime;
@@ -65,10 +66,16 @@ BEGIN
              ELSE TRUE 
            END::Boolean                              as ExistsOrderInternal
          , OrderInternal.MovementId
+         , Object_Juridical.Id                        AS JuridicalId
+         , Object_Juridical.Valuedata                 AS JuridicalName
     FROM tmpUnit
         -- LEFT JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.MainId = tmpUnit.Unitid
         LEFT OUTER JOIN OrderInternal ON OrderInternal.UnitId = tmpUnit.Unitid
         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUnit.Unitid
+        LEFT JOIN ObjectLink AS ObjectLinkJuridical 
+                             ON Object_Unit.id = ObjectLinkJuridical.objectid 
+                            AND ObjectLinkJuridical.descid = zc_ObjectLink_Unit_Juridical()
+        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.id = ObjectLinkJuridical.childobjectid
     -- WHERE Object_ImportExportLink_View.LinkTypeId = zc_Enum_ImportExportLinkType_UnitUnitId()
     ;
             
@@ -81,7 +88,8 @@ ALTER FUNCTION gpSelect_Object_UnitForOrderInternal(Boolean,TVarChar) OWNER TO p
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А   Подмогильный В.В.
+ 02.03.18                                                                           *
  05.05.16         *
  04.08.15                                                         *
 */

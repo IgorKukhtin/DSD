@@ -2,9 +2,8 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
   ClientHeight = 678
   ClientWidth = 903
-  ExplicitTop = -181
   ExplicitWidth = 919
-  ExplicitHeight = 717
+  ExplicitHeight = 713
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -409,6 +408,12 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     inherited actMIChildProtocol: TdsdOpenForm
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1101#1083#1077#1084#1077#1085#1090#1072' ('#1087#1088#1080#1093#1086#1076')>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1101#1083#1077#1084#1077#1085#1090#1072' ('#1087#1088#1080#1093#1086#1076')>'
+    end
+    inherited actGoodsChoiceMaster: TOpenChoiceForm
+      isShowModal = False
+    end
+    inherited actGoodsChoiceChild: TOpenChoiceForm
+      isShowModal = False
     end
     object actGoodsKindChoiceChild: TOpenChoiceForm
       Category = 'DSDLib'

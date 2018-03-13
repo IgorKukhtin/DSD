@@ -1,6 +1,5 @@
 -- Function: gpSelect_MovementItem_GoodsAccount()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_GoodsAccount (Integer, TDatetime, TDatetime, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_GoodsAccount (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_GoodsAccount(
@@ -17,11 +16,11 @@ RETURNS TABLE (Id Integer, PartionId Integer
              , GoodsInfoName TVarChar
              , LineFabricaName TVarChar
              , LabelName TVarChar
-             , GoodsSizeName TVarChar
+             , GoodsSizeId Integer, GoodsSizeName TVarChar
 
              , Amount TFloat, Amount_Sale TFloat
              , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat
-               -- Итого сумма (в прод.)
+               -- Итого сумма вх. + прайс (в прод.)
              , TotalSumm TFloat, TotalSummPriceList TFloat
 
                -- Курс для перевода из валюты партии в ГРН
@@ -54,8 +53,8 @@ RETURNS TABLE (Id Integer, PartionId Integer
              , Amount_GRN_Exc    TFloat
 
              , SaleMI_Id Integer
-             , MovementId_Sale Integer, InvNumber_Sale_Full TVarChar
-             , OperDate_Sale TDatetime , DescName TVarChar
+             , MovementId_Sale Integer, InvNumber_Sale TVarChar
+             , OperDate_Sale TDateTime , DescName TVarChar
              , Comment TVarChar
              , isErased Boolean
               )
@@ -163,7 +162,7 @@ BEGIN
 
                         WHERE Movement.DescId   = zc_Movement_Sale()
                           -- !!!ВРЕМЕННО - потом оставить только ПРОВЕДЕННЫЕ!!!
-                          AND Movement.StatusId in (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                          AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
                           -- если ЕСТЬ долг
                           AND 0 <> zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData)
                                  - COALESCE (MIFloat_TotalChangePercent.ValueData, 0)
@@ -174,14 +173,14 @@ BEGIN
                                  - COALESCE (MIFloat_TotalReturn.ValueData, 0)
                        )
 
-     , tmpMI_Master AS (SELECT MI_Master.Id                                             AS MovementItemId
-                             , MI_Master.PartionId                                      AS PartionId
-                             , MI_Master.ObjectId                                       AS GoodsId
-                             , MI_Master.Amount                                         AS Amount_master
-                             , COALESCE (MIFloat_SummChangePercent_master.ValueData, 0) AS SummChangePercent_master
-                             , COALESCE (MIFloat_TotalPay_master.ValueData, 0)          AS TotalPay_master
-                             , COALESCE (MIString_Comment_master.ValueData,'')          AS Comment_master
-                             , MI_Master.isErased                                       AS isErased
+     , tmpMI_Master AS (SELECT MI_Master.Id                                              AS MovementItemId
+                             , MI_Master.PartionId                                       AS PartionId
+                             , MI_Master.ObjectId                                        AS GoodsId
+                             , MI_Master.Amount                                          AS Amount_master
+                             , COALESCE (MIFloat_SummChangePercent_master.ValueData, 0)  AS SummChangePercent_master
+                             , COALESCE (MIFloat_TotalPay_master.ValueData, 0)           AS TotalPay_master
+                             , COALESCE (MIString_Comment_master.ValueData,'')           AS Comment_master
+                             , MI_Master.isErased                                        AS isErased
                              , ROW_NUMBER() OVER (PARTITION BY MI_Master.isErased ORDER BY MI_Master.Id ASC) AS Ord
 
                              , Movement.Id                                        AS MovementId
@@ -189,7 +188,7 @@ BEGIN
                              , Movement.OperDate                                  AS OperDate
                              , Movement.InvNumber                                 AS InvNumber
                              , Object_PartionMI.ObjectCode                        AS SaleMI_ID
-                             , MovementItem.Amount                                AS Amount
+                             , MovementItem.Amount                                AS Amount_Sale
                              , COALESCE (MIFloat_OperPriceList.ValueData, 0)      AS OperPriceList
 
                                -- Итого сумма оплаты - для "текущего" документа Продажи
@@ -277,7 +276,7 @@ BEGIN
                              , COALESCE (tmpMI_Master.OperDate, tmpMI_Sale.OperDate)             AS OperDate_Sale
                              , COALESCE (tmpMI_Master.InvNumber, tmpMI_Sale.InvNumber)           AS InvNumber_Sale
                              , COALESCE (tmpMI_Master.SaleMI_ID, tmpMI_Sale.SaleMI_ID)           AS SaleMI_Id
-                             , COALESCE (tmpMI_Master.Amount, tmpMI_Sale.Amount)                 AS Amount_Sale
+                             , COALESCE (tmpMI_Master.Amount_Sale, tmpMI_Sale.Amount)            AS Amount_Sale
                              , COALESCE (tmpMI_Master.OperPriceList, tmpMI_Sale.OperPriceList)   AS OperPriceList_Sale
 
                              , COALESCE (tmpMI_Master.TotalPay, tmpMI_Sale.TotalPay)             AS TotalPay_Sale
@@ -292,10 +291,10 @@ BEGIN
                                -- Итого сумма Скидки - все "Расчеты покупателей"
                              , COALESCE (tmpMI_Master.TotalChangePercentPay, tmpMI_Sale.TotalChangePercentPay) AS TotalChangePercentPay_Sale
 
-                  FROM tmpMI_Sale
-                       FULL JOIN tmpMI_Master ON tmpMI_Master.SaleMI_Id = tmpMI_Sale.SaleMI_Id  -- ТОЛЬКО по партии
-                                             -- AND tmpMI_Master.GoodsId   = tmpMI_Sale.GoodsId
-                  -- WHERE tmpMI_Sale.SummDebt <> 0 OR tmpMI_Master.SaleMI_Id > 0
+                  FROM tmpMI_Master
+                       FULL JOIN tmpMI_Sale ON tmpMI_Sale.SaleMI_Id = tmpMI_Master.SaleMI_Id  -- ТОЛЬКО по партии
+                                             -- AND tmpMI_Sale.GoodsId   = tmpMI_Master.GoodsId
+                  -- WHERE tmpMI_Sale.SummDebt <> 0 OR tmpMI_Sale.SaleMI_Id > 0
                  )
 
     , tmpMI_Child AS (SELECT COALESCE (MovementItem.ParentId, 0) AS ParentId
@@ -344,6 +343,7 @@ BEGIN
            , Object_GoodsInfo.ValueData                  AS GoodsInfoName
            , Object_LineFabrica.ValueData                AS LineFabricaName
            , Object_Label.ValueData                      AS LabelName
+           , Object_GoodsSize.Id                         AS GoodsSizeId
            , Object_GoodsSize.ValueData                  AS GoodsSizeName
 
            , tmpMI.Amount                      :: TFloat AS Amount
@@ -352,6 +352,7 @@ BEGIN
            , 0                                 :: TFloat AS CountForPrice
            , tmpMI.OperPriceList_Sale          :: TFloat AS OperPriceList
 
+             -- Итого сумма (в прод.)
            , 0                                 :: TFloat AS TotalSumm
            , zfCalc_SummPriceList (tmpMI.Amount_Sale, tmpMI.OperPriceList_Sale) AS TotalSummPriceList
 
@@ -377,8 +378,9 @@ BEGIN
             - tmpMI.TotalChangePercentPay_sale
             - tmpMI.TotalPay_Sale
             - tmpMI.TotalPayOth_Sale
-              -- так минуснули Возврат
+              -- так минуснули Возвраты (проведенные)
             - tmpMI.TotalReturn
+            + tmpMI.TotalPay_Return
               -- если НЕ ПРОВЕЛИ - уменьшаем Долг на сумму из тек. документа
             - CASE WHEN vbStatusId = zc_Enum_Status_UnComplete() THEN tmpMI.TotalPay ELSE 0 END
             - CASE WHEN vbStatusId = zc_Enum_Status_UnComplete() THEN tmpMI.SummChangePercent ELSE 0 END
@@ -400,8 +402,9 @@ BEGIN
             - tmpMI.TotalChangePercentPay_sale
             - tmpMI.TotalPay_Sale
             - tmpMI.TotalPayOth_Sale
-              -- так минуснули Возврат
+              -- так минуснули Возвраты (проведенные)
             - tmpMI.TotalReturn
+            + tmpMI.TotalPay_Return
               -- если НЕ ПРОВЕЛИ - уменьшаем Долг на сумму из тек. документа
             + CASE WHEN vbStatusId = zc_Enum_Status_Complete() THEN tmpMI.TotalPay ELSE 0 END
             + CASE WHEN vbStatusId = zc_Enum_Status_Complete() THEN tmpMI.SummChangePercent ELSE 0 END
@@ -421,7 +424,7 @@ BEGIN
 
            , tmpMI.SaleMI_Id                   :: Integer   AS SaleMI_Id
            , tmpMI.MovementId_Sale             :: Integer   AS MovementId_Sale
-           , tmpMI.InvNumber_Sale              :: TVarChar  AS InvNumber_Sale_Full
+           , tmpMI.InvNumber_Sale              :: TVarChar  AS InvNumber_Sale
            , tmpMI.OperDate_Sale               :: TDateTime AS OperDate_Sale
            , MovementDesc.ItemName                          AS DescName
 
@@ -465,17 +468,17 @@ BEGIN
      -- Результат такой
      RETURN QUERY
      WITH
-       tmpMI_Master AS (SELECT MI_Master.Id                                             AS Id
-                             , MI_Master.PartionId                                      AS PartionId
-                             , MI_Master.ObjectId                                       AS GoodsId
-                             , MI_Master.Amount                                         AS Amount
-                             , COALESCE (MIFloat_SummChangePercent_master.ValueData, 0) AS SummChangePercent
-                             , COALESCE (MIFloat_TotalPay_master.ValueData, 0)          AS TotalPay
-                             , COALESCE (MIString_Comment_master.ValueData,'')          AS Comment
-                             , MI_Master.isErased                                       AS isErased
+       tmpMI_Master AS (SELECT MI_Master.Id                                              AS Id
+                             , MI_Master.PartionId                                       AS PartionId
+                             , MI_Master.ObjectId                                        AS GoodsId
+                             , MI_Master.Amount                                          AS Amount
+                             , COALESCE (MIFloat_SummChangePercent_master.ValueData, 0)  AS SummChangePercent
+                             , COALESCE (MIFloat_TotalPay_master.ValueData, 0)           AS TotalPay
+                             , COALESCE (MIString_Comment_master.ValueData,'')           AS Comment
+                             , MI_Master.isErased                                        AS isErased
                              , ROW_NUMBER() OVER (PARTITION BY MI_Master.isErased ORDER BY MI_Master.Id ASC) AS Ord
 
-                             , Object_PartionMI.ObjectCode                              AS SaleMI_ID
+                             , Object_PartionMI.ObjectCode                               AS SaleMI_ID
 
                         FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                              JOIN MovementItem AS MI_Master
@@ -545,6 +548,7 @@ BEGIN
            , Object_GoodsInfo.ValueData                                   AS GoodsInfoName
            , Object_LineFabrica.ValueData                                 AS LineFabricaName
            , Object_Label.ValueData                                       AS LabelName
+           , Object_GoodsSize.Id                                          AS GoodsSizeId
            , Object_GoodsSize.ValueData                                   AS GoodsSizeName
 
            , tmpMI.Amount                                       :: TFloat AS Amount
@@ -553,6 +557,7 @@ BEGIN
            , 0                                                  :: TFloat AS CountForPrice
            , COALESCE (MIFloat_OperPriceList.ValueData, 0)      :: TFloat AS OperPriceList
 
+             -- Итого сумма (в прод.)
            , 0                                                  :: TFloat AS TotalSumm
            , zfCalc_SummPriceList (MI_Sale.Amount, MIFloat_OperPriceList.ValueData) AS TotalSummPriceList
 
@@ -578,8 +583,9 @@ BEGIN
             - COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)
             - COALESCE (MIFloat_TotalPay.ValueData, 0)
             - COALESCE (MIFloat_TotalPayOth.ValueData, 0)
-              -- так минуснули Возврат
+              -- так минуснули Возвраты (проведенные)
             - COALESCE (MIFloat_TotalReturn.ValueData, 0)
+            + COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
               -- если НЕ ПРОВЕЛИ - уменьшаем Долг на сумму из тек. документа
             - CASE WHEN vbStatusId = zc_Enum_Status_UnComplete() THEN tmpMI.TotalPay ELSE 0 END
             - CASE WHEN vbStatusId = zc_Enum_Status_UnComplete() THEN tmpMI.SummChangePercent ELSE 0 END
@@ -600,8 +606,9 @@ BEGIN
             - COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)
             - COALESCE (MIFloat_TotalPay.ValueData, 0)
             - COALESCE (MIFloat_TotalPayOth.ValueData, 0)
-              -- так минуснули Возврат
+              -- так минуснули Возвраты (проведенные)
             - COALESCE (MIFloat_TotalReturn.ValueData, 0)
+            + COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
               -- если ПРОВЕЛИ - вернем обратно суммы из тек. документа
             + CASE WHEN vbStatusId = zc_Enum_Status_Complete() THEN tmpMI.TotalPay ELSE 0 END
             + CASE WHEN vbStatusId = zc_Enum_Status_Complete() THEN tmpMI.SummChangePercent ELSE 0 END
@@ -621,7 +628,7 @@ BEGIN
 
            , tmpMI.SaleMI_ID                                   :: Integer AS SaleMI_Id
            , Movement_Sale.Id                                             AS MovementId_Sale
-           , Movement_Sale.InvNumber                                      AS InvNumber_Sale_Full
+           , Movement_Sale.InvNumber                                      AS InvNumber_Sale
            , Movement_Sale.OperDate                                       AS OperDate_Sale
            , MovementDesc.ItemName                                        AS DescName
            , tmpMI.Comment                                    :: TVarChar AS Comment
@@ -704,5 +711,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_GoodsAccount (inMovementId:= 241258 , inShowAll:= TRUE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpSelect_MovementItem_GoodsAccount (inMovementId:= 241258 , inShowAll:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_MovementItem_GoodsAccount (inMovementId:= 241258, inShowAll:= TRUE,  inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_MovementItem_GoodsAccount (inMovementId:= 241258, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());

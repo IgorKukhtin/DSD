@@ -24,7 +24,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxImageComboBox;
 
 type
   TReport_SaleReturnInForm = class(TAncestorReportForm)
@@ -34,18 +35,39 @@ type
     dxBarButton1: TdxBarButton;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    PartnerName: TcxGridDBColumn;
+    ClientName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     actRefreshSize: TdsdDataSetRefresh;
     actRefreshIsPartion: TdsdDataSetRefresh;
     actRefreshPartner: TdsdDataSetRefresh;
     actRefreshMovement: TdsdDataSetRefresh;
-    actOpenReportForm: TdsdOpenForm;
-    bbOpenReportForm: TdxBarButton;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     spGet_UserUnit: TdsdStoredProc;
+    StatusCode: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
+    bbComplete: TdxBarButton;
+    bbSetErased: TdxBarButton;
+    spMovementComplete: TdsdStoredProc;
+    actComplete: TdsdExecStoredProc;
+    actSetErased: TdsdExecStoredProc;
+    spMovementSetErased: TdsdStoredProc;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    actPrintCheck: TdsdPrintAction;
+    bbPrintCheck: TdxBarButton;
+    spSelectPrint: TdsdStoredProc;
+    spSelectPrint_Check: TdsdStoredProc;
+    spGetReporName: TdsdStoredProc;
+    actGetReportName: TdsdExecStoredProc;
+    mactPrint_Check: TMultiAction;
+    FormParams: TdsdFormParams;
+    spGet_Printer: TdsdStoredProc;
+    actGet_Printer: TdsdExecStoredProc;
   private
     { Private declarations }
   public

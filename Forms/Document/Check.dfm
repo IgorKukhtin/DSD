@@ -3,23 +3,26 @@ inherited CheckForm: TCheckForm
   ClientHeight = 523
   ClientWidth = 817
   ExplicitWidth = 833
-  ExplicitHeight = 561
+  ExplicitHeight = 562
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 181
     Width = 817
     Height = 342
-    ExplicitTop = 183
-    ExplicitHeight = 223
+    ExplicitTop = 181
+    ExplicitWidth = 817
+    ExplicitHeight = 342
     ClientRectBottom = 342
     ClientRectRight = 817
     inherited tsMain: TcxTabSheet
-      ExplicitHeight = 199
+      ExplicitWidth = 817
+      ExplicitHeight = 318
       inherited cxGrid: TcxGrid
         Width = 817
         Height = 318
-        ExplicitHeight = 199
+        ExplicitWidth = 817
+        ExplicitHeight = 318
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -229,6 +232,7 @@ inherited CheckForm: TCheckForm
   inherited DataPanel: TPanel
     Width = 817
     Height = 155
+    ExplicitWidth = 817
     ExplicitHeight = 155
     inherited edInvNumber: TcxTextEdit
       Left = 7
@@ -273,19 +277,11 @@ inherited CheckForm: TCheckForm
       ExplicitHeight = 22
       Width = 141
     end
-    object edUnitName: TcxTextEdit
-      Left = 251
-      Top = 14
-      Properties.ReadOnly = True
-      TabOrder = 6
-      Text = 'edUnitName'
-      Width = 212
-    end
     object edCashRegisterName: TcxTextEdit
       Left = 586
       Top = 14
       Properties.ReadOnly = True
-      TabOrder = 7
+      TabOrder = 6
       Text = 'edCashRegisterName'
       Width = 121
     end
@@ -308,7 +304,7 @@ inherited CheckForm: TCheckForm
       Left = 464
       Top = 14
       Properties.ReadOnly = True
-      TabOrder = 11
+      TabOrder = 10
       Text = 'edPaidTypeName'
       Width = 121
     end
@@ -321,7 +317,7 @@ inherited CheckForm: TCheckForm
       Left = 251
       Top = 52
       Properties.ReadOnly = True
-      TabOrder = 13
+      TabOrder = 12
       Width = 212
     end
     object lblBayer: TcxLabel
@@ -333,7 +329,7 @@ inherited CheckForm: TCheckForm
       Left = 8
       Top = 92
       Properties.ReadOnly = True
-      TabOrder = 15
+      TabOrder = 14
       Width = 237
     end
     object cxLabel6: TcxLabel
@@ -345,7 +341,7 @@ inherited CheckForm: TCheckForm
       Left = 708
       Top = 14
       Properties.ReadOnly = True
-      TabOrder = 17
+      TabOrder = 16
       Width = 93
     end
     object chbNotMCS: TcxCheckBox
@@ -353,7 +349,7 @@ inherited CheckForm: TCheckForm
       Top = 52
       Caption = #1053#1077' '#1076#1083#1103' '#1053#1058#1047
       Properties.ReadOnly = True
-      TabOrder = 18
+      TabOrder = 17
       Width = 82
     end
     object cxLabel7: TcxLabel
@@ -365,7 +361,7 @@ inherited CheckForm: TCheckForm
       Left = 549
       Top = 52
       Properties.ReadOnly = True
-      TabOrder = 20
+      TabOrder = 19
       Width = 147
     end
   end
@@ -507,6 +503,19 @@ inherited CheckForm: TCheckForm
     Properties.ReadOnly = True
     TabOrder = 27
     Width = 102
+  end
+  object edUnitName: TcxButtonEdit [24]
+    Left = 251
+    Top = 14
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 28
+    Width = 212
   end
   inherited ActionList: TActionList
     inherited actMISetErased: TdsdUpdateErased
@@ -886,6 +895,28 @@ inherited CheckForm: TCheckForm
           Component = FormParams
           ComponentItem = 'InSPKindId'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterOperDate'
+          Value = 'NULL'
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterUnitId'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterUnitName'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       OpenBeforeShow = True
@@ -1151,9 +1182,18 @@ inherited CheckForm: TCheckForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'UnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'UnitName'
         Value = Null
-        Component = edUnitName
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -1517,5 +1557,34 @@ inherited CheckForm: TCheckForm
     PackSize = 1
     Left = 554
     Top = 336
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnitName
+    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnitTreeForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 352
+    Top = 16
   end
 end

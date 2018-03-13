@@ -68,9 +68,9 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-			<VerInfo_Build>2</VerInfo_Build>
+			<VerInfo_Build>4</VerInfo_Build>
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.1.2;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.1.4;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 			<VerInfo_Release>1</VerInfo_Release>
 			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
@@ -187,6 +187,9 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201009.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201209.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdOlap.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdOLAPXMLBind.pas"/>
+			<DCCReference Include="..\SOURCE\GridGroupCalculate.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

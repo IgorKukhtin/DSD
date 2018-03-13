@@ -205,9 +205,9 @@ inherited ReportMovementCheckLightForm: TReportMovementCheckLightForm
             HeaderAlignmentVert = vaCenter
             Width = 151
           end
-          object NDSKindName: TcxGridDBColumn
+          object NDS: TcxGridDBColumn
             Caption = #1053#1044#1057
-            DataBinding.FieldName = 'NDSKindName'
+            DataBinding.FieldName = 'NDS'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60

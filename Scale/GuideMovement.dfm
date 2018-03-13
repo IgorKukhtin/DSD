@@ -942,7 +942,7 @@ object GuideMovementForm: TGuideMovementForm
       OnClick = cbPrintMovementClick
     end
     object cbPrintTransport: TCheckBox
-      Left = 526
+      Left = 523
       Top = 23
       Width = 48
       Height = 17
@@ -957,9 +957,9 @@ object GuideMovementForm: TGuideMovementForm
       OnClick = cbPrintTransportClick
     end
     object cbPrintQuality: TCheckBox
-      Left = 584
+      Left = 573
       Top = 23
-      Width = 103
+      Width = 97
       Height = 17
       Caption = #1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077
       Font.Charset = RUSSIAN_CHARSET
@@ -987,9 +987,9 @@ object GuideMovementForm: TGuideMovementForm
       OnClick = cbPrintAccountClick
     end
     object cbPrintPack: TCheckBox
-      Left = 584
+      Left = 573
       Top = 3
-      Width = 100
+      Width = 97
       Height = 17
       Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081
       Font.Charset = RUSSIAN_CHARSET
@@ -1002,8 +1002,8 @@ object GuideMovementForm: TGuideMovementForm
       OnClick = cbPrintPackClick
     end
     object cbPrintSpec: TCheckBox
-      Left = 694
-      Top = 3
+      Left = 674
+      Top = 23
       Width = 110
       Height = 17
       Caption = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103
@@ -1017,9 +1017,9 @@ object GuideMovementForm: TGuideMovementForm
       OnClick = cbPrintSpecClick
     end
     object cbPrintTax: TCheckBox
-      Left = 694
-      Top = 23
-      Width = 85
+      Left = 801
+      Top = 3
+      Width = 82
       Height = 17
       Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103
       Font.Charset = RUSSIAN_CHARSET
@@ -1044,6 +1044,21 @@ object GuideMovementForm: TGuideMovementForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 10
+    end
+    object cbPrintPackGross: TCheckBox
+      Left = 674
+      Top = 3
+      Width = 123
+      Height = 17
+      Caption = #1059#1087#1072#1082'. '#1076#1083#1103' '#1054#1061#1056#1040#1053#1067
+      Font.Charset = RUSSIAN_CHARSET
+      Font.Color = clBlue
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 11
+      OnClick = cbPrintPackClick
     end
   end
   object DS: TDataSource

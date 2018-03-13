@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_IncomeFuel(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
-    IN inPrice               TFloat    , -- Цена
+ INOUT ioPrice               TFloat    , -- Цена
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
     IN inSession             TVarChar    -- сессия пользователя
@@ -23,13 +23,13 @@ BEGIN
      -- PERFORM lfCheck_Movement_Parent (inMovementId:= inMovementId, inComment:= 'изменение');
 
      -- сохранили <Элемент документа> и вернули параметры
-     SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
-            INTO ioId, ioCountForPrice, outAmountSumm
+     SELECT tmp.ioId, tmp.ioPrice, tmp.ioCountForPrice, tmp.outAmountSumm
+            INTO ioId, ioPrice, ioCountForPrice, outAmountSumm
      FROM lpInsertUpdate_MovementItem_IncomeFuel (ioId            := ioId
                                                 , inMovementId    := inMovementId
                                                 , inGoodsId       := inGoodsId
                                                 , inAmount        := inAmount
-                                                , inPrice         := inPrice
+                                                , ioPrice         := ioPrice
                                                 , ioCountForPrice := ioCountForPrice
                                                 , inUserId        := vbUserId
                                                  ) AS tmp;

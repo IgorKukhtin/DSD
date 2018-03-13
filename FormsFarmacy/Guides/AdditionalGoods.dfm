@@ -3,9 +3,8 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
   ClientHeight = 567
   ClientWidth = 798
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitTop = -46
   ExplicitWidth = 814
-  ExplicitHeight = 606
+  ExplicitHeight = 605
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -51,9 +50,9 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
             DataBinding.FieldName = 'GoodsGroupName'
             Width = 138
           end
-          object NDSKindName: TcxGridDBColumn
+          object NDS: TcxGridDBColumn
             Caption = #1053#1044#1057
-            DataBinding.FieldName = 'NDSKindName'
+            DataBinding.FieldName = 'NDS'
             Options.Editing = False
             Width = 44
           end

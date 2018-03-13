@@ -32,13 +32,10 @@ RETURNS TABLE (
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbAccessKeyAll Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_Goods());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_Goods());
      vbUserId:= lpGetUserBySession (inSession);
-     -- определяется - может ли пользовать видеть весь справочник
-     -- vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
 
      -- Результат
      RETURN QUERY 
@@ -111,14 +108,12 @@ BEGIN
                                   AND Object_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
      WHERE Object_Goods.DescId = zc_Object_Goods()
-              AND (Object_Goods.isErased = FALSE OR inIsShowAll = TRUE)
-
+       AND (Object_Goods.isErased = FALSE OR inIsShowAll = TRUE)
     ;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

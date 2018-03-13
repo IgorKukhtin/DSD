@@ -16,6 +16,15 @@ BEGIN
 
 -- inIsBefoHistoryCost:= TRUE;
 
+     -- !!!ВРЕМЕННО!!!
+     /*IF inStartDate >= '01.02.2018' THEN 
+          return;
+     END IF;*/
+
+     /*IF inIsBefoHistoryCost = TRUE THEN 
+          return;
+     END IF;*/
+
      -- !!!Замена!!!
      -- inIsBefoHistoryCost:= FALSE;
      -- !!!Замена!!!

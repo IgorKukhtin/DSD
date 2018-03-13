@@ -77,6 +77,7 @@ $BODY$
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_GoodsMI_IncomeByPartner',      inSession:= zfCalc_UserAdmin()); -- +
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_GoodsMI_Production',           inSession:= zfCalc_UserAdmin()); -- +
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_GoodsMI_Inventory',            inSession:= zfCalc_UserAdmin()); -- +
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Check_ReturnInToSale',         inSession:= zfCalc_UserAdmin()); -- +
 --
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Branch_App1',           inSession:= zfCalc_UserAdmin()); -- +
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Branch_App7',           inSession:= zfCalc_UserAdmin()); -- +

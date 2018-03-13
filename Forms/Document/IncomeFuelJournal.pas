@@ -176,6 +176,7 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    JuridicalName_from: TcxGridDBColumn;
   private
   public
   end;

@@ -4,7 +4,7 @@ inherited MCSForm: TMCSForm
   ClientWidth = 758
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 774
-  ExplicitHeight = 454
+  ExplicitHeight = 457
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel
@@ -13,20 +13,20 @@ inherited MCSForm: TMCSForm
   end
   inherited PageControl: TcxPageControl
     Width = 758
-    Height = 361
-    TabOrder = 3
+    Height = 336
+    TabOrder = 2
     ExplicitWidth = 758
-    ExplicitHeight = 361
-    ClientRectBottom = 361
+    ExplicitHeight = 336
+    ClientRectBottom = 336
     ClientRectRight = 758
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 758
-      ExplicitHeight = 361
+      ExplicitHeight = 336
       inherited cxGrid: TcxGrid
         Width = 758
-        Height = 361
+        Height = 336
         ExplicitWidth = 758
-        ExplicitHeight = 361
+        ExplicitHeight = 336
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
@@ -49,6 +49,7 @@ inherited MCSForm: TMCSForm
   end
   inherited ceUnit: TcxButtonEdit
     Enabled = False
+    TabOrder = 4
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -131,6 +132,7 @@ inherited MCSForm: TMCSForm
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
@@ -138,6 +140,7 @@ inherited MCSForm: TMCSForm
         Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 432

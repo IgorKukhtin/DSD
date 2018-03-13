@@ -60,6 +60,9 @@ var
  i : integer;
 begin
 
+  LoadReportFromFile('PrintReport_CheckSP_393052_4474509', ReportPath + '\PrintReport_CheckSP_393052_4474509.fr3');
+  LoadReportFromFile('PrintReport_CheckSP_393038_4474508', ReportPath + '\PrintReport_CheckSP_393038_4474508.fr3');
+
   LoadReportFromFile('–еестр лекарственных препаратов', ReportPath + '\–еестр лекарственных препаратов.fr3');
   LoadReportFromFile('—чет соц.проект', ReportPath + '\—чет соц.проект.fr3');
 

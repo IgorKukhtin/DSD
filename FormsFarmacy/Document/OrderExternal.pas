@@ -92,6 +92,8 @@ type
     Calc_Color: TcxGridDBColumn;
     spUpdate_isDeferred_Yes: TdsdStoredProc;
     spUpdateisDeferredYes: TdsdExecStoredProc;
+    cxLabel13: TcxLabel;
+    edOrderSummComment: TcxTextEdit;
   private
     { Private declarations }
   public

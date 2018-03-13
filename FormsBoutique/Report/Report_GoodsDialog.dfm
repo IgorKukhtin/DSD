@@ -38,8 +38,8 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
   end
   object deEnd: TcxDateEdit
     Left = 121
-    Top = 30
-    EditValue = 42887d
+    Top = 27
+    EditValue = 43101d
     Properties.ShowTime = False
     TabOrder = 2
     Width = 90
@@ -47,7 +47,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
   object deStart: TcxDateEdit
     Left = 11
     Top = 27
-    EditValue = 42887d
+    EditValue = 43101d
     Properties.ShowTime = False
     TabOrder = 3
     Width = 90
@@ -91,7 +91,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
   object cxLabel3: TcxLabel
     Left = 11
     Top = 92
-    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' / '#1075#1088#1091#1087#1087#1072':'
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' / '#1043#1088#1091#1087#1087#1072':'
   end
   object cxLabel1: TcxLabel
     Left = 245
@@ -101,38 +101,44 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
   object cxLabel2: TcxLabel
     Left = 11
     Top = 142
-    Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072':'
+    Caption = #1040#1088#1090#1080#1082#1091#1083':'
   end
   object cxLabel6: TcxLabel
     Left = 11
     Top = 7
-    Caption = #1044#1072#1090#1072' '#1089' :'
+    Caption = #1055#1077#1088#1080#1086#1076' '#1089' ...'
   end
   object cxLabel7: TcxLabel
     Left = 121
     Top = 7
-    Caption = #1044#1072#1090#1072' '#1087#1086' :'
+    Caption = #1055#1077#1088#1080#1086#1076' '#1087#1086' ...'
   end
-  object cbGoodsSize: TcxCheckBox
+  object cbGoodsSizeAll: TcxCheckBox
     Left = 8
     Top = 63
-    Caption = #1055#1086' '#1074#1089#1077#1084' '#1088#1072#1079#1084#1077#1088#1072#1084
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1056#1072#1079#1084#1077#1088#1099
+    ParentShowHint = False
     Properties.ReadOnly = False
+    ShowHint = True
     TabOrder = 12
-    Width = 90
+    Width = 68
   end
-  object cbPartion: TcxCheckBox
-    Left = 121
+  object cbPartionAll: TcxCheckBox
+    Left = 104
     Top = 63
-    Caption = #1055#1086' '#1074#1089#1077#1084' '#1087#1072#1088#1090#1080#1103#1084
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470
+    ParentShowHint = False
     Properties.ReadOnly = False
+    ShowHint = True
     TabOrder = 13
-    Width = 109
+    Width = 135
   end
   object cxLabel5: TcxLabel
     Left = 11
     Top = 196
-    Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1080':'
+    Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470':'
   end
   object edPartion: TcxButtonEdit
     Left = 11
@@ -147,12 +153,14 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
     TabOrder = 15
     Width = 336
   end
-  object cbPeriod: TcxCheckBox
+  object cbPeriodAll: TcxCheckBox
     Left = 245
     Top = 63
-    Caption = #1047#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
+    Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1079#1072' '#1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1079#1072' '#1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
+    ParentShowHint = False
     Properties.ReadOnly = False
-    State = cbsChecked
+    ShowHint = True
     TabOrder = 16
     Width = 102
   end
@@ -250,9 +258,17 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'isPeriod'
+        Value = Null
+        Component = cbPeriodAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'isGoodsSize'
         Value = Null
-        Component = cbGoodsSize
+        Component = cbGoodsSizeAll
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -260,7 +276,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
       item
         Name = 'isPartion'
         Value = Null
-        Component = cbPartion
+        Component = cbPartionAll
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -291,7 +307,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
       item
         Name = 'isPeriod'
         Value = Null
-        Component = cbPeriod
+        Component = cbPeriodAll
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -358,7 +374,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InvNumber_full'
+        Name = 'InvNumberAll'
         Value = Null
         Component = GuidesPartion
         ComponentItem = 'TextValue'

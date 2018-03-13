@@ -497,120 +497,122 @@ BEGIN
 
 
       -- формируются данные для "база" строчной части
-      WITH _tmpMovement2
-          AS -- (SELECT _tmpMovement.MovementId, _tmpMovement.DescId, _tmpMovement.DocumentTaxKindId FROM _tmpMovement)
-           (SELECT Movement.Id AS MovementId, Movement.DescId, inDocumentTaxKindId AS DocumentTaxKindId FROM Movement WHERE Movement.Id = inMovementId AND inDocumentTaxKindId = zc_Enum_DocumentTaxKind_Tax()
-             UNION ALL
-              -- данные <Продажа покупателю> и <Возврат от покупателя> - Juridical
-              SELECT Movement.Id
-                   , Movement.DescId
-                   , CASE WHEN Movement.DescId <> zc_Movement_ReturnIn()
-                               THEN inDocumentTaxKindId
-                          ELSE vbDocumentTaxKindId_TaxCorrective
-                     END AS DocumentTaxKindId
-              FROM MovementDate AS MovementDate_OperDatePartner
-                   INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                                 ON MovementLinkObject_Contract.MovementId = MovementDate_OperDatePartner.MovementId
-                                                AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-                                                AND MovementLinkObject_Contract.ObjectId = vbContractId
-                   INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                                 ON MovementLinkObject_PaidKind.MovementId = MovementDate_OperDatePartner.MovementId
-                                                AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
-                                                AND MovementLinkObject_PaidKind.ObjectId = vbPaidKindId
-                   INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
-                                      AND Movement.StatusId = zc_Enum_Status_Complete()
-                   INNER JOIN (SELECT zc_Movement_Sale() AS MovementDescId, zc_MovementLinkObject_To() AS MLODescId
-                              UNION ALL
-                               SELECT zc_Movement_ReturnIn() AS MovementDescId, zc_MovementLinkObject_From() AS MLODescId
-                              ) AS tmpDesc ON tmpDesc.MovementDescId = Movement.DescId
-                   INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = MovementDate_OperDatePartner.MovementId
-                                                AND MovementLinkObject.DescId = tmpDesc.MLODescId
-                   INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                         ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject.ObjectId
-                                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                        AND ObjectLink_Partner_Juridical.ChildObjectId = vbToId
-              WHERE MovementDate_OperDatePartner.ValueData BETWEEN vbStartDate AND vbEndDate
-                AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-                AND inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR())
-             UNION ALL
-              -- данные <Перевод долга (расход)> и <Перевод долга (приход)> - Juridical
-              SELECT Movement.Id
-                   , Movement.DescId
-                   , CASE WHEN Movement.DescId <> zc_Movement_TransferDebtIn()
-                               THEN inDocumentTaxKindId
-                          ELSE vbDocumentTaxKindId_TaxCorrective
-                     END AS DocumentTaxKindId
-              FROM (SELECT zc_Movement_TransferDebtOut() AS MovementDescId, zc_MovementLinkObject_To() AS MLODescId, zc_MovementLinkObject_ContractTo() AS ContractDescId, zc_MovementLinkObject_PaidKindTo() AS PaidKindDescId
-                   UNION ALL
-                    SELECT zc_Movement_TransferDebtIn() AS MovementDescId, zc_MovementLinkObject_From() AS MLODescId, zc_MovementLinkObject_ContractFrom() AS ContractDescId, zc_MovementLinkObject_PaidKindFrom() AS PaidKindDescId
-                   ) AS tmpDesc
-                   INNER JOIN Movement ON Movement.OperDate BETWEEN vbStartDate AND vbEndDate
-                                      AND Movement.DescId = tmpDesc.MovementDescId
-                                      AND Movement.StatusId = zc_Enum_Status_Complete()
-                                      AND inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR())
-                   INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                                 ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                                AND MovementLinkObject_Contract.DescId = tmpDesc.ContractDescId
-                                                AND MovementLinkObject_Contract.ObjectId = vbContractId
-                   INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
-                                                AND MovementLinkObject.DescId = tmpDesc.MLODescId
-                                                AND MovementLinkObject.ObjectId = vbToId
-                   INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                                 ON MovementLinkObject_PaidKind.MovementId = Movement.Id
-                                                AND MovementLinkObject_PaidKind.DescId = tmpDesc.PaidKindDescId
-                                                AND MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
-             UNION ALL
-              -- данные <Продажа покупателю> и <Возврат от покупателя> - Partner
-              SELECT Movement.Id
-                   , Movement.DescId
-                   , CASE WHEN Movement.DescId <> zc_Movement_ReturnIn()
-                               THEN inDocumentTaxKindId
-                          ELSE vbDocumentTaxKindId_TaxCorrective
-                     END AS DocumentTaxKindId
-              FROM MovementDate AS MovementDate_OperDatePartner
-                   INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                                 ON MovementLinkObject_Contract.MovementId = MovementDate_OperDatePartner.MovementId
-                                                AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-                                                AND MovementLinkObject_Contract.ObjectId = vbContractId
-                   INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                                 ON MovementLinkObject_PaidKind.MovementId = MovementDate_OperDatePartner.MovementId
-                                                AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
-                                                AND MovementLinkObject_PaidKind.ObjectId = vbPaidKindId
-                   INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
-                                      AND Movement.StatusId = zc_Enum_Status_Complete()
-                   INNER JOIN (SELECT zc_Movement_Sale() AS MovementDescId, zc_MovementLinkObject_To() AS MLODescId
-                              UNION ALL
-                               SELECT zc_Movement_ReturnIn() AS MovementDescId, zc_MovementLinkObject_From() AS MLODescId
-                              ) AS tmpDesc ON tmpDesc.MovementDescId = Movement.DescId
-                   INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = MovementDate_OperDatePartner.MovementId
-                                                AND MovementLinkObject.DescId = tmpDesc.MLODescId
-                                                AND MovementLinkObject.ObjectId = vbPartnerId
-              WHERE MovementDate_OperDatePartner.ValueData BETWEEN vbStartDate AND vbEndDate
-                AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-                AND inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
-            )
-/*         , _tmpMI_ReturnIn
-          AS (SELECT _tmpMovement.MovementId, _tmpMovement.DescId, _tmpMovement.DocumentTaxKindId
-              FROM _tmpMovement
-                          INNER JOIN MovementItem ON MovementItem.MovementId = _tmpMovement.MovementId
-                                                 AND MovementItem.DescId   = zc_MI_Child()
-                                                 AND MovementItem.Amount   <> 0
-                                                 AND MovementItem.isErased = FALSE
-                          INNER JOIN MovementItemFloat AS MIFloat_Price
-                                                       ON MIFloat_Price.MovementItemId = MovementItem.ParentId
-                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price() 
-                                                      AND MIFloat_Price.ValueData <> 0  
-                          LEFT JOIN MovementItem AS MovementItem_Master ON MovementItem_Master.Id = MovementItem.ParentId
-                                                                       AND MovementItem_Master.isErased = FALSE
-                          LEFT JOIN MovementItemFloat AS MIFloat_MovementId
-                                                      ON MIFloat_MovementId.MovementItemId = MovementItem.Id
-                                                     AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
-                          LEFT JOIN _tmpMovement2 AS _tmpMovement_find ON _tmpMovement_find.MovementId = MIFloat_MovementId.ValueData :: Integer
-                          LEFT JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = MIFloat_MovementId.ValueData :: Integer
-                                                        AND MovementLinkMovement.DescId     = zc_MovementLinkMovement_Master()
-                                                        AND _tmpMovement_find.MovementId IS NULL
-              WHERE _tmpMovement.DescId = zc_Movement_ReturnIn()
-             )*/
+      WITH _tmpDesc_SaleReturn AS (SELECT zc_Movement_Sale() AS MovementDescId, zc_MovementLinkObject_To() AS MLODescId
+                                  UNION ALL
+                                   SELECT zc_Movement_ReturnIn() AS MovementDescId, zc_MovementLinkObject_From() AS MLODescId
+                                  )
+       , _tmpDesc_TransferDebt AS (SELECT zc_Movement_TransferDebtOut() AS MovementDescId, zc_MovementLinkObject_To() AS MLODescId, zc_MovementLinkObject_ContractTo() AS ContractDescId, zc_MovementLinkObject_PaidKindTo() AS PaidKindDescId
+                                  UNION ALL
+                                   SELECT zc_Movement_TransferDebtIn() AS MovementDescId, zc_MovementLinkObject_From() AS MLODescId, zc_MovementLinkObject_ContractFrom() AS ContractDescId, zc_MovementLinkObject_PaidKindFrom() AS PaidKindDescId
+                                  )
+        , _tmpMovement2 AS (SELECT Movement.Id AS MovementId, Movement.DescId, inDocumentTaxKindId AS DocumentTaxKindId
+                                 , CASE WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn()) THEN Movement.Id END AS MovementId_Return
+                            FROM Movement WHERE Movement.Id = inMovementId AND inDocumentTaxKindId = zc_Enum_DocumentTaxKind_Tax()
+                           UNION ALL
+                            -- данные <Продажа покупателю> и <Возврат от покупателя> - Juridical
+                            SELECT Movement.Id AS MovementId
+                                 , Movement.DescId
+                                 , CASE WHEN Movement.DescId <> zc_Movement_ReturnIn()
+                                             THEN inDocumentTaxKindId
+                                        ELSE vbDocumentTaxKindId_TaxCorrective
+                                   END AS DocumentTaxKindId
+                                , CASE WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn()) THEN Movement.Id END AS MovementId_Return
+                            FROM MovementDate AS MovementDate_OperDatePartner
+                                 INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                               ON MovementLinkObject_Contract.MovementId = MovementDate_OperDatePartner.MovementId
+                                                              AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                                              AND MovementLinkObject_Contract.ObjectId = vbContractId
+                                 INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                                               ON MovementLinkObject_PaidKind.MovementId = MovementDate_OperDatePartner.MovementId
+                                                              AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                                                              AND MovementLinkObject_PaidKind.ObjectId = vbPaidKindId
+                                 INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
+                                                    AND Movement.StatusId = zc_Enum_Status_Complete()
+                                 INNER JOIN _tmpDesc_SaleReturn AS tmpDesc ON tmpDesc.MovementDescId = Movement.DescId
+                                 INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = MovementDate_OperDatePartner.MovementId
+                                                              AND MovementLinkObject.DescId = tmpDesc.MLODescId
+                                 INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                       ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject.ObjectId
+                                                      AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                                      AND ObjectLink_Partner_Juridical.ChildObjectId = vbToId
+                            WHERE MovementDate_OperDatePartner.ValueData BETWEEN vbStartDate AND vbEndDate
+                              AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                              AND inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR())
+                           UNION ALL
+                            -- данные <Перевод долга (расход)> и <Перевод долга (приход)> - Juridical
+                            SELECT Movement.Id
+                                 , Movement.DescId
+                                 , CASE WHEN Movement.DescId <> zc_Movement_TransferDebtIn()
+                                             THEN inDocumentTaxKindId
+                                        ELSE vbDocumentTaxKindId_TaxCorrective
+                                   END AS DocumentTaxKindId
+                                , CASE WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn()) THEN Movement.Id END AS MovementId_Return
+                            FROM _tmpDesc_TransferDebt AS tmpDesc
+                                 INNER JOIN Movement ON Movement.OperDate BETWEEN vbStartDate AND vbEndDate
+                                                    AND Movement.DescId = tmpDesc.MovementDescId
+                                                    AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                    AND inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR())
+                                 INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                               ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                              AND MovementLinkObject_Contract.DescId = tmpDesc.ContractDescId
+                                                              AND MovementLinkObject_Contract.ObjectId = vbContractId
+                                 INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
+                                                              AND MovementLinkObject.DescId = tmpDesc.MLODescId
+                                                              AND MovementLinkObject.ObjectId = vbToId
+                                 INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                                               ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                                              AND MovementLinkObject_PaidKind.DescId = tmpDesc.PaidKindDescId
+                                                              AND MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
+                           UNION ALL
+                            -- данные <Продажа покупателю> и <Возврат от покупателя> - Partner
+                            SELECT Movement.Id
+                                 , Movement.DescId
+                                 , CASE WHEN Movement.DescId <> zc_Movement_ReturnIn()
+                                             THEN inDocumentTaxKindId
+                                        ELSE vbDocumentTaxKindId_TaxCorrective
+                                   END AS DocumentTaxKindId
+                                , CASE WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn()) THEN Movement.Id END AS MovementId_Return
+                            FROM MovementDate AS MovementDate_OperDatePartner
+                                 INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                               ON MovementLinkObject_Contract.MovementId = MovementDate_OperDatePartner.MovementId
+                                                              AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                                              AND MovementLinkObject_Contract.ObjectId = vbContractId
+                                 INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                                               ON MovementLinkObject_PaidKind.MovementId = MovementDate_OperDatePartner.MovementId
+                                                              AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                                                              AND MovementLinkObject_PaidKind.ObjectId = vbPaidKindId
+                                 INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
+                                                    AND Movement.StatusId = zc_Enum_Status_Complete()
+                                 INNER JOIN _tmpDesc_SaleReturn AS tmpDesc ON tmpDesc.MovementDescId = Movement.DescId
+                                 INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = MovementDate_OperDatePartner.MovementId
+                                                              AND MovementLinkObject.DescId = tmpDesc.MLODescId
+                                                              AND MovementLinkObject.ObjectId = vbPartnerId
+                            WHERE MovementDate_OperDatePartner.ValueData BETWEEN vbStartDate AND vbEndDate
+                              AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                              AND inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
+                          )
+              /*         , _tmpMI_ReturnIn
+                        AS (SELECT _tmpMovement.MovementId, _tmpMovement.DescId, _tmpMovement.DocumentTaxKindId
+                            FROM _tmpMovement
+                                        INNER JOIN MovementItem ON MovementItem.MovementId = _tmpMovement.MovementId
+                                                               AND MovementItem.DescId   = zc_MI_Child()
+                                                               AND MovementItem.Amount   <> 0
+                                                               AND MovementItem.isErased = FALSE
+                                        INNER JOIN MovementItemFloat AS MIFloat_Price
+                                                                     ON MIFloat_Price.MovementItemId = MovementItem.ParentId
+                                                                    AND MIFloat_Price.DescId = zc_MIFloat_Price() 
+                                                                    AND MIFloat_Price.ValueData <> 0  
+                                        LEFT JOIN MovementItem AS MovementItem_Master ON MovementItem_Master.Id = MovementItem.ParentId
+                                                                                     AND MovementItem_Master.isErased = FALSE
+                                        LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                                    ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                                   AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+                                        LEFT JOIN _tmpMovement2 AS _tmpMovement_find ON _tmpMovement_find.MovementId = MIFloat_MovementId.ValueData :: Integer
+                                        LEFT JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = MIFloat_MovementId.ValueData :: Integer
+                                                                      AND MovementLinkMovement.DescId     = zc_MovementLinkMovement_Master()
+                                                                      AND _tmpMovement_find.MovementId IS NULL
+                            WHERE _tmpMovement.DescId = zc_Movement_ReturnIn()
+                           )*/
       -- Результат - строчная часть
       INSERT INTO _tmpMI (GoodsId, GoodsKindId, Price, CountForPrice, Amount_Tax, Amount_TaxCorrective, MovementId_Tax, MovementItemId_err)
          SELECT tmpMI.GoodsId
@@ -676,12 +678,12 @@ BEGIN
                                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                       AND MIFloat_Price.DescId = zc_MIFloat_Price() 
                                                       AND MIFloat_Price.ValueData <> 0  
-                          LEFT JOIN MovementItem AS MovementItem_Child ON MovementItem_Child.MovementId = _tmpMovement.MovementId
+                          LEFT JOIN MovementItem AS MovementItem_Child ON MovementItem_Child.MovementId = _tmpMovement.MovementId_return
                                                                       AND MovementItem_Child.isErased = FALSE
-                                                                      AND MovementItem_Child.DescId   = zc_MI_Child()
-                                                                      AND MovementItem_Child.ParentId = MovementItem.Id
+                                                                      AND MovementItem_Child.DescId   = CASE WHEN _tmpMovement.MovementId_return > 0 THEN zc_MI_Child()  END
+                                                                      AND MovementItem_Child.ParentId = CASE WHEN _tmpMovement.MovementId_return > 0 THEN MovementItem.Id END
                                                                       AND MovementItem_Child.Amount   <> 0
-                                                                      AND _tmpMovement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn())
+                                                                      -- AND _tmpMovement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn())
                           LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                       ON MIFloat_MovementId.MovementItemId = MovementItem_Child.Id
                                                      AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()

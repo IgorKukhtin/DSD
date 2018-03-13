@@ -44,4 +44,4 @@ ALTER FUNCTION lpInsertUpdate_MovementLinkMovement (Integer, Integer, Integer) O
 */
 
 -- тест
--- SELECT * FROM lpInsertUpdate_MovementLinkMovement (inDescId:= zc_MovementLinkMovement_Child(), inMovementId:= 1, inMovementChildId:= 2)
+-- SELECT * FROM lpInsertUpdate_MovementLinkMovement (inDescId:= NULL, inMovementId:= 1, inMovementChildId:= 2)

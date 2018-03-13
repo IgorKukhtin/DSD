@@ -58,7 +58,7 @@ BEGIN
      -- сохранили связь с <Кому (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
     
-     IF vbIsInsert = TRUE
+     IF vbIsInsert = TRUE AND inUserId <> zc_User_Sybase()
      THEN
          -- сохранили свойство <Дата создания>
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);

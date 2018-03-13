@@ -320,6 +320,13 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
+      object JuridicalName_from: TcxGridDBColumn
+        Caption = #1054#1090' '#1082#1086#1075#1086' ('#1070#1088'. '#1083#1080#1094#1086')'
+        DataBinding.FieldName = 'JuridicalName_from'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
       object FromName: TcxGridDBColumn
         Caption = #1054#1090' '#1082#1086#1075#1086' ('#1048#1089#1090#1086#1095#1085#1080#1082' '#1079#1072#1087#1088#1072#1074#1082#1080')'
         DataBinding.FieldName = 'FromName'

@@ -736,7 +736,6 @@ uses
   Report_GoodsMI_TransferDebtDialog in '..\..\Forms\Report\Report_GoodsMI_TransferDebtDialog.pas' {Report_GoodsMI_TransferDebtDialogForm: TParentForm},
   Report_GoodsMI_ProductionSeparateUnionDialog in '..\..\Forms\Report\Report_GoodsMI_ProductionSeparateUnionDialog.pas' {Report_GoodsMI_ProductionSeparateUnionDialogForm: TParentForm},
   Report_Transport_ProfitLossDialog in '..\..\Forms\Report\Report_Transport_ProfitLossDialog.pas' {Report_Transport_ProfitLossDialogForm: TParentForm},
-  Report_Transport_ProfitLoss in '..\..\Forms\Report\Report_Transport_ProfitLoss.pas' {Report_Transport_ProfitLossForm: TParentForm},
   IncomeJournalChoice in '..\..\Forms\Document\IncomeJournalChoice.pas' {IncomeJournalChoiceForm: TParentForm},
   RecadvXML in '..\..\SOURCE\EDI\RecadvXML.pas',
   Advertising in '..\..\Forms\Guides\Advertising.pas' {AdvertisingForm: TParentForm},
@@ -996,7 +995,14 @@ uses
   Report_MovementProtocolDialog in '..\..\Forms\Report\Report_MovementProtocolDialog.pas' {Report_MovementProtocolDialogForm: TParentForm},
   Sale_TransportJournal in '..\..\Forms\Document\Sale_TransportJournal.pas' {Sale_TransportJournalForm: TParentForm},
   StickerFile in '..\..\Forms\Guides\StickerFile.pas' {StickerFileForm: TParentForm},
-  Sticker_List in '..\..\Forms\Guides\Sticker_List.pas' {Sticker_ListForm: TParentForm};
+  Sticker_List in '..\..\Forms\Guides\Sticker_List.pas' {Sticker_ListForm: TParentForm},
+  ProductionSeparateStorageLine in '..\..\Forms\Document\ProductionSeparateStorageLine.pas' {ProductionSeparateStorageLineForm: TParentForm},
+  Report_Transport_ProfitLoss in '..\..\Forms\Report\Report_Transport_ProfitLoss.pas' {Report_Transport_ProfitLossForm: TParentForm},
+  EDI_SendJournal in '..\..\Forms\EDI\EDI_SendJournal.pas' {EDI_SendJournalForm: TParentForm},
+  GoodsByGoodsKind_Sticker in '..\..\Forms\Guides\GoodsByGoodsKind_Sticker.pas' {GoodsByGoodsKind_StickerForm: TParentForm},
+  LossPersonalJournal in '..\..\Forms\Document\LossPersonalJournal.pas' {LossPersonalJournalForm: TParentForm},
+  LossPersonal in '..\..\Forms\Document\LossPersonal.pas' {LossPersonalForm: TParentForm},
+  MovementString_INNEdit in '..\..\Forms\Document\MovementString_INNEdit.pas' {MovementString_INNEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

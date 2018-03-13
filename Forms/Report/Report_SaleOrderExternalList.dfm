@@ -1,7 +1,7 @@
 object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
   Left = 0
   Top = 0
-  Caption = #1054#1090#1095#1077#1090' <'#1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1079#1072#1103#1074#1086#1082' '#1080' '#1087#1088#1086#1076#1072#1078'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1048#1090#1086#1075#1086' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084' - '#1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1079#1072#1103#1074#1086#1082' '#1080' '#1087#1088#1086#1076#1072#1078'>'
   ClientHeight = 393
   ClientWidth = 1080
   Color = clBtnFace
@@ -375,12 +375,19 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object FromDescName: TcxGridDBColumn
+        Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1086#1090' '#1082#1086#1075#1086')'
+        DataBinding.FieldName = 'FromDescName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 86
+      end
       object FromName: TcxGridDBColumn
         Caption = #1054#1090' '#1082#1086#1075#1086' ('#1079#1072#1103#1074#1082#1072')'
         DataBinding.FieldName = 'FromName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 90
+        Width = 109
       end
       object ToName: TcxGridDBColumn
         Caption = #1050#1086#1084#1091' ('#1079#1072#1103#1074#1082#1072')'
@@ -578,7 +585,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
     object deStart: TcxDateEdit
       Left = 118
       Top = 5
-      EditValue = 42370d
+      EditValue = 43101d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -587,7 +594,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
     object deEnd: TcxDateEdit
       Left = 118
       Top = 31
-      EditValue = 42370d
+      EditValue = 43101d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -686,8 +693,8 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 312
-    Top = 200
+    Left = 328
+    Top = 184
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -796,8 +803,8 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 256
-    Top = 232
+    Left = 248
+    Top = 248
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1034,8 +1041,8 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
     Top = 296
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 440
-    Top = 240
+    Left = 480
+    Top = 280
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -1066,8 +1073,8 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
       item
         Component = cbSale
       end>
-    Left = 504
-    Top = 216
+    Left = 512
+    Top = 192
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -1145,7 +1152,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 615
-    Top = 200
+    Left = 607
+    Top = 240
   end
 end

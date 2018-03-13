@@ -30,6 +30,7 @@ CREATE OR REPLACE VIEW Object_ImportSettings_View AS
            
            , Object_ImportSettings.isErased   AS isErased
            , ObjectString_ProcedureName.ValueData AS ProcedureName
+           , ObjectString_JSONParamName.ValueData AS JSONParamName
            
        FROM Object AS Object_ImportSettings
            LEFT JOIN ObjectLink AS ObjectLink_ImportSettings_Juridical
@@ -59,6 +60,9 @@ CREATE OR REPLACE VIEW Object_ImportSettings_View AS
            LEFT JOIN ObjectString AS ObjectString_ProcedureName 
                                   ON ObjectString_ProcedureName.ObjectId = Object_ImportType.Id
                                  AND ObjectString_ProcedureName.DescId = zc_ObjectString_ImportType_ProcedureName()
+           LEFT JOIN ObjectString AS ObjectString_JSONParamName 
+                                  ON ObjectString_JSONParamName.ObjectId = Object_ImportType.Id
+                                 AND ObjectString_JSONParamName.DescId = zc_ObjectString_ImportType_JSONParamName()
 
            LEFT JOIN ObjectBoolean AS ObjectBoolean_HDR 
                                    ON ObjectBoolean_HDR.ObjectId = Object_ImportSettings.Id
@@ -84,7 +88,8 @@ ALTER TABLE Object_ImportSettings_View  OWNER TO postgres;
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Подмогильный В.В.
+ 09.02.18                                                         * JSONParamName
  24.07.14                         *
 */
 

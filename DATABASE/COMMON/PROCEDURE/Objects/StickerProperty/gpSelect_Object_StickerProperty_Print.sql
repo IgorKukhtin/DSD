@@ -6,18 +6,22 @@ DROP FUNCTION IF EXISTS gpSelect_Object_StickerProperty_Print(Integer, Boolean, 
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_StickerProperty_Print(
     IN inObjectId          Integer  , -- ключ Этикетки
+    IN inIsJPG             Boolean  , --
     IN inIsLength          Boolean  , --
-    IN inIsDataProduction  Boolean  , -- печатать дату произв-ва на этикетке
-    IN inIsTara            Boolean  , -- печатать для ТАРЫ
-    IN inIsGoodsName       Boolean  , -- печатать название тов.
-    IN inIsDataTara        Boolean  , -- печатать дату для тары
-    IN inIsDataPartion     Boolean  , -- печатать ПАРТИЮ для тары
-    IN inDateStart         TDateTime, -- нач. дата
-    IN inDateUpack         TDateTime, -- дата упаковки
-    IN inDateTara          TDateTime, -- дата для тары 
-    IN inDateProduction    TDateTime, -- дата произв-ва
-    IN inNumUpack          TFloat   , -- № партии  упаковки, по умолчанию = 1
-    IN inNumTech           TFloat   , -- № смены технологов, по умолчанию = 1
+
+    IN inIsStartEnd        Boolean  , -- 1 - печатать дату нач/конечн произв-ва на этикетке
+    IN inIsTare            Boolean  , -- 2 - печатать для ТАРЫ
+    IN inIsPartion         Boolean  , -- 3 - печатать ПАРТИЮ для тары
+    IN inIsGoodsName       Boolean  , -- печатать название тов. (для режим 2,3)
+
+    IN inDateStart         TDateTime, -- нач. дата (для режим 1)
+    IN inDateTare          TDateTime, -- дата для тары  (для режим 2)
+
+    IN inDatePack          TDateTime, -- дата упаковки  (для режим 3)
+    IN inDateProduction    TDateTime, -- дата произв-ва (для режим 3)
+    IN inNumPack           TFloat   , -- № партии  упаковки, по умолчанию = 1 (для режим 3)
+    IN inNumTech           TFloat   , -- № смены технологов, по умолчанию = 1 (для режим 3)
+
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
@@ -29,24 +33,31 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , StickerSkinId Integer, StickerSkinName TVarChar
              , isFix Boolean
              , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat, Value6 TFloat, Value7 TFloat
+             , BarCode TVarChar
              , Sticker_Value1 TFloat, Sticker_Value2 TFloat, Sticker_Value3 TFloat, Sticker_Value4 TFloat, Sticker_Value5 TFloat
+
+             , Level1           TVarChar
+             , Level2           TVarChar
              , StickerGroupName TVarChar
-             , StickerTypeName TVarChar
-             , StickerTagName TVarChar
-             , StickerSortName TVarChar
-             , StickerNormName TVarChar
+             , StickerTypeName  TVarChar
+             , StickerTagName   TVarChar
+             , StickerSortName  TVarChar
+             , StickerNormName  TVarChar
              , Info Text
-             , IsDataProduction  Boolean
-             , IsTara            Boolean
-             , IsGoodsName       Boolean
-             , IsDataTara        Boolean
-             , IsDataPartion     Boolean
+
+             , isJPG             Boolean
+             , isStartEnd        Boolean
+             , isTare            Boolean
+             , isPartion         Boolean
+             , isGoodsName       Boolean
+
              , DateStart         TDateTime
              , DateEnd           TDateTime
-             , DateUpack         TDateTime
-             , DateTara          TDateTime
+
+             , DateTare          TDateTime
+             , DatePack          TDateTime
              , DateProduction    TDateTime
-             , NumUpack          TFloat
+             , NumPack           TFloat
              , NumTech           TFloat
               )
 AS
@@ -54,15 +65,20 @@ $BODY$
     DECLARE vbUserId Integer;
 
     DECLARE vbStickerFileId Integer;
+    DECLARE vbParam1        Integer;
+    DECLARE vbParam2        Integer;
+    DECLARE vbAddLeft       Integer;
+    DECLARE vbAddLine       Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-     --проверка 
-     IF (inIsDataProduction = TRUE AND inIsTara = TRUE) OR (inIsTara = TRUE AND inIsDataTara = TRUE AND inIsDataPartion = TRUE)
-        THEN
-         RAISE EXCEPTION 'Ошибка.Переданы некорректные параметры печати.';
-     END IF;
+     -- проверка
+     -- IF inIsTare = TRUE AND inIsPartion = TRUE
+     --   THEN
+     --    RAISE EXCEPTION 'Ошибка.Переданы некорректные параметры печати.';
+     --END IF;
+
 
      -- поиск ШАБЛОНА
      vbStickerFileId:= (WITH -- Шаблоны "по умолчанию" - для конкретной ТМ
@@ -114,17 +130,45 @@ BEGIN
                         WHERE Object_StickerProperty.Id = inObjectId
                        );
 
+     -- Сколько пробелов добавим слева, т.е. это когда слева - Фирменный знак
+     vbAddLeft:= CASE (SELECT ObjectLink_StickerFile_TradeMark.ChildObjectId
+                       FROM ObjectLink AS ObjectLink_StickerFile_TradeMark
+                       WHERE ObjectLink_StickerFile_TradeMark.ObjectId = vbStickerFileId
+                         AND ObjectLink_StickerFile_TradeMark.DescId = zc_ObjectLink_StickerFile_TradeMark()
+                      )
+                      WHEN 340617 -- тм Повна Чаша (Фоззи)
+                           THEN 40
+                      WHEN 340618 -- тм Премія (Фоззи)
+                           THEN 62
+                      ELSE 0
+                 END;
+     -- При какой длине Level1 - StickerType - выводится в Level2 + при этом инфа в Level2 в 2 строки
+     vbParam1:= CASE vbAddLeft
+                     WHEN 40 -- тм Повна Чаша (Фоззи)
+                          THEN 25
+                     WHEN 62 -- тм Премія (Фоззи)
+                          THEN 25
+                    ELSE 30
+                END;
+     -- При какой длине Level2 - StickerSort и StickerNorm - выводятся в 2 строки
+     vbParam2:= CASE vbAddLeft
+                     WHEN 40 -- тм Повна Чаша (Фоззи)
+                          THEN 20
+                     WHEN 62 -- тм Премія (Фоззи)
+                          THEN 20
+                    ELSE 30
+                END;
+
+     -- Был Ли перевод в несколько строк для Level1 или Level2, тогда по следующим строка НУЖЕН сдвиг
+     vbAddLine:= 0;
+
+
      -- Проверка
-     IF COALESCE (vbStickerFileId, 0) = 0
-     THEN
-          RAISE EXCEPTION 'Ошибка.Шаблон не установлен';
-     END IF;
-/*
-[frxDBDHeader."stickertypename"] [frxDBDHeader."stickersortname"] [frxDBDHeader."stickernormname"]
-СКЛАД: [frxDBDHeader."info"]
-УМОВИ ТА ТЕРМІН ЗБЕРІГАННЯ [frxDBDHeader."stickerpackname"]: за відносної вологості повітря від [frxDBDHeader."value1"]% до [frxDBDHeader."value2"]%, за температури від [FormatFloat('+,0.#; -,0.#;0',<frxDBDHeader."value3">)]С до [FormatFloat('+,0.#; -,0.#; ',<frxDBDHeader."value4">)]С не більш ніж [frxDBDHeader."value5"] діб.
-ПОЖИВНА ЦІННІСТЬ ТА КАЛОРІЙНІСТЬ В 100ГР. ПРОДУКТА: білки не менше [FormatFloat(',0.0; -,0.0; ',<frxDBDHeader."sticker_value2">)] гр, жири не більше [FormatFloat(',0.0; -,0.0; ',<frxDBDHeader."sticker_value3">)] гр, [FormatFloat(',0.0; -,0.0; ',<frxDBDHeader."sticker_value4">)] кКал
-*/
+--     IF COALESCE (vbStickerFileId, 0) = 0
+--     THEN
+--          RAISE EXCEPTION 'Ошибка.Шаблон не установлен';
+--     END IF;
+
 
      -- Результат
      RETURN QUERY
@@ -160,6 +204,7 @@ BEGIN
             , ObjectFloat_Value5.ValueData       AS Value5
             , ObjectFloat_Value6.ValueData       AS Value6
             , ObjectFloat_Value7.ValueData       AS Value7
+            , ObjectString_BarCode.ValueData     AS BarCode
 
             , Sticker_Value1.ValueData           AS Sticker_Value1
             , Sticker_Value2.ValueData           AS Sticker_Value2
@@ -167,36 +212,97 @@ BEGIN
             , Sticker_Value4.ValueData           AS Sticker_Value4
             , Sticker_Value5.ValueData           AS Sticker_Value5
 
-            , Object_StickerGroup.ValueData      AS StickerGroupName
-            , Object_StickerType.ValueData       AS StickerTypeName
-            , Object_StickerTag.ValueData        AS StickerTagName
-            , Object_StickerSort.ValueData       AS StickerSortName
-            , CASE WHEN LENGTH (COALESCE (Object_StickerType.ValueData, '') || ' ' || COALESCE (Object_StickerSort.ValueData, '')) > 25
-                        THEN CHR (13) || Object_StickerNorm.ValueData
-                   ELSE Object_StickerNorm.ValueData
-                 -- ELSE LENGTH (COALESCE (Object_StickerType.ValueData, '') || ' ' || COALESCE (Object_StickerSort.ValueData, '')) :: TVarChar
-              END :: TVarChar AS StickerNormName
+-- [frxDBDHeader."StickerGroupName"] [frxDBDHeader."StickerTypeName"] [frxDBDHeader."StickerTagName"]
+-- [frxDBDHeader."StickerSortName"] [frxDBDHeader."StickerNormName"]
+-- СКЛАД:[frxDBDHeader."Info"]
+-- УМОВИ ТА ТЕРМІН ЗБЕРІГАННЯ [frxDBDHeader."StickerPackName"]:за відносної вологості повітря від [frxDBDHeader."Value1"]% до [frxDBDHeader."Value2"]%, за температури від [FormatFloat('+,0.#; -,0.#;0',<frxDBDHeader."Value3">)]С до [FormatFloat('+,0.#; -,0.#; ',<frxDBDHeader."Value4">)]С не більш ніж [frxDBDHeader."Value5"] діб.
+-- ПОЖИВНА ЦІННІСТЬ ТА КАЛОРІЙНІСТЬ В 100ГР.ПРОДУКТА:білки не менше [FormatFloat(',0.0; -,0.0; ',<frxDBDHeader."Sticker_Value2">)] гр, жири не більше [FormatFloat(',0.0; -,0.0; ',<frxDBDHeader."Sticker_Value3">)] гр, [FormatFloat(',0.0; -,0.0; ',<frxDBDHeader."Sticker_Value4">)] кКал
+--
+-- [frxDBDHeader."Level1"]
+-- [frxDBDHeader."Level2"]
+-- [frxDBDHeader."Info"]
 
-            , zfCalc_Text_parse (Object_TradeMark_StickerFile.Id, ObjectBlob_Info.ValueData, inIsLength
-                               , CASE WHEN LENGTH (COALESCE (Object_StickerType.ValueData, '') || ' ' || COALESCE (Object_StickerSort.ValueData, '')) > 25
-                                           THEN FALSE
-                                           ELSE TRUE
-                                      END
+              -- Level1
+            , (REPEAT (' ', CASE WHEN vbAddLeft > 50 THEN vbAddLeft - 30 WHEN vbAddLeft > 10 THEN vbAddLeft - 15 ELSE vbAddLeft END)
+            || CASE WHEN LENGTH (COALESCE (Object_StickerGroup.ValueData, '') || ' ' || COALESCE (Object_StickerType.ValueData, '') || ' ' || COALESCE (Object_StickerTag.ValueData, '')) > vbParam1
+                         THEN COALESCE (Object_StickerGroup.ValueData, '')
+                    || ' ' || COALESCE (Object_StickerTag.ValueData, '')
+ 
+                    ELSE COALESCE (Object_StickerGroup.ValueData, '')
+               || ' ' || COALESCE (Object_StickerType.ValueData, '')
+               || ' ' || COALESCE (Object_StickerTag.ValueData, '')
+ 
+               END) :: TVarChar AS Level1
+
+              -- Level2
+            , (REPEAT (' ', vbAddLeft)
+            || CASE WHEN LENGTH (COALESCE (Object_StickerGroup.ValueData, '') || ' ' || COALESCE (Object_StickerType.ValueData, '') || ' ' || COALESCE (Object_StickerTag.ValueData, '')) > vbParam1
+                         THEN COALESCE (Object_StickerType.ValueData, '')
+                    || ' ' || COALESCE (Object_StickerSort.ValueData, '')
+               || CHR (13) || REPEAT (' ', vbAddLeft)
+                           || COALESCE (Object_StickerNorm.ValueData, '')
+ 
+                    WHEN LENGTH (COALESCE (Object_StickerSort.ValueData, '') || ' ' || COALESCE (Object_StickerNorm.ValueData, '')) > vbParam2
+                         THEN COALESCE (Object_StickerSort.ValueData, '')
+               || CHR (13) || REPEAT (' ', vbAddLeft)
+                           || COALESCE (Object_StickerNorm.ValueData, '')
+ 
+                    ELSE COALESCE (Object_StickerSort.ValueData, '')
+               || ' ' || COALESCE (Object_StickerNorm.ValueData, '')
+ 
+               END) :: TVarChar AS Level2
+
+              -- Вид продукта (Группа)
+            , Object_StickerGroup.ValueData   AS StickerGroupName
+              -- Способ изготовления продукта
+            , Object_StickerType.ValueData    AS StickerTypeName
+              -- Название продукта
+            , Object_StickerTag.ValueData     AS StickerTagName
+              -- Сортность
+            , Object_StickerSort.ValueData    AS StickerSortName
+              -- ТУ или ДСТУ
+            , Object_StickerNorm.ValueData    AS StickerNormName
+              -- !!!СКЛАД!!!
+            , zfCalc_Text_parse (vbStickerFileId, Object_TradeMark_StickerFile.Id
+                                 -- Сколько пробелов добавим слева, т.е. это когда слева - Фирменный знак
+                               , vbAddLeft
+                                 -- Был Ли перевод в несколько строк для Level1 или Level2, тогда по следующим строкам НУЖЕН сдвиг
+                               , CASE WHEN LENGTH (COALESCE (Object_StickerGroup.ValueData, '') || ' ' || COALESCE (Object_StickerType.ValueData, '') || ' ' || COALESCE (Object_StickerTag.ValueData, '')) > vbParam1
+                                        OR LENGTH (COALESCE (Object_StickerSort.ValueData, '') || ' ' || COALESCE (Object_StickerNorm.ValueData, '')) > vbParam2
+                                       THEN 1
+                                       ELSE 0
+                                 END
+                               , 'СКЛАД:'
+                              || ObjectBlob_Info.ValueData
+                              || 'УМОВИ ТА ТЕРМІН ЗБЕРІГАННЯ:' || COALESCE (Object_StickerPack.ValueData, '') || ':'
+                                  || 'за відносної вологості повітря від ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value1.ValueData, 0)) || '% '
+                                  ||                                ' до ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value2.ValueData, 0)) || '% '
+                                  ||               ', за температури від ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value3.ValueData, 0)) || 'С'
+                                  ||                                ' до ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value4.ValueData, 0)) || 'С'
+                                  ||                      ' не більш ніж ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value5.ValueData, 0)) || 'діб.'
+                              || 'ПОЖИВНА ЦІННІСТЬ ТА КАЛОРІЙНІСТЬ В 100ГР.ПРОДУКТА:'
+                                  ||  ' білки не менше ' || zfConvert_FloatToString (COALESCE (Sticker_Value2.ValueData, 0)) || 'гр'
+                                  || ', жири не більше ' || zfConvert_FloatToString (COALESCE (Sticker_Value3.ValueData, 0)) || 'гр'
+                                  ||                ', ' || zfConvert_FloatToString (COALESCE (Sticker_Value4.ValueData, 0)) || 'кКал'
+                               , inIsLength
+                               , FALSE -- теперь НЕ используется
                                 ) AS Info
 
-            , inIsDataProduction  :: Boolean   AS IsDataProduction
-            , inIsTara            :: Boolean   AS IsTara          
-            , inIsGoodsName       :: Boolean   AS IsGoodsName     
-            , inIsDataTara        :: Boolean   AS IsDataTara      
-            , inIsDataPartion     :: Boolean   AS IsDataPartion   
-            , CASE WHEN inIsDataProduction = TRUE THEN inDateStart ELSE NULL END        :: TDateTime AS DateStart       
-            ,  CASE WHEN inIsDataProduction = TRUE THEN (inDateStart + ((ObjectFloat_Value5.ValueData - 1) ||' day') :: INTERVAL) ELSE NULL END :: TDateTime AS DateEnd
-            , inDateUpack         :: TDateTime AS DateUpack
-            , inDateTara          :: TDateTime AS DateTara
+            , inIsJPG                              :: Boolean   AS isJPG
+            , (inIsStartEnd  AND inIsTare = FALSE) :: Boolean   AS isStartEnd
+            , inIsTare                             :: Boolean   AS isTara
+            , (inIsPartion   AND inIsTare = TRUE)  :: Boolean   AS isPartion
+            , (inIsGoodsName AND inIsTare = TRUE)  :: Boolean   AS isGoodsName
+
+            , inDateStart                                                          :: TDateTime AS DateStart
+            , (inDateStart + (ObjectFloat_Value5.ValueData ||' DAY') :: INTERVAL)  :: TDateTime AS DateEnd
+
+            , inDatePack          :: TDateTime AS DatePack
+            , inDateTare          :: TDateTime AS DateTara
             , inDateProduction    :: TDateTime AS DateProduction
-            , inNumUpack          :: TFloat    AS NumUpack
+            , inNumPack           :: TFloat    AS NumPack
             , inNumTech           :: TFloat    AS NumTech
-            
+
        FROM Object AS Object_StickerProperty
              LEFT JOIN Object AS Object_StickerFile ON Object_StickerFile.Id = vbStickerFileId
 
@@ -250,6 +356,9 @@ BEGIN
              LEFT JOIN ObjectBoolean AS ObjectBoolean_Fix
                                      ON ObjectBoolean_Fix.ObjectId = Object_StickerProperty.Id
                                     AND ObjectBoolean_Fix.DescId = zc_ObjectBoolean_StickerProperty_Fix()
+             LEFT JOIN ObjectString AS ObjectString_BarCode
+                                    ON ObjectString_BarCode.ObjectId = Object_StickerProperty.Id
+                                   AND ObjectString_BarCode.DescId   = zc_ObjectString_StickerProperty_BarCode()
 
              LEFT JOIN ObjectLink AS ObjectLink_StickerFile_TradeMark
                                   ON ObjectLink_StickerFile_TradeMark.ObjectId = Object_StickerFile.Id
@@ -312,7 +421,7 @@ BEGIN
 
           WHERE Object_StickerProperty.Id = inObjectId
             AND Object_StickerProperty.DescId = zc_Object_StickerProperty()
-      ;
+         ;
 
 END;
 $BODY$
@@ -326,5 +435,4 @@ $BODY$
 */
 
 -- тест
---
---select * from gpSelect_Object_StickerProperty_Print(inObjectId := 1006470 , inIsLength := 'False' , inIsDataProduction := 'False' , inIsTara := 'False' , inIsGoodsName := 'False' , inIsDataTara := 'False' , inIsDataPartion := 'False' , inDateStart := ('01.01.2016')::TDateTime , inDateUpack := ('01.01.2016')::TDateTime , inDateTara := ('01.01.2016')::TDateTime , inDateProduction := ('01.01.2016')::TDateTime , inNumUpack := 1 , inNumTech := 1 ,  inSession := zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Object_StickerProperty_Print (inObjectId:= 1371309, inIsJPG:= TRUE, inIsLength:= FALSE, inIsStartEnd:= FALSE, inIsTare:= FALSE, inIsPartion:= FALSE, inIsGoodsName:= FALSE, inDateStart:= '01.01.2016', inDateTare:= '01.01.2016', inDatePack:= '01.01.2016', inDateProduction:= '01.01.2016', inNumPack:= 1, inNumTech:= 1, inSession:= zfCalc_UserAdmin());

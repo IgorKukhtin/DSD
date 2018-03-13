@@ -4,7 +4,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, Integer, TVarChar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_User(
  INOUT ioId          Integer   ,    -- ключ объекта <Пользователь> 
@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_User(
     IN inUserName    TVarChar  ,    -- главное Название пользователя объекта <Пользователь> 
     IN inPassword    TVarChar  ,    -- пароль пользователя 
     IN inMemberId    Integer   ,    -- физ. лицо
+    IN inUnitId      Integer   ,    -- Подразделение
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS Integer 
@@ -35,7 +36,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_User_Password(), ioId, inPassword);
 
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_User_Member(), ioId, inMemberId);
-
+   -- сохранили свойство  <Подразделение>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_User_Unit(), ioId, inUnitId);
 
    -- Ведение протокола
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -48,6 +50,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыки А.А.
+ 15.02.18         *
  06.05.17                                                          *
  05.05.17                                                          *
  12.09.16         *

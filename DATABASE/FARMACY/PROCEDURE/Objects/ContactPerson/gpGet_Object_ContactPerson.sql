@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Phone TVarChar, Mail TVarChar, Comment TVarChar
              , PartnerId Integer, PartnerName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
-             , ContactId Integer, ContacttName TVarChar
+             , ContractId Integer, ContractName TVarChar
              , UnitId Integer, UnitName TVarChar
              , ContactPersonKindId Integer, ContactPersonKindName TVarChar
              , EmailId Integer, EmailName TVarChar

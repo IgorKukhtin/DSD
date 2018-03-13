@@ -21,7 +21,9 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxCurrencyEdit, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxButtonEdit,
+  cxLabel;
 
 type
   TPartionGoodsForm = class(TParentForm)
@@ -67,13 +69,22 @@ type
     CurrencyName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     OperPrice: TcxGridDBColumn;
-    PriceSale: TcxGridDBColumn;
+    OperPriceList: TcxGridDBColumn;
     BrandName: TcxGridDBColumn;
     PeriodName: TcxGridDBColumn;
     PeriodYear: TcxGridDBColumn;
     FabrikaName: TcxGridDBColumn;
     CompositionGroupName: TcxGridDBColumn;
     isArc: TcxGridDBColumn;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
+    cxLabel6: TcxLabel;
+    edUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
+    bbLabel6: TdxBarControlContainerItem;
+    bbUnit: TdxBarControlContainerItem;
+    ExecuteDialog: TExecuteDialog;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public

@@ -25,7 +25,7 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ReestrReturn(), inInvNumber, inOperDate, NULL);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ReestrReturn(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
 
 
      IF inUserId > 0 AND vbIsInsert = True

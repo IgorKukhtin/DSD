@@ -13,6 +13,7 @@ RETURNS TABLE ( GoodsCode   Integer      --Код товара
               , GoodsName   TVarChar     --Наименование товара
               , MakerName   TVarChar     --Производитель
               , NDSKindName TVarChar     --вид ндс
+              , NDS         TFloat       -- % ндс
               , Price1      TFloat
               , Price2      TFloat
               , Price3      TFloat
@@ -248,6 +249,7 @@ BEGIN
             , Object_Goods.ValueData                   AS GoodsName
             , ObjectString_Goods_Maker.ValueData       AS MakerName
             , Object_NDSKind.ValueData                 AS NDSKindName
+            , ObjectFloat_NDSKind_NDS.ValueData        AS NDS
             
             , tmpData.Price1                ::TFloat
             , tmpData.Price2                ::TFloat
@@ -294,6 +296,10 @@ BEGIN
                              ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
                             AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
         LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                              ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
+                             AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
       ORDER BY 2                                   
     ;
 

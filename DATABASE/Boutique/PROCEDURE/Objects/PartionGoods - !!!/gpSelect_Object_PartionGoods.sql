@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_PartionGoods (Boolean, TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_PartionGoods (Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_PartionGoods (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_PartionGoods(
+    IN inUnitId      Integer,
     IN inIsShowAll   Boolean,       --  признак показать удаленные да/нет
     IN inSession     TVarChar       --  сессия пользователя
 )
@@ -10,15 +12,17 @@ RETURNS TABLE (
              MovementItemId       Integer
            , InvNumber            TVarChar  
            --, SybaseId             Integer  
-           , PartnerName          TVarChar  
+           , PartnerName          TVarChar 
+           , UnitId               Integer
            , UnitName             TVarChar  
            , OperDate             TDateTime  
+           , GoodsId              Integer
            , GoodsName            TVarChar  
            , GroupNameFull        TVarChar  
            , CurrencyName         TVarChar  
-           , Amount               TFloat  
+           , Amount               TFloat
            , OperPrice            TFloat  
-           , PriceSale            TFloat  
+           , OperPriceList        TFloat  
            , BrandName            TVarChar  
            , PeriodName           TVarChar  
            , PeriodYear           Integer  
@@ -30,6 +34,7 @@ RETURNS TABLE (
            , LineFabricaName      TVarChar  
            , LabelName            TVarChar  
            , CompositionGroupName TVarChar  
+           , GoodsSizeId          Integer
            , GoodsSizeName        TVarChar  
            , isErased             Boolean  
            , isArc                Boolean  
@@ -53,14 +58,16 @@ BEGIN
            , Movement.InvNumber                  AS InvNumber
            --, Object_PartionGoods.SybaseId        AS SybaseId
            , Object_Partner.ValueData            AS PartnerName
+           , Object_Unit.Id                      AS UnitId
            , Object_Unit.ValueData               AS UnitName
            , Object_PartionGoods.OperDate        AS OperDate
+           , Object_Goods.Id                     AS GoodsId
            , Object_Goods.ValueData              AS GoodsName
            , Object_GroupNameFull.ValueData      As GroupNameFull
            , Object_Currency.ValueData           AS CurrencyName
            , Object_PartionGoods.Amount          AS Amount
            , Object_PartionGoods.OperPrice       AS OperPrice
-           , Object_PartionGoods.PriceSale       AS PriceSale
+           , Object_PartionGoods.OperPriceList   AS OperPriceList
            , Object_Brand.ValueData              AS BrandName
            , Object_Period.ValueData             AS PeriodName
            , Object_PartionGoods.PeriodYear      AS PeriodYear
@@ -72,6 +79,7 @@ BEGIN
            , Object_LineFabrica.ValueData        AS LineFabricaName
            , Object_Label.ValueData              AS LabelName
            , Object_CompositionGroup.ValueData   AS CompositionGroupName
+           , Object_GoodsSize.Id                 AS GoodsSizeId
            , Object_GoodsSize.ValueData          AS GoodsSizeName
            , Object_PartionGoods.isErased        AS isErased
            , Object_PartionGoods.isArc           AS isArc
@@ -97,7 +105,10 @@ BEGIN
            LEFT JOIN  Object AS Object_CompositionGroup on Object_CompositionGroup.Id = Object_PartionGoods.CompositionGroupId
            LEFT JOIN  Object AS Object_GoodsSize on Object_GoodsSize.Id = Object_PartionGoods.GoodsSizeId
            LEFT JOIN  Movement on Movement.Id = Object_PartionGoods.MovementId
-     WHERE  (Object_PartionGoods.isErased = FALSE OR inIsShowAll = TRUE)
+           
+     WHERE (Object_PartionGoods.isErased = FALSE OR inIsShowAll = TRUE)
+       AND Object_PartionGoods.UnitId = inUnitId
+     --LIMIT 10000
 
     ;
 
@@ -109,8 +120,11 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
+23.01.18          *
+18.01.18          *
 15.03.17                                                           *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_PartionGoods (TRUE, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_PartionGoods (inUnitId := 1151, TRUE, zfCalc_UserAdmin())
+--SELECT * FROM gpSelect_Object_PartionGoods (inUnitId := 1151, FALSE, zfCalc_UserAdmin())

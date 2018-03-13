@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCount TFloat
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar, JuridicalName TVarChar, ContractName TVarChar
-             , NDSKindId Integer, NDSKindName TVarChar
+             , NDSKindId Integer, NDSKindName TVarChar, NDS TFloat
              , SaleSumm TFloat
              , InvNumberBranch TVarChar, BranchDate TDateTime
              , Checked Boolean 
@@ -65,6 +65,7 @@ BEGIN
            , Movement_Income_View.ContractName
            , Movement_Income_View.NDSKindId
            , Movement_Income_View.NDSKindName
+           , ObjectFloat_NDSKind_NDS.ValueData    AS NDS
            , Movement_Income_View.SaleSumm
            , Movement_Income_View.InvNumberBranch
            , Movement_Income_View.BranchDate
@@ -95,7 +96,10 @@ BEGIN
                                         AND MLO_Update.DescId = zc_MovementLinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId  
 
-
+            LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                  ON ObjectFloat_NDSKind_NDS.ObjectId = Movement_Income_View.NDSKindId 
+                                 AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()  
+                                 
        WHERE Movement_Income_View.OperDate BETWEEN inStartDate AND inEndDate 
          AND Movement_Income_View.ToId = vbUnitId
        ;
@@ -110,6 +114,7 @@ ALTER FUNCTION gpSelect_Movement_IncomePharmacy (TDateTime, TDateTime, Boolean, 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.01.18         * add NDS
  22.04.16         *
  28.04.15                        *
  11.02.15                        *

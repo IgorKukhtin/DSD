@@ -1,7 +1,7 @@
 object GoodsSizeForm: TGoodsSizeForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1056#1072#1079#1084#1077#1088' '#1090#1086#1074#1072#1088#1072'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1056#1072#1079#1084#1077#1088#1099' '#1090#1086#1074#1072#1088#1072'>'
   ClientHeight = 376
   ClientWidth = 403
   Color = clBtnFace
@@ -53,7 +53,7 @@ object GoodsSizeForm: TGoodsSizeForm
         Width = 55
       end
       object Name: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        Caption = #1056#1072#1079#1084#1077#1088
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter

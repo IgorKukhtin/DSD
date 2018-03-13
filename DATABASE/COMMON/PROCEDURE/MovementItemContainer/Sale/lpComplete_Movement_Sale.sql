@@ -2821,6 +2821,7 @@ END IF;
      IF inUserId <> zc_Enum_Process_Auto_PrimeCost()
         AND inUserId <> 343013 -- Нагорная Я.Г.
         -- AND inUserId <> 9459   -- Малахова Т.Н.
+        -- AND inUserId <> 5
         AND vbPaidKindId = zc_Enum_PaidKind_FirstForm()
         AND vbCurrencyDocumentId = zc_Enum_Currency_Basis()
         AND vbCurrencyPartnerId = zc_Enum_Currency_Basis()

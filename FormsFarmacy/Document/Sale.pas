@@ -76,15 +76,15 @@ type
     cxLabel16: TcxLabel;
     cxLabel8: TcxLabel;
     edPartnerMedical: TcxButtonEdit;
-    PartnerMedicalGuides: TdsdGuides;
+    GuidesPartnerMedical: TdsdGuides;
     isSP: TcxGridDBColumn;
     cxLabel9: TcxLabel;
     edGroupMemberSP: TcxButtonEdit;
-    GroupMemberSPGuides: TdsdGuides;
+    GuidesGroupMemberSP: TdsdGuides;
     edMedicSP: TcxButtonEdit;
     edMemberSP: TcxButtonEdit;
-    MemberSPGuides: TdsdGuides;
-    MedicSPGuides: TdsdGuides;
+    GuidesMemberSP: TdsdGuides;
+    GuidesMedicSP: TdsdGuides;
     spSelectPrintCheck: TdsdStoredProc;
     actPrintCheck: TdsdPrintAction;
     PrintDialog: TExecuteDialog;
@@ -93,6 +93,9 @@ type
     cxLabel10: TcxLabel;
     edSPKind: TcxButtonEdit;
     SPKindGuides: TdsdGuides;
+    spGet_SP_Prior: TdsdStoredProc;
+    actGet_SP_Prior: TdsdExecStoredProc;
+    bbGet_SP_Prior: TdxBarButton;
   private
     { Private declarations }
   public

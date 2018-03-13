@@ -71,28 +71,32 @@ object Report_MovementLossDialogForm: TReport_MovementLossDialogForm
   object cxLabel6: TcxLabel
     Left = 10
     Top = 7
-    Caption = #1044#1072#1090#1072' '#1089' :'
+    Caption = #1055#1077#1088#1080#1086#1076' '#1089' ...'
   end
   object cxLabel7: TcxLabel
     Left = 121
     Top = 7
-    Caption = #1044#1072#1090#1072' '#1087#1086' :'
+    Caption = #1055#1077#1088#1080#1086#1076' '#1087#1086' ...'
   end
   object cbPartion: TcxCheckBox
     Left = 10
     Top = 63
-    Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-    Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 8
-    Width = 86
+    Width = 136
   end
   object cbSize: TcxCheckBox
-    Left = 113
+    Left = 153
     Top = 63
-    Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-    Caption = #1087#1086' '#1056#1072#1079#1084#1077#1088#1072#1084
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1056#1072#1079#1084#1077#1088#1099
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 9
-    Width = 85
+    Width = 73
   end
   object cxLabel1: TcxLabel
     Left = 10
@@ -129,20 +133,24 @@ object Report_MovementLossDialogForm: TReport_MovementLossDialogForm
     Width = 305
   end
   object cbPartner: TcxCheckBox
-    Left = 217
+    Left = 234
     Top = 63
-    Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-    Caption = #1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 14
-    Width = 109
+    Width = 91
   end
   object cbMovement: TcxCheckBox
-    Left = 217
+    Left = 234
     Top = 27
-    Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-    Caption = #1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090'> ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#8470
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 15
-    Width = 109
+    Width = 92
   end
   object cxLabel4: TcxLabel
     Left = 10
@@ -181,30 +189,36 @@ object Report_MovementLossDialogForm: TReport_MovementLossDialogForm
   object cxLabel8: TcxLabel
     Left = 10
     Top = 332
-    Caption = #1043#1086#1076' ('#1085#1072#1095'.):'
-  end
-  object edPeriodYearStart: TcxCurrencyEdit
-    Left = 10
-    Top = 352
-    EditValue = 0.000000000000000000
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 21
-    Width = 100
-  end
-  object edPeriodYearEnd: TcxCurrencyEdit
-    Left = 154
-    Top = 352
-    EditValue = 0.000000000000000000
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 22
-    Width = 100
+    Caption = #1043#1086#1076' '#1089' ...'
   end
   object cxLabel9: TcxLabel
     Left = 154
     Top = 332
-    Caption = #1043#1086#1076' ('#1086#1082#1086#1085'.):'
+    Caption = #1043#1086#1076' '#1087#1086' ...'
+  end
+  object edStartYear: TcxButtonEdit
+    Left = 10
+    Top = 351
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 22
+    Width = 111
+  end
+  object edEndYear: TcxButtonEdit
+    Left = 154
+    Top = 351
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 23
+    Width = 111
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -365,16 +379,36 @@ object Report_MovementLossDialogForm: TReport_MovementLossDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PeriodYearStart'
+        Name = 'StartYear'
         Value = Null
-        Component = edPeriodYearStart
+        Component = GuidesStartYear
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PeriodYearEnd'
+        Name = 'StartYearText'
         Value = Null
-        Component = edPeriodYearEnd
+        Component = GuidesStartYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndYear'
+        Value = Null
+        Component = GuidesEndYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndYearText'
+        Value = Null
+        Component = GuidesEndYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -533,7 +567,67 @@ object Report_MovementLossDialogForm: TReport_MovementLossDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 142
-    Top = 298
+    Left = 110
+    Top = 290
+  end
+  object GuidesStartYear: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edStartYear
+    Key = '0'
+    FormNameParam.Value = 'TPeriodYear_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodYear_ChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesStartYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesStartYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 82
+    Top = 339
+  end
+  object GuidesEndYear: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edEndYear
+    Key = '0'
+    FormNameParam.Value = 'TPeriodYear_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodYear_ChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesEndYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesEndYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 173
+    Top = 341
   end
 end

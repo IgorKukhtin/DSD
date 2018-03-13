@@ -22,7 +22,7 @@ CREATE TABLE Object_PartionGoods(
    Amount              TFloat  NOT NULL,
    OperPrice	       TFloat  NOT NULL,
    CountForPrice       TFloat  NOT NULL DEFAULT 1,
-   PriceSale           TFloat  NOT NULL,
+   OperPriceList       TFloat  NOT NULL,
    -- DiscountPeriod      TFloat  NOT NULL,
    BrandId             Integer ,
    PeriodId            Integer ,
@@ -45,9 +45,13 @@ CREATE TABLE Object_PartionGoods(
 /*-------------------------------------------------------------------------------*/
 
 /*                                  Индексы                                      */
-CREATE INDEX idx_Object_PartionGoods_MovementItemId ON Object_PartionGoods(MovementItemId);
-CREATE INDEX idx_Object_PartionGoods_MovementId	 ON Object_PartionGoods(MovementId);
-CREATE INDEX idx_Object_PartionGoods_GoodsId_PartnerId ON Object_PartionGoods(GoodsId, PartnerId);
+CREATE INDEX idx_Object_PartionGoods_MovementItemId ON Object_PartionGoods (MovementItemId);
+CREATE INDEX idx_Object_PartionGoods_MovementId	 ON Object_PartionGoods (MovementId);
+CREATE INDEX idx_Object_PartionGoods_GoodsId_PartnerId ON Object_PartionGoods (GoodsId, PartnerId);
+CREATE INDEX idx_Object_PartionGoods_MovementItemId_GoodsId ON Object_PartionGoods (MovementItemId, GoodsId);
+CREATE INDEX idx_Object_PartionGoods_PartnerId  ON Object_PartionGoods (PartnerId);
+CREATE INDEX idx_Object_PartionGoods_BrandId    ON Object_PartionGoods (BrandId);
+CREATE INDEX idx_Object_PartionGoods_PeriodYear ON Object_PartionGoods (PeriodYear);
 
 /*-------------------------------------------------------------------------------*/
 /*

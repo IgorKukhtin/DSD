@@ -34,9 +34,9 @@ BEGIN
    IF ioId > 0 AND vbUserId = zc_User_Sybase()
    THEN
        -- <Подразделения>
-       inPositionId:= (SELECT FROM ObjectLink WHERE DescId = zc_ObjectLink_Personal_Position() AND Id = ioId);
+       IF inPositionId = 0 THEN inPositionId:= (SELECT ChildObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Personal_Position() AND ObjectId = ioId); END IF;
        -- <Подразделения>
-       inUnitId:= (SELECT FROM ObjectLink WHERE DescId = zc_ObjectLink_Personal_Unit() AND Id = ioId);
+       IF inUnitId = 0 THEN inUnitId:= (SELECT ChildObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Personal_Unit() AND ObjectId = ioId); END IF;
    END IF;
 
 

@@ -48,16 +48,19 @@ BEGIN
 
      -- определяем <Статус>
      SELECT StatusId, InvNumber INTO vbStatusId, vbInvNumber FROM Movement WHERE Id = inMovementId;
-     -- проверка - проведенные/удаленные документы Изменять нельзя + !!!временно захардкодил -12345!!!
-     IF vbStatusId <> zc_Enum_Status_UnComplete()
+
+     -- проверка - проведенные/удаленные документы Изменять нельзя + !!!временно для SYBASE -1 * zc_User_Sybase() !!!
+     IF vbStatusId <> zc_Enum_Status_UnComplete() AND inUserId <> -1 * zc_User_Sybase()
      THEN
-         RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData (vbStatusId);
+         RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData_sh (vbStatusId);
      END IF;
+
      -- проверка - inAmount
      IF inAmount IS NULL
      THEN
          RAISE EXCEPTION 'Ошибка-1.Не определено количество/сумма в документе № <%>.', vbInvNumber;
      END IF;
+
      -- проверка - inObjectId
      IF inObjectId IS NULL
      THEN
@@ -76,7 +79,8 @@ BEGIN
                                , PartionId  = inPartionId
                                , Amount     = inAmount
                                , ParentId   = inParentId
-                            -- , MovementId = inMovementId
+                                 -- !!!временно для Sybase!!!
+                               , MovementId = inMovementId
                             -- , DescId     = inDescId
          WHERE Id = ioId
          RETURNING isErased, MovementId, DescId INTO vbIsErased, vbMovementId, vbDescId
@@ -106,7 +110,7 @@ BEGIN
          END IF;
 
          -- Проверка - т.к. MovementId - !!!НЕ МЕНЯЕТСЯ!!!
-         IF COALESCE (inMovementId, -1) <> COALESCE (vbMovementId, -2)
+         IF COALESCE (inMovementId, -1) <> COALESCE (vbMovementId, -2) AND (inUserId <> zc_User_Sybase() OR COALESCE (inMovementId, -1) < 0)
          THEN
              RAISE EXCEPTION 'Ошибка изменения MovementId с <%> на <%>', vbMovementId, inMovementId;
          END IF;

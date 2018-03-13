@@ -87,6 +87,7 @@ BEGIN
                       )
              -- Приход пр-во (ФАКТ)
            , tmpIncome AS (SELECT MIContainer.ObjectId_Analyzer                  AS GoodsId
+                                , MIContainer.ObjectExtId_Analyzer               AS FromId
                                 , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId
                                 , SUM (MIContainer.Amount)                       AS Amount
                            FROM MovementItemContainer AS MIContainer
@@ -109,6 +110,7 @@ BEGIN
                              -- AND 1=0
                            GROUP BY MIContainer.ObjectId_Analyzer
                                   , MIContainer.ObjectIntId_Analyzer
+                                  , MIContainer.ObjectExtId_Analyzer
                           )
       -- поиск рецептур - что из чего делается
     , tmpReceipt_START AS (SELECT tmpGoods.GoodsId, tmpGoods.GoodsKindId
@@ -585,6 +587,21 @@ BEGIN
                                    , tmp.PartionGoods_start AS PartionGoods_start
                               FROM tmpRemains_CEH AS tmp
                                    LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmp.PartionGoodsId
+                            UNION
+                              -- tmpIncome - Цех
+                              SELECT tmp.GoodsId         AS GoodsId
+                                   , tmp.GoodsKindId     AS GoodsKindId
+                                   , tmp.FromId          AS FromId
+                                   , 0                   AS Amount
+                                   , 0                   AS Amount_Prev
+                                   , 0                   AS Amount_Next
+                                   , 0                   AS Remains_SKLAD
+                                   , 0                   AS Remains_CEH
+                                   , 0                   AS Remains_CEH_Next
+                                   , ''                  AS PartionGoods
+                                   , NULL :: Integer     AS TermProduction
+                                   , NULL :: TDateTime   AS PartionGoods_start
+                              FROM tmpIncome AS tmp
                               ) AS tmp
                         GROUP BY tmp.GoodsId
                                , tmp.GoodsKindId
@@ -713,6 +730,7 @@ BEGIN
             -- здесь уже товары - что из чего делается
             LEFT JOIN tmpIncome ON tmpIncome.GoodsId     = tmpData.GoodsId
                                AND tmpIncome.GoodsKindId = tmpData.GoodsKindId
+                               AND tmpIncome.FromId      = tmpData.FromId
 
             LEFT JOIN Object AS Object_Goods_basis     ON Object_Goods_basis.Id     = tmpGoodsBasis.GoodsId_Basis
             LEFT JOIN Object AS Object_GoodsKind_basis ON Object_GoodsKind_basis.Id = tmpGoodsBasis.GoodsKindId_Basis

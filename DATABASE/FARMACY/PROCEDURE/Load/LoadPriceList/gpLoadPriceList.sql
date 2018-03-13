@@ -10,11 +10,11 @@ RETURNS Void AS
 $BODY$
    DECLARE vbUserId       Integer;
 
-   DECLARE vbPriceListId  Integer;
-   DECLARE vbJuridicalId  Integer;
-   DECLARE vbContractId   Integer;
-   DECLARE vbAreaId       Integer;
-   DECLARE vbOperDate     TDateTime;
+   DECLARE vbMovementId_pl Integer;
+   DECLARE vbJuridicalId   Integer;
+   DECLARE vbContractId    Integer;
+   DECLARE vbAreaId        Integer;
+   DECLARE vbOperDate      TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_LoadSaleFrom1C());
@@ -32,7 +32,7 @@ BEGIN
 
      -- Если прайс за этот день, юрлицу и договору не найден, то добавляем. А если найден, то сохраняем ИД
      SELECT
-            Movement.Id INTO vbPriceListId
+            Movement.Id INTO vbMovementId_pl
        FROM Movement 
             JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                     ON MovementLinkObject_Juridical.MovementId = Movement.Id
@@ -49,8 +49,8 @@ BEGIN
         AND COALESCE (MovementLinkObject_Area.ObjectId, 0)     = vbAreaId
        ;
 
-      IF COALESCE (vbPriceListId, 0) = 0 THEN 
-         vbPriceListId := gpInsertUpdate_Movement_PriceList (0, '', vbOperDate, vbJuridicalId, vbContractId, vbAreaId, inSession);
+      IF COALESCE (vbMovementId_pl, 0) = 0 THEN 
+         vbMovementId_pl := gpInsertUpdate_Movement_PriceList (0, '', vbOperDate, vbJuridicalId, vbContractId, vbAreaId, inSession);
       END IF;
 
 
@@ -75,50 +75,58 @@ BEGIN
       
      -- Перенос элементов прайса
      PERFORM 
-         lpInsertUpdate_MovementItem_PriceList(
-                                               MovementItem.Id , -- Ключ объекта <Элемент документа>
-                                                 vbPriceListId , -- Ключ объекта <Документ>
-                                                       GoodsId , -- Товары
-                                               Object_Goods.Id , -- Товар прайс-листа
-                                       
-                                                  CASE WHEN LoadPriceList.NDSinPrice = TRUE
-                                                            THEN Price 
-                                                       ELSE Price * (100 + ObjectFloat_NDSKind_NDS.ValueData) / 100 
-                                                  END:: TFloat  , -- Цена
-                                       
-                                                  CASE WHEN LoadPriceList.NDSinPrice = TRUE
-                                                            THEN PriceOriginal 
-                                                       ELSE PriceOriginal * (100 + ObjectFloat_NDSKind_NDS.ValueData) / 100
-                                                  END:: TFloat  , -- !!!Цена оригинальная!!!
-                                       
-                                                 ExpirationDate , -- Партия товара
-                                                        Remains , -- остаток
-                                                       vbUserId)
-        , lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_LastPrice(), GoodsId, vbOperDate)              -- дата прайса --CURRENT_TIMESTAMP
-        , lpInsertUpdate_Goods_CountPrice (vbPriceListId, vbOperDate, GoodsId)
-       FROM LoadPriceListItem 
-               JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
-                             ON ObjectLink_Goods_NDSKind.ObjectId = LoadPriceListItem.GoodsId
-                            AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
-               
-          LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
-                                ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.Childobjectid
-                               AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
+         lpInsertUpdate_MovementItem_PriceList (tmp.MovementItemId , -- Ключ объекта <Элемент документа>
+                                                   vbMovementId_pl , -- Ключ объекта <Документ>
+                                                       tmp.GoodsId , -- inGoodsMainId - Товары
+                                                  tmp.GoodsId_find , -- inGoodsId     - Товар прайс-листа
+                                           
+                                                      CASE WHEN tmp.NDSinPrice = TRUE
+                                                                THEN tmp.Price 
+                                                           ELSE tmp.Price * (100 + tmp.NDS) / 100 
+                                                      END:: TFloat  , -- Цена
+                                           
+                                                      CASE WHEN tmp.NDSinPrice = TRUE
+                                                                THEN tmp.PriceOriginal 
+                                                           ELSE tmp.PriceOriginal * (100 + tmp.NDS) / 100
+                                                      END :: TFloat , -- !!!Цена оригинальная!!!
+                                           
+                                                 tmp.ExpirationDate , -- Партия товара
+                                                        tmp.Remains , -- остаток
+                                                           vbUserId)
+        , lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_LastPrice(), tmp.GoodsId, vbOperDate)              -- дата прайса --CURRENT_TIMESTAMP
+          -- Кол-во позиций по всем прайсам
+        , lpInsertUpdate_Goods_CountPrice (vbMovementId_pl, vbOperDate, tmp.GoodsId)
 
-               JOIN (SELECT Object_Goods_View.Id, Object_Goods_View.GoodsCode
-                                FROM Object_Goods_View 
-                               WHERE ObjectId = vbJuridicalId
-                    ) AS Object_Goods ON Object_Goods.goodscode = LoadPriceListItem.GoodsCode
-                    
-          LEFT JOIN MovementItem ON LoadPriceListItem.GoodsId = MovementItem.ObjectId and MovementId = vbPriceListId
-          LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+       FROM (WITH tmpGoods AS (SELECT Object_Goods_View.Id, Object_Goods_View.GoodsCode
+                               FROM Object_Goods_View
+                               WHERE Object_Goods_View.ObjectId = vbJuridicalId
+                              )
+             SELECT LoadPriceListItem.*
+                  , LoadPriceList.NDSinPrice
+                  , MovementItem.Id AS MovementItemId
+                  , tmpGoods.Id     AS GoodsId_find
+                  , ObjectFloat_NDSKind_NDS.ValueData AS NDS
+             FROM LoadPriceListItem 
+                  JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
+                  LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
+                                     ON ObjectLink_Goods_NDSKind.ObjectId = LoadPriceListItem.GoodsId
+                                    AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
+                     
+                  LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                        ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.Childobjectid
+                                       AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
+      
+                  INNER JOIN tmpGoods ON tmpGoods.goodscode = LoadPriceListItem.GoodsCode
+                          
+                  LEFT JOIN MovementItem ON MovementItem.ObjectId = LoadPriceListItem.GoodsId AND MovementItem.MovementId = vbMovementId_pl
+                  /*LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
                                                    ON MILinkObject_Goods.MovementItemId = MovementItem.Id
-                                                  AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-                                                  AND MILinkObject_Goods.ObjectId = Object_Goods.Id
+                                                  AND MILinkObject_Goods.DescId         = zc_MILinkObject_Goods()
+                                                  AND MILinkObject_Goods.ObjectId       = tmpGoods.Id*/
                     
                     
-      WHERE GoodsId <> 0 AND LoadPriceListId = inId;
+             WHERE LoadPriceListItem.GoodsId > 0 AND LoadPriceListItem.LoadPriceListId = inId
+            ) AS tmp;
 
 
      -- сохранили протокол

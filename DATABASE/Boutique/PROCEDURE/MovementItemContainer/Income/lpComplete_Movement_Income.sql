@@ -33,9 +33,9 @@ BEGIN
 
 
      -- Параметры из документа
-     SELECT _tmp.MovementDescId, _tmp.OperDate, _tmp.PartnerId, _tmp.UnitId
-          , _tmp.CurrencyDocumentId, _tmp.CurrencyValue, _tmp.ParValue
-          , _tmp.AccountDirectionId_To
+     SELECT tmp.MovementDescId, tmp.OperDate, tmp.PartnerId, tmp.UnitId
+          , tmp.CurrencyDocumentId, tmp.CurrencyValue, tmp.ParValue
+          , tmp.AccountDirectionId_To
             INTO vbMovementDescId
                , vbOperDate
                , vbPartnerId
@@ -85,7 +85,7 @@ BEGIN
            WHERE Movement.Id       = inMovementId
              AND Movement.DescId   = zc_Movement_Income()
              AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
-          ) AS _tmp;
+          ) AS tmp;
 
 
      -- доопределили - Аналитику для проводок
@@ -100,41 +100,53 @@ BEGIN
                          , AccountId, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                           )
         -- результат
-        SELECT _tmp.MovementItemId
+        SELECT tmp.MovementItemId
              , 0 AS ContainerId_Summ          -- сформируем позже
              , 0 AS ContainerId_Goods         -- сформируем позже
-             , _tmp.GoodsId
-             , _tmp.PartionId
-             , _tmp.GoodsSizeId
-             , _tmp.OperCount
+             , tmp.GoodsId
+             , tmp.PartionId
+             , tmp.GoodsSizeId
+             , tmp.OperCount
 
-               -- сумма по Контрагенту
-             , _tmp.OperSumm
-               -- сумма в Валюте по Контрагенту
-             , _tmp.OperSumm_Currency
+               -- Сумма по Вх. в zc_Currency_Basis - с округлением до 2-х знаков
+             , zfCalc_SummIn (tmp.OperCount, tmp.OperPrice_basis, tmp.CountForPrice) AS OperSumm
+               -- Сумма по Вх. в ВАЛЮТЕ
+             , tmp.OperSumm_Currency
 
              , 0 AS AccountId                 -- Счет(справочника), сформируем позже
 
                -- УП для Income = УП долг Контрагента
-             , _tmp.InfoMoneyGroupId
-             , _tmp.InfoMoneyDestinationId
-             , _tmp.InfoMoneyId
+             , tmp.InfoMoneyGroupId
+             , tmp.InfoMoneyDestinationId
+             , tmp.InfoMoneyId
 
-        FROM (SELECT MovementItem.Id                  AS MovementItemId
-                   , MovementItem.ObjectId            AS GoodsId
-                   , MovementItem.Id                  AS PartionId -- !!!здесь можно было б и MovementItem.PartionId!!!
-                   , Object_PartionGoods.GoodsSizeId  AS GoodsSizeId
-                   , MovementItem.Amount              AS OperCount
+        FROM (SELECT MovementItem.Id                    AS MovementItemId
+                   , Object_PartionGoods.GoodsId        AS GoodsId
+                   , MovementItem.Id                    AS PartionId -- !!!здесь можно было б и MovementItem.PartionId!!!
+                   , Object_PartionGoods.GoodsSizeId    AS GoodsSizeId
+                   , MovementItem.Amount                AS OperCount
+                   , Object_PartionGoods.OperPrice      AS OperPrice
+                   , CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END AS CountForPrice
+                   , Object_PartionGoods.CurrencyId     AS CurrencyId
 
-                     -- сумма по Контрагенту в Валюте Баланса - с округлением до 2-х знаков
-                   , CASE WHEN vbCurrencyDocumentId <> zc_Currency_Basis()
-                               -- так переводится в валюту zc_Currency_Basis - с округлением до 2-х знаков
-                               THEN zfCalc_CurrencyFrom (zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData), vbCurrencyValue, vbParValue)
-                          ELSE zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData)
-                     END AS OperSumm
+                     -- Цена Вх. - именно её переводим в zc_Currency_Basis - с округлением до 2-х знаков
+                   , zfCalc_PriceIn_Basis (Object_PartionGoods.CurrencyId, Object_PartionGoods.OperPrice
+                                         , CASE WHEN Object_PartionGoods.CurrencyId = Object_PartionGoods.CurrencyId
+                                                     THEN vbCurrencyValue
+                                                WHEN 1=0 -- Object_PartionGoods.CurrencyId <> Object_PartionGoods.CurrencyId AND vbCurrencyValue > 0
+                                                     -- Здесь Деление
+                                                     THEN 1000 * 1 / vbCurrencyValue
+                                           END
+                                         , CASE WHEN Object_PartionGoods.CurrencyId = Object_PartionGoods.CurrencyId
+                                                     THEN vbParValue
+                                                WHEN 1=0 -- Object_PartionGoods.CurrencyId <> Object_PartionGoods.CurrencyId AND vbCurrencyValue > 0
+                                                     -- т.к. было Деление
+                                                     THEN 1000 * vbParValue
+                                           END
+                                          ) AS OperPrice_basis
 
-                     -- сумма по Контрагенту в Валюте - с округлением до 2-х знаков
-                   , zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData) AS OperSumm_Currency
+                     -- Сумма по Вх. в Валюте - с округлением до 2-х знаков
+                   , zfCalc_SummIn (MovementItem.Amount, Object_PartionGoods.OperPrice, Object_PartionGoods.CountForPrice) AS OperSumm_Currency
 
                      -- Управленческая группа
                    , View_InfoMoney.InfoMoneyGroupId
@@ -147,23 +159,17 @@ BEGIN
                    JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                     AND MovementItem.DescId     = zc_MI_Master()
                                     AND MovementItem.isErased   = FALSE
-                   LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
-                                               ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
-                                              AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
-                   LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                               ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                              AND MIFloat_CountForPrice.DescId         = zc_MIFloat_CountForPrice()
+
+                   LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MovementItem.Id
                    LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                        ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
+                                        ON ObjectLink_Goods_InfoMoney.ObjectId = Object_PartionGoods.GoodsId
                                        AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
                    LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = COALESCE (ObjectLink_Goods_InfoMoney.ChildObjectId, zc_Enum_InfoMoney_10101()) -- !!!ВРЕМЕННО!!! Доходы + Товары + Одежда
-                   LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MovementItem.Id
-
 
               WHERE Movement.Id       = inMovementId
                 AND Movement.DescId   = zc_Movement_Income()
                 AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
-             ) AS _tmp
+             ) AS tmp
             ;
 
 
@@ -413,6 +419,15 @@ BEGIN
                                 , inDescId     := zc_Movement_Income()
                                 , inUserId     := inUserId
                                  );
+
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+
+     -- дописали - КОЛ-ВО
+     UPDATE Object_PartionGoods SET Amount = _tmpItem.OperCount, isErased = FALSE, isArc = FALSE
+     FROM _tmpItem
+     WHERE Object_PartionGoods.MovementItemId = _tmpItem.MovementItemId
+    ;
 
 END;
 $BODY$

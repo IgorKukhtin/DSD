@@ -101,6 +101,14 @@ type
     isAuto: TcxGridDBColumn;
     LineNumTaxOld: TcxGridDBColumn;
     actShowMessage: TShowMessageAction;
+    edINN: TcxTextEdit;
+    cxLabel14: TcxLabel;
+    cbINN: TcxCheckBox;
+    spUpdate_INN: TdsdStoredProc;
+    actUpdateINN: TdsdDataSetRefresh;
+    ExecuteDialogINN: TExecuteDialog;
+    macUpdateINN: TMultiAction;
+    bbUpdateINN: TdxBarButton;
   private
     { Private declarations }
   public

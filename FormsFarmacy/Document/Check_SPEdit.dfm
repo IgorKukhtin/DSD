@@ -218,8 +218,25 @@ object Check_SPEditForm: TCheck_SPEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterOperDate'
+        Value = 'NULL'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 23
+    Left = 65535
     Top = 2
   end
   object PeriodChoice: TPeriodChoice
@@ -230,10 +247,10 @@ object Check_SPEditForm: TCheck_SPEditForm
   object PartnerMedicalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPartnerMedical
-    FormNameParam.Value = 'TPartnerMedicalForm'
+    FormNameParam.Value = 'TPartnerMedical_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPartnerMedicalForm'
+    FormName = 'TPartnerMedical_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -255,6 +272,7 @@ object Check_SPEditForm: TCheck_SPEditForm
       end
       item
         Name = 'MedicSPId'
+        Value = Null
         Component = MedicSPGuides
         ComponentItem = 'Key'
         ParamType = ptInput
@@ -268,6 +286,29 @@ object Check_SPEditForm: TCheck_SPEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterOperDate'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'MasterOperDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MasterUnitId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MasterUnitName'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 176
     Top = 177
@@ -276,10 +317,10 @@ object Check_SPEditForm: TCheck_SPEditForm
     KeyField = 'Id'
     LookupControl = edMedicSP
     Key = '0'
-    FormNameParam.Value = 'TMedicSPForm'
+    FormNameParam.Value = 'TMedicSP_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMedicSPForm'
+    FormName = 'TMedicSP_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -329,6 +370,29 @@ object Check_SPEditForm: TCheck_SPEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterOperDate'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'MasterOperDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MasterUnitId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MasterUnitName'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 168

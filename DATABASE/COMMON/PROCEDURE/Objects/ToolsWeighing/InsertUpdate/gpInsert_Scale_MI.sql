@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
     IN inCountForPrice         TFloat    , -- Цена за количество
     IN inCountForPrice_Return  TFloat    , -- Цена за количество
     IN inDayPrior_PriceReturn  Integer,
-    IN inCount                 TFloat    , -- Количество пакетов или Количество батонов
+    IN inCount                 TFloat    , -- Количество пакетов или Количество батонов или Кол-во для Печати ЭТИКЕТОК
     IN inHeadCount             TFloat    , --
     IN inBoxCount              TFloat    , --
     IN inBoxCode               Integer   , --
@@ -316,6 +316,7 @@ BEGIN
                                                                                        -- ?когда схема для Днепра будет как у филиала? - т.е. при продаже - цена из заявки
                                                                                        WHEN vbMovementDescId IN (/**/zc_Movement_Sale(), /**/zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())
                                                                                             AND vbPriceListId_Dnepr <> 0
+                                                                                            AND COALESCE (inMovementId_Promo, 0) = 0
                                                                                             THEN COALESCE ((SELECT tmp.ValuePrice FROM gpGet_ObjectHistory_PriceListItem (inOperDate   := vbOperDate_Dnepr
                                                                                                                                                                         , inPriceListId:= vbPriceListId_Dnepr
                                                                                                                                                                         , inGoodsId    := inGoodsId
@@ -363,7 +364,10 @@ BEGIN
 -- !!! ВРЕМЕННО !!!
 if inSession = '5' AND 1=1
 then
-    RAISE EXCEPTION 'Admin - Test = OK';
+    RAISE EXCEPTION 'Admin - Test = OK  Amount = <%> Price = <%>'
+                  , (SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = vbId)
+                  , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = vbId AND MIF.DescId = zc_MIFloat_Price())
+                   ;
     -- 'Повторите действие через 3 мин.'
 end if;
 

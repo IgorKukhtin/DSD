@@ -19,7 +19,7 @@ BEGIN
       IF EXISTS (SELECT 1 FROM Object AS Object_User WHERE Object_User.Id = vbUserId AND Object_User.DescId = zc_Object_User())
       THEN
            -- сохранили свойство <дата/время успешной ВХОДЯЩЕЙ синхронизации с Мобильного устройства>
-           PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_User_UpdateMobileFrom(), vbUserId, inUpdateMobileFrom);
+           PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_User_UpdateMobileFrom(), vbUserId, CURRENT_TIMESTAMP /*inUpdateMobileFrom*/);
            -- сохранили протокол
            PERFORM lpInsert_ObjectProtocol (vbUserId, vbUserId);
       END IF;
