@@ -1,7 +1,7 @@
 -- Function: gpSelect_Object_Unit()
 
 -- DROP FUNCTION IF EXISTS gpSelect_Object_UnitForReprice (TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_UnitForReprice (Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Object_UnitForReprice (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_UnitForReprice (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_UnitForReprice(

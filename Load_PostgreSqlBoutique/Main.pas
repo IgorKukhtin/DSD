@@ -6621,7 +6621,7 @@ begin
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
-        toStoredProc.Params.AddParam ('inIsCorporate',ftBoolean,ptInput, false);
+        toStoredProc.Params.AddParam ('inIsCorporate',ftBoolean,ptInput, TRUE);
         toStoredProc.Params.AddParam ('inFullName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inAddress',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inOKPO',ftString,ptInput, '');
