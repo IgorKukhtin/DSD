@@ -2,10 +2,12 @@
 
 -- DROP FUNCTION IF EXISTS gpSelect_Object_UnitForReprice (TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_UnitForReprice (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_UnitForReprice (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_UnitForReprice(
-    IN inJuridicalId   Integer,       -- наше юр.лицо
-    IN inSession       TVarChar       -- сессия пользователя
+    IN inJuridicalId      Integer,       -- наше юр.лицо
+    IN inProvinceCityId   Integer,       -- район
+    IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, UnitName TVarChar) AS
 $BODY$
@@ -44,6 +46,7 @@ BEGIN
           AND COALESCE (ObjectBoolean_isLeaf.ValueData,False) = TRUE
           AND COALESCE (ObjectBoolean_RepriceAuto.ValueData,False) = TRUE
           AND (ObjectLink_Unit_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
+          AND (ObjectLink_Unit_ProvinceCity.ChildObjectId = inProvinceCityId OR inProvinceCityId = 0)
 
         ORDER BY Object_Juridical.ValueData , Object_Unit.ValueData , Object_ProvinceCity.ValueData
        ;
@@ -60,4 +63,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_UnitForReprice (0, '2');
+-- SELECT * FROM gpSelect_Object_UnitForReprice (0, 0,'2');

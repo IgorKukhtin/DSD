@@ -144,6 +144,8 @@ type
     GuidesJuridical: TdsdGuides;
     BtnUnitsList: TButton;
     actChoiceJuridical: TOpenChoiceForm;
+    edProvinceCity: TcxButtonEdit;
+    GuidesProvinceCity: TdsdGuides;
     procedure FormCreate(Sender: TObject);
     procedure btnRepriceClick(Sender: TObject);
     procedure btnSelectNewPriceClick(Sender: TObject);
