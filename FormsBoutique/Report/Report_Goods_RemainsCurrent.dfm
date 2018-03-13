@@ -6,7 +6,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -153
   ExplicitWidth = 1185
   ExplicitHeight = 471
   PixelsPerInch = 96
@@ -14,7 +13,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   inherited Panel: TPanel [0]
     Width = 1169
     Height = 55
-    ExplicitLeft = -8
     ExplicitWidth = 1169
     ExplicitHeight = 55
     inherited deStart: TcxDateEdit

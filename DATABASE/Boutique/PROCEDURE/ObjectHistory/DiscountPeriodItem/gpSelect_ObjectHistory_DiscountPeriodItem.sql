@@ -2,14 +2,15 @@
 
 DROP FUNCTION IF EXISTS gpSelect_ObjectHistory_DiscountPeriodItem (Integer, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_ObjectHistory_DiscountPeriodItem (Integer, Integer, Integer, TDateTime, TFloat, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_ObjectHistory_DiscountPeriodItem (Integer, Integer, Integer, TDateTime, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_DiscountPeriodItem(
     IN inUnitId             Integer   , -- подразделение
     IN inBrandId            Integer   , -- торговая марка
     IN inPeriodId           Integer   , -- сезон
     IN inOperDate           TDateTime , -- Дата действия
-    IN inStartYear          TFloat    , -- год
-    IN inEndYear            TFloat    , -- год
+    IN inStartYear          Integer   , -- год с
+    IN inEndYear            Integer   , -- год по
     IN inShowAll            Boolean,
     IN inSession            TVarChar    -- сессия пользователя
 )
@@ -44,6 +45,11 @@ RETURNS TABLE  (  Id Integer , ObjectId Integer
 AS
 $BODY$
 BEGIN
+
+    -- !!!замена!!!
+    IF COALESCE (inEndYear, 0) = 0 THEN
+       inEndYear:= 1000000;
+    END IF;
 
    IF inShowAll = TRUE THEN
 
@@ -114,9 +120,9 @@ BEGIN
                       AND Object_PartionGoods.UnitId      = inUnitId
                       AND (Object_PartionGoods.BrandId    = inBrandId    OR inBrandId   = 0)
                       AND (Object_PartionGoods.PeriodId   = inPeriodId   OR inPeriodId  = 0)
-                      AND (Object_PartionGoods.PeriodYear >= inStartYear OR inStartYear = 0)
-                      AND (Object_PartionGoods.PeriodYear <= inEndYear   OR inEndYear   = 0)
+                      AND (Object_PartionGoods.PeriodYear BETWEEN inStartYear AND inEndYear)
                     )
+
        -- Результат
        SELECT
              tmpDiscount.Id
@@ -250,9 +256,9 @@ BEGIN
                       -- AND Object_PartionGoods.UnitId      = inUnitId
                       AND (Object_PartionGoods.BrandId    = inBrandId    OR inBrandId   = 0)
                       AND (Object_PartionGoods.PeriodId   = inPeriodId   OR inPeriodId  = 0)
-                      AND (Object_PartionGoods.PeriodYear >= inStartYear OR inStartYear = 0)
-                      AND (Object_PartionGoods.PeriodYear <= inEndYear   OR inEndYear   = 0)
+                      AND (Object_PartionGoods.PeriodYear BETWEEN inStartYear AND inEndYear)
                    )
+
        -- Результат
        SELECT
              tmpDiscount.Id

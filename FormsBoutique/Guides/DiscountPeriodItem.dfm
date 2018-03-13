@@ -31,7 +31,12 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = GoodsName
+        end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsCustomize.ColumnHiding = True
@@ -39,6 +44,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
+      OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -410,7 +416,6 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         end>
       Properties.ReadOnly = True
       TabOrder = 11
-      Text = '2000'
       Width = 49
     end
     object edEndYear: TcxButtonEdit
@@ -423,7 +428,6 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         end>
       Properties.ReadOnly = True
       TabOrder = 12
-      Text = '2018'
       Width = 52
     end
   end
@@ -484,19 +488,21 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
           'Width')
       end
       item
-        Component = edStartYear
+        Component = GuidesStartYear
         Properties.Strings = (
-          'Text')
+          'Key'
+          'TextValue')
       end
       item
-        Component = edEndYear
+        Component = GuidesEndYear
         Properties.Strings = (
-          'Text')
+          'Key'
+          'TextValue')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 376
-    Top = 144
+    Left = 400
+    Top = 184
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -924,14 +930,34 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         item
           Name = 'StartYear'
           Value = '0'
-          DataType = ftFloat
+          Component = GuidesStartYear
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartYearText'
+          Value = Null
+          Component = GuidesStartYear
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'EndYear'
           Value = ''
-          DataType = ftFloat
+          Component = GuidesEndYear
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndYearText'
+          Value = Null
+          Component = GuidesEndYear
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -983,16 +1009,16 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       item
         Name = 'inStartYear'
         Value = Null
-        Component = edStartYear
-        DataType = ftFloat
+        Component = GuidesStartYear
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inEndYear'
         Value = Null
-        Component = edEndYear
-        DataType = ftFloat
+        Component = GuidesEndYear
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1156,8 +1182,10 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         Component = GuidesPeriod
       end
       item
+        Component = GuidesStartYear
       end
       item
+        Component = GuidesEndYear
       end
       item
         Component = edShowDate
@@ -1344,9 +1372,20 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PeriodYear'
+        Name = 'Key'
         Value = ''
-        Component = edStartYear
+        Component = GuidesStartYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = Null
+        Component = GuidesStartYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 442
@@ -1363,9 +1402,20 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PeriodYear'
+        Name = 'Key'
         Value = ''
-        Component = edEndYear
+        Component = GuidesEndYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = Null
+        Component = GuidesEndYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 493
