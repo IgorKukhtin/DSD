@@ -65,6 +65,10 @@ type
     edEndYear: TcxButtonEdit;
     GuidesStartYear: TdsdGuides;
     GuidesEndYear: TdsdGuides;
+    actPrint: TdsdPrintAction;
+    actPrintIn: TdsdPrintAction;
+    bbPrint: TdxBarButton;
+    bbPrintin: TdxBarButton;
   private
     { Private declarations }
   public

@@ -69,6 +69,10 @@ type
     cbClient: TcxCheckBox;
     actRefreshClient: TdsdDataSetRefresh;
     GuidesStartYear: TdsdGuides;
+    actPrint: TdsdPrintAction;
+    actPrintIn: TdsdPrintAction;
+    bbPrint: TdxBarButton;
+    bbPrintin: TdxBarButton;
   private
     { Private declarations }
   public
