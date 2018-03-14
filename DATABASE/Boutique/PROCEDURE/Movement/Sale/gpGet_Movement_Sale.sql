@@ -30,11 +30,8 @@ BEGIN
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Sale());
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- определять магазин по принадлежности пользователя к сотруднику
-     --vbUnitId:= lpGetUnitBySession (inSession);
-
      -- подразделение пользователя
-     vbUnitId_User := lpGetUnitByUser(vbUserId);
+     vbUnitId_User := lpGetUnitBySession(inSession);
 
      IF inOperDate < '01.01.2017' THEN inOperDate := CURRENT_DATE; END IF;
      -- пытаемся найти последний непроведенный документ
@@ -103,7 +100,7 @@ BEGIN
      ELSE
  
        -- проверка может ли смотреть любой магазин, или только свой
-       vbUnitId_User := lpCheckUnitByUser(vbUnitId, vbUserId);
+       vbUnitId_User := lpCheckUnitByUser(vbUnitId, inSession);
     
        RETURN QUERY
            WITH

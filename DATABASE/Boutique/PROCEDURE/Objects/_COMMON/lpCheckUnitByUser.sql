@@ -1,23 +1,26 @@
 -- Function: lpCheckUnitByUser(Integer)
 
 DROP FUNCTION IF EXISTS lpCheckUnitByUser (Integer, Integer);
+DROP FUNCTION IF EXISTS lpCheckUnitByUser (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION lpCheckUnitByUser (
-    IN inUnitId   Integer,
-    IN inUserId   Integer
+    IN inUnitId    Integer ,
+    IN inSession   TVarChar
 )
 RETURNS Integer
 AS
 $BODY$  
+   DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
 BEGIN
 
-     vbUnitId := lpGetUnitByUser(inUserId);
+     vbUserId := lpGetUserBySession (inSession);
+     vbUnitId := lpGetUnitBySession (inSession);
 
      -- если у пользователя = 0, тогда может смотреть любой магазин, иначе только свой
      IF vbUnitId <> 0 AND vbUnitId <> inUnitId AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Child() AND OL.ChildObjectid = inUnitId AND OL.Objectid = vbUnitId)
      THEN
-         RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав просмотра данных по подразделению <%> .', lfGet_Object_ValueData (inUserId), lfGet_Object_ValueData (inUnitId);
+         RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав просмотра данных по подразделению <%> .', lfGet_Object_ValueData (vbUserId), lfGet_Object_ValueData (inUnitId);
      END IF;
      
      RETURN  COALESCE (vbUnitId, 0);
@@ -32,4 +35,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpCheckUnitByUser (inUserId:= 2)
+-- SELECT * FROM lpCheckUnitByUser (inUnitId := 1525, inSession:= '2')

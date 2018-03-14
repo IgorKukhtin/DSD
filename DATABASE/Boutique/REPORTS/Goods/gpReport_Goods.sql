@@ -30,7 +30,7 @@ BEGIN
     vbUserId:= lpGetUserBySession (inSession);
 
     -- подразделение пользователя  + проверка может ли смотреть любой магазин, или только свой
-    vbUnitId := lpCheckUnitByUser(inUnitId, vbUserId);
+    vbUnitId := lpCheckUnitByUser(inUnitId, inSession);
 
     -- !!!замена!!!
     inPartionId:= 0;

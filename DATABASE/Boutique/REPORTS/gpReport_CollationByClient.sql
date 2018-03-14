@@ -71,7 +71,7 @@ BEGIN
     vbEndDate := inEndDate + interval '1 day';
 
     -- подразделение пользователя  + проверка может ли смотреть любой магазин, или только свой
-    vbUnitId := lpCheckUnitByUser(inUnitId, vbUserId);
+    vbUnitId := lpCheckUnitByUser(inUnitId, inSession);
 
     -- Результат
     RETURN QUERY
