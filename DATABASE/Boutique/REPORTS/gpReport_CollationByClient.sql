@@ -70,14 +70,8 @@ BEGIN
     vbUserId:= lpGetUserBySession (inSession);
     vbEndDate := inEndDate + interval '1 day';
 
-    -- подразделение пользовател€
-    vbUnitId := lpGetUnitByUser(vbUserId);
-
-    -- если у пользовател€ = 0, тогда может смотреть любой магазин, иначе только свой
-    IF COALESCE (vbUnitId, 0 ) <> 0 AND COALESCE (vbUnitId) <> inUnitId AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Child() AND OL.ChildObjectid = inUnitId AND OL.Objectid = vbUnitId)
-    THEN
-        RAISE EXCEPTION 'ќшибка.” ѕользовател€ <%> нет прав просмотра данных по подразделению <%> .', lfGet_Object_ValueData (vbUserId), lfGet_Object_ValueData (inUnitId);
-    END IF;
+    -- подразделение пользовател€  + проверка может ли смотреть любой магазин, или только свой
+    vbUnitId := lpCheckUnitByUser(inUnitId, vbUserId);
 
     -- –езультат
     RETURN QUERY

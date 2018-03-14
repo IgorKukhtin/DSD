@@ -660,20 +660,20 @@ inherited Report_ClientDebtForm: TReport_ClientDebtForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGet_UserUnit
+      StoredProc = spGet_Unit
       StoredProcList = <
         item
-          StoredProc = spGet_UserUnit
+          StoredProc = spGet_Unit
         end>
       Caption = 'actGet_UserUnit'
     end
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGet_UserUnit
+      StoredProc = spGet_Unit
       StoredProcList = <
         item
-          StoredProc = spGet_UserUnit
+          StoredProc = spGet_Unit
         end
         item
           StoredProc = spSelect
@@ -1138,8 +1138,8 @@ inherited Report_ClientDebtForm: TReport_ClientDebtForm
       end>
     Left = 400
   end
-  object spGet_UserUnit: TdsdStoredProc
-    StoredProcName = 'gpGet_UserUnit'
+  object spGet_Unit: TdsdStoredProc
+    StoredProcName = 'gpGet_UnitbyUser'
     DataSets = <>
     OutputType = otResult
     Params = <

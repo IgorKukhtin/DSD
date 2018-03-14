@@ -127,8 +127,8 @@ object Report_ClientDebtDialogForm: TReport_ClientDebtDialogForm
     Left = 102
     Top = 17
   end
-  object spGet_UserUnit: TdsdStoredProc
-    StoredProcName = 'gpGet_UserUnit'
+  object spGet_Unit: TdsdStoredProc
+    StoredProcName = 'gpGet_UnitbyUser'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -158,20 +158,20 @@ object Report_ClientDebtDialogForm: TReport_ClientDebtDialogForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGet_UserUnit
+      StoredProc = spGet_Unit
       StoredProcList = <
         item
-          StoredProc = spGet_UserUnit
+          StoredProc = spGet_Unit
         end>
       Caption = 'actGet_UserUnit'
     end
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGet_UserUnit
+      StoredProc = spGet_Unit
       StoredProcList = <
         item
-          StoredProc = spGet_UserUnit
+          StoredProc = spGet_Unit
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077

@@ -45,7 +45,7 @@ type
     bbOpenReportForm: TdxBarButton;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    spGet_UserUnit: TdsdStoredProc;
+    spGet_Unit: TdsdStoredProc;
     actOpenReportForm_Partner: TdsdOpenForm;
     bbOpenReportForm_Partner: TdxBarButton;
     cxLabel4: TcxLabel;

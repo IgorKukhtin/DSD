@@ -46,7 +46,7 @@ type
     bbReport_Goods: TdxBarButton;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    spGet_UserUnit: TdsdStoredProc;
+    spGet_Unit: TdsdStoredProc;
     StatusCode: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;

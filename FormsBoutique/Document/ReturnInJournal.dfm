@@ -1338,7 +1338,7 @@ object ReturnInJournalForm: TReturnInJournalForm
     Top = 8
   end
   object spGet_UserUnit: TdsdStoredProc
-    StoredProcName = 'gpGet_UserUnit'
+    StoredProcName = 'gpGet_UnitbyUser'
     DataSets = <>
     OutputType = otResult
     Params = <

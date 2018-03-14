@@ -52,6 +52,11 @@ type
     edEndYear: TcxButtonEdit;
     GuidesStartYear: TdsdGuides;
     GuidesEndYear: TdsdGuides;
+    spGet_Unit: TdsdStoredProc;
+    ActionList: TActionList;
+    actGet_UserUnit: TdsdExecStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
+    actRefresh: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

@@ -41,7 +41,6 @@ type
     bbOpenReportForm: TdxBarButton;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    spGet_UserUnit: TdsdStoredProc;
     OperDate_Partion: TcxGridDBColumn;
     Invnumber_Partion: TcxGridDBColumn;
   private

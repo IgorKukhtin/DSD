@@ -714,10 +714,10 @@ inherited Report_MotionByClientForm: TReport_MotionByClientForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGet_UserUnit
+      StoredProc = spGet_Unit
       StoredProcList = <
         item
-          StoredProc = spGet_UserUnit
+          StoredProc = spGet_Unit
         end>
       Caption = 'actGet_UserUnit'
     end
@@ -1288,8 +1288,8 @@ inherited Report_MotionByClientForm: TReport_MotionByClientForm
       end>
     Left = 424
   end
-  object spGet_UserUnit: TdsdStoredProc
-    StoredProcName = 'gpGet_UserUnit'
+  object spGet_Unit: TdsdStoredProc
+    StoredProcName = 'gpGet_UnitbyUser'
     DataSets = <>
     OutputType = otResult
     Params = <

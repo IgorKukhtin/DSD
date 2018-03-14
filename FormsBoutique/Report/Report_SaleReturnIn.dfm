@@ -710,10 +710,10 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGet_UserUnit
+      StoredProc = spGet_Unit
       StoredProcList = <
         item
-          StoredProc = spGet_UserUnit
+          StoredProc = spGet_Unit
         end>
       Caption = 'actGet_UserUnit'
     end
@@ -765,10 +765,10 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGet_UserUnit
+      StoredProc = spGet_Unit
       StoredProcList = <
         item
-          StoredProc = spGet_UserUnit
+          StoredProc = spGet_Unit
         end
         item
           StoredProc = spSelect
@@ -1340,8 +1340,8 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
       end>
     Left = 400
   end
-  object spGet_UserUnit: TdsdStoredProc
-    StoredProcName = 'gpGet_UserUnit'
+  object spGet_Unit: TdsdStoredProc
+    StoredProcName = 'gpGet_UnitbyUser'
     DataSets = <>
     OutputType = otResult
     Params = <
