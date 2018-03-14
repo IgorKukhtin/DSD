@@ -183,22 +183,30 @@ BEGIN
                                    , SUM (tmpMIContainer_all.AmountEnd)        AS AmountEnd
                                    , SUM (tmpMIContainer_all.AmountIn)         AS AmountIn
                                    , SUM (tmpMIContainer_all.AmountOut)        AS AmountOut
-                                   , SUM (CASE WHEN COALESCE (Object_PartionGoods.CountForPrice, 1) <> 0
-                                                    THEN CAST (COALESCE (tmpMIContainer_all.AmountStart, 0) * COALESCE (Object_PartionGoods.OperPrice, 0) / COALESCE (Object_PartionGoods.CountForPrice, 1) AS NUMERIC (16, 2))
-                                               ELSE CAST ( COALESCE (tmpMIContainer_all.AmountStart, 0) * COALESCE (Object_PartionGoods.OperPrice, 0) AS NUMERIC (16, 2))
+                                   , SUM (CASE WHEN vbUnitId <> 0 THEN 0 
+                                               ELSE CASE WHEN COALESCE (Object_PartionGoods.CountForPrice, 1) <> 0
+                                                              THEN CAST (COALESCE (tmpMIContainer_all.AmountStart, 0) * COALESCE (Object_PartionGoods.OperPrice, 0) / COALESCE (Object_PartionGoods.CountForPrice, 1) AS NUMERIC (16, 2))
+                                                         ELSE CAST ( COALESCE (tmpMIContainer_all.AmountStart, 0) * COALESCE (Object_PartionGoods.OperPrice, 0) AS NUMERIC (16, 2))
+                                                    END
                                           END) AS SummStart
-                                   , SUM (CASE WHEN COALESCE (Object_PartionGoods.CountForPrice, 1) <> 0
-                                                    THEN CAST (COALESCE (tmpMIContainer_all.AmountEnd, 0) * COALESCE (Object_PartionGoods.OperPrice, 0) / COALESCE (Object_PartionGoods.CountForPrice, 1) AS NUMERIC (16, 2))
-                                               ELSE CAST ( COALESCE (tmpMIContainer_all.AmountEnd, 0) * COALESCE (Object_PartionGoods.OperPrice, 0) AS NUMERIC (16, 2))
+                                   , SUM (CASE WHEN vbUnitId <> 0 THEN 0 
+                                               ELSE CASE WHEN COALESCE (Object_PartionGoods.CountForPrice, 1) <> 0
+                                                              THEN CAST (COALESCE (tmpMIContainer_all.AmountEnd, 0) * COALESCE (Object_PartionGoods.OperPrice, 0) / COALESCE (Object_PartionGoods.CountForPrice, 1) AS NUMERIC (16, 2))
+                                                         ELSE CAST ( COALESCE (tmpMIContainer_all.AmountEnd, 0) * COALESCE (Object_PartionGoods.OperPrice, 0) AS NUMERIC (16, 2))
+                                                    END
                                           END) AS SummEnd
-                                   , SUM (CASE WHEN COALESCE (Object_PartionGoods.CountForPrice, 1) <> 0
-                                                    THEN CAST (COALESCE (tmpMIContainer_all.AmountIn, 0) * COALESCE (Object_PartionGoods.OperPrice, 0) / COALESCE (Object_PartionGoods.CountForPrice, 1) AS NUMERIC (16, 2))
-                                               ELSE CAST ( COALESCE (tmpMIContainer_all.AmountIn, 0) * COALESCE (Object_PartionGoods.OperPrice, 0) AS NUMERIC (16, 2))
+                                   , SUM (CASE WHEN vbUnitId <> 0 THEN 0 
+                                               ELSE CASE WHEN COALESCE (Object_PartionGoods.CountForPrice, 1) <> 0
+                                                              THEN CAST (COALESCE (tmpMIContainer_all.AmountIn, 0) * COALESCE (Object_PartionGoods.OperPrice, 0) / COALESCE (Object_PartionGoods.CountForPrice, 1) AS NUMERIC (16, 2))
+                                                         ELSE CAST ( COALESCE (tmpMIContainer_all.AmountIn, 0) * COALESCE (Object_PartionGoods.OperPrice, 0) AS NUMERIC (16, 2))
+                                                    END
                                           END) AS SummIn
 
-                                   , SUM (CASE WHEN COALESCE (Object_PartionGoods.CountForPrice, 1) <> 0
-                                                    THEN CAST (COALESCE (tmpMIContainer_all.AmountOut, 0) * COALESCE (Object_PartionGoods.OperPrice, 0) / COALESCE (Object_PartionGoods.CountForPrice, 1) AS NUMERIC (16, 2))
-                                               ELSE CAST ( COALESCE (tmpMIContainer_all.AmountOut, 0) * COALESCE (Object_PartionGoods.OperPrice, 0) AS NUMERIC (16, 2))
+                                   , SUM (CASE WHEN vbUnitId <> 0 THEN 0 
+                                               ELSE CASE WHEN COALESCE (Object_PartionGoods.CountForPrice, 1) <> 0
+                                                              THEN CAST (COALESCE (tmpMIContainer_all.AmountOut, 0) * COALESCE (Object_PartionGoods.OperPrice, 0) / COALESCE (Object_PartionGoods.CountForPrice, 1) AS NUMERIC (16, 2))
+                                                         ELSE CAST ( COALESCE (tmpMIContainer_all.AmountOut, 0) * COALESCE (Object_PartionGoods.OperPrice, 0) AS NUMERIC (16, 2))
+                                                    END
                                           END) AS SummOut
 
                                FROM (
