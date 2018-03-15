@@ -13,6 +13,7 @@ object DiscountPeriodItemDialogForm: TDiscountPeriodItemDialogForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
@@ -402,5 +403,37 @@ object DiscountPeriodItemDialogForm: TDiscountPeriodItemDialogForm
       end>
     Left = 109
     Top = 163
+  end
+  object spGet_Current_Date: TdsdStoredProc
+    StoredProcName = 'gpGet_Current_Date'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'gpGet_Current_Date'
+        Value = 42917d
+        Component = edShowDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 32
+    Top = 80
+  end
+  object ActionList: TActionList
+    Left = 155
+    Top = 49
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_Current_Date
+      StoredProcList = <
+        item
+          StoredProc = spGet_Current_Date
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      RefreshOnTabSetChanges = False
+    end
   end
 end

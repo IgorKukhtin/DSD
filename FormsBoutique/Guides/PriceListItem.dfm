@@ -12,7 +12,7 @@ object PriceListItemForm: TPriceListItemForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   PixelsPerInch = 96
@@ -125,6 +125,7 @@ object PriceListItemForm: TPriceListItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 80
       end
       object GoodsCode: TcxGridDBColumn
@@ -249,6 +250,7 @@ object PriceListItemForm: TPriceListItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 73
       end
       object GoodsInfoName: TcxGridDBColumn
@@ -257,6 +259,7 @@ object PriceListItemForm: TPriceListItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 70
       end
       object LineFabricaName: TcxGridDBColumn
@@ -265,6 +268,7 @@ object PriceListItemForm: TPriceListItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 55
       end
       object FabrikaName: TcxGridDBColumn
@@ -329,6 +333,7 @@ object PriceListItemForm: TPriceListItemForm
       object ObjectId: TcxGridDBColumn
         DataBinding.FieldName = 'ObjectId'
         Visible = False
+        Options.Editing = False
         VisibleForCustomization = False
         Width = 20
       end
@@ -559,8 +564,8 @@ object PriceListItemForm: TPriceListItemForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 376
-    Top = 168
+    Left = 392
+    Top = 184
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -722,6 +727,22 @@ object PriceListItemForm: TPriceListItemForm
     Images = dmMain.ImageList
     Left = 312
     Top = 176
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_Current_Date
+      StoredProcList = <
+        item
+          StoredProc = spGet_Current_Date
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1290,8 +1311,8 @@ object PriceListItemForm: TPriceListItemForm
     Top = 256
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 296
-    Top = 224
+    Left = 312
+    Top = 232
   end
   object GuidesPriceList: TdsdGuides
     KeyField = 'Id'
@@ -1393,7 +1414,7 @@ object PriceListItemForm: TPriceListItemForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 72
+    Left = 88
     Top = 272
   end
   object RefreshDispatcher: TRefreshDispatcher
@@ -1655,5 +1676,21 @@ object PriceListItemForm: TPriceListItemForm
     PackSize = 1
     Left = 512
     Top = 275
+  end
+  object spGet_Current_Date: TdsdStoredProc
+    StoredProcName = 'gpGet_Current_Date'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'gpGet_Current_Date'
+        Value = ''
+        Component = edOperDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 784
+    Top = 184
   end
 end

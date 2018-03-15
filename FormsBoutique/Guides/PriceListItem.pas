@@ -105,6 +105,8 @@ type
     edPriceTax: TcxCurrencyEdit;
     macInsertUpdate_Price: TMultiAction;
     bbInsertUpdate_Price: TdxBarButton;
+    spGet_Current_Date: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

@@ -12,7 +12,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   PixelsPerInch = 96
@@ -30,12 +30,42 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
-      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.DefaultGroupSummaryItems = <
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Remains
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountDebt
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = RemainsAll
+        end>
       DataController.Summary.FooterSummaryItems = <
         item
           Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = GoodsName
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Remains
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountDebt
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = RemainsAll
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -156,6 +186,44 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 55
+      end
+      object Remains: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1074' '#1084#1072#1075'.'
+        DataBinding.FieldName = 'Remains'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1086#1089#1090#1072#1090#1086#1082' '#1074' '#1084#1072#1075#1072#1079#1080#1085#1077
+        Options.Editing = False
+        Width = 70
+      end
+      object AmountDebt: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1076#1086#1083#1075
+        DataBinding.FieldName = 'AmountDebt'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1086#1083#1075#1080' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+        Options.Editing = False
+        Width = 60
+      end
+      object RemainsAll: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1080#1090#1086#1075#1086
+        DataBinding.FieldName = 'RemainsAll'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1086#1089#1090#1072#1090#1086#1082' '#1080#1090#1086#1075#1086
+        Options.Editing = False
+        Width = 70
       end
       object OperPriceList: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1043#1056#1053
@@ -652,6 +720,23 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
     Images = dmMain.ImageList
     Left = 320
     Top = 136
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_Current_Date
+      StoredProcList = <
+        item
+          StoredProc = spGet_Current_Date
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1420,5 +1505,21 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       end>
     Left = 493
     Top = 99
+  end
+  object spGet_Current_Date: TdsdStoredProc
+    StoredProcName = 'gpGet_Current_Date'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'gpGet_Current_Date'
+        Value = 42856d
+        Component = edOperDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 592
+    Top = 224
   end
 end
