@@ -36,7 +36,7 @@ type
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
     GuidesUnit: TdsdGuides;
-    spGet_UserUnit: TdsdStoredProc;
+    spGet_Unit: TdsdStoredProc;
     ActionList: TActionList;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;

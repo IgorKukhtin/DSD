@@ -29,12 +29,9 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_Movement_ReturnIn());
      vbUserId:= lpGetUserBySession (inSession);
-     
-     -- определять магазин по принадлежности пользователя к сотруднику
-     --vbUnitId:= lpGetUnitBySession (inSession);
-     
+
      -- подразделение пользователя
-     vbUnitId_User := lpGetUnitByUser(vbUserId);
+     vbUnitId_User := lpGetUnitBySession(inSession);
 
      IF inOperDate < '01.01.2017' THEN inOperDate := CURRENT_DATE; END IF;
      -- пытаемся найти последний непроведенный документ
@@ -105,11 +102,9 @@ BEGIN
                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
                LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = vbUnitId_User;
      ELSE
-       -- если у пользователя подразделение = 0, тогда может смотреть любой магазин, иначе только свой
-       IF vbUnitId_User <> 0 AND vbUnitId <> vbUnitId_User
-       THEN
-           RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав просмотра данных по подразделению <%> .', lfGet_Object_ValueData (vbUserId), lfGet_Object_ValueData (inUnitId);
-       END IF;
+
+       -- проверка может ли смотреть любой магазин, или только свой
+       vbUnitId_User := lpCheckUnitByUser(vbUnitId, inSession);
      
        RETURN QUERY 
            WITH

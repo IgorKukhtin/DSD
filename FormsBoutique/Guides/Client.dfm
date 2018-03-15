@@ -31,7 +31,52 @@ object ClientForm: TClientForm
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
-      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.DefaultGroupSummaryItems = <
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSumm
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummPay
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalDebtSumm
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalDebtSumm_All
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummDiscount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = LastCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = LastSumm
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = LastSummDiscount
+        end>
       DataController.Summary.FooterSummaryItems = <
         item
           Format = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1089#1090#1088#1086#1082': 0'
@@ -39,17 +84,49 @@ object ClientForm: TClientForm
           Column = Name
         end
         item
-          Format = ',0.####;-,0.####; ;'
+          Format = ',0.####'
           Kind = skSum
           Column = TotalSumm
         end
         item
+          Format = ',0.####'
           Kind = skSum
           Column = TotalSummPay
         end
         item
+          Format = ',0.####'
           Kind = skSum
           Column = TotalSummDiscount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalDebtSumm
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalDebtSumm_All
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = LastCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = LastSumm
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = LastSummDiscount
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -84,7 +161,7 @@ object ClientForm: TClientForm
         Caption = #1044#1086#1083#1075' '#1087#1086#1082#1091#1087'. '#1087#1086' '#1084#1072#1075'.'
         DataBinding.FieldName = 'TotalDebtSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1044#1086#1083#1075' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
@@ -95,7 +172,7 @@ object ClientForm: TClientForm
         Caption = #1048#1090#1086#1075#1086' '#1076#1086#1083#1075' '#1087#1086#1082#1091#1087'.'
         DataBinding.FieldName = 'TotalDebtSumm_All'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1048#1090#1086#1075#1086' '#1076#1086#1083#1075' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
@@ -131,6 +208,8 @@ object ClientForm: TClientForm
       object DiscountTax: TcxGridDBColumn
         Caption = #1055#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080
         DataBinding.FieldName = 'DiscountTax'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -139,6 +218,8 @@ object ClientForm: TClientForm
       object DiscountTaxTwo: TcxGridDBColumn
         Caption = #1055#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086
         DataBinding.FieldName = 'DiscountTaxTwo'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -147,6 +228,9 @@ object ClientForm: TClientForm
       object TotalCount: TcxGridDBColumn
         Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086
         DataBinding.FieldName = 'TotalCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -188,6 +272,8 @@ object ClientForm: TClientForm
       object LastCount: TcxGridDBColumn
         Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1087#1086#1082#1091#1087#1082#1077
         DataBinding.FieldName = 'LastCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -196,6 +282,8 @@ object ClientForm: TClientForm
       object LastSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1087#1086#1082#1091#1087#1082#1080
         DataBinding.FieldName = 'LastSumm'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -204,6 +292,8 @@ object ClientForm: TClientForm
       object LastSummDiscount: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1074' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1087#1086#1082#1091#1087#1082#1077
         DataBinding.FieldName = 'LastSummDiscount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter

@@ -55,7 +55,7 @@ BEGIN
 
      -- если у пользовател€ подразделение = 0, тогда может смотреть вх.цену, сумму, прибыль, иначе нет
      -- подразделение пользовател€
-     vbUnitId_User := lpGetUnitByUser(vbUserId);
+     vbUnitId_User := lpGetUnitBySession(inSession);
 
      -- ѕараметры документа
      SELECT Movement.OperDate

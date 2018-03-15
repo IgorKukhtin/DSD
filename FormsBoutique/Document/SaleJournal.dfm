@@ -987,10 +987,10 @@ object SaleJournalForm: TSaleJournalForm
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGet_UserUnit
+      StoredProc = spGet_Unit
       StoredProcList = <
         item
-          StoredProc = spGet_UserUnit
+          StoredProc = spGet_Unit
         end
         item
           StoredProc = spSelect
@@ -1337,8 +1337,8 @@ object SaleJournalForm: TSaleJournalForm
     Left = 664
     Top = 8
   end
-  object spGet_UserUnit: TdsdStoredProc
-    StoredProcName = 'gpGet_UserUnit'
+  object spGet_Unit: TdsdStoredProc
+    StoredProcName = 'gpGet_UnitbyUser'
     DataSets = <>
     OutputType = otResult
     Params = <

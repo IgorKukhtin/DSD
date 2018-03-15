@@ -101,7 +101,7 @@ type
     cxLabel3: TcxLabel;
     ceUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
-    spGet_UserUnit: TdsdStoredProc;
+    spGet_Unit: TdsdStoredProc;
     spGet_Printer: TdsdStoredProc;
     actGet_Printer: TdsdExecStoredProc;
     macPrintCheck: TMultiAction;
