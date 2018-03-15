@@ -72,7 +72,7 @@ BEGIN
 
 
      -- 1.0. ƒЋя ¬—≈’ ѕј–“»… - inGoodsId
-     IF -- inUserId <> zc_User_Sybase() AND  - !!! роме Sybase!!!
+     /*IF -- inUserId <> zc_User_Sybase() AND  -- !!! роме Sybase!!!
         inMovementItemId > 0 AND (inOperPrice     <> (SELECT COALESCE (Object_PartionGoods.OperPrice, 0)     FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
                                OR inCountForPrice <> (SELECT COALESCE (Object_PartionGoods.CountForPrice, 0) FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
                                  )
@@ -116,7 +116,7 @@ BEGIN
                            ;
         END IF;
      -- 1.0. ƒЋя 1-ой ѕј–“»»
-     ELSEIF -- inUserId <> zc_User_Sybase() AND  - !!! роме Sybase!!!
+     ELSE*/ IF inUserId <> zc_User_Sybase() AND  -- !!! роме Sybase!!!
         inMovementItemId > 0 AND (-- и еще раз проверим ÷ену - т.к. в партии inMovementItemId все еще может быть другой GoodsId
                                   inOperPrice     <> (SELECT COALESCE (Object_PartionGoods.OperPrice, 0)     FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
                                OR inCountForPrice <> (SELECT COALESCE (Object_PartionGoods.CountForPrice, 0) FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
@@ -404,9 +404,9 @@ BEGIN
                                     -- только дл€ документа inMovementId
                                   , JuridicalId            = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN zfConvert_IntToNull (inJuridicalId) ELSE Object_PartionGoods.JuridicalId   END
                                     -- только дл€ документа inMovementId - еще и ÷ену вх.
-                                  , OperPrice              = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN inOperPrice                         ELSE Object_PartionGoods.OperPrice     END
+                                  -- , OperPrice              = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN inOperPrice                         ELSE Object_PartionGoods.OperPrice     END
                                     -- только дл€ документа inMovementId - еще и ÷ену вх.
-                                  , CountForPrice          = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN inCountForPrice                     ELSE Object_PartionGoods.CountForPrice END
+                                  -- , CountForPrice          = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN inCountForPrice                     ELSE Object_PartionGoods.CountForPrice END
                                     -- еще и ÷ену ѕрайса - если она ѕќ—Ћ≈ƒ≈Ќяя
                                   , OperPriceList          = CASE WHEN vbPriceList_change = TRUE THEN inOperPriceList ELSE Object_PartionGoods.OperPriceList END
      WHERE Object_PartionGoods.MovementItemId <> inMovementItemId

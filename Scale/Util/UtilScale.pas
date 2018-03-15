@@ -119,6 +119,7 @@ var
   TareWeight_Array    :TArrayList;
   ChangePercentAmount_Array :TArrayList;
   PriceList_Array     :TArrayList;
+  PrinterSticker_Array:TArrayList;
 
   zc_Movement_Income: Integer;
   zc_Movement_ReturnOut: Integer;

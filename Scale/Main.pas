@@ -1234,6 +1234,8 @@ begin
   Default_Array:=       DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'Default');
   gpInitialize_SettingMain_Default; //!!!обязатльно после получения Default_Array!!!
 
+  if SettingMain.isSticker = TRUE
+  then PrinterSticker_Array:=DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'PrinterSticker');
   PriceList_Array:=     DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'PriceList');
   TareCount_Array:=     DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'TareCount');
   TareWeight_Array:=    DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'TareWeight');

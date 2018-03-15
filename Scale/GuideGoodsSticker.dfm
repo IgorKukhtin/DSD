@@ -3,7 +3,7 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
   Top = 242
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1087#1088#1086#1076#1091#1082#1094#1080#1080
   ClientHeight = 665
-  ClientWidth = 790
+  ClientWidth = 858
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -22,19 +22,21 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
   object GridPanel: TPanel
     Left = 0
     Top = 387
-    Width = 790
+    Width = 858
     Height = 278
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 790
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
-      Width = 790
+      Width = 858
       Height = 33
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
+      ExplicitWidth = 790
       object bbExit: TSpeedButton
         Left = 511
         Top = 3
@@ -93,11 +95,11 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
     object cxDBGrid: TcxGrid
       Left = 0
       Top = 33
-      Width = 790
+      Width = 858
       Height = 245
       Align = alClient
       TabOrder = 1
-      ExplicitHeight = 380
+      ExplicitWidth = 790
       object cxDBGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DS
@@ -243,233 +245,89 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
   object ParamsAllPanel: TPanel
     Left = 0
     Top = 0
-    Width = 790
+    Width = 858
     Height = 379
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitHeight = 244
+    ExplicitWidth = 790
     object PreviewPanel: TPanel
       Left = 0
       Top = 0
-      Width = 392
+      Width = 380
       Height = 379
-      Align = alClient
+      Align = alLeft
       TabOrder = 2
-      ExplicitWidth = 320
-      ExplicitHeight = 244
+      ExplicitWidth = 392
       object frxPreview: TfrxPreview
         Left = 1
         Top = 1
-        Width = 390
+        Width = 378
         Height = 377
         Align = alClient
         OutlineVisible = False
         OutlineWidth = 120
         ThumbnailVisible = False
         UseReportHints = True
-        ExplicitWidth = 318
-        ExplicitHeight = 242
+        ExplicitWidth = 390
       end
     end
     object cxSplitter1: TcxSplitter
-      Left = 392
+      Left = 850
       Top = 0
       Width = 8
       Height = 379
       AlignSplitter = salRight
       AllowHotZoneDrag = False
       Control = ParamsAllPanel
-      ExplicitLeft = 320
-      ExplicitHeight = 244
+      ExplicitLeft = 392
     end
     object ParamsPanel: TPanel
-      Left = 400
+      Left = 380
       Top = 0
-      Width = 390
+      Width = 470
       Height = 379
-      Align = alRight
+      Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
-      object infoPanelTare: TPanel
-        Left = 168
+      ExplicitLeft = 388
+      object infoPanelPriceList: TPanel
+        Left = 338
         Top = 0
-        Width = 137
-        Height = 379
+        Width = 132
+        Height = 320
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 2
-        Visible = False
-        ExplicitLeft = 240
-        ExplicitHeight = 244
-        object rgTareWeight: TRadioGroup
-          Left = 0
-          Top = 82
-          Width = 137
-          Height = 212
-          Align = alClient
-          Caption = #1058#1072#1088#1072' '#1074#1077#1089
-          Color = clBtnFace
-          Columns = 2
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentColor = False
-          ParentFont = False
-          TabOrder = 2
-          OnClick = rgTareWeightClick
-          ExplicitHeight = 77
-        end
-        object PanelTare: TPanel
-          Left = 0
-          Top = 0
-          Width = 137
-          Height = 41
-          Align = alTop
-          BevelOuter = bvNone
-          TabOrder = 0
-          object gbTareCount: TGroupBox
-            Left = 0
-            Top = 0
-            Width = 79
-            Height = 41
-            Align = alClient
-            Caption = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099
-            TabOrder = 0
-            object EditTareCount: TEdit
-              Left = 5
-              Top = 17
-              Width = 100
-              Height = 22
-              TabOrder = 0
-              Text = 'EditTareCount'
-              OnEnter = EditTareCountEnter
-              OnExit = EditTareCountExit
-              OnKeyPress = EditTareCountKeyPress
-            end
-          end
-          object gbTareWeightCode: TGroupBox
-            Left = 79
-            Top = 0
-            Width = 58
-            Height = 41
-            Align = alRight
-            Caption = #1050#1086#1076' '#1074#1077#1089
-            TabOrder = 1
-            object EditTareWeightCode: TEdit
-              Left = 5
-              Top = 17
-              Width = 60
-              Height = 22
-              TabOrder = 0
-              Text = 'EditTareWeightCode'
-              OnChange = EditTareWeightCodeChange
-              OnEnter = EditTareCountEnter
-              OnExit = EditTareWeightCodeExit
-              OnKeyPress = EditTareWeightCodeKeyPress
-            end
-          end
-        end
-        object infoPanelChangePercentAmount: TPanel
-          Left = 0
-          Top = 294
-          Width = 137
-          Height = 85
-          Align = alBottom
-          BevelOuter = bvNone
-          TabOrder = 3
-          ExplicitTop = 159
-          object rgChangePercentAmount: TRadioGroup
-            Left = 0
-            Top = 41
-            Width = 137
-            Height = 44
-            Align = alClient
-            Caption = #1057#1082#1080#1076#1082#1072' '#1087#1086' '#1074#1077#1089#1091
-            Color = clBtnFace
-            Columns = 3
-            ParentColor = False
-            TabOrder = 1
-            OnClick = rgChangePercentAmountClick
-            OnEnter = rgChangePercentAmountClick
-          end
-          object gbChangePercentAmountCode: TGroupBox
-            Left = 0
-            Top = 0
-            Width = 137
-            Height = 41
-            Align = alTop
-            Caption = #1050#1086#1076' '#1089#1082#1080#1076#1082#1080
-            TabOrder = 0
-            object EditChangePercentAmountCode: TEdit
-              Left = 5
-              Top = 17
-              Width = 100
-              Height = 22
-              TabOrder = 0
-              Text = 'EditChangePercentAmountCode'
-              OnChange = EditChangePercentAmountCodeChange
-              OnEnter = EditTareCountEnter
-              OnExit = EditChangePercentAmountCodeExit
-              OnKeyPress = EditChangePercentAmountCodeKeyPress
-            end
-          end
-        end
-        object gbTareWeightEnter: TGroupBox
-          Left = 0
-          Top = 41
-          Width = 137
-          Height = 41
-          Align = alTop
-          Caption = #1042#1077#1089' '#1090#1072#1088#1099
-          TabOrder = 1
-          object EditTareWeightEnter: TEdit
-            Left = 5
-            Top = 17
-            Width = 100
-            Height = 22
-            TabOrder = 0
-            Text = 'EditTareWeightEnter'
-            OnEnter = EditTareCountEnter
-            OnExit = EditTareWeightEnterExit
-          end
-        end
-      end
-      object infoPanelPriceList: TPanel
-        Left = 305
-        Top = 0
-        Width = 85
-        Height = 379
-        Align = alRight
-        BevelOuter = bvNone
-        TabOrder = 3
-        Visible = False
-        ExplicitLeft = 377
-        ExplicitHeight = 244
+        ExplicitLeft = 328
+        ExplicitHeight = 379
         object rgPriceList: TRadioGroup
           Left = 0
           Top = 41
-          Width = 85
-          Height = 338
+          Width = 132
+          Height = 279
           Align = alClient
-          Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+          Caption = #1055#1088#1080#1085#1090#1077#1088#1099
           Color = clBtnFace
           ParentColor = False
           TabOrder = 1
+          WordWrap = True
           OnClick = rgPriceListClick
           OnEnter = rgPriceListClick
-          ExplicitHeight = 203
+          ExplicitLeft = 6
+          ExplicitTop = 43
+          ExplicitWidth = 144
+          ExplicitHeight = 338
         end
         object gbPriceListCode: TGroupBox
           Left = 0
           Top = 0
-          Width = 85
+          Width = 132
           Height = 41
           Align = alTop
           Caption = #1050#1086#1076
           TabOrder = 0
+          ExplicitWidth = 85
           object EditPriceListCode: TEdit
             Left = 5
             Top = 17
@@ -487,25 +345,25 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       object infoPanelGoods: TPanel
         Left = 0
         Top = 0
-        Width = 135
-        Height = 379
+        Width = 95
+        Height = 320
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitLeft = -2
-        ExplicitTop = 2
+        ExplicitHeight = 379
         object gbGoodsName: TGroupBox
           Left = 0
           Top = 41
-          Width = 135
+          Width = 95
           Height = 41
           Align = alTop
           Caption = #1053#1072#1079#1074#1072#1085#1080#1077
           TabOrder = 1
+          ExplicitWidth = 135
           object EditGoodsName: TEdit
             Left = 5
             Top = 17
-            Width = 125
+            Width = 85
             Height = 22
             TabOrder = 0
             Text = 'EditGoodsName'
@@ -519,15 +377,16 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         object gbGoodsCode: TGroupBox
           Left = 0
           Top = 0
-          Width = 135
+          Width = 95
           Height = 41
           Align = alTop
           Caption = #1050#1086#1076
           TabOrder = 0
+          ExplicitWidth = 135
           object EditGoodsCode: TEdit
             Left = 5
             Top = 17
-            Width = 125
+            Width = 85
             Height = 22
             TabOrder = 0
             Text = 'EditGoodsCode'
@@ -541,16 +400,18 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         object gbGoodsWieghtValue: TGroupBox
           Left = 0
           Top = 123
-          Width = 135
+          Width = 95
           Height = 41
           Align = alTop
           Caption = #1042#1077#1089' '#1085#1072' '#1058#1072#1073#1083#1086
           TabOrder = 2
           Visible = False
+          ExplicitLeft = -6
+          ExplicitTop = 128
           object PanelGoodsWieghtValue: TPanel
             Left = 2
             Top = 16
-            Width = 131
+            Width = 91
             Height = 23
             Align = alClient
             BevelOuter = bvNone
@@ -562,16 +423,18 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
             Font.Style = [fsBold]
             ParentFont = False
             TabOrder = 0
+            ExplicitWidth = 131
           end
         end
         object gbWeightValue: TGroupBox
           Left = 0
           Top = 82
-          Width = 135
+          Width = 95
           Height = 41
           Align = alTop
-          Caption = #1042#1074#1086#1076' '#1050#1054#1051#1048#1063#1045#1057#1058#1042#1054
+          Caption = #1042#1074#1086#1076' '#1050#1054#1051'-'#1042#1054
           TabOrder = 3
+          ExplicitWidth = 135
           object EditWeightValue: TcxCurrencyEdit
             Left = 5
             Top = 18
@@ -584,25 +447,26 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
             OnEnter = EditTareCountEnter
             OnExit = EditWeightValueExit
             OnKeyDown = EditWeightValueKeyDown
-            Width = 125
+            Width = 85
           end
         end
       end
       object infoPanelGoodsKind: TPanel
-        Left = 135
+        Left = 95
         Top = 0
-        Width = 33
-        Height = 379
+        Width = 243
+        Height = 320
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitWidth = 105
-        ExplicitHeight = 244
+        ExplicitLeft = 135
+        ExplicitWidth = 33
+        ExplicitHeight = 379
         object rgGoodsKind: TRadioGroup
           Left = 0
           Top = 41
-          Width = 33
-          Height = 338
+          Width = 243
+          Height = 279
           Align = alClient
           Caption = #1055#1072#1082#1091#1074#1072#1085#1085#1103
           Color = clBtnFace
@@ -616,18 +480,20 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           ParentFont = False
           TabOrder = 1
           OnClick = rgGoodsKindClick
-          ExplicitWidth = 105
-          ExplicitHeight = 203
+          ExplicitWidth = 33
+          ExplicitHeight = 338
         end
         object gbGoodsKindCode: TGroupBox
           Left = 0
           Top = 0
-          Width = 33
+          Width = 243
           Height = 41
           Align = alTop
           Caption = #1050#1086#1076' '#1087#1072#1082#1091#1074#1072#1085#1085#1103
           TabOrder = 0
-          ExplicitWidth = 105
+          ExplicitLeft = -1
+          ExplicitTop = -6
+          ExplicitWidth = 53
           object EditGoodsKindCode: TEdit
             Left = 5
             Top = 17
@@ -642,17 +508,72 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           end
         end
       end
+      object PanelSticker: TPanel
+        Left = 0
+        Top = 320
+        Width = 470
+        Height = 59
+        Align = alBottom
+        TabOrder = 3
+        ExplicitWidth = 460
+        object cbStartEnd: TcxCheckBox
+          Left = 5
+          Top = 5
+          Caption = #1055#1077#1095#1072#1090#1072#1090#1100' '#1076#1072#1090#1091' '#1087#1088#1086#1080#1079#1074'-'#1074#1072
+          State = cbsChecked
+          TabOrder = 0
+          Width = 180
+        end
+        object cxLabel1: TcxLabel
+          Left = 11
+          Top = 31
+          Caption = #1044#1072#1090#1072' '#1089' ...'
+        end
+        object deDateStart: TcxDateEdit
+          Left = 70
+          Top = 28
+          EditValue = 43101d
+          Properties.SaveTime = False
+          Properties.ShowTime = False
+          TabOrder = 2
+          Width = 99
+        end
+        object cbTare: TcxCheckBox
+          Left = 191
+          Top = 5
+          Caption = #1055#1077#1095#1072#1090#1072#1090#1100' '#1076#1083#1103' '#1058#1040#1056#1067
+          TabOrder = 3
+          Width = 140
+        end
+        object cbGoodsName: TcxCheckBox
+          Left = 191
+          Top = 28
+          Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+          Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+          State = cbsChecked
+          TabOrder = 4
+          Width = 140
+        end
+        object Button1: TButton
+          Left = 339
+          Top = 14
+          Width = 124
+          Height = 33
+          Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1083#1103' '#1058#1072#1088#1099
+          TabOrder = 5
+        end
+      end
     end
   end
   object cxSplitter2: TcxSplitter
     Left = 0
     Top = 379
-    Width = 790
+    Width = 858
     Height = 8
     AlignSplitter = salBottom
     InvertDirection = True
     Control = GridPanel
-    ExplicitTop = 244
+    ExplicitWidth = 790
   end
   object DS: TDataSource
     DataSet = CDS

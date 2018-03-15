@@ -11,21 +11,16 @@ uses
   dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage, cxDBData,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxClasses, cxGridCustomView, cxGrid, dsdAddOn, Vcl.ActnList, dsdAction
- ,UtilScale,DataModul, frxClass, frxPreview, frxDBSet, cxSplitter;
+ ,UtilScale,DataModul, frxClass, frxPreview, frxDBSet, cxSplitter, Vcl.ComCtrls,
+  dxCore, cxDateUtils, cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel,
+  cxCheckBox;
 
 type
   TGuideGoodsStickerForm = class(TForm)
     GridPanel: TPanel;
     ParamsPanel: TPanel;
-    infoPanelTare: TPanel;
-    rgTareWeight: TRadioGroup;
     infoPanelPriceList: TPanel;
     rgPriceList: TRadioGroup;
-    PanelTare: TPanel;
-    gbTareCount: TGroupBox;
-    EditTareCount: TEdit;
-    gbTareWeightCode: TGroupBox;
-    EditTareWeightCode: TEdit;
     gbPriceListCode: TGroupBox;
     EditPriceListCode: TEdit;
     DS: TDataSource;
@@ -36,10 +31,6 @@ type
     EditGoodsCode: TEdit;
     gbGoodsWieghtValue: TGroupBox;
     PanelGoodsWieghtValue: TPanel;
-    infoPanelChangePercentAmount: TPanel;
-    rgChangePercentAmount: TRadioGroup;
-    gbChangePercentAmountCode: TGroupBox;
-    EditChangePercentAmountCode: TEdit;
     ButtonPanel: TPanel;
     bbExit: TSpeedButton;
     bbRefresh: TSpeedButton;
@@ -48,8 +39,6 @@ type
     rgGoodsKind: TRadioGroup;
     gbGoodsKindCode: TGroupBox;
     EditGoodsKindCode: TEdit;
-    gbTareWeightEnter: TGroupBox;
-    EditTareWeightEnter: TEdit;
     spSelect: TdsdStoredProc;
     CDS: TClientDataSet;
     gbWeightValue: TGroupBox;
@@ -83,6 +72,13 @@ type
     TradeMarkName_goods: TcxGridDBColumn;
     GoodsName_original: TcxGridDBColumn;
     StickerSortName: TcxGridDBColumn;
+    PanelSticker: TPanel;
+    cbStartEnd: TcxCheckBox;
+    cxLabel1: TcxLabel;
+    deDateStart: TcxDateEdit;
+    cbTare: TcxCheckBox;
+    cbGoodsName: TcxCheckBox;
+    Button1: TButton;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -96,19 +92,9 @@ type
     procedure EditGoodsNameExit(Sender: TObject);
     procedure EditGoodsCodeChange(Sender: TObject);
     procedure EditGoodsNameChange(Sender: TObject);
-    procedure EditTareCountKeyPress(Sender: TObject; var Key: Char);
-    procedure EditTareCountExit(Sender: TObject);
-    procedure EditTareWeightCodeKeyPress(Sender: TObject; var Key: Char);
-    procedure EditTareWeightCodeExit(Sender: TObject);
-    procedure EditChangePercentAmountCodeKeyPress(Sender: TObject; var Key: Char);
-    procedure EditChangePercentAmountCodeExit(Sender: TObject);
-    procedure EditTareWeightCodeChange(Sender: TObject);
-    procedure EditChangePercentAmountCodeChange(Sender: TObject);
     procedure EditPriceListCodeKeyPress(Sender: TObject; var Key: Char);
     procedure EditPriceListCodeExit(Sender: TObject);
     procedure EditPriceListCodeChange(Sender: TObject);
-    procedure rgTareWeightClick(Sender: TObject);
-    procedure rgChangePercentAmountClick(Sender: TObject);
     procedure rgPriceListClick(Sender: TObject);
     procedure EditGoodsCodeEnter(Sender: TObject);
     procedure EditTareCountEnter(Sender: TObject);
@@ -116,7 +102,6 @@ type
     procedure EditGoodsKindCodeChange(Sender: TObject);
     procedure EditGoodsKindCodeExit(Sender: TObject);
     procedure EditGoodsKindCodeKeyPress(Sender: TObject; var Key: Char);
-    procedure EditTareWeightEnterExit(Sender: TObject);
     procedure CDSFilterRecord(DataSet: TDataSet; var Accept: Boolean);
     procedure EditGoodsNameKeyPress(Sender: TObject; var Key: Char);
     procedure DSDataChange(Sender: TObject; Field: TField);
@@ -150,7 +135,7 @@ type
     procedure CancelCxFilter;
     function Checked: boolean;
     procedure InitializeStickerPack(StickerPackGroupId:Integer);
-    procedure InitializePriceList(execParams:TParams);
+    procedure InitializePrinterSticker;
     procedure pShowReport;
   public
     //GoodsWeight:Double;
@@ -161,10 +146,8 @@ var
   GuideGoodsStickerForm: TGuideGoodsStickerForm;
 
 implementation
-
 {$R *.dfm}
-
- uses dmMainScale, Main, DialogWeight, DialogStringValue,FormStorage;
+uses dmMainScale, Main, DialogWeight, DialogStringValue,FormStorage;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsStickerForm.pShowReport;
 begin
@@ -232,6 +215,12 @@ begin
 
 end;
 {------------------------------------------------------------------------------}
+procedure TGuideGoodsStickerForm.CancelCxFilter;
+begin
+     if cxDBGridDBTableView.DataController.Filter.Active
+     then begin cxDBGridDBTableView.DataController.Filter.Clear;cxDBGridDBTableView.DataController.Filter.Active:=false;end
+end;
+{------------------------------------------------------------------------------}
 function TGuideGoodsStickerForm.Execute (execParamsMovement : TParams; isModeSave : Boolean) : Boolean;
 begin
      fStickerPropertyId:=-1;
@@ -250,90 +239,40 @@ begin
      if execParamsMovement.ParamByName('OrderExternalId').AsInteger<>0 then
      with spSelect do
      begin
-       Self.Caption:='Параметры продукции на основании '+execParamsMovement.ParamByName('OrderExternalName_master').asString;
-       if isModeSave = FALSE then Self.Caption:= 'БЕЗ СОХРАНЕНИЯ' + Self.Caption;
+       // Обновили - Показали товары из заявки
+       Self.Caption:='Печать Этикетки на основании '+execParamsMovement.ParamByName('OrderExternalName_master').asString;
+       if isModeSave = FALSE then Self.Caption:= 'БЕЗ СОХРАНЕНИЯ: ' + Self.Caption;
        Params.ParamByName('inOrderExternalId').Value:= execParamsMovement.ParamByName('OrderExternalId').AsInteger;
        Params.ParamByName('inMovementId').Value     := execParamsMovement.ParamByName('MovementId').AsInteger;
        Params.ParamByName('inGoodsCode').Value      := 0;
        Params.ParamByName('inGoodsName').Value      := '';
        Execute;
      end
-     else if isModeSave = FALSE then Self.Caption:= 'БЕЗ СОХРАНЕНИЯ - Параметры продукции'
-     else Self.Caption:= 'Параметры продукции';
+     else if isModeSave = FALSE then Self.Caption:= 'БЕЗ СОХРАНЕНИЯ - ПРОСМОТР Этикетки'
+     else Self.Caption:= 'Печать Этикетки';
      ;
 
-  PanelGoodsWieghtValue.Caption:=FloatToStr(ParamsMI.ParamByName('RealWeight_Get').AsFloat);
-
-  InitializeStickerPack(lStickerPackGroupId);
-  InitializePriceList(ParamsMovement);
+    // Показали вес с весов - получили его перед открытием
+    PanelGoodsWieghtValue.Caption:=FloatToStr(ParamsMI.ParamByName('RealWeight_Get').AsFloat);
 
 
-  {if ParamsMI.ParamByName('GoodsId').AsInteger<>0
-  then begin
-            CDS.Filter:='GoodsId = '+ParamsMI.ParamByName('GoodsId').AsString;
-            if (execParamsMovement.ParamByName('OrderExternalId').asInteger<>0)
-               and (rgGoodsKind.Items.Count>1)
-            then CDS.Filter:= CDS.Filter +' and GoodsKindId = '+IntToStr(ParamsMI.ParamByName('GoodsKindId').AsInteger)
-                                         //+'   or GoodsKindId = 0)'
-                                         ;
+    //Если было сканирование
+    if 1=0 // ParamsMI.ParamByName('GoodsId').AsInteger<>0
+    then begin
+    end
+    else begin
+              EditGoodsCode.Text:='';
+              EditGoodsName.Text:='';
+              EditGoodsKindCode.Text:='';
+              EditWeightValue.Text:='2';
 
-            CDS.Filtered:=false;
-            CDS.Filtered:=true;
+              CDS.Filter:='';
+              CDS.Filtered:=false;
+              if ParamsMovement.ParamByName('OrderExternalId').asInteger<>0
+              then CDS.Filtered:=true;
+              ActiveControl:=EditGoodsCode;
+    end;
 
-            EditGoodsCode.Text:=ParamsMI.ParamByName('GoodsCode').AsString;
-            EditGoodsName.Text:='';
-            EditTareWeightEnter.Text:='';
-
-            EditWeightValue.Text:='0';
-
-            if (CDS.RecordCount=1)and((CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or (SettingMain.BranchCode = 301))
-            then EditTareCount.Text:= '0'
-            else EditTareCount.Text:= GetArrayList_Value_byName(Default_Array,'TareCount');
-
-            EditTareWeightCode.Text:= IntToStr(TareWeight_Array[GetArrayList_Index_byNumber(TareWeight_Array,StrToInt(GetArrayList_Value_byName(Default_Array,'TareWeightNumber')))].Code);
-            EditChangePercentAmountCode.Text:= IntToStr(ChangePercentAmount_Array[GetArrayList_Index_byValue(ChangePercentAmount_Array,ParamsMovement.ParamByName('ChangePercentAmount').AsString)].Code);
-            EditPriceListCode.Text:=  IntToStr(PriceList_Array[GetArrayList_Index_byNumber(PriceList_Array,StrToInt(GetArrayList_Value_byName(Default_Array,'PriceListNumber')))].Code);
-
-            if rgGoodsKind.Items.Count>1
-            then begin EditGoodsKindCode.Text:=ParamsMI.ParamByName('GoodsKindCode').AsString;
-                       rgGoodsKind.ItemIndex:=GetArrayList_lpIndex_GoodsKind(StickerPack_Array,lStickerPackGroupId,ParamsMI.ParamByName('GoodsKindCode').AsInteger);
-                 end;
-
-            //if (CDS.RecordCount=1)
-            //then begin
-            //          EditGoodsKindCode.Text:=CDS.FieldByName('GoodsKindCode').AsString;
-            //          ActiveControl:=EditTareCount;
-            //end;
-
-            if (CDS.RecordCount<>1) then ActiveControl:=EditGoodsCode
-            else if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or (SettingMain.BranchCode = 301)
-                 then ActiveControl:=EditWeightValue
-                 else ActiveControl:=EditTareCount
-  end
-  else} begin
-            EditGoodsCode.Text:='';
-            EditGoodsName.Text:='';
-            EditGoodsKindCode.Text:='';
-            EditTareWeightEnter.Text:='';
-
-            EditWeightValue.Text:='2';
-
-//            EditTareCount.Text:=         GetArrayList_Value_byName(Default_Array,'TareCount');
-//            EditTareWeightCode.Text:=    IntToStr(TareWeight_Array[GetArrayList_Index_byNumber(TareWeight_Array,StrToInt(GetArrayList_Value_byName(Default_Array,'TareWeightNumber')))].Code);
-//            EditChangePercentAmountCode.Text:= IntToStr(ChangePercentAmount_Array[GetArrayList_Index_byValue(ChangePercentAmount_Array,ParamsMovement.ParamByName('ChangePercentAmount').AsString)].Code); //IntToStr(ChangePercent_Array[GetArrayList_Index_byNumber(ChangePercent_Array,StrToInt(GetArrayList_Value_byName(Default_Array,'ChangePercentNumber')))].Code);
-//            EditPriceListCode.Text:=     IntToStr(PriceList_Array[GetArrayList_Index_byNumber(PriceList_Array,StrToInt(GetArrayList_Value_byName(Default_Array,'PriceListNumber')))].Code);
-
-            //InitializeGoodsKind(1);
-            //InitializePriceList(ParamsMovement);
-
-            CDS.Filter:='';
-            CDS.Filtered:=false;
-            if ParamsMovement.ParamByName('OrderExternalId').asInteger<>0 then CDS.Filtered:=true;
-            ActiveControl:=EditGoodsCode;
-  end;
-
-     Application.ProcessMessages;
-     Application.ProcessMessages;
      Application.ProcessMessages;
      fStartWrite:=false;
 
@@ -356,28 +295,25 @@ begin
                  then Items.Add('('+IntToStr(StickerPack_Array[i].Code)+') '+ StickerPack_Array[i].Name);
 
           if i<10 then Columns:=1 else Columns:=2;
-
      end;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsStickerForm.InitializePriceList(execParams:TParams);
+procedure TGuideGoodsStickerForm.InitializePrinterSticker;
 var i:Integer;
 begin
      with rgPriceList do
      begin
           Items.Clear;
-          if execParams.ParamByName('PriceListId').AsInteger=0
-          then Items.Add('нет значения')
-          else Items.Add('('+IntToStr(execParams.ParamByName('PriceListCode').AsInteger)+') '+ execParams.ParamByName('PriceListName').AsString);
-          EditPriceListCode.Text:=IntToStr(execParams.ParamByName('PriceListCode').AsInteger);
-          rgPriceList.ItemIndex:=0;
+          if Length(PrinterSticker_Array)>0
+          then
+              for i:=0 to Length(PrinterSticker_Array)-1 do
+               if PrinterSticker_Array[i].Name <> ''
+               then Items.Add('('+IntToStr(PrinterSticker_Array[i].Code)+') '+ PrinterSticker_Array[i].Name);
+
+          if Items.Count = 0 then Items.Add('(1) по умолчанию');
+          ItemIndex:=0;
+          //EditPriceListCode.Text:='1';
      end;
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsStickerForm.CancelCxFilter;
-begin
-     if cxDBGridDBTableView.DataController.Filter.Active
-     then begin cxDBGridDBTableView.DataController.Filter.Clear;cxDBGridDBTableView.DataController.Filter.Active:=false;end
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsStickerForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
@@ -386,50 +322,25 @@ begin
     if Key=13 then
     begin
       if (ActiveControl=EditGoodsCode) then EditGoodsCodeExit(EditGoodsCode);
-      if (ActiveControl=EditGoodsName)and(trim (EditGoodsName.Text) <> '')and(SettingMain.BranchCode = 301)
-      then begin
-                spSelect.Params.ParamByName('inGoodsCode').Value:= 0;
-                spSelect.Params.ParamByName('inGoodsName').Value:= trim(EditGoodsName.Text);
-                actRefreshExecute(Self);
-      end;
 
-      if (ActiveControl=EditGoodsCode)and(CDS.RecordCount=1)
-      then if 1=1 //(CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or (SettingMain.BranchCode = 301)
-           then ActiveControl:=EditWeightValue
-           else if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
-      else
       if (ActiveControl=EditWeightValue)
-      then if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
+      then if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditPriceListCode
       else if (ActiveControl=EditGoodsCode)
-           then if (Length(trim(EditGoodsCode.Text))>0)and(CDS.RecordCount>=1)
-                then if 1=1//(CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or (SettingMain.BranchCode = 301)
-                     then ActiveControl:=EditWeightValue
-                     else if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
+           then if (Length(trim(EditGoodsCode.Text))>0)
+                then ActiveControl:=EditWeightValue
                 else ActiveControl:=EditGoodsName
 
-           else if (ActiveControl=EditGoodsName)and(CDS.RecordCount=1)
-                then if 1=1//(CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or (SettingMain.BranchCode = 301)
-                     then ActiveControl:=EditWeightValue
-                     else if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
+           else if (ActiveControl=EditGoodsName)and((Length(trim(EditGoodsName.Text))>0))
+                then ActiveControl:=EditWeightValue
 
                 else if (ActiveControl=EditGoodsName)
-                     then if CDS.RecordCount>1 then ActiveControl:=cxDBGrid else ActiveControl:=EditGoodsCode
+                     then ActiveControl:=EditGoodsCode
                      else if (ActiveControl=cxDBGrid)and(CDS.RecordCount>0)
                           then actChoiceExecute(cxDBGrid)
 
-      else if ActiveControl=EditGoodsKindCode then ActiveControl:=EditTareCount
-           else if ActiveControl=EditTareCount then ActiveControl:=EditTareWeightCode
-                else if ActiveControl=EditTareWeightCode then if (rgTareWeight.ItemIndex=rgTareWeight.Items.Count-1)and(gbTareWeightEnter.Visible)
-                                                        then ActiveControl:=EditTareWeightEnter
-                                                        else ActiveControl:=EditChangePercentAmountCode
-                     else if ActiveControl=EditTareWeightEnter then ActiveControl:=EditChangePercentAmountCode
-                          else if ActiveControl=EditChangePercentAmountCode then actSaveExecute(Self) //ActiveControl:=EditPriceListCode
-                               else if ActiveControl=EditPriceListCode then actSaveExecute(Self);
+      else if ActiveControl=EditGoodsKindCode then ActiveControl:=EditPriceListCode
+           else if ActiveControl=EditPriceListCode then actSaveExecute(Self);
     end;
-    //
-    {if Key=32 then
-      if ActiveControl=EditGoodsCode then ActiveControl:=EditGoodsName
-      else if ActiveControl=EditGoodsName then ActiveControl:=EditGoodsCode;}
     //
     if (Key=27) then
       if cxDBGridDBTableView.DataController.Filter.Active
@@ -441,10 +352,10 @@ begin
            then actExitExecute(Self)
            else with DialogStringValueForm do
                 begin
-                     if not Execute (false, true) then begin ShowMessage ('Для отмены взвешивания необходимо ввести пароль.'); exit; end;
+                     if not Execute (false, true) then begin ShowMessage ('Для отмены ПЕЧАТИ ЭТИКЕТОК необходимо ввести пароль.'); exit; end;
                      //
                      if DMMainScaleForm.gpGet_Scale_PSW_delete (StringValueEdit.Text) <> ''
-                     then begin ShowMessage ('Пароль неверный.Отменить взвешивание нельзя.');exit;end
+                     then begin ShowMessage ('Пароль неверный.Отменить ПЕЧАТЬ ЭТИКЕТОК нельзя.');exit;end
                      else begin fCloseOK:= true; actExitExecute(Self); end;
                 end;
 end;
@@ -455,44 +366,43 @@ var
 begin
      if rgGoodsKind.Items.Count=1
      then GoodsKindCode:=0
-     else if {(ParamsMovement.ParamByName('OrderExternalId').asInteger<>0)and}(trim(EditGoodsKindCode.Text)<>'')
-          then try GoodsKindCode:=StrToInt(EditGoodsKindCode.Text) except GoodsKindCode:=0;end
-          else GoodsKindCode:=0;
+     else try GoodsKindCode:=StrToInt(EditGoodsKindCode.Text) except GoodsKindCode:=0;end;
      //
      //
      if fEnterGoodsCode
      then
        if  (EditGoodsCode.Text=DataSet.FieldByName('GoodsCode').AsString)
         and((GoodsKindCode=0)or(GoodsKindCode=DataSet.FieldByName('GoodsKindCode').AsInteger))
-       then Accept:=true else Accept:=false // if DataSet.FieldByName('isTare').AsBoolean = FALSE then Accept:=true else Accept:=false
+       then Accept:=true
+       else Accept:=false
+
      else
          if (fEnterGoodsKindCode)and(trim(GoodsCode_FilterValue)<>'')
          then
-             if  (GoodsCode_FilterValue=DataSet.FieldByName('GoodsCode').AsString)
+             if  (GoodsCode_FilterValue = DataSet.FieldByName('GoodsCode').AsString)
               and((GoodsKindCode=0)or(GoodsKindCode=DataSet.FieldByName('GoodsKindCode').AsInteger))
-             then Accept:=true else Accept:=false // if DataSet.FieldByName('isTare').AsBoolean = FALSE then Accept:=true else Accept:=false
-         //else if DataSet.FieldByName('isTare').AsBoolean = FALSE then Accept:=true else Accept:=false
+             then Accept:=true
+             else Accept:=false
          ;
-     //
-     //if DataSet.FieldByName('isTare').AsBoolean = FALSE then Accept:=true else Accept:=false
      //
      if fEnterGoodsName
      then
        if  (pos(AnsiUpperCase(EditGoodsName.Text),AnsiUpperCase(DataSet.FieldByName('GoodsName').AsString))>0)
         and((GoodsKindCode=0)or(GoodsKindCode=DataSet.FieldByName('GoodsKindCode').AsInteger))
-       then Accept:=true else Accept:=false // if DataSet.FieldByName('isTare').AsBoolean = FALSE then Accept:=true else Accept:=false
+       then Accept:=true
+       else Accept:=false
+
      else
          if (fEnterGoodsKindCode)and(trim(GoodsName_FilterValue)<>'')
          then
              if  (pos(AnsiUpperCase(GoodsName_FilterValue),AnsiUpperCase(DataSet.FieldByName('GoodsName').AsString))>0)
               and((GoodsKindCode=0)or(GoodsKindCode=DataSet.FieldByName('GoodsKindCode').AsInteger))
-             then Accept:=true else Accept:=false // if DataSet.FieldByName('isTare').AsBoolean = FALSE then Accept:=true else Accept:=false
-         //else if DataSet.FieldByName('isTare').AsBoolean = FALSE then Accept:=true else Accept:=false
+             then Accept:=true
+             else Accept:=false
          ;
 
+     //
      if (trim(EditGoodsCode.Text) = '') and (trim(EditGoodsName.Text) = '')
-     // and (ParamsMovement.ParamByName('OrderExternalId').asInteger<>0)
-     //then if DataSet.FieldByName('isTare').AsBoolean = FALSE then Accept:=true else Accept:=false;
      then Accept:=true;
 
 end;
@@ -502,10 +412,8 @@ var WeightReal_check:Double;
 begin
      Result:=(CDS.RecordCount=1)
           and(rgGoodsKind.ItemIndex>=0)
-          and(rgTareWeight.ItemIndex>=0)
-          and(rgChangePercentAmount.ItemIndex>=0)
           and(rgPriceList.ItemIndex>=0)
-          and(ParamsMI.ParamByName('RealWeight').AsFloat>0.0001)
+          and(ParamsMI.ParamByName('RealWeight').AsFloat>=1)
           ;
      //
      if fModeSave = FALSE then
@@ -524,45 +432,19 @@ begin
         then ParamByName('GoodsKindId').AsInteger:= StickerPack_Array[GetArrayList_gpIndex_GoodsKind(StickerPack_Array,lStickerPackGroupId,rgGoodsKind.ItemIndex)].Id
         else ParamByName('GoodsKindId').AsInteger:= 0;
 
-        ParamByName('MovementId_Promo').AsInteger:=CDS.FieldByName('MovementId_Promo').AsInteger;
+        ParamByName('MovementId_Promo').AsInteger:=0;
 
-        ParamByName('Price').AsFloat:=CDS.FieldByName('Price').AsFloat;
-        ParamByName('Price_Return').AsFloat:=CDS.FieldByName('Price_Return').AsFloat;
-        ParamByName('CountForPrice').AsFloat:= CDS.FieldByName('CountForPrice').AsFloat;
-        ParamByName('CountForPrice_Return').AsFloat:= CDS.FieldByName('CountForPrice_Return').AsFloat;
+        ParamByName('Price').AsFloat:=0;
+        ParamByName('Price_Return').AsFloat:=0;
+        ParamByName('CountForPrice').AsFloat:= 0;
+        ParamByName('CountForPrice_Return').AsFloat:= 0;
 
         // Количество тары
-        try ParamByName('CountTare').AsFloat:=StrToFloat(EditTareCount.Text);
-        except ParamByName('CountTare').AsFloat:=0;
-        end;
+        ParamByName('CountTare').AsFloat:=0;
         // Вес 1-ой тары
-        if  (GetArrayList_Value_byName(Default_Array,'isTareWeightEnter')=AnsiUpperCase('TRUE'))
-         and(gbTareWeightEnter.Visible)
-         and(rgTareWeight.ItemIndex = rgTareWeight.Items.Count-1)
-        then begin
-            try ParamByName('WeightTare').AsFloat:=StrToFloat(EditTareWeightEnter.Text);
-            except ParamByName('WeightTare').AsFloat:=0;
-            end;
-            //change Количество тары
-            if (ParamByName('WeightTare').AsFloat<>0) and (ParamByName('CountTare').AsFloat=0)
-            then ParamByName('CountTare').AsFloat:=1;
-        end
-        else
-            try ParamByName('WeightTare').AsFloat:=myStrToFloat(TareWeight_Array[rgTareWeight.ItemIndex].Value);
-            except ParamByName('WeightTare').AsFloat:=0;
-            end;
-       // % скидки для кол-ва
-       if (CDS.FieldByName('ChangePercentAmount').AsFloat <> 0) and (SettingMain.isGoodsComplete = FALSE) and (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Sale)
-       then EditChangePercentAmountCode.Text:= IntToStr(ChangePercentAmount_Array[GetArrayList_Index_byValue(ChangePercentAmount_Array,FloatToStr(CDS.FieldByName('ChangePercentAmount').AsFloat))].Code)
-       else if (SettingMain.isGoodsComplete = FALSE) and (ParamsMovement.ParamByName('MovementDescId').AsInteger <> zc_Movement_Sale)
-            then EditChangePercentAmountCode.Text:= IntToStr(ChangePercentAmount_Array[GetArrayList_Index_byValue(ChangePercentAmount_Array,'0')].Code)
-            else if (CDS.FieldByName('ChangePercentAmount').AsFloat = 0) and (SettingMain.isGoodsComplete = TRUE)
-                 then EditChangePercentAmountCode.Text:= IntToStr(ChangePercentAmount_Array[GetArrayList_Index_byValue(ChangePercentAmount_Array,FloatToStr(CDS.FieldByName('ChangePercentAmount').AsFloat))].Code)
-                 else EditChangePercentAmountCode.Text:= IntToStr(ChangePercentAmount_Array[GetArrayList_Index_byValue(ChangePercentAmount_Array,ParamsMovement.ParamByName('ChangePercentAmount').AsString)].Code);
-
-       try ParamByName('ChangePercentAmount').AsFloat:=myStrToFloat(ChangePercentAmount_Array[rgChangePercentAmount.ItemIndex].Value);
-       except ParamByName('ChangePercentAmount').AsFloat:=0;
-       end;
+        ParamByName('WeightTare').AsFloat:=0;
+        // % скидки для кол-ва
+        ParamByName('ChangePercentAmount').AsFloat:=0;
 
        //ПРОВЕРКА - Количество (склад) с учетом тары
        Result:=(ParamByName('RealWeight').AsFloat-ParamByName('CountTare').AsFloat*ParamByName('WeightTare').AsFloat)>0;
@@ -578,34 +460,8 @@ begin
      if Result = TRUE then
      begin
           //если не ШТ, проверка стабильности - т.е. вес такой же как и был
-          if (CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Kg) and (SettingMain.BranchCode <> 301)
+          if 1=0 // (CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Kg) and (SettingMain.BranchCode <> 301)
           then begin
-                    //получили еще раз
-                    WeightReal_check:=MainForm.fGetScale_CurrentWeight;
-                    //если вдруг погрешность больше 0.002
-                    if abs(WeightReal_check-ParamsMI.ParamByName('RealWeight').AsFloat)> SettingMain.Exception_WeightDiff
-                    then
-                        with DialogWeightForm do
-                        begin
-                             rgWeight.Items.Add(FloatToStr(ParamsMI.ParamByName('RealWeight').AsFloat)+' кг');
-                             rgWeight.Items.Add(FloatToStr(WeightReal_check)+' кг');
-                             rgWeight.ItemIndex:=1;
-                             if Execute then
-                               if rgWeight.ItemIndex=1
-                               then begin
-                                         //ПРОВЕРКА WeightReal_check - Количество (склад) с учетом тары
-                                         Result:=(WeightReal_check-ParamsMI.ParamByName('CountTare').AsFloat*ParamsMI.ParamByName('WeightTare').AsFloat)>0;
-                                         if not Result then
-                                         begin
-                                              ShowMessage('Ошибка.Количество за минусом тары не может быть меньше 0.');
-                                              exit;
-                                         end;
-                                         //!!!меняется на новый "стабильный" вес!!!
-                                         ParamsMI.ParamByName('RealWeight').AsFloat:=WeightReal_check;
-                                    end
-                                else // ничего не делаем, остался 1-ый выриант
-                             else begin Result:=FALSE; exit;end; // из двух вариантов ничего не выбрали, остаемся в форме
-                        end;
           end;
           //сохранение MovementItem
           Result:=DMMainScaleForm.gpInsert_Scale_MI(ParamsMovement,ParamsMI);
@@ -617,11 +473,11 @@ end;
 procedure TGuideGoodsStickerForm.EditGoodsCodeChange(Sender: TObject);
 begin
      if fEnterGoodsCode then
-       with CDS do begin
-           Filtered:=false;
-           if trim(EditGoodsCode.Text)<>'' then Filtered:=true
-           else if 1=1 //ParamsMovement.ParamByName('OrderExternalId').asInteger<>0
-                then CDS.Filtered:=true;//!!!
+      begin
+           CDS.Filtered:=false;
+           if trim (EditGoodsCode.Text) <> ''
+           then CDS.Filtered:=true
+           else CDS.Filtered:=true;//!!!
            //
            //Application.ProcessMessages;
            //pShowReport;
@@ -639,38 +495,20 @@ end;
 procedure TGuideGoodsStickerForm.EditGoodsCodeExit(Sender: TObject);
 var Code_begin:Integer;
 begin
-      if fStartWrite=true then exit;
+     if fStartWrite=true then exit;
 
-      try Code_begin:=StrToInt(EditGoodsCode.Text) except Code_begin:=0;end;
+     try Code_begin:=StrToInt(EditGoodsCode.Text) except Code_begin:=0;end;
 
-     {try Code_begin:=StrToInt(EditGoodsCode.Text) except Code_begin:=0;end;
-     if (GoodsWeight<0.0001)//and(not((GoodsCode>=_CodeStartGoods_onEnterWeight)and(GoodsCode<=_CodeEndGoods_onEnterWeight)))
-     then ActiveControl:=EditGoodsCode;
-     else
-         if (ActiveControl<>EditGoodsName)and((Code_begin<=0)or(Code_begin<>CDS.FieldByName('GoodsCode').AsInteger))
-         then ActiveControl:=EditGoodsCode;}
      //
-     if (CDS.Filtered=false)and(Length(trim(EditGoodsCode.Text))>0)
+     if (CDS.Filtered=false) and (Length(trim(EditGoodsCode.Text))>0)
      then begin fEnterGoodsCode:=true;CDS.Filtered:=true;end;
-
-     if  (SettingMain.isGoodsComplete = FALSE){(CDS.RecordCount=0}
-      and((ParamsMovement.ParamByName('OrderExternalId').asInteger<>0) or (SettingMain.BranchCode = 301))
-      and(Code_begin>0)
-     then begin spSelect.Params.ParamByName('inGoodsCode').Value:=Code_begin;
-                spSelect.Params.ParamByName('inGoodsName').Value:='';
-                actRefreshExecute(Self);
-                fEnterGoodsCode:=true;CDS.Filtered:=False;CDS.Filtered:=True;
-     end;
-
 
 
      if CDS.RecordCount=0
-     then if 1=1 //ParamsMovement.ParamByName('OrderExternalId').asInteger<>0
-          then begin fEnterGoodsCode:=false;
-                     GoodsCode_FilterValue:=EditGoodsCode.Text;
-                     GoodsName_FilterValue:='';
-               end
-          else ActiveControl:=EditGoodsCode
+     then begin fEnterGoodsCode:=false;
+                GoodsCode_FilterValue:=EditGoodsCode.Text;
+                GoodsName_FilterValue:='';
+          end
      else begin fEnterGoodsCode:=false;
                 GoodsCode_FilterValue:=EditGoodsCode.Text;
                 GoodsName_FilterValue:='';
@@ -697,13 +535,14 @@ procedure TGuideGoodsStickerForm.EditGoodsNameChange(Sender: TObject);
 var Code_begin:String;
 begin
      if fEnterGoodsName then
-       with CDS do begin
-           Code_begin:= FieldByName('GoodsCode').AsString;
-           Filtered:=false;
-           if trim(EditGoodsName.Text)<>'' then Filtered:=true
-           else if 1=1 //ParamsMovement.ParamByName('OrderExternalId').asInteger<>0
-                then CDS.Filtered:=true;//!!!
-           if Code_begin <> '' then Locate('GoodsCode',Code_begin,[loCaseInsensitive,loPartialKey]);
+     begin
+           Code_begin:= CDS.FieldByName('GoodsCode').AsString;
+           CDS.Filtered:=false;
+           if trim(EditGoodsName.Text)<>''
+           then CDS.Filtered:=true
+           else CDS.Filtered:=true;//!!!
+           //
+           if Code_begin <> '' then CDS.Locate('GoodsCode',Code_begin,[loCaseInsensitive,loPartialKey]);
        end;
 end;
 {------------------------------------------------------------------------------}
@@ -773,8 +612,7 @@ begin
      end;
      if StrToFloat(EditWeightValue.Text)<=0
      then ActiveControl:=EditWeightValue
-     else if CDS.RecordCount=1
-          then try ParamsMI.ParamByName('RealWeight').AsFloat:=StrToFloat(EditWeightValue.Text);
+     else try ParamsMI.ParamByName('RealWeight').AsFloat:=StrToFloat(EditWeightValue.Text);
           except ParamsMI.ParamByName('RealWeight').AsFloat:=0;end;
 
 end;
@@ -782,7 +620,7 @@ end;
 procedure TGuideGoodsStickerForm.EditWeightValueKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
     if Key=13
-    then if rgGoodsKind.Items.Count>1 then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount;
+    then if rgGoodsKind.Items.Count>1 then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditPriceListCode;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsStickerForm.EditGoodsKindCodeChange(Sender: TObject);
@@ -897,15 +735,9 @@ begin
       //          PanelUpak.Caption:=GetStringValue('select zf_MyRound0(zf_CalcDivisionNoRound('+FormatToFloatServer(GoodsWeight)+',GoodsProperty_Detail.Ves_onUpakovka))as RetV from dba.GoodsProperty join dba.KindPackage on KindPackage.KindPackageCode = '+trim(EditKindPackageCode.Text)+' join dba.GoodsProperty_Detail on GoodsProperty_Detail.GoodsPropertyId=GoodsProperty.Id and GoodsProperty_Detail.KindPackageID=KindPackage.Id where GoodsProperty.GoodsCode = '+trim(EditGoodsCode.Text));
       //end;
       //
-      if (ActiveControl=EditGoodsKindCode)or(ActiveControl=EditTareCount)
-      then begin
-           //if CDS.FieldByName('ChangePercentAmount').AsFloat=0
-           //then EditChangePercentAmountCode.Text:= IntToStr(ChangePercentAmount_Array[GetArrayList_Index_byValue(ChangePercentAmount_Array,FloatToStr(CDS.FieldByName('ChangePercentAmount').AsFloat))].Code)
-           //else EditChangePercentAmountCode.Text:= IntToStr(ChangePercentAmount_Array[GetArrayList_Index_byValue(ChangePercentAmount_Array,ParamsMovement.ParamByName('ChangePercentAmount').AsString)].Code);
-      end;
       if (ActiveControl=EditGoodsKindCode)
       then begin
-           if rgGoodsKind.Items.Count=1 then begin ActiveControl:=EditTareCount;exit;end;
+           if rgGoodsKind.Items.Count=1 then begin ActiveControl:=EditPriceListCode;exit;end;
            //
            ActiveControl:=EditGoodsKindCode;
            //
@@ -931,158 +763,30 @@ begin
       end;
 
       if (ActiveControl=EditGoodsKindCode)and(rgGoodsKind.ItemIndex>=0)and(rgGoodsKind.Items.Count=1)then begin rgGoodsKind.ItemIndex:=0;FormKeyDown(Sender,Key,[]);exit;end;
-      if (ActiveControl=EditTareCount) and ((CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or (SettingMain.BranchCode = 301)) then begin EditTareCount.Text:='0';FormKeyDown(Sender,Key,[]);exit;end;
-      if (ActiveControl=EditTareWeightCode) and ((CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or (SettingMain.BranchCode = 301)) then begin FormKeyDown(Sender,Key,[]);exit;end;
-      if (ActiveControl=EditTareWeightEnter) and ((CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or (SettingMain.BranchCode = 301)) then begin FormKeyDown(Sender,Key,[]);exit;end;
-      if (ActiveControl=EditChangePercentAmountCode)then begin FormKeyDown(Sender,Key,[]);exit;end;
-      if (ActiveControl=EditPriceListCode){and(rgPriceList.ItemIndex>=0)and(rgPriceList.Items.Count=1)}then begin FormKeyDown(Sender,Key,[]);exit;end;
+      if (ActiveControl=EditPriceListCode)and(rgPriceList.ItemIndex>=0)and(rgPriceList.Items.Count=1)then begin FormKeyDown(Sender,Key,[]);exit;end;
       //
-      if (ActiveControl=EditTareWeightEnter)and(rgTareWeight.ItemIndex<>rgTareWeight.Items.Count-1)
-      then begin FormKeyDown(Sender,Key,[]);exit;end;
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsStickerForm.EditTareCountExit(Sender: TObject);
-var TareCount:Integer;
-begin
-     if fStartWrite=true then exit;
-
-     try TareCount:=StrToInt(trim(EditTareCount.Text));except TareCount:=0;end;
-     //
-     if (TareCount>Length(TareCount_Array))
-     then ActiveControl:=EditTareCount;
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsStickerForm.EditTareCountKeyPress(Sender: TObject;var Key: Char);
-var Code_begin:Integer;
-begin
-     if Key=' ' then Key:=#0;
-     if Key='+' then
-     begin
-          Key:=#0;
-          //
-          try Code_begin:=StrToInt(trim(EditTareCount.Text));except Code_begin:=0;end;
-          //
-          if Code_begin>=Length(TareCount_Array) then EditTareCount.Text:= '0' else EditTareCount.Text:= IntToStr(Code_begin+1);
-          //
-          TEdit(Sender).SelectAll;
-     end;
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsStickerForm.EditTareWeightCodeChange(Sender: TObject);
-var Code_begin:Integer;
-begin
-     try Code_begin:=StrToInt(EditTareWeightCode.Text) except Code_begin:=-1;end;
-     if (Code_begin<0)
-     then rgTareWeight.ItemIndex:=-1
-     else rgTareWeight.ItemIndex:=GetArrayList_Index_byCode(TareWeight_Array,Code_begin);
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsStickerForm.EditTareWeightCodeExit(Sender: TObject);
-begin
-     if fStartWrite=true then exit;
-
-     if rgTareWeight.ItemIndex=-1 then ActiveControl:=EditTareWeightCode;
-     if (rgTareWeight.ItemIndex <> rgTareWeight.Items.Count-1)and(gbTareWeightEnter.Visible)
-     then EditTareWeightEnter.Text:='';
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsStickerForm.EditTareWeightCodeKeyPress(Sender: TObject;var Key: Char);
-var findIndex:Integer;
-begin
-     if Key=' ' then Key:=#0;
-     if Key='+' then
-     begin
-          Key:=#0;
-          //
-          if (rgTareWeight.ItemIndex = rgTareWeight.Items.Count-1)or(rgTareWeight.ItemIndex = -1)
-          then findIndex:=0
-          else findIndex:=1+rgTareWeight.ItemIndex;
-          //
-          EditTareWeightCode.Text:=IntToStr(TareWeight_Array[findIndex].Code);
-          TEdit(Sender).SelectAll;
-     end;
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsStickerForm.rgTareWeightClick(Sender: TObject);
-begin
-    EditTareWeightCode.Text:=IntToStr(TareWeight_Array[rgTareWeight.ItemIndex].Code);
-    ActiveControl:=EditTareWeightCode;
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsStickerForm.EditTareWeightEnterExit(Sender: TObject);
-var TareWeight:Double;
-begin
-     if fStartWrite=true then exit;
-
-     if trim (EditTareWeightEnter.Text)='' then EditTareWeightEnter.Text:='0';
-     //
-     try TareWeight:=StrToFloat(trim(EditTareWeightEnter.Text));except TareWeight:=-1;end;
-     //
-     if TareWeight<0
-     then ActiveControl:=EditTareWeightEnter;
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsStickerForm.EditChangePercentAmountCodeChange(Sender: TObject);
-var Code_begin:Integer;
-begin
-     {try Code_begin:=StrToInt(EditChangePercentAmountCode.Text) except Code_begin:=-1;end;
-     if (Code_begin<0)
-     then rgChangePercentAmount.ItemIndex:=-1
-     else rgChangePercentAmount.ItemIndex:=GetArrayList_Index_byCode(ChangePercentAmount_Array,Code_begin);
-     }
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsStickerForm.EditChangePercentAmountCodeExit(Sender: TObject);
-begin
-     {if fStartWrite=true then exit;
-
-     if rgChangePercentAmount.ItemIndex=-1 then ActiveControl:=EditChangePercentAmountCode;
-     }
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsStickerForm.EditChangePercentAmountCodeKeyPress(Sender: TObject;var Key: Char);
-var findIndex:Integer;
-begin
-     {if Key=' ' then Key:=#0;
-     if Key='+' then
-     begin
-          Key:=#0;
-          //
-          if (rgChangePercentAmount.ItemIndex = rgChangePercentAmount.Items.Count-1)or(rgChangePercentAmount.ItemIndex = -1)
-          then findIndex:=0
-          else findIndex:=1+rgChangePercentAmount.ItemIndex;
-          //
-          EditChangePercentAmountCode.Text:=IntToStr(ChangePercentAmount_Array[findIndex].Code);
-          TEdit(Sender).SelectAll;
-     end;}
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsStickerForm.rgChangePercentAmountClick(Sender: TObject);
-var newValue:String;
-begin
-   // EditChangePercentAmountCodeChange(EditChangePercentAmountCode);
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsStickerForm.EditPriceListCodeChange(Sender: TObject);
 var Code_begin:Integer;
 begin
-{     try Code_begin:=StrToInt(EditPriceListCode.Text) except Code_begin:=-1;end;
+     try Code_begin:=StrToInt(EditPriceListCode.Text) except Code_begin:=-1;end;
      if (Code_begin<0)
      then rgPriceList.ItemIndex:=-1
-     else rgPriceList.ItemIndex:=1;//GetArrayList_Index_byCode(PriceList_Array,Code_begin);
-     }
+     else rgPriceList.ItemIndex:= GetArrayList_Index_byCode(PrinterSticker_Array,Code_begin);
+
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsStickerForm.EditPriceListCodeExit(Sender: TObject);
 begin
      if fStartWrite=true then exit;
-     {if rgPriceList.ItemIndex=-1 then ActiveControl:=EditPriceListCode;}
+     if rgPriceList.ItemIndex=-1 then ActiveControl:=EditPriceListCode;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsStickerForm.EditPriceListCodeKeyPress(Sender: TObject;var Key: Char);
 var findIndex:Integer;
 begin
-     {if Key=' ' then Key:=#0;
+     if Key=' ' then Key:=#0;
      if Key='+' then
      begin
           Key:=#0;
@@ -1091,17 +795,15 @@ begin
           then findIndex:=0
           else findIndex:=1+rgPriceList.ItemIndex;
           //
-          EditPriceListCode.Text:=IntToStr(PriceList_Array[findIndex].Code);
+          EditPriceListCode.Text:=IntToStr(PrinterSticker_Array[findIndex].Code);
           TEdit(Sender).SelectAll;
-     end;}
+     end;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsStickerForm.rgPriceListClick(Sender: TObject);
 begin
-    {EditPriceListCodeChange(EditPriceListCode);}
-    if ActiveControl=rgPriceList then ActiveControl:=EditGoodsCode;
-    {EditPriceListCode.Text:=IntToStr(PriceList_Array[rgPriceList.ItemIndex].Code);
-    ActiveControl:=EditPriceListCode;}
+    EditPriceListCode.Text:=IntToStr(PrinterSticker_Array[rgPriceList.ItemIndex].Code);
+    ActiveControl:=EditPriceListCode
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsStickerForm.DSDataChange(Sender: TObject; Field: TField);
@@ -1175,9 +877,9 @@ begin
      //
      if 1=1//(CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or (SettingMain.BranchCode = 301)
      then ActiveControl:=EditWeightValue
-     else if (ParamsMovement.ParamByName('OrderExternalId').asInteger=0)and(rgGoodsKind.Items.Count>1)
+     else if 1=1 //(ParamsMovement.ParamByName('OrderExternalId').asInteger=0)and(rgGoodsKind.Items.Count>1)
           then ActiveControl:=EditGoodsKindCode
-          else ActiveControl:=EditTareCount;
+          else ActiveControl:=EditPriceListCode;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsStickerForm.actExitExecute(Sender: TObject);
@@ -1218,6 +920,11 @@ begin
   //FReport:= TfrxReport.Create(nil);
   //FReport.Preview:=frxPreview;
   //
+
+  //Пакування
+  InitializeStickerPack(lStickerPackGroupId);
+  //Принтеры
+  InitializePrinterSticker;
 
   //вес тары (ручной режим)
   //***gbTareWeightEnter.Visible:=GetArrayList_Value_byName(Default_Array,'isTareWeightEnter')=AnsiUpperCase('TRUE');

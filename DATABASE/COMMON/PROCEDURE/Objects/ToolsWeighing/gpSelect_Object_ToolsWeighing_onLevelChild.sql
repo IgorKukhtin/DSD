@@ -134,6 +134,25 @@ BEGIN
                FROM (SELECT GENERATE_SERIES (1, vbCount) AS Number) AS tmp
               ;
 
+        ELSE
+
+            IF inLevelChild = 'PrinterSticker' AND vbIsSticker = TRUE
+            THEN
+            -- определяется кол-во
+            vbCount:= (SELECT gpGet_ToolsWeighing_Value (vbLevelMain, inLevelChild, '', 'Count', '2', inSession));
+            -- Результат
+            RETURN QUERY
+               SELECT tmp.Number
+                    , 0          AS Id
+                    , tmp.Number AS Code
+                    , tmp.Value  AS Name
+                    , tmp.Value  AS Value
+               FROM (SELECT tmp.Number
+                          , gpGet_ToolsWeighing_Value (vbLevelMain, inLevelChild, '', inLevelChild || '_' || tmp.Number, inLevelChild || '_' || tmp.Number, inSession) AS Value
+                     FROM (SELECT GENERATE_SERIES (1, vbCount) AS Number) AS tmp
+                    ) AS tmp
+              ;
+
             ELSE
 
                 IF inIsCeh = FALSE AND vbIsSticker = FALSE
@@ -177,6 +196,7 @@ BEGIN
                 END IF;
             END IF;
         END IF;
+        END IF;
     END IF;
 
 END;
@@ -198,3 +218,4 @@ $BODY$
 -- SELECT * FROM gpSelect_Object_ToolsWeighing_onLevelChild (FALSE, 1, 'PriceList', zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_Object_ToolsWeighing_onLevelChild (FALSE, 4, 'Default', zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_Object_ToolsWeighing_onLevelChild (FALSE, 1, 'Service', zfCalc_UserAdmin()) ORDER BY 4
+-- SELECT * FROM gpSelect_Object_ToolsWeighing_onLevelChild (FALSE, 1001, 'PrinterSticker', zfCalc_UserAdmin()) ORDER BY 4

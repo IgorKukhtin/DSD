@@ -157,10 +157,14 @@ var
   GuideGoodsForm: TGuideGoodsForm;
 
 implementation
-
 {$R *.dfm}
-
- uses dmMainScale, Main, DialogWeight, DialogStringValue;
+uses dmMainScale, Main, DialogWeight, DialogStringValue;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.CancelCxFilter;
+begin
+     if cxDBGridDBTableView.DataController.Filter.Active
+     then begin cxDBGridDBTableView.DataController.Filter.Clear;cxDBGridDBTableView.DataController.Filter.Active:=false;end
+end;
 {------------------------------------------------------------------------------}
 function TGuideGoodsForm.Execute (execParamsMovement : TParams; isModeSave : Boolean) : Boolean;
 begin
@@ -182,7 +186,7 @@ begin
      with spSelect do
      begin
        Self.Caption:='Параметры продукции на основании '+execParamsMovement.ParamByName('OrderExternalName_master').asString;
-       if isModeSave = FALSE then Self.Caption:= 'БЕЗ СОХРАНЕНИЯ' + Self.Caption;
+       if isModeSave = FALSE then Self.Caption:= 'БЕЗ СОХРАНЕНИЯ: ' + Self.Caption;
        Params.ParamByName('inOrderExternalId').Value:= execParamsMovement.ParamByName('OrderExternalId').AsInteger;
        Params.ParamByName('inMovementId').Value     := execParamsMovement.ParamByName('MovementId').AsInteger;
        Params.ParamByName('inGoodsCode').Value      := 0;
@@ -233,6 +237,7 @@ begin
      else Self.Caption:= 'Параметры продукции';
      ;
 
+  // Показали вес с весов - получили его перед открытием
   PanelGoodsWieghtValue.Caption:=FloatToStr(ParamsMI.ParamByName('RealWeight_Get').AsFloat);
 
   InitializeGoodsKind(ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger);
@@ -366,12 +371,6 @@ begin
           EditPriceListCode.Text:=IntToStr(execParams.ParamByName('PriceListCode').AsInteger);
           rgPriceList.ItemIndex:=0;
      end;
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.CancelCxFilter;
-begin
-     if cxDBGridDBTableView.DataController.Filter.Active
-     then begin cxDBGridDBTableView.DataController.Filter.Clear;cxDBGridDBTableView.DataController.Filter.Active:=false;end
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
