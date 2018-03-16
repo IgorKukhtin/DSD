@@ -54,6 +54,7 @@ RETURNS TABLE (MovementId     Integer,
 
                Remains              TFloat,
                RemainsDebt          TFloat,
+               RemainsAll           TFloat,
                SummRemainsIn        TFloat,
                SummRemains          TFloat,
                CurrencyValue        TFloat,
@@ -212,6 +213,7 @@ BEGIN
                            , Container.ObjectId               AS GoodsId
                            , SUM (CASE WHEN CLO_Client.ContainerId IS NULL THEN Container.Amount ELSE 0 END) AS Remains
                            , SUM (CASE WHEN CLO_Client.ContainerId > 0     THEN Container.Amount ELSE 0 END) AS RemainsDebt
+                           , SUM (COALESCE (Container.Amount, 0))                                            AS RemainsAll
 
                       FROM Container
                            INNER JOIN (SELECT DISTINCT tmpData_Partion.GoodsId, tmpData_Partion.PartionId
@@ -261,6 +263,7 @@ BEGIN
 
                        , SUM (COALESCE (tmpContainer.Remains, 0))         AS Remains
                        , SUM (COALESCE (tmpContainer.RemainsDebt, 0))     AS RemainsDebt
+                       , SUM (COALESCE (tmpContainer.RemainsAll, 0))      AS RemainsAll
 
                   FROM tmpData_Partion AS tmp
                        LEFT JOIN tmpContainer ON tmpContainer.GoodsId    = tmp.GoodsId
@@ -335,8 +338,9 @@ BEGIN
 
            , tmpData.Remains         :: TFloat  AS Remains
            , tmpData.RemainsDebt     :: TFloat  AS RemainsDebt
-           , (tmpData.Remains * (CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSumm/ tmpData.Amount ELSE 0 END ))         :: TFloat AS SummRemainsIn  -- сумма ост. в валюте
-           , (tmpData.Remains * (CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSummPriceList/ tmpData.Amount ELSE 0 END)) :: TFloat AS SummRemains    -- сумма ост. в ГРН
+           , tmpData.RemainsAll      :: TFloat  AS RemainsAll
+           , (tmpData.RemainsAll * (CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSumm/ tmpData.Amount ELSE 0 END ))         :: TFloat AS SummRemainsIn  -- сумма ост.итого в валюте
+           , (tmpData.RemainsAll * (CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSummPriceList/ tmpData.Amount ELSE 0 END)) :: TFloat AS SummRemains    -- сумма ост.итого в ГРН
            
            , tmpData.CurrencyValue  :: TFloat
            , tmpData.ParValue       :: TFloat
