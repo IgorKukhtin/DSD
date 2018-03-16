@@ -133,7 +133,6 @@ type
     bbSetUnErasedProperty: TdxBarButton;
     spGetReportNameSticker: TdsdStoredProc;
     PrintHeaderCDS: TClientDataSet;
-    PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     spInsertReportName: TdsdStoredProc;
     bbPrint: TdxBarButton;

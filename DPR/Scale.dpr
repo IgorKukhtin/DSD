@@ -76,8 +76,7 @@ uses
   GuidePersonal in '..\Scale\GuidePersonal.pas' {GuidePersonalForm},
   DialogPrint in '..\Scale\DialogPrint.pas' {DialogPrintForm},
   AxLibLib_TLB in '..\Scale\Util\AxLibLib_TLB.pas',
-  DialogStringValue in '..\Scale\DialogStringValue.pas' {DialogStringValueForm},
-  DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm},
+  DialogStickerTare in '..\Scale\DialogStickerTare.pas' {DialogStickerTareForm},
   GuideGoodsMovement in '..\Scale\GuideGoodsMovement.pas' {GuideGoodsMovementForm},
   GuideMovement in '..\Scale\GuideMovement.pas' {GuideMovementForm},
   RecadvXML in '..\SOURCE\EDI\RecadvXML.pas',
@@ -86,7 +85,9 @@ uses
   IFIN_J1201009 in '..\SOURCE\MeDOC\IFIN_J1201009.pas',
   IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas',
   LookAndFillSettings in '..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm},
-  GuideGoods in '..\Scale\GuideGoods.pas' {GuideGoodsForm};
+  GuideGoods in '..\Scale\GuideGoods.pas' {GuideGoodsForm},
+  DialogStringValue in '..\Scale\DialogStringValue.pas' {DialogStringValueForm},
+  DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm};
 
 {$R *.res}
 
@@ -133,6 +134,7 @@ begin
          Application.CreateForm(TGuidePersonalForm, GuidePersonalForm);
          Application.CreateForm(TDialogPersonalCompleteForm, DialogPersonalCompleteForm);
          Application.CreateForm(TDialogPrintForm, DialogPrintForm);
+         Application.CreateForm(TDialogStickerTareForm, DialogStickerTareForm);
   end
   else
 
@@ -173,6 +175,7 @@ begin
          Application.CreateForm(TGuidePersonalForm, GuidePersonalForm);
          Application.CreateForm(TDialogPersonalCompleteForm, DialogPersonalCompleteForm);
          Application.CreateForm(TDialogPrintForm, DialogPrintForm);
+         Application.CreateForm(TDialogStickerTareForm, DialogStickerTareForm);
 
   end;
   //

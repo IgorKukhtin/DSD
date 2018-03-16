@@ -985,6 +985,31 @@ end if;
         ;
      END IF; -- if inInsert <> 12345
 
+
+delete from HistoryCost where HistoryCost.ContainerId
+in (
+
+SELECT distinct HistoryCost.ContainerId
+FROM HistoryCost 
+             JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
+                                      ON ContainerLinkObject_InfoMoney.ContainerId = HistoryCost.ContainerId
+--                                     AND ContainerLinkObject_InfoMoney.DescId     = zc_ContainerLinkObject_InfoMoney()
+                                     AND ContainerLinkObject_InfoMoney.DescId     = zc_ContainerLinkObject_InfoMoneyDetail()
+                                     and ContainerLinkObject_InfoMoney.ObjectId      = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+             inner JOIN ContainerLinkObject AS ContainerLinkObject_Unit
+                                      ON ContainerLinkObject_Unit.ContainerId = HistoryCost.ContainerId
+                                     AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
+             inner JOIN Object  ON Object.Id = ContainerLinkObject_Unit.ObjectId
+WHERE '01.03.2018' <= StartDate 
+-- and HistoryCost.ContainerId in (828591)
+and Object.Id in (8459, 8451)
+
+
+)
+ and StartDate  >=  '01.03.2018' 
+;
+
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

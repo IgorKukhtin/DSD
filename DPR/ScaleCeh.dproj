@@ -196,8 +196,8 @@
 			<DCCReference Include="..\ScaleCeh\DialogMessage.pas">
 				<Form>DialogMessageForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\Scale\DialogNumberValue.pas">
-				<Form>DialogNumberValueForm</Form>
+			<DCCReference Include="..\Scale\DialogStickerTare.pas">
+				<Form>DialogStickerTareForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\Scale\DialogStringValue.pas">
 				<Form>DialogStringValueForm</Form>

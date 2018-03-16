@@ -74,7 +74,7 @@ uses
   dmMainScale in '..\ScaleCeh\Util\dmMainScale.pas',
   GuidePartner in '..\Scale\GuidePartner.pas' {GuidePartnerForm},
   DialogMessage in '..\ScaleCeh\DialogMessage.pas' {DialogMessageForm},
-  DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm},
+  DialogStickerTare in '..\Scale\DialogStickerTare.pas' {DialogStickerTareForm},
   DialogStringValue in '..\Scale\DialogStringValue.pas' {DialogStringValueForm},
   RecadvXML in '..\SOURCE\EDI\RecadvXML.pas',
   GuideWorkProgress in '..\ScaleCeh\GuideWorkProgress.pas' {GuideWorkProgressForm},

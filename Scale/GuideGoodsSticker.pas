@@ -60,8 +60,8 @@ type
     GoodsKindName_complete: TcxGridDBColumn;
     PreviewPanel: TPanel;
     frxPreview: TfrxPreview;
-    PrintHeaderCDS: TClientDataSet;
-    spSelectPrint: TdsdStoredProc;
+    PrintHeaderFormCDS: TClientDataSet;
+    spSelectPrintForm: TdsdStoredProc;
     frxDBDHeader: TfrxDBDataset;
     cxSplitter1: TcxSplitter;
     cxSplitter2: TcxSplitter;
@@ -78,7 +78,12 @@ type
     deDateStart: TcxDateEdit;
     cbTare: TcxCheckBox;
     cbGoodsName: TcxCheckBox;
-    Button1: TButton;
+    btnDialogStickerTare: TButton;
+    Panel1: TPanel;
+    btnPrint: TButton;
+    PrintHeaderCDS: TClientDataSet;
+    spSelectPrint: TdsdStoredProc;
+    actPrint: TdsdPrintAction;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -116,6 +121,10 @@ type
     procedure actExitExecute(Sender: TObject);
     procedure actSaveExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure deDateStartPropertiesChange(Sender: TObject);
+    procedure cbStartEndClick(Sender: TObject);
+    procedure btnDialogStickerTareClick(Sender: TObject);
+    procedure cbStartEndEnter(Sender: TObject);
   private
     //FReport : TfrxReport;
     fCloseOK : Boolean;
@@ -137,6 +146,8 @@ type
     procedure InitializeStickerPack(StickerPackGroupId:Integer);
     procedure InitializePrinterSticker;
     procedure pShowReport;
+    procedure pSelectPrintForm;
+    procedure pSelectPrint;
   public
     //GoodsWeight:Double;
     function Execute (execParamsMovement : TParams; isModeSave : Boolean) : Boolean;
@@ -147,7 +158,8 @@ var
 
 implementation
 {$R *.dfm}
-uses dmMainScale, Main, DialogWeight, DialogStringValue,FormStorage;
+uses dmMainScale, Main, DialogWeight, DialogStickerTare,FormStorage,
+  DialogStringValue;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsStickerForm.pShowReport;
 begin
@@ -160,7 +172,7 @@ begin
      then exit;
      fStickerPropertyId:= CDS.FieldByName('Id').asInteger;
      //
-     if CDS.FieldByName('StickerFileName').asString = ''
+     if (CDS.FieldByName('StickerFileName').asString = '')or (CDS.RecordCount <> 1)
      then begin
               //Application.ProcessMessages;
               //Sleep(10);
@@ -181,9 +193,6 @@ begin
               //Sleep(10);
               //Application.ProcessMessages;
               //
-              spSelectPrint.ParamByName('inObjectId').Value:=CDS.FieldByName('Id').asInteger;
-              spSelectPrint.Execute;
-              //
               if fStickerFileName <> CDS.FieldByName('StickerFileName').asString then
               begin
                     FReport.Clear;
@@ -193,16 +202,19 @@ begin
                     fStickerFileName:= CDS.FieldByName('StickerFileName').asString;
               end;
 
+              //
+              pSelectPrintForm;
+              //
               //fReport.DataSet:=frxDBDHeader;
               //fReport.DataSetName:='frxDBDHeader';
               //fReport.Preview:=nil;
               //fReport.Preview:=frxPreview;
               //fReport.PreviewOptions.modal := false;
-              fReport.PrepareReport;
+              //fReport.PrepareReport;
               //fReport.PreviewOptions.Zoom:=1.5;
               //fReport.PreviewOptions.ZoomMode:=zmPageWidth;
               //FReport.PreviewOptions.Maximized := true;
-              fReport.ShowPreparedReport;
+              //fReport.ShowPreparedReport;
               //
               //Application.ProcessMessages;
               //Sleep(10);
@@ -215,6 +227,182 @@ begin
 
 end;
 {------------------------------------------------------------------------------}
+procedure TGuideGoodsStickerForm.pSelectPrintForm;
+begin
+
+    with spSelectPrintForm do
+    begin
+       ParamByName('inObjectId').Value:=CDS.FieldByName('Id').asInteger;
+
+       ParamByName('inIsJPG').Value   := TRUE;
+       ParamByName('inIsLength').Value:= FALSE;
+
+       //1 - печатать дату нач/конечн произв-ва на этикетке
+       ParamByName('inIsStartEnd').Value     := ParamsMI.ParamByName('isStartEnd_Sticker').AsBoolean;
+       //2 - печатать для ТАРЫ
+       ParamByName('inIsTare').Value         := ParamsMI.ParamByName('isTare_Sticker').AsBoolean;
+       //3 - печатать ПАРТИЮ для тары
+       ParamByName('inIsPartion').Value      := ParamsMI.ParamByName('isPartion_Sticker').AsBoolean;
+       //печатать название тов. (для режим 2,3)
+       ParamByName('inIsGoodsName').Value    := ParamsMI.ParamByName('isGoodsName_Sticker').AsBoolean;
+
+       //нач. дата (для режим 1)
+       ParamByName('inDateStart').Value      := ParamsMI.ParamByName('DateStart_Sticker').AsDateTime;
+       //дата для тары  (для режим 2)
+       ParamByName('inDateTare').Value       := ParamsMI.ParamByName('DateTare_Sticker').AsDateTime;
+
+       //дата упаковки  (для режим 3)
+       ParamByName('inDatePack').Value       := ParamsMI.ParamByName('DatePack_Sticker').AsDateTime;
+       //дата произв-ва (для режим 3)
+       ParamByName('inDateProduction').Value := ParamsMI.ParamByName('DateProduction_Sticker').AsDateTime;
+       //№ партии  упаковки, по умолчанию = 1 (для режим 3)
+       ParamByName('inNumPack').Value        := ParamsMI.ParamByName('NumPack_Sticker').AsFloat;
+       //№ смены технологов, по умолчанию = 1 (для режим 3)
+       ParamByName('inNumTech').Value        := ParamsMI.ParamByName('NumTech_Sticker').AsFloat;
+       //
+       Execute;
+    end;
+    //
+    fReport.PrepareReport;
+    fReport.ShowPreparedReport;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsStickerForm.pSelectPrint;
+begin
+
+    with spSelectPrint do
+    begin
+       ParamByName('inObjectId').Value:=CDS.FieldByName('Id').asInteger;
+
+       ParamByName('inIsJPG').Value   := FALSE;
+       ParamByName('inIsLength').Value:= FALSE;
+
+       //1 - печатать дату нач/конечн произв-ва на этикетке
+       ParamByName('inIsStartEnd').Value     := ParamsMI.ParamByName('isStartEnd_Sticker').AsBoolean;
+       //2 - печатать для ТАРЫ
+       ParamByName('inIsTare').Value         := ParamsMI.ParamByName('isTare_Sticker').AsBoolean;
+       //3 - печатать ПАРТИЮ для тары
+       ParamByName('inIsPartion').Value      := ParamsMI.ParamByName('isPartion_Sticker').AsBoolean;
+       //печатать название тов. (для режим 2,3)
+       ParamByName('inIsGoodsName').Value    := ParamsMI.ParamByName('isGoodsName_Sticker').AsBoolean;
+
+       //нач. дата (для режим 1)
+       ParamByName('inDateStart').Value      := ParamsMI.ParamByName('DateStart_Sticker').AsDateTime;
+       //дата для тары  (для режим 2)
+       ParamByName('inDateTare').Value       := ParamsMI.ParamByName('DateTare_Sticker').AsDateTime;
+
+       //дата упаковки  (для режим 3)
+       ParamByName('inDatePack').Value       := ParamsMI.ParamByName('DatePack_Sticker').AsDateTime;
+       //дата произв-ва (для режим 3)
+       ParamByName('inDateProduction').Value := ParamsMI.ParamByName('DateProduction_Sticker').AsDateTime;
+       //№ партии  упаковки, по умолчанию = 1 (для режим 3)
+       ParamByName('inNumPack').Value        := ParamsMI.ParamByName('NumPack_Sticker').AsFloat;
+       //№ смены технологов, по умолчанию = 1 (для режим 3)
+       ParamByName('inNumTech').Value        := ParamsMI.ParamByName('NumTech_Sticker').AsFloat;
+       //
+       //Execute;
+    end;
+    //
+    actPrint.ReportNameParam.Name:=;
+    //
+    actPrint.Execute;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsStickerForm.btnDialogStickerTareClick(Sender: TObject);
+begin
+     with DialogStickerTareForm do
+     begin
+       //2 - печатать для ТАРЫ
+       cbTare.Checked:= TRUE;
+       //3 - печатать ПАРТИЮ для тары
+       cbPartion.Checked      := ParamsMI.ParamByName('isPartion_Sticker').AsBoolean;
+       //печатать название тов. (для режим 2,3)
+       cbGoodsName.Checked    := ParamsMI.ParamByName('isGoodsName_Sticker').AsBoolean;
+
+       //дата для тары  (для режим 2)
+       deDateTare.Date       := ParamsMI.ParamByName('DateTare_Sticker').AsDateTime;
+
+       //дата упаковки  (для режим 3)
+       deDatePack.Date       := ParamsMI.ParamByName('DatePack_Sticker').AsDateTime;
+       //дата произв-ва (для режим 3)
+       deDateProduction.Date := ParamsMI.ParamByName('DateProduction_Sticker').AsDateTime;
+       //№ партии  упаковки, по умолчанию = 1 (для режим 3)
+       ceNumPack.Text        := FloatToStr(ParamsMI.ParamByName('NumPack_Sticker').AsFloat);
+       //№ смены технологов, по умолчанию = 1 (для режим 3)
+       ceNumTech.Text        := FloatToStr(ParamsMI.ParamByName('NumTech_Sticker').AsFloat);
+       //
+       if Execute then
+       begin
+           //2 - печатать для ТАРЫ
+           ParamsMI.ParamByName('isTare_Sticker').AsBoolean      := cbTare.Checked;
+           //3 - печатать ПАРТИЮ для тары
+           ParamsMI.ParamByName('isPartion_Sticker').AsBoolean   := cbPartion.Checked;
+           //печатать название тов. (для режим 2,3)
+           ParamsMI.ParamByName('isGoodsName_Sticker').AsBoolean := cbGoodsName.Checked;
+
+           //дата для тары  (для режим 2)
+           if (cbTare.Checked = TRUE) and (cbPartion.Checked = FALSE)
+           then ParamsMI.ParamByName('DateTare_Sticker').AsDateTime:= deDateTare.Date;
+
+           if (cbTare.Checked = TRUE) and (cbPartion.Checked = TRUE) then
+           begin
+             //дата упаковки  (для режим 3)
+             ParamsMI.ParamByName('DatePack_Sticker').AsDateTime:= deDatePack.Date;
+             //дата произв-ва (для режим 3)
+             ParamsMI.ParamByName('DateProduction_Sticker').AsDateTime:= deDateProduction.Date;
+             //№ партии  упаковки, по умолчанию = 1 (для режим 3)
+             ParamsMI.ParamByName('NumPack_Sticker').AsFloat:= StrToFloat(ceNumPack.Text);
+             //№ смены технологов, по умолчанию = 1 (для режим 3)
+             ParamsMI.ParamByName('NumTech_Sticker').AsFloat:= StrToFloat(ceNumTech.Text);
+           end;
+           //
+           Self.cbTare.Checked      := cbTare.Checked;
+           Self.cbGoodsName.Checked := cbGoodsName.Checked;
+           //
+           pSelectPrintForm;
+           //
+           cbStartEndEnter(Self);
+       end;
+     end;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsStickerForm.deDateStartPropertiesChange(Sender: TObject);
+begin
+     try StrToDate (deDateStart.Text)
+     except
+        deDateStart.Date:= NOW + 1;
+     end;
+     //
+     with ParamsMI do
+     begin
+        ParamByName('DateStart_Sticker').AsDateTime:= deDateStart.Date;
+     end;
+     //
+     pSelectPrintForm;
+     //
+     ActiveControl:= EditPriceListCode;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsStickerForm.cbStartEndClick(Sender: TObject);
+begin
+     with ParamsMI do begin
+        ParamByName('isStartEnd_Sticker').AsBoolean :=cbStartEnd.Checked;
+        ParamByName('isTare_Sticker').AsBoolean     :=cbTare.Checked;
+        ParamByName('isGoodsName_Sticker').AsBoolean:=cbGoodsName.Checked;
+     end;
+     //
+     pSelectPrintForm;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsStickerForm.cbStartEndEnter(Sender: TObject);
+begin
+     if CDS.RecordCount = 1
+     then ActiveControl:= EditPriceListCode
+     else if (Length(trim(EditGoodsCode.Text))>0)
+          then ActiveControl:= EditGoodsKindCode
+          else ActiveControl:= EditGoodsCode;
+end;
+{------------------------------------------------------------------------------}
 procedure TGuideGoodsStickerForm.CancelCxFilter;
 begin
      if cxDBGridDBTableView.DataController.Filter.Active
@@ -225,6 +413,36 @@ function TGuideGoodsStickerForm.Execute (execParamsMovement : TParams; isModeSav
 begin
      fStickerPropertyId:=-1;
      fStickerFileName:='';
+     //
+     //1 - печатать дату нач/конечн произв-ва на этикетке
+     cbStartEnd.Checked := TRUE;
+     //2 - печатать для ТАРЫ
+     cbTare.Checked     := FALSE;
+     //3 - печатать ПАРТИЮ для тары
+     ParamsMI.ParamByName('isPartion_Sticker').AsBoolean:= FALSE;
+     //печатать название тов. (для режим 2,3)
+     cbGoodsName.Checked:= TRUE;
+
+     //нач. дата (для режим 1)
+     deDateStart.Date   := NOW + 1;
+     //дата для тары  (для режим 2)
+     ParamsMI.ParamByName('DateTare_Sticker').AsDateTime:= NOW;
+
+     //дата упаковки  (для режим 3)
+     ParamsMI.ParamByName('DatePack_Sticker').AsDateTime:= NOW;
+     //дата произв-ва (для режим 3)
+     ParamsMI.ParamByName('DateProduction_Sticker').AsDateTime:= NOW;
+     //№ партии  упаковки, по умолчанию = 1 (для режим 3)
+     ParamsMI.ParamByName('NumPack_Sticker').AsFloat:= 1;
+     //№ смены технологов, по умолчанию = 1 (для режим 3)
+     ParamsMI.ParamByName('NumTech_Sticker').AsFloat:= 1;
+
+     //обновили
+     cbStartEndClick(Self);
+     //обновили
+     deDateStartPropertiesChange(Self);
+
+     //
      //
      fModeSave:= isModeSave;
      fCloseOK:=false;
@@ -414,12 +632,19 @@ begin
           and(rgGoodsKind.ItemIndex>=0)
           and(rgPriceList.ItemIndex>=0)
           and(ParamsMI.ParamByName('RealWeight').AsFloat>=1)
+          and (CDS.FieldByName('StickerFileName').asString <> '')
           ;
      //
      if fModeSave = FALSE then
      begin
           Result:= false;
           ShowMessage ('Ошибка.Окно открыто в режиме <Только просмотр>.');
+          exit;
+     end;
+     //
+     if CDS.FieldByName('StickerFileName').asString = '' then
+     begin
+          ShowMessage ('Ошибка.Шаблон для печати НЕ найден.');
           exit;
      end;
      //
@@ -485,11 +710,17 @@ begin
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsStickerForm.EditGoodsCodeEnter(Sender: TObject);
-begin TEdit(Sender).SelectAll;
+begin 
+      //
+      TEdit(Sender).SelectAll;
       EditGoodsName.Text:='';
       CDS.Filtered:=false;
       if 1=1 // ParamsMovement.ParamByName('OrderExternalId').asInteger<>0
       then CDS.Filtered:=true;
+      //
+      Application.ProcessMessages;
+      //
+      ActiveControl:=EditGoodsCode;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsStickerForm.EditGoodsCodeExit(Sender: TObject);
@@ -855,31 +1086,15 @@ begin
      then begin EditGoodsCode.Text:=CDS.FieldByName('GoodsCode').AsString;
                 fEnterGoodsCode:= true;
                 fEnterGoodsName:= false;
-                if SettingMain.BranchCode = 301
-                then EditGoodsCodeChange(EditGoodsCode); // EditGoodsCodeExit(EditGoodsCode);
-          end
-     else if (SettingMain.BranchCode = 301)
-          then begin
-                EditGoodsName.Text:=CDS.FieldByName('GoodsName').AsString;
-                fEnterGoodsCode:= false;
-                fEnterGoodsName:= true;
-                EditGoodsNameChange(EditGoodsName) // EditGoodsNameExit(EditGoodsName);
-          end;
-
-     if (ParamsMovement.ParamByName('OrderExternalId').asInteger=0)
-     then if (SettingMain.BranchCode <> 301) then EditGoodsCodeChange(EditGoodsCode) else
-     else begin
-               fEnterGoodsKindCode:=true;
-               if rgGoodsKind.Items.Count>1
-               then EditGoodsKindCode.Text:=CDS.FieldByName('GoodsKindCode').AsString;
-               EditGoodsKindCodeChange(EditGoodsKindCode);
           end;
      //
-     if 1=1//(CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or (SettingMain.BranchCode = 301)
-     then ActiveControl:=EditWeightValue
-     else if 1=1 //(ParamsMovement.ParamByName('OrderExternalId').asInteger=0)and(rgGoodsKind.Items.Count>1)
-          then ActiveControl:=EditGoodsKindCode
-          else ActiveControl:=EditPriceListCode;
+     fEnterGoodsKindCode:=true;
+     if rgGoodsKind.Items.Count>1
+     then EditGoodsKindCode.Text:=CDS.FieldByName('GoodsKindCode').AsString;
+     EditGoodsKindCodeChange(EditGoodsKindCode);
+
+     //
+     ActiveControl:=EditWeightValue;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsStickerForm.actExitExecute(Sender: TObject);

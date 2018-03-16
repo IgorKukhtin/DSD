@@ -1254,16 +1254,32 @@ begin
   Initialize_afterSave_MI;
   //local visible Columns
   //cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName').Index].Visible       :=SettingMain.isGoodsComplete = TRUE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible        :=SettingMain.isGoodsComplete = FALSE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('HeadCount').Index].Visible           :=SettingMain.isGoodsComplete = FALSE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Count').Index].Visible               :=SettingMain.isGoodsComplete = TRUE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('LevelNumber').Index].Visible         :=SettingMain.isGoodsComplete = TRUE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('BoxNumber').Index].Visible           :=SettingMain.isGoodsComplete = TRUE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('BoxName').Index].Visible             :=SettingMain.isGoodsComplete = TRUE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('BoxCount').Index].Visible            :=SettingMain.isGoodsComplete = TRUE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible        :=(SettingMain.isGoodsComplete = FALSE) and (SettingMain.isSticker = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('HeadCount').Index].Visible           :=(SettingMain.isGoodsComplete = FALSE) and (SettingMain.isSticker = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Count').Index].Visible               :=(SettingMain.isGoodsComplete = TRUE) and (SettingMain.isSticker = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('LevelNumber').Index].Visible         :=(SettingMain.isGoodsComplete = TRUE) and (SettingMain.isSticker = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('BoxNumber').Index].Visible           :=(SettingMain.isGoodsComplete = TRUE) and (SettingMain.isSticker = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('BoxName').Index].Visible             :=(SettingMain.isGoodsComplete = TRUE) and (SettingMain.isSticker = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('BoxCount').Index].Visible            :=(SettingMain.isGoodsComplete = TRUE) and (SettingMain.isSticker = FALSE);
   //
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('TaxDoc').Index].Visible              :=SettingMain.isGoodsComplete = TRUE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('TaxDoc_calc').Index].Visible         :=SettingMain.isGoodsComplete = TRUE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('TaxDoc').Index].Visible              :=(SettingMain.isGoodsComplete = TRUE) and (SettingMain.isSticker = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('TaxDoc_calc').Index].Visible         :=(SettingMain.isGoodsComplete = TRUE) and (SettingMain.isSticker = FALSE);
+  //
+  if SettingMain.isSticker = TRUE then
+  begin
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isBarCode').Index].Visible           := FALSE;
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PriceListName').Index].Visible       := FALSE;
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price').Index].Visible               := FALSE;
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isPromo').Index].Visible             := FALSE;
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('ChangePercentAmount').Index].Visible := FALSE;
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('AmountPartner').Index].Visible       := FALSE;
+     //DataBinding.FieldName = 'Amount'
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('RealWeight').Index].Visible          := FALSE;
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTareTotal').Index].Visible     := FALSE;
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare').Index].Visible          := FALSE;
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountTare').Index].Visible           := FALSE;
+  end;
+
   //local visible
   PanelPartionGoods.Visible:=SettingMain.isGoodsComplete = FALSE;
   HeadCountPanel.Visible:=PanelPartionGoods.Visible;

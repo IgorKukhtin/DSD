@@ -328,7 +328,20 @@ begin
      ParamAdd(Params,'PartionGoodsDate',ftDateTime); //
      ParamAdd(Params,'isStartWeighing',ftBoolean);   //локальный параметр
      end;
-
+     //
+     if SettingMain.isSticker = TRUE then
+     begin
+          ParamAdd(Params,'isStartEnd_Sticker',ftBoolean);       //1 - печатать дату нач/конечн произв-ва на этикетке
+          ParamAdd(Params,'isTare_Sticker',ftBoolean);           //2 - печатать для ТАРЫ
+          ParamAdd(Params,'isPartion_Sticker',ftBoolean);        //3 - печатать ПАРТИЮ для тары
+          ParamAdd(Params,'isGoodsName_Sticker',ftBoolean);      //печатать название тов. (для режим 2,3)
+          ParamAdd(Params,'DateStart_Sticker',ftDateTime);       //нач. дата (для режим 1)
+          ParamAdd(Params,'DateTare_Sticker',ftDateTime);        //дата для тары  (для режим 2)
+          ParamAdd(Params,'DatePack_Sticker',ftDateTime);        //дата упаковки  (для режим 3)
+          ParamAdd(Params,'DateProduction_Sticker',ftDateTime);  //дата произв-ва (для режим 3)
+          ParamAdd(Params,'NumPack_Sticker',ftFloat);            // № партии  упаковки, по умолчанию = 1 (для режим 3)
+          ParamAdd(Params,'NumTech_Sticker',ftFloat);            // № смены технологов, по умолчанию = 1 (для режим 3)
+     end;
 end;
 {------------------------------------------------------------------------}
 procedure Create_ParamsPersonal(var Params:TParams;idx:String);

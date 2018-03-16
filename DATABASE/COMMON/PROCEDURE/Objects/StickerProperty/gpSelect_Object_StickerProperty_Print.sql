@@ -297,8 +297,8 @@ BEGIN
             , inDateStart                                                          :: TDateTime AS DateStart
             , (inDateStart + (ObjectFloat_Value5.ValueData ||' DAY') :: INTERVAL)  :: TDateTime AS DateEnd
 
+            , inDateTare          :: TDateTime AS DateTare
             , inDatePack          :: TDateTime AS DatePack
-            , inDateTare          :: TDateTime AS DateTara
             , inDateProduction    :: TDateTime AS DateProduction
             , inNumPack           :: TFloat    AS NumPack
             , inNumTech           :: TFloat    AS NumTech

@@ -27,7 +27,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 790
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
@@ -36,7 +35,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitWidth = 790
       object bbExit: TSpeedButton
         Left = 511
         Top = 3
@@ -99,7 +97,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       Height = 245
       Align = alClient
       TabOrder = 1
-      ExplicitWidth = 790
       object cxDBGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DS
@@ -250,7 +247,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 790
     object PreviewPanel: TPanel
       Left = 0
       Top = 0
@@ -258,7 +254,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       Height = 379
       Align = alLeft
       TabOrder = 2
-      ExplicitWidth = 392
       object frxPreview: TfrxPreview
         Left = 1
         Top = 1
@@ -269,7 +264,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         OutlineWidth = 120
         ThumbnailVisible = False
         UseReportHints = True
-        ExplicitWidth = 390
       end
     end
     object cxSplitter1: TcxSplitter
@@ -280,7 +274,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       AlignSplitter = salRight
       AllowHotZoneDrag = False
       Control = ParamsAllPanel
-      ExplicitLeft = 392
     end
     object ParamsPanel: TPanel
       Left = 380
@@ -290,7 +283,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitLeft = 388
       object infoPanelPriceList: TPanel
         Left = 338
         Top = 0
@@ -299,13 +291,11 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitLeft = 328
-        ExplicitHeight = 379
         object rgPriceList: TRadioGroup
           Left = 0
-          Top = 41
+          Top = 81
           Width = 132
-          Height = 279
+          Height = 239
           Align = alClient
           Caption = #1055#1088#1080#1085#1090#1077#1088#1099
           Color = clBtnFace
@@ -313,25 +303,23 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           TabOrder = 1
           WordWrap = True
           OnClick = rgPriceListClick
-          OnEnter = rgPriceListClick
-          ExplicitLeft = 6
-          ExplicitTop = 43
-          ExplicitWidth = 144
-          ExplicitHeight = 338
+          ExplicitLeft = -1
+          ExplicitTop = 40
+          ExplicitHeight = 279
         end
         object gbPriceListCode: TGroupBox
           Left = 0
-          Top = 0
+          Top = 40
           Width = 132
           Height = 41
           Align = alTop
           Caption = #1050#1086#1076
           TabOrder = 0
-          ExplicitWidth = 85
+          ExplicitTop = 0
           object EditPriceListCode: TEdit
             Left = 5
             Top = 17
-            Width = 140
+            Width = 121
             Height = 22
             TabOrder = 0
             Text = 'EditPriceListCode'
@@ -339,6 +327,25 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
             OnEnter = EditTareCountEnter
             OnExit = EditPriceListCodeExit
             OnKeyPress = EditPriceListCodeKeyPress
+          end
+        end
+        object Panel1: TPanel
+          Left = 0
+          Top = 0
+          Width = 132
+          Height = 40
+          Align = alTop
+          BevelOuter = bvNone
+          Caption = 'Panel1'
+          TabOrder = 2
+          object btnPrint: TButton
+            Left = 16
+            Top = 6
+            Width = 100
+            Height = 33
+            Caption = #1055#1045#1063#1040#1058#1068
+            TabOrder = 0
+            OnClick = actSaveExecute
           end
         end
       end
@@ -350,7 +357,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitHeight = 379
         object gbGoodsName: TGroupBox
           Left = 0
           Top = 41
@@ -359,7 +365,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           Align = alTop
           Caption = #1053#1072#1079#1074#1072#1085#1080#1077
           TabOrder = 1
-          ExplicitWidth = 135
           object EditGoodsName: TEdit
             Left = 5
             Top = 17
@@ -382,7 +387,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           Align = alTop
           Caption = #1050#1086#1076
           TabOrder = 0
-          ExplicitWidth = 135
           object EditGoodsCode: TEdit
             Left = 5
             Top = 17
@@ -406,8 +410,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           Caption = #1042#1077#1089' '#1085#1072' '#1058#1072#1073#1083#1086
           TabOrder = 2
           Visible = False
-          ExplicitLeft = -6
-          ExplicitTop = 128
           object PanelGoodsWieghtValue: TPanel
             Left = 2
             Top = 16
@@ -423,7 +425,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
             Font.Style = [fsBold]
             ParentFont = False
             TabOrder = 0
-            ExplicitWidth = 131
           end
         end
         object gbWeightValue: TGroupBox
@@ -434,7 +435,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           Align = alTop
           Caption = #1042#1074#1086#1076' '#1050#1054#1051'-'#1042#1054
           TabOrder = 3
-          ExplicitWidth = 135
           object EditWeightValue: TcxCurrencyEdit
             Left = 5
             Top = 18
@@ -459,9 +459,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitLeft = 135
-        ExplicitWidth = 33
-        ExplicitHeight = 379
         object rgGoodsKind: TRadioGroup
           Left = 0
           Top = 41
@@ -480,8 +477,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           ParentFont = False
           TabOrder = 1
           OnClick = rgGoodsKindClick
-          ExplicitWidth = 33
-          ExplicitHeight = 338
         end
         object gbGoodsKindCode: TGroupBox
           Left = 0
@@ -491,9 +486,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           Align = alTop
           Caption = #1050#1086#1076' '#1087#1072#1082#1091#1074#1072#1085#1085#1103
           TabOrder = 0
-          ExplicitLeft = -1
-          ExplicitTop = -6
-          ExplicitWidth = 53
           object EditGoodsKindCode: TEdit
             Left = 5
             Top = 17
@@ -515,13 +507,14 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         Height = 59
         Align = alBottom
         TabOrder = 3
-        ExplicitWidth = 460
         object cbStartEnd: TcxCheckBox
           Left = 5
           Top = 5
           Caption = #1055#1077#1095#1072#1090#1072#1090#1100' '#1076#1072#1090#1091' '#1087#1088#1086#1080#1079#1074'-'#1074#1072
           State = cbsChecked
           TabOrder = 0
+          OnClick = cbStartEndClick
+          OnEnter = cbStartEndEnter
           Width = 180
         end
         object cxLabel1: TcxLabel
@@ -530,12 +523,14 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           Caption = #1044#1072#1090#1072' '#1089' ...'
         end
         object deDateStart: TcxDateEdit
-          Left = 70
-          Top = 28
+          Left = 73
+          Top = 31
           EditValue = 43101d
           Properties.SaveTime = False
           Properties.ShowTime = False
+          Properties.OnChange = deDateStartPropertiesChange
           TabOrder = 2
+          OnEnter = cbStartEndEnter
           Width = 99
         end
         object cbTare: TcxCheckBox
@@ -543,6 +538,8 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           Top = 5
           Caption = #1055#1077#1095#1072#1090#1072#1090#1100' '#1076#1083#1103' '#1058#1040#1056#1067
           TabOrder = 3
+          OnClick = cbStartEndClick
+          OnEnter = cbStartEndEnter
           Width = 140
         end
         object cbGoodsName: TcxCheckBox
@@ -552,15 +549,18 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
           State = cbsChecked
           TabOrder = 4
+          OnClick = cbStartEndClick
+          OnEnter = cbStartEndEnter
           Width = 140
         end
-        object Button1: TButton
+        object btnDialogStickerTare: TButton
           Left = 339
           Top = 14
           Width = 124
           Height = 33
           Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1083#1103' '#1058#1072#1088#1099
           TabOrder = 5
+          OnClick = btnDialogStickerTareClick
         end
       end
     end
@@ -573,7 +573,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
     AlignSplitter = salBottom
     InvertDirection = True
     Control = GridPanel
-    ExplicitWidth = 790
   end
   object DS: TDataSource
     DataSet = CDS
@@ -643,19 +642,48 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100
       OnExecute = actSaveExecute
     end
+    object actPrint: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Value = Null
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end>
+      Params = <>
+      ReportName = 'NULL'
+      ReportNameParam.Value = Null
+      ReportNameParam.ComponentItem = 'ReportNameSticker'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
   end
-  object PrintHeaderCDS: TClientDataSet
+  object PrintHeaderFormCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 84
     Top = 49
   end
-  object spSelectPrint: TdsdStoredProc
+  object spSelectPrintForm: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_StickerProperty_Print'
-    DataSet = PrintHeaderCDS
+    DataSet = PrintHeaderFormCDS
     DataSets = <
       item
-        DataSet = PrintHeaderCDS
+        DataSet = PrintHeaderFormCDS
       end>
     Params = <
       item
@@ -753,7 +781,7 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
   object frxDBDHeader: TfrxDBDataset
     UserName = 'frxDBDHeader'
     CloseDataSource = False
-    DataSet = PrintHeaderCDS
+    DataSet = PrintHeaderFormCDS
     BCDToCurrency = False
     Left = 80
     Top = 112
@@ -782,5 +810,113 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
     Datasets = <>
     Variables = <>
     Style = <>
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 652
+    Top = 9
+  end
+  object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_StickerProperty_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsJPG'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsLength'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsStartEnd'
+        Value = 'True'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsTare'
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsPartion'
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsGoodsName'
+        Value = 'True'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateStart'
+        Value = 43101d
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateTare'
+        Value = 43101d
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDatePack'
+        Value = 43101d
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateProduction'
+        Value = 43101d
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumPack'
+        Value = 1.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumTech'
+        Value = 1.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 647
+    Top = 64
   end
 end

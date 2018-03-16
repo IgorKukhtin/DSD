@@ -567,6 +567,7 @@ object StickerForm: TStickerForm
       Left = 70
       Top = 28
       EditValue = 43101d
+      Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -576,6 +577,7 @@ object StickerForm: TStickerForm
       Left = 647
       Top = 5
       EditValue = 43101d
+      Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -648,6 +650,7 @@ object StickerForm: TStickerForm
       Left = 647
       Top = 28
       EditValue = 43101d
+      Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 11
@@ -679,6 +682,7 @@ object StickerForm: TStickerForm
     Left = 328
     Top = 28
     EditValue = 43101d
+    Properties.ReadOnly = False
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 10
@@ -2624,12 +2628,6 @@ object StickerForm: TStickerForm
     Params = <>
     Left = 836
     Top = 137
-  end
-  object PrintItemsCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 836
-    Top = 182
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_StickerProperty_Print'
