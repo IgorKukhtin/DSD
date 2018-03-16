@@ -4,7 +4,7 @@ inherited GoodsForm: TGoodsForm
   ClientWidth = 883
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 899
-  ExplicitHeight = 478
+  ExplicitHeight = 481
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -572,6 +572,23 @@ inherited GoodsForm: TGoodsForm
       Hint = #1057#1076#1077#1083#1072#1090#1100' '#1054#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' = '#1053#1045#1058
       ImageIndex = 58
     end
+    object actUpdate_CountPrice: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_CountPrice
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_CountPrice
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1072#1081#1089#1086#1074
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1072#1081#1089#1086#1074
+      QuestionBeforeExecute = #1054#1073#1085#1086#1074#1080#1090#1100' '#1089#1074'-'#1074#1086' '#1050#1086#1083'-'#1074#1086' '#1087#1088#1072#1081#1089#1086#1074' '#1087#1086' '#1074#1089#1077#1084' '#1089#1077#1090#1103#1084'?'
+      InfoAfterExecute = #1050#1086#1083'-'#1074#1086' '#1087#1088#1072#1081#1089#1086#1074' '#1086#1073#1085#1086#1074#1083#1077#1085#1086
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -656,6 +673,14 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_CountPrice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -693,6 +718,11 @@ inherited GoodsForm: TGoodsForm
     object bbUpdateNDS: TdxBarButton
       Action = macUpdateNDS
       Category = 0
+    end
+    object bbUpdate_CountPrice: TdxBarButton
+      Action = actUpdate_CountPrice
+      Category = 0
+      ImageIndex = 77
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1239,5 +1269,14 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 808
     Top = 248
+  end
+  object spUpdate_CountPrice: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_CountPrice'
+    DataSets = <>
+    OutputType = otResult
+    Params = <>
+    PackSize = 1
+    Left = 808
+    Top = 152
   end
 end
