@@ -56,6 +56,7 @@ RETURNS TABLE (PartionId            Integer
 
              , Remains              TFloat
              , RemainsDebt          TFloat
+             , RemainsAll           TFloat
              , SummDebt             TFloat
              , SummDebt_profit      TFloat
 
@@ -111,6 +112,7 @@ BEGIN
                            , Container.ObjectId                                        AS GoodsId
                            , CASE WHEN CLO_Client.ContainerId IS NULL THEN Container.Amount ELSE 0 END AS Remains
                            , CASE WHEN CLO_Client.ContainerId > 0     THEN Container.Amount ELSE 0 END AS RemainsDebt
+                           , COALESCE (Container.Amount, 0)                                            AS RemainsAll
                            , COALESCE (Container_SummDebt.Amount, 0)                                   AS SummDebt
                            , COALESCE (Container_SummDebt_profit.Amount, 0)                            AS SummDebt_profit
 
@@ -204,12 +206,13 @@ BEGIN
                           , SUM (CASE WHEN tmpContainer.Ord = 1 THEN tmpContainer.Amount_in ELSE 0 END) AS Amount_in
                           , SUM (tmpContainer.Remains)         AS Remains
                           , SUM (tmpContainer.RemainsDebt)     AS RemainsDebt
+                          , SUM (tmpContainer.RemainsAll)      AS RemainsAll
                           , SUM (tmpContainer.SummDebt)        AS SummDebt
                           , SUM (tmpContainer.SummDebt_profit) AS SummDebt_profit
 
 
-                          , SUM (zfCalc_SummIn        (tmpContainer.Remains, tmpContainer.OperPrice, tmpContainer.CountForPrice)) AS TotalSummPrice
-                          , SUM (zfCalc_SummPriceList (tmpContainer.Remains, tmpContainer.OperPriceList))                         AS TotalSummPriceList
+                          , SUM (zfCalc_SummIn        (tmpContainer.RemainsAll, tmpContainer.OperPrice, tmpContainer.CountForPrice)) AS TotalSummPrice
+                          , SUM (zfCalc_SummPriceList (tmpContainer.RemainsAll, tmpContainer.OperPriceList))                         AS TotalSummPriceList
 
                      FROM tmpContainer
                           LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id = tmpContainer.MovementId
@@ -334,13 +337,15 @@ BEGIN
            , tmpCurrency.Amount   ::TFloat  AS CurrencyValue
            , tmpCurrency.ParValue ::TFloat  AS ParValue
 
-           , tmpData.Amount_in    :: TFloat AS OperPrice
-           , CASE WHEN tmpData.Remains <> 0 THEN tmpData.TotalSummPrice / tmpData.Remains ELSE 0 END :: TFloat AS OperPrice
-           , 1 :: TFloat AS CountForPrice
+           , tmpData.Amount_in    :: TFloat AS Amount_in
+           , CASE WHEN tmpData.RemainsAll <> 0 THEN tmpData.TotalSummPrice / tmpData.RemainsAll ELSE 0 END :: TFloat AS OperPrice
+           , 1                    :: TFloat AS CountForPrice
            , tmpData.OperPriceList
 
            , tmpData.Remains                 :: TFloat AS Remains
            , tmpData.RemainsDebt             :: TFloat AS RemainsDebt
+           , tmpData.RemainsAll              :: TFloat AS RemainsAll
+
            , tmpData.SummDebt                :: TFloat AS SummDebt
            , tmpData.SummDebt_profit         :: TFloat AS SummDebt_profit
 
@@ -393,6 +398,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 15.03.18         * add RemainsAll
  19.02.18         *
  22.06.17         *
 */

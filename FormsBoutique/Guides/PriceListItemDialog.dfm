@@ -4,7 +4,7 @@ object PriceListItemDialogForm: TPriceListItemDialogForm
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' <'#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1072'>'
   ClientHeight = 324
-  ClientWidth = 328
+  ClientWidth = 335
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,6 +13,7 @@ object PriceListItemDialogForm: TPriceListItemDialogForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
@@ -467,5 +468,38 @@ object PriceListItemDialogForm: TPriceListItemDialogForm
       end>
     Left = 192
     Top = 48
+  end
+  object spGet_Current_Date: TdsdStoredProc
+    StoredProcName = 'gpGet_Current_Date'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'gpGet_Current_Date'
+        Value = 42856d
+        Component = edShowDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 32
+    Top = 80
+  end
+  object ActionList: TActionList
+    Left = 155
+    Top = 49
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_Current_Date
+      StoredProcList = <
+        item
+          StoredProc = spGet_Current_Date
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
   end
 end

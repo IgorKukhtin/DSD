@@ -252,8 +252,8 @@ BEGIN
            , tmpPartionGoods.AmountDebt      ::Tfloat
            , (COALESCE(tmpPartionGoods.Remains, 0) + COALESCE(tmpPartionGoods.AmountDebt, 0)) ::Tfloat  AS RemainsAll
 
-           , tmpPrice.StartDate
-           , tmpPrice.EndDate
+           , CASE WHEN tmpPrice.StartDate IN (zc_DateStart(), zc_DateEnd()) THEN NULL ELSE tmpPrice.StartDate END ::TDateTime  AS StartDate
+           , CASE WHEN tmpPrice.EndDate   IN (zc_DateStart(), zc_DateEnd()) THEN NULL ELSE tmpPrice.EndDate   END ::TDateTime  AS EndDate
            , COALESCE(tmpPrice.ValuePrice, NULL) ::TFloat  AS ValuePrice
 
            , Object_Insert.ValueData   AS InsertName
@@ -481,8 +481,8 @@ BEGIN
            , tmpPartionGoods.AmountDebt      ::Tfloat
            , (COALESCE(tmpPartionGoods.Remains, 0) + COALESCE(tmpPartionGoods.AmountDebt, 0)) ::Tfloat  AS RemainsAll
            
-           , tmpPrice.StartDate
-           , tmpPrice.EndDate
+           , CASE WHEN tmpPrice.StartDate IN (zc_DateStart(), zc_DateEnd()) THEN NULL ELSE tmpPrice.StartDate END ::TDateTime  AS StartDate
+           , CASE WHEN tmpPrice.EndDate   IN (zc_DateStart(), zc_DateEnd()) THEN NULL ELSE tmpPrice.EndDate   END ::TDateTime  AS EndDate
            , tmpPrice.ValuePrice
 
            , Object_Insert.ValueData              AS InsertName
@@ -526,6 +526,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.03.18         *
  06.03.18         *
  05.03.18         *
  01.03.18         * новые вх.параметры

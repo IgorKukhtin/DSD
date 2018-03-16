@@ -368,13 +368,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAllJuridicalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsAllJuridicalForm');
   //exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeMasterForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeMasterForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_NDS_diffForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_NDS_diffForm');
 
@@ -383,6 +383,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
 
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsMainForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsMainForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsMainEditForm'));

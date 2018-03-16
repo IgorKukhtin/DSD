@@ -47,6 +47,9 @@ type
     edEndYear: TcxButtonEdit;
     GuidesStartYear: TdsdGuides;
     GuidesEndYear: TdsdGuides;
+    spGet_Current_Date: TdsdStoredProc;
+    ActionList: TActionList;
+    actRefreshStart: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

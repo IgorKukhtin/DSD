@@ -75,6 +75,9 @@ type
     macSimpleUpdateNDS: TMultiAction;
     actUpdateNDS: TdsdExecStoredProc;
     bbUpdateNDS: TdxBarButton;
+    spUpdate_CountPrice: TdsdStoredProc;
+    actUpdate_CountPrice: TdsdExecStoredProc;
+    bbUpdate_CountPrice: TdxBarButton;
   private
     { Private declarations }
   public

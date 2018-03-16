@@ -50,6 +50,9 @@ type
     cxLabel7: TcxLabel;
     edPriceList: TcxButtonEdit;
     GuidesPriceList: TdsdGuides;
+    spGet_Current_Date: TdsdStoredProc;
+    ActionList: TActionList;
+    actRefreshStart: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

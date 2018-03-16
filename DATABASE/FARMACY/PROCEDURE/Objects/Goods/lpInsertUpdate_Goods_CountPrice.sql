@@ -17,8 +17,8 @@ BEGIN
      vbStartDate:= DATE_TRUNC ('DAY', inOperDate);
      vbEndDate:=   DATE_TRUNC ('DAY', inOperDate) + INTERVAL '1 DAY';
      
-     vbAreaId := 0;--COALESCE ((SELECT COALESCE (LoadPriceList.AreaId, 0) FROM LoadPriceList WHERE LoadPriceList.Id = inPriceListId), 0);
-
+     vbAreaId := COALESCE ((SELECT COALESCE (LoadPriceList.AreaId, 0) FROM LoadPriceList WHERE LoadPriceList.Id = inPriceListId), 0);
+ 
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpDataCount'))
      THEN
          DROP TABLE _tmpDataCount;
@@ -67,7 +67,7 @@ BEGIN
                            AND ObjectLink_Main_R.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
                          )
           -- считаем кол-во документов
-          , tmpCount AS (SELECT COALESCE (MovementLinkObject_Area.ObjectId, 0)  AS AreaId
+          , tmpCount AS (/*SELECT COALESCE (MovementLinkObject_Area.ObjectId, 0)  AS AreaId
                               , Count (Movement.Id)                             AS CountPrice
                          FROM Movement 
                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
@@ -83,6 +83,15 @@ BEGIN
                            AND Movement.Id <> inPriceListId
                            AND (COALESCE (MovementLinkObject_Area.ObjectId, 0) = vbAreaId OR COALESCE (MovementLinkObject_Area.ObjectId, 0) = 0 OR vbAreaId=0)
                          GROUP BY  COALESCE (MovementLinkObject_Area.ObjectId, 0)
+                         */
+                         
+                         SELECT LoadPriceList.AreaId                       AS AreaId
+                              , Count (DISTINCT LoadPriceList.JuridicalId) AS CountPrice
+                         FROM LoadPriceListItem 
+                              INNER JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
+                         WHERE LoadPriceListItem.goodsid = inGoodsId ---16848 --17496 
+                           AND LoadPriceList.Id <> inPriceListId
+                         GROUP BY LoadPriceList.AreaId
                         )
 
          SELECT tmp.GoodsId, SUM (tmp.CountPrice) AS CountPrice
