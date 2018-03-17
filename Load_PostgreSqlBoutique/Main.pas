@@ -717,6 +717,15 @@ begin
         Clear;
         Add(mySql);
         try Open except ShowMessage('fOpenSqToQuery'+#10+#13+mySql);Result:=false;exit;end;
+
+        {try Open
+        except
+          on E: Exception do begin
+              ShowMessage('fOpenSqToQuery-1'+#10+#13+E.Message+#10+#13+mySql);
+              Result:=false;
+              exit;
+          end;
+        end;}
      end;
      Result:=true;
 end;
@@ -5361,8 +5370,9 @@ begin
 
              //
              if (FieldByName('Id_Postgres').AsInteger=0)and(FieldByName('isErased').AsInteger=zc_rvNo)
+             //if (FieldByName('isErased').AsInteger=zc_rvNo)
              then
-                 fOpenSqToQuery ('select lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), '+ IntToStr(toStoredProc.Params.ParamByName('ioId').Value) +', ' + FormatToDateTimeServer(FieldByName('OperDateInsert').AsDateTime) +') '
+                 fOpenSqToQuery ('select lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), '+ IntToStr(toStoredProc.Params.ParamByName('ioId').Value) +', ' + FormatToDateTimeServer(FieldByName('OperDateInsert').AsDateTime) +' )'
                                + '     , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), '+ IntToStr(toStoredProc.Params.ParamByName('ioId').Value) +', ' + IntToStr(FieldByName('UserId_pg').AsInteger) + ')'
                                  );
 

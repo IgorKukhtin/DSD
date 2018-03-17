@@ -190,6 +190,20 @@ BEGIN
          -- Поиск Товар - у текущего Элемента
          vbGoodsId_old = (SELECT Object_PartionGoods.GoodsId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = ioId);
 
+
+--         IF COALESCE (vbGoodsId, -1) <> COALESCE (vbGoodsId_old, -2) THEN
+--            RAISE EXCEPTION 'Ошибка.COALESCE (%, -1) <> COALESCE (%, -2)', vbGoodsId, vbGoodsId_old;
+--         END IF;
+--         -- сохранили связь с <Группы товаров>
+--         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroup(), vbGoodsId, inGoodsGroupId);
+--         -- RETURN;
+--         PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_GroupNameFull(), vbGoodsId, lfGet_Object_TreeNameFull (inGoodsGroupId, zc_ObjectLink_GoodsGroup_Parent()));
+--         -- изменили во Всех партиях Товара
+--         UPDATE Object_PartionGoods SET GoodsGroupId         = inGoodsGroupId
+--         WHERE Object_PartionGoods.GoodsId = vbGoodsId;
+--         RETURN;
+
+
      ELSE
          -- Запомнили !!!ДО изменений!!!
          IF ioId > 0
@@ -327,7 +341,7 @@ BEGIN
      THEN -- Цену - у текущего Элемента
           vbOperPriceList_old:= (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_OperPriceList());
 
-     ELSE 
+     ELSE
          -- Проверка
          IF 1 < (SELECT COUNT(*) FROM (SELECT DISTINCT MIF.ValueData
                                         FROM MovementItem
@@ -362,7 +376,7 @@ BEGIN
                            , (SELECT zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId)
                             ;
           END IF;
-          
+
           -- Цену - у любого Элемента
           vbOperPriceList_old:= (SELECT DISTINCT MIF.ValueData
                                  FROM MovementItem

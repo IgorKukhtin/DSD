@@ -25,6 +25,18 @@ BEGIN
    THEN ioId:= 0;
    END IF;
 
+   IF vbUserId = zc_User_Sybase() AND ioId > 0 AND NOT EXISTS (SELECT 1
+                                                               FROM Object
+                                                                    LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_Parent
+                                                                                         ON ObjectLink_GoodsGroup_Parent.ObjectId = Object.Id
+                                                                                        AND ObjectLink_GoodsGroup_Parent.DescId   = zc_ObjectLink_GoodsGroup_Parent()
+                                                               WHERE Object.DescId = zc_Object_GoodsGroup() 
+                                                                 AND Object.Id     = ioId
+                                                                 AND COALESCE (ObjectLink_GoodsGroup_Parent.ChildObjectId, 0) = COALESCE (inParentId, 0)
+                                                              )
+   THEN ioId:= 0;
+   END IF;
+
    -- Поиск для Sybase
    IF vbUserId = zc_User_Sybase() AND COALESCE (ioId, 0) = 0
    THEN ioId:= (SELECT Object.Id

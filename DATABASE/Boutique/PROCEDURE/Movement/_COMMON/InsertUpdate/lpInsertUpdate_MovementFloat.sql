@@ -36,3 +36,6 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat (Integer, Integer, TFloat) OWNER TO 
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  22.03.15                                        * IF ... AND inValueData <> 0
 */
+
+-- тест
+-- SELECT * FROM lpInsertUpdate_MovementFloat ();

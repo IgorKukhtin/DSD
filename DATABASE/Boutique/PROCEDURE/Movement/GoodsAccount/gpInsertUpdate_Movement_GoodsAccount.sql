@@ -19,20 +19,21 @@ $BODY$
    DECLARE vbUnitId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_GoodsAccount());
+     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_GoodsAccount());
+     vbUserId := lpGetUserBySession (inSession);
 
      -- определяем магазин по принадлежности пользователя к сотруднику
      vbUnitId:= lpGetUnitBySession (inSession);
      
      -- если у пользователя = 0, тогда может смотреть любой магазин, иначе только свой
-     IF COALESCE (vbUnitId, 0 ) <> 0 AND (COALESCE (vbUnitId) <> inFromId OR COALESCE (vbUnitId) <> inToId)
+     IF COALESCE (vbUnitId, 0 ) <> 0 AND COALESCE (vbUnitId, 0) <> inToId
      THEN
-         RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав на подразделение <%> .', lfGet_Object_ValueData (vbUserId), lfGet_Object_ValueData (inUnitId);
+         RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав на подразделение <%> .', lfGet_Object_ValueData (vbUserId), lfGet_Object_ValueData (inToId);
      END IF;
      
      
      IF COALESCE (ioId, 0) = 0 THEN
-         ioInvNumber:= CAST (NEXTVAL ('movement_GoodsAccount_seq') AS TVarChar);  
+         ioInvNumber:= CAST (NEXTVAL ('Movement_GoodsAccount_seq') AS TVarChar);  
      ELSEIF vbUserId = zc_User_Sybase() THEN
         ioInvNumber:= (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = ioId);
      END IF;
@@ -59,4 +60,4 @@ $BODY$
  */
 
 -- тест
--- select * from gpInsertUpdate_Movement_GoodsAccount(ioId := 7 , ioInvNumber := '4' , inOperDate := ('01.01.2017')::TDateTime , inFromId := 230 , inComment := 'df' ,  inSession := '2');
+-- SELECT * FROM gpInsertUpdate_Movement_GoodsAccount(ioId := 7 , ioInvNumber := '4' , inOperDate := ('01.01.2017')::TDateTime , inFromId := 230 , inComment := 'df' ,  inSession := '2');
