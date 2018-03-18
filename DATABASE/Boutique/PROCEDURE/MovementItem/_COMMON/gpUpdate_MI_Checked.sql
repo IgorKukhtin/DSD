@@ -14,7 +14,7 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale()); --lpGetUserBySession (inSession);
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_MI_Checked());
 
      -- определили признак
      outisChecked:= NOT inisChecked;

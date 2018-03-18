@@ -322,6 +322,7 @@ object StickerForm: TStickerForm
     Width = 4
     Height = 194
     AlignSplitter = salRight
+    ExplicitLeft = 926
   end
   object Panel: TPanel
     Left = 0
@@ -549,7 +550,7 @@ object StickerForm: TStickerForm
       end
     end
     object cxLeftSplitter: TcxSplitter
-      Left = 0
+      Left = 930
       Top = 0
       Width = 5
       Height = 194

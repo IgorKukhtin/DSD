@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_Sale()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
  INOUT ioId                   Integer   , -- Ключ объекта <Элемент документа>
@@ -32,7 +33,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
    OUT outTotalSummDebt         TFloat    , -- +Сумма долга в продаже ГРН
 
    OUT outDiscountSaleKindName  TVarChar  , -- *** - Вид скидки при продаже
-    IN inBarCode                TVarChar  , -- Штрих-код поставщика
+   OUT outBarCode_partner       TVarChar  , -- Обнуляем Штрих-код поставщика для верхнего грида
+    IN inBarCode_partner        TVarChar  , -- Штрих-код поставщика
+    IN inBarCode_old            TVarChar  , -- Штрих-код из верхнего грида - old
     IN inComment                TVarChar  , -- примечание
     IN inSession                TVarChar    -- сессия пользователя
 )
@@ -48,16 +51,46 @@ $BODY$
    DECLARE vbCashId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
+     vbUserId:= lpGetUserBySession (inSession);
 
 
-     -- при сканировании вызывается лишний раз
-     IF COALESCE (ioId, 0) = 0 AND COALESCE (inBarCode, '') = '' And COALESCE (inPartionId, 0) = 0
-        AND vbUserId <> zc_User_Sybase() 
+     -- определяем магазин
+     vbUnitId:= lpGetUnitBySession (inSession);
+
+     -- Если Штрих-код Поставщика - ОБЯЗАТЕЛЕН
+     IF EXISTS (SELECT 1 FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = vbUnitId AND ObjectBoolean.DescId = zc_ObjectBoolean_Unit_PartnerBarCode() AND ObjectBoolean.ValueData = TRUE)
+        AND vbUserId <> zc_User_Sybase()
      THEN
-        RETURN;
+         -- при сканировании вызывается лишний раз
+         IF COALESCE (inBarCode_partner, '') = '' AND (COALESCE (inBarCode_old, '') = '' OR COALESCE (inPartionId, 0) = 0) AND COALESCE (ioId, 0) = 0
+         THEN
+             RETURN; -- !!!Выход!!!
+         END IF;
+
+         -- если нужен ТОЛЬКО <Штрих-код поставщика> - вызывается лишний раз, т.к. ввод будет в нижнем гриде
+         IF COALESCE (inBarCode_partner, '') <> '' AND COALESCE (inBarCode_old, '') = '' AND COALESCE (ioId, 0) = 0 AND COALESCE (inPartionId, 0) = 0
+         THEN
+             RETURN; -- !!!Выход!!!
+         END IF;
+
+
+         -- если уже был введен
+         IF ioId > 0
+         THEN
+             -- !!!замена!!!
+             inBarCode_partner:= (SELECT MIS.ValueData FROM MovementItemString AS MIS WHERE MIS.MovementItemId = ioId AND MIS.DescId = zc_MIString_BarCode());
+         END IF;
+
+         -- Проверка
+         IF COALESCE (inBarCode_partner, '') = ''
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не установлено значение <Штрих-код Поставщика>.';
+         END IF;
+
      END IF;
-     
+
+
      -- проверка - документ должен быть сохранен
      IF COALESCE (inMovementId, 0) = 0 THEN
         RAISE EXCEPTION 'Ошибка.Документ не сохранен.';
@@ -65,6 +98,10 @@ BEGIN
      -- проверка - свойство должно быть установлено
      IF COALESCE (inPartionId, 0) = 0 THEN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Партия>.';
+     END IF;
+     -- проверка - свойство должно быть установлено
+     IF inAmount < 0 THEN
+        RAISE EXCEPTION 'Ошибка.Не установлено значение <Кол-во>.';
      END IF;
 
 
@@ -77,8 +114,8 @@ BEGIN
 
      -- параметры из Документа
      SELECT Movement.OperDate
-          , MovementLinkObject_From.ObjectId
-          , MovementLinkObject_To.ObjectId
+          , COALESCE (MovementLinkObject_From.ObjectId, 0) AS UnitId
+          , COALESCE (MovementLinkObject_To.ObjectId, 0)   AS ClientId
             INTO vbOperDate, vbUnitId, vbClientId
      FROM Movement
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -88,6 +125,39 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
      WHERE Movement.Id = inMovementId;
+
+
+     -- проверка: ОСТАТОК должен быть
+     IF vbUserId <> zc_User_Sybase()
+        AND inAmount > COALESCE ((SELECT Container.Amount
+                                  FROM Container
+                                       LEFT JOIN ContainerLinkObject AS CLO_Client
+                                                                     ON CLO_Client.ContainerId = Container.Id
+                                                                    AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
+                                  WHERE Container.PartionId     = inPartionId
+                                    AND Container.DescId        = zc_Container_Count()
+                                    AND Container.WhereObjectId = vbUnitId
+                                    AND Container.Amount        > 0
+                                    AND CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
+                                 ), 0)
+     THEN
+        RAISE EXCEPTION 'Ошибка.Для товара <% %> р.<%> Остаток = <%>.'
+                      , lfGet_Object_ValueData_sh ((SELECT Object_PartionGoods.LabelId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inPartionId))
+                      , lfGet_Object_ValueData    ((SELECT Object_PartionGoods.GoodsId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inPartionId))
+                      , lfGet_Object_ValueData_sh ((SELECT Object_PartionGoods.GoodsSizeId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inPartionId))
+                      , zfConvert_FloatToString (COALESCE ((SELECT Container.Amount
+                                                            FROM Container
+                                                                 LEFT JOIN ContainerLinkObject AS CLO_Client
+                                                                                               ON CLO_Client.ContainerId = Container.Id
+                                                                                              AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
+                                                            WHERE Container.PartionId     = inPartionId
+                                                              AND Container.DescId        = zc_Container_Count()
+                                                              AND Container.WhereObjectId = vbUnitId
+                                                              AND Container.Amount        > 0
+                                                              AND CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
+                                                           ), 0))
+                       ;
+     END IF;
 
 
      -- данные из партии : GoodsId и OperPrice и CountForPrice и CurrencyId
@@ -259,7 +329,7 @@ BEGIN
                                               -- , inTotalCountReturn      := COALESCE (outTotalCountReturn, 0)
                                               -- , inTotalReturn           := COALESCE (outTotalReturn, 0)
                                               -- , inTotalPayReturn        := COALESCE (outTotalPayReturn, 0)
-                                              , inBarCode               := inBarCode
+                                              , inBarCode               := inBarCode_partner
                                               , inComment               := -- !!!для SYBASE - потом убрать!!!
                                                                            CASE WHEN vbUserId = zc_User_Sybase() AND SUBSTRING (inComment FROM 1 FOR 5) = '*123*'
                                                                                      THEN -- убрали хардкод
@@ -269,7 +339,7 @@ BEGIN
                                               , inUserId                := vbUserId
                                                );
 
-    
+
     -- !!!для SYBASE - потом убрать!!!
     IF vbUserId = zc_User_Sybase() AND inIsPay = FALSE
     THEN
@@ -303,7 +373,7 @@ BEGIN
         -- проверка - свойство должно быть установлено
         IF COALESCE (vbCashId, 0) = 0 THEN
           -- Для Sybase - ВРЕМЕННО
-          IF vbUserId = zc_User_Sybase() 
+          IF vbUserId = zc_User_Sybase()
           THEN vbCashId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Cash() AND Object.ObjectCode = 1);
           ELSE RAISE EXCEPTION 'Ошибка.Для магазина <%> Не установлено значение <Касса> в грн. (%)', lfGet_Object_ValueData (vbUnitId), vbUnitId;
           END IF;
@@ -368,7 +438,7 @@ BEGIN
 
     -- "сложно" пересчитали "итоговые" суммы по элементу
     PERFORM lpUpdate_MI_Sale_Total (ioId);
-    
+
 
     -- вернули Дополнительная скидка в расчетах ГРН, для грида
     outTotalChangePercentPay:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalChangePercentPay()), 0);
@@ -381,6 +451,9 @@ BEGIN
     outTotalReturn:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalReturn()), 0);
     -- вернули Сумма возврата оплаты ГРН, для грида
     outTotalPayReturn:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalPayReturn()), 0);
+
+    -- Обнуляем Штрих-код поставщика для верхнего грида
+    outBarCode_partner:= '';
 
 END;
 $BODY$
@@ -397,4 +470,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_Sale (ioId := 0 , inMovementId := 8 , ioGoodsId := 446 , inPartionId := 50 , inIsPay := False ,  inAmount := 4 ,ioSummChangePercent:=0, ioOperPriceList := 1030 , inBarCode := '1' ::TVarChar,  inSession := zfCalc_UserAdmin());
+-- SELECT * FROM gpInsertUpdate_MovementItem_Sale (ioId := 0 , inMovementId := 8 , ioGoodsId := 446 , inPartionId := 50 , inIsPay := False ,  inAmount := 4 ,ioSummChangePercent:=0, ioOperPriceList := 1030 , inBarCode_partner := '1' ::TVarChar,  inSession := zfCalc_UserAdmin());

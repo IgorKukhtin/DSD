@@ -98,55 +98,55 @@ BEGIN
                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
                LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = vbUnitId_User;
      ELSE
- 
+
        -- проверка может ли смотреть любой магазин, или только свой
        vbUnitId_User := lpCheckUnitByUser(vbUnitId, inSession);
-    
+
        RETURN QUERY
            WITH
-           -- выбираю все контейнеры по покупателю и подразделению , если выбрано 
+           -- выбираю все контейнеры по покупателю и подразделению , если выбрано
            tmpContainer AS (SELECT CLO_PartionMI.ObjectId          AS PartionId_MI
                                  , Container.Amount
                             FROM Container
-                                 INNER JOIN ContainerLinkObject AS CLO_Client 
+                                 INNER JOIN ContainerLinkObject AS CLO_Client
                                                                 ON CLO_Client.ContainerId = Container.Id
                                                                AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
-                                                               AND CLO_Client.ObjectId    = vbClientId                            --inClientId --ѕерцева Ќаталь€ 6343  -- 
-                                 INNER JOIN ContainerLinkObject AS CLO_Unit 
+                                                               AND CLO_Client.ObjectId    = vbClientId                            --inClientId --ѕерцева Ќаталь€ 6343  --
+                                 INNER JOIN ContainerLinkObject AS CLO_Unit
                                                                 ON CLO_Unit.ContainerId = Container.Id
                                                                AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
                                                                AND CLO_Unit.ObjectId    = vbUnitId
-                                 LEFT JOIN ContainerLinkObject AS CLO_PartionMI 
+                                 LEFT JOIN ContainerLinkObject AS CLO_PartionMI
                                                                ON CLO_PartionMI.ContainerId = Container.Id
                                                               AND CLO_PartionMI.DescId      = zc_ContainerLinkObject_PartionMI()
                              -- !!!кроме ѕокупатели + ѕрибыль будущих периодов!!!
-                             WHERE Container.ObjectId <> zc_Enum_Account_20102() 
-                               AND Container.DescId  = zc_Container_Summ()                         
-                           ) 
+                             WHERE Container.ObjectId <> zc_Enum_Account_20102()
+                               AND Container.DescId  = zc_Container_Summ()
+                           )
          -- получили конечный долг и у нас все партии продажи
          , tmpPartion AS (SELECT tmpContainer.PartionId_MI
                                , sum(tmpContainer.Amount) OVER () as SummDedt
                           FROM tmpContainer
-                          )                     
+                          )
           -- расчет суммы продаж и оплат по партии продажи
          , tmpData AS (SELECT tmpData.SummDedt AS SummDedt
                             , SUM ((MI_PartionMI.Amount * MIFloat_OperPriceList.ValueData)
-                                  - COALESCE (MIFloat_TotalReturn.ValueData, 0) 
-                                  - COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0) 
+                                  - COALESCE (MIFloat_TotalReturn.ValueData, 0)
+                                  - COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)
                                   - COALESCE (MIFloat_TotalChangePercent.ValueData, 0)
                                   )   AS TotalSumm
-                                   
+
                             , SUM (COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_TotalPayOth.ValueData, 0) - COALESCE (MIFloat_TotalPayReturn.ValueData, 0)) AS TotalPay
                             , MAX (Movement_PartionMI.Operdate) AS LastDate
                        FROM (SELECT DISTINCT tmpPartion.PartionId_MI , tmpPartion.SummDedt  FROM tmpPartion) AS tmpData
-                           
+
                            LEFT JOIN Object AS Object_PartionMI     ON Object_PartionMI.Id     = tmpData.PartionId_MI
                            LEFT JOIN MovementItem AS MI_PartionMI   ON MI_PartionMI.Id         = Object_PartionMI.ObjectCode
-                           LEFT JOIN Movement AS Movement_PartionMI ON Movement_PartionMI.Id   = MI_PartionMI.MovementId 
+                           LEFT JOIN Movement AS Movement_PartionMI ON Movement_PartionMI.Id   = MI_PartionMI.MovementId
 
                            LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                        ON MIFloat_OperPriceList.MovementItemId = MI_PartionMI.Id
-                                                      AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()                             
+                                                      AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
 
                            LEFT JOIN MovementItemFloat AS MIFloat_TotalCountReturn
                                                        ON MIFloat_TotalCountReturn.MovementItemId = MI_PartionMI.Id
@@ -173,7 +173,7 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_TotalReturn
                                                        ON MIFloat_TotalReturn.MovementItemId = MI_PartionMI.Id
                                                       AND MIFloat_TotalReturn.DescId         = zc_MIFloat_TotalReturn()
-                       GROUP BY tmpData.SummDedt 
+                       GROUP BY tmpData.SummDedt
                        )
 
          SELECT
@@ -234,11 +234,11 @@ BEGIN
                                   ON ObjectFloat_DiscountTax.ObjectId = Object_To.Id
                                  AND ObjectFloat_DiscountTax.DescId = zc_ObjectFloat_Client_DiscountTax()
 
-            LEFT JOIN ObjectFloat AS ObjectFloat_DiscountTaxTwo 
+            LEFT JOIN ObjectFloat AS ObjectFloat_DiscountTaxTwo
                                   ON ObjectFloat_DiscountTaxTwo.ObjectId = Object_To.Id
                                  AND ObjectFloat_DiscountTaxTwo.DescId = zc_ObjectFloat_Client_DiscountTaxTwo()
 
-            LEFT JOIN ObjectString AS  ObjectString_Comment 
+            LEFT JOIN ObjectString AS  ObjectString_Comment
                                    ON  ObjectString_Comment.ObjectId = Object_To.Id
                                   AND  ObjectString_Comment.DescId = zc_ObjectString_Client_Comment()
 

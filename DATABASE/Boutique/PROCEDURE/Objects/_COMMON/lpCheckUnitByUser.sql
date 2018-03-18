@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION lpCheckUnitByUser (
 )
 RETURNS Integer
 AS
-$BODY$  
+$BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
 BEGIN
@@ -20,9 +20,9 @@ BEGIN
      -- если у пользователя = 0, тогда может смотреть любой магазин, иначе только свой
      IF vbUnitId <> 0 AND vbUnitId <> inUnitId AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Child() AND OL.ChildObjectid = inUnitId AND OL.Objectid = vbUnitId)
      THEN
-         RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав просмотра данных по подразделению <%> .', lfGet_Object_ValueData (vbUserId), lfGet_Object_ValueData (inUnitId);
+         RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет доступак к данным по подразделению <%> .', lfGet_Object_ValueData_sh (vbUserId), lfGet_Object_ValueData_sh (inUnitId);
      END IF;
-     
+
      RETURN  COALESCE (vbUnitId, 0);
 END;
 $BODY$

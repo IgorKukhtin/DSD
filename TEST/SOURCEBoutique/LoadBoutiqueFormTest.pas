@@ -843,6 +843,8 @@ procedure TLoadFormTest.LoadSaleFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleTwoForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSaleTwoForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleJournalForm');
 

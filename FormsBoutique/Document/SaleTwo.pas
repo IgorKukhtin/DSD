@@ -1,4 +1,4 @@
-unit Sale;
+unit SaleTwo;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   cxImageComboBox, cxSplitter;
 
 type
-  TSaleForm = class(TParentForm)
+  TSaleTwoForm = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -169,6 +169,7 @@ type
     Amount_GRN_Exc: TcxGridDBColumn;
     actUpdateDataSource: TdsdUpdateDataSet;
     spInsertUpdateMIMaster_BarCode: TdsdStoredProc;
+    BarCode_item: TcxGridDBColumn;
     spGet_Partion_byBarCode: TdsdStoredProc;
     actPrintCheck: TdsdPrintAction;
     bbPrintCheck: TdxBarButton;
@@ -188,6 +189,7 @@ type
     actUpdate_isChecked: TdsdExecStoredProc;
     bbUpdate_isChecked: TdxBarButton;
     isChecked: TcxGridDBColumn;
+    BarCode_partner: TcxGridDBColumn;
   private
   public
   end;
@@ -197,6 +199,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TSaleForm);
+  RegisterClass(TSaleTwoForm);
 
 end.

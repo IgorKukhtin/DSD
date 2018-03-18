@@ -286,7 +286,8 @@ uses
   DiscountPeriodEdit in '..\..\FormsBoutique\Guides\DiscountPeriodEdit.pas' {DiscountPeriodEditForm: TParentForm},
   PriceListItemDialog in '..\..\FormsBoutique\Guides\PriceListItemDialog.pas' {PriceListItemDialogForm: TParentForm},
   Report_Sale in '..\..\FormsBoutique\Report\Report_Sale.pas' {Report_SaleForm: TParentForm},
-  Report_MovementReturnOut in '..\..\FormsBoutique\Report\Report_MovementReturnOut.pas' {Report_MovementReturnOutForm: TParentForm};
+  Report_MovementReturnOut in '..\..\FormsBoutique\Report\Report_MovementReturnOut.pas' {Report_MovementReturnOutForm: TParentForm},
+  SaleTwo in '..\..\FormsBoutique\Document\SaleTwo.pas' {SaleTwoForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

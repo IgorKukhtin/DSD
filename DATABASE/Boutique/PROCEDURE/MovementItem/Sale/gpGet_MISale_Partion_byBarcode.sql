@@ -1,8 +1,8 @@
--- Function: gpGet_MISale_Partion_byBarcode()
+-- Function: gpGet_MISale_Partion_byBarCode()
 
-DROP FUNCTION IF EXISTS gpGet_MISale_Partion_byBarcode (TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MISale_Partion_byBarCode (TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_MISale_Partion_byBarcode(
+CREATE OR REPLACE FUNCTION gpGet_MISale_Partion_byBarCode(
     IN inBarCode           TVarChar   , --
     IN inSession           TVarChar     -- сессия пользователя
 )
@@ -21,9 +21,27 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpGetUserBySession (inSession);
+     
+     
+     -- Если Пустой
+     IF TRIM (inBarCode) = '' OR CHAR_LENGTH (inBarCode) < 10 THEN
+
+       -- Результат
+       RETURN QUERY
+         SELECT 0 :: Integer AS PartionId
+              , 0 :: Integer AS GoodsId
+              , 0 :: Integer AS GoodsSizeId
+              , 0 :: TFloat  AS OperPriceList
+               ;
+
+       -- !!!Выход!!!
+       RETURN;
+       
+     END IF;
+
 
      -- Если это Штрихкод
-     IF COALESCE (inBarcode, '') <> '' AND CHAR_LENGTH (inBarcode) = 13
+     IF COALESCE (inBarCode, '') <> '' AND CHAR_LENGTH (inBarCode) = 13
      THEN
          -- Поиск в партии Sybase - 1
          IF SUBSTR (inBarCode, 1, 2) = '20'
@@ -119,4 +137,4 @@ $BODY$
 */
 
 -- тест
--- SELECT tmp.*, Object_Goods.*, Object_GoodsSize.ValueData FROM gpGet_MISale_Partion_byBarcode (inBarCode:= '2210002606122', inSession:= zfCalc_UserAdmin()) AS tmp LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = tmp.GoodsSizeId
+-- SELECT tmp.*, Object_Goods.*, Object_GoodsSize.ValueData FROM gpGet_MISale_Partion_byBarCode (inBarCode:= '2210002606122', inSession:= zfCalc_UserAdmin()) AS tmp LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = tmp.GoodsSizeId

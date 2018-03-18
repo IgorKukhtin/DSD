@@ -98,20 +98,26 @@ object GoodsAccountForm: TGoodsAccountForm
       Width = 238
     end
     object cxLabel12: TcxLabel
-      Left = 971
+      Left = 975
       Top = 5
-      Caption = '% '#1090#1077#1082'. '#1089#1082#1080#1076#1082#1080
+      Hint = '% '#1089#1082#1080#1076#1082#1080' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103
+      Caption = '% '#1089#1082#1080#1076#1082#1080
+      ParentShowHint = False
+      ShowHint = True
     end
     object edDiscountTax: TcxCurrencyEdit
-      Left = 971
+      Left = 958
       Top = 23
-      Properties.Alignment.Horz = taRightJustify
+      Hint = '% '#1089#1082#1080#1076#1082#1080' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103
+      ParentShowHint = False
+      Properties.Alignment.Horz = taCenter
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Properties.ReadOnly = True
+      ShowHint = True
       TabOrder = 9
-      Width = 79
+      Width = 89
     end
     object cxLabel16: TcxLabel
       Left = 252
@@ -125,34 +131,40 @@ object GoodsAccountForm: TGoodsAccountForm
       Width = 305
     end
     object cxLabel6: TcxLabel
-      Left = 782
+      Left = 770
       Top = 5
-      Caption = #1057#1091#1084#1084#1072' '#1087#1088'.'#1086#1087#1083#1072#1090
+      Caption = #1048#1058#1054#1043#1054' '#1086#1087#1083#1072#1090
     end
     object edTotalSummPay: TcxCurrencyEdit
-      Left = 782
+      Left = 770
       Top = 23
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.'
       Properties.ReadOnly = True
       TabOrder = 13
-      Width = 92
+      Width = 87
     end
     object edHappyDate: TcxDateEdit
       Left = 566
       Top = 63
+      Hint = #1044#1072#1090#1072'.'#1052#1077#1089#1103#1094
       EditValue = 42864d
+      ParentShowHint = False
       Properties.DisplayFormat = 'DD.MM'
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
+      ShowHint = True
       TabOrder = 14
       Width = 82
     end
     object cxLabel8: TcxLabel
       Left = 566
       Top = 45
+      Hint = #1044#1072#1090#1072'.'#1052#1077#1089#1103#1094
       Caption = #1044#1077#1085#1100' '#1088#1086#1078#1076#1077#1085#1080#1103
+      ParentShowHint = False
+      ShowHint = True
     end
     object cbisPay: TcxCheckBox
       Left = 918
@@ -222,23 +234,29 @@ object GoodsAccountForm: TGoodsAccountForm
       Top = 63
       Properties.ReadOnly = True
       TabOrder = 24
-      Width = 241
+      Width = 272
     end
     object cxLabel10: TcxLabel
-      Left = 923
+      Left = 958
       Top = 45
-      Caption = '% '#1089#1082#1080#1076#1082#1080' '#1054#1073#1091#1074#1100' '#1076#1077#1090#1089#1082'.'
+      Hint = '% '#1089#1082#1080#1076#1082#1080' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1074' '#1063#1072#1076#1086' '#1085#1072' '#1043#1088#1091#1087#1087#1091' <'#1054#1073#1091#1074#1100'>'
+      Caption = '% '#1089#1082#1080#1076#1082#1080' '#1054#1073#1091#1074#1100
+      ParentShowHint = False
+      ShowHint = True
     end
     object edDiscountTaxTwo: TcxCurrencyEdit
-      Left = 923
+      Left = 958
       Top = 63
-      Properties.Alignment.Horz = taRightJustify
+      Hint = '% '#1089#1082#1080#1076#1082#1080' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1074' '#1063#1072#1076#1086' '#1085#1072' '#1043#1088#1091#1087#1087#1091' <'#1054#1073#1091#1074#1100'>'
+      ParentShowHint = False
+      Properties.Alignment.Horz = taCenter
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 1
       Properties.DisplayFormat = '0.0 %'
       Properties.ReadOnly = True
+      ShowHint = True
       TabOrder = 26
-      Width = 127
+      Width = 89
     end
   end
   object cxPageControl: TcxPageControl
@@ -1013,7 +1031,7 @@ object GoodsAccountForm: TGoodsAccountForm
   object cxLabel5: TcxLabel
     Left = 677
     Top = 5
-    Caption = #1057#1091#1084#1084#1072' '#1087#1088'. '#1087#1086#1082#1091#1087#1086#1082
+    Caption = #1048#1058#1054#1043#1054' '#1087#1088#1086#1076#1072#1078#1072
   end
   object edTotalSumm: TcxCurrencyEdit
     Left = 677
@@ -1024,21 +1042,21 @@ object GoodsAccountForm: TGoodsAccountForm
     Properties.DisplayFormat = ',0.####;-,0.####; ;'
     Properties.ReadOnly = True
     TabOrder = 4
-    Width = 99
+    Width = 87
   end
   object cxLabel7: TcxLabel
-    Left = 880
+    Left = 862
     Top = 5
-    Caption = #1057#1091#1084#1084#1072' '#1076#1086#1083#1075#1072
+    Caption = #1048#1058#1054#1043#1054' '#1076#1086#1083#1075
   end
   object edTotalDebt: TcxCurrencyEdit
-    Left = 880
+    Left = 862
     Top = 23
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0.'
     Properties.ReadOnly = True
     TabOrder = 5
-    Width = 85
+    Width = 87
   end
   object cxLabel13: TcxLabel
     Left = 9
@@ -1438,6 +1456,9 @@ object GoodsAccountForm: TGoodsAccountForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdateMovement
+        end
+        item
+          StoredProc = spGet
         end>
       Caption = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
@@ -1666,7 +1687,6 @@ object GoodsAccountForm: TGoodsAccountForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -1685,7 +1705,6 @@ object GoodsAccountForm: TGoodsAccountForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -2164,7 +2183,7 @@ object GoodsAccountForm: TGoodsAccountForm
         #1088#1086#1076#1086#1083#1078#1080#1090#1100'?'
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1086#1087#1077#1088#1072#1094#1080#1102
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1086#1087#1077#1088#1072#1094#1080#1102
-      ImageIndex = 10
+      ImageIndex = 78
     end
     object actGet_Printer: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -2379,36 +2398,10 @@ object GoodsAccountForm: TGoodsAccountForm
         Control = edOperDate
       end
       item
-      end
-      item
         Control = edFrom
       end
       item
         Control = edTo
-      end
-      item
-        Control = edTotalDebt
-      end
-      item
-        Control = edTotalSummPay
-      end
-      item
-        Control = edTotalSumm
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-        Control = edDiscountTax
       end
       item
         Control = ceComment

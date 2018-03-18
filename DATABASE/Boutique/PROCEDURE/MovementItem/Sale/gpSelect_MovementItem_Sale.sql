@@ -35,7 +35,7 @@ RETURNS TABLE (Id Integer, PartionId Integer
              , Amount_EUR_Exc    TFloat
              , Amount_GRN_Exc    TFloat
 
-             , BarCode TVarChar
+             , BarCode_item TVarChar
              , Comment TVarChar
              , isClose Boolean
              , isChecked Boolean
@@ -93,7 +93,7 @@ BEGIN
                            , COALESCE (MIFloat_TotalCountReturn.ValueData, 0)      AS TotalCountReturn      -- Кол-во возврат
                            , COALESCE (MIFloat_TotalReturn.ValueData, 0)           AS TotalReturn           -- Сумма возврата ГРН
                            , COALESCE (MIFloat_TotalPayReturn.ValueData, 0)        AS TotalPayReturn        -- Сумма возврата оплаты ГРН
-                           , MIString_BarCode.ValueData                            AS BarCode
+                           , MIString_BarCode.ValueData                            AS BarCode_item
                            , MIString_Comment.ValueData                            AS Comment
                            , COALESCE (MIBoolean_Close.ValueData, FALSE)           AS isClose
                            , COALESCE (MIBoolean_Checked.ValueData, FALSE)         AS isChecked
@@ -200,7 +200,7 @@ BEGIN
                       FROM tmpMI_Master
                            INNER JOIN Container ON Container.PartionId     = tmpMI_Master.PartionId
                                                AND Container.WhereObjectId = vbUnitId
-                                               AND Container.DescId        = zc_Container_count()
+                                               AND Container.DescId        = zc_Container_Count()
                                                -- !!!обязательно условие, т.к. мог меняться GoodsId и тогда в Container - несколько строк!!!
                                                AND Container.ObjectId      = tmpMI_Master.GoodsId
                            LEFT JOIN ContainerLinkObject AS CLO_Client
@@ -267,7 +267,7 @@ BEGIN
            , tmpMI_Child_Exc.Amount_EUR     :: TFloat AS Amount_EUR_Exc    -- Сумма EUR - обмен приход
            , tmpMI_Child_Exc.Amount_GRN     :: TFloat AS Amount_GRN_Exc    -- Сумма GRN - обмен расход
 
-           , tmpMI.BarCode
+           , tmpMI.BarCode_item
            , tmpMI.Comment
            , tmpMI.isClose   :: Boolean AS isClose
            , tmpMI.isChecked :: Boolean AS isChecked

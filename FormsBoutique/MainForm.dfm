@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 723
   KeyPreview = True
   ExplicitWidth = 739
-  ExplicitHeight = 226
+  ExplicitHeight = 223
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -943,6 +943,35 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actSaleTwoMovement: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1055#1088#1086#1076#1072#1078#1072' ('#1096'/'#1082')'
+      Hint = #1057#1086#1079#1076#1072#1085#1080#1077' - '#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
+      FormName = 'TSaleTwoForm'
+      FormNameParam.Value = 'TSaleTwoForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = 0
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 43101d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 152
@@ -1046,13 +1075,16 @@ inherited MainForm: TMainForm
     object miSaleMovement: TMenuItem [3]
       Action = actSaleMovement
     end
-    object miReturnInMovement: TMenuItem [4]
+    object miSaleTwoMovement: TMenuItem [4]
+      Action = actSaleTwoMovement
+    end
+    object miReturnInMovement: TMenuItem [5]
       Action = actReturnInMovement
     end
-    object miGoodsAccountMovement: TMenuItem [5]
+    object miGoodsAccountMovement: TMenuItem [6]
       Action = actGoodsAccountMovement
     end
-    object miReport_Unit: TMenuItem [6]
+    object miReport_Unit: TMenuItem [7]
       Caption = #1054#1090#1095#1077#1090#1099' ('#1084#1072#1075#1072#1079#1080#1085')'
       object miReport_SaleReturnIn: TMenuItem
         Action = actReport_SaleReturnIn
@@ -1076,7 +1108,7 @@ inherited MainForm: TMainForm
         Action = actReport_Goods_RemainsCurrent
       end
     end
-    object miReport: TMenuItem [7]
+    object miReport: TMenuItem [8]
       Caption = #1054#1090#1095#1077#1090#1099
       object miReport_MovementIncome: TMenuItem
         Action = actReport_MovementIncome
@@ -1103,7 +1135,7 @@ inherited MainForm: TMainForm
         Action = actReport_Goods
       end
     end
-    object miReport_Finance: TMenuItem [8]
+    object miReport_Finance: TMenuItem [9]
       Caption = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       object miReport_Cash: TMenuItem
         Action = actReport_Cash
@@ -1115,7 +1147,7 @@ inherited MainForm: TMainForm
         Action = actReport_MotionByClient
       end
     end
-    object miReport_Basis: TMenuItem [9]
+    object miReport_Basis: TMenuItem [10]
       Caption = #1054#1090#1095#1077#1090#1099' ('#1059#1055')'
       object miReport_Balance: TMenuItem
         Action = actReport_Balance

@@ -15,6 +15,7 @@ $BODY$
   DECLARE vbAccountDirectionId_To   Integer;
   DECLARE vbJuridicalId_Basis       Integer; -- значение пока НЕ определяется
   DECLARE vbBusinessId              Integer; -- значение пока НЕ определяется
+  DECLARE vbId_err                  Integer;
 BEGIN
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
@@ -576,6 +577,47 @@ BEGIN
                                                                                 , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                  );
 
+
+
+     -- проверка: ОСТАТОК должен быть
+     IF inUserId <> zc_User_Sybase()
+     THEN
+         vbId_err:= (WITH tmpContainer AS (SELECT Container.Id, Container.Amount
+                                           FROM _tmpItem
+                                                INNER JOIN Container ON Container.Id = _tmpItem.ContainerId_Goods
+                                                LEFT JOIN ContainerLinkObject AS CLO_Client
+                                                                              ON CLO_Client.ContainerId = Container.Id
+                                                                             AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
+                                           WHERE CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
+
+                                          )
+                     SELECT _tmpItem.PartionId
+                     FROM _tmpItem
+                          LEFT JOIN tmpContainer ON tmpContainer.Id = _tmpItem.ContainerId_Goods
+                     WHERE _tmpItem.OperCount > COALESCE (tmpContainer.Amount, 0)
+                     LIMIT 1
+                    );
+     END IF;
+     -- проверка: ОСТАТОК должен быть
+     IF vbId_err
+     THEN
+        RAISE EXCEPTION 'Ошибка.Для товара <% %> р.<%> Остаток = <%>.'
+                      , lfGet_Object_ValueData_sh ((SELECT Object_PartionGoods.LabelId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = vbId_err))
+                      , lfGet_Object_ValueData    ((SELECT Object_PartionGoods.GoodsId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = vbId_err))
+                      , lfGet_Object_ValueData_sh ((SELECT Object_PartionGoods.GoodsSizeId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = vbId_err))
+                      , zfConvert_FloatToString (COALESCE ((SELECT Container.Amount
+                                                            FROM Container
+                                                                 LEFT JOIN ContainerLinkObject AS CLO_Client
+                                                                                               ON CLO_Client.ContainerId = Container.Id
+                                                                                              AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
+                                                            WHERE Container.PartionId     = vbId_err
+                                                              AND Container.DescId        = zc_Container_Count()
+                                                              AND Container.WhereObjectId = vbUnitId
+                                                              AND Container.Amount        > 0
+                                                              AND CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
+                                                           ), 0))
+                       ;
+     END IF;
 
      -- 2.1. определяется Счет(справочника) для проводок по суммовому учету
      UPDATE _tmpItem SET AccountId = _tmpItem_byAccount.AccountId

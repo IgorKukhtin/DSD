@@ -201,6 +201,8 @@ type
     miReport_OH_DiscountPeriod: TMenuItem;
     actDiscountPeriod: TdsdOpenForm;
     miDiscountPeriod: TMenuItem;
+    actSaleTwoMovement: TdsdOpenForm;
+    miSaleTwoMovement: TMenuItem;
   private
     { Private declarations }
   public

@@ -35,7 +35,7 @@ BEGIN
      inIsParentDetail:= inIsParentDetail OR inIsInfoMoneyDetail;
 
      -- !!!проводки только у Админа!!!
-     IF 1=1 OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin()))
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin()))
      THEN
 
      RETURN QUERY

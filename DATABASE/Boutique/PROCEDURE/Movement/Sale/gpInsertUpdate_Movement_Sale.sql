@@ -28,7 +28,7 @@ BEGIN
      -- если у пользователя = 0, тогда может смотреть любой магазин, иначе только свой
      IF COALESCE (vbUnitId, 0 ) <> 0 AND COALESCE (vbUnitId) <> inFromId
      THEN
-         RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав на подразделение <%> .', lfGet_Object_ValueData (vbUserId), lfGet_Object_ValueData (inFromId);
+         RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав на подразделение <%> .', lfGet_Object_ValueData_sh (vbUserId), lfGet_Object_ValueData_sh (inFromId);
      END IF;
 
 

@@ -43,7 +43,7 @@ BEGIN
                  WHERE Object_UserRole_User.DescId = zc_ObjectLink_UserRole_User()
                    AND Object_UserRole_User.ChildObjectId = vbUserId)
   THEN
-     RAISE EXCEPTION 'Пользователь <%> не имеет прав на %', lfGet_Object_ValueData (vbUserId), lfGet_Object_ValueData (inProcessId);
+     RAISE EXCEPTION 'Пользователь <%> не имеет прав на %', lfGet_Object_ValueData_sh (vbUserId), lfGet_Object_ValueData_sh (inProcessId);
   ELSE
      RETURN vbUserId;
 

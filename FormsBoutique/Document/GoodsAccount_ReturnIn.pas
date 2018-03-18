@@ -160,6 +160,8 @@ type
     edTo: TcxButtonEdit;
     GuidesTo: TdsdGuides;
     ChangePercent: TcxGridDBColumn;
+    cxLabel15: TcxLabel;
+    edDiscountTaxTwo: TcxCurrencyEdit;
   private
   public
   end;

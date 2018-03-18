@@ -40,12 +40,14 @@ BEGIN
              FROM (-- Скидка - сезонная
                    SELECT 1 AS Num, COALESCE (tmp.ValuePrice, 0) AS Tax, zc_Enum_DiscountSaleKind_Period() AS DiscountSaleKindId
                    FROM gpGet_ObjectHistory_DiscountPeriodItem (inOperDate:= inOperDate, inUnitId:= inUnitId, inGoodsId:= inGoodsId, inSession:= inUserId :: TVarChar) AS tmp
+                   WHERE tmp.ValuePrice > 0
                  UNION ALL
                    -- Скидка - клиента
                    SELECT 2 AS Num, COALESCE (ObjectFloat_DiscountTax.ValueData, 0) AS Tax, zc_Enum_DiscountSaleKind_Client() AS DiscountSaleKindId -- клиента
                    FROM ObjectFloat AS ObjectFloat_DiscountTax
-                   WHERE ObjectFloat_DiscountTax.DescId   = zc_ObjectFloat_Client_DiscountTax()
-                     AND ObjectFloat_DiscountTax.ObjectId = inClientId
+                   WHERE ObjectFloat_DiscountTax.DescId    = zc_ObjectFloat_Client_DiscountTax()
+                     AND ObjectFloat_DiscountTax.ObjectId  = inClientId
+                     AND ObjectFloat_DiscountTax.ValueData > 0
                  UNION ALL
                    -- Скидка - outlet
                    SELECT 0 AS Num, tmpOutlet.Tax, tmpOutlet.DiscountSaleKindId FROM tmpOutlet

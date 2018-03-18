@@ -54,9 +54,13 @@ SELECT COUNT(*), MIN (OperDate), max (Id) FROM MovementItemProtocol_arc -- 2 300
 
 SELECT COUNT(*) FROM Container -- 1 460 503
 SELECT COUNT(*) FROM MovementItemContainer  -- 379 637 136 -- SELECT MAX (Id) FROM MovementItemContainer  -- 8 622 279 861
-SELECT COUNT(*) FROM MovementItem  -- 91 517 138 -- !!! - 2 147 483 647
+                                            -- 444 269 521                                                -- 9 985 067 045
+SELECT COUNT(*) FROM MovementItem  --  91 517 138 -- !!! - 2 147 483 647
+                                   -- 102 238 286
 SELECT COUNT(*) FROM MovementItemFloat  -- 314 383 191
-SELECT COUNT(*) FROM Object  -- 1 078 770
+                                        -- 351 191 292
+SELECT COUNT(*) FROM Object       -- 1 078 770
+SELECT COUNT(*) FROM ObjectFloat  -- 1 087 193
 
 integer 4 bytes -- -2147483648 to +214 748 3647
 bigint 8 bytes -- -9223372036854775808 to +9223372036854775807
@@ -124,9 +128,56 @@ TRUNCATE TABLE MovementItemProtocol;
 
 -- select * from object where Id =  1162887
 
+
+-- !!!!INSERT !!!
+DO $$
+DECLARE  vbId Integer;
+-- DECLARE  vbId_mi Integer;
+BEGIN
+
+-- -- SELECT COUNT(*), MIN (OperDate), min (Id), max (Id) FROM MovementProtocol
+-- -- SELECT COUNT(*), Max (OperDate), min (Id), max (Id) FROM MovementProtocol_arc
+-- -- 18 864 570;"2017-12-02 20:51:16.312647+02";111 684 391;130 568 553
+-- --  1 861 459;"2017-12-02 20:48:11.284402+02";111 684 384;103 355 077
+vbId := (select max(Id) FROM MovementProtocol_arc);
+insert into MovementProtocol_arc
+SELECT * FROM MovementProtocol where id between vbId + 1 and vbId + 3000000 and id < 130568553;
+
+
+
+-- -- SELECT COUNT(*), MIN (OperDate), min (Id), max (Id) FROM MovementItemProtocol
+-- -- SELECT COUNT(*), MAX (OperDate), min (Id), max (Id) FROM MovementItemProtocol_arc
+-- -- 23 357 060;"2017-12-02 20:51:16.421357+02";146 256 246;169 629 650
+-- --  4 066 356;"2017-12-02 20:48:54.51985+02" ;146 256 243;134 035 646
+-- vbId_mi := (select max(Id) FROM MovementItemProtocol_arc);
+-- insert into MovementItemProtocol_arc
+-- SELECT * FROM MovementItemProtocol where id between vbId_mi + 1 and vbId_mi + 3000000 and id < 169629650;
+
+END $$;
+
+-- !!!!TRUNCATE + LOCK !!!
+DO $$
+BEGIN
+
+-- -- SELECT COUNT(*), MIN (OperDate), min (Id), max (Id) FROM MovementProtocol where id >= 130568553;
+LOCK TABLE MovementProtocol IN SHARE UPDATE EXCLUSIVE MODE;
+insert into MovementProtocol_arc
+SELECT * FROM MovementProtocol where id >= 130568553;
+TRUNCATE TABLE MovementProtocol;
+
+-- -- SELECT COUNT(*), MIN (OperDate), min (Id), max (Id) FROM MovementItemProtocol where id >= 169629650;
+-- LOCK TABLE MovementItemProtocol IN SHARE UPDATE EXCLUSIVE MODE;
+-- insert into MovementItemProtocol_arc
+-- SELECT * FROM MovementItemProtocol where id >= 169629650;
+-- TRUNCATE TABLE MovementItemProtocol;
+
+END $$;
+
+
+
 -- 
-TRUNCATE TABLE MovementItemContainer;
-TRUNCATE TABLE SoldTable;
+-- TRUNCATE TABLE MovementItemContainer;
+-- TRUNCATE TABLE SoldTable;
 CREATE INDEX idx_MovementProtocol_MovementId ON MovementProtocol (MovementId);
 CREATE INDEX idx_MovementProtocol_UserId ON MovementProtocol (UserId);
 CREATE INDEX idx_MovementProtocol_OperDate ON MovementProtocol (OperDate);

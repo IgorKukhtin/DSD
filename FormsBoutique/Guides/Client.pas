@@ -75,7 +75,7 @@ type
     LastDate: TcxGridDBColumn;
     Address: TcxGridDBColumn;
     HappyDate: TcxGridDBColumn;
-    clPhoneMobile: TcxGridDBColumn;
+    PhoneMobile: TcxGridDBColumn;
     Phone: TcxGridDBColumn;
     Mail: TcxGridDBColumn;
     Comment: TcxGridDBColumn;

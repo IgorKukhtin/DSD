@@ -37,7 +37,10 @@ $BODY$
    DECLARE vbCashId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ReturnIn());
+     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ReturnIn());
+     vbUserId:= lpGetUserBySession (inSession);
+
+
      -- !!!временно - для Sybase!!!
      -- vbUserId := zc_User_Sybase();
 
@@ -59,6 +62,10 @@ BEGIN
      -- проверка - свойство должно быть установлено
      IF COALESCE (inSaleMI_Id, 0) = 0 THEN
         RAISE EXCEPTION 'Ошибка.Не определен элемент Продажи.';
+     END IF;
+     -- проверка - свойство должно быть установлено
+     IF inAmount < 0 THEN
+        RAISE EXCEPTION 'Ошибка.Не установлено значение <Кол-во>.';
      END IF;
 
 
@@ -237,7 +244,7 @@ BEGIN
      END IF;
 
      -- расчитали Итого сумма возврата Скидки (в ГРН)
-     outTotalChangePercent:= 
+     outTotalChangePercent:=
                              (SELECT CASE -- !!!если вернули ВСЁ!!- тогда вся скидка из продажи
                                           WHEN MovementItem.Amount = inAmount
                                                THEN COALESCE (MIFloat_TotalChangePercent.ValueData, 0) + COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)
@@ -309,7 +316,7 @@ BEGIN
                                                                            LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
                                                                                                        ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
                                                                                                       AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
-       
+
                                                                       WHERE MIL_PartionMI.DescId   = zc_MILinkObject_PartionMI()
                                                                         AND MIL_PartionMI.ObjectId = vbPartionMI_Id
                                                                      ), 0), 2)

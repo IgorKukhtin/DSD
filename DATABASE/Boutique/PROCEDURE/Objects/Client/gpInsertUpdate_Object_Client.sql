@@ -5,8 +5,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client_Sybase (Integer, TFloat, TF
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Client(
- INOUT ioId                       Integer   ,    -- Ключ объекта <Покупатели> 
- INOUT ioCode                     Integer   ,    -- Код объекта <Покупатели>     
+ INOUT ioId                       Integer   ,    -- Ключ объекта <Покупатели>
+ INOUT ioCode                     Integer   ,    -- Код объекта <Покупатели>
     IN inName                     TVarChar  ,    -- Название объекта <Покупатели>
     IN inDiscountCard             TVarChar  ,    -- Номер карты
     IN inDiscountTax              TFloat    ,    -- Процент скидки
@@ -30,29 +30,30 @@ BEGIN
    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Client());
    vbUserId:= lpGetUserBySession (inSession);
 
-     -- ВРЕМЕННО - для Sybase найдем Id
-     IF vbUserId = zc_User_Sybase()
-     THEN
-         ioId:= (SELECT Object.Id
-                 FROM Object
-                 WHERE Object.DescId    = zc_Object_Client()
-                   AND TRIM (LOWER (Object.ValueData)) = TRIM (LOWER (inName))
-                );
-         --
-         -- IF ioId <> 0 THEN PERFORM gpUnComplete_Movement_Currency (ioId, inSession); END IF;
-     END IF;
+
+   -- ВРЕМЕННО - для Sybase найдем Id
+   IF vbUserId = zc_User_Sybase()
+   THEN
+       ioId:= (SELECT Object.Id
+               FROM Object
+               WHERE Object.DescId    = zc_Object_Client()
+                 AND TRIM (LOWER (Object.ValueData)) = TRIM (LOWER (inName))
+              );
+       --
+       -- IF ioId <> 0 THEN PERFORM gpUnComplete_Movement_Currency (ioId, inSession); END IF;
+   END IF;
 
 
 
    -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
-   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) <> 0 THEN  ioCode := NEXTVAL ('Object_Client_seq'); 
-   END IF; 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) <> 0 THEN  ioCode := NEXTVAL ('Object_Client_seq');
+   END IF;
 
-   -- Нужен для загрузки из Sybase т.к. там код = 0 
-   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) = 0  THEN  ioCode := NEXTVAL ('Object_Client_seq'); 
+   -- Нужен для загрузки из Sybase т.к. там код = 0
+   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) = 0  THEN  ioCode := NEXTVAL ('Object_Client_seq');
    ELSEIF ioCode = 0
          THEN ioCode:= (SELECT ObjectCode FROM Object WHERE Id = ioId);
-   END IF; 
+   END IF;
 
 
    -- Проверка
@@ -60,12 +61,21 @@ BEGIN
       RAISE EXCEPTION 'Ошибка.Необходимо ввести Название.';
    END IF;
 
+   -- Проверка
+   IF vbUserId <> zc_User_Sybase()
+      AND (inDiscountTax > 30 OR inDiscountTaxTwo > 30)
+   THEN
+      PERFORM lpCheckRight (inSession, zc_Enum_Process_Update_Object_Client_DiscountTax());
+   END IF;
+
+
+
    -- проверка прав уникальности для свойства <Название>
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Client(), inName);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Client(), ioCode, inName);
- 
+
    -- сохранили Номер карты
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Client_DiscountCard(), ioId, inDiscountCard);
    -- сохранили Процент скидки
@@ -92,7 +102,7 @@ BEGIN
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
-   
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -68,7 +68,7 @@ object ClientEditForm: TClientEditForm
   end
   object cxLabel4: TcxLabel
     Left = 8
-    Top = 229
+    Top = 232
     Caption = #1040#1076#1088#1077#1089
   end
   object edAddress: TcxTextEdit
@@ -103,11 +103,11 @@ object ClientEditForm: TClientEditForm
   object cxLabel6: TcxLabel
     Left = 144
     Top = 278
-    Caption = #1058#1077#1083#1077#1092#1086#1085
+    Caption = #1058#1077#1083#1077#1092#1086#1085', '#1076#1088#1091#1075#1086#1081
   end
   object ceCity: TcxButtonEdit
     Left = 8
-    Top = 205
+    Top = 207
     Properties.Buttons = <
       item
         Default = True
@@ -125,45 +125,59 @@ object ClientEditForm: TClientEditForm
   object edDiscountTax: TcxCurrencyEdit
     Left = 8
     Top = 166
+    Hint = '% '#1089#1082#1080#1076#1082#1080' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103
     EditValue = '0'
+    ParentShowHint = False
     Properties.DecimalPlaces = 1
     Properties.DisplayFormat = '0.0 %'
+    ShowHint = True
     TabOrder = 3
     Width = 135
   end
   object cxLabel8: TcxLabel
     Left = 8
-    Top = 142
-    Caption = #1055#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080
+    Top = 143
+    Hint = '% '#1089#1082#1080#1076#1082#1080' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103
+    Caption = '% '#1089#1082#1080#1076#1082#1080
   end
   object cxLabel9: TcxLabel
     Left = 148
-    Top = 142
-    Caption = #1055#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080' '#1076#1086#1087'.'
+    Top = 143
+    Hint = '% '#1089#1082#1080#1076#1082#1080' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1074' '#1063#1072#1076#1086' '#1085#1072' '#1043#1088#1091#1087#1087#1091' <'#1054#1073#1091#1074#1100'>'
+    Caption = '% '#1089#1082#1080#1076#1082#1080' '#1054#1073#1091#1074#1100
   end
   object edDiscountTaxTwo: TcxCurrencyEdit
     Left = 148
     Top = 166
+    Hint = '% '#1089#1082#1080#1076#1082#1080' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1074' '#1063#1072#1076#1086' '#1085#1072' '#1043#1088#1091#1087#1087#1091' <'#1054#1073#1091#1074#1100'>'
     EditValue = 0.000000000000000000
+    ParentShowHint = False
     Properties.DecimalPlaces = 1
     Properties.DisplayFormat = '0.0 %'
+    ShowHint = True
     TabOrder = 4
     Width = 133
   end
   object edHappyDate: TcxDateEdit
     Left = 148
     Top = 117
+    Hint = #1044#1072#1090#1072'.'#1052#1077#1089#1103#1094
     EditValue = 42796d
+    ParentShowHint = False
     Properties.DisplayFormat = 'DD.MM'
     Properties.SaveTime = False
     Properties.ShowTime = False
+    ShowHint = True
     TabOrder = 2
     Width = 133
   end
   object cxLabel10: TcxLabel
-    Left = 144
+    Left = 148
     Top = 99
+    Hint = #1044#1072#1090#1072'.'#1052#1077#1089#1103#1094
     Caption = #1044#1077#1085#1100' '#1088#1086#1078#1076#1077#1085#1080#1103
+    ParentShowHint = False
+    ShowHint = True
   end
   object cxLabel11: TcxLabel
     Left = 8
