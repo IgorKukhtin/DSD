@@ -22,7 +22,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit,
-  cxButtonEdit, cxLabel;
+  cxButtonEdit, cxLabel, Vcl.StdCtrls;
 
 type
   TGoodsForm = class(TAncestorGuidesForm)
