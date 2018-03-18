@@ -697,6 +697,7 @@ inherited GoodsForm: TGoodsForm
         end>
     end
     inherited dxBarStatic: TdxBarStatic
+      Style = dmMain.cxFooterStyle
       ShowCaption = False
     end
     object bbPublished: TdxBarButton
@@ -722,7 +723,9 @@ inherited GoodsForm: TGoodsForm
     object bbUpdate_CountPrice: TdxBarButton
       Action = actUpdate_CountPrice
       Category = 0
-      ImageIndex = 77
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1072#1081#1089#1086#1074' '#1087#1086' '#1074#1089#1077#1084' '#1089#1077#1090#1103#1084
+      Style = dmMain.cxContentStyle
+      PaintStyle = psCaption
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
