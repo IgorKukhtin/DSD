@@ -851,10 +851,6 @@
 				<Form>Report_GoodsDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Guides\GoodsChoice.pas">
-				<Form>GoodsChoiceForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Guides\GoodsSizeChoice.pas">
 				<Form>GoodsSizeChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
