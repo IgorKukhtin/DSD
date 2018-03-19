@@ -7,6 +7,8 @@ type
   private
     FAlwaysSold: boolean;
     FPrinter: IFiscPRN;
+    FisFiscal: boolean;
+    FLengNoFiscalText : integer;
     procedure SetAlwaysSold(Value: boolean);
     function GetAlwaysSold: boolean;
   protected
@@ -42,7 +44,7 @@ type
 
 
 implementation
-uses Forms, SysUtils, Dialogs, Math, Variants, BDE, StrUtils, IniUtils, Log;
+uses Forms, SysUtils, Dialogs, Math, Variants, BDE, StrUtils, IniUtils, RegularExpressions, Log;
 
 function СообщениеКА(k: string): boolean;
 begin
@@ -121,6 +123,7 @@ constructor TCashFP3530T_NEW.Create;
 begin
   inherited Create;
   FAlwaysSold:=false;
+  FLengNoFiscalText := 35;
   FPrinter := CoFiscPrn.Create;
   FPrinter.SETCOMPORT[StrToInt(iniPortNumber), StrToInt(iniPortSpeed)];
   СообщениеКА(FPrinter.GETERROR);
@@ -148,7 +151,8 @@ end;
 
 function TCashFP3530T_NEW.OpenReceipt(const isFiscal: boolean = true): boolean;
 begin
-  if isFiscal then
+  FisFiscal := isFiscal;
+  if FisFiscal then
      FPrinter.OPENFISKCHECK[1, 1, 0, Password]
   else
      FPrinter.OPENCHECK[Password];
@@ -178,9 +182,45 @@ end;
 function TCashFP3530T_NEW.SoldFromPC(const GoodsCode: integer; const GoodsName: string; const Amount, Price, NDS: double): boolean;
 var NDSType: char;
     CashCode: integer;
+    I : Integer;
+    L : string;
+    Res: TArray<string>;
 begin
   result := true;
   if FAlwaysSold then exit;
+
+    // печать нефискального чека
+  if not FisFiscal then
+  begin
+
+    L := '';
+    Res := TRegEx.Split(GoodsName, ' ');
+    for I := 0 to High(Res) do
+    begin
+      if L <> '' then L := L + ' ';
+      L := L + Res[i];
+      if (I < High(Res)) and (Length(L + Res[i]) > FLengNoFiscalText) then
+      begin
+        if not PrintNotFiscalText(L) then Exit;
+        L := '';
+      end;
+      if I = High(Res) then
+      begin
+        if (Length(L + FormatCurr('0.000', Amount)) + 3) >= FLengNoFiscalText then
+        begin
+          if not PrintNotFiscalText(L) then Exit;;
+          L := StringOfChar(' ' , FLengNoFiscalText - Length(FormatCurr('0.000', Amount)) - 1) + FormatCurr('0.000', Amount);
+          if not PrintNotFiscalText(L) then Exit;
+        end else
+        begin
+          L := L + StringOfChar(' ' , FLengNoFiscalText - Length(L + FormatCurr('0.000', Amount)) - 1) + FormatCurr('0.000', Amount);
+          if not PrintNotFiscalText(L) then Exit;
+        end;
+      end;
+    end;
+
+    Exit;
+  end;
 
   ProgrammingGoods(GoodsCode, Copy(GoodsName, 1, 20) , Price, NDS);
   result := SoldCode(GoodsCode, Amount, Price);
@@ -259,6 +299,8 @@ end;
 function TCashFP3530T_NEW.PrintNotFiscalText(
   const PrintText: WideString): boolean;
 begin
+  FPrinter.PRNCHECK[PrintText, Password];
+  result := СообщениеКА(FPrinter.GETERROR)
 end;
 
 function TCashFP3530T_NEW.PrintFiscalText(
