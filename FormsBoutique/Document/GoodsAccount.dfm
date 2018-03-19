@@ -1624,6 +1624,7 @@ object GoodsAccountForm: TGoodsAccountForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -1642,6 +1643,7 @@ object GoodsAccountForm: TGoodsAccountForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -2570,27 +2572,6 @@ object GoodsAccountForm: TGoodsAccountForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TotalSumm'
-        Value = Null
-        Component = edTotalSumm
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TotalSummPay'
-        Value = Null
-        Component = edTotalSummPay
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TotalDebtSumm'
-        Value = Null
-        Component = edTotalDebt
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'MasterUnitId'
         Value = Null
         Component = GuidesTo
@@ -3150,5 +3131,19 @@ object GoodsAccountForm: TGoodsAccountForm
     PackSize = 1
     Left = 976
     Top = 256
+  end
+  object HeaderChanger: THeaderChanger
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    ChangerList = <
+      item
+        Control = edTo
+      end
+      item
+        Control = edFrom
+      end>
+    Action = actInsertUpdateMovement
+    Left = 328
+    Top = 221
   end
 end

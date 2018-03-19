@@ -184,6 +184,7 @@ type
     spGet_Printer: TdsdStoredProc;
     actGet_Printer: TdsdExecStoredProc;
     mactPrintCheck: TMultiAction;
+    HeaderChanger: THeaderChanger;
   private
   public
   end;

@@ -168,7 +168,8 @@ type
     bb_User: TdxBarButton;
     spGet_Printer: TdsdStoredProc;
     actGet_Printer: TdsdExecStoredProc;
-    mactPrintCheck: TMultiAction;
+    macPrintCheck: TMultiAction;
+    HeaderChanger: THeaderChanger;
   private
   public
   end;

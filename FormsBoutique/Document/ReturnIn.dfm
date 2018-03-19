@@ -192,6 +192,7 @@ object ReturnInForm: TReturnInForm
       Left = 656
       Top = 103
       EditValue = '09.05.2017'
+      Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 19
@@ -1285,6 +1286,7 @@ object ReturnInForm: TReturnInForm
     Left = 566
     Top = 103
     EditValue = '09.05.2017'
+    Properties.ReadOnly = True
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 17
@@ -1842,6 +1844,7 @@ object ReturnInForm: TReturnInForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -1860,6 +1863,7 @@ object ReturnInForm: TReturnInForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -2992,27 +2996,6 @@ object ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TotalSumm'
-        Value = Null
-        Component = edTotalSumm
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TotalSummPay'
-        Value = Null
-        Component = edTotalSummPay
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TotalDebtSumm'
-        Value = Null
-        Component = edTotalDebt
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'MasterUnitId'
         Value = Null
         Component = GuidesTo
@@ -3633,5 +3616,19 @@ object ReturnInForm: TReturnInForm
     PackSize = 1
     Left = 856
     Top = 376
+  end
+  object HeaderChanger: THeaderChanger
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    ChangerList = <
+      item
+        Control = edTo
+      end
+      item
+        Control = edFrom
+      end>
+    Action = actInsertUpdateMovement
+    Left = 400
+    Top = 173
   end
 end

@@ -21,16 +21,8 @@ BEGIN
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Sale());
      vbUserId := lpGetUserBySession (inSession);
 
-
-     -- определяем магазин по принадлежности пользователя к сотруднику
-     vbUnitId:= lpGetUnitBySession (inSession);
-
-     -- если у пользователя = 0, тогда может смотреть любой магазин, иначе только свой
-     IF COALESCE (vbUnitId, 0 ) <> 0 AND COALESCE (vbUnitId) <> inFromId
-     THEN
-         RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав на подразделение <%> .', lfGet_Object_ValueData_sh (vbUserId), lfGet_Object_ValueData_sh (inFromId);
-     END IF;
-
+     -- проверка может ли смотреть любой магазин, или только свой
+     vbUnitId := lpCheckUnitByUser(inFromId, inSession);
 
      IF COALESCE (ioId, 0) = 0 THEN
         ioInvNumber:= CAST (NEXTVAL ('Movement_Sale_seq') AS TVarChar);
