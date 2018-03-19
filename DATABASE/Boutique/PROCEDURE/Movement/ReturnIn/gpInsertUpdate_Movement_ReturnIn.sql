@@ -25,12 +25,8 @@ BEGIN
      -- определяем магазин по принадлежности пользователя к сотруднику
      vbUnitId:= lpGetUnitBySession (inSession);
 
-     -- если у пользователя = 0, тогда может смотреть любой магазин, иначе только свой
-     IF COALESCE (vbUnitId, 0 ) <> 0 AND COALESCE (vbUnitId) <> inToId
-     THEN
-         RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав на подразделение <%> .', lfGet_Object_ValueData (vbUserId), lfGet_Object_ValueData (inToId);
-     END IF;
-     
+     -- проверка может ли смотреть любой магазин, или только свой
+     vbUnitId := lpCheckUnitByUser(inToId, inSession);
 
      -- определяется уникальный № док.
      IF COALESCE (ioId, 0) = 0 THEN

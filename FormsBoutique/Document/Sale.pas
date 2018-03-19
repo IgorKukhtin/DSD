@@ -182,6 +182,7 @@ type
     actUpdate_isChecked: TdsdExecStoredProc;
     bbUpdate_isChecked: TdxBarButton;
     isChecked: TcxGridDBColumn;
+    HeaderChanger: THeaderChanger;
   private
   public
   end;

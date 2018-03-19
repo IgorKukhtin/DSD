@@ -409,8 +409,8 @@ object SaleItemEditForm: TSaleItemEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 348
-    Top = 168
+    Left = 356
+    Top = 152
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -586,7 +586,7 @@ object SaleItemEditForm: TSaleItemEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 320
+    Left = 288
     Top = 120
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -618,7 +618,7 @@ object SaleItemEditForm: TSaleItemEditForm
       item
         Component = ceCurrencyValue_EUR
       end>
-    Left = 384
+    Left = 368
     Top = 120
   end
   object spGet_Total: TdsdStoredProc

@@ -3095,7 +3095,7 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 646
+    Left = 694
     Top = 320
   end
   object spUnErasedMIMaster: TdsdStoredProc
@@ -3235,27 +3235,6 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TotalSumm'
-        Value = Null
-        Component = edTotalSumm
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TotalSummPay'
-        Value = Null
-        Component = edTotalSummPay
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TotalDebtSumm'
-        Value = Null
-        Component = edTotalDebt
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'MasterUnitId'
         Value = Null
         Component = GuidesFrom
@@ -3272,8 +3251,8 @@ object SaleForm: TSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 112
-    Top = 40
+    Left = 144
+    Top = 48
   end
   object spGetTotalSumm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TotalSumm'
@@ -3297,14 +3276,14 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 484
+    Left = 516
     Top = 340
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 564
-    Top = 321
+    Left = 604
+    Top = 313
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
@@ -3826,5 +3805,19 @@ object SaleForm: TSaleForm
     PackSize = 1
     Left = 720
     Top = 371
+  end
+  object HeaderChanger: THeaderChanger
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    ChangerList = <
+      item
+        Control = edTo
+      end
+      item
+        Control = edFrom
+      end>
+    Action = actInsertUpdateMovement
+    Left = 320
+    Top = 181
   end
 end
