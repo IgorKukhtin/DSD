@@ -838,6 +838,72 @@ BEGIN
                               AND TRIM (Object_Goods_BarCode.ValueData) <> ''
                            )
                         
+      , tmpGoods AS (SELECT ObjectLink_Goods_Object.ObjectId AS GoodsId
+                     FROM ObjectLink AS ObjectLink_Goods_Object
+                     WHERE ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                       AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
+                       AND ObjectLink_Goods_Object.ObjectId IN (SELECT DISTINCT tmpPrice_All.Goodsid FROM tmpPrice_All)
+                     )  
+      , tmpGoods_All AS (SELECT  Object_Goods.Id                AS Id
+                               , Object_Goods.ObjectCode                          AS GoodsCodeInt
+                               
+                               , Object_Goods.ValueData                           AS GoodsName
+                               , Object_Goods.isErased                            AS isErased
+                               
+                               , Object_GoodsGroup.ValueData                      AS GoodsGroupName
+                    
+                               , ObjectLink_Goods_NDSKind.ChildObjectId           AS NDSKindId
+                               , Object_NDSKind.ValueData                         AS NDSKindName
+                               , ObjectFloat_NDSKind_NDS.ValueData                AS NDS
+                               
+                               , COALESCE(ObjectBoolean_Goods_Close.ValueData, false)   AS isClose
+                               , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false)     AS isTOP
+                               , COALESCE(ObjectBoolean_First.ValueData, False)         AS isFirst
+                               , COALESCE(ObjectBoolean_Second.ValueData, False)        AS isSecond
+                    
+                               , ObjectFloat_Goods_PercentMarkup.ValueData        AS PercentMarkup
+                         FROM tmpGoods
+                         
+                              LEFT JOIN Object AS Object_Goods 
+                                               ON Object_Goods.Id = tmpGoods.GoodsId 
+
+                              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                                   ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpGoods.GoodsId
+                                                  AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+
+                              LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+        
+                              LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
+                                                   ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
+                                                  AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
+                              LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
+                      
+                              LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                                    ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
+                                                   AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
+                      
+                           
+                              LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Close
+                                                      ON ObjectBoolean_Goods_Close.ObjectId = tmpGoods.GoodsId 
+                                                     AND ObjectBoolean_Goods_Close.DescId = zc_ObjectBoolean_Goods_Close()   
+                      
+                              LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                                      ON ObjectBoolean_Goods_TOP.ObjectId = tmpGoods.GoodsId 
+                                                     AND ObjectBoolean_Goods_TOP.DescId = zc_ObjectBoolean_Goods_TOP()  
+                      
+                              LEFT JOIN ObjectBoolean AS ObjectBoolean_First
+                                                      ON ObjectBoolean_First.ObjectId = tmpGoods.GoodsId 
+                                                     AND ObjectBoolean_First.DescId = zc_ObjectBoolean_Goods_First() 
+                              LEFT JOIN ObjectBoolean AS ObjectBoolean_Second
+                                                      ON ObjectBoolean_Second.ObjectId = tmpGoods.GoodsId 
+                                                     AND ObjectBoolean_Second.DescId = zc_ObjectBoolean_Goods_Second() 
+                         
+                              LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_PercentMarkup
+                                                     ON ObjectFloat_Goods_PercentMarkup.ObjectId = tmpGoods.GoodsId 
+                                                    AND ObjectFloat_Goods_PercentMarkup.DescId = zc_ObjectFloat_Goods_PercentMarkup()  
+                          )
+                    
+
             -- Результат     
             SELECT
                  tmpPrice_All.Id                                                       AS Id
@@ -1038,7 +1104,7 @@ BEGIN
                , COALESCE (tmpMarginCategory.isChecked, FALSE)  :: Boolean AS isChecked
                , CASE WHEN tmpMarginCategory.MarginPercentNew <> tmpPrice_All.PercentMarkup AND tmpPrice_All.isTop = FALSE THEN TRUE ELSE FALSE END AS isError_MarginPercent
             FROM tmpPrice_All
-               LEFT OUTER JOIN Object_Goods_View ON Object_Goods_View.id = tmpPrice_All.Goodsid
+               LEFT JOIN tmpGoods_All /*Object_Goods_View*/ AS Object_Goods_View ON Object_Goods_View.id = tmpPrice_All.Goodsid
             --   LEFT OUTER JOIN tmpRemeins AS Object_Remains ON Object_Remains.ObjectId = tmpPrice_View.GoodsId
 
                LEFT JOIN ObjectHistory AS ObjectHistory_Price
