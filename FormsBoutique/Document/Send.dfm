@@ -216,7 +216,7 @@ object SendForm: TSendForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actGoodsChoiceForm
+                Action = actPartionGoodsChoice
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -487,16 +487,16 @@ object SendForm: TSendForm
       Top = 63
       Properties.Buttons = <
         item
-          Action = CompleteMovement
+          Action = actCompleteMovement
           Kind = bkGlyph
         end
         item
-          Action = UnCompleteMovement
+          Action = actUnCompleteMovement
           Default = True
           Kind = bkGlyph
         end
         item
-          Action = DeleteMovement
+          Action = actDeleteMovement
           Kind = bkGlyph
         end>
       Properties.Images = dmMain.ImageList
@@ -687,7 +687,7 @@ object SendForm: TSendForm
         end
         item
           Visible = True
-          ItemName = 'bbMovementItemProtocol'
+          ItemName = 'bbMIProtocol'
         end
         item
           Visible = True
@@ -695,7 +695,7 @@ object SendForm: TSendForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExel'
+          ItemName = 'bbGridToExcel'
         end
         item
           Visible = True
@@ -711,6 +711,7 @@ object SendForm: TSendForm
       Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbInsertUpdateMovement: TdxBarButton
       Action = actInsertUpdateMovement
@@ -732,86 +733,36 @@ object SendForm: TSendForm
       Action = actPrint
       Category = 0
     end
-    object bbGridToExel: TdxBarButton
-      Action = GridToExcel
+    object bbGridToExcel: TdxBarButton
+      Action = actGridToExcel
       Category = 0
     end
     object bbErased: TdxBarButton
-      Action = SetErased
+      Action = actSetErased
       Category = 0
     end
     object bbUnErased: TdxBarButton
-      Action = SetUnErased
+      Action = actSetUnErased
       Category = 0
     end
     object bbMIContainer: TdxBarButton
       Action = actMIContainer
       Category = 0
     end
-    object bbMovementItemProtocol: TdxBarButton
-      Action = MovementItemProtocolOpenForm
-      Category = 0
-    end
-    object bbCalcAmountPartner: TdxBarControlContainerItem
-      Caption = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.>'
-      Category = 0
-      Hint = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.>'
-      Visible = ivAlways
-    end
-    object bbAddMask: TdxBarButton
-      Action = actAddMask
+    object bbMIProtocol: TdxBarButton
+      Action = actMIProtocol
       Category = 0
     end
     object bbInsertRecord: TdxBarButton
-      Action = InsertRecord
+      Action = actInsertRecord
       Category = 0
-    end
-    object bbCompleteCost: TdxBarButton
-      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      Category = 0
-      Enabled = False
-      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      Visible = ivAlways
-      ImageIndex = 12
-    end
-    object bbactUnCompleteCost: TdxBarButton
-      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      Category = 0
-      Enabled = False
-      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      Visible = ivAlways
-      ImageIndex = 11
-    end
-    object bbactSetErasedCost: TdxBarButton
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      Category = 0
-      Enabled = False
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      Visible = ivAlways
-      ImageIndex = 13
-    end
-    object bbShowErasedCost: TdxBarButton
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      Category = 0
-      Enabled = False
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      Visible = ivAlways
-      ImageIndex = 64
-    end
-    object bbUpdateRecord1: TdxBarButton
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      Category = 0
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      Visible = ivAlways
-      ImageIndex = 1
-      ShortCut = 115
     end
     object bbOpenReportForm: TdxBarButton
-      Action = actOpenReportFrom
+      Action = actReport_Goods
       Category = 0
     end
     object bbOpenReportTo: TdxBarButton
-      Action = actOpenReportTo
+      Action = actReport_Goods_to
       Category = 0
     end
     object bbPrintIn: TdxBarButton
@@ -1050,7 +1001,7 @@ object SendForm: TSendForm
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object GridToExcel: TdsdGridToExcel
+    object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -1060,7 +1011,7 @@ object SendForm: TSendForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object SetErased: TdsdUpdateErased
+    object actSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -1075,11 +1026,10 @@ object SendForm: TSendForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
-    object SetUnErased: TdsdUpdateErased
+    object actSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -1094,12 +1044,11 @@ object SendForm: TSendForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
     end
-    object UnCompleteMovement: TChangeGuidesStatus
+    object actUnCompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spChangeStatus
@@ -1117,7 +1066,7 @@ object SendForm: TSendForm
       Status = mtUncomplete
       Guides = StatusGuides
     end
-    object CompleteMovement: TChangeGuidesStatus
+    object actCompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spChangeStatus
@@ -1135,7 +1084,7 @@ object SendForm: TSendForm
       Status = mtComplete
       Guides = StatusGuides
     end
-    object DeleteMovement: TChangeGuidesStatus
+    object actDeleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spChangeStatus
@@ -1174,7 +1123,7 @@ object SendForm: TSendForm
         end>
       isShowModal = False
     end
-    object MovementItemProtocolOpenForm: TdsdOpenForm
+    object actMIProtocol: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
@@ -1204,40 +1153,222 @@ object SendForm: TSendForm
         end>
       isShowModal = False
     end
-    object actAddMask: TdsdExecStoredProc
+    object actReport_Goods: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertMaskMIMaster
-      StoredProcList = <
+      Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>('#1086#1090' '#1082#1086#1075#1086')'
+      Hint = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>'
+      ImageIndex = 40
+      FormName = 'TReport_GoodsForm'
+      FormNameParam.Value = 'TReport_GoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
         item
-          StoredProc = spInsertMaskMIMaster
+          Name = 'LocationId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
-          StoredProc = spSelectMI
+          Name = 'LocationName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsSizeId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsSizeId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsSizeName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsSizeName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPeriod'
+          Value = 'TRUE'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartion'
+          Value = 'False'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
-      ImageIndex = 54
+      isShowModal = False
     end
-    object InsertRecord: TInsertRecord
+    object actReport_Goods_to: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>('#1082#1086#1084#1091')'
+      Hint = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>'
+      ImageIndex = 60
+      FormName = 'TReport_GoodsForm'
+      FormNameParam.Value = 'TReport_GoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'LocationId'
+          Value = ''
+          Component = GuidesTo
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LocationName'
+          Value = ''
+          Component = GuidesTo
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsSizeId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsSizeId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsSizeName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsSizeName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPeriod'
+          Value = 'TRUE'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartion'
+          Value = 'False'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actInsertRecord: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
       View = cxGridDBTableView
-      Action = actGoodsChoiceForm
+      Action = actPartionGoodsChoice
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ShortCut = 45
       ImageIndex = 0
     end
-    object actGoodsChoiceForm: TOpenChoiceForm
+    object actPartionGoodsChoice: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'GoodsForm'
+      PostDataSetAfterExecute = True
+      Caption = 'TPartionGoodsChoiceForm'
       FormName = 'TPartionGoodsChoiceForm'
       FormNameParam.Value = 'TPartionGoodsChoiceForm'
       FormNameParam.DataType = ftString
@@ -1353,204 +1484,6 @@ object SendForm: TSendForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
-    end
-    object actOpenReportTo: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>('#1082#1086#1084#1091')'
-      Hint = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>'
-      ImageIndex = 60
-      FormName = 'TReport_GoodsForm'
-      FormNameParam.Value = 'TReport_GoodsForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'LocationId'
-          Value = ''
-          Component = GuidesTo
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'LocationName'
-          Value = ''
-          Component = GuidesTo
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsSizeId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsSizeId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsSizeName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsSizeName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PartionId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PartionId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isPeriod'
-          Value = 'TRUE'
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isPartion'
-          Value = 'False'
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MovementId'
-          Value = '0'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InvNumber'
-          Value = Null
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actOpenReportFrom: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>('#1086#1090' '#1082#1086#1075#1086')'
-      Hint = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>'
-      ImageIndex = 40
-      FormName = 'TReport_GoodsForm'
-      FormNameParam.Value = 'TReport_GoodsForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'LocationId'
-          Value = ''
-          Component = GuidesFrom
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'LocationName'
-          Value = ''
-          Component = GuidesFrom
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsSizeId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsSizeId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsSizeName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsSizeName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PartionId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PartionId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isPeriod'
-          Value = 'TRUE'
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isPartion'
-          Value = 'False'
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MovementId'
-          Value = '0'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InvNumber'
-          Value = Null
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
     end
   end
   object MasterDS: TDataSource
@@ -2148,115 +2081,5 @@ object SendForm: TSendForm
     PackSize = 1
     Left = 567
     Top = 208
-  end
-  object spInsertMaskMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Send'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId'
-        Value = 0
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPartionId'
-        Value = 'True'
-        Component = MasterCDS
-        ComponentItem = 'PartionId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmount'
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outCountForPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'CountForPrice'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outOperPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'OperPrice'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outTotalSumm'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'TotalSumm'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outTotalSummBalance'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'TotalSummBalance'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioOperPriceList'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'OperPriceList'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outTotalSummPriceList'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'TotalSummPriceList'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outCurrencyValue'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'CurrencyValue'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outParValue'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'ParValue'
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 158
-    Top = 335
   end
 end

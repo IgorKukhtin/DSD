@@ -94,16 +94,16 @@ object SaleForm: TSaleForm
       Top = 23
       Properties.Buttons = <
         item
-          Action = CompleteMovement
+          Action = actCompleteMovement
           Kind = bkGlyph
         end
         item
-          Action = UnCompleteMovement
+          Action = actUnCompleteMovement
           Default = True
           Kind = bkGlyph
         end
         item
-          Action = DeleteMovement
+          Action = actDeleteMovement
           Kind = bkGlyph
         end>
       Properties.Images = dmMain.ImageList
@@ -606,7 +606,7 @@ object SaleForm: TSaleForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actGoodsChoiceForm
+                Action = actPartionGoodsChoice
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -1491,7 +1491,7 @@ object SaleForm: TSaleForm
         end
         item
           Visible = True
-          ItemName = 'bbmac_User'
+          ItemName = 'bb_User'
         end
         item
           Visible = True
@@ -1515,7 +1515,7 @@ object SaleForm: TSaleForm
         end
         item
           Visible = True
-          ItemName = 'bbMovementItemProtocol'
+          ItemName = 'bbMIProtocol'
         end
         item
           Visible = True
@@ -1523,7 +1523,7 @@ object SaleForm: TSaleForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExel'
+          ItemName = 'bbGridToExcel'
         end
         item
           Visible = True
@@ -1561,96 +1561,48 @@ object SaleForm: TSaleForm
       Action = actPrint
       Category = 0
     end
-    object bbGridToExel: TdxBarButton
-      Action = GridToExcel
+    object bbGridToExcel: TdxBarButton
+      Action = actGridToExcel
       Category = 0
     end
     object bbErased: TdxBarButton
-      Action = SetErased
+      Action = actSetErased
       Category = 0
     end
     object bbUnErased: TdxBarButton
-      Action = SetUnErased
+      Action = actSetUnErased
       Category = 0
     end
     object bbMIContainer: TdxBarButton
       Action = actMIContainer
       Category = 0
     end
-    object bbMovementItemProtocol: TdxBarButton
-      Action = MovementItemProtocolOpenForm
+    object bbMIProtocol: TdxBarButton
+      Action = actMIProtocol
       Category = 0
-    end
-    object bbCalcAmountPartner: TdxBarControlContainerItem
-      Caption = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.>'
-      Category = 0
-      Hint = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.>'
-      Visible = ivAlways
     end
     object bbInsertRecord: TdxBarButton
-      Action = InsertRecord
+      Action = actInsertRecord
       Category = 0
-    end
-    object bbCompleteCost: TdxBarButton
-      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      Category = 0
-      Enabled = False
-      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      Visible = ivAlways
-      ImageIndex = 12
-    end
-    object bbactUnCompleteCost: TdxBarButton
-      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      Category = 0
-      Enabled = False
-      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      Visible = ivAlways
-      ImageIndex = 11
-    end
-    object bbactSetErasedCost: TdxBarButton
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      Category = 0
-      Enabled = False
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      Visible = ivAlways
-      ImageIndex = 13
-    end
-    object bbShowErasedCost: TdxBarButton
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      Category = 0
-      Enabled = False
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      Visible = ivAlways
-      ImageIndex = 64
-    end
-    object bbUpdateRecord1: TdxBarButton
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      Category = 0
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      Visible = ivAlways
-      ImageIndex = 1
-      ShortCut = 115
     end
     object bbInsertUpdateMIChild: TdxBarButton
-      Action = MacInsertUpdateMIChild
+      Action = mactInsertUpdateMIChild
       Category = 0
-      ImageIndex = 47
     end
     object bbInsertUpdateMIChildTotal: TdxBarButton
-      Action = MacInsertUpdateMIChildTotal
+      Action = mactInsertUpdateMIChildTotal
       Category = 0
-      ImageIndex = 50
     end
     object bbReport_Goods: TdxBarButton
       Action = actReport_Goods
       Category = 0
     end
     object bbPrintCheck: TdxBarButton
-      Action = macPrintCheck
+      Action = mactPrintCheck
       Category = 0
     end
-    object bbmac_User: TdxBarButton
-      Action = mac_User
+    object bb_User: TdxBarButton
+      Action = mact_User
       Category = 0
     end
     object bbUpdate_isChecked: TdxBarButton
@@ -1934,7 +1886,7 @@ object SaleForm: TSaleForm
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object GridToExcel: TdsdGridToExcel
+    object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -1944,7 +1896,7 @@ object SaleForm: TSaleForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object SetErased: TdsdUpdateErased
+    object actSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -1963,7 +1915,7 @@ object SaleForm: TSaleForm
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
-    object SetUnErased: TdsdUpdateErased
+    object actSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -1983,7 +1935,7 @@ object SaleForm: TSaleForm
       isSetErased = False
       DataSource = MasterDS
     end
-    object UnCompleteMovement: TChangeGuidesStatus
+    object actUnCompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spChangeStatus
@@ -2001,7 +1953,7 @@ object SaleForm: TSaleForm
       Status = mtUncomplete
       Guides = StatusGuides
     end
-    object CompleteMovement: TChangeGuidesStatus
+    object actCompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spChangeStatus
@@ -2019,7 +1971,7 @@ object SaleForm: TSaleForm
       Status = mtComplete
       Guides = StatusGuides
     end
-    object DeleteMovement: TChangeGuidesStatus
+    object actDeleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spChangeStatus
@@ -2058,7 +2010,7 @@ object SaleForm: TSaleForm
         end>
       isShowModal = False
     end
-    object MovementItemProtocolOpenForm: TdsdOpenForm
+    object actMIProtocol: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
@@ -2088,11 +2040,22 @@ object SaleForm: TSaleForm
         end>
       isShowModal = False
     end
-    object actGoodsChoiceForm: TOpenChoiceForm
+    object actInsertRecord: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'GoodsForm'
+      PostDataSetAfterExecute = True
+      View = cxGridDBTableView
+      Action = actPartionGoodsChoice
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      ImageIndex = 0
+    end
+    object actPartionGoodsChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'TPartionGoodsChoiceForm'
       FormName = 'TPartionGoodsChoiceForm'
       FormNameParam.Value = 'TPartionGoodsChoiceForm'
       FormNameParam.DataType = ftString
@@ -2209,54 +2172,24 @@ object SaleForm: TSaleForm
         end>
       isShowModal = True
     end
-    object InsertRecord: TInsertRecord
+    object mactInsertUpdateMIChild: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      View = cxGridDBTableView
-      Action = actGoodsChoiceForm
-      Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      ImageIndex = 0
-    end
-    object actInsertUpdateMIChildTotal: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'actInsertAction1'
-      ImageIndex = 1
-      FormName = 'TSaleItemEditForm'
-      FormNameParam.Value = 'TSaleItemEditForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
+      ActionList = <
         item
-          Name = 'Id'
-          Value = '0'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
+          Action = actInsertUpdateMIChild
         end
         item
-          Name = 'MovementId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isPayTotal'
-          Value = 'TRUE'
-          MultiSelectSeparator = ','
+          Action = actRefreshMI
         end>
-      isShowModal = True
-      IdFieldName = 'Id'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1087#1083#1072#1090#1091' '#1076#1083#1103' 1-'#1086#1075#1086'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1087#1083#1072#1090#1091' '#1076#1083#1103' 1-'#1086#1075#1086'>'
+      ImageIndex = 47
     end
     object actInsertUpdateMIChild: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'actInsertAction1'
-      ImageIndex = 1
       FormName = 'TSaleItemEditForm'
       FormNameParam.Value = 'TSaleItemEditForm'
       FormNameParam.DataType = ftString
@@ -2285,7 +2218,7 @@ object SaleForm: TSaleForm
       isShowModal = True
       IdFieldName = 'Id'
     end
-    object MacInsertUpdateMIChildTotal: TMultiAction
+    object mactInsertUpdateMIChildTotal: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -2297,21 +2230,37 @@ object SaleForm: TSaleForm
         end>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1087#1083#1072#1090#1091' '#1080#1090#1086#1075#1086'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1087#1083#1072#1090#1091' '#1080#1090#1086#1075#1086'>'
-      ImageIndex = 0
+      ImageIndex = 50
     end
-    object MacInsertUpdateMIChild: TMultiAction
+    object actInsertUpdateMIChildTotal: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      ActionList = <
+      Caption = 'actInsertAction1'
+      FormName = 'TSaleItemEditForm'
+      FormNameParam.Value = 'TSaleItemEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
         item
-          Action = actInsertUpdateMIChild
+          Name = 'Id'
+          Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
-          Action = actRefreshMI
+          Name = 'MovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPayTotal'
+          Value = 'TRUE'
+          MultiSelectSeparator = ','
         end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1087#1083#1072#1090#1091' '#1076#1083#1103' 1-'#1086#1075#1086'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1087#1083#1072#1090#1091' '#1076#1083#1103' 1-'#1086#1075#1086'>'
-      ImageIndex = 0
+      isShowModal = True
+      IdFieldName = 'Id'
     end
     object actReport_Goods: TdsdOpenForm
       Category = 'DSDLib'
@@ -2434,7 +2383,7 @@ object SaleForm: TSaleForm
         end>
       Caption = 'actComplete_User'
     end
-    object mac_User: TMultiAction
+    object mact_User: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -2442,7 +2391,7 @@ object SaleForm: TSaleForm
           Action = actComplete_User
         end
         item
-          Action = macPrintCheck
+          Action = mactPrintCheck
         end
         item
           Action = actGet_New
@@ -2468,7 +2417,7 @@ object SaleForm: TSaleForm
         end>
       Caption = 'Get_Printer'
     end
-    object macPrintCheck: TMultiAction
+    object mactPrintCheck: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
