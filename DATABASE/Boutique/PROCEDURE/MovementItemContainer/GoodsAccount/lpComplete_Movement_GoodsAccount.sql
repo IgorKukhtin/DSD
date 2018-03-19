@@ -124,32 +124,32 @@ BEGIN
                           )
        WITH -- для Sybase
             tmpCheck AS (SELECT -12345 AS PartionId_MI
-                   /*UNION SELECT 483329 -- select ObP.*, MovementItem.* , Movement.* from MovementItem join Object as ObP on ObP.ObjectCode = MovementItem.Id and ObP.DescId = zc_Object_PartionMI() join Movement on Movement.Id = MovementId and Movement.DescId = zc_Movement_Sale() and Movement.Operdate = '14.05.2012' where PartionId = (SELECT MovementItemId FROM Object_PartionGoods join Object on Object.Id = GoodsId and Object.ObjectCode = 69023 join Object as o2 on o2.Id = GoodsSizeId and o2.ValueData = '40')
-                   UNION SELECT 498838
-                   UNION SELECT 581629
-                   UNION SELECT 581618
-                   UNION SELECT 761634
-                   UNION SELECT 483304
-                   UNION SELECT 484088
-                   UNION SELECT 498134
-                   UNION SELECT 581631
-                   UNION SELECT 581633
-                   UNION SELECT 581620
-                   UNION SELECT 581624
-                   UNION SELECT 761635
-                   UNION SELECT 764551
-                   UNION SELECT 483331
-                   UNION SELECT 483333
-                   UNION SELECT 483076
-                   UNION SELECT 497389
-                   UNION SELECT 761636
-                   UNION SELECT 483048
-                   UNION SELECT 483114
-                   UNION SELECT 483312
-                   UNION SELECT 581622
-                   UNION SELECT 581627
-                   UNION SELECT 761637
-                   UNION SELECT 765099*/
+                   UNION SELECT 681678 -- select ObP.*, MovementItem.* , Movement.* from MovementItem join Object as ObP on ObP.ObjectCode = MovementItem.Id and ObP.DescId = zc_Object_PartionMI() join Movement on Movement.Id = MovementId and Movement.DescId = zc_Movement_Sale() and Movement.Operdate = '14.05.2012' where PartionId = (SELECT MovementItemId FROM Object_PartionGoods join Object on Object.Id = GoodsId and Object.ObjectCode = 69023 join Object as o2 on o2.Id = GoodsSizeId and o2.ValueData = '40')
+                   UNION SELECT 681677
+                   UNION SELECT 647188
+                   UNION SELECT 641696
+                   UNION SELECT 641684
+                   UNION SELECT 592313
+                   UNION SELECT 591757
+                   UNION SELECT 588809
+                   UNION SELECT 681673
+                   UNION SELECT 681672
+                   UNION SELECT 681671
+                   UNION SELECT 641783
+                   UNION SELECT 641775
+                   UNION SELECT 595672
+                   UNION SELECT 588806
+                   UNION SELECT 681676
+                   UNION SELECT 681675
+                   UNION SELECT 646919
+                   UNION SELECT 641784
+                   UNION SELECT 641709
+                   UNION SELECT 588808
+                   UNION SELECT 681674
+                   UNION SELECT 642060
+                   UNION SELECT 641782
+                   UNION SELECT 588807
+                   UNION SELECT 588329
                          -- FROM gpSelect_MovementItem_Sale_Sybase_Check()
                         )
             -- Данные по MI + расчет SummDebt

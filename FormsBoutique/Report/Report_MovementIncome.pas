@@ -67,6 +67,9 @@ type
     actPrintIn: TdsdPrintAction;
     bbPrint: TdxBarButton;
     bbPrintIn: TdxBarButton;
+    RemainsTotal: TcxGridDBColumn;
+    RemainsDebtTotal: TcxGridDBColumn;
+    RemainsAllTotal: TcxGridDBColumn;
   private
     { Private declarations }
   public

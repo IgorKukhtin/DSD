@@ -501,6 +501,6 @@ with _tmpData  as
                             )
 
 select * 
--- , gpReComplete_Movement_Sale (Id, zfCalc_UserAdmin())
-, gpReComplete_Movement_GoodsAccount (Id, zfCalc_UserAdmin())
+-- , gpReComplete_Movement_Sale (Id, zc_User_Sybase() :: TVarChar)
+, gpReComplete_Movement_GoodsAccount (Id, zc_User_Sybase() :: TVarChar)
 from tmpAcc_PREV 

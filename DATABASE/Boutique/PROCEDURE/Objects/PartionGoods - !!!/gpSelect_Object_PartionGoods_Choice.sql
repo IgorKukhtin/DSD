@@ -1,5 +1,7 @@
 -- Function: gpSelect_Object_PartionGoods (Boolean, TVarChar)
 
+DROP FUNCTION IF EXISTS gpSelect_Object_PartionGoods (Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_PartionGoods (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_PartionGoods_Choice (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_PartionGoods_Choice(

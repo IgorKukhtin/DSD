@@ -40,25 +40,30 @@ RETURNS TABLE (MovementId     Integer,
                GoodsSizeId Integer, GoodsSizeName TVarChar,
                CurrencyName  TVarChar,
 
-               OperPrice           TFloat,
-               CountForPrice       TFloat,
-               OperPriceBalance    TFloat,
-               OperPriceList       TFloat,
-               OperPriceListLast   TFloat,
-               Amount              TFloat,
+               OperPrice              TFloat,
+               CountForPrice          TFloat, -- 
+               OperPriceBalance       TFloat, -- Цена вх. (ГРН)
+               OperPriceList          TFloat, -- Цена по прайсу в документе
+               OperPriceListLast      TFloat, -- Цена по прайсу на сегодня !!!НА!!! zc_DateEnd
+               Amount                 TFloat, -- Кол-во Приход от поставщика
 
-               TotalSumm           TFloat,
-               TotalSummBalance    TFloat,
-               TotalSummPriceList  TFloat,
-               TotalSummPriceListLast TFloat,
+               TotalSumm              TFloat, -- Сумма по входным ценам в валюте
+               TotalSummBalance       TFloat, -- Сумма по входным ценам в ГРН
+               TotalSummPriceList     TFloat, -- Сумма по прайсу в документе
+               TotalSummPriceListLast TFloat, -- Сумма по прайсу на сегодня !!!НА!!! zc_DateEnd
 
-               Remains              TFloat,
-               RemainsDebt          TFloat,
-               RemainsAll           TFloat,
-               SummRemainsIn        TFloat,
-               SummRemains          TFloat,
-               CurrencyValue        TFloat,
-               ParValue             TFloat
+               Remains                TFloat, -- Кол-во - остаток в магазине
+               RemainsDebt            TFloat, -- Кол-во - долги по магазину
+               RemainsAll             TFloat, -- Итого остаток кол-во по магазину с учетом долга
+                                      
+               RemainsTotal           TFloat, -- Кол-во - остаток по ВСЕМ магазинам
+               RemainsDebtTotal       TFloat, -- Кол-во - долги по ВСЕМ магазинам
+               RemainsAllTotal        TFloat, -- Итого остаток кол-во по ВСЕМ магазинам с учетом долга
+                                      
+               SummRemainsIn          TFloat, -- Сумма по входным ценам в валюте - остаток по магазину с учетом долга
+               SummRemains            TFloat, -- Сумма по прайсу - остаток по магазину с учетом долга
+               CurrencyValue          TFloat, -- Курс из Документа <Приход от поставщика>
+               ParValue               TFloat  -- Номинал из Документа <Приход от поставщика>
   )
 AS
 $BODY$
@@ -211,9 +216,10 @@ BEGIN
  
    , tmpContainer AS (SELECT Container.PartionId              AS PartionId
                            , Container.ObjectId               AS GoodsId
+                           , Container.WhereObjectId          AS UnitId
                            , SUM (CASE WHEN CLO_Client.ContainerId IS NULL THEN Container.Amount ELSE 0 END) AS Remains
                            , SUM (CASE WHEN CLO_Client.ContainerId > 0     THEN Container.Amount ELSE 0 END) AS RemainsDebt
-                           , SUM (COALESCE (Container.Amount, 0))                                            AS RemainsAll
+                           , SUM (Container.Amount)                                                          AS RemainsAll
 
                       FROM Container
                            INNER JOIN (SELECT DISTINCT tmpData_Partion.GoodsId, tmpData_Partion.PartionId
@@ -226,10 +232,20 @@ BEGIN
                                                         AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
 
                       WHERE Container.DescId = zc_Container_Count()
-                        AND (Container.WhereObjectId = inUnitId OR inUnitId = 0)
+                      --  AND (Container.WhereObjectId = inUnitId OR inUnitId = 0)
                         AND (Container.Amount <> 0)
                       GROUP BY Container.PartionId
                              , Container.ObjectId
+                             , Container.WhereObjectId
+                     )
+,tmpContainer_sum AS (SELECT tmpContainer.PartionId
+                           , tmpContainer.GoodsId
+                           , SUM (tmpContainer.Remains)       AS Remains
+                           , SUM (tmpContainer.RemainsDebt)   AS RemainsDebt
+                           , SUM (tmpContainer.RemainsAll)    AS RemainsAll
+                      FROM tmpContainer
+                      GROUP BY tmpContainer.PartionId
+                             , tmpContainer.ObjectId
                      )
 
     , tmpData AS (SELECT CASE WHEN inIsPartion = TRUE THEN tmp.MovementId ELSE -1 END  AS MovementId 
@@ -265,9 +281,16 @@ BEGIN
                        , SUM (COALESCE (tmpContainer.RemainsDebt, 0))     AS RemainsDebt
                        , SUM (COALESCE (tmpContainer.RemainsAll, 0))      AS RemainsAll
 
+                       , SUM (COALESCE (tmpContainer_sum.Remains, 0))     AS RemainsTotal
+                       , SUM (COALESCE (tmpContainer_sum.RemainsDebt, 0)) AS RemainsDebtTotal
+                       , SUM (COALESCE (tmpContainer_sum.RemainsAll, 0))  AS RemainsAllTotal
+
                   FROM tmpData_Partion AS tmp
                        LEFT JOIN tmpContainer ON tmpContainer.GoodsId    = tmp.GoodsId
                                              AND tmpContainer.PartionId  = tmp.PartionId
+                                             AND tmpContainer.UnitId     = tmp.ToId
+                       LEFT JOIN tmpContainer_sum ON tmpContainer_sum.GoodsId    = tmp.GoodsId
+                                                 AND tmpContainer_sum.PartionId  = tmp.PartionId
                   GROUP BY CASE WHEN inIsPartion = TRUE THEN tmp.MovementId ELSE -1 END
                          , tmp.InvNumber
                          , tmp.OperDate
@@ -336,9 +359,14 @@ BEGIN
            , tmpData.TotalSummPriceList      :: TFloat  AS TotalSummPriceList
            , tmpData.TotalSummPriceListLast  :: TFloat  AS TotalSummPriceListLast
 
-           , tmpData.Remains         :: TFloat  AS Remains
-           , tmpData.RemainsDebt     :: TFloat  AS RemainsDebt
-           , tmpData.RemainsAll      :: TFloat  AS RemainsAll
+           , tmpData.Remains          :: TFloat AS Remains
+           , tmpData.RemainsDebt      :: TFloat AS RemainsDebt
+           , tmpData.RemainsAll       :: TFloat AS RemainsAll
+
+           , tmpData.RemainsTotal     :: TFloat AS RemainsTotal
+           , tmpData.RemainsDebtTotal :: TFloat AS RemainsDebtTotal
+           , tmpData.RemainsAllTotal  :: TFloat AS RemainsAllTotal
+
            , (tmpData.RemainsAll * (CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSumm/ tmpData.Amount ELSE 0 END ))         :: TFloat AS SummRemainsIn  -- сумма ост.итого в валюте
            , (tmpData.RemainsAll * (CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSummPriceList/ tmpData.Amount ELSE 0 END)) :: TFloat AS SummRemains    -- сумма ост.итого в ГРН
            
@@ -381,4 +409,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Movement_Income(inStartDate := ('01.11.2016')::TDateTime , inEndDate := ('01.07.2018')::TDateTime , inUnitId := 506 , inBrandId := 0 , inPartnerId := 0 , inPeriodId := 0 , inStartYear := 0 , inEndYear := 2017 , inisPartion := 'False' , inisSize := 'False' , inisPartner := 'False' ,  inSession := '2');
+-- SELECT * FROM gpReport_Movement_Income (inStartDate := ('01.11.2016')::TDateTime , inEndDate := ('01.07.2018')::TDateTime , inUnitId := 506 , inBrandId := 0 , inPartnerId := 0 , inPeriodId := 0 , inStartYear := 0 , inEndYear := 2017 , inisPartion := 'False' , inisSize := 'False' , inisPartner := 'False' ,  inSession := '2');
