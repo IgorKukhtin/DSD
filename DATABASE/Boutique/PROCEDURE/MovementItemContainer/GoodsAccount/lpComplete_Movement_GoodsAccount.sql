@@ -15,6 +15,10 @@ $BODY$
   DECLARE vbJuridicalId_Basis       Integer; -- значение пока Ќ≈ определ€етс€
   DECLARE vbBusinessId              Integer; -- значение пока Ќ≈ определ€етс€
 BEGIN
+     -- !!!временно - дл€ Sybase!!!
+     -- inUserId := zc_User_Sybase();
+
+
      -- !!!об€зательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
      -- !!!об€зательно!!! очистили таблицу - элементы оплаты, со всеми свойствами дл€ формировани€ јналитик в проводках
@@ -23,9 +27,6 @@ BEGIN
      DELETE FROM _tmpItem_SummClient;
      -- !!!об€зательно!!! очистили таблицу - элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках
      DELETE FROM _tmpItem;
-
-     -- !!!временно - дл€ Sybase!!!
-     inUserId := zc_User_Sybase();
 
 
      -- ѕараметры из документа
