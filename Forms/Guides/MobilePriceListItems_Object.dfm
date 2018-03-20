@@ -138,6 +138,31 @@ object MobilePriceListItems_ObjectForm: TMobilePriceListItems_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object ReturnStartDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1089' ('#1094#1077#1085#1072' '#1074#1086#1079#1074#1088#1072#1090#1072')'
+        DataBinding.FieldName = 'ReturnStartDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 72
+      end
+      object ReturnEndDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1087#1086' ('#1094#1077#1085#1072' '#1074#1086#1079#1074#1088#1072#1090#1072')'
+        DataBinding.FieldName = 'ReturnEndDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 72
+      end
+      object ReturnPrice: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1074#1086#1079#1074#1088#1072#1090#1072
+        DataBinding.FieldName = 'ReturnPrice'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object isSync: TcxGridDBColumn
         Caption = #1057#1080#1085#1093#1088#1086#1085#1080#1079#1080#1088#1091#1077#1090#1089#1103
         DataBinding.FieldName = 'isSync'
