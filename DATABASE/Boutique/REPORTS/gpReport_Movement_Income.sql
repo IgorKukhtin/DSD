@@ -245,7 +245,7 @@ BEGIN
                            , SUM (tmpContainer.RemainsAll)    AS RemainsAll
                       FROM tmpContainer
                       GROUP BY tmpContainer.PartionId
-                             , tmpContainer.ObjectId
+                             , tmpContainer.GoodsId
                      )
 
     , tmpData AS (SELECT CASE WHEN inIsPartion = TRUE THEN tmp.MovementId ELSE -1 END  AS MovementId 
