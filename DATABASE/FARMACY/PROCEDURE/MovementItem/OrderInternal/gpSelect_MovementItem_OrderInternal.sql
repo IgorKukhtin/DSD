@@ -1212,7 +1212,15 @@ BEGIN
                              ) AS DDD
                         WHERE Id = MinId
                        )      
-                               
+        -- чтоб не двоило данные , выбираем  группируем данных с макс датой отгрузки
+      , tmpMI_PriceList AS (SELECT *
+                            FROM (SELECT _tmpMI.*
+                                       , ROW_NUMBER() OVER (PARTITION BY _tmpMI.MovementItemId, _tmpMI.JuridicalId, _tmpMI.GoodsId, _tmpMI.ContractId, _tmpMI.Price ORDER BY _tmpMI.PartionGoodsDate DESC) AS Ord
+                                  FROM _tmpMI
+                                 ) AS DDD
+                            WHERE DDD.Ord = 1
+                            )
+
       , tmpMI AS (SELECT MovementItem.Id
                        , MovementItem.ObjectId                                            AS GoodsId
                        , MovementItem.Amount                                              AS Amount
@@ -1259,11 +1267,10 @@ BEGIN
 
                        LEFT JOIN tmpMIString_Comment AS MIString_Comment ON MIString_Comment.MovementItemId = MovementItem.Id  
 
-                       LEFT JOIN _tmpMI AS PriceList ON COALESCE (PriceList.ContractId, 0) = COALESCE (MILinkObject_Contract.ObjectId, 0) -- двоит данные , а все эти есть в tmpMinPrice
-                                                    AND PriceList.JuridicalId = MILinkObject_Juridical.ObjectId
-                                                    AND PriceList.GoodsId = MILinkObject_Goods.ObjectId
-                                                    AND PriceList.MovementItemId = MovementItem.Id
-                                                    and  1=0
+                       LEFT JOIN tmpMI_PriceList AS PriceList ON COALESCE (PriceList.ContractId, 0) = COALESCE (MILinkObject_Contract.ObjectId, 0)
+                                                AND PriceList.JuridicalId = MILinkObject_Juridical.ObjectId
+                                                AND PriceList.GoodsId = MILinkObject_Goods.ObjectId
+                                                AND PriceList.MovementItemId = MovementItem.Id
 
                        LEFT JOIN tmpMinPrice AS MinPrice ON MinPrice.MovementItemId = MovementItem.Id
                             
