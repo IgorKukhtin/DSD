@@ -3,7 +3,7 @@ unit ExternalLoad;
 interface
 
 uses
-  dsdAction, dsdDb, Classes, DB, ExternalData, ADODB, Winapi.ActiveX, System.Win.COMObj, Vcl.Forms;
+  dsdAction, dsdDb, Classes, DB, ExternalData, ADODB, Winapi.ActiveX, System.Win.COMObj, Vcl.Forms, DBXJSON;
 
 type
 
@@ -73,6 +73,7 @@ type
   public
     ItemName: string;
     Param: TdsdParam;
+    ConvertFormatInExcel: boolean;
     constructor Create(Collection: TCollection); override;
     destructor Destroy; override;
   end;
@@ -87,6 +88,7 @@ type
     HDR: boolean;
     Directory: string;
     Query: string;
+    JSONParamName: string;
     constructor Create(ItemClass: TCollectionItemClass);
     destructor Destroy; override;
   end;
@@ -105,7 +107,7 @@ type
     FImportSettings: TImportSettings;
     FExternalParams: TdsdParams;
     function GetFieldName(AFieldName: AnsiString; AImportSettings: TImportSettings): string;
-    procedure ProcessingOneRow(AExternalLoad: TExternalLoad; AImportSettings: TImportSettings);
+    function ProcessingOneRow(AExternalLoad: TExternalLoad; AImportSettings: TImportSettings): TJSONObject;
   public
     constructor Create(FileType: TDataSetType; FileName: string; ImportSettings: TImportSettings; ExternalParams: TdsdParams = nil); overload;
     constructor Create(ConnectionString, SQL: string; ImportSettings: TImportSettings; ExternalParams: TdsdParams = nil); overload;
@@ -320,7 +322,7 @@ begin
     ElementList := SplitString(StringList[2], #9);
     for I := Low(ElementList) to High(ElementList) do
         if ElementList[i] <> '' then begin
-           Remark := ElementList[i];
+           Remark := ReplaceStr(ElementList[i], '""', '"');
            break;
         end;
     for I := 3 to StringList.Count - 1 do
@@ -405,14 +407,21 @@ begin
   FDataSet.First
 end;
 
-procedure CheckExcelFloat(AFileName: string);
+procedure CheckExcelFloat(AFileName: string; AImportSettings: TCollection);
 const
   ExcelAppName = 'Excel.Application';
 var
   CLSID: TCLSID;
   Excel, Sheet: Variant;
-  Row, Col: Integer;
+  Row, Col, I: Integer;
   X: Int64;
+  aaa:Integer;
+
+  function CheckItemName(AItemName: string): boolean;
+  begin
+    Result := (Trim(AItemName) <> '') and (Pos('%', AItemName) = 0);
+  end;
+
 begin
   if CLSIDFromProgID(PChar(ExcelAppName), CLSID) = S_OK then
   begin
@@ -425,6 +434,12 @@ begin
       Excel.WorkBooks.Open(AFileName);
       Sheet := Excel.WorkBooks[1].WorkSheets[1];
 
+      for I := 0 to AImportSettings.Count - 1 do
+        if CheckItemName(TImportSettingsItems(AImportSettings.Items[i]).ItemName) and
+           TImportSettingsItems(AImportSettings.Items[i]).ConvertFormatInExcel then
+          Sheet.Range[TImportSettingsItems(AImportSettings.Items[i]).ItemName + '1',
+                      TImportSettingsItems(AImportSettings.Items[i]).ItemName + IntToStr(Sheet.UsedRange.Rows.Count)].NumberFormat := 0;
+      {
       for Row := 1 to Sheet.UsedRange.Rows.Count do
         for Col := 1 to Sheet.UsedRange.Columns.Count do
 
@@ -447,7 +462,7 @@ begin
                        Sheet.Cells[Row, Col].NumberFormat := 0;
                        //Sheet.Cells[Row, Col].Value := X;
                      end;
-
+      }
       Excel.WorkBooks[1].Save;
     finally
       if not VarIsEmpty(Excel) then
@@ -517,10 +532,12 @@ begin
          end;
      }
 
+      {
       if Copy(FileName, 1, 3) = '..\' then
         CheckExcelFloat(AnsiReplaceText(UpperCase(ExtractFilePath(Application.ExeName)), '\BIN\', Copy(FileName, 3, Length(FileName))))
       else
         CheckExcelFloat(FileName);
+      }
 
       strConn:='Provider=Microsoft.Jet.OLEDB.4.0;Mode=Read;' +
                'Data Source=' + FileName + ';' +
@@ -610,31 +627,56 @@ begin
 end;
 
 procedure TExecuteProcedureFromExternalDataSet.Load;
+var JsonArray: TJSONArray;
+    dsdProc: TdsdStoredProc;
+    I: integer;
 begin
   with TGaugeFactory.GetGauge('Загрузка данных', 1, FExternalLoad.RecordCount) do begin
     Start;
+    JSONArray := TJSONArray.Create();
     try
+      I := 0;
       while not FExternalLoad.EOF do begin
-        ProcessingOneRow(FExternalLoad, FImportSettings);
+        JSONArray.AddElement(ProcessingOneRow(FExternalLoad, FImportSettings));
         IncProgress;
         FExternalLoad.Next;
       end;
-      FImportSettings.StoredProc.Execute(true);
+
+      {with TStringList.Create do
+      begin
+        Text := JSONArray.ToString;
+        SaveToFile('price.json');
+        Free;
+      end;}
+
+      if FImportSettings.JSONParamName <> '' then
+      begin
+        FImportSettings.StoredProc.ParamByName(FImportSettings.JSONParamName).Value := JSONArray.ToString;
+        FImportSettings.StoredProc.Execute;
+      end
+      else
+        FImportSettings.StoredProc.Execute(true);
+
       FExternalLoad.Close;
     finally
+     JSONArray.Free;
      Finish
     end;
   end;
 end;
 
-procedure TExecuteProcedureFromExternalDataSet.ProcessingOneRow(AExternalLoad: TExternalLoad;
-  AImportSettings: TImportSettings);
+function TExecuteProcedureFromExternalDataSet.ProcessingOneRow(AExternalLoad: TExternalLoad;
+  AImportSettings: TImportSettings): TJSONObject;
 var i: integer;
     D: TDateTime;
     Value: OleVariant;
     Ft: double;
     Field: TField;
     vbFieldName: string;
+    cParamName: string;
+    JSONObject: TJSONObject;
+    bJSON: boolean;
+    vParamValue: Variant;
 
   function AdaptStr(S: string): string;
   var
@@ -660,7 +702,31 @@ var i: integer;
     end;
   end;
 
+  procedure AddParamToJSON(AName: string; AValue: Variant; ADataType: TFieldType);
+  var intValue: integer;
+  begin
+    if AValue = NULL then
+      JSONObject.AddPair(AName, TJSONNull.Create)
+    else if ADataType = ftDateTime then
+      JSONObject.AddPair(AName, FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz', AValue))
+    else if ADataType = ftFloat then
+      JSONObject.AddPair(AName, TJSONNumber.Create(AValue))
+    else if ADataType = ftInteger then
+    begin
+      if TryStrToInt(AValue, intValue) then
+        JSONObject.AddPair(cParamName, TJSONNumber.Create(intValue))
+      else
+        JSONObject.AddPair(AName, TJSONNull.Create);
+    end
+    else
+      JSONObject.AddPair(cParamName, ReplaceText(String(AValue), '\', '\\'));
+  end;
+
 begin
+  bJSON := AImportSettings.JSONParamName <> '';
+  Result := nil;
+  if bJSON then
+    JSONObject := TJSONObject.Create;
   with AImportSettings do begin
     for i := 0 to Count - 1 do begin
         if TImportSettingsItems(Items[i]).ItemName = '%OBJECT%' then
@@ -685,49 +751,69 @@ begin
                end
                else
                begin
+                 cParamName := LowerCase(TImportSettingsItems(Items[i]).Param.Name);
                  if TImportSettingsItems(Items[i]).ItemName <> '' then begin
                     vbFieldName := GetFieldName(TImportSettingsItems(Items[i]).ItemName, AImportSettings);
                     Field := AExternalLoad.FDataSet.FindField(vbFieldName);
                     if not Assigned(Field) then
                        raise Exception.Create('Не найдено значение для ячейки ' + TImportSettingsItems(Items[i]).ItemName);
-                    case StoredProc.Params[i].DataType of
+                    case TImportSettingsItems(Items[i]).Param.DataType of
                       ftDateTime: begin
+                         D := 0;
                          if Field.Value = null then
-                             StoredProc.Params.Items[i].Value := Null
+                             vParamValue := Null
                          else
                            try
                              Value := Field.Value;
                              D := VarToDateTime(Value);
-                             StoredProc.Params.Items[i].Value := D;
+                             vParamValue := D;
+
                            except
                              on E: EVariantTypeCastError do
-                                StoredProc.Params.Items[i].Value := Date;
+                                vParamValue := Date;
                              on E: Exception do
                                 raise E;
                            end;
+                        if bJSON then
+                          AddParamToJSON(cParamName, vParamValue, TImportSettingsItems(Items[i]).Param.DataType)
+                        else
+                          StoredProc.Params.Items[i].Value := vParamValue;
                       end;
                       ftFloat: begin
                          try
                            Value := Field.Value;
                            Ft := gfStrToFloat(Value);
-                           StoredProc.Params.Items[i].Value := Ft;
+                           vParamValue := Ft;
                          except
                            on E: EVariantTypeCastError do
-                              StoredProc.Params.Items[i].Value := 0;
+                              vParamValue := 0;
                            on E: Exception do
                               raise E;
                          end;
+                        if bJSON then
+                          AddParamToJSON(cParamName, vParamValue, TImportSettingsItems(Items[i]).Param.DataType)
+                        else
+                          StoredProc.Params.Items[i].Value := vParamValue;
                       end
                       else
+                      begin
                         if VarIsNULL(Field.Value) then
-                          StoredProc.Params.Items[i].Value := ''
+                          vParamValue := ''
                         else
-                          StoredProc.Params.Items[i].Value := Trim(AdaptStr(Field.Value));
+                          vParamValue := Trim(AdaptStr(Field.Value));
+                        if bJSON then
+                          AddParamToJSON(cParamName, vParamValue, TImportSettingsItems(Items[i]).Param.DataType)
+                        else
+                          StoredProc.Params.Items[i].Value := vParamValue;
+                      end;
                     end;
                  end;
           end;
     end;
-    StoredProc.Execute;
+    if not bJSON then
+      StoredProc.Execute
+    else
+      Result := JSONObject;
   end;
 end;
 
@@ -774,15 +860,33 @@ begin
 
           TStringList(saFound).Sort;
           for I := 0 to saFound.Count - 1 do
+          begin
+              // конвертируем формат для штрихкодов (только для Excel)
+              if ImportSettings.FileType = dtXLS then
+              begin
+                if Copy(saFound[i], 1, 3) = '..\' then
+                  CheckExcelFloat(AnsiReplaceText(UpperCase(ExtractFilePath(Application.ExeName)),
+                                                  '\BIN\',
+                                                  Copy(saFound[i], 3, Length(saFound[i]))),
+                                  ImportSettings)
+                else
+                  CheckExcelFloat(saFound[i], ImportSettings);
+              end;
+
               with TExecuteProcedureFromExternalDataSet.Create(ImportSettings.FileType, saFound[i], ImportSettings, ExternalParams) do
                 try
                   // Загрузили if + в try с 09.06.2016 - Konstantin
                   if Assigned(ExternalParams) and Assigned(ExternalParams.ParamByName('isNext_aftErr')) and (ExternalParams.ParamByName('isNext_aftErr').Value = TRUE)
-                  then try Load; fErr:= false;
+                  then
+                  try
+                    Load;
+                    fErr:= false;
                        except
                            on E: Exception do begin
                               fErr:= true;
-                              TextMessage:=trim (Copy(E.Message, 1, pos('context', AnsilowerCase(E.Message)) - 1));
+                              TextMessage := E.Message;
+                              if pos('context', AnsilowerCase(TextMessage)) > 0 then
+                                TextMessage:=trim (Copy(TextMessage, 1, pos('context', AnsilowerCase(TextMessage)) - 1));
                               if TextMessage <> ''
                               then TextMessage := ' - ' + ReplaceStr(TextMessage, 'ERROR:', 'ОШИБКА:');
                               //добавили в список не загруженных файлов
@@ -804,6 +908,7 @@ begin
                 finally
                   Free;
                 end;
+          end;
         finally
           saFound.Free
         end;
@@ -855,6 +960,7 @@ begin
   GetStoredProc.Params.AddParam('Directory', ftString, ptOutput, '');
   GetStoredProc.Params.AddParam('ProcedureName', ftString, ptOutput, '');
   GetStoredProc.Params.AddParam('Query', ftString, ptOutput, '');
+  GetStoredProc.Params.AddParam('JSONParamName', ftString, ptOutput, '');
 
   GetStoredProc.Execute;
   {Заполняем параметрами процедуру}
@@ -868,15 +974,17 @@ begin
   Result.ContractId := StrToIntDef(GetStoredProc.Params.ParamByName('ContractId').AsString, 0);
   Result.HDR := GetStoredProc.Params.ParamByName('HDR').Value;
   Result.Query := GetStoredProc.Params.ParamByName('Query').Value;
+  Result.JSONParamName := GetStoredProc.Params.ParamByName('JSONParamName').Value;
 
   //if Result.Directory = '' then begin
-  //   Result.StoredProc.OutputType := otResult;
-  //   Result.StoredProc.PackSize := 1;
-  //end
-  //else begin
+  if Result.JSONParamName <> '' then begin
+     Result.StoredProc.OutputType := otResult;
+     Result.StoredProc.PackSize := 1;
+  end
+  else begin
      Result.StoredProc.OutputType := otMultiExecute;
      Result.StoredProc.PackSize := 100;
-  //end;
+  end;
 
   Result.StoredProc.StoredProcName := GetStoredProc.Params.ParamByName('ProcedureName').Value;
 
@@ -896,15 +1004,26 @@ begin
       FieldType := TFieldType(GetEnumValue(TypeInfo(TFieldType), FieldByName('ParamType').asString));
       with TImportSettingsItems(Result.Add) do begin
         ItemName := FieldByName('ParamValue').asString;
+        Param.DataType := FieldType;
+        Param.Name := FieldByName('ParamName').asString;
+        ConvertFormatInExcel := FieldByName('ConvertFormatInExcel').asBoolean;
         if FieldByName('DefaultValue').AsString = '' then
            Param.Value := GetDefaultByFieldType(FieldType)
         else
            Param.Value := FieldByName('DefaultValue').AsString;
-        Result.StoredProc.Params.AddParam(FieldByName('ParamName').asString, FieldType, ptInput, Param.Value);
+
+        if ((Result.JSONParamName <> '') and
+              ((Pos('%', FieldByName('ParamValue').asString) > 0) or (FieldByName('DefaultValue').AsString <> '')))
+           or
+           (Result.JSONParamName = '') then
+          Result.StoredProc.Params.AddParam(FieldByName('ParamName').asString, FieldType, ptInput, Param.Value);
       end;
       Next;
     end;
   end;
+
+  if Result.JSONParamName <> '' then
+    Result.StoredProc.Params.AddParam(Result.JSONParamName, ftWideString, ptInput, NULL);
 
 end;
 
@@ -1017,3 +1136,4 @@ initialization
   Classes.RegisterClass (TExecuteImportSettingsAction);
 
 end.
+

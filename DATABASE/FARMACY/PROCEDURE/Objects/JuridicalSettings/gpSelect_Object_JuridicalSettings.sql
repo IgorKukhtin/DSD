@@ -41,7 +41,7 @@ BEGIN
                              WHERE ObjectLink_MainJuridical.DescId = zc_ObjectLink_ContractSettings_MainJuridical()
                              ) 
 
- ,  tmpMainJuridicalArea AS (SELECT DISTINCT  ObjectLink_JuridicalRetail.ObjectId      AS MainJuridicalId
+ ,  tmpMainJuridicalArea AS (SELECT DISTINCT ObjectLink_JuridicalRetail.ObjectId      AS MainJuridicalId
                                  ,  ObjectLink_Unit_Area.ChildObjectId AS AreaId
                             FROM ObjectLink AS ObjectLink_JuridicalRetail 
                                  LEFT JOIN ObjectLink AS OL_Unit_Juridical 
@@ -85,7 +85,8 @@ BEGIN
            , LoadPriceList.Date_Update                          AS UpdateDate
 
        FROM LastPriceList_View 
-            LEFT JOIN tmpMainJuridicalArea ON (COALESCE (LastPriceList_View.AreaId, 0) = COALESCE (tmpMainJuridicalArea.AreaId, 0))
+            JOIN tmpMainJuridicalArea ON ( LastPriceList_View.AreaId = COALESCE (tmpMainJuridicalArea.AreaId, 0)
+                                          OR COALESCE (LastPriceList_View.AreaId, 0)  = 0)
             LEFT JOIN Object AS Object_MainJuridical ON Object_MainJuridical.Id = tmpMainJuridicalArea.MainJuridicalId
                                
             JOIN Object AS Object_Juridical ON Object_Juridical.Id = LastPriceList_View.JuridicalId
@@ -187,6 +188,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 21.03.18         *
  15.02.18         *
  17.10.17         * add Area
  09.11.16         * add inIsShowErased, Insert, Update
