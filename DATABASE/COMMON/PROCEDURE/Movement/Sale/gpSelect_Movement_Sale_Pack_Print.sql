@@ -148,6 +148,11 @@ BEGIN
                                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                           )
+   , tmpMI_Boolean AS (SELECT MovementItemBoolean.*
+                       FROM MovementItemBoolean
+                       WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMI.MI_Id FROM tmpMI)
+                         AND MovementItemBoolean.DescId = zc_MIBoolean_BarCode()
+                        )
      , tmpMI_Float AS (SELECT MovementItemFloat.*
                        FROM MovementItemFloat
                        WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.MI_Id FROM tmpMI)
@@ -161,8 +166,10 @@ BEGIN
                          )
      , tmpMovementItem AS (SELECT tmpMI.MovementId                           AS MovementId
                                 , tmpMI.GoodsId                              AS GoodsId
-                                , SUM (tmpMI.Amount)                         AS Amount
-                                , SUM (tmpMI.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) AS AmountWeight
+                                , SUM (CASE WHEN MIBoolean_BarCode.ValueData = TRUE THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE tmpMI.Amount END) AS Amount
+                                , SUM (CASE WHEN MIBoolean_BarCode.ValueData = TRUE THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE tmpMI.Amount END
+                                     * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END
+                                      ) AS AmountWeight
                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)     AS GoodsKindId
                                -- , tmpMI.GoodsKindId
                                 , MAX (COALESCE (MIFloat_LevelNumber.ValueData, 0)) AS LevelNumber
@@ -171,6 +178,9 @@ BEGIN
                                 , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) AS AmountPartnerWeight
                                 , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS AmountPartnerSh
                            FROM tmpMI
+                                LEFT JOIN tmpMI_Boolean AS MIBoolean_BarCode
+                                                        ON MIBoolean_BarCode.MovementItemId = tmpMI.MI_Id
+                                                       AND MIBoolean_BarCode.DescId         = zc_MIBoolean_BarCode()
                                 LEFT JOIN tmpMI_Float AS MIFloat_AmountPartner
                                                       ON MIFloat_AmountPartner.MovementItemId = tmpMI.MI_Id
                                                      AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
@@ -381,6 +391,24 @@ BEGIN
            , tmpMovementItem.AmountPartnerWeight                          :: TFloat AS AmountPartnerWeight
            , tmpMovementItem.AmountPartnerSh                              :: TFloat AS AmountPartnerSh
 
+             -- ВЕС Скидка + потери - ?хотя может быть надо было учесть ТОЛЬКО Скидку?
+           , (tmpMovementItem.AmountWeight - tmpMovementItem.AmountPartnerWeight) :: TFloat AS AmountWeight_diff
+
+             -- ВЕС БРУТТО - учитывается скидка за вес
+           , (-- "чистый" вес "со склада" - ???почему по ТЗ скидка за вес НЕ должна учитываться???
+              tmpMovementItem.AmountWeight
+            + -- плюс Вес "гофроящиков"
+              COALESCE (tmpMovementItem.BoxCount, 0) * COALESCE (tmpObject_GoodsPropertyValue.GoodsBox_Weight, 0)
+            + -- плюс Вес Упаковок (пакетов)
+              CASE WHEN COALESCE (ObjectFloat_WeightTotal.ValueData, 0) /*- COALESCE (ObjectFloat_WeightPackage.ValueData, 0)*/ > 0
+                        THEN -- "чистый" вес "у покупателя" ДЕЛИМ НА вес в упаковке: "чистый" вес + вес 1-ого пакета МИНУС вес 1-ого пакета
+                             CAST (tmpMovementItem.AmountPartnerWeight / (COALESCE (ObjectFloat_WeightTotal.ValueData, 0) /*- COALESCE (ObjectFloat_WeightPackage.ValueData, 0)*/) AS NUMERIC (16, 0))
+                           * -- вес 1-ого пакета
+                             COALESCE (ObjectFloat_WeightPackage.ValueData, 0)
+                   ELSE 0
+              END
+             ) :: TFloat AS AmountWeightWithBox
+
              -- ВЕС БРУТТО
            , (-- "чистый" вес "у покупателя" - ???почему по ТЗ скидка за вес НЕ должна учитываться???
               tmpMovementItem.AmountPartnerWeight
@@ -395,6 +423,7 @@ BEGIN
                    ELSE 0
               END
              ) :: TFloat AS AmountPartnerWeightWithBox
+
 
              -- Кол-во Упаковок (пакетов)
            , CASE WHEN COALESCE (ObjectFloat_WeightTotal.ValueData, 0) /*- COALESCE (ObjectFloat_WeightPackage.ValueData, 0)*/ > 0

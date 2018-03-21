@@ -291,7 +291,7 @@ BEGIN
                             INNER JOIN ContainerLinkObject AS CLO_Member
                                                            ON CLO_Member.ContainerId = Container.Id
                                                           AND CLO_Member.DescId      = zc_ContainerLinkObject_Member()
-                                                          AND CLO_Member.ObjectId    = (SELECT DISTINCT MemberId_From FROM _tmpItem WHERE MemberId_From <> 0)
+                                                          AND CLO_Member.ObjectId    = (SELECT DISTINCT tmpMI.MemberId_From FROM tmpMI WHERE tmpMI.MemberId_From <> 0)
                             INNER JOIN ContainerLinkObject AS CLO_PartionGoods
                                                            ON CLO_PartionGoods.ContainerId = Container.Id
                                                           AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
@@ -385,7 +385,9 @@ BEGIN
 
 
      -- Проверка - т.к.для этих УП-статей могли искать партии - надо что б товар был уникальным
-     IF EXISTS (SELECT _tmpItem.GoodsId FROM _tmpItem
+     IF EXISTS (SELECT _tmpItem.GoodsId
+                FROM (SELECT DISTINCT _tmpItem.MovementItemId, _tmpItem.GoodsId, _tmpItem.InfoMoneyDestinationId FROM _tmpItem
+                     ) AS _tmpItem
                 WHERE _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
                                                         , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                         , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
@@ -394,20 +396,34 @@ BEGIN
                 HAVING COUNT(*) > 1)
      THEN
           RAISE EXCEPTION 'Ошибка.В документе нельзя дублировать товар <%>.'
-              , lfGet_Object_ValueData (
-               (SELECT _tmpItem.GoodsId FROM _tmpItem
-                WHERE _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
-                                                        , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
-                                                        , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
-                                                         )
-                GROUP BY _tmpItem.GoodsId
-                HAVING COUNT(*) > 1));
+              , lfGet_Object_ValueData ((SELECT _tmpItem.GoodsId
+                                         FROM (SELECT _tmpItem.GoodsId
+                                               FROM (SELECT DISTINCT _tmpItem.MovementItemId, _tmpItem.GoodsId, _tmpItem.InfoMoneyDestinationId FROM _tmpItem
+                                                    ) AS _tmpItem
+                                               WHERE _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                                                       , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                                                       , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                                                        )
+                                               GROUP BY _tmpItem.GoodsId
+                                               HAVING COUNT(*) > 1
+                                              ) AS _tmpItem
+                                              LIMIT 1
+                                        ));
      END IF;
 
 
 
      -- формируются Партии товара, ЕСЛИ надо ...
-     UPDATE _tmpItem SET PartionGoodsId_From = CASE WHEN _tmpItem.ObjectDescId     = zc_Object_Asset()
+     UPDATE _tmpItem SET PartionGoodsId_From = CASE WHEN (_tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                                                         )
+                                                      AND _tmpItem.PartionGoodsId_Item > 0
+                                                      -- AND _tmpItem.MemberId_From       > 0
+                                                        THEN _tmpItem.PartionGoodsId_Item
+
+                                                    WHEN _tmpItem.ObjectDescId     = zc_Object_Asset()
                                                       OR _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
                                                       OR ((_tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
@@ -466,14 +482,19 @@ BEGIN
                                                                                            , zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
                                                         THEN 0
 
-                                                    WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
-                                                      OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
-                                                      OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
-                                                      OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
-                                                        THEN _tmpItem.PartionGoodsId_Item
                                                     ELSE lpInsertFind_Object_PartionGoods ('')
                                                END
-                         , PartionGoodsId_To = CASE WHEN _tmpItem.ObjectDescId     = zc_Object_Asset()
+                         , PartionGoodsId_To = CASE WHEN (_tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                                                         )
+                                                      AND _tmpItem.PartionGoodsId_Item > 0
+                                                      AND _tmpItem.MemberId_From       > 0
+                                                      AND _tmpItem.MemberId_To         > 0
+                                                        THEN _tmpItem.PartionGoodsId_Item
+
+                                                    WHEN _tmpItem.ObjectDescId     = zc_Object_Asset()
                                                       OR _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
                                                       OR ((_tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
@@ -1022,6 +1043,9 @@ $BODY$
  19.07.13                                        *
 */
 
+/*
+Форма Перемещение МО - новый селект - по остаткам ПАРТИЙ на "МО от кого" - показать в гриде партии zc_ContainerLinkObject_AssetTo + zc_ContainerLinkObject_PartionGoods : zc_ObjectLink_PartionGoods_Unit + zc_ObjectLink_PartionGoods_Storage = Место хранения + Object.ValueData = Инв Номер + zc_ObjectDate_PartionGoods_Value = Дата перемещения + zc_ObjectFloat_PartionGoods_Price = "Цена списания" и сохранять в gpInsertUpdate_MovementItem_SendMember ТОЛЬКО 1) inGoodsId + inGoodsKindId + inAssetId + inPartionGoodsDate + ioPartionGoods + inUnitId + inStorageId - ОСТАЛЬНОЕ УБИРАЕМ + из селекта тоже + в гриде меняются для партии только StorageId , Т.Е. на показать ВСЕ - SELECT Container union all  MovementItem где парам партии + товар +inAssetId  это ключ и строчки не должны дублироваться + Если это перемещение со склада НА МО - тогда в zc_ContainerLinkObject_PartionGoods для склада = нулл , и берем это св-во из проводок для МО, а если не проведен тогда  а на "показать ВСЕ" ключ будет GoodsId + GoodsKindId
+*/
 -- тест
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 579, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpComplete_Movement_Send (inMovementId:= 5854348, inIsLastComplete:= FALSE, inSession:= zfCalc_UserAdmin())

@@ -1,3 +1,6 @@
+-- select * from _pg_del where Name like '%del%' union all select * from _pg_upd where Name like '%del%'  and OperDate >= ToDay() order by 5
+-- select count(*), min(OperDate), max (OperDate), min(BillDate), max (BillDate)  from _pg_upd where Name not like '%del%' and OperDate >= ToDay()
+
   select * from Unit inner join DiscountKlient on DiscountKlient.ClientId = Unit.id where KindUnit = zc_kuClient()  and Id_Postgres is null order by 1
 -- Ўибко ƒмитрий,ёл€ - 20% - 25%
 
