@@ -24,6 +24,7 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale_Pack_Print());
      vbUserId:= lpGetUserBySession (inSession);
 
+
      -- Дата
      vbOperDatePartner:= (SELECT COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDatePartner
                           FROM Movement
