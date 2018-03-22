@@ -673,35 +673,51 @@ BEGIN
                                       WHERE tmpMIF.DescId = zc_MIFloat_JuridicalPrice()
                                       )           
       , tmpMIString_Maker AS (SELECT MIString_Maker.*
-                              FROM tmpMI_Child
-                                   LEFT JOIN MovementItemString AS MIString_Maker 
-                                                                ON MIString_Maker.DescId = zc_MIString_Maker()
-                                                               AND MIString_Maker.MovementItemId = tmpMI_Child.Id             -- ----and 1=0
+                              FROM MovementItemString AS MIString_Maker 
+                              WHERE MIString_Maker.DescId = zc_MIString_Maker()
+                                AND MIString_Maker.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
                               ) 
       , tmpJuridical AS (SELECT MILinkObject_Juridical.MovementItemId
-                                    , Object_Juridical.Id                 AS JuridicalId
-                                    , Object_Juridical.ValueData          AS JuridicalName
-                         FROM tmpMI_Child
-                              LEFT JOIN MovementItemLinkObject AS MILinkObject_Juridical 
-                                                               ON MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()     ------and 1=0
-                                                              AND MILinkObject_Juridical.MovementItemId = tmpMI_Child.Id
-                              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MILinkObject_Juridical.ObjectId 
+                              , Object_Juridical.Id                 AS JuridicalId
+                              , Object_Juridical.ValueData          AS JuridicalName
+                         FROM MovementItemLinkObject AS MILinkObject_Juridical 
+                              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MILinkObject_Juridical.ObjectId
+                         WHERE MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()     ------and 1=0
+                           AND MILinkObject_Juridical.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
                         ) 
-      , tmpContract AS (SELECT MILinkObject_Contract.MovementItemId
-                                    , Object_Contract.Id                 AS ContractId
-                                    , Object_Contract.ValueData          AS ContractName
-                                    , ObjectFloat_Deferment.ValueData    AS Deferment
-                        FROM tmpMI_Child
-                             LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract 
-                                                              ON MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-                                                             AND MILinkObject_Contract.MovementItemId = tmpMI_Child.Id     
-                             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MILinkObject_Contract.ObjectId
-                 
-                             LEFT JOIN ObjectFloat AS ObjectFloat_Deferment 
-                                                   ON ObjectFloat_Deferment.ObjectId = Object_Contract.Id
-                                                  AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
-                        ) 
-           
+      --
+      , tmpContract_ AS (SELECT MILinkObject_Contract.MovementItemId
+                              , MILinkObject_Contract.ObjectId      AS ContractId
+                        FROM MovementItemLinkObject AS MILinkObject_Contract 
+                        WHERE MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                          AND MILinkObject_Contract.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
+                        )
+      , tmpOF_Deferment AS (SELECT ObjectFloat_Deferment.*
+                            FROM ObjectFloat AS ObjectFloat_Deferment 
+                            WHERE ObjectFloat_Deferment.ObjectId IN (SELECT DISTINCT tmpContract_.ContractId FROM tmpContract_)
+                              AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
+                           ) 
+      , tmpContract AS (SELECT tmpContract_.MovementItemId
+                             , Object_Contract.Id                 AS ContractId
+                             , Object_Contract.ValueData          AS ContractName
+                             , ObjectFloat_Deferment.ValueData    AS Deferment
+                        FROM tmpContract_ 
+                             LEFT JOIN tmpOF_Deferment AS ObjectFloat_Deferment 
+                                                       ON ObjectFloat_Deferment.ObjectId = tmpContract_.ContractId
+                                                      AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
+                             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpContract_.ContractId
+                        )
+      ---
+      , tmpOF_MinimumLot AS (SELECT ObjectFloat_Goods_MinimumLot.*
+                             FROM ObjectFloat AS ObjectFloat_Goods_MinimumLot
+                             WHERE ObjectFloat_Goods_MinimumLot.ObjectId IN (SELECT DISTINCT tmpMI_Child.ObjectId FROM tmpMI_Child) 
+                               AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
+                             ) 
+      , tmpOL_ConditionsKeep AS (SELECT ObjectLink.*
+                                 FROM ObjectLink
+                                 WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpMI_Child.ObjectId FROM tmpMI_Child) 
+                                   AND ObjectLink.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+                                 ) 
       , tmpGoods AS (SELECT tmpMI_Child.ObjectId             AS GoodsId
                           , Object_Goods.ObjectCode          AS GoodsCode
                           , Object_Goods.ValueData           AS GoodsName 
@@ -709,14 +725,14 @@ BEGIN
                           , Object_ConditionsKeep.ValueData           AS ConditionsKeepName
                      FROM tmpMI_Child
                           -- условия хранения
-                          LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
-                                               ON ObjectLink_Goods_ConditionsKeep.ObjectId = tmpMI_Child.ObjectId
-                                              AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+                          LEFT JOIN tmpOL_ConditionsKeep AS ObjectLink_Goods_ConditionsKeep 
+                                                         ON ObjectLink_Goods_ConditionsKeep.ObjectId = tmpMI_Child.ObjectId
+                                                        --AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
                           LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
              
-                          LEFT JOIN ObjectFloat AS ObjectFloat_Goods_MinimumLot
-                                                ON ObjectFloat_Goods_MinimumLot.ObjectId = tmpMI_Child.ObjectId 
-                                               AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
+                          LEFT JOIN tmpOF_MinimumLot AS ObjectFloat_Goods_MinimumLot
+                                                     ON ObjectFloat_Goods_MinimumLot.ObjectId = tmpMI_Child.ObjectId 
+                                               --AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
              
                           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI_Child.ObjectId
                     )
