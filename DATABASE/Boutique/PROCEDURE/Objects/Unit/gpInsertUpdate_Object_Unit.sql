@@ -8,6 +8,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                       Integer   ,    -- Ключ объекта <Подразделения> 
@@ -24,6 +25,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inChildId                  Integer   ,    -- ключ объекта <Склад>
     IN inBankAccountId            Integer   ,    -- ключ объекта <Расчетный счет>
     IN inAccountDirectionId       Integer   ,    -- ключ объекта <Аналитики управленческих счетов - направление>
+    IN inGoodsGroupId             Integer   ,    -- ключ объекта <Группа товара>
     IN inSession                  TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -82,7 +84,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_BankAccount(), ioId, inBankAccountId);
    -- сохранили связь с <Аналитики управленческих счетов - направление>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_AccountDirection(), ioId, inAccountDirectionId);
-
+   -- сохранили связь с <Группа товара>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_GoodsGroup(), ioId, inGoodsGroupId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -96,6 +99,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятикин А.А.
+22.03.18          * 
 05.03.18          *
 27.02.18          * Printer
 07.06.17          * add AccountDirection

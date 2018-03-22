@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ChildId Integer, ChildName  TVarChar
              , BankAccountId Integer, BankAccountName  TVarChar
              , AccountDirectionId Integer, AccountDirectionName TVarChar
+             , GoodsGroupId Integer, GoodsGroupName  TVarChar
              , isPartnerBarCode Boolean
 ) 
 AS
@@ -46,6 +47,8 @@ BEGIN
            , '' :: TVarChar                         AS BankAccountName        
            ,  0 :: Integer                          AS AccountDirectionId
            , '' :: TVarChar                         AS AccountDirectionName 
+           ,  0 :: Integer                          AS GoodsGroupId          
+           , '' :: TVarChar                         AS GoodsGroupName
            , FALSE :: Boolean                       AS isPartnerBarCode
        ;
    ELSE
@@ -70,6 +73,9 @@ BEGIN
 
            , Object_AccountDirection.Id         AS AccountDirectionId
            , Object_AccountDirection.ValueData  AS AccountDirectionName  
+
+           , Object_GoodsGroup.Id           AS GoodsGroupId
+           , Object_GoodsGroup.ValueData    AS GoodsGroupName
 
            , COALESCE (ObjectBoolean_PartnerBarCode.ValueData, FALSE) :: Boolean  AS isPartnerBarCode     
        FROM Object AS Object_Unit
@@ -119,6 +125,11 @@ BEGIN
                                 AND ObjectLink_Unit_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()
             LEFT JOIN Object AS Object_AccountDirection ON Object_AccountDirection.Id = ObjectLink_Unit_AccountDirection.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_GoodsGroup
+                                 ON ObjectLink_Unit_GoodsGroup.ObjectId = Object_Unit.Id
+                                AND ObjectLink_Unit_GoodsGroup.DescId = zc_ObjectLink_Unit_GoodsGroup()
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Unit_GoodsGroup.ChildObjectId
+
       WHERE Object_Unit.Id = inId;
 
    END IF;
@@ -132,6 +143,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+22.03.18          *
 05.03.18          *
 27.02.18          * Printer
 07.06.17          * add AccountDirection
