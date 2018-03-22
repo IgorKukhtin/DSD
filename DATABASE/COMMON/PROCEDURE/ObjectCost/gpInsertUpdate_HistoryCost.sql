@@ -517,10 +517,14 @@ end if;
         FROM MIContainer_Count_Out
              JOIN MIContainer_Summ_Out ON MIContainer_Summ_Out.MovementId     = MIContainer_Count_Out.MovementId
                                       AND MIContainer_Summ_Out.MovementItemId = MIContainer_Count_Out.MovementItemId
+             JOIN Container AS Container_Summ_Out ON Container_Summ_Out.Id       = MIContainer_Summ_Out.ContainerId
+                                                 AND Container_Summ_Out.ParentId = MIContainer_Count_Out.ContainerId
 
              JOIN MIContainer_Summ_In ON MIContainer_Summ_In.ParentId = MIContainer_Summ_Out.ParentId
+             JOIN Container AS Container_Summ_In ON Container_Summ_In.Id       = MIContainer_Summ_In.ContainerId
 
              JOIN MIContainer_Count_In ON MIContainer_Count_In.MovementItemId = MIContainer_Summ_In.MovementItemId
+                                      AND MIContainer_Count_In.ContainerId    = Container_Summ_In.ParentId
 
              LEFT JOIN MovementLinkObject AS MovementLinkObject_User
                                           ON MovementLinkObject_User.MovementId = MIContainer_Count_Out.MovementId
@@ -556,7 +560,7 @@ end if;
                -- , MIContainer_Count_Out.MovementDescId
         ;
 
-     END IF; -- if inBranchId >= 0
+     END IF; -- if inBranchId = 0
 
 
 /*     -- добавляются связи которых нет (т.к. нулевые проводки не формируются)
