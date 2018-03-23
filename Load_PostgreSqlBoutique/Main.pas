@@ -2096,6 +2096,14 @@ begin
      Begin
       pLoadGuide_GoodsGroup;
       pLoadGuide_GoodsGroup;
+      pLoadGuide_GoodsGroup;
+      pLoadGuide_GoodsGroup;
+      pLoadGuide_GoodsGroup;
+      pLoadGuide_GoodsGroup;
+      pLoadGuide_GoodsGroup;
+      pLoadGuide_GoodsGroup;
+      pLoadGuide_GoodsGroup;
+      pLoadGuide_GoodsGroup;
      End;
      if not fStop then pLoadGuide_Discount;
      if not fStop then pLoadGuide_DiscountTools;
@@ -6351,6 +6359,7 @@ begin
         Add('where Goods.HasChildren <> zc_hsLeaf()');
         Add('  and (Goods_find.ParentId is null'); // !!!последнюю группу не загружаем, но кроме АРХИВА
         Add('    or Goods_child.Id > 0)');
+        Add('  and (Goods_parent.Id_Postgres is not null or Goods.ParentId is null)');
         Add('order by ObjectId');
         Open;
         //

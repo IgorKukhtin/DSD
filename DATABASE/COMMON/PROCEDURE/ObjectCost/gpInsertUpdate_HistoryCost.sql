@@ -989,7 +989,7 @@ end if;
         ;
      END IF; -- if inInsert <> 12345
 
-
+/*
 delete from HistoryCost where HistoryCost.ContainerId
 in (
 
@@ -1012,7 +1012,7 @@ and Object.Id in (8459, 8451)
 )
  and StartDate  >=  '01.03.2018' 
 ;
-
+*/
 
 END;
 $BODY$
