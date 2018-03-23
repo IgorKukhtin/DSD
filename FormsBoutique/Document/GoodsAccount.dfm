@@ -521,6 +521,14 @@ object GoodsAccountForm: TGoodsAccountForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+                    object LineNum: TcxGridDBColumn [0]
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'LineNum'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 40
+          end
           object OperDate_Sale: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1087#1088#1086#1076#1072#1078#1072') '
             DataBinding.FieldName = 'OperDate_Sale'
@@ -1400,7 +1408,6 @@ object GoodsAccountForm: TGoodsAccountForm
       Caption = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 14
-      ShortCut = 113
     end
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
@@ -1474,6 +1481,18 @@ object GoodsAccountForm: TGoodsAccountForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actGet_TotalSumm_byClient: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_TotalSumm_byClient
+      StoredProcList = <
+        item
+          StoredProc = spGet_TotalSumm_byClient
+        end>
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1083#1080#1077#1085#1090#1072
+      ImageIndex = 4
       RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh
@@ -2015,8 +2034,8 @@ object GoodsAccountForm: TGoodsAccountForm
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
-    Left = 456
-    Top = 256
+    Left = 464
+    Top = 296
     object N1: TMenuItem
       Action = actRefresh
     end
@@ -2172,8 +2191,8 @@ object GoodsAccountForm: TGoodsAccountForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 362
-    Top = 248
+    Left = 330
+    Top = 240
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -2783,8 +2802,8 @@ object GoodsAccountForm: TGoodsAccountForm
       end
       item
       end>
-    Left = 360
-    Top = 280
+    Left = 376
+    Top = 288
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -3137,13 +3156,108 @@ object GoodsAccountForm: TGoodsAccountForm
     IdParam.MultiSelectSeparator = ','
     ChangerList = <
       item
-        Control = edTo
+        Control = edFrom
       end
       item
-        Control = edFrom
+        Control = edTo
       end>
-    Action = actInsertUpdateMovement
-    Left = 328
-    Top = 221
+    Action = actGet_TotalSumm_byClient
+    Left = 432
+    Top = 213
+  end
+  object spGet_TotalSumm_byClient: TdsdStoredProc
+    StoredProcName = 'gpGet_TotalSumm_byClient'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inClientId'
+        Value = 0c
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LastDate'
+        Value = 42864d
+        Component = edLastDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSumm'
+        Value = 0.000000000000000000
+        Component = edTotalSumm
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSummPay'
+        Value = 0.000000000000000000
+        Component = edTotalSummPay
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalDebt'
+        Value = 0.000000000000000000
+        Component = edTotalDebt
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountTax'
+        Value = 0.000000000000000000
+        Component = edDiscountTax
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'HappyDate'
+        Value = 42864d
+        Component = edHappyDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountTaxTwo'
+        Value = 0.000000000000000000
+        Component = edDiscountTaxTwo
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment_Client'
+        Value = ''
+        Component = ceComment_Client
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PhoneMobile'
+        Value = ''
+        Component = cePhoneMobile
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Phone'
+        Value = ''
+        Component = cePhone
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 656
+    Top = 224
   end
 end

@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Sale(
     IN inIsErased         Boolean      , --
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, PartionId Integer
+RETURNS TABLE (Id Integer, LineNum Integer, PartionId Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , CompositionName TVarChar
@@ -211,6 +211,7 @@ BEGIN
        -- результат
        SELECT
              tmpMI.Id
+           , CAST (ROW_NUMBER() OVER (ORDER BY tmpMI.Id) AS Integer) AS LineNum
            , tmpMI.PartionId
            , Object_Goods.Id                AS GoodsId
            , Object_Goods.ObjectCode        AS GoodsCode
@@ -308,6 +309,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 23.03.18         *
  06.03.18         *
  10.05.17         *
 */

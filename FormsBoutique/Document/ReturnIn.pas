@@ -185,6 +185,8 @@ type
     actGet_Printer: TdsdExecStoredProc;
     mactPrintCheck: TMultiAction;
     HeaderChanger: THeaderChanger;
+    spGet_TotalSumm_byClient: TdsdStoredProc;
+    actGet_TotalSumm_byClient: TdsdDataSetRefresh;
   private
   public
   end;

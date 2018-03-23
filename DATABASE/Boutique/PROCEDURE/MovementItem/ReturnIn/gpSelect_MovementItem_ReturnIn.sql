@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ReturnIn(
     IN inIsErased         Boolean      , -- 
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, PartionId Integer
+RETURNS TABLE (Id Integer, LineNum Integer, PartionId Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , CompositionGroupName TVarChar
@@ -340,6 +340,7 @@ BEGIN
        -- результат
        SELECT
              tmpMI.Id                         :: Integer AS Id
+           , CAST (ROW_NUMBER() OVER (ORDER BY tmpMI.Id) AS Integer) AS LineNum
            , tmpMI.PartionId                  :: Integer AS PartionId
            , Object_Goods.Id                             AS GoodsId
            , Object_Goods.ObjectCode                     AS GoodsCode
@@ -580,6 +581,7 @@ BEGIN
        -- результат
        SELECT
              tmpMI.Id                                          :: Integer AS Id
+           , CAST (ROW_NUMBER() OVER (ORDER BY tmpMI.Id) AS Integer)      AS LineNum
            , tmpMI.PartionId                                   :: Integer AS PartionId
            , Object_Goods.Id                                              AS GoodsId
            , Object_Goods.ObjectCode                                      AS GoodsCode
@@ -772,6 +774,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 23.03.18         *
  21.06.17         *
  15.05.17         *
 */
