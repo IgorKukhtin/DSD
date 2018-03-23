@@ -224,5 +224,7 @@ END;$BODY$
 */
 
 -- тест
+-- SELECT * FROM ObjectString where DescId = zc_ObjectString_MobileConst_MobileVersion()
+-- update ObjectString set ValueData = '1.41.0' where  DescId = zc_ObjectString_MobileConst_MobileVersion()
 -- SELECT * FROM gpGetMobile_Object_Const (inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpGetMobile_Object_Const (inSession:= '1000168')

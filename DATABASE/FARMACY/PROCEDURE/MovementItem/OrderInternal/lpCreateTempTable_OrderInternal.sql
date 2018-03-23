@@ -95,13 +95,14 @@ BEGIN
                                   WHERE ObjectLink_JuridicalArea_Juridical.DescId        = zc_ObjectLink_JuridicalArea_Juridical()
                                  ) 
 
-              , MovementItemOrder AS (SELECT MovementItem.*, ObjectLink_Main.ChildObjectId AS GoodsMainId, ObjectLink_LinkGoods_Goods.ChildObjectId AS GoodsId
+              , MovementItemOrder AS (SELECT MovementItem.*
+                                           , ObjectLink_Main.ChildObjectId AS GoodsMainId, ObjectLink_LinkGoods_Goods.ChildObjectId AS GoodsId
                                       FROM MovementItem    
                                        --  INNER JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = MovementItem.ObjectId -- Связь товара сети с общим
                                        -- получаем GoodsMainId
                                            INNER JOIN  ObjectLink AS ObjectLink_Child 
-                                                                 ON ObjectLink_Child.ChildObjectId = MovementItem.ObjectId
-                                                                AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                                                  ON ObjectLink_Child.ChildObjectId = MovementItem.ObjectId
+                                                                 AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
                                            LEFT JOIN  ObjectLink AS ObjectLink_Main 
                                                                  ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                                                 AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
@@ -110,18 +111,18 @@ BEGIN
                                          --                                  ON PriceList_GoodsLink.GoodsMainId = Object_LinkGoods_View.GoodsMainId
                                            -- товары сети по главному GoodsMainId
                                            LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain 
-                                                                  ON ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()  
-                                                                 AND ObjectLink_LinkGoods_GoodsMain.ChildObjectId = ObjectLink_Main.ChildObjectId --Object_LinkGoods_View.GoodsMainId
+                                                                ON ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()  
+                                                               AND ObjectLink_LinkGoods_GoodsMain.ChildObjectId = ObjectLink_Main.ChildObjectId --Object_LinkGoods_View.GoodsMainId
                                       
                                            LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
-                                                           ON ObjectLink_LinkGoods_Goods.ObjectId = ObjectLink_LinkGoods_GoodsMain.ObjectId
-                                                          AND ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                                                ON ObjectLink_LinkGoods_Goods.ObjectId = ObjectLink_LinkGoods_GoodsMain.ObjectId
+                                                               AND ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
                                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Area
                                                                 ON ObjectLink_Goods_Area.ObjectId = ObjectLink_LinkGoods_Goods.ChildObjectId
                                                                AND ObjectLink_Goods_Area.DescId   = zc_ObjectLink_Goods_Area()
                                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Object
-                                                             ON ObjectLink_Goods_Object.ObjectId = ObjectLink_LinkGoods_Goods.ChildObjectId
-                                                             AND ObjectLink_Goods_Object.DescId   = zc_ObjectLink_Goods_Object()
+                                                                ON ObjectLink_Goods_Object.ObjectId = ObjectLink_LinkGoods_Goods.ChildObjectId
+                                                               AND ObjectLink_Goods_Object.DescId   = zc_ObjectLink_Goods_Object()
                                            LEFT JOIN JuridicalArea ON JuridicalArea.JuridicalId = ObjectLink_Goods_Object.ChildObjectId
 
                                       WHERE MovementItem.MovementId = inMovementId
@@ -214,7 +215,7 @@ BEGIN
                   , MovementItemLastPriceList_View.Price AS Price
                   , MovementItemLastPriceList_View.MovementItemId AS PriceListMovementItemId
                   , MovementItemLastPriceList_View.PartionGoodsDate
-                  , min(MovementItemLastPriceList_View.Price) OVER (PARTITION BY MovementItemOrder.Id) AS MinPrice
+                  , MIN (MovementItemLastPriceList_View.Price) OVER (PARTITION BY MovementItemOrder.Id ORDER BY MovementItemLastPriceList_View.PartionGoodsDate DESC) AS MinPrice
                   , CASE 
                       -- если Цена поставщика >= PriceLimit (до какой цены учитывать бонус при расчете миним. цены)
                       WHEN COALESCE (JuridicalSettings.PriceLimit, 0) <= MovementItemLastPriceList_View.Price
@@ -236,11 +237,11 @@ BEGIN
                   , MovementItemLastPriceList_View.GoodsCode
                   , MovementItemLastPriceList_View.GoodsName
                   , MovementItemLastPriceList_View.MakerName 
-                  , MainGoods.valuedata AS MainGoodsName
-                  , Juridical.ID AS JuridicalId
-                  , Juridical.ValueData AS JuridicalName
-                  , Contract.Id AS ContractId
-                  , Contract.ValueData AS ContractName
+                  , MainGoods.valuedata                       AS MainGoodsName
+                  , Juridical.ID                              AS JuridicalId
+                  , Juridical.ValueData                       AS JuridicalName
+                  , Contract.Id                               AS ContractId
+                  , Contract.ValueData                        AS ContractName
                   , COALESCE (ObjectFloat_Deferment.ValueData, 0)::Integer AS Deferment
                   , COALESCE (GoodsPrice.isTOP, COALESCE (ObjectBoolean_Goods_TOP.ValueData, FALSE)) AS isTOP
             

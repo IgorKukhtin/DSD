@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<ActiveMobileDevice>
-		<NoProfile iOSSimulator="iPhone5" Android="VSP7GUJN7L6PCMLB"/>
+		<NoProfile iOSSimulator="iPhone5" Android="3100f69eecef432b"/>
 	</ActiveMobileDevice>
 	<Transactions>
-    <Transaction>1899.12.30 00:00:00.000.565,=C:\DSD\DSD.GIT\ProjectMobile\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.511,C:\DSD\DSD.GIT\ProjectMobile\uIntf.pas=C:\DSD\DSD.GIT\ProjectMobile\Unit1.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.722,=C:\DSD\DSD.GIT\ProjectMobile\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.141,C:\DSD\DSD.GIT\ProjectMobile\uExec.pas=C:\DSD\DSD.GIT\ProjectMobile\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.141,C:\DSD\DSD.GIT\ProjectMobile\Unit1.pas=C:\DSD\DSD.GIT\ProjectMobile\uExec.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.511,C:\DSD\DSD.GIT\ProjectMobile\Unit1.pas=C:\DSD\DSD.GIT\ProjectMobile\uIntf.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.401,=C:\DSD\DSD.GIT\ProjectMobile\uCache.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.565,=C:\DSD\DSD.GIT\ProjectMobile\Unit1.pas</Transaction>
   </Transactions>
 </BorlandProject>

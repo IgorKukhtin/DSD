@@ -61,106 +61,101 @@ BEGIN
                                   AND MovementItem.DescId     = zc_MI_Master()
                                   AND ((inGoodsId = 0) OR (inGoodsId = MovementItem.ObjectId))
                             )
+        ----
+        , tmpMIB AS (SELECT MovementItemBoolean.*
+                     FROM MovementItemBoolean 
+                     WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT MovementItemOrder.Id FROM MovementItemOrder)
+                    )
 
-        , tmpMIB_MCSNotRecalc AS (SELECT MIBoolean_MCSNotRecalc.*
-                                  FROM MovementItemOrder
-                                       LEFT JOIN MovementItemBoolean AS MIBoolean_MCSNotRecalc
-                                              ON MIBoolean_MCSNotRecalc.MovementItemId = MovementItemOrder.Id
-                                             AND MIBoolean_MCSNotRecalc.DescId = zc_MIBoolean_MCSNotRecalc()
+        , tmpMIB_MCSNotRecalc AS (SELECT tmpMIB.*
+                                  FROM tmpMIB
+                                  WHERE tmpMIB.DescId = zc_MIBoolean_MCSNotRecalc()
                                  )
           
-        , tmpMIB_MCSIsClose AS (SELECT MIBoolean_MCSIsClose.*
-                                FROM MovementItemOrder
-                                     LEFT JOIN MovementItemBoolean AS MIBoolean_MCSIsClose
-                                            ON MIBoolean_MCSIsClose.MovementItemId = MovementItemOrder.Id
-                                           AND MIBoolean_MCSIsClose.DescId = zc_MIBoolean_MCSIsClose()
+        , tmpMIB_MCSIsClose AS (SELECT tmpMIB.*
+                                  FROM tmpMIB
+                                  WHERE tmpMIB.DescId = zc_MIBoolean_MCSIsClose()
                                 )
 
-        , tmpMIB_Close AS (SELECT MIBoolean_Close.*
-                           FROM MovementItemOrder
-                                LEFT JOIN MovementItemBoolean AS MIBoolean_Close 
-                                       ON MIBoolean_Close.DescId = zc_MIBoolean_Close()
-                                      AND MIBoolean_Close.MovementItemId = MovementItemOrder.Id
+        , tmpMIB_Close AS (SELECT tmpMIB.*
+                                  FROM tmpMIB
+                                  WHERE tmpMIB.DescId = zc_MIBoolean_Close()
                           )
-        , tmpMIB_First AS (SELECT MIBoolean_First.*
-                           FROM MovementItemOrder
-                                LEFT JOIN MovementItemBoolean AS MIBoolean_First
-                                       ON MIBoolean_First.DescId = zc_MIBoolean_First()
-                                      AND MIBoolean_First.MovementItemId = MovementItemOrder.Id
+        , tmpMIB_First AS (SELECT tmpMIB.*
+                                  FROM tmpMIB
+                                  WHERE tmpMIB.DescId = zc_MIBoolean_First()
                            )
-        , tmpMIB_Second AS (SELECT MIBoolean_Second.*
-                            FROM MovementItemOrder
-                                 LEFT JOIN MovementItemBoolean AS MIBoolean_Second
-                                        ON MIBoolean_Second.DescId = zc_MIBoolean_Second()
-                                       AND MIBoolean_Second.MovementItemId = MovementItemOrder.Id
+        , tmpMIB_Second AS (SELECT tmpMIB.*
+                                  FROM tmpMIB
+                                  WHERE tmpMIB.DescId = zc_MIBoolean_Second()
                            )
-        , tmpMIB_TOP AS (SELECT MIBoolean_TOP.*
-                         FROM MovementItemOrder
-                              LEFT JOIN MovementItemBoolean AS MIBoolean_TOP
-                                     ON MIBoolean_TOP.DescId = zc_MIBoolean_TOP()
-                                    AND MIBoolean_TOP.MovementItemId = MovementItemOrder.Id
+        , tmpMIB_TOP AS (SELECT tmpMIB.*
+                                  FROM tmpMIB
+                                  WHERE tmpMIB.DescId = zc_MIBoolean_TOP()
                          )
-        , tmpMIB_UnitTOP AS (SELECT MIBoolean_UnitTOP.*
-                             FROM MovementItemOrder
-                                  LEFT JOIN MovementItemBoolean AS MIBoolean_UnitTOP
-                                         ON MIBoolean_UnitTOP.DescId = zc_MIBoolean_UnitTOP()
-                                        AND MIBoolean_UnitTOP.MovementItemId = MovementItemOrder.Id
+        , tmpMIB_UnitTOP AS (SELECT tmpMIB.*
+                                  FROM tmpMIB
+                                  WHERE tmpMIB.DescId = zc_MIBoolean_UnitTOP()
                             )
- 
+        ----
         , tmpMIS_Maker AS (SELECT MIString_Maker.*
                            FROM MovementItemOrder
                                 LEFT JOIN MovementItemString AS MIString_Maker 
                                        ON MIString_Maker.MovementItemId = MovementItemOrder.Id
                                       AND MIString_Maker.DescId = zc_MIString_Maker()
                           )
-    
-        , tmpMIF_MinimumLot AS (SELECT MIFloat_MinimumLot.*
-                                FROM MovementItemOrder
-                                     LEFT JOIN MovementItemFloat AS MIFloat_MinimumLot                                             
-                                            ON MIFloat_MinimumLot.DescId = zc_MIFloat_MinimumLot()
-                                           AND MIFloat_MinimumLot.MovementItemId = MovementItemOrder.Id
+        ----
+        , tmpMIF AS (SELECT MovementItemFloat.*
+                     FROM MovementItemFloat
+                     WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT MovementItemOrder.Id FROM MovementItemOrder)
+                     )
+                     
+        , tmpMIF_MinimumLot AS (SELECT tmpMIF.*
+                                FROM tmpMIF
+                                WHERE tmpMIF.DescId = zc_MIFloat_MinimumLot()
                                 )
   
-        , tmpMIF_MCS AS (SELECT MIFloat_MCS.*
-                         FROM MovementItemOrder
-                              LEFT JOIN MovementItemFloat AS MIFloat_MCS                                           
-                                     ON MIFloat_MCS.DescId = zc_MIFloat_MCS()
-                                    AND MIFloat_MCS.MovementItemId = MovementItemOrder.Id 
+        , tmpMIF_MCS AS (SELECT tmpMIF.*
+                         FROM tmpMIF
+                         WHERE tmpMIF.DescId = zc_MIFloat_MCS()
                          )
-        , tmpMIF_Remains AS (SELECT MIFloat_Remains.*
-                             FROM MovementItemOrder
-                                  LEFT JOIN MovementItemFloat AS MIFloat_Remains
-                                         ON MIFloat_Remains.MovementItemId = MovementItemOrder.Id
-                                        AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
+        , tmpMIF_Remains AS (SELECT tmpMIF.*
+                             FROM tmpMIF
+                             WHERE tmpMIF.DescId = zc_MIFloat_Remains()
                              )
-        , tmpMIF_Income AS (SELECT MIFloat_Income.*
-                            FROM MovementItemOrder
-                                 LEFT JOIN MovementItemFloat AS MIFloat_Income
-                                        ON MIFloat_Income.MovementItemId = MovementItemOrder.Id
-                                       AND MIFloat_Income.DescId = zc_MIFloat_Income()  
+        , tmpMIF_Income AS (SELECT tmpMIF.*
+                            FROM tmpMIF
+                            WHERE tmpMIF.DescId = zc_MIFloat_Income()  
                             )
-        , tmpMIF_Check AS (SELECT MIFloat_Check.*
-                           FROM MovementItemOrder
-                                LEFT JOIN MovementItemFloat AS MIFloat_Check
-                                       ON MIFloat_Check.MovementItemId = MovementItemOrder.Id
-                                      AND MIFloat_Check.DescId = zc_MIFloat_Check() 
+        , tmpMIF_Check AS (SELECT tmpMIF.*
+                           FROM tmpMIF
+                           WHERE tmpMIF.DescId = zc_MIFloat_Check() 
                            )
-        , tmpMIF_Send AS (SELECT MIFloat_Send.*
-                          FROM MovementItemOrder
-                               LEFT JOIN MovementItemFloat AS MIFloat_Send
-                                      ON MIFloat_Send.MovementItemId = MovementItemOrder.Id
-                                     AND MIFloat_Send.DescId = zc_MIFloat_Send()
+        , tmpMIF_Send AS (SELECT tmpMIF.*
+                          FROM tmpMIF
+                          WHERE tmpMIF.DescId = zc_MIFloat_Send()
                          )
-        , tmpMIF_AmountDeferred AS (SELECT MIFloat_AmountDeferred.*
-                                    FROM MovementItemOrder
-                                         LEFT JOIN MovementItemFloat AS MIFloat_AmountDeferred
-                                                ON MIFloat_AmountDeferred.MovementItemId = MovementItemOrder.Id
-                                               AND MIFloat_AmountDeferred.DescId = zc_MIFloat_AmountDeferred()
+        , tmpMIF_AmountDeferred AS (SELECT tmpMIF.*
+                                    FROM tmpMIF
+                                    WHERE tmpMIF.DescId = zc_MIFloat_AmountDeferred()
                                     )
+        , tmpMI_LO AS (SELECT MovementItemLinkObject.*
+                       FROM MovementItemLinkObject
+                       WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT MovementItemOrder.Id FROM MovementItemOrder)
+                         AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Contract()
+                                                             , zc_MILinkObject_Juridical()
+                                                             , zc_MILinkObject_Goods())
+                       )
+        , tmpMIDate AS (SELECT MovementItemDate.*
+                        FROM MovementItemDate
+                        WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT MovementItemOrder.Id FROM MovementItemOrder)
+                          AND MovementItemDate.DescId = zc_MIDate_PartionGoods()
+                        )
 
          SELECT row_number() OVER ()
             , MovementItem.Id                      AS MovementItemId
-            , Object_Goods.Id                      AS GoodsId
+            , MovementItem.ObjectId                AS GoodsId
+            --, Object_Goods.Id                      AS GoodsId
             , Object_PartnerGoods.Id               AS PartnerGoodsId
             
             , Object_Juridical.Id                  AS JuridicalId
@@ -190,26 +185,28 @@ BEGIN
             , MovementItem.isErased
 
          FROM MovementItemOrder AS MovementItem
-              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+              --LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
-              LEFT JOIN MovementItemLinkObject AS MILinkObject_Juridical 
-                                               ON MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()
-                                              AND MILinkObject_Juridical.MovementItemId = MovementItem.Id
-              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MILinkObject_Juridical.ObjectId AND Object_Juridical.DescId = zc_Object_Juridical()
+              LEFT JOIN tmpMI_LO AS MILinkObject_Juridical 
+                                 ON MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()
+                                AND MILinkObject_Juridical.MovementItemId = MovementItem.Id
+              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MILinkObject_Juridical.ObjectId 
+                                                  AND Object_Juridical.DescId = zc_Object_Juridical()
               
-              LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract 
-                                               ON MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-                                              AND MILinkObject_Contract.MovementItemId = MovementItem.Id
+              LEFT JOIN tmpMI_LO AS MILinkObject_Contract 
+                                 ON MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                                AND MILinkObject_Contract.MovementItemId = MovementItem.Id
               LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MILinkObject_Contract.ObjectId AND Object_Contract.DescId = zc_Object_Contract()
               
-              LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods 
-                                               ON MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-                                              AND MILinkObject_Goods.MovementItemId = MovementItem.Id
-              LEFT JOIN Object AS Object_PartnerGoods ON Object_PartnerGoods.Id = MILinkObject_Goods.ObjectId AND Object_PartnerGoods.DescId = zc_Object_Goods()
+              LEFT JOIN tmpMI_LO AS MILinkObject_Goods 
+                                 ON MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                                AND MILinkObject_Goods.MovementItemId = MovementItem.Id
+              LEFT JOIN Object AS Object_PartnerGoods ON Object_PartnerGoods.Id = MILinkObject_Goods.ObjectId 
+                                                     AND Object_PartnerGoods.DescId = zc_Object_Goods()
 
-              LEFT JOIN MovementItemDate AS MIDate_PartionGoods                                        
-                                         ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
-                                        AND MIDate_PartionGoods.MovementItemId = MovementItem.Id
+              LEFT JOIN tmpMIDate AS MIDate_PartionGoods                                        
+                                  ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                                 AND MIDate_PartionGoods.MovementItemId = MovementItem.Id
 
               LEFT JOIN tmpMIB_Close   AS MIBoolean_Close   ON MIBoolean_Close.MovementItemId   = MovementItem.Id
               LEFT JOIN tmpMIB_First   AS MIBoolean_First   ON MIBoolean_First.MovementItemId   = MovementItem.Id
@@ -238,6 +235,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 20.03.18         *
  09.04.17         * ÓÔÚËÏËÁ‡ˆËˇ
  22.12.16         * add AmountDeferred
  04.08.16         *  

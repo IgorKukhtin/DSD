@@ -547,6 +547,14 @@ object ReturnInForm: TReturnInForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object LineNum: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'LineNum'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 40
+          end
           object OperDate_Sale: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1087#1088#1086#1076#1072#1078#1072') '
             DataBinding.FieldName = 'OperDate_Sale'
@@ -2285,6 +2293,20 @@ object ReturnInForm: TReturnInForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
       ImageIndex = 15
     end
+    object actGet_TotalSumm_byClient: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_TotalSumm_byClient
+      StoredProcList = <
+        item
+          StoredProc = spGet_TotalSumm_byClient
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1083#1080#1077#1085#1090#1072
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -3627,8 +3649,103 @@ object ReturnInForm: TReturnInForm
       item
         Control = edFrom
       end>
-    Action = actInsertUpdateMovement
+    Action = actGet_TotalSumm_byClient
     Left = 400
     Top = 173
+  end
+  object spGet_TotalSumm_byClient: TdsdStoredProc
+    StoredProcName = 'gpGet_TotalSumm_byClient'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inClientId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LastDate'
+        Value = 42864d
+        Component = edLastDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSumm'
+        Value = 0.000000000000000000
+        Component = edTotalSumm
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSummPay'
+        Value = 0.000000000000000000
+        Component = edTotalSummPay
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalDebt'
+        Value = 0.000000000000000000
+        Component = edTotalDebt
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountTax'
+        Value = 0.000000000000000000
+        Component = edDiscountTax
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'HappyDate'
+        Value = 42864d
+        Component = edHappyDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountTaxTwo'
+        Value = 0.000000000000000000
+        Component = edDiscountTaxTwo
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment_Client'
+        Value = ''
+        Component = ceComment_Client
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PhoneMobile'
+        Value = ''
+        Component = cePhoneMobile
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Phone'
+        Value = ''
+        Component = cePhone
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 656
+    Top = 224
   end
 end

@@ -2096,6 +2096,14 @@ begin
      Begin
       pLoadGuide_GoodsGroup;
       pLoadGuide_GoodsGroup;
+      pLoadGuide_GoodsGroup;
+      pLoadGuide_GoodsGroup;
+      pLoadGuide_GoodsGroup;
+      pLoadGuide_GoodsGroup;
+      pLoadGuide_GoodsGroup;
+      pLoadGuide_GoodsGroup;
+      pLoadGuide_GoodsGroup;
+      pLoadGuide_GoodsGroup;
      End;
      if not fStop then pLoadGuide_Discount;
      if not fStop then pLoadGuide_DiscountTools;
@@ -6351,6 +6359,7 @@ begin
         Add('where Goods.HasChildren <> zc_hsLeaf()');
         Add('  and (Goods_find.ParentId is null'); // !!!последнюю группу не загружаем, но кроме АРХИВА
         Add('    or Goods_child.Id > 0)');
+        Add('  and (Goods_parent.Id_Postgres is not null or Goods.ParentId is null)');
         Add('order by ObjectId');
         Open;
         //
@@ -7607,8 +7616,8 @@ begin
         toStoredProc.Params.AddParam ('inChildId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inBankAccountId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAccountDirectionId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsGroupId',ftInteger,ptInput, 0);
         //
-
         while not EOF do
         begin
 
@@ -7646,17 +7655,21 @@ end;
 
 procedure TMainForm.pLoadGuide_User;
 var AdminId : Integer;
-    tmp, RoleId, RoleId_Admin, RoleId_Mag : Integer;
+    tmp, RoleId, RoleId_Admin, RoleId_Mag, RoleId_Mag_two, RoleId_Mag_mm : Integer;
 begin
      if (not cbUser.Checked)or(not cbUser.Enabled) then exit;
      //
      fOpenSqToQuery (' SELECT zfCalc_UserAdmin() as AdminId'
                    + '     , (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 1) AS RoleId_Admin'
                    + '     , (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 2) AS RoleId_Mag'
+                   + '     , (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 3) AS RoleId_Mag_two'
+                   + '     , (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 4) AS RoleId_Mag_mm'
                     );
      AdminId      :=toSqlQuery.FieldByName('AdminId').AsInteger;
      RoleId_Admin :=toSqlQuery.FieldByName('RoleId_Admin').AsInteger;
      RoleId_Mag   :=toSqlQuery.FieldByName('RoleId_Mag').AsInteger;
+     RoleId_Mag_two:=toSqlQuery.FieldByName('RoleId_Mag_two').AsInteger;
+     RoleId_Mag_mm:=toSqlQuery.FieldByName('RoleId_Mag_mm').AsInteger;
      //
      myEnabledCB(cbUser);
      //
@@ -7796,6 +7809,36 @@ begin
              if tmp > 0
              then fOpenSqToQuery (' SELECT lpInsertUpdate_ObjectLink (zc_ObjectLink_UserRole_Role(), '+IntToStr(tmp)+', '+IntToStr(RoleId)+')'
                                        +', lpInsertUpdate_ObjectLink (zc_ObjectLink_UserRole_User(), '+IntToStr(tmp)+', '+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+')');
+             //
+             // !!! RoleId_Mag_two !!!
+             if RoleId = RoleId_Mag then
+             begin
+                 if FieldByName('UnitId').AsInteger = 235
+                 then RoleId:= RoleId_Mag_mm
+                 else RoleId:= RoleId_Mag_two;
+                 //
+                 fOpenSqToQuery (' SELECT lpInsertUpdate_Object (0, zc_Object_UserRole(), 0, '''') as RetV'
+                               + ' where NOT EXISTS(SELECT 1'
+                               + '                 FROM Object'
+                               + '                      JOIN ObjectLink AS UserRole_Role'
+                               + '                                      ON UserRole_Role.descId = zc_ObjectLink_UserRole_Role()'
+                               + '                                     AND UserRole_Role.childObjectId = ' + IntToStr(RoleId)
+                               + '                                     AND UserRole_Role.ObjectId = Object.Id'
+                               + '                      JOIN ObjectLink AS UserRole_User'
+                               + '                                      ON UserRole_User.descId = zc_ObjectLink_UserRole_User()'
+                               + '                                     AND UserRole_User.childObjectId = ' + IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
+                               + '                                     AND UserRole_User.ObjectId = Object.Id'
+                               + '                 WHERE Object.descId = zc_Object_UserRole()'
+                               + '                )'
+                                );
+                 tmp :=toSqlQuery.FieldByName('RetV').AsInteger;
+                 if tmp > 0
+                 then fOpenSqToQuery (' SELECT lpInsertUpdate_ObjectLink (zc_ObjectLink_UserRole_Role(), '+IntToStr(tmp)+', '+IntToStr(RoleId)+')'
+                                           +', lpInsertUpdate_ObjectLink (zc_ObjectLink_UserRole_User(), '+IntToStr(tmp)+', '+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+')');
+             end;
+             // !!! RoleId_Mag_two !!!
+
+             //
              //
              Next;
              Application.ProcessMessages;

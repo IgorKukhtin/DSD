@@ -3684,6 +3684,8 @@ end;
 procedure TfrmMain.bOptimizeDBClick(Sender: TObject);
 begin
   try
+    DM.conMain.ExecSQL('DELETE FROM MOVEMENT_ROUTEMEMBER');
+
     DM.conMain.ExecSQL('DELETE FROM Object_GoodsByGoodsKind WHERE isErased = 1');
     DM.conMain.ExecSQL('DELETE FROM Object_GoodsListSale WHERE isErased = 1');
 
@@ -3695,6 +3697,9 @@ begin
      + '    AND NOT EXISTS (SELECT 1 FROM  MOVEMENT_STOREREAL WHERE MOVEMENT_STOREREAL.PARTNERID = OBJECT_PARTNER.ID)'
      + '    AND NOT EXISTS (SELECT 1 FROM  MOVEMENT_VISIT WHERE MOVEMENT_VISIT.PARTNERID = OBJECT_PARTNER.ID)'
      + '    AND NOT EXISTS (SELECT 1 FROM  MOVEMENTITEM_TASK WHERE MOVEMENTITEM_TASK.PARTNERID = OBJECT_PARTNER.ID)');
+
+    DM.conMain.ExecSQL('pragma integrity_check');
+    DM.conMain.ExecSQL('VACUUM');
 
     ShowMessage('Оптимизация базы данных успешно завершена');
   except

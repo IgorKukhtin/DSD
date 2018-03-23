@@ -20,6 +20,9 @@ RETURNS TABLE (Id             Integer
              , SaleStartDate  TDateTime -- Дата с которой действует цена отгрузки
              , SaleEndDate    TDateTime -- Дата до которой действует цена отгрузки
              , SalePrice      TFloat    -- Цена отгрузки
+             , ReturnStartDate TDateTime -- Дата с которой действует цена возврата
+             , ReturnEndDate   TDateTime -- Дата до которой действует цена возврата
+             , ReturnPrice     TFloat    -- Цена возврата
              , isSync         Boolean   -- Синхронизируется (да/нет)
               )
 AS
@@ -52,6 +55,11 @@ BEGIN
             , tmpMobilePriceListItems.SaleStartDate
             , tmpMobilePriceListItems.SaleEndDate
             , tmpMobilePriceListItems.SalePrice
+
+            , tmpMobilePriceListItems.ReturnStartDate
+            , tmpMobilePriceListItems.ReturnEndDate
+            , tmpMobilePriceListItems.ReturnPrice
+                  
             , tmpMobilePriceListItems.isSync
 
         FROM gpSelectMobile_Object_PriceListItems (zc_DateStart(), vbUserId_Mobile :: TVarChar) AS tmpMobilePriceListItems

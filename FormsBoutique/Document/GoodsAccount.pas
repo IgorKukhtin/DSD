@@ -168,8 +168,9 @@ type
     bb_User: TdxBarButton;
     spGet_Printer: TdsdStoredProc;
     actGet_Printer: TdsdExecStoredProc;
-    macPrintCheck: TMultiAction;
     HeaderChanger: THeaderChanger;
+    actGet_TotalSumm_byClient: TdsdDataSetRefresh;
+    spGet_TotalSumm_byClient: TdsdStoredProc;
   private
   public
   end;

@@ -25,22 +25,47 @@ RETURNS record
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbName_Sybase TVarChar;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Client());
    vbUserId:= lpGetUserBySession (inSession);
 
 
+   -- !!!Замена!!!
+   inName:= TRIM (inName);
+
+
    -- ВРЕМЕННО - для Sybase найдем Id
    IF vbUserId = zc_User_Sybase()
    THEN
+       -- !!!поиск!!!
+       vbName_Sybase:= (SELECT gpGet_Object_Client_NEW_SYBASE (inName));
+       -- !!!Замена!!!
+       IF vbName_Sybase <> '' THEN inName:=  vbName_Sybase; END IF;
+
+       -- !!!Замена!!!
        ioId:= (SELECT Object.Id
                FROM Object
                WHERE Object.DescId    = zc_Object_Client()
                  AND TRIM (LOWER (Object.ValueData)) = TRIM (LOWER (inName))
               );
-       --
-       -- IF ioId <> 0 THEN PERFORM gpUnComplete_Movement_Currency (ioId, inSession); END IF;
+
+       -- сохраняем предыдущий !!!Коммент!!!
+       IF ioId > 0 AND TRIM (inComment) = ''
+       THEN inComment:= COALESCE ((SELECT ObjectString.ValueData FROM ObjectString WHERE ObjectString.ObjectId = ioId AND ObjectString.DescId = zc_ObjectString_Client_Comment()), '');
+       END IF;
+       
+       -- сохраняем предыдущий !!!DiscountTax!!!
+       IF ioId > 0 AND COALESCE (inDiscountTax, 0) = 0
+       THEN inDiscountTax:= COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = ioId AND ObjectFloat.DescId = zc_ObjectFloat_Client_DiscountTax()), 0);
+       END IF;
+
+       -- сохраняем предыдущий !!!DiscountTax!!!
+       IF ioId > 0 AND inDiscountTax > 0 AND inDiscountTax > COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ValueData <> 0 AND ObjectFloat.ObjectId = ioId AND ObjectFloat.DescId = zc_ObjectFloat_Client_DiscountTax()), inDiscountTax)
+       THEN inDiscountTax:= COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ValueData <> 0 AND ObjectFloat.ObjectId = ioId AND ObjectFloat.DescId = zc_ObjectFloat_Client_DiscountTax()), inDiscountTax);
+       END IF;
+
    END IF;
 
 

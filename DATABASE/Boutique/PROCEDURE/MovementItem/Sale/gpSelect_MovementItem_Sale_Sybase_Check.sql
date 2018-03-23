@@ -172,37 +172,37 @@ BEGIN
               FROM (SELECT *
                            -- !!!ПРОВЕЛИ - вернули обратно!!!
                          , CASE WHEN tmp.MovementDescId = zc_Movement_Sale()
-                                     THEN gpComplete_Movement_Sale (tmp.MovementId_go, zfCalc_UserAdmin())
+                                     THEN gpComplete_Movement_Sale (tmp.MovementId_go, zc_User_Sybase() :: TVarChar)
 
                                 WHEN tmp.MovementDescId = zc_Movement_GoodsAccount()
-                                     THEN gpComplete_Movement_GoodsAccount (tmp.MovementId_go, zfCalc_UserAdmin())
+                                     THEN gpComplete_Movement_GoodsAccount (tmp.MovementId_go, zc_User_Sybase() :: TVarChar)
 
                                 WHEN tmp.MovementDescId = zc_Movement_ReturnIn()
-                                     THEN gpComplete_Movement_ReturnIn (tmp.MovementId_go, zfCalc_UserAdmin())
+                                     THEN gpComplete_Movement_ReturnIn (tmp.MovementId_go, zc_User_Sybase() :: TVarChar)
                            END AS x3
                     FROM
                    (SELECT *
                            -- !!!удалили!!!
                          , CASE WHEN tmp.MovementDescId = zc_Movement_Sale()
-                                     THEN gpMovementItem_Sale_SetErased (tmp.MovementItemId_go, zfCalc_UserAdmin())
+                                     THEN gpMovementItem_Sale_SetErased (tmp.MovementItemId_go, zc_User_Sybase() :: TVarChar)
 
                                 WHEN tmp.MovementDescId = zc_Movement_GoodsAccount()
-                                     THEN gpMovementItem_GoodsAccount_SetErased (tmp.MovementItemId_go, zfCalc_UserAdmin())
+                                     THEN gpMovementItem_GoodsAccount_SetErased (tmp.MovementItemId_go, zc_User_Sybase() :: TVarChar)
 
                                 WHEN tmp.MovementDescId = zc_Movement_ReturnIn()
-                                     THEN gpMovementItem_ReturnIn_SetErased (tmp.MovementItemId_go, zfCalc_UserAdmin())
+                                     THEN gpMovementItem_ReturnIn_SetErased (tmp.MovementItemId_go, zc_User_Sybase() :: TVarChar)
                            END AS x2
                     FROM
                    (SELECT *
                            -- !!!РАСПРОВЕЛИ!!!
                          , CASE WHEN tmp.MovementDescId = zc_Movement_Sale()
-                                     THEN gpUnComplete_Movement_Sale (tmp.MovementId_go, zfCalc_UserAdmin())
+                                     THEN gpUnComplete_Movement_Sale (tmp.MovementId_go, zc_User_Sybase() :: TVarChar)
 
                                 WHEN tmp.MovementDescId = zc_Movement_GoodsAccount()
-                                     THEN gpUnComplete_Movement_GoodsAccount (tmp.MovementId_go, zfCalc_UserAdmin())
+                                     THEN gpUnComplete_Movement_GoodsAccount (tmp.MovementId_go, zc_User_Sybase() :: TVarChar)
 
                                 WHEN tmp.MovementDescId = zc_Movement_ReturnIn()
-                                     THEN gpUnComplete_Movement_ReturnIn (tmp.MovementId_go, zfCalc_UserAdmin())
+                                     THEN gpUnComplete_Movement_ReturnIn (tmp.MovementId_go, zc_User_Sybase() :: TVarChar)
                            END AS x1
                     FROM
                     

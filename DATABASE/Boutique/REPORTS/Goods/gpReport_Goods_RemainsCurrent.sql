@@ -46,25 +46,25 @@ RETURNS TABLE (PartionId            Integer
              , GoodsSizeName        TVarChar
              , CurrencyName         TVarChar
 
-             , CurrencyValue        TFloat
-             , ParValue             TFloat
+             , CurrencyValue        TFloat -- Курс    !!!НА!!! CURRENT_DATE
+             , ParValue             TFloat -- Номинал !!!НА!!! CURRENT_DATE
 
-             , Amount_in            TFloat
-             , OperPrice            TFloat
-             , CountForPrice        TFloat
-             , OperPriceList        TFloat
+             , Amount_in            TFloat -- Итого кол-во Приход от поставщика
+             , OperPrice            TFloat -- Цена вх.
+             , CountForPrice        TFloat -- Кол. в цене
+             , OperPriceList        TFloat -- Цена по прайсу
 
-             , Remains              TFloat
-             , RemainsDebt          TFloat
-             , RemainsAll           TFloat
-             , SummDebt             TFloat
-             , SummDebt_profit      TFloat
+             , Remains              TFloat -- Кол-во - остаток в магазине
+             , RemainsDebt          TFloat -- Кол-во - долги по магазину
+             , RemainsAll           TFloat -- Итого остаток кол-во с учетом долга
+             , SummDebt             TFloat -- Сумма ГРН - долги по магазину
+             , SummDebt_profit      TFloat -- Сумма ГРН - Прибыль будущих периодов в долгах по магазину
 
-             , TotalSumm            TFloat
-             , TotalSummBalance     TFloat
-             , TotalSummPriceList   TFloat
-             , DiscountTax          TFloat
-             , Amount_GoodsPrint    TFloat
+             , TotalSumm            TFloat -- Сумма по входным ценам в валюте - остаток итого с учетом долга
+             , TotalSummBalance     TFloat -- Сумма по входным ценам в ГРН - остаток итого с учетом долга
+             , TotalSummPriceList   TFloat -- Сумма по прайсу - остаток итого с учетом долга
+             , DiscountTax          TFloat -- % Сезонной скидки !!!НА!!! zc_DateEnd
+             , Amount_GoodsPrint    TFloat -- Кол-во для печати ценников
               )
 AS
 $BODY$

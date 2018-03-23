@@ -72,6 +72,7 @@ type
     AccountDirectionName: TcxGridDBColumn;
     PrintName: TcxGridDBColumn;
     isPartnerBarCode: TcxGridDBColumn;
+    GoodsGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public

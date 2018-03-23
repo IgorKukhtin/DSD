@@ -57,6 +57,8 @@ RETURNS TABLE (PartionId             Integer
 
              , Debt_Amount           TFloat
              , Sale_Amount           TFloat
+             , Sale_InDiscount       TFloat
+             , Sale_OutDiscount      TFloat
              , Sale_Summ             TFloat
              , Sale_SummCost         TFloat
              , Sale_SummCost_diff    TFloat
@@ -148,6 +150,27 @@ BEGIN
                                                          AND tmpCurrency_next.CurrencyToId   = tmpCurrency_all.CurrencyToId
                                                          AND tmpCurrency_next.Ord            = tmpCurrency_all.Ord + 1
                           )
+
+         , tmpDiscountPeriod AS (SELECT ObjectLink_DiscountPeriod_Period.ChildObjectId AS PeriodId
+                                      , ObjectDate_StartDate.ValueData                 AS StartDate
+                                      , ObjectDate_EndDate.ValueData                   AS EndDate
+                                 FROM Object as Object_DiscountPeriod
+                                      LEFT JOIN ObjectLink AS ObjectLink_DiscountPeriod_Period
+                                                           ON ObjectLink_DiscountPeriod_Period.ObjectId = Object_DiscountPeriod.Id
+                                                          AND ObjectLink_DiscountPeriod_Period.DescId = zc_ObjectLink_DiscountPeriod_Period()
+   
+                                      LEFT JOIN ObjectDate AS ObjectDate_StartDate
+                                                           ON ObjectDate_StartDate.ObjectId = Object_DiscountPeriod.Id
+                                                          AND ObjectDate_StartDate.DescId = zc_ObjectDate_DiscountPeriod_StartDate()
+                          
+                                      LEFT JOIN ObjectDate AS ObjectDate_EndDate
+                                                           ON ObjectDate_EndDate.ObjectId = Object_DiscountPeriod.Id
+                                                          AND ObjectDate_EndDate.DescId = zc_ObjectDate_DiscountPeriod_EndDate()
+   
+                                 WHERE Object_DiscountPeriod.DescId = zc_Object_DiscountPeriod()
+                                   AND Object_DiscountPeriod.isErased = FALSE
+                                 )
+
          , tmpContainer AS (SELECT Container.Id         AS ContainerId
                                  , CLO_Client.ObjectId  AS ClientId
                             FROM Container
@@ -249,10 +272,24 @@ BEGIN
                                 -- , 0 :: TFloat AS Result_Summ
                                 -- , 0 :: TFloat AS Result_SummCost
                                 -- , 0 :: TFloat AS Result_Summ_10200
+
+                                , SUM ( CASE WHEN COALESCE(tmpDiscountPeriod.PeriodId, 0) <> 0
+                                             THEN CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount < 0 AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END
+                                             ELSE 0
+                                        END
+                                      ) :: TFloat AS Sale_Amount_InDiscount
+                                      
+                                , SUM ( CASE WHEN COALESCE(tmpDiscountPeriod.PeriodId, 0) = 0
+                                             THEN CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount < 0 AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END
+                                             ELSE 0
+                                        END
+                                      ) :: TFloat AS Sale_Amount_OutDiscount
+
                                   --  № п/п
                                 , ROW_NUMBER() OVER (PARTITION BY Object_PartionGoods.MovementItemId ORDER BY CASE WHEN Object_PartionGoods.UnitId = COALESCE (MIConatiner.ObjectExtId_Analyzer, Object_PartionGoods.UnitId) THEN 0 ELSE 1 END ASC) AS Ord
 
                                 , COALESCE (MIBoolean_Checked.ValueData, FALSE)         AS isChecked
+                                
                            FROM Object_PartionGoods
 
                                 LEFT JOIN MovementItemContainer AS MIConatiner
@@ -282,6 +319,9 @@ BEGIN
                                 LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                             ON MIFloat_OperPriceList.MovementItemId = COALESCE (Object_PartionMI.ObjectCode, MIConatiner.MovementItemId)
                                                            AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
+
+                                LEFT JOIN tmpDiscountPeriod ON tmpDiscountPeriod.PeriodId = Object_PartionGoods.PeriodId
+                                                           AND MIConatiner.OperDate BETWEEN tmpDiscountPeriod.StartDate AND tmpDiscountPeriod.EndDate
 
                            WHERE (Object_PartionGoods.PartnerId  = inPartnerId        OR inPartnerId   = 0)
                              AND (Object_PartionGoods.BrandId    = inBrandId          OR inBrandId     = 0)
@@ -377,6 +417,8 @@ BEGIN
                           , tmpData_all.isChecked
                           , SUM (CASE WHEN tmpData_all.Ord = 1 THEN tmpData_all.Income_Amount ELSE 0 END) AS Income_Amount
 
+                          , SUM (tmpData_all.Sale_Amount_InDiscount)  AS Sale_InDiscount
+                          , SUM (tmpData_all.Sale_Amount_OutDiscount) AS Sale_OutDiscount
                           , SUM (tmpData_all.Debt_Amount)           AS Debt_Amount
                           , SUM (tmpData_all.Sale_Amount)           AS Sale_Amount
                           , SUM (tmpData_all.Sale_Summ)             AS Sale_Summ
@@ -499,10 +541,7 @@ BEGIN
                             , ObjectLink_Parent7.ChildObjectId
                             , ObjectLink_Parent8.ChildObjectId
                     )
-   /*, tmpDayOfWeek AS (SELECT zfCalc.Ord_dow, zfCalc.DayOfWeekName
-                      FROM (SELECT GENERATE_SERIES (CURRENT_DATE, CURRENT_DATE + INTERVAL '6 DAY', '1 DAY' :: INTERVAL) AS OperDate) AS tmp
-                           CROSS JOIN zfCalc_DayOfWeekName_cross (tmp.OperDate) AS zfCalc
-                     )*/
+
 
         -- Результат
         SELECT tmpData.PartionId
@@ -541,6 +580,8 @@ BEGIN
                                             
              , tmpData.Debt_Amount          :: TFloat
              , tmpData.Sale_Amount          :: TFloat
+             , tmpData.Sale_InDiscount      :: TFloat
+             , tmpData.Sale_OutDiscount     :: TFloat
              , tmpData.Sale_Summ            :: TFloat
                                             
              , tmpData.Sale_SummCost_calc   :: TFloat AS Sale_SummCost

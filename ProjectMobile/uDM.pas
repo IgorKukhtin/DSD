@@ -6217,6 +6217,7 @@ end;
 procedure TSyncData.SyncRouteMember;
 var
   SqlText: string;
+  i : Integer;
 begin
   with DM.tblMovement_RouteMember do
   begin
@@ -6231,6 +6232,7 @@ begin
         '  DECLARE vbSession TVarChar := ''' + gc_User.Session + '''; ' +
         'BEGIN ';
 
+        i:= 0;
       while not Eof do
       begin
         SqlText := SqlText +
@@ -6242,6 +6244,21 @@ begin
           '    inGPSE:= ' + ReplaceStr(FormatFloat('0.0###', FieldByName('GPSE').AsFloat), ',', '.') + ', ' +
           '    inAddressByGPS:= ''' + AdaptQuotMark(FieldByName('AddressByGPS').AsString) + ''', ' +
           '    inSession:= vbSession); ';
+
+          i:= i + 1;
+          if i > 100 then
+          begin
+               i:= 0;
+               SqlText := SqlText +
+                 ' END; $BODY$';
+
+               uExec.ExecSQL(SqlText);
+               //
+               SqlText:= 'DO $BODY$ ' +
+                         '  DECLARE vbSession TVarChar := ''' + gc_User.Session + '''; ' +
+                         'BEGIN ';
+          end;
+
 
         Next;
       end;

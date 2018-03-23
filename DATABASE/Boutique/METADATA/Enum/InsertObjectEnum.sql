@@ -4,13 +4,27 @@ BEGIN
      -- zc_Enum_Role_Admin
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_Admin(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_Admin'), inName:= 'Роль администратора', inEnumName:= 'zc_Enum_Role_Admin');
      
-     -- Роль в Магазине
+     -- Роль в Магазине ВСЕМ
+     -- actReturnInMovement + actReturnInMovement + actReport_SaleReturnIn + actReport_GoodsMI_Account + actReport_CollationByClient + actReport_ClientDebt + actReport_Goods_RemainsCurrent
      PERFORM lpInsertUpdate_Object (ioId:= (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 2)
                                   , inDescId    := zc_Object_Role()
                                   , inObjectCode:= 2
-                                  , inValueData := 'Роль в Магазине'
+                                  , inValueData := 'Роль в Магазине ВСЕМ'
                                    );
-    -- actSaleMovement + actReturnInMovement + actReturnInMovement + actReport_SaleReturnIn + actReport_GoodsMI_Account + actReport_CollationByClient + actReport_ClientDebt + actReport_Goods_RemainsCurrent
+     -- Роль в Магазине (не ММ)
+     -- actSaleMovement
+     PERFORM lpInsertUpdate_Object (ioId:= (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 3)
+                                  , inDescId    := zc_Object_Role()
+                                  , inObjectCode:= 3
+                                  , inValueData := 'Роль в Магазине (не ММ)'
+                                   );
+     -- Роль в Магазине ММ
+     -- actSaleTwoMovement
+     PERFORM lpInsertUpdate_Object (ioId:= (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 4)
+                                  , inDescId    := zc_Object_Role()
+                                  , inObjectCode:= 4
+                                  , inValueData := 'Роль в Магазине ММ'
+                                   );
 
      -- !!! Статусы документов
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Status_UnComplete(), inDescId:= zc_Object_Status(), inCode:= zc_Enum_StatusCode_UnComplete(), inName:= 'Не проведен', inEnumName:= 'zc_Enum_Status_UnComplete');

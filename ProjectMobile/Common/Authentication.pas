@@ -13,6 +13,9 @@ uses
   Androidapi.JNI.App,
   FMX.Helpers.Android,
   Androidapi.Helpers,
+  Androidapi.JNI.Os,  //TJBuild
+  //Androidapi.Helpers, // StringToJString
+  FMX.Platform,
   {$ENDIF}
   Storage;
 
@@ -78,10 +81,15 @@ var
   {$IFDEF ANDROID}
   obj: JObject;
   tm: JTelephonyManager;
+  OSVersion: TOSVersion;
+  LocaleService: IFMXLocaleService;
   {$ENDIF}
   lIMEI      : String;
+  lBrand     : String;
   lModel     : String;
+  lLang      : String;
   lVesion    : String;
+  lVesion_two: String;
   lVesionSDK : String;
   ConnectOk: boolean;
   ServNum: integer;
@@ -100,11 +108,39 @@ const
   '</xml>';
 begin
   lIMEI      := '';
+  lBrand     := '';
   lModel     := '';
+  lLang      := '';
   lVesion    := '';
+  lVesion_two:= '';
   lVesionSDK := '';
 
   {$IFDEF ANDROID}
+  // Модель телефона
+  try lBrand := JStringToString(TJBuild.JavaClass.BRAND); except lBrand:='???'; end;
+  // Модель телефона
+  try lModel := JStringToString(TJBuild.JavaClass.MODEL); except lModel:='???'; end;
+  try lModel := lModel + ' PRODUCT:' + JStringToString(TJBuild.JavaClass.PRODUCT)
+                       + ' SERIAL:' + JStringToString(TJBuild.JavaClass.SERIAL)
+                       + ' DEVICE:' + JStringToString(TJBuild.JavaClass.DEVICE)
+                        ;
+  except lModel:= lModel + ' ???'; end;
+  // Версия Android
+  try lVesion:= OSVersion.Name; except lVesion:='???'; end;
+  // Версия Android
+  try lVesion_two:= Format('%d.%d', [OSVersion.Major,OSVersion.Minor]); except lVesion_two:='?.?'; end;
+  try lVesion_two:= lVesion_two + ' Platform :' + Format('%d', [Ord(OSVersion.Platform)]); except lVesion_two:= lVesion_two + ' Platform :???'; end;
+  // Версия SDK
+  try lVesionSDK:= JStringToString(TJBuild_VERSION.JavaClass.SDK); except lVesionSDK:= '???'; end;
+  try lVesionSDK:= lVesionSDK + '(' + IntToStr(TJBuild_VERSION.JavaClass.SDK_INT)+')'; except lVesionSDK:= lVesionSDK + ' (?)'; end;
+  //
+  try
+    if TPlatformServices.Current.SupportsPlatformService(IFMXLocaleService, IInterface(LocaleService))
+    then
+      lLang := LocaleService.GetCurrentLangID()
+    else lLang := '?1?';
+  except lLang:='???'; end;
+
   obj := TAndroidHelper.Context.getSystemService(TJContext.JavaClass.TELEPHONY_SERVICE);
   if obj <> nil then
   begin
@@ -113,11 +149,11 @@ begin
       // IMEI телефона - работает
       lIMEI      := JStringToString(tm.getDeviceId);
       // Модель телефона
-      lModel     := '???'; //
+      //lModel     := '???'; //
       // Версия Android
-      lVesion    := '???'; // JStringToString(tm.getDeviceSoftwareVersion);
+      //lVesion    := '???'; // JStringToString(tm.getDeviceSoftwareVersion);
       // Версия SDK
-      lVesionSDK := '???';
+      //lVesionSDK := '???';
     end;
   end;
   if lIMEI = '' then begin
@@ -125,16 +161,19 @@ begin
     lIMEI      := JStringToString(TJSettings_Secure.JavaClass.getString(TAndroidHelper.Activity.getContentResolver,
                                   TJSettings_Secure.JavaClass.ANDROID_ID));
     // Модель телефона
-    lModel     := '???';
+    //lModel     := '???';
     // Версия Android
-    lVesion    := '???';
+    //lVesion    := '???';
     // Версия SDK
-    lVesionSDK := '???';
+    //lVesionSDK := '???';
   end;
   {$ELSE}
   lIMEI      := '';
+  lBrand     := '';
   lModel     := '';
+  lLang      := '';
   lVesion    := '';
+  lVesion_two:= '';
   lVesionSDK := '';
   {$ENDIF}
 
@@ -148,6 +187,10 @@ begin
         gc_WebService := gc_WebServers[ServNum];
         pStorage.Connection := gc_WebService;
       end;
+
+      lModel:= lBrand + ' ' + lModel;
+      lVesion:= lVesion + ' '  + lVesion_two;
+      //lVesionSDK:= lVesionSDK;
 
       N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, lIMEI, lModel, lVesion, lVesionSDK]), False, 1, ANeedShowException)).DocumentElement;
       if Assigned(N) then
