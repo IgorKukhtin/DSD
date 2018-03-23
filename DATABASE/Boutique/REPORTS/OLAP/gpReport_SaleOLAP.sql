@@ -63,6 +63,8 @@ RETURNS TABLE (BrandName             VarChar (100)
 
              , Debt_Amount           TFloat
              , Sale_Amount           TFloat
+             , Sale_InDiscount       TFloat
+             , Sale_OutDiscount      TFloat
              , Sale_Summ             TFloat
              , Sale_SummCost         TFloat
              , Sale_SummCost_diff    TFloat
@@ -128,19 +130,43 @@ BEGIN
                                WHERE Movement.DescId   = zc_Movement_Currency()
                                  AND Movement.StatusId = zc_Enum_Status_Complete()
                               )
-             , tmpCurrency AS (SELECT tmpCurrency_all.OperDate                           AS StartDate
-                                    , COALESCE (tmpCurrency_next.OperDate, zc_DateEnd()) AS EndDate
-                                    , tmpCurrency_all.Amount
-                                    , tmpCurrency_all.ParValue
-                                    , tmpCurrency_all.CurrencyFromId
-                                    , tmpCurrency_all.CurrencyToId
-                                    -- , ROW_NUMBER() OVER (PARTITION BY tmpCurrency_all.OperDate, tmpCurrency_all.CurrencyFromId, tmpCurrency_all.CurrencyToId) AS Ord
-                               FROM tmpCurrency_all
-                                    LEFT JOIN tmpCurrency_all AS tmpCurrency_next
-                                                              ON tmpCurrency_next.CurrencyFromId = tmpCurrency_all.CurrencyFromId
-                                                             AND tmpCurrency_next.CurrencyToId   = tmpCurrency_all.CurrencyToId
-                                                             AND tmpCurrency_next.Ord            = tmpCurrency_all.Ord + 1
-                              )
+         , tmpCurrency AS (SELECT tmpCurrency_all.OperDate                           AS StartDate
+                                , COALESCE (tmpCurrency_next.OperDate, zc_DateEnd()) AS EndDate
+                                , tmpCurrency_all.Amount
+                                , tmpCurrency_all.ParValue
+                                , tmpCurrency_all.CurrencyFromId
+                                , tmpCurrency_all.CurrencyToId
+                                -- , ROW_NUMBER() OVER (PARTITION BY tmpCurrency_all.OperDate, tmpCurrency_all.CurrencyFromId, tmpCurrency_all.CurrencyToId) AS Ord
+                           FROM tmpCurrency_all
+                                LEFT JOIN tmpCurrency_all AS tmpCurrency_next
+                                                          ON tmpCurrency_next.CurrencyFromId = tmpCurrency_all.CurrencyFromId
+                                                         AND tmpCurrency_next.CurrencyToId   = tmpCurrency_all.CurrencyToId
+                                                         AND tmpCurrency_next.Ord            = tmpCurrency_all.Ord + 1
+                          )
+         , tmpDiscountPeriod AS (SELECT ObjectLink_DiscountPeriod_Period.ChildObjectId AS PeriodId
+                                      , ObjectDate_StartDate.ValueData                 AS StartDate
+                                      , ObjectDate_EndDate.ValueData                   AS EndDate
+                                 FROM Object as Object_DiscountPeriod
+                                      /*LEFT JOIN ObjectLink AS ObjectLink_DiscountPeriod_Unit
+                                                           ON ObjectLink_DiscountPeriod_Unit.ObjectId = Object_DiscountPeriod.Id
+                                                          AND ObjectLink_DiscountPeriod_Unit.DescId = zc_ObjectLink_DiscountPeriod_Unit()
+                                      */
+                                      LEFT JOIN ObjectLink AS ObjectLink_DiscountPeriod_Period
+                                                           ON ObjectLink_DiscountPeriod_Period.ObjectId = Object_DiscountPeriod.Id
+                                                          AND ObjectLink_DiscountPeriod_Period.DescId = zc_ObjectLink_DiscountPeriod_Period()
+   
+                                      LEFT JOIN ObjectDate AS ObjectDate_StartDate
+                                                           ON ObjectDate_StartDate.ObjectId = Object_DiscountPeriod.Id
+                                                          AND ObjectDate_StartDate.DescId = zc_ObjectDate_DiscountPeriod_StartDate()
+                          
+                                      LEFT JOIN ObjectDate AS ObjectDate_EndDate
+                                                           ON ObjectDate_EndDate.ObjectId = Object_DiscountPeriod.Id
+                                                          AND ObjectDate_EndDate.DescId = zc_ObjectDate_DiscountPeriod_EndDate()
+   
+                                 WHERE Object_DiscountPeriod.DescId = zc_Object_DiscountPeriod()
+                                   AND Object_DiscountPeriod.isErased = FALSE
+                                 )
+                              
          , tmpContainer AS (SELECT Container.Id         AS ContainerId
                                  , CLO_Client.ObjectId  AS ClientId
                             FROM Container
@@ -240,6 +266,17 @@ BEGIN
                                   --  № п/п
                                 , ROW_NUMBER() OVER (PARTITION BY Object_PartionGoods.MovementItemId ORDER BY CASE WHEN Object_PartionGoods.UnitId = COALESCE (MIConatiner.ObjectExtId_Analyzer, Object_PartionGoods.UnitId) THEN 0 ELSE 1 END ASC) AS Ord
 
+                                , SUM ( CASE WHEN COALESCE(tmpDiscountPeriod.PeriodId, 0) <> 0
+                                             THEN CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount < 0 AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END
+                                             ELSE 0
+                                        END
+                                      ) :: TFloat AS Sale_Amount_InDiscount
+                                      
+                                , SUM ( CASE WHEN COALESCE(tmpDiscountPeriod.PeriodId, 0) = 0
+                                             THEN CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount < 0 AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END
+                                             ELSE 0
+                                        END
+                                      ) :: TFloat AS Sale_Amount_OutDiscount
                            FROM Object_PartionGoods
                                 -- INNER JOIN Object ON Object.Id = Object_PartionGoods.GoodsId AND Object.ObjectCode = 51925
                                 LEFT JOIN MovementItemContainer AS MIConatiner
@@ -267,6 +304,9 @@ BEGIN
                                                                  ON MILinkObject_DiscountSaleKind.MovementItemId = COALESCE (Object_PartionMI.ObjectCode, MIConatiner.MovementItemId)
                                                                 AND MILinkObject_DiscountSaleKind.DescId         = zc_MILinkObject_DiscountSaleKind()
                                                                 AND inIsDiscount                                 = TRUE
+
+                                LEFT JOIN tmpDiscountPeriod ON tmpDiscountPeriod.PeriodId = Object_PartionGoods.PeriodId
+                                                           AND MIConatiner.OperDate BETWEEN tmpDiscountPeriod.StartDate AND tmpDiscountPeriod.EndDate
 
                            WHERE (Object_PartionGoods.PartnerId  = inPartnerId        OR inPartnerId   = 0)
                              AND (Object_PartionGoods.BrandId    = inBrandId          OR inBrandId     = 0)
@@ -305,156 +345,158 @@ BEGIN
                                   , Object_PartionGoods.OperPrice
                                   , Object_PartionGoods.CountForPrice
                           )
-       , tmpData AS (SELECT tmpData_all.BrandId
-                          , tmpData_all.PeriodId
-                          , tmpData_all.PeriodYear
-                          , tmpData_all.PartnerId
-
-                          , tmpData_all.GoodsGroupId
-                          , tmpData_all.LabelId
-                          , tmpData_all.CompositionGroupId
-                          -- , tmpData_all.CompositionId
-
-                          , CASE WHEN inIsGoods = TRUE THEN tmpData_all.GoodsId     ELSE 0 END AS GoodsId
-                          -- , CASE WHEN inIsGoods = TRUE THEN tmpData_all.GoodsInfoId ELSE 0 END AS GoodsInfoId
-                          , tmpData_all.LineFabricaId
-                          , CASE WHEN inIsSize  = TRUE THEN tmpData_all.GoodsSizeId ELSE 0 END AS GoodsSizeId
-
-                          , tmpData_all.OperDate_doc
-                          , tmpData_all.OrdDay_doc
-                          , tmpData_all.UnitId
-                          , tmpData_all.ClientId
-                          , tmpData_all.ChangePercent
-                          , tmpData_all.DiscountSaleKindId
-
-                          , tmpData_all.UnitId_in
-                          , tmpData_all.CurrencyId
-
-                          , tmpData_all.OperPrice
-                          , SUM (CASE WHEN tmpData_all.Ord = 1 THEN tmpData_all.Income_Amount ELSE 0 END) AS Income_Amount
-
-                          , SUM (tmpData_all.Debt_Amount)           AS Debt_Amount
-                          , SUM (tmpData_all.Sale_Amount)           AS Sale_Amount
-                          , SUM (tmpData_all.Sale_Summ)             AS Sale_Summ
-                          , SUM (tmpData_all.Sale_SummCost)         AS Sale_SummCost
-                          , SUM (tmpData_all.Sale_SummCost_calc)    AS Sale_SummCost_calc
-                          , SUM (tmpData_all.Sale_Summ_10100)       AS Sale_Summ_10100
-                          , SUM (tmpData_all.Sale_Summ_10201)       AS Sale_Summ_10201
-                          , SUM (tmpData_all.Sale_Summ_10202)       AS Sale_Summ_10202
-                          , SUM (tmpData_all.Sale_Summ_10203)       AS Sale_Summ_10203
-                          , SUM (tmpData_all.Sale_Summ_10204)       AS Sale_Summ_10204
-                          , SUM (tmpData_all.Sale_Summ_10200)       AS Sale_Summ_10200
-                          , SUM (tmpData_all.Return_Amount)         AS Return_Amount
-                          , SUM (tmpData_all.Return_Summ)           AS Return_Summ
-                          , SUM (tmpData_all.Return_SummCost)       AS Return_SummCost
-                          , SUM (tmpData_all.Return_SummCost_calc)  AS Return_SummCost_calc
-                          , SUM (tmpData_all.Return_Summ_10200)     AS Return_Summ_10200
-                          , SUM (tmpData_all.Result_Amount)         AS Result_Amount
-                          -- , SUM (tmpData_all.Result_Summ)         AS Result_Summ
-                          -- , SUM (tmpData_all.Result_SummCost)     AS Result_SummCost
-                          -- , SUM (tmpData_all.Result_Summ_10200)   AS Result_Summ_10200
-
-                          , ObjectLink_Parent0.ChildObjectId AS GroupId1
-                          , ObjectLink_Parent1.ChildObjectId AS GroupId1_parent
-
-                          , ObjectLink_Parent1.ChildObjectId AS GroupId2
-                          , ObjectLink_Parent2.ChildObjectId AS GroupId2_parent
-
-                          , ObjectLink_Parent2.ChildObjectId AS GroupId3
-                          , ObjectLink_Parent3.ChildObjectId AS GroupId3_parent
-
-                          , ObjectLink_Parent3.ChildObjectId AS GroupId4
-                          , ObjectLink_Parent4.ChildObjectId AS GroupId4_parent
-
-                          , ObjectLink_Parent4.ChildObjectId AS GroupId5
-                          , ObjectLink_Parent5.ChildObjectId AS GroupId5_parent
-
-                          , ObjectLink_Parent5.ChildObjectId AS GroupId6
-                          , ObjectLink_Parent6.ChildObjectId AS GroupId6_parent
-
-                          , ObjectLink_Parent6.ChildObjectId AS GroupId7
-                          , ObjectLink_Parent7.ChildObjectId AS GroupId7_parent
-
-                          , ObjectLink_Parent7.ChildObjectId AS GroupId8
-                          , ObjectLink_Parent8.ChildObjectId AS GroupId8_parent
-
-                     FROM tmpData_all AS tmpData_all
-                          LEFT JOIN ObjectLink AS ObjectLink_Parent0
-                                               ON ObjectLink_Parent0.ObjectId = tmpData_all.GoodsId
-                                              AND ObjectLink_Parent0.DescId   = zc_ObjectLink_Goods_GoodsGroup()
-
-                          LEFT JOIN ObjectLink AS ObjectLink_Parent1
-                                               ON ObjectLink_Parent1.ObjectId = ObjectLink_Parent0.ChildObjectId
-                                              AND ObjectLink_Parent1.DescId   = zc_ObjectLink_GoodsGroup_Parent()
-                          LEFT JOIN ObjectLink AS ObjectLink_Parent2
-                                               ON ObjectLink_Parent2.ObjectId = ObjectLink_Parent1.ChildObjectId
-                                              AND ObjectLink_Parent2.DescId   = zc_ObjectLink_GoodsGroup_Parent()
-                          LEFT JOIN ObjectLink AS ObjectLink_Parent3
-                                               ON ObjectLink_Parent3.ObjectId = ObjectLink_Parent2.ChildObjectId
-                                              AND ObjectLink_Parent3.DescId   = zc_ObjectLink_GoodsGroup_Parent()
-                          LEFT JOIN ObjectLink AS ObjectLink_Parent4
-                                               ON ObjectLink_Parent4.ObjectId = ObjectLink_Parent3.ChildObjectId
-                                              AND ObjectLink_Parent4.DescId   = zc_ObjectLink_GoodsGroup_Parent()
-                          LEFT JOIN ObjectLink AS ObjectLink_Parent5
-                                               ON ObjectLink_Parent5.ObjectId = ObjectLink_Parent4.ChildObjectId
-                                              AND ObjectLink_Parent5.DescId   = zc_ObjectLink_GoodsGroup_Parent()
-                          LEFT JOIN ObjectLink AS ObjectLink_Parent6
-                                               ON ObjectLink_Parent6.ObjectId = ObjectLink_Parent5.ChildObjectId
-                                              AND ObjectLink_Parent6.DescId   = zc_ObjectLink_GoodsGroup_Parent()
-                          LEFT JOIN ObjectLink AS ObjectLink_Parent7
-                                               ON ObjectLink_Parent7.ObjectId = ObjectLink_Parent6.ChildObjectId
-                                              AND ObjectLink_Parent7.DescId   = zc_ObjectLink_GoodsGroup_Parent()
-                          LEFT JOIN ObjectLink AS ObjectLink_Parent8
-                                               ON ObjectLink_Parent8.ObjectId = ObjectLink_Parent7.ChildObjectId
-                                              AND ObjectLink_Parent8.DescId   = zc_ObjectLink_GoodsGroup_Parent()
-
-                     GROUP BY tmpData_all.BrandId
+         , tmpData AS (SELECT tmpData_all.BrandId
                             , tmpData_all.PeriodId
                             , tmpData_all.PeriodYear
                             , tmpData_all.PartnerId
-
+   
                             , tmpData_all.GoodsGroupId
                             , tmpData_all.LabelId
                             , tmpData_all.CompositionGroupId
                             -- , tmpData_all.CompositionId
-
-                            , CASE WHEN inIsGoods = TRUE THEN tmpData_all.GoodsId     ELSE 0 END
-                            -- , CASE WHEN inIsGoods = TRUE THEN tmpData_all.GoodsInfoId ELSE 0 END
+   
+                            , CASE WHEN inIsGoods = TRUE THEN tmpData_all.GoodsId     ELSE 0 END AS GoodsId
+                            -- , CASE WHEN inIsGoods = TRUE THEN tmpData_all.GoodsInfoId ELSE 0 END AS GoodsInfoId
                             , tmpData_all.LineFabricaId
-                            , CASE WHEN inIsSize  = TRUE THEN tmpData_all.GoodsSizeId ELSE 0 END
-
+                            , CASE WHEN inIsSize  = TRUE THEN tmpData_all.GoodsSizeId ELSE 0 END AS GoodsSizeId
+   
                             , tmpData_all.OperDate_doc
                             , tmpData_all.OrdDay_doc
                             , tmpData_all.UnitId
                             , tmpData_all.ClientId
                             , tmpData_all.ChangePercent
                             , tmpData_all.DiscountSaleKindId
-
+   
                             , tmpData_all.UnitId_in
                             , tmpData_all.CurrencyId
+   
                             , tmpData_all.OperPrice
+                            , SUM (CASE WHEN tmpData_all.Ord = 1 THEN tmpData_all.Income_Amount ELSE 0 END) AS Income_Amount
+   
+                            , SUM (tmpData_all.Sale_Amount_InDiscount)  AS Sale_InDiscount
+                            , SUM (tmpData_all.Sale_Amount_OutDiscount) AS Sale_OutDiscount
+                            , SUM (tmpData_all.Debt_Amount)           AS Debt_Amount
+                            , SUM (tmpData_all.Sale_Amount)           AS Sale_Amount
+                            , SUM (tmpData_all.Sale_Summ)             AS Sale_Summ
+                            , SUM (tmpData_all.Sale_SummCost)         AS Sale_SummCost
+                            , SUM (tmpData_all.Sale_SummCost_calc)    AS Sale_SummCost_calc
+                            , SUM (tmpData_all.Sale_Summ_10100)       AS Sale_Summ_10100
+                            , SUM (tmpData_all.Sale_Summ_10201)       AS Sale_Summ_10201
+                            , SUM (tmpData_all.Sale_Summ_10202)       AS Sale_Summ_10202
+                            , SUM (tmpData_all.Sale_Summ_10203)       AS Sale_Summ_10203
+                            , SUM (tmpData_all.Sale_Summ_10204)       AS Sale_Summ_10204
+                            , SUM (tmpData_all.Sale_Summ_10200)       AS Sale_Summ_10200
+                            , SUM (tmpData_all.Return_Amount)         AS Return_Amount
+                            , SUM (tmpData_all.Return_Summ)           AS Return_Summ
+                            , SUM (tmpData_all.Return_SummCost)       AS Return_SummCost
+                            , SUM (tmpData_all.Return_SummCost_calc)  AS Return_SummCost_calc
+                            , SUM (tmpData_all.Return_Summ_10200)     AS Return_Summ_10200
+                            , SUM (tmpData_all.Result_Amount)         AS Result_Amount
+                            -- , SUM (tmpData_all.Result_Summ)         AS Result_Summ
+                            -- , SUM (tmpData_all.Result_SummCost)     AS Result_SummCost
+                            -- , SUM (tmpData_all.Result_Summ_10200)   AS Result_Summ_10200
+   
+                            , ObjectLink_Parent0.ChildObjectId AS GroupId1
+                            , ObjectLink_Parent1.ChildObjectId AS GroupId1_parent
+   
+                            , ObjectLink_Parent1.ChildObjectId AS GroupId2
+                            , ObjectLink_Parent2.ChildObjectId AS GroupId2_parent
+   
+                            , ObjectLink_Parent2.ChildObjectId AS GroupId3
+                            , ObjectLink_Parent3.ChildObjectId AS GroupId3_parent
+   
+                            , ObjectLink_Parent3.ChildObjectId AS GroupId4
+                            , ObjectLink_Parent4.ChildObjectId AS GroupId4_parent
+   
+                            , ObjectLink_Parent4.ChildObjectId AS GroupId5
+                            , ObjectLink_Parent5.ChildObjectId AS GroupId5_parent
+   
+                            , ObjectLink_Parent5.ChildObjectId AS GroupId6
+                            , ObjectLink_Parent6.ChildObjectId AS GroupId6_parent
+   
+                            , ObjectLink_Parent6.ChildObjectId AS GroupId7
+                            , ObjectLink_Parent7.ChildObjectId AS GroupId7_parent
+   
+                            , ObjectLink_Parent7.ChildObjectId AS GroupId8
+                            , ObjectLink_Parent8.ChildObjectId AS GroupId8_parent
+   
+                       FROM tmpData_all AS tmpData_all
+                            LEFT JOIN ObjectLink AS ObjectLink_Parent0
+                                                 ON ObjectLink_Parent0.ObjectId = tmpData_all.GoodsId
+                                                AND ObjectLink_Parent0.DescId   = zc_ObjectLink_Goods_GoodsGroup()
+   
+                            LEFT JOIN ObjectLink AS ObjectLink_Parent1
+                                                 ON ObjectLink_Parent1.ObjectId = ObjectLink_Parent0.ChildObjectId
+                                                AND ObjectLink_Parent1.DescId   = zc_ObjectLink_GoodsGroup_Parent()
+                            LEFT JOIN ObjectLink AS ObjectLink_Parent2
+                                                 ON ObjectLink_Parent2.ObjectId = ObjectLink_Parent1.ChildObjectId
+                                                AND ObjectLink_Parent2.DescId   = zc_ObjectLink_GoodsGroup_Parent()
+                            LEFT JOIN ObjectLink AS ObjectLink_Parent3
+                                                 ON ObjectLink_Parent3.ObjectId = ObjectLink_Parent2.ChildObjectId
+                                                AND ObjectLink_Parent3.DescId   = zc_ObjectLink_GoodsGroup_Parent()
+                            LEFT JOIN ObjectLink AS ObjectLink_Parent4
+                                                 ON ObjectLink_Parent4.ObjectId = ObjectLink_Parent3.ChildObjectId
+                                                AND ObjectLink_Parent4.DescId   = zc_ObjectLink_GoodsGroup_Parent()
+                            LEFT JOIN ObjectLink AS ObjectLink_Parent5
+                                                 ON ObjectLink_Parent5.ObjectId = ObjectLink_Parent4.ChildObjectId
+                                                AND ObjectLink_Parent5.DescId   = zc_ObjectLink_GoodsGroup_Parent()
+                            LEFT JOIN ObjectLink AS ObjectLink_Parent6
+                                                 ON ObjectLink_Parent6.ObjectId = ObjectLink_Parent5.ChildObjectId
+                                                AND ObjectLink_Parent6.DescId   = zc_ObjectLink_GoodsGroup_Parent()
+                            LEFT JOIN ObjectLink AS ObjectLink_Parent7
+                                                 ON ObjectLink_Parent7.ObjectId = ObjectLink_Parent6.ChildObjectId
+                                                AND ObjectLink_Parent7.DescId   = zc_ObjectLink_GoodsGroup_Parent()
+                            LEFT JOIN ObjectLink AS ObjectLink_Parent8
+                                                 ON ObjectLink_Parent8.ObjectId = ObjectLink_Parent7.ChildObjectId
+                                                AND ObjectLink_Parent8.DescId   = zc_ObjectLink_GoodsGroup_Parent()
+                       GROUP BY tmpData_all.BrandId
+                              , tmpData_all.PeriodId
+                              , tmpData_all.PeriodYear
+                              , tmpData_all.PartnerId
+   
+                              , tmpData_all.GoodsGroupId
+                              , tmpData_all.LabelId
+                              , tmpData_all.CompositionGroupId
+                              -- , tmpData_all.CompositionId
+   
+                              , CASE WHEN inIsGoods = TRUE THEN tmpData_all.GoodsId     ELSE 0 END
+                              -- , CASE WHEN inIsGoods = TRUE THEN tmpData_all.GoodsInfoId ELSE 0 END
+                              , tmpData_all.LineFabricaId
+                              , CASE WHEN inIsSize  = TRUE THEN tmpData_all.GoodsSizeId ELSE 0 END
+   
+                              , tmpData_all.OperDate_doc
+                              , tmpData_all.OrdDay_doc
+                              , tmpData_all.UnitId
+                              , tmpData_all.ClientId
+                              , tmpData_all.ChangePercent
+                              , tmpData_all.DiscountSaleKindId
+   
+                              , tmpData_all.UnitId_in
+                              , tmpData_all.CurrencyId
+                              , tmpData_all.OperPrice
+   
+                              , ObjectLink_Parent0.ChildObjectId
+                              , ObjectLink_Parent1.ChildObjectId
+                              , ObjectLink_Parent1.ChildObjectId
+                              , ObjectLink_Parent2.ChildObjectId
+                              , ObjectLink_Parent2.ChildObjectId
+                              , ObjectLink_Parent3.ChildObjectId
+                              , ObjectLink_Parent3.ChildObjectId
+                              , ObjectLink_Parent4.ChildObjectId
+                              , ObjectLink_Parent4.ChildObjectId
+                              , ObjectLink_Parent5.ChildObjectId
+                              , ObjectLink_Parent5.ChildObjectId
+                              , ObjectLink_Parent6.ChildObjectId
+                              , ObjectLink_Parent6.ChildObjectId
+                              , ObjectLink_Parent7.ChildObjectId
+                              , ObjectLink_Parent7.ChildObjectId
+                              , ObjectLink_Parent8.ChildObjectId
+                       )
+         , tmpDayOfWeek AS (SELECT zfCalc.Ord_dow, zfCalc.DayOfWeekName
+                            FROM (SELECT GENERATE_SERIES (CURRENT_DATE, CURRENT_DATE + INTERVAL '6 DAY', '1 DAY' :: INTERVAL) AS OperDate) AS tmp
+                                 CROSS JOIN zfCalc_DayOfWeekName_cross (tmp.OperDate) AS zfCalc
+                           )
 
-                            , ObjectLink_Parent0.ChildObjectId
-                            , ObjectLink_Parent1.ChildObjectId
-                            , ObjectLink_Parent1.ChildObjectId
-                            , ObjectLink_Parent2.ChildObjectId
-                            , ObjectLink_Parent2.ChildObjectId
-                            , ObjectLink_Parent3.ChildObjectId
-                            , ObjectLink_Parent3.ChildObjectId
-                            , ObjectLink_Parent4.ChildObjectId
-                            , ObjectLink_Parent4.ChildObjectId
-                            , ObjectLink_Parent5.ChildObjectId
-                            , ObjectLink_Parent5.ChildObjectId
-                            , ObjectLink_Parent6.ChildObjectId
-                            , ObjectLink_Parent6.ChildObjectId
-                            , ObjectLink_Parent7.ChildObjectId
-                            , ObjectLink_Parent7.ChildObjectId
-                            , ObjectLink_Parent8.ChildObjectId
-                     )
-   , tmpDayOfWeek AS (SELECT zfCalc.Ord_dow, zfCalc.DayOfWeekName
-                      FROM (SELECT GENERATE_SERIES (CURRENT_DATE, CURRENT_DATE + INTERVAL '6 DAY', '1 DAY' :: INTERVAL) AS OperDate) AS tmp
-                           CROSS JOIN zfCalc_DayOfWeekName_cross (tmp.OperDate) AS zfCalc
-                     )
         -- Результат
         SELECT Object_Brand.ValueData    :: VarChar (100) AS BrandName
              , Object_Period.ValueData   :: VarChar (25)  AS PeriodName
@@ -495,6 +537,8 @@ BEGIN
                                             
              , tmpData.Debt_Amount          :: TFloat
              , tmpData.Sale_Amount          :: TFloat
+             , tmpData.Sale_InDiscount      :: TFloat
+             , tmpData.Sale_OutDiscount     :: TFloat
              , tmpData.Sale_Summ            :: TFloat
                                             
              , tmpData.Sale_SummCost_calc   :: TFloat AS Sale_SummCost

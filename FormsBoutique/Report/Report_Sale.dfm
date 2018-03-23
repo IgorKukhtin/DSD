@@ -178,6 +178,7 @@ inherited Report_SaleForm: TReport_SaleForm
       inherited cxGrid: TcxGrid
         Width = 1176
         Height = 340
+        ExplicitLeft = 304
         ExplicitWidth = 1176
         ExplicitHeight = 340
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -250,6 +251,16 @@ inherited Report_SaleForm: TReport_SaleForm
               Format = ',0.####'
               Kind = skSum
               Column = Sale_SummCost_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_InDiscount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_OutDiscount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -325,6 +336,16 @@ inherited Report_SaleForm: TReport_SaleForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_InDiscount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_OutDiscount
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -497,6 +518,26 @@ inherited Report_SaleForm: TReport_SaleForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 79
+          end
+          object Sale_InDiscount: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1087#1088#1086#1076#1072#1078#1072' ('#1074#1086' '#1074#1088#1077#1084#1103' '#1089#1082#1080#1076#1086#1082')'
+            DataBinding.FieldName = 'Sale_InDiscount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'. '#1087#1088#1086#1076#1072#1078#1072' ('#1074#1086' '#1074#1088#1077#1084#1103' '#1089#1082#1080#1076#1086#1082')'
+            Width = 79
+          end
+          object Sale_OutDiscount: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1087#1088#1086#1076#1072#1078#1072'  ('#1074#1085#1077' '#1089#1082#1080#1076#1086#1082')'
+            DataBinding.FieldName = 'Sale_OutDiscount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'. '#1087#1088#1086#1076#1072#1078#1072'  ('#1074#1085#1077' '#1089#1082#1080#1076#1086#1082')'
             Width = 79
           end
           object Sale_Summ: TcxGridDBColumn
