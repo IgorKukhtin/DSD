@@ -88,6 +88,7 @@ type
     procedure CreateDiscountKind;
     procedure CreateDiscount;
     procedure CreateDiscountTools;
+    procedure CreateDiscountPeriod;
     procedure CreateDiscountPeriodItem;
     procedure CreateFabrika;
     procedure CreateGoodsInfo;
@@ -298,6 +299,10 @@ begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\DiscountTools\');
 end;
 
+procedure TdbObjectProcedureTest.CreateDiscountPeriod;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\DiscountPeriod\');
+end;
 procedure TdbObjectProcedureTest.CreateDiscountPeriodItem;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\DiscountPeriodItem\');

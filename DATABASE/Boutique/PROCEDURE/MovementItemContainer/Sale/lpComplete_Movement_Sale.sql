@@ -100,7 +100,7 @@ BEGIN
                             )
             -- для Sybase
           , tmpCheck AS (SELECT Object.ObjectCode AS PartionId_MI FROM Object WHERE Object.Id IN (SELECT -12345 AS PartionId_MI
-                   UNION SELECT 681678 -- select ObP.*, MovementItem.* , Movement.* from MovementItem join Object as ObP on ObP.ObjectCode = MovementItem.Id and ObP.DescId = zc_Object_PartionMI() join Movement on Movement.Id = MovementId and Movement.DescId = zc_Movement_Sale() and Movement.Operdate = '14.05.2012' where PartionId = (SELECT MovementItemId FROM Object_PartionGoods join Object on Object.Id = GoodsId and Object.ObjectCode = 69023 join Object as o2 on o2.Id = GoodsSizeId and o2.ValueData = '40')
+                   /*UNION SELECT 681678 -- select ObP.*, MovementItem.* , Movement.* from MovementItem join Object as ObP on ObP.ObjectCode = MovementItem.Id and ObP.DescId = zc_Object_PartionMI() join Movement on Movement.Id = MovementId and Movement.DescId = zc_Movement_Sale() and Movement.Operdate = '14.05.2012' where PartionId = (SELECT MovementItemId FROM Object_PartionGoods join Object on Object.Id = GoodsId and Object.ObjectCode = 69023 join Object as o2 on o2.Id = GoodsSizeId and o2.ValueData = '40')
                    UNION SELECT 681677
                    UNION SELECT 647188
                    UNION SELECT 641696
@@ -125,7 +125,7 @@ BEGIN
                    UNION SELECT 642060
                    UNION SELECT 641782
                    UNION SELECT 588807
-                   UNION SELECT 588329
+                   UNION SELECT 588329*/
                          -- FROM gpSelect_MovementItem_Sale_Sybase_Check()
                         ))
         -- результат
