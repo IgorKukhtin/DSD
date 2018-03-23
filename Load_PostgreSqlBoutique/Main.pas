@@ -7616,8 +7616,8 @@ begin
         toStoredProc.Params.AddParam ('inChildId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inBankAccountId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAccountDirectionId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsGroupId',ftInteger,ptInput, 0);
         //
-
         while not EOF do
         begin
 
