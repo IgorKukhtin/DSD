@@ -19,7 +19,7 @@ RETURNS TABLE (Id                   Integer
              , GoodsId              Integer
              , GoodsCode            Integer
              , GoodsName            TVarChar
-             , GroupNameFull        TVarChar
+             , GoodsGroupNameFull   TVarChar
              , CurrencyName         TVarChar
              , Amount               TFloat
              , Remains              TFloat
@@ -104,7 +104,7 @@ BEGIN
             , Object_PartionGoods.GoodsId         AS GoodsId
             , Object_Goods.ObjectCode             AS GoodsCode
             , Object_Goods.ValueData              AS GoodsName
-            , Object_GroupNameFull.ValueData      As GroupNameFull
+            , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , Object_Currency.ValueData           AS CurrencyName
             , Object_PartionGoods.Amount          AS Amount
             , tmpContainer.Amount       :: TFloat AS Remains
@@ -145,9 +145,9 @@ BEGIN
            LEFT JOIN Object AS Object_Unit    ON Object_Unit.Id    = Object_PartionGoods.UnitId
            LEFT JOIN Object AS Object_Goods   ON Object_Goods.Id   = Object_PartionGoods.GoodsId
 
-           LEFT JOIN ObjectString AS Object_GroupNameFull
-                                   ON Object_GroupNameFull.ObjectId = Object_Goods.Id
-                                  AND Object_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+           LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
+                                  ON ObjectString_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                 AND ObjectString_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
 
            LEFT JOIN Object AS Object_Currency         ON Object_Currency.Id         = Object_PartionGoods.CurrencyId
            LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = Object_PartionGoods.BrandId

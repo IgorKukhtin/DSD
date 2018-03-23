@@ -39,7 +39,7 @@ BEGIN
      THEN
          inMovementId:= (SELECT tmp.Id
                          FROM (SELECT Movement.Id
-                                    , ROW_NUMBER() OVER (ORDER BY Movement.Operdate desc, Movement.Id desc) AS Ord
+                                    , ROW_NUMBER() OVER (ORDER BY Movement.Operdate DESC, Movement.Id DESC) AS Ord
                                FROM Movement
                                     INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                             ON MovementLinkObject_From.MovementId = Movement.Id

@@ -14,7 +14,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
   OldCreateOrder = False
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.ChoiceAction = actChoiceGuide
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
@@ -31,7 +31,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
     ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = DataSource
+      DataController.DataSource = MasterDS
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <
         item
@@ -144,9 +144,9 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         Options.Editing = False
         Width = 150
       end
-      object GroupNameFull: TcxGridDBColumn
+      object GoodsGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
-        DataBinding.FieldName = 'GroupNameFull'
+        DataBinding.FieldName = 'GoodsGroupNameFull'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -444,6 +444,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       Top = 0
       Align = alClient
       DataBinding.DataField = 'GoodsGroupNameFull'
+      DataBinding.DataSource = MasterDS
       ParentFont = False
       Properties.Alignment.Horz = taCenter
       Properties.Alignment.Vert = taVCenter
@@ -460,7 +461,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       AnchorY = 15
     end
   end
-  object DataSource: TDataSource
+  object MasterDS: TDataSource
     DataSet = MasterCDS
     Left = 56
     Top = 224
@@ -622,15 +623,15 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       ShortCut = 115
     end
     object bbSetErased: TdxBarButton
-      Action = dsdSetErased
+      Action = actSetErased
       Category = 0
     end
     object bbSetUnErased: TdxBarButton
-      Action = dsdSetUnErased
+      Action = actSetUnErased
       Category = 0
     end
     object bbToExcel: TdxBarButton
-      Action = dsdGridToExcel
+      Action = actGridToExcel
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
@@ -641,11 +642,11 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       ShowCaption = False
     end
     object bbChoice: TdxBarButton
-      Action = dsdChoiceGuides
+      Action = actChoiceGuide
       Category = 0
     end
     object bbProtocolOpenForm: TdxBarButton
-      Action = ProtocolOpenForm
+      Action = actProtocol
       Category = 0
     end
     object bbShowAll: TdxBarButton
@@ -689,7 +690,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object dsdSetErased: TdsdUpdateErased
+    object actSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spErased
@@ -702,9 +703,9 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       ImageIndex = 2
       ShortCut = 8238
       ErasedFieldName = 'isErased'
-      DataSource = DataSource
+      DataSource = MasterDS
     end
-    object dsdSetUnErased: TdsdUpdateErased
+    object actSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spUnErased
@@ -718,9 +719,9 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       ShortCut = 8238
       ErasedFieldName = 'isErased'
       isSetErased = False
-      DataSource = DataSource
+      DataSource = MasterDS
     end
-    object dsdChoiceGuides: TdsdChoiceGuides
+    object actChoiceGuide: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
       Params = <
@@ -758,7 +759,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           Name = 'GroupNameFull'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GroupNameFull'
+          ComponentItem = 'GoodsGroupNameFull'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -899,9 +900,9 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
-      DataSource = DataSource
+      DataSource = MasterDS
     end
-    object dsdGridToExcel: TdsdGridToExcel
+    object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
       Grid = cxGrid
@@ -910,7 +911,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object ProtocolOpenForm: TdsdOpenForm
+    object actProtocol: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
@@ -1111,22 +1112,22 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
     Left = 680
     Top = 96
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 288
     Top = 200
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
+  object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuide
       end
       item
       end>
     ActionItemList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuide
         ShortCut = 13
       end
       item
