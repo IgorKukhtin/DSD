@@ -14,12 +14,15 @@ $BODY$
    DECLARE vbJuridicalId   Integer;
    DECLARE vbContractId    Integer;
    DECLARE vbAreaId        Integer;
+   DECLARE vbAreaDneprId   Integer;
    DECLARE vbOperDate      TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_LoadSaleFrom1C());
      vbUserId := lpGetUserBySession (inSession);
 
+     vbAreaDneprId := (SELECT Object.Id FROM Object WHERE Object.Descid = zc_Object_Area() AND Object.ValueData LIKE 'Днепр');
+     
      -- Получаем параметры прайсЛиста
      SELECT LoadPriceList.OperDate	 
           , LoadPriceList.JuridicalId 
@@ -95,11 +98,15 @@ BEGIN
                                                            vbUserId)
         , lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_LastPrice(), tmp.GoodsId, vbOperDate)              -- дата прайса --CURRENT_TIMESTAMP
           -- Кол-во позиций по всем прайсам
-        , lpInsertUpdate_Goods_CountPrice (vbMovementId_pl, vbOperDate, tmp.GoodsId)
+        --, lpInsertUpdate_Goods_CountPrice (vbMovementId_pl, vbOperDate, tmp.GoodsId)
 
        FROM (WITH tmpGoods AS (SELECT Object_Goods_View.Id, Object_Goods_View.GoodsCode
                                FROM Object_Goods_View
                                WHERE Object_Goods_View.ObjectId = vbJuridicalId
+                                 AND (Object_Goods_View.AreaId = vbAreaId   --  регион = региону у поставщика,
+                                      -- если регион пусто или днепр , выбираем товары  с пустым регионом и днепра
+                                      OR ((vbAreaId = 0 OR vbAreaId = vbAreaDneprId) AND (COALESCE (Object_Goods_View.AreaId, 0) = 0 OR Object_Goods_View.AreaId = vbAreaDneprId)  )  
+                                      )
                               )
              SELECT LoadPriceListItem.*
                   , LoadPriceList.NDSinPrice
@@ -109,8 +116,8 @@ BEGIN
              FROM LoadPriceListItem 
                   JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
                   LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
-                                     ON ObjectLink_Goods_NDSKind.ObjectId = LoadPriceListItem.GoodsId
-                                    AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
+                                       ON ObjectLink_Goods_NDSKind.ObjectId = LoadPriceListItem.GoodsId
+                                      AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
                      
                   LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
                                         ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.Childobjectid
