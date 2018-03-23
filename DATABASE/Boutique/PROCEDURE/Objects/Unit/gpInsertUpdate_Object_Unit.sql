@@ -51,6 +51,7 @@ BEGIN
    IF vbUserId = zc_User_Sybase() AND ioId > 0
    THEN
         inPrinter:= (SELECT OS.ValueData FROM ObjectString AS OS WHERE OS.ObjectId = ioId AND OS.DescId = zc_ObjectString_Unit_Printer());
+        inGoodsGroupId:= (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = ioId AND OL.DescId = zc_ObjectLink_Unit_GoodsGroup());
    END IF;
    
    -- проверка прав уникальности для свойства <Наименование >

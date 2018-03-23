@@ -17,10 +17,11 @@ $BODY$
 BEGIN
 
      -- определили - используется ЛИ zc_ObjectFloat_Client_DiscountTaxTwo
-     IF 0 < 1 -- (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inUnitId AND OL.DescId = zc_ObjectLink_Unit_GoodsGroup())
+     IF (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inUnitId AND OL.DescId = zc_ObjectLink_Unit_GoodsGroup())
      THEN
          -- Если Группа товаров у товара = такая как надо
-         IF (select 1532 /*1530*/) -- (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inUnitId AND OL.DescId = zc_ObjectLink_Unit_GoodsGroup())
+         IF -- (select 1553 /*1532*/ /*1530*/)
+            (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inUnitId AND OL.DescId = zc_ObjectLink_Unit_GoodsGroup())
             IN (-- !!! поднимаемся на все уровни ВВЕРХ !!!!
                  SELECT ObjectLink.ChildObjectId
                  FROM ObjectLink

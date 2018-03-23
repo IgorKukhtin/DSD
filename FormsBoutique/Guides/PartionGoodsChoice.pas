@@ -23,7 +23,7 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxButtonEdit, cxLabel,
-  cxCurrencyEdit;
+  cxCurrencyEdit, cxDBLabel, Vcl.ExtCtrls;
 
 type
   TPartionGoodsChoiceForm = class(TParentForm)
@@ -95,6 +95,8 @@ type
     SybaseId: TcxGridDBColumn;
     PartionId: TcxGridDBColumn;
     DiscountTax: TcxGridDBColumn;
+    PanelGoodsGroupNameFull: TPanel;
+    DBLabelGoodsGroupNameFull: TcxDBLabel;
   private
     { Private declarations }
   public
