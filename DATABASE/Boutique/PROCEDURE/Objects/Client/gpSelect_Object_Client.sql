@@ -23,8 +23,12 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_Client());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_Client());
      vbUserId:= lpGetUserBySession (inSession);
+
+
+     -- проверка может ли смотреть любой магазин, или только свой
+     PERFORM lpCheckUnit_byUser (inUnitId_by:= inUnitId, inUserId:= vbUserId);
 
 
      -- Результат

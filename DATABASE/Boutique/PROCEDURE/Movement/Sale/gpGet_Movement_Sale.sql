@@ -278,8 +278,9 @@ BEGIN
                                    ON ObjectString_Phone.ObjectId = Object_To.Id
                                   AND ObjectString_Phone.DescId = zc_ObjectString_Client_Phone()
             LEFT JOIN tmpData ON 1 = 1
-       WHERE Movement.Id = inMovementId
-         AND Movement.DescId = zc_Movement_Sale();
+       WHERE Movement.Id     = inMovementId
+         AND Movement.DescId = zc_Movement_Sale()
+        ;
 
      END IF;
 

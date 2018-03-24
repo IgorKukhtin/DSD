@@ -49,13 +49,15 @@ RETURNS TABLE (Id                   Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbAccessKeyAll Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_PartionGoods());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_PartionGoods());
      vbUserId:= lpGetUserBySessiON (inSession);
-     -- определяется - может ли пользовать видеть весь справочник
-     -- vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
+
+
+     -- проверка может ли смотреть любой магазин, или только свой
+     PERFORM lpCheckUnit_byUser (inUnitId_by:= inUnitId, inUserId:= vbUserId);
+
 
      -- Результат
      RETURN QUERY

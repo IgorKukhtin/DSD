@@ -33,10 +33,14 @@ BEGIN
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_Movement_ReturnIn());
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- подразделение пользователя
-     vbUnitId_User := lpGetUnitBySession(inSession);
 
+     -- для Пользователя - к какому Подразделению он привязан
+     vbUnitId_User:= lpGetUnit_byUser (vbUserId);
+
+
+     -- заменили
      IF inOperDate < '01.01.2017' THEN inOperDate := CURRENT_DATE; END IF;
+
      -- пытаемся найти последний непроведенный документ
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -55,20 +59,10 @@ BEGIN
                          WHERE tmp.Ord = 1);
      END IF;
      
-     -- параметры из Документа
-     SELECT MovementLinkObject_From.ObjectId AS ClientId
-          , MovementLinkObject_To.ObjectId   AS UnitId
-            INTO vbClientId, vbUnitId
-     FROM MovementLinkObject AS MovementLinkObject_From
-          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                       ON MovementLinkObject_To.MovementId = MovementLinkObject_From.MovementId
-                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-     WHERE MovementLinkObject_From.MovementId = inMovementId
-       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From();
-     
      
      IF COALESCE (inMovementId, 0) = 0
      THEN
+         -- Результат
          RETURN QUERY 
          SELECT
                0 AS Id
@@ -107,9 +101,22 @@ BEGIN
                LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = vbUnitId_User;
      ELSE
 
+       -- параметры из Документа
+       SELECT MovementLinkObject_From.ObjectId AS ClientId
+            , MovementLinkObject_To.ObjectId   AS UnitId
+              INTO vbClientId, vbUnitId
+       FROM MovementLinkObject AS MovementLinkObject_From
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = MovementLinkObject_From.MovementId
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+       WHERE MovementLinkObject_From.MovementId = inMovementId
+         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From();
+
        -- проверка может ли смотреть любой магазин, или только свой
-       vbUnitId_User := lpCheckUnitByUser(vbUnitId, inSession);
+       PERFORM lpCheckUnit_byUser (inUnitId_by:= vbUnitId, inUserId:= vbUserId);
      
+
+       -- Результат
        RETURN QUERY 
            WITH
            -- выбираю все контейнеры по покупателю и подразделению , если выбрано 
@@ -183,7 +190,7 @@ BEGIN
                                                       AND MIFloat_TotalReturn.DescId         = zc_MIFloat_TotalReturn()
                        GROUP BY tmpData.SummDedt 
                        )
-
+         -- Результат
          SELECT
                Movement.Id
              , Movement.InvNumber
@@ -270,9 +277,12 @@ BEGIN
                                    ON ObjectString_Phone.ObjectId = Object_From.Id 
                                   AND ObjectString_Phone.DescId = zc_ObjectString_Client_Phone()
             LEFT JOIN tmpData ON 1 = 1
-       WHERE Movement.Id = inMovementId
-         AND Movement.DescId = zc_Movement_ReturnIn();
+       WHERE Movement.Id     = inMovementId
+         AND Movement.DescId = zc_Movement_ReturnIn()
+        ;
+
      END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
