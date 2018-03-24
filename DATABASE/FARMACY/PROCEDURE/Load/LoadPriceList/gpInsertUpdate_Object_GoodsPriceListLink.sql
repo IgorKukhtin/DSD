@@ -164,19 +164,19 @@ BEGIN
    -- Переносим данные в прайс-лист
    
      PERFORM gpInsertUpdate_MovementItem_PriceList(
-       PriceListItem.Id , -- Ключ объекта <Элемент документа>
-  LastPriceList_View.MovementId , -- Ключ объекта <Документ>
-          vbMainGoodsId , -- Товары
-              vbGoodsId , -- Товар прайс-листа
-           CASE LoadPriceList.NDSinPrice 
-                 WHEN True THEN Price 
-                 ELSE Price * (100 + ObjectFloat_NDSKind_NDS.ValueData) / 100 
-           END:: TFloat  , -- Цена
-          ExpirationDate , -- Партия товара
-              inSession )
+             PriceListItem.Id , -- Ключ объекта <Элемент документа>
+             LastPriceList_View.MovementId , -- Ключ объекта <Документ>
+             vbMainGoodsId , -- Товары
+             vbGoodsId , -- Товар прайс-листа
+             CASE LoadPriceList.NDSinPrice 
+                   WHEN True THEN Price 
+                   ELSE Price * (100 + ObjectFloat_NDSKind_NDS.ValueData) / 100 
+             END:: TFloat  , -- Цена
+             ExpirationDate , -- Партия товара
+             inSession )
        
       FROM LoadPriceListItem 
-               JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
+          JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
           JOIN LastPriceList_View ON LastPriceList_View.JuridicalId = LoadPriceList.JuridicalId
                             AND COALESCE(LastPriceList_View.ContractId, 0) = COALESCE(LoadPriceList.ContractId, 0)
           LEFT JOIN MovementItem AS PriceListItem ON PriceListItem.movementid = LastPriceList_View.MovementId  
