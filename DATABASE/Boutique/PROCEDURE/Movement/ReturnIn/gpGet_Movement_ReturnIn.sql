@@ -1,10 +1,13 @@
 -- Function: gpGet_Movement_ReturnIn (Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpGet_Movement_ReturnIn (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_ReturnIn (Integer, TDateTime, TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_ReturnIn(
     IN inMovementId        Integer  , -- ключ Документа
     IN inOperDate          TDateTime, -- ключ Документа
+    IN inStartDate         TDateTime, -- 
+    IN inEndDate           TDateTime, -- 
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
@@ -190,8 +193,8 @@ BEGIN
              
              --, ObjectDate_LastDate.ValueData           AS LastDate
              , tmpData.LastDate                         :: TDateTime AS LastDate
-             , (Movement.OperDate - interval '1 month') :: TDateTime AS StartDate
-             , (Movement.OperDate - interval '1 day')   :: TDateTime AS EndDate
+             , COALESCE(inStartDate, (Movement.OperDate - interval '1 month')) :: TDateTime AS StartDate
+             , COALESCE(inEndDate, (Movement.OperDate - interval '1 day'))     :: TDateTime AS EndDate
 
              , COALESCE (tmpData.TotalSumm, 0) :: TFloat AS TotalSumm
              , COALESCE (tmpData.TotalPay, 0)  :: TFloat AS TotalSummPay
@@ -277,10 +280,11 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И. 
+ 24.03.18         *
  19.02.18         *
  12.02.18         *
  15.05.17         *
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_ReturnIn (inMovementId:= 1, inOperDate:= CURRENT_DATE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Movement_ReturnIn (inMovementId:= 1, inOperDate:= CURRENT_DATE, inStartDate:= '01.02.2017'::TDateTime, inEndDate:= '01.03.2017'::TDateTime, inSession:= zfCalc_UserAdmin())
