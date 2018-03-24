@@ -191,7 +191,6 @@ object ReturnInForm: TReturnInForm
     object edEndDate: TcxDateEdit
       Left = 656
       Top = 103
-      EditValue = '09.05.2017'
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 19
@@ -1296,9 +1295,8 @@ object ReturnInForm: TReturnInForm
     Caption = #1044#1072#1090#1072' '#1085#1072#1095'. / '#1044#1072#1090#1072' '#1086#1082#1086#1085#1095'. '#1087#1088#1086#1076#1072#1078
   end
   object edStartDate: TcxDateEdit
-    Left = 566
+    Left = 563
     Top = 103
-    EditValue = '09.05.2017'
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 17
@@ -2661,6 +2659,20 @@ object ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inStartDate'
+        Component = edStartDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Component = edEndDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
@@ -2948,7 +2960,8 @@ object ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 116
+    Left = 148
+    Top = 16
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -3758,5 +3771,11 @@ object ReturnInForm: TReturnInForm
     PackSize = 1
     Left = 656
     Top = 224
+  end
+  object PeriodChoice: TPeriodChoice
+    DateStart = edStartDate
+    DateEnd = edEndDate
+    Left = 512
+    Top = 168
   end
 end

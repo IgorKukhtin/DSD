@@ -15,41 +15,29 @@ $BODY$BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
    RETURN QUERY 
-   WITH tmpPersonal AS (SELECT View_Personal.MemberId
-                             , MAX (View_Personal.UnitId) AS UnitId
-                             , MAX (View_Personal.PositionId) AS PositionId
-                        FROM Object_Personal_View AS View_Personal
-                        WHERE View_Personal.isErased = FALSE
-                        GROUP BY View_Personal.MemberId
-                       )
-
    SELECT 
-         ObjectUser.Id         AS Id 
-       , ObjectUser.ObjectCode AS Code
-       , ObjectUser.ValueData  AS Name
+         Object_User.Id         AS Id 
+       , Object_User.ObjectCode AS Code
+       , Object_User.ValueData  AS Name
        , ObjectLink_UserRole_Role.ChildObjectId AS RoleId
        , ObjectLink_UserRole_User.ObjectId      AS UserRoleId
 
        , Object_Unit.ObjectCode    AS UnitCode
        , Object_Unit.ValueData     AS UnitName
-       , Object_Position.ValueData AS PositionName
-    
-       , ObjectUser.isErased       AS isErased
+     
+       , Object_User.isErased       AS isErased
 
    FROM ObjectLink AS ObjectLink_UserRole_Role
         JOIN ObjectLink AS ObjectLink_UserRole_User 
                         ON ObjectLink_UserRole_User.ObjectId = ObjectLink_UserRole_Role.ObjectId
                        AND ObjectLink_UserRole_User.DescId = zc_ObjectLink_UserRole_User()
 
-        JOIN Object AS ObjectUser ON ObjectUser.Id = ObjectLink_UserRole_User.ChildObjectId
-
-        LEFT JOIN ObjectLink AS ObjectLink_User_Member
-                        ON ObjectLink_User_Member.ObjectId = ObjectLink_UserRole_User.ChildObjectId
-                       AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-        LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
-        LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
-        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
-
+        JOIN Object AS Object_User ON Object_User.Id = ObjectLink_UserRole_User.ChildObjectId
+        
+        LEFT JOIN ObjectLink AS ObjectLink_User_Unit
+                             ON ObjectLink_User_Unit.ObjectId = Object_User.Id
+                            AND ObjectLink_User_Unit.DescId = zc_ObjectLink_User_Unit()
+        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_User_Unit.ChildObjectId
 
    WHERE ObjectLink_UserRole_Role.DescId = zc_ObjectLink_UserRole_Role();        
   
@@ -63,6 +51,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».    œÓÎˇÚ˚ÍËÌ ¿.¿.
+ 24.03.18         *
  06.05.17                                                          *
  23.09.13                         *
 
