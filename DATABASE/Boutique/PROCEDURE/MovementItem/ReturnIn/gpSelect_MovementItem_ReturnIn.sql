@@ -169,6 +169,7 @@ BEGIN
                        )
  
      , tmpMI_Master AS (SELECT MI_Master.Id                                              AS MovementItemId
+                             , CAST (ROW_NUMBER() OVER (ORDER BY MI_Master.Id) AS Integer) AS LineNum
                              , MI_Master.PartionId                                       AS PartionId
                              , MI_Master.ObjectId                                        AS GoodsId
                              , MI_Master.Amount                                          AS Amount_master
@@ -261,6 +262,7 @@ BEGIN
                        )
                        
             , tmpMI AS (SELECT COALESCE (tmpMI_Master.MovementItemId, 0)               AS Id
+                             , COALESCE (tmpMI_Master.LineNum, 0)                      AS LineNum
                              , COALESCE (tmpMI_Master.PartionId, tmpMI_Sale.PartionId) AS PartionId
                              , COALESCE (tmpMI_Master.GoodsId, tmpMI_Sale.GoodsId)     AS GoodsId
                              , COALESCE (tmpMI_Master.Amount_master, 0)                AS Amount
@@ -340,7 +342,7 @@ BEGIN
        -- результат
        SELECT
              tmpMI.Id                         :: Integer AS Id
-           , CAST (ROW_NUMBER() OVER (ORDER BY tmpMI.Id) AS Integer) AS LineNum
+           , tmpMI.LineNum                    :: Integer AS LineNum
            , tmpMI.PartionId                  :: Integer AS PartionId
            , Object_Goods.Id                             AS GoodsId
            , Object_Goods.ObjectCode                     AS GoodsCode
