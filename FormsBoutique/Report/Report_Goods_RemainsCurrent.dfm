@@ -6,6 +6,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -396
   ExplicitTop = 0
   ExplicitWidth = 1185
   ExplicitHeight = 468
@@ -187,11 +188,12 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     object cbYear: TcxCheckBox
       Left = 724
       Top = 30
-      Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052' ('#1044#1072'/'#1053#1077#1090')'
-      Caption = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052
+      Hint = 'Visible = False '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052' ('#1044#1072'/'#1053#1077#1090')'
+      Caption = 'Visible = False '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052
       ParentShowHint = False
       ShowHint = True
       TabOrder = 19
+      Visible = False
       Width = 130
     end
     object edStartYear: TcxButtonEdit

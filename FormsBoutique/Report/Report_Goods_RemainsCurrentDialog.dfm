@@ -147,11 +147,12 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
   object cbYear: TcxCheckBox
     Left = 182
     Top = 264
-    Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052' ('#1044#1072'/'#1053#1077#1090')'
-    Caption = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052
+    Hint = 'Visible = False '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052' ('#1044#1072'/'#1053#1077#1090')'
+    Caption = 'Visible = False '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052
     ParentShowHint = False
     ShowHint = True
     TabOrder = 15
+    Visible = False
     Width = 142
   end
   object edStartYear: TcxButtonEdit
