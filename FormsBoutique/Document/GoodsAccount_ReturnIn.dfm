@@ -612,7 +612,7 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
             Width = 80
           end
           object SummChangePercent: TcxGridDBColumn
-            Caption = #1044#1086#1087'. '#1089#1082'. '#1088#1072#1089#1095#1077#1090
+            Caption = #1044#1086#1087'. '#1089#1082'. '#1074' '#1088#1072#1089#1095'.'
             DataBinding.FieldName = 'SummChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -620,7 +620,7 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080' '#1043#1056#1053
+            HeaderHint = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1072#1103' '#1089#1082#1080#1076#1082#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077' - '#1057#1087#1080#1089#1072#1085#1080#1077' '#1087#1088#1080' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1080', '#1043#1056#1053
             Options.Editing = False
             Width = 80
           end

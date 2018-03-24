@@ -1,7 +1,7 @@
 object ReturnInItemEditForm: TReturnInItemEditForm
   Left = 0
   Top = 0
-  Caption = #1042#1086#1079#1074#1088#1072#1090
+  Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1087#1083#1072#1090#1099
   ClientHeight = 295
   ClientWidth = 438
   Color = clBtnFace

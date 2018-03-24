@@ -1,7 +1,7 @@
 object SaleItemEditForm: TSaleItemEditForm
   Left = 0
   Top = 0
-  Caption = #1054#1087#1083#1072#1090#1072
+  Caption = #1054#1087#1083#1072#1090#1072' '#1074' '#1055#1088#1086#1076#1072#1078#1077
   ClientHeight = 315
   ClientWidth = 438
   Color = clBtnFace

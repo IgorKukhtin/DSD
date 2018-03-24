@@ -1,7 +1,7 @@
 object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
   Left = 0
   Top = 0
-  Caption = #1056#1072#1089#1095#1077#1090#1099
+  Caption = #1054#1087#1083#1072#1090#1072' '#1074' '#1056#1072#1089#1095#1077#1090#1072#1093
   ClientHeight = 315
   ClientWidth = 438
   Color = clBtnFace
