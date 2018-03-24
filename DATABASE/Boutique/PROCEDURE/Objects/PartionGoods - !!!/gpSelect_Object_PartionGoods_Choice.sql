@@ -45,6 +45,7 @@ RETURNS TABLE (Id                   Integer
              , DiscountTax          TFloat
              , PartionId            Integer
              , SybaseId             Integer
+             , Color_Calc           Integer
               )
 AS
 $BODY$
@@ -136,6 +137,11 @@ BEGIN
             , tmpContainer.PartionId
             , Object_PartionGoods.SybaseId
 
+            , CASE WHEN tmpContainer.Amount <= 0 THEN 12500670    -- серый
+                   WHEN tmpContainer.AmountDebt > 0 THEN 14664704 -- голубой
+                   ELSE zc_Color_Black()
+              END      ::Integer  AS Color_Calc
+              
        FROM tmpContainer
 
            LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpContainer.PartionId
@@ -176,6 +182,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
+24.03.18          *
 23.01.18          *
 29.06.17          *
 21.06.17          *
@@ -186,3 +193,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Object_PartionGoods_Choice (506, FALSE, zfCalc_UserAdmin())
+--select * from gpSelect_Object_PartionGoods_Choice(inUnitId := 1512 , inIsShowAll := 'False' ,  inSession := '6');
+

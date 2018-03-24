@@ -27,8 +27,6 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 774
-    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -407,6 +405,13 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
+      object Color_calc: TcxGridDBColumn
+        DataBinding.FieldName = 'Color_calc'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 40
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -426,7 +431,9 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 6
+    Style.BorderColor = clGray
+    Style.Color = clWhite
+    TabOrder = 4
     Width = 203
   end
   object PanelGoodsGroupNameFull: TPanel
@@ -437,8 +444,6 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 7
-    ExplicitLeft = -291
-    ExplicitWidth = 1065
     object DBLabelGoodsGroupNameFull: TcxDBLabel
       Left = 0
       Top = 0
@@ -454,7 +459,6 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       Style.Font.Name = 'Tahoma'
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
-      ExplicitWidth = 1065
       Height = 30
       Width = 874
       AnchorX = 437
@@ -470,7 +474,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
     Aggregates = <>
     Params = <>
     Left = 24
-    Top = 184
+    Top = 168
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1135,7 +1139,11 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
