@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Sale(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , LastDate TDateTime, TotalSumm TFloat, TotalSummPay TFloat, TotalDebt TFloat
+             , LastDate TDateTime
+             , TotalSumm TFloat, TotalSummPay TFloat, TotalDebt TFloat
              , DiscountTax TFloat, DiscountTaxTwo TFloat
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
@@ -30,10 +31,14 @@ BEGIN
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Sale());
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- подразделение пользовател€
-     vbUnitId_User := lpGetUnitBySession(inSession);
 
+     -- дл€ ѕользовател€ - к какому ѕодразделению он прив€зан
+     vbUnitId_User:= lpGetUnit_byUser (vbUserId);
+
+
+     -- заменили
      IF inOperDate < '01.01.2017' THEN inOperDate := CURRENT_DATE; END IF;
+
      -- пытаемс€ найти последний непроведенный документ
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -43,8 +48,8 @@ BEGIN
                                FROM Movement
                                     INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                             ON MovementLinkObject_From.MovementId = Movement.Id
-                                           AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                           AND MovementLinkObject_From.ObjectId = vbUnitId_User
+                                           AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                                           AND MovementLinkObject_From.ObjectId   = vbUnitId_User
                                WHERE Movement.DescId   = zc_Movement_Sale()
                                  AND Movement.StatusId = zc_Enum_Status_UnComplete()
                                  AND Movement.OperDate = CURRENT_DATE
@@ -52,19 +57,10 @@ BEGIN
                          WHERE tmp.Ord = 1);
      END IF;
 
-     -- параметры из ƒокумента
-     SELECT MovementLinkObject_From.ObjectId AS UnitId
-          , MovementLinkObject_To.ObjectId   AS ClientId
-            INTO vbUnitId, vbClientId
-     FROM MovementLinkObject AS MovementLinkObject_From
-          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                       ON MovementLinkObject_To.MovementId = MovementLinkObject_From.MovementId
-                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-     WHERE MovementLinkObject_From.MovementId = inMovementId
-       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From();
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
+         -- –езультат
          RETURN QUERY
          SELECT
                0 AS Id
@@ -100,9 +96,22 @@ BEGIN
                LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = vbUnitId_User;
      ELSE
 
-       -- проверка может ли смотреть любой магазин, или только свой
-       vbUnitId_User := lpCheckUnitByUser(vbUnitId, inSession);
+       -- параметры из ƒокумента
+       SELECT MovementLinkObject_From.ObjectId AS UnitId
+            , MovementLinkObject_To.ObjectId   AS ClientId
+              INTO vbUnitId, vbClientId
+       FROM MovementLinkObject AS MovementLinkObject_From
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = MovementLinkObject_From.MovementId
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+       WHERE MovementLinkObject_From.MovementId = inMovementId
+         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From();
 
+       -- проверка может ли смотреть любой магазин, или только свой
+       PERFORM lpCheckUnit_byUser (inUnitId_by:= vbUnitId, inUserId:= vbUserId);
+
+
+       -- –езультат
        RETURN QUERY
            WITH
            -- выбираю все контейнеры по покупателю и подразделению , если выбрано
@@ -176,7 +185,7 @@ BEGIN
                                                       AND MIFloat_TotalReturn.DescId         = zc_MIFloat_TotalReturn()
                        GROUP BY tmpData.SummDedt
                        )
-
+         -- –езультат
          SELECT
                Movement.Id
              , Movement.InvNumber
@@ -271,8 +280,8 @@ BEGIN
             LEFT JOIN tmpData ON 1 = 1
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_Sale();
-     END IF;
 
+     END IF;
 
 END;
 $BODY$

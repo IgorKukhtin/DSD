@@ -17,6 +17,9 @@ BEGIN
     vbUserId:= lpGetUserBySession (inSession);
 
 
+    -- Проверка - Дата Документа
+    PERFORM lpCheckOperDate_byUnit (inUnitId_by:= lpGetUnit_byUser (vbUserId), inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId), inUserId:= vbUserId);
+
     -- тек.статус документа
     vbStatusId:= (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId);
 
@@ -25,7 +28,7 @@ BEGIN
                                 , inUserId     := vbUserId);
 
     -- пересчитали "итоговые" суммы по элементам партии продажи / возврата
-    PERFORM lpUpdate_MI_Partion_Total_byMovement(inMovementId);
+    PERFORM lpUpdate_MI_Partion_Total_byMovement (inMovementId);
 
     -- Если был статус Проведен
     IF vbStatusId = zc_Enum_Status_Complete()

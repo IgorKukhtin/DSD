@@ -18,6 +18,11 @@ BEGIN
 
      -- !!!Меняем только для Подразделения!!! - Дата док. должна соответствовать Дате Проведения
      UPDATE Movement SET OperDate = CURRENT_DATE WHERE Movement.Id = inMovementId;
+     -- сохранили свойство <Дата создания> - по Дате Проведения
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), inMovementId, CURRENT_TIMESTAMP);
+     -- сохранили свойство <Пользователь (создание)> - по Пользователю Проведения
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), inMovementId, vbUserId);
+
 
      -- создаются временные таблицы - для формирование данных по проводкам
      PERFORM lpComplete_Movement_Sale_CreateTemp();

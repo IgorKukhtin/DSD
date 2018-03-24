@@ -10,31 +10,28 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnIn(
     IN inToId                 Integer   , --  ому (в документе)
     IN inComment              TVarChar  , -- ѕримечание
     IN inSession              TVarChar    -- сесси€ пользовател€
-)                              
+)
 RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbUnitId Integer;
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ReturnIn());
      vbUserId := lpGetUserBySession (inSession);
 
 
-     -- определ€ем магазин по принадлежности пользовател€ к сотруднику
-     vbUnitId:= lpGetUnitBySession (inSession);
-
      -- проверка может ли смотреть любой магазин, или только свой
-     vbUnitId := lpCheckUnitByUser(inToId, inSession);
+     PERFORM lpCheckUnit_byUser (inUnitId_by:= inToId, inUserId:= vbUserId);
+
 
      -- определ€етс€ уникальный є док.
      IF COALESCE (ioId, 0) = 0 THEN
-         ioInvNumber:= CAST (NEXTVAL ('Movement_ReturnIn_seq') AS TVarChar);  
+         ioInvNumber:= CAST (NEXTVAL ('Movement_ReturnIn_seq') AS TVarChar);
      ELSEIF vbUserId = zc_User_Sybase() THEN
         ioInvNumber:= (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = ioId);
      END IF;
-     
+
      -- сохранили <ƒокумент>
      ioId := lpInsertUpdate_Movement_ReturnIn (ioId                := ioId
                                              , inInvNumber         := ioInvNumber

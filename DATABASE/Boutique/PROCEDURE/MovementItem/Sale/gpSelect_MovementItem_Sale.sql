@@ -44,18 +44,19 @@ RETURNS TABLE (Id Integer, LineNum Integer, PartionId Integer
 AS
 $BODY$
   DECLARE vbUserId      Integer;
-  DECLARE vbUnitId_User Integer;
   DECLARE vbUnitId      Integer;
   DECLARE vbPriceListId Integer;
   DECLARE vbOperDate    TDateTime;
+  DECLARE vbIsOperPrice Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_Sale());
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- если у пользователя подразделение = 0, тогда может смотреть вх.цену, сумму, прибыль, иначе нет
-     -- подразделение пользователя
-     vbUnitId_User := lpGetUnitBySession(inSession);
+
+     -- Получили - показывать цену ВХ.
+     vbIsOperPrice:= lpCheckOperPrice_visible (vbUserId);
+
 
      -- Параметры документа
      SELECT Movement.OperDate
@@ -107,20 +108,25 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                        AND MIFloat_CountForPrice.DescId         = zc_MIFloat_CountForPrice()
+                            -- в магазине ограничиваем инфу
                             LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
                                                         ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
                                                        AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
-                                                       AND vbUnitId_User = 0 --  продавцам в магазинах ограничиваем инфу
+                                                       AND vbIsOperPrice                    = TRUE
                             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                         ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                                        AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
-
+                            -- в магазине ограничиваем инфу
                             LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValue
                                                         ON MIFloat_CurrencyValue.MovementItemId = MovementItem.Id
                                                        AND MIFloat_CurrencyValue.DescId         = zc_MIFloat_CurrencyValue()
+                                                       AND vbIsOperPrice                        = TRUE
+                            -- в магазине ограничиваем инфу
                             LEFT JOIN MovementItemFloat AS MIFloat_ParValue
                                                         ON MIFloat_ParValue.MovementItemId = MovementItem.Id
                                                        AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
+                                                       AND vbIsOperPrice                   = TRUE
+
                             LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                         ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                                        AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()

@@ -18,7 +18,7 @@ BEGIN
 
 
      -- если у пользователя = 0, тогда может смотреть любой магазин, иначе только свой ИЛИ свой Склад
-     IF inUnitId_by > 0 AND COALESCE (inUnitId_by, 0) NOT IN (SELECT vbUnitId AS UnitId UNION ALL SELECT OL.ChildObjectid FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Child() AND OL.Objectid = vbUnitId)
+     IF vbUnitId > 0 AND COALESCE (inUnitId_by, 0) NOT IN (SELECT vbUnitId AS UnitId UNION ALL SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Child() AND OL.ObjectId = vbUnitId)
      THEN
          RAISE EXCEPTION 'Ошибка.У Пользователя <%> - <%> нет доступак к данным подразделения <%>.'
                        , lfGet_Object_ValueData_sh (inUserId)

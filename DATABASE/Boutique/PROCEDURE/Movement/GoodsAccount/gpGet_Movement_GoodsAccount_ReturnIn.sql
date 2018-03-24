@@ -20,16 +20,22 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
                )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbUnitId Integer;
+   DECLARE vbUserId      Integer;
+   DECLARE vbUnitId_User Integer;
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_Movement_GoodsAccount());
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- определ€ть магазин по принадлежности пользовател€ к сотруднику
-     vbUnitId:= lpGetUnitBySession (inSession);
+
+     -- дл€ ѕользовател€ - к какому ѕодразделению он прив€зан
+     vbUnitId_User := lpGetUnit_byUser (vbUserId);
+
      
+     -- заменили
+     IF inOperDate < '01.01.2017' THEN inOperDate := CURRENT_DATE; END IF;
+
+
      IF COALESCE (inMovementId, 0) = 0
      THEN
          RETURN QUERY 
@@ -66,7 +72,8 @@ BEGIN
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
-               LEFT JOIN Object AS Object_Unit   ON Object_Unit.Id   = vbUnitId;
+               LEFT JOIN Object AS Object_Unit   ON Object_Unit.Id   = vbUnitId_User
+              ;
      ELSE
        RETURN QUERY 
          SELECT

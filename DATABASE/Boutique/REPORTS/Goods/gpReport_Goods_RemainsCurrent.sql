@@ -68,12 +68,20 @@ RETURNS TABLE (PartionId            Integer
               )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbUnitId Integer;
+   DECLARE vbUserId      Integer;
+   DECLARE vbIsOperPrice Boolean;
 BEGIN
     -- проверка прав пользовател€ на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_...());
     vbUserId:= lpGetUserBySession (inSession);
+
+
+    -- проверка может ли смотреть любой магазин, или только свой
+    PERFORM lpCheckUnit_byUser (inUnitId_by:= inUnitId, inUserId:= vbUserId);
+
+    -- ѕолучили - показывать цену ¬’.
+    vbIsOperPrice:= lpCheckOperPrice_visible (vbUserId);
+
 
     -- !!!замена!!!
     IF inIsPartion = TRUE THEN
@@ -86,9 +94,6 @@ BEGIN
     IF inIsYear = TRUE AND COALESCE (inEndYear, 0) = 0 THEN
        inEndYear:= 1000000;
     END IF;
-
-     -- подразделение пользовател€  + проверка может ли смотреть любой магазин, или только свой
-     vbUnitId := lpCheckUnitByUser(inUnitId, inSession);
 
 
     -- таблица подразделений
@@ -135,7 +140,7 @@ BEGIN
                            , Object_PartionGoods.CurrencyId
 
                            , Object_PartionGoods.MovementId
-                           , CASE WHEN vbUnitId = 0 THEN Object_PartionGoods.OperPrice ELSE 0 END AS OperPrice
+                           , CASE WHEN vbIsOperPrice = TRUE THEN Object_PartionGoods.OperPrice ELSE 0 END AS OperPrice
                            , Object_PartionGoods.CountForPrice
                            , Object_PartionGoods.OperPriceList
                            -- , CASE WHEN Container.WhereObjectId = Object_PartionGoods.UnitId THEN Object_PartionGoods.Amount ELSE 0 END AS Amount_in
@@ -300,7 +305,8 @@ BEGIN
                                                                           , inCurrencyToId  := Object.Id
                                                                            ) AS lfSelect
                          WHERE Object.DescId = zc_Object_Currency()
-                           AND Object.Id <> zc_Currency_Basis()
+                           AND Object.Id     <> zc_Currency_Basis()
+                           AND vbIsOperPrice = TRUE
                         )
         -- –езультат
         SELECT
@@ -375,6 +381,7 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = tmpData.GoodsSizeId
             LEFT JOIN Object AS Object_Juridical        ON Object_Juridical.Id        = tmpData.JuridicalId
             LEFT JOIN Object AS Object_Currency         ON Object_Currency.Id         = tmpData.CurrencyId
+                                                       AND vbIsOperPrice              = TRUE
 
             LEFT JOIN Object AS Object_Brand   ON Object_Brand.Id   = tmpData.BrandId
             LEFT JOIN Object AS Object_Fabrika ON Object_Fabrika.Id = tmpData.FabrikaId
