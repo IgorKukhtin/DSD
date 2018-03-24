@@ -521,7 +521,7 @@ object GoodsAccountForm: TGoodsAccountForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-                    object LineNum: TcxGridDBColumn [0]
+          object LineNum: TcxGridDBColumn
             Caption = #8470' '#1087'/'#1087
             DataBinding.FieldName = 'LineNum'
             HeaderAlignmentHorz = taCenter
@@ -1491,8 +1491,10 @@ object GoodsAccountForm: TGoodsAccountForm
         item
           StoredProc = spGet_TotalSumm_byClient
         end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1083#1080#1077#1085#1090#1072
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh
@@ -2561,6 +2563,13 @@ object GoodsAccountForm: TGoodsAccountForm
         Name = 'DiscountTax'
         Value = Null
         Component = edDiscountTax
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountTaxTwo'
+        Value = Null
+        Component = edDiscountTaxTwo
         DataType = ftFloat
         MultiSelectSeparator = ','
       end

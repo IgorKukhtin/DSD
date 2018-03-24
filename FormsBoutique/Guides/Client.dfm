@@ -27,7 +27,6 @@ object ClientForm: TClientForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = 72
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -719,6 +718,13 @@ object ClientForm: TClientForm
           Component = MasterCDS
           ComponentItem = 'DiscountTax'
           DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscountTaxTwo'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'DiscountTaxTwo'
           MultiSelectSeparator = ','
         end
         item

@@ -2992,6 +2992,13 @@ object ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'DiscountTaxTwo'
+        Value = Null
+        Component = edDiscountTaxTwo
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'CityName'
         Value = Null
         DataType = ftString

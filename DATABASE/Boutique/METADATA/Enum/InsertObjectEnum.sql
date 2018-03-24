@@ -5,7 +5,7 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_Admin(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_Admin'), inName:= 'Роль администратора', inEnumName:= 'zc_Enum_Role_Admin');
      
      -- Роль в Магазине ВСЕМ
-     -- actReturnInMovement + actReturnInMovement + actReport_SaleReturnIn + actReport_GoodsMI_Account + actReport_CollationByClient + actReport_ClientDebt + actReport_Goods_RemainsCurrent
+     -- actReturnInMovement + actReport_SaleReturnIn + actReport_GoodsMI_Account + actReport_CollationByClient + actReport_ClientDebt + actReport_Goods_RemainsCurrent
      PERFORM lpInsertUpdate_Object (ioId:= (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 2)
                                   , inDescId    := zc_Object_Role()
                                   , inObjectCode:= 2
