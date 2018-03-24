@@ -47,6 +47,7 @@ BEGIN
                                            AND MovementLinkObject_To.ObjectId = vbUnitId_User
                                WHERE Movement.DescId   = zc_Movement_GoodsAccount()
                                  AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                 AND Movement.OperDate = CURRENT_DATE
                                ) AS tmp
                          WHERE tmp.Ord = 1);
      END IF;

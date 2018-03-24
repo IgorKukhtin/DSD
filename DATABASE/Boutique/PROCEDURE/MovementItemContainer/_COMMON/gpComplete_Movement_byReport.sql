@@ -16,15 +16,13 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- определяем вид документа + Дату
+
+     -- определяем параметры Документа
      SELECT Movement.DescId, Movement.OperDate INTO vbDescId, vbOperDate FROM Movement WHERE Movement.Id = inMovementId;
 
 
-     -- Проверка
-     IF vbOperDate < DATE_TRUNC ('DAY', CURRENT_TIMESTAMP - INTERVAL '14 HOUR')
-     THEN
-         RAISE EXCEPTION 'Ошибка.Изменение данных возможно только с <%>', zfConvert_DateToString (DATE_TRUNC ('DAY', CURRENT_TIMESTAMP - INTERVAL '14 HOUR'));
-     END IF;
+     -- Проверка - Дата Документа
+     PERFORM lpCheckOperDate_byUnit (inUnitId_by:= lpGetUnit_byUser (vbUserId), inOperDate:= vbOperDate, inUserId:= vbUserId);
 
 
      -- Провели

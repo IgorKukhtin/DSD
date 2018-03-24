@@ -64,4 +64,4 @@ ALTER FUNCTION lpCheckRight (TVarChar, Integer, Date)  OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Process('2')
+-- SELECT * FROM gpSelect_Object_Process (zfCalc_UserAdmin())

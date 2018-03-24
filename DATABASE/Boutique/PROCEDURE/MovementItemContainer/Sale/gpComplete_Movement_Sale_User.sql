@@ -15,6 +15,10 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Sale());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+     -- !!!Меняем только для Подразделения!!! - Дата док. должна соответствовать Дате Проведения
+     UPDATE Movement SET OperDate = CURRENT_DATE WHERE Movement.Id = inMovementId;
+
      -- создаются временные таблицы - для формирование данных по проводкам
      PERFORM lpComplete_Movement_Sale_CreateTemp();
 

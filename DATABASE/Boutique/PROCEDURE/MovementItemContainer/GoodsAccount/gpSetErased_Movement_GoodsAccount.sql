@@ -13,7 +13,9 @@ $BODY$
   DECLARE vbStatusId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_GoodsAccount());
+    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_GoodsAccount());
+    vbUserId:= lpGetUserBySession (inSession);
+
 
     -- тек.статус документа
     vbStatusId:= (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId);

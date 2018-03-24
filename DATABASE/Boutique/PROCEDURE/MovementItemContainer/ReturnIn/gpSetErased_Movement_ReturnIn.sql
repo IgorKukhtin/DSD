@@ -13,11 +13,20 @@ $BODY$
   DECLARE vbStatusId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_ReturnIn());
+    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_ReturnIn());
+    vbUserId:= lpGetUserBySession (inSession);
+
 
     -- тек.статус документа
     vbStatusId:= (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId);
     
+     -- Проверка - Дата - для User - Магазин
+     IF lpCheckUnitByUser((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To()), inSession);
+        AND (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId) < DATE_TRUNC ('DAY', CURRENT_TIMESTAMP - INTERVAL '14 HOUR')
+     THEN
+         RAISE EXCEPTION 'Ошибка.Изменение данных возможно только с <%>', zfConvert_DateToString (DATE_TRUNC ('DAY', CURRENT_TIMESTAMP - INTERVAL '14 HOUR'));
+     END IF;
+
     -- Удаляем Документ
     PERFORM lpSetErased_Movement (inMovementId := inMovementId
                                 , inUserId     := vbUserId);
