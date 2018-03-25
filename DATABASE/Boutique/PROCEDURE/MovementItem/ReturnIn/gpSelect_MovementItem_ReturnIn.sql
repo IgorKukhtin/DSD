@@ -160,6 +160,8 @@ BEGIN
                           AND Movement.StatusId = zc_Enum_Status_Complete()
                           -- ÇÀ ÏÅÐÈÎÄ
                           AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                          -- åñëè ÅÑÒÜ äîëã
+                          AND MovementItem.Amount > COALESCE (MIFloat_TotalCountReturn.ValueData, 0)
                        )
  
      , tmpMI_Master AS (SELECT MI_Master.Id                                              AS MovementItemId
