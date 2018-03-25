@@ -50,17 +50,14 @@ RETURNS TABLE (MovementId            Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbUnitId Integer;
 BEGIN
-
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
 
-    -- определяем магазин по принадлежности пользователя к сотруднику
-    --vbUnitId:= lpGetUnitBySession (inSession);
-    
-    -- подразделение пользователя  + проверка может ли смотреть любой магазин, или только свой
-    vbUnitId := lpCheckUnitByUser(inUnitId, inSession);
+
+    -- проверка может ли смотреть любой магазин, или только свой
+    PERFORM lpCheckUnit_byUser (inUnitId_by:= inUnitId, inUserId:= vbUserId);
+
 
     -- Результат
     RETURN QUERY

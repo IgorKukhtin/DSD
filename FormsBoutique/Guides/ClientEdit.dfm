@@ -145,6 +145,8 @@ object ClientEditForm: TClientEditForm
     Top = 143
     Hint = '% '#1089#1082#1080#1076#1082#1080' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1074' '#1063#1072#1076#1086' '#1085#1072' '#1043#1088#1091#1087#1087#1091' <'#1054#1073#1091#1074#1100'>'
     Caption = '% '#1089#1082#1080#1076#1082#1080' '#1054#1073#1091#1074#1100
+    ParentShowHint = False
+    ShowHint = True
   end
   object edDiscountTaxTwo: TcxCurrencyEdit
     Left = 148

@@ -7,7 +7,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitLeft = -396
-  ExplicitTop = -11
+  ExplicitTop = 0
   ExplicitWidth = 1185
   ExplicitHeight = 468
   PixelsPerInch = 96
@@ -188,11 +188,12 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     object cbYear: TcxCheckBox
       Left = 724
       Top = 30
-      Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052' ('#1044#1072'/'#1053#1077#1090')'
-      Caption = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052
+      Hint = 'Visible = False '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052' ('#1044#1072'/'#1053#1077#1090')'
+      Caption = 'Visible = False '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052
       ParentShowHint = False
       ShowHint = True
       TabOrder = 19
+      Visible = False
       Width = 130
     end
     object edStartYear: TcxButtonEdit
@@ -224,19 +225,19 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   inherited PageControl: TcxPageControl [1]
     Top = 81
     Width = 1169
-    Height = 352
+    Height = 322
     TabOrder = 3
     ExplicitTop = 81
     ExplicitWidth = 1169
     ExplicitHeight = 352
-    ClientRectBottom = 352
+    ClientRectBottom = 322
     ClientRectRight = 1169
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1169
       ExplicitHeight = 352
       inherited cxGrid: TcxGrid
         Width = 1169
-        Height = 352
+        Height = 322
         ExplicitWidth = 1169
         ExplicitHeight = 352
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -523,7 +524,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1048#1090#1086#1075#1086' '#1086#1089#1090#1072#1090#1086#1082' '#1082#1086#1083'-'#1074#1086' '#1089' '#1091#1095#1077#1090#1086#1084' '#1076#1086#1083#1075#1072
+            HeaderHint = #1048#1090#1086#1075#1086' '#1086#1089#1090#1072#1090#1086#1082' '#1082#1086#1083'-'#1074#1086' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091' '#1089' '#1091#1095#1077#1090#1086#1084' '#1076#1086#1083#1075#1072
             Options.Editing = False
             Width = 70
           end
@@ -759,6 +760,38 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           end
         end
       end
+    end
+  end
+  object PanelGoodsGroupNameFull: TPanel [2]
+    Left = 0
+    Top = 403
+    Width = 1169
+    Height = 30
+    Align = alBottom
+    BevelOuter = bvNone
+    TabOrder = 6
+    ExplicitTop = 395
+    ExplicitWidth = 1065
+    object DBLabelGoodsGroupNameFull: TcxDBLabel
+      Left = 0
+      Top = 0
+      Align = alClient
+      DataBinding.DataField = 'GoodsGroupNameFull'
+      DataBinding.DataSource = MasterDS
+      ParentFont = False
+      Properties.Alignment.Horz = taCenter
+      Properties.Alignment.Vert = taVCenter
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clNavy
+      Style.Font.Height = -12
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+      ExplicitWidth = 1065
+      Height = 30
+      Width = 1169
+      AnchorX = 585
+      AnchorY = 15
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore

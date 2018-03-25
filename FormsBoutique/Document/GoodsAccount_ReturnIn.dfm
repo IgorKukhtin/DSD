@@ -29,19 +29,19 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
     BevelOuter = bvNone
     TabOrder = 0
     object edInvNumber: TcxTextEdit
-      Left = 9
+      Left = 177
       Top = 23
       Properties.ReadOnly = True
       TabOrder = 0
-      Width = 149
+      Width = 70
     end
     object cxLabel1: TcxLabel
-      Left = 9
+      Left = 177
       Top = 5
       Caption = #8470' '#1076#1086#1082'.'
     end
     object edOperDate: TcxDateEdit
-      Left = 165
+      Left = 252
       Top = 23
       EditValue = '09.05.2017'
       Properties.SaveTime = False
@@ -50,12 +50,12 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
       Width = 82
     end
     object cxLabel2: TcxLabel
-      Left = 165
+      Left = 252
       Top = 5
       Caption = #1044#1072#1090#1072
     end
     object edFrom: TcxButtonEdit
-      Left = 252
+      Left = 340
       Top = 23
       Properties.Buttons = <
         item
@@ -63,21 +63,21 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
           Kind = bkEllipsis
         end>
       TabOrder = 2
-      Width = 305
+      Width = 217
     end
     object cxLabel4: TcxLabel
-      Left = 252
+      Left = 9
       Top = 45
       Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
     end
     object cxLabel11: TcxLabel
       Left = 9
-      Top = 45
+      Top = 5
       Caption = #1057#1090#1072#1090#1091#1089
     end
     object ceStatus: TcxButtonEdit
       Left = 9
-      Top = 63
+      Top = 23
       Properties.Buttons = <
         item
           Action = actCompleteMovement
@@ -95,7 +95,7 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
       Properties.Images = dmMain.ImageList
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 238
+      Width = 157
     end
     object cxLabel12: TcxLabel
       Left = 975
@@ -120,32 +120,38 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
       Width = 89
     end
     object cxLabel16: TcxLabel
-      Left = 252
+      Left = 9
       Top = 85
-      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1044#1086#1082#1091#1084#1077#1085#1090
     end
     object ceComment: TcxTextEdit
-      Left = 252
+      Left = 9
       Top = 103
       TabOrder = 11
-      Width = 305
+      Width = 548
     end
     object cxLabel6: TcxLabel
       Left = 770
       Top = 5
-      Caption = #1048#1058#1054#1043#1054' '#1086#1087#1083#1072#1090
+      Hint = #1048#1090#1086#1075#1086' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+      Caption = #1048#1058#1054#1043#1054' '#1086#1087#1083#1072#1090#1099
+      ParentShowHint = False
+      ShowHint = True
     end
     object edTotalSummPay: TcxCurrencyEdit
       Left = 770
       Top = 23
+      Hint = #1048#1090#1086#1075#1086' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+      ParentShowHint = False
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.'
       Properties.ReadOnly = True
+      ShowHint = True
       TabOrder = 13
       Width = 87
     end
     object edHappyDate: TcxDateEdit
-      Left = 566
+      Left = 862
       Top = 63
       Hint = #1044#1072#1090#1072'.'#1052#1077#1089#1103#1094
       EditValue = 42864d
@@ -155,11 +161,11 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
       Properties.SaveTime = False
       Properties.ShowTime = False
       ShowHint = True
-      TabOrder = 14
-      Width = 82
+      TabOrder = 26
+      Width = 87
     end
     object cxLabel8: TcxLabel
-      Left = 566
+      Left = 862
       Top = 45
       Hint = #1044#1072#1090#1072'.'#1052#1077#1089#1103#1094
       Caption = #1044#1077#1085#1100' '#1088#1086#1078#1076#1077#1085#1080#1103
@@ -167,7 +173,7 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
       ShowHint = True
     end
     object cbisPay: TcxCheckBox
-      Left = 918
+      Left = 920
       Top = 103
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089' '#1086#1087#1083#1072#1090#1086#1081
       Properties.ReadOnly = False
@@ -183,15 +189,15 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
       Left = 566
       Top = 103
       EditValue = 42132d
-      Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
-      Properties.EditFormat = 'dd.mm.yyyy hh:mm'
+      Properties.DisplayFormat = 'dd.mm.yy hh:mm'
+      Properties.EditFormat = 'dd.mm.yy hh:mm'
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
       TabOrder = 18
-      Width = 113
+      Width = 104
     end
     object edInsertName: TcxButtonEdit
-      Left = 685
+      Left = 677
       Top = 103
       Properties.Buttons = <
         item
@@ -201,20 +207,20 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
         end>
       Properties.ReadOnly = True
       TabOrder = 19
-      Width = 170
+      Width = 180
     end
     object cxLabel19: TcxLabel
-      Left = 685
+      Left = 677
       Top = 85
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
     end
     object cxLabel3: TcxLabel
-      Left = 252
+      Left = 340
       Top = 5
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object edTo: TcxButtonEdit
-      Left = 252
+      Left = 9
       Top = 63
       Properties.Buttons = <
         item
@@ -222,7 +228,7 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
           Kind = bkEllipsis
         end>
       TabOrder = 22
-      Width = 305
+      Width = 238
     end
     object cxLabel15: TcxLabel
       Left = 958
@@ -245,6 +251,110 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
       ShowHint = True
       TabOrder = 24
       Width = 89
+    end
+    object cxLabel5: TcxLabel
+      Left = 677
+      Top = 5
+      Hint = #1048#1090#1086#1075#1086' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+      Caption = #1048#1058#1054#1043#1054' '#1087#1088#1086#1076#1072#1078#1080
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object edTotalLastSumm: TcxCurrencyEdit
+      Left = 677
+      Top = 23
+      Hint = #1048#1090#1086#1075#1086' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+      ParentShowHint = False
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 4
+      Width = 87
+    end
+    object cxLabel7: TcxLabel
+      Left = 862
+      Top = 5
+      Hint = #1048#1090#1086#1075#1086' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+      Caption = #1048#1058#1054#1043#1054' '#1076#1086#1083#1075
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object edTotalDebt: TcxCurrencyEdit
+      Left = 862
+      Top = 23
+      Hint = #1048#1090#1086#1075#1086' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+      ParentShowHint = False
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.'
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 6
+      Width = 87
+    end
+    object cxLabel9: TcxLabel
+      Left = 261
+      Top = 45
+      Caption = #1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090
+    end
+    object ceCity: TcxTextEdit
+      Left = 266
+      Top = 63
+      Properties.ReadOnly = True
+      TabOrder = 8
+      Width = 68
+    end
+    object cxLabel10: TcxLabel
+      Left = 381
+      Top = 45
+      Caption = #1040#1076#1088#1077#1089
+    end
+    object ceAddress: TcxTextEdit
+      Left = 381
+      Top = 63
+      Properties.ReadOnly = True
+      TabOrder = 10
+      Width = 35
+    end
+    object cxLabel13: TcxLabel
+      Left = 566
+      Top = 45
+      Caption = #1058#1077#1083#1077#1092#1086#1085' ('#1084#1086#1073#1080#1083#1100#1085#1099#1081')'
+    end
+    object cePhoneMobile: TcxTextEdit
+      Left = 566
+      Top = 63
+      Properties.ReadOnly = True
+      TabOrder = 12
+      Width = 198
+    end
+    object cxLabel17: TcxLabel
+      Left = 768
+      Top = 45
+      Caption = #1058#1077#1083'/ ('#1076#1088#1091#1075#1080#1077')'
+    end
+    object cePhone: TcxTextEdit
+      Left = 770
+      Top = 63
+      Properties.ReadOnly = True
+      TabOrder = 14
+      Width = 87
+    end
+    object cxLabel14: TcxLabel
+      Left = 566
+      Top = 5
+      Caption = #1055#1086#1089#1083#1077#1076#1085#1103#1103' '#1087#1086#1082#1091#1087#1082#1072
+    end
+    object edLastDate: TcxDateEdit
+      Left = 566
+      Top = 23
+      EditValue = 42864d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 15
+      Width = 104
     end
   end
   object cxPageControl: TcxPageControl
@@ -612,7 +722,7 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
             Width = 80
           end
           object SummChangePercent: TcxGridDBColumn
-            Caption = #1044#1086#1087'. '#1089#1082'. '#1088#1072#1089#1095#1077#1090
+            Caption = #1044#1086#1087'. '#1089#1082'. '#1074' '#1088#1072#1089#1095'.'
             DataBinding.FieldName = 'SummChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -620,7 +730,7 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080' '#1043#1056#1053
+            HeaderHint = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1072#1103' '#1089#1082#1080#1076#1082#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077' - '#1057#1087#1080#1089#1072#1085#1080#1077' '#1087#1088#1080' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1080', '#1043#1056#1053
             Options.Editing = False
             Width = 80
           end
@@ -877,98 +987,6 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
         end
       end
     end
-  end
-  object cxLabel5: TcxLabel
-    Left = 677
-    Top = 5
-    Caption = #1048#1058#1054#1043#1054' '#1087#1088#1086#1076#1072#1078#1072
-  end
-  object edTotalLastSumm: TcxCurrencyEdit
-    Left = 677
-    Top = 23
-    Properties.Alignment.Horz = taRightJustify
-    Properties.Alignment.Vert = taVCenter
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####;-,0.####; ;'
-    Properties.ReadOnly = True
-    TabOrder = 4
-    Width = 87
-  end
-  object cxLabel7: TcxLabel
-    Left = 862
-    Top = 5
-    Caption = #1048#1058#1054#1043#1054' '#1076#1086#1083#1075
-  end
-  object edTotalDebt: TcxCurrencyEdit
-    Left = 862
-    Top = 23
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = ',0.'
-    Properties.ReadOnly = True
-    TabOrder = 6
-    Width = 87
-  end
-  object cxLabel9: TcxLabel
-    Left = 655
-    Top = 45
-    Caption = #1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090
-  end
-  object ceCity: TcxTextEdit
-    Left = 655
-    Top = 63
-    Properties.ReadOnly = True
-    TabOrder = 8
-    Width = 109
-  end
-  object cxLabel10: TcxLabel
-    Left = 770
-    Top = 45
-    Caption = #1040#1076#1088#1077#1089
-  end
-  object ceAddress: TcxTextEdit
-    Left = 770
-    Top = 63
-    Properties.ReadOnly = True
-    TabOrder = 10
-    Width = 179
-  end
-  object cxLabel13: TcxLabel
-    Left = 9
-    Top = 85
-    Caption = #1058#1077#1083#1077#1092#1086#1085' ('#1084#1086#1073#1080#1083#1100#1085#1099#1081')'
-  end
-  object cePhoneMobile: TcxTextEdit
-    Left = 9
-    Top = 103
-    Properties.ReadOnly = True
-    TabOrder = 12
-    Width = 117
-  end
-  object cxLabel17: TcxLabel
-    Left = 128
-    Top = 85
-    Caption = #1058#1077#1083#1077#1092#1086#1085#1099' ('#1076#1088#1091#1075#1080#1077')'
-  end
-  object cePhone: TcxTextEdit
-    Left = 130
-    Top = 103
-    Properties.ReadOnly = True
-    TabOrder = 14
-    Width = 117
-  end
-  object cxLabel14: TcxLabel
-    Left = 566
-    Top = 5
-    Caption = #1055#1086#1089#1083#1077#1076#1085#1103#1103' '#1087#1086#1082#1091#1087#1082#1072
-  end
-  object edLastDate: TcxDateEdit
-    Left = 566
-    Top = 23
-    EditValue = 42864d
-    Properties.SaveTime = False
-    Properties.ShowTime = False
-    TabOrder = 15
-    Width = 104
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1412,6 +1430,7 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
+      ShortCut = 8238
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -1430,6 +1449,7 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 8238
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -2438,6 +2458,13 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
         Name = 'DiscountTax'
         Value = 0.000000000000000000
         Component = edDiscountTax
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountTaxTwo'
+        Value = Null
+        Component = edDiscountTaxTwo
         DataType = ftFloat
         MultiSelectSeparator = ','
       end

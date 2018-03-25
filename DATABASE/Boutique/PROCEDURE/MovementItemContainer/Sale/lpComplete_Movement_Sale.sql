@@ -64,7 +64,7 @@ BEGIN
 
            WHERE Movement.Id       = inMovementId
              AND Movement.DescId   = zc_Movement_Sale()
-             AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+             AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased()) -- Обязательно так, т.к. в gp могла измениться Дата
           ) AS _tmp;
 
 

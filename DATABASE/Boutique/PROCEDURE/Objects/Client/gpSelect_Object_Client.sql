@@ -20,11 +20,20 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isErased boolean) 
   AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId      Integer;
+   DECLARE vbIsOperPrice Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_Client());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_Client());
      vbUserId:= lpGetUserBySession (inSession);
+
+
+     -- проверка может ли смотреть любой магазин, или только свой
+     PERFORM lpCheckUnit_byUser (inUnitId_by:= inUnitId, inUserId:= vbUserId);
+
+
+     -- Получили - показывать ЛИ цену ВХ.
+     vbIsOperPrice:= lpCheckOperPrice_visible (vbUserId);
 
 
      -- Результат
@@ -51,9 +60,9 @@ BEGIN
            , ObjectFloat_DiscountTax.ValueData       AS DiscountTax
            , ObjectFloat_DiscountTaxTwo.ValueData    AS DiscountTaxTwo
            , ObjectFloat_TotalCount.ValueData        AS TotalCount
-           , ObjectFloat_TotalSumm.ValueData         AS TotalSumm
-           , ObjectFloat_TotalSummDiscount.ValueData AS TotalSummDiscount
-           , ObjectFloat_TotalSummPay.ValueData      AS TotalSummPay
+           , CASE WHEN vbIsOperPrice = TRUE THEN ObjectFloat_TotalSumm.ValueData         ELSE 0 END :: TFloat AS TotalSumm
+           , CASE WHEN vbIsOperPrice = TRUE THEN ObjectFloat_TotalSummDiscount.ValueData ELSE 0 END :: TFloat AS TotalSummDiscount
+           , CASE WHEN vbIsOperPrice = TRUE THEN ObjectFloat_TotalSummPay.ValueData      ELSE 0 END :: TFloat AS TotalSummPay
            , ObjectFloat_LastCount.ValueData         AS LastCount
            , ObjectFloat_LastSumm.ValueData          AS LastSumm
            , ObjectFloat_LastSummDiscount.ValueData  AS LastSummDiscount

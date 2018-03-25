@@ -61,17 +61,17 @@ RETURNS TABLE (Text_info             TVarChar
   )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbUnitId Integer;
+   DECLARE vbUserId  Integer;
    DECLARE vbEndDate TDateTime;
 BEGIN
-
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
-    vbEndDate := inEndDate + interval '1 day';
+    vbEndDate := inEndDate + INTERVAL '1 DAY';
 
-    -- подразделение пользователя  + проверка может ли смотреть любой магазин, или только свой
-    vbUnitId := lpCheckUnitByUser(inUnitId, inSession);
+
+    -- проверка может ли смотреть любой магазин, или только свой
+    PERFORM lpCheckUnit_byUser (inUnitId_by:= inUnitId, inUserId:= vbUserId);
+
 
     -- Результат
     RETURN QUERY

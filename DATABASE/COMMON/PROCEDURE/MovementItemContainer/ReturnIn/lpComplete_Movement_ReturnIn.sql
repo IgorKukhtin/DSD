@@ -756,7 +756,7 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.%Неправильно выбран документ <Основание № (возврат проведен кладовщиком)>.%Выберите документ в котором заполнено <Кол-во (склад)>.%Проведение невозможно.', CHR(13), CHR(13), CHR(13);
      END IF;
-     IF vbMovementId_parent <> 0
+     IF vbMovementId_parent <> 0 AND inUserId <> zc_Enum_Process_Auto_PrimeCost()
      THEN
          -- проверка даты
          IF vbOperDate <> (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_parent)

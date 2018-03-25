@@ -19,7 +19,8 @@ RETURNS SETOF refcursor
 AS
 $BODY$
    DECLARE vbUserId      Integer;
-   DECLARE vbUnitId      Integer;
+
+   DECLARE vbIsOperPrice Boolean;
    DECLARE vbIsBranch    Boolean;
    DECLARE Cursor1       refcursor;
    DECLARE Cursor2       refcursor;
@@ -29,8 +30,13 @@ BEGIN
     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_Goods());
     vbUserId:= lpGetUserBySession (inSession);
 
-    -- подразделение пользователя  + проверка может ли смотреть любой магазин, или только свой
-    vbUnitId := lpCheckUnitByUser(inUnitId, inSession);
+
+    -- проверка может ли смотреть любой магазин, или только свой
+    PERFORM lpCheckUnit_byUser (inUnitId_by:= inUnitId, inUserId:= vbUserId);
+
+    -- Получили - показывать цену ВХ.
+    vbIsOperPrice:= lpCheckOperPrice_visible (vbUserId);
+
 
     -- !!!замена!!!
     inPartionId:= 0;
@@ -183,26 +189,26 @@ BEGIN
                                    , SUM (tmpMIContainer_all.AmountEnd)        AS AmountEnd
                                    , SUM (tmpMIContainer_all.AmountIn)         AS AmountIn
                                    , SUM (tmpMIContainer_all.AmountOut)        AS AmountOut
-                                   , SUM (CASE WHEN vbUnitId <> 0 THEN 0 
+                                   , SUM (CASE WHEN vbIsOperPrice = FALSE THEN 0
                                                ELSE CASE WHEN COALESCE (Object_PartionGoods.CountForPrice, 1) <> 0
                                                               THEN CAST (COALESCE (tmpMIContainer_all.AmountStart, 0) * COALESCE (Object_PartionGoods.OperPrice, 0) / COALESCE (Object_PartionGoods.CountForPrice, 1) AS NUMERIC (16, 2))
                                                          ELSE CAST ( COALESCE (tmpMIContainer_all.AmountStart, 0) * COALESCE (Object_PartionGoods.OperPrice, 0) AS NUMERIC (16, 2))
                                                     END
                                           END) AS SummStart
-                                   , SUM (CASE WHEN vbUnitId <> 0 THEN 0 
+                                   , SUM (CASE WHEN vbIsOperPrice = FALSE THEN 0
                                                ELSE CASE WHEN COALESCE (Object_PartionGoods.CountForPrice, 1) <> 0
                                                               THEN CAST (COALESCE (tmpMIContainer_all.AmountEnd, 0) * COALESCE (Object_PartionGoods.OperPrice, 0) / COALESCE (Object_PartionGoods.CountForPrice, 1) AS NUMERIC (16, 2))
                                                          ELSE CAST ( COALESCE (tmpMIContainer_all.AmountEnd, 0) * COALESCE (Object_PartionGoods.OperPrice, 0) AS NUMERIC (16, 2))
                                                     END
                                           END) AS SummEnd
-                                   , SUM (CASE WHEN vbUnitId <> 0 THEN 0 
+                                   , SUM (CASE WHEN vbIsOperPrice = FALSE THEN 0
                                                ELSE CASE WHEN COALESCE (Object_PartionGoods.CountForPrice, 1) <> 0
                                                               THEN CAST (COALESCE (tmpMIContainer_all.AmountIn, 0) * COALESCE (Object_PartionGoods.OperPrice, 0) / COALESCE (Object_PartionGoods.CountForPrice, 1) AS NUMERIC (16, 2))
                                                          ELSE CAST ( COALESCE (tmpMIContainer_all.AmountIn, 0) * COALESCE (Object_PartionGoods.OperPrice, 0) AS NUMERIC (16, 2))
                                                     END
                                           END) AS SummIn
 
-                                   , SUM (CASE WHEN vbUnitId <> 0 THEN 0 
+                                   , SUM (CASE WHEN vbIsOperPrice = FALSE THEN 0
                                                ELSE CASE WHEN COALESCE (Object_PartionGoods.CountForPrice, 1) <> 0
                                                               THEN CAST (COALESCE (tmpMIContainer_all.AmountOut, 0) * COALESCE (Object_PartionGoods.OperPrice, 0) / COALESCE (Object_PartionGoods.CountForPrice, 1) AS NUMERIC (16, 2))
                                                          ELSE CAST ( COALESCE (tmpMIContainer_all.AmountOut, 0) * COALESCE (Object_PartionGoods.OperPrice, 0) AS NUMERIC (16, 2))
@@ -391,6 +397,7 @@ BEGIN
         LEFT JOIN Object AS Object_Location_by ON Object_Location_by.Id = tmpMIContainer_group.LocationId_by
         LEFT JOIN Object AS Object_GoodsSize   ON Object_GoodsSize.Id   = tmpMIContainer_group.GoodsSizeId
         LEFT JOIN Object AS Object_Currency    ON Object_Currency.Id    = tmpMIContainer_group.CurrencyId
+                                              AND vbIsOperPrice         = TRUE
 
         LEFT JOIN ObjectDesc AS ObjectDesc_Location    ON ObjectDesc_Location.Id    = Object_Location.DescId
         LEFT JOIN ObjectDesc AS ObjectDesc_Location_by ON ObjectDesc_Location_by.Id = Object_Location_by.DescId
@@ -443,7 +450,8 @@ BEGIN
            , Object_Currency.ValueData           AS CurrencyName
 
            , Object_PartionGoods.Amount    :: TFLoat AS Amount
-           , CASE WHEN vbUnitId <> 0 THEN 0 ELSE Object_PartionGoods.OperPrice END   :: TFLoat AS OperPrice     --  продавцам в магазинах ограничиваем инфу
+             -- в магазине ограничиваем инфу
+           , CASE WHEN vbIsOperPrice = FALSE THEN 0 ELSE Object_PartionGoods.OperPrice END :: TFLoat AS OperPrice
 
              -- !!!ВРЕМЕННО!!!
            , CASE WHEN COALESCE (Object_PartionGoods.OperPriceList, 0) <> COALESCE (tmpPrice.Price, 0)  THEN -1 * CASE WHEN tmpPrice.Price > 0 THEN tmpPrice.Price ELSE Object_PartionGoods.OperPriceList END ELSE Object_PartionGoods.OperPriceList END :: TFLoat AS OperPriceList
@@ -464,6 +472,7 @@ BEGIN
            LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = Object_PartionGoods.GoodsSizeId
            LEFT JOIN Object AS Object_Juridical        ON Object_Juridical.Id        = Object_PartionGoods.JuridicalId
            LEFT JOIN Object AS Object_Currency         ON Object_Currency.Id         = Object_PartionGoods.CurrencyId
+                                                      AND vbIsOperPrice              = TRUE
 
            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id

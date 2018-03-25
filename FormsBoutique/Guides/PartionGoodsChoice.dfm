@@ -3,7 +3,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1086#1074'>'
   ClientHeight = 376
-  ClientWidth = 774
+  ClientWidth = 874
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,22 +14,22 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
   OldCreateOrder = False
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.ChoiceAction = actChoiceGuide
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 774
-    Height = 350
+    Width = 874
+    Height = 320
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = DataSource
+      DataController.DataSource = MasterDS
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <
         item
@@ -142,9 +142,10 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         Options.Editing = False
         Width = 150
       end
-      object GroupNameFull: TcxGridDBColumn
+      object GoodsGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
-        DataBinding.FieldName = 'GroupNameFull'
+        DataBinding.FieldName = 'GoodsGroupNameFull'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -195,6 +196,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = '% '#1057#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
         Options.Editing = False
         Width = 50
       end
@@ -208,7 +210,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
         Options.Editing = False
-        Width = 80
+        Width = 70
       end
       object Amount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076
@@ -222,6 +224,18 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         Options.Editing = False
         Width = 65
       end
+      object RemainsWithDebt: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1048#1090#1086#1075#1086
+        DataBinding.FieldName = 'RemainsWithDebt'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1086#1089#1090#1072#1090#1086#1082' '#1082#1086#1083'-'#1074#1086' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091' '#1089' '#1091#1095#1077#1090#1086#1084' '#1076#1086#1083#1075#1072
+        Options.Editing = False
+        Width = 58
+      end
       object Remains: TcxGridDBColumn
         Caption = #1054#1089#1090#1072#1090#1086#1082
         DataBinding.FieldName = 'Remains'
@@ -233,7 +247,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1083'-'#1074#1086' - '#1086#1089#1090#1072#1090#1086#1082' '#1074' '#1084#1072#1075#1072#1079#1080#1085#1077
         Options.Editing = False
-        Width = 70
+        Width = 58
       end
       object AmountDebt: TcxGridDBColumn
         Caption = #1054#1089#1090'. '#1076#1086#1083#1075
@@ -245,19 +259,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1086#1083#1075#1080' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
         Options.Editing = False
-        Width = 70
-      end
-      object RemainsWithDebt: TcxGridDBColumn
-        Caption = #1054#1089#1090'. '#1048#1090#1086#1075#1086
-        DataBinding.FieldName = 'RemainsWithDebt'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1048#1090#1086#1075#1086' '#1086#1089#1090#1072#1090#1086#1082' '#1082#1086#1083'-'#1074#1086' '#1089' '#1091#1095#1077#1090#1086#1084' '#1076#1086#1083#1075#1072
-        Options.Editing = False
-        Width = 78
+        Width = 58
       end
       object CurrencyName: TcxGridDBColumn
         Caption = #1042#1072#1083'. '#1074#1093'.'
@@ -320,7 +322,6 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       object LineFabricaName: TcxGridDBColumn
         Caption = #1051#1080#1085#1080#1103
         DataBinding.FieldName = 'LineFabricaName'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -404,6 +405,13 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
+      object Color_calc: TcxGridDBColumn
+        DataBinding.FieldName = 'Color_calc'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 40
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -423,10 +431,41 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 6
+    Style.BorderColor = clGray
+    Style.Color = clWhite
+    TabOrder = 4
     Width = 203
   end
-  object DataSource: TDataSource
+  object PanelGoodsGroupNameFull: TPanel
+    Left = 0
+    Top = 346
+    Width = 874
+    Height = 30
+    Align = alBottom
+    BevelOuter = bvNone
+    TabOrder = 7
+    object DBLabelGoodsGroupNameFull: TcxDBLabel
+      Left = 0
+      Top = 0
+      Align = alClient
+      DataBinding.DataField = 'GoodsGroupNameFull'
+      DataBinding.DataSource = MasterDS
+      ParentFont = False
+      Properties.Alignment.Horz = taCenter
+      Properties.Alignment.Vert = taVCenter
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clNavy
+      Style.Font.Height = -12
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+      Height = 30
+      Width = 874
+      AnchorX = 437
+      AnchorY = 15
+    end
+  end
+  object MasterDS: TDataSource
     DataSet = MasterCDS
     Left = 56
     Top = 224
@@ -435,7 +474,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
     Aggregates = <>
     Params = <>
     Left = 24
-    Top = 184
+    Top = 168
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -588,15 +627,15 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       ShortCut = 115
     end
     object bbSetErased: TdxBarButton
-      Action = dsdSetErased
+      Action = actSetErased
       Category = 0
     end
     object bbSetUnErased: TdxBarButton
-      Action = dsdSetUnErased
+      Action = actSetUnErased
       Category = 0
     end
     object bbToExcel: TdxBarButton
-      Action = dsdGridToExcel
+      Action = actGridToExcel
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
@@ -607,11 +646,11 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       ShowCaption = False
     end
     object bbChoice: TdxBarButton
-      Action = dsdChoiceGuides
+      Action = actChoiceGuide
       Category = 0
     end
     object bbProtocolOpenForm: TdxBarButton
-      Action = ProtocolOpenForm
+      Action = actProtocol
       Category = 0
     end
     object bbShowAll: TdxBarButton
@@ -655,7 +694,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object dsdSetErased: TdsdUpdateErased
+    object actSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spErased
@@ -668,9 +707,9 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       ImageIndex = 2
       ShortCut = 8238
       ErasedFieldName = 'isErased'
-      DataSource = DataSource
+      DataSource = MasterDS
     end
-    object dsdSetUnErased: TdsdUpdateErased
+    object actSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spUnErased
@@ -684,9 +723,9 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       ShortCut = 8238
       ErasedFieldName = 'isErased'
       isSetErased = False
-      DataSource = DataSource
+      DataSource = MasterDS
     end
-    object dsdChoiceGuides: TdsdChoiceGuides
+    object actChoiceGuide: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
       Params = <
@@ -724,7 +763,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           Name = 'GroupNameFull'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GroupNameFull'
+          ComponentItem = 'GoodsGroupNameFull'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -865,9 +904,9 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
-      DataSource = DataSource
+      DataSource = MasterDS
     end
-    object dsdGridToExcel: TdsdGridToExcel
+    object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
       Grid = cxGrid
@@ -876,7 +915,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object ProtocolOpenForm: TdsdOpenForm
+    object actProtocol: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
@@ -1077,22 +1116,22 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
     Left = 680
     Top = 96
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 288
     Top = 200
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
+  object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuide
       end
       item
       end>
     ActionItemList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuide
         ShortCut = 13
       end
       item
@@ -1100,7 +1139,11 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>

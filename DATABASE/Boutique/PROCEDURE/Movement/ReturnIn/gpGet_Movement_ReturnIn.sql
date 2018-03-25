@@ -1,10 +1,13 @@
 -- Function: gpGet_Movement_ReturnIn (Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpGet_Movement_ReturnIn (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_ReturnIn (Integer, TDateTime, TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_ReturnIn(
     IN inMovementId        Integer  , -- ключ Документа
     IN inOperDate          TDateTime, -- ключ Документа
+    IN inStartDate         TDateTime, -- 
+    IN inEndDate           TDateTime, -- 
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
@@ -30,10 +33,14 @@ BEGIN
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_Movement_ReturnIn());
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- подразделение пользователя
-     vbUnitId_User := lpGetUnitBySession(inSession);
 
+     -- для Пользователя - к какому Подразделению он привязан
+     vbUnitId_User:= lpGetUnit_byUser (vbUserId);
+
+
+     -- заменили
      IF inOperDate < '01.01.2017' THEN inOperDate := CURRENT_DATE; END IF;
+
      -- пытаемся найти последний непроведенный документ
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -47,24 +54,15 @@ BEGIN
                                            AND MovementLinkObject_To.ObjectId = vbUnitId_User
                                WHERE Movement.DescId   = zc_Movement_ReturnIn()
                                  AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                 AND Movement.OperDate = CURRENT_DATE
                                ) AS tmp
                          WHERE tmp.Ord = 1);
      END IF;
      
-     -- параметры из Документа
-     SELECT MovementLinkObject_From.ObjectId AS ClientId
-          , MovementLinkObject_To.ObjectId   AS UnitId
-            INTO vbClientId, vbUnitId
-     FROM MovementLinkObject AS MovementLinkObject_From
-          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                       ON MovementLinkObject_To.MovementId = MovementLinkObject_From.MovementId
-                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-     WHERE MovementLinkObject_From.MovementId = inMovementId
-       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From();
-     
      
      IF COALESCE (inMovementId, 0) = 0
      THEN
+         -- Результат
          RETURN QUERY 
          SELECT
                0 AS Id
@@ -103,9 +101,22 @@ BEGIN
                LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = vbUnitId_User;
      ELSE
 
+       -- параметры из Документа
+       SELECT MovementLinkObject_From.ObjectId AS ClientId
+            , MovementLinkObject_To.ObjectId   AS UnitId
+              INTO vbClientId, vbUnitId
+       FROM MovementLinkObject AS MovementLinkObject_From
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = MovementLinkObject_From.MovementId
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+       WHERE MovementLinkObject_From.MovementId = inMovementId
+         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From();
+
        -- проверка может ли смотреть любой магазин, или только свой
-       vbUnitId_User := lpCheckUnitByUser(vbUnitId, inSession);
+       PERFORM lpCheckUnit_byUser (inUnitId_by:= vbUnitId, inUserId:= vbUserId);
      
+
+       -- Результат
        RETURN QUERY 
            WITH
            -- выбираю все контейнеры по покупателю и подразделению , если выбрано 
@@ -179,7 +190,7 @@ BEGIN
                                                       AND MIFloat_TotalReturn.DescId         = zc_MIFloat_TotalReturn()
                        GROUP BY tmpData.SummDedt 
                        )
-
+         -- Результат
          SELECT
                Movement.Id
              , Movement.InvNumber
@@ -189,8 +200,8 @@ BEGIN
              
              --, ObjectDate_LastDate.ValueData           AS LastDate
              , tmpData.LastDate                         :: TDateTime AS LastDate
-             , (Movement.OperDate - interval '1 month') :: TDateTime AS StartDate
-             , (Movement.OperDate - interval '1 day')   :: TDateTime AS EndDate
+             , COALESCE(inStartDate, (Movement.OperDate - interval '1 month')) :: TDateTime AS StartDate
+             , COALESCE(inEndDate, (Movement.OperDate - interval '1 day'))     :: TDateTime AS EndDate
 
              , COALESCE (tmpData.TotalSumm, 0) :: TFloat AS TotalSumm
              , COALESCE (tmpData.TotalPay, 0)  :: TFloat AS TotalSummPay
@@ -266,9 +277,12 @@ BEGIN
                                    ON ObjectString_Phone.ObjectId = Object_From.Id 
                                   AND ObjectString_Phone.DescId = zc_ObjectString_Client_Phone()
             LEFT JOIN tmpData ON 1 = 1
-       WHERE Movement.Id = inMovementId
-         AND Movement.DescId = zc_Movement_ReturnIn();
+       WHERE Movement.Id     = inMovementId
+         AND Movement.DescId = zc_Movement_ReturnIn()
+        ;
+
      END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -276,10 +290,11 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И. 
+ 24.03.18         *
  19.02.18         *
  12.02.18         *
  15.05.17         *
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_ReturnIn (inMovementId:= 1, inOperDate:= CURRENT_DATE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Movement_ReturnIn (inMovementId:= 1, inOperDate:= CURRENT_DATE, inStartDate:= '01.02.2017'::TDateTime, inEndDate:= '01.03.2017'::TDateTime, inSession:= zfCalc_UserAdmin())

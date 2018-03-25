@@ -25,7 +25,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxImageComboBox;
+  cxImageComboBox, cxDBLabel;
 
 type
   TReport_SaleReturnInForm = class(TAncestorReportForm)
@@ -68,6 +68,8 @@ type
     FormParams: TdsdFormParams;
     spGet_Printer: TdsdStoredProc;
     actGet_Printer: TdsdExecStoredProc;
+    PanelGoodsGroupNameFull: TPanel;
+    DBLabelGoodsGroupNameFull: TcxDBLabel;
   private
     { Private declarations }
   public

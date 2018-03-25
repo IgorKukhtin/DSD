@@ -19,7 +19,7 @@ RETURNS TABLE (Id                   Integer
              , GoodsId              Integer
              , GoodsCode            Integer
              , GoodsName            TVarChar
-             , GroupNameFull        TVarChar
+             , GoodsGroupNameFull   TVarChar
              , CurrencyName         TVarChar
              , Amount               TFloat
              , Remains              TFloat
@@ -45,17 +45,25 @@ RETURNS TABLE (Id                   Integer
              , DiscountTax          TFloat
              , PartionId            Integer
              , SybaseId             Integer
+             , Color_Calc           Integer
               )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbAccessKeyAll Boolean;
+   DECLARE vbUserId      Integer;
+   DECLARE vbIsOperPrice Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_PartionGoods());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_PartionGoods());
      vbUserId:= lpGetUserBySessiON (inSession);
-     -- определяется - может ли пользовать видеть весь справочник
-     -- vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
+
+
+     -- проверка может ли смотреть любой магазин, или только свой
+     PERFORM lpCheckUnit_byUser (inUnitId_by:= inUnitId, inUserId:= vbUserId);
+
+
+     -- Получили - показывать ЛИ цену ВХ.
+     vbIsOperPrice:= lpCheckOperPrice_visible (vbUserId);
+
 
      -- Результат
      RETURN QUERY
@@ -104,14 +112,14 @@ BEGIN
             , Object_PartionGoods.GoodsId         AS GoodsId
             , Object_Goods.ObjectCode             AS GoodsCode
             , Object_Goods.ValueData              AS GoodsName
-            , Object_GroupNameFull.ValueData      As GroupNameFull
-            , Object_Currency.ValueData           AS CurrencyName
+            , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+            , CASE WHEN vbIsOperPrice = TRUE THEN Object_Currency.ValueData ELSE '' END :: TVarChar AS CurrencyName
             , Object_PartionGoods.Amount          AS Amount
             , tmpContainer.Amount       :: TFloat AS Remains
             , tmpContainer.AmountDebt   :: TFloat AS AmountDebt
             , (tmpContainer.Amount + tmpContainer.AmountDebt) :: TFloat AS RemainsWithDebt
 
-            , Object_PartionGoods.OperPrice       AS OperPrice
+            , CASE WHEN vbIsOperPrice = TRUE THEN Object_PartionGoods.OperPrice ELSE 0 END :: TFloat AS OperPrice
             , Object_PartionGoods.OperPriceList   AS OperPriceList
             , Object_Brand.ValueData              AS BrandName
             , Object_Period.ValueData             AS PeriodName
@@ -134,6 +142,11 @@ BEGIN
             , tmpContainer.PartionId
             , Object_PartionGoods.SybaseId
 
+            , CASE WHEN tmpContainer.Amount <= 0 THEN 12500670    -- серый
+                   WHEN tmpContainer.AmountDebt > 0 THEN 14664704 -- голубой
+                   ELSE zc_Color_Black()
+              END      ::Integer  AS Color_Calc
+              
        FROM tmpContainer
 
            LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpContainer.PartionId
@@ -145,9 +158,9 @@ BEGIN
            LEFT JOIN Object AS Object_Unit    ON Object_Unit.Id    = Object_PartionGoods.UnitId
            LEFT JOIN Object AS Object_Goods   ON Object_Goods.Id   = Object_PartionGoods.GoodsId
 
-           LEFT JOIN ObjectString AS Object_GroupNameFull
-                                   ON Object_GroupNameFull.ObjectId = Object_Goods.Id
-                                  AND Object_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+           LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
+                                  ON ObjectString_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                 AND ObjectString_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
 
            LEFT JOIN Object AS Object_Currency         ON Object_Currency.Id         = Object_PartionGoods.CurrencyId
            LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = Object_PartionGoods.BrandId
@@ -174,6 +187,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
+24.03.18          *
 23.01.18          *
 29.06.17          *
 21.06.17          *
@@ -184,3 +198,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Object_PartionGoods_Choice (506, FALSE, zfCalc_UserAdmin())
+--select * from gpSelect_Object_PartionGoods_Choice(inUnitId := 1512 , inIsShowAll := 'False' ,  inSession := '6');
+

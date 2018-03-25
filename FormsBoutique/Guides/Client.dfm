@@ -3,7 +3,7 @@ object ClientForm: TClientForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1082#1091#1087#1072#1090#1077#1083#1080'>'
   ClientHeight = 392
-  ClientWidth = 787
+  ClientWidth = 884
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,13 +21,13 @@ object ClientForm: TClientForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 61
-    Width = 787
+    Width = 884
     Height = 331
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = 72
+    ExplicitWidth = 787
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -148,7 +148,7 @@ object ClientForm: TClientForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 45
+        Width = 40
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -156,7 +156,7 @@ object ClientForm: TClientForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 220
+        Width = 200
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -165,6 +165,29 @@ object ClientForm: TClientForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Width = 150
+      end
+      object TotalDebtSumm: TcxGridDBColumn
+        Caption = #1044#1086#1083#1075' '#1087#1086#1082#1091#1087'. '#1087#1086' '#1084#1072#1075'.'
+        DataBinding.FieldName = 'TotalDebtSumm'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1086#1083#1075' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+        Options.Editing = False
+        Width = 82
+      end
+      object TotalDebtSumm_All: TcxGridDBColumn
+        Caption = #1048#1090#1086#1075#1086' '#1076#1086#1083#1075' '#1087#1086#1082#1091#1087'.'
+        DataBinding.FieldName = 'TotalDebtSumm_All'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1076#1086#1083#1075' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+        Options.Editing = False
+        Width = 82
       end
       object DiscountTax: TcxGridDBColumn
         Caption = '% '#1089#1082#1080#1076#1082#1080
@@ -196,28 +219,6 @@ object ClientForm: TClientForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 65
       end
-      object TotalDebtSumm: TcxGridDBColumn
-        Caption = #1044#1086#1083#1075' '#1087#1086#1082#1091#1087'. '#1087#1086' '#1084#1072#1075'.'
-        DataBinding.FieldName = 'TotalDebtSumm'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1044#1086#1083#1075' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
-        Options.Editing = False
-        Width = 82
-      end
-      object TotalDebtSumm_All: TcxGridDBColumn
-        Caption = #1048#1090#1086#1075#1086' '#1076#1086#1083#1075' '#1087#1086#1082#1091#1087'.'
-        DataBinding.FieldName = 'TotalDebtSumm_All'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1048#1090#1086#1075#1086' '#1076#1086#1083#1075' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
-        Options.Editing = False
-        Width = 82
-      end
       object PhoneMobile: TcxGridDBColumn
         Caption = #1052#1086#1073#1080#1083#1100#1085#1099#1081' '#1090#1077#1083#1077#1092#1086#1085
         DataBinding.FieldName = 'PhoneMobile'
@@ -243,23 +244,15 @@ object ClientForm: TClientForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = #1044#1072#1090#1072'.'#1052#1077#1089#1103#1094
-        Width = 81
+        Width = 70
       end
-      object CityName: TcxGridDBColumn
-        Caption = #1043#1086#1088#1086#1076
-        DataBinding.FieldName = 'CityName'
+      object DiscountCard: TcxGridDBColumn
+        Caption = #8470' '#1076#1080#1089#1082#1086#1085#1090'. '#1082#1072#1088#1090#1099
+        DataBinding.FieldName = 'DiscountCard'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 65
-      end
-      object Address: TcxGridDBColumn
-        Caption = #1040#1076#1088#1077#1089
-        DataBinding.FieldName = 'Address'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 65
+        Width = 80
       end
       object Mail: TcxGridDBColumn
         Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1095#1090#1072
@@ -269,13 +262,22 @@ object ClientForm: TClientForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 100
       end
-      object DiscountCard: TcxGridDBColumn
-        Caption = #1053#1086#1084#1077#1088' '#1082#1072#1088#1090#1099
-        DataBinding.FieldName = 'DiscountCard'
+      object CityName: TcxGridDBColumn
+        Caption = #1043#1086#1088#1086#1076
+        DataBinding.FieldName = 'CityName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 94
+        Width = 80
+      end
+      object Address: TcxGridDBColumn
+        Caption = #1040#1076#1088#1077#1089
+        DataBinding.FieldName = 'Address'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 80
       end
       object TotalCount: TcxGridDBColumn
         Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086
@@ -289,15 +291,16 @@ object ClientForm: TClientForm
         Width = 80
       end
       object TotalSumm: TcxGridDBColumn
-        Caption = #1048#1090#1086#1075#1086' '#1057#1091#1084#1084#1072
+        Caption = #1048#1090#1086#1075#1086' '#1057#1091#1084#1084#1072' '#1073#1077#1079' '#1089#1082'.'
         DataBinding.FieldName = 'TotalSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 80
+        Width = 100
       end
       object TotalSummDiscount: TcxGridDBColumn
         Caption = #1048#1090#1086#1075#1086' '#1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080
@@ -305,6 +308,7 @@ object ClientForm: TClientForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -316,56 +320,62 @@ object ClientForm: TClientForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Width = 100
       end
       object LastCount: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1087#1086#1082#1091#1087#1082#1077
+        Caption = #1050#1086#1083'. '#1074' '#1087#1086#1089#1083'. '#1087#1086#1082'.'
         DataBinding.FieldName = 'LastCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 124
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1087#1086#1082#1091#1087#1082#1077
+        Width = 70
       end
       object LastSumm: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1087#1086#1082#1091#1087#1082#1080
+        Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1089#1082'. '#1074' '#1087#1086#1089#1083'. '#1087#1086#1082'.'
         DataBinding.FieldName = 'LastSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 122
+        HeaderHint = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080' '#1074' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1087#1086#1082#1091#1087#1082#1077
+        Width = 100
       end
       object LastSummDiscount: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1074' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1087#1086#1082#1091#1087#1082#1077
+        Caption = #1057#1091#1084#1084#1072' '#1089#1082'. '#1074' '#1087#1086#1089#1083'. '#1087#1086#1082'.'
         DataBinding.FieldName = 'LastSummDiscount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 125
+        HeaderHint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1074' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1087#1086#1082#1091#1087#1082#1077
+        Width = 80
       end
       object LastDate: TcxGridDBColumn
-        Caption = #1055#1086#1089#1083#1077#1076#1085#1103#1103' '#1076#1072#1090#1072' '#1087#1086#1082#1091#1087#1082#1080
+        Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083'. '#1087#1086#1082'.'
         DataBinding.FieldName = 'LastDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1087#1086#1082#1091#1087#1082#1080
         Width = 92
       end
       object LastUserName: TcxGridDBColumn
-        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1087#1086#1089#1083'. '#1087#1086#1082'.'
         DataBinding.FieldName = 'LastUserName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 100
+        HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1087#1086#1082#1091#1087#1082#1080
+        Width = 150
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -385,10 +395,11 @@ object ClientForm: TClientForm
   object Panel: TPanel
     Left = 0
     Top = 0
-    Width = 787
+    Width = 884
     Height = 35
     Align = alTop
     TabOrder = 5
+    ExplicitWidth = 787
     object cxLabel6: TcxLabel
       Left = 41
       Top = 7
@@ -722,6 +733,13 @@ object ClientForm: TClientForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'DiscountTaxTwo'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'DiscountTaxTwo'
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'LastDate'
           Value = 'NULL'
           Component = MasterCDS
@@ -945,8 +963,8 @@ object ClientForm: TClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 496
-    Top = 88
+    Left = 416
+    Top = 160
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 288

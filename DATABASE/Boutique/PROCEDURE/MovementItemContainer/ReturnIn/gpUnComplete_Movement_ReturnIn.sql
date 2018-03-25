@@ -9,11 +9,16 @@ CREATE OR REPLACE FUNCTION gpUnComplete_Movement_ReturnIn(
 RETURNS VOID
 AS
 $BODY$
-  DECLARE vbUserId Integer;
+  DECLARE vbUserId   Integer;
   DECLARE vbStatusId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_UnComplete_ReturnIn());
+    -- vbUserId:= lpGetUserBySession (inSession);
+
+
+    -- Проверка - Дата Документа
+    PERFORM lpCheckOperDate_byUnit (inUnitId_by:= lpGetUnit_byUser (vbUserId), inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId), inUserId:= vbUserId);
 
     -- тек.статус документа
     vbStatusId:= (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId);

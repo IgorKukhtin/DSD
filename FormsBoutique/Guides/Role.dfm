@@ -144,14 +144,6 @@ object RoleForm: TRoleForm
           Options.Editing = False
           Width = 63
         end
-        object PositionName: TcxGridDBColumn
-          Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
-          DataBinding.FieldName = 'PositionName'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 64
-        end
         object isErased: TcxGridDBColumn
           Caption = #1059#1076#1072#1083#1077#1085
           DataBinding.FieldName = 'isErased'
@@ -762,14 +754,6 @@ object RoleForm: TRoleForm
           ComponentItem = 'UnitName'
           DataType = ftString
           MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PositionName'
-          Value = Null
-          Component = UserCDS
-          ComponentItem = 'PositionName'
-          DataType = ftString
-          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1214,8 +1198,8 @@ object RoleForm: TRoleForm
   end
   object UserDS: TDataSource
     DataSet = UserCDS
-    Left = 472
-    Top = 304
+    Left = 496
+    Top = 320
   end
   object spRoleUser: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_RoleUser'
@@ -1226,8 +1210,8 @@ object RoleForm: TRoleForm
       end>
     Params = <>
     PackSize = 1
-    Left = 488
-    Top = 336
+    Left = 496
+    Top = 352
   end
   object UserAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1240,8 +1224,8 @@ object RoleForm: TRoleForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 416
-    Top = 320
+    Left = 432
+    Top = 360
   end
   object spInsertUpdateUserRole: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_UserRole'
@@ -1273,8 +1257,8 @@ object RoleForm: TRoleForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 520
-    Top = 296
+    Left = 560
+    Top = 312
   end
   object spInsertUpdateRoleAction: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_RoleAction'

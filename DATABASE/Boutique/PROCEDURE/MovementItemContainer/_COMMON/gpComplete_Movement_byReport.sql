@@ -16,22 +16,51 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- определяем вид документа + Дату
+
+     -- определяем параметры Документа
      SELECT Movement.DescId, Movement.OperDate INTO vbDescId, vbOperDate FROM Movement WHERE Movement.Id = inMovementId;
 
 
-     -- Проверка
-     IF vbOperDate < DATE_TRUNC ('DAY', CURRENT_TIMESTAMP - INTERVAL '14 HOUR')
+     -- Проверка - Дата Документа
+     PERFORM lpCheckOperDate_byUnit (inUnitId_by:= lpGetUnit_byUser (vbUserId), inOperDate:= vbOperDate, inUserId:= vbUserId);
+
+
+     -- сохранили свойство <Дата Корректировки> - по Дате Проведения
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), inMovementId, CURRENT_TIMESTAMP);
+     -- сохранили свойство <Пользователь (Корректировка)> - по Пользователю Проведения
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Update(), inMovementId, vbUserId);
+
+
+     -- 1.Провели
+     IF vbDescId = zc_Movement_Sale()
      THEN
-         RAISE EXCEPTION 'Ошибка.Изменение данных возможно только с <%>', zfConvert_DateToString (DATE_TRUNC ('DAY', CURRENT_TIMESTAMP - INTERVAL '14 HOUR'));
+         -- создаются временные таблицы - для формирование данных по проводкам
+         PERFORM lpComplete_Movement_Sale_CreateTemp();
+         -- собственно проводки
+         PERFORM lpComplete_Movement_Sale (inMovementId  -- Документ
+                                         , vbUserId);    -- Пользователь
      END IF;
 
+     -- 2.Провели
+     IF vbDescId = zc_Movement_ReturnIn()
+     THEN
+         -- создаются временные таблицы - для формирование данных по проводкам
+         PERFORM lpComplete_Movement_ReturnIn_CreateTemp();
+         -- собственно проводки
+         PERFORM lpComplete_Movement_ReturnIn (inMovementId  -- Документ
+                                             , vbUserId);    -- Пользователь
+     END IF;
 
-     -- Провели
-     PERFORM CASE WHEN vbDescId = zc_Movement_Sale()         THEN gpComplete_Movement_Sale_User         (inMovementId, inSession)
-                  WHEN vbDescId = zc_Movement_ReturnIn()     THEN gpComplete_Movement_ReturnIn_User     (inMovementId, inSession)
-                  WHEN vbDescId = zc_Movement_GoodsAccount() THEN gpComplete_Movement_GoodsAccount_User (inMovementId, inSession)
-             END;
+     -- 3.Провели
+     IF vbDescId = zc_Movement_GoodsAccount()
+     THEN
+         -- создаются временные таблицы - для формирование данных по проводкам
+         PERFORM lpComplete_Movement_GoodsAccount_CreateTemp();
+         -- собственно проводки
+         PERFORM lpComplete_Movement_GoodsAccount (inMovementId  -- Документ
+                                                 , vbUserId);    -- Пользователь
+     END IF;
+
 
      -- вернули
      outStatusCode := (SELECT Object_Status.ObjectCode  AS StatusCode

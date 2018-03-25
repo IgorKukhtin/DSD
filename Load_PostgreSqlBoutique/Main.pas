@@ -3997,7 +3997,8 @@ begin
         toStoredProc.Params.AddParam ('ioChangePercent',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('ioSummChangePercent',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('ioOperPriceList',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inBarCode',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inBarCode_partner',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inBarCode_old',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
         //
         while not EOF do
@@ -4018,7 +4019,7 @@ begin
              toStoredProc.Params.ParamByName('ioChangePercent').Value:=FieldByName('ChangePercent').AsFloat;
              toStoredProc.Params.ParamByName('ioSummChangePercent').Value:=FieldByName('SummChangePercent').AsFloat;
              toStoredProc.Params.ParamByName('ioOperPriceList').Value:=FieldByName('OperPriceList').AsFloat;
-             toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode').AsString;
+             toStoredProc.Params.ParamByName('inBarCode_partner').Value:=FieldByName('BarCode').AsString;
              // хардкод
              if FieldByName('isClose').AsInteger = zc_rvYes
              then toStoredProc.Params.ParamByName('inComment').Value:='*123*' + FieldByName('CommentInfo').AsString

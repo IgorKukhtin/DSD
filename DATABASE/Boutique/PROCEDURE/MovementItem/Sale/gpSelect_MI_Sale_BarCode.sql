@@ -18,8 +18,8 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     -- определяем магазин
-     vbUnitId:= lpGetUnitBySession (inSession);
+     -- Получили для Пользователя - к какому Подразделению он привязан
+     vbUnitId:= lpGetUnit_byUser (vbUserId);
 
 
      -- Если Штрих-код Поставщика - ОБЯЗАТЕЛЕН

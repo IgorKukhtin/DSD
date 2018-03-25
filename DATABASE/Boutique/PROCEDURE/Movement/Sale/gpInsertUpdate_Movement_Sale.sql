@@ -15,15 +15,17 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbUnitId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Sale());
      vbUserId := lpGetUserBySession (inSession);
 
-     -- проверка может ли смотреть любой магазин, или только свой
-     vbUnitId := lpCheckUnitByUser(inFromId, inSession);
 
+     -- проверка может ли смотреть любой магазин, или только свой
+     PERFORM lpCheckUnit_byUser (inUnitId_by:= inFromId, inUserId:= vbUserId);
+
+
+     -- определяется уникальный № док.
      IF COALESCE (ioId, 0) = 0 THEN
         ioInvNumber:= CAST (NEXTVAL ('Movement_Sale_seq') AS TVarChar);
      ELSEIF vbUserId = zc_User_Sybase() THEN

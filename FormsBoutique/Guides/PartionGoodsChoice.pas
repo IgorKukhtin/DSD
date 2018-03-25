@@ -23,13 +23,13 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxButtonEdit, cxLabel,
-  cxCurrencyEdit;
+  cxCurrencyEdit, cxDBLabel, Vcl.ExtCtrls;
 
 type
   TPartionGoodsChoiceForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
-    DataSource: TDataSource;
+    MasterDS: TDataSource;
     MasterCDS: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
@@ -40,11 +40,11 @@ type
     bbInsert: TdxBarButton;
     spSelect: TdsdStoredProc;
     bbEdit: TdxBarButton;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
+    actSetErased: TdsdUpdateErased;
+    actSetUnErased: TdsdUpdateErased;
     bbSetErased: TdxBarButton;
     bbSetUnErased: TdxBarButton;
-    dsdGridToExcel: TdsdGridToExcel;
+    actGridToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     spErased: TdsdStoredProc;
@@ -53,10 +53,10 @@ type
     PartnerName: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     isErased: TcxGridDBColumn;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    dsdChoiceGuides: TdsdChoiceGuides;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
-    ProtocolOpenForm: TdsdOpenForm;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    actChoiceGuide: TdsdChoiceGuides;
+    DBViewAddOn: TdsdDBViewAddOn;
+    actProtocol: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
@@ -66,7 +66,7 @@ type
     GoodsInfoName: TcxGridDBColumn;
     LineFabricaName: TcxGridDBColumn;
     LabelName: TcxGridDBColumn;
-    GroupNameFull: TcxGridDBColumn;
+    GoodsGroupNameFull: TcxGridDBColumn;
     GoodsSizeName: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
@@ -95,6 +95,8 @@ type
     SybaseId: TcxGridDBColumn;
     PartionId: TcxGridDBColumn;
     DiscountTax: TcxGridDBColumn;
+    PanelGoodsGroupNameFull: TPanel;
+    DBLabelGoodsGroupNameFull: TcxDBLabel;
   private
     { Private declarations }
   public

@@ -137,7 +137,7 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'ShowAll'
-          Value = False
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
@@ -166,7 +166,7 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'ShowAll'
-          Value = False
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end

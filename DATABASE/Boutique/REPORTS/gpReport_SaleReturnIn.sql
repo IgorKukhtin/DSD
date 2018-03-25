@@ -59,17 +59,14 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
-
 BEGIN
-
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
 
-     -- определяем магазин по принадлежности пользователя к сотруднику
-     --vbUnitId:= lpGetUnitBySession (inSession);
-     
-     -- подразделение пользователя  + проверка может ли смотреть любой магазин, или только свой
-     vbUnitId := lpCheckUnitByUser(inUnitId, inSession);
+
+    -- проверка может ли смотреть любой магазин, или только свой
+    PERFORM lpCheckUnit_byUser (inUnitId_by:= inUnitId, inUserId:= vbUserId);
+
 
     -- Результат
     RETURN QUERY
@@ -107,7 +104,7 @@ BEGIN
                      , COALESCE (MIFloat_TotalCountReturn.ValueData, 0)      AS TotalCountReturn
                      , COALESCE (MIFloat_TotalReturn.ValueData, 0)           AS TotalReturn
                      , COALESCE (MIFloat_TotalPayReturn.ValueData, 0)        AS TotalPayReturn
-                     
+
                      , COALESCE (MIBoolean_Checked.ValueData, FALSE)         AS isChecked
 
                 FROM Movement AS Movement_Sale
@@ -132,10 +129,6 @@ BEGIN
                      LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                  ON MIFloat_ChangePercent.MovementItemId = MI_Master.Id
                                                  AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
-                     LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
-                                                 ON MIFloat_OperPrice.MovementItemId = MI_Master.Id
-                                                AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
-                                                AND vbUnitId = 0                                             --  продавцам в магазинах ограничиваем инфу
                      LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                  ON MIFloat_OperPriceList.MovementItemId = MI_Master.Id
                                                 AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
@@ -190,7 +183,7 @@ BEGIN
                          , COALESCE (MIFloat_SummChangePercent.ValueData, 0)     AS SummChangePercent
                          , COALESCE (MIFloat_TotalChangePercent.ValueData, 0)    AS TotalChangePercent
                          , COALESCE (MIFloat_TotalPayOth.ValueData, 0)           AS TotalPayOth
-                         
+
                          , COALESCE (MIBoolean_Checked.ValueData, FALSE)         AS isChecked
                     FROM Movement AS Movement_ReturnIn
                          INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement_ReturnIn.StatusId
@@ -210,11 +203,6 @@ BEGIN
                          LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                      ON MIFloat_CountForPrice.MovementItemId = MI_Master.Id
                                                     AND MIFloat_CountForPrice.DescId         = zc_MIFloat_CountForPrice()
-
-                         LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
-                                                     ON MIFloat_OperPrice.MovementItemId = MI_Master.Id
-                                                    AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
-                                                    AND vbUnitId = 0                                             --  продавцам в магазинах ограничиваем инфу
 
                          LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                      ON MIFloat_OperPriceList.MovementItemId = MI_Master.Id
