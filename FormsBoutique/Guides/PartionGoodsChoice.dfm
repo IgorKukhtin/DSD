@@ -433,7 +433,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
     Properties.ReadOnly = True
     Style.BorderColor = clGray
     Style.Color = clWhite
-    TabOrder = 4
+    TabOrder = 3
     Width = 203
   end
   object PanelGoodsGroupNameFull: TPanel

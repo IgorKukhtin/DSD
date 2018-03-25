@@ -51,15 +51,13 @@ AS
 $BODY$
    DECLARE vbUserId      Integer;
    DECLARE vbIsOperPrice Boolean;
+   DECLARE vbAccessKeyAll Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_PartionGoods());
+     -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_PartionGoods());
      vbUserId:= lpGetUserBySessiON (inSession);
-
-
-     -- проверка может ли смотреть любой магазин, или только свой
-     PERFORM lpCheckUnit_byUser (inUnitId_by:= inUnitId, inUserId:= vbUserId);
-
+     -- определяется - может ли пользовать видеть весь справочник
+     -- vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
 
      -- Получили - показывать ЛИ цену ВХ.
      vbIsOperPrice:= lpCheckOperPrice_visible (vbUserId);
