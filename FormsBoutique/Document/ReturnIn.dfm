@@ -126,8 +126,8 @@ object ReturnInForm: TReturnInForm
       ParentShowHint = False
       Properties.Alignment.Horz = taCenter
       Properties.Alignment.Vert = taVCenter
-      Properties.DecimalPlaces = 4
-      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Properties.AssignedValues.DisplayFormat = True
+      Properties.DecimalPlaces = 1
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 11
@@ -263,8 +263,8 @@ object ReturnInForm: TReturnInForm
       ParentShowHint = False
       Properties.Alignment.Horz = taCenter
       Properties.Alignment.Vert = taVCenter
+      Properties.AssignedValues.DisplayFormat = True
       Properties.DecimalPlaces = 1
-      Properties.DisplayFormat = '0.0 %'
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 27
@@ -1763,15 +1763,9 @@ object ReturnInForm: TReturnInForm
         end
         item
           StoredProc = spGetTotalSumm
-        end
-        item
-          StoredProc = spSelectMI
-        end
-        item
         end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
+      Caption = 'actRefreshMI'
+      Hint = 'actRefreshMI'
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -1795,6 +1789,22 @@ object ReturnInForm: TReturnInForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actGet_TotalSumm_byClient: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_TotalSumm_byClient
+      StoredProcList = <
+        item
+          StoredProc = spGet_TotalSumm_byClient
+        end
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = 'actGet_TotalSumm_byClient'
+      Hint = 'actGet_TotalSumm_byClient'
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -2062,7 +2072,6 @@ object ReturnInForm: TReturnInForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1087#1083#1072#1090#1091' '#1080#1090#1086#1075#1086'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1087#1083#1072#1090#1091' '#1080#1090#1086#1075#1086'>'
       ImageIndex = 50
-      ShortCut = 45
     end
     object actInsertUpdateMIChildTotal: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -2314,20 +2323,6 @@ object ReturnInForm: TReturnInForm
       Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
       Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
       ImageIndex = 15
-    end
-    object actGet_TotalSumm_byClient: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spGet_TotalSumm_byClient
-      StoredProcList = <
-        item
-          StoredProc = spGet_TotalSumm_byClient
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1083#1080#1077#1085#1090#1072
-      ImageIndex = 4
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
     end
   end
   object MasterDS: TDataSource
@@ -3202,10 +3197,6 @@ object ReturnInForm: TReturnInForm
       end
       item
         Component = edEndDate
-      end
-      item
-      end
-      item
       end>
     Left = 320
     Top = 168

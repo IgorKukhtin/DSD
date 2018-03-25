@@ -27,7 +27,6 @@ object ClientForm: TClientForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 787
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -205,6 +204,7 @@ object ClientForm: TClientForm
         DataBinding.FieldName = 'DiscountTaxTwo'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -399,7 +399,6 @@ object ClientForm: TClientForm
     Height = 35
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 787
     object cxLabel6: TcxLabel
       Left = 41
       Top = 7
