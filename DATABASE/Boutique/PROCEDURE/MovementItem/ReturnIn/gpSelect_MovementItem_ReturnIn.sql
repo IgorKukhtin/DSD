@@ -5,8 +5,8 @@ DROP FUNCTION IF EXISTS gpSelect_MovementItem_ReturnIn (Integer, Integer, Intege
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ReturnIn(
     IN inMovementId       Integer      , -- ключ Документа
-    IN inUnitId           Integer;
-    IN inClientId         Integer;
+    IN inUnitId           Integer      , -- 
+    IN inClientId         Integer      , -- 
     IN inStartDate        TDatetime    , -- нач.дата периода продаж
     IN inEndDate          TDatetime    , -- кон.дата периода продаж
     IN inShowAll          Boolean      , --
