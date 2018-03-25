@@ -61,7 +61,7 @@ object SaleTwoForm: TSaleTwoForm
           Kind = bkEllipsis
         end>
       TabOrder = 3
-      Width = 454
+      Width = 238
     end
     object edFrom: TcxButtonEdit
       Left = 340
@@ -134,32 +134,38 @@ object SaleTwoForm: TSaleTwoForm
       Width = 89
     end
     object cxLabel16: TcxLabel
-      Left = 252
+      Left = 9
       Top = 85
-      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1044#1086#1082#1091#1084#1077#1085#1090
     end
     object ceComment: TcxTextEdit
-      Left = 252
+      Left = 9
       Top = 103
       TabOrder = 13
-      Width = 305
+      Width = 548
     end
     object cxLabel6: TcxLabel
       Left = 770
       Top = 5
-      Caption = #1048#1058#1054#1043#1054' '#1086#1087#1083#1072#1090
+      Hint = #1048#1090#1086#1075#1086' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+      Caption = #1048#1058#1054#1043#1054' '#1086#1087#1083#1072#1090#1099
+      ParentShowHint = False
+      ShowHint = True
     end
     object edTotalSummPay: TcxCurrencyEdit
       Left = 770
       Top = 23
+      Hint = #1048#1090#1086#1075#1086' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+      ParentShowHint = False
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.'
       Properties.ReadOnly = True
+      ShowHint = True
       TabOrder = 15
       Width = 87
     end
     object edHappyDate: TcxDateEdit
-      Left = 475
+      Left = 862
       Top = 63
       Hint = #1044#1072#1090#1072'.'#1052#1077#1089#1103#1094
       EditValue = 42864d
@@ -170,10 +176,10 @@ object SaleTwoForm: TSaleTwoForm
       Properties.ShowTime = False
       ShowHint = True
       TabOrder = 16
-      Width = 82
+      Width = 87
     end
     object cxLabel8: TcxLabel
-      Left = 475
+      Left = 862
       Top = 45
       Hint = #1044#1072#1090#1072'.'#1052#1077#1089#1103#1094
       Caption = #1044#1077#1085#1100' '#1088#1086#1078#1076#1077#1085#1080#1103
@@ -181,7 +187,7 @@ object SaleTwoForm: TSaleTwoForm
       ShowHint = True
     end
     object cbisPay: TcxCheckBox
-      Left = 893
+      Left = 920
       Top = 103
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089' '#1086#1087#1083#1072#1090#1086#1081
       Properties.ReadOnly = False
@@ -197,20 +203,20 @@ object SaleTwoForm: TSaleTwoForm
       Left = 566
       Top = 103
       EditValue = 42132d
-      Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
-      Properties.EditFormat = 'dd.mm.yyyy hh:mm'
+      Properties.DisplayFormat = 'dd.mm.yy hh:mm'
+      Properties.EditFormat = 'dd.mm.yy hh:mm'
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
       TabOrder = 20
-      Width = 113
+      Width = 104
     end
     object cxLabel18: TcxLabel
-      Left = 691
+      Left = 677
       Top = 85
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
     end
     object edInsertName: TcxButtonEdit
-      Left = 691
+      Left = 677
       Top = 103
       Properties.Buttons = <
         item
@@ -220,7 +226,7 @@ object SaleTwoForm: TSaleTwoForm
         end>
       Properties.ReadOnly = True
       TabOrder = 22
-      Width = 165
+      Width = 179
     end
     object edDiscountTaxTwo: TcxCurrencyEdit
       Left = 958
@@ -235,6 +241,106 @@ object SaleTwoForm: TSaleTwoForm
       ShowHint = True
       TabOrder = 23
       Width = 89
+    end
+    object cxLabel5: TcxLabel
+      Left = 677
+      Top = 5
+      Hint = #1048#1090#1086#1075#1086' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+      Caption = #1048#1058#1054#1043#1054' '#1087#1088#1086#1076#1072#1078#1080
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object edTotalSumm: TcxCurrencyEdit
+      Left = 677
+      Top = 23
+      Hint = #1048#1090#1086#1075#1086' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+      ParentShowHint = False
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 4
+      Width = 87
+    end
+    object cxLabel7: TcxLabel
+      Left = 862
+      Top = 5
+      Hint = #1048#1090#1086#1075#1086' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+      Caption = #1048#1058#1054#1043#1054' '#1076#1086#1083#1075
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object edTotalDebt: TcxCurrencyEdit
+      Left = 862
+      Top = 23
+      Hint = #1048#1090#1086#1075#1086' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+      ParentShowHint = False
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.'
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 5
+      Width = 87
+    end
+    object cxLabel10: TcxLabel
+      Left = 958
+      Top = 45
+      Hint = '% '#1089#1082#1080#1076#1082#1080' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1074' '#1063#1072#1076#1086' '#1085#1072' '#1043#1088#1091#1087#1087#1091' <'#1054#1073#1091#1074#1100'>'
+      Caption = '% '#1089#1082#1080#1076#1082#1080' '#1054#1073#1091#1074#1100
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ceComment_Client: TcxTextEdit
+      Left = 252
+      Top = 63
+      Properties.ReadOnly = True
+      TabOrder = 8
+      Width = 305
+    end
+    object cxLabel13: TcxLabel
+      Left = 566
+      Top = 45
+      Caption = #1058#1077#1083#1077#1092#1086#1085' ('#1084#1086#1073#1080#1083#1100#1085#1099#1081')'
+    end
+    object cePhoneMobile: TcxTextEdit
+      Left = 566
+      Top = 63
+      Properties.ReadOnly = True
+      TabOrder = 10
+      Width = 198
+    end
+    object cxLabel17: TcxLabel
+      Left = 770
+      Top = 45
+      Caption = #1058#1077#1083'/ ('#1076#1088#1091#1075#1080#1077')'
+    end
+    object cePhone: TcxTextEdit
+      Left = 770
+      Top = 63
+      Properties.ReadOnly = True
+      TabOrder = 12
+      Width = 86
+    end
+    object cxLabel14: TcxLabel
+      Left = 566
+      Top = 5
+      Caption = #1055#1086#1089#1083#1077#1076#1085#1103#1103' '#1087#1086#1082#1091#1087#1082#1072
+    end
+    object edLastDate: TcxDateEdit
+      Left = 566
+      Top = 23
+      EditValue = 42864d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 17
+      Width = 104
+    end
+    object cxLabel9: TcxLabel
+      Left = 252
+      Top = 45
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103
     end
   end
   object cxPageControl: TcxPageControl
@@ -1243,94 +1349,6 @@ object SaleTwoForm: TSaleTwoForm
         Control = cxGrid1
       end
     end
-  end
-  object cxLabel5: TcxLabel
-    Left = 677
-    Top = 5
-    Caption = #1048#1058#1054#1043#1054' '#1087#1088#1086#1076#1072#1078#1072
-  end
-  object edTotalSumm: TcxCurrencyEdit
-    Left = 677
-    Top = 23
-    Properties.Alignment.Horz = taRightJustify
-    Properties.Alignment.Vert = taVCenter
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####;-,0.####; ;'
-    Properties.ReadOnly = True
-    TabOrder = 4
-    Width = 87
-  end
-  object cxLabel7: TcxLabel
-    Left = 862
-    Top = 5
-    Caption = #1048#1058#1054#1043#1054' '#1076#1086#1083#1075
-  end
-  object edTotalDebt: TcxCurrencyEdit
-    Left = 862
-    Top = 23
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = ',0.'
-    Properties.ReadOnly = True
-    TabOrder = 5
-    Width = 87
-  end
-  object cxLabel10: TcxLabel
-    Left = 958
-    Top = 45
-    Hint = '% '#1089#1082#1080#1076#1082#1080' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1074' '#1063#1072#1076#1086' '#1085#1072' '#1043#1088#1091#1087#1087#1091' <'#1054#1073#1091#1074#1100'>'
-    Caption = '% '#1089#1082#1080#1076#1082#1080' '#1054#1073#1091#1074#1100
-    ParentShowHint = False
-    ShowHint = True
-  end
-  object ceComment_Client: TcxTextEdit
-    Left = 566
-    Top = 63
-    Properties.ReadOnly = True
-    TabOrder = 8
-    Width = 290
-  end
-  object cxLabel13: TcxLabel
-    Left = 8
-    Top = 85
-    Caption = #1058#1077#1083#1077#1092#1086#1085' ('#1084#1086#1073#1080#1083#1100#1085#1099#1081')'
-  end
-  object cePhoneMobile: TcxTextEdit
-    Left = 8
-    Top = 103
-    Properties.ReadOnly = True
-    TabOrder = 10
-    Width = 117
-  end
-  object cxLabel17: TcxLabel
-    Left = 128
-    Top = 85
-    Caption = #1058#1077#1083#1077#1092#1086#1085#1099' ('#1076#1088#1091#1075#1080#1077')'
-  end
-  object cePhone: TcxTextEdit
-    Left = 130
-    Top = 103
-    Properties.ReadOnly = True
-    TabOrder = 12
-    Width = 117
-  end
-  object cxLabel14: TcxLabel
-    Left = 566
-    Top = 5
-    Caption = #1055#1086#1089#1083#1077#1076#1085#1103#1103' '#1087#1086#1082#1091#1087#1082#1072
-  end
-  object edLastDate: TcxDateEdit
-    Left = 566
-    Top = 23
-    EditValue = 42864d
-    Properties.SaveTime = False
-    Properties.ShowTime = False
-    TabOrder = 17
-    Width = 104
-  end
-  object cxLabel9: TcxLabel
-    Left = 566
-    Top = 45
-    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103
   end
   object FormParams: TdsdFormParams
     Params = <
