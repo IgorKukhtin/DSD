@@ -155,6 +155,7 @@ BEGIN
                         WHERE Movement.DescId   = zc_Movement_Sale()
                           -- !!!ВРЕМЕННО - потом оставить только ПРОВЕДЕННЫЕ!!!
                           -- AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                          AND Movement.StatusId = zc_Enum_Status_Complete()
                           -- если ЕСТЬ долг
                           AND 0 <> zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData)
                                  - COALESCE (MIFloat_TotalChangePercent.ValueData, 0)
@@ -163,6 +164,8 @@ BEGIN
                                  - COALESCE (MIFloat_TotalPayOth.ValueData, 0)
                                    -- так минуснули Возврат
                                  - COALESCE (MIFloat_TotalReturn.ValueData, 0)
+                                   -- !!!ПЛЮС!!!
+                                 + COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
                        )
 
      , tmpMI_Master AS (SELECT MI_Master.Id                                              AS MovementItemId

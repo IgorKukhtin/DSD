@@ -105,7 +105,6 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
-    spInsertMaskMIMaster: TdsdStoredProc;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
     cxLabel5: TcxLabel;
