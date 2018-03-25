@@ -170,6 +170,7 @@ type
     HeaderChanger: THeaderChanger;
     actGet_TotalSumm_byClient: TdsdDataSetRefresh;
     spGet_TotalSumm_byClient: TdsdStoredProc;
+    actGet_TotalSumm: TdsdDataSetRefresh;
   private
   public
   end;

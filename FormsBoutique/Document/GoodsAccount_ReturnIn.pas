@@ -150,6 +150,7 @@ type
     ChangePercent: TcxGridDBColumn;
     cxLabel15: TcxLabel;
     edDiscountTaxTwo: TcxCurrencyEdit;
+    actGet_TotalSumm: TdsdDataSetRefresh;
   private
   public
   end;

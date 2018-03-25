@@ -1534,6 +1534,22 @@ object GoodsAccountForm: TGoodsAccountForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actGet_TotalSumm: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGetTotalSumm
+      StoredProcList = <
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = 'actGet_TotalSumm'
+      Hint = 'actGet_TotalSumm'
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
     object actGet_TotalSumm_byClient: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1804,6 +1820,9 @@ object GoodsAccountForm: TGoodsAccountForm
         end
         item
           Action = actRefreshMI
+        end
+        item
+          Action = actGet_TotalSumm
         end>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1087#1083#1072#1090#1091' '#1076#1083#1103' 1-'#1086#1075#1086'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1087#1083#1072#1090#1091' '#1076#1083#1103' 1-'#1086#1075#1086'>'
@@ -1850,6 +1869,9 @@ object GoodsAccountForm: TGoodsAccountForm
         end
         item
           Action = actRefreshMI
+        end
+        item
+          Action = actGet_TotalSumm
         end>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1087#1083#1072#1090#1091' '#1080#1090#1086#1075#1086'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1087#1083#1072#1090#1091' '#1080#1090#1086#1075#1086'>'
