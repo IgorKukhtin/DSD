@@ -157,8 +157,8 @@ object ReturnInForm: TReturnInForm
       Top = 23
       Hint = #1048#1090#1086#1075#1086' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
       ParentShowHint = False
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.'
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 15
@@ -305,8 +305,8 @@ object ReturnInForm: TReturnInForm
       Top = 23
       Hint = #1048#1090#1086#1075#1086' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
       ParentShowHint = False
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.'
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 5
@@ -759,15 +759,16 @@ object ReturnInForm: TReturnInForm
             Width = 40
           end
           object ChangePercent: TcxGridDBColumn
-            Caption = '% '#1057#1082#1080#1076#1082#1080
+            Caption = '% '#1057#1082'.'
             DataBinding.FieldName = 'ChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1057#1082#1080#1076#1082#1080
             Options.Editing = False
-            Width = 55
+            Width = 35
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -1762,9 +1763,6 @@ object ReturnInForm: TReturnInForm
         end
         item
           StoredProc = spGetTotalSumm
-        end
-        item
-          StoredProc = spSelectMI
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS

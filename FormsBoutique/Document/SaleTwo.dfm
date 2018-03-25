@@ -157,8 +157,8 @@ object SaleTwoForm: TSaleTwoForm
       Top = 23
       Hint = #1048#1090#1086#1075#1086' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
       ParentShowHint = False
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.'
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 15
@@ -277,8 +277,8 @@ object SaleTwoForm: TSaleTwoForm
       Top = 23
       Hint = #1048#1090#1086#1075#1086' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
       ParentShowHint = False
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.'
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 5

@@ -143,8 +143,8 @@ object GoodsAccountForm: TGoodsAccountForm
       Top = 23
       Hint = #1048#1090#1086#1075#1086' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
       ParentShowHint = False
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.'
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 13
@@ -177,6 +177,7 @@ object GoodsAccountForm: TGoodsAccountForm
       Top = 103
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089' '#1086#1087#1083#1072#1090#1086#1081
       Properties.ReadOnly = False
+      State = cbsChecked
       TabOrder = 16
       Width = 127
     end
@@ -299,8 +300,8 @@ object GoodsAccountForm: TGoodsAccountForm
       Top = 23
       Hint = #1048#1090#1086#1075#1086' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
       ParentShowHint = False
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.'
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 5
@@ -450,10 +451,6 @@ object GoodsAccountForm: TGoodsAccountForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = Amount_Return
             end
             item
@@ -477,6 +474,10 @@ object GoodsAccountForm: TGoodsAccountForm
               Column = TotalChangePercentPay
             end>
           DataController.Summary.FooterSummaryItems = <
+            item
+              Kind = skSum
+              Column = OperPriceList
+            end
             item
               Format = ',0.####'
               Kind = skSum
@@ -560,14 +561,6 @@ object GoodsAccountForm: TGoodsAccountForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalPay_Return
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Kind = skSum
-              Column = OperPriceList
             end
             item
               Format = ',0.####'
@@ -711,15 +704,16 @@ object GoodsAccountForm: TGoodsAccountForm
             Width = 40
           end
           object ChangePercent: TcxGridDBColumn
-            Caption = '% '#1057#1082#1080#1076#1082#1080
+            Caption = '% '#1057#1082'.'
             DataBinding.FieldName = 'ChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1057#1082#1080#1076#1082#1080
             Options.Editing = False
-            Width = 55
+            Width = 35
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -2168,10 +2162,10 @@ object GoodsAccountForm: TGoodsAccountForm
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
         Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 18
+        DataSummaryItemIndex = 0
       end>
-    Left = 371
-    Top = 329
+    Left = 363
+    Top = 345
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 302
