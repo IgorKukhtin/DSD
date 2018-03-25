@@ -49,7 +49,8 @@ RETURNS TABLE (Id                   Integer
               )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId      Integer;
+   DECLARE vbIsOperPrice Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_PartionGoods());
@@ -58,6 +59,10 @@ BEGIN
 
      -- проверка может ли смотреть любой магазин, или только свой
      PERFORM lpCheckUnit_byUser (inUnitId_by:= inUnitId, inUserId:= vbUserId);
+
+
+     -- Получили - показывать ЛИ цену ВХ.
+     vbIsOperPrice:= lpCheckOperPrice_visible (vbUserId);
 
 
      -- Результат
@@ -108,13 +113,13 @@ BEGIN
             , Object_Goods.ObjectCode             AS GoodsCode
             , Object_Goods.ValueData              AS GoodsName
             , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-            , Object_Currency.ValueData           AS CurrencyName
+            , CASE WHEN vbIsOperPrice = TRUE THEN Object_Currency.ValueData ELSE '' END :: TVarChar AS CurrencyName
             , Object_PartionGoods.Amount          AS Amount
             , tmpContainer.Amount       :: TFloat AS Remains
             , tmpContainer.AmountDebt   :: TFloat AS AmountDebt
             , (tmpContainer.Amount + tmpContainer.AmountDebt) :: TFloat AS RemainsWithDebt
 
-            , Object_PartionGoods.OperPrice       AS OperPrice
+            , CASE WHEN vbIsOperPrice = TRUE THEN Object_PartionGoods.OperPrice ELSE 0 END :: TFloat AS OperPrice
             , Object_PartionGoods.OperPriceList   AS OperPriceList
             , Object_Brand.ValueData              AS BrandName
             , Object_Period.ValueData             AS PeriodName

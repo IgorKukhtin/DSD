@@ -1855,6 +1855,7 @@ object ReturnInForm: TReturnInForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
+      ShortCut = 8238
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -1873,6 +1874,7 @@ object ReturnInForm: TReturnInForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 8238
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -3461,6 +3463,22 @@ object ReturnInForm: TReturnInForm
         Value = 0c
         Component = FormParams
         ComponentItem = 'inOperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDate'
+        Value = 'NULL'
+        Component = edStartDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 'NULL'
+        Component = edEndDate
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','

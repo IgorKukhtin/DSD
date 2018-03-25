@@ -1,7 +1,7 @@
 -- Function: lpCheckUnit_byUser (Integer, Integer)
 
--- DROP FUNCTION IF EXISTS lpCheckUnitByUser (Integer, TVarChar);
--- DROP FUNCTION IF EXISTS lpCheckUnitByUser (Integer, Integer);
+DROP FUNCTION IF EXISTS lpCheckUnitByUser (Integer, TVarChar);
+DROP FUNCTION IF EXISTS lpCheckUnitByUser (Integer, Integer);
 DROP FUNCTION IF EXISTS lpCheckUnit_byUser (Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpCheckUnit_byUser (

@@ -1,7 +1,7 @@
 -- Function: lpGetUnit_byUser(Integer)
 
--- DROP FUNCTION IF EXISTS lpGetUnitBySession (TVarChar);
--- DROP FUNCTION IF EXISTS lpGetUnitByUser (Integer);
+DROP FUNCTION IF EXISTS lpGetUnitBySession (TVarChar);
+DROP FUNCTION IF EXISTS lpGetUnitByUser (Integer);
 DROP FUNCTION IF EXISTS lpGetUnit_byUser (Integer);
 
 CREATE OR REPLACE FUNCTION lpGetUnit_byUser (
