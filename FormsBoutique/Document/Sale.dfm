@@ -312,7 +312,7 @@ object SaleForm: TSaleForm
       Width = 198
     end
     object cxLabel17: TcxLabel
-      Left = 768
+      Left = 770
       Top = 45
       Caption = #1058#1077#1083'/ ('#1076#1088#1091#1075#1080#1077')'
     end

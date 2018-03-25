@@ -163,7 +163,7 @@ BEGIN
 
                         WHERE Movement.DescId   = zc_Movement_Sale()
                           -- !!!ВРЕМЕННО - потом оставить только ПРОВЕДЕННЫЕ!!!
-                          AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                          -- AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
                           -- ЗА ПЕРИОД
                           AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                        )

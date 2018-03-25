@@ -37,7 +37,7 @@ BEGIN
 
 
      -- заменили
-     IF inOperDate < '01.01.2017' THEN inOperDate := CURRENT_DATE; END IF;
+     IF inOperDate < '01.01.2017' OR vbUnitId_User > 0 THEN inOperDate:= CURRENT_DATE; END IF;
 
      -- пытаемся найти последний непроведенный документ
      IF COALESCE (inMovementId, 0) = 0
@@ -66,7 +66,7 @@ BEGIN
                0 AS Id
              --, CAST (NEXTVAL ('Movement_Sale_seq') AS TVarChar) AS InvNumber
              , CAST (lfGet_InvNumber (0, zc_Movement_Sale()) AS TVarChar) AS InvNumber
-             , CASE WHEN vbUnitId_User <> 0 THEN CURRENT_DATE ELSE inOperDate END ::TDateTime  AS OperDate
+             , inOperDate                       AS OperDate
              , Object_Status.Code               AS StatusCode
              , Object_Status.Name               AS StatusName
 

@@ -162,7 +162,7 @@ BEGIN
 
                         WHERE Movement.DescId   = zc_Movement_Sale()
                           -- !!!ВРЕМЕННО - потом оставить только ПРОВЕДЕННЫЕ!!!
-                          AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                          -- AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
                           -- если ЕСТЬ долг
                           AND 0 <> zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData)
                                  - COALESCE (MIFloat_TotalChangePercent.ValueData, 0)
