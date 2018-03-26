@@ -28,6 +28,7 @@ object GoodsAccountForm: TGoodsAccountForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitLeft = 32
     object edInvNumber: TcxTextEdit
       Left = 177
       Top = 23
@@ -2628,18 +2629,6 @@ object GoodsAccountForm: TGoodsAccountForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'CityName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Address'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'PhoneMobile'
         Value = Null
         Component = cePhoneMobile
@@ -3061,7 +3050,7 @@ object GoodsAccountForm: TGoodsAccountForm
       end>
     PackSize = 1
     Left = 168
-    Top = 400
+    Top = 368
   end
   object spGet_Printer: TdsdStoredProc
     StoredProcName = 'gpGet_PrinterByUnit'

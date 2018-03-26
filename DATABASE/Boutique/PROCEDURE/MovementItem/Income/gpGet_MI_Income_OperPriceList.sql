@@ -1,11 +1,11 @@
 -- Function: gpGet_MI_Income_OperPriceList()
 
 DROP FUNCTION IF EXISTS gpGet_MI_Income_OperPriceList (TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_MI_Income_OperPriceList (Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MI_Income_OperPriceList (Integer, TVarChar, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MI_Income_OperPriceList(
     IN inMovementId        Integer  , --
-    IN inGoodsId           Integer  , --
+    IN inGoodsName         TVarChar  , --
     IN inOperPrice         TFloat   , --
     IN inCountForPrice     TFloat   , --
  INOUT ioOperPriceList     TFloat   , -- 
@@ -25,11 +25,13 @@ BEGIN
                            SELECT inOperPrice AS OperPrice
                           UNION ALL
                            SELECT COALESCE (MIFloat_OperPrice.ValueData, 0) AS OperPrice
-                           FROM MovementItem 
+                           FROM MovementItem
+                                INNER JOIN Object AS Object_Goods ON Object_Goods.ValueData = TRIM (inGoodsName) 
+                                                                 AND Object_Goods.DescId    = zc_Object_Goods()
                                 LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
                                                             ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
                                                            AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
-                           WHERE MovementItem.MovementId = inMovementId AND MovementItem.ObjectId = inGoodsId
+                           WHERE MovementItem.MovementId = inMovementId
                            ) AS tmp
                     );
      
@@ -48,4 +50,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_MI_Income_OperPriceList (inOperPrice:= 156, inCountForPrice:= 1, ioOperPriceList:= 256, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_MI_Income_OperPriceList (inMovementId := 248647 , inGoodsName := '961 * М5 *  *' ,inOperPrice:= 156, inCountForPrice:= 1, ioOperPriceList:= 256, inSession:= zfCalc_UserAdmin());

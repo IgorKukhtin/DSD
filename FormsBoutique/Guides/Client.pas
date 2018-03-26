@@ -92,6 +92,7 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     actReport_CollationByPartner: TdsdOpenForm;
     bbReport_CollationByPartner: TdxBarButton;
+    UnitName_User: TcxGridDBColumn;
   private
     { Private declarations }
   public

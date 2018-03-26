@@ -184,6 +184,9 @@ type
     bbUpdate_isChecked: TdxBarButton;
     isChecked: TcxGridDBColumn;
     BarCode_partner: TcxGridDBColumn;
+    spGet_TotalSumm_byClient: TdsdStoredProc;
+    actGet_TotalSumm_byClient: TdsdDataSetRefresh;
+    HeaderChanger: THeaderChanger;
   private
   public
   end;

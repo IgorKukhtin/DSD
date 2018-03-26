@@ -3047,18 +3047,6 @@ object ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'CityName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Address'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'PhoneMobile'
         Value = Null
         Component = cePhoneMobile

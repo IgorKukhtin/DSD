@@ -3258,13 +3258,6 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Address'
-        Value = Null
-        Component = ceComment_Client
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'PhoneMobile'
         Value = Null
         Component = cePhoneMobile
@@ -3356,8 +3349,8 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 559
-    Top = 200
+    Left = 583
+    Top = 184
   end
   object dsdDBViewAddOn1: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -3421,8 +3414,8 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 688
-    Top = 192
+    Left = 712
+    Top = 184
   end
   object spInsertUpdateMIMaster_BarCode: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Sale'
@@ -3591,7 +3584,7 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 624
+    Left = 640
     Top = 200
   end
   object spComplete_User: TdsdStoredProc
@@ -3956,7 +3949,7 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 504
-    Top = 192
+    Left = 536
+    Top = 216
   end
 end

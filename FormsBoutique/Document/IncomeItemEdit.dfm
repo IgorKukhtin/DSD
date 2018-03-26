@@ -1261,6 +1261,22 @@ object IncomeItemEditForm: TIncomeItemEditForm
     OutputType = otResult
     Params = <
       item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsName'
+        Value = Null
+        Component = edGoodsName
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inOperPrice'
         Value = 0.000000000000000000
         Component = ceOperPrice
@@ -1285,8 +1301,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 384
-    Top = 168
+    Left = 368
+    Top = 192
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
