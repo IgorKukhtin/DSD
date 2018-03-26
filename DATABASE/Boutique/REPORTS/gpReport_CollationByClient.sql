@@ -19,9 +19,10 @@ RETURNS TABLE (Text_info             TVarChar
 
              , PartionId          Integer
 
-             , Amount_PartionMI    TFloat
-             , OperDate_PartionMI  TDateTime
-             , InvNumber_PartionMI TVarChar
+             , Amount_PartionMI     TFloat
+             , OperDate_PartionMI   TDateTime
+             , InsertDate_PartionMI TDateTime
+             , InvNumber_PartionMI  TVarChar
 
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar
@@ -319,6 +320,7 @@ BEGIN
 
         , MI_PartionMI.Amount            AS Amount_PartionMI
         , Movement_PartionMI.OperDate    AS OperDate_PartionMI
+        , MovementDate_Insert.ValueData  AS InsertDate_PartionMI
         , Movement_PartionMI.InvNumber   AS InvNumber_PartionMI
 
         , Object_Goods.Id                AS GoodsId
@@ -404,6 +406,10 @@ BEGIN
         LEFT JOIN Object AS Object_PartionMI     ON Object_PartionMI.Id     = tmpData.PartionId_MI
         LEFT JOIN MovementItem AS MI_PartionMI   ON MI_PartionMI.Id         = Object_PartionMI.ObjectCode
         LEFT JOIN Movement AS Movement_PartionMI ON Movement_PartionMI.Id   = MI_PartionMI.MovementId
+
+        LEFT JOIN MovementDate AS MovementDate_Insert
+                               ON MovementDate_Insert.MovementId = Movement_PartionMI.Id
+                              AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
         --LEFT JOIN MovementDesc AS MovementDesc_Partion ON MovementDesc_Partion.Id = Movement_PartionMI.DescId
 
         LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull

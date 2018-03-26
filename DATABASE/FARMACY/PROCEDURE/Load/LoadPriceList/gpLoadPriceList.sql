@@ -14,15 +14,13 @@ $BODY$
    DECLARE vbJuridicalId   Integer;
    DECLARE vbContractId    Integer;
    DECLARE vbAreaId        Integer;
-   DECLARE vbAreaDneprId   Integer;
+   DECLARE vbAreaId_find   Integer;
    DECLARE vbOperDate      TDateTime;
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_LoadSaleFrom1C());
      vbUserId := lpGetUserBySession (inSession);
 
-     vbAreaDneprId := (SELECT Object.Id FROM Object WHERE Object.Descid = zc_Object_Area() AND Object.ValueData LIKE 'ƒнепр');
-     
      -- ѕолучаем параметры прайсЋиста
      SELECT LoadPriceList.OperDate	 
           , LoadPriceList.JuridicalId 
@@ -56,6 +54,23 @@ BEGIN
          vbMovementId_pl := gpInsertUpdate_Movement_PriceList (0, '', vbOperDate, vbJuridicalId, vbContractId, vbAreaId, inSession);
       END IF;
 
+      -- определ€ем регион дл€ выбора товара
+      vbAreaId_find := COALESCE ( (SELECT ObjectLink_JuridicalArea_Area.ChildObjectId AS AreaId
+                                   FROM ObjectLink AS ObjectLink_JuridicalArea_Juridical
+                                        INNER JOIN Object AS Object_JuridicalArea ON Object_JuridicalArea.Id       = ObjectLink_JuridicalArea_Juridical.ObjectId
+                                                                                 AND Object_JuridicalArea.isErased = FALSE
+                                        INNER JOIN ObjectLink AS ObjectLink_JuridicalArea_Area
+                                                              ON ObjectLink_JuridicalArea_Area.ObjectId      = Object_JuridicalArea.Id
+                                                             AND ObjectLink_JuridicalArea_Area.DescId        = zc_ObjectLink_JuridicalArea_Area()
+                                        -- ”никальный код поставщика “ќЋ№ ќ дл€ –егиона
+                                        INNER JOIN ObjectBoolean AS ObjectBoolean_JuridicalArea_GoodsCode
+                                                                 ON ObjectBoolean_JuridicalArea_GoodsCode.ObjectId  = Object_JuridicalArea.Id
+                                                                AND ObjectBoolean_JuridicalArea_GoodsCode.DescId    = zc_ObjectBoolean_JuridicalArea_GoodsCode()
+                                                                AND ObjectBoolean_JuridicalArea_GoodsCode.ValueData = TRUE
+                                   WHERE ObjectLink_JuridicalArea_Juridical.DescId        = zc_ObjectLink_JuridicalArea_Juridical()
+                                     AND ObjectLink_JuridicalArea_Juridical.ChildObjectId = vbJuridicalId
+                                     AND ObjectLink_JuridicalArea_Area.ChildObjectId      = vbAreaId
+                                  ) , 0);
 
      -- переносим последнюю дату прайса в ѕ–≈ƒпоследнюю 
      PERFORM CASE WHEN COALESCE (ObjectDate_LastPriceOLd.ValueData, NULL) <> NULL
@@ -87,7 +102,7 @@ BEGIN
                                                                 THEN tmp.Price 
                                                            ELSE tmp.Price * (100 + tmp.NDS) / 100 
                                                       END:: TFloat  , -- ÷ена
-                                           
+                                            
                                                       CASE WHEN tmp.NDSinPrice = TRUE
                                                                 THEN tmp.PriceOriginal 
                                                            ELSE tmp.PriceOriginal * (100 + tmp.NDS) / 100
@@ -103,10 +118,13 @@ BEGIN
        FROM (WITH tmpGoods AS (SELECT Object_Goods_View.Id, Object_Goods_View.GoodsCode
                                FROM Object_Goods_View
                                WHERE Object_Goods_View.ObjectId = vbJuridicalId
-                                 AND (Object_Goods_View.AreaId = vbAreaId   --  регион = региону у поставщика,
-                                      -- если регион пусто или днепр , выбираем товары  с пустым регионом и днепра
-                                      OR ((vbAreaId = 0 OR vbAreaId = vbAreaDneprId) AND (COALESCE (Object_Goods_View.AreaId, 0) = 0 OR Object_Goods_View.AreaId = vbAreaDneprId)  )  
-                                      )
+                                 AND (-- если –егион соответсвует
+                                      COALESCE (Object_Goods_View.AreaId, 0) = vbAreaId_find
+                                      -- или Ёто регион zc_Area_Basis - тогда ищем в регионе "пусто"
+                                   OR (vbAreaId_find = zc_Area_Basis() AND Object_Goods_View.AreaId IS NULL)
+                                      -- или Ёто регион "пусто" - тогда ищем в регионе zc_Area_Basis
+                                   OR (vbAreaId_find = 0 AND Object_Goods_View.AreaId = zc_Area_Basis())
+                                     )
                               )
              SELECT LoadPriceListItem.*
                   , LoadPriceList.NDSinPrice
