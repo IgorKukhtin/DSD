@@ -538,6 +538,15 @@ inherited Report_CollationByClientForm: TReport_CollationByClientForm
             HeaderHint = #1074' '#1087#1072#1088#1090#1080#1080' '#1087#1088#1086#1076#1072#1078#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
             Width = 70
           end
+          object InsertDate_PartionMI: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)  ('#1087#1072#1088#1090#1080#1103' '#1087#1086#1082'.)'
+            DataBinding.FieldName = 'InsertDate_PartionMI'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.) '#1074' '#1087#1072#1088#1090#1080#1080' '#1087#1088#1086#1076#1072#1078#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
+            Options.Editing = False
+            Width = 100
+          end
           object AmountStart: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1083#1075' ('#1085#1072#1095'.)'
             DataBinding.FieldName = 'AmountStart'
