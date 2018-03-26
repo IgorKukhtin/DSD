@@ -44,7 +44,7 @@ BEGIN
      SELECT SUM (-- Сумма по Прайсу
                  zfCalc_SummPriceList (MI_Sale.Amount, MIFloat_OperPriceList.ValueData)
                  -- МИНУС: Итого сумма Скидки (в ГРН) - для ВСЕХ документов - суммируется 1)по %скидки + 2)дополнительная + 3)дополнительная в оплатах
-               - (COALESCE (MIFloat_SummChangePercent.ValueData, 0) + COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0))
+               - (COALESCE (MIFloat_TotalChangePercent.ValueData, 0) + COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0))
                  -- МИНУС: Итого сумма оплаты (в ГРН) - для ВСЕХ документов - суммируется 1) + 2)
                - (COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_TotalPayOth.ValueData, 0))
                  -- МИНУС TotalReturn - Итого сумма возврата со скидкой - все док-ты
@@ -80,9 +80,9 @@ BEGIN
                                       ON MIFloat_OperPriceList.MovementItemId = MI_Sale.Id
                                      AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
 
-          LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
-                                      ON MIFloat_SummChangePercent.MovementItemId = MI_Sale.Id
-                                     AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
+          LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
+                                      ON MIFloat_TotalChangePercent.MovementItemId = MI_Sale.Id
+                                     AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()
           LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercentPay
                                       ON MIFloat_TotalChangePercentPay.MovementItemId = MI_Sale.Id
                                      AND MIFloat_TotalChangePercentPay.DescId         = zc_MIFloat_TotalChangePercentPay()
@@ -129,6 +129,7 @@ BEGIN
                            , COALESCE (MAX (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN COALESCE (MIFloat_CurrencyValue.ValueData, 0) ELSE 0 END), 0) AS CurrencyValue_EUR
                            , COALESCE (MAX (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN COALESCE (MIFloat_ParValue.ValueData, 1)      ELSE 0 END), 0) AS ParValue_EUR
                       FROM MovementItem
+                            LEFT JOIN MovementItem AS MI_Master ON MI_Master.Id = MovementItem.ParentId
                             LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
                                                              ON MILinkObject_Currency.MovementItemId = MovementItem.Id
@@ -142,7 +143,8 @@ BEGIN
                       WHERE MovementItem.MovementId = inMovementId
                         AND MovementItem.DescId     = zc_MI_Child()
                         AND MovementItem.isErased   = FALSE
-                        AND (MovementItem.ParentId = inId OR inId = 0)
+                        AND (MovementItem.ParentId = inId  OR inId = 0)
+                        AND (MI_Master.isErased    = FALSE OR MovementItem.ParentId IS NULL)
                      )
             , tmpMI AS (SELECT tmpRes.AmountGRN
                              , tmpRes.AmountUSD

@@ -90,6 +90,7 @@ BEGIN
                            , COALESCE (MAX (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN COALESCE (MIFloat_CurrencyValue.ValueData, 0) ELSE 0 END), 0) AS CurrencyValue_EUR
                            , COALESCE (MAX (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN COALESCE (MIFloat_ParValue.ValueData, 1)      ELSE 0 END), 0) AS ParValue_EUR
                       FROM MovementItem
+                            LEFT JOIN MovementItem AS MI_Master ON MI_Master.Id = MovementItem.ParentId
                             LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
                                                              ON MILinkObject_Currency.MovementItemId = MovementItem.Id
@@ -103,7 +104,8 @@ BEGIN
                       WHERE MovementItem.MovementId = inMovementId
                         AND MovementItem.DescId     = zc_MI_Child()
                         AND MovementItem.isErased   = FALSE
-                        AND (MovementItem.ParentId = inId OR inId = 0)
+                        AND (MovementItem.ParentId = inId  OR inId = 0)
+                        AND (MI_Master.isErased    = FALSE OR MovementItem.ParentId IS NULL)
                      )
             , tmpMI AS (SELECT tmpRes.AmountGRN
                              , tmpRes.AmountUSD

@@ -105,7 +105,6 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
-    spInsertMaskMIMaster: TdsdStoredProc;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
     cxLabel5: TcxLabel;
@@ -171,6 +170,7 @@ type
     HeaderChanger: THeaderChanger;
     actGet_TotalSumm_byClient: TdsdDataSetRefresh;
     spGet_TotalSumm_byClient: TdsdStoredProc;
+    actGet_TotalSumm: TdsdDataSetRefresh;
   private
   public
   end;

@@ -1,9 +1,12 @@
 -- Function: gpSelect_MovementItem_ReturnIn()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_ReturnIn (Integer,TDatetime, TDatetime, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_ReturnIn (Integer, TDatetime, TDatetime, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_ReturnIn (Integer, Integer, Integer, TDatetime, TDatetime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ReturnIn(
     IN inMovementId       Integer      , -- ключ Документа
+    IN inUnitId           Integer      , -- 
+    IN inClientId         Integer      , -- 
     IN inStartDate        TDatetime    , -- нач.дата периода продаж
     IN inEndDate          TDatetime    , -- кон.дата периода продаж
     IN inShowAll          Boolean      , --
@@ -66,8 +69,6 @@ AS
 $BODY$
   DECLARE vbUserId      Integer;
   DECLARE vbStatusId    Integer;
-  DECLARE vbUnitId      Integer;
-  DECLARE vbClientId    Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_ReturnIn());
@@ -75,16 +76,8 @@ BEGIN
 
      -- Параметры документа
      SELECT Movement.StatusId                AS StatusId
-          , MovementLinkObject_From.ObjectId AS ClientId
-          , MovementLinkObject_To.ObjectId   AS UnitId
-            INTO vbStatusId, vbClientId, vbUnitId
+            INTO vbStatusId
      FROM Movement 
-          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                       ON MovementLinkObject_From.MovementId = Movement.Id
-                                      AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
-          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                       ON MovementLinkObject_To.MovementId = Movement.Id
-                                      AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
      WHERE Movement.Id = inMovementId;
 
 
@@ -125,11 +118,11 @@ BEGIN
                              INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                            ON MovementLinkObject_To.MovementId = Movement.Id
                                                           AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
-                                                          AND MovementLinkObject_To.ObjectId   = vbClientId
+                                                          AND MovementLinkObject_To.ObjectId   = inClientId
                              INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                            ON MovementLinkObject_From.MovementId = Movement.Id
                                                           AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
-                                                          AND MovementLinkObject_From.ObjectId   = vbUnitId
+                                                          AND MovementLinkObject_From.ObjectId   = inUnitId
                              LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                    AND MovementItem.DescId     = zc_MI_Master()
                                                    AND MovementItem.isErased   = FALSE
@@ -163,9 +156,12 @@ BEGIN
 
                         WHERE Movement.DescId   = zc_Movement_Sale()
                           -- !!!ВРЕМЕННО - потом оставить только ПРОВЕДЕННЫЕ!!!
-                          AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                          -- AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                          AND Movement.StatusId = zc_Enum_Status_Complete()
                           -- ЗА ПЕРИОД
                           AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                          -- если ЕСТЬ долг
+                          AND MovementItem.Amount > COALESCE (MIFloat_TotalCountReturn.ValueData, 0)
                        )
  
      , tmpMI_Master AS (SELECT MI_Master.Id                                              AS MovementItemId
@@ -329,7 +325,7 @@ BEGIN
    , tmpContainer AS (SELECT DISTINCT Container.*
                       FROM tmpMI AS tmpMI_Master
                            INNER JOIN Container ON Container.PartionId     = tmpMI_Master.PartionId
-                                               AND Container.WhereObjectId = vbUnitId
+                                               AND Container.WhereObjectId = inUnitId
                                                AND Container.DescId        = zc_Container_count()
                                                -- !!!обязательно условие, т.к. мог меняться GoodsId и тогда в Container - несколько строк!!!
                                                AND Container.ObjectId      = tmpMI_Master.GoodsId
@@ -571,7 +567,7 @@ BEGIN
    , tmpContainer AS (SELECT DISTINCT Container.*
                       FROM tmpMI_Master
                            INNER JOIN Container ON Container.PartionId     = tmpMI_Master.PartionId
-                                               AND Container.WhereObjectId = vbUnitId
+                                               AND Container.WhereObjectId = inUnitId
                                                AND Container.DescId        = zc_Container_count()
                                                -- !!!обязательно условие, т.к. мог меняться GoodsId и тогда в Container - несколько строк!!!
                                                AND Container.ObjectId      = tmpMI_Master.GoodsId
@@ -782,5 +778,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_ReturnIn (inMovementId:= 241258, inStartDate:= CURRENT_DATE - INTERVAL '100 DAY', inEndDate:= CURRENT_DATE, inShowAll:= TRUE,  inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpSelect_MovementItem_ReturnIn (inMovementId:= 241258, inStartDate:= CURRENT_DATE - INTERVAL '100 DAY', inEndDate:= CURRENT_DATE, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_MovementItem_ReturnIn (inMovementId:= 241258, inUnitId:= 1, inClientId:= 1, inStartDate:= CURRENT_DATE - INTERVAL '100 DAY', inEndDate:= CURRENT_DATE, inShowAll:= TRUE,  inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_MovementItem_ReturnIn (inMovementId:= 241258, inUnitId:= 1, inClientId:= 1, inStartDate:= CURRENT_DATE - INTERVAL '100 DAY', inEndDate:= CURRENT_DATE, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());

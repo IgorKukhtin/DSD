@@ -105,7 +105,6 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
-    spInsertMaskMIMaster: TdsdStoredProc;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
     cxLabel5: TcxLabel;
@@ -151,6 +150,7 @@ type
     ChangePercent: TcxGridDBColumn;
     cxLabel15: TcxLabel;
     edDiscountTaxTwo: TcxCurrencyEdit;
+    actGet_TotalSumm: TdsdDataSetRefresh;
   private
   public
   end;

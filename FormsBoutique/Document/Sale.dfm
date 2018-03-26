@@ -277,8 +277,8 @@ object SaleForm: TSaleForm
       Top = 23
       Hint = #1048#1090#1086#1075#1086' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
       ParentShowHint = False
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.'
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 5
@@ -312,7 +312,7 @@ object SaleForm: TSaleForm
       Width = 198
     end
     object cxLabel17: TcxLabel
-      Left = 768
+      Left = 770
       Top = 45
       Caption = #1058#1077#1083'/ ('#1076#1088#1091#1075#1080#1077')'
     end
@@ -1766,15 +1766,9 @@ object SaleForm: TSaleForm
         end
         item
           StoredProc = spGetTotalSumm
-        end
-        item
-          StoredProc = spSelectMI
-        end
-        item
         end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
+      Caption = 'actRefreshMI'
+      Hint = 'actRefreshMI'
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -3264,13 +3258,6 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Address'
-        Value = Null
-        Component = ceComment_Client
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'PhoneMobile'
         Value = Null
         Component = cePhoneMobile
@@ -3362,8 +3349,8 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 559
-    Top = 200
+    Left = 583
+    Top = 184
   end
   object dsdDBViewAddOn1: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -3427,8 +3414,8 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 688
-    Top = 192
+    Left = 712
+    Top = 184
   end
   object spInsertUpdateMIMaster_BarCode: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Sale'
@@ -3597,7 +3584,7 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 624
+    Left = 640
     Top = 200
   end
   object spComplete_User: TdsdStoredProc
@@ -3962,7 +3949,7 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 504
-    Top = 192
+    Left = 536
+    Top = 216
   end
 end

@@ -21,7 +21,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Client(
     IN inDiscountKindId           Integer   ,    -- Вид накопительной скидки
     IN inSession                  TVarChar       -- сессия пользователя
 )
-RETURNS record
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -71,13 +71,13 @@ BEGIN
 
 
    -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
-   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) <> 0 THEN  ioCode := NEXTVAL ('Object_Client_seq');
+   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) <> 0 THEN ioCode := NEXTVAL ('Object_Client_seq');
    END IF;
 
    -- Нужен для загрузки из Sybase т.к. там код = 0
-   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) = 0  THEN  ioCode := NEXTVAL ('Object_Client_seq');
+   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) = 0  THEN ioCode := NEXTVAL ('Object_Client_seq');
    ELSEIF ioCode = 0
-         THEN ioCode:= (SELECT ObjectCode FROM Object WHERE Id = ioId);
+       THEN ioCode:= (SELECT ObjectCode FROM Object WHERE Id = ioId);
    END IF;
 
 
@@ -86,11 +86,24 @@ BEGIN
       RAISE EXCEPTION 'Ошибка.Необходимо ввести Название.';
    END IF;
 
-   -- Проверка
+   -- Проверка - нельзя > 30%
    IF vbUserId <> zc_User_Sybase()
       AND (inDiscountTax > 30 OR inDiscountTaxTwo > 30)
    THEN
-      PERFORM lpCheckRight (inSession, zc_Enum_Process_Update_Object_Client_DiscountTax());
+       PERFORM lpCheckRight (inSession, zc_Enum_Process_Update_Object_Client_DiscountTax());
+   END IF;
+   -- Проверка - нельзя DiscountTaxTwo
+   IF ((ioId > 0 AND inDiscountTaxTwo <> COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = ioId AND ObjectFloat.DescId = zc_ObjectFloat_Client_DiscountTaxTwo()), 0))
+    OR (ioId = 0 AND inDiscountTaxTwo <> 0)
+      )
+      -- если это Пользователь Магазина
+      AND lpGetUnit_byUser (vbUserId) > 0
+      -- если в Этом Магазине НЕТ Группы Товара
+      AND 0 = COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = lpGetUnit_byUser (vbUserId) AND OL.DescId = zc_ObjectLink_Unit_GoodsGroup()), 0)
+      -- 
+      AND vbUserId <> zc_User_Sybase()
+   THEN
+       PERFORM lpCheckRight (inSession, zc_Enum_Process_Update_Object_Client_DiscountTaxTwo());
    END IF;
 
 

@@ -52,7 +52,7 @@ BEGIN
                                   -- Сумма по Прайсу
                                 , zfCalc_SummPriceList (MI_Sale.Amount, MIFloat_OperPriceList.ValueData)
                                   -- МИНУС: Итого сумма Скидки (в ГРН) - для ВСЕХ документов - суммируется 1)по %скидки + 2)дополнительная + 3)дополнительная в оплатах
-                                - (COALESCE (MIFloat_SummChangePercent.ValueData, 0) + COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0))
+                                - (COALESCE (MIFloat_TotalChangePercent.ValueData, 0) + COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0))
                                   -- МИНУС: Итого сумма оплаты (в ГРН) - для ВСЕХ документов - суммируется 1) + 2)
                                 - (COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_TotalPayOth.ValueData, 0))
                                   -- МИНУС TotalReturn - Итого сумма возврата со скидкой - все док-ты
@@ -81,9 +81,9 @@ BEGIN
                                                             ON MIFloat_OperPriceList.MovementItemId = MI_Sale.Id
                                                            AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
 
-                                LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
-                                                            ON MIFloat_SummChangePercent.MovementItemId = MI_Sale.Id
-                                                           AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
+                                LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
+                                                            ON MIFloat_TotalChangePercent.MovementItemId = MI_Sale.Id
+                                                           AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()
                                 LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercentPay
                                                             ON MIFloat_TotalChangePercentPay.MovementItemId = MI_Sale.Id
                                                            AND MIFloat_TotalChangePercentPay.DescId         = zc_MIFloat_TotalChangePercentPay()

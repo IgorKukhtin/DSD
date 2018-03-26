@@ -129,7 +129,7 @@ object ClientEditForm: TClientEditForm
     EditValue = '0'
     ParentShowHint = False
     Properties.DecimalPlaces = 1
-    Properties.DisplayFormat = '0.0 %'
+    Properties.DisplayFormat = '0.#### %'
     ShowHint = True
     TabOrder = 3
     Width = 135
@@ -155,7 +155,7 @@ object ClientEditForm: TClientEditForm
     EditValue = 0.000000000000000000
     ParentShowHint = False
     Properties.DecimalPlaces = 1
-    Properties.DisplayFormat = '0.0 %'
+    Properties.DisplayFormat = '0.#### %'
     ShowHint = True
     TabOrder = 4
     Width = 133

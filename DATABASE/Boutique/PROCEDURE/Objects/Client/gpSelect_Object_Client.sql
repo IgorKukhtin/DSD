@@ -16,7 +16,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , LastDate TDateTime
              , Address TVarChar, HappyDate TDateTime, PhoneMobile TVarChar, Phone TVarChar
              , Mail TVarChar, Comment TVarChar, CityName TVarChar
-             , DiscountKindName TVarChar, LastUserName TVarChar
+             , DiscountKindName TVarChar
+             , LastUserName TVarChar, UnitName_User TVarChar
              , isErased boolean) 
   AS
 $BODY$
@@ -78,6 +79,7 @@ BEGIN
            , Object_City.ValueData                   AS CityName
            , Object_DiscountKind.ValueData           AS DiscountKindName
            , Object_LastUser.ValueData               AS LastUserName
+           , Object_Unit.ValueData                   AS UnitName_User
            , Object_Client.isErased                  AS isErased
            
        FROM Object AS Object_Client
@@ -164,6 +166,11 @@ BEGIN
                                 AND ObjectLink_Client_LastUser.DescId = zc_ObjectLink_Client_LastUser()
             LEFT JOIN Object AS Object_LastUser ON Object_LastUser.Id = ObjectLink_Client_LastUser.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_User_Unit
+                                 ON ObjectLink_User_Unit.ObjectId = Object_LastUser.Id
+                                AND ObjectLink_User_Unit.DescId = zc_ObjectLink_User_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_User_Unit.ChildObjectId
+
             LEFT JOIN tmpContainer ON tmpContainer.ClientId = Object_Client.Id
             
      WHERE Object_Client.DescId = zc_Object_Client()
@@ -177,6 +184,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
+26.03.2017        *
 17.09.2017        *
 09.05.2017                                                           *
 28.02.2017                                                           *

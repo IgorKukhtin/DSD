@@ -21,7 +21,8 @@ BEGIN
                                           END
                                          , '999 999 999 999 999D99'))
             ) :: TVarChar AS TotalSumm
-       FROM Movement
+       FROM (SELECT inMovementId AS MovementId) AS tmp
+            LEFT JOIN Movement ON Movement.Id = tmp.MovementId
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId = Movement.Id
                                    AND MovementFloat_TotalSumm.DescId     = zc_MovementFloat_TotalSumm()
@@ -34,8 +35,7 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPay
                                     ON MovementFloat_TotalSummPay.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummPay.DescId     = zc_MovementFloat_TotalSummPay()
-
-       WHERE Movement.Id = inMovementId;
+       ;
 
 END;
 $BODY$
@@ -49,4 +49,4 @@ ALTER FUNCTION gpGet_Movement_TotalSumm (Integer, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_TotalSumm (inMovementId:= 1, inSession:= '2')
+-- SELECT * FROM gpGet_Movement_TotalSumm (inMovementId:= 1, inSession:= zfCalc_UserAdmin())

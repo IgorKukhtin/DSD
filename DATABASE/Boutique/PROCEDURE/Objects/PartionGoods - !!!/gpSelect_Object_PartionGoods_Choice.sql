@@ -53,7 +53,7 @@ $BODY$
    DECLARE vbIsOperPrice Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_PartionGoods());
+     -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_PartionGoods());
      vbUserId:= lpGetUserBySessiON (inSession);
 
 
@@ -142,8 +142,9 @@ BEGIN
             , tmpContainer.PartionId
             , Object_PartionGoods.SybaseId
 
-            , CASE WHEN tmpContainer.Amount <= 0 THEN 12500670    -- серый
-                   WHEN tmpContainer.AmountDebt > 0 THEN 14664704 -- голубой
+            , CASE WHEN tmpContainer.Amount     <= 0 THEN 12500670    -- серый
+                   WHEN tmpContainer.AmountDebt >  0 THEN zc_Color_Blue()
+                   
                    ELSE zc_Color_Black()
               END      ::Integer  AS Color_Calc
               
@@ -197,6 +198,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_PartionGoods_Choice (506, FALSE, zfCalc_UserAdmin())
---select * from gpSelect_Object_PartionGoods_Choice(inUnitId := 1512 , inIsShowAll := 'False' ,  inSession := '6');
-
+-- SELECT * FROM gpSelect_Object_PartionGoods_Choice (inUnitId:= 1512, inIsShowAll:= FALSE, inSession:= zfCalc_UserAdmin());

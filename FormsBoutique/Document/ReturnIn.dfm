@@ -126,8 +126,8 @@ object ReturnInForm: TReturnInForm
       ParentShowHint = False
       Properties.Alignment.Horz = taCenter
       Properties.Alignment.Vert = taVCenter
-      Properties.DecimalPlaces = 4
-      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Properties.AssignedValues.DisplayFormat = True
+      Properties.DecimalPlaces = 1
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 11
@@ -157,8 +157,8 @@ object ReturnInForm: TReturnInForm
       Top = 23
       Hint = #1048#1090#1086#1075#1086' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
       ParentShowHint = False
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.'
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 15
@@ -263,8 +263,8 @@ object ReturnInForm: TReturnInForm
       ParentShowHint = False
       Properties.Alignment.Horz = taCenter
       Properties.Alignment.Vert = taVCenter
+      Properties.AssignedValues.DisplayFormat = True
       Properties.DecimalPlaces = 1
-      Properties.DisplayFormat = '0.0 %'
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 27
@@ -305,8 +305,8 @@ object ReturnInForm: TReturnInForm
       Top = 23
       Hint = #1048#1090#1086#1075#1086' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
       ParentShowHint = False
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.'
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 5
@@ -325,7 +325,7 @@ object ReturnInForm: TReturnInForm
       Width = 198
     end
     object cxLabel17: TcxLabel
-      Left = 768
+      Left = 770
       Top = 45
       Caption = #1058#1077#1083'/ ('#1076#1088#1091#1075#1080#1077')'
     end
@@ -759,15 +759,16 @@ object ReturnInForm: TReturnInForm
             Width = 40
           end
           object ChangePercent: TcxGridDBColumn
-            Caption = '% '#1057#1082#1080#1076#1082#1080
+            Caption = '% '#1057#1082'.'
             DataBinding.FieldName = 'ChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1057#1082#1080#1076#1082#1080
             Options.Editing = False
-            Width = 55
+            Width = 35
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -780,13 +781,14 @@ object ReturnInForm: TReturnInForm
             Width = 50
           end
           object Amount_Sale: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1086#1076#1072#1078#1072
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1087#1088#1086#1076#1072#1078#1077
             DataBinding.FieldName = 'Amount_Sale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1069#1083#1077#1084#1077#1085#1090' '#1055#1088#1086#1076#1072#1078#1080
             Options.Editing = False
             Width = 58
           end
@@ -1392,6 +1394,22 @@ object ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inClientId'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inStartDate'
         Value = 'NULL'
         Component = edStartDate
@@ -1745,9 +1763,6 @@ object ReturnInForm: TReturnInForm
         end
         item
           StoredProc = spGetTotalSumm
-        end
-        item
-          StoredProc = spSelectMI
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
@@ -1762,15 +1777,9 @@ object ReturnInForm: TReturnInForm
         end
         item
           StoredProc = spGetTotalSumm
-        end
-        item
-          StoredProc = spSelectMI
-        end
-        item
         end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
+      Caption = 'actRefreshMI'
+      Hint = 'actRefreshMI'
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -1794,6 +1803,22 @@ object ReturnInForm: TReturnInForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actGet_TotalSumm_byClient: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_TotalSumm_byClient
+      StoredProcList = <
+        item
+          StoredProc = spGet_TotalSumm_byClient
+        end
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = 'actGet_TotalSumm_byClient'
+      Hint = 'actGet_TotalSumm_byClient'
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -2061,7 +2086,6 @@ object ReturnInForm: TReturnInForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1087#1083#1072#1090#1091' '#1080#1090#1086#1075#1086'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1087#1083#1072#1090#1091' '#1080#1090#1086#1075#1086'>'
       ImageIndex = 50
-      ShortCut = 45
     end
     object actInsertUpdateMIChildTotal: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -2313,20 +2337,6 @@ object ReturnInForm: TReturnInForm
       Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
       Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
       ImageIndex = 15
-    end
-    object actGet_TotalSumm_byClient: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spGet_TotalSumm_byClient
-      StoredProcList = <
-        item
-          StoredProc = spGet_TotalSumm_byClient
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1083#1080#1077#1085#1090#1072
-      ImageIndex = 4
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
     end
   end
   object MasterDS: TDataSource
@@ -3037,18 +3047,6 @@ object ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'CityName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Address'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'PhoneMobile'
         Value = Null
         Component = cePhoneMobile
@@ -3201,10 +3199,6 @@ object ReturnInForm: TReturnInForm
       end
       item
         Component = edEndDate
-      end
-      item
-      end
-      item
       end>
     Left = 320
     Top = 168

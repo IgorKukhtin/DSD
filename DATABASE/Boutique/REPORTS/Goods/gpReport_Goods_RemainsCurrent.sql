@@ -340,7 +340,7 @@ BEGIN
            , Object_Label.ValueData         AS LabelName
            , Object_GoodsSize.Id            AS GoodsSizeId
            , Object_GoodsSize.ValueData     AS GoodsSizeName
-           , Object_Currency.ValueData      AS CurrencyName
+           , CASE WHEN vbIsOperPrice = TRUE THEN Object_Currency.ValueData ELSE '' END :: TVarChar AS CurrencyName
 
            , tmpCurrency.Amount   ::TFloat  AS CurrencyValue
            , tmpCurrency.ParValue ::TFloat  AS ParValue
@@ -381,7 +381,6 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = tmpData.GoodsSizeId
             LEFT JOIN Object AS Object_Juridical        ON Object_Juridical.Id        = tmpData.JuridicalId
             LEFT JOIN Object AS Object_Currency         ON Object_Currency.Id         = tmpData.CurrencyId
-                                                       AND vbIsOperPrice              = TRUE
 
             LEFT JOIN Object AS Object_Brand   ON Object_Brand.Id   = tmpData.BrandId
             LEFT JOIN Object AS Object_Fabrika ON Object_Fabrika.Id = tmpData.FabrikaId
@@ -399,8 +398,9 @@ BEGIN
             LEFT JOIN tmpGoodsPrint ON tmpGoodsPrint.UnitId    = tmpData.UnitId
                                    AND tmpGoodsPrint.PartionId = tmpData.PartionId
                                    AND tmpGoodsPrint.GoodsId   = tmpData.GoodsId
-;
- END;
+           ;
+           
+END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 

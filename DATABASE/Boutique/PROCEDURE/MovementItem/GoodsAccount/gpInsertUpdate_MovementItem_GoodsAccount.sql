@@ -12,10 +12,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_GoodsAccount(
     IN inSaleMI_Id              Integer   , -- ѕарти€ элемента продажа/возврат
     IN inIsPay                  Boolean   , -- добавить с оплатой
     IN inAmount                 TFloat    , --  оличество
-   OUT outTotalPay              TFloat    , -- 
+   OUT outTotalPay              TFloat    , --
     IN inComment                TVarChar  , -- примечание
     IN inSession                TVarChar    -- сесси€ пользовател€
-)                              
+)
 RETURNS RECORD
 AS
 $BODY$
@@ -44,8 +44,8 @@ BEGIN
 
      -- данные из партии : GoodsId
      vbGoodsId:= (SELECT Object_PartionGoods.GoodsId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inPartionId);
-    
-    
+
+
      -- сохранили
      ioId:= lpInsertUpdate_MovementItem_GoodsAccount (ioId                 := ioId
                                                     , inMovementId         := inMovementId
@@ -53,26 +53,32 @@ BEGIN
                                                     , inPartionId          := COALESCE (inPartionId, 0)
                                                     , inPartionMI_Id       := COALESCE (vbPartionMI_Id, 0)
                                                     , inAmount             := inAmount
-                                                    , inComment            := COALESCE (inComment,'') :: TVarChar 
+                                                    , inComment            := COALESCE (inComment,'') :: TVarChar
                                                     , inUserId             := vbUserId
                                                      );
 
-    IF inIsPay = TRUE THEN
-        -- сохранили оплату
-       /*     PERFORM lpInsertUpdate_MI_GoodsAccount_Child  (ioId             := COALESCE (_tmpMI.Id,0)
-                                                     , inMovementId         := inMovementId
-                                                     , inParentId           := inParentId
-                                                     , inCashId             := COALESCE (_tmpCash.CashId, _tmpMI.CashId)
-                                                     , inCurrencyId         := COALESCE (_tmpCash.CurrencyId, _tmpMI.CurrencyId)
-                                                     , inCashId_Exc         := Null
-                                                     , inAmount             := COALESCE (_tmpCash.Amount,0)
-                                                     , inCurrencyValue      := COALESCE (_tmpCash.CurrencyValue,1)
-                                                     , inParValue           := COALESCE (_tmpCash.ParValue,0)
-                                                     , inUserId             := vbUserId
-                                                      )
-             FROM _tmpCash
-*/
-    END IF;
+     -- расчитали »того оплата дл€ грида
+     IF inIsPay = TRUE THEN
+         -- сохранили оплату
+        /*     PERFORM lpInsertUpdate_MI_GoodsAccount_Child  (ioId             := COALESCE (_tmpMI.Id,0)
+                                                      , inMovementId         := inMovementId
+                                                      , inParentId           := inParentId
+                                                      , inCashId             := COALESCE (_tmpCash.CashId, _tmpMI.CashId)
+                                                      , inCurrencyId         := COALESCE (_tmpCash.CurrencyId, _tmpMI.CurrencyId)
+                                                      , inCashId_Exc         := Null
+                                                      , inAmount             := COALESCE (_tmpCash.Amount,0)
+                                                      , inCurrencyValue      := COALESCE (_tmpCash.CurrencyValue,1)
+                                                      , inParValue           := COALESCE (_tmpCash.ParValue,0)
+                                                      , inUserId             := vbUserId
+                                                       )
+              FROM _tmpCash
+ */
+
+         outTotalPay := COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalPay()), 0);
+     ELSE
+         outTotalPay := COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalPay()), 0);
+     END IF;
+
 
 
 END;

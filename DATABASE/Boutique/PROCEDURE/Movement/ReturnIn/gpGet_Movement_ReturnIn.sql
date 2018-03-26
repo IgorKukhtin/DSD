@@ -39,14 +39,14 @@ BEGIN
 
 
      -- заменили
-     IF inOperDate < '01.01.2017' THEN inOperDate := CURRENT_DATE; END IF;
+     IF inOperDate < '01.01.2017' OR vbUnitId_User > 0 THEN inOperDate:= CURRENT_DATE; END IF;
 
      -- пытаемся найти последний непроведенный документ
      IF COALESCE (inMovementId, 0) = 0
      THEN
          inMovementId:= (SELECT tmp.Id
                          FROM (SELECT Movement.Id
-                                    , ROW_NUMBER() OVER (ORDER BY Movement.Operdate desc, Movement.Id desc) AS Ord
+                                    , ROW_NUMBER() OVER (ORDER BY Movement.Operdate DESC, Movement.Id DESC) AS Ord
                                FROM Movement
                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                             ON MovementLinkObject_To.MovementId = Movement.Id
@@ -66,15 +66,14 @@ BEGIN
          RETURN QUERY 
          SELECT
                0 AS Id
-             --, CAST (NEXTVAL ('Movement_ReturnIn_seq') AS TVarChar) AS InvNumber
              , CAST (lfGet_InvNumber (0, zc_Movement_ReturnIn()) AS TVarChar) AS InvNumber
-             , CASE WHEN vbUnitId_User <> 0 THEN CURRENT_DATE ELSE inOperDate END ::TDateTime  AS OperDate
+             , inOperDate                       AS OperDate
              , Object_Status.Code               AS StatusCode
              , Object_Status.Name               AS StatusName
             
              , CAST (NULL AS TDateTime)         AS LastDate
-             , (inOperDate - interval '1 month') :: TDateTime AS StartDate
-             , (inOperDate - interval '1 day')   :: TDateTime AS EndDate
+             , (inOperDate - INTERVAL '8 MONTH') :: TDateTime AS StartDate
+             , (inOperDate - INTERVAL '0 DAY')   :: TDateTime AS EndDate
              , CAST (0 as TFloat)               AS TotalSumm
              , CAST (0 as TFloat)               AS TotalSummPay
              , CAST (0 as TFloat)               AS TotalDebt
@@ -198,10 +197,9 @@ BEGIN
              , Object_Status.ObjectCode               AS StatusCode
              , Object_Status.ValueData                AS StatusName
              
-             --, ObjectDate_LastDate.ValueData           AS LastDate
              , tmpData.LastDate                         :: TDateTime AS LastDate
-             , COALESCE(inStartDate, (Movement.OperDate - interval '1 month')) :: TDateTime AS StartDate
-             , COALESCE(inEndDate, (Movement.OperDate - interval '1 day'))     :: TDateTime AS EndDate
+             , COALESCE (inStartDate, (Movement.OperDate - INTERVAL '8 MONTH')) :: TDateTime AS StartDate
+             , COALESCE (inEndDate, (Movement.OperDate - INTERVAL '0 DAY'))     :: TDateTime AS EndDate
 
              , COALESCE (tmpData.TotalSumm, 0) :: TFloat AS TotalSumm
              , COALESCE (tmpData.TotalPay, 0)  :: TFloat AS TotalSummPay

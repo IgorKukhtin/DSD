@@ -28,6 +28,7 @@ object GoodsAccountForm: TGoodsAccountForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitLeft = 32
     object edInvNumber: TcxTextEdit
       Left = 177
       Top = 23
@@ -112,8 +113,8 @@ object GoodsAccountForm: TGoodsAccountForm
       ParentShowHint = False
       Properties.Alignment.Horz = taCenter
       Properties.Alignment.Vert = taVCenter
-      Properties.DecimalPlaces = 4
-      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Properties.AssignedValues.DisplayFormat = True
+      Properties.DecimalPlaces = 1
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 9
@@ -143,8 +144,8 @@ object GoodsAccountForm: TGoodsAccountForm
       Top = 23
       Hint = #1048#1090#1086#1075#1086' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
       ParentShowHint = False
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.'
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 13
@@ -177,6 +178,7 @@ object GoodsAccountForm: TGoodsAccountForm
       Top = 103
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089' '#1086#1087#1083#1072#1090#1086#1081
       Properties.ReadOnly = False
+      State = cbsChecked
       TabOrder = 16
       Width = 127
     end
@@ -257,8 +259,8 @@ object GoodsAccountForm: TGoodsAccountForm
       ParentShowHint = False
       Properties.Alignment.Horz = taCenter
       Properties.Alignment.Vert = taVCenter
+      Properties.AssignedValues.DisplayFormat = True
       Properties.DecimalPlaces = 1
-      Properties.DisplayFormat = '0.0 %'
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 26
@@ -299,8 +301,8 @@ object GoodsAccountForm: TGoodsAccountForm
       Top = 23
       Hint = #1048#1090#1086#1075#1086' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
       ParentShowHint = False
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.'
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 5
@@ -319,7 +321,7 @@ object GoodsAccountForm: TGoodsAccountForm
       Width = 198
     end
     object cxLabel17: TcxLabel
-      Left = 768
+      Left = 770
       Top = 45
       Caption = #1058#1077#1083'/ ('#1076#1088#1091#1075#1080#1077')'
     end
@@ -450,10 +452,6 @@ object GoodsAccountForm: TGoodsAccountForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = Amount_Return
             end
             item
@@ -477,6 +475,10 @@ object GoodsAccountForm: TGoodsAccountForm
               Column = TotalChangePercentPay
             end>
           DataController.Summary.FooterSummaryItems = <
+            item
+              Kind = skSum
+              Column = OperPriceList
+            end
             item
               Format = ',0.####'
               Kind = skSum
@@ -560,14 +562,6 @@ object GoodsAccountForm: TGoodsAccountForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalPay_Return
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Kind = skSum
-              Column = OperPriceList
             end
             item
               Format = ',0.####'
@@ -711,15 +705,16 @@ object GoodsAccountForm: TGoodsAccountForm
             Width = 40
           end
           object ChangePercent: TcxGridDBColumn
-            Caption = '% '#1057#1082#1080#1076#1082#1080
+            Caption = '% '#1057#1082'.'
             DataBinding.FieldName = 'ChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1057#1082#1080#1076#1082#1080
             Options.Editing = False
-            Width = 55
+            Width = 35
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -732,13 +727,14 @@ object GoodsAccountForm: TGoodsAccountForm
             Width = 50
           end
           object Amount_Sale: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1086#1076#1072#1078#1072
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1087#1088#1086#1076#1072#1078#1077
             DataBinding.FieldName = 'Amount_Sale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1069#1083#1077#1084#1077#1085#1090' '#1055#1088#1086#1076#1072#1078#1080
             Options.Editing = False
             Width = 58
           end
@@ -1171,6 +1167,22 @@ object GoodsAccountForm: TGoodsAccountForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inClientId'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inShowAll'
         Value = Null
         Component = actShowAll
@@ -1497,27 +1509,9 @@ object GoodsAccountForm: TGoodsAccountForm
         end
         item
           StoredProc = spGetTotalSumm
-        end
-        item
-          StoredProc = spSelectMI
         end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object actGet_TotalSumm_byClient: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spGet_TotalSumm_byClient
-      StoredProcList = <
-        item
-          StoredProc = spGet_TotalSumm_byClient
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1083#1080#1077#1085#1090#1072
-      ImageIndex = 4
+      Caption = 'actRefreshMI'
+      Hint = 'actRefreshMI'
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -1538,6 +1532,38 @@ object GoodsAccountForm: TGoodsAccountForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actGet_TotalSumm: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGetTotalSumm
+      StoredProcList = <
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = 'actGet_TotalSumm'
+      Hint = 'actGet_TotalSumm'
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actGet_TotalSumm_byClient: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_TotalSumm_byClient
+      StoredProcList = <
+        item
+          StoredProc = spGet_TotalSumm_byClient
+        end
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = 'actGet_TotalSumm_byClient'
+      Hint = 'actGet_TotalSumm_byClient'
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -1795,6 +1821,9 @@ object GoodsAccountForm: TGoodsAccountForm
         end
         item
           Action = actRefreshMI
+        end
+        item
+          Action = actGet_TotalSumm
         end>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1087#1083#1072#1090#1091' '#1076#1083#1103' 1-'#1086#1075#1086'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1087#1083#1072#1090#1091' '#1076#1083#1103' 1-'#1086#1075#1086'>'
@@ -1841,11 +1870,13 @@ object GoodsAccountForm: TGoodsAccountForm
         end
         item
           Action = actRefreshMI
+        end
+        item
+          Action = actGet_TotalSumm
         end>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1087#1083#1072#1090#1091' '#1080#1090#1086#1075#1086'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1087#1083#1072#1090#1091' '#1080#1090#1086#1075#1086'>'
       ImageIndex = 50
-      ShortCut = 45
     end
     object actInsertUpdateMIChildTotal: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -2154,10 +2185,10 @@ object GoodsAccountForm: TGoodsAccountForm
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
         Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 18
+        DataSummaryItemIndex = 0
       end>
-    Left = 371
-    Top = 329
+    Left = 363
+    Top = 345
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 302
@@ -2598,18 +2629,6 @@ object GoodsAccountForm: TGoodsAccountForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'CityName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Address'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'PhoneMobile'
         Value = Null
         Component = cePhoneMobile
@@ -2704,137 +2723,11 @@ object GoodsAccountForm: TGoodsAccountForm
     Left = 551
     Top = 256
   end
-  object spInsertMaskMIMaster: TdsdStoredProc
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId'
-        Value = 0
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPartionId'
-        Value = 'True'
-        Component = MasterCDS
-        ComponentItem = 'PartionId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisPay'
-        Value = Null
-        Component = cbisPay
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmount'
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outChangePercent'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'ChangePercent'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inSummChangePercent'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummChangePercent'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outOperPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'OperPrice'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outCountForPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'CountForPrice'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outAmountSumm'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountSumm'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outOperPriceList'
-        Value = 0.000000000000000000
-        Component = MasterCDS
-        ComponentItem = 'OperPriceList'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outAmountPriceListSumm'
-        Value = 0.000000000000000000
-        Component = MasterCDS
-        ComponentItem = 'AmountPriceListSumm'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inBarCode'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 150
-    Top = 343
-  end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
     IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefreshMI
-    ComponentList = <
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end>
+    ComponentList = <>
     Left = 376
     Top = 288
   end
@@ -3157,7 +3050,7 @@ object GoodsAccountForm: TGoodsAccountForm
       end>
     PackSize = 1
     Left = 168
-    Top = 400
+    Top = 368
   end
   object spGet_Printer: TdsdStoredProc
     StoredProcName = 'gpGet_PrinterByUnit'
