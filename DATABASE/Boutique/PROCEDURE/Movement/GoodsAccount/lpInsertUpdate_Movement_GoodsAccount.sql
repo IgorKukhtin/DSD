@@ -38,6 +38,17 @@ BEGIN
      END IF;
 
 
+     -- проверка
+     IF inUserId <> zc_User_Sybase() AND ioId > 0
+        AND (COALESCE (inFromId, 0) <> COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = ioId AND MLO.DescId = zc_MovementLinkObject_From()), 0)
+          OR COALESCE (inToId, 0)   <> COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = ioId AND MLO.DescId = zc_MovementLinkObject_To()), 0)
+            )
+        AND EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = ioId AND MI.DescId = zc_MI_Master())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ не пустой.Корректировка не возможна.Необходимо удалить текущий документ и сформировать новый.';
+     END IF;
+
+
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 

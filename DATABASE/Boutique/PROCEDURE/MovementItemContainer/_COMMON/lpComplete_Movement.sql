@@ -21,7 +21,7 @@ BEGIN
   -- проверка
   /*IF EXISTS (SELECT MovementId FROM MovementItemContainer WHERE MovementId = inMovementId)
   THEN
-      RAISE EXCEPTION 'Ошибка.Существуют проводки.Проведение невозможно.';
+      RAISE EXCEPTION 'Ошибка.Существуют проводки.Проведение не возможно.';
   END IF;*/
 
   -- 0. Проверка

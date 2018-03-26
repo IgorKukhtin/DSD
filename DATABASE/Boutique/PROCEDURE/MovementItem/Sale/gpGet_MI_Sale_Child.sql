@@ -45,6 +45,7 @@ BEGIN
      SELECT -- сумма к оплате - учитывается ТОЛЬКО скидка %
             COALESCE (SUM (zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData)
                          - COALESCE (MIFloat_TotalChangePercent.ValueData, 0)
+                         + COALESCE (MIFloat_SummChangePercent.ValueData, 0)
                           ), 0)
             -- сумма доп.скидки - Списание при округлении
           , COALESCE (SUM (COALESCE (MIFloat_SummChangePercent.ValueData, 0)), 0)

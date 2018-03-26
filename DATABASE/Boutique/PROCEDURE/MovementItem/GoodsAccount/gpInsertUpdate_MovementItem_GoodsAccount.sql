@@ -28,19 +28,35 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
+     -- определяем Партию элемента продажи/возврата
+     vbPartionMI_Id := lpInsertFind_Object_PartionMI (inSaleMI_Id);
+
+
      -- проверка - документ должен быть сохранен
      IF COALESCE (inMovementId, 0) = 0 THEN
         RAISE EXCEPTION 'Ошибка.Документ не сохранен.';
      END IF;
-
      -- проверка - свойство должно быть установлено
      IF COALESCE (inPartionId, 0) = 0 THEN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Партия>.';
      END IF;
+     -- проверка - свойство должно быть установлено
+     IF COALESCE (inSaleMI_Id, 0) = 0 AND  vbUserId <> zc_User_Sybase() THEN
+        RAISE EXCEPTION 'Ошибка.Не определен элемент Продажи.';
+     END IF;
+     -- проверка - свойство должно быть установлено
+     IF inAmount < 0 THEN
+        RAISE EXCEPTION 'Ошибка.Не установлено значение <Кол-во>.';
+     END IF;
+     -- проверка - Уникальный vbPartionMI_Id
+     IF EXISTS (SELECT 1 FROM MovementItem AS MI INNER JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = MI.Id AND MILO.DescId = zc_MILinkObject_PartionMI() AND MILO.ObjectId = vbPartionMI_Id WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.Id <> COALESCE (ioId, 0)) THEN
+        RAISE EXCEPTION 'Ошибка.В документе уже есть Товар <% %> р.<%>.Дублирование запрещено.'
+                      , lfGet_Object_ValueData_sh ((SELECT Object_PartionGoods.LabelId     FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inPartionId))
+                      , lfGet_Object_ValueData    ((SELECT Object_PartionGoods.GoodsId     FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inPartionId))
+                      , lfGet_Object_ValueData_sh ((SELECT Object_PartionGoods.GoodsSizeId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inPartionId))
+                       ;
+     END IF;
 
-
-     -- определяем Партию элемента продажи/возврата
-     vbPartionMI_Id := lpInsertFind_Object_PartionMI (inSaleMI_Id);
 
      -- данные из партии : GoodsId
      vbGoodsId:= (SELECT Object_PartionGoods.GoodsId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inPartionId);

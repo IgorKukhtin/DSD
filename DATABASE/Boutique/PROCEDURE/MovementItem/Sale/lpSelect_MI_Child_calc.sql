@@ -283,7 +283,7 @@ BEGIN
                                        ELSE FLOOR (100 * zfCalc_CurrencyTo (tmp_MI_res.Amount_USD_grn, inCurrencyValueUSD, inParValueUSD))
                                           / 100
                                   END AS Amount_USD
-                                
+
                            FROM tmp_MI_res
                           )
           -- 6.2. получили реальные суммы - ќ“Ѕ–ќ—»Ћ» "хвостики" в √–Ќ если по ним»“ќ√ќ =0
@@ -346,6 +346,7 @@ BEGIN
                                  AND tmpMI_Child.CashId   = tmpCash.CashId
        WHERE tmpMI_Child.MovementItemId > 0
           OR (tmp_MI_res.Amount_GRN + COALESCE (tmp_Currency.Amount_EUR_grn, 0)  + COALESCE (tmp_Currency.Amount_USD_grn, 0)) <> 0
+          OR tmp_MI_res.AmountDiscount <> 0
 
       UNION ALL
        -- 1.2. –езультат : GRN - Card
