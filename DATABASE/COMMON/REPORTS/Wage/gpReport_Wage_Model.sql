@@ -969,14 +969,20 @@ AS  (SELECT
          CROSS JOIN tmpOperDate
          LEFT OUTER JOIN Movement_SheetGroup ON COALESCE (Movement_SheetGroup.PositionId, 0)      = COALESCE (Setting.PositionId, 0)
                                             AND COALESCE (Movement_SheetGroup.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
-                                            AND (COALESCE (Movement_SheetGroup.StorageLineId, 0)   = COALESCE (Setting.StorageLineId_From, 0)
-                                              OR COALESCE (Movement_SheetGroup.StorageLineId, 0)   = COALESCE (Setting.StorageLineId_To, 0))
+                                            AND (COALESCE (Movement_SheetGroup.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_From, 0)
+                                              OR COALESCE (Movement_SheetGroup.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_To, 0)
+                                              OR COALESCE (Setting.StorageLineId_From, 0)         = 0
+                                              OR COALESCE (Setting.StorageLineId_To, 0)           = 0
+                                                )
                                             AND Setting.ServiceModelKindId                        = zc_Enum_ModelServiceKind_MonthSheetWorkTime() -- за мес€ц табель
 
          LEFT OUTER JOIN Movement_Sheet ON COALESCE (Movement_Sheet.PositionId, 0)      = COALESCE (Setting.PositionId, 0)
                                        AND COALESCE (Movement_Sheet.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
-                                       AND (COALESCE (Movement_Sheet.StorageLineId, 0)   = COALESCE (Setting.StorageLineId_From, 0)
-                                         OR COALESCE (Movement_Sheet.StorageLineId, 0)   = COALESCE (Setting.StorageLineId_To, 0))
+                                       AND (COALESCE (Movement_Sheet.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_From, 0)
+                                         OR COALESCE (Movement_Sheet.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_To, 0)
+                                         OR COALESCE (Setting.StorageLineId_From, 0)    = 0
+                                         OR COALESCE (Setting.StorageLineId_To, 0)      = 0
+                                           )
                                        AND Movement_Sheet.OperDate                      = tmpOperDate.OperDate
                                        AND (COALESCE (Movement_Sheet.MemberId, 0)       = Movement_SheetGroup.MemberId OR Movement_SheetGroup.MemberId IS NULL)
 
@@ -999,8 +1005,12 @@ AS  (SELECT
                                             AND COALESCE (Setting.ModelServiceItemChild_FromId, 0) = COALESCE (ServiceModelMovement.ModelServiceItemChild_FromId, 0)
                                             AND COALESCE (Setting.ModelServiceItemChild_ToId, 0)   = COALESCE (ServiceModelMovement.ModelServiceItemChild_ToId, 0)
 
-                                            AND COALESCE (Setting.StorageLineId_From, 0)           = COALESCE (ServiceModelMovement.StorageLineId_From, 0)
-                                            AND COALESCE (Setting.StorageLineId_To, 0)             = COALESCE (ServiceModelMovement.StorageLineId_To, 0)
+                                            AND (COALESCE (Setting.StorageLineId_From, 0)          = COALESCE (ServiceModelMovement.StorageLineId_From, 0)
+                                              OR COALESCE (Setting.StorageLineId_From, 0)          = 0
+                                                )
+                                            AND (COALESCE (Setting.StorageLineId_To, 0)            = COALESCE (ServiceModelMovement.StorageLineId_To, 0)
+                                              OR COALESCE (Setting.StorageLineId_To, 0)            = 0
+                                                )
 
                                             AND COALESCE (Setting.GoodsKind_FromId, 0)             = COALESCE (ServiceModelMovement.GoodsKind_FromId, 0)
                                             AND COALESCE (Setting.GoodsKindComplete_FromId, 0)     = COALESCE (ServiceModelMovement.GoodsKindComplete_FromId, 0)
@@ -1009,7 +1019,8 @@ AS  (SELECT
 
                                             AND ServiceModelMovement.OperDate                      = tmpOperDate.OperDate
                                             AND (ServiceModelMovement.DocumentKindId               = Setting.DocumentKindId
-                                              OR Setting.DocumentKindId = 0)
+                                              OR Setting.DocumentKindId = 0
+                                                )
 
         LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = COALESCE (Movement_SheetGroup.PersonalGroupId, Movement_Sheet.PersonalGroupId)
 

@@ -169,6 +169,7 @@ object ClientForm: TClientForm
         Caption = #1044#1086#1083#1075' '#1087#1086#1082#1091#1087'. '#1087#1086' '#1084#1072#1075'.'
         DataBinding.FieldName = 'TotalDebtSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -180,6 +181,7 @@ object ClientForm: TClientForm
         Caption = #1048#1090#1086#1075#1086' '#1076#1086#1083#1075' '#1087#1086#1082#1091#1087'.'
         DataBinding.FieldName = 'TotalDebtSumm_All'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -192,7 +194,8 @@ object ClientForm: TClientForm
         Caption = '% '#1089#1082#1080#1076#1082#1080
         DataBinding.FieldName = 'DiscountTax'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.#### %'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -203,7 +206,8 @@ object ClientForm: TClientForm
         Caption = '% '#1089#1082#1080#1076#1082#1080' '#1054#1073#1091#1074#1100
         DataBinding.FieldName = 'DiscountTaxTwo'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.#### %'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -283,7 +287,7 @@ object ClientForm: TClientForm
         Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'TotalCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 0
+        Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -330,6 +334,7 @@ object ClientForm: TClientForm
         Caption = #1050#1086#1083'. '#1074' '#1087#1086#1089#1083'. '#1087#1086#1082'.'
         DataBinding.FieldName = 'LastCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -341,6 +346,7 @@ object ClientForm: TClientForm
         Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1089#1082'. '#1074' '#1087#1086#1089#1083'. '#1087#1086#1082'.'
         DataBinding.FieldName = 'LastSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -352,6 +358,7 @@ object ClientForm: TClientForm
         Caption = #1057#1091#1084#1084#1072' '#1089#1082'. '#1074' '#1087#1086#1089#1083'. '#1087#1086#1082'.'
         DataBinding.FieldName = 'LastSummDiscount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -378,7 +385,7 @@ object ClientForm: TClientForm
         Width = 150
       end
       object UnitName_User: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1086#1083#1100#1079'.)'
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1087#1086#1089#1083'. '#1087#1086#1082'.'
         DataBinding.FieldName = 'UnitName_User'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
