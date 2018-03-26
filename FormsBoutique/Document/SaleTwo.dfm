@@ -2608,12 +2608,12 @@ object SaleTwoForm: TSaleTwoForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmount'
+        Name = 'ioAmount'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -3499,10 +3499,10 @@ object SaleTwoForm: TSaleTwoForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmount'
-        Value = '1'
+        Name = 'ioAmount'
+        Value = '0'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
