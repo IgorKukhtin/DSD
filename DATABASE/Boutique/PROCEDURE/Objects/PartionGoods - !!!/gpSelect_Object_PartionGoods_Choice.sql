@@ -142,11 +142,11 @@ BEGIN
             , tmpContainer.PartionId
             , Object_PartionGoods.SybaseId
 
-            , CASE WHEN tmpContainer.Amount     <= 0 THEN 12500670    -- серый
-                   WHEN tmpContainer.AmountDebt >  0 THEN zc_Color_Blue()
-                   
+            , CASE WHEN tmpContainer.Amount < 0 OR tmpContainer.AmountDebt < 0 THEN zc_Color_Red()
+                   WHEN tmpContainer.AmountDebt > 0 THEN zc_Color_Blue()
+                   WHEN tmpContainer.Amount     = 0 THEN zc_Color_UnEnabl()
                    ELSE zc_Color_Black()
-              END      ::Integer  AS Color_Calc
+              END :: Integer                      AS Color_Calc
               
        FROM tmpContainer
 

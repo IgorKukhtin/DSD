@@ -14,7 +14,7 @@ object ProfitLoss_ObjectForm: TProfitLoss_ObjectForm
   OldCreateOrder = False
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.ChoiceAction = actChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -220,7 +220,7 @@ object ProfitLoss_ObjectForm: TProfitLoss_ObjectForm
       Category = 0
     end
     object bbGridToExcel: TdxBarButton
-      Action = dsdGridToExcel
+      Action = actGridToExcel
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
@@ -230,7 +230,7 @@ object ProfitLoss_ObjectForm: TProfitLoss_ObjectForm
       Visible = ivAlways
     end
     object bbChoiceGuides: TdxBarButton
-      Action = dsdChoiceGuides
+      Action = actChoiceGuides
       Category = 0
     end
   end
@@ -252,7 +252,7 @@ object ProfitLoss_ObjectForm: TProfitLoss_ObjectForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object dsdChoiceGuides: TdsdChoiceGuides
+    object actChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
       Params = <
@@ -305,7 +305,7 @@ object ProfitLoss_ObjectForm: TProfitLoss_ObjectForm
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
     end
-    object dsdGridToExcel: TdsdGridToExcel
+    object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
       Grid = cxGrid
@@ -336,13 +336,13 @@ object ProfitLoss_ObjectForm: TProfitLoss_ObjectForm
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
       end
       item
       end>
     ActionItemList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
         ShortCut = 13
       end
       item

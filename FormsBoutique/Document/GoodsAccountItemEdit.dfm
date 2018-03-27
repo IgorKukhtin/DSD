@@ -730,6 +730,14 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountGRN'
+        Value = Null
+        Component = ceAmountGRN
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAmountUSD'
         Value = 0.000000000000000000
         Component = ceAmountUSD
@@ -832,6 +840,14 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountUSD'
+        Value = Null
+        Component = ceAmountUSD
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAmountEUR'
         Value = 0.000000000000000000
         Component = ceAmountEUR
@@ -877,7 +893,7 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 48
+    Left = 56
     Top = 48
   end
   object spGet_isEUR: TdsdStoredProc
@@ -929,6 +945,14 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
         Name = 'inAmountUSD'
         Value = 0.000000000000000000
         Component = ceAmountUSD
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountEUR'
+        Value = Null
+        Component = ceAmountEUR
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1036,6 +1060,14 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountCard'
+        Value = Null
+        Component = ceAmountCARD
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAmountDiscount'
         Value = 0.000000000000000000
         Component = ceAmountDiscount
@@ -1133,6 +1165,14 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
         Name = 'inAmountCard'
         Value = 0.000000000000000000
         Component = ceAmountCARD
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountDiscount'
+        Value = Null
+        Component = ceAmountDiscount
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

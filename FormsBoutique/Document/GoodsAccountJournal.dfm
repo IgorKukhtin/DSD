@@ -458,7 +458,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
       ShowCaption = False
     end
     object bbGridToExcel: TdxBarButton
-      Action = dsdGridToExcel
+      Action = actGridToExcel
       Category = 0
     end
     object bbMIContainer: TdxBarButton
@@ -466,7 +466,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
       Category = 0
     end
     object bbMovementProtocol: TdxBarButton
-      Action = MovementProtocolOpenForm
+      Action = actProtocol
       Category = 0
     end
     object bbPrint: TdxBarButton
@@ -500,7 +500,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object dsdGridToExcel: TdsdGridToExcel
+    object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
       Grid = cxGrid
@@ -586,7 +586,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object MovementProtocolOpenForm: TdsdOpenForm
+    object actProtocol: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'

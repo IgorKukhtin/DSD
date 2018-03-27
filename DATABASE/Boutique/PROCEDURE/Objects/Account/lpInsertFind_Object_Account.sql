@@ -26,27 +26,27 @@ BEGIN
    -- Проверки
    IF COALESCE (inUserId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Ошибка.Невозможно определить Пользователя : <%>, <%>, <%>, <%>', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
+       RAISE EXCEPTION 'Ошибка.Не возможно определить Пользователя : <%>, <%>, <%>, <%>', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
    END IF;
 
    IF COALESCE (inAccountGroupId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Ошибка.Невозможно определить Счет т.к. не установлено <Группа счета> : <%>, <%>, <%>, <%>', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
+       RAISE EXCEPTION 'Ошибка.Не возможно определить Счет т.к. не установлено <Группа счета> : <%>, <%>, <%>, <%>', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
    END IF;
 
    IF COALESCE (inAccountDirectionId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Ошибка.Невозможно определить Счет т.к. не установлено <Аналитика счета - направление> : <%>, <%>, <%>, <%>', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
+       RAISE EXCEPTION 'Ошибка.Не возможно определить Счет т.к. не установлено <Аналитика счета - направление> : <%>, <%>, <%>, <%>', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
    END IF;
 
    IF COALESCE (inInfoMoneyDestinationId, 0) = 0 AND COALESCE (inInfoMoneyId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Ошибка.Невозможно определить Счет т.к. не установлено <Управленческое назначение> : <%>, <%>, <%>, <%>', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
+       RAISE EXCEPTION 'Ошибка.Не возможно определить Счет т.к. не установлено <Управленческое назначение> : <%>, <%>, <%>, <%>', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
    END IF;
 
    IF COALESCE (inInfoMoneyDestinationId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Ошибка.Невозможно определить Счет т.к. не установлено <Управленческое назначение> : <%>, <%>, <%>, <%>', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
+       RAISE EXCEPTION 'Ошибка.Не возможно определить Счет т.к. не установлено <Управленческое назначение> : <%>, <%>, <%>, <%>', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
    END IF;
 
 
@@ -59,7 +59,7 @@ BEGIN
    -- проверка - статья не должна быть удалена
    IF EXISTS (SELECT Id FROM Object WHERE Id = vbAccountId AND isErased = TRUE)
    THEN
-       RAISE EXCEPTION 'Ошибка.Невозможно использовать удаленный Счет: <%>, <%>, <%>, <%>', lfGet_Object_ValueData (inAccountGroupId), lfGet_Object_ValueData (inAccountDirectionId), lfGet_Object_ValueData (inInfoMoneyDestinationId), lfGet_Object_ValueData (inInfoMoneyId);
+       RAISE EXCEPTION 'Ошибка.Не возможно использовать удаленный Счет: <%>, <%>, <%>, <%>', lfGet_Object_ValueData (inAccountGroupId), lfGet_Object_ValueData (inAccountDirectionId), lfGet_Object_ValueData (inInfoMoneyDestinationId), lfGet_Object_ValueData (inInfoMoneyId);
    END IF;
 
 
@@ -69,7 +69,7 @@ BEGIN
        -- для некоторых случаев блокируем создание счета
        IF inInsert = FALSE
        THEN
-           RAISE EXCEPTION 'Ошибка.В данном документе невозможно создать новый Счет с параметрами: <%>, <%>, <%>, <%>', lfGet_Object_ValueData (inAccountGroupId), lfGet_Object_ValueData (inAccountDirectionId), lfGet_Object_ValueData (inInfoMoneyDestinationId), lfGet_Object_ValueData (inInfoMoneyId);
+           RAISE EXCEPTION 'Ошибка.В данном документе не возможно создать новый Счет с параметрами: <%>, <%>, <%>, <%>', lfGet_Object_ValueData (inAccountGroupId), lfGet_Object_ValueData (inAccountDirectionId), lfGet_Object_ValueData (inInfoMoneyDestinationId), lfGet_Object_ValueData (inInfoMoneyId);
        END IF;
 
        -- Определяем Id 2-ий уровень по <Группа счетов> и <Аналитики счетов - направления>

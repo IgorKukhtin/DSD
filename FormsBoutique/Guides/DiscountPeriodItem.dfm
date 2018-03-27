@@ -680,7 +680,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       Category = 0
     end
     object bbToExcel: TdxBarButton
-      Action = dsdGridToExcel
+      Action = actGridToExcel
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
@@ -698,7 +698,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       Category = 0
     end
     object bbProtocol: TdxBarButton
-      Action = ProtocolOpenForm
+      Action = actProtocol
       Category = 0
     end
     object bbPriceListTaxDialog: TdxBarButton
@@ -751,7 +751,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object dsdGridToExcel: TdsdGridToExcel
+    object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
       Grid = cxGrid
@@ -833,7 +833,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
-    object ProtocolOpenForm: TdsdOpenForm
+    object actProtocol: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072

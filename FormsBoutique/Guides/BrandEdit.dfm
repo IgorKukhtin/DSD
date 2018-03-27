@@ -12,7 +12,7 @@ object BrandEditForm: TBrandEditForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.RefreshAction = dsdDataSetRefresh
+  AddOnFormData.RefreshAction = actDataSetRefresh
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
@@ -32,7 +32,7 @@ object BrandEditForm: TBrandEditForm
     Top = 163
     Width = 75
     Height = 25
-    Action = dsdInsertUpdateGuides
+    Action = actInsertUpdateGuides
     Default = True
     TabOrder = 2
   end
@@ -41,7 +41,7 @@ object BrandEditForm: TBrandEditForm
     Top = 163
     Width = 75
     Height = 25
-    Action = dsdFormClose
+    Action = actFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     TabOrder = 3
@@ -81,7 +81,7 @@ object BrandEditForm: TBrandEditForm
   object ActionList: TActionList
     Left = 152
     Top = 56
-    object dsdDataSetRefresh: TdsdDataSetRefresh
+    object actDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGet
@@ -94,7 +94,7 @@ object BrandEditForm: TBrandEditForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
+    object actInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -105,7 +105,7 @@ object BrandEditForm: TBrandEditForm
         end>
       Caption = 'Ok'
     end
-    object dsdFormClose: TdsdFormClose
+    object actFormClose: TdsdFormClose
       MoveParams = <>
       PostDataSetBeforeExecute = False
     end

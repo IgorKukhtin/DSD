@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
     IN inPartionId            Integer   , -- Партия
  INOUT ioDiscountSaleKindId   Integer   , -- *** - Вид скидки при продаже
     IN inIsPay                Boolean   , -- добавить с оплатой
-    IN inAmount               TFloat    , -- Количество
+ INOUT ioAmount               TFloat    , -- Количество
  INOUT ioChangePercent        TFloat    , -- *** - % Скидки
  INOUT ioSummChangePercent    TFloat    , -- *** - Дополнительная скидка в продаже ГРН
    OUT outOperPrice           TFloat    , -- Цена вх. в валюте
@@ -54,6 +54,14 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
      vbUserId:= lpGetUserBySession (inSession);
+
+
+     -- замена
+     IF COALESCE (ioAmount, 0) = 0 AND COALESCE (ioId, 0) = 0 AND vbUserId <> zc_User_Sybase()
+     THEN
+         -- По умаолчанию
+         ioAmount:= 1;
+     END IF;
 
 
      -- Получили для Пользователя - к какому Подразделению он привязан
@@ -102,8 +110,16 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Партия>.';
      END IF;
      -- проверка - свойство должно быть установлено
-     IF inAmount < 0 THEN
+     IF ioAmount < 0 THEN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Кол-во>.';
+     END IF;
+     -- проверка - Уникальный inPartionId
+     IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.PartionId = inPartionId AND MI.Id <> COALESCE (ioId, 0)) THEN
+        RAISE EXCEPTION 'Ошибка.В документе уже есть Товар <% %> р.<%>.Дублирование запрещено.'
+                      , lfGet_Object_ValueData_sh ((SELECT Object_PartionGoods.LabelId     FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inPartionId))
+                      , lfGet_Object_ValueData    ((SELECT Object_PartionGoods.GoodsId     FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inPartionId))
+                      , lfGet_Object_ValueData_sh ((SELECT Object_PartionGoods.GoodsSizeId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inPartionId))
+                       ;
      END IF;
 
 
@@ -131,7 +147,7 @@ BEGIN
 
      -- проверка: ОСТАТОК должен быть
      IF vbUserId <> zc_User_Sybase()
-        AND inAmount > COALESCE ((SELECT Container.Amount
+        AND ioAmount > COALESCE ((SELECT Container.Amount
                                   FROM Container
                                        LEFT JOIN ContainerLinkObject AS CLO_Client
                                                                      ON CLO_Client.ContainerId = Container.Id
@@ -144,8 +160,8 @@ BEGIN
                                  ), 0)
      THEN
         RAISE EXCEPTION 'Ошибка.Для товара <% %> р.<%> Остаток = <%>.'
-                      , lfGet_Object_ValueData_sh ((SELECT Object_PartionGoods.LabelId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inPartionId))
-                      , lfGet_Object_ValueData    ((SELECT Object_PartionGoods.GoodsId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inPartionId))
+                      , lfGet_Object_ValueData_sh ((SELECT Object_PartionGoods.LabelId     FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inPartionId))
+                      , lfGet_Object_ValueData    ((SELECT Object_PartionGoods.GoodsId     FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inPartionId))
                       , lfGet_Object_ValueData_sh ((SELECT Object_PartionGoods.GoodsSizeId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inPartionId))
                       , zfConvert_FloatToString (COALESCE ((SELECT Container.Amount
                                                             FROM Container
@@ -256,14 +272,14 @@ BEGIN
 
 
      -- вернули Сумма вх. в валюте, для грида - Округлили до 2-х Знаков
-     outTotalSumm := zfCalc_SummIn (inAmount, outOperPrice, outCountForPrice);
+     outTotalSumm := zfCalc_SummIn (ioAmount, outOperPrice, outCountForPrice);
      -- вернули сумму вх. в грн по элементу, для грида
      outTotalSummBalance := zfCalc_CurrencyFrom (outTotalSumm, outCurrencyValue, outParValue);
      -- расчитали Сумма по прайсу по элементу, для грида
-     outTotalSummPriceList := zfCalc_SummPriceList (inAmount, ioOperPriceList);
+     outTotalSummPriceList := zfCalc_SummPriceList (ioAmount, ioOperPriceList);
 
      -- расчитали Итого скидка в продаже ГРН, для грида - !!!Округлили до НОЛЬ Знаков - только %, ВСЕ округлять - нельзя!!!
-     outTotalChangePercent := outTotalSummPriceList - zfCalc_SummChangePercent (inAmount, ioOperPriceList, ioChangePercent) + COALESCE (ioSummChangePercent, 0);
+     outTotalChangePercent := outTotalSummPriceList - zfCalc_SummChangePercent (ioAmount, ioOperPriceList, ioChangePercent) + COALESCE (ioSummChangePercent, 0);
 
      -- вернули Итого оплата в продаже ГРН, для грида
      IF inIsPay = TRUE
@@ -316,7 +332,7 @@ BEGIN
                                               , inGoodsId               := ioGoodsId
                                               , inPartionId             := COALESCE (inPartionId, 0)
                                               , inDiscountSaleKindId    := ioDiscountSaleKindId
-                                              , inAmount                := inAmount
+                                              , inAmount                := ioAmount
                                               , inChangePercent         := COALESCE (ioChangePercent, 0)
                                               -- , inSummChangePercent     := COALESCE (ioSummChangePercent, 0)
                                               , inOperPrice             := COALESCE (outOperPrice, 0)
@@ -472,4 +488,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_Sale (ioId := 0 , inMovementId := 8 , ioGoodsId := 446 , inPartionId := 50 , inIsPay := False ,  inAmount := 4 ,ioSummChangePercent:=0, ioOperPriceList := 1030 , inBarCode_partner := '1' ::TVarChar,  inSession := zfCalc_UserAdmin());
+-- SELECT * FROM gpInsertUpdate_MovementItem_Sale (ioId := 0 , inMovementId := 8 , ioGoodsId := 446 , inPartionId := 50 , inIsPay := False ,  ioAmount := 4 ,ioSummChangePercent:=0, ioOperPriceList := 1030 , inBarCode_partner := '1' ::TVarChar,  inSession := zfCalc_UserAdmin());

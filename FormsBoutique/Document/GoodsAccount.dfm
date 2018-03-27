@@ -28,7 +28,6 @@ object GoodsAccountForm: TGoodsAccountForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = 32
     object edInvNumber: TcxTextEdit
       Left = 177
       Top = 23
@@ -1851,11 +1850,14 @@ object GoodsAccountForm: TGoodsAccountForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPayTotal'
           Value = 'False'
+          DataType = ftBoolean
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -1903,6 +1905,7 @@ object GoodsAccountForm: TGoodsAccountForm
         item
           Name = 'isPayTotal'
           Value = 'TRUE'
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       isShowModal = True

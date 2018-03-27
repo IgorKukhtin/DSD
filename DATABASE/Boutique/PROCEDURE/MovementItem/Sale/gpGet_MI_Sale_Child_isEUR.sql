@@ -1,6 +1,7 @@
 -- Function: gpGet_Movement_Income()
 
 DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_isEUR (Boolean,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_isEUR (Boolean,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child_isEUR(
     IN inisEUR             Boolean  , --
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child_isEUR(
     IN inAmount            TFloat   , -- сумма к оплате
     IN inAmountGRN         TFloat   , --
     IN inAmountUSD         TFloat   , --
+    IN inAmountEUR         TFloat   , --
     IN inAmountCard        TFloat   , --
     IN inAmountDiscount    TFloat   , --
     IN inSession           TVarChar   -- сессия пользователя
@@ -27,6 +29,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
      
      IF inisEUR THEN
+         IF inAmountEUR = 0 THEN
          vbAmountEUR := CAST (CASE WHEN COALESCE(inCurrencyValueEUR,1) <> 0 
                                    THEN (inAmount - (COALESCE (inAmountGRN,0)
                                                 + (COALESCE (inAmountUSD,0) * COALESCE(inCurrencyValueUSD,1)) 
@@ -35,6 +38,8 @@ BEGIN
                                          /  COALESCE(inCurrencyValueEUR,1)
                                    ELSE 0
                               END AS NUMERIC (16, 0)) ;
+         ELSE vbAmountEUR := inAmountEUR;
+         END IF;
      ELSE 
          vbAmountEUR := 0;
      END IF;

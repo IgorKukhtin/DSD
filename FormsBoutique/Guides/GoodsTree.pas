@@ -48,14 +48,14 @@ type
     actRefresh: TdsdDataSetRefresh;
     actInsert: TdsdInsertUpdateAction;
     actUpdate: TdsdInsertUpdateAction;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
-    dsdGridToExcel: TdsdGridToExcel;
+    actSetErased: TdsdUpdateErased;
+    actSetUnErased: TdsdUpdateErased;
+    actGridToExcel: TdsdGridToExcel;
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     spErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    dsdChoiceGuides: TdsdChoiceGuides;
+    actChoiceGuides: TdsdChoiceGuides;
     isErased: TcxGridDBColumn;
     cxDBTreeList: TcxDBTreeList;
     ceParentName: TcxDBTreeListColumn;
@@ -66,7 +66,7 @@ type
     cxSplitter: TcxSplitter;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    ProtocolOpenForm: TdsdOpenForm;
+    actProtocol: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     MeasureName: TcxGridDBColumn;
     CompositionName: TcxGridDBColumn;

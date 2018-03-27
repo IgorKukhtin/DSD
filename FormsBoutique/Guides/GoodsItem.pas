@@ -40,7 +40,7 @@ type
     spSelect: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    dsdGridToExcel: TdsdGridToExcel;
+    actGridToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     bbChoice: TdxBarButton;
@@ -49,9 +49,9 @@ type
     GoodsName: TcxGridDBColumn;
     isErased: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    dsdChoiceGuides: TdsdChoiceGuides;
+    actChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    ProtocolOpenForm: TdsdOpenForm;
+    actProtocol: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;

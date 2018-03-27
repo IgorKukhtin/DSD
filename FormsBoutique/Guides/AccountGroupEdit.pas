@@ -29,9 +29,9 @@ type
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
     ActionList: TActionList;
-    dsdDataSetRefresh: TdsdDataSetRefresh;
-    dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
-    dsdFormClose: TdsdFormClose;
+    actDataSetRefresh: TdsdDataSetRefresh;
+    actInsertUpdateGuides: TdsdInsertUpdateGuides;
+    actFormClose: TdsdFormClose;
     spInsertUpdate: TdsdStoredProc;
     FormParams: TdsdFormParams;
     spGet: TdsdStoredProc;

@@ -2586,6 +2586,7 @@ end;
 
 procedure TLoadFormTest.LoadMobileProjectFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileReturnInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileReturnInJournalForm');
   //
@@ -2594,10 +2595,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobilePromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobilePromoForm');
   //
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileOrderExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileOrderExternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileOrderExternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileOrderExternalJournalForm');
+  exit;
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileContract_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileContract_ObjectForm');

@@ -28,7 +28,7 @@ BEGIN
               LEFT JOIN Movement ON Movement.Id = tmpMovement.MovementId_Parent
               LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId;
          --
-         RAISE EXCEPTION 'Ошибка.Невозможно % документа т.к. он связан с <%> № <%> от <%>.', inComment, vbItemName, vbInvNumber, vbOperDate;
+         RAISE EXCEPTION 'Ошибка.Не возможно % документа т.к. он связан с <%> № <%> от <%>.', inComment, vbItemName, vbInvNumber, vbOperDate;
      END IF;
 
 END;

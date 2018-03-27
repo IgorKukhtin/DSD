@@ -46,13 +46,13 @@ type
     actRefresh: TdsdDataSetRefresh;
     actInsert: TdsdInsertUpdateAction;
     actUpdate: TdsdInsertUpdateAction;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
-    dsdGridToExcel: TdsdGridToExcel;
+    actSetErased: TdsdUpdateErased;
+    actSetUnErased: TdsdUpdateErased;
+    actGridToExcel: TdsdGridToExcel;
     spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     spErasedUnErased: TdsdStoredProc;
-    dsdChoiceGuides: TdsdChoiceGuides;
+    actChoiceGuides: TdsdChoiceGuides;
     isErased: TcxGridDBColumn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     InfoMoneyGroupCode: TcxGridDBColumn;

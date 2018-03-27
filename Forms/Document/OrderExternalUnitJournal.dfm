@@ -4,9 +4,8 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
   ClientWidth = 1064
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -320
   ExplicitWidth = 1080
-  ExplicitHeight = 453
+  ExplicitHeight = 452
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -571,6 +570,12 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
           Component = FormParams
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inIsJuridical'
+          Value = 'False'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_OrderExternal'
       ReportNameParam.Value = 'PrintMovement_OrderExternal'
@@ -1066,6 +1071,13 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsJuridical'
+        Value = 'false'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

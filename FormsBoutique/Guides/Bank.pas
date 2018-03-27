@@ -40,11 +40,11 @@ type
     spSelect: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
+    actSetErased: TdsdUpdateErased;
+    actSetUnErased: TdsdUpdateErased;
     bbSetErased: TdxBarButton;
     bbSetUnErased: TdxBarButton;
-    dsdGridToExcel: TdsdGridToExcel;
+    actGridToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     spErased: TdsdStoredProc;
@@ -54,9 +54,9 @@ type
     Name: TcxGridDBColumn;
     Erased: TcxGridDBColumn;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    dsdChoiceGuides: TdsdChoiceGuides;
+    actChoiceGuides: TdsdChoiceGuides;
     DBViewAddOn: TdsdDBViewAddOn;
-    ProtocolOpenForm: TdsdOpenForm;
+    actProtocol: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;

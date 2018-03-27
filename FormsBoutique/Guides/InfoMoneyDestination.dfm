@@ -14,7 +14,7 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
   OldCreateOrder = False
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.ChoiceAction = actChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -214,15 +214,15 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
       Category = 0
     end
     object bbSetErased: TdxBarButton
-      Action = dsdSetErased
+      Action = actSetErased
       Category = 0
     end
     object bbSetUnErased: TdxBarButton
-      Action = dsdSetUnErased
+      Action = actSetUnErased
       Category = 0
     end
     object bbGridToExcel: TdxBarButton
-      Action = dsdGridToExcel
+      Action = actGridToExcel
       Category = 0
     end
     object dxBarStatic1: TdxBarStatic
@@ -232,7 +232,7 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
       Visible = ivAlways
     end
     object bbChoiceGuides: TdxBarButton
-      Action = dsdChoiceGuides
+      Action = actChoiceGuides
       Category = 0
     end
   end
@@ -300,7 +300,7 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object dsdSetErased: TdsdUpdateErased
+    object actSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spErasedUnErased
@@ -311,11 +311,11 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
-      ShortCut = 46
+      ShortCut = 8238
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
-    object dsdSetUnErased: TdsdUpdateErased
+    object actSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spErasedUnErased
@@ -326,12 +326,12 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 32776
+      ShortCut = 8238
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
     end
-    object dsdChoiceGuides: TdsdChoiceGuides
+    object actChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
       Params = <
@@ -356,7 +356,7 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
       ImageIndex = 7
       DataSource = DataSource
     end
-    object dsdGridToExcel: TdsdGridToExcel
+    object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
       Grid = cxGrid
@@ -404,14 +404,14 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
       end
       item
         Action = actUpdate
       end>
     ActionItemList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
         ShortCut = 13
       end
       item

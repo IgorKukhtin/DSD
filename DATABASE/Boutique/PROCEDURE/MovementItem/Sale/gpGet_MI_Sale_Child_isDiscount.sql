@@ -1,6 +1,7 @@
 -- Function: gpGet_Movement_Income()
 
 DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_isDiscount (Boolean,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_isDiscount (Boolean,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child_isDiscount(
     IN inisDiscount        Boolean  , --
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child_isDiscount(
     IN inAmountUSD         TFloat   , --
     IN inAmountEUR         TFloat   , --
     IN inAmountCard        TFloat   , --
+    IN inAmountDiscount    TFloat   , --
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (AmountRemains TFloat
@@ -27,11 +29,14 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      IF inisDiscount THEN
+         IF inAmountDiscount = 0 THEN
          vbAmountDiscount := CAST ((inAmount - (COALESCE (inAmountGRN,0)
                                            + (COALESCE (inAmountUSD,0) * COALESCE(inCurrencyValueUSD,1)) 
                                            + (COALESCE (inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1)) 
                                            +  COALESCE (inAmountCard,0))
                                     ) AS NUMERIC (16, 2)) ;
+         ELSE vbAmountDiscount := inAmountDiscount;
+         END IF;
      ELSE 
          vbAmountDiscount := 0;
      END IF;

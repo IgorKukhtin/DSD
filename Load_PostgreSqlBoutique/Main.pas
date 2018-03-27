@@ -4252,8 +4252,8 @@ begin
                  then
                      if not myExecToStoredProc then ;//exit;
              //
-             if (FieldByName('Id_Postgres').AsInteger=0)
-                or ((FieldByName('Id_Postgres').AsInteger<0) and (FieldByName('isErased').AsInteger=zc_rvNo))
+             if (FieldByName('Id_Postgres').AsInteger<=0)
+                 and (FieldByName('isErased').AsInteger=zc_rvNo)
              then
                  fExecSqFromQuery(' update dba.DiscountKlientAccountMoney set MovementId_pg = '+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
                                  +' from dba.DiscountMovementItem_byBarCode'

@@ -12,7 +12,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.RefreshAction = dsdDataSetRefresh
+  AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
@@ -26,7 +26,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Top = 339
     Width = 75
     Height = 25
-    Action = dsdInsertUpdateGuides
+    Action = actInsertUpdate
     Default = True
     TabOrder = 2
   end
@@ -35,7 +35,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Top = 339
     Width = 75
     Height = 25
-    Action = dsdFormClose
+    Action = actFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     TabOrder = 3
@@ -253,7 +253,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
   object ActionList: TActionList
     Left = 24
     Top = 328
-    object dsdDataSetRefresh: TdsdDataSetRefresh
+    object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGet
@@ -266,7 +266,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
+    object actInsertUpdate: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -277,7 +277,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
         end>
       Caption = 'Ok'
     end
-    object dsdFormClose: TdsdFormClose
+    object actFormClose: TdsdFormClose
       MoveParams = <>
       PostDataSetBeforeExecute = False
     end

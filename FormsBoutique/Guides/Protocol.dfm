@@ -5,7 +5,7 @@ inherited ProtocolForm: TProtocolForm
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   ExplicitWidth = 949
-  ExplicitHeight = 398
+  ExplicitHeight = 397
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -201,7 +201,7 @@ inherited ProtocolForm: TProtocolForm
     Top = 216
   end
   inherited MasterDS: TDataSource
-    Top = 55
+    Top = 95
   end
   inherited MasterCDS: TClientDataSet
     Top = 55
@@ -249,7 +249,8 @@ inherited ProtocolForm: TProtocolForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Top = 63
+    Left = 112
+    Top = 95
   end
   inherited BarManager: TdxBarManager
     Top = 55

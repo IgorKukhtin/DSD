@@ -14,7 +14,7 @@ object RoleForm: TRoleForm
   OldCreateOrder = False
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.ChoiceAction = actChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -129,7 +129,7 @@ object RoleForm: TRoleForm
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
             item
-              Action = UserChoiceForm
+              Action = actUserChoiceForm
               Default = True
               Kind = bkEllipsis
             end>
@@ -188,7 +188,7 @@ object RoleForm: TRoleForm
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
             item
-              Action = ActionChoiceForm
+              Action = actActionChoiceForm
               Default = True
               Kind = bkEllipsis
             end>
@@ -233,7 +233,7 @@ object RoleForm: TRoleForm
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
             item
-              Action = ProcessChoiceForm
+              Action = actProcessChoiceForm
               Default = True
               Kind = bkEllipsis
             end>
@@ -299,7 +299,7 @@ object RoleForm: TRoleForm
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
             item
-              Action = ProcessAccessChoiceForm
+              Action = actProcessAccessChoiceForm
               Default = True
               Kind = bkEllipsis
             end>
@@ -493,15 +493,15 @@ object RoleForm: TRoleForm
       Category = 0
     end
     object bbSetErased: TdxBarButton
-      Action = dsdSetErased
+      Action = actSetErased
       Category = 0
     end
     object bbSetUnErased: TdxBarButton
-      Action = dsdSetUnErased
+      Action = actSetUnErased
       Category = 0
     end
     object bbToExcel: TdxBarButton
-      Action = dsdGridToExcel
+      Action = actGridToExcel
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
@@ -512,7 +512,7 @@ object RoleForm: TRoleForm
       ShowCaption = False
     end
     object bbChoice: TdxBarButton
-      Action = dsdChoiceGuides
+      Action = actChoiceGuides
       Category = 0
     end
     object bbInsertMask: TdxBarButton
@@ -520,23 +520,23 @@ object RoleForm: TRoleForm
       Category = 0
     end
     object bbProtocolOpen: TdxBarButton
-      Action = actProtocolOpenForm
+      Action = actProtocol
       Category = 0
     end
     object bbProtocolAction: TdxBarButton
-      Action = actProtocolActionForm
+      Action = actProtocolAction
       Category = 0
     end
     object bbProtocolProcess: TdxBarButton
-      Action = actProtocolProcessForm
+      Action = actProtocolProcess
       Category = 0
     end
     object bbProtocolProcessAccess: TdxBarButton
-      Action = actProtocolProcessAccessForm
+      Action = actProtocolProcessAccess
       Category = 0
     end
     object bbProtocolUser: TdxBarButton
-      Action = actProtocolUserForm
+      Action = actProtocolUser
       Category = 0
     end
   end
@@ -643,7 +643,7 @@ object RoleForm: TRoleForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object dsdSetErased: TdsdUpdateErased
+    object actSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spErased
@@ -654,11 +654,11 @@ object RoleForm: TRoleForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
-      ShortCut = 46
+      ShortCut = 8238
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
-    object dsdSetUnErased: TdsdUpdateErased
+    object actSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spUnErased
@@ -674,7 +674,7 @@ object RoleForm: TRoleForm
       isSetErased = False
       DataSource = DataSource
     end
-    object dsdGridToExcel: TdsdGridToExcel
+    object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
       Grid = cxGrid
@@ -683,7 +683,7 @@ object RoleForm: TRoleForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object dsdChoiceGuides: TdsdChoiceGuides
+    object actChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
       Params = <
@@ -714,7 +714,7 @@ object RoleForm: TRoleForm
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
     end
-    object UserChoiceForm: TOpenChoiceForm
+    object actUserChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -757,7 +757,7 @@ object RoleForm: TRoleForm
         end>
       isShowModal = False
     end
-    object UserUpdateDataSet: TdsdUpdateDataSet
+    object actUpdateDataSetUser: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -768,7 +768,7 @@ object RoleForm: TRoleForm
         end>
       DataSource = UserDS
     end
-    object ProcessAccessChoiceForm: TOpenChoiceForm
+    object actProcessAccessChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -795,7 +795,7 @@ object RoleForm: TRoleForm
         end>
       isShowModal = False
     end
-    object ProcessChoiceForm: TOpenChoiceForm
+    object actProcessChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -822,7 +822,7 @@ object RoleForm: TRoleForm
         end>
       isShowModal = False
     end
-    object ActionChoiceForm: TOpenChoiceForm
+    object actActionChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -849,7 +849,7 @@ object RoleForm: TRoleForm
         end>
       isShowModal = False
     end
-    object ProcessAccessUpdateDataSet: TdsdUpdateDataSet
+    object actProcessAccessUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -861,7 +861,7 @@ object RoleForm: TRoleForm
       Caption = 'ActionUpdateDataSet'
       DataSource = ProcessAccessDS
     end
-    object ProcessUpdateDataSet: TdsdUpdateDataSet
+    object actUpdateDataSetProcess: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -873,7 +873,7 @@ object RoleForm: TRoleForm
       Caption = 'ActionUpdateDataSet'
       DataSource = ProcessDS
     end
-    object ActionUpdateDataSet: TdsdUpdateDataSet
+    object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -882,10 +882,10 @@ object RoleForm: TRoleForm
         item
           StoredProc = spInsertUpdateRoleAction
         end>
-      Caption = 'ActionUpdateDataSet'
+      Caption = 'actUpdateDataSet'
       DataSource = ActionDS
     end
-    object actProtocolUserForm: TdsdOpenForm
+    object actProtocolUser: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
@@ -915,7 +915,7 @@ object RoleForm: TRoleForm
         end>
       isShowModal = False
     end
-    object actProtocolProcessAccessForm: TdsdOpenForm
+    object actProtocolProcessAccess: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1055#1088#1086#1094#1077#1089#1089' '#1076#1086#1089#1090#1091#1087
@@ -945,7 +945,7 @@ object RoleForm: TRoleForm
         end>
       isShowModal = False
     end
-    object actProtocolProcessForm: TdsdOpenForm
+    object actProtocolProcess: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1055#1088#1086#1094#1077#1089#1089#1072
@@ -975,7 +975,7 @@ object RoleForm: TRoleForm
         end>
       isShowModal = False
     end
-    object actProtocolActionForm: TdsdOpenForm
+    object actProtocolAction: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1044#1077#1081#1089#1090#1074#1080#1103
@@ -1005,7 +1005,7 @@ object RoleForm: TRoleForm
         end>
       isShowModal = False
     end
-    object actProtocolOpenForm: TdsdOpenForm
+    object actProtocol: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
@@ -1053,14 +1053,14 @@ object RoleForm: TRoleForm
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
       end
       item
         Action = actUpdate
       end>
     ActionItemList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
         ShortCut = 13
       end
       item

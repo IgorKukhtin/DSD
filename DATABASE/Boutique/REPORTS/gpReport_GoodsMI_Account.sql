@@ -86,7 +86,7 @@ BEGIN
                      , COALESCE (MIFloat_ChangePercent.ValueData, 0)      AS ChangePercent
                      , COALESCE (MIFloat_OperPriceList.ValueData, 0)      AS OperPriceList
                      , COALESCE (MIFloat_SummChangePercent.ValueData, 0)  AS SummChangePercent
-                     , (MI_Master.Amount)                             AS Amount
+                     , (MI_Master.Amount)                                 AS Amount
                      , COALESCE (MIFloat_TotalPay.ValueData, 0)           AS TotalPay
                      , COALESCE (MIFloat_TotalPayOth.ValueData, 0)        AS TotalPayOth
                      , ( FLOOR ( ((MI_Master.Amount - COALESCE (MIFloat_TotalCountReturn.ValueData, 0) ) * COALESCE (MIFloat_OperPriceList.ValueData, 0)) * (1- COALESCE (MIFloat_ChangePercent.ValueData, 0) / 100) )
@@ -112,7 +112,7 @@ BEGIN
                                             AND MI_Master.isErased   = FALSE
                      LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                  ON MIFloat_ChangePercent.MovementItemId = MI_Master.Id
-                                                 AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+                                                AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
                      LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                  ON MIFloat_OperPriceList.MovementItemId = MI_Master.Id
                                                 AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
@@ -501,7 +501,7 @@ BEGIN
 
                            FROM tmpData_MI AS tmp
                                 LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmp.MI_Id
-                           WHERE COALESCE (tmp.TotalPay, 0) <> 0
+                           WHERE COALESCE (tmp.TotalPay, 0) <> 0 OR tmp.SummChangePercent <> 0
                        UNION ALL
                            SELECT tmp.MovementId
                                 , tmp.MovementDescId

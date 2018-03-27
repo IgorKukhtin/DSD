@@ -40,10 +40,10 @@ type
     bbChoiceGuide: TdxBarButton;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
-    dsdGridToExcel: TdsdGridToExcel;
+    actGridToExcel: TdsdGridToExcel;
     spSelect: TdsdStoredProc;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    dsdChoiceGuides: TdsdChoiceGuides;
+    actChoiceGuides: TdsdChoiceGuides;
     Erased: TcxGridDBColumn;
     DBViewAddOn: TdsdDBViewAddOn;
   private

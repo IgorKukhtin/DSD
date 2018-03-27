@@ -14,7 +14,7 @@ object InfoMoneyDestination_ObjectForm: TInfoMoneyDestination_ObjectForm
   OldCreateOrder = False
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.ChoiceAction = actChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -197,7 +197,7 @@ object InfoMoneyDestination_ObjectForm: TInfoMoneyDestination_ObjectForm
       Category = 0
     end
     object bbGridToExcel: TdxBarButton
-      Action = dsdGridToExcel
+      Action = actGridToExcel
       Category = 0
     end
     object dxBarStatic1: TdxBarStatic
@@ -207,7 +207,7 @@ object InfoMoneyDestination_ObjectForm: TInfoMoneyDestination_ObjectForm
       Visible = ivAlways
     end
     object bbChoiceGuides: TdxBarButton
-      Action = dsdChoiceGuides
+      Action = actChoiceGuides
       Category = 0
     end
   end
@@ -229,7 +229,7 @@ object InfoMoneyDestination_ObjectForm: TInfoMoneyDestination_ObjectForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object dsdChoiceGuides: TdsdChoiceGuides
+    object actChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
       Params = <
@@ -254,7 +254,7 @@ object InfoMoneyDestination_ObjectForm: TInfoMoneyDestination_ObjectForm
       ImageIndex = 7
       DataSource = DataSource
     end
-    object dsdGridToExcel: TdsdGridToExcel
+    object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
       Grid = cxGrid
@@ -285,13 +285,13 @@ object InfoMoneyDestination_ObjectForm: TInfoMoneyDestination_ObjectForm
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
       end
       item
       end>
     ActionItemList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
         ShortCut = 13
       end
       item

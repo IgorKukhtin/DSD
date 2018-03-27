@@ -512,7 +512,7 @@ BEGIN
                   ELSE FALSE
              END :: Boolean AS isFozzi
              
-           , FALSE :: Boolean AS isContract_30201
+           , vbIsContract_30201 :: Boolean AS isContract_30201
 
        FROM tmpMovementData AS tmpMovementItem
           LEFT JOIN tmpMovementParam ON tmpMovementParam.MovementId = tmpMovementItem.MovementId

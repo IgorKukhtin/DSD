@@ -82,6 +82,9 @@ type
     PeriodSecMobile: TcxGridDBColumn;
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
+    actPrintTotal: TdsdPrintAction;
+    spSelectPrintTotal: TdsdStoredProc;
+    bbPrintTotal: TdxBarButton;
   private
     { Private declarations }
   public
