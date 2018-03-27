@@ -30,9 +30,9 @@ type
     spInsertUpdate: TdsdStoredProc;
     FormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
-    dsdDataSetRefresh: TdsdDataSetRefresh;
-    dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
-    dsdFormClose: TdsdFormClose;
+    actRefresh: TdsdDataSetRefresh;
+    actInsertUpdate: TdsdInsertUpdateGuides;
+    actFormClose: TdsdFormClose;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLabel3: TcxLabel;

@@ -38,13 +38,13 @@ type
     bbGridToExcel: TdxBarButton;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
-    dsdGridToExcel: TdsdGridToExcel;
+    actGridToExcel: TdsdGridToExcel;
     spSelect: TdsdStoredProc;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     DBViewAddOn: TdsdDBViewAddOn;
     dxBarStatic: TdxBarStatic;
     bbChoiceGuides: TdxBarButton;
-    dsdChoiceGuides: TdsdChoiceGuides;
+    actChoiceGuides: TdsdChoiceGuides;
     Erased: TcxGridDBColumn;
     AccountGroupCode: TcxGridDBColumn;
     AccountGroupName: TcxGridDBColumn;

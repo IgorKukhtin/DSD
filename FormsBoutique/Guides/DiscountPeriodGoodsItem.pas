@@ -40,7 +40,7 @@ type
     actRefresh: TdsdDataSetRefresh;
     spSelect: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    dsdGridToExcel: TdsdGridToExcel;
+    actGridToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     cxGridDBTableView: TcxGridDBTableView;
@@ -63,8 +63,8 @@ type
     bbUpdate: TdxBarButton;
     bbSetErased: TdxBarButton;
     bbSetUnErased: TdxBarButton;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
+    actSetErased: TdsdUpdateErased;
+    actSetUnErased: TdsdUpdateErased;
     isErased: TcxGridDBColumn;
   private
     { Private declarations }

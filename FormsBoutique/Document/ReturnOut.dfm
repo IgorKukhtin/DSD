@@ -719,10 +719,12 @@ object ReturnOutForm: TReturnOutForm
     object bbErased: TdxBarButton
       Action = actSetErased
       Category = 0
+      ShortCut = 8238
     end
     object bbUnErased: TdxBarButton
       Action = actSetUnErased
       Category = 0
+      ShortCut = 8238
     end
     object bbMIContainer: TdxBarButton
       Action = actMIContainer
@@ -945,6 +947,7 @@ object ReturnOutForm: TReturnOutForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -963,6 +966,7 @@ object ReturnOutForm: TReturnOutForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS

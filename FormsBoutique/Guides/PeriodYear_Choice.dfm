@@ -14,7 +14,7 @@ object PeriodYear_ChoiceForm: TPeriodYear_ChoiceForm
   OldCreateOrder = False
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.ChoiceAction = actChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -25,7 +25,6 @@ object PeriodYear_ChoiceForm: TPeriodYear_ChoiceForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 202
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -160,7 +159,7 @@ object PeriodYear_ChoiceForm: TPeriodYear_ChoiceForm
       Category = 0
     end
     object bbGridToExcel: TdxBarButton
-      Action = dsdGridToExcel
+      Action = actGridToExcel
       Category = 0
     end
     object dxBarStatic1: TdxBarStatic
@@ -170,7 +169,7 @@ object PeriodYear_ChoiceForm: TPeriodYear_ChoiceForm
       Visible = ivAlways
     end
     object bbChoiceGuides: TdxBarButton
-      Action = dsdChoiceGuides
+      Action = actChoiceGuides
       Category = 0
     end
   end
@@ -192,7 +191,7 @@ object PeriodYear_ChoiceForm: TPeriodYear_ChoiceForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object dsdChoiceGuides: TdsdChoiceGuides
+    object actChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
       Params = <
@@ -224,7 +223,7 @@ object PeriodYear_ChoiceForm: TPeriodYear_ChoiceForm
       ImageIndex = 7
       DataSource = DataSource
     end
-    object dsdGridToExcel: TdsdGridToExcel
+    object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
       Grid = cxGrid
@@ -255,13 +254,13 @@ object PeriodYear_ChoiceForm: TPeriodYear_ChoiceForm
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
       end
       item
       end>
     ActionItemList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
         ShortCut = 13
       end
       item

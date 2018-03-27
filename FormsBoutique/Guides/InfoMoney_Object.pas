@@ -41,13 +41,13 @@ type
     bbChoiceGuides: TdxBarButton;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
-    dsdGridToExcel: TdsdGridToExcel;
+    actGridToExcel: TdsdGridToExcel;
     spSelect: TdsdStoredProc;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     DBViewAddOn: TdsdDBViewAddOn;
     InfoMoneyGroup: TcxGridDBColumn;
     InfoMoneyDestination: TcxGridDBColumn;
-    dsdChoiceGuides: TdsdChoiceGuides;
+    actChoiceGuides: TdsdChoiceGuides;
     Erased: TcxGridDBColumn;
   private
     { Private declarations }

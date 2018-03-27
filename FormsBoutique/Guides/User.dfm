@@ -14,7 +14,7 @@ object UserForm: TUserForm
   OldCreateOrder = False
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.ChoiceAction = actChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -72,7 +72,7 @@ object UserForm: TUserForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = ChoiceUnit
+            Action = actChoiceUnit
             Default = True
             Kind = bkEllipsis
           end>
@@ -184,7 +184,7 @@ object UserForm: TUserForm
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
             item
-              Action = OpenChoiceForm
+              Action = actOpenChoiceForm
               Default = True
               Kind = bkEllipsis
             end>
@@ -361,15 +361,15 @@ object UserForm: TUserForm
       Category = 0
     end
     object bbSetErased: TdxBarButton
-      Action = dsdSetErased
+      Action = actSetErased
       Category = 0
     end
     object bbSetUnErased: TdxBarButton
-      Action = dsdSetUnErased
+      Action = actSetUnErased
       Category = 0
     end
     object bbToExcel: TdxBarButton
-      Action = dsdGridToExcel
+      Action = actGridToExcel
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
@@ -380,15 +380,15 @@ object UserForm: TUserForm
       ShowCaption = False
     end
     object bbChoice: TdxBarButton
-      Action = dsdChoiceGuides
+      Action = actChoiceGuides
       Category = 0
     end
     object bbProtocolOpen: TdxBarButton
-      Action = actProtocolOpenForm
+      Action = actProtocol
       Category = 0
     end
     object bbProtocolRole: TdxBarButton
-      Action = actProtocolRoleForm
+      Action = actProtocolRole
       Category = 0
     end
   end
@@ -463,7 +463,7 @@ object UserForm: TUserForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object dsdSetErased: TdsdUpdateErased
+    object actSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spErased
@@ -478,7 +478,7 @@ object UserForm: TUserForm
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
-    object dsdSetUnErased: TdsdUpdateErased
+    object actSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spUnErased
@@ -494,7 +494,7 @@ object UserForm: TUserForm
       isSetErased = False
       DataSource = DataSource
     end
-    object dsdGridToExcel: TdsdGridToExcel
+    object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
       Grid = cxGrid
@@ -503,7 +503,7 @@ object UserForm: TUserForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object dsdChoiceGuides: TdsdChoiceGuides
+    object actChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
       Params = <
@@ -550,7 +550,7 @@ object UserForm: TUserForm
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
     end
-    object UpdateDataSetUser: TdsdUpdateDataSet
+    object actUpdateDataSetUser: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -559,10 +559,10 @@ object UserForm: TUserForm
         item
           StoredProc = spInsertUpdateUser
         end>
-      Caption = 'UpdateDataSetUser'
+      Caption = 'actUpdateDataSetUser'
       DataSource = DataSource
     end
-    object UpdateDataSet: TdsdUpdateDataSet
+    object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -571,10 +571,10 @@ object UserForm: TUserForm
         item
           StoredProc = spInsertUpdateUserRole
         end>
-      Caption = 'UpdateDataSet'
+      Caption = 'actUpdateDataSet'
       DataSource = RoleDS
     end
-    object OpenChoiceForm: TOpenChoiceForm
+    object actOpenChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -600,7 +600,7 @@ object UserForm: TUserForm
         end>
       isShowModal = False
     end
-    object ChoiceRole: TOpenChoiceForm
+    object actChoiceRole: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -622,7 +622,7 @@ object UserForm: TUserForm
         end>
       isShowModal = False
     end
-    object ChoiceUnit: TOpenChoiceForm
+    object actChoiceUnit: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -648,7 +648,7 @@ object UserForm: TUserForm
         end>
       isShowModal = False
     end
-    object UpdatePeriodClose: TdsdUpdateDataSet
+    object actUpdatePeriodClose: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -656,7 +656,7 @@ object UserForm: TUserForm
         item
         end>
     end
-    object actProtocolRoleForm: TdsdOpenForm
+    object actProtocolRole: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1056#1086#1083#1080
@@ -686,7 +686,7 @@ object UserForm: TUserForm
         end>
       isShowModal = False
     end
-    object actProtocolOpenForm: TdsdOpenForm
+    object actProtocol: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
@@ -734,14 +734,14 @@ object UserForm: TUserForm
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
       end
       item
         Action = actUpdate
       end>
     ActionItemList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
         ShortCut = 13
       end
       item

@@ -14,7 +14,7 @@ object JuridicalGroup_ObjectForm: TJuridicalGroup_ObjectForm
   OldCreateOrder = False
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.ChoiceAction = actChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
   object cxDBTreeList: TcxDBTreeList
@@ -181,17 +181,17 @@ object JuridicalGroup_ObjectForm: TJuridicalGroup_ObjectForm
       ImageIndex = 1
     end
     object bbSetErased: TdxBarButton
-      Action = dsdSetErased
+      Action = actSetErased
       Category = 0
       ImageIndex = 2
     end
     object bbSetUnErased: TdxBarButton
-      Action = dsdSetUnErased
+      Action = actSetUnErased
       Category = 0
       ImageIndex = 8
     end
     object bbChoiceGuides: TdxBarButton
-      Action = dsdChoiceGuides
+      Action = actChoiceGuides
       Category = 0
     end
     object dxBarStatic1: TdxBarStatic
@@ -201,7 +201,7 @@ object JuridicalGroup_ObjectForm: TJuridicalGroup_ObjectForm
       Visible = ivAlways
     end
     object bbProtocolOpenForm: TdxBarButton
-      Action = ProtocolOpenForm
+      Action = actProtocol
       Category = 0
     end
     object bbShowAll: TdxBarButton
@@ -270,7 +270,7 @@ object JuridicalGroup_ObjectForm: TJuridicalGroup_ObjectForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object dsdSetErased: TdsdUpdateErased
+    object actSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spErasedUnErased
@@ -284,7 +284,7 @@ object JuridicalGroup_ObjectForm: TJuridicalGroup_ObjectForm
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
-    object dsdSetUnErased: TdsdUpdateErased
+    object actSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spErasedUnErased
@@ -298,7 +298,7 @@ object JuridicalGroup_ObjectForm: TJuridicalGroup_ObjectForm
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
-    object dsdChoiceGuides: TdsdChoiceGuides
+    object actChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
       Params = <
@@ -323,7 +323,7 @@ object JuridicalGroup_ObjectForm: TJuridicalGroup_ObjectForm
       ImageIndex = 7
       DataSource = DataSource
     end
-    object ProtocolOpenForm: TdsdOpenForm
+    object actProtocol: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
@@ -414,14 +414,14 @@ object JuridicalGroup_ObjectForm: TJuridicalGroup_ObjectForm
     ErasedFieldName = 'isErased'
     OnDblClickActionList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
       end
       item
         Action = actUpdate
       end>
     ActionItemList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
         ShortCut = 13
       end
       item

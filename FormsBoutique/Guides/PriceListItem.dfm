@@ -683,7 +683,7 @@ object PriceListItemForm: TPriceListItemForm
       Category = 0
     end
     object bbToExcel: TdxBarButton
-      Action = dsdGridToExcel
+      Action = actGridToExcel
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
@@ -701,11 +701,11 @@ object PriceListItemForm: TPriceListItemForm
       Category = 0
     end
     object bbProtocol: TdxBarButton
-      Action = ProtocolOpenForm
+      Action = actProtocol
       Category = 0
     end
     object bbPriceListTaxDialog: TdxBarButton
-      Action = PriceListTaxDialoglOpenForm
+      Action = actPriceListTaxDialoglOpenForm
       Category = 0
     end
     object bbPrint: TdxBarButton
@@ -741,6 +741,7 @@ object PriceListItemForm: TPriceListItemForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh
@@ -757,7 +758,7 @@ object PriceListItemForm: TPriceListItemForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object dsdGridToExcel: TdsdGridToExcel
+    object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
       Grid = cxGrid
@@ -840,7 +841,7 @@ object PriceListItemForm: TPriceListItemForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
-    object ProtocolOpenForm: TdsdOpenForm
+    object actProtocol: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
@@ -870,7 +871,7 @@ object PriceListItemForm: TPriceListItemForm
         end>
       isShowModal = False
     end
-    object PriceListTaxDialoglOpenForm: TdsdOpenForm
+    object actPriceListTaxDialoglOpenForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080

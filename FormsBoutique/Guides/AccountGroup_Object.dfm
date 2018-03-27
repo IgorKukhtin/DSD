@@ -14,7 +14,7 @@ object AccountGroup_ObjectForm: TAccountGroup_ObjectForm
   OldCreateOrder = False
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.ChoiceAction = actChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -177,17 +177,17 @@ object AccountGroup_ObjectForm: TAccountGroup_ObjectForm
       Visible = ivAlways
     end
     object bbGridToExcel: TdxBarButton
-      Action = dsdGridToExcel
+      Action = actGridToExcel
       Category = 0
     end
     object bbChoiceGuide: TdxBarButton
-      Action = dsdChoiceGuides
+      Action = actChoiceGuides
       Category = 0
     end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 264
+    Left = 240
     Top = 120
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -203,7 +203,7 @@ object AccountGroup_ObjectForm: TAccountGroup_ObjectForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object dsdChoiceGuides: TdsdChoiceGuides
+    object actChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
       Params = <
@@ -248,7 +248,7 @@ object AccountGroup_ObjectForm: TAccountGroup_ObjectForm
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
     end
-    object dsdGridToExcel: TdsdGridToExcel
+    object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
       Grid = cxGrid
@@ -279,13 +279,13 @@ object AccountGroup_ObjectForm: TAccountGroup_ObjectForm
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
       end
       item
       end>
     ActionItemList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
         ShortCut = 13
       end
       item
@@ -297,7 +297,7 @@ object AccountGroup_ObjectForm: TAccountGroup_ObjectForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 168
-    Top = 240
+    Left = 240
+    Top = 224
   end
 end

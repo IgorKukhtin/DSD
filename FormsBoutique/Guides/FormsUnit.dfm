@@ -1,7 +1,5 @@
 inherited FormsForm: TFormsForm
   Caption = #1060#1086#1088#1084#1099' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
-  ExplicitWidth = 591
-  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

@@ -41,11 +41,11 @@ type
     spSelect: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
+    actSetErased: TdsdUpdateErased;
+    actSetUnErased: TdsdUpdateErased;
     bbSetErased: TdxBarButton;
     bbSetUnErased: TdxBarButton;
-    dsdGridToExcel: TdsdGridToExcel;
+    actGridToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     spErased: TdsdStoredProc;
@@ -55,10 +55,10 @@ type
     UnitName: TcxGridDBColumn;
     Erased: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    dsdChoiceGuides: TdsdChoiceGuides;
+    actChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     PeriodName: TcxGridDBColumn;
-    ProtocolOpenForm: TdsdOpenForm;
+    actProtocol: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
@@ -68,8 +68,8 @@ type
     EndDate: TcxGridDBColumn;
     spUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
-    OpenChoiceUnit: TOpenChoiceForm;
-    OpenChoicePeriod: TOpenChoiceForm;
+    actOpenChoiceUnit: TOpenChoiceForm;
+    actOpenChoicePeriod: TOpenChoiceForm;
     YEAR_Start: TcxGridDBColumn;
     YEAR_End: TcxGridDBColumn;
   private

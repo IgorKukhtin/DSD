@@ -2,7 +2,7 @@ object CashEditForm: TCashEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1072#1089#1089#1072'>'
-  ClientHeight = 266
+  ClientHeight = 264
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -12,7 +12,7 @@ object CashEditForm: TCashEditForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.RefreshAction = dsdDataSetRefresh
+  AddOnFormData.RefreshAction = actDataSetRefresh
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
@@ -32,7 +32,7 @@ object CashEditForm: TCashEditForm
     Top = 216
     Width = 75
     Height = 25
-    Action = dsdInsertUpdateGuides
+    Action = actInsertUpdateGuides
     Default = True
     TabOrder = 3
   end
@@ -41,7 +41,7 @@ object CashEditForm: TCashEditForm
     Top = 216
     Width = 75
     Height = 25
-    Action = dsdFormClose
+    Action = actFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     TabOrder = 4
@@ -98,7 +98,7 @@ object CashEditForm: TCashEditForm
   object ActionList: TActionList
     Left = 152
     Top = 56
-    object dsdDataSetRefresh: TdsdDataSetRefresh
+    object actDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGet
@@ -111,7 +111,7 @@ object CashEditForm: TCashEditForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
+    object actInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -122,7 +122,7 @@ object CashEditForm: TCashEditForm
         end>
       Caption = 'Ok'
     end
-    object dsdFormClose: TdsdFormClose
+    object actFormClose: TdsdFormClose
       MoveParams = <>
       PostDataSetBeforeExecute = False
     end

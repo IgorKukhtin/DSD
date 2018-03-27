@@ -67,7 +67,7 @@ type
     TotalCount: TcxGridDBColumn;
     TotalSummPriceList: TcxGridDBColumn;
     bbStatic: TdxBarStatic;
-    dsdGridToExcel: TdsdGridToExcel;
+    actGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
@@ -77,7 +77,7 @@ type
     cxLabel2: TcxLabel;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
-    MovementProtocolOpenForm: TdsdOpenForm;
+    actProtocol: TdsdOpenForm;
     bbMovementProtocol: TdxBarButton;
     spSelectPrint: TdsdStoredProc;
     bbPrint: TdxBarButton;

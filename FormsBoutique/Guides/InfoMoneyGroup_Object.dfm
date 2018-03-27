@@ -14,7 +14,7 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
   OldCreateOrder = False
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.ChoiceAction = actChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -178,7 +178,7 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
       Category = 0
     end
     object bbGridToExcel: TdxBarButton
-      Action = dsdGridToExcel
+      Action = actGridToExcel
       Category = 0
     end
     object dxBarStatic1: TdxBarStatic
@@ -188,7 +188,7 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
       Visible = ivAlways
     end
     object bbChoiceGuides: TdxBarButton
-      Action = dsdChoiceGuides
+      Action = actChoiceGuides
       Category = 0
     end
   end
@@ -210,7 +210,7 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object dsdGridToExcel: TdsdGridToExcel
+    object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -218,7 +218,7 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object dsdChoiceGuides: TdsdChoiceGuides
+    object actChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
       Params = <
@@ -265,13 +265,13 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
       end
       item
       end>
     ActionItemList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
         ShortCut = 13
       end
       item

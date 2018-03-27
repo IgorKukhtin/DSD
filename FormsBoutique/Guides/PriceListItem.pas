@@ -40,7 +40,7 @@ type
     actRefresh: TdsdDataSetRefresh;
     spSelect: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    dsdGridToExcel: TdsdGridToExcel;
+    actGridToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     cxGridDBTableView: TcxGridDBTableView;
@@ -68,10 +68,10 @@ type
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     isErased: TcxGridDBColumn;
-    ProtocolOpenForm: TdsdOpenForm;
+    actProtocol: TdsdOpenForm;
     bbProtocol: TdxBarButton;
     ObjectId: TcxGridDBColumn;
-    PriceListTaxDialoglOpenForm: TdsdOpenForm;
+    actPriceListTaxDialoglOpenForm: TdsdOpenForm;
     bbPriceListTaxDialog: TdxBarButton;
     UpdateName: TcxGridDBColumn;
     UpdateDate: TcxGridDBColumn;

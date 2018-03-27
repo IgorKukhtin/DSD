@@ -12,7 +12,7 @@ object BankEditForm: TBankEditForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.RefreshAction = dsdDataSetRefresh
+  AddOnFormData.RefreshAction = actDataSetRefresh
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
@@ -32,7 +32,7 @@ object BankEditForm: TBankEditForm
     Top = 280
     Width = 75
     Height = 25
-    Action = dsdInsertUpdateGuides
+    Action = actInsertUpdateGuides
     Default = True
     TabOrder = 5
   end
@@ -41,7 +41,7 @@ object BankEditForm: TBankEditForm
     Top = 280
     Width = 75
     Height = 25
-    Action = dsdFormClose
+    Action = actFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     TabOrder = 6
@@ -114,7 +114,7 @@ object BankEditForm: TBankEditForm
   object ActionList: TActionList
     Left = 176
     Top = 8
-    object dsdDataSetRefresh: TdsdDataSetRefresh
+    object actDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGet
@@ -127,7 +127,7 @@ object BankEditForm: TBankEditForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
+    object actInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -138,7 +138,7 @@ object BankEditForm: TBankEditForm
         end>
       Caption = 'Ok'
     end
-    object dsdFormClose: TdsdFormClose
+    object actFormClose: TdsdFormClose
       MoveParams = <>
       PostDataSetBeforeExecute = False
     end

@@ -12,7 +12,7 @@
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.RefreshAction = dsdDataSetRefresh
+  AddOnFormData.RefreshAction = actDataSetRefresh
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
@@ -32,7 +32,7 @@
     Top = 316
     Width = 75
     Height = 25
-    Action = dsdInsertUpdateGuides
+    Action = actInsertUpdateGuides
     Default = True
     ModalResult = 8
     TabOrder = 2
@@ -42,7 +42,7 @@
     Top = 316
     Width = 75
     Height = 25
-    Action = dsdFormClose1
+    Action = actFormClose1
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 8
@@ -132,7 +132,7 @@
   end
   object ActionList: TActionList
     Left = 152
-    object dsdDataSetRefresh: TdsdDataSetRefresh
+    object actDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGet
@@ -147,11 +147,11 @@
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object dsdFormClose1: TdsdFormClose
+    object actFormClose1: TdsdFormClose
       MoveParams = <>
       PostDataSetBeforeExecute = False
     end
-    object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
+    object actInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False

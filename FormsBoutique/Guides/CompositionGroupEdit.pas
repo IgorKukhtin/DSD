@@ -30,9 +30,9 @@ type
     spInsertUpdate: TdsdStoredProc;
     FormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
-    dsdDataSetRefresh: TdsdDataSetRefresh;
-    dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
-    dsdFormClose: TdsdFormClose;
+    actDataSetRefresh: TdsdDataSetRefresh;
+    actInsertUpdateGuides: TdsdInsertUpdateGuides;
+    actFormClose: TdsdFormClose;
     cxLabel2: TcxLabel;
     edCode: TcxCurrencyEdit;
     cxPropertiesStore: TcxPropertiesStore;

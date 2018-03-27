@@ -40,12 +40,12 @@ type
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     Name: TcxDBTreeListColumn;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
+    actSetErased: TdsdUpdateErased;
+    actSetUnErased: TdsdUpdateErased;
     bbSetErased: TdxBarButton;
     bbSetUnErased: TdxBarButton;
     cxDBTreeList: TcxDBTreeList;
-    dsdChoiceGuides: TdsdChoiceGuides;
+    actChoiceGuides: TdsdChoiceGuides;
     bbChoiceGuides: TdxBarButton;
     dxBarStatic1: TdxBarStatic;
     Code: TcxDBTreeListColumn;
@@ -53,7 +53,7 @@ type
     spErased: TdsdStoredProc;
     DBTreeAddOn: TdsdDBTreeAddOn;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    ProtocolOpenForm: TdsdOpenForm;
+    actProtocol: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
