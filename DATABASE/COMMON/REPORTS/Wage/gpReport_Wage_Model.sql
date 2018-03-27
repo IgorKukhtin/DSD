@@ -636,8 +636,8 @@ AS  (SELECT
            ,Setting.SelectKindId
            ,Setting.ModelServiceItemChild_FromId
            ,Setting.ModelServiceItemChild_ToId
-           ,Setting.StorageLineId_From
-           ,Setting.StorageLineId_To
+           , COALESCE (tmpMovement.StorageLineId_From, Setting.StorageLineId_From) AS StorageLineId_From
+           , COALESCE (tmpMovement.StorageLineId_To,   Setting.StorageLineId_To)   AS StorageLineId_To
            ,Setting.GoodsKind_FromId
            ,Setting.GoodsKindComplete_FromId
            ,Setting.GoodsKind_ToId
@@ -731,7 +731,9 @@ AS  (SELECT
            , Setting.SelectKindCode
            , Setting.ModelServiceItemChild_FromId
            , Setting.ModelServiceItemChild_ToId
-           , Setting.StorageLineId_From
+           , COALESCE (tmpMovement.StorageLineId_From, Setting.StorageLineId_From)
+           , COALESCE (tmpMovement.StorageLineId_To,   Setting.StorageLineId_To)
+
            , Setting.StorageLineId_To
            , Setting.GoodsKind_FromId
            , Setting.GoodsKindComplete_FromId
@@ -937,8 +939,10 @@ AS  (SELECT
        ,Setting.ModelServiceItemChild_ToDescId
        ,Setting.ModelServiceItemChild_ToName
 
-       ,Setting.StorageLineId_From, Setting.StorageLineName_From
-       ,Setting.StorageLineId_To, Setting.StorageLineName_To
+       , COALESCE (ServiceModelMovement.StorageLineId_From, Setting.StorageLineId_From) :: Integer  AS StorageLineId_From
+       , COALESCE (Object_StorageLine_From.ValueData, Setting.StorageLineName_From)     :: TVarChar AS StorageLineName_From
+       , COALESCE (ServiceModelMovement.StorageLineId_To, Setting.StorageLineId_To)     :: Integer  AS StorageLineId_To
+       , COALESCE (Object_StorageLine_To.ValueData, Setting.StorageLineName_To)         :: TVarChar AS StorageLineName_To
 
        ,Setting.GoodsKind_FromId, Setting.GoodsKind_FromName, Setting.GoodsKindComplete_FromId, Setting.GoodsKindComplete_FromName
        ,Setting.GoodsKind_ToId, Setting.GoodsKind_ToName, Setting.GoodsKindComplete_ToId, Setting.GoodsKindComplete_ToName
@@ -971,8 +975,8 @@ AS  (SELECT
                                             AND COALESCE (Movement_SheetGroup.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
                                             AND (COALESCE (Movement_SheetGroup.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_From, 0)
                                               OR COALESCE (Movement_SheetGroup.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_To, 0)
-                                              OR COALESCE (Setting.StorageLineId_From, 0)         = 0
-                                              OR COALESCE (Setting.StorageLineId_To, 0)           = 0
+                                              OR (COALESCE (Setting.StorageLineId_From, 0)        = 0
+                                              AND COALESCE (Setting.StorageLineId_To, 0)          = 0)
                                                 )
                                             AND Setting.ServiceModelKindId                        = zc_Enum_ModelServiceKind_MonthSheetWorkTime() -- за мес€ц табель
 
@@ -980,11 +984,13 @@ AS  (SELECT
                                        AND COALESCE (Movement_Sheet.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
                                        AND (COALESCE (Movement_Sheet.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_From, 0)
                                          OR COALESCE (Movement_Sheet.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_To, 0)
-                                         OR COALESCE (Setting.StorageLineId_From, 0)    = 0
-                                         OR COALESCE (Setting.StorageLineId_To, 0)      = 0
+                                         OR (COALESCE (Setting.StorageLineId_From, 0)   = 0
+                                         AND COALESCE (Setting.StorageLineId_To, 0)     = 0)
                                            )
                                        AND Movement_Sheet.OperDate                      = tmpOperDate.OperDate
-                                       AND (COALESCE (Movement_Sheet.MemberId, 0)       = Movement_SheetGroup.MemberId OR Movement_SheetGroup.MemberId IS NULL)
+                                       AND (COALESCE (Movement_Sheet.MemberId, 0)       = Movement_SheetGroup.MemberId
+                                         OR Movement_SheetGroup.MemberId IS NULL
+                                           )
 
          LEFT OUTER JOIN Movement_Sheet_Count_Day ON Movement_Sheet_Count_Day.MemberId        = COALESCE (Movement_SheetGroup.MemberId, Movement_Sheet.MemberId)
                                                  AND Movement_Sheet_Count_Day.PersonalGroupId = COALESCE (Movement_SheetGroup.PersonalGroupId, Movement_Sheet.PersonalGroupId)
@@ -1009,7 +1015,7 @@ AS  (SELECT
                                               OR COALESCE (Setting.StorageLineId_From, 0)          = 0
                                                 )
                                             AND (COALESCE (Setting.StorageLineId_To, 0)            = COALESCE (ServiceModelMovement.StorageLineId_To, 0)
-                                              OR COALESCE (Setting.StorageLineId_To, 0)            = 0
+                                               OR COALESCE (Setting.StorageLineId_To, 0)            = 0
                                                 )
 
                                             AND COALESCE (Setting.GoodsKind_FromId, 0)             = COALESCE (ServiceModelMovement.GoodsKind_FromId, 0)
@@ -1023,6 +1029,9 @@ AS  (SELECT
                                                 )
 
         LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = COALESCE (Movement_SheetGroup.PersonalGroupId, Movement_Sheet.PersonalGroupId)
+
+        LEFT JOIN Object AS Object_StorageLine_From ON Object_StorageLine_From.Id = ServiceModelMovement.StorageLineId_From
+        LEFT JOIN Object AS Object_StorageLine_To   ON Object_StorageLine_To.Id   = ServiceModelMovement.StorageLineId_To
 
     WHERE Setting.SelectKindId NOT IN (zc_Enum_SelectKind_MI_Master(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MovementCount())
 
@@ -1149,4 +1158,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Report_Wage_Model (inStartDate:= '02.11.2017', inEndDate:= '02.11.2017', inUnitId:= 8439, inModelServiceId:= 632844, inMemberId:= 0, inPositionId:= 0, inSession:= '5');
+-- SELECT * FROM gpSelect_Report_Wage_Model (inStartDate:= '02.11.2018', inEndDate:= '02.11.2018', inUnitId:= 8439, inModelServiceId:= 632844, inMemberId:= 0, inPositionId:= 0, inSession:= '5');

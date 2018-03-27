@@ -634,8 +634,8 @@ BEGIN
            ,Setting.SelectKindId
            ,Setting.ModelServiceItemChild_FromId
            ,Setting.ModelServiceItemChild_ToId
-           ,Setting.StorageLineId_From
-           ,Setting.StorageLineId_To
+           , COALESCE (tmpMovement.StorageLineId_From, Setting.StorageLineId_From) AS StorageLineId_From
+           , COALESCE (tmpMovement.StorageLineId_To,   Setting.StorageLineId_To)   AS StorageLineId_To
            ,Setting.GoodsKind_FromId
            ,Setting.GoodsKindComplete_FromId
            ,Setting.GoodsKind_ToId
@@ -729,8 +729,8 @@ BEGIN
            , Setting.SelectKindCode
            , Setting.ModelServiceItemChild_FromId
            , Setting.ModelServiceItemChild_ToId
-           , Setting.StorageLineId_From
-           , Setting.StorageLineId_To
+           , COALESCE (tmpMovement.StorageLineId_From, Setting.StorageLineId_From)
+           , COALESCE (tmpMovement.StorageLineId_To,   Setting.StorageLineId_To)
            , Setting.GoodsKind_FromId
            , Setting.GoodsKindComplete_FromId
            , Setting.GoodsKind_ToId
@@ -934,8 +934,10 @@ BEGIN
        ,Setting.ModelServiceItemChild_ToDescId
        ,Setting.ModelServiceItemChild_ToName
 
-       ,Setting.StorageLineId_From, Setting.StorageLineName_From
-       ,Setting.StorageLineId_To, Setting.StorageLineName_To
+       , COALESCE (ServiceModelMovement.StorageLineId_From, Setting.StorageLineId_From) :: Integer  AS StorageLineId_From
+       , COALESCE (Object_StorageLine_From.ValueData, Setting.StorageLineName_From)     :: TVarChar AS StorageLineName_From
+       , COALESCE (ServiceModelMovement.StorageLineId_To, Setting.StorageLineId_To)     :: Integer  AS StorageLineId_To
+       , COALESCE (Object_StorageLine_To.ValueData, Setting.StorageLineName_To)         :: TVarChar AS StorageLineName_To
 
        ,Setting.GoodsKind_FromId, Setting.GoodsKind_FromName, Setting.GoodsKindComplete_FromId, Setting.GoodsKindComplete_FromName
        ,Setting.GoodsKind_ToId, Setting.GoodsKind_ToName, Setting.GoodsKindComplete_ToId, Setting.GoodsKindComplete_ToName
@@ -966,16 +968,24 @@ BEGIN
          CROSS JOIN tmpOperDate
          LEFT OUTER JOIN Movement_SheetGroup ON COALESCE (Movement_SheetGroup.PositionId, 0)      = COALESCE (Setting.PositionId, 0)
                                             AND COALESCE (Movement_SheetGroup.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
-                                            AND (COALESCE (Movement_SheetGroup.StorageLineId, 0)   = COALESCE (Setting.StorageLineId_From, 0)
-                                              OR COALESCE (Movement_SheetGroup.StorageLineId, 0)   = COALESCE (Setting.StorageLineId_To, 0))
+                                            AND (COALESCE (Movement_SheetGroup.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_From, 0)
+                                              OR COALESCE (Movement_SheetGroup.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_To, 0)
+                                              OR (COALESCE (Setting.StorageLineId_From, 0)        = 0
+                                              AND COALESCE (Setting.StorageLineId_To, 0)          = 0)
+                                                )
                                             AND Setting.ServiceModelKindId                        = zc_Enum_ModelServiceKind_MonthSheetWorkTime() -- за мес€ц табель
 
          LEFT OUTER JOIN Movement_Sheet ON COALESCE (Movement_Sheet.PositionId, 0)      = COALESCE (Setting.PositionId, 0)
                                        AND COALESCE (Movement_Sheet.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
-                                       AND (COALESCE (Movement_Sheet.StorageLineId, 0)   = COALESCE (Setting.StorageLineId_From, 0)
-                                         OR COALESCE (Movement_Sheet.StorageLineId, 0)   = COALESCE (Setting.StorageLineId_To, 0))
+                                       AND (COALESCE (Movement_Sheet.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_From, 0)
+                                         OR COALESCE (Movement_Sheet.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_To, 0)
+                                         OR (COALESCE (Setting.StorageLineId_From, 0)   = 0
+                                         AND COALESCE (Setting.StorageLineId_To, 0)     = 0)
+                                           )
                                        AND Movement_Sheet.OperDate                      = tmpOperDate.OperDate
-                                       AND (COALESCE (Movement_Sheet.MemberId, 0)       = Movement_SheetGroup.MemberId OR Movement_SheetGroup.MemberId IS NULL)
+                                       AND (COALESCE (Movement_Sheet.MemberId, 0)       = Movement_SheetGroup.MemberId
+                                         OR Movement_SheetGroup.MemberId IS NULL
+                                           )
 
          LEFT OUTER JOIN Movement_Sheet_Count_Day ON Movement_Sheet_Count_Day.MemberId        = COALESCE (Movement_SheetGroup.MemberId, Movement_Sheet.MemberId)
                                                  AND Movement_Sheet_Count_Day.PersonalGroupId = COALESCE (Movement_SheetGroup.PersonalGroupId, Movement_Sheet.PersonalGroupId)
@@ -996,8 +1006,12 @@ BEGIN
                                             AND COALESCE (Setting.ModelServiceItemChild_FromId, 0) = COALESCE (ServiceModelMovement.ModelServiceItemChild_FromId, 0)
                                             AND COALESCE (Setting.ModelServiceItemChild_ToId, 0)   = COALESCE (ServiceModelMovement.ModelServiceItemChild_ToId, 0)
 
-                                            AND COALESCE (Setting.StorageLineId_From, 0)           = COALESCE (ServiceModelMovement.StorageLineId_From, 0)
-                                            AND COALESCE (Setting.StorageLineId_To, 0)             = COALESCE (ServiceModelMovement.StorageLineId_To, 0)
+                                            AND (COALESCE (Setting.StorageLineId_From, 0)          = COALESCE (ServiceModelMovement.StorageLineId_From, 0)
+                                              OR COALESCE (Setting.StorageLineId_From, 0)          = 0
+                                                )
+                                            AND (COALESCE (Setting.StorageLineId_To, 0)            = COALESCE (ServiceModelMovement.StorageLineId_To, 0)
+                                              OR COALESCE (Setting.StorageLineId_To, 0)            = 0
+                                                )
 
                                             AND COALESCE (Setting.GoodsKind_FromId, 0)             = COALESCE (ServiceModelMovement.GoodsKind_FromId, 0)
                                             AND COALESCE (Setting.GoodsKindComplete_FromId, 0)     = COALESCE (ServiceModelMovement.GoodsKindComplete_FromId, 0)
@@ -1006,9 +1020,13 @@ BEGIN
 
                                             AND ServiceModelMovement.OperDate                      = tmpOperDate.OperDate
                                             AND (ServiceModelMovement.DocumentKindId               = Setting.DocumentKindId
-                                              OR Setting.DocumentKindId = 0)
+                                              OR Setting.DocumentKindId = 0
+                                                )
 
         LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = COALESCE (Movement_SheetGroup.PersonalGroupId, Movement_Sheet.PersonalGroupId)
+
+        LEFT JOIN Object AS Object_StorageLine_From ON Object_StorageLine_From.Id = ServiceModelMovement.StorageLineId_From
+        LEFT JOIN Object AS Object_StorageLine_To   ON Object_StorageLine_To.Id   = ServiceModelMovement.StorageLineId_To
 
     WHERE Setting.SelectKindId NOT IN (zc_Enum_SelectKind_MI_Master(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MovementCount())
 
@@ -1134,5 +1152,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Report_Wage_Model_Server (inStartDate:= '02.06.2017', inEndDate:= '02.06.2017', inUnitId:= 8439, inModelServiceId:= 632844, inMemberId:= 0, inPositionId:= 0, inSession:= '5');
--- SELECT * FROM gpSelect_Report_Wage_Model_Server (inStartDate:= '01.10.2017', inEndDate:= '31.10.2017', inUnitId:= 0, inModelServiceId:= 1342334, inMemberId:= 0, inPositionId:= 0, inSession:= '5');
+-- SELECT * FROM gpSelect_Report_Wage_Model_Server (inStartDate:= '02.06.2018', inEndDate:= '02.06.2018', inUnitId:= 8439, inModelServiceId:= 632844, inMemberId:= 0, inPositionId:= 0, inSession:= '5');
+-- SELECT * FROM gpSelect_Report_Wage_Model_Server (inStartDate:= '01.10.2018', inEndDate:= '31.10.2018', inUnitId:= 0, inModelServiceId:= 1342334, inMemberId:= 0, inPositionId:= 0, inSession:= '5');
