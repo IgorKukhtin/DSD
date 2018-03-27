@@ -5,7 +5,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1066
-  ExplicitHeight = 431
+  ExplicitHeight = 434
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -814,6 +814,12 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
           Component = FormParams
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inIsJuridical'
+          Value = 'False'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_OrderExternal'
       ReportNameParam.Value = 'PrintMovement_OrderExternal'
@@ -1241,6 +1247,13 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsJuridical'
+        Value = 'false'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
