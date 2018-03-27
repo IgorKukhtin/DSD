@@ -1,12 +1,14 @@
 -- Function: gpGet_Movement_Income()
 
 DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_isGRN (Boolean,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_isGRN (Boolean,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child_isGRN(
     IN inisGRN             Boolean  , --
     IN inCurrencyValueUSD  TFloat   , --
     IN inCurrencyValueEUR  TFloat   , --
     IN inAmount            TFloat   , --
+    IN inAmountGRN         TFloat   , --
     IN inAmountUSD         TFloat   , --
     IN inAmountEUR         TFloat   , --
     IN inAmountCard        TFloat   , --
@@ -26,11 +28,14 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-     IF inisGRN THEN
+     IF inisGRN = TRUE THEN
+         IF inAmountGRN = 0 THEN
          vbAmountGRN := (inAmount - ( (COALESCE (inAmountUSD,0) * COALESCE(inCurrencyValueUSD,1))
                                     + (COALESCE (inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1)) 
                                     +  COALESCE (inAmountCard,0) 
                                     +  COALESCE (inAmountDiscount,0)) );
+          ELSE vbAmountGRN := inAmountGRN;
+          END IF;
      ELSE 
          vbAmountGRN := 0;
      END IF;
@@ -77,4 +82,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpGet_MI_Sale_Child_isGRN(inisGRN := 'True' , inCurrencyValueUSD := 26.25 , inCurrencyValueEUR := 31.2 , inAmount := 5247.4 , inAmountUSD := 100 , inAmountEUR := 84 , inAmountCard := 0 , inAmountDiscount := 0.4 ,  inSession := '2');
+-- select * from gpGet_MI_Sale_Child_isGRN(inisGRN := 'True' , inCurrencyValueUSD := 26.25 , inCurrencyValueEUR := 31.2 , inAmount := 5247.4 , inAmountGRN := 100 ,inAmountUSD := 100 , inAmountEUR := 84 , inAmountCard := 0 , inAmountDiscount := 0.4 ,  inSession := '2');

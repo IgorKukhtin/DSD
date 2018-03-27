@@ -1,6 +1,7 @@
 -- Function: gpGet_Movement_Income()
 
 DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_isCard (Boolean,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_isCard (Boolean,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child_isCard(
     IN inisCard            Boolean  , --
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child_isCard(
     IN inAmountGRN         TFloat   , --
     IN inAmountUSD         TFloat   , --
     IN inAmountEUR         TFloat   , --
+    IN inAmountCard        TFloat   , --
     IN inAmountDiscount    TFloat   , --
     IN inSession           TVarChar   -- сессия пользователя
 )
@@ -27,11 +29,14 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      IF inisCard THEN
+         IF inAmountCard = 0 THEN
          vbAmountCard := CAST ((inAmount - (COALESCE (inAmountGRN,0)
                                        + (COALESCE (inAmountUSD,0) * COALESCE(inCurrencyValueUSD,1)) 
                                        + (COALESCE (inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1)) 
                                        +  COALESCE (inAmountDiscount,0))
                                ) AS NUMERIC (16, 2)) ;
+         ELSE vbAmountCard := inAmountCard;
+         END IF;
      ELSE 
          vbAmountCard := 0;
      END IF;
