@@ -14,13 +14,12 @@ CREATE OR REPLACE FUNCTION gpGet_MI_Income_OperPriceList(
 RETURNS TFloat
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbOperPrice TFloat;
+   DECLARE vbUserId  Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpGetUserBySession (inSession);
 
-     inOperPrice := (SELECT MAX(tmp.OperPrice)
+     inOperPrice := (SELECT MAX (tmp.OperPrice)
                      FROM (
                            SELECT inOperPrice AS OperPrice
                           UNION ALL
@@ -32,6 +31,8 @@ BEGIN
                                                             ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
                                                            AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
                            WHERE MovementItem.MovementId = inMovementId
+                             AND MovementItem.DescId     = zc_MI_Master()
+                             AND MovementItem.isErased   = FALSE
                            ) AS tmp
                     );
      

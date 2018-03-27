@@ -45,6 +45,7 @@ BEGIN
         THEN
             -- Проверка inValue
             IF NOT EXISTS (SELECT ValueData FROM ObjectHistoryFloat WHERE DescId = zc_ObjectHistoryFloat_PriceListItem_Value() AND ObjectHistoryId = ioId AND ValueData = inValue)
+               AND NOT EXISTS (SELECT 1 FROM Object WHERE Object.DescId = zc_Object_PriceList() AND Object.ObjectCode = 2 AND Object.Id = inPriceListId)
             THEN
                 RAISE EXCEPTION 'NOT EXISTS VALUE on EndDate <%> <%>', inValue, (SELECT ValueData FROM ObjectHistoryFloat WHERE DescId = zc_ObjectHistoryFloat_PriceListItem_Value() AND ObjectHistoryId = ioId);
             END IF;
@@ -60,6 +61,7 @@ BEGIN
             THEN
                 -- Проверка inValue
                 IF NOT EXISTS (SELECT ValueData FROM ObjectHistoryFloat WHERE DescId = zc_ObjectHistoryFloat_PriceListItem_Value() AND ObjectHistoryId = ioId AND ValueData = inValue)
+                   AND NOT EXISTS (SELECT 1 FROM Object WHERE Object.DescId = zc_Object_PriceList() AND Object.ObjectCode = 2 AND Object.Id = inPriceListId)
                 THEN
                     RAISE EXCEPTION 'NOT EXISTS VALUE on StartDate <%> <%>', inValue, (SELECT ValueData FROM ObjectHistoryFloat WHERE DescId = zc_ObjectHistoryFloat_PriceListItem_Value() AND ObjectHistoryId = ioId);
                 END IF;
