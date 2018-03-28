@@ -40,7 +40,7 @@ BEGIN
      -- 1. эти параметры всегда -1 день
      -- ioOperDateEnd:= inOperDate - INTERVAL '1 DAY';
      -- 0.
-     outDayCount:= 1 + EXTRACT (DAY FROM (ioOperDateEnd - ioOperDateStart));
+     outDayCount:= 1 + EXTRACT (DAY FROM (zfConvert_DateTimeWithOutTZ (ioOperDateEnd) - zfConvert_DateTimeWithOutTZ (ioOperDateStart)));
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;

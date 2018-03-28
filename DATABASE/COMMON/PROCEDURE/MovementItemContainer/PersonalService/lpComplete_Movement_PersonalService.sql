@@ -83,12 +83,20 @@ BEGIN
              -- для ведомости БН - нельзя "текущий" месяц
              vbMovementItemId_err:= (SELECT MovementItem.Id
                                      FROM MovementItem
+                                          LEFT JOIN MovementItemLinkObject AS MILO_Position
+                                                                           ON MILO_Position.MovementItemId = MovementItem.Id
+                                                                          AND MILO_Position.DescId         = zc_MILinkObject_Position()
+                                          LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+                                                               ON ObjectLink_Personal_Position.ObjectId = MovementItem.ObjectId
+                                                              AND ObjectLink_Personal_Position.DescId   = zc_ObjectLink_Personal_Position()
                                           LEFT JOIN ObjectDate AS ObjectDate_DateOut
                                                                ON ObjectDate_DateOut.ObjectId = MovementItem.ObjectId
                                                               AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out()
                                      WHERE MovementItem.MovementId = inMovementId
                                        AND MovementItem.DescId     = zc_MI_Master()
                                        AND MovementItem.isErased   = FALSE
+                                       -- еще условие - Должность
+                                       AND COALESCE (MILO_Position.ObjectId, 0) = COALESCE (ObjectLink_Personal_Position.ChildObjectId, 0)
                                        -- т.е. раньше чем Дата созданиня ДОК.
                                        AND COALESCE (CASE WHEN vbIsNalog = TRUE
                                                                THEN DATE_TRUNC ('MONTH', ObjectDate_DateOut.ValueData) + INTERVAL '1 MONTH'
@@ -114,12 +122,20 @@ BEGIN
          -- для остальных - нельзя "следующий" месяц
          vbMovementItemId_err:= (SELECT MovementItem.Id
                                  FROM MovementItem
+                                      LEFT JOIN MovementItemLinkObject AS MILO_Position
+                                                                       ON MILO_Position.MovementItemId = MovementItem.Id
+                                                                      AND MILO_Position.DescId         = zc_MILinkObject_Position()
+                                      LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+                                                           ON ObjectLink_Personal_Position.ObjectId = MovementItem.ObjectId
+                                                          AND ObjectLink_Personal_Position.DescId   = zc_ObjectLink_Personal_Position()
                                       LEFT JOIN ObjectDate AS ObjectDate_DateOut
                                                            ON ObjectDate_DateOut.ObjectId = MovementItem.ObjectId
                                                           AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out()
                                  WHERE MovementItem.MovementId = inMovementId
                                    AND MovementItem.DescId     = zc_MI_Master()
                                    AND MovementItem.isErased   = FALSE
+                                   -- еще условие - Должность
+                                   AND COALESCE (MILO_Position.ObjectId, 0) = COALESCE (ObjectLink_Personal_Position.ChildObjectId, 0)
                                    -- т.е. раньше чем 1-ое число след. месяца
                                    AND COALESCE (ObjectDate_DateOut.ValueData + INTERVAL'1 MONTH', zc_DateEnd()) < DATE_TRUNC ('MONTH', vbServiceDate) + INTERVAL'1 MONTH'
                                  LIMIT 1

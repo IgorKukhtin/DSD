@@ -29,7 +29,7 @@ BEGIN
 
      -- определяется
      SELECT Movement.OperDate
-          , 1 + EXTRACT (DAY FROM (MovementDate_OperDateEnd.ValueData - MovementDate_OperDateStart.ValueData))
+          , 1 + EXTRACT (DAY FROM (zfConvert_DateTimeWithOutTZ (MovementDate_OperDateEnd.ValueData) - zfConvert_DateTimeWithOutTZ (MovementDate_OperDateStart.ValueData)))
           , EXTRACT (MONTH FROM (Movement.OperDate + INTERVAL '1 DAY'))
           , MovementLinkObject_From.ObjectId
           , MovementLinkObject_To.ObjectId

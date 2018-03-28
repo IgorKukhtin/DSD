@@ -67,8 +67,8 @@ BEGIN
            , Object_From.ValueData                  AS FromName
            , Object_To.Id                           AS ToId
            , Object_To.ValueData                    AS ToName
-           , (1 + EXTRACT (DAY FROM (COALESCE (MovementDate_OperDateEnd.ValueData, Movement.OperDate - (INTERVAL '1 DAY')) :: TDateTime
-                                   - COALESCE (MovementDate_OperDateStart.ValueData, Movement.OperDate - (INTERVAL '7 DAY')) :: TDateTime)
+           , (1 + EXTRACT (DAY FROM (COALESCE (zfConvert_DateTimeWithOutTZ (MovementDate_OperDateEnd.ValueData),   zfConvert_DateTimeWithOutTZ (Movement.OperDate) - (INTERVAL '1 DAY'))
+                                   - COALESCE (zfConvert_DateTimeWithOutTZ (MovementDate_OperDateStart.ValueData), zfConvert_DateTimeWithOutTZ (Movement.OperDate) - (INTERVAL '7 DAY')))
                           )) :: TFloat AS DayCount
            , MovementString_Comment.ValueData       AS Comment
 
