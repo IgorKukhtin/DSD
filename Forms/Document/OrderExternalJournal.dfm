@@ -594,6 +594,12 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           Component = FormParams
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inIsJuridical'
+          Value = 'False'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_OrderExternal'
       ReportNameParam.Value = 'PrintMovement_OrderExternal'

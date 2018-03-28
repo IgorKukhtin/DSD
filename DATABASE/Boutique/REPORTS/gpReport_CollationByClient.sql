@@ -104,10 +104,28 @@ BEGIN
                       WHERE Container.ObjectId <> zc_Enum_Account_20102()
                     )
   -- привязываем движение за выбранный период
+  , tmpMIContainer_All AS (SELECT tmpContainer.ContainerId
+                            , tmpContainer.GoodsId
+                            , tmpContainer.PartionId
+                            , tmpContainer.PartionId_MI
+                            , tmpContainer.ContainerDescId
+                            , tmpContainer.Amount
+                            , MIContainer.OperDate
+                            , MIContainer.MovementId
+                            , MIContainer.MovementDescId
+                            , MIContainer.DescId
+                            , COALESCE (MIContainer.AnalyzerId, 0) AS AnalyzerId
+                            , MIContainer.MovementItemId
+                            , MIContainer.Amount AS Amount_MI
+                       FROM tmpContainer
+                            LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId
+                                                                          AND MIContainer.OperDate    >= inStartDate
+                      )
   , tmpMIContainer AS (SELECT tmpContainer.ContainerId
                             , tmpContainer.GoodsId
                             , tmpContainer.PartionId
                             , tmpContainer.PartionId_MI
+                            , tmpContainer.OperDate
 
                             , CASE WHEN tmpContainer.ContainerDescId = zc_Container_Count()
                                    THEN tmpContainer.Amount
@@ -118,42 +136,114 @@ BEGIN
                                    ELSE 0
                               END AS AmountSumm
 
-                            , MIContainer.MovementId     AS MovementId
-                            , MIContainer.MovementDescId AS MovementDescId
-                            , COALESCE (MIContainer.AnalyzerId, 0) AS AnalyzerId
+                            , tmpContainer.MovementId     AS MovementId
+                            , tmpContainer.MovementDescId AS MovementDescId
+                            , tmpContainer.AnalyzerId
 
                               -- нужен Только для движения За период
-                            , CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate)
-                                      THEN MIContainer.MovementItemId
+                            , CASE WHEN (tmpContainer.OperDate BETWEEN inStartDate AND inEndDate)
+                                      THEN tmpContainer.MovementItemId
                                    ELSE 0
                               END AS MovementItemId
 
                               -- Кол-во за ПЕРИОД
-                            , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.DescId = zc_MIContainer_Count()
-                                        THEN MIContainer.Amount
+                            , CASE WHEN tmpContainer.OperDate BETWEEN inStartDate AND inEndDate AND tmpContainer.DescId = zc_MIContainer_Count()
+                                        THEN tmpContainer.Amount_MI
                                    ELSE 0
                               END AS Amount_Period
                               -- Кол-во почти ИТОГО
-                            , CASE WHEN MIContainer.DescId = zc_MIContainer_Count()
-                                      THEN MIContainer.Amount
+                            , CASE WHEN tmpContainer.DescId = zc_MIContainer_Count()
+                                      THEN tmpContainer.Amount_MI
                                    ELSE 0
                               END AS Amount_Total
 
                               -- сумма за ПЕРИОД
-                            , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.DescId = zc_MIContainer_Summ()
-                                        THEN MIContainer.Amount
+                            , CASE WHEN tmpContainer.OperDate BETWEEN inStartDate AND inEndDate AND tmpContainer.DescId = zc_MIContainer_Summ()
+                                        THEN tmpContainer.Amount_MI
                                    ELSE 0
                               END AS Summ_Period
                               -- сумма почти ИТОГО
-                            , CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()
-                                        THEN MIContainer.Amount
+                            , CASE WHEN tmpContainer.DescId = zc_MIContainer_Summ()
+                                        THEN tmpContainer.Amount_MI
                                    ELSE 0
                               END AS Summ_Total
 
-                       FROM tmpContainer
-                            LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId
-                                                                          AND MIContainer.OperDate    >= inStartDate
+                       FROM tmpMIContainer_All AS tmpContainer
                       )
+  , tmpMotion AS (SELECT tmp.OperDate
+                       , tmp.GoodsId
+                       , tmp.PartionId
+                       , tmp.PartionId_MI
+                       , tmp.MovementId
+                       , tmp.ContainerId
+                       , SUM(tmp.AmountSumm) AS AmountSumm
+                       , SUM (tmp.SummIn - tmp.SummOut) AS SummDebt
+                  FROM (SELECT tmpMIContainer.ContainerId
+                             , tmpMIContainer.MovementId
+                             , tmpMIContainer.MovementItemId
+                             , tmpMIContainer.GoodsId
+                             , tmpMIContainer.PartionId
+                             , tmpMIContainer.PartionId_MI
+                             , tmpMIContainer.OperDate
+                             , tmpMIContainer.AmountSumm
+                             , CASE WHEN tmpMIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount(), zc_Movement_ReturnIn())
+                                     AND tmpMIContainer.AnalyzerId     > 0
+                                         THEN 1 * tmpMIContainer.Summ_Period
+                                    WHEN tmpMIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount(), zc_Movement_ReturnIn())
+                                         THEN 0
+                                    WHEN tmpMIContainer.Summ_Period > 0
+                                         THEN 1 * tmpMIContainer.Summ_Period
+                                    ELSE 0
+                               END AS SummIn
+                             , CASE WHEN tmpMIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount(), zc_Movement_ReturnIn())
+                                     AND tmpMIContainer.AnalyzerId     = 0
+                                         THEN -1 * tmpMIContainer.Summ_Period
+                                    WHEN tmpMIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount(), zc_Movement_ReturnIn())
+                                         THEN 0
+                                    WHEN tmpMIContainer.Summ_Period < 0
+                                         THEN -1 * tmpMIContainer.Summ_Period
+                                    ELSE 0
+                               END AS SummOut
+                        FROM tmpMIContainer
+                        WHERE tmpMIContainer.Summ_Period <> 0
+                        ) AS tmp
+                  GROUP BY tmp.OperDate
+                         , tmp.GoodsId
+                         , tmp.PartionId
+                         , tmp.PartionId_MI
+                         , tmp.MovementId
+                         , tmp.ContainerId
+                 )
+
+  , tmpDebt AS (SELECT tmp.OperDate
+                     , tmp.GoodsId
+                     , tmp.PartionId
+                     , tmp.PartionId_MI
+                     , tmp.MovementId
+                     , SUM(tmp.SummDebt) AS SummDebt
+                FROM (SELECT tmp.OperDate
+                           , tmp.GoodsId
+                           , tmp.PartionId
+                           , tmp.PartionId_MI
+                           , tmp.MovementId
+                           , (tmp.SummDebt - SUM (CASE WHEN tmp2.OperDate >= tmp.OperDate THEN COALESCE (tmp2.SummDebt,0) ELSE 0 END) )  AS SummDebt
+                      FROM tmpMotion AS tmp
+                           LEFT JOIN tmpMotion AS tmp2 ON tmp2.ContainerId = tmp.ContainerId
+                                                      --AND tmp2.OperDate <= tmp.OperDate
+                      GROUP BY tmp.OperDate
+                             , tmp.GoodsId
+                             , tmp.PartionId
+                             , tmp.PartionId_MI
+                             , tmp.MovementId
+                             , tmp.SummDebt 
+                      ) AS tmp 
+                GROUP BY tmp.OperDate
+                       , tmp.GoodsId
+                       , tmp.PartionId
+                       , tmp.PartionId_MI
+                       , tmp.MovementId
+                )
+
     -- "собрали" данные нач / конечн. остатки и движение - в одну строку
   , tmpMIContainer_group AS (SELECT tmpMIContainer_all.Text_info
                                   , tmpMIContainer_all.NumGroup
@@ -375,13 +465,10 @@ BEGIN
         -- % скидки из партии док. продажи
         , COALESCE (MIFloat_ChangePercent.ValueData, 0)             :: TFloat   AS ChangePercent
 
-        , (CASE WHEN tmpData.NumGroup = 2 THEN CASE WHEN MovementDesc.Id = zc_Movement_GoodsAccount()
-                                                   THEN tmpData.SummOut
-                                                   ELSE tmpData.SummIn
-                                              END
-               ELSE (tmpData.SummStart + tmpData.SummEnd)
-          END
-          - COALESCE (MIFloat_TotalPay.ValueData, 0) )              :: TFloat   AS SummDebt
+        , (CASE WHEN tmpData.NumGroup = 2 
+                  THEN tmpDebt.SummDebt
+                  ELSE (tmpData.SummStart + tmpData.SummEnd)
+             END)                                             :: TFloat   AS SummDebt
 
    FROM tmpMIContainer_group AS tmpData
         LEFT JOIN Movement ON Movement.Id = tmpData.MovementId
@@ -445,6 +532,12 @@ BEGIN
         LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
                                     ON MIFloat_TotalPay.MovementItemId = tmpData.MovementItemId
                                    AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
+
+        LEFT JOIN tmpDebt ON tmpDebt.PartionId    = tmpData.PartionId
+                         AND tmpDebt.PartionId_MI = tmpData.PartionId_MI
+                         AND tmpDebt.MovementId   = tmpData.MovementId
+                         AND tmpDebt.GoodsId      = Object_Goods.Id
+                         AND tmpDebt.OperDate     = Movement.OperDate
        ;
 
  END;

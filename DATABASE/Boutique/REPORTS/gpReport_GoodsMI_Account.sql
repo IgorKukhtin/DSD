@@ -71,70 +71,70 @@ BEGIN
                         LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmp.StatusId
                  )
    , tmpSale AS (SELECT Movement_Sale.Id                    AS MovementId
-                     , zc_Movement_Sale()                  AS MovementDescId
-                     , tmpStatus.StatusCode                AS StatusCode
-                     , Movement_Sale.OperDate              AS OperDate
-                     , Movement_Sale.Invnumber             AS Invnumber
-                     , Movement_Sale.Id                    AS MovementId_Sale
-                     , Movement_Sale.DescId                AS MovementDescId_Sale
-                     , Movement_Sale.OperDate              AS OperDate_Sale
-                     , Movement_Sale.Invnumber             AS Invnumber_Sale
-                     , MovementLinkObject_To.ObjectId      AS ClientId
-                     , MI_Master.ObjectId                  AS GoodsId
-                     , MI_Master.PartionId
-                     , MI_Master.Id                        AS MI_Id
-                     , COALESCE (MIFloat_ChangePercent.ValueData, 0)      AS ChangePercent
-                     , COALESCE (MIFloat_OperPriceList.ValueData, 0)      AS OperPriceList
-                     , COALESCE (MIFloat_SummChangePercent.ValueData, 0)  AS SummChangePercent
-                     , (MI_Master.Amount)                                 AS Amount
-                     , COALESCE (MIFloat_TotalPay.ValueData, 0)           AS TotalPay
-                     , COALESCE (MIFloat_TotalPayOth.ValueData, 0)        AS TotalPayOth
-                     , ( FLOOR ( ((MI_Master.Amount - COALESCE (MIFloat_TotalCountReturn.ValueData, 0) ) * COALESCE (MIFloat_OperPriceList.ValueData, 0)) * (1- COALESCE (MIFloat_ChangePercent.ValueData, 0) / 100) )
-                        - COALESCE (MIFloat_SummChangePercent.ValueData, 0)
-                        - COALESCE (MIFloat_TotalPay.ValueData, 0)
-                        - COALESCE (MIFloat_TotalPayOth.ValueData, 0)
-                        + COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
-                        )    AS Debt
-
-                FROM Movement AS Movement_Sale
-                     INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement_Sale.StatusId
-                     INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                                   ON MovementLinkObject_From.MovementId = Movement_Sale.Id
-                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                  AND (MovementLinkObject_From.ObjectId = inUnitId OR inUnitId = 0)
-                     LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                  ON MovementLinkObject_To.MovementId = Movement_Sale.Id
-                                                 AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-
-                     INNER JOIN MovementItem AS MI_Master
-                                             ON MI_Master.MovementId = Movement_Sale.Id
-                                            AND MI_Master.DescId     = zc_MI_Master()
-                                            AND MI_Master.isErased   = FALSE
-                     LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
-                                                 ON MIFloat_ChangePercent.MovementItemId = MI_Master.Id
-                                                AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
-                     LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
-                                                 ON MIFloat_OperPriceList.MovementItemId = MI_Master.Id
-                                                AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
-                     LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
-                                                 ON MIFloat_TotalPay.MovementItemId = MI_Master.Id
-                                                AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
-                     LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
-                                                 ON MIFloat_SummChangePercent.MovementItemId = MI_Master.Id
-                                                AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
-                     LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth
-                                                 ON MIFloat_TotalPayOth.MovementItemId = MI_Master.Id
-                                                AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth()
-
-                     LEFT JOIN MovementItemFloat AS MIFloat_TotalCountReturn
-                                                 ON MIFloat_TotalCountReturn.MovementItemId = MI_Master.Id
-                                                AND MIFloat_TotalCountReturn.DescId         = zc_MIFloat_TotalCountReturn()
-                     LEFT JOIN MovementItemFloat AS MIFloat_TotalPayReturn
-                                                 ON MIFloat_TotalPayReturn.MovementItemId = MI_Master.Id
-                                                AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()
-                WHERE Movement_Sale.DescId = zc_Movement_Sale()
-                  AND Movement_Sale.OperDate BETWEEN inStartDate AND inEndDate
-              )
+                      , zc_Movement_Sale()                  AS MovementDescId
+                      , tmpStatus.StatusCode                AS StatusCode
+                      , Movement_Sale.OperDate              AS OperDate
+                      , Movement_Sale.Invnumber             AS Invnumber
+                      , Movement_Sale.Id                    AS MovementId_Sale
+                      , Movement_Sale.DescId                AS MovementDescId_Sale
+                      , Movement_Sale.OperDate              AS OperDate_Sale
+                      , Movement_Sale.Invnumber             AS Invnumber_Sale
+                      , MovementLinkObject_To.ObjectId      AS ClientId
+                      , MI_Master.ObjectId                  AS GoodsId
+                      , MI_Master.PartionId
+                      , MI_Master.Id                        AS MI_Id
+                      , COALESCE (MIFloat_ChangePercent.ValueData, 0)      AS ChangePercent
+                      , COALESCE (MIFloat_OperPriceList.ValueData, 0)      AS OperPriceList
+                      , COALESCE (MIFloat_SummChangePercent.ValueData, 0)  AS SummChangePercent
+                      , (MI_Master.Amount)                                 AS Amount
+                      , COALESCE (MIFloat_TotalPay.ValueData, 0)           AS TotalPay
+                      , COALESCE (MIFloat_TotalPayOth.ValueData, 0)        AS TotalPayOth
+                      , ( FLOOR ( ((MI_Master.Amount - COALESCE (MIFloat_TotalCountReturn.ValueData, 0) ) * COALESCE (MIFloat_OperPriceList.ValueData, 0)) * (1- COALESCE (MIFloat_ChangePercent.ValueData, 0) / 100) )
+                         - COALESCE (MIFloat_SummChangePercent.ValueData, 0)
+                         - COALESCE (MIFloat_TotalPay.ValueData, 0)
+                         - COALESCE (MIFloat_TotalPayOth.ValueData, 0)
+                         + COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
+                         )    AS Debt
+ 
+                 FROM Movement AS Movement_Sale
+                      INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement_Sale.StatusId
+                      INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                    ON MovementLinkObject_From.MovementId = Movement_Sale.Id
+                                                   AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                   AND (MovementLinkObject_From.ObjectId = inUnitId OR inUnitId = 0)
+                      LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                   ON MovementLinkObject_To.MovementId = Movement_Sale.Id
+                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+ 
+                      INNER JOIN MovementItem AS MI_Master
+                                              ON MI_Master.MovementId = Movement_Sale.Id
+                                             AND MI_Master.DescId     = zc_MI_Master()
+                                             AND MI_Master.isErased   = FALSE
+                      LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                  ON MIFloat_ChangePercent.MovementItemId = MI_Master.Id
+                                                 AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+                      LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
+                                                  ON MIFloat_OperPriceList.MovementItemId = MI_Master.Id
+                                                 AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
+                      LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
+                                                  ON MIFloat_TotalPay.MovementItemId = MI_Master.Id
+                                                 AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
+                      LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
+                                                  ON MIFloat_SummChangePercent.MovementItemId = MI_Master.Id
+                                                 AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
+                      LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth
+                                                  ON MIFloat_TotalPayOth.MovementItemId = MI_Master.Id
+                                                 AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth()
+ 
+                      LEFT JOIN MovementItemFloat AS MIFloat_TotalCountReturn
+                                                  ON MIFloat_TotalCountReturn.MovementItemId = MI_Master.Id
+                                                 AND MIFloat_TotalCountReturn.DescId         = zc_MIFloat_TotalCountReturn()
+                      LEFT JOIN MovementItemFloat AS MIFloat_TotalPayReturn
+                                                  ON MIFloat_TotalPayReturn.MovementItemId = MI_Master.Id
+                                                 AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()
+                 WHERE Movement_Sale.DescId = zc_Movement_Sale()
+                   AND Movement_Sale.OperDate BETWEEN inStartDate AND inEndDate
+               )
 
   , tmpReturnIn AS (SELECT Movement_ReturnIn.Id                AS MovementId
                          , zc_Movement_ReturnIn()              AS MovementDescId
