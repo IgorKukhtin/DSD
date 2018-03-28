@@ -16,10 +16,18 @@ $BODY$
    DECLARE vbInsertDate            TDateTime;
    DECLARE vbIsNalog               Boolean;
 BEGIN
-     -- таблица - по документам, дл€ lpComplete_Movement_PersonalService_Recalc
-     CREATE TEMP TABLE _tmpMovement_Recalc (MovementId Integer, StatusId Integer, PersonalServiceListId Integer, PaidKindId Integer, ServiceDate TDateTime) ON COMMIT DROP;
-     -- таблица - по элементам, дл€ lpComplete_Movement_PersonalService_Recalc
-     CREATE TEMP TABLE _tmpMI_Recalc (MovementId_from Integer, MovementItemId_from Integer, PersonalServiceListId_from Integer, MovementId_to Integer, MovementItemId_to Integer, PersonalServiceListId_to Integer, ServiceDate TDateTime, UnitId Integer, PersonalId Integer, PositionId Integer, InfoMoneyId Integer, SummCardRecalc TFloat, SummCardSecondRecalc TFloat, SummNalogRecalc TFloat, SummNalogRetRecalc TFloat, SummChildRecalc TFloat, SummMinusExtRecalc TFloat, isMovementComplete Boolean) ON COMMIT DROP;
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpMovement_Recalc'))
+     THEN
+         -- таблица - по документам, дл€ lpComplete_Movement_PersonalService_Recalc
+         DELETE FROM _tmpMovement_Recalc;
+         -- таблица - по элементам, дл€ lpComplete_Movement_PersonalService_Recalc
+         DELETE FROM _tmpMI_Recalc;
+     ELSE
+         -- таблица - по документам, дл€ lpComplete_Movement_PersonalService_Recalc
+         CREATE TEMP TABLE _tmpMovement_Recalc (MovementId Integer, StatusId Integer, PersonalServiceListId Integer, PaidKindId Integer, ServiceDate TDateTime) ON COMMIT DROP;
+         -- таблица - по элементам, дл€ lpComplete_Movement_PersonalService_Recalc
+         CREATE TEMP TABLE _tmpMI_Recalc (MovementId_from Integer, MovementItemId_from Integer, PersonalServiceListId_from Integer, MovementId_to Integer, MovementItemId_to Integer, PersonalServiceListId_to Integer, ServiceDate TDateTime, UnitId Integer, PersonalId Integer, PositionId Integer, InfoMoneyId Integer, SummCardRecalc TFloat, SummCardSecondRecalc TFloat, SummNalogRecalc TFloat, SummNalogRetRecalc TFloat, SummChildRecalc TFloat, SummMinusExtRecalc TFloat, isMovementComplete Boolean) ON COMMIT DROP;
+     END IF;
 
 
      -- Ќашли

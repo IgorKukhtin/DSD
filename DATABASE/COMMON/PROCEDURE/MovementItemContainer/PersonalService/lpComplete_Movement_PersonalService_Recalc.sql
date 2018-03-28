@@ -336,11 +336,15 @@ BEGIN
      WHERE Movement.Id = tmp.MovementId_to;
 
 
+
      -- Проведение Новых док-тов  + сохранили протокол
-     PERFORM lpComplete_Movement (inMovementId := tmp.MovementId_to
-                                , inDescId     := zc_Movement_PersonalService()
-                                , inUserId     := inUserId
-                                 )
+     -- PERFORM lpComplete_Movement (inMovementId := tmp.MovementId_to
+     --                            , inDescId     := zc_Movement_PersonalService()
+     --                            , inUserId     := inUserId
+     --                             )
+     PERFORM lpComplete_Movement_PersonalService (inMovementId := tmp.MovementId_to
+                                                , inUserId     := inUserId
+                                                 )
      FROM (SELECT DISTINCT _tmpMI_Recalc.MovementId_to FROM _tmpMI_Recalc WHERE _tmpMI_Recalc.isMovementComplete = TRUE) AS tmp;
 
 
