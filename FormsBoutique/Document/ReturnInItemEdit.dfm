@@ -699,6 +699,14 @@ object ReturnInItemEditForm: TReturnInItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountGRN'
+        Value = Null
+        Component = ceAmountGRN
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAmountUSD'
         Value = 0.000000000000000000
         Component = ceAmountUSD
@@ -795,6 +803,14 @@ object ReturnInItemEditForm: TReturnInItemEditForm
         Name = 'inAmountGRN'
         Value = 0.000000000000000000
         Component = ceAmountGRN
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountUSD'
+        Value = Null
+        Component = ceAmountUSD
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -901,6 +917,14 @@ object ReturnInItemEditForm: TReturnInItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountEUR'
+        Value = Null
+        Component = ceAmountEUR
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAmountCard'
         Value = 0.000000000000000000
         Component = ceAmountCARD
@@ -997,6 +1021,14 @@ object ReturnInItemEditForm: TReturnInItemEditForm
         Name = 'inAmountEUR'
         Value = 0.000000000000000000
         Component = ceAmountEUR
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountCard'
+        Value = Null
+        Component = ceAmountCARD
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -746,6 +746,14 @@ object SaleItemEditForm: TSaleItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountGRN'
+        Value = Null
+        Component = ceAmountGRN
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAmountUSD'
         Value = 0.000000000000000000
         Component = ceAmountUSD
@@ -843,6 +851,14 @@ object SaleItemEditForm: TSaleItemEditForm
         Name = 'inAmountGRN'
         Value = 0.000000000000000000
         Component = ceAmountGRN
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountUSD'
+        Value = Null
+        Component = ceAmountUSD
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -950,6 +966,14 @@ object SaleItemEditForm: TSaleItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountEUR'
+        Value = Null
+        Component = ceAmountEUR
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAmountCard'
         Value = 0.000000000000000000
         Component = ceAmountCARD
@@ -1052,6 +1076,14 @@ object SaleItemEditForm: TSaleItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountCard'
+        Value = Null
+        Component = ceAmountCARD
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAmountDiscount'
         Value = 0.000000000000000000
         Component = ceAmountDiscount
@@ -1149,6 +1181,14 @@ object SaleItemEditForm: TSaleItemEditForm
         Name = 'inAmountCard'
         Value = 0.000000000000000000
         Component = ceAmountCARD
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountDiscount'
+        Value = Null
+        Component = ceAmountDiscount
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
