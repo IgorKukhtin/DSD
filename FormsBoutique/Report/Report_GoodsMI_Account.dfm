@@ -114,6 +114,11 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
               Format = ',0.####'
               Kind = skSum
               Column = SummChangePercent
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalDebt
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -160,6 +165,11 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = ClientName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalDebt
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -399,6 +409,15 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 110
+          end
+          object TotalDebt: TcxGridDBColumn
+            Caption = #1044#1086#1083#1075
+            DataBinding.FieldName = 'TotalDebt'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
           end
           object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
