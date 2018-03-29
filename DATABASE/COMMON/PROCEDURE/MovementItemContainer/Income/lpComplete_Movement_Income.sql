@@ -361,7 +361,16 @@ BEGIN
      IF vbCardFuelId_From <> 0
      THEN
          -- нашли Прайс
-         vbPriceListId_Fuel:= (SELECT CASE WHEN vbOperDatePartner >= ObjectDate_Juridical_StartPromo.ValueData THEN ObjectLink_Juridical_PriceList.ChildObjectId ELSE 0 END
+         vbPriceListId_Fuel:= COALESCE
+                             ((-- 1. Поиск в Договоре
+                               SELECT ObjectLink_Contract_PriceList.ChildObjectId
+                               FROM ObjectLink AS ObjectLink_Contract_PriceList
+                               WHERE ObjectLink_Contract_PriceList.ObjectId = vbContractId
+                                 AND ObjectLink_Contract_PriceList.DescId   = zc_ObjectLink_Contract_PriceList()
+                                 -- AND inUserId = 5
+                              )
+                            , (-- 1. Поиск у Юр Лица
+                               SELECT CASE WHEN vbOperDatePartner >= ObjectDate_Juridical_StartPromo.ValueData THEN ObjectLink_Juridical_PriceList.ChildObjectId ELSE 0 END
                                FROM ObjectLink AS ObjectLink_CardFuel_Juridical
                                     LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
                                                          ON ObjectLink_Juridical_PriceList.ObjectId = ObjectLink_CardFuel_Juridical.ChildObjectId
@@ -372,7 +381,8 @@ BEGIN
                                WHERE ObjectLink_CardFuel_Juridical.ObjectId = vbCardFuelId_From
                                  AND ObjectLink_CardFuel_Juridical.DescId   = zc_ObjectLink_CardFuel_Juridical()
                                  -- AND inUserId = 5
-                              );
+                              ));
+                              
 
          IF vbPriceListId_Fuel > 0
          THEN
