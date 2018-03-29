@@ -60,6 +60,7 @@ object ReturnInForm: TReturnInForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 3
       Width = 238
     end
@@ -71,6 +72,7 @@ object ReturnInForm: TReturnInForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 2
       Width = 217
     end

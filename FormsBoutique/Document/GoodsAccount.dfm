@@ -62,6 +62,7 @@ object GoodsAccountForm: TGoodsAccountForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 2
       Width = 238
     end
@@ -228,6 +229,7 @@ object GoodsAccountForm: TGoodsAccountForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 22
       Width = 217
     end

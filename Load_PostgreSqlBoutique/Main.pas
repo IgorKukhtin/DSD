@@ -171,6 +171,7 @@ type
     cbNEW: TCheckBox;
     cbDiscountPeriod: TCheckBox;
     cbObmen: TCheckBox;
+    cbGoodsNew: TCheckBox;
 
     procedure btnAddGuideId_PostgresClick(Sender: TObject);
     procedure btnAddlDocId_PostgresClick(Sender: TObject);
@@ -6361,6 +6362,7 @@ begin
         Add('  and (Goods_find.ParentId is null'); // !!!последнюю группу не загружаем, но кроме АРХИВА
         Add('    or Goods_child.Id > 0)');
         Add('  and (Goods_parent.Id_Postgres is not null or Goods.ParentId is null)');
+        if cbGoodsNew.Checked then Add(' and Goods.Id_Postgres is null');
         Add('order by ObjectId');
         Open;
         //
@@ -7632,7 +7634,9 @@ begin
              toStoredProc.Params.ParamByName('inPhone').Value:=FieldByName('Phone').AsString;
              toStoredProc.Params.ParamByName('inPrinter').Value:='';
              toStoredProc.Params.ParamByName('inPrint').Value:=FieldByName('NamePrint').AsString;
-             toStoredProc.Params.ParamByName('inIsPartnerBarCode').Value:=FALSE;
+             if FieldByName('ObjectId').AsInteger = 235 //магазин MaxMara
+             then toStoredProc.Params.ParamByName('inIsPartnerBarCode').Value:=TRUE
+             else toStoredProc.Params.ParamByName('inIsPartnerBarCode').Value:=FALSE;
              toStoredProc.Params.ParamByName('inDiscountTax').Value:=FieldByName('DiscountTax').AsFloat;
              toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('ParentId').AsInteger;
              toStoredProc.Params.ParamByName('inChildId').Value:=FieldByName('ChildId').AsInteger;
