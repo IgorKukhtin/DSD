@@ -143,6 +143,8 @@ type
     dsdDBViewAddOn1: TdsdDBViewAddOn;
     spSelectChild: TdsdStoredProc;
     spUpdateMI_NPP: TdsdStoredProc;
+    actReport_Check_NPP: TdsdOpenForm;
+    bbReport_Check_NPP: TdxBarButton;
   private
     { Private declarations }
   public

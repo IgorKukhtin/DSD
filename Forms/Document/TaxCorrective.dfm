@@ -10,7 +10,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Top = 163
     Width = 1114
     Height = 505
-    ExplicitTop = 179
+    ExplicitTop = 163
     ExplicitWidth = 1114
     ExplicitHeight = 505
     ClientRectBottom = 505
@@ -1149,6 +1149,44 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Hint = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1048#1053#1053' '#1076#1083#1103' 1-'#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 76
     end
+    object actReport_Check_NPP: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#8470#1087'/'#1087'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#8470#1087'/'#1087'>'
+      ImageIndex = 40
+      FormName = 'TReport_CheckTaxCorrective_NPPForm'
+      FormNameParam.Value = 'TReport_CheckTaxCorrective_NPPForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = '0'
+          Component = DocumentTaxGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1282,6 +1320,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         end
         item
           Visible = True
+          ItemName = 'bbReport_Check_NPP'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint_TaxCorrective_Client'
         end
         item
@@ -1337,6 +1383,10 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     end
     object bbChangeNPP_calc: TdxBarButton
       Action = actChangeNPP_calc
+      Category = 0
+    end
+    object bbReport_Check_NPP: TdxBarButton
+      Action = actReport_Check_NPP
       Category = 0
     end
   end
@@ -2090,6 +2140,10 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end>
     Left = 80
     Top = 432
+  end
+  inherited spGetTotalSumm: TdsdStoredProc
+    Left = 428
+    Top = 196
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'

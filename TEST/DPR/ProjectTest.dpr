@@ -1002,7 +1002,8 @@ uses
   GoodsByGoodsKind_Sticker in '..\..\Forms\Guides\GoodsByGoodsKind_Sticker.pas' {GoodsByGoodsKind_StickerForm: TParentForm},
   LossPersonalJournal in '..\..\Forms\Document\LossPersonalJournal.pas' {LossPersonalJournalForm: TParentForm},
   LossPersonal in '..\..\Forms\Document\LossPersonal.pas' {LossPersonalForm: TParentForm},
-  MovementString_INNEdit in '..\..\Forms\Document\MovementString_INNEdit.pas' {MovementString_INNEditForm: TParentForm};
+  MovementString_INNEdit in '..\..\Forms\Document\MovementString_INNEdit.pas' {MovementString_INNEditForm: TParentForm},
+  Report_CheckTaxCorrective_NPP in '..\..\Forms\Report\Report_CheckTaxCorrective_NPP.pas' {Report_CheckTaxCorrective_NPPForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
