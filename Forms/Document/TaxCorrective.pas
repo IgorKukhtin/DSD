@@ -109,6 +109,12 @@ type
     ExecuteDialogINN: TExecuteDialog;
     macUpdateINN: TMultiAction;
     bbUpdateINN: TdxBarButton;
+    LineNumTaxCorr: TcxGridDBColumn;
+    LineNumTaxCorr_calc: TcxGridDBColumn;
+    AmountTax_calc: TcxGridDBColumn;
+    actChangeNPP_calc: TdsdExecStoredProc;
+    bbChangeNPP_calc: TdxBarButton;
+    spUpdateMI_NPP_calc: TdsdStoredProc;
   private
     { Private declarations }
   public
