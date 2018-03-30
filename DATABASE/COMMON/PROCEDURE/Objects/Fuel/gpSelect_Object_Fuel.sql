@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Fuel(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
              , Ratio TFloat
              , RateFuelKindId Integer, RateFuelKindCode Integer, RateFuelKindName TVarChar
-             , ValuePrice TFloat
+             , ValuePrice TVarChar
              , isErased boolean
               )
 AS
@@ -18,26 +18,62 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Fuel());
 
      RETURN QUERY 
-       WITH tmpPrice AS (SELECT ObjectLink_Goods_Fuel.ChildObjectId                    AS FuelId
-                              , MAX (COALESCE (ObjectHistoryFloat_Value.ValueData, 0)) AS ValuePrice
-                         FROM ObjectLink AS ObjectLink_Goods_Fuel
-                              INNER JOIN ObjectLink AS ObjectLink_Goods
-                                                    ON ObjectLink_Goods.ChildObjectId = ObjectLink_Goods_Fuel.ObjectId
-                                                   AND ObjectLink_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
-                              INNER JOIN ObjectLink AS ObjectLink_PriceList
-                                                    ON ObjectLink_PriceList.ObjectId      = ObjectLink_Goods.ObjectId
-                                                   AND ObjectLink_PriceList.ChildObjectId = zc_PriceList_Fuel()
-                                                   AND ObjectLink_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
-                              INNER JOIN ObjectHistory AS ObjectHistory_PriceListItem
-                                                       ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_Goods.ObjectId
-                                                      AND ObjectHistory_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
-                                                      AND ObjectHistory_PriceListItem.EndDate  = zc_DateEnd()
-                              LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value
-                                                           ON ObjectHistoryFloat_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
-                                                          AND ObjectHistoryFloat_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
-                         WHERE ObjectLink_Goods_Fuel.DescId        = zc_ObjectLink_Goods_Fuel()
-                           AND ObjectLink_Goods_Fuel.ChildObjectId > 0
-                         GROUP BY  ObjectLink_Goods_Fuel.ChildObjectId
+       WITH tmpPrice AS (WITH tmpPriceList AS (SELECT zc_PriceList_Fuel() AS PriceListId
+                                              UNION
+                                               SELECT DISTINCT ObjectLink_Contract_PriceList.ChildObjectId
+                                               FROM ObjectLink AS ObjectLink_Contract_InfoMoney
+                                                    INNER JOIN ObjectLink AS ObjectLink_Contract_PriceList
+                                                                          ON ObjectLink_Contract_PriceList.ObjectId      = ObjectLink_Contract_InfoMoney.ObjectId
+                                                                         AND ObjectLink_Contract_PriceList.DescId        = zc_ObjectLink_Contract_PriceList()
+                                                                         AND ObjectLink_Contract_PriceList.ChildObjectId > 0
+                                               WHERE ObjectLink_Contract_InfoMoney.DescId        = zc_ObjectLink_Contract_InfoMoney()
+                                                 AND ObjectLink_Contract_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_20401() -- ГСМ
+                                              UNION
+                                               SELECT DISTINCT ObjectLink_Juridical_PriceList.ChildObjectId
+                                               FROM ObjectLink AS ObjectLink_CardFuel_Juridical
+                                                    INNER JOIN ObjectLink AS ObjectLink_Juridical_PriceList
+                                                                          ON ObjectLink_Juridical_PriceList.ObjectId      = ObjectLink_CardFuel_Juridical.ObjectId
+                                                                         AND ObjectLink_Juridical_PriceList.DescId        = zc_ObjectLink_Juridical_PriceList()
+                                                                         AND ObjectLink_Juridical_PriceList.ChildObjectId > 0
+                                               WHERE ObjectLink_CardFuel_Juridical.ObjectId > 0
+                                                 AND ObjectLink_CardFuel_Juridical.DescId   = zc_ObjectLink_CardFuel_Juridical()
+                                              )
+                                 , tmpData AS (SELECT ObjectLink_PriceList.ChildObjectId                     AS PriceListId
+                                                    , ObjectLink_Goods_Fuel.ChildObjectId                    AS FuelId
+                                                    , MAX (COALESCE (ObjectHistoryFloat_Value.ValueData, 0)) AS ValuePrice
+                                               FROM ObjectLink AS ObjectLink_Goods_Fuel
+                                                    INNER JOIN ObjectLink AS ObjectLink_Goods
+                                                                          ON ObjectLink_Goods.ChildObjectId = ObjectLink_Goods_Fuel.ObjectId
+                                                                         AND ObjectLink_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
+                                                    INNER JOIN ObjectLink AS ObjectLink_PriceList
+                                                                          ON ObjectLink_PriceList.ObjectId      = ObjectLink_Goods.ObjectId
+                                                                         -- AND ObjectLink_PriceList.ChildObjectId = zc_PriceList_Fuel()
+                                                                         AND ObjectLink_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                                                    INNER JOIN tmpPriceList ON tmpPriceList.PriceListId = ObjectLink_PriceList.ChildObjectId
+                                                    INNER JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                                                             ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_Goods.ObjectId
+                                                                            AND ObjectHistory_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
+                                                                            AND ObjectHistory_PriceListItem.EndDate  = zc_DateEnd()
+                                                    LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value
+                                                                                 ON ObjectHistoryFloat_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                                                AND ObjectHistoryFloat_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                                               WHERE ObjectLink_Goods_Fuel.DescId        = zc_ObjectLink_Goods_Fuel()
+                                                 AND ObjectLink_Goods_Fuel.ChildObjectId > 0
+                                               GROUP BY ObjectLink_PriceList.ChildObjectId, ObjectLink_Goods_Fuel.ChildObjectId
+                                              )
+                                 , tmpFuel AS (SELECT Object_Fuel.Id AS FuelId FROM Object AS Object_Fuel WHERE Object_Fuel.DescId = zc_Object_Fuel())
+                         -- Результат
+                         SELECT tmp.FuelId, STRING_AGG (zfConvert_FloatToString (tmp.ValuePrice), ' ; ') AS ValuePrice
+                         FROM (SELECT tmpPriceList.PriceListId, tmpPriceList.FuelId, COALESCE (tmpData.ValuePrice, 0) AS ValuePrice
+                               FROM (SELECT tmpFuel.FuelId, tmpPriceList.PriceListId
+                                     FROM tmpPriceList
+                                          CROSS JOIN tmpFuel
+                                    ) AS tmpPriceList
+                                    LEFT JOIN tmpData ON tmpData.PriceListId = tmpPriceList.PriceListId
+                                                     AND tmpData.FuelId      = tmpPriceList.FuelId
+                               ORDER BY tmpPriceList.PriceListId
+                              ) AS tmp
+                         GROUP BY tmp.FuelId
                         )
        -- Результат
        SELECT 
@@ -51,7 +87,7 @@ BEGIN
            , Object_RateFuelKind.ObjectCode  AS RateFuelKindCode
            , Object_RateFuelKind.ValueData   AS RateFuelKindName
            
-           , tmpPrice.ValuePrice :: TFloat AS ValuePrice
+           , tmpPrice.ValuePrice :: TVarChar AS ValuePrice
           
            , Object_Fuel.isErased AS isErased
            

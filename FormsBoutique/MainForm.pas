@@ -172,7 +172,6 @@ type
     miSaleMovement: TMenuItem;
     actReport_GoodsAccount_TotalError: TdsdOpenForm;
     miTotalError: TMenuItem;
-    miLine803: TMenuItem;
     miGoodsAccount_TotalError: TMenuItem;
     actReport_ReturnIn_TotalError: TdsdOpenForm;
     miReturnIn_TotalError: TMenuItem;
@@ -203,6 +202,10 @@ type
     miDiscountPeriod: TMenuItem;
     actSaleTwoMovement: TdsdOpenForm;
     miSaleTwoMovement: TMenuItem;
+    actIncomeKoeff: TdsdOpenForm;
+    miIncomeKoeff: TMenuItem;
+    N1: TMenuItem;
+    N2: TMenuItem;
   private
     { Private declarations }
   public

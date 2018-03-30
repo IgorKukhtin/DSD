@@ -109,6 +109,42 @@ type
     ExecuteDialogINN: TExecuteDialog;
     macUpdateINN: TMultiAction;
     bbUpdateINN: TdxBarButton;
+    LineNumTaxCorr: TcxGridDBColumn;
+    LineNumTaxCorr_calc: TcxGridDBColumn;
+    AmountTax_calc: TcxGridDBColumn;
+    actChangeNPP_calc: TdsdExecStoredProc;
+    bbChangeNPP_calc: TdxBarButton;
+    spUpdateMI_NPP_calc: TdsdStoredProc;
+    cxTabSheet1: TcxTabSheet;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    cxLineNum: TcxGridDBColumn;
+    cxLineNumTaxOld: TcxGridDBColumn;
+    cxLineNumTax: TcxGridDBColumn;
+    cxisAuto: TcxGridDBColumn;
+    cxLineNumTaxCorr_calc: TcxGridDBColumn;
+    cxLineNumTaxCorr: TcxGridDBColumn;
+    cxAmountTax_calc: TcxGridDBColumn;
+    cxGoodsGroupNameFull: TcxGridDBColumn;
+    cxGoodsCode: TcxGridDBColumn;
+    cxGoodsCodeUKTZED: TcxGridDBColumn;
+    cxGoodsName: TcxGridDBColumn;
+    cxGoodsKindName: TcxGridDBColumn;
+    cxMeasureName: TcxGridDBColumn;
+    cxAmount: TcxGridDBColumn;
+    cxPrice: TcxGridDBColumn;
+    cxCountForPrice: TcxGridDBColumn;
+    cxAmountSumm: TcxGridDBColumn;
+    cxisErased: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    ChildDS: TDataSource;
+    ChildCDS: TClientDataSet;
+    actUpdateChildDS: TdsdUpdateDataSet;
+    dsdDBViewAddOn1: TdsdDBViewAddOn;
+    spSelectChild: TdsdStoredProc;
+    spUpdateMI_NPP: TdsdStoredProc;
+    actReport_Check_NPP: TdsdOpenForm;
+    bbReport_Check_NPP: TdxBarButton;
   private
     { Private declarations }
   public

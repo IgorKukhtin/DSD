@@ -285,7 +285,8 @@ uses
   PriceListItemDialog in '..\..\FormsBoutique\Guides\PriceListItemDialog.pas' {PriceListItemDialogForm: TParentForm},
   Report_Sale in '..\..\FormsBoutique\Report\Report_Sale.pas' {Report_SaleForm: TParentForm},
   Report_MovementReturnOut in '..\..\FormsBoutique\Report\Report_MovementReturnOut.pas' {Report_MovementReturnOutForm: TParentForm},
-  SaleTwo in '..\..\FormsBoutique\Document\SaleTwo.pas' {SaleTwoForm: TParentForm};
+  SaleTwo in '..\..\FormsBoutique\Document\SaleTwo.pas' {SaleTwoForm: TParentForm},
+  IncomeKoeffEdit in '..\..\FormsBoutique\Guides\IncomeKoeffEdit.pas' {IncomeKoeffEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

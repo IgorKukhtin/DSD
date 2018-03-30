@@ -1270,7 +1270,8 @@ end;
 //
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
-
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeKoeffEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeKoeffEditForm');
 //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TFormsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TFormsForm');

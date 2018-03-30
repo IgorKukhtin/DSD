@@ -79,8 +79,8 @@ else*/
     ELSE
         -- определяется
         SELECT Movement.OperDate
-             , 1 + EXTRACT (DAY FROM (MovementDate_OperDateEnd.ValueData - MovementDate_OperDateStart.ValueData))       AS DayCount
-             , (1 + EXTRACT (DAY FROM (MovementDate_OperDateEnd.ValueData - MovementDate_OperDateStart.ValueData))) / 7 AS WeekCount
+             ,  1 + EXTRACT (DAY FROM (zfConvert_DateTimeWithOutTZ (MovementDate_OperDateEnd.ValueData) - zfConvert_DateTimeWithOutTZ (MovementDate_OperDateStart.ValueData)))      AS DayCount
+             , (1 + EXTRACT (DAY FROM (zfConvert_DateTimeWithOutTZ (MovementDate_OperDateEnd.ValueData) - zfConvert_DateTimeWithOutTZ (MovementDate_OperDateStart.ValueData)))) / 7 AS WeekCount
                INTO vbOperDate, vbDayCount, vbWeekCount
         FROM Movement
              LEFT JOIN MovementDate AS MovementDate_OperDateStart

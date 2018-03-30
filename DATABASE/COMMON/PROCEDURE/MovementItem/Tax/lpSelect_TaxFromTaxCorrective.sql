@@ -5,13 +5,14 @@ DROP FUNCTION IF EXISTS lpSelect_TaxFromTaxCorrective (Integer);
 CREATE OR REPLACE FUNCTION lpSelect_TaxFromTaxCorrective(
     IN inMovementId          Integer    -- Ключ объекта <Документ> - Налоговая
 )
-RETURNS TABLE (MovementId  Integer
-             , Kind        Integer
-             , GoodsId     Integer
-             , GoodsKindId Integer
+RETURNS TABLE (MovementId         Integer
+             , Kind               Integer
+             , GoodsId            Integer
+             , GoodsKindId        Integer
              , GoodsKindId_exists Integer
-             , Price       TFloat
-             , LineNum     Integer
+             , Amount_Tax_find    TFloat
+             , Price              TFloat
+             , LineNum            Integer
               )
 AS
 $BODY$
@@ -20,7 +21,8 @@ BEGIN
     WITH 
      tmpMITax AS (SELECT MovementItem.ObjectId                                          AS GoodsId
                        , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                  AS GoodsKindId
-                       , MIFloat_Price.ValueData                                        AS Price
+                       , MovementItem.Amount                                            AS Amount_Tax_find
+                       , COALESCE (MIFloat_Price.ValueData, 0)               :: TFloat  AS Price
                        , COALESCE (MIFloat_NPP.ValueData, 0)                 :: Integer AS LineNum
                        , COUNT(*) OVER (PARTITION BY MovementItem.ObjectId, COALESCE (MILinkObject_GoodsKind.ObjectId, 0), MIFloat_Price.ValueData) AS LineCount1
                        , COUNT(*) OVER (PARTITION BY MovementItem.ObjectId, MIFloat_Price.ValueData)                                                AS LineCount2
@@ -36,14 +38,14 @@ BEGIN
                                                  ON MIFloat_NPP.MovementItemId = MovementItem.Id
                                                 AND MIFloat_NPP.DescId = zc_MIFloat_NPP()
                   WHERE MovementItem.MovementId  = inMovementId
-                    AND MovementItem.DescId = zc_MI_Master()
-                    AND MovementItem.isErased = FALSE
+                    AND MovementItem.DescId      = zc_MI_Master()
+                    AND MovementItem.isErased    = FALSE
                   )
 
                   -- результат
                   SELECT inMovementId AS MovementId
                        , 1 :: Integer AS Kind
-                       , tmp.GoodsId, tmp.GoodsKindId, tmp.GoodsKindId, tmp.Price
+                       , tmp.GoodsId, tmp.GoodsKindId, tmp.GoodsKindId, tmp.Amount_Tax_find, tmp.Price
                        , (CASE WHEN tmp.LineCount1 <> 1 THEN -1 ELSE 1 END * tmp.LineNum) :: Integer AS LineNum
                   FROM (SELECT tmpMITax.*
                              , ROW_NUMBER() OVER (PARTITION BY tmpMITax.GoodsId, tmpMITax.GoodsKindId, tmpMITax.Price ORDER BY tmpMITax.LineNum ASC) AS Ord
@@ -53,7 +55,7 @@ BEGIN
                  UNION ALL
                   SELECT inMovementId AS MovementId
                        , 2 :: Integer AS Kind
-                       , tmp.GoodsId, 0 AS GoodsKindId, tmp.GoodsKindId, tmp.Price
+                       , tmp.GoodsId, 0 AS GoodsKindId, tmp.GoodsKindId, tmp.Amount_Tax_find, tmp.Price
                        , (CASE WHEN tmp.LineCount2 <> 1 THEN -1 ELSE 1 END * tmp.LineNum) :: Integer AS LineNum
                   FROM (SELECT tmpMITax.*
                              , ROW_NUMBER() OVER (PARTITION BY tmpMITax.GoodsId, tmpMITax.Price ORDER BY tmpMITax.LineNum ASC) AS Ord

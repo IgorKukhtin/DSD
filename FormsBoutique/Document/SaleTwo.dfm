@@ -60,6 +60,7 @@ object SaleTwoForm: TSaleTwoForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 3
       Width = 238
     end
@@ -71,6 +72,7 @@ object SaleTwoForm: TSaleTwoForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 2
       Width = 217
     end
@@ -295,6 +297,7 @@ object SaleTwoForm: TSaleTwoForm
     object ceComment_Client: TcxTextEdit
       Left = 252
       Top = 63
+      Properties.ReadOnly = True
       TabOrder = 8
       Width = 305
     end
@@ -1312,20 +1315,6 @@ object SaleTwoForm: TSaleTwoForm
           OptionsView.HeaderHeight = 40
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object BarCode: TcxGridDBColumn
-            Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <'#1058#1086#1074#1072#1088'>'
-            DataBinding.FieldName = 'BarCode'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.MaxLength = 13
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 180
-          end
           object BarCode_partner: TcxGridDBColumn
             Caption = #1064#1090#1088#1080#1093'-'#1082#1086#1076' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'BarCode_partner'
@@ -1336,6 +1325,20 @@ object SaleTwoForm: TSaleTwoForm
                 Kind = bkEllipsis
               end>
             Properties.MaxLength = 14
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 180
+          end
+          object BarCode: TcxGridDBColumn
+            Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <'#1058#1086#1074#1072#1088'>'
+            DataBinding.FieldName = 'BarCode'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.MaxLength = 13
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 180
@@ -3392,16 +3395,16 @@ object SaleTwoForm: TSaleTwoForm
     ColorRuleList = <>
     ColumnAddOnList = <
       item
-        Column = BarCode
+        Column = BarCode_partner
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
       end>
     ColumnEnterList = <
       item
-        Column = BarCode
+        Column = BarCode_partner
       end
       item
-        Column = BarCode_partner
+        Column = BarCode
       end>
     SummaryItemList = <>
     Left = 784

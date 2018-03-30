@@ -3,7 +3,7 @@ object FuelForm: TFuelForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1080#1076#1099' '#1090#1086#1087#1083#1080#1074#1072'>'
   ClientHeight = 376
-  ClientWidth = 597
+  ClientWidth = 652
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,11 +20,12 @@ object FuelForm: TFuelForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 597
+    Width = 652
     Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 597
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -43,7 +44,6 @@ object FuelForm: TFuelForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.CellAutoHeight = True
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
@@ -53,7 +53,7 @@ object FuelForm: TFuelForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 85
+        Width = 45
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -63,23 +63,21 @@ object FuelForm: TFuelForm
         Width = 181
       end
       object ValuePrice: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1055#1088#1072#1081#1089
+        Caption = #1062#1077#1085#1099' '#1055#1088#1072#1081#1089
         DataBinding.FieldName = 'ValuePrice'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = '0.####;-0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 100
       end
       object clRatio: TcxGridDBColumn
-        Caption = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1087#1077#1088#1077#1074#1086#1076#1072' '#1085#1086#1088#1084#1099
+        Caption = #1050#1086#1101#1092#1092'.'
         DataBinding.FieldName = 'Ratio'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = '0.####;-0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1087#1077#1088#1077#1074#1086#1076#1072' '#1085#1086#1088#1084#1099
         Width = 111
       end
       object clRateFuelKind: TcxGridDBColumn
@@ -259,6 +257,7 @@ object FuelForm: TFuelForm
       Category = 0
       Hint = '    '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides

@@ -604,7 +604,7 @@ BEGIN
                        THEN 'ВИПРАВЛЕННЯ ПОМИЛКИ'
                   WHEN tmpMI.isPartner = TRUE
                        THEN 'НЕДОВIЗ'
-                  ELSE 'повернення'
+                  ELSE 'повернення товару або авансових платежів' -- 'повернення'
              END :: TVarChar AS KindName
            , MovementBoolean_PriceWithVAT.ValueData                         AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData                             AS VATPercent

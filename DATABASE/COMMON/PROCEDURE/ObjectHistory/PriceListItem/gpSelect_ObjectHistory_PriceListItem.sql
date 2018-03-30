@@ -35,7 +35,25 @@ BEGIN
 
    -- Ограничение - если роль Начисления транспорт-меню
    IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 78489 AND UserId = vbUserId)
-      AND COALESCE (inPriceListId, 0) NOT IN (zc_PriceList_Fuel()
+      AND COALESCE (inPriceListId, 0) NOT IN (SELECT zc_PriceList_Fuel()
+                                             UNION
+                                              SELECT DISTINCT ObjectLink_Contract_PriceList.ChildObjectId
+                                              FROM ObjectLink AS ObjectLink_Contract_InfoMoney
+                                                   INNER JOIN ObjectLink AS ObjectLink_Contract_PriceList
+                                                                         ON ObjectLink_Contract_PriceList.ObjectId      = ObjectLink_Contract_InfoMoney.ObjectId
+                                                                        AND ObjectLink_Contract_PriceList.DescId        = zc_ObjectLink_Contract_PriceList()
+                                                                        AND ObjectLink_Contract_PriceList.ChildObjectId > 0
+                                              WHERE ObjectLink_Contract_InfoMoney.DescId        = zc_ObjectLink_Contract_InfoMoney()
+                                                AND ObjectLink_Contract_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_20401() -- ГСМ
+                                             UNION
+                                              SELECT DISTINCT ObjectLink_Juridical_PriceList.ChildObjectId
+                                              FROM ObjectLink AS ObjectLink_CardFuel_Juridical
+                                                   INNER JOIN ObjectLink AS ObjectLink_Juridical_PriceList
+                                                                         ON ObjectLink_Juridical_PriceList.ObjectId      = ObjectLink_CardFuel_Juridical.ObjectId
+                                                                        AND ObjectLink_Juridical_PriceList.DescId        = zc_ObjectLink_Juridical_PriceList()
+                                                                        AND ObjectLink_Juridical_PriceList.ChildObjectId > 0
+                                              WHERE ObjectLink_CardFuel_Juridical.ObjectId > 0
+                                                AND ObjectLink_CardFuel_Juridical.DescId   = zc_ObjectLink_CardFuel_Juridical()
                                              )
    THEN
        RAISE EXCEPTION 'Ошибка. Нет прав на Просмотр прайса <%>', lfGet_Object_ValueData (inPriceListId);

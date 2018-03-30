@@ -817,7 +817,7 @@ BEGIN
 
 
     ELSE
-
+ 
 
     -- !!!Только для ДРУГИХ документов!!!
 
@@ -1231,7 +1231,7 @@ BEGIN
         -- чтоб не двоило данные , выбираем  группируем данных с макс датой отгрузки
       , tmpMI_PriceList AS (SELECT *
                             FROM (SELECT _tmpMI.*
-                                       , ROW_NUMBER() OVER (PARTITION BY _tmpMI.MovementItemId, _tmpMI.JuridicalId, _tmpMI.GoodsId, _tmpMI.ContractId, _tmpMI.Price ORDER BY _tmpMI.PartionGoodsDate DESC) AS Ord
+                                       , ROW_NUMBER() OVER (PARTITION BY _tmpMI.MovementItemId, _tmpMI.JuridicalId, _tmpMI.GoodsId, _tmpMI.ContractId ORDER BY _tmpMI.Price ASC, _tmpMI.PartionGoodsDate DESC) AS Ord
                                   FROM _tmpMI
                                  ) AS DDD
                             WHERE DDD.Ord = 1

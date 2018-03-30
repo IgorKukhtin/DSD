@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_Insert_Movement_TaxCorrective_Tax() R
 CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_MI_TaxCorrective() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_MI_TaxCorrective' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_SetErased_MI_TaxCorrective() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_SetErased_MI_TaxCorrective' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_SetUnErased_MI_TaxCorrective() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_SetUnErased_MI_TaxCorrective' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_MI_TaxCorrective_NPP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_MI_TaxCorrective_NPP' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 -- Status
 CREATE OR REPLACE FUNCTION zc_Enum_Process_UnComplete_TaxCorrective() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_UnComplete_TaxCorrective' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Complete_TaxCorrective() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Complete_TaxCorrective' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
@@ -65,6 +66,12 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_SetUnErased_MI_TaxCor
                                   , inCode:= 3
                                   , inName:= 'Элемент документа <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TaxCorrective())||'> - восстановление.'
                                   , inEnumName:= 'zc_Enum_Process_SetUnErased_MI_TaxCorrective');
+                                  
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_MI_TaxCorrective_NPP()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 4
+                                  , inName:= 'Элемент документа <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TaxCorrective())||'> - сохранение данных.'
+                                  , inEnumName:= 'zc_Enum_Process_Update_MI_TaxCorrective_NPP');
 -- Status_TaxCorrective
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_UnComplete_TaxCorrective()
                                   , inDescId:= zc_Object_Process()

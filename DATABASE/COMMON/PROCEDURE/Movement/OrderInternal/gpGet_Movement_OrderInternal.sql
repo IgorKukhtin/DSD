@@ -51,7 +51,7 @@ BEGIN
              , Object_To.Id                                       AS ToId
              , Object_To.ValueData                                AS ToName
              -- , (1 + EXTRACT (DAY FROM ((inOperDate - INTERVAL '1 DAY') - (inOperDate - INTERVAL '56 DAY')))) :: TFloat AS DayCount
-             , (1 + EXTRACT (DAY FROM (tmpGoodsReportSaleInf.EndDate - tmpGoodsReportSaleInf.EndDate))) :: TFloat AS DayCount
+             , (1 + EXTRACT (DAY FROM (zfConvert_DateTimeWithOutTZ (tmpGoodsReportSaleInf.EndDate) - zfConvert_DateTimeWithOutTZ (tmpGoodsReportSaleInf.EndDate)))) :: TFloat AS DayCount
              , CAST ('' as TVarChar) 		                  AS Comment
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
@@ -89,8 +89,8 @@ BEGIN
            , Object_To.Id                                       AS ToId
            , Object_To.ValueData                                AS ToName
 
-           , (1 + EXTRACT (DAY FROM (COALESCE (MovementDate_OperDateEnd.ValueData, tmpGoodsReportSaleInf.EndDate) :: TDateTime
-                                   - COALESCE (MovementDate_OperDateStart.ValueData, tmpGoodsReportSaleInf.StartDate) :: TDateTime)
+           , (1 + EXTRACT (DAY FROM (COALESCE (zfConvert_DateTimeWithOutTZ (MovementDate_OperDateEnd.ValueData),   zfConvert_DateTimeWithOutTZ (tmpGoodsReportSaleInf.EndDate))
+                                   - COALESCE (zfConvert_DateTimeWithOutTZ (MovementDate_OperDateStart.ValueData), zfConvert_DateTimeWithOutTZ (tmpGoodsReportSaleInf.StartDate)))
                           )) :: TFloat AS DayCount
            , MovementString_Comment.ValueData       AS Comment
             
