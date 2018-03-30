@@ -2436,6 +2436,13 @@ object ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'outLineNum'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'LineNum'
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisPay'
         Value = Null
         Component = cbisPay

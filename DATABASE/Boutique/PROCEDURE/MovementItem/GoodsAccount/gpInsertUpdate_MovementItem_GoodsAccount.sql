@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_GoodsAccount(
     IN inMovementId             Integer   , -- Ключ объекта <Документ>
     IN inPartionId              Integer   , -- Партия
     IN inSaleMI_Id              Integer   , -- Партия элемента продажа/возврат
+   OUT outLineNum               Integer   , -- № п.п. 
     IN inIsPay                  Boolean   , -- добавить с оплатой
     IN inAmount                 TFloat    , -- Количество
    OUT outTotalPay              TFloat    , --
@@ -95,7 +96,15 @@ BEGIN
          outTotalPay := COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalPay()), 0);
      END IF;
 
-
+    --№ п.п. строки
+    outLineNum := (SELECT tmp.LineNum
+                   FROM (SELECT MI_Master.Id 
+                              , CAST (ROW_NUMBER() OVER (ORDER BY MI_Master.Id) AS Integer) AS LineNum
+                         FROM MovementItem AS MI_Master
+                         WHERE MI_Master.MovementId = inMovementId
+                           AND MI_Master.DescId     = zc_MI_Master()
+                         ) AS tmp
+                   WHERE tmp.Id = ioId);
 
 END;
 $BODY$
@@ -104,6 +113,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.03.18         *
  18.05.17         *
 */
 
