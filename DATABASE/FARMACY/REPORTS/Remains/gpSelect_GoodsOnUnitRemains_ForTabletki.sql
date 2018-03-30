@@ -1,4 +1,4 @@
--- Function: gpSelect_Movement_Income()
+-- Function: gpSelect_GoodsOnUnitRemains_ForTabletki
 
 DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnitRemains_ForTabletki (Integer, TVarChar);
 
@@ -41,17 +41,39 @@ BEGIN
                 Container.ObjectId
             HAVING
                 SUM(Container.Amount) > 0
-        )
+        ), 
+		Reserve as (
+			SELECT 
+                MovementItem.ObjectId,    
+				SUM(MovementItem.Amount) as ReserveAmount
+            FROM Movement 
+                INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                              ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                             AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                INNER JOIN Object AS Object_Unit  
+                                              ON MovementLinkObject_Unit.ObjectID = Object_Unit.ID
+                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                  AND MovementItem.DescId     = zc_MI_Master()
+                                                  AND MovementItem.isErased   = FALSE
+            WHERE  
+                 Movement.DescId = zc_Movement_Check() 
+				 AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                 AND  MovementLinkObject_Unit.ObjectID = inUnitId
+            GROUP BY MovementItem.ObjectId)
+				
     INSERT INTO _Result(RowData)
     SELECT
-        '<Offer Code="'||CAST(Object_Goods.ObjectCode AS TVarChar)||'" Name="'||replace(replace(replace(Object_Goods.ValueData, '"', ''),'&','&amp;'),'''','')||'" Producer="'||replace(replace(replace(COALESCE(Remains.MakerName,''),'"',''),'&','&amp;'),'''','')||'" Price="'||to_char(Object_Price.Price,'FM9999990.00')||'" Quantity="'||CAST(Remains.Amount AS TVarChar)||'" />'
+        '<Offer Code="'||CAST(Object_Goods.ObjectCode AS TVarChar)||'" Name="'||replace(replace(replace(Object_Goods.ValueData, '"', ''),'&','&amp;'),'''','')||'" Producer="'||replace(replace(replace(COALESCE(Remains.MakerName,''),'"',''),'&','&amp;'),'''','')||'" Price="'||to_char(Object_Price.Price,'FM9999990.00')||'" Quantity="'||CAST((Remains.Amount - coalesce(Reserve_Goods.ReserveAmount, 0)) AS TVarChar)||'" />'
     FROM
         Remains
         INNER JOIN Object AS Object_Goods
                           ON Object_Goods.Id = Remains.ObjectId
         LEFT OUTER JOIN Object_Price_View AS Object_Price
                                           ON Object_Price.GoodsId = Remains.ObjectId
-                                         AND Object_Price.UnitId = inUnitId;
+                                         AND Object_Price.UnitId = inUnitId
+		LEFT OUTER JOIN Reserve AS Reserve_Goods 
+		                                  ON Reserve_Goods.ObjectId = Remains.ObjectId
+	WHERE (Remains.Amount - coalesce(Reserve_Goods.ReserveAmount, 0)) > 0;
     --подвал
     INSERT INTO _Result(RowData) Values ('</Offers>');
         
@@ -67,10 +89,13 @@ ALTER FUNCTION gpSelect_GoodsOnUnitRemains_ForTabletki (Integer, TVarChar) OWNER
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В. 
  15.01.16                                                                       *
+ 29.03.18                                                                                      *
+
 
 */
 
 -- тест
--- SELECT * FROM gpSelect_GoodsOnUnitRemains_ForTabletki (inUnitId := 183292, inSession:= '2')
+-- SELECT * FROM gpSelect_GoodsOnUnitRemains_ForTabletki (inUnitId := 183292, inSession:= '2') (inUnitId := 183292, inSession:= '2')
+
