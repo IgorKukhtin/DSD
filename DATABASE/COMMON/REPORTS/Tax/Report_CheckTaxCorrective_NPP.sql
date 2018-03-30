@@ -27,7 +27,12 @@ BEGIN
     RETURN QUERY
 
       WITH
-      tmpMI_Tax AS (SELECT MovementItem.MovementId
+      -- № п/п строк Налоговой
+      tmpMITax AS (SELECT tmp.Kind, tmp.GoodsId, tmp.GoodsKindId, tmp.Price, tmp.LineNum
+                   FROM lpSelect_TaxFromTaxCorrective (inMovementId) AS tmp
+                  )
+
+    , tmpMI_Tax AS (SELECT MovementItem.MovementId
                          , MIFloat_NPP.ValueData       :: Integer AS LineNum
                          , Object_Goods.Id                        AS GoodsId
                          , Object_Goods.ObjectCode                AS GoodsCode
@@ -60,7 +65,7 @@ BEGIN
                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
-              
+
               WHERE MovementItem.MovementId = inMovementId
                 AND MovementItem.DescId     = zc_MI_Master()
                 AND MovementItem.isErased   = FALSE --tmpIsErased.isErased
@@ -68,7 +73,8 @@ BEGIN
            )
 
     , tmpMI_TaxCorrective AS (SELECT MovementItem.MovementId
-                                   , COALESCE(MIFloat_NPP.ValueData,0)           :: Integer  AS LineNumTax 
+                                   , CASE WHEN COALESCE (MIBoolean_isAuto.ValueData, True) = True THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) ELSE COALESCE(MIFloat_NPP.ValueData,0) END  :: Integer AS LineNumTaxOld
+                                   , CASE WHEN COALESCE (MIBoolean_isAuto.ValueData, True) = True THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) ELSE COALESCE(MIFloat_NPP.ValueData,0) END  :: Integer AS LineNumTax
                         
                                    , COALESCE (MIFloat_NPPTax_calc.ValueData, 0)    :: Integer AS LineNumTaxCorr_calc
                                    , COALESCE (MIFloat_NPP_calc.ValueData, 0)       :: Integer AS LineNumTaxCorr
@@ -107,7 +113,10 @@ BEGIN
                                    LEFT JOIN MovementItemFloat AS MIFloat_NPP
                                                                ON MIFloat_NPP.MovementItemId = MovementItem.Id
                                                               AND MIFloat_NPP.DescId = zc_MIFloat_NPP()
-                       
+                                   LEFT JOIN MovementItemBoolean AS MIBoolean_isAuto
+                                                                 ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_isAuto.DescId = zc_MIBoolean_isAuto()
+
                                    LEFT JOIN MovementItemFloat AS MIFloat_NPPTax_calc
                                                                ON MIFloat_NPPTax_calc.MovementItemId = MovementItem.Id
                                                               AND MIFloat_NPPTax_calc.DescId = zc_MIFloat_NPPTax_calc()
@@ -122,6 +131,15 @@ BEGIN
                                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                    AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                                    LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
+                                   LEFT JOIN tmpMITax AS tmpMITax1 ON tmpMITax1.Kind        = 1
+                                                                  AND tmpMITax1.GoodsId     = Object_Goods.Id
+                                                                  AND tmpMITax1.GoodsKindId = Object_GoodsKind.Id
+                                                                  AND tmpMITax1.Price       = MIFloat_Price.ValueData
+                                   LEFT JOIN tmpMITax AS tmpMITax2 ON tmpMITax2.Kind        = 2
+                                                                  AND tmpMITax2.GoodsId     = Object_Goods.Id
+                                                                  AND tmpMITax2.Price       = MIFloat_Price.ValueData
+                                                                  AND tmpMITax1.GoodsId     IS NULL
                                 WHERE (MovementItem.ObjectId = inGoodsId OR inGoodsId = 0)
                               )
                               
