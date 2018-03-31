@@ -6,7 +6,14 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_TaxCorrective_NPP_calc(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS VOID
+RETURNS TABLE (MovementItemId Integer
+             , GoodsId        Integer
+             , GoodsKindId    Integer
+             , NPPTax_calc    Integer
+             , NPP_calc       Integer
+             , AmountTax_calc TFloat
+             , Amount         TFloat
+              )
 AS
 $BODY$
    DECLARE vbUserId         Integer;
@@ -15,6 +22,43 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_TaxCorrective());
+
+
+     -- !!!Проверка - Можно ли МЕНЯТЬ!!!
+     IF EXISTS (SELECT 1
+                FROM MovementItem
+                     INNER JOIN MovementItemFloat AS MIFloat_NPP_calc
+                                                  ON MIFloat_NPP_calc.MovementItemId = MovementItem.Id
+                                                 AND MIFloat_NPP_calc.DescId         = zc_MIFloat_NPP_calc()
+                                                 AND MIFloat_NPP_calc.ValueData < 0
+                WHERE MovementItem.MovementId = inMovementId
+                  AND MovementItem.DescId     = zc_MI_Master()
+                  AND MovementItem.isErased   = FALSE
+                  AND MovementItem.Amount     <> 0
+               )
+     THEN
+         RAISE EXCEPTION 'Ошибка.В корректировке уже сформированы данные <№ п/п в колонке 1/2строка - для колонки 7 с "плюсом" - формируется в Корректировке по правилу: № п/п + 1>';
+     END IF;
+     -- !!!Проверка - Можно ли МЕНЯТЬ!!!
+     IF NOT EXISTS (SELECT 1
+                    FROM MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                    WHERE MovementLinkObject_DocumentTaxKind.MovementId = inMovementId
+                      AND MovementLinkObject_DocumentTaxKind.DescId     = zc_MovementLinkObject_DocumentTaxKind()
+                      AND MovementLinkObject_DocumentTaxKind.ObjectId   IN (zc_Enum_DocumentTaxKind_Corrective()
+                                                                          , zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalR()
+                                                                          , zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR()
+                                                                          , zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR()
+                                                                          , zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR()
+                                                                           )
+                   )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Для документа <%> выбранная функция не предусмотрена.'
+                       , lfGet_Object_ValueData_sh ((SELECT MovementLinkObject_DocumentTaxKind.ObjectId
+                                                     FROM MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                                                     WHERE MovementLinkObject_DocumentTaxKind.MovementId = inMovementId
+                                                       AND MovementLinkObject_DocumentTaxKind.DescId     = zc_MovementLinkObject_DocumentTaxKind()
+                                                   ));
+     END IF;
 
 
      -- определяется <Налоговый документ> и его параметры
@@ -29,10 +73,14 @@ BEGIN
      ;
 
 
+     -- таблица - Список
+     CREATE TEMP TABLE _tmpRes (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, NPPTax_calc Integer, NPP_calc Integer, AmountTax_calc TFloat, Amount TFloat) ON COMMIT DROP;
+
+
      WITH -- Все корректировки
           tmpMovement AS
              (SELECT MovementLinkMovement_Child.MovementId
-              FROM MovementLinkMovement_Child
+              FROM MovementLinkMovement AS MovementLinkMovement_Child
                    INNER JOIN Movement ON Movement.Id       = MovementLinkMovement_Child.MovementId
                                       AND Movement.StatusId = zc_Enum_Status_Complete()
                                       AND Movement.OperDate <= vbOperDate
@@ -47,6 +95,7 @@ BEGIN
                                                                                                      )
               WHERE MovementLinkMovement_Child.MovementChildId = vbMovementId_tax
                 AND MovementLinkMovement_Child.DescId          = zc_MovementLinkMovement_Child()
+                AND MovementLinkMovement_Child.MovementId      <> inMovementId
              )
           -- ВСЕ корректировки (кроме текущей)
         , tmpMI_All AS
@@ -55,7 +104,7 @@ BEGIN
                    , MovementItem.ObjectId                       AS GoodsId
                    , MovementItem.Amount                         AS Amount
               FROM tmpMovement
-                   INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
+                   INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
                                           AND MovementItem.DescId     = zc_MI_Master()
                                           AND MovementItem.isErased   = FALSE
                                           AND MovementItem.Amount     <> 0
@@ -86,7 +135,7 @@ BEGIN
                      --  № п/п - Что б выбрать !!!ПОСЛЕДНЮЮ!!!
                    , ROW_NUMBER() OVER (PARTITION BY tmpMI_All.GoodsId, MILinkObject_GoodsKind.ObjectId, MIFloat_Price.ValueData ORDER BY MIFloat_NPP_calc.ValueData DESC) AS Ord1
                      --  № п/п - Что б выбрать !!!ПОСЛЕДНЮЮ!!!
-                   , ROW_NUMBER() OVER (PARTITION BY tmpMI_All.GoodsId, MILinkObject_GoodsKind.ObjectId, MIFloat_Price.ValueData ORDER BY MIFloat_NPP_calc.ValueData DESC) AS Ord1
+                   , ROW_NUMBER() OVER (PARTITION BY tmpMI_All.GoodsId, MILinkObject_GoodsKind.ObjectId, MIFloat_Price.ValueData ORDER BY MIFloat_NPP_calc.ValueData DESC) AS Ord2
               FROM tmpMI_All
                    INNER JOIN tmpMIFloat AS MIFloat_NPP_calc
                                          ON MIFloat_NPP_calc.MovementItemId = tmpMI_All.Id
@@ -145,7 +194,7 @@ BEGIN
                    , tmpMI_Corr_curr_all.Price
                    , COALESCE (tmpMI_tax1.Amount_Tax_find, tmpMI_tax2.Amount_Tax_find) AS AmountTax_calc
                    , CASE WHEN tmpMI_Corr_curr_all.NPP = 0 THEN COALESCE (tmpMI_tax1.LineNum, tmpMI_tax2.LineNum) ELSE tmpMI_Corr_curr_all.NPP END :: Integer AS NPP
-                     --  № п/п - Что б увеличить счетчик на + 1
+                     -- № п/п - Что б увеличить счетчик на + 1
                    , ROW_NUMBER() OVER (ORDER BY CASE WHEN tmpMI_Corr_curr_all.NPP = 0 THEN COALESCE (tmpMI_tax1.LineNum, tmpMI_tax2.LineNum) ELSE tmpMI_Corr_curr_all.NPP END ASC) AS Ord
               FROM tmpMI_Corr_curr_all
                    -- номера строк в НН
@@ -153,29 +202,81 @@ BEGIN
                                                     AND tmpMI_tax1.GoodsId     = tmpMI_Corr_curr_all.GoodsId
                                                     AND tmpMI_tax1.GoodsKindId = tmpMI_Corr_curr_all.GoodsKindId
                                                     AND tmpMI_tax1.Price       = tmpMI_Corr_curr_all.Price
-       
+
                    LEFT JOIN tmpMI_tax AS tmpMI_tax2 ON tmpMI_tax2.Kind        = 2
                                                     AND tmpMI_tax2.GoodsId     = tmpMI_Corr_curr_all.GoodsId
                                                     AND tmpMI_tax2.Price       = tmpMI_Corr_curr_all.Price
                                                     AND tmpMI_tax1.GoodsId     IS NULL
              )
+          -- Результат
+        , tmpMI_Data AS
+             (SELECT tmpMI_Corr_curr.Id AS MovementItemId
+                   , tmpMI_Corr_curr.GoodsId
+                   , tmpMI_Corr_curr.GoodsKindId
+                     -- № п/п в колонке 1/1строка - для колонки 7 с "минусом"
+                   , COALESCE (tmpMI_Corr_all1.NPP_calc  -- № п/п в последней корр
+                             , tmpMI_Corr_all2.NPP_calc  -- № п/п в последней корр - БЕЗ GoodsKindId
+                             , tmpMI_Corr_curr.NPP       -- № п/п в налоговой
+                              ) :: Integer AS NPPTax_calc
+                     -- Кол-во для НН в колонке 7/1строка
+                   , COALESCE (tmpMI_Corr_all1.AmountTax_calc - tmpMI_Corr_all1.Amount  -- кол-во в последней корр МИНУС какая там корр.
+                             , tmpMI_Corr_all2.AmountTax_calc - tmpMI_Corr_all2.Amount  -- кол-во в последней корр МИНУС какая там корр. - БЕЗ GoodsKindId
+                             , tmpMI_Corr_curr.AmountTax_calc                           -- кол-во в налоговой
+                              ) :: TFloat AS AmountTax_calc
+                     -- № п/п в ТЕКУЩЕЙ корректировка - Что б увеличить счетчик на + 1
+                   , tmpMI_Corr_curr.Ord                 
+                     -- Кол-во в ТЕКУЩЕЙ корректировка
+                   , tmpMI_Corr_curr.Amount
+       
+              FROM tmpMI_Corr_curr
+                   LEFT JOIN tmpMI_Corr_all AS tmpMI_Corr_all1 ON tmpMI_Corr_all1.GoodsId     = tmpMI_Corr_curr.GoodsId
+                                                              AND tmpMI_Corr_all1.GoodsKindId = tmpMI_Corr_curr.GoodsKindId
+                                                              AND tmpMI_Corr_all1.Price       = tmpMI_Corr_curr.Price
+                                                              AND tmpMI_Corr_all1.Ord1        = 1 -- т.е. по всем св-вам
+                   LEFT JOIN tmpMI_Corr_all AS tmpMI_Corr_all2 ON tmpMI_Corr_all2.GoodsId     = tmpMI_Corr_curr.GoodsId
+                                                              AND tmpMI_Corr_all2.Price       = tmpMI_Corr_curr.Price
+                                                              AND tmpMI_Corr_all2.Ord2        = 2 -- т.е. по св-вам БЕЗ GoodsKindId
+             )
+     -- сохранили
+     INSERT INTO _tmpRes (MovementItemId, GoodsId, GoodsKindId, NPPTax_calc, NPP_calc, AmountTax_calc, Amount)
+       SELECT tmpMI_Data.MovementItemId
+            , tmpMI_Data.GoodsId
+            , tmpMI_Data.GoodsKindId
+              -- № п/п в колонке 1/1строка - для колонки 7 с "минусом"
+            , tmpMI_Data.NPPTax_calc
+              -- № п/п в колонке 1/2строка - для колонки 7 с "плюсом" - формируется в Корректировке по правилу: № п/п + 1
+            , (COALESCE ((SELECT MAX (tmp.NPP) FROM (SELECT MAX (tmpMI_Data.NPPTax_calc) AS NPP FROM tmpMI_Data UNION ALL SELECT MAX (tmpMI_tax.LineNum) AS NPP FROM tmpMI_tax) AS tmp), 0)
+             + tmpMI_Data.Ord                 -- № п/п - Что б увеличить счетчик на + 1
+              ) :: Integer AS NPP_calc
+              -- Кол-во для НН в колонке 7/1строка
+            , tmpMI_Data.AmountTax_calc
+              -- Кол-во в ТЕКУЩЕЙ корректировка
+            , tmpMI_Data.Amount
+
+       FROM tmpMI_Data;
 
 
      -- сохранили
-     SELECT tmpMI_Corr_curr.Id AS MovementItemId
-            -- № п/п в колонке 1/1строка - для колонки 7 с "минусом" 
-          , AS NPPTax_calc
-            -- № п/п в колонке 1/2строка - для колонки 7 с "плюсом" - формируется в Корректировке по правилу: № п/п + 1 
-          , AS NPPTax_calc
-            -- Кол-во для НН в колонке 7/1строка 
-          , AS NPPTax_calc
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPPTax_calc(),    _tmpRes.MovementItemId, _tmpRes.NPPTax_calc)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountTax_calc(), _tmpRes.MovementItemId, _tmpRes.AmountTax_calc)
+             -- !!!важно - сохранили ТОЛЬКО если есть еще что возвращать!!!
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPP_calc(),       _tmpRes.MovementItemId, CASE WHEN _tmpRes.AmountTax_calc > _tmpRes.Amount THEN _tmpRes.NPP_calc ELSE 0 END)
+     FROM _tmpRes;
 
-     FROM tmpMI_Corr_curr
-          LEFT tmpMI_Corr_all AS tmpMI_Corr_all1 ON tmpMI_Corr_all1.GoodsId     = tmpMI_Corr_curr.GoodsId
-                                                AND tmpMI_Corr_all1.GoodsKindId = tmpMI_Corr_curr.GoodsKindId
-                                                AND tmpMI_Corr_all1.Price       = tmpMI_Corr_curr.Price
-          LEFT tmpMI_Corr_all AS tmpMI_Corr_all2 ON tmpMI_Corr_all2.GoodsId     = tmpMI_Corr_curr.GoodsId
-                                                AND tmpMI_Corr_all2.Price       = tmpMI_Corr_curr.Price
+
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+
+     -- сохранили протокол
+     PERFORM lpInsert_MovementItemProtocol (_tmpRes.MovementItemId, vbUserId, FALSE)
+     FROM _tmpRes;
+
+     
+     -- Результат
+     RETURN;
+     -- Результат
+     RETURN QUERY
+       SELECT _tmpRes.MovementItemId, _tmpRes.GoodsId, _tmpRes.GoodsKindId, _tmpRes.NPPTax_calc, _tmpRes.NPP_calc, _tmpRes.AmountTax_calc, _tmpRes.Amount FROM _tmpRes;
 
 
 END;
@@ -185,8 +286,22 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 15.12.15         *
+ 30.03.18                                        *
 */
-
+/*
+ SELECT DISTINCT Movement.*
+ FROM Movement 
+      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                             AND MovementItem.DescId     = zc_MI_Master()
+                             AND MovementItem.isErased   = FALSE
+                             AND MovementItem.Amount     <> 0
+      INNER JOIN MovementItemFloat AS MIFloat_NPP_calc
+                                   ON MIFloat_NPP_calc.MovementItemId = MovementItem.Id
+                                  AND MIFloat_NPP_calc.DescId         = zc_MIFloat_NPP_calc()
+                                  AND MIFloat_NPP_calc.ValueData      > 0
+ WHERE Movement.OperDate >= '01.03.2018'
+   AND Movement.DescId   = zc_Movement_TaxCorrective()
+   AND Movement.StatusId = zc_Enum_Status_Complete()
+*/
 -- тест
--- SELECT * FROM gpUpdate_MI_TaxCorrective_NPP_calc
+-- SELECT * FROM gpUpdate_MI_TaxCorrective_NPP_calc (inMovementId:= -8616346, inSession:= zfCalc_UserAdmin())
