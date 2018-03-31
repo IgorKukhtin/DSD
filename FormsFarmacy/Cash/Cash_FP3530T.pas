@@ -7,6 +7,8 @@ type
   private
     Table: TTable;
     FAlwaysSold: boolean;
+    FisFiscal: boolean;
+    FLengNoFiscalText : integer;
     procedure SetAlwaysSold(Value: boolean);
     function GetAlwaysSold: boolean;
   protected
@@ -42,7 +44,7 @@ type
 
 
 implementation
-uses Forms, SysUtils, Dialogs, Math, Variants, BDE;
+uses Forms, SysUtils, Dialogs, Math, Variants, BDE, RegularExpressions;
 
 type
   RetData = record
@@ -87,6 +89,9 @@ function    DeleteArticle(hWin:HWND; fun:TMathFunc; par:LPARAM; cod:integer; pas
 function    ChangeArticlePrice(hWin:HWND; fun:TMathFunc; par:LPARAM; cod:integer;sena:Double; pass:LPSTR):integer; stdcall  ;external 'fpl.dll' name 'ChangeArticlePrice';
 function    GetArticleInfo(hWin:HWND; fun:TMathFunc; par:LPARAM; cod:integer):integer; stdcall  ;external 'fpl.dll' name 'GetArticleInfo';
 function    SetDateTime(hWin: HWND; fun: TMathFunc; par: LPARAM; n1, n2: LPSTR): integer; stdcall; external 'fpl.dll' name 'SetDateTime';
+
+function    OpenNonfiscalReceipt(hWin:HWND; fun:TMathFunc; par:LPARAM):integer; stdcall; external 'fpl.dll' name 'OpenNonfiscalReceipt';
+function    CloseNonfiscalReceipt(hWin:HWND; fun:TMathFunc; par:LPARAM):integer; stdcall; external 'fpl.dll' name 'CloseNonfiscalReceipt';
 
   CONST
 
@@ -192,6 +197,7 @@ begin
   FAlwaysSold:=false;
   InitFPport(1, 19200);
   SetDecimals(2);
+  FLengNoFiscalText := 35;
   Table:= TTable.Create(nil);
   Table.TableName:='CashAttachment.db';
   Table.Open;
@@ -215,7 +221,8 @@ begin
     while s=0 do Application.ProcessMessages;
 
     s:=0;
-    CloseFiscalReceipt(0, PrinterResults, 0);
+    if FisFiscal then CloseFiscalReceipt(0, PrinterResults, 0)
+    else CloseNonfiscalReceipt(0, PrinterResults, 0);
     while s=0 do Application.ProcessMessages;
 
   except
@@ -244,7 +251,8 @@ begin
     status:= 0;
     if FAlwaysSold then exit;
     s:=0;
-    OpenFiscalReceipt(0, PrinterResults, 0, 1,'0000',0, true);
+    if FisFiscal then OpenFiscalReceipt(0, PrinterResults, 0, 1,'0000',0, true)
+    else OpenNonfiscalReceipt(0, PrinterResults, 0);
     while s=0 do Application.ProcessMessages;
 
     s:=0;
@@ -301,6 +309,9 @@ end;
 function TCashFP3530T.SoldFromPC(const GoodsCode: integer; const GoodsName: string; const Amount, Price, NDS: double): boolean;
 var NDSType: char;
     CashCode: integer;
+    I : Integer;
+    L : string;
+    Res: TArray<string>;
 begin
   result := true;
   try
@@ -308,6 +319,39 @@ begin
     status:= 0;
     result:= true;
     if FAlwaysSold then exit;
+
+      // печать нефискального чека
+    if not FisFiscal then
+    begin
+
+      L := '';
+      Res := TRegEx.Split(GoodsName, ' ');
+      for I := 0 to High(Res) do
+      begin
+        if L <> '' then L := L + ' ';
+        L := L + Res[i];
+        if (I < High(Res)) and (Length(L + Res[i]) > FLengNoFiscalText) then
+        begin
+          if not PrintNotFiscalText(L) then Exit;
+          L := '';
+        end;
+        if I = High(Res) then
+        begin
+          if (Length(L + FormatCurr('0.000', Amount)) + 3) >= FLengNoFiscalText then
+          begin
+            if not PrintNotFiscalText(L) then Exit;;
+            L := StringOfChar(' ' , FLengNoFiscalText - Length(FormatCurr('0.000', Amount)) - 1) + FormatCurr('0.000', Amount);
+            if not PrintNotFiscalText(L) then Exit;
+          end else
+          begin
+            L := L + StringOfChar(' ' , FLengNoFiscalText - Length(L + FormatCurr('0.000', Amount)) - 1) + FormatCurr('0.000', Amount);
+            if not PrintNotFiscalText(L) then Exit;
+          end;
+        end;
+      end;
+
+      Exit;
+    end;
 
     // найти в таблице соответсвий
     if Table.Locate('GoodsCode;Price',VarArrayOf([GoodsCode, Price]),[]) then begin
@@ -349,6 +393,7 @@ function TCashFP3530T.ProgrammingGoods(const GoodsCode: integer;
 var NDSType: Ansichar;
 begin
   result := true;
+  if not FisFiscal then Exit;
   try
     status:= 0;
     if NDS=0 then NDSType:='Б' else NDSType:='А';

@@ -277,6 +277,7 @@ BEGIN
                  -- или Это регион "пусто" - тогда ищем в регионе zc_Area_Basis
               OR (vbAreaId_find = 0 AND ObjectLink_Goods_Area.ChildObjectId = zc_Area_Basis())
                 )
+            AND ObjectLink_LinkGoods_GoodsMain.ChildObjectId IN (SELECT Object.id FROM Object WHERE iserased = False)
     )            
     UPDATE tblJSON
     SET GoodsID = tmpGoodsCode.GoodsID,
@@ -346,6 +347,7 @@ BEGIN
     
     -- добавляем новое
     INSERT INTO LoadPriceListItem (LoadPriceListId, CommonCode, BarCode, CodeUKTZED, GoodsCode, GoodsName, GoodsNDS, GoodsId, Price, PriceOriginal, ExpirationDate, PackCount, ProducerName)
+    /*
     SELECT LoadPriceListId, inCommonCode, inBarCode, inCodeUKTZED, inGoodsCode, inGoodsName, inGoodsNDS, GoodsId, inPrice, PriceOriginal, inExpirationDate, inPackCount, inProducerName
     FROM
     (
@@ -356,7 +358,13 @@ BEGIN
         FROM tblJSON
         WHERE COALESCE (inPrice, 0) <> 0 AND NOT EXISTS(SELECT * FROM LoadPriceListItem WHERE LoadPriceListId = vbLoadPriceListId AND GoodsCode = inGoodsCode)
     ) T
-    WHERE RN = 1;    
+    WHERE RN = 1;   
+    */  
+    SELECT 
+        vbLoadPriceListId as LoadPriceListId, inCommonCode, COALESCE(inBarCode, '') as inBarCode, COALESCE(inCodeUKTZED, '') as inCodeUKTZED, inGoodsCode, inGoodsName, inGoodsNDS, GoodsId, 
+        inPrice, PriceOriginal, inExpirationDate, COALESCE(inPackCount, '') as inPackCount, COALESCE(inProducerName, '') as inProducerName
+    FROM tblJSON
+    WHERE COALESCE (inPrice, 0) <> 0 AND NOT EXISTS(SELECT * FROM LoadPriceListItem WHERE LoadPriceListId = vbLoadPriceListId AND GoodsCode = inGoodsCode);    
     
 END;
 $BODY$
