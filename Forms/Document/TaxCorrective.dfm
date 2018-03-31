@@ -3,7 +3,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   ClientHeight = 668
   ClientWidth = 1114
   ExplicitWidth = 1130
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -246,7 +246,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
     end
     object cxTabSheet1: TcxTabSheet
-      Caption = #8470' '#1087'/'#1087
+      Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#8470' '#1087'/'#1087
       ImageIndex = 1
       object cxGrid1: TcxGrid
         Left = 0
@@ -1066,6 +1066,12 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         end
         item
           StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectChild
+        end
+        item
+          StoredProc = spGetTotalSumm
         end>
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#8470' '#1087'/'#1087' '#1044#1051#1071' '#1082#1086#1083#1086#1085#1082#1080' 1/2'#1089#1090#1088#1086#1082#1072
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#8470' '#1087'/'#1087' '#1044#1051#1071' '#1082#1086#1083#1086#1085#1082#1080' 1/2'#1089#1090#1088#1086#1082#1072

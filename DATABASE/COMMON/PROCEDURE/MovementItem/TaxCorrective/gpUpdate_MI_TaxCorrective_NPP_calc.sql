@@ -271,6 +271,13 @@ BEGIN
      PERFORM lpInsert_MovementItemProtocol (_tmpRes.MovementItemId, vbUserId, FALSE)
      FROM _tmpRes;
 
+
+     -- сохранили протокол
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_NPP_calc(), inMovementId, TRUE)
+           , lpInsertUpdate_MovementDate    (zc_MovementDate_NPP_calc(),    inMovementId, CURRENT_TIMESTAMP)
+           ;
+
+
      
      -- Результат
      RETURN;
