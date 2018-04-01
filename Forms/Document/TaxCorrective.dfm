@@ -3,7 +3,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   ClientHeight = 668
   ClientWidth = 1114
   ExplicitWidth = 1130
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -724,22 +724,22 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Width = 73
     end
     object cxLabel16: TcxLabel
-      Left = 293
+      Left = 189
       Top = 86
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 293
+      Left = 189
       Top = 103
       TabOrder = 33
-      Width = 467
+      Width = 261
     end
     object edINN: TcxTextEdit
       Left = 767
       Top = 103
       Properties.ReadOnly = True
       TabOrder = 34
-      Width = 132
+      Width = 119
     end
     object cxLabel14: TcxLabel
       Left = 767
@@ -747,7 +747,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Caption = #1048#1053#1053' '#1076#1083#1103' '#1042#1089#1077#1093' '#1080#1083#1080' 1-'#1086#1075#1086' '#1076#1086#1082'.'
     end
     object cbINN: TcxCheckBox
-      Left = 901
+      Left = 895
       Top = 103
       Hint = #1048#1053#1053' '#1080#1089#1087#1088#1072#1074#1083#1077#1085' '#1076#1083#1103' 1-'#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
       ParentShowHint = False
@@ -757,12 +757,15 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Width = 24
     end
     object cbNPP_calc: TcxCheckBox
-      Left = 116
+      Left = 460
       Top = 103
-      Caption = #8470' '#1087'/'#1087
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '#8470' '#1087'/'#1087' ('#1076#1072'/'#1085#1077#1090')'
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '#8470' '#1087'/'#1087
+      ParentShowHint = False
       Properties.ReadOnly = True
+      ShowHint = True
       TabOrder = 37
-      Width = 67
+      Width = 142
     end
   end
   object cbPartner: TcxCheckBox [2]
@@ -774,19 +777,26 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Width = 102
   end
   object cxLabel17: TcxLabel [3]
-    Left = 189
+    Left = 642
     Top = 86
-    Caption = #1044#1072#1090#1072' '#8470' '#1087'/'#1087
+    Hint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1103' '#8470' '#1087'/'#1087
+    Caption = #1044#1072#1090#1072'/'#1042#1088'. '#8470' '#1087'/'#1087
+    ParentShowHint = False
+    ShowHint = True
   end
   object edDateisNPP_calc: TcxDateEdit [4]
-    Left = 189
+    Left = 642
     Top = 103
+    Hint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1103' '#8470' '#1087'/'#1087
     EditValue = 42342d
+    ParentShowHint = False
+    Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+    Properties.EditFormat = 'dd.mm.yyyy hh:mm'
+    Properties.Kind = ckDateTime
     Properties.ReadOnly = True
-    Properties.SaveTime = False
-    Properties.ShowTime = False
+    ShowHint = True
     TabOrder = 8
-    Width = 97
+    Width = 118
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -2489,7 +2499,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 912
+    Left = 936
     Top = 56
   end
   object HeaderSaverDocChild: THeaderSaver

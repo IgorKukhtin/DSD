@@ -59,7 +59,7 @@ BEGIN
              , CAST (False as Boolean)              AS isElectron
              , inOperDate                           AS DateisElectron
              , CAST (False as Boolean)              AS isNPP_calc
-             , NULL :: TDateTime                    AS DateisNPP_calc
+             , CURRENT_TIMESTAMP       :: TDateTime AS DateisNPP_calc
              , CAST (False as Boolean)              AS PriceWithVAT
              , CAST (TaxPercent_View.Percent as TFloat) AS VATPercent
              , CAST (0 as TFloat)                   AS TotalCount
@@ -135,8 +135,8 @@ BEGIN
            , COALESCE (MovementDate_DateRegistered.ValueData,Movement.OperDate) AS DateisElectron
 
            , COALESCE (MovementBoolean_NPP_calc.ValueData, FALSE) ::Boolean AS isNPP_calc
-           , COALESCE (MovementDate_NPP_calc.ValueData, Null) :: TDateTime  AS DateisNPP_calc
-           
+           , COALESCE (MovementDate_NPP_calc.ValueData, CURRENT_TIMESTAMP) :: TDateTime  AS DateisNPP_calc
+          
            , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)       AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData                             AS VATPercent
            , MovementFloat_TotalCount.ValueData                             AS TotalCount

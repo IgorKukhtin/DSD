@@ -64,7 +64,7 @@ BEGIN
              , 0 AS PositionId -- не используется
 
                -- Филиал Баланс: !!!определяется Филиал по Пользователю!!!, иначе всегда на Главном филиале
-             , vbBranchId_Member
+             , CASE WHEN inMovementId = 8869232 /*3810 - 31.03.2018 - Івденко Андрій Леонідович*/ THEN 0 ELSE vbBranchId_Member END
                -- Филиал ОПиУ: не используется
              , 0 AS BranchId_ProfitLoss
 

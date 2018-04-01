@@ -5,7 +5,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog1
   ExplicitWidth = 1134
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -106,7 +106,29 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
-          object IsError: TcxGridDBColumn [1]
+          object isNPP_calc: TcxGridDBColumn [1]
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'isNPP_calc'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '#8470' '#1087'/'#1087' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 40
+          end
+          object DateisNPP_calc: TcxGridDBColumn [2]
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#8470' '#1087'/'#1087
+            DataBinding.FieldName = 'DateisNPP_calc'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+            Properties.EditFormat = 'dd.mm.yyyy hh:mm'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1103' '#8470' '#1087'/'#1087
+            Options.Editing = False
+            Width = 65
+          end
+          object IsError: TcxGridDBColumn [3]
             Caption = #1054#1096#1080#1073#1082#1072
             DataBinding.FieldName = 'isError'
             Visible = False
@@ -114,18 +136,18 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object BranchName: TcxGridDBColumn [2]
+          object BranchName: TcxGridDBColumn [4]
             Caption = #1060#1080#1083#1080#1072#1083
             DataBinding.FieldName = 'BranchName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          inherited colOperDate: TcxGridDBColumn [3]
+          inherited colOperDate: TcxGridDBColumn [5]
             HeaderAlignmentHorz = taCenter
             Width = 50
           end
-          inherited colInvNumber: TcxGridDBColumn [4]
+          inherited colInvNumber: TcxGridDBColumn [6]
             Caption = #8470' '#1076#1086#1082'.'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -399,25 +421,6 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             DataBinding.FieldName = 'IsMedoc'
             HeaderAlignmentVert = vaCenter
             Width = 46
-          end
-          object isNPP_calc: TcxGridDBColumn
-            Caption = #8470' '#1087'/'#1087
-            DataBinding.FieldName = 'isNPP_calc'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #8470' '#1087'/'#1087' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085
-            Options.Editing = False
-            Width = 40
-          end
-          object DateisNPP_calc: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#8470' '#1087'/'#1087
-            DataBinding.FieldName = 'DateisNPP_calc'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1103' '#8470' '#1087'/'#1087
-            Options.Editing = False
-            Width = 65
           end
           object DocumentValue: TcxGridDBColumn
             DataBinding.FieldName = 'DocumentValue'
