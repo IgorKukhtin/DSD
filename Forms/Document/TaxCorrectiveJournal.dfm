@@ -5,7 +5,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog1
   ExplicitWidth = 1134
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -399,6 +399,25 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             DataBinding.FieldName = 'IsMedoc'
             HeaderAlignmentVert = vaCenter
             Width = 46
+          end
+          object isNPP_calc: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'isNPP_calc'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1087'/'#1087' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085
+            Options.Editing = False
+            Width = 40
+          end
+          object DateisNPP_calc: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#8470' '#1087'/'#1087
+            DataBinding.FieldName = 'DateisNPP_calc'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1103' '#8470' '#1087'/'#1087
+            Options.Editing = False
+            Width = 65
           end
           object DocumentValue: TcxGridDBColumn
             DataBinding.FieldName = 'DocumentValue'
@@ -1275,6 +1294,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 26
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object ExecuteDialogINN: TExecuteDialog
@@ -1314,6 +1334,48 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Caption = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1048#1053#1053' '#1076#1083#1103' 1-'#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1048#1053#1053' '#1076#1083#1103' 1-'#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 76
+    end
+    object actChangeNPP_calc: TdsdExecStoredProc
+      Category = 'NPP'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMI_NPP_calc
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMI_NPP_calc
+        end>
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#8470' '#1087'/'#1087' '#1044#1051#1071' '#1082#1086#1083#1086#1085#1082#1080' 1/2'#1089#1090#1088#1086#1082#1072
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#8470' '#1087'/'#1087' '#1044#1051#1071' '#1082#1086#1083#1086#1085#1082#1080' 1/2'#1089#1090#1088#1086#1082#1072
+      ImageIndex = 45
+    end
+    object macChangeNPP: TMultiAction
+      Category = 'NPP'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actChangeNPP_calc
+        end>
+      View = cxGridDBTableView
+      Caption = 'macChangeNPP'
+      ImageIndex = 45
+    end
+    object macChangeNPP_Calc: TMultiAction
+      Category = 'NPP'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macChangeNPP
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1080' '#1076#1083#1103' '#1042#1057#1045#1061' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1086#1082' '#8470' '#1087'/'#1087' '#1044#1051#1071' '#1082#1086#1083#1086#1085 +
+        #1082#1080' 1/2'#1089#1090#1088#1086#1082#1072'?'
+      InfoAfterExecute = #8470#8470' '#1087'/'#1087' '#1044#1051#1071' '#1082#1086#1083#1086#1085#1082#1080' 1/2'#1089#1090#1088#1086#1082#1072' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1083#1103' '#1042#1057#1045#1061' '#8470' '#1087'/'#1087' '#1044#1051#1071' '#1082#1086#1083#1086#1085#1082#1080' 1/2'#1089#1090#1088#1086#1082#1072
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1083#1103' '#1042#1057#1045#1061' '#8470' '#1087'/'#1087' '#1044#1051#1071' '#1082#1086#1083#1086#1085#1082#1080' 1/2'#1089#1090#1088#1086#1082#1072
+      ImageIndex = 45
     end
   end
   inherited MasterDS: TDataSource
@@ -1471,6 +1533,14 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbDocument'
         end
         item
@@ -1615,6 +1685,10 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     end
     object bbUpdateINN: TdxBarButton
       Action = macUpdateINN
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = macChangeNPP_Calc
       Category = 0
     end
   end
@@ -2137,5 +2211,22 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     PackSize = 1
     Left = 906
     Top = 216
+  end
+  object spUpdateMI_NPP_calc: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_TaxCorrective_NPP_calc'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 920
+    Top = 297
   end
 end

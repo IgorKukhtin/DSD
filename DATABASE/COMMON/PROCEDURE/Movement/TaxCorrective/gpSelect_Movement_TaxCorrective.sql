@@ -33,6 +33,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , isINN Boolean
              , Comment TVarChar
              , PersonalSigningName TVarChar
+             , isNPP_calc Boolean, DateisNPP_calc TDateTime
               )
 AS
 $BODY$
@@ -158,6 +159,9 @@ BEGIN
 
            , COALESCE (Object_PersonalSigning.PersonalName, COALESCE (Object_PersonalBookkeeper_View.PersonalName, ''))  ::TVarChar    AS PersonalSigningName
 
+           , COALESCE (MovementBoolean_NPP_calc.ValueData, FALSE) ::Boolean AS isNPP_calc
+           , COALESCE (MovementDate_NPP_calc.ValueData, Null) :: TDateTime  AS DateisNPP_calc
+
        FROM (SELECT Movement.Id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate AND Movement.DescId = zc_Movement_TaxCorrective() AND Movement.StatusId = tmpStatus.StatusId
@@ -186,6 +190,14 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Document
                                       ON MovementBoolean_Document.MovementId =  Movement.Id
                                      AND MovementBoolean_Document.DescId = zc_MovementBoolean_Document()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_NPP_calc
+                                      ON MovementBoolean_NPP_calc.MovementId = Movement.Id
+                                     AND MovementBoolean_NPP_calc.DescId = zc_MovementBoolean_NPP_calc()
+
+            LEFT JOIN MovementDate AS MovementDate_NPP_calc
+                                   ON MovementDate_NPP_calc.MovementId =  Movement.Id
+                                  AND MovementDate_NPP_calc.DescId = zc_MovementDate_NPP_calc()
 
             LEFT JOIN MovementDate AS MovementDate_DateRegistered
                                    ON MovementDate_DateRegistered.MovementId =  Movement.Id
