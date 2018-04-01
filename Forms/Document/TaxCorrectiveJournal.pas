@@ -126,6 +126,11 @@ type
     ExecuteDialogINN: TExecuteDialog;
     macUpdateINN: TMultiAction;
     bbUpdateINN: TdxBarButton;
+    spUpdateMI_NPP_calc: TdsdStoredProc;
+    actChangeNPP_calc: TdsdExecStoredProc;
+    macChangeNPP: TMultiAction;
+    macChangeNPP_Calc: TMultiAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

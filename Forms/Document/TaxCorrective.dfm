@@ -246,7 +246,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
     end
     object cxTabSheet1: TcxTabSheet
-      Caption = #8470' '#1087'/'#1087
+      Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#8470' '#1087'/'#1087
       ImageIndex = 1
       object cxGrid1: TcxGrid
         Left = 0
@@ -724,15 +724,15 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Width = 73
     end
     object cxLabel16: TcxLabel
-      Left = 189
+      Left = 293
       Top = 86
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 189
+      Left = 293
       Top = 103
       TabOrder = 33
-      Width = 571
+      Width = 467
     end
     object edINN: TcxTextEdit
       Left = 767
@@ -743,7 +743,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     end
     object cxLabel14: TcxLabel
       Left = 767
-      Top = 85
+      Top = 86
       Caption = #1048#1053#1053' '#1076#1083#1103' '#1042#1089#1077#1093' '#1080#1083#1080' 1-'#1086#1075#1086' '#1076#1086#1082'.'
     end
     object cbINN: TcxCheckBox
@@ -756,6 +756,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       TabOrder = 36
       Width = 24
     end
+    object cbNPP_calc: TcxCheckBox
+      Left = 116
+      Top = 103
+      Caption = #8470' '#1087'/'#1087
+      Properties.ReadOnly = True
+      TabOrder = 37
+      Width = 67
+    end
   end
   object cbPartner: TcxCheckBox [2]
     Left = 8
@@ -764,6 +772,21 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Properties.ReadOnly = True
     TabOrder = 6
     Width = 102
+  end
+  object cxLabel17: TcxLabel [3]
+    Left = 189
+    Top = 86
+    Caption = #1044#1072#1090#1072' '#8470' '#1087'/'#1087
+  end
+  object edDateisNPP_calc: TcxDateEdit [4]
+    Left = 189
+    Top = 103
+    EditValue = 42342d
+    Properties.ReadOnly = True
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 8
+    Width = 97
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -1066,6 +1089,15 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         end
         item
           StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectChild
+        end
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spGetTotalSumm
         end>
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#8470' '#1087'/'#1087' '#1044#1051#1071' '#1082#1086#1083#1086#1085#1082#1080' 1/2'#1089#1090#1088#1086#1082#1072
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#8470' '#1087'/'#1087' '#1044#1051#1071' '#1082#1086#1083#1086#1085#1082#1080' 1/2'#1089#1090#1088#1086#1082#1072
@@ -1760,6 +1792,20 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = edINN
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isNPP_calc'
+        Value = Null
+        Component = cbNPP_calc
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DateisNPP_calc'
+        Value = 'NULL'
+        Component = edDateisNPP_calc
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 40
     Top = 328
@@ -2267,8 +2313,8 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     IdParam.Value = Null
     IdParam.MultiSelectSeparator = ','
     ComponentList = <>
-    Left = 496
-    Top = 96
+    Left = 392
+    Top = 88
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

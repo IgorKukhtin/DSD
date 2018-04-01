@@ -70,6 +70,8 @@ $BODY$
   DECLARE vbCurrencyPartnerValue TFloat;
   DECLARE vbParPartnerValue TFloat;
 
+  DECLARE vbIsNPP_calc Boolean;
+
 BEGIN
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -140,24 +142,45 @@ BEGIN
       WHERE Movement.Id = inMovementId;
 
 
+     -- !!!надо ОПРЕДЕЛИТЬ - НОВАЯ схема для TaxCorrective с 30.03.18!!!
+     IF vbMovementDescId = zc_Movement_TaxCorrective()
+     THEN
+         -- !!!ОПРЕДЕЛИЛИ!!!
+         vbIsNPP_calc:= EXISTS (SELECT 1
+                                FROM MovementItem
+                                     INNER JOIN MovementItemFloat AS MIFloat_NPP_calc
+                                                                  ON MIFloat_NPP_calc.MovementItemId = MovementItem.Id
+                                                                 AND MIFloat_NPP_calc.DescId         = zc_MIFloat_NPP_calc()
+                                                                 AND MIFloat_NPP_calc.ValueData      > 0
+                                WHERE MovementItem.MovementId = inMovementId
+                                  AND MovementItem.DescId     = zc_MI_Master()
+                                  AND MovementItem.isErased   = FALSE
+                                  AND MovementItem.Amount     <> 0
+                               );
+     ELSE
+         vbIsNPP_calc:= FALSE;
+     END IF;
+
+
      -- !!!надо определить - есть ли скидка в цене!!!
      IF vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal())
      THEN
-     vbIsChangePrice:= vbPaidKindId <> zc_Enum_PaidKind_SecondForm()
-                    OR ((vbDiscountPercent > 0 OR vbExtraChargesPercent > 0)
-                        AND EXISTS (SELECT 1
-                                    FROM MovementItem
-                                         LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
-                                                                     ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
-                                                                    AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
-                                    WHERE MovementItem.MovementId = inMovementId
-                                      AND MovementItem.DescId = zc_MI_Master()
-                                      AND MovementItem.isErased = FALSE
-                                      AND COALESCE (MIFloat_ChangePercent.ValueData, 0) = 0
-                                   ));
+         vbIsChangePrice:= vbPaidKindId <> zc_Enum_PaidKind_SecondForm()
+                        OR ((vbDiscountPercent > 0 OR vbExtraChargesPercent > 0)
+                            AND EXISTS (SELECT 1
+                                        FROM MovementItem
+                                             LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                                         ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                                        AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+                                        WHERE MovementItem.MovementId = inMovementId
+                                          AND MovementItem.DescId = zc_MI_Master()
+                                          AND MovementItem.isErased = FALSE
+                                          AND COALESCE (MIFloat_ChangePercent.ValueData, 0) = 0
+                                       ));
      ELSE
-     vbIsChangePrice:= vbPaidKindId = zc_Enum_PaidKind_FirstForm();
+         vbIsChangePrice:= vbPaidKindId = zc_Enum_PaidKind_FirstForm();
      END IF;
+
 
      -- Перевод Итоговых сумм в валюту (если надо)
      SELECT
@@ -250,7 +273,7 @@ BEGIN
           , OperSumm_Phone
           , OperSumm_NalogRet
           , OperSumm_NalogRetRecalc
-          
+
             INTO vbOperCount_Master, vbOperCount_Child, vbOperCount_Partner, vbOperCount_Second, vbOperCount_Tare, vbOperCount_Sh, vbOperCount_Kg, vbOperCount_ShFrom, vbOperCount_KgFrom
                , vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_PVAT_original, vbOperSumm_Partner, vbOperSumm_PartnerFrom, vbOperSumm_Currency
                , vbOperCount_Packer, vbOperSumm_Packer, vbOperSumm_Inventory
@@ -259,591 +282,715 @@ BEGIN
                , vbTotalSummChild, vbTotalSummChildRecalc, vbTotalSummMinusExt, vbTotalSummMinusExtRecalc
                , vbTotalSummTransport, vbTotalSummTransportAdd, vbTotalSummTransportAddLong, vbTotalSummTransportTaxi, vbTotalSummPhone
                , vbTotalSummNalogRet, vbTotalSummNalogRetRecalc
-     FROM
-     -- Расчет Итоговых суммы
-    (SELECT
-            -- Количество по факту (главные элементы)
-            OperCount_Master
-            -- Количество по факту (подчиненные элементы)
-          , OperCount_Child
-            -- Количество по Контрагенту
-          , OperCount_Partner
-            -- Количество дозаказ
-          , OperCount_Second
-            -- Количество тары !!!по Контрагенту!!!
-          , OperCount_Tare
-            -- Количество шт !!!по Контрагенту!!!
-          , OperCount_Sh
-            -- Количество вес !!!по Контрагенту!!!
-          , OperCount_Kg
-            -- Количество шт !!!ушло!!!
-          , OperCount_ShFrom
-            -- Количество вес !!!ушло!!!
-          , OperCount_KgFrom
 
-            -- Сумма без НДС
-          , CASE WHEN NOT vbPriceWithVAT OR vbVATPercent = 0
-                      -- если цены без НДС или %НДС=0
-                      THEN (OperSumm_Partner)
-                 WHEN vbPriceWithVAT AND 1=1
-                      -- если цены c НДС
-                      THEN CAST ( (OperSumm_Partner) / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
-                 WHEN vbPriceWithVAT
-                      -- если цены c НДС (Вариант может быть если  первичен расчет НДС =1/6 )
-                      THEN OperSumm_Partner - CAST ( (OperSumm_Partner) / (100 / vbVATPercent + 1) AS NUMERIC (16, 2))
-            END AS OperSumm_MVAT
+     FROM  -- Расчет Итоговых суммы
+          (WITH tmpMI AS (SELECT Movement.DescId AS MovementDescId
+                               , CASE WHEN Movement.DescId = zc_Movement_TaxCorrective() THEN MovementItem.Id ELSE 0 END AS MovementItemId
+                               , MovementItem.DescId
+                               , MovementItem.ObjectId AS GoodsId
+                               , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
 
-            -- Сумма с НДС
-          , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
-                      -- если цены с НДС
-                      THEN (OperSumm_Partner)
-                 WHEN vbVATPercent > 0
-                      -- если цены без НДС
-                      THEN CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner) AS NUMERIC (16, 2))
-            END AS OperSumm_PVAT
+                               , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
+                                           THEN CAST ( (1 + MIFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                                      WHEN vbDiscountPercent <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
+                                           THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                                      WHEN vbExtraChargesPercent <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
+                                           THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                                      ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                 END AS Price
+                               , COALESCE (MIFloat_Price.ValueData, 0) AS Price_original
+                               , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
 
-            -- Сумма с НДС + !!!НЕ!!! учтена скидка в цене
-          , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
-                      -- если цены с НДС
-                      THEN (OperSumm_Partner_original)
-                 WHEN vbVATPercent > 0
-                      -- если цены без НДС
-                      THEN CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_original) AS NUMERIC (16, 2))
-            END AS OperSumm_PVAT_original
+                               , COALESCE (MIFloat_ChangePercent.ValueData, 0) AS ChangePercent
+
+                                 -- !!!очень важное кол-во, для него расчет сумм!!!
+                               , SUM (CASE WHEN Movement.DescId IN (zc_Movement_SendOnPrice(), zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_EDI(), zc_Movement_WeighingPartner(), zc_Movement_Income(), zc_Movement_ReturnOut())
+                                            AND MovementItem.DescId IN (zc_MI_Master())
+                                                THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
+                                           WHEN MovementItem.DescId IN (zc_MI_Master())
+                                                THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)
+                                           ELSE 0
+                                      END) AS OperCount_calc
+                                 -- !!!не очень важное кол-во "ушло", для него тоже расчет сумм!!!
+                               , SUM (CASE WHEN Movement.DescId IN (zc_Movement_SendOnPrice(), zc_Movement_Sale())
+                                            AND MovementItem.DescId IN (zc_MI_Master())
+                                                THEN COALESCE (MIFloat_AmountChangePercent.ValueData, 0)
+                                           WHEN MovementItem.DescId IN (zc_MI_Master())
+                                                THEN MovementItem.Amount
+                                           ELSE 0
+                                      END) AS OperCount_calcFrom
+
+                               , SUM (CASE WHEN MovementItem.DescId = zc_MI_Master() THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS OperCount_Master
+                               , SUM (CASE WHEN MovementItem.DescId = zc_MI_Child() THEN MovementItem.Amount ELSE 0 END) AS OperCount_Child
+                               , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS OperCount_Partner -- Количество у контрагента
+                               , SUM (COALESCE (MIFloat_AmountPacker.ValueData, 0))  AS OperCount_Packer  -- Количество у заготовителя
+                               , SUM (COALESCE (MIFloat_AmountSecond.ValueData, 0))  AS OperCount_Second  -- Количество дозаказ
+
+                               , SUM (COALESCE (CASE WHEN Movement.DescId = zc_Movement_Inventory() THEN MIFloat_Summ.ValueData ELSE 0 END, 0)) AS OperSumm_Inventory
+
+                               , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0))              AS OperSumm_ToPay
+                               , SUM (COALESCE (MIFloat_SummService.ValueData, 0))            AS OperSumm_Service
+                               , SUM (COALESCE (MIFloat_SummCard.ValueData, 0))               AS OperSumm_Card
+                               , SUM (COALESCE (MIFloat_SummCardSecond.ValueData, 0))         AS OperSumm_CardSecond
+                               , SUM (COALESCE (MIFloat_SummNalog.ValueData, 0))              AS OperSumm_Nalog
+                               , SUM (COALESCE (MIFloat_SummMinus.ValueData, 0))              AS OperSumm_Minus
+                               , SUM (COALESCE (MIFloat_SummAdd.ValueData, 0))                AS OperSumm_Add
+                               , SUM (COALESCE (MIFloat_SummHoliday.ValueData, 0))            AS OperSumm_Holiday
+
+                               , SUM (COALESCE (MIFloat_SummCardRecalc.ValueData, 0))         AS OperSumm_CardRecalc
+                               , SUM (COALESCE (MIFloat_SummCardSecondRecalc.ValueData, 0))   AS OperSumm_CardSecondRecalc
+                               , SUM (COALESCE (MIFloat_SummCardSecondCash.ValueData, 0))     AS OperSumm_CardSecondCash
+                               , SUM (COALESCE (MIFloat_SummNalogRecalc.ValueData, 0))        AS OperSumm_NalogRecalc
+                               , SUM (COALESCE (MIFloat_SummSocialIn.ValueData, 0))           AS OperSumm_SocialIn
+                               , SUM (COALESCE (MIFloat_SummSocialAdd.ValueData, 0))          AS OperSumm_SocialAdd
+                               , SUM (COALESCE (MIFloat_SummChild.ValueData, 0))              AS OperSumm_Child
+                               , SUM (COALESCE (MIFloat_SummChildRecalc.ValueData, 0))        AS OperSumm_ChildRecalc
+                               , SUM (COALESCE (MIFloat_SummMinusExt.ValueData, 0))           AS OperSumm_MinusExt
+                               , SUM (COALESCE (MIFloat_SummMinusExtRecalc.ValueData, 0))     AS OperSumm_MinusExtRecalc
+
+                               , SUM (COALESCE (MIFloat_SummTransport.ValueData, 0))          AS OperSumm_Transport
+                               , SUM (COALESCE (MIFloat_SummTransportAdd.ValueData, 0))       AS OperSumm_TransportAdd
+                               , SUM (COALESCE (MIFloat_SummTransportAddLong.ValueData, 0))   AS OperSumm_TransportAddLong
+                               , SUM (COALESCE (MIFloat_SummTransportTaxi.ValueData, 0))      AS OperSumm_TransportTaxi
+                               , SUM (COALESCE (MIFloat_SummPhone.ValueData, 0))              AS OperSumm_Phone
+
+                               , SUM (COALESCE (MIFloat_SummNalogRet.ValueData, 0))           AS OperSumm_NalogRet
+                               , SUM (COALESCE (MIFloat_SummNalogRetRecalc.ValueData, 0))     AS OperSumm_NalogRetRecalc
+
+                               , SUM (COALESCE (MIFloat_AmountTax_calc.ValueData, 0))         AS AmountTax_calc
+
+                          FROM Movement
+                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                      AND MovementItem.isErased = FALSE
+                               LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+                               LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                           ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                               LEFT JOIN MovementItemFloat AS MIFloat_AmountChangePercent
+                                                           ON MIFloat_AmountChangePercent.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_AmountChangePercent.DescId = zc_MIFloat_AmountChangePercent()
+                                                          AND Movement.DescId IN (zc_Movement_SendOnPrice())
+                               LEFT JOIN MovementItemFloat AS MIFloat_AmountPacker
+                                                           ON MIFloat_AmountPacker.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_AmountPacker.DescId = zc_MIFloat_AmountPacker()
+                               LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                                           ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                                                          AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal())
+
+                               LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                           ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+
+                               LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                           ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                               LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                           ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+
+                               LEFT JOIN MovementItemFloat AS MIFloat_Summ
+                                                           ON MIFloat_Summ.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+
+                               LEFT JOIN MovementItemFloat AS MIFloat_AmountTax_calc
+                                                           ON MIFloat_AmountTax_calc.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_AmountTax_calc.DescId         = zc_MIFloat_AmountTax_calc()
+                                                          AND vbMovementDescId                      = zc_Movement_TaxCorrective()
+
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummToPay
+                                                           ON MIFloat_SummToPay.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummToPay.DescId = zc_MIFloat_SummToPay()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummService
+                                                           ON MIFloat_SummService.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummService.DescId = zc_MIFloat_SummService()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummCard
+                                                           ON MIFloat_SummCard.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummCard.DescId = zc_MIFloat_SummCard()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecond
+                                                           ON MIFloat_SummCardSecond.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummCardSecond.DescId = zc_MIFloat_SummCardSecond()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummNalog
+                                                           ON MIFloat_SummNalog.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummNalog.DescId = zc_MIFloat_SummNalog()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummMinus
+                                                           ON MIFloat_SummMinus.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummMinus.DescId = zc_MIFloat_SummMinus()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
+                                                           ON MIFloat_SummAdd.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummHoliday
+                                                           ON MIFloat_SummHoliday.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummCardRecalc
+                                                           ON MIFloat_SummCardRecalc.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummCardRecalc.DescId = zc_MIFloat_SummCardRecalc()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondRecalc
+                                                           ON MIFloat_SummCardSecondRecalc.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummCardSecondRecalc.DescId = zc_MIFloat_SummCardSecondRecalc()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondCash
+                                                           ON MIFloat_SummCardSecondCash.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummCardSecondCash.DescId = zc_MIFloat_SummCardSecondCash()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRecalc
+                                                           ON MIFloat_SummNalogRecalc.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummNalogRecalc.DescId = zc_MIFloat_SummNalogRecalc()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummSocialIn
+                                                           ON MIFloat_SummSocialIn.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummSocialIn.DescId = zc_MIFloat_SummSocialIn()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummSocialAdd
+                                                           ON MIFloat_SummSocialAdd.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummSocialAdd.DescId = zc_MIFloat_SummSocialAdd()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummChild
+                                                           ON MIFloat_SummChild.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummChild.DescId = zc_MIFloat_SummChild()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummChildRecalc
+                                                           ON MIFloat_SummChildRecalc.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummChildRecalc.DescId = zc_MIFloat_SummChildRecalc()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummMinusExt
+                                                           ON MIFloat_SummMinusExt.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummMinusExt.DescId = zc_MIFloat_SummMinusExt()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummMinusExtRecalc
+                                                           ON MIFloat_SummMinusExtRecalc.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummMinusExtRecalc.DescId = zc_MIFloat_SummMinusExtRecalc()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRet
+                                                           ON MIFloat_SummNalogRet.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummNalogRet.DescId = zc_MIFloat_SummNalogRet()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRetRecalc
+                                                           ON MIFloat_SummNalogRetRecalc.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummNalogRetRecalc.DescId = zc_MIFloat_SummNalogRetRecalc()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummTransport
+                                                           ON MIFloat_SummTransport.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummTransport.DescId = zc_MIFloat_SummTransport()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummTransportAdd
+                                                           ON MIFloat_SummTransportAdd.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummTransportAdd.DescId = zc_MIFloat_SummTransportAdd()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummTransportAddLong
+                                                           ON MIFloat_SummTransportAddLong.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummTransportAddLong.DescId = zc_MIFloat_SummTransportAddLong()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummTransportTaxi
+                                                           ON MIFloat_SummTransportTaxi.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummTransportTaxi.DescId = zc_MIFloat_SummTransportTaxi()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummPhone
+                                                           ON MIFloat_SummPhone.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummPhone.DescId = zc_MIFloat_SummPhone()
+                          WHERE Movement.Id = inMovementId
+                          GROUP BY Movement.DescId
+                                 , CASE WHEN Movement.DescId = zc_Movement_TaxCorrective() THEN MovementItem.Id ELSE 0 END
+                                 , MovementItem.DescId
+                                 , MovementItem.ObjectId
+                                 , MILinkObject_GoodsKind.ObjectId
+                                 , MIFloat_Price.ValueData
+                                 , MIFloat_CountForPrice.ValueData
+                                 , MIFloat_ChangePercent.ValueData
+                         )
+           SELECT
+                  -- Количество по факту (главные элементы)
+                  OperCount_Master
+                  -- Количество по факту (подчиненные элементы)
+                , OperCount_Child
+                  -- Количество по Контрагенту
+                , OperCount_Partner
+                  -- Количество дозаказ
+                , OperCount_Second
+                  -- Количество тары !!!по Контрагенту!!!
+                , OperCount_Tare
+                  -- Количество шт !!!по Контрагенту!!!
+                , OperCount_Sh
+                  -- Количество вес !!!по Контрагенту!!!
+                , OperCount_Kg
+                  -- Количество шт !!!ушло!!!
+                , OperCount_ShFrom
+                  -- Количество вес !!!ушло!!!
+                , OperCount_KgFrom
+
+                  -- Сумма без НДС
+                , CASE WHEN NOT vbPriceWithVAT OR vbVATPercent = 0
+                            -- если цены без НДС или %НДС=0
+                            THEN (OperSumm_Partner)
+                       WHEN vbPriceWithVAT AND 1=1
+                            -- если цены c НДС
+                            THEN CAST ( (OperSumm_Partner) / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
+                       WHEN vbPriceWithVAT
+                            -- если цены c НДС (Вариант может быть если  первичен расчет НДС =1/6 )
+                            THEN OperSumm_Partner - CAST ( (OperSumm_Partner) / (100 / vbVATPercent + 1) AS NUMERIC (16, 2))
+                  END AS OperSumm_MVAT
+
+                  -- Сумма с НДС
+                , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
+                            -- если цены с НДС
+                            THEN (OperSumm_Partner)
+                       WHEN vbVATPercent > 0
+                            -- если цены без НДС
+                            THEN CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner) AS NUMERIC (16, 2))
+                  END AS OperSumm_PVAT
+
+                  -- Сумма с НДС + !!!НЕ!!! учтена скидка в цене
+                , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
+                            -- если цены с НДС
+                            THEN (OperSumm_Partner_original)
+                       WHEN vbVATPercent > 0
+                            -- если цены без НДС
+                            THEN CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_original) AS NUMERIC (16, 2))
+                  END AS OperSumm_PVAT_original
 
 
-            -- Сумма по Контрагенту
-          , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
-                    -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
-                    THEN CASE WHEN vbIsChangePrice = FALSE AND vbDiscountPercent     > 0 THEN CAST ( (1 - vbDiscountPercent     / 100) * (OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))
-                              WHEN vbIsChangePrice = FALSE AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))
-                              ELSE (OperSumm_Partner_ChangePrice)
-                         END
-                 WHEN vbVATPercent > 0
-                    -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН) !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
-                    THEN CASE WHEN vbIsChangePrice = FALSE AND vbDiscountPercent     > 0 THEN CAST ( (1 - vbDiscountPercent     / 100) * (CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
-                              WHEN vbIsChangePrice = FALSE AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
-                              ELSE CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))
-                         END
-                 WHEN vbVATPercent > 0
-                    -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН) !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
-                    THEN CASE WHEN 1=0 AND vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 - vbDiscountPercent/100) * (OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
-                              WHEN 1=0 AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 + vbExtraChargesPercent/100) * (OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
-                              ELSE CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))
-                         END
-            END AS OperSumm_Partner
-            -- Сумма по Контрагенту !!!ушло!!!
-          , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
-                    -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
-                    THEN CASE WHEN vbIsChangePrice = FALSE AND vbDiscountPercent     > 0 THEN CAST ( (1 - vbDiscountPercent     / 100) * (OperSumm_PartnerFrom_ChangePrice) AS NUMERIC (16, 2))
-                              WHEN vbIsChangePrice = FALSE AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (OperSumm_PartnerFrom_ChangePrice) AS NUMERIC (16, 2))
-                              ELSE (OperSumm_PartnerFrom_ChangePrice)
-                         END
-                 WHEN vbVATPercent > 0
-                    -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН) !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
-                    THEN CASE WHEN vbIsChangePrice = FALSE AND vbDiscountPercent     > 0 THEN CAST ( (1 - vbDiscountPercent     / 100) * (CAST ( (1 + vbVATPercent / 100) * (OperSumm_PartnerFrom_ChangePrice) AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
-                              WHEN vbIsChangePrice = FALSE AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (CAST ( (1 + vbVATPercent / 100) * (OperSumm_PartnerFrom_ChangePrice) AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
-                              ELSE CAST ( (1 + vbVATPercent / 100) * (OperSumm_PartnerFrom_ChangePrice) AS NUMERIC (16, 2))
-                         END
-                 WHEN vbVATPercent > 0
-                    -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН) !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
-                    THEN CASE WHEN 1=0 AND vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 - vbDiscountPercent/100) * (OperSumm_PartnerFrom_ChangePrice) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
-                              WHEN 1=0 AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 + vbExtraChargesPercent/100) * (OperSumm_PartnerFrom_ChangePrice) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
-                              ELSE CAST ( (1 + vbVATPercent / 100) * (OperSumm_PartnerFrom_ChangePrice) AS NUMERIC (16, 2))
-                         END
-            END AS OperSumm_PartnerFrom
+                  -- Сумма по Контрагенту
+                , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
+                          -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
+                          THEN CASE WHEN vbIsChangePrice = FALSE AND vbDiscountPercent     > 0 THEN CAST ( (1 - vbDiscountPercent     / 100) * (OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))
+                                    WHEN vbIsChangePrice = FALSE AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))
+                                    ELSE (OperSumm_Partner_ChangePrice)
+                               END
+                       WHEN vbVATPercent > 0
+                          -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН) !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
+                          THEN CASE WHEN vbIsChangePrice = FALSE AND vbDiscountPercent     > 0 THEN CAST ( (1 - vbDiscountPercent     / 100) * (CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
+                                    WHEN vbIsChangePrice = FALSE AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
+                                    ELSE CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))
+                               END
+                       WHEN vbVATPercent > 0
+                          -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН) !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
+                          THEN CASE WHEN 1=0 AND vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 - vbDiscountPercent/100) * (OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                    WHEN 1=0 AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 + vbExtraChargesPercent/100) * (OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                    ELSE CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))
+                               END
+                  END AS OperSumm_Partner
+                  -- Сумма по Контрагенту !!!ушло!!!
+                , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
+                          -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
+                          THEN CASE WHEN vbIsChangePrice = FALSE AND vbDiscountPercent     > 0 THEN CAST ( (1 - vbDiscountPercent     / 100) * (OperSumm_PartnerFrom_ChangePrice) AS NUMERIC (16, 2))
+                                    WHEN vbIsChangePrice = FALSE AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (OperSumm_PartnerFrom_ChangePrice) AS NUMERIC (16, 2))
+                                    ELSE (OperSumm_PartnerFrom_ChangePrice)
+                               END
+                       WHEN vbVATPercent > 0
+                          -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН) !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
+                          THEN CASE WHEN vbIsChangePrice = FALSE AND vbDiscountPercent     > 0 THEN CAST ( (1 - vbDiscountPercent     / 100) * (CAST ( (1 + vbVATPercent / 100) * (OperSumm_PartnerFrom_ChangePrice) AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
+                                    WHEN vbIsChangePrice = FALSE AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (CAST ( (1 + vbVATPercent / 100) * (OperSumm_PartnerFrom_ChangePrice) AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
+                                    ELSE CAST ( (1 + vbVATPercent / 100) * (OperSumm_PartnerFrom_ChangePrice) AS NUMERIC (16, 2))
+                               END
+                       WHEN vbVATPercent > 0
+                          -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН) !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
+                          THEN CASE WHEN 1=0 AND vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 - vbDiscountPercent/100) * (OperSumm_PartnerFrom_ChangePrice) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                    WHEN 1=0 AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 + vbExtraChargesPercent/100) * (OperSumm_PartnerFrom_ChangePrice) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                    ELSE CAST ( (1 + vbVATPercent / 100) * (OperSumm_PartnerFrom_ChangePrice) AS NUMERIC (16, 2))
+                               END
+                  END AS OperSumm_PartnerFrom
 
-            -- Сумма по Контрагенту (!!!в валюте!!!)
-          , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
-                    -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
-                    THEN CASE WHEN vbIsChangePrice = FALSE AND vbDiscountPercent     > 0 THEN CAST ( (1 - vbDiscountPercent     / 100) * (OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2))
-                              WHEN vbIsChangePrice = FALSE AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2))
-                              ELSE (OperSumm_Partner_ChangePrice_Currency)
-                         END
-                 WHEN vbVATPercent > 0
-                    -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН) !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
-                    THEN CASE WHEN vbIsChangePrice = FALSE AND vbDiscountPercent     > 0 THEN CAST ( (1 - vbDiscountPercent     / 100) * (CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
-                              WHEN vbIsChangePrice = FALSE AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
-                              ELSE CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2))
-                         END
-                 WHEN vbVATPercent > 0
-                    -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН) !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
-                    THEN CASE WHEN 1=0 AND vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 - vbDiscountPercent/100) * (OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
-                              WHEN 1=0 AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 + vbExtraChargesPercent/100) * (OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
-                              ELSE CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2))
-                         END
-            END AS OperSumm_Partner_Currency
+                  -- Сумма по Контрагенту (!!!в валюте!!!)
+                , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
+                          -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
+                          THEN CASE WHEN vbIsChangePrice = FALSE AND vbDiscountPercent     > 0 THEN CAST ( (1 - vbDiscountPercent     / 100) * (OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2))
+                                    WHEN vbIsChangePrice = FALSE AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2))
+                                    ELSE (OperSumm_Partner_ChangePrice_Currency)
+                               END
+                       WHEN vbVATPercent > 0
+                          -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН) !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
+                          THEN CASE WHEN vbIsChangePrice = FALSE AND vbDiscountPercent     > 0 THEN CAST ( (1 - vbDiscountPercent     / 100) * (CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
+                                    WHEN vbIsChangePrice = FALSE AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
+                                    ELSE CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2))
+                               END
+                       WHEN vbVATPercent > 0
+                          -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН) !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
+                          THEN CASE WHEN 1=0 AND vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 - vbDiscountPercent/100) * (OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                    WHEN 1=0 AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 + vbExtraChargesPercent/100) * (OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                    ELSE CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2))
+                               END
+                  END AS OperSumm_Partner_Currency
 
-            -- Количество по Заготовителю
-          , OperCount_Packer AS OperCount_Packer
+                  -- Количество по Заготовителю
+                , OperCount_Packer AS OperCount_Packer
 
-            -- Сумма по Заготовителю
-          , CASE WHEN vbPriceWithVAT = TRUE OR vbVATPercent = 0
-                    -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
-                    THEN CASE WHEN 1=0 AND vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbDiscountPercent > 0 THEN CAST ( (1 - vbDiscountPercent / 100) * (OperSumm_Packer) AS NUMERIC (16, 2))
-                              WHEN 1=0 AND vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (OperSumm_Packer) AS NUMERIC (16, 2))
-                              ELSE (OperSumm_Packer)
-                         END
-                 WHEN vbVATPercent > 0
-                    -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН) !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
-                    THEN CASE WHEN 1=0 AND vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbDiscountPercent > 0 THEN CAST ( (1 - vbDiscountPercent / 100) * (CAST ( (1 + vbVATPercent / 100) * (OperSumm_Packer) AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
-                              WHEN 1=0 AND vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (CAST ( (1 + vbVATPercent / 100) * (OperSumm_Packer) AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
-                              ELSE CAST ( (1 + vbVATPercent / 100) * (OperSumm_Packer) AS NUMERIC (16, 2))
-                         END
-                 WHEN vbVATPercent > 0
-                    -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН) !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
-                    THEN CASE WHEN 1=0 AND vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 - vbDiscountPercent/100) * (OperSumm_Packer) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
-                              WHEN 1=0 AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 + vbExtraChargesPercent/100) * (OperSumm_Packer) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
-                              ELSE CAST ( (1 + vbVATPercent / 100) * (OperSumm_Packer) AS NUMERIC (16, 2))
-                         END
-            END AS OperSumm_Packer
+                  -- Сумма по Заготовителю
+                , CASE WHEN vbPriceWithVAT = TRUE OR vbVATPercent = 0
+                          -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
+                          THEN CASE WHEN 1=0 AND vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbDiscountPercent > 0 THEN CAST ( (1 - vbDiscountPercent / 100) * (OperSumm_Packer) AS NUMERIC (16, 2))
+                                    WHEN 1=0 AND vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (OperSumm_Packer) AS NUMERIC (16, 2))
+                                    ELSE (OperSumm_Packer)
+                               END
+                       WHEN vbVATPercent > 0
+                          -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН) !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
+                          THEN CASE WHEN 1=0 AND vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbDiscountPercent > 0 THEN CAST ( (1 - vbDiscountPercent / 100) * (CAST ( (1 + vbVATPercent / 100) * (OperSumm_Packer) AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
+                                    WHEN 1=0 AND vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (CAST ( (1 + vbVATPercent / 100) * (OperSumm_Packer) AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
+                                    ELSE CAST ( (1 + vbVATPercent / 100) * (OperSumm_Packer) AS NUMERIC (16, 2))
+                               END
+                       WHEN vbVATPercent > 0
+                          -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН) !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
+                          THEN CASE WHEN 1=0 AND vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 - vbDiscountPercent/100) * (OperSumm_Packer) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                    WHEN 1=0 AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 + vbExtraChargesPercent/100) * (OperSumm_Packer) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                    ELSE CAST ( (1 + vbVATPercent / 100) * (OperSumm_Packer) AS NUMERIC (16, 2))
+                               END
+                  END AS OperSumm_Packer
 
-            -- сумма ввода остатка
-          , OperSumm_Inventory AS OperSumm_Inventory
-
-            -- сумма начисления зп
-          , OperSumm_ToPay
-          , OperSumm_Service
-          , OperSumm_Card
-          , OperSumm_CardSecond
-          , OperSumm_Nalog
-          , OperSumm_Minus
-          , OperSumm_Add
-          , OperSumm_Holiday
-          , OperSumm_CardRecalc
-          , OperSumm_CardSecondRecalc
-          , OperSumm_CardSecondCash
-          , OperSumm_NalogRecalc
-          , OperSumm_SocialIn
-          , OperSumm_SocialAdd
-          , OperSumm_Child
-          , OperSumm_ChildRecalc
-          , OperSumm_MinusExt
-          , OperSumm_MinusExtRecalc
-          , OperSumm_Transport
-          , OperSumm_TransportAdd
-          , OperSumm_TransportAddLong
-          , OperSumm_TransportTaxi
-          , OperSumm_Phone
-          , OperSumm_NalogRet
-          , OperSumm_NalogRetRecalc
-     FROM
-           -- получили 1 запись + !!! перевели в валюту если надо!!!
-          (SELECT SUM (tmpMI.OperCount_Master)  AS OperCount_Master
-                , SUM (tmpMI.OperCount_Child)   AS OperCount_Child
-                , SUM (tmpMI.OperCount_Partner) AS OperCount_Partner -- Количество у контрагента
-                , SUM (tmpMI.OperCount_Packer)  AS OperCount_Packer  -- Количество у заготовителя
-                , SUM (tmpMI.OperCount_Second)  AS OperCount_Second  -- Количество дозаказ
-
-                , SUM (tmpMI.OperCount_Tare)     AS OperCount_Tare
-                , SUM (tmpMI.OperCount_Sh)       AS OperCount_Sh
-                , SUM (tmpMI.OperCount_Kg)       AS OperCount_Kg
-                , SUM (tmpMI.OperCount_ShFrom)   AS OperCount_ShFrom
-                , SUM (tmpMI.OperCount_KgFrom)   AS OperCount_KgFrom
-
-                  -- сумма по Контрагенту - с округлением до 2-х знаков
-                , SUM (CASE WHEN tmpMI.CountForPrice <> 0
-                                 THEN CAST (tmpMI.OperCount_calc * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
-                            ELSE CAST (tmpMI.OperCount_calc * tmpMI.Price AS NUMERIC (16, 2))
-                       END) AS OperSumm_Partner
-                  -- сумма по Контрагенту - с округлением до 2-х знаков + !!!НЕ!!! учтена скидка в цене
-                , SUM (CASE WHEN tmpMI.CountForPrice <> 0
-                                 THEN CAST (tmpMI.OperCount_calc * tmpMI.Price_original / tmpMI.CountForPrice AS NUMERIC (16, 2))
-                            ELSE CAST (tmpMI.OperCount_calc * tmpMI.Price_original AS NUMERIC (16, 2))
-                       END) AS OperSumm_Partner_original
-
-                   -- сумма по Контрагенту с учетом скидки для цены - с округлением до 2-х знаков
-                 , SUM (CASE WHEN tmpMI.CountForPrice <> 0
-                                  THEN CAST (tmpMI.OperCount_calc * (tmpMI.Price - vbChangePrice) / tmpMI.CountForPrice AS NUMERIC (16, 2))
-                             ELSE CAST (tmpMI.OperCount_calc * (tmpMI.Price - vbChangePrice) AS NUMERIC (16, 2))
-                        END) AS OperSumm_Partner_ChangePrice
-                   -- сумма по Контрагенту с учетом скидки для цены - с округлением до 2-х знаков !!!ушло!!!
-                 , SUM (CASE WHEN tmpMI.CountForPrice <> 0
-                                  THEN CAST (tmpMI.OperCount_calcFrom * (tmpMI.Price - vbChangePrice) / tmpMI.CountForPrice AS NUMERIC (16, 2))
-                             ELSE CAST (tmpMI.OperCount_calcFrom * (tmpMI.Price - vbChangePrice) AS NUMERIC (16, 2))
-                        END) AS OperSumm_PartnerFrom_ChangePrice
-                   -- сумма по Контрагенту с учетом скидки для цены - с округлением до 2-х знаков !!!в валюте!!!
-                 , SUM (CASE WHEN tmpMI.CountForPrice <> 0
-                                  THEN CAST (tmpMI.OperCount_calc * (tmpMI.Price_Currency - vbChangePrice) / tmpMI.CountForPrice AS NUMERIC (16, 2))
-                             ELSE CAST (tmpMI.OperCount_calc * (tmpMI.Price_Currency - vbChangePrice) AS NUMERIC (16, 2))
-                        END) AS OperSumm_Partner_ChangePrice_Currency
-
-
-                   -- сумма по Заготовителю - с округлением до 2-х знаков
-                 , SUM (CASE WHEN tmpMI.CountForPrice <> 0
-                                  THEN CAST (tmpMI.OperCount_Packer * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
-                             ELSE CAST (tmpMI.OperCount_Packer * tmpMI.Price AS NUMERIC (16, 2))
-                        END) AS OperSumm_Packer
-
-                   -- сумма ввода остатка
-                 , SUM (tmpMI.OperSumm_Inventory) AS OperSumm_Inventory
+                  -- сумма ввода остатка
+                , OperSumm_Inventory AS OperSumm_Inventory
 
                   -- сумма начисления зп
-                 , SUM (tmpMI.OperSumm_ToPay)       AS OperSumm_ToPay
-                 , SUM (tmpMI.OperSumm_Service)     AS OperSumm_Service
-                 , SUM (tmpMI.OperSumm_Card)        AS OperSumm_Card
-                 , SUM (tmpMI.OperSumm_CardSecond)  AS OperSumm_CardSecond
-                 , SUM (tmpMI.OperSumm_Nalog)       AS OperSumm_Nalog
-                 , SUM (tmpMI.OperSumm_Minus)       AS OperSumm_Minus
-                 , SUM (tmpMI.OperSumm_Add)         AS OperSumm_Add
-                 , SUM (tmpMI.OperSumm_Holiday)     AS OperSumm_Holiday
-                 , SUM (tmpMI.OperSumm_CardRecalc)  AS OperSumm_CardRecalc
-                 , SUM (tmpMI.OperSumm_CardSecondRecalc)  AS OperSumm_CardSecondRecalc
-                 , SUM (tmpMI.OperSumm_CardSecondCash)  AS OperSumm_CardSecondCash
-                 , SUM (tmpMI.OperSumm_NalogRecalc) AS OperSumm_NalogRecalc
-                 , SUM (tmpMI.OperSumm_SocialIn)    AS OperSumm_SocialIn
-                 , SUM (tmpMI.OperSumm_SocialAdd)   AS OperSumm_SocialAdd
-                 , SUM (tmpMI.OperSumm_Child)       AS OperSumm_Child
-                 , SUM (tmpMI.OperSumm_ChildRecalc)      AS OperSumm_ChildRecalc
-                 , SUM (tmpMI.OperSumm_MinusExt)         AS OperSumm_MinusExt
-                 , SUM (tmpMI.OperSumm_MinusExtRecalc)   AS OperSumm_MinusExtRecalc
-                 , SUM (tmpMI.OperSumm_Transport)        AS OperSumm_Transport
-                 , SUM (tmpMI.OperSumm_TransportAdd)     AS OperSumm_TransportAdd
-                 , SUM (tmpMI.OperSumm_TransportAddLong) AS OperSumm_TransportAddLong
-                 , SUM (tmpMI.OperSumm_TransportTaxi)    AS OperSumm_TransportTaxi
-                 , SUM (tmpMI.OperSumm_Phone)            AS OperSumm_Phone
-                 , SUM (tmpMI.OperSumm_NalogRet)         AS OperSumm_NalogRet
-                 , SUM (tmpMI.OperSumm_NalogRetRecalc)   AS OperSumm_NalogRetRecalc
-            FROM (SELECT tmpMI.GoodsId
-                       , tmpMI.GoodsKindId
-                       , CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
-                                   -- так переводится в валюту zc_Enum_Currency_Basis
-                                   THEN CAST (tmpMI.Price * CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END AS NUMERIC (16, 2))
-                              ELSE tmpMI.Price
-                         END AS Price
-                       , CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
-                                   -- так переводится в валюту zc_Enum_Currency_Basis
-                                   THEN CAST (tmpMI.Price_original * CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END AS NUMERIC (16, 2))
-                              ELSE tmpMI.Price_original
-                         END AS Price_original
-                       , CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
-                                   THEN tmpMI.Price
-                              ELSE 0
-                         END AS Price_Currency
-                       , tmpMI.CountForPrice
+                , OperSumm_ToPay
+                , OperSumm_Service
+                , OperSumm_Card
+                , OperSumm_CardSecond
+                , OperSumm_Nalog
+                , OperSumm_Minus
+                , OperSumm_Add
+                , OperSumm_Holiday
+                , OperSumm_CardRecalc
+                , OperSumm_CardSecondRecalc
+                , OperSumm_CardSecondCash
+                , OperSumm_NalogRecalc
+                , OperSumm_SocialIn
+                , OperSumm_SocialAdd
+                , OperSumm_Child
+                , OperSumm_ChildRecalc
+                , OperSumm_MinusExt
+                , OperSumm_MinusExtRecalc
+                , OperSumm_Transport
+                , OperSumm_TransportAdd
+                , OperSumm_TransportAddLong
+                , OperSumm_TransportTaxi
+                , OperSumm_Phone
+                , OperSumm_NalogRet
+                , OperSumm_NalogRetRecalc
+           FROM
+                 -- получили 1 запись + !!! перевели в валюту если надо!!!
+                (SELECT SUM (tmpMI.OperCount_Master)  AS OperCount_Master
+                      , SUM (tmpMI.OperCount_Child)   AS OperCount_Child
+                      , SUM (tmpMI.OperCount_Partner) AS OperCount_Partner -- Количество у контрагента
+                      , SUM (tmpMI.OperCount_Packer)  AS OperCount_Packer  -- Количество у заготовителя
+                      , SUM (tmpMI.OperCount_Second)  AS OperCount_Second  -- Количество дозаказ
 
-                         -- очень важное кол-во, для него расчет сумм
-                       , tmpMI.OperCount_calc
-                         -- не очень важное кол-во "ушло", для него тоже расчет сумм
-                       , tmpMI.OperCount_calcFrom
+                      , SUM (tmpMI.OperCount_Tare)     AS OperCount_Tare
+                      , SUM (tmpMI.OperCount_Sh)       AS OperCount_Sh
+                      , SUM (tmpMI.OperCount_Kg)       AS OperCount_Kg
+                      , SUM (tmpMI.OperCount_ShFrom)   AS OperCount_ShFrom
+                      , SUM (tmpMI.OperCount_KgFrom)   AS OperCount_KgFrom
 
-                         -- кол-во Master (!!!без тары с ц=0!!!)
-                       , CASE WHEN COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
-                               AND tmpMI.Price = 0
-                                   THEN 0
-                              ELSE tmpMI.OperCount_Master
-                         END AS OperCount_Master
-                         -- кол-во Child (!!!без тары с ц=0!!!)
-                       , CASE WHEN COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
-                               AND tmpMI.Price = 0
-                                   THEN 0
-                              ELSE tmpMI.OperCount_Child
-                         END AS OperCount_Child
-                         -- кол-во Partner (!!!без тары с ц=0!!!)
-                       , CASE WHEN COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
-                               AND tmpMI.Price = 0
-                                   THEN 0
-                              ELSE tmpMI.OperCount_Partner
-                         END AS OperCount_Partner
+                        -- сумма по Контрагенту - с округлением до 2-х знаков
+                      , SUM (CASE WHEN tmpMI.CountForPrice <> 0
+                                       THEN CAST (tmpMI.OperCount_calc * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                                  ELSE CAST (tmpMI.OperCount_calc * tmpMI.Price AS NUMERIC (16, 2))
+                             END) AS OperSumm_Partner
+                        -- сумма по Контрагенту - с округлением до 2-х знаков + !!!НЕ!!! учтена скидка в цене
+                      , SUM (CASE WHEN tmpMI.CountForPrice <> 0
+                                       THEN CAST (tmpMI.OperCount_calc * tmpMI.Price_original / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                                  ELSE CAST (tmpMI.OperCount_calc * tmpMI.Price_original AS NUMERIC (16, 2))
+                             END) AS OperSumm_Partner_original
 
-                       , tmpMI.OperCount_Packer
-                       , tmpMI.OperCount_Second
-                         -- тара (если цена=0)
-                       , CASE WHEN COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
-                               AND tmpMI.Price = 0
-                                   THEN CASE WHEN tmpMI.MovementDescId = zc_Movement_WeighingPartner()
-                                                  THEN tmpMI.OperCount_Master
-                                             ELSE tmpMI.OperCount_calc
-                                        END
-                              ELSE 0
-                         END AS OperCount_Tare
-                         -- ШТ (пришло)
-                       , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
-                                   THEN tmpMI.OperCount_calc
-                              ELSE 0
-                         END AS OperCount_Sh
-                         -- ВЕС (пришло)
-                       , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
-                                   THEN tmpMI.OperCount_calc * COALESCE (ObjectFloat_Weight.ValueData, 0)
-                              WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg()
-                                   THEN tmpMI.OperCount_calc
-                              ELSE 0
-                         END AS OperCount_Kg
-                         -- ШТ (ушло)
-                       , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
-                                   THEN tmpMI.OperCount_calcFrom
-                              ELSE 0
-                         END AS OperCount_ShFrom
-                         -- ВЕС (ушло)
-                       , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
-                                   THEN tmpMI.OperCount_calcFrom * COALESCE (ObjectFloat_Weight.ValueData, 0)
-                              WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg()
-                                   THEN tmpMI.OperCount_calcFrom
-                              ELSE 0
-                         END AS OperCount_KgFrom
+                         -- сумма по Контрагенту с учетом скидки для цены - с округлением до 2-х знаков
+                       , SUM (CASE WHEN tmpMI.CountForPrice <> 0
+                                        THEN CAST (tmpMI.OperCount_calc * (tmpMI.Price - vbChangePrice) / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                                   ELSE CAST (tmpMI.OperCount_calc * (tmpMI.Price - vbChangePrice) AS NUMERIC (16, 2))
+                              END) AS OperSumm_Partner_ChangePrice
+                         -- сумма по Контрагенту с учетом скидки для цены - с округлением до 2-х знаков !!!ушло!!!
+                       , SUM (CASE WHEN tmpMI.CountForPrice <> 0
+                                        THEN CAST (tmpMI.OperCount_calcFrom * (tmpMI.Price - vbChangePrice) / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                                   ELSE CAST (tmpMI.OperCount_calcFrom * (tmpMI.Price - vbChangePrice) AS NUMERIC (16, 2))
+                              END) AS OperSumm_PartnerFrom_ChangePrice
+                         -- сумма по Контрагенту с учетом скидки для цены - с округлением до 2-х знаков !!!в валюте!!!
+                       , SUM (CASE WHEN tmpMI.CountForPrice <> 0
+                                        THEN CAST (tmpMI.OperCount_calc * (tmpMI.Price_Currency - vbChangePrice) / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                                   ELSE CAST (tmpMI.OperCount_calc * (tmpMI.Price_Currency - vbChangePrice) AS NUMERIC (16, 2))
+                              END) AS OperSumm_Partner_ChangePrice_Currency
 
-                        -- сумма ввода остатка
-                      , tmpMI.OperSumm_Inventory
+
+                         -- сумма по Заготовителю - с округлением до 2-х знаков
+                       , SUM (CASE WHEN tmpMI.CountForPrice <> 0
+                                        THEN CAST (tmpMI.OperCount_Packer * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                                   ELSE CAST (tmpMI.OperCount_Packer * tmpMI.Price AS NUMERIC (16, 2))
+                              END) AS OperSumm_Packer
+
+                         -- сумма ввода остатка
+                       , SUM (tmpMI.OperSumm_Inventory) AS OperSumm_Inventory
 
                         -- сумма начисления зп
-                      , tmpMI.OperSumm_ToPay
-                      , tmpMI.OperSumm_Service
-                      , tmpMI.OperSumm_Card
-                      , tmpMI.OperSumm_CardSecond
-                      , tmpMI.OperSumm_Nalog
-                      , tmpMI.OperSumm_Minus
-                      , tmpMI.OperSumm_Add
-                      , tmpMI.OperSumm_Holiday
-                      , tmpMI.OperSumm_CardRecalc
-                      , tmpMI.OperSumm_CardSecondRecalc
-                      , tmpMI.OperSumm_CardSecondCash
-                      , tmpMI.OperSumm_NalogRecalc
-                      , tmpMI.OperSumm_SocialIn
-                      , tmpMI.OperSumm_SocialAdd
-                      , tmpMI.OperSumm_Child
-                      , tmpMI.OperSumm_ChildRecalc
-                      , tmpMI.OperSumm_MinusExt
-                      , tmpMI.OperSumm_MinusExtRecalc
-                      , tmpMI.OperSumm_Transport
-                      , tmpMI.OperSumm_TransportAdd
-                      , tmpMI.OperSumm_TransportAddLong
-                      , tmpMI.OperSumm_TransportTaxi
-                      , tmpMI.OperSumm_Phone
-                      , tmpMI.OperSumm_NalogRet
-                      , tmpMI.OperSumm_NalogRetRecalc
-
-                  FROM (SELECT Movement.DescId AS MovementDescId
-                             , CASE WHEN Movement.DescId = zc_Movement_TaxCorrective() THEN MovementItem.Id ELSE 0 END AS MovementItemId
-                             , MovementItem.DescId
-                             , MovementItem.ObjectId AS GoodsId
-                             , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
-
-                             , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
-                                         THEN CAST ( (1 + MIFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                                    WHEN vbDiscountPercent <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
-                                         THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                                    WHEN vbExtraChargesPercent <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
-                                         THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                                    ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                       , SUM (tmpMI.OperSumm_ToPay)       AS OperSumm_ToPay
+                       , SUM (tmpMI.OperSumm_Service)     AS OperSumm_Service
+                       , SUM (tmpMI.OperSumm_Card)        AS OperSumm_Card
+                       , SUM (tmpMI.OperSumm_CardSecond)  AS OperSumm_CardSecond
+                       , SUM (tmpMI.OperSumm_Nalog)       AS OperSumm_Nalog
+                       , SUM (tmpMI.OperSumm_Minus)       AS OperSumm_Minus
+                       , SUM (tmpMI.OperSumm_Add)         AS OperSumm_Add
+                       , SUM (tmpMI.OperSumm_Holiday)     AS OperSumm_Holiday
+                       , SUM (tmpMI.OperSumm_CardRecalc)  AS OperSumm_CardRecalc
+                       , SUM (tmpMI.OperSumm_CardSecondRecalc)  AS OperSumm_CardSecondRecalc
+                       , SUM (tmpMI.OperSumm_CardSecondCash)  AS OperSumm_CardSecondCash
+                       , SUM (tmpMI.OperSumm_NalogRecalc) AS OperSumm_NalogRecalc
+                       , SUM (tmpMI.OperSumm_SocialIn)    AS OperSumm_SocialIn
+                       , SUM (tmpMI.OperSumm_SocialAdd)   AS OperSumm_SocialAdd
+                       , SUM (tmpMI.OperSumm_Child)       AS OperSumm_Child
+                       , SUM (tmpMI.OperSumm_ChildRecalc)      AS OperSumm_ChildRecalc
+                       , SUM (tmpMI.OperSumm_MinusExt)         AS OperSumm_MinusExt
+                       , SUM (tmpMI.OperSumm_MinusExtRecalc)   AS OperSumm_MinusExtRecalc
+                       , SUM (tmpMI.OperSumm_Transport)        AS OperSumm_Transport
+                       , SUM (tmpMI.OperSumm_TransportAdd)     AS OperSumm_TransportAdd
+                       , SUM (tmpMI.OperSumm_TransportAddLong) AS OperSumm_TransportAddLong
+                       , SUM (tmpMI.OperSumm_TransportTaxi)    AS OperSumm_TransportTaxi
+                       , SUM (tmpMI.OperSumm_Phone)            AS OperSumm_Phone
+                       , SUM (tmpMI.OperSumm_NalogRet)         AS OperSumm_NalogRet
+                       , SUM (tmpMI.OperSumm_NalogRetRecalc)   AS OperSumm_NalogRetRecalc
+                  FROM (SELECT tmpMI.GoodsId
+                             , tmpMI.GoodsKindId
+                             , CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
+                                         -- так переводится в валюту zc_Enum_Currency_Basis
+                                         THEN CAST (tmpMI.Price * CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END AS NUMERIC (16, 2))
+                                    ELSE tmpMI.Price
                                END AS Price
-                             , COALESCE (MIFloat_Price.ValueData, 0) AS Price_original
-                             , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
+                             , CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
+                                         -- так переводится в валюту zc_Enum_Currency_Basis
+                                         THEN CAST (tmpMI.Price_original * CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END AS NUMERIC (16, 2))
+                                    ELSE tmpMI.Price_original
+                               END AS Price_original
+                             , CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
+                                         THEN tmpMI.Price
+                                    ELSE 0
+                               END AS Price_Currency
+                             , tmpMI.CountForPrice
 
-                             , COALESCE (MIFloat_ChangePercent.ValueData, 0) AS ChangePercent
+                               -- очень важное кол-во, для него расчет сумм
+                             , tmpMI.OperCount_calc
+                               -- не очень важное кол-во "ушло", для него тоже расчет сумм
+                             , tmpMI.OperCount_calcFrom
 
-                               -- !!!очень важное кол-во, для него расчет сумм!!!
-                             , SUM (CASE WHEN Movement.DescId IN (zc_Movement_SendOnPrice(), zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_EDI(), zc_Movement_WeighingPartner(), zc_Movement_Income(), zc_Movement_ReturnOut())
-                                          AND MovementItem.DescId IN (zc_MI_Master())
-                                              THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
-                                         WHEN MovementItem.DescId IN (zc_MI_Master())
-                                              THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)
-                                         ELSE 0
-                                    END) AS OperCount_calc
-                               -- !!!не очень важное кол-во "ушло", для него тоже расчет сумм!!!
-                             , SUM (CASE WHEN Movement.DescId IN (zc_Movement_SendOnPrice(), zc_Movement_Sale())
-                                          AND MovementItem.DescId IN (zc_MI_Master())
-                                              THEN COALESCE (MIFloat_AmountChangePercent.ValueData, 0)
-                                         WHEN MovementItem.DescId IN (zc_MI_Master())
-                                              THEN MovementItem.Amount
-                                         ELSE 0
-                                    END) AS OperCount_calcFrom
+                               -- кол-во Master (!!!без тары с ц=0!!!)
+                             , CASE WHEN COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                                     AND tmpMI.Price = 0
+                                         THEN 0
+                                    ELSE tmpMI.OperCount_Master
+                               END AS OperCount_Master
+                               -- кол-во Child (!!!без тары с ц=0!!!)
+                             , CASE WHEN COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                                     AND tmpMI.Price = 0
+                                         THEN 0
+                                    ELSE tmpMI.OperCount_Child
+                               END AS OperCount_Child
+                               -- кол-во Partner (!!!без тары с ц=0!!!)
+                             , CASE WHEN COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                                     AND tmpMI.Price = 0
+                                         THEN 0
+                                    ELSE tmpMI.OperCount_Partner
+                               END AS OperCount_Partner
 
-                             , SUM (CASE WHEN MovementItem.DescId = zc_MI_Master() THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS OperCount_Master
-                             , SUM (CASE WHEN MovementItem.DescId = zc_MI_Child() THEN MovementItem.Amount ELSE 0 END) AS OperCount_Child
-                             , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS OperCount_Partner -- Количество у контрагента
-                             , SUM (COALESCE (MIFloat_AmountPacker.ValueData, 0))  AS OperCount_Packer  -- Количество у заготовителя
-                             , SUM (COALESCE (MIFloat_AmountSecond.ValueData, 0))  AS OperCount_Second  -- Количество дозаказ
+                             , tmpMI.OperCount_Packer
+                             , tmpMI.OperCount_Second
+                               -- тара (если цена=0)
+                             , CASE WHEN COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                                     AND tmpMI.Price = 0
+                                         THEN CASE WHEN tmpMI.MovementDescId = zc_Movement_WeighingPartner()
+                                                        THEN tmpMI.OperCount_Master
+                                                   ELSE tmpMI.OperCount_calc
+                                              END
+                                    ELSE 0
+                               END AS OperCount_Tare
+                               -- ШТ (пришло)
+                             , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
+                                         THEN tmpMI.OperCount_calc
+                                    ELSE 0
+                               END AS OperCount_Sh
+                               -- ВЕС (пришло)
+                             , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
+                                         THEN tmpMI.OperCount_calc * COALESCE (ObjectFloat_Weight.ValueData, 0)
+                                    WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg()
+                                         THEN tmpMI.OperCount_calc
+                                    ELSE 0
+                               END AS OperCount_Kg
+                               -- ШТ (ушло)
+                             , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
+                                         THEN tmpMI.OperCount_calcFrom
+                                    ELSE 0
+                               END AS OperCount_ShFrom
+                               -- ВЕС (ушло)
+                             , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
+                                         THEN tmpMI.OperCount_calcFrom * COALESCE (ObjectFloat_Weight.ValueData, 0)
+                                    WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg()
+                                         THEN tmpMI.OperCount_calcFrom
+                                    ELSE 0
+                               END AS OperCount_KgFrom
 
-                             , SUM (COALESCE (CASE WHEN Movement.DescId = zc_Movement_Inventory() THEN MIFloat_Summ.ValueData ELSE 0 END, 0)) AS OperSumm_Inventory
+                              -- сумма ввода остатка
+                            , tmpMI.OperSumm_Inventory
 
-                             , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0))         AS OperSumm_ToPay
-                             , SUM (COALESCE (MIFloat_SummService.ValueData, 0))       AS OperSumm_Service
-                             , SUM (COALESCE (MIFloat_SummCard.ValueData, 0))          AS OperSumm_Card
-                             , SUM (COALESCE (MIFloat_SummCardSecond.ValueData, 0))    AS OperSumm_CardSecond
-                             , SUM (COALESCE (MIFloat_SummNalog.ValueData, 0))         AS OperSumm_Nalog
-                             , SUM (COALESCE (MIFloat_SummMinus.ValueData, 0))         AS OperSumm_Minus
-                             , SUM (COALESCE (MIFloat_SummAdd.ValueData, 0))           AS OperSumm_Add
-                             , SUM (COALESCE (MIFloat_SummHoliday.ValueData, 0))       AS OperSumm_Holiday
+                              -- сумма начисления зп
+                            , tmpMI.OperSumm_ToPay
+                            , tmpMI.OperSumm_Service
+                            , tmpMI.OperSumm_Card
+                            , tmpMI.OperSumm_CardSecond
+                            , tmpMI.OperSumm_Nalog
+                            , tmpMI.OperSumm_Minus
+                            , tmpMI.OperSumm_Add
+                            , tmpMI.OperSumm_Holiday
+                            , tmpMI.OperSumm_CardRecalc
+                            , tmpMI.OperSumm_CardSecondRecalc
+                            , tmpMI.OperSumm_CardSecondCash
+                            , tmpMI.OperSumm_NalogRecalc
+                            , tmpMI.OperSumm_SocialIn
+                            , tmpMI.OperSumm_SocialAdd
+                            , tmpMI.OperSumm_Child
+                            , tmpMI.OperSumm_ChildRecalc
+                            , tmpMI.OperSumm_MinusExt
+                            , tmpMI.OperSumm_MinusExtRecalc
+                            , tmpMI.OperSumm_Transport
+                            , tmpMI.OperSumm_TransportAdd
+                            , tmpMI.OperSumm_TransportAddLong
+                            , tmpMI.OperSumm_TransportTaxi
+                            , tmpMI.OperSumm_Phone
+                            , tmpMI.OperSumm_NalogRet
+                            , tmpMI.OperSumm_NalogRetRecalc
 
-                             , SUM (COALESCE (MIFloat_SummCardRecalc.ValueData, 0))         AS OperSumm_CardRecalc
-                             , SUM (COALESCE (MIFloat_SummCardSecondRecalc.ValueData, 0))   AS OperSumm_CardSecondRecalc
-                             , SUM (COALESCE (MIFloat_SummCardSecondCash.ValueData, 0))     AS OperSumm_CardSecondCash
-                             , SUM (COALESCE (MIFloat_SummNalogRecalc.ValueData, 0))        AS OperSumm_NalogRecalc
-                             , SUM (COALESCE (MIFloat_SummSocialIn.ValueData, 0))           AS OperSumm_SocialIn
-                             , SUM (COALESCE (MIFloat_SummSocialAdd.ValueData, 0))          AS OperSumm_SocialAdd
-                             , SUM (COALESCE (MIFloat_SummChild.ValueData, 0))              AS OperSumm_Child
-                             , SUM (COALESCE (MIFloat_SummChildRecalc.ValueData, 0))        AS OperSumm_ChildRecalc
-                             , SUM (COALESCE (MIFloat_SummMinusExt.ValueData, 0))           AS OperSumm_MinusExt
-                             , SUM (COALESCE (MIFloat_SummMinusExtRecalc.ValueData, 0))     AS OperSumm_MinusExtRecalc
+                        FROM (SELECT tmpMI.MovementDescId
+                                   , tmpMI.MovementItemId
+                                   , tmpMI.DescId
+                                   , tmpMI.GoodsId
+                                   , tmpMI.GoodsKindId
 
-                             , SUM (COALESCE (MIFloat_SummTransport.ValueData, 0))        AS OperSumm_Transport
-                             , SUM (COALESCE (MIFloat_SummTransportAdd.ValueData, 0))     AS OperSumm_TransportAdd
-                             , SUM (COALESCE (MIFloat_SummTransportAddLong.ValueData, 0)) AS OperSumm_TransportAddLong
-                             , SUM (COALESCE (MIFloat_SummTransportTaxi.ValueData, 0))    AS OperSumm_TransportTaxi
-                             , SUM (COALESCE (MIFloat_SummPhone.ValueData, 0))            AS OperSumm_Phone
-                             
-                             , SUM (COALESCE (MIFloat_SummNalogRet.ValueData, 0))         AS OperSumm_NalogRet
-                             , SUM (COALESCE (MIFloat_SummNalogRetRecalc.ValueData, 0))   AS OperSumm_NalogRetRecalc
-                             
-                        FROM Movement
-                             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                    AND MovementItem.isErased = FALSE
-                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                   , tmpMI.Price
+                                   , tmpMI.Price_original
+                                   , tmpMI.CountForPrice
 
-                             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                                         ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                             LEFT JOIN MovementItemFloat AS MIFloat_AmountChangePercent
-                                                         ON MIFloat_AmountChangePercent.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_AmountChangePercent.DescId = zc_MIFloat_AmountChangePercent()
-                                                        AND Movement.DescId IN (zc_Movement_SendOnPrice())
-                             LEFT JOIN MovementItemFloat AS MIFloat_AmountPacker
-                                                         ON MIFloat_AmountPacker.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_AmountPacker.DescId = zc_MIFloat_AmountPacker()
-                             LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
-                                                         ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
-                                                        AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal())
+                                   , tmpMI.ChangePercent
 
-                             LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
-                                                         ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+                                     -- !!!очень важное кол-во, для него расчет сумм!!! - !!! ПЕРВАЯ Строка !!!
+                                   , (CASE WHEN vbIsNPP_calc = TRUE THEN 1 * tmpMI.AmountTax_calc ELSE tmpMI.OperCount_calc END) AS OperCount_calc
+                                     -- !!!не очень важное кол-во "ушло", для него тоже расчет сумм!!!
+                                   , tmpMI.OperCount_calcFrom
 
-                             LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                                     -- !!!важное кол-во, для него zc_MovementFloat_TotalCount !!! - !!! ПЕРВАЯ Строка !!!
+                                   , (CASE WHEN vbIsNPP_calc = TRUE THEN 1 * tmpMI.AmountTax_calc ELSE tmpMI.OperCount_Master END) AS OperCount_Master
 
-                             LEFT JOIN MovementItemFloat AS MIFloat_Summ
-                                                         ON MIFloat_Summ.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+                                   , tmpMI.OperCount_Child
+                                   , tmpMI.OperCount_Partner -- Количество у контрагента
+                                   , tmpMI.OperCount_Packer  -- Количество у заготовителя
+                                   , tmpMI.OperCount_Second  -- Количество дозаказ
 
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummToPay
-                                                         ON MIFloat_SummToPay.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummToPay.DescId = zc_MIFloat_SummToPay()
-                                                        AND Movement.DescId = zc_Movement_PersonalService()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummService
-                                                         ON MIFloat_SummService.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummService.DescId = zc_MIFloat_SummService()
-                                                        AND Movement.DescId = zc_Movement_PersonalService()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummCard
-                                                         ON MIFloat_SummCard.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummCard.DescId = zc_MIFloat_SummCard()
-                                                        AND Movement.DescId = zc_Movement_PersonalService()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecond
-                                                         ON MIFloat_SummCardSecond.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummCardSecond.DescId = zc_MIFloat_SummCardSecond()
-                                                        AND Movement.DescId = zc_Movement_PersonalService()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummNalog
-                                                         ON MIFloat_SummNalog.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummNalog.DescId = zc_MIFloat_SummNalog()
-                                                        AND Movement.DescId = zc_Movement_PersonalService()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummMinus
-                                                         ON MIFloat_SummMinus.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummMinus.DescId = zc_MIFloat_SummMinus()
-                                                        AND Movement.DescId = zc_Movement_PersonalService()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
-                                                         ON MIFloat_SummAdd.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
-                                                        AND Movement.DescId = zc_Movement_PersonalService()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummHoliday
-                                                         ON MIFloat_SummHoliday.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
-                                                        AND Movement.DescId = zc_Movement_PersonalService()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummCardRecalc
-                                                         ON MIFloat_SummCardRecalc.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummCardRecalc.DescId = zc_MIFloat_SummCardRecalc()
-                                                        AND Movement.DescId = zc_Movement_PersonalService()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondRecalc
-                                                         ON MIFloat_SummCardSecondRecalc.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummCardSecondRecalc.DescId = zc_MIFloat_SummCardSecondRecalc()
-                                                        AND Movement.DescId = zc_Movement_PersonalService()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondCash
-                                                         ON MIFloat_SummCardSecondCash.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummCardSecondCash.DescId = zc_MIFloat_SummCardSecondCash()
-                                                        AND Movement.DescId = zc_Movement_PersonalService()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRecalc
-                                                         ON MIFloat_SummNalogRecalc.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummNalogRecalc.DescId = zc_MIFloat_SummNalogRecalc()
-                                                        AND Movement.DescId = zc_Movement_PersonalService()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummSocialIn
-                                                         ON MIFloat_SummSocialIn.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummSocialIn.DescId = zc_MIFloat_SummSocialIn()
-                                                        AND Movement.DescId = zc_Movement_PersonalService()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummSocialAdd
-                                                         ON MIFloat_SummSocialAdd.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummSocialAdd.DescId = zc_MIFloat_SummSocialAdd()
-                                                        AND Movement.DescId = zc_Movement_PersonalService()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummChild
-                                                         ON MIFloat_SummChild.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummChild.DescId = zc_MIFloat_SummChild()
-                                                        AND Movement.DescId = zc_Movement_PersonalService()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummChildRecalc
-                                                         ON MIFloat_SummChildRecalc.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummChildRecalc.DescId = zc_MIFloat_SummChildRecalc()
-                                                        AND Movement.DescId = zc_Movement_PersonalService()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummMinusExt
-                                                         ON MIFloat_SummMinusExt.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummMinusExt.DescId = zc_MIFloat_SummMinusExt()
-                                                        AND Movement.DescId = zc_Movement_PersonalService()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummMinusExtRecalc
-                                                         ON MIFloat_SummMinusExtRecalc.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummMinusExtRecalc.DescId = zc_MIFloat_SummMinusExtRecalc()
-                                                        AND Movement.DescId = zc_Movement_PersonalService()
+                                   , tmpMI.OperSumm_Inventory
 
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRet
-                                                         ON MIFloat_SummNalogRet.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummNalogRet.DescId = zc_MIFloat_SummNalogRet()
-                                                        AND Movement.DescId = zc_Movement_PersonalService()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRetRecalc
-                                                         ON MIFloat_SummNalogRetRecalc.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummNalogRetRecalc.DescId = zc_MIFloat_SummNalogRetRecalc()
-                                                        AND Movement.DescId = zc_Movement_PersonalService()
-                                                        
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummTransport
-                                                         ON MIFloat_SummTransport.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummTransport.DescId = zc_MIFloat_SummTransport()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummTransportAdd
-                                                         ON MIFloat_SummTransportAdd.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummTransportAdd.DescId = zc_MIFloat_SummTransportAdd()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummTransportAddLong
-                                                         ON MIFloat_SummTransportAddLong.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummTransportAddLong.DescId = zc_MIFloat_SummTransportAddLong()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummTransportTaxi
-                                                         ON MIFloat_SummTransportTaxi.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummTransportTaxi.DescId = zc_MIFloat_SummTransportTaxi()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummPhone
-                                                         ON MIFloat_SummPhone.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_SummPhone.DescId = zc_MIFloat_SummPhone()
-                        WHERE Movement.Id = inMovementId
-                        GROUP BY Movement.DescId
-                               , CASE WHEN Movement.DescId = zc_Movement_TaxCorrective() THEN MovementItem.Id ELSE 0 END
-                               , MovementItem.DescId
-                               , MovementItem.ObjectId
-                               , MILinkObject_GoodsKind.ObjectId
-                               , MIFloat_Price.ValueData
-                               , MIFloat_CountForPrice.ValueData
-                               , MIFloat_ChangePercent.ValueData
+                                   , tmpMI.OperSumm_ToPay
+                                   , tmpMI.OperSumm_Service
+                                   , tmpMI.OperSumm_Card
+                                   , tmpMI.OperSumm_CardSecond
+                                   , tmpMI.OperSumm_Nalog
+                                   , tmpMI.OperSumm_Minus
+                                   , tmpMI.OperSumm_Add
+                                   , tmpMI.OperSumm_Holiday
+
+                                   , tmpMI.OperSumm_CardRecalc
+                                   , tmpMI.OperSumm_CardSecondRecalc
+                                   , tmpMI.OperSumm_CardSecondCash
+                                   , tmpMI.OperSumm_NalogRecalc
+                                   , tmpMI.OperSumm_SocialIn
+                                   , tmpMI.OperSumm_SocialAdd
+                                   , tmpMI.OperSumm_Child
+                                   , tmpMI.OperSumm_ChildRecalc
+                                   , tmpMI.OperSumm_MinusExt
+                                   , tmpMI.OperSumm_MinusExtRecalc
+
+                                   , tmpMI.OperSumm_Transport
+                                   , tmpMI.OperSumm_TransportAdd
+                                   , tmpMI.OperSumm_TransportAddLong
+                                   , tmpMI.OperSumm_TransportTaxi
+                                   , tmpMI.OperSumm_Phone
+
+                                   , tmpMI.OperSumm_NalogRet
+                                   , tmpMI.OperSumm_NalogRetRecalc
+
+                              FROM tmpMI
+                             UNION ALL
+                              SELECT tmpMI.MovementDescId
+                                   , tmpMI.MovementItemId
+                                   , tmpMI.DescId
+                                   , tmpMI.GoodsId
+                                   , tmpMI.GoodsKindId
+
+                                   , tmpMI.Price
+                                   , tmpMI.Price_original
+                                   , tmpMI.CountForPrice
+
+                                   , tmpMI.ChangePercent
+
+                                     -- !!!очень важное кол-во, для него расчет сумм!!! - !!! ВТОРАЯ Строка !!!
+                                   , -1 * (tmpMI.AmountTax_calc - tmpMI.OperCount_calc) AS OperCount_calc
+                                     -- !!!не очень важное кол-во "ушло", для него тоже расчет сумм!!!
+                                   , tmpMI.OperCount_calcFrom
+
+                                     -- !!!важное кол-во, для него zc_MovementFloat_TotalCount !!! - !!! ВТОРАЯ Строка !!!
+                                   , -1 * (tmpMI.AmountTax_calc - tmpMI.OperCount_calc) AS OperCount_Master
+
+                                   , tmpMI.OperCount_Child
+                                   , tmpMI.OperCount_Partner -- Количество у контрагента
+                                   , tmpMI.OperCount_Packer  -- Количество у заготовителя
+                                   , tmpMI.OperCount_Second  -- Количество дозаказ
+
+                                   , tmpMI.OperSumm_Inventory
+
+                                   , tmpMI.OperSumm_ToPay
+                                   , tmpMI.OperSumm_Service
+                                   , tmpMI.OperSumm_Card
+                                   , tmpMI.OperSumm_CardSecond
+                                   , tmpMI.OperSumm_Nalog
+                                   , tmpMI.OperSumm_Minus
+                                   , tmpMI.OperSumm_Add
+                                   , tmpMI.OperSumm_Holiday
+
+                                   , tmpMI.OperSumm_CardRecalc
+                                   , tmpMI.OperSumm_CardSecondRecalc
+                                   , tmpMI.OperSumm_CardSecondCash
+                                   , tmpMI.OperSumm_NalogRecalc
+                                   , tmpMI.OperSumm_SocialIn
+                                   , tmpMI.OperSumm_SocialAdd
+                                   , tmpMI.OperSumm_Child
+                                   , tmpMI.OperSumm_ChildRecalc
+                                   , tmpMI.OperSumm_MinusExt
+                                   , tmpMI.OperSumm_MinusExtRecalc
+
+                                   , tmpMI.OperSumm_Transport
+                                   , tmpMI.OperSumm_TransportAdd
+                                   , tmpMI.OperSumm_TransportAddLong
+                                   , tmpMI.OperSumm_TransportTaxi
+                                   , tmpMI.OperSumm_Phone
+
+                                   , tmpMI.OperSumm_NalogRet
+                                   , tmpMI.OperSumm_NalogRetRecalc
+
+                              FROM tmpMI
+                              WHERE vbIsNPP_calc = TRUE
+                             ) AS tmpMI
+
+                             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                   ON ObjectFloat_Weight.ObjectId = tmpMI.GoodsId
+                                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                                                  AND tmpMI.DescId = zc_MI_Master()
+                             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                  ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
+                                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                  ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMI.GoodsId
+                                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
                        ) AS tmpMI
-
-                       LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                             ON ObjectFloat_Weight.ObjectId = tmpMI.GoodsId
-                                            AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-                                            AND tmpMI.DescId = zc_MI_Master()
-                       LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                            ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
-                                           AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-                       LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                            ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMI.GoodsId
-                                           AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                       LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
-
-                 ) AS tmpMI
-          ) AS _tmp
+                ) AS _tmp
           ) AS _tmp;
 
      -- !!!меняется значение - переводится в валюту zc_Enum_Currency_Basis!!! - !!!нельзя что б переводился в строчной части!!!
@@ -925,7 +1072,7 @@ BEGIN
 
          -- Сохранили свойство <Итого Сумма Моб.связь (удержание))>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPhone(), inMovementId, vbTotalSummPhone);
-         
+
          -- Сохранили свойство <Налоги - возмещение к ЗП>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummNalogRet(), inMovementId, vbTotalSummNalogRet);
          -- Сохранили свойство <Налоги - возмещение к ЗП (ввод)>
@@ -1003,3 +1150,4 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 -- select lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= id) from gpSelect_Movement_WeighingPartner (inStartDate := ('01.06.2014')::TDateTime , inEndDate := ('30.06.2014')::TDateTime ,  inSession := '5') as a
 -- тест
 -- SELECT lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= Movement.Id) from Movement where DescId = zc_Movement_Sale() and OperDate between ('01.11.2014')::TDateTime and  ('31.12.2014')::TDateTime
+-- SELECT lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= Movement.Id) from Movement where Id = 8872183 -- 8796848

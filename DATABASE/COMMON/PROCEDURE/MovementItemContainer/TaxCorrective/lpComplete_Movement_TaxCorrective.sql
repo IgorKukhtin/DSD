@@ -22,6 +22,22 @@ BEGIN
      IF outMessageText <> '' THEN RETURN; END IF;
 
 
+     -- !!!сохранили - Ќќ¬јя схема с 30.03.18!!!
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_NPP_calc(), inMovementId
+                                           , EXISTS (SELECT 1
+                                                     FROM MovementItem
+                                                          INNER JOIN MovementItemFloat AS MIFloat_NPP_calc
+                                                                                       ON MIFloat_NPP_calc.MovementItemId = MovementItem.Id
+                                                                                      AND MIFloat_NPP_calc.DescId         = zc_MIFloat_NPP_calc()
+                                                                                      AND MIFloat_NPP_calc.ValueData      > 0
+                                                     WHERE MovementItem.MovementId = inMovementId
+                                                       AND MovementItem.DescId     = zc_MI_Master()
+                                                       AND MovementItem.isErased   = FALSE
+                                                       AND MovementItem.Amount     <> 0
+                                                    )
+                                            );
+
+
      IF vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Corrective()
      THEN
           -- у всех возвратов "восстанавливаем" <“ип формировани€ налогового документа>
