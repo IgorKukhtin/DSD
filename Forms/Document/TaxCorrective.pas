@@ -145,6 +145,9 @@ type
     spUpdateMI_NPP: TdsdStoredProc;
     actReport_Check_NPP: TdsdOpenForm;
     bbReport_Check_NPP: TdxBarButton;
+    cbNPP_calc: TcxCheckBox;
+    cxLabel17: TcxLabel;
+    edDateisNPP_calc: TcxDateEdit;
   private
     { Private declarations }
   public

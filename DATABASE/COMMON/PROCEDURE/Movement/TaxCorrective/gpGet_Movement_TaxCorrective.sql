@@ -10,7 +10,9 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_TaxCorrective(
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, isMask Boolean, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , Checked Boolean, Document Boolean, isElectron Boolean, DateisElectron TDateTime
+             , Checked Boolean, Document Boolean
+             , isElectron Boolean, DateisElectron TDateTime
+             , isNPP_calc Boolean, DateisNPP_calc TDateTime
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat
@@ -56,6 +58,8 @@ BEGIN
              , CAST (False as Boolean)              AS Document
              , CAST (False as Boolean)              AS isElectron
              , inOperDate                           AS DateisElectron
+             , CAST (False as Boolean)              AS isNPP_calc
+             , NULL :: TDateTime                    AS DateisNPP_calc
              , CAST (False as Boolean)              AS PriceWithVAT
              , CAST (TaxPercent_View.Percent as TFloat) AS VATPercent
              , CAST (0 as TFloat)                   AS TotalCount
@@ -129,6 +133,10 @@ BEGIN
            , COALESCE (MovementBoolean_Document.ValueData, FALSE)           AS Document
            , COALESCE (MovementBoolean_Electron.ValueData, FALSE)           AS isElectron
            , COALESCE (MovementDate_DateRegistered.ValueData,Movement.OperDate) AS DateisElectron
+
+           , COALESCE (MovementBoolean_NPP_calc.ValueData, FALSE) ::Boolean AS isNPP_calc
+           , COALESCE (MovementDate_NPP_calc.ValueData, Null) :: TDateTime  AS DateisNPP_calc
+           
            , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)       AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData                             AS VATPercent
            , MovementFloat_TotalCount.ValueData                             AS TotalCount
@@ -190,9 +198,17 @@ BEGIN
                                       ON MovementBoolean_Electron.MovementId = Movement.Id
                                      AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_NPP_calc
+                                      ON MovementBoolean_NPP_calc.MovementId = Movement.Id
+                                     AND MovementBoolean_NPP_calc.DescId = zc_MovementBoolean_NPP_calc()
+
             LEFT JOIN MovementDate AS MovementDate_DateRegistered
                                    ON MovementDate_DateRegistered.MovementId =  Movement.Id
                                   AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
+
+            LEFT JOIN MovementDate AS MovementDate_NPP_calc
+                                   ON MovementDate_NPP_calc.MovementId =  Movement.Id
+                                  AND MovementDate_NPP_calc.DescId = zc_MovementDate_NPP_calc()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
@@ -291,6 +307,7 @@ ALTER FUNCTION gpGet_Movement_TaxCorrective (Integer, Boolean, TDateTime, TVarCh
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 01.04.18         * 
  04.12.15         * add isPartner
  16.03.15         * add inMask
  01.05.14                                        * add lpInsertFind_Object_InvNumberTax

@@ -81,6 +81,11 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
             Properties.DisplayFormat = 'DD.MM.YYYY (DDD)'
             Width = 61
           end
+          object UnitJuridical: TcxGridDBColumn
+            Caption = #1070#1088#1083#1080#1094#1086
+            DataBinding.FieldName = 'UnitJuridical'
+            Width = 80
+          end
           object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
@@ -195,9 +200,6 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
     object tsPivot: TcxTabSheet
       Caption = #1057#1074#1086#1076#1085#1072#1103' '#1090#1072#1073#1083#1080#1094#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxDBPivotGrid1: TcxDBPivotGrid
         Left = 0
         Top = 0
@@ -226,6 +228,15 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
           GroupInterval = giDateWeekOfYear
           Visible = True
           UniqueName = #1053#1077#1076#1077#1083#1103
+        end
+        object pcolUnitJuridical: TcxDBPivotGridField
+          AreaIndex = 3
+          AllowedAreas = [faColumn, faRow, faFilter]
+          IsCaptionAssigned = True
+          Caption = #1070#1088#1083#1080#1094#1086
+          DataBinding.FieldName = 'UnitJuridical'
+          Visible = True
+          UniqueName = #1070#1088#1083#1080#1094#1086
         end
         object pcolUnitName: TcxDBPivotGridField
           Area = faRow

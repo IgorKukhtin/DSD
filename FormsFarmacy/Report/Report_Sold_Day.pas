@@ -63,6 +63,8 @@ type
     bbQuasiSchedule: TdxBarButton;
     actGridToExcelPivot: TdsdGridToExcel;
     bbGridToExcelPivot: TdxBarButton;
+    UnitJuridical: TcxGridDBColumn;
+    pcolUnitJuridical: TcxDBPivotGridField;
   private
     { Private declarations }
   public
