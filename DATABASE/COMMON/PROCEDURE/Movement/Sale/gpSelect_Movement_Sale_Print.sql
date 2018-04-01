@@ -1162,8 +1162,9 @@ BEGIN
                                   AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
 
        WHERE tmpMI.AmountPartner <> 0
-       ORDER BY CASE WHEN vbGoodsPropertyId IN (83954 -- Метро
-                                              , 83963 -- Ашан
+       ORDER BY CASE WHEN vbGoodsPropertyId IN (83954  -- Метро
+                                              , 83963  -- Ашан
+                                              , 404076 -- Новус
                                                )
                           THEN zfConvert_StringToNumber (COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, '0')))
                      ELSE '0'
