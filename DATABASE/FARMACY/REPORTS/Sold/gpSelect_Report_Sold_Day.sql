@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Report_SoldDay(
 RETURNS TABLE (
 
     PlanDate          TDateTime,  --Месяц плана
+    UnitJuridical     TVarChar,   --Юрлицо
     UnitName          TVarChar,   --подразделение
     PlanAmount        TFloat,     --План
     PlanAmountAccum   TFloat,     --План с накоплением
@@ -193,6 +194,7 @@ BEGIN
     RETURN QUERY
         SELECT
             T0.PlanDate::TDateTime                                              AS PlanAmount
+           ,Object_Juridical.ValueData::TVarChar                                AS UnitJuridical
            ,Object_Unit.ValueData::TVarChar                                     AS UnitName
            ,T0.PlanAmount::TFloat                                               AS PlanAmount
            ,(SUM(T0.PlanAmount)OVER(PARTITION BY T0.UnitId 
@@ -233,19 +235,24 @@ BEGIN
                ,_PartDay.UnitId
            ) AS T0
            INNER JOIN Object AS Object_Unit ON T0.UnitId = Object_Unit.ID
+           LEFT OUTER JOIN ObjectLink AS ObjectLinkJuridical 
+                                 ON Object_Unit.id = ObjectLinkJuridical.objectid 
+                                AND ObjectLinkJuridical.descid = zc_ObjectLink_Unit_Juridical()
+           LEFT OUTER JOIN Object AS Object_Juridical ON Object_Juridical.id = ObjectLinkJuridical.childobjectid		
        ORDER BY
            Object_Unit.ValueData
           ,T0.PlanDate;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Report_SoldDay (TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
- 
+
+ALTER FUNCTION gpSelect_Report_SoldDay (TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres; 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А. Шаблий О.В.
  28.09.15                                                                        *
+ 31.03.15                                                                                     *
 */
 /*
 -- !!!
