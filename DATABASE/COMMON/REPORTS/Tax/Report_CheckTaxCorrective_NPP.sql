@@ -14,6 +14,7 @@ RETURNS TABLE (ItemName TVarChar, InvNumber TVarChar, InvNumberPartner TVarChar,
              , LineNum         Integer
              , LineNumTax      Integer
              , LineNumTaxCorr_calc Integer
+             , LineNum_calc    Integer
              , Amount          TFloat
              , Price           TFloat
              , CountForPrice   TFloat
@@ -145,6 +146,7 @@ BEGIN
                                                                   AND tmpMITax2.Price       = MIFloat_Price.ValueData
                                                                   AND tmpMITax1.GoodsId     IS NULL
                                 WHERE (MovementItem.ObjectId = inGoodsId OR inGoodsId = 0)
+                                  AND COALESCE (MIFloat_NPP_calc.ValueData, 0) <> 0
                               )
                               
     , tmpData AS (SELECT tmp.MovementId
@@ -191,7 +193,10 @@ BEGIN
 
          , tmpData.LineNum             :: integer
          , tmpData.LineNumTax          :: integer
-         , CASE WHEN COALESCE (tmpData.LineNumTaxCorr_calc, 0) <> 0 THEN tmpData.LineNumTaxCorr_calc ELSE tmpMI_TaxCorrective.LineNumTaxCorr END  :: integer AS LineNumTaxCorr_calc
+         , CASE WHEN COALESCE (tmpData.LineNumTaxCorr_calc, 0) <> 0 THEN tmpData.LineNumTaxCorr_calc ELSE tmpLine.LineNum END  :: integer AS LineNumTaxCorr_calc
+         --, tmpData.LineNumTaxCorr_calc
+         --, ROW_NUMBER() OVER (PARTITION BY tmpData.MovementId ORDER BY tmpData.LineNum, tmpData.LineNumTaxCorr_calc)  :: integer AS LineNum_calc
+         , ROW_NUMBER() OVER (ORDER BY tmpData.LineNum, tmpData.LineNumTaxCorr_calc)  :: integer AS LineNum_calc
          , tmpData.Amount         :: TFloat
          , tmpData.Price          :: TFloat
          , tmpData.CountForPrice  :: TFloat
@@ -218,8 +223,9 @@ BEGIN
          LEFT JOIN MovementString AS MS_DocumentChild_InvNumberPartner ON MS_DocumentChild_InvNumberPartner.MovementId = MovementLinkMovement_DocumentChild.MovementChildId
                                                                       AND MS_DocumentChild_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
-         LEFT JOIN tmpMI_TaxCorrective on tmpMI_TaxCorrective.LineNumTaxCorr_calc = tmpData.LineNum
-                                      --  AND Movement.Id = Movement_DocumentChild.Id
+         LEFT JOIN tmpData AS tmpLine ON tmpLine.LineNumTaxCorr_calc = tmpData.LineNum  -- and 1 = 0
+                                    AND tmpData.LineNum <> 0
+                                     --AND tmpLine.MovementId = tmpData.MovementId
     ORDER BY 1 DESC, tmpData.LineNum
     ;
 
@@ -230,6 +236,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 02.04.18         *
  30.03.18         *
 */
 
