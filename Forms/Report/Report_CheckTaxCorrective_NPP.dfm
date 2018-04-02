@@ -112,9 +112,9 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
             HeaderAlignmentVert = vaCenter
             Width = 72
           end
-          object InvNumber_Tax: TcxGridDBColumn
+          object InvNumberPartner_Tax: TcxGridDBColumn
             Caption = #8470' '#1053#1053
-            DataBinding.FieldName = 'InvNumber_Tax'
+            DataBinding.FieldName = 'InvNumberPartner_Tax'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

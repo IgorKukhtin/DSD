@@ -53,7 +53,7 @@ type
     spGet: TdsdStoredProc;
     GuidesJuridical: TdsdGuides;
     Invnumber: TcxGridDBColumn;
-    InvNumber_Tax: TcxGridDBColumn;
+    InvNumberPartner_Tax: TcxGridDBColumn;
     LineNum_calc: TcxGridDBColumn;
   private
     { Private declarations }
