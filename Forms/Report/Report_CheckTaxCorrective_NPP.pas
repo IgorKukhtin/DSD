@@ -39,8 +39,22 @@ type
     AmountSumm: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    Invnumber: TcxGridDBColumn;
+    InvNumberPartner: TcxGridDBColumn;
     FormParams: TdsdFormParams;
+    cxLabel8: TcxLabel;
+    edDocumentTax: TcxButtonEdit;
+    cxLabel10: TcxLabel;
+    edOperDate_Tax: TcxDateEdit;
+    GuidesDocumentTax: TdsdGuides;
+    edJuridical: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    OperDate: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    spGet: TdsdStoredProc;
+    GuidesJuridical: TdsdGuides;
+    Invnumber: TcxGridDBColumn;
+    InvNumber_Tax: TcxGridDBColumn;
+    LineNum_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

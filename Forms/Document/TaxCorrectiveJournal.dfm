@@ -5,7 +5,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog1
   ExplicitWidth = 1134
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1380,6 +1380,40 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1083#1103' '#1042#1057#1045#1061' '#8470' '#1087'/'#1087' '#1044#1051#1071' '#1082#1086#1083#1086#1085#1082#1080' 1/2'#1089#1090#1088#1086#1082#1072
       ImageIndex = 45
     end
+    object actReport_Check_NPP: TdsdOpenForm
+      Category = 'NPP'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#8470#1087'/'#1087'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#8470#1087'/'#1087'>'
+      ImageIndex = 40
+      FormName = 'TReport_CheckTaxCorrective_NPPForm'
+      FormNameParam.Value = 'TReport_CheckTaxCorrective_NPPForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'GoodsId'
+          Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = ' '
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'DocumentChildId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1536,7 +1570,15 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbChangeNPP_Calc'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_Check_NPP'
         end
         item
           Visible = True
@@ -1690,8 +1732,12 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Action = macUpdateINN
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbChangeNPP_Calc: TdxBarButton
       Action = macChangeNPP_Calc
+      Category = 0
+    end
+    object bbReport_Check_NPP: TdxBarButton
+      Action = actReport_Check_NPP
       Category = 0
     end
   end

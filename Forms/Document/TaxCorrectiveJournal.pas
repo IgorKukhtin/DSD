@@ -130,7 +130,9 @@ type
     actChangeNPP_calc: TdsdExecStoredProc;
     macChangeNPP: TMultiAction;
     macChangeNPP_Calc: TMultiAction;
-    bb: TdxBarButton;
+    bbChangeNPP_Calc: TdxBarButton;
+    actReport_Check_NPP: TdsdOpenForm;
+    bbReport_Check_NPP: TdxBarButton;
   private
     { Private declarations }
   public

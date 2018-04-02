@@ -7,12 +7,13 @@ CREATE OR REPLACE FUNCTION Report_CheckTaxCorrective_NPP (
     IN inGoodsId             Integer   , -- товар
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (ItemName TVarChar, InvNumber TVarChar, OperDate TDateTime
+RETURNS TABLE (ItemName TVarChar, InvNumber TVarChar, InvNumberPartner TVarChar, InvNumber_Tax TVarChar
+             , OperDate TDateTime
+             , JuridicalName TVarChar
              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
              , LineNum         Integer
              , LineNumTax      Integer
              , LineNumTaxCorr_calc Integer
-             , LineNumTaxCorr  Integer
              , Amount          TFloat
              , Price           TFloat
              , CountForPrice   TFloat
@@ -95,6 +96,9 @@ BEGIN
                                                
                               FROM (SELECT MovementLinkMovement_DocumentChild.MovementId                    --корр.
                                     FROM MovementLinkMovement AS MovementLinkMovement_DocumentChild
+                                         INNER JOIN Movement ON Movement.Id = MovementLinkMovement_DocumentChild.MovementId
+                                                           AND Movement.DescId = zc_Movement_TaxCorrective()
+                                                           AND Movement.StatusId = zc_Enum_Status_Complete()
                                     WHERE MovementLinkMovement_DocumentChild.MovementChildId = inMovementId -- НН
                                       AND MovementLinkMovement_DocumentChild.DescId = zc_MovementLinkMovement_Child()
                                     ) AS tmpMovement 
@@ -152,47 +156,70 @@ BEGIN
                        , tmp.Price
                        , tmp.CountForPrice
                        , tmp.AmountSumm
-                       , 0              AS LineNumTax
                        , 0   :: Integer AS LineNumTaxCorr_calc
-                       , 0   :: Integer AS LineNumTaxCorr
+                       , 0    AS LineNumTax
                        , 0   :: TFloat  AS AmountTax_calc
                   FROM tmpMI_Tax AS tmp
                UNION 
                   SELECT tmp.MovementId
-                       , 0 AS LineNum
+                       , tmp.LineNumTaxCorr AS LineNum
                        , tmp.GoodsCode
                        , tmp.GoodsName
                        , tmp.GoodsKindName
-                       , tmp.Amount
+                       , (-1) * tmp.Amount
                        , tmp.Price
                        , tmp.CountForPrice
-                       , tmp.AmountSumm
-                       , (-1) * tmp.LineNumTax
-                       , (-1) * tmp.LineNumTaxCorr_calc
-                       , (-1) * tmp.LineNumTaxCorr
-                       , (-1) * tmp.AmountTax_calc
+                       , (-1) * tmp.AmountSumm
+                       , tmp.LineNumTaxCorr_calc
+                       , tmp.LineNumTax
+                       , tmp.AmountTax_calc
                   FROM tmpMI_TaxCorrective AS tmp
                   )
     --- результат 
     SELECT MovementDesc.ItemName
          , Movement.InvNumber
+         , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
+         , CASE WHEN Movement.DescId = zc_Movement_Tax() 
+                THEN MovementString_InvNumberPartner.ValueData 
+                ELSE CAST(MS_DocumentChild_InvNumberPartner.ValueData as TVarChar)
+           END                  AS InvNumber_Tax
          , Movement.OperDate
+         , Object_To.ValueData  AS JuridicalName
          , tmpData.GoodsCode
          , tmpData.GoodsName
          , tmpData.GoodsKindName
 
          , tmpData.LineNum             :: integer
          , tmpData.LineNumTax          :: integer
-         , tmpData.LineNumTaxCorr_calc :: integer
-         , tmpData.LineNumTaxCorr      :: integer
+         , CASE WHEN COALESCE (tmpData.LineNumTaxCorr_calc, 0) <> 0 THEN tmpData.LineNumTaxCorr_calc ELSE tmpMI_TaxCorrective.LineNumTaxCorr END  :: integer AS LineNumTaxCorr_calc
          , tmpData.Amount         :: TFloat
          , tmpData.Price          :: TFloat
          , tmpData.CountForPrice  :: TFloat
          , tmpData.AmountSumm     :: TFloat
-         , tmpData.AmountTax_calc :: TFloat
+         , tmpData.AmountTax_calc :: TFloat 
     FROM tmpData
          LEFT JOIN Movement ON Movement.Id = tmpData.MovementId
          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                      ON MovementLinkObject_To.MovementId = Movement.Id
+                                     AND MovementLinkObject_To.DescId = CASE WHEN Movement.DescId = zc_Movement_Tax() THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From() END
+         LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+         
+         LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                  ON MovementString_InvNumberPartner.MovementId = Movement.Id
+                                 AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+
+         LEFT JOIN MovementLinkMovement AS MovementLinkMovement_DocumentChild
+                                        ON MovementLinkMovement_DocumentChild.MovementId = Movement.Id
+                                       AND MovementLinkMovement_DocumentChild.DescId = zc_MovementLinkMovement_Child()
+ 
+         LEFT JOIN Movement AS Movement_DocumentChild ON Movement_DocumentChild.Id = MovementLinkMovement_DocumentChild.MovementChildId
+         LEFT JOIN MovementString AS MS_DocumentChild_InvNumberPartner ON MS_DocumentChild_InvNumberPartner.MovementId = MovementLinkMovement_DocumentChild.MovementChildId
+                                                                      AND MS_DocumentChild_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+
+         LEFT JOIN tmpMI_TaxCorrective on tmpMI_TaxCorrective.LineNumTaxCorr_calc = tmpData.LineNum
+                                      --  AND Movement.Id = Movement_DocumentChild.Id
     ORDER BY 1 DESC, tmpData.LineNum
     ;
 

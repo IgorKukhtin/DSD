@@ -3,7 +3,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   ClientHeight = 668
   ClientWidth = 1114
   ExplicitWidth = 1130
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -812,8 +812,8 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
           'Top'
           'Width')
       end>
-    Left = 40
-    Top = 640
+    Left = 56
+    Top = 576
   end
   inherited ActionList: TActionList
     Left = 63
@@ -1512,8 +1512,8 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 280
-    Top = 552
+    Left = 288
+    Top = 528
   end
   inherited StatusGuides: TdsdGuides
     Left = 48
@@ -1815,6 +1815,12 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Value = 'NULL'
         Component = edDateisNPP_calc
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 40
@@ -2498,8 +2504,16 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate_Tax'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'OperDate_Tax'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
-    Left = 936
+    Left = 920
     Top = 56
   end
   object HeaderSaverDocChild: THeaderSaver

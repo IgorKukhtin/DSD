@@ -1,28 +1,30 @@
 inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1056#1077#1077#1089#1090#1088#1072' '#1085#1072#1083#1086#1075#1086#1074#1099#1093' '#1085#1072#1082#1083#1072#1076#1085#1099#1093'>'
-  ClientHeight = 319
-  ClientWidth = 837
+  ClientHeight = 316
+  ClientWidth = 839
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 853
-  ExplicitHeight = 357
+  ExplicitWidth = 855
+  ExplicitHeight = 354
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 837
-    Height = 262
+    Top = 75
+    Width = 839
+    Height = 241
     TabOrder = 3
-    ExplicitWidth = 837
-    ExplicitHeight = 262
-    ClientRectBottom = 262
-    ClientRectRight = 837
+    ExplicitTop = 75
+    ExplicitWidth = 839
+    ExplicitHeight = 241
+    ClientRectBottom = 241
+    ClientRectRight = 839
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 837
-      ExplicitHeight = 262
+      ExplicitWidth = 839
+      ExplicitHeight = 241
       inherited cxGrid: TcxGrid
-        Width = 837
-        Height = 262
-        ExplicitWidth = 837
-        ExplicitHeight = 262
+        Width = 839
+        Height = 241
+        ExplicitWidth = 839
+        ExplicitHeight = 241
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -69,6 +71,11 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = GoodsName
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -85,11 +92,51 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
             Width = 72
           end
           object Invnumber: TcxGridDBColumn
-            Caption = #8470' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
+            Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'Invnumber'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
+          object OperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 68
+          end
+          object InvNumberPartner: TcxGridDBColumn
+            Caption = #8470' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
+            DataBinding.FieldName = 'InvNumberPartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 72
+          end
+          object InvNumber_Tax: TcxGridDBColumn
+            Caption = #8470' '#1053#1053
+            DataBinding.FieldName = 'InvNumber_Tax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object JuridicalName: TcxGridDBColumn
+            Caption = #1070#1088'. '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 109
+          end
+          object LineNumTax: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087' ('#1053#1053')'
+            DataBinding.FieldName = 'LineNumTax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = '0.;-0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object LineNum: TcxGridDBColumn
             Caption = #8470' '#1087'/'#1087
@@ -102,17 +149,6 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
             Options.Editing = False
             Width = 55
           end
-          object LineNumTax: TcxGridDBColumn
-            Caption = #8470' '#1087'/'#1087' ('#1053#1053')'
-            DataBinding.FieldName = 'LineNumTax'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = '0.;-0.; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #8470' '#1087'/'#1087' '#1074' '#1082#1086#1083#1086#1085#1082#1077' 1/1'#1089#1090#1088#1086#1082#1072' - '#1076#1083#1103' '#1082#1086#1083#1086#1085#1082#1080' 7 '#1089' "'#1084#1080#1085#1091#1089#1086#1084'"'
-            Options.Editing = False
-            Width = 75
-          end
           object LineNumTaxCorr_calc: TcxGridDBColumn
             Caption = #8470' '#1087'/'#1087' '#1053#1053'-'#1050#1086#1088#1088'. ('#1085#1072#1083#1086#1075'.)'
             DataBinding.FieldName = 'LineNumTaxCorr_calc'
@@ -124,17 +160,12 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
             Options.Editing = False
             Width = 75
           end
-          object LineNumTaxCorr: TcxGridDBColumn
-            Caption = #8470' '#1087'/'#1087' '#1053#1053'-'#1050#1086#1088#1088'.'
-            DataBinding.FieldName = 'LineNumTaxCorr'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = '0.;-0.; ;'
+          object LineNum_calc: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087' ('#1088#1072#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'LineNum_calc'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = 
-              #8470' '#1087'/'#1087' '#1074' '#1082#1086#1083#1086#1085#1082#1077' 1/2'#1089#1090#1088#1086#1082#1072' - '#1076#1083#1103' '#1082#1086#1083#1086#1085#1082#1080' 7 '#1089' "'#1087#1083#1102#1089#1086#1084'" - '#1092#1086#1088#1084#1080#1088#1091#1077#1090 +
-              #1089#1103' '#1074' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1077' '#1087#1086' '#1087#1088#1072#1074#1080#1083#1091': '#8470' '#1087'/'#1087' + 1'
-            Options.Editing = False
+            HeaderHint = #8470' '#1087'/'#1087' '#1088#1072#1089#1095#1077#1090#1085#1086#1077
             Width = 70
           end
           object GoodsCode: TcxGridDBColumn
@@ -153,7 +184,7 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 70
+            Width = 135
           end
           object GoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -210,38 +241,48 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
     end
   end
   inherited Panel: TPanel
-    Width = 837
-    ExplicitWidth = 837
+    Width = 839
+    Height = 49
+    ExplicitWidth = 839
+    ExplicitHeight = 49
     inherited deStart: TcxDateEdit
-      Left = 683
+      Left = 99
+      Top = 42
       Properties.SaveTime = False
       Visible = False
-      ExplicitLeft = 683
+      ExplicitLeft = 99
+      ExplicitTop = 42
     end
     inherited deEnd: TcxDateEdit
-      Left = 745
+      Left = 177
+      Top = 23
       Properties.SaveTime = False
       Visible = False
-      ExplicitLeft = 745
+      ExplicitLeft = 177
+      ExplicitTop = 23
     end
     inherited cxLabel1: TcxLabel
-      Left = 635
+      Left = 19
+      Top = 42
       Visible = False
-      ExplicitLeft = 635
+      ExplicitLeft = 19
+      ExplicitTop = 42
     end
     inherited cxLabel2: TcxLabel
-      Left = 720
+      Left = 104
+      Top = 42
       Visible = False
-      ExplicitLeft = 720
+      ExplicitLeft = 104
+      ExplicitTop = 42
     end
     object cxLabel4: TcxLabel
-      Left = 18
-      Top = 6
+      Left = 482
+      Top = 0
       Caption = #1058#1086#1074#1072#1088':'
     end
     object edGoods: TcxButtonEdit
-      Left = 57
-      Top = 5
+      Left = 482
+      Top = 17
       Properties.Buttons = <
         item
           Default = True
@@ -251,8 +292,68 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
       TabOrder = 5
       Width = 340
     end
+    object cxLabel8: TcxLabel
+      Left = 98
+      Top = 0
+      Caption = #8470' '#1085#1072#1083#1086#1075#1086#1074#1086#1081
+    end
+    object edDocumentTax: TcxButtonEdit
+      Left = 98
+      Top = 17
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 83
+    end
+    object cxLabel10: TcxLabel
+      Left = 4
+      Top = 0
+      Caption = #1044#1072#1090#1072' '#1085#1072#1083#1086#1075#1086#1074#1086#1081
+    end
+    object edOperDate_Tax: TcxDateEdit
+      Left = 4
+      Top = 17
+      EditValue = 42342d
+      Properties.ReadOnly = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 9
+      Width = 87
+    end
+    object edJuridical: TcxButtonEdit
+      Left = 190
+      Top = 17
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 10
+      Width = 283
+    end
+    object cxLabel3: TcxLabel
+      Left = 190
+      Top = 0
+      Caption = #1070#1088'. '#1083#1080#1094#1086
+    end
   end
   inherited ActionList: TActionList
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProc = spGet
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spSelect
+        end>
+    end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
@@ -316,8 +417,8 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
       item
         Name = 'inMovementId'
         Value = 41640d
-        Component = FormParams
-        ComponentItem = 'MovementId'
+        Component = GuidesDocumentTax
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -397,8 +498,8 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 272
-    Top = 8
+    Left = 264
+    Top = 32
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -420,10 +521,156 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
       item
         Name = 'MovementId'
         Value = ''
+        Component = GuidesDocumentTax
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end>
     Left = 344
     Top = 176
+  end
+  object GuidesDocumentTax: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edDocumentTax
+    FormNameParam.Value = 'TTaxJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TTaxJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesDocumentTax
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesDocumentTax
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalId'
+        Value = '0'
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerId'
+        Value = '0'
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerName'
+        Value = ' '
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate_Tax'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'OperDate_Tax'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    Left = 120
+    Top = 16
+  end
+  object spGet: TdsdStoredProc
+    StoredProcName = 'gpGet_TaxParam'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = GuidesDocumentTax
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber'
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate'
+        Value = 42132d
+        Component = edOperDate_Tax
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberPartner'
+        Value = ''
+        Component = GuidesDocumentTax
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ToId'
+        Value = '0'
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ToName'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 504
+    Top = 208
+  end
+  object GuidesJuridical: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    Key = '0'
+    FormNameParam.Value = 'TContractChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TContractChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'JuridicalId'
+        Value = '0'
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 344
+    Top = 8
   end
 end
