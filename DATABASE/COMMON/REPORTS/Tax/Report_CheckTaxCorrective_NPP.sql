@@ -148,7 +148,7 @@ BEGIN
                                                                   AND tmpMITax2.Price       = MIFloat_Price.ValueData
                                                                   AND tmpMITax1.GoodsId     IS NULL
                                 WHERE (MovementItem.ObjectId = inGoodsId OR inGoodsId = 0)
-                                  AND COALESCE (MIFloat_NPP_calc.ValueData, 0) <> 0
+                                  -- AND COALESCE (MIFloat_NPP_calc.ValueData, 0) <> 0
                               )
                               
     , tmpData AS (SELECT tmp.MovementId
