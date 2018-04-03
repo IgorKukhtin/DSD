@@ -11,7 +11,7 @@ type
     class function FieldToBin(AField: TField): RawByteString;
   public
     /// TODO: передавать указатель на строку
-    class function PackDataset(ADataSet: TDataSet; AutoWidth: boolean): RawByteString;
+    class function PackDataset(ADataSet: TDataSet): RawByteString;
   end;
 
 implementation
@@ -19,7 +19,7 @@ implementation
 const
   cHeader: AnsiString = #150#25 + AnsiChar($E0) + AnsiChar($BD) + #1#0#0#0#24#0#0#0;
   cHeaderFooter = #3#0#0#0;
-  cTypeHeader = #0#2#0#0#0;
+  cTypeHeader = #0#16#0#0#0;
   cProp = #0#0;
 
   cTypeInteger = #4#0#1 + cTypeHeader;
@@ -27,10 +27,10 @@ const
   cTypeNumeric = #8#0#4 + cTypeHeader;
   cTypeDateTime = #8#0#8 + cTypeHeader;
 
-  cTypeAnsiString = #2#0#73#0#2#0#1#0#5'WIDTH'#2#0#2#0;
-  cTypeWideString = #2#0#74#0#2#0#1#0#5'WIDTH'#2#0#2#0;
-  cTypeWideMemo = #4#0#75#0#2#0#1#0#7'SUBTYPE'#2#0#73#0#9#0'WideText'#0;
-  cTypeAnsiMemo = #4#0#75#0#2#0#1#0#7'SUBTYPE'#2#0#73#0#5#0'Text'#0;
+  cTypeAnsiString = #2#0#73#0#16#0#1#0#5'WIDTH'#2#0#2#0;
+  cTypeWideString = #2#0#74#0#16#0#1#0#5'WIDTH'#2#0#2#0;
+  cTypeWideMemo = #4#0#75#0#16#0#1#0#7'SUBTYPE'#2#0#73#0#9#0'WideText'#0;
+  cTypeAnsiMemo = #4#0#75#0#16#0#1#0#7'SUBTYPE'#2#0#73#0#5#0'Text'#0;
 
   cUnixMilliseconds = 62135683200000;
 
@@ -76,6 +76,7 @@ var
   LByte, LRecordStatus: Byte;
   I, J: Integer;
   LFieldCount, LWordValue: Word;
+  LLongWordValue: LongWord;
   LRecordCount: Cardinal;
   LIntValue: Integer;
   LFieldList, LRes, LStringValue: RawByteString;
@@ -104,7 +105,8 @@ begin
     begin
       LByte := 0;
       for J := 0 to 3 do
-        if (ADataSet.FieldCount > (I * 4 + J)) and ADataSet.Fields[I * 4 + J].IsNull then
+        if (ADataSet.FieldCount > (I * 4 + J)) and (ADataSet.Fields[I * 4 + J].IsNull or
+          (ADataSet.Fields[I * 4 + J].DataType = ftMemo) and (ADataSet.Fields[I * 4 + J].AsAnsiString = '')) then
           LByte := LByte or (1 shl (J * 2));
       LRes := LRes + AnsiChar(LByte);
     end;
@@ -113,7 +115,7 @@ begin
     begin
       if not LField.IsNull then
         case LField.DataType of
-          ftString, ftMemo, ftWideString, ftWideMemo:
+          ftString, ftWideString:
             begin
               LStringValue := LField.AsAnsiString;
               LWordValue := Length(LStringValue);
@@ -122,6 +124,21 @@ begin
 
               SetLength(LRes, Length(LRes) + SizeOf(LWordValue));
               Move(LWordValue, LRes[Length(LRes) - (SizeOf(LWordValue) - 1)], SizeOf(LWordValue));
+
+              LRes := LRes + LStringValue;
+
+              if Length(LStringValue) = 0 then
+                LRes := LRes + #0
+            end;
+          ftMemo, ftWideMemo: if LField.AsAnsiString <> '' then
+            begin
+              LStringValue := LField.AsAnsiString;
+              LLongWordValue := Length(LStringValue);
+              if LLongWordValue = 0 then
+                LLongWordValue := 1;
+
+              SetLength(LRes, Length(LRes) + SizeOf(LLongWordValue));
+              Move(LLongWordValue, LRes[Length(LRes) - (SizeOf(LLongWordValue) - 1)], SizeOf(LLongWordValue));
 
               LRes := LRes + LStringValue;
 

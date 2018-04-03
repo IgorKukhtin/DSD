@@ -4,7 +4,11 @@ uses
   Vcl.SvcMgr,
   uDSDSvcMain in 'uDSDSvcMain.pas' {FarmacyService: TService},
   dmDSD in 'dmDSD.pas' {DM: TDataModule},
-  uFillDataSet in 'uFillDataSet.pas';
+  uFillDataSet in 'uFillDataSet.pas',
+  NativeXml in 'NativeXml\NativeXml.pas',
+  sdDebug in 'NativeXml\sdDebug.pas',
+  sdStreams in 'NativeXml\sdStreams.pas',
+  sdStringTable in 'NativeXml\sdStringTable.pas';
 
 {$R *.RES}
 

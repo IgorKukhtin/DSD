@@ -6,9 +6,9 @@ uses
   System.SysUtils, System.Classes, IdContext, IdCustomHTTPServer, IdCustomTCPServer, Data.DB,
   ZStoredProcedure, ZConnection, Vcl.ExtCtrls, IdBaseComponent, IdComponent,
   IdHTTPServer, System.Generics.Collections, Datasnap.Provider, Datasnap.DBClient,
-  Windows, System.StrUtils, IdGlobal, Winapi.ActiveX, Xml.XMLIntf, Xml.XMLDoc, System.Variants, ZLibEx, IdURI,
+  Windows, System.StrUtils, IdGlobal, Winapi.ActiveX, System.Variants, ZLibEx, IdURI,
   System.DateUtils, IniFiles, System.IOUtils, uFillDataSet, ZDataSet, ZCompatibility, ZAbstractRODataset,
-  ZAbstractDataset, ZAbstractConnection;
+  ZAbstractDataset, ZAbstractConnection, NativeXml;
 
 type
   TDSDStoredProcParam = record
@@ -178,76 +178,86 @@ end;
 
 function TDM.ParseXML(const AXML: String; out AStoredProc: TDSDStoredProc): Boolean;
 var
-  LXML: IXMLDocument;
-  LDocument, LArrayItem: IXMLNode;
+  LXML: TNativeXml;
+  LDocument, LArrayItem: TXmlNode;
   LStoredProc: TDSDStoredProc;
   LParam: TDSDStoredProcParam;
   I: integer;
   Locale: TFormatSettings;
+  MStream : TStringStream;
 begin
   CoInitialize(nil);
   try
-    LXML := NewXMLDocument;
-    LXML.LoadFromXML(AXML);
-    LDocument := LXML.DocumentElement;
+    LXML := TNativeXml.Create(Self);
+    MStream := TStringStream.Create;
+    MStream.WriteString(AXML);
+    MStream.Position := 0;
+    LXML.LoadFromStream(MStream);
+    LDocument := LXML.Root;
 
-    if VarIsNull(LDocument.Attributes['Session']) then
+    if LDocument.AttributeIndexByName('Session') < 0 then
       LStoredProc.Session := ''
     else
-      LStoredProc.Session := LDocument.Attributes['Session'];
+      LStoredProc.Session := LDocument.AttributeValueByNameWide['Session'];
 
-    if VarIsNull(LDocument.Attributes['AutoWidth']) then
+    if LDocument.AttributeIndexByName('AutoWidth') < 0 then
       LStoredProc.AutoWidth := False
     else
-      LStoredProc.AutoWidth := LDocument.Attributes['AutoWidth'];
+      LStoredProc.AutoWidth := LDocument.AttributeByName['AutoWidth'].ValueAsBool;
 
-    LStoredProc.SPName := LDocument.ChildNodes[0].NodeName;
-    LStoredProc.OutputType := LDocument.ChildNodes[0].Attributes['OutputType'];
-    if VarIsNull(LDocument.Attributes['DataSetType']) then
+    LStoredProc.SPName := LDocument.Nodes[LDocument.NodeCount - 1].NameUnicode;
+    LStoredProc.OutputType := LDocument.Nodes[LDocument.NodeCount - 1].AttributeValueByNameWide['OutputType'];
+    if LDocument.Nodes[LDocument.NodeCount - 1].AttributeIndexByName('DataSetType') < 0 then
       LStoredProc.DataSetType := ''
     else
-      LStoredProc.DataSetType := LDocument.ChildNodes[0].Attributes['DataSetType'];
+      LStoredProc.DataSetType := LDocument.Nodes[LDocument.NodeCount - 1].AttributeByName['DataSetType'].Value;
 
     LStoredProc.ParamsList := TList<TDSDStoredProcParam>.Create;
-    if LDocument.ChildNodes[LStoredProc.SPName].ChildNodes.Count > 0 then
-      for I := 0 to LDocument.ChildNodes[LStoredProc.SPName].ChildNodes.Count - 1 do
+    if LDocument.NodeByName(LStoredProc.SPName).NodeCount > 0 then
+      for I := 0 to LDocument.NodeByName(LStoredProc.SPName).NodeCount - 1 do
       begin
-        LArrayItem := LDocument.ChildNodes[LStoredProc.SPName].ChildNodes[I];
+        LArrayItem :=LDocument.NodeByName(LStoredProc.SPName).Nodes[I];
         with LParam do
         begin
-          ParamName := LArrayItem.NodeName;
-          Value := LArrayItem.Attributes['Value'];
+          ParamName := LArrayItem.NameUnicode;
+          if LArrayItem.AttributeIndexByName('Value') >= 0 then
+          begin
+            Value := LArrayItem.AttributeByName['Value'].Value;
 
-          case IndexStr(LArrayItem.Attributes['DataType'], ['ftInteger', 'ftString', 'ftFloat', 'ftBlob', 'ftDateTime',
-            'ftBoolean']) of
-            0:
-              DataType := 'integer';
-            1:
-              DataType := 'TVarChar';
-            2:
-              DataType := 'TFloat';
-            3:
-              DataType := 'TBlob';
-            4:
-              begin
-                DataType := 'TDateTime';
-                Locale := TFormatSettings.Create;
-                Locale.DateSeparator := '.';
-                Locale.ShortDateFormat := 'dd.MM.yyyy';
-                Locale.TimeSeparator := ':';
-                Locale.ShortTimeFormat := 'H:mm';
-                Value := StrToDateTime(VarToStr(Value), Locale);
-              end;
-            5:
-              DataType := 'Boolean';
+            case IndexStr(LArrayItem.AttributeValueByNameWide['DataType'], ['ftInteger', 'ftString', 'ftFloat', 'ftBlob', 'ftDateTime',
+              'ftBoolean']) of
+              0:
+                DataType := 'integer';
+              1:
+                DataType := 'TVarChar';
+              2: begin
+                   DataType := 'TFloat';
+                   Value := LArrayItem.AttributeByName['Value'].ValueAsFloat;
+                 end;
+              3:
+                DataType := 'TBlob';
+              4:
+                begin
+                  DataType := 'TDateTime';
+                  Locale := TFormatSettings.Create;
+                  Locale.DateSeparator := '.';
+                  Locale.ShortDateFormat := 'dd.MM.yyyy';
+                  Locale.TimeSeparator := ':';
+                  Locale.ShortTimeFormat := 'H:mm';
+                  Value := StrToDateTime(VarToStr(Value), Locale);
+                end;
+              5:
+                DataType := 'Boolean';
+            end;
+            LStoredProc.ParamsList.Add(LParam);
           end;
-          LStoredProc.ParamsList.Add(LParam);
         end;
       end;
     AStoredProc := LStoredProc;
     Result := True;
   finally
-    LXML := nil;
+    MStream.Free;
+    LXML.Free;
     CoUninitialize;
   end;
 end;
@@ -270,7 +280,7 @@ begin
       begin
         Name := AStoredProc.ParamsList[I].ParamName;
         Value := AStoredProc.ParamsList[I].Value;
-        case AnsiIndexStr(AStoredProc.ParamsList[I].DataType, ['TVarChar', 'TDateTime', 'Boolean', 'TBlob']) of
+        case AnsiIndexStr(AStoredProc.ParamsList[I].DataType, ['TVarChar', 'TDateTime', 'Boolean', 'TBlob', 'TFloat']) of
           0:
             DataType := ftString;
           1:
@@ -282,6 +292,8 @@ begin
               DataType := ftMemo;
               Value := VarToStr(AStoredProc.ParamsList[I].Value);
             end;
+          4:
+            DataType := ftFloat;
         else
           DataType := ftInteger;
         end;
@@ -315,7 +327,9 @@ begin
           for I := 0 to LStoredProc.FieldCount - 1 do
               case LStoredProc.Fields[I].DataType of
                 ftDate, ftDateTime, ftTime:
-                  Result := Result + ' ' + LStoredProc.Fields[I].FieldName + '="' + DateToISO8601(LStoredProc.Fields[I].asDateTime) + '"'
+                  Result := Result + ' ' + LStoredProc.Fields[I].FieldName + '="' + DateToISO8601(LStoredProc.Fields[I].asDateTime) + '"';
+                ftString:
+                  Result := Result + ' ' + LStoredProc.Fields[I].FieldName + '="' + StringsReplace(VarToStr(LStoredProc.Fields[I].Value), ['"'], ['&quot;']) + '"';
                 else
                   Result := Result + ' ' + LStoredProc.Fields[I].FieldName + '="' + VarToStr(LStoredProc.Fields[I].Value) + '"';
               end;
