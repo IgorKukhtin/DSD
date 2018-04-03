@@ -457,6 +457,7 @@ inherited SaleForm: TSaleForm
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
