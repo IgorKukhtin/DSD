@@ -131,16 +131,16 @@ BEGIN
                    , tmpMI_All.Amount                               AS Amount
                    , COALESCE (MIFloat_Price.ValueData, 0)          AS Price
                    , COALESCE (MIFloat_AmountTax_calc.ValueData, 0) AS AmountTax_calc
-                   , MIFloat_NPP_calc.ValueData                     AS NPP_calc
+                   , COALESCE (MIFloat_NPP_calc.ValueData, 0)       AS NPP_calc
                      --  є п/п - „то б выбрать !!!ѕќ—Ћ≈ƒЌёё!!!
-                   , ROW_NUMBER() OVER (PARTITION BY tmpMI_All.GoodsId, MILinkObject_GoodsKind.ObjectId, MIFloat_Price.ValueData ORDER BY MIFloat_NPP_calc.ValueData DESC) AS Ord1
+                   , ROW_NUMBER() OVER (PARTITION BY tmpMI_All.GoodsId, MILinkObject_GoodsKind.ObjectId, MIFloat_Price.ValueData ORDER BY COALESCE (MIFloat_NPP_calc.ValueData, 1) DESC) AS Ord1
                      --  є п/п - „то б выбрать !!!ѕќ—Ћ≈ƒЌёё!!!
-                   , ROW_NUMBER() OVER (PARTITION BY tmpMI_All.GoodsId, MILinkObject_GoodsKind.ObjectId, MIFloat_Price.ValueData ORDER BY MIFloat_NPP_calc.ValueData DESC) AS Ord2
+                   , ROW_NUMBER() OVER (PARTITION BY tmpMI_All.GoodsId, MILinkObject_GoodsKind.ObjectId, MIFloat_Price.ValueData ORDER BY COALESCE (MIFloat_NPP_calc.ValueData, 1) DESC) AS Ord2
               FROM tmpMI_All
-                   INNER JOIN tmpMIFloat AS MIFloat_NPP_calc
-                                         ON MIFloat_NPP_calc.MovementItemId = tmpMI_All.Id
-                                        AND MIFloat_NPP_calc.DescId         = zc_MIFloat_NPP_calc()
-                                        AND MIFloat_NPP_calc.ValueData      > 0
+                   LEFT JOIN tmpMIFloat AS MIFloat_NPP_calc
+                                        ON MIFloat_NPP_calc.MovementItemId = tmpMI_All.Id
+                                       AND MIFloat_NPP_calc.DescId         = zc_MIFloat_NPP_calc()
+                                       AND MIFloat_NPP_calc.ValueData      > 0
                    LEFT JOIN tmpMIFloat AS MIFloat_AmountTax_calc
                                         ON MIFloat_AmountTax_calc.MovementItemId = tmpMI_All.Id
                                        AND MIFloat_AmountTax_calc.DescId         = zc_MIFloat_AmountTax_calc()
@@ -151,6 +151,16 @@ BEGIN
                    LEFT JOIN tmpGoodsKind AS MILinkObject_GoodsKind
                                           ON MILinkObject_GoodsKind.MovementItemId = tmpMI_All.Id
                                          AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+             )
+          -- SUMMA
+        , tmpMI_Corr_sum AS
+             (SELECT tmpMI_Corr_all.GoodsId
+                   , tmpMI_Corr_all.Price
+                   , SUM (tmpMI_Corr_all.Amount) AS Amount
+              FROM tmpMI_Corr_all
+              WHERE tmpMI_Corr_all.NPP_calc = 0
+              GROUP BY tmpMI_Corr_all.GoodsId
+                     , tmpMI_Corr_all.Price
              )
           -- “≈ ”ўјя ќƒЌј - корректировка
         , tmpMI_Corr_curr_all AS
@@ -192,11 +202,13 @@ BEGIN
                    , tmpMI_Corr_curr_all.GoodsKindId
                    , tmpMI_Corr_curr_all.Amount
                    , tmpMI_Corr_curr_all.Price
-                   , COALESCE (tmpMI_tax1.Amount_Tax_find, tmpMI_tax2.Amount_Tax_find) AS AmountTax_calc
+                   , COALESCE (tmpMI_tax1.Amount_Tax_find, tmpMI_tax2.Amount_Tax_find) - COALESCE (tmpMI_Corr_sum.Amount, 0) AS AmountTax_calc
                    , CASE WHEN tmpMI_Corr_curr_all.NPP = 0 THEN COALESCE (tmpMI_tax1.LineNum, tmpMI_tax2.LineNum) ELSE tmpMI_Corr_curr_all.NPP END :: Integer AS NPP
                      -- є п/п - „то б увеличить счетчик на + 1
                    , ROW_NUMBER() OVER (ORDER BY CASE WHEN tmpMI_Corr_curr_all.NPP = 0 THEN COALESCE (tmpMI_tax1.LineNum, tmpMI_tax2.LineNum) ELSE tmpMI_Corr_curr_all.NPP END ASC) AS Ord
               FROM tmpMI_Corr_curr_all
+                   LEFT JOIN tmpMI_Corr_sum ON tmpMI_Corr_sum.GoodsId     = tmpMI_Corr_curr_all.GoodsId
+                                           AND tmpMI_Corr_sum.Price       = tmpMI_Corr_curr_all.Price
                    -- номера строк в ЌЌ
                    LEFT JOIN tmpMI_tax AS tmpMI_tax1 ON tmpMI_tax1.Kind        = 1
                                                     AND tmpMI_tax1.GoodsId     = tmpMI_Corr_curr_all.GoodsId
@@ -233,9 +245,11 @@ BEGIN
                                                               AND tmpMI_Corr_all1.GoodsKindId = tmpMI_Corr_curr.GoodsKindId
                                                               AND tmpMI_Corr_all1.Price       = tmpMI_Corr_curr.Price
                                                               AND tmpMI_Corr_all1.Ord1        = 1 -- т.е. по всем св-вам
+                                                              AND tmpMI_Corr_all1.NPP_calc    > 0
                    LEFT JOIN tmpMI_Corr_all AS tmpMI_Corr_all2 ON tmpMI_Corr_all2.GoodsId     = tmpMI_Corr_curr.GoodsId
                                                               AND tmpMI_Corr_all2.Price       = tmpMI_Corr_curr.Price
                                                               AND tmpMI_Corr_all2.Ord2        = 2 -- т.е. по св-вам Ѕ≈« GoodsKindId
+                                                              AND tmpMI_Corr_all2.NPP_calc    > 0
              )
      -- сохранили
      INSERT INTO _tmpRes (MovementItemId, GoodsId, GoodsKindId, NPPTax_calc, NPP_calc, AmountTax_calc, Amount)

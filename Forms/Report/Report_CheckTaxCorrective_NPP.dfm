@@ -1,7 +1,8 @@
 inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
-  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1056#1077#1077#1089#1090#1088#1072' '#1085#1072#1083#1086#1075#1086#1074#1099#1093' '#1085#1072#1082#1083#1072#1076#1085#1099#1093'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#8470' '#1087'/'#1087' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1086#1082'>'
   ClientHeight = 316
   ClientWidth = 839
+  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
   ExplicitWidth = 855
   ExplicitHeight = 354
@@ -226,6 +227,27 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
             Options.Editing = False
             Width = 85
           end
+          object AmountTax: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1053#1053'-'#1050#1086#1088#1088'. ('#1085#1072#1083#1086#1075'.) ('#1088#1072#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'AmountTax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1082#1086#1083#1086#1085#1082#1077' 7/1'#1089#1090#1088#1086#1082#1072' ('#1088#1072#1089#1095#1077#1090')'
+            Options.Editing = False
+            Width = 85
+          end
+          object isAmountTax: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'.'
+            DataBinding.FieldName = 'isAmountTax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1074' '#1082#1086#1083'-'#1074#1077' '#1076#1083#1103' '#1082#1086#1088#1088#1077#1082#1090'.'
+            Options.Editing = False
+            Width = 43
+          end
           object AmountSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1085#1072#1083#1086#1075'.)'
             DataBinding.FieldName = 'AmountSumm'
@@ -344,7 +366,9 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
     end
   end
   inherited ActionList: TActionList
-    inherited actRefresh: TdsdDataSetRefresh
+    object actRefreshStart: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -352,6 +376,19 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
         end
         item
           StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
         end>
     end
     object ExecuteDialog: TExecuteDialog

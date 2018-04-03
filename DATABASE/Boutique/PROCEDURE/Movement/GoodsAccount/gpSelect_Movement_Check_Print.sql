@@ -139,6 +139,7 @@ BEGIN
            , MovementFloat_TotalSummReturn.ValueData     AS TotalSummReturn
            , MovementFloat_TotalSummPayReturn.ValueData  AS TotalSummPayReturn
 
+           , Object_From.ObjectCode          :: Integer  AS FromCode
            , Object_From.ValueData                       AS FromName
            , OS_Unit_Print.ValueData                     AS PrintName
            , OS_Unit_Address.ValueData                   AS Address_Unit

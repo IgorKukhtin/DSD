@@ -36,16 +36,25 @@ BEGIN
    THEN
        RAISE EXCEPTION 'Ошибка.Значение <Медицинское учреждение> не установлено.';
    END IF;
+   IF COALESCE (inGroupMemberSPId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Значение <Категория пациента> не установлено.';
+   END IF;
+   
    -- проверка уникальности <Наименование>
    --PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_MemberSP(), inName);
    IF EXISTS (SELECT 1 
               FROM Object AS Object_MemberSP
                    LEFT JOIN ObjectLink AS OL_PartnerMedical
-                          ON OL_PartnerMedical.ObjectId = Object_MemberSP.Id
-                         AND OL_PartnerMedical.DescId = zc_ObjectLink_MemberSP_PartnerMedical()
+                                        ON OL_PartnerMedical.ObjectId = Object_MemberSP.Id
+                                       AND OL_PartnerMedical.DescId = zc_ObjectLink_MemberSP_PartnerMedical()
+                   LEFT JOIN ObjectLink AS ObjectLink_MemberSP_GroupMemberSP
+                                        ON ObjectLink_MemberSP_GroupMemberSP.ObjectId = Object_MemberSP.Id
+                                       AND ObjectLink_MemberSP_GroupMemberSP.DescId = zc_ObjectLink_MemberSP_GroupMemberSP()
               WHERE Object_MemberSP.DescId = zc_Object_MemberSP()
                 AND Object_MemberSP.ValueData = TRIM(inName)
                 AND OL_PartnerMedical.ChildObjectId = inPartnerMedicalId
+                AND ObjectLink_MemberSP_GroupMemberSP.ChildObjectId = inGroupMemberSPId
                 AND Object_MemberSP.Id <> ioId
               )
    THEN

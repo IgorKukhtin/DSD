@@ -55,6 +55,8 @@ type
     Invnumber: TcxGridDBColumn;
     InvNumberPartner_Tax: TcxGridDBColumn;
     LineNum_calc: TcxGridDBColumn;
+    actRefreshStart: TdsdDataSetRefresh;
+    isAmountTax: TcxGridDBColumn;
   private
     { Private declarations }
   public
