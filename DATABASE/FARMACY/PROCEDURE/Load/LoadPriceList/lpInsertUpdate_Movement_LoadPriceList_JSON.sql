@@ -1,4 +1,3 @@
-
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_LoadPriceList_JSON (Integer, Integer, Integer, Boolean, Text, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_LoadPriceList_JSON(
@@ -44,8 +43,8 @@ BEGIN
     );
     
     INSERT INTO tblJSON
-    SELECT * 
-    FROM json_populate_recordset(null::tblJSON, inJSON::json);
+    SELECT *
+    FROM json_populate_recordset(null::tblJSON, replace(inJSON, '&quot;', '\"')::json);
     
     CREATE INDEX idx_tblJSON_CommonCode ON tblJSON USING btree (inCommonCode);
     CREATE INDEX idx_tblJSON_BarCode ON tblJSON USING btree (inBarCode);     

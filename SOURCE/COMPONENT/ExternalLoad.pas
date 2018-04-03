@@ -719,7 +719,8 @@ var i: integer;
         JSONObject.AddPair(AName, TJSONNull.Create);
     end
     else
-      JSONObject.AddPair(cParamName, ReplaceText(String(AValue), '\', '\\'));
+      JSONObject.AddPair(cParamName, ReplaceText(
+        ReplaceText(String(AValue), '\', '\\'), '"', '&quot;'));
   end;
 
 begin
