@@ -35,8 +35,9 @@ BEGIN
       tmpMITax AS (SELECT tmp.Kind, tmp.GoodsId, tmp.GoodsKindId, tmp.Price, tmp.LineNum
                    FROM lpSelect_TaxFromTaxCorrective (inMovementId) AS tmp
                   )
-
-    , tmpMI_Tax AS (SELECT MovementItem.MovementId
+     -- сначала выбираем все товары из Налоговых и корректировок, чтоб сделать Расчетный № п/п
+    , tmpMI_Tax AS (SELECT MovementItem.MovementId                AS MovementId
+                         , MovementItem.Id                        AS MovementItemId
                          , MIFloat_NPP.ValueData       :: Integer AS LineNum
                          , Object_Goods.Id                        AS GoodsId
                          , Object_Goods.ObjectCode                AS GoodsCode
@@ -73,11 +74,13 @@ BEGIN
               WHERE MovementItem.MovementId = inMovementId
                 AND MovementItem.DescId     = zc_MI_Master()
                 AND MovementItem.isErased   = FALSE --tmpIsErased.isErased
-                AND (MovementItem.ObjectId = inGoodsId OR inGoodsId = 0)
+                --AND (MovementItem.ObjectId = inGoodsId OR inGoodsId = 0)
            )
 
     , tmpMI_TaxCorrective AS (SELECT MovementItem.MovementId
                                    , tmpMovement.MovementId_Tax
+                                   , MovementItem.Id                                           AS MovementItemId
+                                   , COALESCE (MovementBoolean_NPP_calc.ValueData, FALSE) ::Boolean AS isNPP_calc
                                    , CASE WHEN COALESCE (MIBoolean_isAuto.ValueData, True) = True THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) ELSE COALESCE(MIFloat_NPP.ValueData,0) END  :: Integer AS LineNumTaxOld
                                    , CASE WHEN COALESCE (MIBoolean_isAuto.ValueData, True) = True THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) ELSE COALESCE(MIFloat_NPP.ValueData,0) END  :: Integer AS LineNumTax
                         
@@ -97,7 +100,7 @@ BEGIN
                                                    THEN CAST ( (COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
                                                    ELSE CAST ( (COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                                            END AS TFloat)                   AS AmountSumm
-                                               
+                                             
                               FROM (SELECT MLM_DocumentChild.MovementId                    --корр.
                                          , MLM_DocumentChild.MovementChildId  AS MovementId_Tax
                                     FROM MovementLinkMovement AS MLM_DocumentChild
@@ -107,6 +110,11 @@ BEGIN
                                     WHERE MLM_DocumentChild.MovementChildId = inMovementId -- НН
                                       AND MLM_DocumentChild.DescId = zc_MovementLinkMovement_Child()
                                     ) AS tmpMovement 
+                                   -- 
+                                   LEFT JOIN MovementBoolean AS MovementBoolean_NPP_calc
+                                                             ON MovementBoolean_NPP_calc.MovementId = tmpMovement.MovementId
+                                                            AND MovementBoolean_NPP_calc.DescId = zc_MovementBoolean_NPP_calc()
+
                                    LEFT JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
                                                          AND MovementItem.DescId     = zc_MI_Master()
                                                          AND MovementItem.isErased   = FALSE
@@ -149,15 +157,17 @@ BEGIN
                                                                   AND tmpMITax2.GoodsId     = Object_Goods.Id
                                                                   AND tmpMITax2.Price       = MIFloat_Price.ValueData
                                                                   AND tmpMITax1.GoodsId     IS NULL
-                                WHERE (MovementItem.ObjectId = inGoodsId OR inGoodsId = 0)
-                                  -- AND COALESCE (MIFloat_NPP_calc.ValueData, 0) <> 0
                               )
-                              
+
+    -- данные НН и корректировок                           
     , tmpData_All AS (SELECT tmp.MovementId
                        , tmp.MovementId AS MovementId_Tax
+                       , tmp.MovementItemId
                        , tmp.LineNum
+                       , tmp.GoodsId
                        , tmp.GoodsCode
                        , tmp.GoodsName
+                       , tmp.GoodsKindId
                        , tmp.GoodsKindName
                        , tmp.Amount
                        , tmp.Price
@@ -166,13 +176,17 @@ BEGIN
                        , 0   :: Integer AS LineNumTaxCorr_calc
                        , tmp.LineNum    AS LineNumTax
                        , 0   :: TFloat  AS AmountTax_calc
+                       , TRUE           AS isNPP_calc
                   FROM tmpMI_Tax AS tmp
                UNION 
                   SELECT tmp.MovementId
                        , tmp.MovementId_Tax
+                       , tmp.MovementItemId
                        , tmp.LineNumTaxCorr AS LineNum
+                       , tmp.GoodsId
                        , tmp.GoodsCode
                        , tmp.GoodsName
+                       , tmp.GoodsKindId
                        , tmp.GoodsKindName
                        , (-1) * tmp.Amount
                        , tmp.Price
@@ -181,14 +195,19 @@ BEGIN
                        , tmp.LineNumTaxCorr_calc
                        , tmp.LineNumTax
                        , tmp.AmountTax_calc
+                       , tmp.isNPP_calc
                   FROM tmpMI_TaxCorrective AS tmp
                   )
-    -- получаем расчетное значение № п/п 
-    , tmpData_ord AS (SELECT tmp.MovementId
+    -- перенумеруем 
+    , tmpDataAll_ord AS (SELECT tmp.MovementId
                        , tmp.MovementId_Tax
+                       , tmp.MovementItemId
+                       , tmp.isNPP_calc
                        , tmp.LineNum
+                       , tmp.GoodsId
                        , tmp.GoodsCode
                        , tmp.GoodsName
+                       , tmp.GoodsKindId
                        , tmp.GoodsKindName
                        , tmp.Amount
                        , tmp.Price
@@ -197,17 +216,21 @@ BEGIN
                        , tmp.LineNumTaxCorr_calc
                        , tmp.LineNumTax
                        , tmp.AmountTax_calc
-                       , ROW_NUMBER() OVER (/*PARTITION BY tmpData.MovementId*/ ORDER BY tmp.MovementId, tmp.LineNum, tmp.LineNumTaxCorr_calc)  :: integer AS LineNum_calc
-                       , ROW_NUMBER() OVER (PARTITION BY tmp.GoodsName,tmp.GoodsKindName  ORDER BY tmp.MovementId, tmp.LineNum, tmp.LineNumTaxCorr_calc)  :: integer AS Ord_calc
+                       , ROW_NUMBER() OVER (PARTITION BY tmp.GoodsId, tmp.GoodsKindId, tmp.Price ORDER BY tmp.MovementId, tmp.LineNum, tmp.LineNumTaxCorr_calc)  :: integer AS Ord_calc
+
                  FROM tmpData_All AS tmp
-                 --WHERE COALESCE (tmpData.LineNumTaxCorr_calc, 0) <> 0
                  )
+
     -- получаем расчетное значение AmountTax_calc
-    , tmpData AS (SELECT tmp1.MovementId
+    , tmpData_Summ AS (SELECT tmp1.MovementId
                        , tmp1.MovementId_Tax
+                       , tmp1.MovementItemId
+                       , tmp1.isNPP_calc
                        , tmp1.LineNum
+                       , tmp1.GoodsId
                        , tmp1.GoodsCode
                        , tmp1.GoodsName
+                       , tmp1.GoodsKindId
                        , tmp1.GoodsKindName
                        , tmp1.Amount
                        , tmp1.Price
@@ -216,18 +239,20 @@ BEGIN
                        , tmp1.LineNumTaxCorr_calc
                        , tmp1.LineNumTax
                        , tmp1.AmountTax_calc
-                       , tmp1.LineNum_calc
-                       --, COALESCE (tmp2.AmountTax_calc) AS AmountTax
-                       , SUM (COALESCE (tmp2.Amount)) AS AmountTax
-                 FROM tmpData_ord AS tmp1
-                      LEFT JOIN tmpData_ord AS tmp2 ON tmp2.GoodsName = tmp1.GoodsName
-                                                   AND tmp2.GoodsKindName = tmp1.GoodsKindName
-                                                   AND tmp2.Ord_calc < tmp1.Ord_calc
+                       , SUM (COALESCE (tmp2.Amount, 0)) AS AmountTax
+                 FROM tmpDataAll_ord AS tmp1
+                      LEFT JOIN tmpDataAll_ord AS tmp2 ON tmp2.GoodsId     = tmp1.GoodsId
+                                                   AND (tmp2.GoodsKindId = tmp1.GoodsKindId OR COALESCE (tmp1.GoodsKindId,0) = 0)
+                                                   AND tmp2.Price       = tmp1.Price
+                                                   AND tmp2.Ord_calc    < tmp1.Ord_calc
                  GROUP BY tmp1.MovementId
                         , tmp1.MovementId_Tax
+                        , tmp1.MovementItemId
                         , tmp1.LineNum
+                        , tmp1.GoodsId
                         , tmp1.GoodsCode
                         , tmp1.GoodsName
+                        , tmp1.GoodsKindId
                         , tmp1.GoodsKindName
                         , tmp1.Amount
                         , tmp1.Price
@@ -236,7 +261,55 @@ BEGIN
                         , tmp1.LineNumTaxCorr_calc
                         , tmp1.LineNumTax
                         , tmp1.AmountTax_calc
-                        , tmp1.LineNum_calc
+                        , tmp1.isNPP_calc
+                 )
+
+    -- получаем расчетное значение № п/п
+   , tmpData_Ord AS (SELECT tmp.MovementId
+                       , tmp.MovementId_Tax
+                       , tmp.MovementItemId
+                       , tmp.isNPP_calc
+                       , tmp.LineNum
+                       , tmp.GoodsId
+                       , tmp.GoodsCode
+                       , tmp.GoodsName
+                       , tmp.GoodsKindId
+                       , tmp.GoodsKindName
+                       , tmp.Amount
+                       , tmp.Price
+                       , tmp.CountForPrice
+                       , tmp.AmountSumm
+                       , tmp.LineNumTaxCorr_calc
+                       , tmp.LineNumTax
+                       , tmp.AmountTax_calc
+                       , tmp.AmountTax
+                       , ROW_NUMBER() OVER (ORDER BY tmp.MovementId, tmp.LineNum, tmp.LineNumTaxCorr_calc)  :: integer AS LineNum_calc
+                 FROM tmpData_Summ AS tmp
+                 WHERE tmp.isNPP_calc = TRUE
+                   AND (COALESCE (tmp.Amount, 0) + COALESCE (tmp.AmountTax, 0)) <> 0
+                 )
+
+  , tmpData AS (SELECT tmp.MovementId
+                       , tmp.MovementId_Tax
+                       , tmp.MovementItemId
+                       , tmp.isNPP_calc
+                       , tmp.LineNum
+                       , tmp.GoodsId
+                       , tmp.GoodsCode
+                       , tmp.GoodsName
+                       , tmp.GoodsKindId
+                       , tmp.GoodsKindName
+                       , tmp.Amount
+                       , tmp.Price
+                       , tmp.CountForPrice
+                       , tmp.AmountSumm
+                       , tmp.LineNumTaxCorr_calc
+                       , tmp.LineNumTax
+                       , tmp.AmountTax_calc
+                       , tmp.AmountTax
+                       , tmpData_Ord.LineNum_calc
+                 FROM tmpData_Summ AS tmp
+                      LEFT JOIN tmpData_Ord ON tmpData_Ord.MovementItemId = tmp.MovementItemId
                  )
 
     --- результат 
@@ -255,14 +328,14 @@ BEGIN
          , CASE WHEN COALESCE (tmpData.LineNumTaxCorr_calc, 0) <> 0 THEN tmpData.LineNumTaxCorr_calc ELSE tmpLine.LineNum END  :: integer AS LineNumTaxCorr_calc
          --, tmpData.LineNumTaxCorr_calc
          --, ROW_NUMBER() OVER (PARTITION BY tmpData.MovementId_Tax ORDER BY tmpData.MovementId , tmpData.LineNum, tmpData.LineNumTaxCorr_calc)  :: integer AS LineNum_calc
-         , tmpData.LineNum_calc   :: integer
+         , COALESCE (tmpData.LineNum_calc, 0)   :: integer AS LineNum_calc
          , tmpData.Amount         :: TFloat
          , tmpData.Price          :: TFloat
          , tmpData.CountForPrice  :: TFloat
          , tmpData.AmountSumm     :: TFloat
          , tmpData.AmountTax_calc :: TFloat
-         , tmpData.AmountTax      :: TFloat 
-         , CASE WHEN COALESCE (tmpData.AmountTax_calc, 0) <> 0 AND COALESCE (tmpData.AmountTax_calc, 0) <> COALESCE (tmpData.AmountTax, 0) THEN TRUE ELSE FALSE END AS isAmountTax
+         , CASE WHEN tmpData.isNPP_calc = FALSE THEN 0 ELSE tmpData.AmountTax END  :: TFloat  AS AmountTax
+         , CASE WHEN tmpData.isNPP_calc = TRUE AND COALESCE (tmpData.AmountTax_calc, 0) <> COALESCE (tmpData.AmountTax, 0) THEN TRUE ELSE FALSE END AS isAmountTax
     FROM tmpData
          LEFT JOIN Movement ON Movement.Id = tmpData.MovementId
          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
@@ -283,6 +356,7 @@ BEGIN
          LEFT JOIN tmpData AS tmpLine ON tmpLine.LineNumTaxCorr_calc = tmpData.LineNum  -- and 1 = 0
                                     AND tmpData.LineNum <> 0
                                     AND tmpLine.MovementId_Tax = tmpData.MovementId_Tax
+WHERE (tmpData.GoodsId = inGoodsId OR inGoodsId = 0)
     ORDER BY 1 DESC, tmpData.LineNum
     ;
 

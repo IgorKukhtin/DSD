@@ -164,6 +164,8 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
           object LineNum_calc: TcxGridDBColumn
             Caption = #8470' '#1087'/'#1087' ('#1088#1072#1089#1095#1077#1090')'
             DataBinding.FieldName = 'LineNum_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.;-0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #8470' '#1087'/'#1087' '#1088#1072#1089#1095#1077#1090#1085#1086#1077
