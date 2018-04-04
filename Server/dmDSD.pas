@@ -44,6 +44,7 @@ type
     FisArchive: Boolean;
     FConnectionParam: TConnectionParam;
     function GetConnection: TZConnection;
+    function FillDSDStoredProcParam(ADateNode: TXmlNode; AStoredProc: TDSDStoredProc) : boolean;
     function ParseXML(const AXML: String; out AStoredProc: TDSDStoredProc): Boolean;
     function CreateResponse(const AType, AText: RawByteString): RawByteString;
   public
@@ -176,13 +177,65 @@ begin
   end;
 end;
 
+function TDM.FillDSDStoredProcParam(ADateNode: TXmlNode; AStoredProc: TDSDStoredProc) : boolean;
+var
+  I : integer;
+  LArrayItem: TXmlNode;
+  LParam: TDSDStoredProcParam;
+  Locale: TFormatSettings;
+begin
+  for I := 0 to ADateNode.NodeCount - 1 do
+  begin
+    LArrayItem := ADateNode.Nodes[I];
+    with LParam do
+    begin
+      ParamName := LArrayItem.Name;
+      if LArrayItem.AttributeIndexByName('Value') >= 0 then
+      begin
+        if UpperCase(LArrayItem.AttributeByName['Value'].Value) = 'NULL' then Value := Null
+        else Value := LArrayItem.AttributeByName['Value'].Value;
+
+        case IndexStr(LArrayItem.AttributeValueByNameWide['DataType'], ['ftInteger', 'ftString', 'ftFloat', 'ftBlob', 'ftDateTime',
+          'ftBoolean']) of
+          0:
+            DataType := 'integer';
+          1:
+            DataType := 'TVarChar';
+          2: begin
+               DataType := 'TFloat';
+               Value := LArrayItem.AttributeByName['Value'].ValueAsFloat;
+             end;
+          3:
+            DataType := 'TBlob';
+          4:
+            begin
+              DataType := 'TDateTime';
+              if Value <> Null then
+              begin
+                Locale := TFormatSettings.Create;
+                Locale.DateSeparator := '.';
+                Locale.ShortDateFormat := 'dd.MM.yyyy';
+                Locale.TimeSeparator := ':';
+                Locale.ShortTimeFormat := 'H:mm';
+                Value := StrToDateTime(VarToStr(Value), Locale);
+              end;
+            end;
+          5:
+            DataType := 'Boolean';
+        end;
+        AStoredProc.ParamsList.Add(LParam);
+      end;
+    end;
+  end;
+end;
+
 function TDM.ParseXML(const AXML: String; out AStoredProc: TDSDStoredProc): Boolean;
 var
   LXML: TNativeXml;
   LDocument, LArrayItem: TXmlNode;
   LStoredProc: TDSDStoredProc;
   LParam: TDSDStoredProcParam;
-  I: integer;
+  nNode, I: integer;
   Locale: TFormatSettings;
   MStream : TStringStream;
 begin
@@ -194,65 +247,48 @@ begin
     MStream.Position := 0;
     LXML.LoadFromStream(MStream);
     LDocument := LXML.Root;
+    nNode := 0;
 
-    if LDocument.AttributeIndexByName('Session') < 0 then
-      LStoredProc.Session := ''
-    else
+    if LDocument.AttributeIndexByName('Session') >= 0 then
+    begin
       LStoredProc.Session := LDocument.AttributeValueByNameWide['Session'];
+      Inc(nNode)
+    end else LStoredProc.Session := '';
 
-    if LDocument.AttributeIndexByName('AutoWidth') < 0 then
-      LStoredProc.AutoWidth := False
-    else
+    if LDocument.AttributeIndexByName('AutoWidth') >= 0 then
+    begin
       LStoredProc.AutoWidth := LDocument.AttributeByName['AutoWidth'].ValueAsBool;
+      Inc(nNode);
+    end else LStoredProc.AutoWidth := False;
 
-    LStoredProc.SPName := LDocument.Nodes[LDocument.NodeCount - 1].NameUnicode;
-    LStoredProc.OutputType := LDocument.Nodes[LDocument.NodeCount - 1].AttributeValueByNameWide['OutputType'];
-    if LDocument.Nodes[LDocument.NodeCount - 1].AttributeIndexByName('DataSetType') < 0 then
-      LStoredProc.DataSetType := ''
-    else
-      LStoredProc.DataSetType := LDocument.Nodes[LDocument.NodeCount - 1].AttributeByName['DataSetType'].Value;
+    LStoredProc.SPName := LDocument.Nodes[nNode].Name;
+
+    LStoredProc.OutputType := LDocument.Nodes[nNode].AttributeValueByNameWide['OutputType'];
+
+    if LDocument.Nodes[nNode].AttributeIndexByName('DataSetType') >= 0 then
+      LStoredProc.DataSetType := LDocument.Nodes[nNode].AttributeByName['DataSetType'].Value
+    else LStoredProc.DataSetType := '';
 
     LStoredProc.ParamsList := TList<TDSDStoredProcParam>.Create;
-    if LDocument.NodeByName(LStoredProc.SPName).NodeCount > 0 then
-      for I := 0 to LDocument.NodeByName(LStoredProc.SPName).NodeCount - 1 do
-      begin
-        LArrayItem :=LDocument.NodeByName(LStoredProc.SPName).Nodes[I];
-        with LParam do
-        begin
-          ParamName := LArrayItem.NameUnicode;
-          if LArrayItem.AttributeIndexByName('Value') >= 0 then
-          begin
-            Value := LArrayItem.AttributeByName['Value'].Value;
+    if LStoredProc.OutputType = 'otMultiExecute' then
+    begin
+      if LDocument.Nodes[nNode].NodeCount > 0 then
+        FillDSDStoredProcParam(LDocument.Nodes[nNode], LStoredProc);
+      StoredProcExecute(LStoredProc);
+      Inc(nNode);
 
-            case IndexStr(LArrayItem.AttributeValueByNameWide['DataType'], ['ftInteger', 'ftString', 'ftFloat', 'ftBlob', 'ftDateTime',
-              'ftBoolean']) of
-              0:
-                DataType := 'integer';
-              1:
-                DataType := 'TVarChar';
-              2: begin
-                   DataType := 'TFloat';
-                   Value := LArrayItem.AttributeByName['Value'].ValueAsFloat;
-                 end;
-              3:
-                DataType := 'TBlob';
-              4:
-                begin
-                  DataType := 'TDateTime';
-                  Locale := TFormatSettings.Create;
-                  Locale.DateSeparator := '.';
-                  Locale.ShortDateFormat := 'dd.MM.yyyy';
-                  Locale.TimeSeparator := ':';
-                  Locale.ShortTimeFormat := 'H:mm';
-                  Value := StrToDateTime(VarToStr(Value), Locale);
-                end;
-              5:
-                DataType := 'Boolean';
-            end;
-            LStoredProc.ParamsList.Add(LParam);
-          end;
-        end;
+      for I := 0 to LDocument.Nodes[nNode].NodeCount - 1 do
+      begin
+        LStoredProc.ParamsList := TList<TDSDStoredProcParam>.Create;
+        if LDocument.Nodes[nNode].Nodes[I].NodeCount > 0 then
+          FillDSDStoredProcParam(LDocument.Nodes[nNode].Nodes[I], LStoredProc);
+        if I < (LDocument.Nodes[nNode].NodeCount - 1) then StoredProcExecute(LStoredProc);
       end;
+    end else
+    begin
+      if LDocument.Nodes[nNode].NodeCount > 0 then
+        FillDSDStoredProcParam(LDocument.Nodes[nNode], LStoredProc);
+    end;
     AStoredProc := LStoredProc;
     Result := True;
   finally
@@ -427,13 +463,17 @@ function TDM.CreateResponse(const AType, AText: RawByteString): RawByteString;
 var
   LType: RawByteString;
 begin
-  case IndexStr(AType, ['otResult', 'otBlob', 'otDataSet', 'otMultiDataSet']) of
+  case IndexStr(AType, ['otResult', 'otBlob', 'otDataSet', 'otMultiDataSet', 'otMultiExecute']) of
     0, 1:
       LType := PADR('Result', cResultTypeLength);
     2:
       LType := PADR('DataSet', cResultTypeLength);
     3:
       LType := 'MultiDataSet ';
+    4: begin
+         Result := '';
+         Exit;
+       end
   else
     LType := PADR('error', cResultTypeLength);
   end;
