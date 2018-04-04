@@ -1,12 +1,14 @@
 -- Function: gpUpdate_MI_TaxCorrective_NPP()
 
 DROP FUNCTION IF EXISTS gpUpdate_MI_TaxCorrective_NPP (Integer, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_TaxCorrective_NPP (Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_TaxCorrective_NPP(
     IN inId                   Integer   , -- Ключ объекта <Элемент документа>
     IN inLineNumTaxCorr_calc  TFloat    , -- № п/п НН-Корр.(налог.)
     IN inLineNumTaxCorr       TFloat    , -- № п/п НН-Корр.
     IN inAmountTax_calc       TFloat    , -- Кол-во для НН-Корр.(налог.)
+    IN inSummTaxDiff_calc     TFloat    , -- Сумма КОРРЕКТИРОВКИ для НН-Корр.(налог.) 
     IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -50,6 +52,9 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPP_calc(), inId, inLineNumTaxCorr);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountTax_calc(), inId, inAmountTax_calc);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTaxDiff_calc(), inId, inSummTaxDiff_calc);
+
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, FALSE);
@@ -61,6 +66,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.04.18         * add inSummTaxDiff_calc
  30.03.18         *
 */
 

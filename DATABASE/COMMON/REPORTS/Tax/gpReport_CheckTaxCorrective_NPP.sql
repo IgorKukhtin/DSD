@@ -1,8 +1,9 @@
 -- FunctiON: Report_CheckTaxCorrective_NPP ()
 
 DROP FUNCTION IF EXISTS Report_CheckTaxCorrective_NPP (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_CheckTaxCorrective_NPP (Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION Report_CheckTaxCorrective_NPP (
+CREATE OR REPLACE FUNCTION gpReport_CheckTaxCorrective_NPP (
     IN inMovementId          Integer   , -- № налоговой
     IN inGoodsId             Integer   , -- товар
     IN inSession             TVarChar    -- сессия пользователя
@@ -19,6 +20,8 @@ RETURNS TABLE (ItemName TVarChar, InvNumber TVarChar, InvNumberPartner TVarChar,
              , Price           TFloat
              , CountForPrice   TFloat
              , AmountSumm      TFloat
+             , AmountSumm_original  TFloat
+             , SummTaxDiff_calc     TFloat
              , AmountTax_calc  TFloat
              , AmountTax       TFloat
              , isAmountTax     Boolean
@@ -100,6 +103,7 @@ BEGIN
                                                    THEN CAST ( (COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
                                                    ELSE CAST ( (COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                                            END AS TFloat)                   AS AmountSumm
+                                   , COALESCE (MIFloat_SummTaxDiff_calc.ValueData, 0) :: TFloat AS SummTaxDiff_calc
                                              
                               FROM (SELECT MLM_DocumentChild.MovementId                    --корр.
                                          , MLM_DocumentChild.MovementChildId  AS MovementId_Tax
@@ -143,7 +147,10 @@ BEGIN
                                    LEFT JOIN MovementItemFloat AS MIFloat_AmountTax_calc
                                                                ON MIFloat_AmountTax_calc.MovementItemId = MovementItem.Id
                                                               AND MIFloat_AmountTax_calc.DescId = zc_MIFloat_AmountTax_calc()
-                       
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummTaxDiff_calc
+                                                               ON MIFloat_SummTaxDiff_calc.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummTaxDiff_calc.DescId = zc_MIFloat_SummTaxDiff_calc()
+
                                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                    AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -173,6 +180,8 @@ BEGIN
                        , tmp.Price
                        , tmp.CountForPrice
                        , tmp.AmountSumm
+                       , tmp.AmountSumm AS AmountSumm_original
+                       , 0   :: TFloat  AS SummTaxDiff_calc
                        , 0   :: Integer AS LineNumTaxCorr_calc
                        , tmp.LineNum    AS LineNumTax
                        , 0   :: TFloat  AS AmountTax_calc
@@ -191,7 +200,9 @@ BEGIN
                        , (-1) * tmp.Amount
                        , tmp.Price
                        , tmp.CountForPrice
-                       , (-1) * tmp.AmountSumm
+                       , (-1) * (tmp.AmountSumm + tmp.SummTaxDiff_calc) AS AmountSumm
+                       , (-1) * tmp.AmountSumm AS AmountSumm_original
+                       , (-1) * tmp.SummTaxDiff_calc
                        , tmp.LineNumTaxCorr_calc
                        , tmp.LineNumTax
                        , tmp.AmountTax_calc
@@ -213,6 +224,8 @@ BEGIN
                        , tmp.Price
                        , tmp.CountForPrice
                        , tmp.AmountSumm
+                       , tmp.AmountSumm_original
+                       , tmp.SummTaxDiff_calc
                        , tmp.LineNumTaxCorr_calc
                        , tmp.LineNumTax
                        , tmp.AmountTax_calc
@@ -236,6 +249,8 @@ BEGIN
                        , tmp1.Price
                        , tmp1.CountForPrice
                        , tmp1.AmountSumm
+                       , tmp1.AmountSumm_original
+                       , tmp1.SummTaxDiff_calc
                        , tmp1.LineNumTaxCorr_calc
                        , tmp1.LineNumTax
                        , tmp1.AmountTax_calc
@@ -258,6 +273,8 @@ BEGIN
                         , tmp1.Price
                         , tmp1.CountForPrice
                         , tmp1.AmountSumm
+                        , tmp1.AmountSumm_original
+                        , tmp1.SummTaxDiff_calc
                         , tmp1.LineNumTaxCorr_calc
                         , tmp1.LineNumTax
                         , tmp1.AmountTax_calc
@@ -279,6 +296,8 @@ BEGIN
                        , tmp.Price
                        , tmp.CountForPrice
                        , tmp.AmountSumm
+                       , tmp.AmountSumm_original
+                       , tmp.SummTaxDiff_calc
                        , tmp.LineNumTaxCorr_calc
                        , tmp.LineNumTax
                        , tmp.AmountTax_calc
@@ -303,6 +322,8 @@ BEGIN
                        , tmp.Price
                        , tmp.CountForPrice
                        , tmp.AmountSumm
+                       , tmp.AmountSumm_original
+                       , tmp.SummTaxDiff_calc
                        , tmp.LineNumTaxCorr_calc
                        , tmp.LineNumTax
                        , tmp.AmountTax_calc
@@ -333,6 +354,8 @@ BEGIN
          , tmpData.Price          :: TFloat
          , tmpData.CountForPrice  :: TFloat
          , tmpData.AmountSumm     :: TFloat
+         , tmpData.AmountSumm_original  :: TFloat
+         , tmpData.SummTaxDiff_calc     :: TFloat
          , tmpData.AmountTax_calc :: TFloat
          , CASE WHEN tmpData.isNPP_calc = FALSE THEN 0 ELSE tmpData.AmountTax END  :: TFloat  AS AmountTax
          , CASE WHEN tmpData.isNPP_calc = TRUE AND COALESCE (tmpData.AmountTax_calc, 0) <> COALESCE (tmpData.AmountTax, 0) THEN TRUE ELSE FALSE END AS isAmountTax
@@ -367,9 +390,10 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.04.18         *
  02.04.18         *
  30.03.18         *
 */
 
 -- тест
--- SELECT * FROM Report_CheckTaxCorrective_NPP (inMovementId:= 5199861, inGoodsId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_CheckTaxCorrective_NPP (inMovementId:= 5199861, inGoodsId:= 0, inSession:= zfCalc_UserAdmin());

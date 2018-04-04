@@ -49,6 +49,16 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSumm_original
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummTaxDiff_calc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -77,6 +87,16 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSumm_original
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummTaxDiff_calc
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -258,6 +278,27 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
             Properties.DisplayFormat = ',0.####;-,0.####'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 127
+          end
+          object AmountSumm_original: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' ('#1085#1072#1083#1086#1075'.) ('#1073#1077#1079' '#1089#1091#1084#1084#1099' '#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'AmountSumm_original'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 127
+          end
+          object SummTaxDiff_calc: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1050#1054#1056#1056'. '#1076#1083#1103' '#1053#1053'-'#1050#1086#1088#1088'.('#1085#1072#1083#1086#1075'.)'
+            DataBinding.FieldName = 'SummTaxDiff_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1050#1054#1056#1056#1045#1050#1058#1048#1056#1054#1042#1050#1048' '#1076#1083#1103' '#1053#1053'-'#1050#1086#1088#1088'.('#1085#1072#1083#1086#1075'.)'
             Width = 127
           end
         end
@@ -451,7 +492,7 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'Report_CheckTaxCorrective_NPP'
+    StoredProcName = 'gpReport_CheckTaxCorrective_NPP'
     Params = <
       item
         Name = 'inMovementId'
