@@ -1098,7 +1098,7 @@ $BODY$
  10.07.13                                        *
 */
 
--- SELECT * FROM HistoryCost where ContainerId in ( 976442, 976754) ORDER BY 1 DESC
+-- SELECT * FROM HistoryCost where ContainerId in ( 141708) ORDER BY 1 DESC
 
 /*
 select distinct Object.ObjectCode, Object.ValueData, Object2.ObjectCode, Object2.ValueData, Object3.ObjectCode, Object3.ValueData, Object4.ValueData
@@ -1122,5 +1122,5 @@ SELECT * FROM HistoryCost WHERE ('01.03.2017' BETWEEN StartDate AND EndDate) and
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2016', inEndDate:= '31.01.2016', inBranchId:= 8379, inItearationCount:= 1000, inInsert:= 12345, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
 
 -- тест
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.03.2017', inEndDate:= '31.03.2017', inBranchId:= 0, inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  WHERE Price <> PriceNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.03.2018', inEndDate:= '31.03.2018', inBranchId:= 0, inItearationCount:= 10, inInsert:= 1, inDiffSumm:= 0, inSession:= '2')  WHERE ContainerId = 141708 -- Price <> PriceNext
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.11.2017', inEndDate:= '30.11.2017', inBranchId:= 0, inItearationCount:= 10, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') ORDER BY ABS (Price) DESC -- WHERE CalcSummCurrent <> CalcSummNext
