@@ -1,31 +1,31 @@
 inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#8470' '#1087'/'#1087' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1086#1082'>'
-  ClientHeight = 316
-  ClientWidth = 839
+  ClientHeight = 359
+  ClientWidth = 823
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 855
-  ExplicitHeight = 354
+  ExplicitWidth = 839
+  ExplicitHeight = 397
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 75
-    Width = 839
-    Height = 241
+    Top = 115
+    Width = 823
+    Height = 244
     TabOrder = 3
-    ExplicitTop = 75
-    ExplicitWidth = 839
-    ExplicitHeight = 241
-    ClientRectBottom = 241
-    ClientRectRight = 839
+    ExplicitTop = 115
+    ExplicitWidth = 823
+    ExplicitHeight = 201
+    ClientRectBottom = 244
+    ClientRectRight = 823
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 839
-      ExplicitHeight = 241
+      ExplicitWidth = 823
+      ExplicitHeight = 201
       inherited cxGrid: TcxGrid
-        Width = 839
-        Height = 241
-        ExplicitWidth = 839
-        ExplicitHeight = 241
+        Width = 823
+        Height = 244
+        ExplicitWidth = 823
+        ExplicitHeight = 201
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -286,10 +286,10 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
     end
   end
   inherited Panel: TPanel
-    Width = 839
-    Height = 49
-    ExplicitWidth = 839
-    ExplicitHeight = 49
+    Width = 823
+    Height = 89
+    ExplicitWidth = 823
+    ExplicitHeight = 89
     inherited deStart: TcxDateEdit
       Left = 99
       Top = 42
@@ -321,13 +321,13 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
       ExplicitTop = 42
     end
     object cxLabel4: TcxLabel
-      Left = 482
-      Top = 0
+      Left = 190
+      Top = 42
       Caption = #1058#1086#1074#1072#1088':'
     end
     object edGoods: TcxButtonEdit
-      Left = 482
-      Top = 17
+      Left = 190
+      Top = 59
       Properties.Buttons = <
         item
           Default = True
@@ -335,7 +335,7 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 340
+      Width = 619
     end
     object cxLabel8: TcxLabel
       Left = 98
@@ -375,7 +375,6 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
       Properties.Buttons = <
         item
           Default = True
-          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -386,6 +385,23 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
       Left = 190
       Top = 0
       Caption = #1070#1088'. '#1083#1080#1094#1086
+    end
+    object cxLabel11: TcxLabel
+      Left = 482
+      Top = 0
+      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+    end
+    object edPartner: TcxButtonEdit
+      Left = 482
+      Top = 17
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 13
+      Text = ' '
+      Width = 327
     end
   end
   inherited ActionList: TActionList
@@ -527,6 +543,9 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
       end
       item
         Component = GuidesGoods
+      end
+      item
+        Component = GuidesDocumentTax
       end>
     Left = 184
     Top = 136
@@ -558,8 +577,8 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 264
-    Top = 32
+    Left = 456
+    Top = 56
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -615,12 +634,14 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
       item
         Name = 'JuridicalId'
         Value = '0'
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
         Value = ''
+        Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -629,6 +650,7 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
       item
         Name = 'PartnerId'
         Value = '0'
+        Component = GuidesPartner
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -636,6 +658,7 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
       item
         Name = 'PartnerName'
         Value = ' '
+        Component = GuidesPartner
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -643,8 +666,7 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
       item
         Name = 'OperDate_Tax'
         Value = 'NULL'
-        Component = FormParams
-        ComponentItem = 'OperDate_Tax'
+        Component = edOperDate_Tax
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
@@ -700,6 +722,21 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerId'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerName'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 504
@@ -732,5 +769,62 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
       end>
     Left = 344
     Top = 8
+  end
+  object GuidesPartner: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartner
+    Key = '0'
+    TextValue = ' '
+    FormNameParam.Value = 'TContractChoicePartnerForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TContractChoicePartnerForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'PartnerId'
+        Value = '0'
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerName'
+        Value = ' '
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Key'
+        Value = ''
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalId'
+        Value = '0'
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 616
+    Top = 16
   end
 end

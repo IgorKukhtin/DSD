@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , InvNumberPartner TVarChar
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
+             , PartnerId Integer, PartnerName TVarChar
               )
 AS
 $BODY$
@@ -32,6 +33,8 @@ BEGIN
            , Object_From.ValueData             			AS FromName--
            , Object_To.Id                      			AS ToId
            , Object_To.ValueData               			AS ToName
+           , Object_Partner.Id                     		AS PartnerId
+           , Object_Partner.ValueData              		AS PartnerName
       
        FROM Movement
             LEFT JOIN MovementDate AS MovementDate_DateRegistered
@@ -51,6 +54,11 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                         ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
 
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_Tax();
