@@ -957,9 +957,12 @@ begin
                                //НЕ ошибка - найден НЕ ОДИН файл MMO для загрузки
                                if (1=1 )
                                then
+                               begin
+                                   // выполняется загрузка
+                                   actExecuteImportSettings.ExternalParams.ParamByName('Directory_add').Value:= '';
                                    // выполняется загрузка
                                    mactExecuteImportSettings.Execute
-                               else //ошибка - найден НЕ ОДИН файл MMO для загрузки
+                               end else //ошибка - найден НЕ ОДИН файл MMO для загрузки
                                    ;
                                if actExecuteImportSettings.ExternalParams.ParamByName('outMsgText').Value <> ''
                                then begin
