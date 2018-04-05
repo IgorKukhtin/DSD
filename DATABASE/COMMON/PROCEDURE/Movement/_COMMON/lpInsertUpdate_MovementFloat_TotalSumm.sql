@@ -358,6 +358,7 @@ BEGIN
                                , SUM (COALESCE (MIFloat_SummNalogRetRecalc.ValueData, 0))     AS OperSumm_NalogRetRecalc
 
                                , SUM (COALESCE (MIFloat_AmountTax_calc.ValueData, 0))         AS AmountTax_calc
+                               , SUM (COALESCE (MIFloat_SummTaxDiff_calc.ValueData, 0))       AS SummTaxDiff_calc
 
                           FROM Movement
                                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
@@ -400,6 +401,11 @@ BEGIN
                                                            ON MIFloat_AmountTax_calc.MovementItemId = MovementItem.Id
                                                           AND MIFloat_AmountTax_calc.DescId         = zc_MIFloat_AmountTax_calc()
                                                           AND vbMovementDescId                      = zc_Movement_TaxCorrective()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummTaxDiff_calc
+                                                           ON MIFloat_SummTaxDiff_calc.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummTaxDiff_calc.DescId         = zc_MIFloat_SummTaxDiff_calc()
+                                                          AND vbMovementDescId                        = zc_Movement_TaxCorrective()
+                                                          
 
                                LEFT JOIN MovementItemFloat AS MIFloat_SummToPay
                                                            ON MIFloat_SummToPay.MovementItemId = MovementItem.Id
@@ -692,7 +698,10 @@ BEGIN
                       , SUM (CASE WHEN tmpMI.CountForPrice <> 0
                                        THEN CAST (tmpMI.OperCount_calc * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
                                   ELSE CAST (tmpMI.OperCount_calc * tmpMI.Price AS NUMERIC (16, 2))
-                             END) AS OperSumm_Partner
+                             END
+                             -- Сумма DIFF для НН в колонке 13/1строка
+                           + tmpMI.SummTaxDiff_calc
+                             ) AS OperSumm_Partner
                         -- сумма по Контрагенту - с округлением до 2-х знаков + !!!НЕ!!! учтена скидка в цене
                       , SUM (CASE WHEN tmpMI.CountForPrice <> 0
                                        THEN CAST (tmpMI.OperCount_calc * tmpMI.Price_original / tmpMI.CountForPrice AS NUMERIC (16, 2))
@@ -753,6 +762,9 @@ BEGIN
                        , SUM (tmpMI.OperSumm_NalogRetRecalc)   AS OperSumm_NalogRetRecalc
                   FROM (SELECT tmpMI.GoodsId
                              , tmpMI.GoodsKindId
+                               -- Сумма DIFF для НН в колонке 13/1строка
+                             , tmpMI.SummTaxDiff_calc
+
                              , CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
                                          -- так переводится в валюту zc_Enum_Currency_Basis
                                          THEN CAST (tmpMI.Price * CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END AS NUMERIC (16, 2))
@@ -870,6 +882,8 @@ BEGIN
                                    , tmpMI.CountForPrice
 
                                    , tmpMI.ChangePercent
+                                     -- Сумма DIFF для НН в колонке 13/1строка
+                                   , tmpMI.SummTaxDiff_calc
 
                                      -- !!!очень важное кол-во, для него расчет сумм!!! - !!! ПЕРВАЯ Строка !!!
                                    , (CASE WHEN vbIsNPP_calc = TRUE THEN 1 * tmpMI.AmountTax_calc ELSE tmpMI.OperCount_calc END) AS OperCount_calc
@@ -928,6 +942,8 @@ BEGIN
                                    , tmpMI.CountForPrice
 
                                    , tmpMI.ChangePercent
+                                     -- Сумма DIFF для НН в колонке 13/1строка
+                                   , 0 AS SummTaxDiff_calc
 
                                      -- !!!очень важное кол-во, для него расчет сумм!!! - !!! ВТОРАЯ Строка !!!
                                    , -1 * (tmpMI.AmountTax_calc - tmpMI.OperCount_calc) AS OperCount_calc
@@ -1150,4 +1166,4 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 -- select lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= id) from gpSelect_Movement_WeighingPartner (inStartDate := ('01.06.2014')::TDateTime , inEndDate := ('30.06.2014')::TDateTime ,  inSession := '5') as a
 -- тест
 -- SELECT lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= Movement.Id) from Movement where DescId = zc_Movement_Sale() and OperDate between ('01.11.2014')::TDateTime and  ('31.12.2014')::TDateTime
--- SELECT lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= Movement.Id) from Movement where Id = 8872183 -- 8796848
+-- SELECT lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= Movement.Id) from Movement where Id = 8751077 -- 8796848

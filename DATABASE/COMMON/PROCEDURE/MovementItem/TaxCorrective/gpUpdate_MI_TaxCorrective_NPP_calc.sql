@@ -6,13 +6,14 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_TaxCorrective_NPP_calc(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (MovementItemId Integer
-             , GoodsId        Integer
-             , GoodsKindId    Integer
-             , NPPTax_calc    Integer
-             , NPP_calc       Integer
-             , AmountTax_calc TFloat
-             , Amount         TFloat
+RETURNS TABLE (MovementItemId   Integer
+             , GoodsId          Integer
+             , GoodsKindId      Integer
+             , NPPTax_calc      Integer
+             , NPP_calc         Integer
+             , AmountTax_calc   TFloat
+             , SummTaxDiff_calc TFloat
+             , Amount           TFloat
               )
 AS
 $BODY$
@@ -74,7 +75,7 @@ BEGIN
 
 
      -- таблица - Список
-     CREATE TEMP TABLE _tmpRes (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, NPPTax_calc Integer, NPP_calc Integer, AmountTax_calc TFloat, Amount TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpRes (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, NPPTax_calc Integer, NPP_calc Integer, AmountTax_calc TFloat, SummTaxDiff_calc TFloat, Amount TFloat) ON COMMIT DROP;
 
 
      WITH -- Все корректировки
@@ -132,10 +133,12 @@ BEGIN
                    , COALESCE (MIFloat_Price.ValueData, 0)          AS Price
                    , COALESCE (MIFloat_AmountTax_calc.ValueData, 0) AS AmountTax_calc
                    , COALESCE (MIFloat_NPP_calc.ValueData, 0)       AS NPP_calc
+                     --  Сумма - для Итого
+                   , CAST (tmpMI_All.Amount * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2)) + COALESCE (MIFloat_SummTaxDiff_calc.ValueData, 0) AS AmountSumm
                      --  № п/п - Что б выбрать !!!ПОСЛЕДНЮЮ!!!
-                   , ROW_NUMBER() OVER (PARTITION BY tmpMI_All.GoodsId, MILinkObject_GoodsKind.ObjectId, MIFloat_Price.ValueData ORDER BY COALESCE (MIFloat_NPP_calc.ValueData, 1) DESC) AS Ord1
+                   , ROW_NUMBER() OVER (PARTITION BY tmpMI_All.GoodsId, MILinkObject_GoodsKind.ObjectId, MIFloat_Price.ValueData ORDER BY COALESCE (MIFloat_NPP_calc.ValueData, 1) DESC, tmpMI_All.Id DESC) AS Ord1
                      --  № п/п - Что б выбрать !!!ПОСЛЕДНЮЮ!!!
-                   , ROW_NUMBER() OVER (PARTITION BY tmpMI_All.GoodsId, MILinkObject_GoodsKind.ObjectId, MIFloat_Price.ValueData ORDER BY COALESCE (MIFloat_NPP_calc.ValueData, 1) DESC) AS Ord2
+                   , ROW_NUMBER() OVER (PARTITION BY tmpMI_All.GoodsId, MILinkObject_GoodsKind.ObjectId, MIFloat_Price.ValueData ORDER BY COALESCE (MIFloat_NPP_calc.ValueData, 1) DESC, tmpMI_All.Id DESC) AS Ord2
               FROM tmpMI_All
                    LEFT JOIN tmpMIFloat AS MIFloat_NPP_calc
                                         ON MIFloat_NPP_calc.MovementItemId = tmpMI_All.Id
@@ -144,6 +147,9 @@ BEGIN
                    LEFT JOIN tmpMIFloat AS MIFloat_AmountTax_calc
                                         ON MIFloat_AmountTax_calc.MovementItemId = tmpMI_All.Id
                                        AND MIFloat_AmountTax_calc.DescId         = zc_MIFloat_AmountTax_calc()
+                   LEFT JOIN tmpMIFloat AS MIFloat_SummTaxDiff_calc
+                                        ON MIFloat_SummTaxDiff_calc.MovementItemId = tmpMI_All.Id
+                                       AND MIFloat_SummTaxDiff_calc.DescId         = zc_MIFloat_SummTaxDiff_calc()
                    LEFT JOIN tmpMIFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = tmpMI_All.Id
                                        AND MIFloat_Price.DescId         = zc_MIFloat_Price()
@@ -153,12 +159,23 @@ BEGIN
                                          AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
              )
           -- SUMMA
-        , tmpMI_Corr_sum AS
+        , tmpMI_Corr_sum_1 AS
+             (SELECT tmpMI_Corr_all.GoodsId
+                   , tmpMI_Corr_all.GoodsKindId
+                   , tmpMI_Corr_all.Price
+                   , SUM (CASE WHEN tmpMI_Corr_all.NPP_calc = 0 THEN tmpMI_Corr_all.Amount ELSE 0 END) AS Amount
+                   , SUM (tmpMI_Corr_all.AmountSumm) AS AmountSumm
+              FROM tmpMI_Corr_all
+              GROUP BY tmpMI_Corr_all.GoodsId
+                     , tmpMI_Corr_all.GoodsKindId
+                     , tmpMI_Corr_all.Price
+             )
+        , tmpMI_Corr_sum_2 AS
              (SELECT tmpMI_Corr_all.GoodsId
                    , tmpMI_Corr_all.Price
-                   , SUM (tmpMI_Corr_all.Amount) AS Amount
+                   , SUM (CASE WHEN tmpMI_Corr_all.NPP_calc = 0 THEN tmpMI_Corr_all.Amount ELSE 0 END) AS Amount
+                   , SUM (tmpMI_Corr_all.AmountSumm) AS AmountSumm
               FROM tmpMI_Corr_all
-              WHERE tmpMI_Corr_all.NPP_calc = 0
               GROUP BY tmpMI_Corr_all.GoodsId
                      , tmpMI_Corr_all.Price
              )
@@ -202,13 +219,23 @@ BEGIN
                    , tmpMI_Corr_curr_all.GoodsKindId
                    , tmpMI_Corr_curr_all.Amount
                    , tmpMI_Corr_curr_all.Price
-                   , COALESCE (tmpMI_tax1.Amount_Tax_find, tmpMI_tax2.Amount_Tax_find) - COALESCE (tmpMI_Corr_sum.Amount, 0) AS AmountTax_calc
+                     -- Кол-во из налог. за минусом "предыдущих" корр. (т.е. без "схемы")
+                   , COALESCE (tmpMI_tax1.Amount_Tax_find, tmpMI_tax2.Amount_Tax_find) - COALESCE (tmpMI_Corr_sum_1.Amount, tmpMI_Corr_sum_2.Amount, 0) AS AmountTax_calc
+                     -- Сумма DIFF - из налог. за минусом ...
+                   , CAST (COALESCE (tmpMI_tax1.Amount_Tax_find, tmpMI_tax2.Amount_Tax_find) * COALESCE (tmpMI_tax1.Price, tmpMI_tax2.Price) AS NUMERIC (16, 2))
+                           -- минус "предыдущие" корр. (ВСЕ)
+                         - COALESCE (tmpMI_Corr_sum_1.AmountSumm, tmpMI_Corr_sum_2.AmountSumm, 0)
+                     AS SummTaxDiff_calc
+                     -- № п/п из налог. ИЛИ текущий
                    , CASE WHEN tmpMI_Corr_curr_all.NPP = 0 THEN COALESCE (tmpMI_tax1.LineNum, tmpMI_tax2.LineNum) ELSE tmpMI_Corr_curr_all.NPP END :: Integer AS NPP
-                     -- № п/п - Что б увеличить счетчик на + 1
+                     -- № п/п внутренний для ЗАПРОСА с 1... и до... - Что б увеличить счетчик на + 1
                    , ROW_NUMBER() OVER (ORDER BY CASE WHEN tmpMI_Corr_curr_all.NPP = 0 THEN COALESCE (tmpMI_tax1.LineNum, tmpMI_tax2.LineNum) ELSE tmpMI_Corr_curr_all.NPP END ASC) AS Ord
               FROM tmpMI_Corr_curr_all
-                   LEFT JOIN tmpMI_Corr_sum ON tmpMI_Corr_sum.GoodsId     = tmpMI_Corr_curr_all.GoodsId
-                                           AND tmpMI_Corr_sum.Price       = tmpMI_Corr_curr_all.Price
+                   LEFT JOIN tmpMI_Corr_sum_1 ON tmpMI_Corr_sum_1.GoodsId     = tmpMI_Corr_curr_all.GoodsId
+                                             AND tmpMI_Corr_sum_1.GoodsKindId = tmpMI_Corr_curr_all.GoodsKindId
+                                             AND tmpMI_Corr_sum_1.Price       = tmpMI_Corr_curr_all.Price
+                   LEFT JOIN tmpMI_Corr_sum_2 ON tmpMI_Corr_sum_2.GoodsId     = tmpMI_Corr_curr_all.GoodsId
+                                             AND tmpMI_Corr_sum_2.Price       = tmpMI_Corr_curr_all.Price
                    -- номера строк в НН
                    LEFT JOIN tmpMI_tax AS tmpMI_tax1 ON tmpMI_tax1.Kind        = 1
                                                     AND tmpMI_tax1.GoodsId     = tmpMI_Corr_curr_all.GoodsId
@@ -235,6 +262,15 @@ BEGIN
                              , tmpMI_Corr_all2.AmountTax_calc - tmpMI_Corr_all2.Amount  -- кол-во в последней корр МИНУС какая там корр. - БЕЗ GoodsKindId
                              , tmpMI_Corr_curr.AmountTax_calc                           -- кол-во в налоговой
                               ) :: TFloat AS AmountTax_calc
+                     -- Сумма DIFF для НН в колонке 13/1строка - из налог. за минусом ...
+                   , tmpMI_Corr_curr.SummTaxDiff_calc
+                   - CAST (COALESCE (tmpMI_Corr_all1.AmountTax_calc - tmpMI_Corr_all1.Amount  -- кол-во в последней корр МИНУС какая там корр.
+                                   , tmpMI_Corr_all2.AmountTax_calc - tmpMI_Corr_all2.Amount  -- кол-во в последней корр МИНУС какая там корр. - БЕЗ GoodsKindId
+                                   , tmpMI_Corr_curr.AmountTax_calc                           -- кол-во в налоговой
+                                    )
+                         * tmpMI_Corr_curr.Price AS NUMERIC (16, 2))
+                     AS SummTaxDiff_calc
+
                      -- № п/п в ТЕКУЩЕЙ корректировка - Что б увеличить счетчик на + 1
                    , tmpMI_Corr_curr.Ord                 
                      -- Кол-во в ТЕКУЩЕЙ корректировка
@@ -252,7 +288,7 @@ BEGIN
                                                               AND tmpMI_Corr_all2.NPP_calc    > 0
              )
      -- сохранили
-     INSERT INTO _tmpRes (MovementItemId, GoodsId, GoodsKindId, NPPTax_calc, NPP_calc, AmountTax_calc, Amount)
+     INSERT INTO _tmpRes (MovementItemId, GoodsId, GoodsKindId, NPPTax_calc, NPP_calc, AmountTax_calc, SummTaxDiff_calc, Amount)
        SELECT tmpMI_Data.MovementItemId
             , tmpMI_Data.GoodsId
             , tmpMI_Data.GoodsKindId
@@ -264,6 +300,8 @@ BEGIN
               ) :: Integer AS NPP_calc
               -- Кол-во для НН в колонке 7/1строка
             , tmpMI_Data.AmountTax_calc
+              -- Сумма DIFF для НН в колонке 13/1строка
+            , CASE WHEN tmpMI_Data.AmountTax_calc = tmpMI_Data.Amount OR 1=1 THEN tmpMI_Data.SummTaxDiff_calc ELSE 0 END AS SummTaxDiff_calc
               -- Кол-во в ТЕКУЩЕЙ корректировка
             , tmpMI_Data.Amount
 
@@ -271,8 +309,9 @@ BEGIN
 
 
      -- сохранили
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPPTax_calc(),    _tmpRes.MovementItemId, _tmpRes.NPPTax_calc)
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountTax_calc(), _tmpRes.MovementItemId, _tmpRes.AmountTax_calc)
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPPTax_calc(),      _tmpRes.MovementItemId, _tmpRes.NPPTax_calc)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountTax_calc(),   _tmpRes.MovementItemId, _tmpRes.AmountTax_calc)
+           -- , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTaxDiff_calc(), _tmpRes.MovementItemId, _tmpRes.SummTaxDiff_calc)
              -- !!!важно - сохранили ТОЛЬКО если есть еще что возвращать!!!
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPP_calc(),       _tmpRes.MovementItemId, CASE WHEN _tmpRes.AmountTax_calc > _tmpRes.Amount THEN _tmpRes.NPP_calc ELSE 0 END)
      FROM _tmpRes;
@@ -293,11 +332,15 @@ BEGIN
 
 
      
-     -- Результат
-     RETURN;
-     -- Результат
-     RETURN QUERY
-       SELECT _tmpRes.MovementItemId, _tmpRes.GoodsId, _tmpRes.GoodsKindId, _tmpRes.NPPTax_calc, _tmpRes.NPP_calc, _tmpRes.AmountTax_calc, _tmpRes.Amount FROM _tmpRes;
+     IF inSession <> '5'
+     THEN
+         -- Результат
+         RETURN;
+     ELSE
+         -- Результат
+         RETURN QUERY
+           SELECT _tmpRes.MovementItemId, _tmpRes.GoodsId, _tmpRes.GoodsKindId, _tmpRes.NPPTax_calc, _tmpRes.NPP_calc, _tmpRes.AmountTax_calc, _tmpRes.SummTaxDiff_calc, _tmpRes.Amount FROM _tmpRes;
+     END IF;
 
 
 END;
@@ -325,4 +368,4 @@ $BODY$
    AND Movement.StatusId = zc_Enum_Status_Complete()
 */
 -- тест
--- SELECT * FROM gpUpdate_MI_TaxCorrective_NPP_calc (inMovementId:= -8616346, inSession:= zfCalc_UserAdmin())
+ SELECT * FROM gpUpdate_MI_TaxCorrective_NPP_calc (inMovementId:= 8751077, inSession:= zfCalc_UserAdmin())

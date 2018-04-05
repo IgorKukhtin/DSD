@@ -236,10 +236,11 @@ BEGIN
              , tmpMI_All.GoodsGroupId                 AS GoodsGroupId
              , tmpMI_All.isPartner                    AS isPartner
 
-             , COALESCE (MIFloat_NPPTax_calc.ValueData, 0)    AS NPPTax_calc
-             , COALESCE (MIFloat_NPP_calc.ValueData, 0)       AS NPP_calc
-             , COALESCE (MIFloat_AmountTax_calc.ValueData, 0) AS AmountTax_calc
-
+             , COALESCE (MIFloat_NPPTax_calc.ValueData, 0)      AS NPPTax_calc
+             , COALESCE (MIFloat_NPP_calc.ValueData, 0)         AS NPP_calc
+             , COALESCE (MIFloat_AmountTax_calc.ValueData, 0)   AS AmountTax_calc
+             , COALESCE (MIFloat_SummTaxDiff_calc.ValueData, 0) AS SummTaxDiff_calc
+             
         FROM tmpMI_All
             LEFT JOIN tmpMIFloat AS MIFloat_NPP
                                  ON MIFloat_NPP.MovementItemId = tmpMI_All.Id
@@ -261,6 +262,9 @@ BEGIN
             LEFT JOIN tmpMIFloat AS MIFloat_AmountTax_calc
                                  ON MIFloat_AmountTax_calc.MovementItemId = tmpMI_All.Id
                                 AND MIFloat_AmountTax_calc.DescId         = zc_MIFloat_AmountTax_calc()
+            LEFT JOIN tmpMIFloat AS MIFloat_SummTaxDiff_calc
+                                 ON MIFloat_SummTaxDiff_calc.MovementItemId = tmpMI_All.Id
+                                AND MIFloat_SummTaxDiff_calc.DescId         = zc_MIFloat_SummTaxDiff_calc()
 
             LEFT JOIN tmpGoodsKind AS MILinkObject_GoodsKind
                                    ON MILinkObject_GoodsKind.MovementItemId = tmpMI_All.Id
@@ -639,13 +643,14 @@ BEGIN
 
            , 'оплата з поточного рахунка'::TVarChar                         AS N9
            , CASE WHEN tmpMovement_Data.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
-                       THEN 'Змiна цiни'
+                       THEN 'Зміна ціни'
                   WHEN MovementBoolean_isCopy.ValueData = TRUE
                        THEN 'ВИПРАВЛЕННЯ ПОМИЛКИ'
                   WHEN tmpMI.isPartner = TRUE
-                       THEN 'НЕДОВIЗ'
-                  ELSE 'Змiна кiлькостi' -- 'повернення товару або авансових платежів' -- 'повернення'
+                       THEN 'НЕДОВІЗ'
+                  ELSE 'Зміна кількості' -- 'повернення товару або авансових платежів' -- 'повернення'
              END :: TVarChar AS KindName
+           , tmpMovement_Data.DocumentTaxKind
            , MovementBoolean_PriceWithVAT.ValueData                         AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData                             AS VATPercent
            , CAST (REPEAT (' ', 7 - LENGTH (MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData AS TVarChar) AS InvNumberPartner
@@ -869,9 +874,10 @@ BEGIN
            , CASE WHEN tmpMovement_Data.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_Corrective(),zc_Enum_DocumentTaxKind_Prepay())
                   THEN 'X' ELSE '' END    AS TaxKind --признак  сводной корректировки
 
-           , tmpMI.NPPTax_calc    :: Integer AS NPPTax_calc
-           , tmpMI.NPP_calc       :: Integer AS NPP_calc
-           , tmpMI.AmountTax_calc :: TFloat  AS AmountTax_calc
+           , tmpMI.NPPTax_calc      :: Integer AS NPPTax_calc
+           , tmpMI.NPP_calc         :: Integer AS NPP_calc
+           , tmpMI.AmountTax_calc   :: TFloat  AS AmountTax_calc
+           , tmpMI.SummTaxDiff_calc :: TFloat  AS SummTaxDiff_calc
 
        FROM tmpMI
 
@@ -966,7 +972,12 @@ BEGIN
            , tmpData_all.N10_ifin
 
            , tmpData_all.N9
-           , tmpData_all.KindName
+           , CASE WHEN tmpData_all.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                   AND tmpData_all.AmountTax_calc = tmpData_all.Amount
+                       THEN 'Повернення товару або авансових платежів'
+                  ELSE tmpData_all.KindName
+             END :: TVarChar AS KindName
+
            , tmpData_all.PriceWithVAT
            , tmpData_all.VATPercent
            , tmpData_all.InvNumberPartner_ifin
@@ -1062,10 +1073,11 @@ BEGIN
            , tmpData_all.Price_for_PriceCor
 
              -- !!! ПЕРВАЯ Строка !!!
-           , CASE WHEN tmpData_all.CountForPrice_orig > 0
-                  THEN ((COALESCE (CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.AmountTax_calc ELSE tmpData_all.Amount_orig END, 0)) * tmpData_all.Price_orig / tmpData_all.CountForPrice_orig) :: NUMERIC (16, 2)
-                  ELSE ((COALESCE (CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.AmountTax_calc ELSE tmpData_all.Amount_orig END, 0)) * tmpData_all.Price_orig) :: NUMERIC (16, 2)
-             END :: TFloat AS AmountSumm
+           , (CASE WHEN tmpData_all.CountForPrice_orig > 0
+                   THEN ((COALESCE (CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.AmountTax_calc ELSE tmpData_all.Amount_orig END, 0)) * tmpData_all.Price_orig / tmpData_all.CountForPrice_orig) :: NUMERIC (16, 2)
+                   ELSE ((COALESCE (CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.AmountTax_calc ELSE tmpData_all.Amount_orig END, 0)) * tmpData_all.Price_orig) :: NUMERIC (16, 2)
+              END
+            + tmpData_all.SummTaxDiff_calc) :: TFloat AS AmountSumm
 
            , tmpData_all.InvNumberBranch
            , tmpData_all.InvNumberBranch_Child
