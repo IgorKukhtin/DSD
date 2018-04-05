@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpReport_CheckTaxCorrective_NPP (
 )
 RETURNS TABLE (ItemName TVarChar, InvNumber TVarChar, InvNumberPartner TVarChar, InvNumberPartner_Tax TVarChar
              , OperDate TDateTime
+             , OperDate_Tax TDateTime
              , JuridicalName TVarChar
              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
              , LineNum         Integer
@@ -338,18 +339,17 @@ BEGIN
          , Movement.InvNumber
          , MovementString_InvNumberPartner.ValueData     AS InvNumberPartner
          , MovementString_InvNumberPartner_Tax.ValueData AS InvNumberPartner_Tax
-         , Movement.OperDate
+         , Movement.OperDate                             AS OperDate
+         , Movement_Tax.OperDate                         AS OperDate_Tax
          , Object_To.ValueData  AS JuridicalName
          , tmpData.GoodsCode
          , tmpData.GoodsName
          , tmpData.GoodsKindName
 
-         , tmpData.LineNum             :: integer
-         , tmpData.LineNumTax          :: integer
-         , CASE WHEN COALESCE (tmpData.LineNumTaxCorr_calc, 0) <> 0 THEN tmpData.LineNumTaxCorr_calc ELSE tmpLine.LineNum END  :: integer AS LineNumTaxCorr_calc
-         --, tmpData.LineNumTaxCorr_calc
-         --, ROW_NUMBER() OVER (PARTITION BY tmpData.MovementId_Tax ORDER BY tmpData.MovementId , tmpData.LineNum, tmpData.LineNumTaxCorr_calc)  :: integer AS LineNum_calc
-         , COALESCE (tmpData.LineNum_calc, 0)   :: integer AS LineNum_calc
+         , tmpData.LineNum             :: integer                                         -- сквозная нумерация строк налоговой  и  корректировок (начиная с 31,03,18)
+         , tmpData.LineNumTax          :: integer                                         -- № п/п из  налоговой который корректируется
+         , COALESCE (tmpData.LineNumTaxCorr_calc, 0) :: integer AS LineNumTaxCorr_calc    -- № п/п строки которая корректируется
+         , COALESCE (tmpData.LineNum_calc, 0)   :: integer AS LineNum_calc                -- расчетный № п/п
          , tmpData.Amount         :: TFloat
          , tmpData.Price          :: TFloat
          , tmpData.CountForPrice  :: TFloat
@@ -362,7 +362,8 @@ BEGIN
     FROM tmpData
          LEFT JOIN Movement ON Movement.Id = tmpData.MovementId
          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
-
+         LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = tmpData.MovementId_Tax
+         
          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                       ON MovementLinkObject_To.MovementId = Movement.Id
                                      AND MovementLinkObject_To.DescId = CASE WHEN Movement.DescId = zc_Movement_Tax() THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From() END
@@ -376,9 +377,6 @@ BEGIN
                                   ON MovementString_InvNumberPartner_Tax.MovementId = tmpData.MovementId_Tax
                                  AND MovementString_InvNumberPartner_Tax.DescId = zc_MovementString_InvNumberPartner()
 
-         LEFT JOIN tmpData AS tmpLine ON tmpLine.LineNumTaxCorr_calc = tmpData.LineNum  -- and 1 = 0
-                                    AND tmpData.LineNum <> 0
-                                    AND tmpLine.MovementId_Tax = tmpData.MovementId_Tax
 WHERE (tmpData.GoodsId = inGoodsId OR inGoodsId = 0)
     ORDER BY 1 DESC, tmpData.LineNum
     ;

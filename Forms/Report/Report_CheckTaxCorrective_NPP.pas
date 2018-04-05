@@ -60,6 +60,7 @@ type
     cxLabel11: TcxLabel;
     edPartner: TcxButtonEdit;
     GuidesPartner: TdsdGuides;
+    OperDate_Tax: TcxGridDBColumn;
   private
     { Private declarations }
   public
