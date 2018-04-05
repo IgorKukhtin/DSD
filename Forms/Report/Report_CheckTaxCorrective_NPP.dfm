@@ -15,17 +15,19 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
     TabOrder = 3
     ExplicitTop = 115
     ExplicitWidth = 823
-    ExplicitHeight = 201
+    ExplicitHeight = 244
     ClientRectBottom = 244
     ClientRectRight = 823
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 823
-      ExplicitHeight = 201
+      ExplicitHeight = 244
       inherited cxGrid: TcxGrid
         Width = 823
         Height = 244
+        ExplicitLeft = -64
+        ExplicitTop = 3
         ExplicitWidth = 823
-        ExplicitHeight = 201
+        ExplicitHeight = 244
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -156,6 +158,7 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
             Properties.DisplayFormat = '0.;-0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1087'/'#1087' '#1089#1082#1074#1086#1079#1085#1072#1103' '#1085#1091#1084#1077#1088#1072#1094#1080#1103
             Options.Editing = False
             Width = 55
           end
@@ -177,7 +180,7 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
             Properties.DisplayFormat = '0.;-0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #8470' '#1087'/'#1087' '#1088#1072#1089#1095#1077#1090#1085#1086#1077' ('#1089#1082#1074#1086#1079#1085#1072#1103' '#1085#1091#1084#1077#1088#1072#1094#1080#1103')'
+            HeaderHint = #8470' '#1087'/'#1087' '#1088#1072#1089#1095#1077#1090#1085#1086#1077
             Width = 70
           end
           object GoodsCode: TcxGridDBColumn
@@ -251,11 +254,20 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
             Width = 85
           end
           object isAmountTax: TcxGridDBColumn
-            Caption = #1054#1090#1082#1083'.'
+            Caption = #1054#1090#1082#1083'. '#1082#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1082#1086#1088#1088'.'
             DataBinding.FieldName = 'isAmountTax'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1074' '#1082#1086#1083'-'#1074#1077' '#1076#1083#1103' '#1082#1086#1088#1088#1077#1082#1090'.'
+            Options.Editing = False
+            Width = 43
+          end
+          object isLineNum: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'. '#8470' '#1087'/'#1087
+            DataBinding.FieldName = 'isLineNum'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#8470' '#1087'/'#1087' '#1086#1090' '#1088#1072#1089#1095#1077#1090#1085#1086#1075#1086
             Options.Editing = False
             Width = 43
           end
@@ -487,6 +499,25 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1042#1057#1045
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1042#1057#1045
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1086#1096#1080#1073#1082#1080
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1042#1057#1045
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1086#1096#1080#1073#1082#1080
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1042#1057#1045
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -516,10 +547,11 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisShowAll'
         Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptUnknown
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 112
@@ -533,8 +565,43 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
       Category = 0
     end
   end

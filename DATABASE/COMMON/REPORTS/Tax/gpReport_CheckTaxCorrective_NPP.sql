@@ -2,10 +2,12 @@
 
 DROP FUNCTION IF EXISTS Report_CheckTaxCorrective_NPP (Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_CheckTaxCorrective_NPP (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_CheckTaxCorrective_NPP (Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_CheckTaxCorrective_NPP (
     IN inMovementId          Integer   , -- № налоговой
     IN inGoodsId             Integer   , -- товар
+    IN inIsShowAll           Boolean   , -- показать по умолч только  ошибки - №п/п или кол-во
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ItemName TVarChar, InvNumber TVarChar, InvNumberPartner TVarChar, InvNumberPartner_Tax TVarChar
@@ -26,6 +28,7 @@ RETURNS TABLE (ItemName TVarChar, InvNumber TVarChar, InvNumberPartner TVarChar,
              , AmountTax_calc  TFloat
              , AmountTax       TFloat
              , isAmountTax     Boolean
+             , isLineNum       Boolean
               )  
 AS
 $BODY$
@@ -306,7 +309,7 @@ BEGIN
                        , ROW_NUMBER() OVER (ORDER BY tmp.MovementId, tmp.LineNum, tmp.LineNumTaxCorr_calc)  :: integer AS LineNum_calc
                  FROM tmpData_Summ AS tmp
                  WHERE tmp.isNPP_calc = TRUE
-                   AND (COALESCE (tmp.Amount, 0) + COALESCE (tmp.AmountTax, 0)) <> 0
+                   AND (COALESCE (tmp.AmountTax, 0) + COALESCE (tmp.Amount, 0)) > 0
                  )
 
   , tmpData AS (SELECT tmp.MovementId
@@ -330,6 +333,8 @@ BEGIN
                        , tmp.AmountTax_calc
                        , tmp.AmountTax
                        , tmpData_Ord.LineNum_calc
+                       , CASE WHEN tmp.isNPP_calc = TRUE AND COALESCE (tmp.AmountTax_calc, 0) <> COALESCE (tmp.AmountTax, 0) THEN TRUE ELSE FALSE END AS isAmountTax
+                       , CASE WHEN tmp.isNPP_calc = TRUE AND COALESCE (tmp.LineNum, 0) <> COALESCE (tmpData_Ord.LineNum_calc, 0) THEN TRUE ELSE FALSE END     AS isLineNum
                  FROM tmpData_Summ AS tmp
                       LEFT JOIN tmpData_Ord ON tmpData_Ord.MovementItemId = tmp.MovementItemId
                  )
@@ -358,7 +363,8 @@ BEGIN
          , tmpData.SummTaxDiff_calc     :: TFloat
          , tmpData.AmountTax_calc :: TFloat
          , CASE WHEN tmpData.isNPP_calc = FALSE THEN 0 ELSE tmpData.AmountTax END  :: TFloat  AS AmountTax
-         , CASE WHEN tmpData.isNPP_calc = TRUE AND COALESCE (tmpData.AmountTax_calc, 0) <> COALESCE (tmpData.AmountTax, 0) THEN TRUE ELSE FALSE END AS isAmountTax
+         , tmpData.isAmountTax
+         , tmpData.isLineNum
     FROM tmpData
          LEFT JOIN Movement ON Movement.Id = tmpData.MovementId
          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
@@ -377,7 +383,9 @@ BEGIN
                                   ON MovementString_InvNumberPartner_Tax.MovementId = tmpData.MovementId_Tax
                                  AND MovementString_InvNumberPartner_Tax.DescId = zc_MovementString_InvNumberPartner()
 
-WHERE (tmpData.GoodsId = inGoodsId OR inGoodsId = 0)
+    WHERE (tmpData.GoodsId = inGoodsId OR inGoodsId = 0)
+      AND ((inIsShowAll = FALSE AND (tmpData.isAmountTax = TRUE OR tmpData.isLineNum = TRUE))
+         OR inIsShowAll = TRUE)
     ORDER BY 1 DESC, tmpData.LineNum
     ;
 

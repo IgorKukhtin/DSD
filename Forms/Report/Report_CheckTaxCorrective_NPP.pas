@@ -61,6 +61,8 @@ type
     edPartner: TcxButtonEdit;
     GuidesPartner: TdsdGuides;
     OperDate_Tax: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public
