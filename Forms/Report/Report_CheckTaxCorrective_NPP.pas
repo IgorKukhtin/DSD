@@ -57,6 +57,9 @@ type
     LineNum_calc: TcxGridDBColumn;
     actRefreshStart: TdsdDataSetRefresh;
     isAmountTax: TcxGridDBColumn;
+    cxLabel11: TcxLabel;
+    edPartner: TcxButtonEdit;
+    GuidesPartner: TdsdGuides;
   private
     { Private declarations }
   public
