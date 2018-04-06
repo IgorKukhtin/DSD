@@ -274,6 +274,7 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       AlignSplitter = salRight
       AllowHotZoneDrag = False
       Control = ParamsAllPanel
+      ExplicitLeft = -8
     end
     object ParamsPanel: TPanel
       Left = 380

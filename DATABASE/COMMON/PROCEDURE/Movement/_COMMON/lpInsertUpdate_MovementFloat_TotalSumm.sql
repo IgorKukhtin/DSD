@@ -148,14 +148,23 @@ BEGIN
          -- !!!ОПРЕДЕЛИЛИ!!!
          vbIsNPP_calc:= EXISTS (SELECT 1
                                 FROM MovementItem
-                                     INNER JOIN MovementItemFloat AS MIFloat_NPP_calc
-                                                                  ON MIFloat_NPP_calc.MovementItemId = MovementItem.Id
-                                                                 AND MIFloat_NPP_calc.DescId         = zc_MIFloat_NPP_calc()
-                                                                 AND MIFloat_NPP_calc.ValueData      > 0
+                                     LEFT JOIN MovementItemFloat AS MIFloat_NPPTax_calc
+                                                                 ON MIFloat_NPPTax_calc.MovementItemId = MovementItem.Id
+                                                                AND MIFloat_NPPTax_calc.DescId         = zc_MIFloat_NPPTax_calc()
+                                     LEFT JOIN MovementItemFloat AS MIFloat_NPP_calc
+                                                                 ON MIFloat_NPP_calc.MovementItemId = MovementItem.Id
+                                                                AND MIFloat_NPP_calc.DescId         = zc_MIFloat_NPP_calc()
+                                     LEFT JOIN MovementItemFloat AS MIFloat_AmountTax_calc
+                                                                 ON MIFloat_AmountTax_calc.MovementItemId = MovementItem.Id
+                                                                AND MIFloat_AmountTax_calc.DescId         = zc_MIFloat_AmountTax_calc()
                                 WHERE MovementItem.MovementId = inMovementId
                                   AND MovementItem.DescId     = zc_MI_Master()
                                   AND MovementItem.isErased   = FALSE
                                   AND MovementItem.Amount     <> 0
+                                  AND (MIFloat_NPPTax_calc.ValueData    <> 0
+                                    OR MIFloat_NPP_calc.ValueData       <> 0
+                                    OR MIFloat_AmountTax_calc.ValueData <> 0
+                                      )
                                );
      ELSE
          vbIsNPP_calc:= FALSE;
@@ -709,57 +718,60 @@ BEGIN
                              END) AS OperSumm_Partner_original
 
                          -- сумма по Контрагенту с учетом скидки для цены - с округлением до 2-х знаков
-                       , SUM (CASE WHEN tmpMI.CountForPrice <> 0
-                                        THEN CAST (tmpMI.OperCount_calc * (tmpMI.Price - vbChangePrice) / tmpMI.CountForPrice AS NUMERIC (16, 2))
-                                   ELSE CAST (tmpMI.OperCount_calc * (tmpMI.Price - vbChangePrice) AS NUMERIC (16, 2))
-                              END) AS OperSumm_Partner_ChangePrice
-                         -- сумма по Контрагенту с учетом скидки для цены - с округлением до 2-х знаков !!!ушло!!!
-                       , SUM (CASE WHEN tmpMI.CountForPrice <> 0
-                                        THEN CAST (tmpMI.OperCount_calcFrom * (tmpMI.Price - vbChangePrice) / tmpMI.CountForPrice AS NUMERIC (16, 2))
-                                   ELSE CAST (tmpMI.OperCount_calcFrom * (tmpMI.Price - vbChangePrice) AS NUMERIC (16, 2))
-                              END) AS OperSumm_PartnerFrom_ChangePrice
-                         -- сумма по Контрагенту с учетом скидки для цены - с округлением до 2-х знаков !!!в валюте!!!
-                       , SUM (CASE WHEN tmpMI.CountForPrice <> 0
-                                        THEN CAST (tmpMI.OperCount_calc * (tmpMI.Price_Currency - vbChangePrice) / tmpMI.CountForPrice AS NUMERIC (16, 2))
-                                   ELSE CAST (tmpMI.OperCount_calc * (tmpMI.Price_Currency - vbChangePrice) AS NUMERIC (16, 2))
-                              END) AS OperSumm_Partner_ChangePrice_Currency
+                      , SUM (CASE WHEN tmpMI.CountForPrice <> 0
+                                       THEN CAST (tmpMI.OperCount_calc * (tmpMI.Price - vbChangePrice) / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                                  ELSE CAST (tmpMI.OperCount_calc * (tmpMI.Price - vbChangePrice) AS NUMERIC (16, 2))
+                             END
+                            -- Сумма DIFF для НН в колонке 13/1строка
+                          + tmpMI.SummTaxDiff_calc
+                            ) AS OperSumm_Partner_ChangePrice
+                        -- сумма по Контрагенту с учетом скидки для цены - с округлением до 2-х знаков !!!ушло!!!
+                      , SUM (CASE WHEN tmpMI.CountForPrice <> 0
+                                       THEN CAST (tmpMI.OperCount_calcFrom * (tmpMI.Price - vbChangePrice) / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                                  ELSE CAST (tmpMI.OperCount_calcFrom * (tmpMI.Price - vbChangePrice) AS NUMERIC (16, 2))
+                             END) AS OperSumm_PartnerFrom_ChangePrice
+                        -- сумма по Контрагенту с учетом скидки для цены - с округлением до 2-х знаков !!!в валюте!!!
+                      , SUM (CASE WHEN tmpMI.CountForPrice <> 0
+                                       THEN CAST (tmpMI.OperCount_calc * (tmpMI.Price_Currency - vbChangePrice) / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                                  ELSE CAST (tmpMI.OperCount_calc * (tmpMI.Price_Currency - vbChangePrice) AS NUMERIC (16, 2))
+                             END) AS OperSumm_Partner_ChangePrice_Currency
 
 
-                         -- сумма по Заготовителю - с округлением до 2-х знаков
-                       , SUM (CASE WHEN tmpMI.CountForPrice <> 0
-                                        THEN CAST (tmpMI.OperCount_Packer * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
-                                   ELSE CAST (tmpMI.OperCount_Packer * tmpMI.Price AS NUMERIC (16, 2))
-                              END) AS OperSumm_Packer
+                        -- сумма по Заготовителю - с округлением до 2-х знаков
+                      , SUM (CASE WHEN tmpMI.CountForPrice <> 0
+                                       THEN CAST (tmpMI.OperCount_Packer * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                                  ELSE CAST (tmpMI.OperCount_Packer * tmpMI.Price AS NUMERIC (16, 2))
+                             END) AS OperSumm_Packer
 
-                         -- сумма ввода остатка
-                       , SUM (tmpMI.OperSumm_Inventory) AS OperSumm_Inventory
+                        -- сумма ввода остатка
+                      , SUM (tmpMI.OperSumm_Inventory) AS OperSumm_Inventory
 
-                        -- сумма начисления зп
-                       , SUM (tmpMI.OperSumm_ToPay)       AS OperSumm_ToPay
-                       , SUM (tmpMI.OperSumm_Service)     AS OperSumm_Service
-                       , SUM (tmpMI.OperSumm_Card)        AS OperSumm_Card
-                       , SUM (tmpMI.OperSumm_CardSecond)  AS OperSumm_CardSecond
-                       , SUM (tmpMI.OperSumm_Nalog)       AS OperSumm_Nalog
-                       , SUM (tmpMI.OperSumm_Minus)       AS OperSumm_Minus
-                       , SUM (tmpMI.OperSumm_Add)         AS OperSumm_Add
-                       , SUM (tmpMI.OperSumm_Holiday)     AS OperSumm_Holiday
-                       , SUM (tmpMI.OperSumm_CardRecalc)  AS OperSumm_CardRecalc
-                       , SUM (tmpMI.OperSumm_CardSecondRecalc)  AS OperSumm_CardSecondRecalc
-                       , SUM (tmpMI.OperSumm_CardSecondCash)  AS OperSumm_CardSecondCash
-                       , SUM (tmpMI.OperSumm_NalogRecalc) AS OperSumm_NalogRecalc
-                       , SUM (tmpMI.OperSumm_SocialIn)    AS OperSumm_SocialIn
-                       , SUM (tmpMI.OperSumm_SocialAdd)   AS OperSumm_SocialAdd
-                       , SUM (tmpMI.OperSumm_Child)       AS OperSumm_Child
-                       , SUM (tmpMI.OperSumm_ChildRecalc)      AS OperSumm_ChildRecalc
-                       , SUM (tmpMI.OperSumm_MinusExt)         AS OperSumm_MinusExt
-                       , SUM (tmpMI.OperSumm_MinusExtRecalc)   AS OperSumm_MinusExtRecalc
-                       , SUM (tmpMI.OperSumm_Transport)        AS OperSumm_Transport
-                       , SUM (tmpMI.OperSumm_TransportAdd)     AS OperSumm_TransportAdd
-                       , SUM (tmpMI.OperSumm_TransportAddLong) AS OperSumm_TransportAddLong
-                       , SUM (tmpMI.OperSumm_TransportTaxi)    AS OperSumm_TransportTaxi
-                       , SUM (tmpMI.OperSumm_Phone)            AS OperSumm_Phone
-                       , SUM (tmpMI.OperSumm_NalogRet)         AS OperSumm_NalogRet
-                       , SUM (tmpMI.OperSumm_NalogRetRecalc)   AS OperSumm_NalogRetRecalc
+                       -- сумма начисления зп
+                      , SUM (tmpMI.OperSumm_ToPay)       AS OperSumm_ToPay
+                      , SUM (tmpMI.OperSumm_Service)     AS OperSumm_Service
+                      , SUM (tmpMI.OperSumm_Card)        AS OperSumm_Card
+                      , SUM (tmpMI.OperSumm_CardSecond)  AS OperSumm_CardSecond
+                      , SUM (tmpMI.OperSumm_Nalog)       AS OperSumm_Nalog
+                      , SUM (tmpMI.OperSumm_Minus)       AS OperSumm_Minus
+                      , SUM (tmpMI.OperSumm_Add)         AS OperSumm_Add
+                      , SUM (tmpMI.OperSumm_Holiday)     AS OperSumm_Holiday
+                      , SUM (tmpMI.OperSumm_CardRecalc)  AS OperSumm_CardRecalc
+                      , SUM (tmpMI.OperSumm_CardSecondRecalc)  AS OperSumm_CardSecondRecalc
+                      , SUM (tmpMI.OperSumm_CardSecondCash)  AS OperSumm_CardSecondCash
+                      , SUM (tmpMI.OperSumm_NalogRecalc) AS OperSumm_NalogRecalc
+                      , SUM (tmpMI.OperSumm_SocialIn)    AS OperSumm_SocialIn
+                      , SUM (tmpMI.OperSumm_SocialAdd)   AS OperSumm_SocialAdd
+                      , SUM (tmpMI.OperSumm_Child)       AS OperSumm_Child
+                      , SUM (tmpMI.OperSumm_ChildRecalc)      AS OperSumm_ChildRecalc
+                      , SUM (tmpMI.OperSumm_MinusExt)         AS OperSumm_MinusExt
+                      , SUM (tmpMI.OperSumm_MinusExtRecalc)   AS OperSumm_MinusExtRecalc
+                      , SUM (tmpMI.OperSumm_Transport)        AS OperSumm_Transport
+                      , SUM (tmpMI.OperSumm_TransportAdd)     AS OperSumm_TransportAdd
+                      , SUM (tmpMI.OperSumm_TransportAddLong) AS OperSumm_TransportAddLong
+                      , SUM (tmpMI.OperSumm_TransportTaxi)    AS OperSumm_TransportTaxi
+                      , SUM (tmpMI.OperSumm_Phone)            AS OperSumm_Phone
+                      , SUM (tmpMI.OperSumm_NalogRet)         AS OperSumm_NalogRet
+                      , SUM (tmpMI.OperSumm_NalogRetRecalc)   AS OperSumm_NalogRetRecalc
                   FROM (SELECT tmpMI.GoodsId
                              , tmpMI.GoodsKindId
                                -- Сумма DIFF для НН в колонке 13/1строка

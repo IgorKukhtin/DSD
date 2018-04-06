@@ -37,14 +37,24 @@ BEGIN
      -- !!!ОПРЕДЕЛИЛИ - НОВАЯ схема с 30.03.18!!!
      vbIsNPP_calc:= EXISTS (SELECT 1
                             FROM MovementItem
-                                 INNER JOIN MovementItemFloat AS MIFloat_NPP_calc
-                                                              ON MIFloat_NPP_calc.MovementItemId = MovementItem.Id
-                                                             AND MIFloat_NPP_calc.DescId         = zc_MIFloat_NPP_calc()
-                                                             AND MIFloat_NPP_calc.ValueData      > 0
+                                 LEFT JOIN MovementItemFloat AS MIFloat_NPPTax_calc
+                                                             ON MIFloat_NPPTax_calc.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_NPPTax_calc.DescId         = zc_MIFloat_NPPTax_calc()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_NPP_calc
+                                                             ON MIFloat_NPP_calc.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_NPP_calc.DescId         = zc_MIFloat_NPP_calc()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_AmountTax_calc
+                                                             ON MIFloat_AmountTax_calc.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_AmountTax_calc.DescId         = zc_MIFloat_AmountTax_calc()
+                                                            
                             WHERE MovementItem.MovementId = inMovementId
                               AND MovementItem.DescId     = zc_MI_Master()
                               AND MovementItem.isErased   = FALSE
                               AND MovementItem.Amount     <> 0
+                              AND (MIFloat_NPPTax_calc.ValueData    <> 0
+                                OR MIFloat_NPP_calc.ValueData       <> 0
+                                OR MIFloat_AmountTax_calc.ValueData <> 0
+                                  )
                            );
 
 
@@ -647,7 +657,7 @@ BEGIN
                   WHEN MovementBoolean_isCopy.ValueData = TRUE
                        THEN 'ВИПРАВЛЕННЯ ПОМИЛКИ'
                   WHEN tmpMI.isPartner = TRUE
-                       THEN 'НЕДОВІЗ'
+                       THEN 'Зміна кількості' -- 'НЕДОВІЗ'
                   ELSE 'Зміна кількості' -- 'повернення товару або авансових платежів' -- 'повернення'
              END :: TVarChar AS KindName
            , tmpMovement_Data.DocumentTaxKind
@@ -962,7 +972,6 @@ BEGIN
            , tmpData_all.MeasureName
            , tmpData_all.MeasureCode
 
-
            , tmpData_all.inMovementId
            , tmpData_all.MovementId
            , tmpData_all.InvNumber
@@ -1114,7 +1123,6 @@ BEGIN
            , tmpData_all.GoodsName_two
            , tmpData_all.MeasureName
            , tmpData_all.MeasureCode
-
 
            , tmpData_all.inMovementId
            , tmpData_all.MovementId

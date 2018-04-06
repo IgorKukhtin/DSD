@@ -1511,6 +1511,16 @@ if inSession = '5' AND 1=1 then
 end if;
 
 
+     -- дописали zc_MovementFloat_GPSN + zc_MovementFloat_GPSE
+     IF vbMovementDescId = zc_Movement_Sale()
+     THEN
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_GPSN(), inMovementId, COALESCE ((SELECT EXTRACT (DAY FROM Movement.OperDate) :: TFloat FROM Movement WHERE Movement.Id = vbMovementId_begin), 0));
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_GPSE(), inMovementId, COALESCE ((SELECT EXTRACT (DAY FROM MovementDate.ValueData) :: TFloat FROM MovementDate WHERE MovementDate.MovementId = vbMovementId_begin AND MovementDate.DescId = zc_MovementDate_OperDatePartner()), 0));
+         -- сохранили протокол
+          PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
+     END IF;
+
+
      -- дописали св-во <ƒата/врем€ создани€>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartBegin(), inMovementId, vbOperDate_StartBegin);
      -- дописали св-во <ƒата/врем€ создани€>

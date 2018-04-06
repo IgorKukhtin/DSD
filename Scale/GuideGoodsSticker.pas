@@ -303,7 +303,7 @@ begin
        //Execute;
     end;
     //
-    actPrint.ReportNameParam.Name:=;
+    //actPrint.ReportNameParam.Name:=;
     //
     actPrint.Execute;
 end;

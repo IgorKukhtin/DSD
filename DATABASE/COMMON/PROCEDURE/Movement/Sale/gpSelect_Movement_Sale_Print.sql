@@ -349,10 +349,10 @@ BEGIN
            , COALESCE (EXTRACT (DAY FROM MovementDate_OperDatePartner.ValueData), 0) :: Integer AS OperDatePartner_day
 
            , Movement.OperDate                          AS OperDate
-           , COALESCE (MovementDate_OperDatePartner.ValueData, CASE WHEN Movement.DescId <> zc_Movement_Sale() THEN Movement.OperDate END) AS OperDatePartner
+           , COALESCE (MovementDate_OperDatePartner.ValueData, CASE WHEN Movement.DescId <> zc_Movement_Sale() THEN Movement.OperDate END) :: TDateTime AS OperDatePartner
            , MovementDate_Payment.ValueData             AS PaymentDate
-           , CASE WHEN MovementDate_Payment.ValueData IS NOT NULL THEN TRUE ELSE FALSE END AS isPaymentDate
-           , COALESCE (Movement_order.OperDate, Movement.OperDate) AS OperDateOrder
+           , CASE WHEN MovementDate_Payment.ValueData IS NOT NULL THEN TRUE ELSE FALSE END :: Boolean AS isPaymentDate
+           , COALESCE (Movement_order.OperDate, Movement.OperDate) :: TDateTime AS OperDateOrder
            , vbPriceWithVAT                             AS PriceWithVAT
            , vbVATPercent                               AS VATPercent
            , vbExtraChargesPercent - vbDiscountPercent  AS ChangePercent

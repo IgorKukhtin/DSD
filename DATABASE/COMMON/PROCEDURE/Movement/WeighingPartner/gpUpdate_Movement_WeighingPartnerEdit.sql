@@ -30,6 +30,7 @@ $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
 
+   DECLARE vbParentId  Integer;
    DECLARE vbInvNumber TVarChar;
    DECLARE vbStartWeighing TDateTime;
    DECLARE vbPriceWithVAT  Boolean;
@@ -91,6 +92,15 @@ BEGIN
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inId);
+
+
+     -- дописали zc_MovementFloat_GPSN + zc_MovementFloat_GPSE
+     vbParentId:= (SELECT Movement.ParentId FROM Movement WHERE Movement.Id = inId);
+     IF vbParentId > 0
+     THEN
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_GPSN(), inId, COALESCE ((SELECT EXTRACT (DAY FROM Movement.OperDate) :: TFloat FROM Movement WHERE Movement.Id = vbParentId), 0));
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_GPSE(), inId, COALESCE ((SELECT EXTRACT (DAY FROM MovementDate.ValueData) :: TFloat FROM MovementDate WHERE MovementDate.MovementId = vbParentId AND MovementDate.DescId = zc_MovementDate_OperDatePartner()), 0));
+     END IF;
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (inId, vbUserId, vbIsInsert);

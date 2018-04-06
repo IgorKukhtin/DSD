@@ -26,14 +26,23 @@ BEGIN
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_NPP_calc(), inMovementId
                                            , EXISTS (SELECT 1
                                                      FROM MovementItem
-                                                          INNER JOIN MovementItemFloat AS MIFloat_NPP_calc
-                                                                                       ON MIFloat_NPP_calc.MovementItemId = MovementItem.Id
-                                                                                      AND MIFloat_NPP_calc.DescId         = zc_MIFloat_NPP_calc()
-                                                                                      AND MIFloat_NPP_calc.ValueData      > 0
+                                                          LEFT JOIN MovementItemFloat AS MIFloat_NPPTax_calc
+                                                                                      ON MIFloat_NPPTax_calc.MovementItemId = MovementItem.Id
+                                                                                     AND MIFloat_NPPTax_calc.DescId         = zc_MIFloat_NPPTax_calc()
+                                                          LEFT JOIN MovementItemFloat AS MIFloat_NPP_calc
+                                                                                      ON MIFloat_NPP_calc.MovementItemId = MovementItem.Id
+                                                                                     AND MIFloat_NPP_calc.DescId         = zc_MIFloat_NPP_calc()
+                                                          LEFT JOIN MovementItemFloat AS MIFloat_AmountTax_calc
+                                                                                      ON MIFloat_AmountTax_calc.MovementItemId = MovementItem.Id
+                                                                                     AND MIFloat_AmountTax_calc.DescId         = zc_MIFloat_AmountTax_calc()
                                                      WHERE MovementItem.MovementId = inMovementId
                                                        AND MovementItem.DescId     = zc_MI_Master()
                                                        AND MovementItem.isErased   = FALSE
                                                        AND MovementItem.Amount     <> 0
+                                                       AND (MIFloat_NPPTax_calc.ValueData    <> 0
+                                                         OR MIFloat_NPP_calc.ValueData       <> 0
+                                                         OR MIFloat_AmountTax_calc.ValueData <> 0
+                                                           )
                                                     )
                                             );
 

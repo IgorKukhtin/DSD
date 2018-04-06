@@ -386,13 +386,22 @@ $BODY$
                              AND MovementItem.DescId     = zc_MI_Master()
                              AND MovementItem.isErased   = FALSE
                              AND MovementItem.Amount     <> 0
-      INNER JOIN MovementItemFloat AS MIFloat_NPP_calc
-                                   ON MIFloat_NPP_calc.MovementItemId = MovementItem.Id
-                                  AND MIFloat_NPP_calc.DescId         = zc_MIFloat_NPP_calc()
-                                  AND MIFloat_NPP_calc.ValueData      > 0
+      LEFT JOIN MovementItemFloat AS MIFloat_NPPTax_calc
+                                  ON MIFloat_NPPTax_calc.MovementItemId = MovementItem.Id
+                                 AND MIFloat_NPPTax_calc.DescId         = zc_MIFloat_NPPTax_calc()
+      LEFT JOIN MovementItemFloat AS MIFloat_NPP_calc
+                                  ON MIFloat_NPP_calc.MovementItemId = MovementItem.Id
+                                 AND MIFloat_NPP_calc.DescId         = zc_MIFloat_NPP_calc()
+      LEFT JOIN MovementItemFloat AS MIFloat_AmountTax_calc
+                                  ON MIFloat_AmountTax_calc.MovementItemId = MovementItem.Id
+                                 AND MIFloat_AmountTax_calc.DescId         = zc_MIFloat_AmountTax_calc()
  WHERE Movement.OperDate >= '01.03.2018'
    AND Movement.DescId   = zc_Movement_TaxCorrective()
    AND Movement.StatusId = zc_Enum_Status_Complete()
+   AND (MIFloat_NPPTax_calc.ValueData    <> 0
+     OR MIFloat_NPP_calc.ValueData       <> 0
+     OR MIFloat_AmountTax_calc.ValueData <> 0
+       )
 */
 -- тест
 -- SELECT * FROM gpUpdate_MI_TaxCorrective_NPP_calc (inMovementId:= 8842841, inSession:= zfCalc_UserAdmin())

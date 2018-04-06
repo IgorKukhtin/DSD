@@ -757,8 +757,21 @@ end if;
                                                                   );*/
          -- Сохраняем что насчитали - !!!для 1-ого Филиала!!!
          INSERT INTO HistoryCost (ContainerId, StartDate, EndDate, Price, Price_external, StartCount, StartSumm, IncomeCount, IncomeSumm, CalcCount, CalcSumm, CalcCount_external, CalcSumm_external, OutCount, OutSumm, MovementItemId_diff, Summ_diff)
+            with tmpErr AS (SELECT Container.*
+                            FROM Container
+                                 INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                                                               AND ContainerLinkObject.ObjectId = 8411 -- Склад ГП ф.Киев
+                                                               AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Unit()
+                                 INNER JOIN ContainerLinkObject as CLO2 ON CLO2.ContainerId = Container.Id
+                                                               AND CLO2.ObjectId = 621819 -- С/К МАХАН по-татарськи 1г, ТМ Наші Колбаси
+                                                               AND CLO2.DescId = zc_ContainerLinkObject_Goods()
+                            WHERE Container.DescId = zc_Container_Summ()
+                              AND inEndDate <= '31.03.2018'
+                              AND inBranchId = 8379 -- ф.Киев
+                           )
+            -- Результат
             SELECT _tmpMaster.ContainerId, inStartDate AS StartDate, inEndDate AS EndDate
-                 , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
+                 , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE OR tmpErr.Id > 0 -- !!!временно!!!
                              THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) <> 0
                                             THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
                                        ELSE  0
@@ -768,7 +781,7 @@ end if;
                              THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
                         ELSE 0
                    END AS Price
-                 , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
+                 , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE OR tmpErr.Id > 0 -- !!!временно!!!
                              THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) <> 0
                                             THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
                                        ELSE  0
@@ -782,6 +795,9 @@ end if;
                  , _tmpDiff.MovementItemId_diff, _tmpDiff.Summ_diff
             FROM _tmpMaster
                  LEFT JOIN _tmpDiff ON _tmpDiff.ContainerId = _tmpMaster.ContainerId
+                 -- !!!временно!!!
+                 LEFT JOIN tmpErr ON tmpErr.Id = _tmpMaster.ContainerId
+
             WHERE (((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm)          <> 0)
                 OR ((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) <> 0)
                   )
@@ -1122,5 +1138,5 @@ SELECT * FROM HistoryCost WHERE ('01.03.2017' BETWEEN StartDate AND EndDate) and
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2016', inEndDate:= '31.01.2016', inBranchId:= 8379, inItearationCount:= 1000, inInsert:= 12345, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
 
 -- тест
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.03.2018', inEndDate:= '31.03.2018', inBranchId:= 0, inItearationCount:= 10, inInsert:= 1, inDiffSumm:= 0, inSession:= '2')  WHERE ContainerId = 141708 -- Price <> PriceNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.03.2018', inEndDate:= '31.03.2018', inBranchId:= 0, inItearationCount:= 10, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  WHERE ContainerId = 141708 -- Price <> PriceNext
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.11.2017', inEndDate:= '30.11.2017', inBranchId:= 0, inItearationCount:= 10, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') ORDER BY ABS (Price) DESC -- WHERE CalcSummCurrent <> CalcSummNext
