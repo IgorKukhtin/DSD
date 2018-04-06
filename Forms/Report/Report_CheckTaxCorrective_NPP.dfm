@@ -24,8 +24,6 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
       inherited cxGrid: TcxGrid
         Width = 823
         Height = 244
-        ExplicitLeft = -64
-        ExplicitTop = 3
         ExplicitWidth = 823
         ExplicitHeight = 244
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -507,10 +505,10 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
         item
           StoredProc = spSelect
         end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1042#1057#1045
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1042#1057#1045
-      ImageIndex = 63
-      Value = False
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1086#1096#1080#1073#1082#1080
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1086#1096#1080#1073#1082#1080
+      ImageIndex = 62
+      Value = True
       HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1086#1096#1080#1073#1082#1080
       HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1042#1057#1045
       CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1086#1096#1080#1073#1082#1080
@@ -548,7 +546,7 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
       end
       item
         Name = 'inisShowAll'
-        Value = 41640d
+        Value = 'TRUE'
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
