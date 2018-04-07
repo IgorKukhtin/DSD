@@ -696,6 +696,7 @@ object SaleTwoForm: TSaleTwoForm
             DataBinding.FieldName = 'BarCode_item'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object GoodsGroupNameFull: TcxGridDBColumn
