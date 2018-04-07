@@ -6,7 +6,7 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1081
-  ExplicitHeight = 463
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -1127,6 +1127,12 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inReportKind'
+        Value = 2
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outStatusCode'
         Value = Null
         Component = MasterCDS
@@ -1147,6 +1153,12 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReportKind'
+        Value = 2
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

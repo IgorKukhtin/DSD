@@ -63,17 +63,17 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 1065
-    ExplicitHeight = 366
+    ExplicitHeight = 336
     ClientRectBottom = 336
     ClientRectRight = 1065
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1065
-      ExplicitHeight = 366
+      ExplicitHeight = 336
       inherited cxGrid: TcxGrid
         Width = 1065
         Height = 336
         ExplicitWidth = 1065
-        ExplicitHeight = 366
+        ExplicitHeight = 336
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1407,6 +1407,12 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inReportKind'
+        Value = 1
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outStatusCode'
         Value = 'outStatusCode'
         Component = MasterCDS
@@ -1427,6 +1433,12 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReportKind'
+        Value = 1
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

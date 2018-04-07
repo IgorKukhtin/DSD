@@ -689,7 +689,7 @@ object SaleTwoForm: TSaleTwoForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 40
+            Width = 50
           end
           object BarCode_item: TcxGridDBColumn
             Caption = #1064#1090#1088#1080#1093'-'#1082#1086#1076' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072

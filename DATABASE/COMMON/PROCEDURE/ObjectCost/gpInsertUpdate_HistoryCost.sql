@@ -757,7 +757,7 @@ end if;
                                                                   );*/
          -- Сохраняем что насчитали - !!!для 1-ого Филиала!!!
          INSERT INTO HistoryCost (ContainerId, StartDate, EndDate, Price, Price_external, StartCount, StartSumm, IncomeCount, IncomeSumm, CalcCount, CalcSumm, CalcCount_external, CalcSumm_external, OutCount, OutSumm, MovementItemId_diff, Summ_diff)
-            with tmpErr AS (SELECT Container.*
+            /*WITH tmpErr AS (SELECT Container.*
                             FROM Container
                                  INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
                                                                AND ContainerLinkObject.ObjectId = 8411 -- Склад ГП ф.Киев
@@ -768,10 +768,10 @@ end if;
                             WHERE Container.DescId = zc_Container_Summ()
                               AND inEndDate <= '31.03.2018'
                               AND inBranchId = 8379 -- ф.Киев
-                           )
+                           )*/
             -- Результат
             SELECT _tmpMaster.ContainerId, inStartDate AS StartDate, inEndDate AS EndDate
-                 , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE OR tmpErr.Id > 0 -- !!!временно!!!
+                 , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE -- OR tmpErr.Id > 0 -- !!!временно!!!
                              THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) <> 0
                                             THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
                                        ELSE  0
@@ -781,7 +781,7 @@ end if;
                              THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
                         ELSE 0
                    END AS Price
-                 , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE OR tmpErr.Id > 0 -- !!!временно!!!
+                 , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE -- OR tmpErr.Id > 0 -- !!!временно!!!
                              THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) <> 0
                                             THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
                                        ELSE  0
@@ -796,7 +796,7 @@ end if;
             FROM _tmpMaster
                  LEFT JOIN _tmpDiff ON _tmpDiff.ContainerId = _tmpMaster.ContainerId
                  -- !!!временно!!!
-                 LEFT JOIN tmpErr ON tmpErr.Id = _tmpMaster.ContainerId
+                 -- LEFT JOIN tmpErr ON tmpErr.Id = _tmpMaster.ContainerId
 
             WHERE (((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm)          <> 0)
                 OR ((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) <> 0)

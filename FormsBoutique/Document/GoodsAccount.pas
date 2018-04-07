@@ -171,6 +171,7 @@ type
     actGet_TotalSumm_byClient: TdsdDataSetRefresh;
     spGet_TotalSumm_byClient: TdsdStoredProc;
     actGet_TotalSumm: TdsdDataSetRefresh;
+    isLine: TcxGridDBColumn;
   private
   public
   end;

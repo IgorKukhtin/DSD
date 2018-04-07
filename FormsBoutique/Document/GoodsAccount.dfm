@@ -602,6 +602,14 @@ object GoodsAccountForm: TGoodsAccountForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object isLine: TcxGridDBColumn
+            Caption = '*'
+            DataBinding.FieldName = 'isLine'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 35
+          end
           object LineNum: TcxGridDBColumn
             Caption = #8470' '#1087'/'#1087
             DataBinding.FieldName = 'LineNum'
@@ -610,7 +618,7 @@ object GoodsAccountForm: TGoodsAccountForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 40
+            Width = 50
           end
           object OperDate_Sale: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1087#1088#1086#1076#1072#1078#1072') '
@@ -2144,6 +2152,14 @@ object GoodsAccountForm: TGoodsAccountForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'LineNum'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsLine'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isLine'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item

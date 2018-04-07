@@ -151,6 +151,7 @@ type
     cxLabel15: TcxLabel;
     edDiscountTaxTwo: TcxCurrencyEdit;
     actGet_TotalSumm: TdsdDataSetRefresh;
+    isLine: TcxGridDBColumn;
   private
   public
   end;

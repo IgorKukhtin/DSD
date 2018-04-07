@@ -73,6 +73,7 @@ BEGIN
      RETURN QUERY
      WITH
      tmpMI_Master AS (SELECT MovementItem.Id
+                           , ROW_NUMBER() OVER (ORDER BY CASE WHEN MovementItem.isErased = FALSE AND MovementItem.Amount > 0 THEN 0 ELSE 1 END ASC, MovementItem.Id ASC) AS LineNum
                            , MovementItem.ObjectId                                 AS GoodsId
                            , MovementItem.PartionId
                            , MILinkObject_DiscountSaleKind.ObjectId                AS DiscountSaleKindId
@@ -217,7 +218,7 @@ BEGIN
        -- результат
        SELECT
              tmpMI.Id
-           , CAST (ROW_NUMBER() OVER (ORDER BY tmpMI.Id) AS Integer) AS LineNum
+           , CASE WHEN tmpMI.isErased = FALSE AND tmpMI.Amount > 0 THEN tmpMI.LineNum ELSE NULL END :: Integer AS LineNum
            , tmpMI.PartionId
            , Object_Goods.Id                AS GoodsId
            , Object_Goods.ObjectCode        AS GoodsCode

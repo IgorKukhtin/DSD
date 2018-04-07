@@ -188,6 +188,7 @@ type
     spGet_TotalSumm_byClient: TdsdStoredProc;
     actGet_TotalSumm_byClient: TdsdDataSetRefresh;
     PeriodChoice: TPeriodChoice;
+    isLine: TcxGridDBColumn;
   private
   public
   end;

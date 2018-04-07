@@ -1,9 +1,11 @@
 -- Function: gpSetErased_Movement_byReport (Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpSetErased_Movement_byReport (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSetErased_Movement_byReport (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSetErased_Movement_byReport(
     IN inMovementId   Integer    , -- ключ объекта <Документ>
+    IN inReportKind   Integer    , -- 1 - Отчет <по продажам / возвратам> ИЛИ 2 - Отчет <по расчетам>
    OUT outStatusCode  Integer    , --
     IN inSession      TVarChar     -- текущий пользователь
 )                              
@@ -20,6 +22,18 @@ BEGIN
      -- определяем параметры Документа
      SELECT Movement.DescId, Movement.OperDate INTO vbDescId, vbOperDate FROM Movement WHERE Movement.Id = inMovementId;
      
+
+     -- Проверка - Вид Документа
+     IF inReportKind = 1 AND vbDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+     THEN
+         RAISE EXCEPTION 'Ошибка. Удаление возможно только в Отчете <по расчетам>';
+
+     ELSEIF inReportKind = 2 AND vbDescId NOT IN (zc_Movement_GoodsAccount())
+     THEN
+         RAISE EXCEPTION 'Ошибка. Удаление возможно только в Отчете <по продажам / возвратам>';
+
+     END IF;
+
 
      -- Проверка - Дата Документа
      PERFORM lpCheckOperDate_byUnit (inUnitId_by:= lpGetUnit_byUser (vbUserId), inOperDate:= vbOperDate, inUserId:= vbUserId);

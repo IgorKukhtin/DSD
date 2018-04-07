@@ -1,7 +1,5 @@
 -- Покупатели
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client_Sybase (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client_Sybase (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Client(
@@ -26,6 +24,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbName_Sybase TVarChar;
+   DECLARE vbName_Sybase2 TVarChar;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Client());
@@ -39,8 +38,26 @@ BEGIN
    -- ВРЕМЕННО - для Sybase найдем Id
    IF vbUserId = zc_User_Sybase()
    THEN
-       -- !!!поиск!!!
-       vbName_Sybase:= (SELECT gpGet_Object_Client_NEW_SYBASE (inName));
+       -- !!!поиск - из №2 !!!
+       vbName_Sybase2:= (SELECT gpGet_Object_Client_NEW2_SYBASE (inName));
+       
+       IF vbName_Sybase2 <> ''
+       THEN
+           vbName_Sybase:= vbName_Sybase2;
+       ELSE
+           -- !!!поиск!!!
+           vbName_Sybase:= (SELECT gpGet_Object_Client_NEW_SYBASE (inName));
+
+           -- !!!поиск - из №2 + для vbName_Sybase!!!
+           vbName_Sybase2:= (SELECT gpGet_Object_Client_NEW2_SYBASE (vbName_Sybase));
+           --
+           IF vbName_Sybase2 <> ''
+           THEN
+               vbName_Sybase:= vbName_Sybase2;
+           END IF;
+
+       END IF;
+       
        -- !!!Замена!!!
        IF vbName_Sybase <> '' THEN inName:=  vbName_Sybase; END IF;
 

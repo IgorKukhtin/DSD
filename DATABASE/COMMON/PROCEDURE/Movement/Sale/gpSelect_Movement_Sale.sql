@@ -95,7 +95,7 @@ BEGIN
                                                                  || ' , inJuridicalBasisId := ' || inJuridicalBasisId :: TVarChar
                                                                  || ' , inUserId           := ' || vbUserId           :: TVarChar
                                                                  || '  )' AS RetV
-                     FROM (SELECT GENERATE_SERIES (0, EXTRACT (DAY FROM (inEndDate - inStartDate)) :: Integer) AS Ord) AS tmpList
+                     FROM (SELECT GENERATE_SERIES (0, EXTRACT (DAY FROM (zfConvert_DateTimeWithOutTZ (inEndDate) - zfConvert_DateTimeWithOutTZ (inStartDate))) :: Integer) AS Ord) AS tmpList
                     ) AS tmp);
      
 

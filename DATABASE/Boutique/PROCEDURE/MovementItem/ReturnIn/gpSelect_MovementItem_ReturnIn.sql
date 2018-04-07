@@ -5,15 +5,15 @@ DROP FUNCTION IF EXISTS gpSelect_MovementItem_ReturnIn (Integer, Integer, Intege
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ReturnIn(
     IN inMovementId       Integer      , -- ключ Документа
-    IN inUnitId           Integer      , -- 
-    IN inClientId         Integer      , -- 
+    IN inUnitId           Integer      , --
+    IN inClientId         Integer      , --
     IN inStartDate        TDatetime    , -- нач.дата периода продаж
     IN inEndDate          TDatetime    , -- кон.дата периода продаж
     IN inShowAll          Boolean      , --
-    IN inIsErased         Boolean      , -- 
+    IN inIsErased         Boolean      , --
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, LineNum Integer, PartionId Integer
+RETURNS TABLE (Id Integer, LineNum Integer, isLine TVarChar, PartionId Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , CompositionGroupName TVarChar
@@ -58,7 +58,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, PartionId Integer
              , Amount_USD_Exc    TFloat
              , Amount_EUR_Exc    TFloat
              , Amount_GRN_Exc    TFloat
-             
+
              , SaleMI_Id Integer
              , MovementId_Sale Integer, InvNumber_Sale TVarChar
              , OperDate_Sale TDateTime , DescName TVarChar
@@ -77,14 +77,14 @@ BEGIN
      -- Параметры документа
      SELECT Movement.StatusId                AS StatusId
             INTO vbStatusId
-     FROM Movement 
+     FROM Movement
      WHERE Movement.Id = inMovementId;
 
 
      IF inShowAll = TRUE
      THEN
      -- Результат такой
-     RETURN QUERY 
+     RETURN QUERY
      WITH
          tmpMI_Sale AS (-- продажа покупателю
                         SELECT Movement.Id                                        AS MovementId
@@ -163,9 +163,9 @@ BEGIN
                           -- если ЕСТЬ долг
                           AND MovementItem.Amount > COALESCE (MIFloat_TotalCountReturn.ValueData, 0)
                        )
- 
+
      , tmpMI_Master AS (SELECT MI_Master.Id                                              AS MovementItemId
-                             , CAST (ROW_NUMBER() OVER (ORDER BY MI_Master.Id) AS Integer) AS LineNum
+                             , ROW_NUMBER() OVER (ORDER BY CASE WHEN MI_Master.isErased = FALSE AND MI_Master.Amount > 0 THEN 0 ELSE 1 END ASC, MI_Master.Id ASC) AS LineNum
                              , MI_Master.PartionId                                       AS PartionId
                              , MI_Master.ObjectId                                        AS GoodsId
                              , MI_Master.Amount                                          AS Amount_master
@@ -256,7 +256,7 @@ BEGIN
                                                          ON MIFloat_TotalPayReturn.MovementItemId = MovementItem.Id
                                                         AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()
                        )
-                       
+
             , tmpMI AS (SELECT COALESCE (tmpMI_Master.MovementItemId, 0)               AS Id
                              , COALESCE (tmpMI_Master.LineNum, 0)                      AS LineNum
                              , COALESCE (tmpMI_Master.PartionId, tmpMI_Sale.PartionId) AS PartionId
@@ -338,7 +338,8 @@ BEGIN
        -- результат
        SELECT
              tmpMI.Id                         :: Integer AS Id
-           , tmpMI.LineNum                    :: Integer AS LineNum
+           , CASE WHEN tmpMI.isErased = FALSE AND tmpMI.Amount > 0 THEN tmpMI.LineNum ELSE NULL END :: Integer  AS LineNum
+           , CASE WHEN tmpMI.isErased = FALSE AND tmpMI.Amount > 0 THEN '*'           ELSE '_'  END :: TVarChar AS isLine
            , tmpMI.PartionId                  :: Integer AS PartionId
            , Object_Goods.Id                             AS GoodsId
            , Object_Goods.ObjectCode                     AS GoodsCode
@@ -496,9 +497,10 @@ BEGIN
 
      ELSE
      -- Результат такой
-     RETURN QUERY 
-     WITH 
+     RETURN QUERY
+     WITH
        tmpMI_Master AS (SELECT MI_Master.Id                                              AS Id
+                             , ROW_NUMBER() OVER (ORDER BY CASE WHEN MI_Master.isErased = FALSE AND MI_Master.Amount > 0 THEN 0 ELSE 1 END ASC, MI_Master.Id ASC) AS LineNum
                              , MI_Master.PartionId                                       AS PartionId
                              , MI_Master.ObjectId                                        AS GoodsId
                              , MI_Master.Amount                                          AS Amount
@@ -578,54 +580,55 @@ BEGIN
                      )
        -- результат
        SELECT
-             tmpMI.Id                                          :: Integer AS Id
-           , CAST (ROW_NUMBER() OVER (ORDER BY tmpMI.Id) AS Integer)      AS LineNum
-           , tmpMI.PartionId                                   :: Integer AS PartionId
-           , Object_Goods.Id                                              AS GoodsId
-           , Object_Goods.ObjectCode                                      AS GoodsCode
-           , Object_Goods.ValueData                                       AS GoodsName
-           , ObjectString_Goods_GoodsGroupFull.ValueData                  AS GoodsGroupNameFull
-           , Object_Measure.ValueData                                     AS MeasureName
-           , Object_CompositionGroup.ValueData                            AS CompositionGroupName
-           , Object_Composition.ValueData                                 AS CompositionName
-           , Object_GoodsInfo.ValueData                                   AS GoodsInfoName
-           , Object_LineFabrica.ValueData                                 AS LineFabricaName
-           , Object_Label.ValueData                                       AS LabelName
-           , Object_GoodsSize.Id                                          AS GoodsSizeId
-           , Object_GoodsSize.ValueData                                   AS GoodsSizeName
+             tmpMI.Id                                          :: Integer  AS Id
+           , CASE WHEN tmpMI.isErased = FALSE AND tmpMI.Amount > 0 THEN tmpMI.LineNum ELSE NULL END :: Integer  AS LineNum
+           , CASE WHEN tmpMI.isErased = FALSE AND tmpMI.Amount > 0 THEN '*'           ELSE '_'  END :: TVarChar AS isLine
+           , tmpMI.PartionId                                   :: Integer  AS PartionId
+           , Object_Goods.Id                                               AS GoodsId
+           , Object_Goods.ObjectCode                                       AS GoodsCode
+           , Object_Goods.ValueData                                        AS GoodsName
+           , ObjectString_Goods_GoodsGroupFull.ValueData                   AS GoodsGroupNameFull
+           , Object_Measure.ValueData                                      AS MeasureName
+           , Object_CompositionGroup.ValueData                             AS CompositionGroupName
+           , Object_Composition.ValueData                                  AS CompositionName
+           , Object_GoodsInfo.ValueData                                    AS GoodsInfoName
+           , Object_LineFabrica.ValueData                                  AS LineFabricaName
+           , Object_Label.ValueData                                        AS LabelName
+           , Object_GoodsSize.Id                                           AS GoodsSizeId
+           , Object_GoodsSize.ValueData                                    AS GoodsSizeName
 
-           , tmpMI.Amount                                       :: TFloat AS Amount
-           , MI_Sale.Amount                                     :: TFloat AS Amount_Sale
-           , Container.Amount                                   :: TFloat AS Remains
-           , 0                                                  :: TFloat AS OperPrice
-           , 0                                                  :: TFloat AS CountForPrice
-           , COALESCE (MIFloat_OperPriceList.ValueData, 0)      :: TFloat AS OperPriceList
+           , tmpMI.Amount                                       :: TFloat  AS Amount
+           , MI_Sale.Amount                                     :: TFloat  AS Amount_Sale
+           , Container.Amount                                   :: TFloat  AS Remains
+           , 0                                                  :: TFloat  AS OperPrice
+           , 0                                                  :: TFloat  AS CountForPrice
+           , COALESCE (MIFloat_OperPriceList.ValueData, 0)      :: TFloat  AS OperPriceList
 
              -- Итого сумма (в прод.)
-           , 0                                                  :: TFloat AS TotalSumm
-           , 0                                                  :: TFloat AS TotalSummBalance
+           , 0                                                  :: TFloat  AS TotalSumm
+           , 0                                                  :: TFloat  AS TotalSummBalance
            , zfCalc_SummPriceList (MI_Sale.Amount, MIFloat_OperPriceList.ValueData) AS TotalSummPriceList
 
              -- Итого сумма (текущий возврат)
-           , 0                                                  :: TFloat AS TotalSumm_return
-           , 0                                                  :: TFloat AS TotalSummBalance_return
+           , 0                                                  :: TFloat  AS TotalSumm_return
+           , 0                                                  :: TFloat  AS TotalSummBalance_return
            , zfCalc_SummPriceList (tmpMI.Amount, MIFloat_OperPriceList.ValueData) AS TotalSummPriceList_return
 
              -- Курс для перевода из валюты партии в ГРН - элемент продажи
-           , 0                                                  :: TFloat AS CurrencyValue
-           , 0                                                  :: TFloat AS ParValue
+           , 0                                                  :: TFloat  AS CurrencyValue
+           , 0                                                  :: TFloat  AS ParValue
 
              -- Итого сумма оплаты - для "текущего" документа Продажи
-           , COALESCE (MIFloat_TotalPay.ValueData, 0)           ::TFloat AS TotalPay_Sale
+           , COALESCE (MIFloat_TotalPay.ValueData, 0)           :: TFloat  AS TotalPay_Sale
              -- Итого сумма оплаты - все "Расчеты покупателей"
-           , COALESCE (MIFloat_TotalPayOth.ValueData, 0)        ::TFloat AS TotalPayOth_Sale
+           , COALESCE (MIFloat_TotalPayOth.ValueData, 0)        :: TFloat  AS TotalPayOth_Sale
 
              -- Итого сумма возврата оплаты - все док-ты
-           , COALESCE (MIFloat_TotalCountReturn.ValueData, 0)   ::TFloat AS Amount_Return
+           , COALESCE (MIFloat_TotalCountReturn.ValueData, 0)   :: TFloat  AS Amount_Return
              -- Итого сумма возврата оплаты - все док-ты
-           , COALESCE (MIFloat_TotalReturn.ValueData, 0)        ::TFloat AS TotalReturn
+           , COALESCE (MIFloat_TotalReturn.ValueData, 0)        :: TFloat  AS TotalReturn
              -- Итого сумма возврата оплаты - все док-ты
-           , COALESCE (MIFloat_TotalPayReturn.ValueData, 0)     ::TFloat AS TotalPay_Return
+           , COALESCE (MIFloat_TotalPayReturn.ValueData, 0)     :: TFloat  AS TotalPay_Return
 
              -- Сумма долга
            , (zfCalc_SummPriceList (MI_Sale.Amount, MIFloat_OperPriceList.ValueData)

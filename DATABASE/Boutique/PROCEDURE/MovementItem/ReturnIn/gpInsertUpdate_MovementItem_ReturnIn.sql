@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn(
  INOUT ioGoodsId                Integer   , -- Товары
     IN inPartionId              Integer   , -- Партия
     IN inSaleMI_Id              Integer   , -- Элемент MI - док. продажи
-   OUT outLineNum               Integer   , -- № п.п.    
+   OUT outLineNum               Integer   , -- № п.п.
+   OUT outIsLine                TVarChar  , -- № п.п.
     IN inIsPay                  Boolean   , -- добавить с оплатой
     IN inAmount                 TFloat    , -- Количество
    OUT outOperPrice             TFloat    , -- Цена вх. в валюте
@@ -682,16 +683,22 @@ BEGIN
 
     END IF;
 
-    --№ п.п. строки
-    outLineNum := (SELECT tmp.LineNum
-                   FROM (SELECT MI_Master.Id 
-                              , CAST (ROW_NUMBER() OVER (ORDER BY MI_Master.Id) AS Integer) AS LineNum
-                         FROM MovementItem AS MI_Master
-                         WHERE MI_Master.MovementId = inMovementId
-                           AND MI_Master.DescId     = zc_MI_Master()
-                         ) AS tmp
-                   WHERE tmp.Id = ioId);
-                                              
+
+    -- № п.п. строки
+    SELECT CASE WHEN tmp.isErased = FALSE AND tmp.Amount > 0 THEN tmp.LineNum ELSE NULL END :: Integer  AS LineNum
+         , CASE WHEN tmp.isErased = FALSE AND tmp.Amount > 0 THEN '*'         ELSE '_'  END :: TVarChar AS isLine
+           INTO outLineNum, outIsLine
+    FROM (SELECT MI_Master.Id
+               , ROW_NUMBER() OVER (ORDER BY CASE WHEN MI_Master.isErased = FALSE AND MI_Master.Amount > 0 THEN 0 ELSE 1 END ASC, MI_Master.Id ASC) AS LineNum
+               , MI_Master.Amount
+               , MI_Master.isErased
+          FROM MovementItem AS MI_Master
+          WHERE MI_Master.MovementId = inMovementId
+            AND MI_Master.DescId     = zc_MI_Master()
+         ) AS tmp
+    WHERE tmp.Id = ioId;
+
+
     -- "сложно" пересчитали "итоговые" суммы по элементу
     PERFORM lpUpdate_MI_ReturnIn_Total (ioId);
 
