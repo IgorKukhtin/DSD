@@ -124,7 +124,7 @@ BEGIN
                           )
        WITH -- для Sybase
             tmpCheck AS (SELECT -12345 AS PartionId_MI
-                   UNION SELECT 483949 -- select ObP.*, MovementItem.* , Movement.* from MovementItem join Object as ObP on ObP.ObjectCode = MovementItem.Id and ObP.DescId = zc_Object_PartionMI() join Movement on Movement.Id = MovementId and Movement.DescId = zc_Movement_Sale() and Movement.Operdate = '14.05.2012' where PartionId = (SELECT MovementItemId FROM Object_PartionGoods join Object on Object.Id = GoodsId and Object.ObjectCode = 69023 join Object as o2 on o2.Id = GoodsSizeId and o2.ValueData = '40')
+                   /*UNION SELECT 483949 -- select ObP.*, MovementItem.* , Movement.* from MovementItem join Object as ObP on ObP.ObjectCode = MovementItem.Id and ObP.DescId = zc_Object_PartionMI() join Movement on Movement.Id = MovementId and Movement.DescId = zc_Movement_Sale() and Movement.Operdate = '14.05.2012' where PartionId = (SELECT MovementItemId FROM Object_PartionGoods join Object on Object.Id = GoodsId and Object.ObjectCode = 69023 join Object as o2 on o2.Id = GoodsSizeId and o2.ValueData = '40')
                    UNION SELECT 483950
                    UNION SELECT 486899
                    UNION SELECT 538439
@@ -149,7 +149,7 @@ BEGIN
                    UNION SELECT 620057
                    UNION SELECT 490814
                    UNION SELECT 538437
-                   UNION SELECT 620056
+                   UNION SELECT 620056*/
                          -- FROM gpSelect_MovementItem_Sale_Sybase_Check()
                         )
             -- Данные по MI + расчет SummDebt

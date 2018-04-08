@@ -9,15 +9,18 @@ CREATE OR REPLACE FUNCTION  gpReport_GoodsMI_Account(
     IN inIsShowAll        Boolean  ,  -- Показывать все документы / только проведенные
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (MovementId            Integer
+RETURNS TABLE (-- Документ
+               MovementId            Integer
              , StatusCode            Integer
              , DescName              TVarChar
              , OperDate              TDateTime
-             , Invnumber             TVarChar
+             , InvNumber             TVarChar
+               -- Партия ПРОДАЖИ
              , MovementId_Sale       Integer
              , DescName_Sale         TVarChar
              , OperDate_Sale         TDateTime
-             , Invnumber_Sale        TVarChar
+             , InvNumber_Sale        TVarChar
+               --
              , ClientName            TVarChar
              , PartionId             Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
@@ -26,27 +29,38 @@ RETURNS TABLE (MovementId            Integer
              , GoodsInfoName    TVarChar
              , LineFabricaName  TVarChar
              , LabelName        TVarChar
-             , GoodsSizeId Integer, GoodsSizeName    TVarChar
+             , GoodsSizeId Integer, GoodsSizeName TVarChar
              , BrandName        TVarChar
              , FabrikaName      TVarChar
              , PeriodName       TVarChar
              , PeriodYear       Integer
+               -- % скидки
              , ChangePercent    TFloat
+               -- Цена по прайсу в продаже, ГРН
              , OperPriceList    TFloat
+               -- Дополнительная скидка в документе, ГРН
              , SummChangePercent  TFloat
+               -- Кол-во
              , Amount           TFloat
+               -- Сумма без скидки
              , TotalSummPriceList TFloat
+               -- Оплата
              , TotalPay_Grn     TFloat
              , TotalPay_USD     TFloat
              , TotalPay_EUR     TFloat
              , TotalPay_Card    TFloat
              , TotalPay         TFloat
+               -- Долг
              , TotalDebt        TFloat
+
              , CurrencyValue    TFloat
 
+               -- Дата/вр. (созд.)
              , InsertDate       TDateTime
+               -- Группа: 1 - по Товарам + 2 - Обмены
              , NumGroup         Integer
-            -- , NumDoc           Integer
+               -- Группировка в печати
+             , ValueGroup       TVarChar
   )
 AS
 $BODY$
@@ -66,48 +80,37 @@ BEGIN
     tmpStatus AS (SELECT tmp.StatusId              AS StatusId
                        , Object_Status.ObjectCode  AS StatusCode
                   FROM (SELECT zc_Enum_Status_Complete()   AS StatusId
-                        UNION SELECT zc_Enum_Status_UnComplete() AS StatusId WHERE inIsShowAll = TRUE
-                        UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsShowAll = TRUE
+                  UNION SELECT zc_Enum_Status_UnComplete() AS StatusId WHERE inIsShowAll = TRUE
+                  UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsShowAll = TRUE
                         ) AS tmp
                         LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmp.StatusId
                  )
+     -- 1.1. Продажи за период Отчета
    , tmpSale AS (SELECT Movement_Sale.Id                    AS MovementId
-                      , zc_Movement_Sale()                  AS MovementDescId
+                      , Movement_Sale.DescId                AS MovementDescId
                       , tmpStatus.StatusCode                AS StatusCode
                       , Movement_Sale.OperDate              AS OperDate
-                      , Movement_Sale.Invnumber             AS Invnumber
-                      , Movement_Sale.Id                    AS MovementId_Sale
-                      , Movement_Sale.DescId                AS MovementDescId_Sale
-                      , Movement_Sale.OperDate              AS OperDate_Sale
-                      , Movement_Sale.Invnumber             AS Invnumber_Sale
+                      , Movement_Sale.InvNumber             AS InvNumber
                       , MovementLinkObject_To.ObjectId      AS ClientId
                       , MI_Master.ObjectId                  AS GoodsId
-                      , MI_Master.PartionId
+                      , MI_Master.PartionId                 AS PartionId
                       , MI_Master.Id                        AS MI_Id
                       , COALESCE (MIFloat_ChangePercent.ValueData, 0)      AS ChangePercent
                       , COALESCE (MIFloat_OperPriceList.ValueData, 0)      AS OperPriceList
                       , COALESCE (MIFloat_SummChangePercent.ValueData, 0)  AS SummChangePercent
-                      , (MI_Master.Amount)                                 AS Amount
+                      , MI_Master.Amount                                   AS Amount
                       , COALESCE (MIFloat_TotalPay.ValueData, 0)           AS TotalPay
-                      , COALESCE (MIFloat_TotalPayOth.ValueData, 0)        AS TotalPayOth
-                      ,/* ( FLOOR ( ((MI_Master.Amount - COALESCE (MIFloat_TotalCountReturn.ValueData, 0) ) * COALESCE (MIFloat_OperPriceList.ValueData, 0)) * (1- COALESCE (MIFloat_ChangePercent.ValueData, 0) / 100) )
-                         - COALESCE (MIFloat_SummChangePercent.ValueData, 0)
-                         + COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)
-                         - COALESCE (MIFloat_TotalPay.ValueData, 0)
-                         - COALESCE (MIFloat_TotalPayOth.ValueData, 0)
-                         + COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
-                         ) */ 0   AS Debt
- 
+
                  FROM Movement AS Movement_Sale
                       INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement_Sale.StatusId
                       INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                     ON MovementLinkObject_From.MovementId = Movement_Sale.Id
-                                                   AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                   AND (MovementLinkObject_From.ObjectId = inUnitId OR inUnitId = 0)
+                                                   AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                                                   AND (MovementLinkObject_From.ObjectId  = inUnitId OR inUnitId = 0)
                       LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                    ON MovementLinkObject_To.MovementId = Movement_Sale.Id
-                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
- 
+                                                  AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+
                       INNER JOIN MovementItem AS MI_Master
                                               ON MI_Master.MovementId = Movement_Sale.Id
                                              AND MI_Master.DescId     = zc_MI_Master()
@@ -124,60 +127,41 @@ BEGIN
                       LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
                                                   ON MIFloat_SummChangePercent.MovementItemId = MI_Master.Id
                                                  AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
-                      LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth
-                                                  ON MIFloat_TotalPayOth.MovementItemId = MI_Master.Id
-                                                 AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth()
-                   /*   LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercentPay
-                                                  ON MIFloat_TotalChangePercentPay.MovementItemId = MI_Master.Id
-                                                 AND MIFloat_TotalChangePercentPay.DescId         = zc_MIFloat_TotalChangePercentPay()
 
-                      LEFT JOIN MovementItemFloat AS MIFloat_TotalCountReturn
-                                                  ON MIFloat_TotalCountReturn.MovementItemId = MI_Master.Id
-                                                 AND MIFloat_TotalCountReturn.DescId         = zc_MIFloat_TotalCountReturn()
-                      LEFT JOIN MovementItemFloat AS MIFloat_TotalPayReturn
-                                                  ON MIFloat_TotalPayReturn.MovementItemId = MI_Master.Id
-                                                 AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()*/
-                 WHERE Movement_Sale.DescId = zc_Movement_Sale()
+                 WHERE Movement_Sale.DescId   = zc_Movement_Sale()
                    AND Movement_Sale.OperDate BETWEEN inStartDate AND inEndDate
                )
-
+    -- 1.2. Возвраты за период Отчета
   , tmpReturnIn AS (SELECT Movement_ReturnIn.Id                AS MovementId
-                         , zc_Movement_ReturnIn()              AS MovementDescId
+                         , Movement_ReturnIn.DescId            AS MovementDescId
                          , tmpStatus.StatusCode                AS StatusCode
                          , Movement_ReturnIn.OperDate          AS OperDate
-                         , Movement_ReturnIn.Invnumber         AS Invnumber
+                         , Movement_ReturnIn.InvNumber         AS InvNumber
                          , Movement_Sale.Id                    AS MovementId_Sale
                          , Movement_Sale.DescId                AS MovementDescId_Sale
                          , Movement_Sale.OperDate              AS OperDate_Sale
-                         , Movement_Sale.Invnumber             AS Invnumber_Sale
+                         , Movement_Sale.InvNumber             AS InvNumber_Sale
                          , MovementLinkObject_From.ObjectId    AS ClientId
                          , MI_Master.ObjectId                  AS GoodsId
-                         , MI_Master.PartionId
+                         , MI_Master.PartionId                 AS PartionId
                          , MI_Master.Id                        AS MI_Id
                          , COALESCE (MIFloat_ChangePercent.ValueData, 0)      AS ChangePercent
                          , COALESCE (MIFloat_OperPriceList.ValueData, 0)      AS OperPriceList
-                         , 0/*COALESCE (MIFloat_SummChangePercent.ValueData, 0) * (-1)*/  AS SummChangePercent
+                         , 0                                                  AS SummChangePercent
 
-                         , (MI_Master.Amount) * (-1)                          AS Amount
-                         , (COALESCE (MIFloat_TotalPay.ValueData, 0)) * (-1)  AS TotalPay
-                         , COALESCE (MIFloat_TotalPayOth.ValueData, 0)        AS TotalPayOth
-                        /* , ( FLOOR ( ((MI_Sale.Amount-MI_Master.Amount ) * COALESCE (MIFloat_OperPriceList.ValueData, 0)) * (1- COALESCE (MIFloat_ChangePercent.ValueData, 0) / 100) )
-                           - COALESCE (MIFloat_SummChangePercent.ValueData, 0)
-                           + COALESCE (MIFloat_TotalPay.ValueData, 0)                  -- оплата возврата
-                           - COALESCE (MIFloat_TotalPayOth_Sale.ValueData, 0)          -- оплата расчета
-                           - COALESCE (MIFloat_TotalPay_Sale.ValueData, 0)             -- оплата продажа
-                          ) * (-1)  AS Debt */
-                          , 0   AS Debt
+                         , -1 * MI_Master.Amount                              AS Amount
+                         , -1 * COALESCE (MIFloat_TotalPay.ValueData, 0)      AS TotalPay
+
                     FROM Movement AS Movement_ReturnIn
                          INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement_ReturnIn.StatusId
 
                          INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                        ON MovementLinkObject_To.MovementId = Movement_ReturnIn.Id
-                                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                      AND (MovementLinkObject_To.ObjectId = inUnitId OR inUnitId = 0)
+                                                      AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                                      AND (MovementLinkObject_To.ObjectId  = inUnitId OR inUnitId = 0)
                          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                       ON MovementLinkObject_From.MovementId = Movement_ReturnIn.Id
-                                                     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                     AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
 
                          INNER JOIN MovementItem AS MI_Master
                                                  ON MI_Master.MovementId = Movement_ReturnIn.Id
@@ -191,9 +175,6 @@ BEGIN
                          LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
                                                      ON MIFloat_TotalPay.MovementItemId = MI_Master.Id
                                                     AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
-                         LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth
-                                                     ON MIFloat_TotalPayOth.MovementItemId = MI_Master.Id
-                                                    AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth()
 
                          LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
                                                           ON MILinkObject_PartionMI.MovementItemId = MI_Master.Id
@@ -205,169 +186,114 @@ BEGIN
                                                      ON MIFloat_ChangePercent.MovementItemId = MI_Sale.Id
                                                     AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
 
-                         LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
-                                                     ON MIFloat_SummChangePercent.MovementItemId = MI_Sale.Id
-                                                    AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
-
-                        /* LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth_Sale
-                                                     ON MIFloat_TotalPayOth_Sale.MovementItemId = MI_Sale.Id
-                                                    AND MIFloat_TotalPayOth_Sale.DescId         = zc_MIFloat_TotalPayOth()
-                         LEFT JOIN MovementItemFloat AS MIFloat_TotalPay_Sale
-                                                     ON MIFloat_TotalPay_Sale.MovementItemId = MI_Sale.Id
-                                                    AND MIFloat_TotalPay_Sale.DescId         = zc_MIFloat_TotalPay()
-                        */
-                    WHERE Movement_ReturnIn.DescId = zc_Movement_ReturnIn()
+                    WHERE Movement_ReturnIn.DescId   = zc_Movement_ReturnIn()
                       AND Movement_ReturnIn.OperDate BETWEEN inStartDate AND inEndDate
-                        )
+                   )
+    -- 1.3. Расчеты за период Отчета
+  , tmpGoodsAccount AS (SELECT Movement_GoodsAccount.Id            AS MovementId
+                             , Movement_GoodsAccount.DescId        AS MovementDescId
+                             , tmpStatus.StatusCode                AS StatusCode
+                             , Movement_GoodsAccount.OperDate      AS OperDate
+                             , Movement_GoodsAccount.InvNumber     AS InvNumber
+                             , Movement_Sale.Id                    AS MovementId_Sale
+                             , Movement_Sale.DescId                AS MovementDescId_Sale
+                             , Movement_Sale.OperDate              AS OperDate_Sale
+                             , Movement_Sale.InvNumber             AS InvNumber_Sale
+                             , MovementLinkObject_From.ObjectId    AS ClientId
+                             , MI_Master.ObjectId                  AS GoodsId
+                             , MI_Sale.PartionId                   AS PartionId
+                             , MI_Master.Id                        AS MI_Id
+                             , COALESCE (MIFloat_ChangePercent.ValueData, 0)      AS ChangePercent
+                             , COALESCE (MIFloat_OperPriceList.ValueData, 0)      AS OperPriceList
+                             , COALESCE (MIFloat_SummChangePercent_master.ValueData, 0)  AS SummChangePercent
+                             , MI_Master.Amount                                   AS Amount
+                             , COALESCE (MIFloat_TotalPay.ValueData, 0)         AS TotalPay
+                               -- № п/п - 
+                             , ROW_NUMBER() OVER (PARTITION BY Movement_GoodsAccount.Id, MI_Sale.PartionId ORDER BY MI_Sale.PartionId ASC) AS Ord
 
-  , tmpGoodsAccount AS (SELECT tmp.MovementId
-                             , tmp.MovementDescId
-                             , tmp.StatusCode
-                             , tmp.OperDate
-                             , tmp.Invnumber
-                             , tmp.MovementId_Sale
-                             , tmp.MovementDescId_Sale
-                             , tmp.OperDate_Sale
-                             , tmp.Invnumber_Sale
-                             , tmp.ClientId
-                             , tmp.GoodsId
-                             , tmp.PartionId
-                             , tmp.MI_Id
-                             , tmp.ChangePercent
-                             , tmp.OperPriceList
-                             , tmp.SummChangePercent
-                             , tmp.Amount
-                             , tmp.TotalPay
-                             , 0--CASE WHEN tmp.Ord = 1 THEN ( /*FLOOR ( (tmp.Amount * tmp.OperPriceList) * (1- tmp.ChangePercent / 100) )  - COALESCE(tmp.SummChangePercent_Sale,0)*/ - COALESCE(tmp.SummChangePercent,0) + COALESCE(tmp.TotalPayOth,0))
-                                  --  ELSE 0 END
-                               AS Debt
-                        FROM (SELECT Movement_GoodsAccount.Id            AS MovementId
-                                   , zc_Movement_GoodsAccount()          AS MovementDescId
-                                   , tmpStatus.StatusCode                AS StatusCode
-                                   , Movement_GoodsAccount.OperDate      AS OperDate
-                                   , Movement_GoodsAccount.Invnumber     AS Invnumber
-                                   , Movement_Sale.Id                    AS MovementId_Sale
-                                   , Movement_Sale.DescId                AS MovementDescId_Sale
-                                   , Movement_Sale.OperDate              AS OperDate_Sale
-                                   , Movement_Sale.Invnumber             AS Invnumber_Sale
-                                   , MovementLinkObject_From.ObjectId    AS ClientId
-                                   , MI_Master.ObjectId                  AS GoodsId
-                                   , MI_Sale.PartionId
-                                   , MI_Master.Id                        AS MI_Id
-                                   , COALESCE (MIFloat_ChangePercent.ValueData, 0)      AS ChangePercent
-                                   , COALESCE (MIFloat_OperPriceList.ValueData, 0)      AS OperPriceList
-                                   , COALESCE (MIFloat_SummChangePercent_master.ValueData, 0)  AS SummChangePercent
-                                   , COALESCE (MIFloat_SummChangePercent.ValueData, 0)  AS SummChangePercent_Sale
-                                   , 0 /*MI_Sale.Amount */                              AS Amount
-                                   , (COALESCE (MIFloat_TotalPay.ValueData, 0))         AS TotalPay
-                                   , COALESCE (MIFloat_TotalPayOth.ValueData, MIFloat_TotalPayOth_Sale.ValueData)     -- оплата в расчетах
-                               --    + COALESCE (MIFloat_TotalPay_Sale.ValueData, 0 )   -- оплата в продажах
-                                                                   
-                                            AS TotalPayOth              
-                                   , ROW_NUMBER() OVER (PARTITION BY Movement_GoodsAccount.Id, MI_Sale.PartionId ORDER BY MI_Sale.PartionId ASC) AS Ord
-                              FROM Movement AS Movement_GoodsAccount
-                                   INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement_GoodsAccount.StatusId
+                        FROM Movement AS Movement_GoodsAccount
+                             INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement_GoodsAccount.StatusId
 
-                                   INNER JOIN MovementItem AS MI_Master
-                                                          ON MI_Master.MovementId = Movement_GoodsAccount.Id
-                                                         AND MI_Master.DescId     = zc_MI_Master()
-                                                         AND MI_Master.isErased = FALSE
+                             INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                           ON MovementLinkObject_To.MovementId = Movement_GoodsAccount.Id
+                                                          AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                                          AND (MovementLinkObject_To.ObjectId  = inUnitId OR inUnitId = 0)
+                             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                          ON MovementLinkObject_From.MovementId = Movement_GoodsAccount.Id
+                                                         AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
 
-                                   LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent_master
-                                                               ON MIFloat_SummChangePercent_master.MovementItemId = MI_Master.Id
-                                                              AND MIFloat_SummChangePercent_master.DescId         = zc_MIFloat_SummChangePercent()
+                             INNER JOIN MovementItem AS MI_Master
+                                                     ON MI_Master.MovementId = Movement_GoodsAccount.Id
+                                                    AND MI_Master.DescId     = zc_MI_Master()
+                                                    AND MI_Master.isErased   = FALSE
 
-                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
-                                                                    ON MILinkObject_PartionMI.MovementItemId = MI_Master.Id
-                                                                   AND MILinkObject_PartionMI.DescId         = zc_MILinkObject_PartionMI()
-                                   LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = MILinkObject_PartionMI.ObjectId
-                                   LEFT JOIN MovementItem AS MI_Sale ON MI_Sale.Id = Object_PartionMI.ObjectCode
-                                   LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MI_Sale.MovementId
-                                   INNER JOIN MovementLinkObject AS MovementLinkObject_From_Sale
-                                                                 ON MovementLinkObject_From_Sale.MovementId = Movement_Sale.Id
-                                                                AND MovementLinkObject_From_Sale.DescId = CASE WHEN Movement_Sale.DescId = zc_Movement_Sale()
-                                                                                                               THEN zc_MovementLinkObject_From()
-                                                                                                               ELSE zc_MovementLinkObject_To()
-                                                                                                          END
-                                                                AND (MovementLinkObject_From_Sale.ObjectId = inUnitId OR inUnitId = 0)
+                             LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent_master
+                                                         ON MIFloat_SummChangePercent_master.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_SummChangePercent_master.DescId         = zc_MIFloat_SummChangePercent()
+                             LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
+                                                         ON MIFloat_TotalPay.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
 
-                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                                ON MovementLinkObject_From.MovementId = Movement_GoodsAccount.Id
-                                                               AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                   LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
-                                                               ON MIFloat_OperPriceList.MovementItemId = MI_Sale.Id
-                                                              AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
-                                   LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
-                                                               ON MIFloat_ChangePercent.MovementItemId = MI_Sale.Id
-                                                               AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
-                                   LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
-                                                               ON MIFloat_SummChangePercent.MovementItemId = MI_Sale.Id
-                                                              AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
+                             LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
+                                                              ON MILinkObject_PartionMI.MovementItemId = MI_Master.Id
+                                                             AND MILinkObject_PartionMI.DescId         = zc_MILinkObject_PartionMI()
+                             LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = MILinkObject_PartionMI.ObjectId
+                             LEFT JOIN MovementItem AS MI_Sale ON MI_Sale.Id = Object_PartionMI.ObjectCode
+                             LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MI_Sale.MovementId
 
-                                   LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
-                                                               ON MIFloat_TotalPay.MovementItemId = MI_Master.Id
-                                                              AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
-                                   LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth
-                                                               ON MIFloat_TotalPayOth.MovementItemId = MI_Master.Id
-                                                              AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth()
+                             LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                         ON MIFloat_ChangePercent.MovementItemId = MI_Sale.Id
+                                                        AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+                             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
+                                                         ON MIFloat_OperPriceList.MovementItemId = MI_Sale.Id
+                                                        AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
 
-                                   LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth_Sale
-                                                               ON MIFloat_TotalPayOth_Sale.MovementItemId = MI_Sale.Id
-                                                              AND MIFloat_TotalPayOth_Sale.DescId         = zc_MIFloat_TotalPayOth()
-                                   LEFT JOIN MovementItemFloat AS MIFloat_TotalPay_Sale
-                                                               ON MIFloat_TotalPay_Sale.MovementItemId = MI_Sale.Id
-                                                              AND MIFloat_TotalPay_Sale.DescId         = zc_MIFloat_TotalPay()
-                        WHERE Movement_GoodsAccount.DescId = zc_Movement_GoodsAccount()
+                        WHERE Movement_GoodsAccount.DescId   = zc_Movement_GoodsAccount()
                           AND Movement_GoodsAccount.OperDate BETWEEN inStartDate AND inEndDate
-                        ) AS tmp
-                      )
+                       )
 
      -- все документы
      , tmpData_MI  AS  (SELECT tmp.MovementId
-                                , tmp.MovementDescId
-                                , tmp.StatusCode
-                                , tmp.OperDate
-                                , tmp.Invnumber
-                                , tmp.MovementId_Sale
-                                , tmp.MovementDescId_Sale
-                                , tmp.OperDate_Sale
-                                , tmp.Invnumber_Sale
-                                , tmp.ClientId
-                                , tmp.GoodsId
-                                , tmp.PartionId
-                                , tmp.ChangePercent
-                                , tmp.OperPriceList
-                                , tmp.MI_Id
-                                , SUM (tmp.SummChangePercent) AS SummChangePercent
-                                , SUM (tmp.Amount)            AS Amount
-                                , SUM (tmp.TotalPay)          AS TotalPay
-                                , SUM (tmp.Debt)              AS Debt
-                           FROM tmpSale AS tmp
-                           GROUP BY tmp.MovementId
-                                  , tmp.MovementDescId
-                                  , tmp.StatusCode
-                                  , tmp.OperDate
-                                  , tmp.Invnumber
-                                  , tmp.MovementId_Sale
-                                  , tmp.MovementDescId_Sale
-                                  , tmp.OperDate_Sale
-                                  , tmp.Invnumber_Sale
-                                  , tmp.ClientId
-                                  , tmp.GoodsId
-                                  , tmp.PartionId
-                                  , tmp.ChangePercent
-                                  , tmp.OperPriceList
-                                  , tmp.MI_Id
+                             , tmp.MovementDescId
+                             , tmp.StatusCode
+                             , tmp.OperDate
+                             , tmp.InvNumber
+                             , tmp.MovementId     AS MovementId_Sale
+                             , tmp.MovementDescId AS MovementDescId_Sale
+                             , tmp.OperDate       AS OperDate_Sale
+                             , tmp.InvNumber      AS InvNumber_Sale
+                             , tmp.ClientId
+                             , tmp.GoodsId
+                             , tmp.PartionId
+                             , tmp.ChangePercent
+                             , tmp.OperPriceList
+                             , tmp.MI_Id
+                             , SUM (tmp.SummChangePercent) AS SummChangePercent
+                             , SUM (tmp.Amount)            AS Amount
+                             , SUM (tmp.TotalPay)          AS TotalPay
+
+                        FROM tmpSale AS tmp
+                        GROUP BY tmp.MovementId
+                               , tmp.MovementDescId
+                               , tmp.StatusCode
+                               , tmp.OperDate
+                               , tmp.InvNumber
+                               , tmp.ClientId
+                               , tmp.GoodsId
+                               , tmp.PartionId
+                               , tmp.ChangePercent
+                               , tmp.OperPriceList
+                               , tmp.MI_Id
                          UNION ALL
                            SELECT tmp.MovementId
                                 , tmp.MovementDescId
                                 , tmp.StatusCode
                                 , tmp.OperDate
-                                , tmp.Invnumber
+                                , tmp.InvNumber
                                 , tmp.MovementId_Sale
                                 , tmp.MovementDescId_Sale
                                 , tmp.OperDate_Sale
-                                , tmp.Invnumber_Sale
+                                , tmp.InvNumber_Sale
                                 , tmp.ClientId
                                 , tmp.GoodsId
                                 , tmp.PartionId
@@ -377,33 +303,34 @@ BEGIN
                                 , SUM (tmp.SummChangePercent) AS SummChangePercent
                                 , SUM (tmp.Amount)            AS Amount
                                 , SUM (tmp.TotalPay)          AS TotalPay
-                                , SUM (tmp.Debt)              AS Debt
+
                            FROM tmpReturnIn AS tmp
                            GROUP BY tmp.MovementId
                                   , tmp.MovementDescId
                                   , tmp.StatusCode
                                   , tmp.OperDate
-                                  , tmp.Invnumber
+                                  , tmp.InvNumber
                                   , tmp.MovementId_Sale
                                   , tmp.MovementDescId_Sale
                                   , tmp.OperDate_Sale
-                                  , tmp.Invnumber_Sale
+                                  , tmp.InvNumber_Sale
                                   , tmp.ClientId
                                   , tmp.GoodsId
                                   , tmp.PartionId
                                   , tmp.ChangePercent
                                   , tmp.OperPriceList
                                   , tmp.MI_Id
+
                          UNION ALL
                            SELECT tmp.MovementId
                                 , tmp.MovementDescId
                                 , tmp.StatusCode
                                 , tmp.OperDate
-                                , tmp.Invnumber
+                                , tmp.InvNumber
                                 , tmp.MovementId_Sale
                                 , tmp.MovementDescId_Sale
                                 , tmp.OperDate_Sale
-                                , tmp.Invnumber_Sale
+                                , tmp.InvNumber_Sale
                                 , tmp.ClientId
                                 , tmp.GoodsId
                                 , tmp.PartionId
@@ -413,17 +340,17 @@ BEGIN
                                 , SUM (tmp.SummChangePercent) AS SummChangePercent
                                 , SUM (tmp.Amount)            AS Amount
                                 , SUM (tmp.TotalPay)          AS TotalPay
-                                , SUM (tmp.Debt)              AS Debt
+
                            FROM tmpGoodsAccount AS tmp
                            GROUP BY tmp.MovementId
                                   , tmp.MovementDescId
                                   , tmp.StatusCode
                                   , tmp.OperDate
-                                  , tmp.Invnumber
+                                  , tmp.InvNumber
                                   , tmp.MovementId_Sale
                                   , tmp.MovementDescId_Sale
                                   , tmp.OperDate_Sale
-                                  , tmp.Invnumber_Sale
+                                  , tmp.InvNumber_Sale
                                   , tmp.ClientId
                                   , tmp.GoodsId
                                   , tmp.PartionId
@@ -431,7 +358,7 @@ BEGIN
                                   , tmp.OperPriceList
                                   , tmp.MI_Id
                     )
-    -- оплата в валюте / обмены
+      -- оплаты в валюте / обмены
     , tmpMI_Child AS (SELECT MovementItem.MovementId
                            , COALESCE (MovementItem.ParentId, 0) AS ParentId
                            , SUM (CASE WHEN MovementItem.ParentId IS NULL
@@ -511,16 +438,16 @@ BEGIN
                         , tmpContainer.GoodsId
                         , tmpContainer.PartionId
                  )
-                        
+
        , tmpData AS (SELECT tmp.MovementId          AS MovementId
                           , tmp.MovementDescId      AS MovementDescId
                           , tmp.StatusCode          AS StatusCode
                           , tmp.OperDate            AS OperDate
-                          , tmp.Invnumber             AS Invnumber
+                          , tmp.InvNumber             AS InvNumber
                           , tmp.MovementId_Sale       AS MovementId_Sale
                           , tmp.MovementDescId_Sale   AS MovementDescId_Sale
                           , tmp.OperDate_Sale       AS OperDate_Sale
-                          , tmp.Invnumber_Sale      AS Invnumber_Sale
+                          , tmp.InvNumber_Sale      AS InvNumber_Sale
                           , tmp.ClientId            AS ClientId
                           , tmp.PartionId           AS PartionId
                           , tmp.ChangePercent       AS ChangePercent
@@ -539,11 +466,11 @@ BEGIN
                                 , tmp.MovementDescId
                                 , tmp.StatusCode
                                 , tmp.OperDate
-                                , tmp.Invnumber
+                                , tmp.InvNumber
                                 , tmp.MovementId_Sale
                                 , tmp.MovementDescId_Sale
                                 , tmp.OperDate_Sale
-                                , tmp.Invnumber_Sale
+                                , tmp.InvNumber_Sale
                                 , tmp.ClientId
                                 , tmp.GoodsId
                                 , tmp.PartionId
@@ -570,11 +497,11 @@ BEGIN
                                 , tmp.MovementDescId
                                 , tmp.StatusCode
                                 , tmp.OperDate
-                                , tmp.Invnumber
+                                , tmp.InvNumber
                                 , 0 AS MovementId_Sale
                                 , 0 AS MovementDescId_Sale
                                 , Null :: TDateTime AS OperDate_Sale
-                                , ''   :: Tvarchar  AS Invnumber_Sale
+                                , ''   :: Tvarchar  AS InvNumber_Sale
                                 , tmp.ClientId
                                 , -1 AS GoodsId
                                 , 0 AS PartionId
@@ -594,7 +521,7 @@ BEGIN
                                       , tmp.MovementDescId
                                       , tmp.StatusCode
                                       , tmp.OperDate
-                                      , tmp.Invnumber
+                                      , tmp.InvNumber
                                       , tmp.ClientId
                                  FROM tmpData_MI AS tmp) AS tmp
                                INNER JOIN tmpMI_Child AS tmpMI_Child_Exc
@@ -605,11 +532,11 @@ BEGIN
                              , tmp.MovementDescId
                              , tmp.StatusCode
                              , tmp.OperDate
-                             , tmp.Invnumber
+                             , tmp.InvNumber
                              , tmp.MovementId_Sale
                              , tmp.MovementDescId_Sale
                              , tmp.OperDate_Sale
-                             , tmp.Invnumber_Sale
+                             , tmp.InvNumber_Sale
                              , tmp.ClientId
                              , tmp.PartionId
                              , tmp.ChangePercent
@@ -620,14 +547,14 @@ BEGIN
    -- сворачиваем по продажам и возвратам
   , tmp_All AS (SELECT CASE WHEN tmp.GoodsId <> -1 THEN 1 ELSE 2 END AS NumGroup
                      , CASE WHEN tmp.MovementDescId IN (zc_Movement_GoodsAccount()) AND tmp.GoodsId <> -1 THEN tmp.MovementId_Sale ELSE tmp.MovementId END AS MovementId
-                     , CASE WHEN tmp.MovementDescId IN (zc_Movement_GoodsAccount()) AND tmp.GoodsId <> -1 THEN tmp.MovementDescId_Sale ELSE tmp.MovementDescId END AS MovementDescId
+                     , CASE WHEN tmp.MovementDescId IN (zc_Movement_GoodsAccount()) AND tmp.GoodsId <> -1 THEN tmp.MovementDescId /*tmp.MovementDescId_Sale*/ ELSE tmp.MovementDescId END AS MovementDescId
                      , tmp.StatusCode          AS StatusCode
-                     , CASE WHEN tmp.MovementDescId IN (zc_Movement_GoodsAccount()) AND tmp.GoodsId <> -1 THEN tmp.OperDate_Sale ELSE tmp.OperDate END AS OperDate
-                     , CASE WHEN tmp.MovementDescId IN (zc_Movement_GoodsAccount()) AND tmp.GoodsId <> -1 THEN tmp.Invnumber_Sale ELSE tmp.Invnumber END AS Invnumber
+                     , CASE WHEN tmp.MovementDescId IN (zc_Movement_GoodsAccount()) AND tmp.GoodsId <> -1 THEN tmp.OperDate /*tmp.OperDate_Sale*/ ELSE tmp.OperDate END AS OperDate
+                     , CASE WHEN tmp.MovementDescId IN (zc_Movement_GoodsAccount()) AND tmp.GoodsId <> -1 THEN tmp.InvNumber /*tmp.InvNumber_Sale*/ ELSE tmp.InvNumber END AS InvNumber
                      , tmp.MovementId_Sale       AS MovementId_Sale
                      , tmp.MovementDescId_Sale   AS MovementDescId_Sale
                      , tmp.OperDate_Sale       AS OperDate_Sale
-                     , tmp.Invnumber_Sale      AS Invnumber_Sale
+                     , tmp.InvNumber_Sale      AS InvNumber_Sale
                      , tmp.ClientId            AS ClientId
                      , tmp.PartionId           AS PartionId
                      , tmp.ChangePercent       AS ChangePercent
@@ -646,32 +573,32 @@ BEGIN
                 FROM tmpData AS tmp
                 GROUP BY CASE WHEN tmp.GoodsId <> -1 THEN 1 ELSE 2 END
                      , CASE WHEN tmp.MovementDescId IN (zc_Movement_GoodsAccount()) AND tmp.GoodsId <> -1 THEN tmp.MovementId_Sale ELSE tmp.MovementId END
-                     , CASE WHEN tmp.MovementDescId IN (zc_Movement_GoodsAccount()) AND tmp.GoodsId <> -1 THEN tmp.MovementDescId_Sale ELSE tmp.MovementDescId END
+                     , CASE WHEN tmp.MovementDescId IN (zc_Movement_GoodsAccount()) AND tmp.GoodsId <> -1 THEN tmp.MovementDescId /*tmp.MovementDescId_Sale*/ ELSE tmp.MovementDescId END
                      , tmp.StatusCode
-                     , CASE WHEN tmp.MovementDescId IN (zc_Movement_GoodsAccount()) AND tmp.GoodsId <> -1 THEN tmp.OperDate_Sale ELSE tmp.OperDate END
-                     , CASE WHEN tmp.MovementDescId IN (zc_Movement_GoodsAccount()) AND tmp.GoodsId <> -1 THEN tmp.Invnumber_Sale ELSE tmp.Invnumber END
-                     , tmp.MovementId_Sale 
-                     , tmp.MovementDescId_Sale 
-                     , tmp.OperDate_Sale   
-                     , tmp.Invnumber_Sale  
-                     , tmp.ClientId        
-                     , tmp.PartionId       
-                     , tmp.ChangePercent   
-                     , tmp.OperPriceList   
+                     , CASE WHEN tmp.MovementDescId IN (zc_Movement_GoodsAccount()) AND tmp.GoodsId <> -1 THEN tmp.OperDate /*tmp.OperDate_Sale*/ ELSE tmp.OperDate END
+                     , CASE WHEN tmp.MovementDescId IN (zc_Movement_GoodsAccount()) AND tmp.GoodsId <> -1 THEN tmp.InvNumber /*tmp.InvNumber_Sale*/ ELSE tmp.InvNumber END
+                     , tmp.MovementId_Sale
+                     , tmp.MovementDescId_Sale
+                     , tmp.OperDate_Sale
+                     , tmp.InvNumber_Sale
+                     , tmp.ClientId
+                     , tmp.PartionId
+                     , tmp.ChangePercent
+                     , tmp.OperPriceList
                      , tmp.GoodsId
                      , tmp.CurrencyValue
              )
-           
+
   ---
   SELECT tmpData.MovementId     ::Integer
              , tmpData.StatusCode     ::Integer         AS StatusCode
              , MovementDesc.ItemName  ::TVarChar        AS DescName
              , tmpData.OperDate       ::TDateTime       AS OperDate
-             , tmpData.Invnumber      ::TVarChar        AS Invnumber
+             , tmpData.InvNumber      ::TVarChar        AS InvNumber
              , tmpData.MovementId_Sale ::Integer        AS MovementId_Sale
              , MovementDesc_Sale.ItemName   ::TVarChar  AS DescName_Sale
              , tmpData.OperDate_Sale  ::TDateTime       AS OperDate_Sale
-             , tmpData.Invnumber_Sale ::TVarChar        AS Invnumber_Sale
+             , tmpData.InvNumber_Sale ::TVarChar        AS InvNumber_Sale
 
              , Object_Client.ValueData        AS ClientName
              , tmpData.PartionId              AS PartionId
@@ -693,21 +620,33 @@ BEGIN
 
              , tmpData.ChangePercent       ::TFloat
              , tmpData.OperPriceList       ::TFloat
-             , tmpData.SummChangePercent   ::TFloat
+             , COALESCE (tmpData.SummChangePercent, 0)   ::TFloat AS SummChangePercent
              , tmpData.Amount              ::TFloat
              , zfCalc_SummPriceList (tmpData.Amount, tmpData.OperPriceList) AS TotalSummPriceList
              , tmpData.TotalPay_Grn        ::TFloat
              , tmpData.TotalPay_USD        ::TFloat
              , tmpData.TotalPay_EUR        ::TFloat
              , tmpData.TotalPay_Card       ::TFloat
-             , COALESCE (tmpData.TotalPay,0) ::TFloat
+             , COALESCE (tmpData.TotalPay, 0) ::TFloat  AS TotalPay
              , COALESCE (tmpData.Debt, 0)    :: TFloat  AS TotalDebt
 
              , tmpData.CurrencyValue         ::TFloat AS CurrencyValue
 
              , MovementDate_Insert.ValueData            AS InsertDate
-             -- разные группы обмены и продажи
+               -- разные группы обмены и продажи
              , tmpData.NumGroup
+
+             , CASE WHEN tmpData.NumGroup = 1
+                         THEN tmpData.NumGroup   :: TVarChar
+                    || '_' || tmpData.ClientId   :: TVarChar
+                    || '_' || tmpData.PartionId  :: TVarChar
+                    || '_' || zfConvert_FloatToString (tmpData.ChangePercent)
+                    || '_' || zfConvert_FloatToString (tmpData.OperPriceList)
+
+                    ELSE zfConvert_FloatToString (tmpData.CurrencyValue)
+
+               END :: TVarChar AS ValueGroup
+
         FROM tmp_All AS tmpData
             LEFT JOIN MovementDesc ON MovementDesc.Id = tmpData.MovementDescId
             LEFT JOIN MovementDesc AS MovementDesc_Sale ON MovementDesc_Sale.Id = tmpData.MovementDescId_Sale
@@ -748,4 +687,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_Account (inStartDate:= '01.01.2017', inEndDate:= '13.07.2017', inUnitId:= 506, inIsShowAll:= TRUE, inSession:= zfCalc_UserAdmin()) -- WHERE ClientName like '%Шуваев%'
+-- SELECT * FROM gpReport_GoodsMI_Account (inStartDate:= '01.04.2018', inEndDate:= '01.04.2018', inUnitId:= 506, inIsShowAll:= TRUE, inSession:= zfCalc_UserAdmin()) -- WHERE ClientName like '%Шуваев%'
