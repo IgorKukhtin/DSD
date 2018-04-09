@@ -239,7 +239,7 @@ BEGIN
                            , tmp.AmountSumm
                            , tmp.AmountSumm AS AmountSumm_original
                            , 0   :: TFloat  AS SummTaxDiff_calc
-                           , 0   :: Integer AS LineNumTaxCorr_calc
+                           , tmp.LineNum    AS LineNumTaxCorr_calc
                            , tmp.LineNum    AS LineNumTax
                            , 0   :: TFloat  AS AmountTax_calc
                            , TRUE           AS isNPP_calc
