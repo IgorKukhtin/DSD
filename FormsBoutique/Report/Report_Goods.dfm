@@ -5,8 +5,9 @@ inherited Report_GoodsForm: TReport_GoodsForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -421
   ExplicitWidth = 1211
-  ExplicitHeight = 511
+  ExplicitHeight = 508
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -969,19 +970,18 @@ inherited Report_GoodsForm: TReport_GoodsForm
     object cbGoodsSizeAll: TcxCheckBox
       Left = 621
       Top = 30
-      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1056#1072#1079#1084#1077#1088#1099
       ParentShowHint = False
       Properties.ReadOnly = False
       ShowHint = True
-      State = cbsChecked
       TabOrder = 7
       Width = 68
     end
     object cbPartionAll: TcxCheckBox
       Left = 737
       Top = 30
-      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470
       ParentShowHint = False
       Properties.ReadOnly = False

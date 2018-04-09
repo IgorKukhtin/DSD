@@ -7,7 +7,6 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_RoleUser(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, RoleId Integer, UserRoleId Integer             
              , UnitCode Integer, UnitName TVarChar
-             , PositionName TVarChar
              , isErased Boolean) AS
 $BODY$BEGIN
    
