@@ -205,11 +205,9 @@ BEGIN
                              , MI_Master.Id                        AS MI_Id
                              , COALESCE (MIFloat_ChangePercent.ValueData, 0)      AS ChangePercent
                              , COALESCE (MIFloat_OperPriceList.ValueData, 0)      AS OperPriceList
-                             , COALESCE (MIFloat_SummChangePercent_master.ValueData, 0)  AS SummChangePercent
+                             , COALESCE (MIFloat_SummChangePercent_master.ValueData, 0) AS SummChangePercent
                              , MI_Master.Amount                                   AS Amount
-                             , COALESCE (MIFloat_TotalPay.ValueData, 0)         AS TotalPay
-                               -- № п/п - 
-                             , ROW_NUMBER() OVER (PARTITION BY Movement_GoodsAccount.Id, MI_Sale.PartionId ORDER BY MI_Sale.PartionId ASC) AS Ord
+                             , COALESCE (MIFloat_TotalPay.ValueData, 0)           AS TotalPay
 
                         FROM Movement AS Movement_GoodsAccount
                              INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement_GoodsAccount.StatusId
@@ -251,8 +249,7 @@ BEGIN
                         WHERE Movement_GoodsAccount.DescId   = zc_Movement_GoodsAccount()
                           AND Movement_GoodsAccount.OperDate BETWEEN inStartDate AND inEndDate
                        )
-
-     -- все документы
+       -- все документы
      , tmpData_MI  AS  (SELECT tmp.MovementId
                              , tmp.MovementDescId
                              , tmp.StatusCode
@@ -372,7 +369,7 @@ BEGIN
                            , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN MovementItem.Amount ELSE 0 END) AS Amount_EUR
                            , SUM (CASE WHEN Object.DescId = zc_Object_BankAccount() THEN MovementItem.Amount ELSE 0 END) AS Amount_Bank
                            , CASE WHEN MovementItem.ParentId IS NULL THEN MIFloat_CurrencyValue.ValueData ELSE 0 END AS CurrencyValue
-                           --, MovementItem.isErased
+
                       FROM (SELECT DISTINCT tmpData_MI.MovementId FROM tmpData_MI) AS tmpData
                             JOIN MovementItem ON MovementItem.MovementId = tmpData.MovementId
                                              AND MovementItem.DescId     = zc_MI_Child()
@@ -391,65 +388,74 @@ BEGIN
                              , MovementItem.MovementId
                              , CASE WHEN MovementItem.ParentId IS NULL THEN MIFloat_CurrencyValue.ValueData ELSE 0 END
                      )
-
-  -- выбираю все контейнеры по покупателю и подразделению , если выбрано
+    -- выбираю все контейнеры по покупателю и подразделению , если выбрано
   , tmpContainer AS (SELECT Container.Id                    AS ContainerId
                           , CLO_Client.ObjectId             AS ClientId
                           , CLO_Goods.ObjectId              AS GoodsId
                           , Container.PartionId             AS PartionId
+                          , Object_PartionMI.ObjectCode     AS MI_Id
                           , Container.Amount
                      FROM Container
                           INNER JOIN ContainerLinkObject AS CLO_Client
                                                          ON CLO_Client.ContainerId = Container.Id
                                                         AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
+                          INNER JOIN ContainerLinkObject AS CLO_PartionMI
+                                                         ON CLO_PartionMI.ContainerId = Container.Id
+                                                        AND CLO_PartionMI.DescId      = zc_ContainerLinkObject_PartionMI()
+                          INNER JOIN Object AS Object_PartionMI ON Object_PartionMI.Id         = CLO_PartionMI.ObjectId
+                                                               AND Object_PartionMI.ObjectCode IN (SELECT DISTINCT tmpData_MI.MI_Id FROM tmpData_MI)
                           INNER JOIN ContainerLinkObject AS CLO_Unit
                                                          ON CLO_Unit.ContainerId = Container.Id
                                                         AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
-                                                        AND (CLO_Unit.ObjectId    = inUnitId OR inUnitId = 0)
+                                                        AND (CLO_Unit.ObjectId   = inUnitId OR inUnitId = 0)
                           LEFT JOIN ContainerLinkObject AS CLO_Goods
                                                         ON CLO_Goods.ContainerId = Container.Id
                                                        AND CLO_Goods.DescId = zc_ContainerLinkObject_Goods()
                       -- !!!кроме Покупатели + Прибыль будущих периодов!!!
-                      WHERE Container.ObjectId <> zc_Enum_Account_20102()
-                         AND Container.DescId = zc_Container_Summ()
-                         AND Container.PartionId IN (SELECT DISTINCT tmpData_MI.PartionId From tmpData_MI)
+                      WHERE Container.ObjectId  <> zc_Enum_Account_20102()
+                        AND Container.DescId    = zc_Container_Summ()
                     )
-  , tmpDebt AS ( SELECT tmpContainer.ClientId
-                      , tmpContainer.GoodsId
-                      , tmpContainer.PartionId
-                      , SUM (tmpContainer.Debt) AS Debt
-                 FROM ( SELECT tmpContainer.ClientId
+  , tmpDebt AS (SELECT tmpContainer.ClientId
+                     , tmpContainer.GoodsId
+                     , tmpContainer.PartionId
+                     , tmpContainer.MI_Id
+                     , SUM (tmpContainer.Debt) AS Debt
+                FROM (SELECT tmpContainer.ClientId
+                           , tmpContainer.GoodsId
+                           , tmpContainer.PartionId
+                           , tmpContainer.MI_Id
+                           , tmpContainer.ContainerId
+                           , tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS Debt
+                      FROM tmpContainer
+                            LEFT JOIN MovementItemContainer AS MIContainer
+                                                            ON MIContainer.ContainerId = tmpContainer.ContainerId
+                                                           AND MIContainer.OperDate    > inEndDate
+                      GROUP BY tmpContainer.ClientId
                              , tmpContainer.GoodsId
                              , tmpContainer.PartionId
+                             , tmpContainer.MI_Id
                              , tmpContainer.ContainerId
-                             , tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS Debt
-                        FROM tmpContainer
-                              LEFT JOIN MovementItemContainer AS MIContainer
-                                                              ON MIContainer.Containerid = tmpContainer.ContainerId
-                                                             AND MIContainer.OperDate > inEndDate
-                        GROUP BY tmpContainer.ClientId
-                               , tmpContainer.GoodsId
-                               , tmpContainer.PartionId
-                               , tmpContainer.ContainerId
-                               , tmpContainer.Amount
-                        HAVING (tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
-                       ) AS tmpContainer
-                 GROUP BY tmpContainer.ClientId
-                        , tmpContainer.GoodsId
-                        , tmpContainer.PartionId
-                 )
+                             , tmpContainer.Amount
+                      HAVING (tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
+                     ) AS tmpContainer
+                GROUP BY tmpContainer.ClientId
+                       , tmpContainer.GoodsId
+                       , tmpContainer.PartionId
+                       , tmpContainer.MI_Id
+               )
 
        , tmpData AS (SELECT tmp.MovementId          AS MovementId
                           , tmp.MovementDescId      AS MovementDescId
                           , tmp.StatusCode          AS StatusCode
                           , tmp.OperDate            AS OperDate
-                          , tmp.InvNumber             AS InvNumber
-                          , tmp.MovementId_Sale       AS MovementId_Sale
-                          , tmp.MovementDescId_Sale   AS MovementDescId_Sale
+                          , tmp.InvNumber           AS InvNumber
+                          , tmp.MovementId_Sale     AS MovementId_Sale
+                          , tmp.MovementDescId_Sale AS MovementDescId_Sale
                           , tmp.OperDate_Sale       AS OperDate_Sale
                           , tmp.InvNumber_Sale      AS InvNumber_Sale
                           , tmp.ClientId            AS ClientId
                           , tmp.PartionId           AS PartionId
+                          , tmp.MI_Id               AS MI_Id
                           , tmp.ChangePercent       AS ChangePercent
                           , tmp.OperPriceList       AS OperPriceList
                           , tmp.GoodsId
@@ -474,6 +480,7 @@ BEGIN
                                 , tmp.ClientId
                                 , tmp.GoodsId
                                 , tmp.PartionId
+                                , tmp.MI_Id
                                 , tmp.ChangePercent
                                 , tmp.OperPriceList
                                 , tmpMI_Child.CurrencyValue
@@ -489,8 +496,9 @@ BEGIN
                            FROM tmpData_MI AS tmp
                                 LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmp.MI_Id
                                 LEFT JOIN tmpDebt ON tmpDebt.PartionId = tmp.PartionId
-                                                 AND tmpDebt.ClientId = tmp.ClientId
-                                                 AND tmpDebt.GoodsId = tmp.GoodsId
+                                                 AND tmpDebt.ClientId  = tmp.ClientId
+                                                 AND tmpDebt.GoodsId   = tmp.GoodsId
+                                                 AND tmpDebt.MI_Id     = tmp.MI_Id
                            WHERE COALESCE (tmp.TotalPay, 0) <> 0 OR tmp.SummChangePercent <> 0
                        UNION ALL
                            SELECT tmp.MovementId
@@ -500,11 +508,12 @@ BEGIN
                                 , tmp.InvNumber
                                 , 0 AS MovementId_Sale
                                 , 0 AS MovementDescId_Sale
-                                , Null :: TDateTime AS OperDate_Sale
+                                , NULL :: TDateTime AS OperDate_Sale
                                 , ''   :: Tvarchar  AS InvNumber_Sale
                                 , tmp.ClientId
                                 , -1 AS GoodsId
-                                , 0 AS PartionId
+                                , 0  AS PartionId
+                                , 0  AS MI_Id
                                 , 0    :: TFloat    AS ChangePercent
                                 , 0    :: TFloat    AS OperPriceList
                                 , tmpMI_Child_Exc.CurrencyValue
@@ -523,10 +532,11 @@ BEGIN
                                       , tmp.OperDate
                                       , tmp.InvNumber
                                       , tmp.ClientId
-                                 FROM tmpData_MI AS tmp) AS tmp
-                               INNER JOIN tmpMI_Child AS tmpMI_Child_Exc
-                                                      ON tmpMI_Child_Exc.MovementId = tmp.MovementId
-                                                     AND tmpMI_Child_Exc.ParentId = 0
+                                 FROM tmpData_MI AS tmp
+                                ) AS tmp
+                                INNER JOIN tmpMI_Child AS tmpMI_Child_Exc
+                                                       ON tmpMI_Child_Exc.MovementId = tmp.MovementId
+                                                      AND tmpMI_Child_Exc.ParentId   = 0
                                  ) AS tmp
                       GROUP BY tmp.MovementId
                              , tmp.MovementDescId
@@ -539,26 +549,28 @@ BEGIN
                              , tmp.InvNumber_Sale
                              , tmp.ClientId
                              , tmp.PartionId
+                             , tmp.MI_Id
                              , tmp.ChangePercent
                              , tmp.OperPriceList
                              , tmp.GoodsId
                              , tmp.CurrencyValue
               )
-   -- сворачиваем по продажам и возвратам
+    -- ???сворачиваем по продажам и возвратам???
   , tmp_All AS (SELECT CASE WHEN tmp.GoodsId <> -1 THEN 1 ELSE 2 END AS NumGroup
-                     , CASE WHEN tmp.MovementDescId IN (zc_Movement_GoodsAccount()) AND tmp.GoodsId <> -1 THEN tmp.MovementId_Sale ELSE tmp.MovementId END AS MovementId
-                     , CASE WHEN tmp.MovementDescId IN (zc_Movement_GoodsAccount()) AND tmp.GoodsId <> -1 THEN tmp.MovementDescId /*tmp.MovementDescId_Sale*/ ELSE tmp.MovementDescId END AS MovementDescId
-                     , tmp.StatusCode          AS StatusCode
-                     , CASE WHEN tmp.MovementDescId IN (zc_Movement_GoodsAccount()) AND tmp.GoodsId <> -1 THEN tmp.OperDate /*tmp.OperDate_Sale*/ ELSE tmp.OperDate END AS OperDate
-                     , CASE WHEN tmp.MovementDescId IN (zc_Movement_GoodsAccount()) AND tmp.GoodsId <> -1 THEN tmp.InvNumber /*tmp.InvNumber_Sale*/ ELSE tmp.InvNumber END AS InvNumber
+                     , tmp.MovementId
+                     , tmp.MovementDescId
+                     , tmp.StatusCode
+                     , tmp.OperDate
+                     , tmp.InvNumber
                      , tmp.MovementId_Sale       AS MovementId_Sale
                      , tmp.MovementDescId_Sale   AS MovementDescId_Sale
-                     , tmp.OperDate_Sale       AS OperDate_Sale
-                     , tmp.InvNumber_Sale      AS InvNumber_Sale
-                     , tmp.ClientId            AS ClientId
-                     , tmp.PartionId           AS PartionId
-                     , tmp.ChangePercent       AS ChangePercent
-                     , tmp.OperPriceList       AS OperPriceList
+                     , tmp.OperDate_Sale         AS OperDate_Sale
+                     , tmp.InvNumber_Sale        AS InvNumber_Sale
+                     , tmp.ClientId              AS ClientId
+                     , tmp.PartionId             AS PartionId
+                     , tmp.MI_Id                 AS MI_Id
+                     , tmp.ChangePercent         AS ChangePercent
+                     , tmp.OperPriceList         AS OperPriceList
                      , tmp.GoodsId
                      , tmp.CurrencyValue
                      , SUM (tmp.SummChangePercent) AS SummChangePercent
@@ -569,20 +581,21 @@ BEGIN
                      , SUM (tmp.TotalPay_Card)     AS TotalPay_Card
                      , SUM (tmp.TotalPay)          AS TotalPay
                      , SUM (tmp.Debt)              AS Debt
-                     , ROW_NUMBER() OVER (PARTITION BY tmp.MovementId_Sale, tmp.ClientId, tmp.PartionId ORDER BY tmp.MovementId_Sale DESC, tmp.ClientId, tmp.PartionId ,tmp.OperDate_Sale ASC) AS Ord
+                     , ROW_NUMBER() OVER (PARTITION BY tmp.MI_Id ORDER BY tmp.MovementId DESC) AS Ord
                 FROM tmpData AS tmp
                 GROUP BY CASE WHEN tmp.GoodsId <> -1 THEN 1 ELSE 2 END
-                     , CASE WHEN tmp.MovementDescId IN (zc_Movement_GoodsAccount()) AND tmp.GoodsId <> -1 THEN tmp.MovementId_Sale ELSE tmp.MovementId END
-                     , CASE WHEN tmp.MovementDescId IN (zc_Movement_GoodsAccount()) AND tmp.GoodsId <> -1 THEN tmp.MovementDescId /*tmp.MovementDescId_Sale*/ ELSE tmp.MovementDescId END
+                     , tmp.MovementId
+                     , tmp.MovementDescId
                      , tmp.StatusCode
-                     , CASE WHEN tmp.MovementDescId IN (zc_Movement_GoodsAccount()) AND tmp.GoodsId <> -1 THEN tmp.OperDate /*tmp.OperDate_Sale*/ ELSE tmp.OperDate END
-                     , CASE WHEN tmp.MovementDescId IN (zc_Movement_GoodsAccount()) AND tmp.GoodsId <> -1 THEN tmp.InvNumber /*tmp.InvNumber_Sale*/ ELSE tmp.InvNumber END
+                     , tmp.OperDate
+                     , tmp.InvNumber
                      , tmp.MovementId_Sale
                      , tmp.MovementDescId_Sale
                      , tmp.OperDate_Sale
                      , tmp.InvNumber_Sale
                      , tmp.ClientId
                      , tmp.PartionId
+                     , tmp.MI_Id
                      , tmp.ChangePercent
                      , tmp.OperPriceList
                      , tmp.GoodsId
@@ -628,7 +641,7 @@ BEGIN
              , tmpData.TotalPay_EUR        ::TFloat
              , tmpData.TotalPay_Card       ::TFloat
              , COALESCE (tmpData.TotalPay, 0) ::TFloat  AS TotalPay
-             , COALESCE (tmpData.Debt, 0)    :: TFloat  AS TotalDebt
+             , CASE WHEN tmpData.Ord = 1 THEN COALESCE (tmpData.Debt, 0) ELSE 0 END :: TFloat  AS TotalDebt
 
              , tmpData.CurrencyValue         ::TFloat AS CurrencyValue
 
