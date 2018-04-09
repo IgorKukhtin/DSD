@@ -57,6 +57,17 @@ type
     actComplete: TdsdExecStoredProc;
     bbComplete: TdxBarButton;
     bbSetErased: TdxBarButton;
+    actGet_Printer: TdsdExecStoredProc;
+    actGetReportName: TdsdExecStoredProc;
+    actPrintCheck: TdsdPrintAction;
+    mactPrint_Check: TMultiAction;
+    bbPrint_Check: TdxBarButton;
+    FormParams: TdsdFormParams;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spGetReporName: TdsdStoredProc;
+    spGet_Printer: TdsdStoredProc;
+    spSelectPrint_Check: TdsdStoredProc;
   private
     { Private declarations }
   public

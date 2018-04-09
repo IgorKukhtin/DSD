@@ -5,14 +5,15 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1382
-  ExplicitHeight = 460
+  ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
     Width = 1366
     Height = 33
-    ExplicitWidth = 1065
+    ExplicitWidth = 1366
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 29
@@ -61,17 +62,19 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
     Height = 336
     TabOrder = 3
     ExplicitTop = 59
-    ExplicitWidth = 1065
+    ExplicitWidth = 1366
     ExplicitHeight = 336
     ClientRectBottom = 336
     ClientRectRight = 1366
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1065
+      ExplicitWidth = 1366
       ExplicitHeight = 336
       inherited cxGrid: TcxGrid
         Width = 1366
         Height = 336
-        ExplicitWidth = 1065
+        ExplicitLeft = 3
+        ExplicitTop = -6
+        ExplicitWidth = 1366
         ExplicitHeight = 336
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -512,9 +515,6 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 6
-    ExplicitLeft = -8
-    ExplicitTop = 401
-    ExplicitWidth = 1065
     object DBLabelGoodsGroupNameFull: TcxDBLabel
       Left = 0
       Top = 0
@@ -530,7 +530,6 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
       Style.Font.Name = 'Tahoma'
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
-      ExplicitWidth = 1065
       Height = 30
       Width = 1366
       AnchorX = 683
@@ -906,6 +905,90 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
       Caption = 'actSetErased'
       ImageIndex = 13
     end
+    object actGet_Printer: TdsdExecStoredProc
+      Category = 'Print'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Printer
+      StoredProcList = <
+        item
+          StoredProc = spGet_Printer
+        end>
+      Caption = 'Get_Printer'
+    end
+    object actGetReportName: TdsdExecStoredProc
+      Category = 'Print'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReporName
+      StoredProcList = <
+        item
+          StoredProc = spGetReporName
+        end>
+      Caption = 'actGetReportName'
+    end
+    object actPrintCheck: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_Check
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Check
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Printer = 'PrinterName'
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameCheck'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
+    object mactPrint_Check: TMultiAction
+      Category = 'Print'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Printer
+        end
+        item
+          Action = actGetReportName
+        end
+        item
+          Action = actPrintCheck
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1063#1077#1082
+      Hint = #1055#1077#1095#1072#1090#1100' '#1063#1077#1082
+      ImageIndex = 15
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -1021,6 +1104,14 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Check'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1057,6 +1148,10 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
     end
     object bbSetErased: TdxBarButton
       Action = actSetErased
+      Category = 0
+    end
+    object bbPrint_Check: TdxBarButton
+      Action = mactPrint_Check
       Category = 0
     end
   end
@@ -1190,5 +1285,110 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
     PackSize = 1
     Left = 288
     Top = 280
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'ReportNameCheck'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PrinterName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 416
+    Top = 208
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 876
+    Top = 185
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 892
+    Top = 246
+  end
+  object spGetReporName: TdsdStoredProc
+    StoredProcName = 'gpGet_ReportName_SaleReturnId'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_ReportName_SaleReturnId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameCheck'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 664
+    Top = 152
+  end
+  object spGet_Printer: TdsdStoredProc
+    StoredProcName = 'gpGet_PrinterByUnit'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_PrinterByUnit'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PrinterName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 728
+    Top = 160
+  end
+  object spSelectPrint_Check: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Check_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 728
+    Top = 224
   end
 end

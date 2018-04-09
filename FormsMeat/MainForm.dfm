@@ -110,7 +110,12 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TReport_CheckTaxCorrective_NPPForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'MovementId'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end>
       isShowModal = False
     end
     object actStickerGroup: TdsdOpenForm [4]
