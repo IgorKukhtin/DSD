@@ -780,9 +780,12 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
       Printer = 'PrinterName'
       Params = <
         item
-          Name = 'Id'
+          Name = 'PrinterName'
           Value = Null
-          ComponentItem = 'Id'
+          Component = FormParams
+          ComponentItem = 'PrinterName'
+          DataType = ftString
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       ReportNameParam.Value = ''
@@ -1146,10 +1149,10 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actGet_Printer
+          Action = actGetReportName
         end
         item
-          Action = actGetReportName
+          Action = actGet_Printer
         end
         item
           Action = actPrintCheck

@@ -7,7 +7,7 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1382
-  ExplicitHeight = 463
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -72,8 +72,6 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
       inherited cxGrid: TcxGrid
         Width = 1366
         Height = 336
-        ExplicitLeft = 3
-        ExplicitTop = -6
         ExplicitWidth = 1366
         ExplicitHeight = 336
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -960,9 +958,12 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
       Printer = 'PrinterName'
       Params = <
         item
-          Name = 'Id'
+          Name = 'PrinterName'
           Value = Null
-          ComponentItem = 'Id'
+          Component = FormParams
+          ComponentItem = 'PrinterName'
+          DataType = ftString
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       ReportNameParam.Value = Null
@@ -977,10 +978,10 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actGet_Printer
+          Action = actGetReportName
         end
         item
-          Action = actGetReportName
+          Action = actGet_Printer
         end
         item
           Action = actPrintCheck
