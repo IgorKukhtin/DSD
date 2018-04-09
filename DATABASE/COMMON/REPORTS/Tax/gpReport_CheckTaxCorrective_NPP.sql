@@ -3,8 +3,11 @@
 DROP FUNCTION IF EXISTS Report_CheckTaxCorrective_NPP (Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_CheckTaxCorrective_NPP (Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_CheckTaxCorrective_NPP (Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_CheckTaxCorrective_NPP (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_CheckTaxCorrective_NPP (
+    IN inStartDate           TDateTime ,  
+    IN inEndDate             TDateTime ,
     IN inMovementId          Integer   , -- № налоговой
     IN inGoodsId             Integer   , -- товар
     IN inIsShowAll           Boolean   , -- показать по умолч только  ошибки - №п/п или кол-во
