@@ -144,6 +144,7 @@ BEGIN
            , OS_Unit_Print.ValueData                     AS PrintName
            , OS_Unit_Address.ValueData                   AS Address_Unit
            , OS_Unit_Phone.ValueData                     As Phone_Unit
+           , Object_To.ObjectCode            :: Integer  AS ToCode
            , Object_To.ValueData                         AS ToName
            
            , tmpDiscount.DiscountTax
