@@ -239,7 +239,7 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
             Width = 55
           end
           object OperDate_Sale: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1087#1088#1086#1076#1072#1078#1072')'
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1087#1088'.)'
             DataBinding.FieldName = 'OperDate_Sale'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
