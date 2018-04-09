@@ -310,42 +310,40 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
     ExplicitWidth = 823
     ExplicitHeight = 89
     inherited deStart: TcxDateEdit
-      Left = 99
-      Top = 42
+      Left = 4
+      Top = 59
       Properties.SaveTime = False
-      Visible = False
-      ExplicitLeft = 99
-      ExplicitTop = 42
+      ExplicitLeft = 4
+      ExplicitTop = 59
     end
     inherited deEnd: TcxDateEdit
-      Left = 177
-      Top = 23
+      Left = 98
+      Top = 59
       Properties.SaveTime = False
-      Visible = False
-      ExplicitLeft = 177
-      ExplicitTop = 23
+      ExplicitLeft = 98
+      ExplicitTop = 59
+      ExplicitWidth = 110
+      Width = 110
     end
     inherited cxLabel1: TcxLabel
-      Left = 19
+      Left = 4
       Top = 42
-      Visible = False
-      ExplicitLeft = 19
+      ExplicitLeft = 4
       ExplicitTop = 42
     end
     inherited cxLabel2: TcxLabel
-      Left = 104
+      Left = 98
       Top = 42
-      Visible = False
-      ExplicitLeft = 104
+      ExplicitLeft = 98
       ExplicitTop = 42
     end
     object cxLabel4: TcxLabel
-      Left = 190
+      Left = 217
       Top = 42
       Caption = #1058#1086#1074#1072#1088':'
     end
     object edGoods: TcxButtonEdit
-      Left = 190
+      Left = 217
       Top = 59
       Properties.Buttons = <
         item
@@ -354,7 +352,7 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 619
+      Width = 592
     end
     object cxLabel8: TcxLabel
       Left = 98
@@ -371,7 +369,7 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 83
+      Width = 110
     end
     object cxLabel10: TcxLabel
       Left = 4
@@ -389,7 +387,7 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
       Width = 87
     end
     object edJuridical: TcxButtonEdit
-      Left = 190
+      Left = 217
       Top = 17
       Properties.Buttons = <
         item
@@ -398,10 +396,10 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
         end>
       Properties.ReadOnly = True
       TabOrder = 10
-      Width = 283
+      Width = 256
     end
     object cxLabel3: TcxLabel
-      Left = 190
+      Left = 217
       Top = 0
       Caption = #1070#1088'. '#1083#1080#1094#1086
     end
@@ -528,6 +526,22 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpReport_CheckTaxCorrective_NPP'
     Params = <
+      item
+        Name = 'inStartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inMovementId'
         Value = 41640d
@@ -744,8 +758,7 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
-    Left = 120
-    Top = 16
+    Left = 160
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_TaxParam'
