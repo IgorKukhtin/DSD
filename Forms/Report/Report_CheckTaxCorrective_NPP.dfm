@@ -3,6 +3,7 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
   ClientHeight = 359
   ClientWidth = 823
   AddOnFormData.RefreshAction = actRefreshStart
+  AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   ExplicitWidth = 839
   ExplicitHeight = 397
@@ -312,6 +313,7 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
     inherited deStart: TcxDateEdit
       Left = 4
       Top = 59
+      EditValue = 43190d
       Properties.SaveTime = False
       ExplicitLeft = 4
       ExplicitTop = 59
@@ -319,11 +321,10 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
     inherited deEnd: TcxDateEdit
       Left = 98
       Top = 59
+      EditValue = 43191d
       Properties.SaveTime = False
       ExplicitLeft = 98
       ExplicitTop = 59
-      ExplicitWidth = 110
-      Width = 110
     end
     inherited cxLabel1: TcxLabel
       Left = 4
@@ -675,6 +676,7 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
         Value = ''
         Component = GuidesGoods
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -683,6 +685,7 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
         Component = GuidesGoods
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -690,6 +693,7 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
         Value = ''
         Component = GuidesDocumentTax
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 344
@@ -758,7 +762,8 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
-    Left = 160
+    Left = 144
+    Top = 16
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_TaxParam'
