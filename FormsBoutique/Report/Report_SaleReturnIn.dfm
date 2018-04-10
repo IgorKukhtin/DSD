@@ -651,6 +651,14 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
             Options.Editing = False
             Width = 115
           end
+          object PartnerName: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+            DataBinding.FieldName = 'PartnerName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object DescName_Sale: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1076#1086#1082'. ('#1087#1088#1086#1076#1072#1078#1072')'
             DataBinding.FieldName = 'DescName_Sale'
@@ -1050,7 +1058,7 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         item
           DataSet = MasterCDS
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'OperDate;DescName;InvNumber;LabelName;GoodsSizeName'
+          IndexFieldNames = 'PartnerName;OperDate;GoodsCode;LabelName;GoodsSizeName'
         end>
       Params = <
         item
@@ -1075,8 +1083,8 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1072#1084
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1072#1084
+      ReportName = 'PrintReport_SaleReturnIn'
+      ReportNameParam.Value = 'PrintReport_SaleReturnIn'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1270,6 +1278,14 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         item
           Visible = True
           ItemName = 'bbReport_Goods'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
         end
         item
           Visible = True
