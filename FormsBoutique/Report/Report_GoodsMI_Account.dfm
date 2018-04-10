@@ -2,12 +2,11 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1088#1072#1089#1095#1077#1090#1072#1084'>'
   ClientHeight = 425
   ClientWidth = 1366
-  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1382
-  ExplicitHeight = 460
+  ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -537,12 +536,10 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = deEnd
         Properties.Strings = (
           'Date')
       end
       item
-        Component = deStart
         Properties.Strings = (
           'Date')
       end
@@ -1166,8 +1163,10 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
         Component = PeriodChoice
       end
       item
+        Component = deStart
       end
       item
+        Component = deEnd
       end
       item
         Component = GuidesUnit
@@ -1221,6 +1220,20 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
         Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     PackSize = 1

@@ -5,7 +5,9 @@ DROP FUNCTION IF EXISTS gpGet_UnitbyUser (TVarChar);
 CREATE OR REPLACE FUNCTION gpGet_UnitbyUser(
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE(UnitId integer, UnitName TVarChar)
+RETURNS TABLE(UnitId integer, UnitName TVarChar
+            , StartDate TDatetime, EndDate TDatetime    -- для отчета = CURRENT_DATE
+              )
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -23,7 +25,19 @@ BEGIN
                            , 0) ::Integer;
 
      RETURN QUERY
-     SELECT Id, ValueData FROM Object WHERE Id = vbUnitId;
+     SELECT Object.Id           AS UnitId
+          , Object.ValueData    AS UnitName
+          , CURRENT_DATE ::TDatetime AS StartDate
+          , CURRENT_DATE ::TDatetime AS EndDate
+     FROM Object 
+     WHERE Object.Id = vbUnitId AND vbUnitId <> 0
+   UNION 
+     SELECT 0                        AS UnitId
+          , ''           ::TVarChar  AS UnitName
+          , CURRENT_DATE ::TDatetime AS StartDate
+          , CURRENT_DATE ::TDatetime AS EndDate
+     WHERE vbUnitId = 0
+     ;
 
 END;
 $BODY$
@@ -32,6 +46,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.04.18         *
  14.03.18         * rename gpGet_UserUnit  - - gpGet_UnitbyUser
  19.02.18         *
 
@@ -39,3 +54,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpGet_UnitbyUser (inSession:= zfCalc_UserAdmin())
+select * from gpGet_UnitbyUser( inSession := '6');

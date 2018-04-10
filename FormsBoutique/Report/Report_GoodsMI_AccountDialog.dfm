@@ -83,11 +83,11 @@ object Report_GoodsMI_AccountDialogForm: TReport_GoodsMI_AccountDialogForm
     DateStart = deStart
     DateEnd = deEnd
     Left = 279
-    Top = 49
+    Top = 25
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 214
-    Top = 47
+    Left = 230
+    Top = 15
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -190,14 +190,28 @@ object Report_GoodsMI_AccountDialogForm: TReport_GoodsMI_AccountDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 152
     Top = 104
   end
   object ActionList: TActionList
-    Left = 155
-    Top = 49
+    Left = 195
+    Top = 65
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -219,7 +233,6 @@ object Report_GoodsMI_AccountDialogForm: TReport_GoodsMI_AccountDialogForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh
