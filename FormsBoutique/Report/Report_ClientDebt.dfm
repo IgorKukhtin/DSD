@@ -2,9 +2,9 @@ inherited Report_ClientDebtForm: TReport_ClientDebtForm
   Caption = #1054#1090#1095#1077#1090' <'#1044#1086#1083#1075#1080' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081'>'
   ClientHeight = 425
   ClientWidth = 1065
-  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1081
   ExplicitHeight = 463
   PixelsPerInch = 96
@@ -81,6 +81,7 @@ inherited Report_ClientDebtForm: TReport_ClientDebtForm
       inherited cxGrid: TcxGrid
         Width = 1065
         Height = 366
+        ExplicitTop = 3
         ExplicitWidth = 1065
         ExplicitHeight = 366
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -965,7 +966,7 @@ inherited Report_ClientDebtForm: TReport_ClientDebtForm
         item
           DataSet = MasterCDS
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'OperDate;DescName;InvNumber;LabelName;GoodsSizeName'
+          IndexFieldNames = 'ClientName;OperDate_Sale;LabelName'
         end>
       Params = <
         item
@@ -990,8 +991,8 @@ inherited Report_ClientDebtForm: TReport_ClientDebtForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1072#1084
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1072#1084
+      ReportName = 'PrintReport_ClientDebt'
+      ReportNameParam.Value = 'PrintReport_ClientDebt'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1060,6 +1061,14 @@ inherited Report_ClientDebtForm: TReport_ClientDebtForm
         item
           Visible = True
           ItemName = 'bbOpenReportForm_Partner'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
         end
         item
           Visible = True
@@ -1161,5 +1170,10 @@ inherited Report_ClientDebtForm: TReport_ClientDebtForm
     PackSize = 1
     Left = 584
     Top = 144
+  end
+  object FormParams: TdsdFormParams
+    Params = <>
+    Left = 416
+    Top = 208
   end
 end

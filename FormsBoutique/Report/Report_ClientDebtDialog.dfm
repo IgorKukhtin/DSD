@@ -58,7 +58,7 @@ object Report_ClientDebtDialogForm: TReport_ClientDebtDialogForm
     Top = 11
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 214
+    Left = 190
     Top = 9
   end
   object cxPropertiesStore: TcxPropertiesStore

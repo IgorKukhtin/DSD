@@ -46,6 +46,9 @@ RETURNS TABLE (MovementId_Partion   Integer
              , CountDebt              TFloat
              , SummDebt               TFloat
              , SummDebt_profit        TFloat
+             , SummToPay              TFloat
+             , SummTotalPay           TFloat
+             , InsertName             TVarChar
   )
 AS
 $BODY$
@@ -248,6 +251,18 @@ BEGIN
              , tmpData.CountDebt                ::TFloat
              , tmpData.SummDebt                 ::TFloat
              , tmpData.SummDebt_profit          ::TFloat
+             -- сумма к оплате  = сумма по прайсу -скидка - возврат
+             , (tmpData.TotalSummPriceList 
+               - COALESCE (tmpData.SummChangePercent,0) 
+               - COALESCE (tmpData.TotalChangePercent,0) 
+               - COALESCE (tmpData.TotalReturn ,0)
+               - COALESCE (tmpData.TotalChangePercentPay,0)) ::TFloat AS SummToPay
+             --сумма оплаты итого
+             , (COALESCE (tmpData.TotalPay,0)
+               + COALESCE (tmpData.TotalPayOth,0)
+               - COALESCE (tmpData.TotalPayReturn,0)) ::TFloat AS SummTotalPay
+               
+             , Object_Insert.ValueData   AS InsertName
 
         FROM tmpData
             LEFT JOIN Object_PartionGoods      ON Object_PartionGoods.MovementItemId  = tmpData.PartionId
@@ -272,6 +287,11 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
+
+            LEFT JOIN MovementLinkObject AS MLO_Insert
+                                         ON MLO_Insert.MovementId = tmpData.MovementId_Sale
+                                        AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
           ;
 
  END;
