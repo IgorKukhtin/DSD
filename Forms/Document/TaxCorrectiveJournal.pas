@@ -133,6 +133,11 @@ type
     bbChangeNPP_Calc: TdxBarButton;
     actReport_Check_NPP: TdsdOpenForm;
     bbReport_Check_NPP: TdxBarButton;
+    spUpdateMI_NPP_Null: TdsdStoredProc;
+    actUpdateMI_NPP_Null: TdsdExecStoredProc;
+    macUpdate_NPP_Null: TMultiAction;
+    macUpdate_NPP_Null_All: TMultiAction;
+    bbUpdate_NPP_Null: TdxBarButton;
   private
     { Private declarations }
   public
