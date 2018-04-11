@@ -20,46 +20,75 @@ $BODY$
    DECLARE vbUserId         Integer;
    DECLARE vbMovementId_tax Integer;
    DECLARE vbOperDate       TDateTime;
-   DECLARE vbMovementId_Corrective Integer;
+   DECLARE vbMovementId_Corrective Integer; -- для Корректировки №2 (переносим строчки с другой причиной корректировки)
+   DECLARE vbDocumentTaxKindId     Integer; -- вид Корректировки
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_TaxCorrective());
 
 
+     -- определяются параметры для <Корректировка>
+     SELECT Movement.OperDate
+          , MovementLinkMovement_Child.MovementChildId AS MovementId_tax
+          , MLO_DocumentTaxKind.ObjectId
+            INTO vbOperDate, vbMovementId_tax, vbDocumentTaxKindId
+     FROM Movement
+          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
+                                         ON MovementLinkMovement_Child.MovementId = Movement.Id
+                                        AND MovementLinkMovement_Child.DescId     = zc_MovementLinkMovement_Child()
+          LEFT JOIN MovementLinkObject AS MLO_DocumentTaxKind 
+                                       ON MLO_DocumentTaxKind.MovementId = Movement.Id
+                                      AND MLO_DocumentTaxKind.DescId     = zc_MovementLinkObject_DocumentTaxKind())
+     WHERE Movement.Id = inMovementId
+     ;
+
+
      -- !!!Проверка - Можно ли МЕНЯТЬ!!!
      IF EXISTS (SELECT 1
                 FROM MovementItem
-                     INNER JOIN MovementItemFloat AS MIFloat_NPPTax_calc
-                                                  ON MIFloat_NPPTax_calc.MovementItemId = MovementItem.Id
-                                                 AND MIFloat_NPPTax_calc.DescId         = zc_MIFloat_NPP_calc()
-                                                 AND MIFloat_NPPTax_calc.ValueData      > 0
+                     LEFT JOIN MovementItemFloat AS MIFloat_NPPTax_calc
+                                                 ON MIFloat_NPPTax_calc.MovementItemId = MovementItem.Id
+                                                AND MIFloat_NPPTax_calc.DescId         = zc_MIFloat_NPPTax_calc()
+                     LEFT JOIN MovementItemFloat AS MIFloat_NPP_calc
+                                                 ON MIFloat_NPP_calc.MovementItemId = MovementItem.Id
+                                                AND MIFloat_NPP_calc.DescId         = zc_MIFloat_NPP_calc()
                 WHERE MovementItem.MovementId = inMovementId
                   AND MovementItem.DescId     = zc_MI_Master()
                   AND MovementItem.isErased   = FALSE
                   AND MovementItem.Amount     <> 0
+                  AND (MIFloat_NPPTax_calc.ValueData<> 0
+                    OR MIFloat_NPP_calc.ValueData   <> 0
+                      )
+               )
+     AND EXISTS (SELECT 1
+                FROM Movement
+                     INNER JOIN MovementLinkMovement AS MovementLinkMovement_Child
+                                                    ON MovementLinkMovement_Child.MovementId      = Movement.Id
+                                                   AND MovementLinkMovement_Child.DescId          = zc_MovementLinkMovement_Child()
+                                                   AND MovementLinkMovement_Child.MovementChildId = vbMovementId_tax
+                WHERE Movement.OperDate = vbOperDate
+                  AND Movement.DescId   = zc_Movement_TaxCorrective()
+                  AND Movement.StatusId = zc_Enum_Status_Complete()
+                  AND Movement.Id       <> inMovementId
                )
      THEN
-         RAISE EXCEPTION 'Ошибка.В корректировке уже сформированы данные <№ п/п в колонке 1/2строка - для колонки 7 с "плюсом" - формируется в Корректировке по правилу: № п/п + 1>';
+         RAISE EXCEPTION 'Ошибка.В корректировке уже сформированы данные <№ п/п в колонке 1/2строка - для колонки 7 с "плюсом" - формируется в Корректировке по правилу: № п/п + 1>%Необходимо сначала обнулить значение <№ п/п в 1/2строка> и <Кол-во в 7/1строка>, потом повторить операцию.', CHR (13);
      END IF;
+
      -- !!!Проверка - Можно ли МЕНЯТЬ!!!
-     IF NOT EXISTS (SELECT 1
-                    FROM MovementLinkObject AS MovementLinkObject_DocumentTaxKind
-                    WHERE MovementLinkObject_DocumentTaxKind.MovementId = inMovementId
-                      AND MovementLinkObject_DocumentTaxKind.DescId     = zc_MovementLinkObject_DocumentTaxKind()
-                      AND MovementLinkObject_DocumentTaxKind.ObjectId   IN (zc_Enum_DocumentTaxKind_Corrective()
-                                                                          , zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalR()
-                                                                          , zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR()
-                                                                          , zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR()
-                                                                          , zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR()
-                                                                           )
-                   )
+     IF vbDocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_Corrective()
+                                  , zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalR()
+                                  , zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR()
+                                  , zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR()
+                                  , zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR()
+                                  -- , zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                  -- , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                   )
      THEN
+         IF inSession <> '5' THEN
          RAISE EXCEPTION 'Ошибка.Для документа <%> выбранная функция не предусмотрена.'
-                       , lfGet_Object_ValueData_sh ((SELECT MovementLinkObject_DocumentTaxKind.ObjectId
-                                                     FROM MovementLinkObject AS MovementLinkObject_DocumentTaxKind
-                                                     WHERE MovementLinkObject_DocumentTaxKind.MovementId = inMovementId
-                                                       AND MovementLinkObject_DocumentTaxKind.DescId     = zc_MovementLinkObject_DocumentTaxKind()
-                                                   ));
+                       , lfGet_Object_ValueData_sh (vbDocumentTaxKindId);
+         END IF;
      END IF;
      
      
@@ -83,20 +112,6 @@ BEGIN
          RETURN;
 
      END IF;
-
-
-
-     -- определяется <Налоговый документ> и его параметры
-     SELECT Movement.OperDate
-          , MovementLinkMovement_Child.MovementChildId AS MovementId_tax
-            INTO vbOperDate, vbMovementId_tax
-     FROM Movement
-          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
-                                         ON MovementLinkMovement_Child.MovementId = Movement.Id
-                                        AND MovementLinkMovement_Child.DescId     = zc_MovementLinkMovement_Child()
-     WHERE Movement.Id = inMovementId
-     ;
-
 
 
      -- таблица - Список
@@ -191,10 +206,38 @@ BEGIN
               tmpMovement AS
                  (SELECT MovementLinkMovement_Child.MovementId
                        , Movement.OperDate
+                       , COALESCE (MovementBoolean.ValueData, FALSE) AS isRegistered
                   FROM MovementLinkMovement AS MovementLinkMovement_Child
                        INNER JOIN Movement ON Movement.Id       = MovementLinkMovement_Child.MovementId
                                           AND Movement.StatusId = zc_Enum_Status_Complete()
                                           AND Movement.OperDate <= vbOperDate
+                       LEFT JOIN MovementBoolean ON MovementBoolean.MovementId = MovementLinkMovement_Child.MovementId
+                                                AND MovementBoolean.DescId     = zc_MovementBoolean_Registered()
+                       INNER JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                                                     ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
+                                                    AND MovementLinkObject_DocumentTaxKind.DescId     = zc_MovementLinkObject_DocumentTaxKind()
+                                                    AND MovementLinkObject_DocumentTaxKind.ObjectId   IN (zc_Enum_DocumentTaxKind_Corrective()
+                                                                                                        , zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalR()
+                                                                                                        , zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR()
+                                                                                                        , zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR()
+                                                                                                        , zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR()
+                                                                                                        , zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                                                        , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                                                         )
+                  WHERE MovementLinkMovement_Child.MovementChildId = vbMovementId_tax
+                    AND MovementLinkMovement_Child.DescId          = zc_MovementLinkMovement_Child()
+                    AND MovementLinkMovement_Child.MovementId      <> inMovementId
+                 UNION ALL
+                  -- Зарегистрированные
+                  SELECT MovementLinkMovement_Child.MovementId
+                       , Movement.OperDate
+                       , MovementBoolean.ValueData AS isRegistered
+                  FROM MovementLinkMovement AS MovementLinkMovement_Child
+                       INNER JOIN Movement ON Movement.Id       = MovementLinkMovement_Child.MovementId
+                                          AND Movement.StatusId = zc_Enum_Status_Complete()
+                       INNER JOIN MovementBoolean ON MovementBoolean.MovementId = MovementLinkMovement_Child.MovementId
+                                                 AND MovementBoolean.DescId     = zc_MovementBoolean_Registered()
+                                                 AND MovementBoolean.ValueData  = TRUE
                        INNER JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                                      ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
                                                     AND MovementLinkObject_DocumentTaxKind.DescId     = zc_MovementLinkObject_DocumentTaxKind()
@@ -215,6 +258,7 @@ BEGIN
                        , MovementItem.ObjectId    AS GoodsId
                        , MovementItem.Amount      AS Amount
                        , tmpMovement.OperDate     AS OperDate
+                       , tmpMovement.isRegistered AS isRegistered
                   FROM tmpMovement
                        INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
                                               AND MovementItem.DescId     = zc_MI_Master()
@@ -239,6 +283,7 @@ BEGIN
                  (SELECT tmpMI_All.Id                                   AS Id
                        , tmpMI_All.MovementId                           AS MovementId
                        , tmpMI_All.OperDate                             AS OperDate
+                       , tmpMI_All.isRegistered                         AS isRegistered
                        , tmpMI_All.GoodsId                              AS GoodsId
                        , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  AS GoodsKindId
                        , tmpMI_All.Amount                               AS Amount
@@ -281,17 +326,23 @@ BEGIN
                        , tmpMI_Corr_all.GoodsKindId
                        , tmpMI_Corr_all.Price
                        , SUM (CASE WHEN (tmpMI_Corr_all.NPPTax_calc = 0 AND tmpMI_Corr_all.OperDate < vbOperDate)
-                                     OR tmpMI_Corr_all.NPPTax_calc > 0
+                                     OR tmpMI_Corr_all.NPPTax_calc  > 0
+                                     OR tmpMI_Corr_all.isRegistered = TRUE
+
                                    THEN tmpMI_Corr_all.Amount
                                    ELSE 0
                               END) AS Amount
                        , SUM (CASE WHEN (tmpMI_Corr_all.NPPTax_calc = 0 AND tmpMI_Corr_all.OperDate < vbOperDate)
                                      OR tmpMI_Corr_all.NPPTax_calc > 0
+                                     OR tmpMI_Corr_all.isRegistered = TRUE
+
                                    THEN tmpMI_Corr_all.Amount
                                    ELSE 0
                               END) AS Amount_all
                        , SUM (CASE WHEN (tmpMI_Corr_all.NPPTax_calc = 0 AND tmpMI_Corr_all.OperDate < vbOperDate)
-                                     OR tmpMI_Corr_all.NPPTax_calc > 0
+                                     OR tmpMI_Corr_all.NPPTax_calc  > 0
+                                     OR tmpMI_Corr_all.isRegistered = TRUE
+
                                    THEN tmpMI_Corr_all.AmountSumm
                                    ELSE 0
                               END) AS AmountSumm
@@ -306,17 +357,23 @@ BEGIN
                  (SELECT tmpMI_Corr_all.GoodsId
                        , tmpMI_Corr_all.Price
                        , SUM (CASE WHEN (tmpMI_Corr_all.NPPTax_calc = 0 AND tmpMI_Corr_all.OperDate < vbOperDate)
-                                     OR tmpMI_Corr_all.NPPTax_calc > 0
+                                     OR tmpMI_Corr_all.NPPTax_calc  > 0
+                                     OR tmpMI_Corr_all.isRegistered = TRUE
+
                                    THEN tmpMI_Corr_all.Amount
                                    ELSE 0
                               END) AS Amount
                        , SUM (CASE WHEN (tmpMI_Corr_all.NPPTax_calc = 0 AND tmpMI_Corr_all.OperDate < vbOperDate)
-                                     OR tmpMI_Corr_all.NPPTax_calc > 0
+                                     OR tmpMI_Corr_all.NPPTax_calc  > 0
+                                     OR tmpMI_Corr_all.isRegistered = TRUE
+
                                    THEN tmpMI_Corr_all.Amount
                                    ELSE 0
                               END) AS Amount_all
                        , SUM (CASE WHEN (tmpMI_Corr_all.NPPTax_calc = 0 AND tmpMI_Corr_all.OperDate < vbOperDate)
-                                     OR tmpMI_Corr_all.NPPTax_calc > 0
+                                     OR tmpMI_Corr_all.NPPTax_calc  > 0
+                                     OR tmpMI_Corr_all.isRegistered = TRUE
+
                                    THEN tmpMI_Corr_all.AmountSumm
                                    ELSE 0
                               END) AS AmountSumm
@@ -518,7 +575,7 @@ BEGIN
                                                        , inToId             := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
                                                        , inPartnerId        := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Partner())
                                                        , inContractId       := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
-                                                       , inDocumentTaxKindId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_DocumentTaxKind())
+                                                       , inDocumentTaxKindId:= vbDocumentTaxKindId
                                                        , inUserId           := vbUserId
                                                       );
          -- сохранили связь с <филиал>

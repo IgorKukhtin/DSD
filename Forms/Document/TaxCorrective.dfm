@@ -3,7 +3,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   ClientHeight = 668
   ClientWidth = 1114
   ExplicitWidth = 1130
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -260,6 +260,9 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#8470' '#1087'/'#1087
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -1270,9 +1273,13 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         item
           StoredProc = spSelectChild
         end>
-      Caption = #1054#1073#1085#1091#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#8470' '#1087'/'#1087
-      Hint = #1054#1073#1085#1091#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#8470' '#1087'/'#1087
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#8470' '#1087'/'#1087
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#8470' '#1087'/'#1087
       ImageIndex = 46
+      QuestionBeforeExecute = 
+        #1041#1091#1076#1091#1090' '#1059#1044#1040#1051#1045#1053#1067' '#1042#1057#1045' '#1076#1072#1085#1085#1085#1099#1077' '#1076#1083#1103' '#8470' '#1087'/'#1087' '#1041#1045#1047' '#1042#1054#1047#1052#1054#1046#1053#1054#1057#1058#1048' '#1042#1054#1057#1057#1058#1040#1053#1054#1042#1051#1045#1053 +
+        #1048#1071'. '#1055#1088#1086#1076#1086#1083#1078#1080#1090#1100' ?'
+      InfoAfterExecute = #1059#1044#1040#1051#1045#1053#1067' '#1042#1057#1045' '#1076#1072#1085#1085#1085#1099#1077' '#1076#1083#1103' '#8470' '#1087'/'#1087
     end
   end
   inherited MasterDS: TDataSource

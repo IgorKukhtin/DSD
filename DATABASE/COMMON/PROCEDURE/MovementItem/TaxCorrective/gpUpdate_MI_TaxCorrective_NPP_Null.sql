@@ -17,11 +17,21 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_TaxCorrective());
 
      -- определяем <Статус>
-     SELECT StatusId, InvNumber INTO vbStatusId, vbInvNumber FROM Movement WHERE Id = inMovementId;
+     /*SELECT StatusId, InvNumber INTO vbStatusId, vbInvNumber FROM Movement WHERE Id = inMovementId;
      -- проверка - проведенные/удаленные документы Изменять нельзя
      IF vbStatusId <> zc_Enum_Status_UnComplete()
      THEN
          RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData (vbStatusId);
+     END IF;*/
+
+     -- проверка
+     IF  EXISTS (SELECT MovementId FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_Registered() AND ValueData = TRUE)
+      OR EXISTS (SELECT MovementId FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_Electron()   AND ValueData = TRUE)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Установлен признак <Электронный документ> в <%> № <%> от <%>.<Изменение> невозможно.', (SELECT MovementDesc.ItemName FROM Movement JOIN MovementDesc ON MovementDesc.Id = Movement.DescId WHERE Movement.Id = inMovementId)
+                                                                                                       , (SELECT InvNumber FROM Movement WHERE Id = inMovementId)
+                                                                                                       , zfConvert_DateToString ((SELECT OperDate FROM Movement WHERE Id = inMovementId))
+                                                                                                        ;
      END IF;
 
      --
@@ -29,7 +39,7 @@ BEGIN
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPP_calc(), MovementItem.Id, 0)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountTax_calc(), MovementItem.Id, 0)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTaxDiff_calc(), MovementItem.Id, 0)
-           , lpInsert_MovementItemProtocol (MovementItem.Id, vbUserId, FALSE)                             -- протокол
+           , lpInsert_MovementItemProtocol (MovementItem.Id, vbUserId, FALSE) -- протокол
      FROM MovementItem
           LEFT JOIN MovementItemFloat AS MIFloat_NPP_calc
                                       ON MIFloat_NPP_calc.MovementItemId = MovementItem.Id

@@ -66,7 +66,7 @@ BEGIN
 
 
 
-     IF 1=0
+     IF 1=1
      THEN
           -- Результат
           RETURN QUERY
@@ -152,4 +152,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale (inStartDate:= '31.10.2017', inEndDate:= '31.10.2017', inIsPartnerDate:= FALSE, inIsErased:= TRUE, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Sale (inStartDate:= '01.03.2018', inEndDate:= '31.03.2018', inIsPartnerDate:= FALSE, inIsErased:= TRUE, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())

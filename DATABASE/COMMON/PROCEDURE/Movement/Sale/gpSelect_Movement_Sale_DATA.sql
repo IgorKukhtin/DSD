@@ -917,6 +917,6 @@ $BODY$
 
 -- тест
 --
--- SELECT * FROM gpSelect_Movement_Sale_DATA (inStartDate:= '01.10.2016', inEndDate:= '31.10.2016', inIsPartnerDate:= FALSE, inIsErased:= TRUE, inJuridicalBasisId:= 0, inUserId:= zfCalc_UserAdmin() :: Integer)
+-- SELECT * FROM gpSelect_Movement_Sale_DATA (inStartDate:= '01.03.2018', inEndDate:= '31.03.2018', inIsPartnerDate:= FALSE, inIsErased:= TRUE, inJuridicalBasisId:= 0, inUserId:= zfCalc_UserAdmin() :: Integer)
 --Ѕыло 1 мес€ц - 3 мин 21 сек
 --сейчас 1 мес€ц - 28 сек
