@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox;
+  cxImageComboBox, cxSplitter;
 
 type
   TInventoryForm = class(TParentForm)
@@ -120,6 +120,19 @@ type
     Comment: TcxGridDBColumn;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    BarCode: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxSplitter1: TcxSplitter;
+    DataSource: TDataSource;
+    ClientDataSet: TClientDataSet;
+    dsdDBViewAddOn1: TdsdDBViewAddOn;
+    spSelectBarCode: TdsdStoredProc;
+    spGet_Partion_byBarcode: TdsdStoredProc;
+    actGoodsItemForm: TdsdOpenForm;
+    macGoodsItemForm: TMultiAction;
+    actRefresh_Goods: TdsdDataSetRefresh;
   private
   public
   end;

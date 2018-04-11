@@ -286,7 +286,8 @@ uses
   Report_Sale in '..\..\FormsBoutique\Report\Report_Sale.pas' {Report_SaleForm: TParentForm},
   Report_MovementReturnOut in '..\..\FormsBoutique\Report\Report_MovementReturnOut.pas' {Report_MovementReturnOutForm: TParentForm},
   SaleTwo in '..\..\FormsBoutique\Document\SaleTwo.pas' {SaleTwoForm: TParentForm},
-  IncomeKoeffEdit in '..\..\FormsBoutique\Guides\IncomeKoeffEdit.pas' {IncomeKoeffEditForm: TParentForm};
+  IncomeKoeffEdit in '..\..\FormsBoutique\Guides\IncomeKoeffEdit.pas' {IncomeKoeffEditForm: TParentForm},
+  InventoryItemEdit in '..\..\FormsBoutique\Document\InventoryItemEdit.pas' {InventoryItemEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
