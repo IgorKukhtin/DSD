@@ -148,6 +148,9 @@ type
     cbNPP_calc: TcxCheckBox;
     cxLabel17: TcxLabel;
     edDateisNPP_calc: TcxDateEdit;
+    spUpdateMI_NPP_Null: TdsdStoredProc;
+    actUpdateMI_NPP_Null: TdsdExecStoredProc;
+    bbUpdateMI_NPP_Null: TdxBarButton;
   private
     { Private declarations }
   public

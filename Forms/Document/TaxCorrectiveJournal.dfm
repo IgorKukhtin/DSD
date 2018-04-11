@@ -568,13 +568,53 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   inherited ActionList: TActionList
     Left = 47
     Top = 266
-    object MedocListAction: TMedocCorrectiveAction [0]
+    object actUpdateMI_NPP_Null: TdsdExecStoredProc [0]
+      Category = 'NPP'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMI_NPP_Null
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMI_NPP_Null
+        end>
+      Caption = #1054#1073#1085#1091#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#8470' '#1087'/'#1087
+      Hint = #1054#1073#1085#1091#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#8470' '#1087'/'#1087
+      ImageIndex = 46
+    end
+    object macUpdate_NPP_Null_All: TMultiAction [1]
+      Category = 'NPP'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_NPP_Null
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1054#1073#1085#1091#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#8470' '#1087'/'#1087'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#8470' '#1087'/'#1087' '#1086#1073#1085#1091#1083#1080#1085#1099
+      Caption = #1054#1073#1085#1091#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#8470' '#1087'/'#1087
+      Hint = #1054#1073#1085#1091#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#8470' '#1087'/'#1087
+      ImageIndex = 46
+    end
+    object MedocListAction: TMedocCorrectiveAction [2]
       Category = 'TaxLib'
       MoveParams = <>
       Caption = 'MedocListAction'
       HeaderDataSet = PrintItemsCDS
       ItemsDataSet = PrintItemsCDS
       AskFilePath = False
+    end
+    object macUpdate_NPP_Null: TMultiAction [3]
+      Category = 'NPP'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateMI_NPP_Null
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdate_NPP_Null'
+      ImageIndex = 46
     end
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
@@ -585,7 +625,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           StoredProc = spGetInfo
         end>
     end
-    object actMedocFalse: TdsdExecStoredProc [2]
+    object actMedocFalse: TdsdExecStoredProc [5]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -598,7 +638,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1052#1077#1076#1086#1082' - '#1053#1077#1090'"'
       ImageIndex = 72
     end
-    object actElectron: TdsdExecStoredProc [4]
+    object actElectron: TdsdExecStoredProc [7]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -611,7 +651,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 52
     end
-    object actChecked: TdsdExecStoredProc [5]
+    object actChecked: TdsdExecStoredProc [8]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -624,7 +664,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 58
     end
-    object actDocument: TdsdExecStoredProc [6]
+    object actDocument: TdsdExecStoredProc [9]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -640,7 +680,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1086#1076#1087#1080#1089#1072#1085' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 33
     end
-    inherited actInsertMask: TdsdInsertUpdateAction [7]
+    inherited actInsertMask: TdsdInsertUpdateAction [10]
       FormName = 'TTaxCorrectiveForm'
       FormNameParam.Value = 'TTaxCorrectiveForm'
       GuiParams = <
@@ -671,7 +711,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    object actInsertMaskMulti: TMultiAction [8]
+    object actInsertMaskMulti: TMultiAction [11]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -684,7 +724,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
       ImageIndex = 54
     end
-    inherited actUpdate: TdsdInsertUpdateAction [9]
+    inherited actUpdate: TdsdInsertUpdateAction [12]
       FormName = 'TTaxCorrectiveForm'
       FormNameParam.Name = 'TTaxCorrectiveForm'
       FormNameParam.Value = 'TTaxCorrectiveForm'
@@ -717,7 +757,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    inherited actInsert: TdsdInsertUpdateAction [10]
+    inherited actInsert: TdsdInsertUpdateAction [13]
       FormName = 'TTaxCorrectiveForm'
       FormNameParam.Name = 'TTaxCorrectiveForm'
       FormNameParam.Value = 'TTaxCorrectiveForm'
@@ -747,7 +787,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    object actMovementCheck: TdsdOpenForm [13]
+    object actMovementCheck: TdsdOpenForm [16]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1096#1080#1073#1082#1080
@@ -771,7 +811,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     inherited actMovementItemContainer: TdsdOpenForm
       Enabled = False
     end
-    object ExecuteDialog: TExecuteDialog [23]
+    object ExecuteDialog: TExecuteDialog [26]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1578,6 +1618,14 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_NPP_Null'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbReport_Check_NPP'
         end
         item
@@ -1738,6 +1786,10 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     end
     object bbReport_Check_NPP: TdxBarButton
       Action = actReport_Check_NPP
+      Category = 0
+    end
+    object bbUpdate_NPP_Null: TdxBarButton
+      Action = macUpdate_NPP_Null_All
       Category = 0
     end
   end
@@ -2277,5 +2329,22 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     PackSize = 1
     Left = 920
     Top = 297
+  end
+  object spUpdateMI_NPP_Null: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_TaxCorrective_NPP_Null'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 808
+    Top = 353
   end
 end

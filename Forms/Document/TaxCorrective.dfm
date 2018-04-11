@@ -1112,7 +1112,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       isShowModal = False
     end
     object actChangeNPP_calc: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'NPP'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spUpdateMI_NPP_calc
@@ -1215,7 +1215,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       ImageIndex = 76
     end
     object actReport_Check_NPP: TdsdOpenForm
-      Category = 'DSDLib'
+      Category = 'NPP'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#8470#1087'/'#1087'>'
       Hint = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#8470#1087'/'#1087'>'
@@ -1251,6 +1251,28 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actUpdateMI_NPP_Null: TdsdExecStoredProc
+      Category = 'NPP'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMI_NPP_Null
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMI_NPP_Null
+        end
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectChild
+        end>
+      Caption = #1054#1073#1085#1091#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#8470' '#1087'/'#1087
+      Hint = #1054#1073#1085#1091#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#8470' '#1087'/'#1087
+      ImageIndex = 46
     end
   end
   inherited MasterDS: TDataSource
@@ -1357,6 +1379,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateMI_NPP_Null'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -1452,6 +1482,10 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     end
     object bbReport_Check_NPP: TdxBarButton
       Action = actReport_Check_NPP
+      Category = 0
+    end
+    object bbUpdateMI_NPP_Null: TdxBarButton
+      Action = actUpdateMI_NPP_Null
       Category = 0
     end
   end
@@ -2845,8 +2879,8 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 208
-    Top = 377
+    Left = 536
+    Top = 393
   end
   object ChildDS: TDataSource
     DataSet = ChildCDS
@@ -2975,5 +3009,22 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     PackSize = 1
     Left = 792
     Top = 384
+  end
+  object spUpdateMI_NPP_Null: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_TaxCorrective_NPP_Null'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 696
+    Top = 345
   end
 end
