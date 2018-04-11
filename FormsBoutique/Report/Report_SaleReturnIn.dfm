@@ -2,12 +2,11 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' / '#1074#1086#1079#1074#1088#1072#1090#1072#1084'>'
   ClientHeight = 425
   ClientWidth = 1065
-  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1081
-  ExplicitHeight = 460
+  ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -652,6 +651,14 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
             Options.Editing = False
             Width = 115
           end
+          object PartnerName: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+            DataBinding.FieldName = 'PartnerName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object DescName_Sale: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1076#1086#1082'. ('#1087#1088#1086#1076#1072#1078#1072')'
             DataBinding.FieldName = 'DescName_Sale'
@@ -719,12 +726,10 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = deEnd
         Properties.Strings = (
           'Date')
       end
       item
-        Component = deStart
         Properties.Strings = (
           'Date')
       end
@@ -1053,7 +1058,7 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         item
           DataSet = MasterCDS
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'OperDate;DescName;InvNumber;LabelName;GoodsSizeName'
+          IndexFieldNames = 'PartnerName;OperDate;GoodsCode;LabelName;GoodsSizeName'
         end>
       Params = <
         item
@@ -1078,8 +1083,8 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1072#1084
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1072#1084
+      ReportName = 'PrintReport_SaleReturnIn'
+      ReportNameParam.Value = 'PrintReport_SaleReturnIn'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1280,6 +1285,14 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintCheck'
         end
         item
@@ -1333,8 +1346,8 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
     end
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 104
-    Top = 24
+    Left = 144
+    Top = 16
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -1342,8 +1355,10 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         Component = PeriodChoice
       end
       item
+        Component = deEnd
       end
       item
+        Component = deStart
       end
       item
         Component = GuidesUnit
@@ -1397,6 +1412,20 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     PackSize = 1

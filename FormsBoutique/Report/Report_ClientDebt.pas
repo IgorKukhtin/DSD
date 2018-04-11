@@ -54,6 +54,7 @@ type
     TotalReturn: TcxGridDBColumn;
     TotalPayReturn: TcxGridDBColumn;
     MovementItemId_Sale: TcxGridDBColumn;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

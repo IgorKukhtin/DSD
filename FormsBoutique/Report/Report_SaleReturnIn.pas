@@ -70,6 +70,7 @@ type
     actGet_Printer: TdsdExecStoredProc;
     PanelGoodsGroupNameFull: TPanel;
     DBLabelGoodsGroupNameFull: TcxDBLabel;
+    PartnerName: TcxGridDBColumn;
   private
     { Private declarations }
   public

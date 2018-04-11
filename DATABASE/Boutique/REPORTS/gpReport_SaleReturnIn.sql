@@ -10,18 +10,19 @@ CREATE OR REPLACE FUNCTION  gpReport_SaleReturnIn (
     IN inIsShowAll        Boolean  ,  -- Показывать все документы / только проведенные
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (MovementId            Integer
-             , StatusCode            Integer
-             , DescName              TVarChar
-             , OperDate              TDateTime
-             , InvNumber             TVarChar
-             , MovementId_Sale       Integer
-             , DescName_Sale         TVarChar
-             , OperDate_Sale         TDateTime
-             , InvNumber_Sale        TVarChar
-             , ClientName            TVarChar
-             , PartionId             Integer
+RETURNS TABLE (MovementId          Integer
+             , StatusCode          Integer
+             , DescName            TVarChar
+             , OperDate            TDateTime
+             , InvNumber           TVarChar
+             , MovementId_Sale     Integer
+             , DescName_Sale       TVarChar
+             , OperDate_Sale       TDateTime
+             , InvNumber_Sale      TVarChar
+             , ClientName          TVarChar
+             , PartionId           Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , BarCode_item        TVarChar
              , GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar
              , CompositionName     TVarChar
              , GoodsInfoName       TVarChar
@@ -31,6 +32,7 @@ RETURNS TABLE (MovementId            Integer
              , BrandName           TVarChar
              , FabrikaName         TVarChar
              , PeriodName          TVarChar
+             , PartnerName         TVarChar
              , PeriodYear          Integer
 
              , ChangePercent       TFloat
@@ -106,6 +108,7 @@ BEGIN
                      , COALESCE (MIFloat_TotalPayReturn.ValueData, 0)        AS TotalPayReturn
 
                      , COALESCE (MIBoolean_Checked.ValueData, FALSE)         AS isChecked
+                     , MIString_BarCode.ValueData                            AS BarCode_item
 
                 FROM Movement AS Movement_Sale
                      INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement_Sale.StatusId
@@ -160,6 +163,10 @@ BEGIN
                      LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
                                                    ON MIBoolean_Checked.MovementItemId = MI_Master.Id
                                                   AND MIBoolean_Checked.DescId         = zc_MIBoolean_Checked()
+
+                     LEFT JOIN MovementItemString AS MIString_BarCode
+                                                  ON MIString_BarCode.MovementItemId = MI_Master.Id
+                                                 AND MIString_BarCode.DescId         = zc_MIString_BarCode()
                 WHERE Movement_Sale.DescId = zc_Movement_Sale()
                   AND Movement_Sale.OperDate BETWEEN inStartDate AND inEndDate
                   --AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
@@ -185,6 +192,7 @@ BEGIN
                          , COALESCE (MIFloat_TotalPayOth.ValueData, 0)           AS TotalPayOth
 
                          , COALESCE (MIBoolean_Checked.ValueData, FALSE)         AS isChecked
+                         , MIString_BarCode.ValueData                            AS BarCode_item
                     FROM Movement AS Movement_ReturnIn
                          INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement_ReturnIn.StatusId
                          INNER JOIN MovementLinkObject AS MovementLinkObject_To
@@ -232,6 +240,10 @@ BEGIN
                          LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
                                                        ON MIBoolean_Checked.MovementItemId = MI_Sale.Id
                                                       AND MIBoolean_Checked.DescId         = zc_MIBoolean_Checked()
+
+                         LEFT JOIN MovementItemString AS MIString_BarCode
+                                                      ON MIString_BarCode.MovementItemId = MI_Sale.Id
+                                                     AND MIString_BarCode.DescId         = zc_MIString_BarCode() 
                     WHERE Movement_ReturnIn.DescId = zc_Movement_ReturnIn()
                       AND Movement_ReturnIn.OperDate BETWEEN inStartDate AND inEndDate
                       --AND Movement_ReturnIn.StatusId = zc_Enum_Status_Complete()
@@ -260,6 +272,7 @@ BEGIN
                           , tmp.TotalReturn
                           , tmp.TotalPayReturn
                           , tmp.isChecked
+                          , tmp.BarCode_item
                      FROM tmpSale AS tmp
                    UNION ALL
                      SELECT tmp.MovementId
@@ -285,6 +298,7 @@ BEGIN
                           , 0 :: TFloat AS TotalReturn
                           , 0 :: TFloat AS TotalPayReturn
                           , tmp.isChecked
+                          , tmp.BarCode_item
                      FROM tmpReturnIn AS tmp
                     )
     -- cуммы оплат / возврата по валютам
@@ -317,6 +331,7 @@ BEGIN
                       GROUP BY tmpData.MovementId
                      )
 
+        -- результат
         SELECT tmpData.MovementId
              , tmpData.StatusCode             AS StatusCode
              , MovementDesc.ItemName          AS DescName
@@ -332,6 +347,7 @@ BEGIN
              , Object_Goods.Id                AS GoodsId
              , Object_Goods.ObjectCode        AS GoodsCode
              , Object_Goods.ValueData         AS GoodsName
+             , tmpData.BarCode_item        :: TVarChar
              , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
              , Object_GoodsGroup.ValueData    AS GoodsGroupName
              , Object_Composition.ValueData   AS CompositionName
@@ -343,6 +359,7 @@ BEGIN
              , Object_Brand.ValueData         AS BrandName
              , Object_Fabrika.ValueData       AS FabrikaName
              , Object_Period.ValueData        AS PeriodName
+             , Object_Partner.ValueData       AS PartnerName
              , Object_PartionGoods.PeriodYear ::Integer
 
              , tmpData.ChangePercent       ::TFloat
@@ -390,6 +407,7 @@ BEGIN
             LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = Object_PartionGoods.BrandId
             LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = Object_PartionGoods.PeriodId
             LEFT JOIN Object AS Object_Fabrika          ON Object_Fabrika.Id          = Object_PartionGoods.FabrikaId
+            LEFT JOIN Object AS Object_Partner          ON Object_Partner.Id          = Object_PartionGoods.PartnerId
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpData.GoodsId
@@ -409,9 +427,10 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 10.04.18         *
  19.02.18         *
  04.07.17         *
 */
 
 -- тест
--- SELECT * FROM gpReport_SaleReturnIn (inStartDate:= '01.01.2017', inEndDate:= '13.07.2017', inUnitId:= 506, inIsShowAll:= TRUE, inSession:= zfCalc_UserAdmin()) -- WHERE ClientName like '%Шуваев%'
+-- select * from gpReport_SaleReturnIn(inStartDate := ('09.04.2018')::TDateTime , inEndDate := ('10.04.2018')::TDateTime , inUnitId := 0 , inIsShowAll := 'False' ,  inSession := '6');
