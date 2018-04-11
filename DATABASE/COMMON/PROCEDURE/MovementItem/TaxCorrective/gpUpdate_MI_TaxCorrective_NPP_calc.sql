@@ -29,10 +29,10 @@ BEGIN
      -- !!!Проверка - Можно ли МЕНЯТЬ!!!
      IF EXISTS (SELECT 1
                 FROM MovementItem
-                     INNER JOIN MovementItemFloat AS MIFloat_NPP_calc
-                                                  ON MIFloat_NPP_calc.MovementItemId = MovementItem.Id
-                                                 AND MIFloat_NPP_calc.DescId         = zc_MIFloat_NPP_calc()
-                                                 AND MIFloat_NPP_calc.ValueData < 0
+                     INNER JOIN MovementItemFloat AS MIFloat_NPPTax_calc
+                                                  ON MIFloat_NPPTax_calc.MovementItemId = MovementItem.Id
+                                                 AND MIFloat_NPPTax_calc.DescId         = zc_MIFloat_NPP_calc()
+                                                 AND MIFloat_NPPTax_calc.ValueData      > 0
                 WHERE MovementItem.MovementId = inMovementId
                   AND MovementItem.DescId     = zc_MI_Master()
                   AND MovementItem.isErased   = FALSE
@@ -61,6 +61,29 @@ BEGIN
                                                        AND MovementLinkObject_DocumentTaxKind.DescId     = zc_MovementLinkObject_DocumentTaxKind()
                                                    ));
      END IF;
+     
+     
+     -- !!!важно - ОБНУЛИЛИ!!!
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPPTax_calc(),      MovementItem.Id, 0)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountTax_calc(),   MovementItem.Id, 0)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTaxDiff_calc(), MovementItem.Id, 0)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPP_calc(),         MovementItem.Id, 0)
+     FROM MovementItem
+     WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.DescId     = zc_MI_Master()
+       -- AND MovementItem.isErased   = FALSE
+       -- AND MovementItem.Amount     <> 0
+         ;
+         
+     IF inSession = '5' AND 1=0
+     THEN
+         -- пересчитали Итоговые суммы по накладной
+         PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+         --
+         RETURN;
+
+     END IF;
+
 
 
      -- определяется <Налоговый документ> и его параметры
@@ -167,6 +190,7 @@ BEGIN
          WITH -- Все корректировки
               tmpMovement AS
                  (SELECT MovementLinkMovement_Child.MovementId
+                       , Movement.OperDate
                   FROM MovementLinkMovement AS MovementLinkMovement_Child
                        INNER JOIN Movement ON Movement.Id       = MovementLinkMovement_Child.MovementId
                                           AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -186,10 +210,11 @@ BEGIN
                  )
               -- ВСЕ корректировки (кроме текущей)
             , tmpMI_All AS
-                 (SELECT MovementItem.Id                             AS Id
-                       , MovementItem.MovementId                     AS MovementId
-                       , MovementItem.ObjectId                       AS GoodsId
-                       , MovementItem.Amount                         AS Amount
+                 (SELECT MovementItem.Id          AS Id
+                       , MovementItem.MovementId  AS MovementId
+                       , MovementItem.ObjectId    AS GoodsId
+                       , MovementItem.Amount      AS Amount
+                       , tmpMovement.OperDate     AS OperDate
                   FROM tmpMovement
                        INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
                                               AND MovementItem.DescId     = zc_MI_Master()
@@ -207,18 +232,20 @@ BEGIN
                  (SELECT MovementItemLinkObject.*
                   FROM MovementItemLinkObject
                   WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_All.Id FROM tmpMI_All)
-                    AND MovementItemLinkObject.DescId        = zc_MILinkObject_GoodsKind()
+                    AND MovementItemLinkObject.DescId         = zc_MILinkObject_GoodsKind()
                  )
               -- ВСЕ корректировки (кроме текущей) + СВ-ВА
             , tmpMI_Corr_all AS
                  (SELECT tmpMI_All.Id                                   AS Id
                        , tmpMI_All.MovementId                           AS MovementId
+                       , tmpMI_All.OperDate                             AS OperDate
                        , tmpMI_All.GoodsId                              AS GoodsId
                        , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  AS GoodsKindId
                        , tmpMI_All.Amount                               AS Amount
                        , COALESCE (MIFloat_Price.ValueData, 0)          AS Price
                        , COALESCE (MIFloat_AmountTax_calc.ValueData, 0) AS AmountTax_calc
                        , COALESCE (MIFloat_NPP_calc.ValueData, 0)       AS NPP_calc
+                       , COALESCE (MIFloat_NPPTax_calc.ValueData, 0)    AS NPPTax_calc
                          --  Сумма - для Итого
                        , CAST (tmpMI_All.Amount * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2)) + COALESCE (MIFloat_SummTaxDiff_calc.ValueData, 0) AS AmountSumm
                          --  № п/п - Что б выбрать !!!ПОСЛЕДНЮЮ!!!
@@ -226,6 +253,10 @@ BEGIN
                          --  № п/п - Что б выбрать !!!ПОСЛЕДНЮЮ!!!
                        , ROW_NUMBER() OVER (PARTITION BY tmpMI_All.GoodsId, MILinkObject_GoodsKind.ObjectId, MIFloat_Price.ValueData ORDER BY COALESCE (MIFloat_NPP_calc.ValueData, 1) DESC, tmpMI_All.Id DESC) AS Ord2
                   FROM tmpMI_All
+                       LEFT JOIN tmpMIFloat AS MIFloat_NPPTax_calc
+                                            ON MIFloat_NPPTax_calc.MovementItemId = tmpMI_All.Id
+                                           AND MIFloat_NPPTax_calc.DescId         = zc_MIFloat_NPPTax_calc()
+                                           AND MIFloat_NPPTax_calc.ValueData      > 0
                        LEFT JOIN tmpMIFloat AS MIFloat_NPP_calc
                                             ON MIFloat_NPP_calc.MovementItemId = tmpMI_All.Id
                                            AND MIFloat_NPP_calc.DescId         = zc_MIFloat_NPP_calc()
@@ -249,9 +280,23 @@ BEGIN
                  (SELECT tmpMI_Corr_all.GoodsId
                        , tmpMI_Corr_all.GoodsKindId
                        , tmpMI_Corr_all.Price
-                       , SUM (CASE WHEN tmpMI_Corr_all.NPP_calc = 0 THEN tmpMI_Corr_all.Amount ELSE 0 END) AS Amount
-                       , SUM (tmpMI_Corr_all.Amount)     AS Amount_all
-                       , SUM (tmpMI_Corr_all.AmountSumm) AS AmountSumm
+                       , SUM (CASE WHEN (tmpMI_Corr_all.NPPTax_calc = 0 AND tmpMI_Corr_all.OperDate < vbOperDate)
+                                     OR tmpMI_Corr_all.NPPTax_calc > 0
+                                   THEN tmpMI_Corr_all.Amount
+                                   ELSE 0
+                              END) AS Amount
+                       , SUM (CASE WHEN (tmpMI_Corr_all.NPPTax_calc = 0 AND tmpMI_Corr_all.OperDate < vbOperDate)
+                                     OR tmpMI_Corr_all.NPPTax_calc > 0
+                                   THEN tmpMI_Corr_all.Amount
+                                   ELSE 0
+                              END) AS Amount_all
+                       , SUM (CASE WHEN (tmpMI_Corr_all.NPPTax_calc = 0 AND tmpMI_Corr_all.OperDate < vbOperDate)
+                                     OR tmpMI_Corr_all.NPPTax_calc > 0
+                                   THEN tmpMI_Corr_all.AmountSumm
+                                   ELSE 0
+                              END) AS AmountSumm
+                       -- , SUM (tmpMI_Corr_all.Amount)     AS Amount_all
+                       -- , SUM (tmpMI_Corr_all.AmountSumm) AS AmountSumm
                   FROM tmpMI_Corr_all
                   GROUP BY tmpMI_Corr_all.GoodsId
                          , tmpMI_Corr_all.GoodsKindId
@@ -260,9 +305,23 @@ BEGIN
             , tmpMI_Corr_sum_2 AS
                  (SELECT tmpMI_Corr_all.GoodsId
                        , tmpMI_Corr_all.Price
-                       , SUM (CASE WHEN tmpMI_Corr_all.NPP_calc = 0 THEN tmpMI_Corr_all.Amount ELSE 0 END) AS Amount
-                       , SUM (tmpMI_Corr_all.Amount)     AS Amount_all
-                       , SUM (tmpMI_Corr_all.AmountSumm) AS AmountSumm
+                       , SUM (CASE WHEN (tmpMI_Corr_all.NPPTax_calc = 0 AND tmpMI_Corr_all.OperDate < vbOperDate)
+                                     OR tmpMI_Corr_all.NPPTax_calc > 0
+                                   THEN tmpMI_Corr_all.Amount
+                                   ELSE 0
+                              END) AS Amount
+                       , SUM (CASE WHEN (tmpMI_Corr_all.NPPTax_calc = 0 AND tmpMI_Corr_all.OperDate < vbOperDate)
+                                     OR tmpMI_Corr_all.NPPTax_calc > 0
+                                   THEN tmpMI_Corr_all.Amount
+                                   ELSE 0
+                              END) AS Amount_all
+                       , SUM (CASE WHEN (tmpMI_Corr_all.NPPTax_calc = 0 AND tmpMI_Corr_all.OperDate < vbOperDate)
+                                     OR tmpMI_Corr_all.NPPTax_calc > 0
+                                   THEN tmpMI_Corr_all.AmountSumm
+                                   ELSE 0
+                              END) AS AmountSumm
+                       -- , SUM (tmpMI_Corr_all.Amount)     AS Amount_all
+                       -- , SUM (tmpMI_Corr_all.AmountSumm) AS AmountSumm
                   FROM tmpMI_Corr_all
                   GROUP BY tmpMI_Corr_all.GoodsId
                          , tmpMI_Corr_all.Price
@@ -326,7 +385,8 @@ BEGIN
                                                              = COALESCE (tmpMI_tax1.Amount_Tax_find, tmpMI_tax2.Amount_Tax_find, 0)
                                                                THEN 12345678
                                                           WHEN tmpMI_Corr_curr_all.NPP = 0 THEN COALESCE (tmpMI_tax1.LineNum, tmpMI_tax2.LineNum, 0)
-                                                          ELSE tmpMI_Corr_curr_all.NPP END ASC
+                                                          ELSE tmpMI_Corr_curr_all.NPP
+                                                     END ASC
                                            ) AS Ord
                   FROM tmpMI_Corr_curr_all
                        -- номера строк в НН
