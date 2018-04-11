@@ -12,6 +12,7 @@ AS
 $BODY$
     DECLARE vbUserId Integer;
 
+    DECLARE vbMovementId_Return Integer;
     DECLARE vbMovementId_TaxCorrective Integer;
     DECLARE vbStatusId_TaxCorrective Integer;
     DECLARE vbIsLongUKTZED Boolean;
@@ -78,6 +79,16 @@ BEGIN
                                                             )
                                   THEN vbNotNDSPayer_INN ELSE '' END
                           );
+
+     -- определяется
+     vbMovementId_Return:= COALESCE ((SELECT MovementLinkMovement_Master.MovementChildId
+                                      FROM Movement
+                                           LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                                                                          ON MovementLinkMovement_Master.MovementId = Movement.Id
+                                                                         AND MovementLinkMovement_Master.DescId     = zc_MovementLinkMovement_Master()
+                                       WHERE Movement.Id     = inMovementId
+                                         AND Movement.DescId = zc_Movement_TaxCorrective()
+                                     ), inMovementId);
 
      -- определяется <Налоговый документ> и его параметры
      SELECT COALESCE (tmpMovement.MovementId_TaxCorrective, 0) AS MovementId_TaxCorrective
@@ -1272,6 +1283,7 @@ BEGIN
           (SELECT Movement_find.Id
                 , MovementLinkMovement_Master.MovementChildId AS MovementId_Return
            FROM Movement
+                -- Возврат у Корректировки
                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                                ON MovementLinkMovement_Master.MovementId = Movement.Id
                                               AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
@@ -1287,6 +1299,7 @@ BEGIN
            SELECT MovementLinkMovement_Master.MovementId AS Id
                 , Movement.Id AS MovementId_Return
            FROM Movement
+                -- Корректировки у Возврата
                 INNER JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                                 ON MovementLinkMovement_Master.MovementChildId = Movement.Id
                                                AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
@@ -1297,6 +1310,7 @@ BEGIN
           )
         , tmpMovementTaxCorrectiveCount AS
           (SELECT COALESCE (COUNT (*), 0) AS CountTaxId FROM tmpMovement)
+          -- Суммы в корректировках
         , tmpMovementTaxCorrective AS
           (SELECT tmpMovement.Id
                 , COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TotalSummVAT
@@ -1310,6 +1324,7 @@ BEGIN
                                         ON MovementFloat_TotalSummPVAT.MovementId =  tmpMovement.Id
                                        AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
           )
+          -- Суммы в Возврате
         , tmpReturnIn AS
           (SELECT MovementItem.ObjectId     			        AS GoodsId
                 , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND Movement.DescId = zc_Movement_ReturnIn()
@@ -1322,7 +1337,7 @@ BEGIN
                                  THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                                  ELSE MovementItem.Amount
                        END) AS Amount
-           FROM (SELECT MovementId_Return AS MovementId FROM tmpMovement GROUP BY MovementId_Return) AS tmpMovement
+           FROM (SELECT DISTINCT MovementId_Return AS MovementId FROM tmpMovement) AS tmpMovement
                 INNER JOIN Movement ON Movement.Id = tmpMovement.MovementId
                                    AND Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
                                    AND Movement.StatusId <> zc_Enum_Status_Erased() -- не проведенные должны учавствовать
@@ -1399,11 +1414,12 @@ BEGIN
              FROM tmpMovementTaxCorrective
             ) AS tmpMovementTaxCorrective
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
-                                    ON MovementFloat_TotalSummMVAT.MovementId = inMovementId
+                                    ON MovementFloat_TotalSummMVAT.MovementId = vbMovementId_Return -- inMovementId
                                    AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
-                                    ON MovementFloat_TotalSummPVAT.MovementId = inMovementId
+                                    ON MovementFloat_TotalSummPVAT.MovementId = vbMovementId_Return -- inMovementId
                                    AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
+            -- строки по которым разница для Кол-во
             LEFT JOIN (SELECT GoodsId
                             , Price
                             , SUM (ReturnInAmount)            AS ReturnInAmount

@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_TaxCorrective (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_TaxCorrective(
- INOUT ioId                  Integer   , -- Ключ объекта <Документ Налоговая>
+ INOUT ioId                  Integer   , -- Ключ объекта <Документ TaxCorrective>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inInvNumberPartner    TVarChar  , -- Номер налогового документа
     IN inInvNumberBranch     TVarChar  , -- Номер филиала
@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_TaxCorrective(
     IN inToId                Integer   , -- Кому (в документе)
     IN inPartnerId           Integer   , -- Контрагент
     IN inContractId          Integer   , -- Договора
-    IN inDocumentTaxKindId   Integer   , -- Тип формирования налогового документа
+    IN inDocumentTaxKindId   Integer   , -- Тип формирования документа TaxCorrective
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer AS
