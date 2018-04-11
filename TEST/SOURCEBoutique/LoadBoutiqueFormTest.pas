@@ -1055,6 +1055,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInventoryForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryItemEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInventoryItemEditForm');
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryPartionForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TInventoryPartionForm');
 end;
