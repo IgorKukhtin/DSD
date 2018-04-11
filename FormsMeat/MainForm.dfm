@@ -115,6 +115,21 @@ inherited MainForm: TMainForm
           Name = 'MovementId'
           Value = '0'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = '0'
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end

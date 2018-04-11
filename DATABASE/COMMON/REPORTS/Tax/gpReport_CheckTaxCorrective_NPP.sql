@@ -13,7 +13,13 @@ CREATE OR REPLACE FUNCTION gpReport_CheckTaxCorrective_NPP (
     IN inIsShowAll           Boolean   , -- показать по умолч только  ошибки - №п/п или кол-во
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (ItemName TVarChar, InvNumber TVarChar, InvNumberPartner TVarChar, InvNumberPartner_Tax TVarChar
+RETURNS TABLE (ItemName             TVarChar
+             , TaxKindName          TVarChar
+             , BranchName           TVarChar
+             , InvNumber            Integer
+             , InvNumberPartner     Integer
+             , InvNumberPartner_Tax Integer
+             
              , OperDate TDateTime
              , OperDate_Tax TDateTime
              , JuridicalName TVarChar
@@ -383,7 +389,10 @@ BEGIN
     , tmpMLO AS (SELECT MovementLinkObject.*
                  FROM MovementLinkObject
                  WHERE MovementLinkObject.MovementId IN (SELECT tmpData.MovementId FROM tmpData)
-                   AND MovementLinkObject.DescId IN (zc_MovementLinkObject_To(), zc_MovementLinkObject_From())
+                   AND MovementLinkObject.DescId IN (zc_MovementLinkObject_To()
+                                                   , zc_MovementLinkObject_From()
+                                                   , zc_MovementLinkObject_DocumentTaxKind()
+                                                   , zc_MovementLinkObject_Branch())
                  )
       
     , tmpMS_InvNumberPartner AS (SELECT MovementString.*
@@ -399,10 +408,12 @@ BEGIN
                           )
 
     --- результат 
-    SELECT Movement.ItemName
-         , Movement.InvNumber
-         , MovementString_InvNumberPartner.ValueData     AS InvNumberPartner
-         , MovementString_InvNumberPartner_Tax.ValueData AS InvNumberPartner_Tax
+    SELECT Movement.ItemName                             AS ItemName
+         , Object_TaxKind.ValueData         		 AS TaxKindName
+         , Object_Branch.ValueData                       AS BranchName
+         , Movement.InvNumber                            :: integer AS InvNumber
+         , MovementString_InvNumberPartner.ValueData     :: integer AS InvNumberPartner
+         , MovementString_InvNumberPartner_Tax.ValueData :: integer AS InvNumberPartner_Tax
          , Movement.OperDate                             AS OperDate
          , Movement_Tax.OperDate                         AS OperDate_Tax
          , Object_To.ValueData         AS JuridicalName
@@ -433,6 +444,16 @@ BEGIN
                          AND MovementLinkObject_To.DescId = CASE WHEN Movement.DescId = zc_Movement_Tax() THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From() END
          LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
          
+         LEFT JOIN tmpMLO AS MovementLinkObject_DocumentTaxKind
+                          ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
+                         AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+         LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
+
+         LEFT JOIN tmpMLO AS MovementLinkObject_Branch
+                          ON MovementLinkObject_Branch.MovementId = Movement.Id
+                         AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()
+         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = MovementLinkObject_Branch.ObjectId
+
          LEFT JOIN tmpMS_InvNumberPartner AS MovementString_InvNumberPartner
                                           ON MovementString_InvNumberPartner.MovementId = Movement.Id
                                          AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
