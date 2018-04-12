@@ -171,7 +171,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1074' '#1082#1086#1083#1086#1085#1082#1077' 9/1'#1089#1090#1088#1086#1082#1072
             Options.Editing = False
-            Width = 80
+            Width = 70
           end
           object GoodsGroupNameFull: TcxGridDBColumn [9]
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
@@ -444,7 +444,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 58
+            Width = 55
           end
           object cxGoodsCodeUKTZED: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1086' '#1059#1050#1058' '#1047#1045#1044

@@ -261,6 +261,7 @@ BEGIN
              , COALESCE (MIFloat_NPP_calc.ValueData, 0)         AS NPP_calc
              , COALESCE (MIFloat_AmountTax_calc.ValueData, 0)   AS AmountTax_calc
              , COALESCE (MIFloat_SummTaxDiff_calc.ValueData, 0) AS SummTaxDiff_calc
+             , COALESCE (MIFloat_PriceTax_calc.ValueData, 0)    AS PriceTax_calc
              
         FROM tmpMI_All
             LEFT JOIN tmpMIFloat AS MIFloat_NPP
@@ -286,6 +287,9 @@ BEGIN
             LEFT JOIN tmpMIFloat AS MIFloat_SummTaxDiff_calc
                                  ON MIFloat_SummTaxDiff_calc.MovementItemId = tmpMI_All.Id
                                 AND MIFloat_SummTaxDiff_calc.DescId         = zc_MIFloat_SummTaxDiff_calc()
+            LEFT JOIN tmpMIFloat AS MIFloat_PriceTax_calc
+                                 ON MIFloat_PriceTax_calc.MovementItemId = tmpMI_All.Id
+                                AND MIFloat_PriceTax_calc.DescId         = zc_MIFloat_PriceTax_calc()
 
             LEFT JOIN tmpGoodsKind AS MILinkObject_GoodsKind
                                    ON MILinkObject_GoodsKind.MovementItemId = tmpMI_All.Id
@@ -895,10 +899,11 @@ BEGIN
            , CASE WHEN tmpMovement_Data.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_Corrective(),zc_Enum_DocumentTaxKind_Prepay())
                   THEN 'X' ELSE '' END    AS TaxKind --признак  сводной корректировки
 
-           , tmpMI.NPPTax_calc      :: Integer AS NPPTax_calc
-           , tmpMI.NPP_calc         :: Integer AS NPP_calc
-           , tmpMI.AmountTax_calc   :: TFloat  AS AmountTax_calc
-           , tmpMI.SummTaxDiff_calc :: TFloat  AS SummTaxDiff_calc
+           , tmpMI.NPPTax_calc           :: Integer AS NPPTax_calc
+           , tmpMI.NPP_calc              :: Integer AS NPP_calc
+           , tmpMI.AmountTax_calc        :: TFloat  AS AmountTax_calc
+           , tmpMI.SummTaxDiff_calc      :: TFloat  AS SummTaxDiff_calc
+           , tmpMI.PriceTax_calc         :: TFloat  AS PriceTax_calc
 
        FROM tmpMI
 
@@ -1086,18 +1091,34 @@ BEGIN
            , tmpData_all.BarCodeGLN_Juridical
 
              -- !!! ПЕРВАЯ Строка !!!
-           , (CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.AmountTax_calc ELSE tmpData_all.Amount END) :: TFloat AS Amount
+           , CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                       THEN 0 -- !!!Корр. цены!!!
+                  ELSE CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.AmountTax_calc ELSE tmpData_all.Amount END
+             END :: TFloat AS Amount
+
            , tmpData_all.Price
 
            , tmpData_all.Amount_for_PriceCor
-           , tmpData_all.Price_for_PriceCor
-
+             -- !!! ПЕРВАЯ Строка - Корр. цены!!!
+           , CASE WHEN vbIsNPP_calc = FALSE
+                        THEN tmpData_all.Price_for_PriceCor
+                  WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                        THEN tmpData_all.PriceTax_calc
+                  ELSE 0
+             END :: TFloat AS Price_for_PriceCor
+           
              -- !!! ПЕРВАЯ Строка !!!
-           , (CASE WHEN tmpData_all.CountForPrice_orig > 0
-                   THEN ((COALESCE (CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.AmountTax_calc ELSE tmpData_all.Amount_orig END, 0)) * tmpData_all.Price_orig / tmpData_all.CountForPrice_orig) :: NUMERIC (16, 2)
+           , (CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                    AND vbIsNPP_calc = TRUE
+                        -- !!!Корр. цены!!!
+                        THEN (tmpData_all.Amount_for_PriceCor * tmpData_all.PriceTax_calc) :: NUMERIC (16, 2)
+
+                   WHEN tmpData_all.CountForPrice_orig > 0
+                        THEN ((COALESCE (CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.AmountTax_calc ELSE tmpData_all.Amount_orig END, 0)) * tmpData_all.Price_orig / tmpData_all.CountForPrice_orig) :: NUMERIC (16, 2)
                    ELSE ((COALESCE (CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.AmountTax_calc ELSE tmpData_all.Amount_orig END, 0)) * tmpData_all.Price_orig) :: NUMERIC (16, 2)
               END
-            + tmpData_all.SummTaxDiff_calc) :: TFloat AS AmountSumm
+            + tmpData_all.SummTaxDiff_calc
+             ) :: TFloat AS AmountSumm
 
            , tmpData_all.InvNumberBranch
            , tmpData_all.InvNumberBranch_Child
@@ -1232,15 +1253,27 @@ BEGIN
            , tmpData_all.BarCodeGLN_Juridical
 
              -- !!! ВТОРАЯ Строка !!!
-           , (-1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount)) :: TFloat AS Amount
+           , CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                       THEN 0 -- !!!Корр. цены!!!
+                  ELSE -1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount)
+             END :: TFloat AS Amount
+
            , tmpData_all.Price
 
            , tmpData_all.Amount_for_PriceCor
-           , tmpData_all.Price_for_PriceCor
+             -- !!! ВТОРАЯ Строка - Корр. цены!!!
+           , CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                        THEN -1 * (tmpData_all.PriceTax_calc - tmpData_all.Price_for_PriceCor)
+                   ELSE 0
+             END :: TFloat AS Price_for_PriceCor
 
              -- !!! ВТОРАЯ Строка !!!
-           , CASE WHEN tmpData_all.CountForPrice_orig > 0
-                  THEN ((COALESCE (-1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount), 0)) * tmpData_all.Price_orig / tmpData_all.CountForPrice_orig) :: NUMERIC (16, 2)
+           , CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                       -- !!!Корр. цены!!!
+                       THEN (tmpData_all.Amount_for_PriceCor * -1 * (tmpData_all.PriceTax_calc - tmpData_all.Price_for_PriceCor)) :: NUMERIC (16, 2)
+
+                  WHEN tmpData_all.CountForPrice_orig > 0
+                       THEN ((COALESCE (-1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount), 0)) * tmpData_all.Price_orig / tmpData_all.CountForPrice_orig) :: NUMERIC (16, 2)
                   ELSE ((COALESCE (-1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount), 0)) * tmpData_all.Price_orig) :: NUMERIC (16, 2)
              END :: TFloat AS AmountSumm
 
@@ -1265,9 +1298,11 @@ BEGIN
 
        FROM tmpData_all
        WHERE vbIsNPP_calc = TRUE
-             -- !!!важно - показали ТОЛЬКО если есть еще что возвращать!!!
-         AND tmpData_all.AmountTax_calc <> tmpData_all.Amount
-
+              -- !!!важно - показали ТОЛЬКО если есть еще что возвращать!!!
+         AND (tmpData_all.AmountTax_calc <> tmpData_all.Amount
+              -- или !!!Корр. цены!!!
+           OR tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+             )
        ORDER BY 1
               , 2
               , 3

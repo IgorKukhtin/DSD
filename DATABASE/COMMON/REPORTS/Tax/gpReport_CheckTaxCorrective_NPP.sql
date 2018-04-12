@@ -218,10 +218,16 @@ BEGIN
                                    , MILinkObject_GoodsKind.ObjectId        AS GoodsKindId
                                    , tmpMovement.Amount                     AS Amount
                                    , MIFloat_Price.ValueData                AS Price
-                                   , CASE WHEN tmpMovement.DocumentTaxKindId = zc_Enum_DocumentTaxKind_CorrectivePrice() AND COALESCE (MIFloat_PriceTax_calc.ValueData, 0) <> 0
-                                          THEN MIFloat_PriceTax_calc.ValueData
+
+                                     -- "заменяем" цену если Корр. цены 
+                                   , CASE WHEN MIFloat_PriceTax_calc.ValueData <> 0
+                                           AND tmpMovement.DocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                               , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                                )
+                                               THEN MIFloat_PriceTax_calc.ValueData
                                           ELSE MIFloat_Price.ValueData
-                                     END                 AS Price_Original
+                                     END AS Price_Original
+
                                    , MIFloat_CountForPrice.ValueData        AS CountForPrice
                                    , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                                                    THEN CAST ( (COALESCE (tmpMovement.Amount, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
@@ -351,7 +357,8 @@ BEGIN
                               , tmp.LineNumTax
                               , tmp.AmountTax_calc
                               , tmp.PriceTax_calc
-                              , ROW_NUMBER() OVER (PARTITION BY tmp.MovementId_Tax, tmp.GoodsId, tmp.GoodsKindId, tmp.Price
+                                -- с GoodsKindId
+                              , ROW_NUMBER() OVER (PARTITION BY tmp.MovementId_Tax, tmp.GoodsId, tmp.GoodsKindId, tmp.Price_Original
                                                    ORDER BY tmp.MovementId_Tax
                                                           , CASE WHEN tmp.MovementDescId = zc_Movement_Tax() THEN 1 ELSE 2 END
                                                           , CASE WHEN tmp.isRegistered = TRUE THEN tmp.DateRegistered ELSE zc_DateEnd() END
@@ -359,6 +366,15 @@ BEGIN
                                                           , tmp.MovementId
                                                           , tmp.LineNum, tmp.LineNumTaxCorr_calc
                                                   )  :: Integer AS Ord_calc
+                                -- без GoodsKindId
+                              , ROW_NUMBER() OVER (PARTITION BY tmp.MovementId_Tax, tmp.GoodsId, tmp.Price_Original
+                                                   ORDER BY tmp.MovementId_Tax
+                                                          , CASE WHEN tmp.MovementDescId = zc_Movement_Tax() THEN 1 ELSE 2 END
+                                                          , CASE WHEN tmp.isRegistered = TRUE THEN tmp.DateRegistered ELSE zc_DateEnd() END
+                                                          , tmp.OperDate
+                                                          , tmp.MovementId
+                                                          , tmp.LineNum, tmp.LineNumTaxCorr_calc
+                                                  )  :: Integer AS Ord_calc_next
                          FROM tmpData_All AS tmp
                         )
 
@@ -386,14 +402,35 @@ BEGIN
                             , tmp1.LineNumTax
                             , tmp1.AmountTax_calc
                             , tmp1.PriceTax_calc
-                            , SUM (COALESCE (tmp2.Amount, 0)) AS AmountTax
+                            , SUM (COALESCE (tmp2.Amount, tmpMI_Tax1.Amount, tmpMI_Tax2.Amount, 0)) AS AmountTax
                        FROM tmpDataAll_ord AS tmp1
-                           LEFT JOIN tmpDataAll_ord AS tmp2 
+                           LEFT JOIN tmpDataAll_ord AS tmp2
                                                     ON tmp2.MovementId_Tax = tmp1.MovementId_Tax
                                                    AND tmp2.GoodsId        = tmp1.GoodsId
                                                    AND (tmp2.GoodsKindId   = tmp1.GoodsKindId OR COALESCE (tmp1.GoodsKindId,0) = 0)
                                                    AND tmp2.Price_Original = tmp1.Price_Original
                                                    AND tmp2.Ord_calc       < tmp1.Ord_calc
+                                                   -- если НЕ Корр. цены 
+                                                   AND tmp1.DocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                                    , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                                     )
+                           -- поиск в Налоговой - Только для Корр. цены
+                           LEFT JOIN tmpMI_Tax AS tmpMI_Tax1 ON tmpMI_Tax1.MovementId     = tmp1.MovementId_Tax
+                                                            AND tmpMI_Tax1.GoodsId        = tmp1.GoodsId
+                                                            AND tmpMI_Tax1.GoodsKindId    = tmp1.GoodsKindId
+                                                            AND tmpMI_Tax1.Price          = tmp1.Price_Original
+                                                            AND tmp1.DocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                                         , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                                          )
+                           -- поиск в Налоговой БЕЗ GoodsKindId - Только для Корр. цены
+                           LEFT JOIN tmpMI_Tax AS tmpMI_Tax2 ON tmpMI_Tax2.MovementId     = tmp1.MovementId_Tax
+                                                            AND tmpMI_Tax2.GoodsId        = tmp1.GoodsId
+                                                            AND tmpMI_Tax2.Price          = tmp1.Price_Original
+                                                            AND tmp1.DocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                                         , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                                          )
+                                                            -- и если НЕ нашли
+                                                            AND tmpMI_Tax1.GoodsId        IS NULL
                        GROUP BY tmp1.MovementDescId
                               , tmp1.OperDate
                               , tmp1.MovementId
@@ -451,8 +488,12 @@ BEGIN
                                                ) :: Integer AS LineNum_calc
                      FROM tmpData_Summ AS tmp
                      WHERE tmp.isNPP_calc = TRUE
-                       AND (COALESCE (tmp.AmountTax, 0) + COALESCE (tmp.Amount, 0)) > 0
-                     )
+                       AND ((COALESCE (tmp.AmountTax, 0) + COALESCE (tmp.Amount, 0)) > 0
+                         OR tmp.DocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                    , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                     )
+                           )
+                    )
 
     , tmpData AS (SELECT tmp.MovementId
                        , tmp.MovementId_Tax
@@ -534,10 +575,10 @@ BEGIN
          , Object_Goods.ValueData      AS GoodsName
          , Object_GoodsKind.ValueData  AS GoodsKindName
 
-         , tmpData.LineNum             :: Integer                                         -- сквозная нумерация строк налоговой  и  корректировок (начиная с 31,03,18)
-         , tmpData.LineNumTax          :: Integer                                         -- № п/п из  налоговой который корректируется
-         , COALESCE (tmpData.LineNumTaxCorr_calc, 0) :: Integer AS LineNumTaxCorr_calc    -- № п/п строки которая корректируется
-         , COALESCE (tmpData.LineNum_calc, 0)        :: Integer AS LineNum_calc           -- расчетный № п/п
+         , tmpData.LineNum             :: Integer                                         -- № п/п в Корректировке - сквозная нумерация
+         , tmpData.LineNumTax          :: Integer                                         -- № п/п Налоговой
+         , COALESCE (tmpData.LineNumTaxCorr_calc, 0) :: Integer AS LineNumTaxCorr_calc    -- № п/п который корректируется
+         , COALESCE (tmpData.LineNum_calc, 0)        :: Integer AS LineNum_calc           -- № п/п в Корректировке расчет - сквозная нумерация
          , tmpData.Amount         :: TFloat
          , tmpData.Price          :: TFloat
          , tmpData.CountForPrice  :: TFloat
@@ -546,7 +587,7 @@ BEGIN
          , tmpData.SummTaxDiff_calc     :: TFloat
          , tmpData.AmountTax_calc :: TFloat
          , tmpData.PriceTax_calc  :: TFloat
-         , CASE WHEN tmpData.isNPP_calc = FALSE THEN 0 ELSE tmpData.AmountTax END  :: TFloat  AS AmountTax
+         , CASE WHEN tmpData.isNPP_calc = FALSE THEN 0 ELSE tmpData.AmountTax END :: TFloat  AS AmountTax
          , tmpData.isAmountTax
          , tmpData.isLineNum
 

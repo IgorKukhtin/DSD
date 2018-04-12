@@ -35,12 +35,11 @@ BEGIN
      END IF;
 
      --
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPPTax_calc(), MovementItem.Id, 0)
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPP_calc(), MovementItem.Id, 0)
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountTax_calc(), MovementItem.Id, 0)
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPPTax_calc(),      MovementItem.Id, 0)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPP_calc(),         MovementItem.Id, 0)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountTax_calc(),   MovementItem.Id, 0)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTaxDiff_calc(), MovementItem.Id, 0)
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceTax_calc(), MovementItem.Id, 0)
-           , lpInsert_MovementItemProtocol (MovementItem.Id, vbUserId, FALSE) -- протокол
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceTax_calc(),    MovementItem.Id, 0)
      FROM MovementItem
           LEFT JOIN MovementItemFloat AS MIFloat_NPP_calc
                                       ON MIFloat_NPP_calc.MovementItemId = MovementItem.Id
@@ -56,12 +55,26 @@ BEGIN
                                      AND MIFloat_SummTaxDiff_calc.DescId = zc_MIFloat_SummTaxDiff_calc()
      WHERE MovementItem.MovementId = inMovementId
        AND MovementItem.DescId     = zc_MI_Master()
-       AND MovementItem.isErased   = FALSE;
-   
+       -- AND MovementItem.isErased   = FALSE
+         ;
  
-     -- сохранили свойства шапки
+
+     -- сохранили протокол
+     PERFORM lpInsert_MovementItemProtocol (MovementItem.Id, vbUserId, FALSE)
+     FROM MovementItem
+     WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.DescId     = zc_MI_Master()
+       -- AND MovementItem.isErased   = FALSE
+         ;
+
+     -- сохранили протокол
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_NPP_calc(), inMovementId, FALSE)
            , lpInsertUpdate_MovementDate    (zc_MovementDate_NPP_calc(),    inMovementId, CURRENT_TIMESTAMP);
+
+
+     -- пересчитали Итоговые суммы по накладной - обязательно ПОСЛЕ сохранили протокол
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+
 
 END;
 $BODY$

@@ -36,15 +36,16 @@ BEGIN
           LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
                                          ON MovementLinkMovement_Child.MovementId = Movement.Id
                                         AND MovementLinkMovement_Child.DescId     = zc_MovementLinkMovement_Child()
-          LEFT JOIN MovementLinkObject AS MLO_DocumentTaxKind 
+          LEFT JOIN MovementLinkObject AS MLO_DocumentTaxKind
                                        ON MLO_DocumentTaxKind.MovementId = Movement.Id
-                                      AND MLO_DocumentTaxKind.DescId     = zc_MovementLinkObject_DocumentTaxKind())
+                                      AND MLO_DocumentTaxKind.DescId     = zc_MovementLinkObject_DocumentTaxKind()
      WHERE Movement.Id = inMovementId
      ;
 
 
      -- !!!Проверка - Можно ли МЕНЯТЬ!!!
-     IF EXISTS (SELECT 1
+     IF -- если был сформирован № п/п
+        EXISTS (SELECT 1
                 FROM MovementItem
                      LEFT JOIN MovementItemFloat AS MIFloat_NPPTax_calc
                                                  ON MIFloat_NPPTax_calc.MovementItemId = MovementItem.Id
@@ -56,10 +57,11 @@ BEGIN
                   AND MovementItem.DescId     = zc_MI_Master()
                   AND MovementItem.isErased   = FALSE
                   AND MovementItem.Amount     <> 0
-                  AND (MIFloat_NPPTax_calc.ValueData<> 0
-                    OR MIFloat_NPP_calc.ValueData   <> 0
+                  AND (MIFloat_NPPTax_calc.ValueData <> 0
+                    OR MIFloat_NPP_calc.ValueData    <> 0
                       )
                )
+         -- Найдены В Этот день другие Корректировки
      AND EXISTS (SELECT 1
                 FROM Movement
                      INNER JOIN MovementLinkMovement AS MovementLinkMovement_Child
@@ -81,29 +83,31 @@ BEGIN
                                   , zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR()
                                   , zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR()
                                   , zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR()
-                                  -- , zc_Enum_DocumentTaxKind_CorrectivePrice()
-                                  -- , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                  , zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                  , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
                                    )
      THEN
-         IF inSession <> '5' THEN
+         -- IF inSession <> '5' THEN
          RAISE EXCEPTION 'Ошибка.Для документа <%> выбранная функция не предусмотрена.'
                        , lfGet_Object_ValueData_sh (vbDocumentTaxKindId);
-         END IF;
+         -- END IF;
      END IF;
-     
-     
+
+
      -- !!!важно - ОБНУЛИЛИ!!!
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPPTax_calc(),      MovementItem.Id, 0)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountTax_calc(),   MovementItem.Id, 0)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTaxDiff_calc(), MovementItem.Id, 0)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPP_calc(),         MovementItem.Id, 0)
+             -- для корр.цены
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceTax_calc(),    MovementItem.Id, 0)
      FROM MovementItem
      WHERE MovementItem.MovementId = inMovementId
        AND MovementItem.DescId     = zc_MI_Master()
        -- AND MovementItem.isErased   = FALSE
        -- AND MovementItem.Amount     <> 0
          ;
-         
+
      IF inSession = '5' AND 1=0
      THEN
          -- пересчитали Итоговые суммы по накладной
@@ -115,7 +119,7 @@ BEGIN
 
 
      -- таблица - Список
-     CREATE TEMP TABLE _tmpRes (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, NPPTax_calc Integer, NPP_calc Integer, AmountTax_calc TFloat, SummTaxDiff_calc TFloat, Amount TFloat, OperPrice TFloat, CountForPrice TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpRes (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, NPPTax_calc Integer, NPP_calc Integer, AmountTax_calc TFloat, SummTaxDiff_calc TFloat, Amount TFloat, OperPrice TFloat, CountForPrice TFloat, PriceTax_calc TFloat) ON COMMIT DROP;
 
 
      -- !!!Временно - если уже был расчет - Тогда только Переносим строчки!!!
@@ -157,6 +161,9 @@ BEGIN
                       AND MovementItem.Amount     <> 0
                       AND MIFloat_NPP_calc.ValueData > 0
                    )
+        AND vbDocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                      , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                       )
      THEN
          -- сохранили - !!!БЕЗ расчета №п/п!!!
          INSERT INTO _tmpRes (MovementItemId, GoodsId, GoodsKindId, NPPTax_calc, NPP_calc, AmountTax_calc, SummTaxDiff_calc, Amount, OperPrice, CountForPrice)
@@ -206,13 +213,15 @@ BEGIN
               tmpMovement AS
                  (SELECT MovementLinkMovement_Child.MovementId
                        , Movement.OperDate
-                       , COALESCE (MovementBoolean.ValueData, FALSE) AS isRegistered
+                       , CASE WHEN MovementString_InvNumberRegistered.ValueData <> '' THEN TRUE ELSE FALSE END AS isRegistered
+                       , MovementLinkObject_DocumentTaxKind.ObjectId AS DocumentTaxKindId
                   FROM MovementLinkMovement AS MovementLinkMovement_Child
                        INNER JOIN Movement ON Movement.Id       = MovementLinkMovement_Child.MovementId
                                           AND Movement.StatusId = zc_Enum_Status_Complete()
                                           AND Movement.OperDate <= vbOperDate
-                       LEFT JOIN MovementBoolean ON MovementBoolean.MovementId = MovementLinkMovement_Child.MovementId
-                                                AND MovementBoolean.DescId     = zc_MovementBoolean_Registered()
+                       LEFT JOIN MovementString AS MovementString_InvNumberRegistered
+                                                ON MovementString_InvNumberRegistered.MovementId = MovementLinkMovement_Child.MovementId
+                                               AND MovementString_InvNumberRegistered.DescId     = zc_MovementString_InvNumberRegistered()
                        INNER JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                                      ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
                                                     AND MovementLinkObject_DocumentTaxKind.DescId     = zc_MovementLinkObject_DocumentTaxKind()
@@ -227,17 +236,23 @@ BEGIN
                   WHERE MovementLinkMovement_Child.MovementChildId = vbMovementId_tax
                     AND MovementLinkMovement_Child.DescId          = zc_MovementLinkMovement_Child()
                     AND MovementLinkMovement_Child.MovementId      <> inMovementId
-                 UNION ALL
+                    -- пока считаем что для Корр.Цены нет Корр.Кол-ва
+                    -- AND vbDocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                    --                               , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                    --                                )
+                 UNION
                   -- Зарегистрированные
                   SELECT MovementLinkMovement_Child.MovementId
                        , Movement.OperDate
-                       , MovementBoolean.ValueData AS isRegistered
+                       , TRUE                                        AS isRegistered
+                       , MovementLinkObject_DocumentTaxKind.ObjectId AS DocumentTaxKindId
                   FROM MovementLinkMovement AS MovementLinkMovement_Child
                        INNER JOIN Movement ON Movement.Id       = MovementLinkMovement_Child.MovementId
                                           AND Movement.StatusId = zc_Enum_Status_Complete()
-                       INNER JOIN MovementBoolean ON MovementBoolean.MovementId = MovementLinkMovement_Child.MovementId
-                                                 AND MovementBoolean.DescId     = zc_MovementBoolean_Registered()
-                                                 AND MovementBoolean.ValueData  = TRUE
+                       INNER JOIN MovementString AS MovementString_InvNumberRegistered
+                                                ON MovementString_InvNumberRegistered.MovementId = MovementLinkMovement_Child.MovementId
+                                               AND MovementString_InvNumberRegistered.DescId     = zc_MovementString_InvNumberRegistered()
+                                               AND MovementString_InvNumberRegistered.ValueData  <> ''
                        INNER JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                                      ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
                                                     AND MovementLinkObject_DocumentTaxKind.DescId     = zc_MovementLinkObject_DocumentTaxKind()
@@ -250,15 +265,20 @@ BEGIN
                   WHERE MovementLinkMovement_Child.MovementChildId = vbMovementId_tax
                     AND MovementLinkMovement_Child.DescId          = zc_MovementLinkMovement_Child()
                     AND MovementLinkMovement_Child.MovementId      <> inMovementId
+                    -- пока считаем что для Корр.Цены нет Корр.Кол-ва
+                    -- AND vbDocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                    --                               , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                    --                                )
                  )
               -- ВСЕ корректировки (кроме текущей)
             , tmpMI_All AS
-                 (SELECT MovementItem.Id          AS Id
-                       , MovementItem.MovementId  AS MovementId
-                       , MovementItem.ObjectId    AS GoodsId
-                       , MovementItem.Amount      AS Amount
-                       , tmpMovement.OperDate     AS OperDate
-                       , tmpMovement.isRegistered AS isRegistered
+                 (SELECT MovementItem.Id               AS Id
+                       , MovementItem.MovementId       AS MovementId
+                       , MovementItem.ObjectId         AS GoodsId
+                       , MovementItem.Amount           AS Amount
+                       , tmpMovement.OperDate          AS OperDate
+                       , tmpMovement.isRegistered      AS isRegistered
+                       , tmpMovement.DocumentTaxKindId AS DocumentTaxKindId
                   FROM tmpMovement
                        INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
                                               AND MovementItem.DescId     = zc_MI_Master()
@@ -284,6 +304,7 @@ BEGIN
                        , tmpMI_All.MovementId                           AS MovementId
                        , tmpMI_All.OperDate                             AS OperDate
                        , tmpMI_All.isRegistered                         AS isRegistered
+                       , tmpMI_All.DocumentTaxKindId                    AS DocumentTaxKindId
                        , tmpMI_All.GoodsId                              AS GoodsId
                        , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  AS GoodsKindId
                        , tmpMI_All.Amount                               AS Amount
@@ -427,22 +448,38 @@ BEGIN
                        , tmpMI_Corr_curr_all.GoodsKindId
                        , tmpMI_Corr_curr_all.Amount
                        , tmpMI_Corr_curr_all.Price
+                       , COALESCE (tmpMI_tax1.Price, tmpMI_tax2.Price, 0) AS PriceTax_calc
                        , tmpMI_Corr_curr_all.CountForPrice
-                         -- Кол-во из налог. за минусом "предыдущих" корр. (т.е. без "схемы")
+
+                         -- Кол-во из налог. за минусом "предыдущих" корр.
                        , COALESCE (tmpMI_tax1.Amount_Tax_find, tmpMI_tax2.Amount_Tax_find) - COALESCE (tmpMI_Corr_sum_1.Amount, tmpMI_Corr_sum_2.Amount, 0) AS AmountTax_calc
+
                          -- Сумма DIFF - из налог. за минусом ...
                        , CAST (COALESCE (tmpMI_tax1.Amount_Tax_find, tmpMI_tax2.Amount_Tax_find) * COALESCE (tmpMI_tax1.Price, tmpMI_tax2.Price) AS NUMERIC (16, 2))
-                               -- минус "предыдущие" корр. (ВСЕ)
-                             - COALESCE (tmpMI_Corr_sum_1.AmountSumm, tmpMI_Corr_sum_2.AmountSumm, 0)
-                         AS SummTaxDiff_calc
+                         -- минус "предыдущие" корр. (ВСЕ)
+                       - COALESCE (tmpMI_Corr_sum_1.AmountSumm, tmpMI_Corr_sum_2.AmountSumm, 0) AS SummTaxDiff_calc
+
                          -- № п/п из налог. ИЛИ текущий
                        , CASE WHEN tmpMI_Corr_curr_all.NPP = 0 THEN COALESCE (tmpMI_tax1.LineNum, tmpMI_tax2.LineNum) ELSE tmpMI_Corr_curr_all.NPP END :: Integer AS NPP
+
                          -- № п/п внутренний для ЗАПРОСА с 1... и до... - Что б увеличить счетчик на + 1
-                       , ROW_NUMBER() OVER (ORDER BY CASE WHEN COALESCE (tmpMI_Corr_sum_1.Amount_all, tmpMI_Corr_sum_1.Amount_all, 0) + tmpMI_Corr_curr_all.Amount
+                       , ROW_NUMBER() OVER (ORDER BY CASE -- для Корр. цені
+                                                          WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                                     , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                                      )
+                                                               THEN COALESCE (tmpMI_tax1.LineNum, tmpMI_tax2.LineNum, 0)
+                                                               
+                                                          -- если корректируют все "оставшееся" кол-во
+                                                          WHEN COALESCE (tmpMI_Corr_sum_1.Amount_all, tmpMI_Corr_sum_1.Amount_all, 0) + tmpMI_Corr_curr_all.Amount
                                                              = COALESCE (tmpMI_tax1.Amount_Tax_find, tmpMI_tax2.Amount_Tax_find, 0)
                                                                THEN 12345678
+
+                                                          -- если (как правило) вручную № п/п НЕ вводили
                                                           WHEN tmpMI_Corr_curr_all.NPP = 0 THEN COALESCE (tmpMI_tax1.LineNum, tmpMI_tax2.LineNum, 0)
+
+                                                          -- если (вдруг) вводили вручную № п/п
                                                           ELSE tmpMI_Corr_curr_all.NPP
+
                                                      END ASC
                                            ) AS Ord
                   FROM tmpMI_Corr_curr_all
@@ -450,44 +487,80 @@ BEGIN
                        LEFT JOIN tmpMI_tax AS tmpMI_tax1 ON tmpMI_tax1.Kind        = 1
                                                         AND tmpMI_tax1.GoodsId     = tmpMI_Corr_curr_all.GoodsId
                                                         AND tmpMI_tax1.GoodsKindId = tmpMI_Corr_curr_all.GoodsKindId
-                                                        AND tmpMI_tax1.Price       = tmpMI_Corr_curr_all.Price
+                                                        AND tmpMI_tax1.Price       = CASE WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                                                                     , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                                                                      )
+                                                                                               THEN tmpMI_tax1.Price
+                                                                                          ELSE tmpMI_Corr_curr_all.Price
+                                                                                     END
 
                        LEFT JOIN tmpMI_tax AS tmpMI_tax2 ON tmpMI_tax2.Kind        = 2
                                                         AND tmpMI_tax2.GoodsId     = tmpMI_Corr_curr_all.GoodsId
-                                                        AND tmpMI_tax2.Price       = tmpMI_Corr_curr_all.Price
+                                                        AND tmpMI_tax2.Price       = CASE WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                                                                     , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                                                                      )
+                                                                                               THEN tmpMI_tax2.Price
+                                                                                          ELSE tmpMI_Corr_curr_all.Price
+                                                                                     END
                                                         AND tmpMI_tax1.GoodsId     IS NULL
                        -- итоги в корр
                        LEFT JOIN tmpMI_Corr_sum_1 ON tmpMI_Corr_sum_1.GoodsId     = tmpMI_Corr_curr_all.GoodsId
                                                  AND tmpMI_Corr_sum_1.GoodsKindId = tmpMI_Corr_curr_all.GoodsKindId
                                                  AND tmpMI_Corr_sum_1.Price       = tmpMI_Corr_curr_all.Price
+                                                 AND vbDocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                               , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                                )
                        LEFT JOIN tmpMI_Corr_sum_2 ON tmpMI_Corr_sum_2.GoodsId     = tmpMI_Corr_curr_all.GoodsId
                                                  AND tmpMI_Corr_sum_2.Price       = tmpMI_Corr_curr_all.Price
                                                  -- !!!обязательно!!! - если и в налоговой НЕТ GoodsKindId
                                                  AND tmpMI_tax1.GoodsId           IS NULL
+                                                 AND vbDocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                               , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                                )
                  )
               -- Результат
             , tmpMI_Data AS
                  (SELECT tmpMI_Corr_curr.Id AS MovementItemId
                        , tmpMI_Corr_curr.GoodsId
                        , tmpMI_Corr_curr.GoodsKindId
+
                          -- № п/п в колонке 1/1строка - для колонки 7 с "минусом"
-                       , COALESCE (tmpMI_Corr_all1.NPP_calc  -- № п/п в последней корр
-                                 , tmpMI_Corr_all2.NPP_calc  -- № п/п в последней корр - БЕЗ GoodsKindId
-                                 , tmpMI_Corr_curr.NPP       -- № п/п в налоговой
-                                  ) :: Integer AS NPPTax_calc
+                       , CASE WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                         , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                          )
+                                   THEN tmpMI_Corr_curr.NPP       -- № п/п в налоговой
+                              ELSE COALESCE (tmpMI_Corr_all1.NPP_calc  -- № п/п в последней корр
+                                           , tmpMI_Corr_all2.NPP_calc  -- № п/п в последней корр - БЕЗ GoodsKindId
+                                           , tmpMI_Corr_curr.NPP       -- № п/п в налоговой
+                                            )
+                         END :: Integer AS NPPTax_calc
+
                          -- Кол-во для НН в колонке 7/1строка
-                       , COALESCE (tmpMI_Corr_all1.AmountTax_calc - tmpMI_Corr_all1.Amount  -- кол-во в последней корр МИНУС какая там корр.
-                                 , tmpMI_Corr_all2.AmountTax_calc - tmpMI_Corr_all2.Amount  -- кол-во в последней корр МИНУС какая там корр. - БЕЗ GoodsKindId
-                                 , tmpMI_Corr_curr.AmountTax_calc                           -- кол-во в налоговой
-                                  ) :: TFloat AS AmountTax_calc
+                       , CASE WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                         , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                          )
+                                   THEN tmpMI_Corr_curr.AmountTax_calc -- кол-во в налоговой
+
+                              ELSE COALESCE (tmpMI_Corr_all1.AmountTax_calc - tmpMI_Corr_all1.Amount  -- кол-во в последней корр МИНУС какая там корр.
+                                           , tmpMI_Corr_all2.AmountTax_calc - tmpMI_Corr_all2.Amount  -- кол-во в последней корр МИНУС какая там корр. - БЕЗ GoodsKindId
+                                           , tmpMI_Corr_curr.AmountTax_calc                           -- кол-во в налоговой
+                                            )
+                         END :: TFloat AS AmountTax_calc
+
                          -- Сумма DIFF для НН в колонке 13/1строка - из налог. за минусом ...
-                       , tmpMI_Corr_curr.SummTaxDiff_calc
-                       - CAST (COALESCE (tmpMI_Corr_all1.AmountTax_calc - tmpMI_Corr_all1.Amount  -- кол-во в последней корр МИНУС какая там корр.
-                                       , tmpMI_Corr_all2.AmountTax_calc - tmpMI_Corr_all2.Amount  -- кол-во в последней корр МИНУС какая там корр. - БЕЗ GoodsKindId
-                                       , tmpMI_Corr_curr.AmountTax_calc                           -- кол-во в налоговой
-                                        )
-                             * tmpMI_Corr_curr.Price AS NUMERIC (16, 2))
-                         AS SummTaxDiff_calc
+                       , CASE WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                         , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                          )
+                                   THEN 0
+
+                              ELSE tmpMI_Corr_curr.SummTaxDiff_calc
+                                 - CAST (COALESCE (tmpMI_Corr_all1.AmountTax_calc - tmpMI_Corr_all1.Amount  -- кол-во в последней корр МИНУС какая там корр.
+                                                 , tmpMI_Corr_all2.AmountTax_calc - tmpMI_Corr_all2.Amount  -- кол-во в последней корр МИНУС какая там корр. - БЕЗ GoodsKindId
+                                                 , tmpMI_Corr_curr.AmountTax_calc                           -- кол-во в налоговой
+                                                  )
+                                       * tmpMI_Corr_curr.Price AS NUMERIC (16, 2))
+
+                         END AS SummTaxDiff_calc
 
                          -- № п/п в ТЕКУЩЕЙ корректировка - Что б увеличить счетчик на + 1
                        , tmpMI_Corr_curr.Ord
@@ -496,7 +569,8 @@ BEGIN
                          -- Цена в ТЕКУЩЕЙ корректировка
                        , tmpMI_Corr_curr.Price
                        , tmpMI_Corr_curr.CountForPrice
-
+                         -- Цена в налоговой - для Корр цены
+                       , tmpMI_Corr_curr.PriceTax_calc
                   FROM tmpMI_Corr_curr
                        LEFT JOIN tmpMI_Corr_all AS tmpMI_Corr_all1 ON tmpMI_Corr_all1.GoodsId     = tmpMI_Corr_curr.GoodsId
                                                                   AND tmpMI_Corr_all1.GoodsKindId = tmpMI_Corr_curr.GoodsKindId
@@ -509,12 +583,14 @@ BEGIN
                                                                   AND tmpMI_Corr_all2.NPP_calc    > 0
                  )
          -- сохранили
-         INSERT INTO _tmpRes (MovementItemId, GoodsId, GoodsKindId, NPPTax_calc, NPP_calc, AmountTax_calc, SummTaxDiff_calc, Amount, OperPrice, CountForPrice)
+         INSERT INTO _tmpRes (MovementItemId, GoodsId, GoodsKindId, NPPTax_calc, NPP_calc, AmountTax_calc, SummTaxDiff_calc, Amount, OperPrice, CountForPrice, PriceTax_calc)
            SELECT tmpMI_Data.MovementItemId
                 , tmpMI_Data.GoodsId
                 , tmpMI_Data.GoodsKindId
+
                   -- № п/п в колонке 1/1строка - для колонки 7 с "минусом"
                 , tmpMI_Data.NPPTax_calc
+
                   -- № п/п в колонке 1/2строка - для колонки 7 с "плюсом" - формируется в Корректировке по правилу: № п/п + 1
                 , (COALESCE ((SELECT MAX (tmp.NPP)
                               FROM (SELECT MAX (tmpMI_Data.NPPTax_calc)  AS NPP FROM tmpMI_Data
@@ -526,23 +602,29 @@ BEGIN
                              ), 0)
                  + tmpMI_Data.Ord -- № п/п - Что б увеличить счетчик на + 1
                   ) :: Integer AS NPP_calc
+
                   -- Кол-во для НН в колонке 7/1строка
                 , tmpMI_Data.AmountTax_calc
+
                   -- Сумма DIFF для НН в колонке 13/1строка - !!!всегда!!!
                   -- , CASE WHEN tmpMI_Data.AmountTax_calc = tmpMI_Data.Amount THEN tmpMI_Data.SummTaxDiff_calc ELSE 0 END AS SummTaxDiff_calc
                 , tmpMI_Data.SummTaxDiff_calc
+
                   -- Кол-во в ТЕКУЩЕЙ корректировка
                 , tmpMI_Data.Amount
                   -- Цена в ТЕКУЩЕЙ корректировка
                 , tmpMI_Data.Price AS OperPrice
                 , tmpMI_Data.CountForPrice
+                
+                  -- Цена в налоговой - для Корр цены
+                , tmpMI_Data.PriceTax_calc
 
            FROM tmpMI_Data;
 
      END IF; -- сохранили - !!!с расчетом №п/п!!!
 
 
-     -- сохранили ВСЕ что расчитали для № п/п
+     -- РЕЗУЛЬТАТ - сохранили ВСЕ что расчитали для № п/п
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPPTax_calc(),      _tmpRes.MovementItemId, _tmpRes.NPPTax_calc)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountTax_calc(),   _tmpRes.MovementItemId, _tmpRes.AmountTax_calc)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTaxDiff_calc(), _tmpRes.MovementItemId, _tmpRes.SummTaxDiff_calc)
@@ -550,18 +632,36 @@ BEGIN
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPP_calc()
                                              , _tmpRes.MovementItemId
                                              , CASE -- WHEN inSession = '5' THEN 0
+                                                    WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                               , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                                )
+                                                         THEN _tmpRes.NPP_calc
+
                                                     WHEN _tmpRes.AmountTax_calc > _tmpRes.Amount THEN _tmpRes.NPP_calc
+                                                    ELSE 0
+                                               END
+                                              )
+             -- !!!для корр.цены!!!
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceTax_calc()
+                                             , _tmpRes.MovementItemId
+                                             , CASE WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                               , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                                )
+                                                    THEN _tmpRes.PriceTax_calc
                                                     ELSE 0
                                                END
                                               )
      FROM _tmpRes;
 
 
-     -- схема - переносим ЧАСТЬ корректировки
+     -- схема - переносим ЧАСТЬ корректировки - строчки с другой причиной корректировки
      IF   EXISTS (SELECT 1 FROM _tmpRes WHERE _tmpRes.AmountTax_calc =  _tmpRes.Amount AND _tmpRes.Amount <> 0)
       AND EXISTS (SELECT 1 FROM _tmpRes WHERE _tmpRes.AmountTax_calc <> _tmpRes.Amount AND _tmpRes.Amount <> 0)
+      AND vbDocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                    , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                     )
      THEN
-         -- создаем новую <Корректировки>
+         -- создаем новую <Корректировку>
          vbMovementId_Corrective:= lpInsertUpdate_Movement_TaxCorrective (ioId               :=0
                                                        , inInvNumber        := NEXTVAL ('movement_taxcorrective_seq') :: TVarChar
                                                        , inInvNumberPartner := lpInsertFind_Object_InvNumberTax (zc_Movement_TaxCorrective(), vbOperDate, '') :: TVarChar
@@ -661,11 +761,8 @@ BEGIN
            AND _tmpRes.Amount          <> 0
           ;
 
-     END IF;
+     END IF; -- схема - переносим ЧАСТЬ корректировки - строчки с другой причиной корректировки
 
-
-     -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (_tmpRes.MovementItemId, vbUserId, FALSE)
@@ -676,8 +773,11 @@ BEGIN
            , lpInsertUpdate_MovementDate    (zc_MovementDate_NPP_calc(),    inMovementId, CURRENT_TIMESTAMP)
             ;
 
+     -- пересчитали Итоговые суммы по накладной - обязательно ПОСЛЕ сохранили протокол
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
-     IF inSession <> '5' OR 1=1
+
+     IF inSession <> '5' OR 1=0
      THEN
          -- Результат
          RETURN;
@@ -725,4 +825,4 @@ $BODY$
        )
 */
 -- тест
--- SELECT * FROM gpUpdate_MI_TaxCorrective_NPP_calc (inMovementId:= 8842841, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpUpdate_MI_TaxCorrective_NPP_calc (inMovementId:= 8808499, inSession:= zfCalc_UserAdmin())

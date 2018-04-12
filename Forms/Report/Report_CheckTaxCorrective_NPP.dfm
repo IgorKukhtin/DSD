@@ -1,30 +1,31 @@
 inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#8470' '#1087'/'#1087' '#1074' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1077'>'
   ClientHeight = 359
-  ClientWidth = 823
+  ClientWidth = 1234
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 839
+  ExplicitLeft = -444
+  ExplicitWidth = 1250
   ExplicitHeight = 394
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 115
-    Width = 823
+    Width = 1234
     Height = 244
     TabOrder = 3
     ExplicitTop = 115
     ExplicitWidth = 823
     ExplicitHeight = 244
     ClientRectBottom = 244
-    ClientRectRight = 823
+    ClientRectRight = 1234
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 823
       ExplicitHeight = 244
       inherited cxGrid: TcxGrid
-        Width = 823
+        Width = 1234
         Height = 244
         ExplicitWidth = 823
         ExplicitHeight = 244
@@ -194,7 +195,7 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
             DataBinding.FieldName = 'isLineNum'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#8470' '#1087'/'#1087' '#1074' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1077' '#1086#1090' '#1088#1072#1089#1095#1077#1090#1085#1086#1075#1086
+            HeaderHint = #1054#1064#1048#1041#1050#1040': '#1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#8470' '#1087'/'#1087' '#1074' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1077' '#1086#1090' '#1088#1072#1089#1095#1077#1090#1085#1086#1075#1086
             Options.Editing = False
             Width = 43
           end
@@ -206,7 +207,7 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #8470' '#1087'/'#1087' '#1074' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1077' '#1088#1072#1089#1095#1077#1090' - '#1089#1082#1074#1086#1079#1085#1072#1103' '#1085#1091#1084#1077#1088#1072#1094#1080#1103
-            Width = 70
+            Width = 75
           end
           object LineNum: TcxGridDBColumn
             Caption = #8470' '#1087'/'#1087' '#1050#1086#1088#1088'.'
@@ -229,7 +230,7 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #8470' '#1087'/'#1087' '#1082#1086#1090#1086#1088#1099#1081' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1091#1077#1090#1089#1103
             Options.Editing = False
-            Width = 75
+            Width = 70
           end
           object LineNumTax: TcxGridDBColumn
             Caption = #8470' '#1087'/'#1087' ('#1053#1053')'
@@ -247,13 +248,13 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
             DataBinding.FieldName = 'isAmountTax'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1076#1083#1103' '#1082#1086#1083'-'#1074#1072' '#1074' '#1082#1086#1083#1086#1085#1082#1077' 7/1'#1089#1090#1088#1086#1082#1072'  '#1086#1090' '#1088#1072#1089#1095#1077#1090#1085#1086#1075#1086
+            HeaderHint = #1054#1064#1048#1041#1050#1040': '#1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1076#1083#1103' '#1082#1086#1083'-'#1074#1072' '#1074' '#1082#1086#1083#1086#1085#1082#1077' 7/1'#1089#1090#1088#1086#1082#1072' '#1086#1090' '#1088#1072#1089#1095#1077#1090#1085#1086#1075#1086
             Options.Editing = False
             Width = 50
           end
-          object AmountTax_calc: TcxGridDBColumn
+          object AmountTax: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1074' 7/1 ('#1088#1072#1089#1095#1077#1090')'
-            DataBinding.FieldName = 'AmountTax_calc'
+            DataBinding.FieldName = 'AmountTax'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -261,11 +262,11 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1082#1086#1083#1086#1085#1082#1077' 7/1'#1089#1090#1088#1086#1082#1072' ('#1088#1072#1089#1095#1077#1090')'
             Options.Editing = False
-            Width = 75
+            Width = 70
           end
-          object AmountTax: TcxGridDBColumn
+          object AmountTax_calc: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1074' 7/1'
-            DataBinding.FieldName = 'AmountTax'
+            DataBinding.FieldName = 'AmountTax_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -273,7 +274,7 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1082#1086#1083#1086#1085#1082#1077' 7/1'#1089#1090#1088#1086#1082#1072
             Options.Editing = False
-            Width = 70
+            Width = 55
           end
           object SummTaxDiff_calc: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1050#1054#1056#1056'. '#1076#1083#1103' '#1053#1053'-'#1050#1086#1088#1088'.'
@@ -284,7 +285,7 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1050#1054#1056#1056#1045#1050#1058#1048#1056#1054#1042#1050#1048' "'#1086#1082#1088#1091#1075#1083#1077#1085#1080#1081'" '#1076#1083#1103' '#1053#1053'-'#1050#1086#1088#1088'.'
-            Width = 100
+            Width = 75
           end
           object PriceTax_calc: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1076#1083#1103' '#1050#1086#1088#1088'.'#1094#1077#1085#1099
@@ -296,7 +297,7 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1074' '#1082#1086#1083#1086#1085#1082#1077' 9/1'#1089#1090#1088#1086#1082#1072
             Options.Editing = False
-            Width = 80
+            Width = 70
           end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074'.'
@@ -377,7 +378,7 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
     end
   end
   inherited Panel: TPanel
-    Width = 823
+    Width = 1234
     Height = 89
     ExplicitWidth = 823
     ExplicitHeight = 89
