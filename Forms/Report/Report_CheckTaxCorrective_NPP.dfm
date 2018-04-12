@@ -4,6 +4,7 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
   ClientWidth = 823
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 839
   ExplicitHeight = 397
@@ -86,12 +87,27 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object BranchName: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083
+            DataBinding.FieldName = 'BranchName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object ItemName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1076#1086#1082'.'
             DataBinding.FieldName = 'ItemName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 72
+          end
+          object TaxKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
+            DataBinding.FieldName = 'TaxKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 67
           end
           object Invnumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
@@ -454,8 +470,8 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_CheckTaxDialogForm'
-      FormNameParam.Value = 'TReport_CheckTaxDialogForm'
+      FormName = 'TReport_CheckTC_NPPDialogForm'
+      FormNameParam.Value = 'TReport_CheckTC_NPPDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -476,17 +492,17 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'DocumentTaxKindId'
+          Name = 'DocumentTaxId'
           Value = ''
-          Component = GuidesGoods
+          Component = GuidesDocumentTax
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'DocumentTaxKindName'
+          Name = 'DocumentTaxName'
           Value = ''
-          Component = GuidesGoods
+          Component = GuidesDocumentTax
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -622,8 +638,8 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
     Left = 368
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 80
-    Top = 144
+    Left = 72
+    Top = 96
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -636,8 +652,8 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
       item
         Component = GuidesDocumentTax
       end>
-    Left = 184
-    Top = 136
+    Left = 144
+    Top = 56
   end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
@@ -693,6 +709,15 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
         Value = ''
         Component = GuidesDocumentTax
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber'
+        Value = Null
+        Component = GuidesDocumentTax
+        ComponentItem = 'TextValue'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

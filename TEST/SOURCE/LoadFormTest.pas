@@ -1546,6 +1546,8 @@ procedure TLoadFormTest.LoadReportFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckTaxCorrective_NPPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckTaxCorrective_NPPForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckTC_NPPDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckTC_NPPDialogForm');
   exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Remains_byOrderExternalForm'));

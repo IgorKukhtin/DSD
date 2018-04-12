@@ -60,8 +60,23 @@ BEGIN
                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
 
-       WHERE Movement.Id = inMovementId
-         AND Movement.DescId = zc_Movement_Tax();
+       WHERE Movement.Id = inMovementId 
+         AND Movement.DescId = zc_Movement_Tax()
+         AND COALESCE (inMovementId, 0) <> 0
+      UNION
+       SELECT 0	              AS Id
+           , '' ::TVarChar    AS InvNumber
+           , CAST (DATE_TRUNC ('DAY', CURRENT_TIMESTAMP) AS TDateTime) AS OperDate
+           , CAST (DATE_TRUNC ('DAY', CURRENT_TIMESTAMP) AS TDateTime) AS DateRegistered
+           , '' ::TVarChar    AS InvNumberPartner
+           , 0                AS FromId
+           , '' ::TVarChar    AS FromName--
+           , 0                AS ToId
+           , '' ::TVarChar    AS ToName
+           , 0                AS PartnerId
+           , '' ::TVarChar    AS PartnerName 
+       WHERE COALESCE (inMovementId, 0) = 0
+      ;
    
 
 END;
@@ -71,6 +86,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 11.04.18         *
  02.03.18         *
 */
 
