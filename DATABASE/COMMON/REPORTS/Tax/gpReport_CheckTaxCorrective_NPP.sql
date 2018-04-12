@@ -409,10 +409,10 @@ BEGIN
                            , tmp.AmountTax
                            , ROW_NUMBER() OVER (PARTITION BY tmp.MovementId_Tax
                                                 ORDER BY CASE WHEN tmp.MovementDescId = zc_Movement_Tax() THEN 1 ELSE 2 END
-                                                       , tmp.OperDate
-                                                       , tmp.MovementId
-                                                       , tmp.LineNum
-                                                       , tmp.LineNumTaxCorr_calc
+                                                     , tmp.LineNum  
+                                                     , tmp.OperDate
+                                                     , tmp.MovementId
+                                                     , tmp.LineNumTaxCorr_calc
                                                ) :: Integer AS LineNum_calc
                      FROM tmpData_Summ AS tmp
                      WHERE tmp.isNPP_calc = TRUE
@@ -455,7 +455,6 @@ BEGIN
                  WHERE MovementLinkObject.MovementId IN (SELECT tmpData.MovementId FROM tmpData)
                    AND MovementLinkObject.DescId IN (zc_MovementLinkObject_To()
                                                    , zc_MovementLinkObject_From()
-                                                   --, zc_MovementLinkObject_DocumentTaxKind()
                                                    , zc_MovementLinkObject_Branch())
                  )
       
@@ -476,7 +475,7 @@ BEGIN
     , tmpMovementBoolean AS (SELECT MovementBoolean.*
                              FROM MovementBoolean
                              WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpData.MovementId FROM tmpData)
-                               AND MovementBoolean.DescId IN (zc_MovementBoolean_Registered(), zc_MovementBoolean_Electron())
+                               AND MovementBoolean.DescId = zc_MovementBoolean_Electron()
                             )
     , tmpMovementString AS (SELECT MovementString.*
                              FROM MovementString
@@ -552,9 +551,6 @@ BEGIN
          LEFT JOIN tmpMovementString AS MovementString_InvNumberRegistered
                                      ON MovementString_InvNumberRegistered.MovementId = tmpData.MovementId
                                     AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
-         -- LEFT JOIN tmpMovementBoolean AS MovementBoolean_Registered 
-         --                              ON MovementBoolean_Registered.MovementId = tmpData.MovementId
-         --                             AND MovementBoolean_Registered.DescId = zc_MovementBoolean_Registered()
          LEFT JOIN tmpMovementBoolean AS MovementBoolean_Electron 
                                       ON MovementBoolean_Electron.MovementId = tmpData.MovementId
                                      AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
