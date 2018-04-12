@@ -472,26 +472,30 @@ BEGIN
                           )
 
 
-   -- zc_MovementBoolean_Registered + zc_MovementDate_DateRegistered + zc_MovementBoolean_Electron
+    -- zc_MovementBoolean_Registered + zc_MovementDate_DateRegistered + zc_MovementBoolean_Electron
     , tmpMovementBoolean AS (SELECT MovementBoolean.*
                              FROM MovementBoolean
                              WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpData.MovementId FROM tmpData)
-                                AND MovementBoolean.DescId IN (zc_MovementBoolean_Registered(), zc_MovementBoolean_Electron())
-                             )
+                               AND MovementBoolean.DescId IN (zc_MovementBoolean_Registered(), zc_MovementBoolean_Electron())
+                            )
+    , tmpMovementString AS (SELECT MovementString.*
+                             FROM MovementString
+                             WHERE MovementString.MovementId IN (SELECT DISTINCT tmpData.MovementId FROM tmpData)
+                               AND MovementString.DescId = zc_MovementString_InvNumberRegistered()
+                           )
     , tmpMovementDate AS (SELECT MovementDate.*
                           FROM MovementDate
                           WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpData.MovementId FROM tmpData)
                              AND MovementDate.DescId = zc_MovementDate_DateRegistered()
-                          )
-
+                         )
 
     --- результат 
     SELECT Movement.ItemName                             AS ItemName
          , Object_TaxKind.ValueData         		 AS TaxKindName
          , Object_Branch.ValueData                       AS BranchName
-         , Movement.InvNumber                            :: integer AS InvNumber
-         , MovementString_InvNumberPartner.ValueData     :: integer AS InvNumberPartner
-         , MovementString_InvNumberPartner_Tax.ValueData :: integer AS InvNumberPartner_Tax
+         , Movement.InvNumber                            :: Integer AS InvNumber
+         , MovementString_InvNumberPartner.ValueData     :: Integer AS InvNumberPartner
+         , MovementString_InvNumberPartner_Tax.ValueData :: Integer AS InvNumberPartner_Tax
          , Movement.OperDate                             AS OperDate
          , Movement_Tax.OperDate                         AS OperDate_Tax
          , Object_To.ValueData         AS JuridicalName
@@ -499,8 +503,8 @@ BEGIN
          , Object_Goods.ValueData      AS GoodsName
          , Object_GoodsKind.ValueData  AS GoodsKindName
 
-         , tmpData.LineNum             :: integer                                         -- сквозная нумерация строк налоговой  и  корректировок (начиная с 31,03,18)
-         , tmpData.LineNumTax          :: integer                                         -- № п/п из  налоговой который корректируется
+         , tmpData.LineNum             :: Integer                                         -- сквозная нумерация строк налоговой  и  корректировок (начиная с 31,03,18)
+         , tmpData.LineNumTax          :: Integer                                         -- № п/п из  налоговой который корректируется
          , COALESCE (tmpData.LineNumTaxCorr_calc, 0) :: Integer AS LineNumTaxCorr_calc    -- № п/п строки которая корректируется
          , COALESCE (tmpData.LineNum_calc, 0)        :: Integer AS LineNum_calc           -- расчетный № п/п
          , tmpData.Amount         :: TFloat
@@ -514,9 +518,10 @@ BEGIN
          , CASE WHEN tmpData.isNPP_calc = FALSE THEN 0 ELSE tmpData.AmountTax END  :: TFloat  AS AmountTax
          , tmpData.isAmountTax
          , tmpData.isLineNum
-         , COALESCE (MovementBoolean_Registered.ValueData, FALSE)  :: Boolean AS isRegistered
+         -- , COALESCE (MovementBoolean_Registered.ValueData, FALSE)  :: Boolean AS isRegistered
+         , CASE WHEN MovementString_InvNumberRegistered.ValueData <> '' THEN TRUE ELSE FALSE END  :: Boolean AS isRegistered
          , COALESCE (MovementBoolean_Electron.ValueData, FALSE)    :: Boolean AS isElectron
-         , MovementDate_DateRegistered.ValueData                 :: TDateTime AS DateRegistered
+         , CASE WHEN MovementString_InvNumberRegistered.ValueData <> '' THEN MovementDate_DateRegistered.ValueData ELSE NULL END :: TDateTime AS DateRegistered
     FROM tmpData
          LEFT JOIN tmpMovement_All AS Movement ON Movement.Id = tmpData.MovementId
          LEFT JOIN tmpMovement_All AS Movement_Tax ON Movement_Tax.Id = tmpData.MovementId_Tax
@@ -544,9 +549,12 @@ BEGIN
          LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmpData.GoodsId
          LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpData.GoodsKindId
 
-         LEFT JOIN tmpMovementBoolean AS MovementBoolean_Registered 
-                                      ON MovementBoolean_Registered.MovementId = tmpData.MovementId
-                                     AND MovementBoolean_Registered.DescId = zc_MovementBoolean_Registered() 
+         LEFT JOIN tmpMovementString AS MovementString_InvNumberRegistered
+                                     ON MovementString_InvNumberRegistered.MovementId = tmpData.MovementId
+                                    AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
+         -- LEFT JOIN tmpMovementBoolean AS MovementBoolean_Registered 
+         --                              ON MovementBoolean_Registered.MovementId = tmpData.MovementId
+         --                             AND MovementBoolean_Registered.DescId = zc_MovementBoolean_Registered()
          LEFT JOIN tmpMovementBoolean AS MovementBoolean_Electron 
                                       ON MovementBoolean_Electron.MovementId = tmpData.MovementId
                                      AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()

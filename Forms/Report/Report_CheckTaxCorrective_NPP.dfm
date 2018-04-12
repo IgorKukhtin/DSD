@@ -1,5 +1,5 @@
 inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
-  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#8470' '#1087'/'#1087' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1086#1082'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#8470' '#1087'/'#1087' '#1074' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1077'>'
   ClientHeight = 359
   ClientWidth = 823
   AddOnFormData.RefreshAction = actRefreshStart
@@ -7,7 +7,7 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 839
-  ExplicitHeight = 397
+  ExplicitHeight = 394
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -92,67 +92,144 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
             DataBinding.FieldName = 'BranchName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 70
           end
           object ItemName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1076#1086#1082'.'
             DataBinding.FieldName = 'ItemName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 72
+            Width = 70
           end
           object TaxKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
             DataBinding.FieldName = 'TaxKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1080#1087' '#1085#1072#1083#1086#1075#1086#1074#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             Options.Editing = False
             Width = 67
           end
-          object Invnumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'.'
-            DataBinding.FieldName = 'Invnumber'
+          object IsRegistered: TcxGridDBColumn
+            Caption = #1056#1077#1075#1080#1089#1090#1088'.'
+            DataBinding.FieldName = 'isRegistered'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1077#1075#1080#1089#1090#1088#1072#1094#1080#1103
+            Options.Editing = False
+            Width = 45
+          end
+          object IsElectron: TcxGridDBColumn
+            Caption = #1069#1083#1077#1082#1090#1088'.'
+            DataBinding.FieldName = 'isElectron'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 30
+          end
+          object DateRegistered: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1088#1077#1075#1080#1089#1090#1088'.'
+            DataBinding.FieldName = 'DateRegistered'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
+            Options.Editing = False
+            Width = 70
           end
           object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082'. '#1053#1072#1083#1086#1075#1086#1074#1072#1103'/'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072
             Width = 68
+          end
+          object InvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'InvNumber'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1053#1072#1083#1086#1075#1086#1074#1072#1103'/'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072
+            Width = 55
           end
           object InvNumberPartner: TcxGridDBColumn
             Caption = #8470' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumberPartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1053#1072#1083#1086#1075#1086#1074#1072#1103'/'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072
             Width = 72
-          end
-          object InvNumberPartner_Tax: TcxGridDBColumn
-            Caption = #8470' '#1085#1072#1083#1086#1075'.'
-            DataBinding.FieldName = 'InvNumberPartner_Tax'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
           end
           object OperDate_Tax: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1085#1072#1083#1086#1075'.'
             DataBinding.FieldName = 'OperDate_Tax'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1053#1072#1083#1086#1075#1086#1074#1072#1103
             Options.Editing = False
             Width = 70
+          end
+          object InvNumberPartner_Tax: TcxGridDBColumn
+            Caption = #8470' '#1085#1072#1083#1086#1075'.'
+            DataBinding.FieldName = 'InvNumberPartner_Tax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1053#1072#1083#1086#1075#1086#1074#1072#1103
+            Options.Editing = False
+            Width = 55
           end
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'. '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 109
+            Width = 100
+          end
+          object isLineNum: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'. '#8470' '#1087'/'#1087
+            DataBinding.FieldName = 'isLineNum'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#8470' '#1087'/'#1087' '#1086#1090' '#1088#1072#1089#1095#1077#1090#1085#1086#1075#1086
+            Options.Editing = False
+            Width = 43
+          end
+          object LineNum_calc: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087' ('#1088#1072#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'LineNum_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.;-0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1087'/'#1087' '#1088#1072#1089#1095#1077#1090' - '#1089#1082#1074#1086#1079#1085#1072#1103' '#1085#1091#1084#1077#1088#1072#1094#1080#1103
+            Width = 70
+          end
+          object LineNum: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'LineNum'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = '0.;-0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1087'/'#1087' - '#1089#1082#1074#1086#1079#1085#1072#1103' '#1085#1091#1084#1077#1088#1072#1094#1080#1103
+            Options.Editing = False
+            Width = 55
+          end
+          object LineNumTaxCorr_calc: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087' '#1053#1053'-'#1050#1086#1088#1088'.'
+            DataBinding.FieldName = 'LineNumTaxCorr_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.;-0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1087'/'#1087' '#1082#1086#1090#1086#1088#1099#1081' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1091#1077#1090#1089#1103
+            Options.Editing = False
+            Width = 75
           end
           object LineNumTax: TcxGridDBColumn
             Caption = #8470' '#1087'/'#1087' ('#1053#1053')'
@@ -165,41 +242,52 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
             HeaderHint = #8470' '#1087'/'#1087' '#1053#1072#1083#1086#1075#1086#1074#1086#1081
             Width = 55
           end
-          object LineNum: TcxGridDBColumn
-            Caption = #8470' '#1087'/'#1087
-            DataBinding.FieldName = 'LineNum'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = '0.;-0.; ;'
+          object isAmountTax: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'. '#1082#1086#1083'-'#1074#1086' '#1074' 7/1'
+            DataBinding.FieldName = 'isAmountTax'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #8470' '#1087'/'#1087' '#1089#1082#1074#1086#1079#1085#1072#1103' '#1085#1091#1084#1077#1088#1072#1094#1080#1103
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1076#1083#1103' '#1082#1086#1083'-'#1074#1072' '#1074' '#1082#1086#1083#1086#1085#1082#1077' 7/1'#1089#1090#1088#1086#1082#1072'  '#1086#1090' '#1088#1072#1089#1095#1077#1090#1085#1086#1075#1086
             Options.Editing = False
-            Width = 55
+            Width = 50
           end
-          object LineNumTaxCorr_calc: TcxGridDBColumn
-            Caption = #8470' '#1087'/'#1087' '#1053#1053'-'#1050#1086#1088#1088'. ('#1085#1072#1083#1086#1075'.)'
-            DataBinding.FieldName = 'LineNumTaxCorr_calc'
+          object AmountTax_calc: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074' 7/1 ('#1088#1072#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'AmountTax_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = '0.;-0.; ;'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #8470' '#1087'/'#1087' '#1082#1086#1090#1086#1088#1099#1081' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1091#1077#1090#1089#1103
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1082#1086#1083#1086#1085#1082#1077' 7/1'#1089#1090#1088#1086#1082#1072' ('#1088#1072#1089#1095#1077#1090')'
             Options.Editing = False
             Width = 75
           end
-          object LineNum_calc: TcxGridDBColumn
-            Caption = #8470' '#1087'/'#1087' ('#1088#1072#1089#1095#1077#1090')'
-            DataBinding.FieldName = 'LineNum_calc'
+          object AmountTax: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074' 7/1'
+            DataBinding.FieldName = 'AmountTax'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = '0.;-0.; ;'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #8470' '#1087'/'#1087' '#1088#1072#1089#1095#1077#1090#1085#1086#1077
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1082#1086#1083#1086#1085#1082#1077' 7/1'#1089#1090#1088#1086#1082#1072
+            Options.Editing = False
             Width = 70
           end
+          object SummTaxDiff_calc: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1050#1054#1056#1056'. '#1076#1083#1103' '#1053#1053'-'#1050#1086#1088#1088'.'
+            DataBinding.FieldName = 'SummTaxDiff_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1050#1054#1056#1056#1045#1050#1058#1048#1056#1054#1042#1050#1048' "'#1086#1082#1088#1091#1075#1083#1077#1085#1080#1081'" '#1076#1083#1103' '#1053#1053'-'#1050#1086#1088#1088'.'
+            Width = 100
+          end
           object PriceTax_calc: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1076#1083#1103' '#1053#1053'-'#1050#1086#1088#1088'.'#1094#1077#1085#1099' ('#1085#1072#1083#1086#1075'.)'
+            Caption = #1062#1077#1085#1072' '#1076#1083#1103' '#1050#1086#1088#1088'.'#1094#1077#1085#1099
             DataBinding.FieldName = 'PriceTax_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -208,7 +296,7 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1074' '#1082#1086#1083#1086#1085#1082#1077' 9/1'#1089#1090#1088#1086#1082#1072
             Options.Editing = False
-            Width = 93
+            Width = 80
           end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074'.'
@@ -234,18 +322,10 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
-            Width = 42
-          end
-          object Price: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072
-            DataBinding.FieldName = 'Price'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Width = 45
+            Width = 55
           end
           object Amount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' ('#1085#1072#1083#1086#1075'.)'
+            Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -253,106 +333,44 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1053#1072#1083#1086#1075#1086#1074#1072#1103'/'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072
             Options.Editing = False
-            Width = 67
+            Width = 70
           end
-          object AmountTax_calc: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1053#1053'-'#1050#1086#1088#1088'. ('#1085#1072#1083#1086#1075'.)'
-            DataBinding.FieldName = 'AmountTax_calc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          object Price: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072
+            DataBinding.FieldName = 'Price'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1082#1086#1083#1086#1085#1082#1077' 7/1'#1089#1090#1088#1086#1082#1072
-            Options.Editing = False
-            Width = 85
-          end
-          object AmountTax: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1053#1053'-'#1050#1086#1088#1088'. ('#1085#1072#1083#1086#1075'.) ('#1088#1072#1089#1095#1077#1090')'
-            DataBinding.FieldName = 'AmountTax'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1082#1086#1083#1086#1085#1082#1077' 7/1'#1089#1090#1088#1086#1082#1072' ('#1088#1072#1089#1095#1077#1090')'
-            Options.Editing = False
-            Width = 85
-          end
-          object isAmountTax: TcxGridDBColumn
-            Caption = #1054#1090#1082#1083'. '#1082#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1082#1086#1088#1088'.'
-            DataBinding.FieldName = 'isAmountTax'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1074' '#1082#1086#1083'-'#1074#1077' '#1076#1083#1103' '#1082#1086#1088#1088#1077#1082#1090'.'
-            Options.Editing = False
-            Width = 43
-          end
-          object isLineNum: TcxGridDBColumn
-            Caption = #1054#1090#1082#1083'. '#8470' '#1087'/'#1087
-            DataBinding.FieldName = 'isLineNum'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#8470' '#1087'/'#1087' '#1086#1090' '#1088#1072#1089#1095#1077#1090#1085#1086#1075#1086
-            Options.Editing = False
-            Width = 43
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1062#1077#1085#1072' '#1053#1072#1083#1086#1075#1086#1074#1072#1103'/'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072
+            Width = 55
           end
           object AmountSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' ('#1085#1072#1083#1086#1075'.)'
+            Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 127
+            HeaderHint = 
+              #1057#1091#1084#1084#1072' '#1053#1072#1083#1086#1075#1086#1074#1072#1103'/'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1089' '#1091#1095#1077#1090#1086#1084' '#1050#1054#1056#1056#1045#1050#1058#1048#1056#1054#1042#1050#1048' "'#1086#1082#1088#1091#1075#1083#1077#1085#1080#1081 +
+              '"'
+            Width = 80
           end
           object AmountSumm_original: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' ('#1085#1072#1083#1086#1075'.) ('#1073#1077#1079' '#1089#1091#1084#1084#1099' '#1082#1086#1088#1088'.)'
+            Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057' ('#1073#1077#1079' '#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'AmountSumm_original'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 127
-          end
-          object SummTaxDiff_calc: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1050#1054#1056#1056'. '#1076#1083#1103' '#1053#1053'-'#1050#1086#1088#1088'.('#1085#1072#1083#1086#1075'.)'
-            DataBinding.FieldName = 'SummTaxDiff_calc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1050#1054#1056#1056#1045#1050#1058#1048#1056#1054#1042#1050#1048' '#1076#1083#1103' '#1053#1053'-'#1050#1086#1088#1088'.('#1085#1072#1083#1086#1075'.)'
-            Width = 127
-          end
-          object IsElectron: TcxGridDBColumn
-            Caption = #1069#1083#1077#1082#1090#1088'.'
-            DataBinding.FieldName = 'isElectron'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 30
-          end
-          object IsRegistered: TcxGridDBColumn
-            Caption = #1047#1072#1088#1077#1075'.'
-            DataBinding.FieldName = 'isRegistered'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1047#1072#1088#1077#1075#1080#1089#1090#1088#1080#1088#1086#1074#1072#1085
-            Options.Editing = False
-            Width = 30
-          end
-          object DateRegistered: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1088#1077#1075#1080#1089#1090#1088'.'
-            DataBinding.FieldName = 'DateRegistered'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 65
+            HeaderHint = 
+              #1057#1091#1084#1084#1072' '#1053#1072#1083#1086#1075#1086#1074#1072#1103'/'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1041#1045#1047' '#1091#1095#1077#1090#1072' '#1050#1054#1056#1056#1045#1050#1058#1048#1056#1054#1042#1050#1048' "'#1086#1082#1088#1091#1075#1083#1077#1085#1080 +
+              #1081'"'
+            Width = 85
           end
         end
       end
@@ -758,8 +776,8 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 344
-    Top = 176
+    Left = 328
+    Top = 224
   end
   object GuidesDocumentTax: TdsdGuides
     KeyField = 'Id'

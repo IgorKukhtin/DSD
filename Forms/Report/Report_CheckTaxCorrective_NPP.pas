@@ -52,7 +52,7 @@ type
     JuridicalName: TcxGridDBColumn;
     spGet: TdsdStoredProc;
     GuidesJuridical: TdsdGuides;
-    Invnumber: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
     InvNumberPartner_Tax: TcxGridDBColumn;
     LineNum_calc: TcxGridDBColumn;
     actRefreshStart: TdsdDataSetRefresh;
