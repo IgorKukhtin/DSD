@@ -49,41 +49,13 @@ BEGIN
                                     AND ObjectProtocol.OperDate > inSyncDateIn
                                   GROUP BY ObjectProtocol.ObjectId
                                  )
-                , tmpContract AS (-- если vbPersonalId - Сотрудник (торговый)
-                                  SELECT ObjectLink_Contract_Juridical.ObjectId AS ContractId
-                                  FROM ObjectLink AS OL
-                                       JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                                       ON ObjectLink_Partner_Juridical.ObjectId = OL.ObjectId
-                                                      AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+               , tmpJuridical AS (SELECT DISTINCT lfSelect.JuridicalId AS JuridicalId FROM lfSelectMobile_Object_Partner (FALSE, inSession) AS lfSelect
+                                 )
+                , tmpContract AS (SELECT DISTINCT ObjectLink_Contract_Juridical.ObjectId AS ContractId
+                                  FROM tmpJuridical
                                        JOIN ObjectLink AS ObjectLink_Contract_Juridical
-                                                       ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                                       ON ObjectLink_Contract_Juridical.ChildObjectId = tmpJuridical.JuridicalId
                                                       AND ObjectLink_Contract_Juridical.DescId        = zc_ObjectLink_Contract_Juridical()
-                                  WHERE OL.ChildObjectId = vbPersonalId
-                                    AND OL.DescId        = zc_ObjectLink_Partner_PersonalTrade()
-                                  UNION
-                                  -- если vbPersonalId - Сотрудник (супервайзер)
-                                  SELECT ObjectLink_Contract_Juridical.ObjectId AS ContractId
-                                  FROM ObjectLink AS OL
-                                       JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                                       ON ObjectLink_Partner_Juridical.ObjectId = OL.ObjectId
-                                                      AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
-                                       JOIN ObjectLink AS ObjectLink_Contract_Juridical
-                                                       ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                                                      AND ObjectLink_Contract_Juridical.DescId        = zc_ObjectLink_Contract_Juridical()
-                                  WHERE OL.ChildObjectId = vbPersonalId
-                                    AND OL.DescId        = zc_ObjectLink_Partner_Personal()
-                                  UNION
-                                  -- если vbPersonalId - Сотрудник (мерчандайзер)
-                                  SELECT ObjectLink_Contract_Juridical.ObjectId AS ContractId
-                                  FROM ObjectLink AS OL
-                                       JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                                       ON ObjectLink_Partner_Juridical.ObjectId = OL.ObjectId
-                                                      AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
-                                       JOIN ObjectLink AS ObjectLink_Contract_Juridical
-                                                       ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                                                      AND ObjectLink_Contract_Juridical.DescId        = zc_ObjectLink_Partner_PersonalMerch()
-                                  WHERE OL.ChildObjectId = vbPersonalId
-                                    AND OL.DescId        = zc_ObjectLink_Partner_PersonalMerch()
                                  )
                 , tmpFilter AS (SELECT tmpProtocol.ContractId FROM tmpProtocol
                                 UNION
@@ -203,3 +175,4 @@ $BODY$
 -- SELECT * FROM gpSelectMobile_Object_Contract (inSyncDateIn := zc_DateStart(), inSession := '347628') -- Киюк С.М.
 -- SELECT * FROM gpSelectMobile_Object_Contract (inSyncDateIn := zc_DateStart(), inSession := '1000167') WHERE ObjectCode in (4859, 4572, 4532) -- Зенченко Ю.Д.
 -- SELECT * FROM gpSelectMobile_Object_Contract (inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelectMobile_Object_Contract (inSyncDateIn := zc_DateStart(), inSession := '1839161')
