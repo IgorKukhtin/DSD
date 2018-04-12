@@ -3,7 +3,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   ClientHeight = 668
   ClientWidth = 1114
   ExplicitWidth = 1130
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -137,17 +137,17 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
             Options.Editing = False
             Width = 70
           end
-          object AmountTax_calc: TcxGridDBColumn [6]
-            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1053#1053'-'#1050#1086#1088#1088'. ('#1085#1072#1083#1086#1075'.)'
-            DataBinding.FieldName = 'AmountTax_calc'
+          object PriceTax_calc: TcxGridDBColumn [6]
+            Caption = #1062#1077#1085#1072' '#1076#1083#1103' '#1053#1053'-'#1050#1086#1088#1088'.'#1094#1077#1085#1099' ('#1085#1072#1083#1086#1075'.)'
+            DataBinding.FieldName = 'PriceTax_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1082#1086#1083#1086#1085#1082#1077' 7/1'#1089#1090#1088#1086#1082#1072
+            HeaderHint = #1062#1077#1085#1072' '#1074' '#1082#1086#1083#1086#1085#1082#1077' 9/1'#1089#1090#1088#1086#1082#1072
             Options.Editing = False
-            Width = 85
+            Width = 93
           end
           object SummTaxDiff_calc: TcxGridDBColumn [7]
             Caption = #1057#1091#1084#1084#1072' '#1050#1054#1056#1056'. '#1076#1083#1103' '#1053#1053'-'#1050#1086#1088#1088'.('#1085#1072#1083#1086#1075'.)'
@@ -254,15 +254,24 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
             Options.Editing = False
             Width = 80
           end
+          object AmountTax_calc: TcxGridDBColumn [18]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1053#1053'-'#1050#1086#1088#1088'. ('#1085#1072#1083#1086#1075'.)'
+            DataBinding.FieldName = 'AmountTax_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1082#1086#1083#1086#1085#1082#1077' 7/1'#1089#1090#1088#1086#1082#1072
+            Options.Editing = False
+            Width = 85
+          end
         end
       end
     end
     object cxTabSheet1: TcxTabSheet
       Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#8470' '#1087'/'#1087
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -386,6 +395,17 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
               #8470' '#1087'/'#1087' '#1074' '#1082#1086#1083#1086#1085#1082#1077' 1/2'#1089#1090#1088#1086#1082#1072' - '#1076#1083#1103' '#1082#1086#1083#1086#1085#1082#1080' 7 '#1089' "'#1087#1083#1102#1089#1086#1084'" - '#1092#1086#1088#1084#1080#1088#1091#1077#1090 +
               #1089#1103' '#1074' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1077' '#1087#1086' '#1087#1088#1072#1074#1080#1083#1091': '#8470' '#1087'/'#1087' + 1'
             Width = 70
+          end
+          object cxPriceTax_calc: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1076#1083#1103' '#1053#1053'-'#1050#1086#1088#1088'.'#1094#1077#1085#1099' ('#1085#1072#1083#1086#1075'.)'
+            DataBinding.FieldName = 'PriceTax_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1074' '#1082#1086#1083#1086#1085#1082#1077' 9/1'#1089#1090#1088#1086#1082#1072
+            Width = 92
           end
           object cxAmountTax_calc: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1053#1053'-'#1050#1086#1088#1088'. ('#1085#1072#1083#1086#1075'.)'
@@ -3006,6 +3026,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = ChildCDS
         ComponentItem = 'SummTaxDiff_calc'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceTax_calc'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'PriceTax_calc'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

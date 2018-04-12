@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, LineNumTaxOld Integer, LineNumTax In
              , GoodsKindId Integer, GoodsKindName  TVarChar
              , AmountSumm TFloat
              , SummTaxDiff_calc TFloat
+             , PriceTax_calc TFloat
              , isErased Boolean
               )
 AS
@@ -67,6 +68,7 @@ BEGIN
            , Object_GoodsKind.ValueData             AS GoodsKindName
            , CAST (NULL AS TFloat)                  AS AmountSumm
            , CAST (NULL AS TFloat)                  AS SummTaxDiff_calc
+           , CAST (NULL AS TFloat)                  AS PriceTax_calc
            , FALSE                                  AS isErased
 
        FROM (SELECT Object_Goods.Id           AS GoodsId
@@ -144,6 +146,7 @@ BEGIN
                    END AS TFloat)                   AS AmountSumm
 
            , COALESCE (MIFloat_SummTaxDiff_calc.ValueData, 0) :: TFloat AS SummTaxDiff_calc
+           , COALESCE (MIFloat_PriceTax_calc.ValueData, 0)   :: TFloat AS PriceTax_calc
            , MovementItem.isErased                  AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -180,6 +183,10 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_SummTaxDiff_calc
                                         ON MIFloat_SummTaxDiff_calc.MovementItemId = MovementItem.Id
                                        AND MIFloat_SummTaxDiff_calc.DescId = zc_MIFloat_SummTaxDiff_calc()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_PriceTax_calc
+                                        ON MIFloat_PriceTax_calc.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PriceTax_calc.DescId = zc_MIFloat_PriceTax_calc()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -248,6 +255,7 @@ BEGIN
                            ELSE CAST ( (COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat)                   AS AmountSumm
            , COALESCE (MIFloat_SummTaxDiff_calc.ValueData, 0) :: TFloat AS SummTaxDiff_calc
+           , COALESCE (MIFloat_PriceTax_calc.ValueData, 0)   :: TFloat AS PriceTax_calc
            , MovementItem.isErased                  AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -279,7 +287,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_AmountTax_calc
                                         ON MIFloat_AmountTax_calc.MovementItemId = MovementItem.Id
                                        AND MIFloat_AmountTax_calc.DescId = zc_MIFloat_AmountTax_calc()
-
+            LEFT JOIN MovementItemFloat AS MIFloat_PriceTax_calc
+                                        ON MIFloat_PriceTax_calc.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PriceTax_calc.DescId = zc_MIFloat_PriceTax_calc()
             LEFT JOIN MovementItemFloat AS MIFloat_SummTaxDiff_calc
                                         ON MIFloat_SummTaxDiff_calc.MovementItemId = MovementItem.Id
                                        AND MIFloat_SummTaxDiff_calc.DescId = zc_MIFloat_SummTaxDiff_calc()
@@ -322,6 +332,7 @@ ALTER FUNCTION gpSelect_MovementItem_TaxCorrective (Integer, Boolean, Boolean, T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 12.04.18         * add PriceTax_calc
  04.04.18         * add SummTaxDiff_calc
  06.01.17         * 
  25.03.16         * add LineNum

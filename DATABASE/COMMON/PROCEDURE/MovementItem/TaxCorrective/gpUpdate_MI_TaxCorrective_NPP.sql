@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpUpdate_MI_TaxCorrective_NPP (Integer, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_MI_TaxCorrective_NPP (Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_TaxCorrective_NPP (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_TaxCorrective_NPP(
     IN inId                   Integer   , -- Ключ объекта <Элемент документа>
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_TaxCorrective_NPP(
     IN inLineNumTaxCorr       TFloat    , -- № п/п НН-Корр.
     IN inAmountTax_calc       TFloat    , -- Кол-во для НН-Корр.(налог.)
     IN inSummTaxDiff_calc     TFloat    , -- Сумма КОРРЕКТИРОВКИ для НН-Корр.(налог.) 
+    IN inPriceTax_calc        TFloat    , -- Цена для НН-Корр.цены(налог.)
     IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -54,7 +56,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountTax_calc(), inId, inAmountTax_calc);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTaxDiff_calc(), inId, inSummTaxDiff_calc);
-
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceTax_calc(), inId, inPriceTax_calc);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, FALSE);
@@ -66,6 +69,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.04.18         * add PriceTax_calc
  04.04.18         * add inSummTaxDiff_calc
  30.03.18         *
 */
