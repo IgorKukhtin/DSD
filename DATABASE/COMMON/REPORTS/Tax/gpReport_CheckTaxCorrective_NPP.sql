@@ -84,11 +84,19 @@ BEGIN
                              , MovementLinkObject_DocumentTaxKind.ObjectId AS DocumentTaxKindId
                              , MovementItem.ObjectId                  AS GoodsId
                              , MovementItem.Amount                    AS Amount
+                             , CASE WHEN MovementString_InvNumberRegistered.ValueData <> '' THEN TRUE ELSE FALSE END  :: Boolean AS isRegistered
+                             , CASE WHEN MovementString_InvNumberRegistered.ValueData <> '' THEN MovementDate_DateRegistered.ValueData ELSE NULL END :: TDateTime AS DateRegistered
                         FROM _tmpMovementTax
                               LEFT JOIN Movement ON Movement.Id = _tmpMovementTax.MovementId
                               LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                                            ON MovementLinkObject_DocumentTaxKind.MovementId = _tmpMovementTax.MovementId
                                                           AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                              LEFT JOIN MovementString AS MovementString_InvNumberRegistered
+                                                       ON MovementString_InvNumberRegistered.MovementId = _tmpMovementTax.MovementId
+                                                      AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
+                              LEFT JOIN MovementDate AS MovementDate_DateRegistered 
+                                                     ON MovementDate_DateRegistered.MovementId = _tmpMovementTax.MovementId
+                                                    AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
                               LEFT JOIN MovementItem ON MovementItem.MovementId = _tmpMovementTax.MovementId
                                                     AND MovementItem.DescId     = zc_MI_Master()
                                                     AND MovementItem.isErased   = FALSE
@@ -108,6 +116,8 @@ BEGIN
                          , MovementItem.MovementId                AS MovementId
                          , MovementItem.MovementItemId            AS MovementItemId
                          , MovementItem.DocumentTaxKindId         AS DocumentTaxKindId
+                         , MovementItem.isRegistered
+                         , MovementItem.DateRegistered
                          , MIFloat_NPP.ValueData       :: Integer AS LineNum
                          , MovementItem.GoodsId                   AS GoodsId
                          , MILinkObject_GoodsKind.ObjectId        AS GoodsKindId
@@ -143,7 +153,10 @@ BEGIN
                           , MovementItem.ObjectId                                          AS GoodsId
                           , MovementItem.Amount                                            AS Amount
                           , COALESCE (MovementBoolean_NPP_calc.ValueData, FALSE) ::Boolean AS isNPP_calc
-                     FROM (SELECT MLM_DocumentChild.MovementId                    --корр.
+
+                          , CASE WHEN MovementString_InvNumberRegistered.ValueData <> '' THEN TRUE ELSE FALSE END  :: Boolean AS isRegistered
+                          , CASE WHEN MovementString_InvNumberRegistered.ValueData <> '' THEN MovementDate_DateRegistered.ValueData ELSE NULL END :: TDateTime AS DateRegistered
+                       FROM (SELECT MLM_DocumentChild.MovementId                    --корр.
                                 , MLM_DocumentChild.MovementChildId  AS MovementId_Tax
                                 , Movement.OperDate
                            FROM MovementLinkMovement AS MLM_DocumentChild
@@ -160,6 +173,12 @@ BEGIN
                           LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                                        ON MovementLinkObject_DocumentTaxKind.MovementId = tmpMovement.MovementId
                                                       AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                          LEFT JOIN MovementString AS MovementString_InvNumberRegistered
+                                                   ON MovementString_InvNumberRegistered.MovementId = tmpMovement.MovementId
+                                                  AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
+                          LEFT JOIN MovementDate AS MovementDate_DateRegistered 
+                                                 ON MovementDate_DateRegistered.MovementId = tmpMovement.MovementId
+                                                AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
                           
                           LEFT JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
                                                 AND MovementItem.DescId     = zc_MI_Master()
@@ -185,6 +204,8 @@ BEGIN
                                    , tmpMovement.MovementId_Tax
                                    , tmpMovement.MovementItemId
                                    , tmpMovement.DocumentTaxKindId
+                                   , tmpMovement.isRegistered
+                                   , tmpMovement.DateRegistered
                                    , tmpMovement.isNPP_calc
                                    , CASE WHEN COALESCE (MIBoolean_isAuto.ValueData, True) = True THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) ELSE COALESCE(MIFloat_NPP.ValueData,0) END  :: Integer AS LineNumTaxOld
                                    , CASE WHEN COALESCE (MIBoolean_isAuto.ValueData, True) = True THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) ELSE COALESCE(MIFloat_NPP.ValueData,0) END  :: Integer AS LineNumTax
@@ -261,6 +282,8 @@ BEGIN
                            , zc_Movement_Tax() AS MovementDescId
                            , tmp.MovementId AS MovementId_Tax
                            , tmp.DocumentTaxKindId
+                           , tmp.isRegistered
+                           , tmp.DateRegistered
                            , tmp.MovementItemId
                            , tmp.LineNum
                            , tmp.GoodsId
@@ -284,6 +307,8 @@ BEGIN
                            , zc_Movement_TaxCorrective() AS MovementDescId
                            , tmp.MovementId_Tax
                            , tmp.DocumentTaxKindId
+                           , tmp.isRegistered
+                           , tmp.DateRegistered
                            , tmp.MovementItemId
                            , tmp.LineNumTaxCorr AS LineNum
                            , tmp.GoodsId
@@ -308,6 +333,8 @@ BEGIN
                               , tmp.MovementId
                               , tmp.MovementId_Tax
                               , tmp.DocumentTaxKindId
+                              , tmp.isRegistered
+                              , tmp.DateRegistered
                               , tmp.MovementItemId
                               , tmp.isNPP_calc
                               , tmp.LineNum
@@ -327,6 +354,7 @@ BEGIN
                               , ROW_NUMBER() OVER (PARTITION BY tmp.MovementId_Tax, tmp.GoodsId, tmp.GoodsKindId, tmp.Price
                                                    ORDER BY tmp.MovementId_Tax
                                                           , CASE WHEN tmp.MovementDescId = zc_Movement_Tax() THEN 1 ELSE 2 END
+                                                          , CASE WHEN tmp.isRegistered = TRUE THEN tmp.DateRegistered ELSE zc_DateEnd() END
                                                           , tmp.OperDate
                                                           , tmp.MovementId
                                                           , tmp.LineNum, tmp.LineNumTaxCorr_calc
@@ -340,6 +368,8 @@ BEGIN
                             , tmp1.MovementId
                             , tmp1.MovementId_Tax
                             , tmp1.DocumentTaxKindId
+                            , tmp1.isRegistered
+                            , tmp1.DateRegistered
                             , tmp1.MovementItemId
                             , tmp1.isNPP_calc
                             , tmp1.LineNum
@@ -369,6 +399,8 @@ BEGIN
                               , tmp1.MovementId
                               , tmp1.MovementId_Tax
                               , tmp1.DocumentTaxKindId
+                              , tmp1.isRegistered
+                              , tmp1.DateRegistered
                               , tmp1.MovementItemId
                               , tmp1.LineNum
                               , tmp1.GoodsId
@@ -391,6 +423,8 @@ BEGIN
     , tmpData_Ord AS (SELECT tmp.MovementId
                            , tmp.MovementId_Tax
                            , tmp.DocumentTaxKindId
+                           , tmp.isRegistered
+                           , tmp.DateRegistered
                            , tmp.MovementItemId
                            , tmp.isNPP_calc
                            , tmp.LineNum
@@ -409,10 +443,11 @@ BEGIN
                            , tmp.AmountTax
                            , ROW_NUMBER() OVER (PARTITION BY tmp.MovementId_Tax
                                                 ORDER BY CASE WHEN tmp.MovementDescId = zc_Movement_Tax() THEN 1 ELSE 2 END
-                                                       , tmp.OperDate
-                                                       , tmp.MovementId
-                                                       , tmp.LineNum
-                                                       , tmp.LineNumTaxCorr_calc
+                                                     , CASE WHEN tmp.isRegistered = TRUE THEN tmp.DateRegistered ELSE zc_DateEnd() END
+                                                     , tmp.LineNum
+                                                     , tmp.OperDate
+                                                     , tmp.MovementId
+                                                     , tmp.LineNumTaxCorr_calc
                                                ) :: Integer AS LineNum_calc
                      FROM tmpData_Summ AS tmp
                      WHERE tmp.isNPP_calc = TRUE
@@ -422,6 +457,8 @@ BEGIN
     , tmpData AS (SELECT tmp.MovementId
                        , tmp.MovementId_Tax
                        , tmp.DocumentTaxKindId
+                       , tmp.isRegistered
+                       , tmp.DateRegistered
                        , tmp.MovementItemId
                        , tmp.isNPP_calc
                        , tmp.LineNum
@@ -446,39 +483,33 @@ BEGIN
                                            AND tmpData_Ord.MovementId_Tax = tmp.MovementId_Tax
                                            AND tmpData_Ord.MovementId     = tmp.MovementId
                  )
-    , tmpAll AS (SELECT DISTINCT tmpData.MovementId FROM tmpData
-                 UNION
-                 SELECT DISTINCT tmpData.MovementId_Tax AS MovementId FROM tmpData
-                 )
+
     , tmpMLO AS (SELECT MovementLinkObject.*
                  FROM MovementLinkObject
                  WHERE MovementLinkObject.MovementId IN (SELECT tmpData.MovementId FROM tmpData)
                    AND MovementLinkObject.DescId IN (zc_MovementLinkObject_To()
                                                    , zc_MovementLinkObject_From()
-                                                   --, zc_MovementLinkObject_DocumentTaxKind()
                                                    , zc_MovementLinkObject_Branch())
                  )
       
     , tmpMS_InvNumberPartner AS (SELECT MovementString.*
                                  FROM MovementString
-                                 WHERE MovementString.MovementId IN (SELECT DISTINCT tmpAll.MovementId FROM tmpAll)
+                                 WHERE MovementString.MovementId IN (SELECT DISTINCT tmpData.MovementId FROM tmpData)
                                    AND MovementString.DescId = zc_MovementString_InvNumberPartner()
                                  )
     , tmpMovement_All AS (SELECT Movement.*
                                , MovementDesc.ItemName
                           FROM Movement
                                LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
-                          WHERE Movement.Id IN (SELECT DISTINCT tmpAll.MovementId FROM tmpAll)
+                          WHERE Movement.Id IN (SELECT DISTINCT tmpData.MovementId FROM tmpData)
                           )
 
-
-    -- zc_MovementBoolean_Registered + zc_MovementDate_DateRegistered + zc_MovementBoolean_Electron
     , tmpMovementBoolean AS (SELECT MovementBoolean.*
                              FROM MovementBoolean
                              WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpData.MovementId FROM tmpData)
-                               AND MovementBoolean.DescId IN (zc_MovementBoolean_Registered(), zc_MovementBoolean_Electron())
+                               AND MovementBoolean.DescId = zc_MovementBoolean_Electron()
                             )
-    , tmpMovementString AS (SELECT MovementString.*
+   /* , tmpMovementString AS (SELECT MovementString.*
                              FROM MovementString
                              WHERE MovementString.MovementId IN (SELECT DISTINCT tmpData.MovementId FROM tmpData)
                                AND MovementString.DescId = zc_MovementString_InvNumberRegistered()
@@ -488,7 +519,7 @@ BEGIN
                           WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpData.MovementId FROM tmpData)
                              AND MovementDate.DescId = zc_MovementDate_DateRegistered()
                          )
-
+   */
     --- результат 
     SELECT Movement.ItemName                             AS ItemName
          , Object_TaxKind.ValueData         		 AS TaxKindName
@@ -518,10 +549,13 @@ BEGIN
          , CASE WHEN tmpData.isNPP_calc = FALSE THEN 0 ELSE tmpData.AmountTax END  :: TFloat  AS AmountTax
          , tmpData.isAmountTax
          , tmpData.isLineNum
-         -- , COALESCE (MovementBoolean_Registered.ValueData, FALSE)  :: Boolean AS isRegistered
-         , CASE WHEN MovementString_InvNumberRegistered.ValueData <> '' THEN TRUE ELSE FALSE END  :: Boolean AS isRegistered
+
+   --      , CASE WHEN MovementString_InvNumberRegistered.ValueData <> '' THEN TRUE ELSE FALSE END  :: Boolean AS isRegistered
+         , tmpData.isRegistered
+                              
          , COALESCE (MovementBoolean_Electron.ValueData, FALSE)    :: Boolean AS isElectron
-         , CASE WHEN MovementString_InvNumberRegistered.ValueData <> '' THEN MovementDate_DateRegistered.ValueData ELSE NULL END :: TDateTime AS DateRegistered
+   --      , CASE WHEN MovementString_InvNumberRegistered.ValueData <> '' THEN MovementDate_DateRegistered.ValueData ELSE NULL END :: TDateTime AS DateRegistered
+         , tmpData.DateRegistered
     FROM tmpData
          LEFT JOIN tmpMovement_All AS Movement ON Movement.Id = tmpData.MovementId
          LEFT JOIN tmpMovement_All AS Movement_Tax ON Movement_Tax.Id = tmpData.MovementId_Tax
@@ -549,17 +583,9 @@ BEGIN
          LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmpData.GoodsId
          LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpData.GoodsKindId
 
-         LEFT JOIN tmpMovementString AS MovementString_InvNumberRegistered
-                                     ON MovementString_InvNumberRegistered.MovementId = tmpData.MovementId
-                                    AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
-         -- LEFT JOIN tmpMovementBoolean AS MovementBoolean_Registered 
-         --                              ON MovementBoolean_Registered.MovementId = tmpData.MovementId
-         --                             AND MovementBoolean_Registered.DescId = zc_MovementBoolean_Registered()
          LEFT JOIN tmpMovementBoolean AS MovementBoolean_Electron 
                                       ON MovementBoolean_Electron.MovementId = tmpData.MovementId
                                      AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
-         LEFT JOIN tmpMovementDate AS MovementDate_DateRegistered 
-                                   ON MovementDate_DateRegistered.MovementId = tmpData.MovementId
 
     WHERE (tmpData.GoodsId = inGoodsId OR inGoodsId = 0)
       AND ((inIsShowAll = FALSE AND (tmpData.isAmountTax = TRUE OR tmpData.isLineNum = TRUE))
