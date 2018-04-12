@@ -1230,17 +1230,13 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       GuiParams = <
         item
           Name = 'GoodsId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsId'
+          Value = 0
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsName'
+          Value = ''
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
