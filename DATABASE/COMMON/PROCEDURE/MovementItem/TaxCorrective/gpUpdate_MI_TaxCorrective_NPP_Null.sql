@@ -39,6 +39,7 @@ BEGIN
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPP_calc(), MovementItem.Id, 0)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountTax_calc(), MovementItem.Id, 0)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTaxDiff_calc(), MovementItem.Id, 0)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceTax_calc(), MovementItem.Id, 0)
            , lpInsert_MovementItemProtocol (MovementItem.Id, vbUserId, FALSE) -- протокол
      FROM MovementItem
           LEFT JOIN MovementItemFloat AS MIFloat_NPP_calc

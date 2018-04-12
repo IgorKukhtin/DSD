@@ -198,6 +198,18 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
             HeaderHint = #8470' '#1087'/'#1087' '#1088#1072#1089#1095#1077#1090#1085#1086#1077
             Width = 70
           end
+          object PriceTax_calc: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1076#1083#1103' '#1053#1053'-'#1050#1086#1088#1088'.'#1094#1077#1085#1099' ('#1085#1072#1083#1086#1075'.)'
+            DataBinding.FieldName = 'PriceTax_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1074' '#1082#1086#1083#1086#1085#1082#1077' 9/1'#1089#1090#1088#1086#1082#1072
+            Options.Editing = False
+            Width = 93
+          end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074'.'
             DataBinding.FieldName = 'GoodsCode'
@@ -316,6 +328,31 @@ inherited Report_CheckTaxCorrective_NPPForm: TReport_CheckTaxCorrective_NPPForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1050#1054#1056#1056#1045#1050#1058#1048#1056#1054#1042#1050#1048' '#1076#1083#1103' '#1053#1053'-'#1050#1086#1088#1088'.('#1085#1072#1083#1086#1075'.)'
             Width = 127
+          end
+          object IsElectron: TcxGridDBColumn
+            Caption = #1069#1083#1077#1082#1090#1088'.'
+            DataBinding.FieldName = 'isElectron'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 30
+          end
+          object IsRegistered: TcxGridDBColumn
+            Caption = #1047#1072#1088#1077#1075'.'
+            DataBinding.FieldName = 'isRegistered'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1088#1077#1075#1080#1089#1090#1088#1080#1088#1086#1074#1072#1085
+            Options.Editing = False
+            Width = 30
+          end
+          object DateRegistered: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1088#1077#1075#1080#1089#1090#1088'.'
+            DataBinding.FieldName = 'DateRegistered'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 65
           end
         end
       end

@@ -35,9 +35,13 @@ RETURNS TABLE (ItemName             TVarChar
              , AmountSumm_original  TFloat
              , SummTaxDiff_calc     TFloat
              , AmountTax_calc  TFloat
+             , PriceTax_calc   TFloat
              , AmountTax       TFloat
              , isAmountTax     Boolean
              , isLineNum       Boolean
+             , isRegistered     Boolean
+             , isElectron       Boolean
+             , DateRegistered   TDateTime
               )  
 AS
 $BODY$
@@ -76,9 +80,14 @@ BEGIN
      -- сначала выбираем все товары из Налоговых и корректировок, чтоб сделать Расчетный № п/п
     , tmpMI_Tax_All AS (SELECT MovementItem.MovementId                AS MovementId
                              , MovementItem.Id                        AS MovementItemId
+                             , MovementLinkObject_DocumentTaxKind.ObjectId AS DocumentTaxKindId
                              , MovementItem.ObjectId                  AS GoodsId
                              , MovementItem.Amount                    AS Amount
                         FROM _tmpMovementTax
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                                                           ON MovementLinkObject_DocumentTaxKind.MovementId = _tmpMovementTax.MovementId
+                                                          AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                                  
                               LEFT JOIN MovementItem ON MovementItem.MovementId = _tmpMovementTax.MovementId
                                                     AND MovementItem.DescId     = zc_MI_Master()
                                                     AND MovementItem.isErased   = FALSE
@@ -96,6 +105,7 @@ BEGIN
  
     , tmpMI_Tax AS (SELECT MovementItem.MovementId                AS MovementId
                          , MovementItem.MovementItemId            AS MovementItemId
+                         , MovementItem.DocumentTaxKindId         AS DocumentTaxKindId
                          , MIFloat_NPP.ValueData       :: Integer AS LineNum
                          , MovementItem.GoodsId                   AS GoodsId
                          , MILinkObject_GoodsKind.ObjectId        AS GoodsKindId
@@ -125,6 +135,7 @@ BEGIN
 
     , tmpMI_Corr AS (SELECT tmpMovement.MovementId
                                , tmpMovement.MovementId_Tax
+                               , MovementLinkObject_DocumentTaxKind.ObjectId                    AS DocumentTaxKindId
                                , MovementItem.Id                                                AS MovementItemId
                                , MovementItem.ObjectId                                          AS GoodsId
                                , MovementItem.Amount                                            AS Amount
@@ -142,6 +153,10 @@ BEGIN
                                                              ON MovementBoolean_NPP_calc.MovementId = tmpMovement.MovementId
                                                             AND MovementBoolean_NPP_calc.DescId = zc_MovementBoolean_NPP_calc()
 
+                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                                                                ON MovementLinkObject_DocumentTaxKind.MovementId = tmpMovement.MovementId
+                                                               AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                                   
                                    LEFT JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
                                                          AND MovementItem.DescId     = zc_MI_Master()
                                                          AND MovementItem.isErased   = FALSE
@@ -170,6 +185,7 @@ BEGIN
     , tmpMI_TaxCorrective AS (SELECT tmpMovement.MovementId
                                    , tmpMovement.MovementId_Tax
                                    , tmpMovement.MovementItemId
+                                   , tmpMovement.DocumentTaxKindId
                                    , tmpMovement.isNPP_calc
                                    , CASE WHEN COALESCE (MIBoolean_isAuto.ValueData, True) = True THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) ELSE COALESCE(MIFloat_NPP.ValueData,0) END  :: Integer AS LineNumTaxOld
                                    , CASE WHEN COALESCE (MIBoolean_isAuto.ValueData, True) = True THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) ELSE COALESCE(MIFloat_NPP.ValueData,0) END  :: Integer AS LineNumTax
@@ -182,43 +198,51 @@ BEGIN
                                    , MILinkObject_GoodsKind.ObjectId        AS GoodsKindId
                                    , tmpMovement.Amount                     AS Amount
                                    , MIFloat_Price.ValueData                AS Price
+                                   , CASE WHEN tmpMovement.DocumentTaxKindId = zc_Enum_DocumentTaxKind_CorrectivePrice() AND COALESCE (MIFloat_PriceTax_calc.ValueData, 0) <> 0
+                                          THEN MIFloat_PriceTax_calc.ValueData
+                                          ELSE MIFloat_Price.ValueData
+                                     END                 AS Price_Original
                                    , MIFloat_CountForPrice.ValueData        AS CountForPrice
                                    , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                                                    THEN CAST ( (COALESCE (tmpMovement.Amount, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
                                                    ELSE CAST ( (COALESCE (tmpMovement.Amount, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                                            END AS TFloat)                   AS AmountSumm
                                    , COALESCE (MIFloat_SummTaxDiff_calc.ValueData, 0) :: TFloat AS SummTaxDiff_calc
+                                   , COALESCE (MIFloat_PriceTax_calc.ValueData, 0)    :: TFloat AS PriceTax_calc
                                              
                               FROM tmpMI_Corr AS tmpMovement 
                                    LEFT JOIN tmpMovementItemFloat AS MIFloat_Price
-                                                               ON MIFloat_Price.MovementItemId = tmpMovement.MovementItemId
-                                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                                  ON MIFloat_Price.MovementItemId = tmpMovement.MovementItemId
+                                                                 AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                    LEFT JOIN tmpMovementItemFloat AS MIFloat_CountForPrice
-                                                               ON MIFloat_CountForPrice.MovementItemId = tmpMovement.MovementItemId
-                                                              AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                                                                  ON MIFloat_CountForPrice.MovementItemId = tmpMovement.MovementItemId
+                                                                 AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
                        
                                    LEFT JOIN tmpMovementItemFloat AS MIFloat_NPP
-                                                               ON MIFloat_NPP.MovementItemId = tmpMovement.MovementItemId
-                                                              AND MIFloat_NPP.DescId = zc_MIFloat_NPP()
+                                                                  ON MIFloat_NPP.MovementItemId = tmpMovement.MovementItemId
+                                                                 AND MIFloat_NPP.DescId = zc_MIFloat_NPP()
                                    LEFT JOIN tmpMovementItemBoolean AS MIBoolean_isAuto
-                                                                 ON MIBoolean_isAuto.MovementItemId = tmpMovement.MovementItemId
-                                                                AND MIBoolean_isAuto.DescId = zc_MIBoolean_isAuto()
+                                                                    ON MIBoolean_isAuto.MovementItemId = tmpMovement.MovementItemId
+                                                                   AND MIBoolean_isAuto.DescId = zc_MIBoolean_isAuto()
 
                                    LEFT JOIN tmpMovementItemFloat AS MIFloat_NPPTax_calc
-                                                               ON MIFloat_NPPTax_calc.MovementItemId = tmpMovement.MovementItemId
-                                                              AND MIFloat_NPPTax_calc.DescId = zc_MIFloat_NPPTax_calc()
+                                                                  ON MIFloat_NPPTax_calc.MovementItemId = tmpMovement.MovementItemId
+                                                                 AND MIFloat_NPPTax_calc.DescId = zc_MIFloat_NPPTax_calc()
                                    LEFT JOIN tmpMovementItemFloat AS MIFloat_NPP_calc
-                                                               ON MIFloat_NPP_calc.MovementItemId = tmpMovement.MovementItemId
-                                                              AND MIFloat_NPP_calc.DescId = zc_MIFloat_NPP_calc()
+                                                                  ON MIFloat_NPP_calc.MovementItemId = tmpMovement.MovementItemId
+                                                                 AND MIFloat_NPP_calc.DescId = zc_MIFloat_NPP_calc()
                                    LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountTax_calc
-                                                               ON MIFloat_AmountTax_calc.MovementItemId = tmpMovement.MovementItemId
-                                                              AND MIFloat_AmountTax_calc.DescId = zc_MIFloat_AmountTax_calc()
+                                                                  ON MIFloat_AmountTax_calc.MovementItemId = tmpMovement.MovementItemId
+                                                                 AND MIFloat_AmountTax_calc.DescId = zc_MIFloat_AmountTax_calc()
                                    LEFT JOIN tmpMovementItemFloat AS MIFloat_SummTaxDiff_calc
-                                                               ON MIFloat_SummTaxDiff_calc.MovementItemId = tmpMovement.MovementItemId
-                                                              AND MIFloat_SummTaxDiff_calc.DescId = zc_MIFloat_SummTaxDiff_calc()
-
+                                                                  ON MIFloat_SummTaxDiff_calc.MovementItemId = tmpMovement.MovementItemId
+                                                                 AND MIFloat_SummTaxDiff_calc.DescId = zc_MIFloat_SummTaxDiff_calc()
+                                   LEFT JOIN tmpMovementItemFloat AS MIFloat_PriceTax_calc
+                                                                  ON MIFloat_PriceTax_calc.MovementItemId = tmpMovement.MovementItemId
+                                                                 AND MIFloat_PriceTax_calc.DescId = zc_MIFloat_PriceTax_calc()
+                                       
                                    LEFT JOIN tmpMI_LO_GoodsKind AS MILinkObject_GoodsKind
-                                                                    ON MILinkObject_GoodsKind.MovementItemId = tmpMovement.MovementItemId
+                                                                ON MILinkObject_GoodsKind.MovementItemId = tmpMovement.MovementItemId
 
                                    LEFT JOIN tmpMITax AS tmpMITax1 ON tmpMITax1.Kind        = 1
                                                                   AND tmpMITax1.GoodsId     = tmpMovement.GoodsId
@@ -235,12 +259,14 @@ BEGIN
     -- данные НН и корректировок                           
     , tmpData_All AS (SELECT tmp.MovementId
                            , tmp.MovementId AS MovementId_Tax
+                           , tmp.DocumentTaxKindId
                            , tmp.MovementItemId
                            , tmp.LineNum
                            , tmp.GoodsId
                            , tmp.GoodsKindId
                            , tmp.Amount
                            , tmp.Price
+                           , tmp.Price AS Price_Original
                            , tmp.CountForPrice
                            , tmp.AmountSumm
                            , tmp.AmountSumm AS AmountSumm_original
@@ -248,17 +274,20 @@ BEGIN
                            , tmp.LineNum    AS LineNumTaxCorr_calc
                            , tmp.LineNum    AS LineNumTax
                            , 0   :: TFloat  AS AmountTax_calc
+                           , 0   :: TFloat  AS PriceTax_calc
                            , TRUE           AS isNPP_calc
                       FROM tmpMI_Tax AS tmp
                    UNION 
                       SELECT tmp.MovementId
                            , tmp.MovementId_Tax
+                           , tmp.DocumentTaxKindId
                            , tmp.MovementItemId
                            , tmp.LineNumTaxCorr AS LineNum
                            , tmp.GoodsId
                            , tmp.GoodsKindId
                            , (-1) * tmp.Amount
                            , tmp.Price
+                           , tmp.Price_Original
                            , tmp.CountForPrice
                            , (-1) * (tmp.AmountSumm + tmp.SummTaxDiff_calc) AS AmountSumm
                            , (-1) * tmp.AmountSumm AS AmountSumm_original
@@ -266,12 +295,15 @@ BEGIN
                            , tmp.LineNumTaxCorr_calc
                            , tmp.LineNumTax
                            , tmp.AmountTax_calc
+                           , tmp.PriceTax_calc
                            , tmp.isNPP_calc
                       FROM tmpMI_TaxCorrective AS tmp
                       )
+                      
     -- перенумеруем 
     , tmpDataAll_ord AS (SELECT tmp.MovementId
                               , tmp.MovementId_Tax
+                              , tmp.DocumentTaxKindId
                               , tmp.MovementItemId
                               , tmp.isNPP_calc
                               , tmp.LineNum
@@ -279,6 +311,7 @@ BEGIN
                               , tmp.GoodsKindId
                               , tmp.Amount
                               , tmp.Price
+                              , tmp.Price_Original
                               , tmp.CountForPrice
                               , tmp.AmountSumm
                               , tmp.AmountSumm_original
@@ -286,13 +319,15 @@ BEGIN
                               , tmp.LineNumTaxCorr_calc
                               , tmp.LineNumTax
                               , tmp.AmountTax_calc
-                              , ROW_NUMBER() OVER (PARTITION BY tmp.MovementId_Tax, tmp.GoodsId, tmp.GoodsKindId, tmp.Price ORDER BY tmp.MovementId_Tax, tmp.MovementId, tmp.LineNum, tmp.LineNumTaxCorr_calc)  :: integer AS Ord_calc
+                              , tmp.PriceTax_calc
+                              , ROW_NUMBER() OVER (PARTITION BY tmp.MovementId_Tax, tmp.GoodsId, tmp.GoodsKindId, tmp.Price_Original ORDER BY tmp.MovementId_Tax, tmp.MovementId, tmp.LineNum, tmp.LineNumTaxCorr_calc)  :: integer AS Ord_calc
                          FROM tmpData_All AS tmp
                          )
 
     -- получаем расчетное значение AmountTax_calc
     , tmpData_Summ AS (SELECT tmp1.MovementId
                             , tmp1.MovementId_Tax
+                            , tmp1.DocumentTaxKindId
                             , tmp1.MovementItemId
                             , tmp1.isNPP_calc
                             , tmp1.LineNum
@@ -300,6 +335,7 @@ BEGIN
                             , tmp1.GoodsKindId
                             , tmp1.Amount
                             , tmp1.Price
+                            , tmp1.Price_Original
                             , tmp1.CountForPrice
                             , tmp1.AmountSumm
                             , tmp1.AmountSumm_original
@@ -307,22 +343,25 @@ BEGIN
                             , tmp1.LineNumTaxCorr_calc
                             , tmp1.LineNumTax
                             , tmp1.AmountTax_calc
+                            , tmp1.PriceTax_calc
                             , SUM (COALESCE (tmp2.Amount, 0)) AS AmountTax
                        FROM tmpDataAll_ord AS tmp1
                            LEFT JOIN tmpDataAll_ord AS tmp2 
                                                     ON tmp2.MovementId_Tax = tmp1.MovementId_Tax
                                                    AND tmp2.GoodsId        = tmp1.GoodsId
                                                    AND (tmp2.GoodsKindId   = tmp1.GoodsKindId OR COALESCE (tmp1.GoodsKindId,0) = 0)
-                                                   AND tmp2.Price          = tmp1.Price
+                                                   AND tmp2.Price_Original = tmp1.Price_Original
                                                    AND tmp2.Ord_calc       < tmp1.Ord_calc
                        GROUP BY tmp1.MovementId
                               , tmp1.MovementId_Tax
+                              , tmp1.DocumentTaxKindId
                               , tmp1.MovementItemId
                               , tmp1.LineNum
                               , tmp1.GoodsId
                               , tmp1.GoodsKindId
                               , tmp1.Amount
                               , tmp1.Price
+                              , tmp1.Price_Original
                               , tmp1.CountForPrice
                               , tmp1.AmountSumm
                               , tmp1.AmountSumm_original
@@ -330,12 +369,14 @@ BEGIN
                               , tmp1.LineNumTaxCorr_calc
                               , tmp1.LineNumTax
                               , tmp1.AmountTax_calc
+                              , tmp1.PriceTax_calc
                               , tmp1.isNPP_calc
                       )
 
     -- получаем расчетное значение № п/п
     , tmpData_Ord AS (SELECT tmp.MovementId
                            , tmp.MovementId_Tax
+                           , tmp.DocumentTaxKindId
                            , tmp.MovementItemId
                            , tmp.isNPP_calc
                            , tmp.LineNum
@@ -350,6 +391,7 @@ BEGIN
                            , tmp.LineNumTaxCorr_calc
                            , tmp.LineNumTax
                            , tmp.AmountTax_calc
+                           , tmp.PriceTax_calc
                            , tmp.AmountTax
                            , ROW_NUMBER() OVER (PARTITION BY tmp.MovementId_Tax ORDER BY tmp.MovementId, tmp.LineNum, tmp.LineNumTaxCorr_calc)  :: integer AS LineNum_calc
                      FROM tmpData_Summ AS tmp
@@ -359,6 +401,7 @@ BEGIN
 
     , tmpData AS (SELECT tmp.MovementId
                        , tmp.MovementId_Tax
+                       , tmp.DocumentTaxKindId
                        , tmp.MovementItemId
                        , tmp.isNPP_calc
                        , tmp.LineNum
@@ -373,10 +416,11 @@ BEGIN
                        , tmp.LineNumTaxCorr_calc
                        , tmp.LineNumTax
                        , tmp.AmountTax_calc
+                       , tmp.PriceTax_calc
                        , tmp.AmountTax
                        , tmpData_Ord.LineNum_calc
-                       , CASE WHEN tmp.isNPP_calc = TRUE AND COALESCE (tmp.AmountTax_calc, 0) <> COALESCE (tmp.AmountTax, 0) THEN TRUE ELSE FALSE END AS isAmountTax
-                       , CASE WHEN tmp.isNPP_calc = TRUE AND COALESCE (tmp.LineNum, 0) <> COALESCE (tmpData_Ord.LineNum_calc, 0) THEN TRUE ELSE FALSE END     AS isLineNum
+                       , CASE WHEN tmp.isNPP_calc = TRUE AND COALESCE (tmp.AmountTax_calc, 0) <> COALESCE (tmp.AmountTax, 0) THEN TRUE ELSE FALSE END     AS isAmountTax
+                       , CASE WHEN tmp.isNPP_calc = TRUE AND COALESCE (tmp.LineNum, 0) <> COALESCE (tmpData_Ord.LineNum_calc, 0) THEN TRUE ELSE FALSE END AS isLineNum
                  FROM tmpData_Summ AS tmp
                       LEFT JOIN tmpData_Ord ON tmpData_Ord.MovementItemId = tmp.MovementItemId
                                            AND tmpData_Ord.MovementId_Tax = tmp.MovementId_Tax
@@ -391,7 +435,7 @@ BEGIN
                  WHERE MovementLinkObject.MovementId IN (SELECT tmpData.MovementId FROM tmpData)
                    AND MovementLinkObject.DescId IN (zc_MovementLinkObject_To()
                                                    , zc_MovementLinkObject_From()
-                                                   , zc_MovementLinkObject_DocumentTaxKind()
+                                                   --, zc_MovementLinkObject_DocumentTaxKind()
                                                    , zc_MovementLinkObject_Branch())
                  )
       
@@ -406,6 +450,20 @@ BEGIN
                                LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
                           WHERE Movement.Id IN (SELECT DISTINCT tmpAll.MovementId FROM tmpAll)
                           )
+
+
+   -- zc_MovementBoolean_Registered + zc_MovementDate_DateRegistered + zc_MovementBoolean_Electron
+    , tmpMovementBoolean AS (SELECT MovementBoolean.*
+                             FROM MovementBoolean
+                             WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpData.MovementId FROM tmpData)
+                                AND MovementBoolean.DescId IN (zc_MovementBoolean_Registered(), zc_MovementBoolean_Electron())
+                             )
+    , tmpMovementDate AS (SELECT MovementDate.*
+                          FROM MovementDate
+                          WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpData.MovementId FROM tmpData)
+                             AND MovementDate.DescId = zc_MovementDate_DateRegistered()
+                          )
+
 
     --- результат 
     SELECT Movement.ItemName                             AS ItemName
@@ -432,9 +490,13 @@ BEGIN
          , tmpData.AmountSumm_original  :: TFloat
          , tmpData.SummTaxDiff_calc     :: TFloat
          , tmpData.AmountTax_calc :: TFloat
+         , tmpData.PriceTax_calc  :: TFloat
          , CASE WHEN tmpData.isNPP_calc = FALSE THEN 0 ELSE tmpData.AmountTax END  :: TFloat  AS AmountTax
          , tmpData.isAmountTax
          , tmpData.isLineNum
+         , COALESCE (MovementBoolean_Registered.ValueData, FALSE)  :: Boolean AS isRegistered
+         , COALESCE (MovementBoolean_Electron.ValueData, FALSE)    :: Boolean AS isElectron
+         , MovementDate_DateRegistered.ValueData                 :: TDateTime AS DateRegistered
     FROM tmpData
          LEFT JOIN tmpMovement_All AS Movement ON Movement.Id = tmpData.MovementId
          LEFT JOIN tmpMovement_All AS Movement_Tax ON Movement_Tax.Id = tmpData.MovementId_Tax
@@ -443,11 +505,8 @@ BEGIN
                           ON MovementLinkObject_To.MovementId = Movement.Id
                          AND MovementLinkObject_To.DescId = CASE WHEN Movement.DescId = zc_Movement_Tax() THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From() END
          LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-         
-         LEFT JOIN tmpMLO AS MovementLinkObject_DocumentTaxKind
-                          ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
-                         AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
-         LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
+
+         LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = tmpData.DocumentTaxKindId
 
          LEFT JOIN tmpMLO AS MovementLinkObject_Branch
                           ON MovementLinkObject_Branch.MovementId = Movement.Id
@@ -464,6 +523,15 @@ BEGIN
 
          LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmpData.GoodsId
          LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpData.GoodsKindId
+
+         LEFT JOIN tmpMovementBoolean AS MovementBoolean_Registered 
+                                      ON MovementBoolean_Registered.MovementId = tmpData.MovementId
+                                     AND MovementBoolean_Registered.DescId = zc_MovementBoolean_Registered() 
+         LEFT JOIN tmpMovementBoolean AS MovementBoolean_Electron 
+                                      ON MovementBoolean_Electron.MovementId = tmpData.MovementId
+                                     AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
+         LEFT JOIN tmpMovementDate AS MovementDate_DateRegistered 
+                                   ON MovementDate_DateRegistered.MovementId = tmpData.MovementId
 
     WHERE (tmpData.GoodsId = inGoodsId OR inGoodsId = 0)
       AND ((inIsShowAll = FALSE AND (tmpData.isAmountTax = TRUE OR tmpData.isLineNum = TRUE))
