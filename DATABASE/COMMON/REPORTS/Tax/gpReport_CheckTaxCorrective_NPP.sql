@@ -74,11 +74,13 @@ BEGIN
                         LEFT JOIN lpSelect_TaxFromTaxCorrective (inMovementId := _tmpMovementTax.MovementId) AS tmp ON tmp.MovementId = _tmpMovementTax.MovementId
                   )
      -- сначала выбираем все товары из Налоговых и корректировок, чтоб сделать Расчетный № п/п
-    , tmpMI_Tax_All AS (SELECT MovementItem.MovementId                AS MovementId
+    , tmpMI_Tax_All AS (SELECT Movement.OperDate                      AS OperDate
+                             , MovementItem.MovementId                AS MovementId
                              , MovementItem.Id                        AS MovementItemId
                              , MovementItem.ObjectId                  AS GoodsId
                              , MovementItem.Amount                    AS Amount
                         FROM _tmpMovementTax
+                              LEFT JOIN Movement ON Movement.Id = _tmpMovementTax.MovementId
                               LEFT JOIN MovementItem ON MovementItem.MovementId = _tmpMovementTax.MovementId
                                                     AND MovementItem.DescId     = zc_MI_Master()
                                                     AND MovementItem.isErased   = FALSE
@@ -94,7 +96,8 @@ BEGIN
                                   AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
                              )
  
-    , tmpMI_Tax AS (SELECT MovementItem.MovementId                AS MovementId
+    , tmpMI_Tax AS (SELECT MovementItem.OperDate                  AS OperDate
+                         , MovementItem.MovementId                AS MovementId
                          , MovementItem.MovementItemId            AS MovementItemId
                          , MIFloat_NPP.ValueData       :: Integer AS LineNum
                          , MovementItem.GoodsId                   AS GoodsId
@@ -123,39 +126,34 @@ BEGIN
                                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.MovementItemId
                     )
 
-    , tmpMI_Corr AS (SELECT tmpMovement.MovementId
-                               , tmpMovement.MovementId_Tax
-                               , MovementItem.Id                                                AS MovementItemId
-                               , MovementItem.ObjectId                                          AS GoodsId
-                               , MovementItem.Amount                                            AS Amount
-                               , COALESCE (MovementBoolean_NPP_calc.ValueData, FALSE) ::Boolean AS isNPP_calc
-                          FROM (SELECT MLM_DocumentChild.MovementId                    --корр.
-                                         , MLM_DocumentChild.MovementChildId  AS MovementId_Tax
-                                    FROM MovementLinkMovement AS MLM_DocumentChild
-                                         INNER JOIN Movement ON Movement.Id = MLM_DocumentChild.MovementId
-                                                            AND Movement.DescId = zc_Movement_TaxCorrective()
-                                                            AND Movement.StatusId = zc_Enum_Status_Complete()
-                                    WHERE MLM_DocumentChild.MovementChildId IN (SELECT DISTINCT _tmpMovementTax.MovementId FROM _tmpMovementTax) --inMovementId -- НН
-                                      AND MLM_DocumentChild.DescId = zc_MovementLinkMovement_Child()
-                                    ) AS tmpMovement
-                                   LEFT JOIN MovementBoolean AS MovementBoolean_NPP_calc
-                                                             ON MovementBoolean_NPP_calc.MovementId = tmpMovement.MovementId
-                                                            AND MovementBoolean_NPP_calc.DescId = zc_MovementBoolean_NPP_calc()
+    , tmpMI_Corr AS (SELECT tmpMovement.OperDate
+                          , tmpMovement.MovementId
+                          , tmpMovement.MovementId_Tax
+                          , MovementItem.Id                                                AS MovementItemId
+                          , MovementItem.ObjectId                                          AS GoodsId
+                          , MovementItem.Amount                                            AS Amount
+                          , COALESCE (MovementBoolean_NPP_calc.ValueData, FALSE) ::Boolean AS isNPP_calc
+                     FROM (SELECT MLM_DocumentChild.MovementId                    --корр.
+                                , MLM_DocumentChild.MovementChildId  AS MovementId_Tax
+                                , Movement.OperDate
+                           FROM MovementLinkMovement AS MLM_DocumentChild
+                                INNER JOIN Movement ON Movement.Id       = MLM_DocumentChild.MovementId
+                                                   AND Movement.DescId   = zc_Movement_TaxCorrective()
+                                                   AND Movement.StatusId = zc_Enum_Status_Complete()
+                           WHERE MLM_DocumentChild.MovementChildId IN (SELECT DISTINCT _tmpMovementTax.MovementId FROM _tmpMovementTax) --inMovementId -- НН
+                             AND MLM_DocumentChild.DescId = zc_MovementLinkMovement_Child()
+                           ) AS tmpMovement
+                           LEFT JOIN MovementBoolean AS MovementBoolean_NPP_calc
+                                                     ON MovementBoolean_NPP_calc.MovementId = tmpMovement.MovementId
+                                                    AND MovementBoolean_NPP_calc.DescId = zc_MovementBoolean_NPP_calc()
 
-                                   LEFT JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
-                                                         AND MovementItem.DescId     = zc_MI_Master()
-                                                         AND MovementItem.isErased   = FALSE
-                           )
+                           LEFT JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
+                                                 AND MovementItem.DescId     = zc_MI_Master()
+                                                 AND MovementItem.isErased   = FALSE
+                    )
     , tmpMovementItemFloat AS (SELECT MovementItemFloat.*
                                FROM MovementItemFloat
                                WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_Corr.MovementItemId FROM tmpMI_Corr)
-                                /* AND MovementItemFloat.DescId IN (zc_MIFloat_Price()
-                                                                , zc_MIFloat_CountForPrice()
-                                                                , zc_MIFloat_NPP()
-                                                                , zc_MIFloat_NPPTax_calc()
-                                                                , zc_MIFloat_NPP_calc()
-                                                                , zc_MIFloat_AmountTax_calc()
-                                                                , zc_MIFloat_SummTaxDiff_calc())*/
                                )
     , tmpMovementItemBoolean AS (SELECT MovementItemBoolean.*
                                  FROM MovementItemBoolean
@@ -167,7 +165,8 @@ BEGIN
                              WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_Corr.MovementItemId FROM tmpMI_Corr)
                                AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
                              )
-    , tmpMI_TaxCorrective AS (SELECT tmpMovement.MovementId
+    , tmpMI_TaxCorrective AS (SELECT tmpMovement.OperDate
+                                   , tmpMovement.MovementId
                                    , tmpMovement.MovementId_Tax
                                    , tmpMovement.MovementItemId
                                    , tmpMovement.isNPP_calc
@@ -233,7 +232,9 @@ BEGIN
                               )
 
     -- данные НН и корректировок                           
-    , tmpData_All AS (SELECT tmp.MovementId
+    , tmpData_All AS (SELECT tmp.OperDate
+                           , tmp.MovementId
+                           , zc_Movement_Tax() AS MovementDescId
                            , tmp.MovementId AS MovementId_Tax
                            , tmp.MovementItemId
                            , tmp.LineNum
@@ -250,8 +251,10 @@ BEGIN
                            , 0   :: TFloat  AS AmountTax_calc
                            , TRUE           AS isNPP_calc
                       FROM tmpMI_Tax AS tmp
-                   UNION 
-                      SELECT tmp.MovementId
+                     UNION ALL
+                      SELECT tmp.OperDate
+                           , tmp.MovementId
+                           , zc_Movement_TaxCorrective() AS MovementDescId
                            , tmp.MovementId_Tax
                            , tmp.MovementItemId
                            , tmp.LineNumTaxCorr AS LineNum
@@ -268,9 +271,11 @@ BEGIN
                            , tmp.AmountTax_calc
                            , tmp.isNPP_calc
                       FROM tmpMI_TaxCorrective AS tmp
-                      )
+                     )
     -- перенумеруем 
-    , tmpDataAll_ord AS (SELECT tmp.MovementId
+    , tmpDataAll_ord AS (SELECT tmp.MovementDescId
+                              , tmp.OperDate
+                              , tmp.MovementId
                               , tmp.MovementId_Tax
                               , tmp.MovementItemId
                               , tmp.isNPP_calc
@@ -286,12 +291,20 @@ BEGIN
                               , tmp.LineNumTaxCorr_calc
                               , tmp.LineNumTax
                               , tmp.AmountTax_calc
-                              , ROW_NUMBER() OVER (PARTITION BY tmp.MovementId_Tax, tmp.GoodsId, tmp.GoodsKindId, tmp.Price ORDER BY tmp.MovementId_Tax, tmp.MovementId, tmp.LineNum, tmp.LineNumTaxCorr_calc)  :: integer AS Ord_calc
+                              , ROW_NUMBER() OVER (PARTITION BY tmp.MovementId_Tax, tmp.GoodsId, tmp.GoodsKindId, tmp.Price
+                                                   ORDER BY tmp.MovementId_Tax
+                                                          , CASE WHEN tmp.MovementDescId = zc_Movement_Tax() THEN 1 ELSE 2 END
+                                                          , tmp.OperDate
+                                                          , tmp.MovementId
+                                                          , tmp.LineNum, tmp.LineNumTaxCorr_calc
+                                                  )  :: Integer AS Ord_calc
                          FROM tmpData_All AS tmp
-                         )
+                        )
 
     -- получаем расчетное значение AmountTax_calc
-    , tmpData_Summ AS (SELECT tmp1.MovementId
+    , tmpData_Summ AS (SELECT tmp1.MovementDescId
+                            , tmp1.OperDate
+                            , tmp1.MovementId
                             , tmp1.MovementId_Tax
                             , tmp1.MovementItemId
                             , tmp1.isNPP_calc
@@ -315,7 +328,9 @@ BEGIN
                                                    AND (tmp2.GoodsKindId   = tmp1.GoodsKindId OR COALESCE (tmp1.GoodsKindId,0) = 0)
                                                    AND tmp2.Price          = tmp1.Price
                                                    AND tmp2.Ord_calc       < tmp1.Ord_calc
-                       GROUP BY tmp1.MovementId
+                       GROUP BY tmp1.MovementDescId
+                              , tmp1.OperDate
+                              , tmp1.MovementId
                               , tmp1.MovementId_Tax
                               , tmp1.MovementItemId
                               , tmp1.LineNum
@@ -351,7 +366,13 @@ BEGIN
                            , tmp.LineNumTax
                            , tmp.AmountTax_calc
                            , tmp.AmountTax
-                           , ROW_NUMBER() OVER (PARTITION BY tmp.MovementId_Tax ORDER BY tmp.MovementId, tmp.LineNum, tmp.LineNumTaxCorr_calc)  :: integer AS LineNum_calc
+                           , ROW_NUMBER() OVER (PARTITION BY tmp.MovementId_Tax
+                                                ORDER BY CASE WHEN tmp.MovementDescId = zc_Movement_Tax() THEN 1 ELSE 2 END
+                                                       , tmp.OperDate
+                                                       , tmp.MovementId
+                                                       , tmp.LineNum
+                                                       , tmp.LineNumTaxCorr_calc
+                                               ) :: Integer AS LineNum_calc
                      FROM tmpData_Summ AS tmp
                      WHERE tmp.isNPP_calc = TRUE
                        AND (COALESCE (tmp.AmountTax, 0) + COALESCE (tmp.Amount, 0)) > 0
@@ -423,8 +444,8 @@ BEGIN
 
          , tmpData.LineNum             :: integer                                         -- сквозная нумерация строк налоговой  и  корректировок (начиная с 31,03,18)
          , tmpData.LineNumTax          :: integer                                         -- № п/п из  налоговой который корректируется
-         , COALESCE (tmpData.LineNumTaxCorr_calc, 0) :: integer AS LineNumTaxCorr_calc    -- № п/п строки которая корректируется
-         , COALESCE (tmpData.LineNum_calc, 0)   :: integer AS LineNum_calc                -- расчетный № п/п
+         , COALESCE (tmpData.LineNumTaxCorr_calc, 0) :: Integer AS LineNumTaxCorr_calc    -- № п/п строки которая корректируется
+         , COALESCE (tmpData.LineNum_calc, 0)        :: Integer AS LineNum_calc           -- расчетный № п/п
          , tmpData.Amount         :: TFloat
          , tmpData.Price          :: TFloat
          , tmpData.CountForPrice  :: TFloat
@@ -486,4 +507,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_CheckTaxCorrective_NPP (inStartDate :='01.04.2018' ::TDateTime, inEndDate:='03.04.2018' ::TDateTime, inMovementId:=0, inGoodsId:= 0, inIsShowAll := false, inSession:= zfCalc_UserAdmin());
---5199861	
