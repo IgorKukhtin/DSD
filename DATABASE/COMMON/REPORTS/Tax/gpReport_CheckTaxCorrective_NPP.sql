@@ -57,9 +57,11 @@ BEGIN
     RETURN QUERY
 
       WITH
-      _tmpMovementTax AS (SELECT inMovementId AS MovementId --inMovementId
+      _tmpMovementTax AS (-- Если передан inMovementId <> 0 строим отчет по 1 документу
+                          SELECT inMovementId AS MovementId --inMovementId
                           WHERE COALESCE (inMovementId) <> 0
                        UNION 
+                         -- Если inMovementId = 0 строим отчет за период: За период выбираются Корректировки , а к ним уже выбираются налоговые
                          SELECT MovementLinkMovement_Child.MovementChildId AS MovementId
                          FROM MovementLinkMovement AS MovementLinkMovement_Child
                          WHERE MovementLinkMovement_Child.MovementId IN (SELECT DISTINCT Movement.Id AS MovementId_Corr
@@ -72,12 +74,13 @@ BEGIN
                            AND COALESCE (inMovementId) = 0
                          )
 
-      -- № п/п строк Налоговой
+      -- № п/п строк Налоговых
     , tmpMITax AS (SELECT tmp.MovementId, tmp.Kind, tmp.GoodsId, tmp.GoodsKindId, tmp.Price, tmp.LineNum
                    FROM _tmpMovementTax
                         LEFT JOIN lpSelect_TaxFromTaxCorrective (inMovementId := _tmpMovementTax.MovementId) AS tmp ON tmp.MovementId = _tmpMovementTax.MovementId
                   )
      -- сначала выбираем все товары из Налоговых и корректировок, чтоб сделать Расчетный № п/п
+     
     , tmpMI_Tax_All AS (SELECT Movement.OperDate                      AS OperDate
                              , MovementItem.MovementId                AS MovementId
                              , MovementItem.Id                        AS MovementItemId
@@ -101,6 +104,7 @@ BEGIN
                                                     AND MovementItem.DescId     = zc_MI_Master()
                                                     AND MovementItem.isErased   = FALSE
                        )
+    -- для оптимизации выбираем свойства строк отдельными запросами
     , tmpMF AS (SELECT MovementItemFloat.*
                 FROM MovementItemFloat
                 WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_Tax_All.MovementItemId FROM tmpMI_Tax_All)
@@ -111,7 +115,7 @@ BEGIN
                                 WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_Tax_All.MovementItemId FROM tmpMI_Tax_All)
                                   AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
                              )
- 
+    --Данные потоварно из Налоговых
     , tmpMI_Tax AS (SELECT MovementItem.OperDate                  AS OperDate
                          , MovementItem.MovementId                AS MovementId
                          , MovementItem.MovementItemId            AS MovementItemId
@@ -144,7 +148,7 @@ BEGIN
                           LEFT JOIN tmpMILO_GoodsKind_tax AS MILinkObject_GoodsKind
                                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.MovementItemId
                     )
-
+    -- Данных корректировок 
     , tmpMI_Corr AS (SELECT tmpMovement.OperDate
                           , tmpMovement.MovementId
                           , tmpMovement.MovementId_Tax
@@ -156,16 +160,17 @@ BEGIN
 
                           , CASE WHEN MovementString_InvNumberRegistered.ValueData <> '' THEN TRUE ELSE FALSE END  :: Boolean AS isRegistered
                           , CASE WHEN MovementString_InvNumberRegistered.ValueData <> '' THEN MovementDate_DateRegistered.ValueData ELSE NULL END :: TDateTime AS DateRegistered
-                       FROM (SELECT MLM_DocumentChild.MovementId                    --корр.
-                                , MLM_DocumentChild.MovementChildId  AS MovementId_Tax
-                                , Movement.OperDate
-                           FROM MovementLinkMovement AS MLM_DocumentChild
-                                INNER JOIN Movement ON Movement.Id = MLM_DocumentChild.MovementId
-                                                   AND Movement.DescId = zc_Movement_TaxCorrective()
-                                                   AND Movement.StatusId = zc_Enum_Status_Complete()
-                           WHERE MLM_DocumentChild.MovementChildId IN (SELECT DISTINCT _tmpMovementTax.MovementId FROM _tmpMovementTax) --inMovementId -- НН
-                             AND MLM_DocumentChild.DescId = zc_MovementLinkMovement_Child()
-                          ) AS tmpMovement
+                       FROM (-- для Налоговых получаем все их корректировки
+                             SELECT MLM_DocumentChild.MovementId                    --корр.
+                                  , MLM_DocumentChild.MovementChildId  AS MovementId_Tax
+                                  , Movement.OperDate
+                             FROM MovementLinkMovement AS MLM_DocumentChild
+                                  INNER JOIN Movement ON Movement.Id = MLM_DocumentChild.MovementId
+                                                     AND Movement.DescId = zc_Movement_TaxCorrective()
+                                                     AND Movement.StatusId = zc_Enum_Status_Complete()
+                             WHERE MLM_DocumentChild.MovementChildId IN (SELECT DISTINCT _tmpMovementTax.MovementId FROM _tmpMovementTax) --inMovementId -- НН
+                               AND MLM_DocumentChild.DescId = zc_MovementLinkMovement_Child()
+                            ) AS tmpMovement
                           LEFT JOIN MovementBoolean AS MovementBoolean_NPP_calc
                                                     ON MovementBoolean_NPP_calc.MovementId = tmpMovement.MovementId
                                                    AND MovementBoolean_NPP_calc.DescId = zc_MovementBoolean_NPP_calc()
@@ -184,7 +189,7 @@ BEGIN
                                                 AND MovementItem.DescId     = zc_MI_Master()
                                                 AND MovementItem.isErased   = FALSE
                     )
-
+    -- свойства строк корректировок
     , tmpMovementItemFloat AS (SELECT MovementItemFloat.*
                                FROM MovementItemFloat
                                WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_Corr.MovementItemId FROM tmpMI_Corr)
@@ -199,6 +204,8 @@ BEGIN
                              WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_Corr.MovementItemId FROM tmpMI_Corr)
                                AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
                              )
+                             
+    --Данные потоварно из корректировок
     , tmpMI_TaxCorrective AS (SELECT tmpMovement.OperDate
                                    , tmpMovement.MovementId
                                    , tmpMovement.MovementId_Tax
@@ -333,7 +340,7 @@ BEGIN
                            , tmp.isNPP_calc
                       FROM tmpMI_TaxCorrective AS tmp
                      )
-    -- перенумеруем 
+    -- нумеруем группировки По налоговым потоварно с учетом и без GoodsKindId для просчета в дальнейшем AmountTax_calc
     , tmpDataAll_ord AS (SELECT tmp.MovementDescId
                               , tmp.OperDate
                               , tmp.MovementId
@@ -361,7 +368,7 @@ BEGIN
                               , ROW_NUMBER() OVER (PARTITION BY tmp.MovementId_Tax, tmp.GoodsId, tmp.GoodsKindId, tmp.Price_Original
                                                    ORDER BY tmp.MovementId_Tax
                                                           , CASE WHEN tmp.MovementDescId = zc_Movement_Tax() THEN 1 ELSE 2 END
-                                                          , CASE WHEN tmp.isRegistered = TRUE THEN tmp.DateRegistered ELSE zc_DateEnd() END
+                                                          , CASE WHEN tmp.isRegistered = TRUE THEN tmp.DateRegistered ELSE tmp.OperDate END
                                                           , tmp.OperDate
                                                           , tmp.MovementId
                                                           , tmp.LineNum, tmp.LineNumTaxCorr_calc
@@ -370,7 +377,7 @@ BEGIN
                               , ROW_NUMBER() OVER (PARTITION BY tmp.MovementId_Tax, tmp.GoodsId, tmp.Price_Original
                                                    ORDER BY tmp.MovementId_Tax
                                                           , CASE WHEN tmp.MovementDescId = zc_Movement_Tax() THEN 1 ELSE 2 END
-                                                          , CASE WHEN tmp.isRegistered = TRUE THEN tmp.DateRegistered ELSE zc_DateEnd() END
+                                                          , CASE WHEN tmp.isRegistered = TRUE THEN tmp.DateRegistered ELSE tmp.OperDate END
                                                           , tmp.OperDate
                                                           , tmp.MovementId
                                                           , tmp.LineNum, tmp.LineNumTaxCorr_calc
@@ -457,6 +464,7 @@ BEGIN
                       )
 
     -- получаем расчетное значение № п/п
+    -- сортируем сначала налоговые потом корректировки,  дата регистрации (если нет рег. тогда дата документа), № пп НН / корр, и.т.д.
     , tmpData_Ord AS (SELECT tmp.MovementId
                            , tmp.MovementId_Tax
                            , tmp.DocumentTaxKindId
@@ -480,7 +488,7 @@ BEGIN
                            , tmp.AmountTax
                            , ROW_NUMBER() OVER (PARTITION BY tmp.MovementId_Tax
                                                 ORDER BY CASE WHEN tmp.MovementDescId = zc_Movement_Tax() THEN 1 ELSE 2 END
-                                                     , CASE WHEN tmp.isRegistered = TRUE THEN tmp.DateRegistered ELSE zc_DateEnd() END
+                                                     , CASE WHEN tmp.isRegistered = TRUE THEN tmp.DateRegistered ELSE tmp.OperDate END
                                                      , tmp.LineNum
                                                      , tmp.OperDate
                                                      , tmp.MovementId
@@ -494,7 +502,7 @@ BEGIN
                                                      )
                            )
                     )
-
+    -- к основной таб. данных привязываем расченый №пп, и проверяем на ошибки (отклонения)
     , tmpData AS (SELECT tmp.MovementId
                        , tmp.MovementId_Tax
                        , tmp.DocumentTaxKindId
@@ -524,10 +532,11 @@ BEGIN
                                            AND tmpData_Ord.MovementId_Tax = tmp.MovementId_Tax
                                            AND tmpData_Ord.MovementId     = tmp.MovementId
                  )
-
+                 
+    -- запросы свойств документов
     , tmpMLO AS (SELECT MovementLinkObject.*
                  FROM MovementLinkObject
-                 WHERE MovementLinkObject.MovementId IN (SELECT tmpData.MovementId FROM tmpData)
+                 WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpData.MovementId FROM tmpData)
                    AND MovementLinkObject.DescId IN (zc_MovementLinkObject_To()
                                                    , zc_MovementLinkObject_From()
                                                    , zc_MovementLinkObject_Branch())
@@ -550,18 +559,8 @@ BEGIN
                              WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpData.MovementId FROM tmpData)
                                AND MovementBoolean.DescId = zc_MovementBoolean_Electron()
                             )
-   /* , tmpMovementString AS (SELECT MovementString.*
-                             FROM MovementString
-                             WHERE MovementString.MovementId IN (SELECT DISTINCT tmpData.MovementId FROM tmpData)
-                               AND MovementString.DescId = zc_MovementString_InvNumberRegistered()
-                           )
-    , tmpMovementDate AS (SELECT MovementDate.*
-                          FROM MovementDate
-                          WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpData.MovementId FROM tmpData)
-                             AND MovementDate.DescId = zc_MovementDate_DateRegistered()
-                         )
-   */
-    --- результат 
+
+    --- результат
     SELECT Movement.ItemName                             AS ItemName
          , Object_TaxKind.ValueData         		 AS TaxKindName
          , Object_Branch.ValueData                       AS BranchName
@@ -591,11 +590,8 @@ BEGIN
          , tmpData.isAmountTax
          , tmpData.isLineNum
 
-   --      , CASE WHEN MovementString_InvNumberRegistered.ValueData <> '' THEN TRUE ELSE FALSE END  :: Boolean AS isRegistered
          , tmpData.isRegistered
-                              
          , COALESCE (MovementBoolean_Electron.ValueData, FALSE)    :: Boolean AS isElectron
-   --      , CASE WHEN MovementString_InvNumberRegistered.ValueData <> '' THEN MovementDate_DateRegistered.ValueData ELSE NULL END :: TDateTime AS DateRegistered
          , tmpData.DateRegistered
     FROM tmpData
          LEFT JOIN tmpMovement_All AS Movement ON Movement.Id = tmpData.MovementId
