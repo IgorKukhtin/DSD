@@ -698,17 +698,26 @@ BEGIN
                 , OperSumm_NalogRetRecalc
            FROM
                  -- получили 1 запись + !!! перевели в валюту если надо!!!
-                (SELECT SUM (tmpMI.OperCount_Master)  AS OperCount_Master
+                (SELECT SUM (CASE WHEN tmpMI.myLevel = 2 AND vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                                       THEN 0
+                                  ELSE tmpMI.OperCount_Master
+                            END) AS OperCount_Master
                       , SUM (tmpMI.OperCount_Child)   AS OperCount_Child
                       , SUM (tmpMI.OperCount_Partner) AS OperCount_Partner -- Количество у контрагента
                       , SUM (tmpMI.OperCount_Packer)  AS OperCount_Packer  -- Количество у заготовителя
                       , SUM (tmpMI.OperCount_Second)  AS OperCount_Second  -- Количество дозаказ
 
-                      , SUM (tmpMI.OperCount_Tare)     AS OperCount_Tare
-                      , SUM (tmpMI.OperCount_Sh)       AS OperCount_Sh
-                      , SUM (tmpMI.OperCount_Kg)       AS OperCount_Kg
-                      , SUM (tmpMI.OperCount_ShFrom)   AS OperCount_ShFrom
-                      , SUM (tmpMI.OperCount_KgFrom)   AS OperCount_KgFrom
+                      , SUM (tmpMI.OperCount_Tare) AS OperCount_Tare
+                      , SUM (CASE WHEN tmpMI.myLevel = 2 AND vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                                       THEN 0
+                                  ELSE tmpMI.OperCount_Sh
+                            END) AS OperCount_Sh
+                      , SUM (CASE WHEN tmpMI.myLevel = 2 AND vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                                       THEN 0
+                                  ELSE tmpMI.OperCount_Kg
+                            END) AS OperCount_Kg
+                      , SUM (tmpMI.OperCount_ShFrom) AS OperCount_ShFrom
+                      , SUM (tmpMI.OperCount_KgFrom) AS OperCount_KgFrom
 
                         -- сумма по Контрагенту - с округлением до 2-х знаков
                       , SUM (CASE WHEN tmpMI.CountForPrice <> 0
@@ -781,6 +790,8 @@ BEGIN
                       , SUM (tmpMI.OperSumm_NalogRetRecalc)   AS OperSumm_NalogRetRecalc
                   FROM (SELECT tmpMI.GoodsId
                              , tmpMI.GoodsKindId
+                             , tmpMI.myLevel
+
                                -- Сумма DIFF для НН в колонке 13/1строка
                              , tmpMI.SummTaxDiff_calc
 
@@ -896,6 +907,9 @@ BEGIN
                                    , tmpMI.GoodsId
                                    , tmpMI.GoodsKindId
 
+                                     -- !!! ПЕРВАЯ Строка !!!
+                                   , 1 AS myLevel
+                                     -- !!! ПЕРВАЯ Строка !!!
                                    , CASE WHEN vbIsNPP_calc = TRUE
                                            AND vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                      , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
@@ -963,6 +977,9 @@ BEGIN
                                    , tmpMI.GoodsId
                                    , tmpMI.GoodsKindId
 
+                                     -- !!! ВТОРАЯ Строка !!!
+                                   , 2 AS myLevel
+                                     -- !!! ВТОРАЯ Строка !!!
                                    , CASE WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                      , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
                                                                       )

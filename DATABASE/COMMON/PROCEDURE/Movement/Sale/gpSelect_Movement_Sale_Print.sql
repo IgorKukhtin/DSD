@@ -37,7 +37,9 @@ $BODY$
 
     DECLARE vbIsProcess_BranchIn Boolean;
 
+    DECLARE vbWeighingCount   Integer;
     DECLARE vbStoreKeeperName TVarChar;
+    
     DECLARE vbIsInfoMoney_30201 Boolean;
     DECLARE vbIsInfoMoney_30200 Boolean;
 
@@ -53,6 +55,14 @@ BEGIN
      -- !!! для Киева
      vbKiev := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Unit() AND Object.Id = 8411 );    
  
+
+     -- кол-во Взвешиваний
+     vbWeighingCount:= (SELECT COUNT(*)
+                        FROM Movement
+                        WHERE Movement.ParentId = inMovementId AND Movement.DescId IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction())
+                          AND Movement.StatusId = zc_Enum_Status_Complete()
+                       );
+
      -- параметры из Взвешивания
      vbStoreKeeperName:= (SELECT Object_User.ValueData
                           FROM Movement
@@ -541,6 +551,9 @@ BEGIN
            , CASE WHEN Position(UPPER('обмен') in UPPER(View_Contract.InvNumber)) > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPrintText
            
            , CASE WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() THEN TRUE ELSE FALSE END :: Boolean AS isFirstForm
+
+             -- кол-во Взвешиваний
+           , vbWeighingCount AS WeighingCount
 
        FROM Movement
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
