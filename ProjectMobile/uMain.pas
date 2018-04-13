@@ -3684,6 +3684,9 @@ end;
 procedure TfrmMain.bOptimizeDBClick(Sender: TObject);
 begin
   try
+    DM.conMain.ExecSQL('pragma integrity_check');
+    DM.conMain.ExecSQL('VACUUM');
+
     DM.conMain.ExecSQL('DELETE FROM MOVEMENT_ROUTEMEMBER');
 
     DM.conMain.ExecSQL('DELETE FROM Object_GoodsByGoodsKind WHERE isErased = 1');
