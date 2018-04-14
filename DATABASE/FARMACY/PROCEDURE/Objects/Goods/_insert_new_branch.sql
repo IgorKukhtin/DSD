@@ -72,7 +72,8 @@
            WHERE ObjectLink_LinkGoods_GoodsMain.ChildObjectId > 0
           ) AS Object_Goods
           LEFT JOIN Object AS Object_Retail ON Object_Retail.DescId = zc_Object_Retail() AND Object_Retail.Id <> Object_Goods.ObjectId
-                                           AND Object_Retail.Id = (select max (Id) from Object where DescId = zc_Object_Retail())
+                                           -- AND Object_Retail.Id = (select max (Id) from Object where DescId = zc_Object_Retail())
+                                           AND Object_Retail.Id IN (7433742 , 7433743) -- select * from Object where DescId = zc_Object_Retail() order by id DESC
           
 
           LEFT JOIN 
@@ -80,7 +81,8 @@
            FROM (SELECT MIN (Object_Retail.Id) AS Id FROM Object AS Object_Retail WHERE Object_Retail.DescId = zc_Object_Retail()
                 ) AS Object_Retail_from
                 LEFT JOIN Object AS Object_Retail ON Object_Retail.DescId = zc_Object_Retail() AND Object_Retail.Id <> Object_Retail_from.Id
-                                                 AND Object_Retail.Id = (select max (Id) from Object where DescId = zc_Object_Retail())
+                                                 -- AND Object_Retail.Id = (select max (Id) from Object where DescId = zc_Object_Retail())
+                                                 AND Object_Retail.Id IN (7433742 , 7433743)
                 INNER JOIN ObjectLink AS ObjectLink_Goods_Object
                                       ON ObjectLink_Goods_Object.ChildObjectId = Object_Retail.Id
                                      AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
@@ -162,13 +164,15 @@
                                               AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
            WHERE ObjectLink_LinkGoods_GoodsMain.ChildObjectId > 0
           ) AS Object_Goods_View_from
-          LEFT JOIN Object AS Object_Retail ON Object_Retail.DescId = zc_Object_Retail() AND Object_Retail.Id <> Object_Goods_View_from.ObjectId
-                                           AND Object_Retail.Id = (select max (Id) from Object where DescId = zc_Object_Retail())
+          LEFT JOIN Object AS Object_Retail ON Object_Retail.DescId = zc_Object_Retail() -- AND Object_Retail.Id <> Object_Goods_View_from.ObjectId
+                                           -- AND Object_Retail.Id = (select max (Id) from Object where DescId = zc_Object_Retail())
+                                           AND Object_Retail.Id IN (7433742 , 7433743)
+
           -- inner JOIN Object_Goods_View on Object_Goods_View.ObjectId = Object_Retail.Id
           --        and Object_Goods_View.GoodsCode = Object_Goods_View_from.GoodsCode
 
 
-
+/*
      SELECT *
           , gpInsertUpdate_Object_LinkGoods_Load (inGoodsMainCode    := '25995'
                                                 , inGoodsCode        := '25995'
@@ -180,3 +184,4 @@
                 ) AS Object_Retail_from
           ) AS Object_Goods_View_from
           LEFT JOIN Object AS Object_Retail ON Object_Retail.DescId = zc_Object_Retail() AND Object_Retail.Id <> Object_Goods_View_from.ObjectId
+*/

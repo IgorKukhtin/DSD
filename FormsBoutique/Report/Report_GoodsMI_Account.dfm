@@ -1,18 +1,18 @@
 inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1088#1072#1089#1095#1077#1090#1072#1084'>'
   ClientHeight = 425
-  ClientWidth = 1366
+  ClientWidth = 1362
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1382
-  ExplicitHeight = 463
+  ExplicitWidth = 1378
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
-    Width = 1366
+    Width = 1362
     Height = 33
-    ExplicitWidth = 1366
+    ExplicitWidth = 1362
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 29
@@ -57,21 +57,21 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
   end
   inherited PageControl: TcxPageControl [1]
     Top = 59
-    Width = 1366
+    Width = 1362
     Height = 336
     TabOrder = 3
     ExplicitTop = 59
-    ExplicitWidth = 1366
+    ExplicitWidth = 1362
     ExplicitHeight = 336
     ClientRectBottom = 336
-    ClientRectRight = 1366
+    ClientRectRight = 1362
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1366
+      ExplicitWidth = 1362
       ExplicitHeight = 336
       inherited cxGrid: TcxGrid
-        Width = 1366
+        Width = 1362
         Height = 336
-        ExplicitWidth = 1366
+        ExplicitWidth = 1362
         ExplicitHeight = 336
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -507,7 +507,7 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
   object PanelGoodsGroupNameFull: TPanel [2]
     Left = 0
     Top = 395
-    Width = 1366
+    Width = 1362
     Height = 30
     Align = alBottom
     BevelOuter = bvNone
@@ -528,8 +528,8 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
       Height = 30
-      Width = 1366
-      AnchorX = 683
+      Width = 1362
+      AnchorX = 681
       AnchorY = 15
     end
   end
@@ -820,7 +820,7 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
         item
           DataSet = MasterCDS
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'NumGroup;ClientName;GoodsCode;LabelName;GoodsSizeName'
+          IndexFieldNames = 'NumGroup;ValueGroup;ClientName;GoodsCode;LabelName;GoodsSizeName'
         end>
       Params = <
         item

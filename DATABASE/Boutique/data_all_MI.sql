@@ -13,6 +13,9 @@
 -- delete from _pgSummDiscountManual;
 -- insert into _pgSummDiscountManual (DiscountMovementItemId, SummDiscountManual) select  DiscountMovementItemId, SummDiscountManual from _pgSummDiscountManual_view;
 
+-- select DatabaseId, ReplId, * from DiscountKlient where DiscountKlientName  like '%чубар%' or ReplId = 353 order by 4
+-- select DatabaseId, ReplId, * from DiscountKlient where DiscountKlientName  like '%чубар%' or ReplId = 2416 order by 4
+
 --
 -- 1. Выгрузили сво всех маг - Продажи + Возвраты - !!!в файл!!! потом скопировали
 --

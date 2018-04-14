@@ -5712,7 +5712,8 @@ begin
         Add('select');
         Add('  Unit.Id as ObjectId');
         Add(', 0 as ObjectCode');
-        Add(', Unit.UnitName as ObjectName');
+        //Add(', Unit.UnitName as ObjectName');
+        Add(', DiscountKlient.DiscountKlientName as ObjectName');
         Add(', zc_erasedDel() as zc_erasedDel');
         Add(', Unit.Erased as Erased');
         Add(', Unit.Id_Postgres');
