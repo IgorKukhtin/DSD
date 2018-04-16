@@ -726,7 +726,7 @@ begin
   try
     timer1.Enabled := False;
 
-    btnOptimaAllClick(nil);
+//    btnOptimaAllClick(nil);
 
     btnBaDMExecuteClick(nil);
     btnBaDMExportClick(nil);
