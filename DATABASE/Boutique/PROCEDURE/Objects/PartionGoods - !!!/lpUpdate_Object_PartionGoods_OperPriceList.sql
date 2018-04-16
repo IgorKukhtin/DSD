@@ -33,7 +33,7 @@ BEGIN
       ;
 
       -- Если было изменение - надо записать в Object_GoodsPrint - потом распечатают Ценник с Новой ценой
-      IF FOUND
+      IF FOUND AND inUserId <> zc_User_Sybase()
       THEN
           -- ? по ВСЕМ товарам ?
           PERFORM lpInsertUpdate_Object_GoodsPrint (ioOrd       := 0

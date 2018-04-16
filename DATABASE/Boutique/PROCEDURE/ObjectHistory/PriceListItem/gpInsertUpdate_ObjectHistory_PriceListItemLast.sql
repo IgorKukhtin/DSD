@@ -90,4 +90,4 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_ObjectHistory_PriceListItemLast (ioId := 0 , inPriceListId := 372 , inGoodsId := 406 , inOperDate := ('20.08.2015')::TDateTime , inValue := 59 , inIsLast := 'False' ,  inSession := '2');
+-- SELECT * FROM gpInsertUpdate_ObjectHistory_PriceListItemLast (ioId := 0, inPriceListId:= 4788, inGoodsId := 120766, inOperDate = '26.03.2015', inValue := 59, inIsLast:= TRUE, inSession := zc_User_Sybase() :: TVarChar);

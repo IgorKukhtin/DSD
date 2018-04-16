@@ -80,7 +80,7 @@
           (SELECT Object_Goods.*, ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId_main, Object_Retail.Id AS ObjectId
            FROM (SELECT MIN (Object_Retail.Id) AS Id FROM Object AS Object_Retail WHERE Object_Retail.DescId = zc_Object_Retail()
                 ) AS Object_Retail_from
-                LEFT JOIN Object AS Object_Retail ON Object_Retail.DescId = zc_Object_Retail() AND Object_Retail.Id <> Object_Retail_from.Id
+                LEFT JOIN Object AS Object_Retail ON Object_Retail.DescId = zc_Object_Retail() -- AND Object_Retail.Id <> Object_Retail_from.Id
                                                  -- AND Object_Retail.Id = (select max (Id) from Object where DescId = zc_Object_Retail())
                                                  AND Object_Retail.Id IN (7433742 , 7433743)
                 INNER JOIN ObjectLink AS ObjectLink_Goods_Object
