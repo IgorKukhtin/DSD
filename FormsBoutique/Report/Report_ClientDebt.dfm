@@ -81,7 +81,6 @@ inherited Report_ClientDebtForm: TReport_ClientDebtForm
       inherited cxGrid: TcxGrid
         Width = 1065
         Height = 366
-        ExplicitTop = 3
         ExplicitWidth = 1065
         ExplicitHeight = 366
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -633,6 +632,41 @@ inherited Report_ClientDebtForm: TReport_ClientDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object SummTotalPay: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' '#1080#1090#1086#1075#1086
+            DataBinding.FieldName = 'SummTotalPay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object SummToPay: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1082' '#1086#1087#1083#1072#1090#1077
+            DataBinding.FieldName = 'SummToPay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object InsertName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
+            DataBinding.FieldName = 'InsertName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
         end
       end
     end
@@ -964,9 +998,9 @@ inherited Report_ClientDebtForm: TReport_ClientDebtForm
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = MasterCDS
           UserName = 'frxDBDItems'
           IndexFieldNames = 'ClientName;OperDate_Sale;LabelName'
+          GridView = cxGridDBTableView
         end>
       Params = <
         item

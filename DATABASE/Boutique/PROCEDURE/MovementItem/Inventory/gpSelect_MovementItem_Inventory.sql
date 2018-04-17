@@ -36,8 +36,8 @@ $BODY$
   DECLARE vbPartnerId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_Inventory());
-     vbUserId:= lpGetUserBySession (inSession);
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_MI_Inventory());
+     --vbUserId:= lpGetUserBySession (inSession);
 
       -- Результат такой
      RETURN QUERY 
@@ -158,4 +158,4 @@ $BODY$
 */
 
 -- тест
---select * from gpSelect_MovementItem_Inventory(inMovementId := 23 , inIsErased := 'False' ,  inSession := '2');
+--select * from gpSelect_MovementItem_Inventory(inMovementId := 23 , inIsErased := 'False' ,  inSession := zfCalc_UserAdmin());

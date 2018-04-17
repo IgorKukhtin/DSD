@@ -29,8 +29,8 @@ $BODY$
   DECLARE vbParValue       TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpGetUserBySession (inSession);
-
+     --vbUserId:= lpGetUserBySession (inSession);
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_MI_Income());
 
      -- Определили курс в документе
      SELECT MLO_CurrencyDocument.ObjectId AS CurrencyId_Doc
