@@ -1626,6 +1626,9 @@ object GoodsAccountForm: TGoodsAccountForm
       ReportNameParam.Value = 'PrintMovement_GoodsAccount'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintCheck: TdsdPrintAction
       Category = 'DSDLib'
@@ -1647,7 +1650,6 @@ object GoodsAccountForm: TGoodsAccountForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      Printer = 'PrinterName'
       Params = <
         item
           Name = 'InvNumber'
@@ -1674,10 +1676,17 @@ object GoodsAccountForm: TGoodsAccountForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
+      Printer = 'PrinterName'
       ReportName = 'Print_Check_GoodsAccount'
       ReportNameParam.Value = 'Print_Check_GoodsAccount'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.Component = FormParams
+      PrinterNameParam.ComponentItem = 'PrinterName'
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+      PreviewWindowMaximized = False
     end
     object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -2880,8 +2889,8 @@ object GoodsAccountForm: TGoodsAccountForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 704
-    Top = 264
+    Left = 736
+    Top = 296
   end
   object spComplete_User: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_GoodsAccount_User'
