@@ -134,7 +134,7 @@ type
     cxGridLevel1: TcxGridLevel;
     cxSplitter1: TcxSplitter;
     spSelectBarCode: TdsdStoredProc;
-    cbisPay: TcxCheckBox;
+    cbIsPay: TcxCheckBox;
     actInsertUpdateMIChild: TdsdInsertUpdateAction;
     mactInsertUpdateMIChild: TMultiAction;
     bbInsertUpdateMIChild: TdxBarButton;

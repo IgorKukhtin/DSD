@@ -140,7 +140,7 @@ type
     spSelectBarCode: TdsdStoredProc;
     actPartionGoodsChoice: TOpenChoiceForm;
     actInsertRecord: TInsertRecord;
-    cbisPay: TcxCheckBox;
+    cbIsPay: TcxCheckBox;
     DiscountSaleKindName: TcxGridDBColumn;
     actInsertUpdateMIChild: TdsdInsertUpdateAction;
     mactInsertUpdateMIChild: TMultiAction;

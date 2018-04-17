@@ -188,7 +188,7 @@ object SaleForm: TSaleForm
       ParentShowHint = False
       ShowHint = True
     end
-    object cbisPay: TcxCheckBox
+    object cbIsPay: TcxCheckBox
       Left = 920
       Top = 103
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089' '#1086#1087#1083#1072#1090#1086#1081
@@ -1364,6 +1364,7 @@ object SaleForm: TSaleForm
       end
       item
         Name = 'PrinterName'
+        Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1856,6 +1857,7 @@ object SaleForm: TSaleForm
       ReportNameParam.Value = 'Print_Check'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
       PrinterNameParam.Component = FormParams
       PrinterNameParam.ComponentItem = 'PrinterName'
       PrinterNameParam.DataType = ftString
@@ -2590,7 +2592,7 @@ object SaleForm: TSaleForm
       item
         Name = 'inIsPay'
         Value = Null
-        Component = cbisPay
+        Component = cbIsPay
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3469,7 +3471,7 @@ object SaleForm: TSaleForm
       item
         Name = 'inIsPay'
         Value = 'False'
-        Component = cbisPay
+        Component = cbIsPay
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -188,7 +188,7 @@ object SaleTwoForm: TSaleTwoForm
       ParentShowHint = False
       ShowHint = True
     end
-    object cbisPay: TcxCheckBox
+    object cbIsPay: TcxCheckBox
       Left = 920
       Top = 103
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089' '#1086#1087#1083#1072#1090#1086#1081
@@ -1839,7 +1839,6 @@ object SaleTwoForm: TSaleTwoForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      Printer = 'PrinterName'
       Params = <
         item
           Name = 'InvNumber'
@@ -1875,10 +1874,14 @@ object SaleTwoForm: TSaleTwoForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
+      Printer = 'PrinterName'
       ReportName = 'Print_Check'
       ReportNameParam.Value = 'Print_Check'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
       PreviewWindowMaximized = False
     end
     object actPrint: TdsdPrintAction
@@ -1931,6 +1934,9 @@ object SaleTwoForm: TSaleTwoForm
       ReportNameParam.Value = 'PrintMovement_ReturnOut'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -2606,7 +2612,7 @@ object SaleTwoForm: TSaleTwoForm
       item
         Name = 'inIsPay'
         Value = Null
-        Component = cbisPay
+        Component = cbIsPay
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3497,7 +3503,7 @@ object SaleTwoForm: TSaleTwoForm
       item
         Name = 'inIsPay'
         Value = 'False'
-        Component = cbisPay
+        Component = cbIsPay
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

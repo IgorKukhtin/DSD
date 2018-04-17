@@ -188,11 +188,12 @@ object ReturnInForm: TReturnInForm
       ParentShowHint = False
       ShowHint = True
     end
-    object cbisPay: TcxCheckBox
+    object cbIsPay: TcxCheckBox
       Left = 920
       Top = 103
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089' '#1086#1087#1083#1072#1090#1086#1081
       Properties.ReadOnly = False
+      State = cbsChecked
       TabOrder = 18
       Width = 127
     end
@@ -1882,6 +1883,9 @@ object ReturnInForm: TReturnInForm
       ReportNameParam.Value = 'PrintMovement_ReturnOut'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -2246,7 +2250,6 @@ object ReturnInForm: TReturnInForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      Printer = 'PrinterName'
       Params = <
         item
           Name = 'InvNumber'
@@ -2273,10 +2276,14 @@ object ReturnInForm: TReturnInForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
+      Printer = 'PrinterName'
       ReportName = 'Print_Check_GoodsAccount'
       ReportNameParam.Value = 'Print_Check_GoodsAccount'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actGet_New: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -2459,9 +2466,9 @@ object ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPay'
+        Name = 'inIsPay'
         Value = Null
-        Component = cbisPay
+        Component = cbIsPay
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2549,6 +2556,14 @@ object ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'outTotalPay'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalPay'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outTotalPayOth'
         Value = Null
         Component = MasterCDS
@@ -2561,6 +2576,14 @@ object ReturnInForm: TReturnInForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'TotalSummToPay'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummDebt'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummDebt'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -3329,7 +3352,7 @@ object ReturnInForm: TReturnInForm
       item
         Name = 'inisPay'
         Value = 'False'
-        Component = cbisPay
+        Component = cbIsPay
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

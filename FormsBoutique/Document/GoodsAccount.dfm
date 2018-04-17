@@ -173,7 +173,7 @@ object GoodsAccountForm: TGoodsAccountForm
       ParentShowHint = False
       ShowHint = True
     end
-    object cbisPay: TcxCheckBox
+    object cbIsPay: TcxCheckBox
       Left = 920
       Top = 103
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089' '#1086#1087#1083#1072#1090#1086#1081
@@ -1626,6 +1626,9 @@ object GoodsAccountForm: TGoodsAccountForm
       ReportNameParam.Value = 'PrintMovement_GoodsAccount'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintCheck: TdsdPrintAction
       Category = 'DSDLib'
@@ -1647,7 +1650,6 @@ object GoodsAccountForm: TGoodsAccountForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      Printer = 'PrinterName'
       Params = <
         item
           Name = 'InvNumber'
@@ -1674,10 +1676,14 @@ object GoodsAccountForm: TGoodsAccountForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
+      Printer = 'PrinterName'
       ReportName = 'Print_Check_GoodsAccount'
       ReportNameParam.Value = 'Print_Check_GoodsAccount'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -2165,7 +2171,7 @@ object GoodsAccountForm: TGoodsAccountForm
       item
         Name = 'inisPay'
         Value = Null
-        Component = cbisPay
+        Component = cbIsPay
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2177,6 +2183,30 @@ object GoodsAccountForm: TGoodsAccountForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummChangePercent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummChangePercent'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalPay'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalPay'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummDebt'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummDebt'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item

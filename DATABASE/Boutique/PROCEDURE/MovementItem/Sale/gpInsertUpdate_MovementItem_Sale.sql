@@ -44,12 +44,12 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 
-   DECLARE vbPartionId Integer;
-   DECLARE vbOperDate TDateTime;
-   DECLARE vbCurrencyId Integer;
-   DECLARE vbUnitId Integer;
-   DECLARE vbClientId Integer;
-   DECLARE vbCashId Integer;
+   DECLARE vbOperDate    TDateTime;
+   DECLARE vbCurrencyId  Integer;
+   DECLARE vbUnitId      Integer;
+   DECLARE vbUnitId_user Integer;
+   DECLARE vbClientId    Integer;
+   DECLARE vbCashId      Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
@@ -59,17 +59,17 @@ BEGIN
      -- замена
      IF COALESCE (ioAmount, 0) = 0 AND COALESCE (ioId, 0) = 0 AND vbUserId <> zc_User_Sybase()
      THEN
-         -- По умаолчанию
+         -- По умолчанию
          ioAmount:= 1;
      END IF;
 
 
      -- Получили для Пользователя - к какому Подразделению он привязан
-     vbUnitId:= lpGetUnit_byUser (vbUserId);
+     vbUnitId_user:= lpGetUnit_byUser (vbUserId);
 
 
      -- Если Штрих-код Поставщика - ОБЯЗАТЕЛЕН
-     IF EXISTS (SELECT 1 FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = vbUnitId AND ObjectBoolean.DescId = zc_ObjectBoolean_Unit_PartnerBarCode() AND ObjectBoolean.ValueData = TRUE)
+     IF EXISTS (SELECT 1 FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = vbUnitId_user AND ObjectBoolean.DescId = zc_ObjectBoolean_Unit_PartnerBarCode() AND ObjectBoolean.ValueData = TRUE)
         AND vbUserId <> zc_User_Sybase()
      THEN
          -- при сканировании вызывается лишний раз
@@ -101,10 +101,34 @@ BEGIN
      END IF;
 
 
+     -- параметры из Документа
+     SELECT Movement.OperDate
+          , COALESCE (MovementLinkObject_From.ObjectId, 0) AS UnitId
+          , COALESCE (MovementLinkObject_To.ObjectId, 0)   AS ClientId
+            INTO vbOperDate, vbUnitId, vbClientId
+     FROM Movement
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                         ON MovementLinkObject_From.MovementId = Movement.Id
+                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = Movement.Id
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+     WHERE Movement.Id = inMovementId;
+
+
      -- проверка - документ должен быть сохранен
      IF COALESCE (inMovementId, 0) = 0 THEN
         RAISE EXCEPTION 'Ошибка.Документ не сохранен.';
      END IF;
+     -- проверка - свойство должно быть установлено
+     IF COALESCE (vbUnitId, 0) = 0 THEN
+        RAISE EXCEPTION 'Ошибка.Не установлено значение <Подразделение>.';
+     END IF;
+     -- проверка - Пользователя
+     IF vbUnitId_user > 0 AND vbUnitId_user <> vbUnitId THEN
+        RAISE EXCEPTION 'Ошибка.Нет прав проводить операцию для подразделения <%>.', lfGet_Object_ValueData_sh (vbUnitId);
+     END IF;
+     
      -- проверка - свойство должно быть установлено
      IF COALESCE (inPartionId, 0) = 0 THEN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Партия>.';
@@ -130,20 +154,6 @@ BEGIN
          RETURN;
      END IF;
 
-
-     -- параметры из Документа
-     SELECT Movement.OperDate
-          , COALESCE (MovementLinkObject_From.ObjectId, 0) AS UnitId
-          , COALESCE (MovementLinkObject_To.ObjectId, 0)   AS ClientId
-            INTO vbOperDate, vbUnitId, vbClientId
-     FROM Movement
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                         ON MovementLinkObject_From.MovementId = Movement.Id
-                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = Movement.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-     WHERE Movement.Id = inMovementId;
 
 
      -- проверка: ОСТАТОК должен быть
@@ -258,7 +268,8 @@ BEGIN
          FROM zfSelect_DiscountSaleKind (vbOperDate, vbUnitId, ioGoodsId, vbClientId, vbUserId) AS tmp;
 
          -- Дополнительная скидка в продаже ГРН
-         IF inIsPay = TRUE
+         IF (inIsPay = TRUE AND ioAmount <> COALESCE ((SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = ioId), 0))
+            OR ioAmount = 0
          THEN
              -- !!!обнулили!!!
              ioSummChangePercent:= 0;
@@ -298,32 +309,32 @@ BEGIN
      outTotalSummDebt := COALESCE (outTotalSummToPay, 0) - COALESCE (outTotalPay, 0) ;
 
 
-    -- !!!для SYBASE - потом убрать!!!
-    /*IF vbUserId = zc_User_Sybase() AND ioId > 0 AND inIsPay = FALSE
-    THEN PERFORM gpInsertUpdate_MI_Sale_Child(
-                       inMovementId            := inMovementId
-                     , inParentId              := ioId
-                     , inAmountGRN             := 0
-                     , inAmountUSD             := 0
-                     , inAmountEUR             := 0
-                     , inAmountCard            := 0
-                     , inAmountDiscount        := 0
-                     , inCurrencyValueUSD      := 0
-                     , inParValueUSD           := 0
-                     , inCurrencyValueEUR      := 0
-                     , inParValueEUR           := 0
-                     , inSession               := inSession
-                 );
-        -- в мастер записать - Дополнительная скидка в продаже ГРН - т.к. могли обнулить
-        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), ioId, COALESCE (ioSummChangePercent, 0));
+     -- !!!для SYBASE - потом убрать!!!
+     /*IF vbUserId = zc_User_Sybase() AND ioId > 0 AND inIsPay = FALSE
+     THEN PERFORM gpInsertUpdate_MI_Sale_Child(
+                        inMovementId            := inMovementId
+                      , inParentId              := ioId
+                      , inAmountGRN             := 0
+                      , inAmountUSD             := 0
+                      , inAmountEUR             := 0
+                      , inAmountCard            := 0
+                      , inAmountDiscount        := 0
+                      , inCurrencyValueUSD      := 0
+                      , inParValueUSD           := 0
+                      , inCurrencyValueEUR      := 0
+                      , inParValueEUR           := 0
+                      , inSession               := inSession
+                  );
+         -- в мастер записать - Дополнительная скидка в продаже ГРН - т.к. могли обнулить
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), ioId, COALESCE (ioSummChangePercent, 0));
 
-        -- в мастер записать - Итого оплата в продаже ГРН
-        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), ioId, 0);
+         -- в мастер записать - Итого оплата в продаже ГРН
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), ioId, 0);
 
-        -- пересчитали Итоговые суммы по накладной
-        PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+         -- пересчитали Итоговые суммы по накладной
+         PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
-    END IF;*/
+     END IF;*/
 
 
 
@@ -359,120 +370,133 @@ BEGIN
                                                );
 
 
-    -- !!!для SYBASE - потом убрать!!!
-    IF vbUserId = zc_User_Sybase() AND inIsPay = FALSE
-    THEN
-        -- в мастер записать - Дополнительная скидка в продаже ГРН - т.к. .....
-        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), ioId, COALESCE (ioSummChangePercent, 0));
-    END IF;
+     -- !!!для SYBASE - потом убрать!!!
+     IF vbUserId = zc_User_Sybase() AND inIsPay = FALSE
+     THEN
+         -- в мастер записать - Дополнительная скидка в продаже ГРН - т.к. .....
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), ioId, COALESCE (ioSummChangePercent, 0));
+     END IF;
 
-    -- !!!для SYBASE - потом убрать!!!
-    IF vbUserId = zc_User_Sybase() AND SUBSTRING (inComment FROM 1 FOR 5) = '*123*'
-    THEN
-        -- сохранили для проверки - в SYBASE это полностью оплаченная продажа -> надо формировать проводку
-        PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Close(), ioId, TRUE);
+     -- !!!для SYBASE - потом убрать!!!
+     IF vbUserId = zc_User_Sybase() AND SUBSTRING (inComment FROM 1 FOR 5) = '*123*'
+     THEN
+         -- сохранили для проверки - в SYBASE это полностью оплаченная продажа -> надо формировать проводку
+         PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Close(), ioId, TRUE);
 
-    ELSEIF vbUserId = zc_User_Sybase() AND EXISTS (SELECT 1 FROM MovementItemBoolean AS MIB WHERE MIB.MovementItemId = ioId AND MIB.DescId = zc_MIBoolean_Close() AND MIB.ValueData = TRUE)
-    THEN
-        -- убрали для проверки - в SYBASE это НЕ полностью оплаченная продажа -> НЕ надо формировать проводку
-        PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Close(), ioId, FALSE);
+     ELSEIF vbUserId = zc_User_Sybase() AND EXISTS (SELECT 1 FROM MovementItemBoolean AS MIB WHERE MIB.MovementItemId = ioId AND MIB.DescId = zc_MIBoolean_Close() AND MIB.ValueData = TRUE)
+     THEN
+         -- убрали для проверки - в SYBASE это НЕ полностью оплаченная продажа -> НЕ надо формировать проводку
+         PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Close(), ioId, FALSE);
 
-    END IF;
-
-
-    -- Добавляем оплату в грн
-    IF inIsPay = TRUE
-    THEN
-        -- находим кассу для Магазина, в которую попадет оплата
-        vbCashId := (SELECT lpSelect.CashId
-                     FROM lpSelect_Object_Cash (vbUnitId, vbUserId) AS lpSelect
-                     WHERE lpSelect.isBankAccount = FALSE
-                       AND lpSelect.CurrencyId    = zc_Currency_GRN());
-
-        -- проверка - свойство должно быть установлено
-        IF COALESCE (vbCashId, 0) = 0 THEN
-          -- Для Sybase - ВРЕМЕННО
-          IF vbUserId = zc_User_Sybase()
-          THEN vbCashId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Cash() AND Object.ObjectCode = 1);
-          ELSE RAISE EXCEPTION 'Ошибка.Для магазина <%> Не установлено значение <Касса> в грн. (%)', lfGet_Object_ValueData (vbUnitId), vbUnitId;
-          END IF;
-        END IF;
+     END IF;
 
 
-        -- сохранили
-        PERFORM lpInsertUpdate_MI_Sale_Child (ioId                 := tmp.Id
-                                            , inMovementId         := inMovementId
-                                            , inParentId           := ioId
-                                            , inCashId             := tmp.CashId
-                                            , inCurrencyId         := tmp.CurrencyId
-                                            , inCashId_Exc         := NULL
-                                            , inAmount             := tmp.Amount
-                                            , inCurrencyValue      := tmp.CurrencyValue
-                                            , inParValue           := tmp.ParValue
-                                            , inUserId             := vbUserId
-                                             )
-        FROM (WITH tmpMI AS (SELECT MovementItem.Id                 AS Id
-                                  , MovementItem.ObjectId           AS CashId
-                                  , MILinkObject_Currency.ObjectId  AS CurrencyId
-                                  , MIFloat_CurrencyValue.ValueData AS CurrencyValue
-                                  , MIFloat_ParValue.ValueData      AS ParValue
-                             FROM MovementItem
-                                  LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValue
-                                                              ON MIFloat_CurrencyValue.MovementItemId = MovementItem.Id
-                                                             AND MIFloat_CurrencyValue.DescId         = zc_MIFloat_CurrencyValue()
-                                  LEFT JOIN MovementItemFloat AS MIFloat_ParValue
-                                                              ON MIFloat_ParValue.MovementItemId = MovementItem.Id
-                                                             AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
-                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
-                                                                   ON MILinkObject_Currency.MovementItemId = MovementItem.Id
-                                                                  AND MILinkObject_Currency.DescId         = zc_MILinkObject_Currency()
-                             WHERE MovementItem.ParentId   = ioId
-                               AND MovementItem.MovementId = inMovementId
-                               AND MovementItem.DescId     = zc_MI_Child()
-                               AND MovementItem.isErased   = FALSE
-                            )
-              SELECT tmpMI.Id                                                  AS Id
-                   , COALESCE (_tmpCash.CashId, tmpMI.CashId)                  AS CashId
-                   , COALESCE (_tmpCash.CurrencyId, tmpMI.CurrencyId)          AS CurrencyId
-                   , CASE WHEN _tmpCash.CashId > 0 THEN outTotalPay ELSE 0 END AS Amount
-                   , COALESCE (tmpMI.CurrencyValue, 0)                         AS CurrencyValue
-                   , COALESCE (tmpMI.CurrencyId, 0)                            AS ParValue
-              FROM (SELECT vbCashId AS CashId, zc_Currency_GRN() AS CurrencyId
-                   ) AS _tmpCash
-                   FULL JOIN tmpMI ON tmpMI.CashId = _tmpCash.CashId
-             ) AS tmp
-        ;
+     -- Добавляем оплату в грн
+     IF inIsPay = TRUE
+     THEN
+         -- находим кассу для Магазина, в которую попадет оплата
+         vbCashId := (SELECT lpSelect.CashId
+                      FROM lpSelect_Object_Cash (vbUnitId, vbUserId) AS lpSelect
+                      WHERE lpSelect.isBankAccount = FALSE
+                        AND lpSelect.CurrencyId    = zc_Currency_GRN()
+                     );
 
-        -- в мастер записать - Дополнительная скидка в продаже ГРН - т.к. могли обнулить
-        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), ioId, COALESCE (ioSummChangePercent, 0));
-
-        -- в мастер записать - Итого оплата в продаже ГРН
-        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), ioId, outTotalPay);
-
-        -- пересчитали Итоговые суммы по накладной
-        PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
-
-    END IF;
+         -- проверка - свойство должно быть установлено
+         IF COALESCE (vbCashId, 0) = 0 THEN
+           -- Для Sybase - ВРЕМЕННО
+           IF vbUserId = zc_User_Sybase()
+           THEN vbCashId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Cash() AND Object.ObjectCode = 1);
+           ELSE RAISE EXCEPTION 'Ошибка.Для магазина <%> Не установлено значение <Касса> в грн. (%)', lfGet_Object_ValueData (vbUnitId), vbUnitId;
+           END IF;
+         END IF;
 
 
-    -- "сложно" пересчитали "итоговые" суммы по элементу
-    PERFORM lpUpdate_MI_Sale_Total (ioId);
+         -- сохранили
+         PERFORM lpInsertUpdate_MI_Sale_Child (ioId                 := tmp.Id
+                                             , inMovementId         := inMovementId
+                                             , inParentId           := ioId
+                                             , inCashId             := tmp.CashId
+                                             , inCurrencyId         := tmp.CurrencyId
+                                             , inCashId_Exc         := NULL
+                                             , inAmount             := tmp.Amount
+                                             , inCurrencyValue      := tmp.CurrencyValue
+                                             , inParValue           := tmp.ParValue
+                                             , inUserId             := vbUserId
+                                              )
+         FROM (WITH tmpMI AS (SELECT MovementItem.Id                 AS Id
+                                   , MovementItem.ObjectId           AS CashId
+                                   , MILinkObject_Currency.ObjectId  AS CurrencyId
+                                   , MIFloat_CurrencyValue.ValueData AS CurrencyValue
+                                   , MIFloat_ParValue.ValueData      AS ParValue
+                              FROM MovementItem
+                                   LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValue
+                                                               ON MIFloat_CurrencyValue.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_CurrencyValue.DescId         = zc_MIFloat_CurrencyValue()
+                                   LEFT JOIN MovementItemFloat AS MIFloat_ParValue
+                                                               ON MIFloat_ParValue.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
+                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
+                                                                    ON MILinkObject_Currency.MovementItemId = MovementItem.Id
+                                                                   AND MILinkObject_Currency.DescId         = zc_MILinkObject_Currency()
+                              WHERE MovementItem.ParentId   = ioId
+                                AND MovementItem.MovementId = inMovementId
+                                AND MovementItem.DescId     = zc_MI_Child()
+                                AND MovementItem.isErased   = FALSE
+                             )
+               SELECT tmpMI.Id                                                  AS Id
+                    , COALESCE (_tmpCash.CashId, tmpMI.CashId)                  AS CashId
+                    , COALESCE (_tmpCash.CurrencyId, tmpMI.CurrencyId)          AS CurrencyId
+                    , CASE WHEN _tmpCash.CashId > 0 THEN outTotalPay ELSE 0 END AS Amount
+                    , COALESCE (tmpMI.CurrencyValue, 0)                         AS CurrencyValue
+                    , COALESCE (tmpMI.CurrencyId, 0)                            AS ParValue
+               FROM (SELECT vbCashId AS CashId, zc_Currency_GRN() AS CurrencyId
+                    ) AS _tmpCash
+                    FULL JOIN tmpMI ON tmpMI.CashId = _tmpCash.CashId
+              ) AS tmp
+         ;
+
+         -- в мастер записать - Дополнительная скидка в продаже ГРН - т.к. могли обнулить
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), ioId, COALESCE (ioSummChangePercent, 0));
+
+         -- в мастер записать - Итого оплата в продаже ГРН
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), ioId, outTotalPay);
+
+         -- пересчитали Итоговые суммы по накладной
+         PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+
+     END IF;
 
 
-    -- вернули Дополнительная скидка в расчетах ГРН, для грида
-    outTotalChangePercentPay:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalChangePercentPay()), 0);
-    -- вернули Итого оплата в расчетах ГРН, для грида
-    outTotalPayOth:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalPayOth()), 0);
+     -- "сложно" пересчитали "итоговые" суммы по элементу
+     PERFORM lpUpdate_MI_Sale_Total (ioId);
 
-    -- вернули Кол-во возврат, для грида
-    outTotalCountReturn:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalCountReturn()), 0);
-    -- вернули Сумма возврата ГРН, для грида
-    outTotalReturn:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalReturn()), 0);
-    -- вернули Сумма возврата оплаты ГРН, для грида
-    outTotalPayReturn:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalPayReturn()), 0);
 
-    -- Обнуляем Штрих-код поставщика для верхнего грида
-    outBarCode_partner:= '';
+     -- вернули Дополнительная скидка в расчетах ГРН, для грида
+     outTotalChangePercentPay:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalChangePercentPay()), 0);
+     -- вернули Итого оплата в расчетах ГРН, для грида
+     outTotalPayOth:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalPayOth()), 0);
+
+     -- вернули Кол-во возврат, для грида
+     outTotalCountReturn:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalCountReturn()), 0);
+     -- вернули Сумма возврата ГРН, для грида
+     outTotalReturn:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalReturn()), 0);
+     -- вернули Сумма возврата оплаты ГРН, для грида
+     outTotalPayReturn:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalPayReturn()), 0);
+
+     -- Обнуляем Штрих-код поставщика для верхнего грида
+     outBarCode_partner:= '';
+
+
+     -- Обнуляем Цену вх. для грида - т.к. у пользователя Магазина НЕТ Прав
+     IF vbUnitId_user > 0
+     THEN
+         outOperPrice         := 0; -- Цена вх. в валюте
+         outCountForPrice     := 0; -- Цена вх.за количество
+         outTotalSumm         := 0; -- Сумма вх. в валюте
+         outTotalSummBalance  := 0; -- Сумма вх. ГРН
+         outCurrencyValue     := 0; -- Курс для перевода из валюты партии в ГРН
+         outParValue          := 0; -- Номинал для перевода из валюты партии в ГРН
+     END IF;
 
 END;
 $BODY$

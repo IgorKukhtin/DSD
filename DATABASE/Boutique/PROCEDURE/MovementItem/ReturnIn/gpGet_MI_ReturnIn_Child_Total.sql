@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpGet_MI_ReturnIn_Child_Total (Integer,Integer,TFloat,TF
 DROP FUNCTION IF EXISTS gpGet_MI_ReturnIn_Child_Total (Integer,Integer,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MI_ReturnIn_Child_Total(
-    IN inId                Integer  , -- ключ  парамеметр что б понимать какой режим - общая оплата =0 
+    IN inId                Integer  , -- ключ  парамеметр что б понимать какой режим - общая оплата =0
     IN inMovementId        Integer  , --
     IN inCurrencyValueUSD  TFloat   , --
     IN inCurrencyValueEUR  TFloat   , --
@@ -27,13 +27,10 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- сумма к оплате
-     SELECT CAST ((COALESCE(MovementItem.Amount,0) *  COALESCE(MIFloat_OperPriceList.ValueData,0) / COALESCE(MIFloat_CountForPrice.ValueData,1) 
-                 - COALESCE(MIFloat_TotalChangePercent.ValueData,0)) AS NUMERIC (16, 2)) 
-    INTO vbSumm
+     SELECT CAST ((COALESCE(MovementItem.Amount,0) *  COALESCE(MIFloat_OperPriceList.ValueData,0)
+                 - COALESCE(MIFloat_TotalChangePercent.ValueData,0)) AS NUMERIC (16, 2))
+            INTO vbSumm
      FROM MovementItem
-          LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                      ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                     AND MIFloat_CountForPrice.DescId         = zc_MIFloat_CountForPrice()
           LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                       ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                      AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
@@ -46,29 +43,29 @@ BEGIN
        AND MovementItem.isErased   = FALSE;
 
          -- Результат
-         RETURN QUERY 
-          SELECT ( COALESCE (inAmountGRN,0) 
+         RETURN QUERY
+          SELECT ( COALESCE (inAmountGRN,0)
                +  (COALESCE (inAmountUSD,0) * COALESCE(inCurrencyValueUSD,1))
-               +  (COALESCE (inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1)) 
+               +  (COALESCE (inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1))
                +   COALESCE (inAmountCard,0)   )             ::TFloat AS Amount
 
-               , CASE WHEN vbSumm - (  COALESCE(inAmountGRN,0) 
+               , CASE WHEN vbSumm - (  COALESCE(inAmountGRN,0)
                                     + (COALESCE(inAmountUSD,0) * COALESCE(inCurrencyValueUSD,1))
-                                    + (COALESCE(inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1)) 
-                                    +  COALESCE(inAmountCard,0) ) > 0 
-                      THEN vbSumm - (  COALESCE(inAmountGRN,0) 
+                                    + (COALESCE(inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1))
+                                    +  COALESCE(inAmountCard,0) ) > 0
+                      THEN vbSumm - (  COALESCE(inAmountGRN,0)
                                     + (COALESCE(inAmountUSD,0) * COALESCE(inCurrencyValueUSD,1))
-                                    + (COALESCE(inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1)) 
+                                    + (COALESCE(inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1))
                                     +  COALESCE(inAmountCard,0) )
                       ELSE 0
-                 END                                            ::TFloat AS AmountRemains          
-               , CASE WHEN vbSumm - (  COALESCE(inAmountGRN,0) 
+                 END                                            ::TFloat AS AmountRemains
+               , CASE WHEN vbSumm - (  COALESCE(inAmountGRN,0)
                                     + (COALESCE(inAmountUSD,0) * COALESCE(inCurrencyValueUSD,1))
-                                    + (COALESCE(inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1)) 
-                                    +  COALESCE(inAmountCard,0) ) < 0 
-                      THEN (vbSumm - ( COALESCE(inAmountGRN,0) 
+                                    + (COALESCE(inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1))
+                                    +  COALESCE(inAmountCard,0) ) < 0
+                      THEN (vbSumm - ( COALESCE(inAmountGRN,0)
                                     + (COALESCE(inAmountUSD,0) * COALESCE(inCurrencyValueUSD,1))
-                                    + (COALESCE(inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1)) 
+                                    + (COALESCE(inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1))
                                     +  COALESCE(inAmountCard,0) )) * (-1)
                       ELSE 0
                  END                                            ::TFloat AS AmountChange

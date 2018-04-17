@@ -123,7 +123,7 @@ type
     cePhone: TcxTextEdit;
     cxLabel14: TcxLabel;
     edLastDate: TcxDateEdit;
-    cbisPay: TcxCheckBox;
+    cbIsPay: TcxCheckBox;
     actInsertUpdateMIChild: TdsdInsertUpdateAction;
     mactInsertUpdateMIChild: TMultiAction;
     bbInsertUpdateMIChild: TdxBarButton;

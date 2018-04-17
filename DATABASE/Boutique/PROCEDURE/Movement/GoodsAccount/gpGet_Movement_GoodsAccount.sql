@@ -36,7 +36,7 @@ BEGIN
 
 
      -- заменили
-     IF inOperDate < '01.01.2017' OR vbUnitId_User > 0 THEN inOperDate:= CURRENT_DATE; END IF;
+     IF inOperDate < '01.01.2017' OR vbUnitId_User > 0 OR 1=1 THEN inOperDate:= CURRENT_DATE; END IF;
 
      -- пытаемся найти последний непроведенный документ
      IF COALESCE (inMovementId, 0) = 0

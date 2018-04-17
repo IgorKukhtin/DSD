@@ -24,19 +24,23 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn(
    OUT outTotalPay              TFloat    , -- Итого сумма возврата оплаты (в ГРН)
    OUT outTotalPayOth           TFloat    , -- Итого сумма возврата оплаты  в расчетах (в ГРН)
    OUT outTotalSummToPay        TFloat    , -- +Сумма к возврату ГРН
+   OUT outSummDebt              TFloat    , -- долг
     IN inComment                TVarChar  , -- примечание
     IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbPartionMI_Id Integer;
-   DECLARE vbOperDate TDateTime;
-   DECLARE vbCurrencyId Integer;
-   DECLARE vbUnitId Integer;
-   DECLARE vbClientId Integer;
-   DECLARE vbCashId Integer;
+   DECLARE vbUserId          Integer;
+
+   DECLARE vbMovementId_sale Integer; -- <Документ Продажи>
+   DECLARE vbPartionMI_Id    Integer;
+   DECLARE vbOperDate        TDateTime;
+   DECLARE vbCurrencyId      Integer;
+   DECLARE vbUnitId          Integer;
+   DECLARE vbUnitId_user     Integer;
+   DECLARE vbClientId        Integer;
+   DECLARE vbCashId          Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ReturnIn());
@@ -53,13 +57,40 @@ BEGIN
      END IF;
 
 
+     -- Получили для Пользователя - к какому Подразделению он привязан
+     vbUnitId_user:= lpGetUnit_byUser (vbUserId);
+
      -- определяем Партию элемента продажи/возврата
      vbPartionMI_Id := lpInsertFind_Object_PartionMI (inSaleMI_Id);
+     -- определяем для Скорости
+     vbMovementId_sale:=  (SELECT MovementItem.MovementId FROM MovementItem WHERE MovementItem.Id = inSaleMI_Id);
+
+     -- параметры из Документа
+     SELECT Movement.OperDate                AS OperDate
+          , MovementLinkObject_From.ObjectId AS ClientId
+          , MovementLinkObject_To.ObjectId   AS UnitId
+            INTO vbOperDate, vbClientId, vbUnitId
+     FROM Movement
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                       ON MovementLinkObject_From.MovementId = Movement.Id
+                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                       ON MovementLinkObject_To.MovementId = Movement.Id
+                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+     WHERE Movement.Id = inMovementId;
 
 
      -- проверка - документ должен быть сохранен
      IF COALESCE (inMovementId, 0) = 0 THEN
         RAISE EXCEPTION 'Ошибка.Документ не сохранен.';
+     END IF;
+     -- проверка - свойство должно быть установлено
+     IF COALESCE (vbUnitId, 0) = 0 THEN
+        RAISE EXCEPTION 'Ошибка.Не установлено значение <Подразделение>.';
+     END IF;
+     -- проверка - Пользователя
+     IF vbUnitId_user > 0 AND vbUnitId_user <> vbUnitId THEN
+        RAISE EXCEPTION 'Ошибка.Нет прав проводить операцию для подразделения <%>.', lfGet_Object_ValueData_sh (vbUnitId);
      END IF;
      -- проверка - свойство должно быть установлено
      IF COALESCE (inPartionId, 0) = 0 THEN
@@ -81,22 +112,6 @@ BEGIN
                       , lfGet_Object_ValueData_sh ((SELECT Object_PartionGoods.GoodsSizeId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inPartionId))
                        ;
      END IF;
-
-
-     -- данные из шапки
-     SELECT Movement.OperDate                AS OperDate
-          , MovementLinkObject_From.ObjectId AS ClientId
-          , MovementLinkObject_To.ObjectId   AS UnitId
-            INTO vbOperDate, vbClientId, vbUnitId
-     FROM Movement
-          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                       ON MovementLinkObject_From.MovementId = Movement.Id
-                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                       ON MovementLinkObject_To.MovementId = Movement.Id
-                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-     WHERE Movement.Id = inMovementId;
-
 
 
      -- данные из партии : GoodsId и OperPrice и CountForPrice и CurrencyId
@@ -148,7 +163,11 @@ BEGIN
                    LEFT JOIN MovementItemFloat AS MIFloat_ParValue
                                                ON MIFloat_ParValue.MovementItemId = MovementItem.Id
                                               AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
-              WHERE MovementItem.Id = inSaleMI_Id;
+              WHERE MovementItem.MovementId = vbMovementId_sale
+                AND MovementItem.DescId     = zc_MI_Master()
+                AND MovementItem.Id         = inSaleMI_Id
+                AND MovementItem.isErased   = FALSE
+                ;
          ELSE
              -- Определили курс на Дату документа
              SELECT COALESCE (tmp.Amount, 1), COALESCE (tmp.ParValue, 0)
@@ -243,9 +262,9 @@ BEGIN
                                                                     ON MIFloat_TotalChangePercentPay.MovementItemId = MovementItem.Id
                                                                    AND MIFloat_TotalChangePercentPay.DescId         = zc_MIFloat_TotalChangePercentPay()
 
-                                   WHERE MovementItem.Id         = inSaleMI_Id
-                                     -- AND MovementItem.MovementId = inMovementId
+                                   WHERE MovementItem.MovementId = vbMovementId_sale
                                      AND MovementItem.DescId     = zc_MI_Master()
+                                     AND MovementItem.Id         = inSaleMI_Id
                                      AND MovementItem.isErased   = FALSE
                                   ), 0);
          END IF;
@@ -547,9 +566,9 @@ BEGIN
                                                             ON MIFloat_TotalCountReturn.MovementItemId = MovementItem.Id
                                                            AND MIFloat_TotalCountReturn.DescId         = zc_MIFloat_TotalCountReturn()
 
-                             WHERE MovementItem.Id         = inSaleMI_Id
-                               -- AND MovementItem.MovementId = inMovementId
+                             WHERE MovementItem.MovementId = vbMovementId_sale
                                AND MovementItem.DescId     = zc_MI_Master()
+                               AND MovementItem.Id         = inSaleMI_Id
                                AND MovementItem.isErased   = FALSE
                             );
 
@@ -705,6 +724,74 @@ BEGIN
 
     -- вернули Сумма возврата оплаты в расчетах ГРН, для грида
     outTotalPayOth:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalPayOth()), 0);
+
+
+    -- вернули Сумма ...
+    SELECT CASE -- Сумма к возврату оплаты
+                WHEN inAmount = 0
+                     THEN 0
+                ELSE COALESCE (MIFloat_TotalPay.ValueData, 0)
+                   + COALESCE (MIFloat_TotalPayOth.ValueData, 0)
+                   - COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
+           END
+           -- Долг
+         , zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData)
+         - COALESCE (MIFloat_TotalChangePercent.ValueData, 0)
+         - COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)
+         - COALESCE (MIFloat_TotalPay.ValueData, 0)
+         - COALESCE (MIFloat_TotalPayOth.ValueData, 0)
+           -- так минуснули Возвраты (проведенные)
+         - COALESCE (MIFloat_TotalReturn.ValueData, 0)
+         + COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
+           -- если НЕ ПРОВЕЛИ - уменьшаем Долг на сумму из тек. документа
+         - (zfCalc_SummPriceList (inAmount, MIFloat_OperPriceList.ValueData) - outTotalChangePercent)
+         + outTotalPay
+           
+           INTO outTotalSummToPay
+              , outSummDebt
+    FROM MovementItem
+         LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
+                                     ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
+                                    AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
+
+         LEFT JOIN MovementItemFloat AS MIFloat_TotalReturn
+                                     ON MIFloat_TotalReturn.MovementItemId = MovementItem.Id
+                                    AND MIFloat_TotalReturn.DescId         = zc_MIFloat_TotalReturn()
+         LEFT JOIN MovementItemFloat AS MIFloat_TotalPayReturn
+                                     ON MIFloat_TotalPayReturn.MovementItemId = MovementItem.Id
+                                    AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()
+
+         LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
+                                     ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
+                                    AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
+         LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth
+                                     ON MIFloat_TotalPayOth.MovementItemId = MovementItem.Id
+                                    AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth()
+
+         LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
+                                     ON MIFloat_TotalChangePercent.MovementItemId = MovementItem.Id
+                                    AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()
+         LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercentPay
+                                     ON MIFloat_TotalChangePercentPay.MovementItemId = MovementItem.Id
+                                    AND MIFloat_TotalChangePercentPay.DescId         = zc_MIFloat_TotalChangePercentPay()
+
+    WHERE MovementItem.MovementId = vbMovementId_sale
+      AND MovementItem.DescId     = zc_MI_Master()
+      AND MovementItem.Id         = inSaleMI_Id
+      AND MovementItem.isErased   = FALSE
+     ;
+                                     
+
+     -- Обнуляем Цену вх. для грида - т.к. у пользователя Магазина НЕТ Прав
+     IF vbUnitId_user > 0
+     THEN
+         outOperPrice         := 0; -- Цена вх. в валюте
+         outCountForPrice     := 0; -- Цена вх.за количество
+         outTotalSumm         := 0; -- Сумма вх. в валюте
+         outTotalSummBalance  := 0; -- Сумма вх. ГРН
+         outCurrencyValue     := 0; -- Курс для перевода из валюты партии в ГРН
+         outParValue          := 0; -- Номинал для перевода из валюты партии в ГРН
+     END IF;
 
 END;
 $BODY$

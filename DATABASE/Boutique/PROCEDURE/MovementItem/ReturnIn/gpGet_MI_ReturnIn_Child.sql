@@ -39,33 +39,52 @@ BEGIN
      -- данные из документа
      vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
 
+
      -- Сумма к оплате
-     SELECT SUM (-- Сумма к оплате за возврат ГРН - !!!возвращаем ВСЕ сколько можно вернуть денег за продажу!!!
-                 COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_TotalPayOth.ValueData, 0) - COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
-                ) AS SummToPay
+     vbSummToPay:= (WITH tmpMI AS (SELECT DISTINCT Object_PartionMI.ObjectCode AS MovementItemId_sale
+                                   FROM MovementItem
+                                        -- получаем сразу партию Продажи
+                                        LEFT JOIN MovementItemLinkObject AS MILO_PartionMI
+                                                                         ON MILO_PartionMI.MovementItemId = MovementItem.Id
+                                                                        AND MILO_PartionMI.DescId = zc_MILinkObject_PartionMI()
+                                        LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = MILO_PartionMI.ObjectId
+                              
+                                        LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
+                                                                    ON MIFloat_TotalPay.MovementItemId = Object_PartionMI.ObjectCode
+                                                                   AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
+                                        LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth
+                                                                    ON MIFloat_TotalPayOth.MovementItemId = Object_PartionMI.ObjectCode
+                                                                   AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth()
+                                        LEFT JOIN MovementItemFloat AS MIFloat_TotalPayReturn
+                                                                    ON MIFloat_TotalPayReturn.MovementItemId = Object_PartionMI.ObjectCode
+                                                                   AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()
+                                   WHERE MovementItem.MovementId = inMovementId
+                                     AND MovementItem.DescId     = zc_MI_Master()
+                                     AND MovementItem.isErased   = FALSE
+                                     AND (MovementItem.Id = inId OR inId = 0)
+                                  )
+                  , tmpMIFloat AS (SELECT MovementItemFloat.*
+                                   FROM MovementItemFloat
+                                   WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI.MovementItemId_sale FROM tmpMI)
+                                  )
 
-            INTO vbSummToPay
-
-     FROM MovementItem
-          -- получаем сразу партию Продажи
-          LEFT JOIN MovementItemLinkObject AS MILO_PartionMI
-                                           ON MILO_PartionMI.MovementItemId = MovementItem.Id
-                                          AND MILO_PartionMI.DescId = zc_MILinkObject_PartionMI()
-          LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = MILO_PartionMI.ObjectId
-
-          LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
-                                      ON MIFloat_TotalPay.MovementItemId = Object_PartionMI.ObjectCode
-                                     AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
-          LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth
-                                      ON MIFloat_TotalPayOth.MovementItemId = Object_PartionMI.ObjectCode
-                                     AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth()
-          LEFT JOIN MovementItemFloat AS MIFloat_TotalPayReturn
-                                      ON MIFloat_TotalPayReturn.MovementItemId = Object_PartionMI.ObjectCode
-                                     AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()
-     WHERE MovementItem.MovementId = inMovementId
-       AND MovementItem.DescId     = zc_MI_Master()
-       AND MovementItem.isErased   = FALSE
-       AND (MovementItem.Id = inId OR inId = 0);
+                    -- Результат
+                    SELECT SUM (-- Сумма к оплате за возврат ГРН - !!!возвращаем ВСЕ сколько можно вернуть денег за продажу!!!
+                                COALESCE (MIFloat_TotalPay.ValueData, 0)
+                              + COALESCE (MIFloat_TotalPayOth.ValueData, 0)
+                              - COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
+                               ) AS SummToPay
+                    FROM tmpMI
+                         LEFT JOIN tmpMIFloat AS MIFloat_TotalPay
+                                              ON MIFloat_TotalPay.MovementItemId = tmpMI.MovementItemId_sale
+                                             AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
+                         LEFT JOIN tmpMIFloat AS MIFloat_TotalPayOth
+                                              ON MIFloat_TotalPayOth.MovementItemId = tmpMI.MovementItemId_sale
+                                             AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth()
+                         LEFT JOIN tmpMIFloat AS MIFloat_TotalPayReturn
+                                              ON MIFloat_TotalPayReturn.MovementItemId = tmpMI.MovementItemId_sale
+                                             AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()
+                   );
 
 
      -- Результат
