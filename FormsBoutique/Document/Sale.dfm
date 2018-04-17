@@ -1364,7 +1364,6 @@ object SaleForm: TSaleForm
       end
       item
         Name = 'PrinterName'
-        Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1817,7 +1816,6 @@ object SaleForm: TSaleForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      Printer = 'PrinterName'
       Params = <
         item
           Name = 'InvNumber'
@@ -1853,10 +1851,15 @@ object SaleForm: TSaleForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
+      Printer = 'PrinterName'
       ReportName = 'Print_Check'
       ReportNameParam.Value = 'Print_Check'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Component = FormParams
+      PrinterNameParam.ComponentItem = 'PrinterName'
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
       PreviewWindowMaximized = False
     end
     object actPrint: TdsdPrintAction
@@ -1909,6 +1912,9 @@ object SaleForm: TSaleForm
       ReportNameParam.Value = 'PrintMovement_ReturnOut'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'

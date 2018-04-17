@@ -583,18 +583,21 @@ type
   // Действие печати
   TdsdPrintAction = class(TdsdCustomDataSetAction)
   private
-    FReportName: String;
-    FParams: TdsdParams;
-    FReportNameParam: TdsdParam;
+    FReportName: String;          // Название отчета - локально
+    FPrinter: String;             // Название Принтера - локально
+    FReportNameParam: TdsdParam;  // Название отчета - из Get
+    FPrinterNameParam: TdsdParam; // Название Принтера - из Get
+    FParams: TdsdParams;          // Параметры - передаются в саму форму печати
     FDataSets: TdsdDataSets;
 //    FDataSetList: TList;
     FWithOutPreview: Boolean;
     FCopiesCount: Integer;
-    FPrinter: String;
     FModalPreview: Boolean;
     FPreviewWindowMaximized: Boolean;
     function GetReportName: String;
+    function GetPrinterName : String;
     procedure SetReportName(const Value: String);
+    procedure SetPrinterName(const Value: String);
     procedure SetWithOutPreview(const Value: Boolean);
 
   protected
@@ -612,13 +615,19 @@ type
     property DataSets: TdsdDataSets read FDataSets write FDataSets;
     // Количество копий
     property CopiesCount: Integer read FCopiesCount write FCopiesCount Default 1;
-    // Название Принтера
-    property Printer: String read FPrinter write FPrinter;
+    // Параметры - передаются в саму форму печати
     property Params: TdsdParams read FParams write FParams;
+    // Название Принтера - локально
+    property Printer: String read GetPrinterName write SetPrinterName;
+    // Название отчета - локально
     property ReportName: String read GetReportName write SetReportName;
-    // Название отчета
+    // Название отчета - из Get
     property ReportNameParam: TdsdParam read FReportNameParam
       write FReportNameParam;
+    // Название Принтера - из Get
+    property PrinterNameParam: TdsdParam read FPrinterNameParam
+      write FPrinterNameParam;
+
     Property ModalPreview: Boolean read FModalPreview write FModalPreview Default False;
     Property PreviewWindowMaximized: Boolean read FPreviewWindowMaximized write FPreviewWindowMaximized Default True;
     property Caption;
@@ -1750,9 +1759,15 @@ begin
   inherited;
   FParams := TdsdParams.Create(Self, TdsdParam);
   PostDataSetBeforeExecute := true;
+  // Название отчета - из Get
   FReportNameParam := TdsdParam.Create(nil);
   FReportNameParam.DataType := ftString;
   FReportNameParam.Value := '';
+ // Название Принтера - из Get
+  FPrinterNameParam := TdsdParam.Create(nil);
+  FPrinterNameParam.DataType := ftString;
+  FPrinterNameParam.Value := '';
+
   FDataSets := TdsdDataSets.Create(Self, TAddOnDataSet);
   WithOutPreview := false;
   FCopiesCount := 1;
@@ -1765,6 +1780,7 @@ destructor TdsdPrintAction.Destroy;
 begin
   FreeAndNil(FParams);
   FreeAndNil(FReportNameParam);
+  FreeAndNil(FPrinterNameParam);
   FreeAndNil(FDataSets);
   inherited;
 end;
@@ -1774,6 +1790,13 @@ begin
   result := FReportNameParam.AsString;
   if result = '' then
     result := FReportName
+end;
+
+function TdsdPrintAction.GetPrinterName: String;
+begin
+  result := FPrinterNameParam.AsString;
+  if result = '' then
+    result := FPrinter
 end;
 
 function GetDefaultPrinter: string;
@@ -1827,6 +1850,14 @@ begin
     ShowMessage('Используйте ReportNameParam')
   else
     FReportName := Value;
+end;
+
+procedure TdsdPrintAction.SetPrinterName(const Value: String);
+begin
+  if (csDesigning in ComponentState) and not(csLoading in ComponentState) then
+    ShowMessage('Используйте PrinterNameParam')
+  else
+    FPrinter := Value;
 end;
 
 procedure TdsdPrintAction.SetWithOutPreview(const Value: Boolean);
