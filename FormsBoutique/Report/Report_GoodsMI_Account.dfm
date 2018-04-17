@@ -857,6 +857,9 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
@@ -959,7 +962,6 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      Printer = 'PrinterName'
       Params = <
         item
           Name = 'PrinterName'
@@ -970,12 +972,19 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
+      Printer = 'PrinterName'
       ReportNameParam.Value = Null
       ReportNameParam.Component = FormParams
       ReportNameParam.ComponentItem = 'ReportNameCheck'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.Component = FormParams
+      PrinterNameParam.ComponentItem = 'PrinterName'
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+      PreviewWindowMaximized = False
     end
     object mactPrint_Check: TMultiAction
       Category = 'Print'

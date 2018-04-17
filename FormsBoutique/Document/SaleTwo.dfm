@@ -1880,6 +1880,8 @@ object SaleTwoForm: TSaleTwoForm
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
+      PrinterNameParam.Component = FormParams
+      PrinterNameParam.ComponentItem = 'PrinterName'
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
       PreviewWindowMaximized = False

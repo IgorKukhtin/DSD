@@ -574,6 +574,9 @@ object ReturnInJournalForm: TReturnInJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -746,7 +749,6 @@ object ReturnInJournalForm: TReturnInJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      Printer = 'PrinterName'
       Params = <
         item
           Name = 'Id'
@@ -755,11 +757,18 @@ object ReturnInJournalForm: TReturnInJournalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
+      Printer = 'PrinterName'
       ReportName = 'Print_Check_GoodsAccount'
       ReportNameParam.Value = 'Print_Check_GoodsAccount'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.Component = FormParams
+      PrinterNameParam.ComponentItem = 'PrinterName'
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+      PreviewWindowMaximized = False
     end
     object actCompleteList: TMultiAction
       Category = 'DSDLib'

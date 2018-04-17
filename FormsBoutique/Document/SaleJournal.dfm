@@ -561,7 +561,6 @@ object SaleJournalForm: TSaleJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      Printer = 'PrinterName'
       Params = <
         item
           Name = 'Id'
@@ -570,11 +569,18 @@ object SaleJournalForm: TSaleJournalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
+      Printer = 'PrinterName'
       ReportName = 'Print_Check'
       ReportNameParam.Value = 'Print_Check'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.Component = FormParams
+      PrinterNameParam.ComponentItem = 'PrinterName'
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+      PreviewWindowMaximized = False
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -619,6 +625,9 @@ object SaleJournalForm: TSaleJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'

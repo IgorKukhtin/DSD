@@ -2284,6 +2284,11 @@ object ReturnInForm: TReturnInForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Component = FormParams
+      PrinterNameParam.ComponentItem = 'PrinterName'
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+      PreviewWindowMaximized = False
     end
     object actGet_New: TdsdExecStoredProc
       Category = 'DSDLib'

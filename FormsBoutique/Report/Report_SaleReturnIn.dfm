@@ -782,7 +782,6 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      Printer = 'PrinterName'
       Params = <
         item
           Name = 'PrinterName'
@@ -793,12 +792,19 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
+      Printer = 'PrinterName'
       ReportNameParam.Value = ''
       ReportNameParam.Component = FormParams
       ReportNameParam.ComponentItem = 'ReportNameCheck'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.Component = FormParams
+      PrinterNameParam.ComponentItem = 'PrinterName'
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+      PreviewWindowMaximized = False
     end
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -1088,6 +1094,9 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
