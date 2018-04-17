@@ -34,8 +34,8 @@ $BODY$
   DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_Loss());
-     vbUserId:= lpGetUserBySession (inSession);
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_MI_Loss());
+     --vbUserId:= lpGetUserBySession (inSession);
 
      -- данные из шапки
      SELECT Movement.OperDate
@@ -345,5 +345,5 @@ $BODY$
 */
 
 -- тест
---select * from gpSelect_MovementItem_Loss(inMovementId := 7 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '2');
---select * from gpSelect_MovementItem_Loss(inMovementId := 7 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '2');
+--select * from gpSelect_MovementItem_Loss(inMovementId := 7 , inShowAll := 'True' , inIsErased := 'False' , inSession := zfCalc_UserAdmin());
+--select * from gpSelect_MovementItem_Loss(inMovementId := 7 , inShowAll := 'False', inIsErased := 'False' , inSession := zfCalc_UserAdmin());

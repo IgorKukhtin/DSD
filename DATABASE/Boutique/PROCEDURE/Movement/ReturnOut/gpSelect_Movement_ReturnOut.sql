@@ -21,8 +21,8 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ReturnOut());
-     vbUserId:= lpGetUserBySession (inSession);
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ReturnOut());
+    -- vbUserId:= lpGetUserBySession (inSession);
 
      -- Результат
      RETURN QUERY 
@@ -112,4 +112,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ReturnOut (inStartDate:= '01.03.2017', inEndDate:= '01.03.2017', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_ReturnOut (inStartDate:= '01.01.2017', inEndDate:= '01.03.2017', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

@@ -37,8 +37,8 @@ $BODY$
   DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_Send());
-     vbUserId:= lpGetUserBySession (inSession);
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_MI_Send());
+     --vbUserId:= lpGetUserBySession (inSession);
 
      -- данные из шапки
      SELECT Movement.OperDate
