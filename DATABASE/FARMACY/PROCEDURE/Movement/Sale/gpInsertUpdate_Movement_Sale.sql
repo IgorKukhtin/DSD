@@ -39,9 +39,12 @@ BEGIN
           IF COALESCE (vbMemberSPId,0) = 0
              THEN 
                  -- не нашли Сохраняем
-                 vbMemberSPId := gpInsertUpdate_Object_MemberSP (ioId      := 0
-                                                               , inCode    := lfGet_ObjectCode(0, zc_Object_MemberSP()) 
-                                                               , inName    := inMemberSP
+                 vbMemberSPId := gpInsertUpdate_Object_MemberSP (ioId               := 0
+                                                               , inCode             := lfGet_ObjectCode(0, zc_Object_MemberSP()) 
+                                                               , inName             := inMemberSP
+                                                               , inPartnerMedicalId := inPartnerMedicalId    -- Мед. учрежд.
+                                                               , inGroupMemberSPId  := inGroupMemberSPId     -- категория пац.
+                                                               , inHappyDate        := '' ::  TVarChar       -- год рождения
                                                                , inSession := inSession
                                                                 );
           END IF;
@@ -58,6 +61,7 @@ BEGIN
                  vbMedicSPId := gpInsertUpdate_Object_MedicSP (ioId      := 0
                                                              , inCode    := lfGet_ObjectCode(0, zc_Object_MedicSP()) 
                                                              , inName    := inMedicSP
+                                                             , inPartnerMedicalId := inPartnerMedicalId
                                                              , inSession := inSession
                                                              );
           END IF;
