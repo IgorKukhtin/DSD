@@ -643,6 +643,16 @@ ALTER TABLE PrintForms_View OWNER TO postgres;
  05.02.14                                                        *
 */
 
+/*
+----------------
+PrintMovement_Sale01074874.fr3 -- ВСП Локомотивне депо Джанкой ТЧ-10
+PrintMovement_Sale2902403938.fr3 -- Сидоров Євген Васильович ФОП
+PrintMovement_Sale30487219.fr3 -- АТБ-МАРКЕТ  ТОВ
+PrintMovement_Sale32516492.fr3 -- Амстор Торгiвельний будинок ТОВ
+PrintMovement_Sale35275230.fr3 -- Адвентіс ТОВ
+PrintMovement_Sale37910513.fr3 -- Фуршет Центр ДП
+*/
+
 -- тест
 -- SELECT * FROM PrintForms_View LEFT JOIN Object ON Object.Id = JuridicalId WHERE JuridicalId IN (SELECT JuridicalId FROM PrintForms_View GROUP BY JuridicalId, ReportType, PaidKindId, StartDate HAVING COUNT(*) > 1) ORDER BY ReportType, JuridicalId, PaidKindId, StartDate
 -- SELECT * FROM PrintForms_View LEFT JOIN Object ON Object.Id = JuridicalId WHERE PrintFormName = 'PrintMovement_Sale35275230'

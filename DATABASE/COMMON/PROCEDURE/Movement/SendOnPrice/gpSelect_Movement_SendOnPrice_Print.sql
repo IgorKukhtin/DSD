@@ -35,11 +35,20 @@ $BODY$
     DECLARE vbTotalCountKgOut  TFloat;
     DECLARE vbTotalCountShOut  TFloat;
 
+    DECLARE vbWeighingCount   Integer;
+
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_SendOnPrice_Print());
      vbUserId:= inSession;
 
+
+     -- кол-во Взвешиваний
+     vbWeighingCount:= (SELECT COUNT(*)
+                        FROM Movement
+                        WHERE Movement.ParentId = inMovementId AND Movement.DescId IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction())
+                          AND Movement.StatusId = zc_Enum_Status_Complete()
+                       );
 
      -- параметры из документа
      SELECT Movement.DescId
@@ -287,6 +296,9 @@ BEGIN
            , TRIM (COALESCE (MovementString_Comment_order.ValueData, '')) :: TVarChar AS Comment_order
 
            --, inReportType AS ReportType
+
+             -- кол-во Взвешиваний
+           , vbWeighingCount AS WeighingCount
 
        FROM Movement
 
@@ -554,4 +566,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_SendOnPrice_Print (inMovementId := 570596, inReportType := 0, inSession:= '5');
+-- SELECT * FROM gpSelect_Movement_SendOnPrice_Print (inMovementId:= 570596, inSession:= '5');
