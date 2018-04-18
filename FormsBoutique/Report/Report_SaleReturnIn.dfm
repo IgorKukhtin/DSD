@@ -1355,8 +1355,8 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
     end
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 144
-    Top = 16
+    Left = 240
+    Top = 144
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <

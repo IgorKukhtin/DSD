@@ -2,7 +2,6 @@ inherited Report_CollationByClientForm: TReport_CollationByClientForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'> '#1087#1086' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
   ClientHeight = 450
   ClientWidth = 1065
-  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
@@ -1062,6 +1061,9 @@ inherited Report_CollationByClientForm: TReport_CollationByClientForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -1209,8 +1211,10 @@ inherited Report_CollationByClientForm: TReport_CollationByClientForm
         Component = PeriodChoice
       end
       item
+        Component = deEnd
       end
       item
+        Component = deStart
       end
       item
         Component = GuidesClient

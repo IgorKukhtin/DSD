@@ -68,6 +68,7 @@ type
     bbPrint: TdxBarButton;
     cbTotal: TcxCheckBox;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
+    RefreshDispatcher: TRefreshDispatcher;
   private
   public
   end;

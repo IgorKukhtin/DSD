@@ -4,10 +4,8 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
   ClientWidth = 1065
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -292
-  ExplicitTop = -66
   ExplicitWidth = 1081
-  ExplicitHeight = 523
+  ExplicitHeight = 526
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -1278,6 +1276,9 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintIn: TdsdPrintAction
       Category = 'DSDLib'
@@ -1378,6 +1379,9 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -1607,6 +1611,12 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       end
       item
         Component = GuidesEndYear
+      end
+      item
+        Component = deEnd
+      end
+      item
+        Component = deStart
       end>
     Left = 688
     Top = 280
