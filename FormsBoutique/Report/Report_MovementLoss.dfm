@@ -1115,6 +1115,9 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -1217,6 +1220,9 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -1453,6 +1459,12 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
       end
       item
         Component = GuidesEndYear
+      end
+      item
+        Component = deStart
+      end
+      item
+        Component = deEnd
       end>
     Left = 384
     Top = 176

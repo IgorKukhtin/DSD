@@ -5,7 +5,7 @@ inherited Report_SaleForm: TReport_SaleForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1192
-  ExplicitHeight = 460
+  ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -1469,6 +1469,9 @@ inherited Report_SaleForm: TReport_SaleForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintIn: TdsdPrintAction
       Category = 'DSDLib'
@@ -1557,6 +1560,9 @@ inherited Report_SaleForm: TReport_SaleForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -1806,6 +1812,12 @@ inherited Report_SaleForm: TReport_SaleForm
       end
       item
         Component = GuidesPeriod
+      end
+      item
+        Component = deStart
+      end
+      item
+        Component = deEnd
       end>
     Left = 384
     Top = 176

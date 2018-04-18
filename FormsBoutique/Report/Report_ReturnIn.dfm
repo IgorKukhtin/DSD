@@ -1391,6 +1391,9 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintIn: TdsdPrintAction
       Category = 'DSDLib'
@@ -1479,6 +1482,9 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -1734,6 +1740,12 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
       end
       item
         Component = GuidesEndYear
+      end
+      item
+        Component = deStart
+      end
+      item
+        Component = deEnd
       end>
     Left = 384
     Top = 176
@@ -1914,8 +1926,8 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 746
-    Top = 65
+    Left = 706
+    Top = 73
   end
   object GuidesEndYear: TdsdGuides
     KeyField = 'Id'

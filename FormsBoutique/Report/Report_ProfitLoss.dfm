@@ -61,7 +61,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     Align = alClient
     DataSource = DataSource
     Groups = <>
-    TabOrder = 4
+    TabOrder = 3
     object clProfitLossGroupName: TcxDBPivotGridField
       Area = faRow
       AreaIndex = 0
@@ -630,6 +630,9 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -1008,5 +1011,26 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     DateEnd = deEnd
     Left = 400
     Top = 48
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = deEnd
+      end
+      item
+        Component = deStart
+      end
+      item
+      end
+      item
+      end>
+    Left = 688
+    Top = 280
   end
 end

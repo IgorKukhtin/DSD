@@ -1121,6 +1121,9 @@ inherited Report_MotionByClientForm: TReport_MotionByClientForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -1250,12 +1253,16 @@ inherited Report_MotionByClientForm: TReport_MotionByClientForm
         Component = PeriodChoice
       end
       item
-      end
-      item
         Component = GuidesUnit
       end
       item
         Component = GuidesClient
+      end
+      item
+        Component = deStart
+      end
+      item
+        Component = deEnd
       end>
     Left = 688
     Top = 280

@@ -413,9 +413,8 @@ inherited Report_OH_DiscountPeriodForm: TReport_OH_DiscountPeriodForm
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
+      StoredProc = spSelect
       StoredProcList = <
-        item
-        end
         item
           StoredProc = spSelect
         end>
@@ -907,8 +906,10 @@ inherited Report_OH_DiscountPeriodForm: TReport_OH_DiscountPeriodForm
         Component = GuidesUnit
       end
       item
+        Component = deStart
       end
       item
+        Component = deEnd
       end
       item
         Component = GuidesPeriod

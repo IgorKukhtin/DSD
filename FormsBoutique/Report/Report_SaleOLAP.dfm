@@ -1360,6 +1360,12 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       end
       item
         Component = GuidesEndYear
+      end
+      item
+        Component = deStart
+      end
+      item
+        Component = deEnd
       end>
     Left = 496
     Top = 224

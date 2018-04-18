@@ -5,9 +5,8 @@ inherited Report_GoodsForm: TReport_GoodsForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -421
   ExplicitWidth = 1211
-  ExplicitHeight = 508
+  ExplicitHeight = 511
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1166,6 +1165,9 @@ inherited Report_GoodsForm: TReport_GoodsForm
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -1602,8 +1604,10 @@ inherited Report_GoodsForm: TReport_GoodsForm
         Component = PeriodChoice
       end
       item
+        Component = deStart
       end
       item
+        Component = deEnd
       end
       item
         Component = GuidesGoodsSize
