@@ -15,8 +15,12 @@ CREATE OR REPLACE FUNCTION gpReport_OrderExternal(
     IN inIsByDoc            Boolean   ,
     IN inSession            TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (InvNumber TVarChar
-             , InvNumberPartner TVarChar
+RETURNS TABLE (InvNumber              TVarChar
+             , InvNumberPartner       TVarChar
+             , InvNumber_Master       TVarChar
+             , OperDate_Master        TDateTime
+             , OperDatePartner_Master TDateTime
+           
              , ContractCode Integer, ContractNumber TVarChar, ContractTagName TVarChar, ContractTagGroupName TVarChar
              , FromCode Integer, FromName TVarChar
              , ToCode Integer, ToName TVarChar
@@ -161,7 +165,7 @@ BEGIN
 --          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
-                                  ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                  ON MovementDate_OperDatePartner.MovementId = Movement.Id
                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
@@ -282,10 +286,36 @@ BEGIN
               , tmpMovement2.JuridicalId
               , tmpMovement2.RetailId
       )
+     -- выбираем для заказов документы продажи и перемещения по цене 
+     , tmpMLM AS (SELECT MovementLinkMovement.*
+                  FROM MovementLinkMovement
+                  WHERE MovementLinkMovement.MovementChildId IN (SELECT DISTINCT tmpMovement.MovementId FROM tmpMovement)
+                    AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
+                 )
+     -- Для документы продажи и перемещения по цене получаем дату, номер, дату у покупателя 
+     , tmpMLM_All AS (SELECT   tmpMLM.MovementChildId AS MovementId_Order
+                             , tmpMLM.MovementId      AS MovementId
+                             , Movement.InvNumber     AS InvNumber
+                             , Movement.OperDate      AS OperDate
+                             , MovementDate_OperDatePartner.ValueData  AS OperDatePartner
+                      FROM tmpMLM
+                           INNER JOIN Movement ON Movement.Id = tmpMLM.MovementId
+                                              AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SendOnPrice())
+                                              AND Movement.StatusId = zc_Enum_Status_Complete()
+                           LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                                  ON MovementDate_OperDatePartner.MovementId = tmpMLM.MovementId
+                                                 AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                     )
+
        -- Результат
        SELECT
              Movement.InvNumber                         AS InvNumber
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
+           
+           , tmpMLM_All.InvNumber                       AS InvNumber_Master
+           , tmpMLM_All.OperDate                        AS OperDate_Master
+           , tmpMLM_All.OperDatePartner                 AS OperDatePartner_Master
+           
            , View_Contract_InvNumber.ContractCode
            , View_Contract_InvNumber.InvNumber          AS ContractNumber
            , View_Contract_InvNumber.ContractTagName
@@ -410,6 +440,8 @@ BEGIN
           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
 
           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_goods ON View_InfoMoney_goods.InfoMoneyId = tmpMovement.InfoMoneyId
+          
+          LEFT JOIN tmpMLM_All ON tmpMLM_All.MovementId_Order = tmpMovement.MovementId
          ;
 
 END;
@@ -420,6 +452,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 18.04.18         *
  25.05.17         *
  29.06.15                                        * ALL
  02.09.14                                                        *

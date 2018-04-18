@@ -1544,12 +1544,13 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckTaxCorrective_NPPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckTaxCorrective_NPPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckTC_NPPDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckTC_NPPDialogForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Remains_byOrderExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Remains_byOrderExternalForm');
   exit;
@@ -1739,13 +1740,13 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckContractInMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckContractInMovementForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_OrderExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_OrderExternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_OrderExternalDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_OrderExternalDialogForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_OrderExternal_SaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_OrderExternal_SaleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_OrderExternal_SaleDialogForm'));
