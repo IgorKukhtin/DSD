@@ -71,7 +71,7 @@ BEGIN
     END IF;*/
 
     --
-    inIsByDoc:= (inStartDate = inEndDate);
+    -- inIsByDoc:= (inStartDate = inEndDate);
 
 
      RETURN QUERY
