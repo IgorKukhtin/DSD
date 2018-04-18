@@ -20,7 +20,10 @@ RETURNS TABLE (Id Integer, LineNum Integer, isLine TVarChar, PartionId Integer
              , LineFabricaName TVarChar
              , LabelName TVarChar
              , GoodsSizeId Integer, GoodsSizeName TVarChar
-
+             , BrandName    TVarChar
+             , PeriodName   TVarChar
+             , PeriodYear   Integer
+             
              , Amount TFloat, Amount_Sale TFloat
              , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat
                -- Итого сумма вх. + прайс (в прод.)
@@ -345,6 +348,10 @@ BEGIN
            , Object_GoodsSize.Id                         AS GoodsSizeId
            , Object_GoodsSize.ValueData                  AS GoodsSizeName
 
+           , Object_Brand.ValueData                      AS BrandName
+           , Object_Period.ValueData                     AS PeriodName
+           , Object_PartionGoods.PeriodYear              AS PeriodYear
+           
            , tmpMI.Amount                      :: TFloat AS Amount
            , tmpMI.Amount_Sale                 :: TFloat AS Amount_Sale
            , 0                                 :: TFloat AS OperPrice
@@ -449,6 +456,8 @@ BEGIN
             LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = Object_PartionGoods.LineFabricaId
             LEFT JOIN Object AS Object_Label            ON Object_Label.Id            = Object_PartionGoods.LabelId
             LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = Object_PartionGoods.GoodsSizeId
+            LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = Object_PartionGoods.BrandId
+            LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = Object_PartionGoods.PeriodId
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
@@ -553,6 +562,10 @@ BEGIN
            , Object_GoodsSize.Id                                           AS GoodsSizeId
            , Object_GoodsSize.ValueData                                    AS GoodsSizeName
 
+           , Object_Brand.ValueData                                        AS BrandName
+           , Object_Period.ValueData                                       AS PeriodName
+           , Object_PartionGoods.PeriodYear                                AS PeriodYear
+           
            , tmpMI.Amount                                       :: TFloat  AS Amount
            , MI_Sale.Amount                                     :: TFloat  AS Amount_Sale
            , 0                                                  :: TFloat  AS OperPrice
@@ -655,6 +668,8 @@ BEGIN
             LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = Object_PartionGoods.LineFabricaId
             LEFT JOIN Object AS Object_Label            ON Object_Label.Id            = Object_PartionGoods.LabelId
             LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = Object_PartionGoods.GoodsSizeId
+            LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = Object_PartionGoods.BrandId
+            LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = Object_PartionGoods.PeriodId
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId

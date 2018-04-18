@@ -16,6 +16,9 @@ RETURNS TABLE (Id Integer, PartionId Integer
              , LineFabricaName TVarChar
              , LabelName TVarChar
              , GoodsSizeId Integer, GoodsSizeName TVarChar
+             , BrandName    TVarChar
+             , PeriodName   TVarChar
+             , PeriodYear   Integer
              , Amount TFloat, AmountSecond TFloat, AmountRemains TFloat, AmountSecondRemains TFloat
              , CountForPrice TFloat
              , OperPrice TFloat, OperPriceList TFloat
@@ -105,6 +108,9 @@ BEGIN
            , Object_Label.ValueData         AS LabelName
            , Object_GoodsSize.Id            AS GoodsSizeId
            , Object_GoodsSize.ValueData     AS GoodsSizeName 
+           , Object_Brand.ValueData         AS BrandName
+           , Object_Period.ValueData        AS PeriodName
+           , Object_PartionGoods.PeriodYear AS PeriodYear
 
            , tmpMI.Amount
            , tmpMI.AmountSecond         ::TFloat
@@ -141,7 +147,9 @@ BEGIN
             LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = Object_PartionGoods.LineFabricaId 
             LEFT JOIN Object AS Object_Label            ON Object_Label.Id            = Object_PartionGoods.LabelId
             LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = Object_PartionGoods.GoodsSizeId
-           
+            LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = Object_PartionGoods.BrandId
+            LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = Object_PartionGoods.PeriodId
+
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
