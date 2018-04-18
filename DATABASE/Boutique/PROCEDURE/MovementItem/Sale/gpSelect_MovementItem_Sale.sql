@@ -15,6 +15,10 @@ RETURNS TABLE (Id Integer, LineNum Integer, PartionId Integer
              , LineFabricaName TVarChar
              , LabelName TVarChar
              , GoodsSizeId Integer, GoodsSizeName TVarChar
+             , BrandName    TVarChar
+             , PeriodName   TVarChar
+             , PeriodYear   Integer
+             
              , DiscountSaleKindId Integer, DiscountSaleKindName TVarChar
              , Amount TFloat, Remains TFloat
              , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat
@@ -233,6 +237,10 @@ BEGIN
            , Object_GoodsSize.Id            AS GoodsSizeId
            , Object_GoodsSize.ValueData     AS GoodsSizeName
 
+           , Object_Brand.ValueData         AS BrandName
+           , Object_Period.ValueData        AS PeriodName
+           , Object_PartionGoods.PeriodYear AS PeriodYear
+           
            , Object_DiscountSaleKind.Id        AS DiscountSaleKindId
            , Object_DiscountSaleKind.ValueData AS DiscountSaleKindName
 
@@ -300,7 +308,9 @@ BEGIN
             LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = Object_PartionGoods.LineFabricaId
             LEFT JOIN Object AS Object_Label            ON Object_Label.Id            = Object_PartionGoods.LabelId
             LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = Object_PartionGoods.GoodsSizeId
-
+            LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = Object_PartionGoods.BrandId
+            LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = Object_PartionGoods.PeriodId
+            
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()

@@ -99,14 +99,33 @@ BEGIN
         FROM DD AS D1
             LEFT OUTER JOIN DD AS D2 ON D1.MarginCategoryId = D2.MarginCategoryId AND D1.ORD = D2.ORD-1
     )
+  , ObjectLink_Child_NB 
+    AS 
+        (SELECT 
+            ObjectLink_Child.ChildObjectId,
+            ObjectLink_Child_NB.ChildObjectId as ChildObjectIdNB 
+         FROM ObjectLink AS ObjectLink_Child
+            INNER JOIN ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                 AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+            INNER JOIN ObjectLink AS ObjectLink_Main_NB ON ObjectLink_Main_NB.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                 AND ObjectLink_Main_NB.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+            INNER JOIN ObjectLink AS ObjectLink_Child_NB ON ObjectLink_Child_NB.ObjectId = ObjectLink_Main_NB.ObjectId
+                                 AND ObjectLink_Child_NB.DescId   = zc_ObjectLink_LinkGoods_Goods()
+            INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                  ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_NB.ChildObjectId
+                                 AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                 AND ObjectLink_Goods_Object.ChildObjectId = 4  
+         WHERE ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods())
   , RemainsTo AS
        (SELECT
             -- !!!временно захардкодил, будет всегда товар НеБолей!!!
-            ObjectLink_Child_NB.ChildObjectId AS GoodsId         -- здесь товар
-          , Container.ObjectId                AS GoodsId_retail  -- здесь товар "сети"
+            ObjectLink_Child_NB.ChildObjectIdNB AS GoodsId         -- здесь товар
+          , Container.ObjectId                  AS GoodsId_retail  -- здесь товар "сети"
           , MIN (COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())) :: TDateTime AS MinExpirationDate -- Срок годности
-          , SUM (Container.Amount)  :: TFloat AS Amount
+          , SUM (Container.Amount)  :: TFloat   AS Amount
         FROM Container
+            INNER JOIN ObjectLink_Child_NB AS ObjectLink_Child_NB
+                                        ON ObjectLink_Child_NB.ChildObjectId = Container.ObjectID
             LEFT OUTER JOIN ContainerLinkObject AS CLO_PartionMovementItem
                                                 ON CLO_PartionMovementItem.ContainerId = Container.Id
                                                AND CLO_PartionMovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
@@ -115,25 +134,10 @@ BEGIN
             LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
                                               ON MIDate_ExpirationDate.MovementItemId = Object_PartionMovementItem.ObjectCode
                                              AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
-                                    -- !!!временно захардкодил, будет всегда товар НеБолей!!!!
-                                    INNER JOIN ObjectLink AS ObjectLink_Child
-                                                          ON ObjectLink_Child.ChildObjectId = Container.ObjectID
-                                                         AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
-                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-                                    INNER JOIN ObjectLink AS ObjectLink_Main_NB ON ObjectLink_Main_NB.ChildObjectId = ObjectLink_Main.ChildObjectId
-                                                                               AND ObjectLink_Main_NB.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
-                                    INNER JOIN ObjectLink AS ObjectLink_Child_NB ON ObjectLink_Child_NB.ObjectId = ObjectLink_Main_NB.ObjectId
-                                                                                AND ObjectLink_Child_NB.DescId   = zc_ObjectLink_LinkGoods_Goods()
-                                    INNER JOIN ObjectLink AS ObjectLink_Goods_Object
-                                                          ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_NB.ChildObjectId
-                                                         AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-                                                         AND ObjectLink_Goods_Object.ChildObjectId = 4 -- !!!NeBoley!!!
-
         WHERE Container.DescId = zc_Container_Count()
           AND Container.WhereObjectId = inUnitId_to
           AND Container.Amount <> 0
-        GROUP BY ObjectLink_Child_NB.ChildObjectId
+        GROUP BY ObjectLink_Child_NB.ChildObjectIdNB
                , Container.ObjectId
         HAVING SUM (Container.Amount) > 0
        )
@@ -415,7 +419,8 @@ ALTER FUNCTION gpSelect_AllGoodsPrice (Integer,  Integer,  TFloat, Boolean, TFlo
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 17.04.18                                                                                      *
  01.11.17                                        * add inTaxTo
  17.10.17         * add Area
  18.06.16                                        *
