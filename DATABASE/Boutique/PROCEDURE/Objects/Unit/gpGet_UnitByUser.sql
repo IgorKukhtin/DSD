@@ -1,11 +1,13 @@
 -- Function: gpGet_UnitbyUser()
 
 DROP FUNCTION IF EXISTS gpGet_UnitbyUser (TVarChar);
+DROP FUNCTION IF EXISTS gpGet_UnitbyUser (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_UnitbyUser(
+    IN inUnitId        Integer,    -- сохр. подразделение
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE(UnitId integer, UnitName TVarChar
+RETURNS TABLE(UnitId Integer, UnitName TVarChar
             , StartDate TDatetime, EndDate TDatetime    -- для отчета = CURRENT_DATE
               )
 AS
@@ -24,6 +26,11 @@ BEGIN
                               AND ObjectLink_User_Unit.ObjectId = vbUserId)
                            , 0) ::Integer;
 
+     -- переопределяем если подразделение не выбрано на вх. парам.
+     IF vbUnitId = 0 AND COALESCE (inUnitId, 0) <> 0 THEN
+        vbUnitId:= inUnitId;
+     END IF;
+        
      RETURN QUERY
      SELECT Object.Id           AS UnitId
           , Object.ValueData    AS UnitName
@@ -46,6 +53,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.04.18         * add inUnitId
  10.04.18         *
  14.03.18         * rename gpGet_UserUnit  - - gpGet_UnitbyUser
  19.02.18         *
@@ -54,4 +62,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpGet_UnitbyUser (inSession:= zfCalc_UserAdmin())
-select * from gpGet_UnitbyUser( inSession := '6');
+--select * from gpGet_UnitbyUser( inUnitId:=0;inSession := '6');

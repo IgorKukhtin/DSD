@@ -40,7 +40,6 @@ type
     bbReport_Goods: TdxBarButton;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    spGet_Unit: TdsdStoredProc;
     bbOpenReportForm_Partner: TdxBarButton;
     cxLabel4: TcxLabel;
     edClient: TcxButtonEdit;

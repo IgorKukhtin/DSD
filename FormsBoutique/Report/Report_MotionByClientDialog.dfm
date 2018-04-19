@@ -214,6 +214,14 @@ object Report_MotionByClientDialogForm: TReport_MotionByClientDialogForm
     OutputType = otResult
     Params = <
       item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'UnitId'
         Value = '0'
         Component = GuidesUnit

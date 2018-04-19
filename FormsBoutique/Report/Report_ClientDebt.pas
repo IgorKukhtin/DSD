@@ -45,7 +45,6 @@ type
     bbOpenReportForm: TdxBarButton;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    spGet_Unit: TdsdStoredProc;
     actOpenReportForm_Partner: TdsdOpenForm;
     bbOpenReportForm_Partner: TdxBarButton;
     SummDebt_profit: TcxGridDBColumn;
