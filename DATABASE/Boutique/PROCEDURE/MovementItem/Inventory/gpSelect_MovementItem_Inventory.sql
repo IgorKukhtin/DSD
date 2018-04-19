@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Inventory(
     IN inIsErased         Boolean      , -- 
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, PartionId Integer
+RETURNS TABLE (Id Integer
+             , PartionId Integer, InvNumber_Partion TVarChar, OperDate_Partion TDateTime
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , CompositionGroupName TVarChar
@@ -95,9 +96,11 @@ BEGIN
        SELECT
              tmpMI.Id
            , tmpMI.PartionId
-           , Object_Goods.Id          AS GoodsId
-           , Object_Goods.ObjectCode  AS GoodsCode
-           , Object_Goods.ValueData   AS GoodsName
+           , Movement_Partion.InvNumber     AS InvNumber_Partion
+           , Movement_Partion.OperDate      AS OperDate_Partion
+           , Object_Goods.Id                AS GoodsId
+           , Object_Goods.ObjectCode        AS GoodsCode
+           , Object_Goods.ValueData         AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData AS MeasureName
 
@@ -139,6 +142,7 @@ BEGIN
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpMI.PartionId                                 
 
+            LEFT JOIN Movement AS Movement_Partion      ON Movement_Partion.Id        = Object_PartionGoods.MovementId
             LEFT JOIN Object AS Object_GoodsGroup       ON Object_GoodsGroup.Id       = Object_PartionGoods.GoodsGroupId
             LEFT JOIN Object AS Object_Measure          ON Object_Measure.Id          = Object_PartionGoods.MeasureId
             LEFT JOIN Object AS Object_Composition      ON Object_Composition.Id      = Object_PartionGoods.CompositionId
@@ -161,7 +165,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.04.18         *
  25.04.17         *
 */
 

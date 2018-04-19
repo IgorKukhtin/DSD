@@ -488,6 +488,25 @@ object ReturnOutForm: TReturnOutForm
             Options.Editing = False
             Width = 70
           end
+          object OperDate_Partion: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'OperDate_Partion'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            Options.Editing = False
+            Width = 70
+          end
+          object InvNumber_Partion: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'InvNumber_Partion'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            Options.Editing = False
+            Width = 55
+          end
         end
         object cxGridLevel: TcxGridLevel
           GridView = cxGridDBTableView
@@ -921,6 +940,9 @@ object ReturnOutForm: TReturnOutForm
       ReportNameParam.Value = 'PrintMovement_ReturnOut'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'

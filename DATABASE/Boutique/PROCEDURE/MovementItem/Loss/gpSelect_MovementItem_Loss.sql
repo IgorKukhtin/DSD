@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Loss(
     IN inIsErased         Boolean      , -- 
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, PartionId Integer
+RETURNS TABLE (Id Integer
+             , PartionId Integer, InvNumber_Partion TVarChar, OperDate_Partion TDateTime
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , CompositionName TVarChar
@@ -92,6 +93,7 @@ BEGIN
    
                           )
        , tmpPartion AS (SELECT Object_PartionGoods.MovementItemId AS PartionId
+                             , Object_PartionGoods.MovementId
                              , Object_PartionGoods.GoodsId
                              , Object_PartionGoods.GoodsGroupId
                              , Object_PartionGoods.MeasureId
@@ -142,11 +144,13 @@ BEGIN
         */
    
           -- результат
-           SELECT 0                        AS Id
+           SELECT 0                              AS Id
                 , tmpPartion.PartionId
-                , Object_Goods.Id          AS GoodsId
-                , Object_Goods.ObjectCode  AS GoodsCode
-                , Object_Goods.ValueData   AS GoodsName
+                , Movement_Partion.InvNumber     AS InvNumber_Partion
+                , Movement_Partion.OperDate      AS OperDate_Partion
+                , Object_Goods.Id                AS GoodsId
+                , Object_Goods.ObjectCode        AS GoodsCode
+                , Object_Goods.ValueData         AS GoodsName
                 , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
                 , Object_Measure.ValueData AS MeasureName
      
@@ -178,7 +182,7 @@ BEGIN
            FROM tmpPartion
                 LEFT JOIN tmpMI        ON tmpMI.PartionId      = tmpPartion.PartionId
                 --LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpPartion.GoodsId
-
+                LEFT JOIN Movement  AS Movement_Partion ON Movement_Partion.Id  = tmpPartion.MovementId
                 LEFT JOIN Object AS Object_Goods       ON Object_Goods.Id       = tmpPartion.GoodsId
                 LEFT JOIN Object AS Object_GoodsGroup  ON Object_GoodsGroup.Id  = tmpPartion.GoodsGroupId
                 LEFT JOIN Object AS Object_Measure     ON Object_Measure.Id     = tmpPartion.MeasureId
@@ -200,6 +204,8 @@ BEGIN
            SELECT
                  tmpMI.Id
                , tmpMI.PartionId
+               , Movement_Partion.InvNumber     AS InvNumber_Partion
+               , Movement_Partion.OperDate      AS OperDate_Partion
                , Object_Goods.Id                AS GoodsId
                , Object_Goods.ObjectCode        AS GoodsCode
                , Object_Goods.ValueData         AS GoodsName
@@ -239,6 +245,7 @@ BEGIN
                                    AND Container.WhereObjectId = vbUnitId
                                    AND Container.DescId        = zc_Container_count()
     
+                LEFT JOIN Movement AS Movement_Partion      ON Movement_Partion.Id        = Object_PartionGoods.MovementId
                 LEFT JOIN Object AS Object_GoodsGroup       ON Object_GoodsGroup.Id       = Object_PartionGoods.GoodsGroupId
                 LEFT JOIN Object AS Object_Measure          ON Object_Measure.Id          = Object_PartionGoods.MeasureId
                 LEFT JOIN Object AS Object_Composition      ON Object_Composition.Id      = Object_PartionGoods.CompositionId
@@ -299,11 +306,13 @@ BEGIN
            SELECT
                  tmpMI.Id
                , tmpMI.PartionId
-               , Object_Goods.Id          AS GoodsId
-               , Object_Goods.ObjectCode  AS GoodsCode
-               , Object_Goods.ValueData   AS GoodsName
+               , Movement_Partion.InvNumber     AS InvNumber_Partion
+               , Movement_Partion.OperDate      AS OperDate_Partion
+               , Object_Goods.Id                AS GoodsId
+               , Object_Goods.ObjectCode        AS GoodsCode
+               , Object_Goods.ValueData         AS GoodsName
                , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-               , Object_Measure.ValueData AS MeasureName
+               , Object_Measure.ValueData       AS MeasureName
     
                , Object_Composition.ValueData   AS CompositionName
                , Object_GoodsInfo.ValueData     AS GoodsInfoName
@@ -338,6 +347,7 @@ BEGIN
                                    AND Container.WhereObjectId = vbUnitId
                                    AND Container.DescId        = zc_Container_count()
 
+                LEFT JOIN Movement AS Movement_Partion      ON Movement_Partion.Id        = Object_PartionGoods.MovementId
                 LEFT JOIN Object AS Object_GoodsGroup       ON Object_GoodsGroup.Id       = Object_PartionGoods.GoodsGroupId
                 LEFT JOIN Object AS Object_Measure          ON Object_Measure.Id          = Object_PartionGoods.MeasureId
                 LEFT JOIN Object AS Object_Composition      ON Object_Composition.Id      = Object_PartionGoods.CompositionId
@@ -360,7 +370,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.04.18         *
  21.06.17         *
  25.04.17         *
 */

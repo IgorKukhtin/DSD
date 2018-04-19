@@ -8,7 +8,9 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ReturnOut(
     IN inIsErased         Boolean      , --
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, PartionId Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (Id Integer
+             , PartionId Integer, InvNumber_Partion TVarChar, OperDate_Partion TDateTime
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , CompositionName TVarChar
              , GoodsInfoName TVarChar
@@ -95,6 +97,7 @@ BEGIN
                                                        AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
                        )
        , tmpPartion AS (SELECT Object_PartionGoods.MovementItemId AS PartionId
+                             , Object_PartionGoods.MovementId
                              , Object_PartionGoods.GoodsId
                              , Object_PartionGoods.GoodsGroupId
                              , Object_PartionGoods.MeasureId
@@ -148,6 +151,9 @@ BEGIN
        SELECT
              0                                    AS Id
            , tmpPartion.PartionId                 AS PartionId
+           , Movement_Partion.InvNumber           AS InvNumber_Partion
+           , Movement_Partion.OperDate            AS OperDate_Partion
+
            , Object_Goods.Id                      AS GoodsId
            , Object_Goods.ObjectCode              AS GoodsCode
            , Object_Goods.ValueData               AS GoodsName
@@ -176,7 +182,7 @@ BEGIN
        FROM tmpPartion
             LEFT JOIN tmpMI        ON tmpMI.PartionId      = tmpPartion.PartionId
             --LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpPartion.GoodsId
-
+            LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id   = tmpPartion.MovementId
             LEFT JOIN Object AS Object_Goods       ON Object_Goods.Id       = tmpPartion.GoodsId
             LEFT JOIN Object AS Object_GoodsGroup  ON Object_GoodsGroup.Id  = tmpPartion.GoodsGroupId
             LEFT JOIN Object AS Object_Measure     ON Object_Measure.Id     = tmpPartion.MeasureId
@@ -197,6 +203,8 @@ BEGIN
        SELECT
              tmpMI.Id                             AS Id
            , tmpMI.PartionId                      AS PartionId
+           , Movement_Partion.InvNumber           AS InvNumber_Partion
+           , Movement_Partion.OperDate            AS OperDate_Partion
            , Object_Goods.Id                      AS GoodsId
            , Object_Goods.ObjectCode              AS GoodsCode
            , Object_Goods.ValueData               AS GoodsName
@@ -230,8 +238,8 @@ BEGIN
             LEFT JOIN tmpRemains AS Container ON Container.PartionId     = tmpMI.PartionId
                                --AND Container.WhereObjectId = vbUnitId
                                --AND Container.DescId        = zc_Container_count()
-
-            LEFT JOIN Object AS Object_Goods       ON Object_Goods.Id       = tmpMI.GoodsId -- Object_PartionGoods.GoodsId - тоже самое
+            LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id   = Object_PartionGoods.MovementId
+            LEFT JOIN Object AS Object_Goods       ON Object_Goods.Id       = tmpMI.GoodsId                    -- Object_PartionGoods.GoodsId - тоже самое
             LEFT JOIN Object AS Object_GoodsGroup  ON Object_GoodsGroup.Id  = Object_PartionGoods.GoodsGroupId
             LEFT JOIN Object AS Object_Measure     ON Object_Measure.Id     = Object_PartionGoods.MeasureId
             LEFT JOIN Object AS Object_Composition ON Object_Composition.Id = Object_PartionGoods.CompositionId
@@ -291,6 +299,8 @@ BEGIN
        SELECT
              tmpMI.Id                             AS Id
            , tmpMI.PartionId                      AS PartionId
+           , Movement_Partion.InvNumber           AS InvNumber_Partion
+           , Movement_Partion.OperDate            AS OperDate_Partion
            , Object_Goods.Id                      AS GoodsId
            , Object_Goods.ObjectCode              AS GoodsCode
            , Object_Goods.ValueData               AS GoodsName
@@ -324,7 +334,7 @@ BEGIN
             LEFT JOIN tmpRemains AS Container ON Container.PartionId     = tmpMI.PartionId
                                --AND Container.WhereObjectId = vbUnitId
                                --AND Container.DescId        = zc_Container_count()
-
+            LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id   = Object_PartionGoods.MovementId
             LEFT JOIN Object AS Object_Goods       ON Object_Goods.Id       = tmpMI.GoodsId -- Object_PartionGoods.GoodsId - тоже самое
             LEFT JOIN Object AS Object_GoodsGroup  ON Object_GoodsGroup.Id  = Object_PartionGoods.GoodsGroupId
             LEFT JOIN Object AS Object_Measure     ON Object_Measure.Id     = Object_PartionGoods.MeasureId
@@ -346,7 +356,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.04.18         *
  21.06.17         *
  24.04.17         *
 */

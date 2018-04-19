@@ -943,6 +943,8 @@ type
     miLossPersonal: TMenuItem;
     actReport_CheckTaxCorrective_NPP: TdsdOpenForm;
     N3: TMenuItem;
+    actMemberSheetWorkTime: TdsdOpenForm;
+    miMemberSheetWorkTime: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

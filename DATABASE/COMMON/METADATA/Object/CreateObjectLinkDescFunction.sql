@@ -1550,6 +1550,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsReportSale_Unit() RETURNS Integer 
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_GoodsReportSale_Unit', 'Подразделение', zc_Object_GoodsReportSale(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsReportSale_Unit');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_MemberSheetWorkTime_Unit() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberSheetWorkTime_Unit'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+ INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+ SELECT 'zc_ObjectLink_MemberSheetWorkTime_Unit', 'Подразделение', zc_Object_MemberSheetWorkTime(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberSheetWorkTime_Unit');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_MemberSheetWorkTime_Member() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberSheetWorkTime_Member'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+ INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+ SELECT 'zc_ObjectLink_MemberSheetWorkTime_Member', 'Физ.лицо', zc_Object_MemberSheetWorkTime(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberSheetWorkTime_Member');
+
 
 --!!! АПТЕКА
 
@@ -1890,6 +1898,8 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 18.04.18         * zc_ObjectLink_MemberSheetWorkTime_Unit
+                    zc_ObjectLink_MemberSheetWorkTime_Member
  14.02.18         * zc_ObjectLink_GoodsPropertyValue_GoodsBox
  18.01.18         * zc_ObjectLink_MemberSP_PartnerMedical
                     zc_ObjectLink_MemberSP_GroupMemberSP

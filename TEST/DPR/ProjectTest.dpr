@@ -1004,7 +1004,9 @@ uses
   LossPersonal in '..\..\Forms\Document\LossPersonal.pas' {LossPersonalForm: TParentForm},
   MovementString_INNEdit in '..\..\Forms\Document\MovementString_INNEdit.pas' {MovementString_INNEditForm: TParentForm},
   Report_CheckTaxCorrective_NPP in '..\..\Forms\Report\Report_CheckTaxCorrective_NPP.pas' {Report_CheckTaxCorrective_NPPForm: TParentForm},
-  Report_CheckTC_NPPDialog in '..\..\Forms\Report\Report_CheckTC_NPPDialog.pas' {Report_CheckTC_NPPDialogForm: TParentForm};
+  Report_CheckTC_NPPDialog in '..\..\Forms\Report\Report_CheckTC_NPPDialog.pas' {Report_CheckTC_NPPDialogForm: TParentForm},
+  MemberSheetWorkTime in '..\..\Forms\Guides\MemberSheetWorkTime.pas' {MemberSheetWorkTimeForm: TParentForm},
+  MemberSheetWorkTimeEdit in '..\..\Forms\Guides\MemberSheetWorkTimeEdit.pas' {MemberSheetWorkTimeEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

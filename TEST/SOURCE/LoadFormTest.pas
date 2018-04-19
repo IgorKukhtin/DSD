@@ -86,6 +86,7 @@ type
     procedure LoadMeasureFormTest;
     procedure LoadMemberFormTest;
     procedure LoadMemberExternalFormTest;
+    procedure LoadMemberSheetWorkTimeFormTest;
     procedure LoadMobileTariffFormTest;
     procedure LoadMobileBillsFormTest;
     procedure LoadMobileProjectFormTest;
@@ -2521,6 +2522,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMemberExternalEditForm');
 end;
 
+procedure TLoadFormTest.LoadMemberSheetWorkTimeFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberSheetWorkTimeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberSheetWorkTimeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberSheetWorkTimeEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberSheetWorkTimeEditForm');
+end;
 
 procedure TLoadFormTest.LoadWorkTimeKindFormTest;
 begin

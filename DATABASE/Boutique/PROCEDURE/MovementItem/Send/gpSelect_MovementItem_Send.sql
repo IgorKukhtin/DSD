@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Send(
     IN inIsErased         Boolean      , -- 
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, PartionId Integer
+RETURNS TABLE (Id Integer
+             , PartionId Integer, InvNumber_Partion TVarChar, OperDate_Partion TDateTime
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , CompositionName TVarChar
@@ -100,6 +101,7 @@ BEGIN
                                                                          ) AS lfSelect
                         )
        , tmpPartion AS (SELECT Object_PartionGoods.MovementItemId AS PartionId
+                             , Object_PartionGoods.MovementId
                              , Object_PartionGoods.GoodsId
                              , Object_PartionGoods.GoodsGroupId
                              , Object_PartionGoods.MeasureId
@@ -156,6 +158,8 @@ BEGIN
            SELECT
                  0
                , tmpPartion.PartionId           AS PartionId
+               , Movement_Partion.InvNumber     AS InvNumber_Partion
+               , Movement_Partion.OperDate      AS OperDate_Partion
                , Object_Goods.Id                AS GoodsId
                , Object_Goods.ObjectCode        AS GoodsCode
                , Object_Goods.ValueData         AS GoodsName
@@ -190,7 +194,7 @@ BEGIN
            FROM tmpPartion
                 LEFT JOIN tmpMI        ON tmpMI.PartionId      = tmpPartion.PartionId
                 --LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpPartion.GoodsId
-
+                LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id   = tmpPartion.MovementId
                 LEFT JOIN Object AS Object_Goods       ON Object_Goods.Id       = tmpPartion.GoodsId
                 LEFT JOIN Object AS Object_GoodsGroup  ON Object_GoodsGroup.Id  = tmpPartion.GoodsGroupId
                 LEFT JOIN Object AS Object_Measure     ON Object_Measure.Id     = tmpPartion.MeasureId
@@ -212,6 +216,9 @@ BEGIN
            SELECT
                  tmpMI.Id
                , tmpMI.PartionId
+               , Movement_Partion.InvNumber     AS InvNumber_Partion
+               , Movement_Partion.OperDate      AS OperDate_Partion
+
                , Object_Goods.Id                AS GoodsId
                , Object_Goods.ObjectCode        AS GoodsCode
                , Object_Goods.ValueData         AS GoodsName
@@ -245,7 +252,8 @@ BEGIN
     
            FROM tmpMI
                 LEFT JOIN Object_PartionGoods    ON Object_PartionGoods.MovementItemId = tmpMI.PartionId                                 
-    
+                LEFT JOIN Movement  AS Movement_Partion ON Movement_Partion.Id = Object_PartionGoods.MovementId
+
                 LEFT JOIN Container AS Container_From
                                     ON Container_From.PartionId     = tmpMI.PartionId
                                    AND Container_From.ObjectId      = tmpMI.GoodsId
@@ -323,6 +331,9 @@ BEGIN
            SELECT
                  tmpMI.Id
                , tmpMI.PartionId
+               , Movement_Partion.InvNumber     AS InvNumber_Partion
+               , Movement_Partion.OperDate      AS OperDate_Partion
+
                , Object_Goods.Id                AS GoodsId
                , Object_Goods.ObjectCode        AS GoodsCode
                , Object_Goods.ValueData         AS GoodsName
@@ -358,6 +369,8 @@ BEGIN
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
                 LEFT JOIN Object_PartionGoods    ON Object_PartionGoods.MovementItemId = tmpMI.PartionId                                 
 
+                LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id = Object_PartionGoods.MovementId
+                
                 LEFT JOIN tmpContainer AS Container_From ON Container_From.PartionId = tmpMI.PartionId
 
                 LEFT JOIN Object AS Object_GoodsGroup       ON Object_GoodsGroup.Id       = Object_PartionGoods.GoodsGroupId
@@ -385,6 +398,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 18.04.17         *
  26.06.17         *
  21.06.17         *
  25.04.17         *

@@ -3369,6 +3369,14 @@
 				<Form>Report_CheckTC_NPPDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\MemberSheetWorkTime.pas">
+				<Form>MemberSheetWorkTimeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\MemberSheetWorkTimeEdit.pas">
+				<Form>MemberSheetWorkTimeEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
