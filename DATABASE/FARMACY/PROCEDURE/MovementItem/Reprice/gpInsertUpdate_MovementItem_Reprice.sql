@@ -36,19 +36,19 @@ BEGIN
     vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
     
     -- найти документ
-    SELECT Movement.Id
-    INTO vbMovementId
-    FROM Movement 
-        INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                      ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                     AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                     AND MovementLinkObject_Unit.ObjectId = inUnitId
-        LEFT OUTER JOIN MovementString AS MovementString_GUID
-                                       ON MovementString_GUID.MovementId = Movement.Id
-                                      AND MovementString_GUID.DescId = zc_MovementString_Comment()
-    WHERE Movement.DescId = zc_Movement_Reprice()
-      AND Movement.OperDate = CURRENT_DATE
-      AND MovementString_GUID.ValueData = inGUID;    
+    vbMovementId:= (SELECT Movement.Id
+                    FROM Movement 
+                        INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                      ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                     AND MovementLinkObject_Unit.DescId     = zc_MovementLinkObject_Unit()
+                                                     AND MovementLinkObject_Unit.ObjectId   = inUnitId
+                        INNER JOIN MovementString AS MovementString_GUID
+                                                  ON MovementString_GUID.MovementId = Movement.Id
+                                                 AND MovementString_GUID.DescId     = zc_MovementString_Comment()
+                                                 AND MovementString_GUID.ValueData  = inGUID
+                    WHERE Movement.DescId  = zc_Movement_Reprice()
+                      AND Movement.OperDate >= CURRENT_DATE AND Movement.OperDate < CURRENT_DATE + INTERVAL '1 DAY'
+                   );
         
 
     IF COALESCE (vbMovementId, 0) = 0
@@ -98,7 +98,7 @@ BEGIN
                                                , inUserId             := vbUserId);
 
      if inSession = zfCalc_UserAdmin() then 
-        RAISE EXCEPTION ' % ', (CLOCK_TIMESTAMP()- vbOperDate_StartBegin );
+        RAISE EXCEPTION ' %  %', vbOperDate_StartBegin, CLOCK_TIMESTAMP();
      end If;
 
 END;
