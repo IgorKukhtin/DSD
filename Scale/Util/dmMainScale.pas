@@ -529,7 +529,9 @@ begin
        Params.AddParam('inPrice_Return', ftFloat, ptInput, execParamsMI.ParamByName('Price_Return').AsFloat);
        Params.AddParam('inCountForPrice', ftFloat, ptInput, execParamsMI.ParamByName('CountForPrice').AsFloat);
        Params.AddParam('inCountForPrice_Return', ftFloat, ptInput, execParamsMI.ParamByName('CountForPrice_Return').AsFloat);
-       Params.AddParam('inDayPrior_PriceReturn', ftInteger, ptInput, StrToInt(GetArrayList_Value_byName(Default_Array,'DayPrior_PriceReturn')));
+       if GetArrayList_Index_byName(Default_Array,'DayPrior_PriceReturn')>=0
+       then Params.AddParam('inDayPrior_PriceReturn', ftInteger, ptInput, StrToInt(GetArrayList_Value_byName(Default_Array,'DayPrior_PriceReturn')))
+       else Params.AddParam('inDayPrior_PriceReturn', ftInteger, ptInput, 0);
        Params.AddParam('inCount', ftFloat, ptInput, execParamsMI.ParamByName('Count').AsFloat);
        Params.AddParam('inHeadCount', ftFloat, ptInput, execParamsMI.ParamByName('HeadCount').AsFloat);
        Params.AddParam('inBoxCount', ftFloat, ptInput, execParamsMI.ParamByName('BoxCount').AsFloat);

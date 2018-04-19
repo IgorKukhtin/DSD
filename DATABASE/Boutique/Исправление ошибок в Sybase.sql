@@ -2,6 +2,7 @@
 -- select count(*), min(OperDate), max (OperDate), min(BillDate), max (BillDate)  from _pg_upd where Name not like '%del%' and OperDate >= ToDay()
 
   select * from Unit inner join DiscountKlient on DiscountKlient.ClientId = Unit.id where KindUnit = zc_kuClient()  and Id_Postgres is null order by 1
+  select ReplId, DatabaseId, * from DiscountKlient where DiscountKlientName like '%Астион%' order by 4
 -- Шибко Дмитрий,Юля - 20% - 25%
 
 -- select DiscountKlientAccountMoney.* from  DiscountMovement join "dba".DiscountMovementItem_byBarCode on DiscountMovementId = DiscountMovement.Id join DiscountKlientAccountMoney on DiscountMovementItemId = DiscountMovementItem_byBarCode.Id where DiscountKlientAccountMoney.OperDate between '2012-01-15' and '2012-01-16' and DiscountKlientAccountMoney.isErased = 1 order by DiscountMovement.OperDate desc, DiscountMovementItem_byBarCode.Id  desc;

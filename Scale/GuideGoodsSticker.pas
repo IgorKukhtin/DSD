@@ -274,7 +274,8 @@ begin
     begin
        ParamByName('inObjectId').Value:=CDS.FieldByName('Id').asInteger;
 
-       ParamByName('inIsJPG').Value   := FALSE;
+       //ParamByName('inIsJPG').Value   := FALSE;
+       ParamByName('inIsJPG').Value   := TRUE;
        ParamByName('inIsLength').Value:= FALSE;
 
        //1 - печатать дату нач/конечн произв-ва на этикетке
@@ -303,8 +304,11 @@ begin
        //Execute;
     end;
     //
-    //actPrint.ReportNameParam.Name:=;
-    //
+    actPrint.ReportNameParam.Value:=CDS.FieldByName('StickerFileName').asString;
+    actPrint.Printer:=System.Copy(rgPriceList.Items[rgPriceList.ItemIndex], 5, Length(rgPriceList.Items[rgPriceList.ItemIndex]) - 4);
+    actPrint.WithOutPreview:= FALSE;
+    //actPrint.WithOutPreview:= TRUE;
+    actPrint.CopiesCount:=ParamsMI.ParamByName('RealWeight').AsInteger;
     actPrint.Execute;
 end;
 {------------------------------------------------------------------------------}
@@ -688,9 +692,17 @@ begin
           if 1=0 // (CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Kg) and (SettingMain.BranchCode <> 301)
           then begin
           end;
+
+          //ѕ≈„ј“№
+          pSelectPrint;
+
           //сохранение MovementItem
+          //Result:=true;
           Result:=DMMainScaleForm.gpInsert_Scale_MI(ParamsMovement,ParamsMI);
-          if not Result then ShowMessage('Error.not Result');
+
+          if not Result
+          then ShowMessage('Error.not Result');
+
           Result:=true;
      end;
 end;

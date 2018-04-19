@@ -274,7 +274,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       AlignSplitter = salRight
       AllowHotZoneDrag = False
       Control = ParamsAllPanel
-      ExplicitLeft = -8
     end
     object ParamsPanel: TPanel
       Left = 380
@@ -304,9 +303,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           TabOrder = 1
           WordWrap = True
           OnClick = rgPriceListClick
-          ExplicitLeft = -1
-          ExplicitTop = 40
-          ExplicitHeight = 279
         end
         object gbPriceListCode: TGroupBox
           Left = 0
@@ -316,7 +312,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           Align = alTop
           Caption = #1050#1086#1076
           TabOrder = 0
-          ExplicitTop = 0
           object EditPriceListCode: TEdit
             Left = 5
             Top = 17
@@ -671,6 +666,9 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   object PrintHeaderFormCDS: TClientDataSet
