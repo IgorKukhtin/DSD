@@ -28,12 +28,12 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMovementId Integer;
-   DECLARE vbOperDate_StartBegin TDateTime;
+   -- DECLARE vbOperDate_StartBegin TDateTime;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
     
-    vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
+    -- vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
     
     -- найти документ
     vbMovementId:= (SELECT Movement.Id
@@ -47,7 +47,8 @@ BEGIN
                                                  AND MovementString_GUID.DescId     = zc_MovementString_Comment()
                                                  AND MovementString_GUID.ValueData  = inGUID
                     WHERE Movement.DescId  = zc_Movement_Reprice()
-                      AND Movement.OperDate >= CURRENT_DATE AND Movement.OperDate < CURRENT_DATE + INTERVAL '1 DAY'
+                      -- AND Movement.OperDate >= CURRENT_DATE AND Movement.OperDate < CURRENT_DATE + INTERVAL '1 DAY'
+                      AND Movement.OperDate = CURRENT_DATE
                    );
         
 
@@ -97,9 +98,9 @@ BEGIN
                                                , inContract_Percent   := inContract_Percent
                                                , inUserId             := vbUserId);
 
-     if inSession = zfCalc_UserAdmin() then 
-        RAISE EXCEPTION ' %  %', vbOperDate_StartBegin, CLOCK_TIMESTAMP();
-     end If;
+    -- if inSession = zfCalc_UserAdmin() then 
+    --    RAISE EXCEPTION ' %  %', vbOperDate_StartBegin, CLOCK_TIMESTAMP();
+    -- end If;
 
 END;
 $BODY$
