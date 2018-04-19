@@ -274,7 +274,10 @@ BEGIN
            , Object_GoodsInfo.ValueData     AS GoodsInfoName
            , Object_LineFabrica.ValueData   AS LineFabricaName
            , Object_Label.ValueData         AS LabelName
-           , Object_GoodsSize.ValueData     AS GoodsSizeName 
+           , Object_GoodsSize.ValueData     AS GoodsSizeName
+           , CASE WHEN COALESCE (Object_GoodsSize.ValueData, '') <> '' THEN 'ð.' ||Object_GoodsSize.ValueData ELSE '' END AS GoodsSize_text
+           , Object_Brand.ValueData         AS BrandName
+           , Object_CountryBrand.ValueData  AS CountryBrandName
 
            , tmpMI.Amount
            , COALESCE (MIFloat_ChangePercent.ValueData, tmpMI.ChangePercent)      :: TFloat AS ChangePercent
@@ -317,6 +320,13 @@ BEGIN
             LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = Object_PartionGoods.LineFabricaId 
             LEFT JOIN Object AS Object_Label            ON Object_Label.Id            = Object_PartionGoods.LabelId
             LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = Object_PartionGoods.GoodsSizeId
+            LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = Object_PartionGoods.BrandId
+
+            LEFT JOIN ObjectLink AS Object_Brand_CountryBrand
+                                 ON Object_Brand_CountryBrand.ObjectId = Object_Brand.Id
+                                AND Object_Brand_CountryBrand.DescId = zc_ObjectLink_Brand_CountryBrand()
+            LEFT JOIN Object AS Object_CountryBrand ON Object_CountryBrand.Id = Object_Brand_CountryBrand.ChildObjectId
+            
             --
             LEFT JOIN MovementItem AS MI_Sale    ON MI_Sale.Id          = tmpMI.SaleMI_Id
             LEFT JOIN Movement AS Movement_Sale  ON Movement_Sale.Id    = MI_Sale.MovementId
