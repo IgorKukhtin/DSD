@@ -177,6 +177,14 @@ object Report_SaleReturnInDialogForm: TReport_SaleReturnInDialogForm
     OutputType = otResult
     Params = <
       item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'UnitId'
         Value = ''
         Component = GuidesUnit

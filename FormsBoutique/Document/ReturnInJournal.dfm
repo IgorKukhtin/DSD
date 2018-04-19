@@ -1352,6 +1352,14 @@ object ReturnInJournalForm: TReturnInJournalForm
     OutputType = otResult
     Params = <
       item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'UnitId'
         Value = ''
         Component = GuidesUnit
