@@ -167,8 +167,8 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 216
-    Top = 231
+    Left = 232
+    Top = 207
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 256
@@ -444,8 +444,8 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 290
-    Top = 143
+    Left = 298
+    Top = 159
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -503,7 +503,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 150
-    Top = 204
+    Left = 166
+    Top = 188
   end
 end

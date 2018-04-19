@@ -6,10 +6,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -396
-  ExplicitTop = 0
   ExplicitWidth = 1185
-  ExplicitHeight = 468
+  ExplicitHeight = 471
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -229,17 +227,17 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     TabOrder = 3
     ExplicitTop = 81
     ExplicitWidth = 1169
-    ExplicitHeight = 352
+    ExplicitHeight = 322
     ClientRectBottom = 322
     ClientRectRight = 1169
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1169
-      ExplicitHeight = 352
+      ExplicitHeight = 322
       inherited cxGrid: TcxGrid
         Width = 1169
         Height = 322
         ExplicitWidth = 1169
-        ExplicitHeight = 352
+        ExplicitHeight = 322
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -770,8 +768,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 6
-    ExplicitTop = 395
-    ExplicitWidth = 1065
     object DBLabelGoodsGroupNameFull: TcxDBLabel
       Left = 0
       Top = 0
@@ -787,7 +783,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Style.Font.Name = 'Tahoma'
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
-      ExplicitWidth = 1065
       Height = 30
       Width = 1169
       AnchorX = 585
@@ -1220,6 +1215,9 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object mactGoodsPrintList_Print: TMultiAction
       Category = 'DSDLib'
@@ -1364,6 +1362,9 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -1436,6 +1437,9 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource

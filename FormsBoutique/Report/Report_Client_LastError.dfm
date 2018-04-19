@@ -343,20 +343,16 @@ inherited Report_Client_LastErrorForm: TReport_Client_LastErrorForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGet_UserUnit
       StoredProcList = <
         item
-          StoredProc = spGet_UserUnit
         end>
       Caption = 'actGet_UserUnit'
     end
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGet_UserUnit
       StoredProcList = <
         item
-          StoredProc = spGet_UserUnit
         end
         item
           StoredProc = spSelect
@@ -628,6 +624,9 @@ inherited Report_Client_LastErrorForm: TReport_Client_LastErrorForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -705,25 +704,5 @@ inherited Report_Client_LastErrorForm: TReport_Client_LastErrorForm
       end>
     Left = 688
     Top = 280
-  end
-  object spGet_UserUnit: TdsdStoredProc
-    StoredProcName = 'gpGet_UserUnit'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'UnitId'
-        Value = ''
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitName'
-        Value = ''
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 584
-    Top = 144
   end
 end

@@ -42,7 +42,6 @@ type
     bbOpenReportForm: TdxBarButton;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    spGet_UserUnit: TdsdStoredProc;
     InvNumber: TcxGridDBColumn;
   private
     { Private declarations }

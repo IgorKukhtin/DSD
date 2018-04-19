@@ -3,7 +3,8 @@ unit UploadUnloadData;
 interface
 
 uses
-  Windows, Data.DB, Datasnap.DBClient, System.Classes, dsdDB, VKDBFDataSet;
+  Windows, Data.DB, Datasnap.DBClient, System.Classes, System.IOUtils, System.IniFiles,
+  dsdDB, VKDBFDataSet;
 
 type
   TdmUnloadUploadData = class(TDataModule)
@@ -17,6 +18,7 @@ type
     procedure InsertSendTable(EXEC_STR:String);
   public
     procedure UnloadData;
+    function GetUnloadPath : string;
   end;
 
 implementation
@@ -87,9 +89,27 @@ begin
   end;
 end;
 {------------------------------------------------------------------------------}
+function TdmUnloadUploadData.GetUnloadPath : string;
+var
+  Ini: TIniFile;
+begin
+  Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'Farmacy.ini');
+
+  try
+    Result := Ini.readString('Options', 'UnloadDataDBF', ExtractFilePath(Application.ExeName));
+    if Result[length(Result)]<> '\' then Result := Result+'\';
+    Ini.WriteString('Options','UnloadDataDBF',Result);
+
+  finally
+    Ini.free;
+  end;
+  if not TDirectory.Exists(Result) then TDirectory.CreateDirectory(Result);
+
+end;
+{------------------------------------------------------------------------------}
 procedure TdmUnloadUploadData.UnloadData;
 begin
-  OpenSendTable('D:\Unload\guides.dbf');
+  OpenSendTable(GetUnloadPath + 'guides.dbf');
   SaveGoods;
   SendTable.Close;
 end;

@@ -1231,7 +1231,7 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         MultiSelectSeparator = ','
       end>
     Left = 80
-    Top = 200
+    Top = 208
   end
   inherited BarManager: TdxBarManager
     Left = 120
@@ -1408,6 +1408,14 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
     DataSets = <>
     OutputType = otResult
     Params = <
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'UnitId'
         Value = ''

@@ -1301,6 +1301,14 @@ inherited Report_MotionByClientForm: TReport_MotionByClientForm
     OutputType = otResult
     Params = <
       item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'UnitId'
         Value = ''
         Component = GuidesUnit

@@ -807,20 +807,16 @@ inherited Report_CollationByClientForm: TReport_CollationByClientForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGet_Unit
       StoredProcList = <
         item
-          StoredProc = spGet_Unit
         end>
       Caption = 'actGet_UserUnit'
     end
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGet_Unit
       StoredProcList = <
         item
-          StoredProc = spGet_Unit
         end
         item
           StoredProc = spSelect
@@ -1252,30 +1248,6 @@ inherited Report_CollationByClientForm: TReport_CollationByClientForm
         MultiSelectSeparator = ','
       end>
     Left = 424
-  end
-  object spGet_Unit: TdsdStoredProc
-    StoredProcName = 'gpGet_UnitbyUser'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'UnitId'
-        Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitName'
-        Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 608
-    Top = 200
   end
   object GuidesClient: TdsdGuides
     KeyField = 'Id'
