@@ -730,6 +730,23 @@ type
     Label90: TLabel;
     dsGoodsFullForPrice: TBindSourceDB;
     LinkListControlToField5: TLinkListControlToField;
+
+    pBackup_two: TPanel;
+    GridPanelLayout15_two: TGridPanelLayout;
+    bBackup_two: TButton;
+    GridPanelLayout16_two: TGridPanelLayout;
+    Label91_two: TLabel;
+    Label92_two: TLabel;
+    bRestore_two: TButton;
+    GridPanelLayout17_two: TGridPanelLayout;
+    Label93_two: TLabel;
+    Label94_two: TLabel;
+    Panel52_two: TPanel;
+    pOptimizeDB_two: TPanel;
+    GridPanelLayout18_two: TGridPanelLayout;
+    bOptimizeDB_two: TButton;
+    Panel57_two: TPanel;
+
     pBackup: TPanel;
     GridPanelLayout15: TGridPanelLayout;
     bBackup: TButton;
@@ -1034,6 +1051,8 @@ type
     procedure ppEnterAmountClosePopup(Sender: TObject);
     procedure bBackupClick(Sender: TObject);
     procedure bRestoreClick(Sender: TObject);
+    procedure bBackupClick_two(Sender: TObject);
+    procedure bRestoreClick_two(Sender: TObject);
     procedure bCashTotalClick(Sender: TObject);
     procedure bTotalCashClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -1045,6 +1064,7 @@ type
       const AItem: TListViewItem);
     procedure bSelectPartnersClick(Sender: TObject);
     procedure bOptimizeDBClick(Sender: TObject);
+    procedure bOptimizeDBClick_two(Sender: TObject);
     procedure LinkListControlToField14FilledListItem(Sender: TObject;
       const AEditor: IBindListEditorItem);
     procedure LinkListControlToField2FilledListItem(Sender: TObject; const AEditor: IBindListEditorItem);
@@ -3264,6 +3284,18 @@ begin
   TDialogService.MessageDialog(Mes,
       TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, BackupDB);
 end;
+procedure TfrmMain.bBackupClick_two(Sender: TObject);
+var
+  Mes: string;
+begin
+  if FileExists(TPath.Combine(TPath.GetSharedDocumentsPath, DataBaseFileName)) then
+    Mes := 'Резервная копия уже существует. Перезаписать резервную копию базы данных?'
+  else
+    Mes := 'Выполнить резервное копирование базы данных?';
+
+  TDialogService.MessageDialog(Mes,
+      TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, BackupDB);
+end;
 
 // отмена выбора товаров
 procedure TfrmMain.bCancelCashClick(Sender: TObject);
@@ -3389,6 +3421,9 @@ begin
     WebServerLayout.Height := 0;
     CurWebServerLayout.Height := 0;
     gc_WebService := gc_WebServers[0];
+    //
+    pBackup_two.Visible := false;
+    pOptimizeDB_two.Visible := false;
   end;
 end;
 
@@ -3673,6 +3708,14 @@ begin
   end
   else
   begin
+    pBackup_two.Visible := true;
+    pOptimizeDB_two.Visible := true;
+    LogInButton.Position.X := bRestore_two.Position.X;
+    LogInButton.Position.Y := bOptimizeDB_two.Position.Y-25;
+    //LogInButton.Size.Height := bOptimizeDB_two.Size.Height;
+    //LogInButton.Size.Width  := bRestore_two.Size.Width;
+    // exit;
+    //
     WebServerLayout.Height := 75;
     WebServerEdit.Text := FTemporaryServer;
     CurWebServerLayout.Height := 75;
@@ -3682,6 +3725,35 @@ begin
 end;
 
 procedure TfrmMain.bOptimizeDBClick(Sender: TObject);
+begin
+  try
+    DM.conMain.ExecSQL('pragma integrity_check');
+    DM.conMain.ExecSQL('VACUUM');
+
+    DM.conMain.ExecSQL('DELETE FROM MOVEMENT_ROUTEMEMBER');
+
+    DM.conMain.ExecSQL('DELETE FROM Object_GoodsByGoodsKind WHERE isErased = 1');
+    DM.conMain.ExecSQL('DELETE FROM Object_GoodsListSale WHERE isErased = 1');
+
+    DM.conMain.ExecSQL('DELETE FROM OBJECT_PARTNER'
+     + ' WHERE  OBJECT_PARTNER.ISERASED = 1'
+     + '    AND NOT EXISTS (SELECT 1 FROM  MOVEMENT_ORDEREXTERNAL WHERE MOVEMENT_ORDEREXTERNAL.PARTNERID = OBJECT_PARTNER.ID AND MOVEMENT_ORDEREXTERNAL.CONTRACTID = OBJECT_PARTNER.CONTRACTID)'
+     + '    AND NOT EXISTS (SELECT 1 FROM  MOVEMENT_RETURNIN WHERE MOVEMENT_RETURNIN.PARTNERID = OBJECT_PARTNER.ID AND MOVEMENT_RETURNIN.CONTRACTID = OBJECT_PARTNER.CONTRACTID)'
+     + '    AND NOT EXISTS (SELECT 1 FROM  MOVEMENT_CASH WHERE MOVEMENT_CASH.PARTNERID = OBJECT_PARTNER.ID AND MOVEMENT_CASH.CONTRACTID = OBJECT_PARTNER.CONTRACTID)'
+     + '    AND NOT EXISTS (SELECT 1 FROM  MOVEMENT_STOREREAL WHERE MOVEMENT_STOREREAL.PARTNERID = OBJECT_PARTNER.ID)'
+     + '    AND NOT EXISTS (SELECT 1 FROM  MOVEMENT_VISIT WHERE MOVEMENT_VISIT.PARTNERID = OBJECT_PARTNER.ID)'
+     + '    AND NOT EXISTS (SELECT 1 FROM  MOVEMENTITEM_TASK WHERE MOVEMENTITEM_TASK.PARTNERID = OBJECT_PARTNER.ID)');
+
+    DM.conMain.ExecSQL('pragma integrity_check');
+    DM.conMain.ExecSQL('VACUUM');
+
+    ShowMessage('Оптимизация базы данных успешно завершена');
+  except
+    on E: Exception do
+      Showmessage(E.Message);
+  end;
+end;
+procedure TfrmMain.bOptimizeDBClick_two(Sender: TObject);
 begin
   try
     DM.conMain.ExecSQL('pragma integrity_check');
@@ -4032,6 +4104,15 @@ begin
 end;
 
 procedure TfrmMain.bRestoreClick(Sender: TObject);
+begin
+  if FileExists(TPath.Combine(TPath.GetSharedDocumentsPath, DataBaseFileName)) then
+    TDialogService.MessageDialog('Востановить резервную копию базы данных? Текущая база данных будет потеряна!',
+      TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, RestoreDB)
+  else
+    TDialogService.MessageDialog('Резервная копия не найдена',
+        TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbOK], TMsgDlgBtn.mbOK, 0, nil);
+end;
+procedure TfrmMain.bRestoreClick_two(Sender: TObject);
 begin
   if FileExists(TPath.Combine(TPath.GetSharedDocumentsPath, DataBaseFileName)) then
     TDialogService.MessageDialog('Востановить резервную копию базы данных? Текущая база данных будет потеряна!',
@@ -5007,6 +5088,9 @@ begin
     WebServerLayout.Height := 0;
     CurWebServerLayout.Height := 0;
     SyncLayout.Visible := true;
+    //
+    pBackup_two.Visible := false;
+    pOptimizeDB_two.Visible := false;
   end
   else
   begin
