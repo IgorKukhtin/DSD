@@ -199,8 +199,8 @@ object MainForm: TMainForm
         Visible = False
       end
       object bbChoice_UnComlete: TSpeedButton
-        Left = 434
-        Top = 2
+        Left = 430
+        Top = 5
         Width = 31
         Height = 29
         Hint = #1042#1077#1088#1085#1091#1090#1100#1089#1103' '#1082' '#1085#1077#1079#1072#1082#1088#1099#1090#1086#1084#1091' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1102
@@ -436,7 +436,7 @@ object MainForm: TMainForm
         ParentShowHint = False
         ShowHint = True
       end
-      object SpeedButton2: TSpeedButton
+      object bbReestrKind_PartnerOut_two: TSpeedButton
         Left = 782
         Top = 2
         Width = 31
@@ -480,7 +480,7 @@ object MainForm: TMainForm
         ParentShowHint = False
         ShowHint = True
       end
-      object SpeedButton3: TSpeedButton
+      object bbReestrKind_PartnerOut_three: TSpeedButton
         Left = 816
         Top = 2
         Width = 31

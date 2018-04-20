@@ -1506,9 +1506,9 @@ end if;*/
 end if;*/
 
 -- !!! ВРЕМЕННО !!!
-if inSession = '5' AND 1=1 then
-    RAISE EXCEPTION 'Admin - Test = OK'; -- 'Повторите действие через 3 мин.'
-end if;
+IF inSession = '5' AND 1=1 THEN
+    RAISE EXCEPTION 'Admin - Test = OK - %', inBranchCode; -- 'Повторите действие через 3 мин.'
+END IF;
 
 
      -- дописали zc_MovementFloat_GPSN + zc_MovementFloat_GPSE

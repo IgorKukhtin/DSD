@@ -307,7 +307,12 @@ BEGIN
                                                        , inBoxCount            := inBoxCount
                                                        , inBoxNumber           := CASE WHEN vbMovementDescId <> zc_Movement_Sale() THEN 0 ELSE  1 + COALESCE ((SELECT MAX (MovementItemFloat.ValueData) FROM MovementItem INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id AND MovementItemFloat.DescId = zc_MIFloat_BoxNumber() WHERE MovementItem.MovementId = inMovementId AND MovementItem.isErased = FALSE), 0) END
                                                        , inLevelNumber         := 0
-                                                       , inPrice               := CASE -- цена для Специй
+                                                       , inPrice               := CASE -- для isSticker = TRUE
+                                                                                       WHEN inBranchCode > 1000
+                                                                                            -- !!!здесь № печати!!!
+                                                                                            THEN inPrice
+
+                                                                                       -- цена для Специй
                                                                                        WHEN inBranchCode = 301 AND vbPrice_301 > 0 AND vbMovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut())
                                                                                             THEN vbPrice_301
                                                                                        -- в первую очередь - если Возврат + Акция
@@ -340,7 +345,11 @@ BEGIN
                                                        , inChangePercent       := vbChangePercent
                                                        , inPartionGoods        := inPartionGoods
                                                        , inPartionGoodsDate    := NULL
-                                                       , inGoodsKindId         := CASE WHEN (SELECT View_InfoMoney.InfoMoneyDestinationId
+                                                       , inGoodsKindId         := CASE WHEN inBranchCode > 1000
+                                                                                            -- !!!здесь StickerPack!!!
+                                                                                            THEN inGoodsKindId
+
+                                                                                       WHEN (SELECT View_InfoMoney.InfoMoneyDestinationId
                                                                                              FROM ObjectLink AS ObjectLink_Goods_InfoMoney
                                                                                                   LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
                                                                                              WHERE ObjectLink_Goods_InfoMoney.ObjectId = inGoodsId
@@ -351,7 +360,15 @@ BEGIN
                                                                                             THEN 0
                                                                                        ELSE inGoodsKindId
                                                                                   END
-                                                       , inPriceListId         := CASE WHEN vbPriceListId_Dnepr <> 0 THEN vbPriceListId_Dnepr ELSE inPriceListId END
+                                                       , inPriceListId         := CASE WHEN inBranchCode > 1000
+                                                                                            -- !!!здесь GoodsKindId - из StickerProperty!!!
+                                                                                            THEN inPriceListId
+
+                                                                                       WHEN vbPriceListId_Dnepr <> 0
+                                                                                            THEN vbPriceListId_Dnepr
+                                                                                       ELSE inPriceListId
+                                                                                  END
+                                                         
                                                        , inBoxId               := vbBoxId
                                                        , inMovementId_Promo    := COALESCE (inMovementId_Promo, 0)
                                                        , inIsBarCode           := CASE WHEN inSession = '5' THEN TRUE ELSE inIsBarCode END
@@ -362,14 +379,13 @@ BEGIN
      vbTotalSumm:= (SELECT ValueData FROM MovementFloat WHERE MovementId = inMovementId AND DescId = zc_MovementFloat_TotalSumm());
 
 -- !!! ВРЕМЕННО !!!
-if inSession = '5' AND 1=1
-then
+IF inSession = '5' AND 1=1 AND inBranchCode < 1000 THEN
     RAISE EXCEPTION 'Admin - Test = OK  Amount = <%> Price = <%>'
                   , (SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = vbId)
                   , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = vbId AND MIF.DescId = zc_MIFloat_Price())
                    ;
-    -- 'Повторите действие через 3 мин.'
-end if;
+    -- RAISE EXCEPTION 'Повторите действие через 3 мин.';
+END IF;
 
      -- Результат
      RETURN QUERY

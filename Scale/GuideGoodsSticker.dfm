@@ -291,11 +291,40 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 2
+        object gbWeightValue: TGroupBox
+          Left = 0
+          Top = 0
+          Width = 132
+          Height = 41
+          Align = alTop
+          Caption = #1042#1074#1086#1076' '#1050#1054#1051'-'#1042#1054
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlue
+          Font.Height = -12
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 3
+          object EditWeightValue: TcxCurrencyEdit
+            Left = 5
+            Top = 18
+            EditValue = 2.000000000000000000
+            Properties.Alignment.Horz = taRightJustify
+            Properties.Alignment.Vert = taVCenter
+            Properties.AssignedValues.DisplayFormat = True
+            Properties.DecimalPlaces = 0
+            TabOrder = 0
+            OnEnter = EditTareCountEnter
+            OnExit = EditWeightValueExit
+            OnKeyDown = EditWeightValueKeyDown
+            Width = 121
+          end
+        end
         object rgPriceList: TRadioGroup
           Left = 0
-          Top = 81
+          Top = 122
           Width = 132
-          Height = 239
+          Height = 158
           Align = alClient
           Caption = #1055#1088#1080#1085#1090#1077#1088#1099
           Color = clBtnFace
@@ -303,10 +332,11 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           TabOrder = 1
           WordWrap = True
           OnClick = rgPriceListClick
+          ExplicitHeight = 198
         end
         object gbPriceListCode: TGroupBox
           Left = 0
-          Top = 40
+          Top = 81
           Width = 132
           Height = 41
           Align = alTop
@@ -325,14 +355,14 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
             OnKeyPress = EditPriceListCodeKeyPress
           end
         end
-        object Panel1: TPanel
+        object PanelPrint: TPanel
           Left = 0
-          Top = 0
+          Top = 41
           Width = 132
           Height = 40
           Align = alTop
           BevelOuter = bvNone
-          Caption = 'Panel1'
+          Caption = 'PanelPrint'
           TabOrder = 2
           object btnPrint: TButton
             Left = 16
@@ -342,6 +372,24 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
             Caption = #1055#1045#1063#1040#1058#1068
             TabOrder = 0
             OnClick = actSaveExecute
+          end
+        end
+        object PanelIsPreview: TPanel
+          Left = 0
+          Top = 280
+          Width = 132
+          Height = 40
+          Align = alBottom
+          BevelOuter = bvNone
+          Caption = 'PanelIsPreview'
+          TabOrder = 4
+          ExplicitTop = 41
+          object cbPreviewPrint: TcxCheckBox
+            Left = 20
+            Top = 9
+            Caption = #1055#1088#1086#1089#1084#1086#1090#1088
+            TabOrder = 0
+            Width = 91
           end
         end
       end
@@ -399,7 +447,7 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         end
         object gbGoodsWieghtValue: TGroupBox
           Left = 0
-          Top = 123
+          Top = 82
           Width = 95
           Height = 41
           Align = alTop
@@ -421,29 +469,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
             Font.Style = [fsBold]
             ParentFont = False
             TabOrder = 0
-          end
-        end
-        object gbWeightValue: TGroupBox
-          Left = 0
-          Top = 82
-          Width = 95
-          Height = 41
-          Align = alTop
-          Caption = #1042#1074#1086#1076' '#1050#1054#1051'-'#1042#1054
-          TabOrder = 3
-          object EditWeightValue: TcxCurrencyEdit
-            Left = 5
-            Top = 18
-            EditValue = 2.000000000000000000
-            Properties.Alignment.Horz = taRightJustify
-            Properties.Alignment.Vert = taVCenter
-            Properties.AssignedValues.DisplayFormat = True
-            Properties.DecimalPlaces = 0
-            TabOrder = 0
-            OnEnter = EditTareCountEnter
-            OnExit = EditWeightValueExit
-            OnKeyDown = EditWeightValueKeyDown
-            Width = 85
           end
         end
       end

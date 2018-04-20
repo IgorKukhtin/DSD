@@ -210,8 +210,8 @@ type
     actReestrStart: TdsdOpenForm;
     actReestrPartnerIn: TdsdOpenForm;
     actReestrRemakeIn: TdsdOpenForm;
-    SpeedButton2: TSpeedButton;
-    SpeedButton3: TSpeedButton;
+    bbReestrKind_PartnerOut_two: TSpeedButton;
+    bbReestrKind_PartnerOut_three: TSpeedButton;
     bbReestrReturn: TSpeedButton;
     actReestrReturnStart: TdsdOpenForm;
     bbUpdatePartner: TSpeedButton;
@@ -337,6 +337,12 @@ begin
      Result:=false;
      //
      OperDateEdit.Text:=DateToStr(DMMainScaleForm.gpGet_Scale_OperDate(ParamsMovement));
+     //
+     if SettingMain.isSticker = TRUE
+     then begin
+         ShowMessage('Ошибка.Проведение документа не предусмотрено.');
+         exit;
+     end;
      //
      if ParamsMovement.ParamByName('MovementId').AsInteger=0
      then begin
@@ -1267,9 +1273,30 @@ begin
   //
   if SettingMain.isSticker = TRUE then
   begin
+     //
+     bbChoice_UnComlete.Visible:=false;
+     bbView_all.Visible:=false;
+
+     bbReestrReturn.Visible:=false;
+     bbReestrKind_PartnerOut.Visible:=false;
+     bbReestrKind_PartnerOut_two.Visible:=false;
+     bbReestrKind_PartnerOut_three.Visible:=false;
+     //
+     // StickerPack
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName').Index].Caption    := 'Вид пакування';
+     // GoodsKindId - из StickerProperty
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PriceListName').Index].Caption    := 'Вид товара';
+     // № печати
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price').Index].Caption            := '№ печати';
+     // Кол-во в печати
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Amount').Index].Caption           := 'Печать';
+
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName').Index].Width      := 150;
+
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PriceListName').Index].Visible       := TRUE;
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price').Index].Visible               := TRUE;
+     //
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isBarCode').Index].Visible           := FALSE;
-     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PriceListName').Index].Visible       := FALSE;
-     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price').Index].Visible               := FALSE;
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isPromo').Index].Visible             := FALSE;
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('ChangePercentAmount').Index].Visible := FALSE;
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('AmountPartner').Index].Visible       := FALSE;
@@ -1278,6 +1305,8 @@ begin
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTareTotal').Index].Visible     := FALSE;
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare').Index].Visible          := FALSE;
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountTare').Index].Visible           := FALSE;
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('UpdateDate').Index].Visible          := FALSE;
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isErased').Index].Visible            := FALSE;
   end;
 
   //local visible

@@ -79,11 +79,13 @@ type
     cbTare: TcxCheckBox;
     cbGoodsName: TcxCheckBox;
     btnDialogStickerTare: TButton;
-    Panel1: TPanel;
+    PanelPrint: TPanel;
     btnPrint: TButton;
     PrintHeaderCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
+    PanelIsPreview: TPanel;
+    cbPreviewPrint: TcxCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -274,8 +276,8 @@ begin
     begin
        ParamByName('inObjectId').Value:=CDS.FieldByName('Id').asInteger;
 
-       //ParamByName('inIsJPG').Value   := FALSE;
-       ParamByName('inIsJPG').Value   := TRUE;
+       ParamByName('inIsJPG').Value   := FALSE;
+       //ParamByName('inIsJPG').Value   := TRUE;
        ParamByName('inIsLength').Value:= FALSE;
 
        //1 - печатать дату нач/конечн произв-ва на этикетке
@@ -306,7 +308,7 @@ begin
     //
     actPrint.ReportNameParam.Value:=CDS.FieldByName('StickerFileName').asString;
     actPrint.Printer:=System.Copy(rgPriceList.Items[rgPriceList.ItemIndex], 5, Length(rgPriceList.Items[rgPriceList.ItemIndex]) - 4);
-    actPrint.WithOutPreview:= FALSE;
+    actPrint.WithOutPreview:= not cbPreviewPrint.Checked;
     //actPrint.WithOutPreview:= TRUE;
     actPrint.CopiesCount:=ParamsMI.ParamByName('RealWeight').AsInteger;
     actPrint.Execute;
@@ -545,22 +547,23 @@ begin
     begin
       if (ActiveControl=EditGoodsCode) then EditGoodsCodeExit(EditGoodsCode);
 
-      if (ActiveControl=EditWeightValue)
-      then if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditPriceListCode
+      if (ActiveControl=EditGoodsCode)
+      then if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditWeightValue
       else if (ActiveControl=EditGoodsCode)
            then if (Length(trim(EditGoodsCode.Text))>0)
-                then ActiveControl:=EditWeightValue
+                then if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditWeightValue
                 else ActiveControl:=EditGoodsName
 
            else if (ActiveControl=EditGoodsName)and((Length(trim(EditGoodsName.Text))>0))
-                then ActiveControl:=EditWeightValue
+                then if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditWeightValue
 
                 else if (ActiveControl=EditGoodsName)
                      then ActiveControl:=EditGoodsCode
                      else if (ActiveControl=cxDBGrid)and(CDS.RecordCount>0)
                           then actChoiceExecute(cxDBGrid)
 
-      else if ActiveControl=EditGoodsKindCode then ActiveControl:=EditPriceListCode
+      else if ActiveControl=EditGoodsKindCode then ActiveControl:=EditWeightValue
+      else if ActiveControl=EditWeightValue   then ActiveControl:=EditPriceListCode
            else if ActiveControl=EditPriceListCode then actSaveExecute(Self);
     end;
     //
@@ -657,13 +660,18 @@ begin
      else
      with ParamsMI do begin
         ParamByName('GoodsId').AsInteger:=CDS.FieldByName('GoodsId').AsInteger;
+        // на самом деле здесь StickerPack
         if rgGoodsKind.Items.Count > 1
         then ParamByName('GoodsKindId').AsInteger:= StickerPack_Array[GetArrayList_gpIndex_GoodsKind(StickerPack_Array,lStickerPackGroupId,rgGoodsKind.ItemIndex)].Id
         else ParamByName('GoodsKindId').AsInteger:= 0;
 
-        ParamByName('MovementId_Promo').AsInteger:=0;
+        // здесь GoodsKindId - из StickerProperty
+        ParamsMovement.ParamByName('PriceListId').AsInteger:= CDS.FieldByName('GoodsKindId_complete').AsInteger;
+        // здесь № печати
+        ParamByName('Price').AsFloat:= rgPriceList.ItemIndex + 1;
 
-        ParamByName('Price').AsFloat:=0;
+        // все остальное - обнулили
+        ParamByName('MovementId_Promo').AsInteger:=0;
         ParamByName('Price_Return').AsFloat:=0;
         ParamByName('CountForPrice').AsFloat:= 0;
         ParamByName('CountForPrice_Return').AsFloat:= 0;
@@ -863,7 +871,7 @@ end;
 procedure TGuideGoodsStickerForm.EditWeightValueKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
     if Key=13
-    then if rgGoodsKind.Items.Count>1 then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditPriceListCode;
+    then ActiveControl:=EditPriceListCode;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsStickerForm.EditGoodsKindCodeChange(Sender: TObject);
@@ -895,7 +903,7 @@ begin
       then exit;
 //Focused
       if (rgGoodsKind.ItemIndex=-1)and (rgGoodsKind.Items.Count>1)
-      then begin ShowMessage('Ошибка.Не определено значение <Код вида упаковки>.');
+      then begin ShowMessage('Ошибка.Не определено значение <Код Вид пакування>.');
                  ActiveControl:=EditGoodsKindCode;
            end
       else
@@ -903,7 +911,7 @@ begin
         then if (rgGoodsKind.Items.Count>1)
                //and (ParamsMovement.ParamByName('OrderExternalId').asInteger<>0)
              then begin
-                       ShowMessage('Ошибка.Не определено значение <Код вида упаковки>.');
+                       ShowMessage('Ошибка.Не определено значение <Код Вид пакування>.');
                        ActiveControl:=EditGoodsKindCode;
                   end
              else begin
