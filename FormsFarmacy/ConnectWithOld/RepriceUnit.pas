@@ -314,7 +314,15 @@ begin
 
           try
           spInsertUpdate_MovementItem_Reprice.Execute;
-          except ShowMessage('15');exit;end;
+          except
+              on E:Exception do
+              begin
+                 raise Exception.Create(e.Message);
+                //ShowMessage('15');
+                //ShowMessage('Ошибка выполнения Проц.');
+                exit;
+              end;
+          end;
 
         End;
         Application.ProcessMessages;
@@ -323,8 +331,17 @@ begin
       end;
 
       try
-      spInsertUpdate_MovementItem_Reprice.Execute(True);
-      except ShowMessage('13');exit;end;
+         spInsertUpdate_MovementItem_Reprice.Execute(True);
+      except
+        on E:Exception do
+        begin
+           raise Exception.Create(e.Message);
+           exit;
+          //ShowMessage('Ошибка выполнения Проц.');
+        end;
+      end;
+
+
     finally
       //
       for i := 0 to CheckListBox.Items.Count - 1 do

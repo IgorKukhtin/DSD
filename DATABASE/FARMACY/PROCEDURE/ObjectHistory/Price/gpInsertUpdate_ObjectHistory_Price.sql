@@ -26,17 +26,19 @@ BEGIN
    THEN
        RAISE EXCEPTION 'Ошибка.Не установлен <прайс>.';
    END IF;
+
+
    -- Вставляем или меняем объект историю
-   ioId := lpInsertUpdate_ObjectHistory(ioId, zc_ObjectHistory_Price(), inPriceId, inOperDate, vbUserId);
+   ioId := lpInsertUpdate_ObjectHistory (ioId, zc_ObjectHistory_Price(), inPriceId, inOperDate, vbUserId);
    -- Цена
-   PERFORM lpInsertUpdate_ObjectHistoryFloat(zc_ObjectHistoryFloat_Price_Value(), ioId, inPrice);
+   PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_Price_Value(), ioId, inPrice);
    -- НТЗ
-   PERFORM lpInsertUpdate_ObjectHistoryFloat(zc_ObjectHistoryFloat_Price_MCSValue(), ioId, inMCSValue);
-   
+   PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_Price_MCSValue(), ioId, inMCSValue);
+
    -- Количество дней для анализа НТЗ
-   PERFORM lpInsertUpdate_ObjectHistoryFloat(zc_ObjectHistoryFloat_Price_MCSPeriod(), ioId, inMCSPeriod);
+   PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_Price_MCSPeriod(), ioId, inMCSPeriod);
    -- Страховой запас дней НТЗ
-   PERFORM lpInsertUpdate_ObjectHistoryFloat(zc_ObjectHistoryFloat_Price_MCSDay(), ioId, inMCSDay);
+   PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_Price_MCSDay(), ioId, inMCSDay);
 
 END;
 $BODY$

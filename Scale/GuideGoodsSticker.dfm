@@ -21,9 +21,9 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
   TextHeight = 14
   object GridPanel: TPanel
     Left = 0
-    Top = 387
+    Top = 415
     Width = 858
-    Height = 278
+    Height = 250
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 0
@@ -94,9 +94,10 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       Left = 0
       Top = 33
       Width = 858
-      Height = 245
+      Height = 217
       Align = alClient
       TabOrder = 1
+      ExplicitHeight = 245
       object cxDBGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DS
@@ -243,54 +244,60 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
     Left = 0
     Top = 0
     Width = 858
-    Height = 379
+    Height = 407
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitHeight = 379
     object PreviewPanel: TPanel
       Left = 0
       Top = 0
       Width = 380
-      Height = 379
+      Height = 407
       Align = alLeft
       TabOrder = 2
+      ExplicitHeight = 379
       object frxPreview: TfrxPreview
         Left = 1
         Top = 1
         Width = 378
-        Height = 377
+        Height = 405
         Align = alClient
         OutlineVisible = False
         OutlineWidth = 120
         ThumbnailVisible = False
         UseReportHints = True
+        ExplicitHeight = 377
       end
     end
     object cxSplitter1: TcxSplitter
       Left = 850
       Top = 0
       Width = 8
-      Height = 379
+      Height = 407
       AlignSplitter = salRight
       AllowHotZoneDrag = False
       Control = ParamsAllPanel
+      ExplicitHeight = 379
     end
     object ParamsPanel: TPanel
       Left = 380
       Top = 0
       Width = 470
-      Height = 379
+      Height = 407
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
+      ExplicitHeight = 379
       object infoPanelPriceList: TPanel
         Left = 338
         Top = 0
         Width = 132
-        Height = 320
+        Height = 348
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 2
+        ExplicitHeight = 320
         object gbWeightValue: TGroupBox
           Left = 0
           Top = 0
@@ -322,26 +329,34 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         end
         object rgPriceList: TRadioGroup
           Left = 0
-          Top = 122
+          Top = 115
           Width = 132
-          Height = 158
+          Height = 212
           Align = alClient
           Caption = #1055#1088#1080#1085#1090#1077#1088#1099
           Color = clBtnFace
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -9
+          Font.Name = 'Tahoma'
+          Font.Style = []
           ParentColor = False
+          ParentFont = False
           TabOrder = 1
           WordWrap = True
           OnClick = rgPriceListClick
-          ExplicitHeight = 198
+          ExplicitTop = 122
+          ExplicitHeight = 158
         end
         object gbPriceListCode: TGroupBox
           Left = 0
-          Top = 81
+          Top = 74
           Width = 132
           Height = 41
           Align = alTop
           Caption = #1050#1086#1076
           TabOrder = 0
+          ExplicitTop = 81
           object EditPriceListCode: TEdit
             Left = 5
             Top = 17
@@ -359,14 +374,14 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           Left = 0
           Top = 41
           Width = 132
-          Height = 40
+          Height = 33
           Align = alTop
           BevelOuter = bvNone
           Caption = 'PanelPrint'
           TabOrder = 2
           object btnPrint: TButton
-            Left = 16
-            Top = 6
+            Left = 26
+            Top = 0
             Width = 100
             Height = 33
             Caption = #1055#1045#1063#1040#1058#1068
@@ -376,17 +391,16 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         end
         object PanelIsPreview: TPanel
           Left = 0
-          Top = 280
+          Top = 327
           Width = 132
-          Height = 40
+          Height = 21
           Align = alBottom
           BevelOuter = bvNone
-          Caption = 'PanelIsPreview'
           TabOrder = 4
-          ExplicitTop = 41
+          ExplicitTop = 298
           object cbPreviewPrint: TcxCheckBox
             Left = 20
-            Top = 9
+            Top = 0
             Caption = #1055#1088#1086#1089#1084#1086#1090#1088
             TabOrder = 0
             Width = 91
@@ -397,10 +411,11 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         Left = 0
         Top = 0
         Width = 95
-        Height = 320
+        Height = 348
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 0
+        ExplicitHeight = 320
         object gbGoodsName: TGroupBox
           Left = 0
           Top = 41
@@ -476,15 +491,16 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         Left = 95
         Top = 0
         Width = 243
-        Height = 320
+        Height = 348
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 1
+        ExplicitHeight = 320
         object rgGoodsKind: TRadioGroup
           Left = 0
           Top = 41
           Width = 243
-          Height = 279
+          Height = 307
           Align = alClient
           Caption = #1055#1072#1082#1091#1074#1072#1085#1085#1103
           Color = clBtnFace
@@ -498,6 +514,7 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           ParentFont = False
           TabOrder = 1
           OnClick = rgGoodsKindClick
+          ExplicitHeight = 279
         end
         object gbGoodsKindCode: TGroupBox
           Left = 0
@@ -523,11 +540,12 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       end
       object PanelSticker: TPanel
         Left = 0
-        Top = 320
+        Top = 348
         Width = 470
         Height = 59
         Align = alBottom
         TabOrder = 3
+        ExplicitTop = 320
         object cbStartEnd: TcxCheckBox
           Left = 5
           Top = 5
@@ -588,12 +606,13 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
   end
   object cxSplitter2: TcxSplitter
     Left = 0
-    Top = 379
+    Top = 407
     Width = 858
     Height = 8
     AlignSplitter = salBottom
     InvertDirection = True
     Control = GridPanel
+    ExplicitTop = 379
   end
   object DS: TDataSource
     DataSet = CDS
@@ -802,7 +821,7 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
     Left = 191
     Top = 96
   end
-  object frxDBDHeader: TfrxDBDataset
+  object frxDBDHeaderForm: TfrxDBDataset
     UserName = 'frxDBDHeader'
     CloseDataSource = False
     DataSet = PrintHeaderFormCDS
@@ -812,7 +831,7 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
   end
   object FReport: TfrxReport
     Version = '4.15.6'
-    DataSet = frxDBDHeader
+    DataSet = frxDBDHeaderForm
     DataSetName = 'frxDBDHeader'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'

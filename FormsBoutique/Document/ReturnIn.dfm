@@ -389,6 +389,7 @@ object ReturnInForm: TReturnInForm
         Height = 299
         Align = alClient
         TabOrder = 0
+        ExplicitTop = 81
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS

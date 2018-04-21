@@ -1197,11 +1197,12 @@ $BODY$
 /*
 -- !!!ERROR - UPDATE!!!
 -- update  ObjectHistory set EndDate = coalesce (tmp.nextStartDate, zc_DateEnd()) from (
-with tmp as (
-select ObjectHistory_Price.*
-     , Row_Number() OVER (PARTITION BY ObjectHistory_Price.ObjectId ORDER BY ObjectHistory_Price.StartDate Asc, ObjectHistory_Price.Id) AS Ord
-from ObjectHistory AS ObjectHistory_Price
- Where ObjectHistory_Price.DescId = zc_ObjectHistory_PriceListItem()
+ with tmp as (
+ select ObjectHistory_Price.*
+      , Row_Number() OVER (PARTITION BY ObjectHistory_Price.ObjectId ORDER BY ObjectHistory_Price.StartDate Asc, ObjectHistory_Price.Id) AS Ord
+ from ObjectHistory AS ObjectHistory_Price
+ Where ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
+-- Where ObjectHistory_Price.DescId = zc_ObjectHistory_PriceListItem()
 -- Where ObjectId = 265141
 )
 

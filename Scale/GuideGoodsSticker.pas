@@ -62,7 +62,7 @@ type
     frxPreview: TfrxPreview;
     PrintHeaderFormCDS: TClientDataSet;
     spSelectPrintForm: TdsdStoredProc;
-    frxDBDHeader: TfrxDBDataset;
+    frxDBDHeaderForm: TfrxDBDataset;
     cxSplitter1: TcxSplitter;
     cxSplitter2: TcxSplitter;
     GoodsKindCode: TcxGridDBColumn;
@@ -207,8 +207,8 @@ begin
               //
               pSelectPrintForm;
               //
-              //fReport.DataSet:=frxDBDHeader;
-              //fReport.DataSetName:='frxDBDHeader';
+              //fReport.DataSet:=frxDBDHeaderForm;
+              //fReport.DataSetName:='frxDBDHeaderForm';
               //fReport.Preview:=nil;
               //fReport.Preview:=frxPreview;
               //fReport.PreviewOptions.modal := false;
@@ -231,11 +231,13 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsStickerForm.pSelectPrintForm;
 begin
+    frxDBDHeaderForm.UserName:= 'frxDBDHeader';
 
     with spSelectPrintForm do
     begin
        ParamByName('inObjectId').Value:=CDS.FieldByName('Id').asInteger;
 
+       //ParamByName('inIsJPG').Value   := FALSE;
        ParamByName('inIsJPG').Value   := TRUE;
        ParamByName('inIsLength').Value:= FALSE;
 
@@ -267,10 +269,13 @@ begin
     //
     fReport.PrepareReport;
     fReport.ShowPreparedReport;
+
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsStickerForm.pSelectPrint;
 begin
+    try
+       frxDBDHeaderForm.UserName:= 'frxDBDHeader_';
 
     with spSelectPrint do
     begin
@@ -312,6 +317,11 @@ begin
     //actPrint.WithOutPreview:= TRUE;
     actPrint.CopiesCount:=ParamsMI.ParamByName('RealWeight').AsInteger;
     actPrint.Execute;
+
+    finally
+           frxDBDHeaderForm.UserName:= 'frxDBDHeader';
+    end;
+
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsStickerForm.btnDialogStickerTareClick(Sender: TObject);
@@ -419,6 +429,7 @@ function TGuideGoodsStickerForm.Execute (execParamsMovement : TParams; isModeSav
 begin
      fStickerPropertyId:=-1;
      fStickerFileName:='';
+     cbPreviewPrint.Checked:= false;
      //
      //1 - печатать дату нач/конечн произв-ва на этикетке
      cbStartEnd.Checked := TRUE;
@@ -711,7 +722,8 @@ begin
           if not Result
           then ShowMessage('Error.not Result');
 
-          Result:=true;
+          //Result:=not cbPreviewPrint.Checked;
+          Result:= TRUE;
      end;
 end;
 {------------------------------------------------------------------------------}
