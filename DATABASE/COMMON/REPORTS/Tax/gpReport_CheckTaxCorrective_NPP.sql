@@ -368,19 +368,21 @@ BEGIN
                               , ROW_NUMBER() OVER (PARTITION BY tmp.MovementId_Tax, tmp.GoodsId, tmp.GoodsKindId, tmp.Price_Original
                                                    ORDER BY tmp.MovementId_Tax
                                                           , CASE WHEN tmp.MovementDescId = zc_Movement_Tax() THEN 1 ELSE 2 END
-                                                          , CASE WHEN tmp.isRegistered = TRUE THEN tmp.DateRegistered ELSE tmp.OperDate END
+                                                         -- , CASE WHEN tmp.isRegistered = TRUE THEN tmp.DateRegistered ELSE tmp.OperDate END
+                                                          , tmp.LineNum
                                                           , tmp.OperDate
                                                           , tmp.MovementId
-                                                          , tmp.LineNum, tmp.LineNumTaxCorr_calc
+                                                          , tmp.LineNumTaxCorr_calc
                                                   )  :: Integer AS Ord_calc
                                 -- без GoodsKindId
                               , ROW_NUMBER() OVER (PARTITION BY tmp.MovementId_Tax, tmp.GoodsId, tmp.Price_Original
                                                    ORDER BY tmp.MovementId_Tax
                                                           , CASE WHEN tmp.MovementDescId = zc_Movement_Tax() THEN 1 ELSE 2 END
-                                                          , CASE WHEN tmp.isRegistered = TRUE THEN tmp.DateRegistered ELSE tmp.OperDate END
+                                                          --, CASE WHEN tmp.isRegistered = TRUE THEN tmp.DateRegistered ELSE tmp.OperDate  END
+                                                          , tmp.LineNum
                                                           , tmp.OperDate
                                                           , tmp.MovementId
-                                                          , tmp.LineNum, tmp.LineNumTaxCorr_calc
+                                                          , tmp.LineNumTaxCorr_calc
                                                   )  :: Integer AS Ord_calc_next
                          FROM tmpData_All AS tmp
                         )
@@ -415,7 +417,7 @@ BEGIN
                                                     ON tmp2.MovementId_Tax = tmp1.MovementId_Tax
                                                    AND tmp2.GoodsId        = tmp1.GoodsId
                                                    AND (tmp2.GoodsKindId   = tmp1.GoodsKindId OR COALESCE (tmp1.GoodsKindId,0) = 0)
-                                                   AND tmp2.Price_Original = tmp1.Price_Original
+                                                   AND tmp2.Price = tmp1.Price_Original
                                                    AND tmp2.Ord_calc       < tmp1.Ord_calc
                                                    -- если НЕ Корр. цены 
                                                    AND tmp1.DocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
@@ -429,6 +431,7 @@ BEGIN
                                                             AND tmp1.DocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                                          , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
                                                                                           )
+
                            -- поиск в Налоговой БЕЗ GoodsKindId - Только для Корр. цены
                            LEFT JOIN tmpMI_Tax AS tmpMI_Tax2 ON tmpMI_Tax2.MovementId     = tmp1.MovementId_Tax
                                                             AND tmpMI_Tax2.GoodsId        = tmp1.GoodsId
@@ -487,13 +490,13 @@ BEGIN
                            , tmp.PriceTax_calc
                            , tmp.AmountTax
                            , ROW_NUMBER() OVER (PARTITION BY tmp.MovementId_Tax
-                                                ORDER BY CASE WHEN tmp.MovementDescId = zc_Movement_Tax() THEN 1 ELSE 2 END
-                                                     , CASE WHEN tmp.isRegistered = TRUE THEN tmp.DateRegistered ELSE tmp.OperDate END
-                                                     , tmp.LineNum
-                                                     , tmp.OperDate
-                                                     , tmp.MovementId
-                                                     , tmp.LineNumTaxCorr_calc
-                                               ) :: Integer AS LineNum_calc
+                                                   ORDER BY CASE WHEN tmp.MovementDescId = zc_Movement_Tax() THEN 1 ELSE 2 END
+                                                         -- , CASE WHEN tmp.isRegistered = TRUE THEN tmp.DateRegistered ELSE tmp.OperDate END
+                                                          , tmp.LineNum
+                                                          , tmp.OperDate
+                                                          , tmp.MovementId
+                                                          , tmp.LineNumTaxCorr_calc 
+                                                 ) :: Integer AS LineNum_calc
                      FROM tmpData_Summ AS tmp
                      WHERE tmp.isNPP_calc = TRUE
                        AND ((COALESCE (tmp.AmountTax, 0) + COALESCE (tmp.Amount, 0)) > 0
