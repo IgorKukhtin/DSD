@@ -667,13 +667,20 @@ BEGIN
              END                            :: TVarChar AS N10_ifin
 
            , 'оплата з поточного рахунка'::TVarChar                         AS N9
-           , CASE WHEN tmpMovement_Data.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+           , CASE WHEN tmpMovement_Data.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change())
+                       THEN Object_DocumentTaxKind.ValueData
+
+                  WHEN tmpMovement_Data.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
                        THEN 'Зміна ціни'
+                       
                   WHEN MovementBoolean_isCopy.ValueData = TRUE
                        THEN 'ВИПРАВЛЕННЯ ПОМИЛКИ'
+
                   WHEN tmpMI.isPartner = TRUE
                        THEN 'Зміна кількості' -- 'НЕДОВІЗ'
+
                   ELSE 'Зміна кількості' -- 'повернення товару або авансових платежів' -- 'повернення'
+
              END :: TVarChar AS KindName
            , tmpMovement_Data.DocumentTaxKind
            , MovementBoolean_PriceWithVAT.ValueData                         AS PriceWithVAT
@@ -938,6 +945,8 @@ BEGIN
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN tmpMovement_Data ON tmpMovement_Data.MovementId = tmpMI.MovementId
+            LEFT JOIN Object As Object_DocumentTaxKind ON Object_DocumentTaxKind.Id = tmpMovement_Data.DocumentTaxKind
+            
             LEFT JOIN tmpPersonalBookkeeper ON tmpPersonalBookkeeper.BranchId = tmpMovement_Data.BranchId
             LEFT JOIN tmpMLM_Child ON tmpMLM_Child.MovementId = tmpMI.MovementId
                                           
@@ -997,7 +1006,9 @@ BEGIN
            , tmpData_all.N10_ifin
 
            , tmpData_all.N9
-           , CASE WHEN tmpData_all.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+           , CASE WHEN tmpData_all.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                         , zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change()
+                                                          )
                    AND tmpData_all.AmountTax_calc = tmpData_all.Amount
                        THEN 'Повернення товару або авансових платежів'
                   ELSE tmpData_all.KindName

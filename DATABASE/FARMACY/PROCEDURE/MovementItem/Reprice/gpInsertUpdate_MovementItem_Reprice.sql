@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Reprice(
     IN inTax                 TFloat    , -- % +/-
     IN inJuridicalId         Integer   , -- поставщик
     IN inContractId          Integer   , -- Договор
-    IN inExpirationDate      TDateTime , -- Срок годности 
+    IN inExpirationDate      TDateTime , -- Срок годности
     IN inMinExpirationDate   TDateTime , -- Срок годности остатка
     IN inAmount              TFloat    , -- Количество (Остаток)
     IN inPriceOld            TFloat    , -- Цена старая
@@ -21,8 +21,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Reprice(
     IN inGUID                TVarChar  , -- GUID для определения текущей переоценки
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Integer 
-AS 
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMovementId Integer;
@@ -30,23 +30,14 @@ $BODY$
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
-    
+
     -- !!!Протокол - отладка Скорости!!!
     vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
 
-    
-    if inSession = '183242'
-    and inUnitId               = 377610
-    and inUnitId_Forwarding   = 0
--- "158202773,27814,377610,0,0,59612,183378,'01.03.2020','01.02.2020',1,22.7,23.3,21.36,0,0,'{DA9C7F18-8308-46F3-A62E-9B5BBD353D15}','183242'"
-    and 1=0
-    then
-       vbMovementId:= 9137080;
-    else
-    
+
     -- найти документ
-    vbMovementId:= (SELECT Movement.Id
-                    FROM Movement 
+    vbMovementId:= (/*SELECT Movement.Id
+                    FROM Movement
                         INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                      AND MovementLinkObject_Unit.DescId     = zc_MovementLinkObject_Unit()
@@ -55,15 +46,35 @@ BEGIN
                                                   ON MovementString_GUID.MovementId = Movement.Id
                                                  AND MovementString_GUID.DescId     = zc_MovementString_Comment()
                                                  AND MovementString_GUID.ValueData  = inGUID
-                    WHERE Movement.DescId  = zc_Movement_Reprice()
+                    WHERE Movement.DescId   = zc_Movement_Reprice()
                       -- AND Movement.OperDate >= CURRENT_DATE AND Movement.OperDate < CURRENT_DATE + INTERVAL '1 DAY'
-                      AND Movement.OperDate = CURRENT_DATE
+                      AND Movement.OperDate = CURRENT_DATE*/
+                    WITH tmpMS_GUID AS (SELECT MS_GUID.MovementId
+                                        FROM MovementString AS MS_GUID
+                                        WHERE MS_GUID.ValueData = inGUID
+                                          AND MS_GUID.DescId    = zc_MovementString_Comment())
+                      ,  tmpMLO_Unit AS (SELECT MLO_Unit.MovementId
+                                         FROM MovementLinkObject AS MLO_Unit
+                                         WHERE MLO_Unit.MovementId IN (SELECT DISTINCT tmpMS_GUID.MovementId FROM tmpMS_GUID)
+                                           AND MLO_Unit.DescId     = zc_MovementLinkObject_Unit()
+                                           AND MLO_Unit.ObjectId   = inUnitId
+                                        )
+                      ,  tmpMovement AS (SELECT Movement.Id, Movement.OperDate, Movement.DescId
+                                         FROM Movement
+                                         WHERE Movement.Id IN (SELECT DISTINCT tmpMLO_Unit.MovementId FROM tmpMLO_Unit)
+                                        )
+                    -- Результат
+                    SELECT Movement.Id AS MovementId
+                    FROM tmpMovement AS Movement
+                    WHERE Movement.OperDate = CURRENT_DATE
+                      AND Movement.DescId   = zc_Movement_Reprice()
+                      -- AND Movement.OperDate >= CURRENT_DATE AND Movement.OperDate < CURRENT_DATE + INTERVAL '1 DAY'
                    );
-end if;        
+
 
     IF COALESCE (vbMovementId, 0) = 0
     THEN
-        -- 
+        --
         vbMovementId := lpInsertUpdate_Movement_Reprice(ioId        := COALESCE (vbMovementId,0),
                                                         inInvNumber := CAST (NEXTVAL('movement_sale_seq') AS TVarChar),
                                                         inOperDate  := CURRENT_DATE::TDateTime,
@@ -74,9 +85,9 @@ end if;
         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_UnitForwarding(), vbMovementId, inUnitId_Forwarding);
         -- сохранили <(-)% Скидки (+)% Наценки (основание для равенства цен)>
         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), vbMovementId, inTax);
-       
 
-    ELSE 
+
+    ELSE
         -- сохранили связь с <Подразделения(основание для равенства цен)>
         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_UnitForwarding(), vbMovementId, inUnitId_Forwarding);
         -- сохранили <(-)% Скидки (+)% Наценки (основание для равенства цен)>
@@ -107,7 +118,7 @@ end if;
                                                , inContract_Percent   := inContract_Percent
                                                , inUserId             := vbUserId);
 
-    -- if inSession = zfCalc_UserAdmin() then 
+    -- if inSession = zfCalc_UserAdmin() then
     --
     -- !!!Протокол - отладка Скорости!!!
     INSERT INTO Log_Reprice (InsertDate, StartDate, EndDate, MovementId, UserId, TextValue)
@@ -132,20 +143,20 @@ end if;
              );
     -- end If;
 
-    /*if inSession = zfCalc_UserAdmin() then 
+    /*if inSession = zfCalc_UserAdmin() then
       RAISE EXCEPTION ' %  %', vbOperDate_StartBegin, CLOCK_TIMESTAMP();
     end If;*/
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpInsertUpdate_MovementItem_Reprice (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar) OWNER TO postgres;
+
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.    Воробкало А.А.
  18.02.16         *
  27.11.15                                                                       *
 */
---select * from gpInsertUpdate_MovementItem_Reprice(ioID := 0 , inGoodsId := 749444 , inUnitId := 4135547 , inUnitId_Forwarding := 183292 , inTax := 0 , inJuridicalId := 59610 , inContractId := 183257 , inExpirationDate := ('01.12.2022')::TDateTime , inMinExpirationDate := ('01.12.2022')::TDateTime , inAmount := 1 , inPriceOld := 20 , inPriceNew := 19.2 , inJuridical_Price := 18.3291 , inJuridical_Percent := 0 , inContract_Percent := 0 , inGUID := '{D56FDAB5-2E8B-4BB6-AC30-549410FF9EC0}' ,  inSession := '3');
---select * from gpSelect_AllGoodsPrice(inUnitId := 4135547 , inUnitId_to := 183292 , inMinPercent := 30 , inVAT20 := 'False' , inTaxTo := 0 , inPriceMaxTo := 0 ,  inSession := '3');
---select * from gpInsertUpdate_MovementItem_Reprice(ioID := 0 , inGoodsId := 28894 , inUnitId := 4135547 , inUnitId_Forwarding := 183292 , inTax := 0 , inJuridicalId := 59610 , inContractId := 183257 , inExpirationDate := ('01.07.2020')::TDateTime , inMinExpirationDate := ('01.12.2019')::TDateTime , inAmount := 1 , inPriceOld := 103.2 , inPriceNew := 102.6 , inJuridical_Price := 95.3263 , inJuridical_Percent := 0 , inContract_Percent := 0 , inGUID := '{603F0E68-F94C-4D93-BB24-F0778553C417}' ,  inSession := '3');
+-- SELECT COUNT(*) FROM Log_Reprice
+-- SELECT * FROM Log_Reprice WHERE TextValue NOT LIKE '%InsertUpdate%' ORDER BY Id DESC LIMIT 100
+-- SELECT * FROM Log_Reprice ORDER BY Id DESC LIMIT 100

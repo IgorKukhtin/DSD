@@ -671,10 +671,18 @@ inherited Report_Client_TotalErrorForm: TReport_Client_TotalErrorForm
     Top = 280
   end
   object spGet_UserUnit: TdsdStoredProc
-    StoredProcName = 'gpGet_UserUnit'
+    StoredProcName = 'gpGet_UnitbyUser'
     DataSets = <>
     OutputType = otResult
     Params = <
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'UnitId'
         Value = ''

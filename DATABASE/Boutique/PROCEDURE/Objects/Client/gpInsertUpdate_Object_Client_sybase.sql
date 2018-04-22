@@ -1,8 +1,8 @@
--- Function: gpInsertUpdate_Object_Client() - Покупатели
+-- Function: gpInsertUpdate_Object_Client_sybase() - Покупатели
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client_sybase (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, TDateTime, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Client(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Client_sybase(
  INOUT ioId                       Integer   ,    -- Ключ объекта <Покупатели>
  INOUT ioCode                     Integer   ,    -- Код объекта <Покупатели>
     IN inName                     TVarChar  ,    -- Название объекта <Покупатели>
@@ -17,6 +17,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Client(
     IN inComment                  TVarChar  ,    -- Примечание
     IN inCityId                   Integer   ,    -- Населенный пункт
     IN inDiscountKindId           Integer   ,    -- Вид накопительной скидки
+    IN inInsertDate               TDateTime ,
+    IN inUserId_insert            Integer   ,    -- 
+    IN inUnitId_insert            Integer   ,    -- 
     IN inSession                  TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -60,9 +63,6 @@ BEGIN
 
        END IF;
        
-       -- !!!Замена!!!
-       IF vbName_Sybase <> '' THEN inName:=  vbName_Sybase; END IF;
-
        -- !!!Замена!!!
        IF vbName_Sybase <> '' THEN inName:=  vbName_Sybase; END IF;
 
@@ -172,21 +172,13 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Client_DiscountKind(), ioId, inDiscountKindId);
 
 
-   -- определяется признак Создание/Корректировка
-   IF vbIsInsert = TRUE
-   THEN
        -- сохранили протокол - Подразделение (создание)
-       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Client_InsertUnit(), ioId, (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_User_Unit() AND OL.ObjectId = vbUserId));
+       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Client_InsertUnit(), ioId, inUnitId_insert);
        -- сохранили протокол - Пользователь (создание)
-       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Insert(), ioId, vbUserId);
+       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Insert(), ioId, inUserId_insert);
        -- сохранили протокол - Дата создания
-       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), ioId, CURRENT_TIMESTAMP);
-   ELSEIF NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Protocol_Insert() AND OL.ObjectId = ioId AND OL.ChildObjectId > 0)
-   THEN
-       -- сохранили протокол - Подразделение (создание) - если здесь было значение "пусто"
-       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Client_InsertUnit(), ioId, (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_User_Unit() AND OL.ObjectId = vbUserId));
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), ioId, inInsertDate);
 
-   END IF;
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -205,4 +197,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_Client()
+-- SELECT * FROM gpInsertUpdate_Object_Client_sybase()

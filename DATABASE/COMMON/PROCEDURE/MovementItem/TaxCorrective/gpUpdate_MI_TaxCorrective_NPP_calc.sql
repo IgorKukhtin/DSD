@@ -163,6 +163,8 @@ BEGIN
                    )
         AND vbDocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                       , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                      , zc_Enum_DocumentTaxKind_Goods()
+                                      , zc_Enum_DocumentTaxKind_Change()
                                        )
      THEN
          -- сохранили - !!!БЕЗ расчета №п/п!!!
@@ -232,6 +234,8 @@ BEGIN
                                                                                                         , zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR()
                                                                                                         , zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                                                         , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                                                        , zc_Enum_DocumentTaxKind_Goods()
+                                                                                                        , zc_Enum_DocumentTaxKind_Change()
                                                                                                          )
                   WHERE MovementLinkMovement_Child.MovementChildId = vbMovementId_tax
                     AND MovementLinkMovement_Child.DescId          = zc_MovementLinkMovement_Child()
@@ -466,6 +470,8 @@ BEGIN
                        , ROW_NUMBER() OVER (ORDER BY CASE -- для Корр. цені
                                                           WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                                      , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                                     , zc_Enum_DocumentTaxKind_Goods()
+                                                                                     , zc_Enum_DocumentTaxKind_Change()
                                                                                       )
                                                                THEN COALESCE (tmpMI_tax1.LineNum, tmpMI_tax2.LineNum, 0)
                                                                
@@ -489,6 +495,8 @@ BEGIN
                                                         AND tmpMI_tax1.GoodsKindId = tmpMI_Corr_curr_all.GoodsKindId
                                                         AND tmpMI_tax1.Price       = CASE WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                                                                      , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                                                                     , zc_Enum_DocumentTaxKind_Goods()
+                                                                                                                     , zc_Enum_DocumentTaxKind_Change()
                                                                                                                       )
                                                                                                THEN tmpMI_tax1.Price
                                                                                           ELSE tmpMI_Corr_curr_all.Price
@@ -498,6 +506,8 @@ BEGIN
                                                         AND tmpMI_tax2.GoodsId     = tmpMI_Corr_curr_all.GoodsId
                                                         AND tmpMI_tax2.Price       = CASE WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                                                                      , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                                                                     , zc_Enum_DocumentTaxKind_Goods()
+                                                                                                                     , zc_Enum_DocumentTaxKind_Change()
                                                                                                                       )
                                                                                                THEN tmpMI_tax2.Price
                                                                                           ELSE tmpMI_Corr_curr_all.Price
@@ -509,6 +519,8 @@ BEGIN
                                                  AND tmpMI_Corr_sum_1.Price       = tmpMI_Corr_curr_all.Price
                                                  AND vbDocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                                , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                               , zc_Enum_DocumentTaxKind_Goods()
+                                                                               , zc_Enum_DocumentTaxKind_Change()
                                                                                 )
                        LEFT JOIN tmpMI_Corr_sum_2 ON tmpMI_Corr_sum_2.GoodsId     = tmpMI_Corr_curr_all.GoodsId
                                                  AND tmpMI_Corr_sum_2.Price       = tmpMI_Corr_curr_all.Price
@@ -516,6 +528,8 @@ BEGIN
                                                  AND tmpMI_tax1.GoodsId           IS NULL
                                                  AND vbDocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                                , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                               , zc_Enum_DocumentTaxKind_Goods()
+                                                                               , zc_Enum_DocumentTaxKind_Change()
                                                                                 )
                  )
               -- Результат
@@ -527,6 +541,8 @@ BEGIN
                          -- № п/п в колонке 1/1строка - для колонки 7 с "минусом"
                        , CASE WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                          , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                         , zc_Enum_DocumentTaxKind_Goods()
+                                                         , zc_Enum_DocumentTaxKind_Change()
                                                           )
                                    THEN tmpMI_Corr_curr.NPP       -- № п/п в налоговой
                               ELSE COALESCE (tmpMI_Corr_all1.NPP_calc  -- № п/п в последней корр
@@ -538,6 +554,8 @@ BEGIN
                          -- Кол-во для НН в колонке 7/1строка
                        , CASE WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                          , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                         , zc_Enum_DocumentTaxKind_Goods()
+                                                         , zc_Enum_DocumentTaxKind_Change()
                                                           )
                                    THEN tmpMI_Corr_curr.AmountTax_calc -- кол-во в налоговой
 
@@ -550,6 +568,8 @@ BEGIN
                          -- Сумма DIFF для НН в колонке 13/1строка - из налог. за минусом ...
                        , CASE WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                          , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                         , zc_Enum_DocumentTaxKind_Goods()
+                                                         , zc_Enum_DocumentTaxKind_Change()
                                                           )
                                    THEN 0
 
@@ -637,7 +657,15 @@ BEGIN
 
      -- РЕЗУЛЬТАТ - сохранили ВСЕ что расчитали для № п/п
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPPTax_calc(),      _tmpRes.MovementItemId, _tmpRes.NPPTax_calc)
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountTax_calc(),   _tmpRes.MovementItemId, _tmpRes.AmountTax_calc)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountTax_calc()
+                                             , _tmpRes.MovementItemId
+                                             , CASE WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                               , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                                )
+                                                    THEN ABS (_tmpRes.Amount) -- !!!подставили что ввели, а не из Налоговой!!!
+                                                    ELSE _tmpRes.AmountTax_calc
+                                               END
+                                              )
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTaxDiff_calc(), _tmpRes.MovementItemId, _tmpRes.SummTaxDiff_calc)
              -- !!!важно - сохранили ТОЛЬКО если есть еще что возвращать!!!
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPP_calc()

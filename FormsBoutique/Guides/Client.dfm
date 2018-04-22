@@ -223,6 +223,14 @@ object ClientForm: TClientForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 65
       end
+      object UnitName_insert: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1089#1086#1079#1076#1072#1085#1080#1077')'
+        DataBinding.FieldName = 'UnitName_insert'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1089#1086#1079#1076#1072#1085#1080#1077')'
+        Width = 100
+      end
       object PhoneMobile: TcxGridDBColumn
         Caption = #1052#1086#1073#1080#1083#1100#1085#1099#1081' '#1090#1077#1083#1077#1092#1086#1085
         DataBinding.FieldName = 'PhoneMobile'
@@ -330,6 +338,15 @@ object ClientForm: TClientForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 100
       end
+      object LastDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083'. '#1087#1086#1082'.'
+        DataBinding.FieldName = 'LastDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1087#1086#1082#1091#1087#1082#1080
+        Width = 92
+      end
       object LastCount: TcxGridDBColumn
         Caption = #1050#1086#1083'. '#1074' '#1087#1086#1089#1083'. '#1087#1086#1082'.'
         DataBinding.FieldName = 'LastCount'
@@ -366,15 +383,6 @@ object ClientForm: TClientForm
         HeaderHint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1074' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1087#1086#1082#1091#1087#1082#1077
         Width = 80
       end
-      object LastDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083'. '#1087#1086#1082'.'
-        DataBinding.FieldName = 'LastDate'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        HeaderHint = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1087#1086#1082#1091#1087#1082#1080
-        Width = 92
-      end
       object LastUserName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1087#1086#1089#1083'. '#1087#1086#1082'.'
         DataBinding.FieldName = 'LastUserName'
@@ -392,6 +400,22 @@ object ClientForm: TClientForm
         HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1087#1086#1082#1091#1087#1082#1080
         Options.Editing = False
         Width = 100
+      end
+      object InsertName: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+        DataBinding.FieldName = 'InsertName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076#1072#1085#1080#1077')'
+        Width = 100
+      end
+      object InsertDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
+        DataBinding.FieldName = 'InsertDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072' ('#1089#1086#1079#1076#1072#1085#1080#1103')'
+        Width = 80
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

@@ -4269,7 +4269,8 @@ begin
                                  +'   and _lfCalc_DateTime_change(DiscountKlientAccountMoney.InsertDate, DiscountKlientAccountMoney.OperDate) = ' +FormatToDateTimeServerNoSec(FieldByName('OperDateInsert').AsDateTime)
                                  );
              //Протокол
-             {if FieldByName('Id_Postgres').AsInteger=0
+             //if FieldByName('Id_Postgres').AsInteger=0
+             {if 1=1
              then
                  fOpenSqToQuery ('select lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), '+ IntToStr(toStoredProc.Params.ParamByName('ioId').Value) +', ' + FormatToDateTimeServer(FieldByName('OperDateInsert').AsDateTime) +') '
                                + '     , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), '+ IntToStr(toStoredProc.Params.ParamByName('ioId').Value) +', ' + IntToStr(FieldByName('UserId_pg').AsInteger) + ')'
@@ -5018,7 +5019,8 @@ begin
                  if (FieldByName('isErased').AsInteger=zc_rvNo)and(FieldByName('Id_Postgres').AsInteger=0) and(FieldByName('isBill').AsInteger=zc_rvYes) then
                    fExecSqFromQuery('update dba.Bill set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
-             if (FieldByName('Id_Postgres').AsInteger=0)and(FieldByName('isErased').AsInteger=zc_rvNo)
+             if (FieldByName('isErased').AsInteger=zc_rvNo)
+             //if (FieldByName('Id_Postgres').AsInteger=0)and(FieldByName('isErased').AsInteger=zc_rvNo)
              then
                  fOpenSqToQuery ('select lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), '+ IntToStr(toStoredProc.Params.ParamByName('ioId').Value) +', ' + FormatToDateTimeServer(FieldByName('OperDateInsert').AsDateTime) +') '
                                + '     , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), '+ IntToStr(toStoredProc.Params.ParamByName('ioId').Value) +', ' + IntToStr(FieldByName('UserId_pg').AsInteger) + ')'
@@ -5379,7 +5381,8 @@ begin
                    fExecSqFromQuery('update dba.Bill set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
 
              //
-             if (FieldByName('Id_Postgres').AsInteger=0)and(FieldByName('isErased').AsInteger=zc_rvNo)
+             if (FieldByName('isErased').AsInteger=zc_rvNo)
+             // if (FieldByName('Id_Postgres').AsInteger=0)and(FieldByName('isErased').AsInteger=zc_rvNo)
              //if (FieldByName('isErased').AsInteger=zc_rvNo)
              then
                  fOpenSqToQuery ('select lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), '+ IntToStr(toStoredProc.Params.ParamByName('ioId').Value) +', ' + FormatToDateTimeServer(FieldByName('OperDateInsert').AsDateTime) +' )'
@@ -5736,12 +5739,35 @@ begin
         Add(', DiscountKlient.CommentInfo as  Comments');
         Add(', DiscountKlient.City as CityName');
         Add(', DiscountKlient.KindDiscount as KindDiscount');
+        Add(', Unit_insert.Id_Postgres AS UnitId_insert');
+        Add(', Users_insert.userId_postgres as InsertUserID');
+        Add(', DiscountKlient.ProtocolDate');
         Add(', DiscountKlient.DatabaseId');
         Add(', DiscountKlient.ReplId');
         Add(', users.userId_postgres as LastUserID');
         Add('from Unit inner join DiscountKlient on DiscountKlient.ClientId = Unit.id');
         Add('     left outer join Users on users.id = DiscountKlient.LastUserID');
-        Add('where KindUnit = zc_kuClient()');
+
+        Add('     left outer join Users as Users_insert on Users_insert.id = DiscountKlient.UserID');
+
+
+        Add('     left outer join dba.Unit as Unit_insert on Unit_insert.Id = ');
+        Add('   case when DiscountKlient.DatabaseId = 1 then 235   ' ); // магазин MaxMara	Касаджикова Т.В.	5940
+        Add('        when DiscountKlient.DatabaseId = 2 then 204   ' ); // магазин Terri-Luxury	Биндарь С.И.	2797
+        Add('        when DiscountKlient.DatabaseId = 3 then 240   ' ); // магазин 5 Элемент	Бедина Е.	5193
+        Add('        when DiscountKlient.DatabaseId = 4 then 1121  ' ); // магазин CHADO	Адаменко А.В.	1761
+        Add('        when DiscountKlient.DatabaseId = 5 then 234   ' ); // магазин SAVOY	Байнак А.А.	8726
+        Add('        when DiscountKlient.DatabaseId = 6 then 5727  ' ); // магазин Savoy-P.Z.	Savoy_PZ1	801
+        Add('        when DiscountKlient.DatabaseId = 7 then 11772 ' ); // магазин Терри-Out	Шатова С.П.	411
+        Add('        when DiscountKlient.DatabaseId = 8 then 978   ' ); // магазин Vintag	Балкова О.	3146
+        Add('        when DiscountKlient.DatabaseId = 9 then 20484 ' ); // магазин ESCADA	Рожкова И	2867
+        Add('        when DiscountKlient.DatabaseId = 10 then 29018 ' ); // магазин Savoy-O	Безкаравайная И.	1294
+        Add('        when DiscountKlient.DatabaseId = 11 then 969   ' ); // магазин Terry-Vintage	Гаджиева Н.	1438
+        Add('        when DiscountKlient.DatabaseId = 12 then 11932 ' ); // магазин Chado-Outlet	Сорина Г.	45
+        Add(' end ' );
+
+
+        Add('where Unit.KindUnit = zc_kuClient()');
         if cbClientNew.Checked then Add(' and Unit.Id_Postgres is null');
         Add('order by Unit.UnitName, ObjectId');
         Open;
@@ -5752,7 +5778,7 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpinsertupdate_object_Client';
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_Client_sybase';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
@@ -5769,6 +5795,9 @@ begin
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inCityId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inDiscountKindId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inInsertDate',ftDateTime,ptInput, '');
+        toStoredProc.Params.AddParam ('inUserId_insert',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inUnitId_insert',ftInteger,ptInput, 0);
         //
         while not EOF do
         begin
@@ -5803,7 +5832,9 @@ begin
                            +' and objectcode ='+inttostr(FieldByName('KindDiscount').AsInteger));
              toStoredProc.Params.ParamByName('inDiscountKindId').Value:=toSqlQuery.FieldByName('Id').AsInteger;
              //
-
+             toStoredProc.Params.ParamByName('inInsertDate').Value:=FormatToDateTimeServer(FieldByName('ProtocolDate').AsDateTime);
+             toStoredProc.Params.ParamByName('inUserId_insert').Value:=FieldByName('InsertUserID').AsInteger;
+             toStoredProc.Params.ParamByName('inUnitId_insert').Value:=FieldByName('UnitId_insert').AsInteger;
 
 
              if not myExecToStoredProc then ;//exit;

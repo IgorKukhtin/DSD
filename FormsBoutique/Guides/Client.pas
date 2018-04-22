@@ -93,6 +93,9 @@ type
     actReport_CollationByPartner: TdsdOpenForm;
     bbReport_CollationByPartner: TdxBarButton;
     UnitName_User: TcxGridDBColumn;
+    UnitName_insert: TcxGridDBColumn;
+    InsertName: TcxGridDBColumn;
+    InsertDate: TcxGridDBColumn;
   private
     { Private declarations }
   public
