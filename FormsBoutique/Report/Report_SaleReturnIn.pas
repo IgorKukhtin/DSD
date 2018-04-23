@@ -72,6 +72,9 @@ type
     DBLabelGoodsGroupNameFull: TcxDBLabel;
     PartnerName: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
+    spGet_PrinterNull: TdsdStoredProc;
+    actGet_PrinterNull: TdsdExecStoredProc;
+    mactPrint: TMultiAction;
   private
     { Private declarations }
   public

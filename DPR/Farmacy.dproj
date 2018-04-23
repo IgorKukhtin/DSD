@@ -226,6 +226,9 @@
 				<Form>ExportSalesForSuppForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201209.pas"/>
+			<DCCReference Include="..\FormsFarmacy\Report\Report_Analysis_Remains_Selling.pas">
+				<Form>Report_Analysis_Remains_SellingForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

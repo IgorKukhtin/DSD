@@ -415,10 +415,13 @@ type
     miGoodsRetail: TMenuItem;
     actGoods_NDS_diff: TdsdOpenForm;
     miGoods_NDS_diff: TMenuItem;
+    N2: TMenuItem;
+    actReport_Analysis_Remains_Selling: TAction;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
+    procedure actReport_Analysis_Remains_SellingExecute(Sender: TObject);
   private
     { Private declarations }
   public
@@ -433,8 +436,18 @@ implementation
 {$R *.dfm}
 
 uses
-  UploadUnloadData, Dialogs, Forms, SysUtils, IdGlobal, RepriceUnit, ExportSalesForSupp;
+  UploadUnloadData, Dialogs, Forms, SysUtils, IdGlobal, RepriceUnit, ExportSalesForSupp,
+  Report_Analysis_Remains_Selling;
 
+
+procedure TMainForm.actReport_Analysis_Remains_SellingExecute(Sender: TObject);
+begin
+  with TReport_Analysis_Remains_SellingForm.Create(nil) do
+  try
+     Show;
+  finally
+  end;
+end;
 
 procedure TMainForm.actSaveDataExecute(Sender: TObject);
 begin
