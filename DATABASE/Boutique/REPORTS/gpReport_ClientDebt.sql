@@ -77,11 +77,11 @@ BEGIN
                            , SUM (tmp.AmountSum)        AS SummDebt
                            , SUM (tmp.AmountSum_profit) AS SummDebt_profit
                       FROM
-                          (SELECT Container.WhereObjectId                                                                    AS UnitId
-                                , CLO_Client.ObjectId                                                                        AS ClientId
-                                , Container.PartionId                                                                        AS PartionId
-                                , CLO_PartionMI.ObjectId                                                                     AS PartionMI_Id
-                                , SUM (CASE WHEN Container.DescId = zc_Container_count() THEN Container.Amount ELSE 0 END )  AS Amount
+                          (SELECT Container.WhereObjectId     AS UnitId
+                                , CLO_Client.ObjectId         AS ClientId
+                                , Container.PartionId         AS PartionId
+                                , CLO_PartionMI.ObjectId      AS PartionMI_Id
+                                , SUM (CASE WHEN Container.DescId = zc_Container_Count() THEN Container.Amount ELSE 0 END )  AS Amount
                                 , SUM (CASE WHEN Container.DescId = zc_Container_Summ() AND Container.ObjectId <> zc_Enum_Account_20102() THEN Container.Amount ELSE 0 END ) AS AmountSum
                                   --  продавцам в магазинах ограничиваем инфу
                                 , SUM (CASE WHEN Container.DescId = zc_Container_Summ() AND Container.ObjectId =  zc_Enum_Account_20102() AND vbIsOperPrice = TRUE THEN Container.Amount ELSE 0 END ) AS AmountSum_profit

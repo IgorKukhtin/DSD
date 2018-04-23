@@ -2634,6 +2634,7 @@ begin
         Add('where Bill.BillKind = zc_bkSaleFromUnitToClient() and Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text)));
         Add('  and Bill.DatabaseId = 0');
         Add('  and Bill.Id_Postgres > 0');
+        if cbTest.Checked    then Add(' and 1 = 0');
 
         Add('union all');
         Add('select DISTINCT');
@@ -2660,6 +2661,7 @@ begin
         Add('  and _dataBI_all.ReplId is null');
         Add('  and DiscountMovementItem_byBarCode.BillItemsId is null');
         Add('  and Bill.BillDate < ' + FormatToDateServer_notNULL(StrToDate('11.11.2012')));
+        if cbTest.Checked    then Add(' and 1 = 0');
 
         Add('union all');
         Add('select');
@@ -2684,6 +2686,7 @@ begin
         Add('where DiscountMovement.descId = 1  and DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text)));
         Add('  and DiscountMovement.isErased = zc_rvNo()');
         Add('  and DiscountMovement.SaleId_Postgres > 0');
+        if cbTest.Checked    then Add(' and DiscountKlient.Id = ' + TestEdit.Text);
         Add('order by 5, 1');
         Open;
 
@@ -2764,6 +2767,7 @@ begin
         Add(' where Bill.BillKind = zc_bkReturnFromClientToUnit() and Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text)));
         Add('   and Bill.DatabaseId = 0');
         Add('   and Bill.Id_Postgres > 0');
+        if cbTest.Checked    then Add(' and 1 = 0');
 
         Add('union all');
         Add('select DISTINCT');
@@ -2790,6 +2794,7 @@ begin
         Add('  and _dataBI_all.ReplId is null');
         Add('  and DiscountMovementItemReturn_byBarCode.BillItemsId is null');
         Add('  and Bill.BillDate < ' + FormatToDateServer_notNULL(StrToDate('11.11.2012')));
+        if cbTest.Checked    then Add(' and 1 = 0');
 
         Add('union all');
         Add(' select');
@@ -2814,6 +2819,7 @@ begin
         Add('where DiscountMovement.descId = 2  and DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text)));
         Add('  and DiscountMovement.isErased = zc_rvNo()');
         Add('  and DiscountMovement.ReturnInId_Postgres > 0');
+        if cbTest.Checked    then Add(' and DiscountKlient.Id = ' + TestEdit.Text);
         Add('order by 5, 1');
         Open;
 
@@ -2909,6 +2915,7 @@ begin
              + '   and DiscountKlientAccountMoney.isErased = zc_rvNo()'
              + '   and DiscountKlientAccountMoney.MovementId_pg > 0'
             );
+        if cbTest.Checked    then Add(' and DiscountKlient.Id = ' + TestEdit.Text);
         Add(' GROUP BY ');
         Add('      DiscountKlientAccountMoney.OperDate');
         Add('    , Unit_From.Id_Postgres ');
@@ -3224,6 +3231,9 @@ begin
              + '   and DiscountKlientAccountMoney.isErased = zc_rvNo()'
              //+ '   and DiscountKlientAccountMoney.MovementId_pg > 0'
             );
+
+        if cbTest.Checked    then Add(' and 1 = 0');
+
         Add(' GROUP BY ');
         Add('      DiscountKlientAccountMoney.MovementId_pg ');
         Add('    , DiscountKlientAccountMoney.DiscountMovementItemId');
@@ -3636,6 +3646,7 @@ begin
         Add('  and Bill.DatabaseId = 0');
         if cbReturnInErr.Checked then Add(' and 1=0 ');
         if cbNEW.Checked         then Add(' and BillItems.Id_Postgres is null');
+        if cbTest.Checked    then Add(' and 1 = 0');
 
         Add('union all');
         Add('SELECT');
@@ -3663,6 +3674,7 @@ begin
         Add('  and DiscountMovementItemReturn_byBarCode.BillItemsId is null');
         Add('  and Bill.BillDate < ' + FormatToDateServer_notNULL(StrToDate('11.11.2012')));
         if cbNEW.Checked         then Add(' and BillItems.Id_Postgres is null');
+        if cbTest.Checked    then Add(' and 1 = 0');
 
         Add('union all');
         Add('SELECT');
@@ -3692,6 +3704,7 @@ begin
         Add('  and DiscountMovement.isErased = zc_rvNo()');
         if cbReturnInErr.Checked then Add(' and 1=0 ');
         if cbNEW.Checked         then Add(' and DiscountMovementItemReturn_byBarCode.Id_Postgres is null');
+        if cbTest.Checked    then Add(' and 1 = 0');
 
         Add('ORDER BY 4, 3, 1 ');
         Open;
@@ -3889,6 +3902,7 @@ begin
         Add('  and Bill.DatabaseId = 0');
         if cbSaleErr.Checked then Add(' and 1=0 ');
         if cbNEW.Checked     then Add(' and BillItems.Id_Postgres is null');
+        if cbTest.Checked    then Add(' and 1 = 0');
 
         Add('union all');
         Add('SELECT');
@@ -3925,6 +3939,7 @@ begin
         Add('  and DiscountMovementItem_byBarCode.BillItemsId is null');
         Add('  and Bill.BillDate < ' + FormatToDateServer_notNULL(StrToDate('11.11.2012')));
         if cbNEW.Checked     then Add(' and BillItems.Id_Postgres is null');
+        if cbTest.Checked    then Add(' and 1 = 0');
 
         Add('union all');
         Add('SELECT');
@@ -3973,6 +3988,7 @@ begin
         Add('  and DiscountMovement.isErased = zc_rvNo()');
         if cbSaleErr.Checked then Add(' and 1=0 ');
         if cbNEW.Checked     then Add(' and DiscountMovementItem_byBarCode.Id_Postgres is null');
+        if cbTest.Checked    then Add(' and 1 = 0');
 
         Add('ORDER BY 4, 3, 1 ');
         Open;
@@ -4174,6 +4190,7 @@ begin
 
         if cbErr.Checked then Add(' and Unit_From.Id_Postgres is null ');
         if cbNEW.Checked then Add(' and DiscountKlientAccountMoney.MovementId_pg is null');
+        if cbTest.Checked    then Add(' and DiscountKlient.Id = ' + TestEdit.Text);
 
         Add(' GROUP BY ');
         Add('      DiscountKlientAccountMoney.OperDate');
@@ -4332,6 +4349,9 @@ begin
 
              //+ '   and DiscountKlientAccountMoney.MovementId_pg > 0'
             );
+
+        if cbTest.Checked    then Add(' and 1 = 0');
+
         Add(' GROUP BY ');
         Add('      DiscountKlientAccountMoney.MovementId_pg ');
         Add('    , DiscountKlientAccountMoney.DiscountMovementItemId');
@@ -4905,6 +4925,7 @@ begin
         if cbErr.Checked         then Add(' and Unit_From.Id_Postgres is null ');
         if cbReturnInErr.Checked then Add(' and 1=0 ');
         if cbNEW.Checked         then Add(' and Bill.Id_Postgres is null');
+        if cbTest.Checked        then Add(' and 1 = 0');
 
         Add('union all');
         Add('select DISTINCT');
@@ -4932,8 +4953,9 @@ begin
         Add('  and _dataBI_all.ReplId is null');
         Add('  and DiscountMovementItemReturn_byBarCode.BillItemsId is null');
         Add('  and Bill.BillDate < ' + FormatToDateServer_notNULL(StrToDate('11.11.2012')));
-        if cbErr.Checked         then Add(' and Unit_From.Id_Postgres is null ');
-        if cbNEW.Checked         then Add(' and Bill.Id_Postgres is null');
+        if cbErr.Checked     then Add(' and Unit_From.Id_Postgres is null ');
+        if cbNEW.Checked     then Add(' and Bill.Id_Postgres is null');
+        if cbTest.Checked    then Add(' and 1 = 0');
 
         Add('union all');
         Add('select');
@@ -4960,6 +4982,7 @@ begin
         if cbErr.Checked         then Add(' and Unit_From.Id_Postgres is null ');
         if cbReturnInErr.Checked then Add(' and 1=0 ');
         if cbNEW.Checked         then Add(' and DiscountMovement.ReturnInId_Postgres is null');
+        if cbTest.Checked        then Add(' and DiscountKlient.Id = ' + TestEdit.Text);
 
         Add('order by 5, 1');
         Open;
@@ -5258,7 +5281,8 @@ begin
         Add('    left outer join DBA.Unit as Unit_To on Unit_To.Id = Bill.ToId');
         Add('where Bill.BillKind = zc_bkSaleFromUnitToClient() and Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add('  and Bill.DatabaseId = 0');
-        if cbTest.Checked    then Add(' and Bill.Id = -' + TestEdit.Text);
+        //if cbTest.Checked    then Add(' and Bill.Id = -' + TestEdit.Text);
+        if cbTest.Checked    then Add(' and 1 = 0');
         if cbErr.Checked     then Add(' and Unit_To.Id_Postgres is null ');
         if cbSaleErr.Checked then Add(' and 1=0 ');
         if cbNEW.Checked     then Add(' and Bill.Id_Postgres is null');
@@ -5290,7 +5314,8 @@ begin
         Add('  and _dataBI_all.ReplId is null');
         Add('  and DiscountMovementItem_byBarCode.BillItemsId is null');
         Add('  and Bill.BillDate < ' + FormatToDateServer_notNULL(StrToDate('11.11.2012')));
-        if cbTest.Checked    then Add(' and Bill.Id = -' + TestEdit.Text);
+        //if cbTest.Checked    then Add(' and Bill.Id = -' + TestEdit.Text);
+        if cbTest.Checked    then Add(' and 1 = 0');
         if cbErr.Checked     then Add(' and Unit_To.Id_Postgres is null ');
         if cbNEW.Checked     then Add(' and Bill.Id_Postgres is null');
 
@@ -5317,7 +5342,8 @@ begin
 
         Add('where DiscountMovement.descId = 1  and DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         //Add('  and DiscountMovement.isErased = zc_rvNo()');
-        if cbTest.Checked    then Add(' and DiscountMovement.Id = ' + TestEdit.Text);
+        //if cbTest.Checked    then Add(' and DiscountMovement.Id = ' + TestEdit.Text);
+        if cbTest.Checked    then Add(' and DiscountKlient.Id = ' + TestEdit.Text);
         if cbErr.Checked     then Add(' and Unit_To.Id_Postgres is null ');
         if cbSaleErr.Checked then Add(' and 1=0 ');
         if cbNEW.Checked     then Add(' and DiscountMovement.SaleId_Postgres is null');

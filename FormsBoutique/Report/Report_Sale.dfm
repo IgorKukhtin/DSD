@@ -4,7 +4,6 @@ inherited Report_SaleForm: TReport_SaleForm
   ClientWidth = 1176
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -386
   ExplicitWidth = 1192
   ExplicitHeight = 460
   PixelsPerInch = 96
@@ -830,58 +829,6 @@ inherited Report_SaleForm: TReport_SaleForm
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = deEnd
-        Properties.Strings = (
-          'Date')
-      end
-      item
-        Component = deStart
-        Properties.Strings = (
-          'Date')
-      end
-      item
-        Component = GuidesUnit
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
-        Component = GuidesBrand
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
-        Component = GuidesPartner
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
-        Component = GuidesClient
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
-        Component = GuidesPeriod
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
-        Component = GuidesStartYear
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
-        Component = GuidesEndYear
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
         Component = cbClient
         Properties.Strings = (
           'Checked')
@@ -905,6 +852,68 @@ inherited Report_SaleForm: TReport_SaleForm
         Component = cbSize
         Properties.Strings = (
           'Checked')
+      end
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = edEndYear
+        Properties.Strings = (
+          'Text')
+      end
+      item
+        Component = edStartYear
+        Properties.Strings = (
+          'Text')
+      end
+      item
+        Component = GuidesBrand
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesClient
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesEndYear
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesPartner
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesPeriod
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesStartYear
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesUnit
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end>
   end
   inherited ActionList: TActionList
@@ -1443,7 +1452,7 @@ inherited Report_SaleForm: TReport_SaleForm
         end
         item
           Name = 'EndYear'
-          Value = '2018'
+          Value = ''
           Component = GuidesEndYear
           ComponentItem = 'TextValue'
           DataType = ftString
@@ -1534,7 +1543,7 @@ inherited Report_SaleForm: TReport_SaleForm
         end
         item
           Name = 'EndYear'
-          Value = '2018'
+          Value = ''
           Component = GuidesEndYear
           ComponentItem = 'TextValue'
           DataType = ftString
@@ -1980,7 +1989,6 @@ inherited Report_SaleForm: TReport_SaleForm
     KeyField = 'Id'
     LookupControl = edEndYear
     Key = '0'
-    TextValue = '2018'
     FormNameParam.Value = 'TPeriodYear_ChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
