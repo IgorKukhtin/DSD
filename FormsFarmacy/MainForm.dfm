@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 666
   KeyPreview = True
   ExplicitWidth = 682
-  ExplicitHeight = 226
+  ExplicitHeight = 230
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -2232,6 +2232,11 @@ inherited MainForm: TMainForm
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
       OnExecute = actExportSalesForSuppClickExecute
     end
+    object actReport_Analysis_Remains_Selling: TAction
+      Category = #1054#1090#1095#1077#1090#1099
+      Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1086#1089#1090#1072#1090#1082#1086#1084' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088#1080#1086#1076#1072
+      OnExecute = actReport_Analysis_Remains_SellingExecute
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -2727,6 +2732,9 @@ inherited MainForm: TMainForm
       end
       object N136: TMenuItem
         Action = actReport_CheckPromoFarm
+      end
+      object N2: TMenuItem
+        Action = actReport_Analysis_Remains_Selling
       end
       object N132: TMenuItem
         Caption = '-'
