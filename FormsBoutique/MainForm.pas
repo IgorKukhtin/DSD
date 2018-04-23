@@ -206,6 +206,8 @@ type
     miIncomeKoeff: TMenuItem;
     N1: TMenuItem;
     N2: TMenuItem;
+    actClientSMS: TdsdOpenForm;
+    miClientSMS: TMenuItem;
   private
     { Private declarations }
   public

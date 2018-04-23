@@ -287,7 +287,9 @@ uses
   Report_MovementReturnOut in '..\..\FormsBoutique\Report\Report_MovementReturnOut.pas' {Report_MovementReturnOutForm: TParentForm},
   SaleTwo in '..\..\FormsBoutique\Document\SaleTwo.pas' {SaleTwoForm: TParentForm},
   IncomeKoeffEdit in '..\..\FormsBoutique\Guides\IncomeKoeffEdit.pas' {IncomeKoeffEditForm: TParentForm},
-  InventoryItemEdit in '..\..\FormsBoutique\Document\InventoryItemEdit.pas' {InventoryItemEditForm: TParentForm};
+  InventoryItemEdit in '..\..\FormsBoutique\Document\InventoryItemEdit.pas' {InventoryItemEditForm: TParentForm},
+  ClientSMSDialog in '..\..\FormsBoutique\Guides\ClientSMSDialog.pas' {ClientSMSDialogForm: TParentForm},
+  ClientSMS in '..\..\FormsBoutique\Guides\ClientSMS.pas' {ClientSMSForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
