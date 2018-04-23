@@ -250,6 +250,11 @@ end;
 
 procedure TLoadFormTest.LoadClientFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TClientSMSForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TClientSMSForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TClientSMSDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TClientSMSDialogForm');
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TClientForm'));
   TdsdFormStorageFactory.GetStorage.Load('TClientForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TClientEditForm'));

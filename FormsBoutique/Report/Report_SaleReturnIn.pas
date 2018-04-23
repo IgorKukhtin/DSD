@@ -71,6 +71,7 @@ type
     PanelGoodsGroupNameFull: TPanel;
     DBLabelGoodsGroupNameFull: TcxDBLabel;
     PartnerName: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -19,6 +19,7 @@ RETURNS TABLE (MovementId          Integer
              , DescName_Sale       TVarChar
              , OperDate_Sale       TDateTime
              , InvNumber_Sale      TVarChar
+             , UnitName            TVarChar
              , ClientName          TVarChar
              , PartionId           Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
@@ -91,6 +92,7 @@ BEGIN
                      , Movement_Sale.DescId                AS MovementDescId_Sale
                      , Movement_Sale.OperDate              AS OperDate_Sale
                      , Movement_Sale.Invnumber             AS Invnumber_Sale
+                     , MovementLinkObject_From.ObjectId    AS UnitId
                      , MovementLinkObject_To.ObjectId      AS ClientId
                      , MI_Master.ObjectId                  AS GoodsId
                      , MI_Master.PartionId
@@ -180,6 +182,7 @@ BEGIN
                          , Movement_Sale.DescId                AS MovementDescId_Sale
                          , Movement_Sale.OperDate              AS OperDate_Sale
                          , Movement_Sale.Invnumber             AS Invnumber_Sale
+                         , MovementLinkObject_To.ObjectId      AS UnitId
                          , MovementLinkObject_From.ObjectId    AS ClientId
                          , MI_Master.ObjectId                  AS GoodsId
                          , MI_Master.PartionId
@@ -258,6 +261,7 @@ BEGIN
                           , tmp.MovementDescId_Sale
                           , tmp.OperDate_Sale
                           , tmp.Invnumber_Sale
+                          , tmp.UnitId
                           , tmp.ClientId
                           , tmp.GoodsId
                           , tmp.PartionId
@@ -284,6 +288,7 @@ BEGIN
                           , tmp.MovementDescId_Sale
                           , tmp.OperDate_Sale
                           , tmp.Invnumber_Sale
+                          , tmp.UnitId
                           , tmp.ClientId
                           , tmp.GoodsId
                           , tmp.PartionId
@@ -342,6 +347,7 @@ BEGIN
              , tmpData.OperDate_Sale
              , tmpData.Invnumber_Sale
 
+             , Object_Unit.ValueData          AS UnitName
              , Object_Client.ValueData        AS ClientName
              , tmpData.PartionId
              , Object_Goods.Id                AS GoodsId
@@ -393,6 +399,7 @@ BEGIN
             LEFT JOIN MovementDesc ON MovementDesc.Id = tmpData.MovementDescId
             LEFT JOIN MovementDesc AS MovementDesc_Sale ON MovementDesc_Sale.Id = tmpData.MovementDescId_Sale
 
+            LEFT JOIN Object AS Object_Unit   ON Object_Unit.Id   = tmpData.UnitId
             LEFT JOIN Object AS Object_Client ON Object_Client.Id = tmpData.ClientId
             LEFT JOIN Object AS Object_Goods  ON Object_Goods.Id  = tmpData.GoodsId
 
@@ -427,6 +434,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 23.04.18         *
  10.04.18         *
  19.02.18         *
  04.07.17         *
