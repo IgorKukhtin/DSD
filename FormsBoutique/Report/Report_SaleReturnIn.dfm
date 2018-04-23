@@ -71,6 +71,7 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
       inherited cxGrid: TcxGrid
         Width = 1065
         Height = 336
+        ExplicitTop = -6
         ExplicitWidth = 1065
         ExplicitHeight = 336
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -761,6 +762,31 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         end>
       Caption = 'actGet_UserUnit'
     end
+    object mactPrint: TMultiAction
+      Category = 'Print'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_PrinterNull
+        end
+        item
+          Action = actPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+    end
+    object actGet_PrinterNull: TdsdExecStoredProc
+      Category = 'Print'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_PrinterNull
+      StoredProcList = <
+        item
+          StoredProc = spGet_PrinterNull
+        end>
+      Caption = 'Get_Printer'
+    end
     object actPrintCheck: TdsdPrintAction
       Category = 'Print'
       MoveParams = <
@@ -1030,7 +1056,7 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
       isShowModal = False
     end
     object actPrint: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'Print'
       MoveParams = <
         item
           FromParam.Name = 'id'
@@ -1103,9 +1129,11 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
+      PrinterNameParam.Component = FormParams
+      PrinterNameParam.ComponentItem = 'PrinterName'
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+      PreviewWindowMaximized = False
     end
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
@@ -1342,7 +1370,7 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
       Category = 0
     end
     object bbPrint: TdxBarButton
-      Action = actPrint
+      Action = mactPrint
       Category = 0
     end
     object bbShowAll: TdxBarButton
@@ -1646,5 +1674,28 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
     PackSize = 1
     Left = 928
     Top = 184
+  end
+  object spGet_PrinterNull: TdsdStoredProc
+    StoredProcName = 'gpGet_PrinterByUnit'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_PrinterByUnit'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PrinterName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 968
+    Top = 240
   end
 end
