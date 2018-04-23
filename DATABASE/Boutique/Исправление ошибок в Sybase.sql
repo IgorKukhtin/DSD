@@ -455,32 +455,32 @@ where _data_all.BillItemsIncomeID  <> DiscountMovementItem_byBarCode.BillItemsIn
 
 with _tmpData  as
 (SELECT * FROM Object WHERE Object.Id IN (SELECT -12345 AS PartionId_MI
-                   UNION SELECT 302052 -- select ObP.*, MovementItem.* , Movement.* from MovementItem join Object as ObP on ObP.ObjectCode = MovementItem.Id and ObP.DescId = zc_Object_PartionMI() join Movement on Movement.Id = MovementId and Movement.DescId = zc_Movement_Sale() and Movement.Operdate = '14.05.2012' where PartionId = (SELECT MovementItemId FROM Object_PartionGoods join Object on Object.Id = GoodsId and Object.ObjectCode = 69023 join Object as o2 on o2.Id = GoodsSizeId and o2.ValueData = '40')
-                   UNION SELECT 302053
-                   UNION SELECT 302054
-                   UNION SELECT 303596
-                   UNION SELECT 303803
-                   UNION SELECT 303646
-                   UNION SELECT 308218
-                   UNION SELECT 385368
-                   UNION SELECT 385369
-                   UNION SELECT 301564
-                   UNION SELECT 303799
-                   UNION SELECT 307155
-                   UNION SELECT 314460
-                   UNION SELECT 385375
-                   UNION SELECT 303786
-                   UNION SELECT 314845
-                   UNION SELECT 385364
-                   UNION SELECT 302055
-                   UNION SELECT 303801
-                   UNION SELECT 303619
-                   UNION SELECT 304361
-                   UNION SELECT 315013
-                   UNION SELECT 385362
-                   UNION SELECT 385366
-                   UNION SELECT 385371
-                   UNION SELECT 385373
+                   UNION SELECT 764132 -- select ObP.*, MovementItem.* , Movement.* from MovementItem join Object as ObP on ObP.ObjectCode = MovementItem.Id and ObP.DescId = zc_Object_PartionMI() join Movement on Movement.Id = MovementId and Movement.DescId = zc_Movement_Sale() and Movement.Operdate = '14.05.2012' where PartionId = (SELECT MovementItemId FROM Object_PartionGoods join Object on Object.Id = GoodsId and Object.ObjectCode = 69023 join Object as o2 on o2.Id = GoodsSizeId and o2.ValueData = '40')
+                   UNION SELECT 764131
+                   UNION SELECT 764129
+                   UNION SELECT 686338
+                   UNION SELECT 685769
+                   UNION SELECT 685753
+                   UNION SELECT 685567
+                   UNION SELECT 596053
+                   UNION SELECT 764134
+                   UNION SELECT 764133
+                   UNION SELECT 764130
+                   UNION SELECT 696356
+                   UNION SELECT 685616
+                   UNION SELECT 592549
+                   UNION SELECT 592548
+                   UNION SELECT 592547
+                   UNION SELECT 696906
+                   UNION SELECT 685767
+                   UNION SELECT 685766
+                   UNION SELECT 599412
+                   UNION SELECT 592546
+                   UNION SELECT 764136
+                   UNION SELECT 764135
+                   UNION SELECT 685590
+                   UNION SELECT 595497
+                   UNION SELECT 592069
                          -- FROM gpSelect_MovementItem_Sale_Sybase_Check()
                         )
 )

@@ -3,10 +3,10 @@
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_Sale_Sybase_Check();
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Sale_Sybase_Check()
-RETURNS TABLE (isErased Boolean, MovementItemId Integer, MovementId Integer, InvNumber Integer, OperDate TDateTime, StartDate_sybase TDateTime
+RETURNS TABLE (PartionId_MI Integer, PartionId Integer
+             , isErased Boolean, MovementItemId Integer, MovementId Integer, InvNumber Integer, OperDate TDateTime, StartDate_sybase TDateTime
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsSizeId Integer, GoodsSizeName TVarChar
-             , PartionId Integer, PartionId_MI Integer
              , COUNT_Sale TFloat, COUNT_Ret TFloat, SummDebt_sale TFloat, SummDebt_return TFloat
               )
 AS
@@ -302,12 +302,12 @@ BEGIN
                              WHERE coalesce (MIFloat_TotalPay.ValueData , 0) > 0 -- and MIFloat_SummChangePercent.ValueData <> 0
                             )
        -- Результат
-       SELECT _tmpData.isErased, _tmpData.MovementItemId, _tmpData.MovementId, _tmpData.InvNumber, _tmpData.OperDate, _tmpData.StartDate_sybase
+       SELECT _tmpData.PartionId_MI, _tmpData.PartionId
+            , _tmpData.isErased, _tmpData.MovementItemId, _tmpData.MovementId, _tmpData.InvNumber, _tmpData.OperDate, _tmpData.StartDate_sybase
             , _tmpData.FromId, Object_From.ValueData AS FromName
             , _tmpData.ToId, Object_To.ValueData AS ToName
             , _tmpData.GoodsId, Object_Goods.ObjectCode AS GoodsCode, Object_Goods.ValueData AS GoodsName
             , _tmpData.GoodsSizeId, Object_GoodsSize.ValueData AS GoodsSizeName
-            , _tmpData.PartionId, _tmpData.PartionId_MI
             , _tmpData.COUNT_Sale, _tmpData.COUNT_Ret, _tmpData.SummDebt_sale, _tmpData.SummDebt_return
        FROM _tmpData
             LEFT JOIN Object AS Object_From      ON Object_From.Id                     = _tmpData.FromId

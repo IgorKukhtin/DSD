@@ -1312,8 +1312,9 @@ BEGIN
               -- !!!важно - показали ТОЛЬКО если есть еще что возвращать!!!
          AND (tmpData_all.AmountTax_calc <> tmpData_all.Amount
               -- или !!!Корр. цены!!!
-           OR tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
-             )
+           OR tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                            , zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change()
+                                             ))
        ORDER BY 1
               , 2
               , 3
