@@ -258,17 +258,24 @@ BEGIN
               )
  , tmpDiscountList AS (SELECT DISTINCT tmpData.UnitId, tmpData.GoodsId FROM tmpData)
 
+          , tmpOL1 AS (SELECT * FROM ObjectLink WHERE ObjectLink.ChildObjectId IN (SELECT DISTINCT tmpData.GoodsId FROM tmpData)
+                                                  AND ObjectLink.DescId        = zc_ObjectLink_DiscountPeriodItem_Goods()
+                      )
+          , tmpOL2 AS (SELECT * FROM ObjectLink WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpOL1.ObjectId FROM tmpOL1)
+                                                  AND ObjectLink.DescId   = zc_ObjectLink_DiscountPeriodItem_Unit()
+                      )
+
  , tmpDiscount AS (SELECT ObjectLink_DiscountPeriodItem_Unit.ChildObjectId      AS UnitId
                         , ObjectLink_DiscountPeriodItem_Goods.ChildObjectId     AS GoodsId
                         , ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData AS DiscountTax
                    FROM tmpDiscountList
-                        INNER JOIN ObjectLink AS ObjectLink_DiscountPeriodItem_Goods
+                        INNER JOIN tmpOL1 AS ObjectLink_DiscountPeriodItem_Goods
                                               ON ObjectLink_DiscountPeriodItem_Goods.ChildObjectId = tmpDiscountList.GoodsId
-                                             AND ObjectLink_DiscountPeriodItem_Goods.DescId       = zc_ObjectLink_DiscountPeriodItem_Goods()
-                        INNER JOIN ObjectLink AS ObjectLink_DiscountPeriodItem_Unit
+                                             -- AND ObjectLink_DiscountPeriodItem_Goods.DescId       = zc_ObjectLink_DiscountPeriodItem_Goods()
+                        INNER JOIN tmpOL2 AS ObjectLink_DiscountPeriodItem_Unit
                                               ON ObjectLink_DiscountPeriodItem_Unit.ObjectId      = ObjectLink_DiscountPeriodItem_Goods.ObjectId
                                              AND ObjectLink_DiscountPeriodItem_Unit.ChildObjectId = tmpDiscountList.UnitId
-                                             AND ObjectLink_DiscountPeriodItem_Unit.DescId       = zc_ObjectLink_DiscountPeriodItem_Unit()
+                                             -- AND ObjectLink_DiscountPeriodItem_Unit.DescId       = zc_ObjectLink_DiscountPeriodItem_Unit()
                         INNER JOIN ObjectHistory AS ObjectHistory_DiscountPeriodItem
                                                  ON ObjectHistory_DiscountPeriodItem.ObjectId = ObjectLink_DiscountPeriodItem_Goods.ObjectId
                                                 AND ObjectHistory_DiscountPeriodItem.DescId   = zc_ObjectHistory_DiscountPeriodItem()
@@ -399,6 +406,7 @@ BEGIN
                                    AND tmpGoodsPrint.PartionId = tmpData.PartionId
                                    AND tmpGoodsPrint.GoodsId   = tmpData.GoodsId
            ;
+
            
 END;
 $BODY$
@@ -411,6 +419,23 @@ $BODY$
  19.02.18         *
  22.06.17         *
 */
-
+/*
+drop index idx_objectlink_objectid_childobjectid_descid
+drop index idx_objectlink_childobjectid_descid
+drop index idx_objecthistory_objectid_enddate_descid
+CREATE UNIQUE INDEX idx_objectlink_objectid_childobjectid_descid
+  ON public.objectlink
+  USING btree
+  (ObjectId, childobjectid, descid);
+CREATE INDEX idx_objectlink_childobjectid_descid
+  ON public.objectlink
+  USING btree
+  (childobjectid, descid);
+CREATE UNIQUE INDEX idx_objecthistory_objectid_enddate_descid
+  ON public.objecthistory
+  USING btree
+  (objectid, enddate, descid);
+*/
 -- тест
--- SELECT * FROM gpReport_Goods_RemainsCurrent (inUnitId:= 1152, inBrandId:= 0, inPartnerId:= 0, inPeriodId:= 0, inStartYear:= 0, inEndYear:= 2017, inUserId:= 0, inGoodsPrintId:= 0, inisPartion:= FALSE, inisPartner:= FALSE, inisSize:= FALSE, inIsYear:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_Goods_RemainsCurrent (inUnitId:= 1531, inBrandId:= 0, inPartnerId:= 0, inPeriodId:= 0, inStartYear:= 0, inEndYear:= 0, inUserId:= 0, inGoodsPrintId:= 0, inisPartion:= FALSE, inisPartner:= FALSE, inisSize:= TRUE, inIsYear:= FALSE, inSession:= zfCalc_UserAdmin())
+
