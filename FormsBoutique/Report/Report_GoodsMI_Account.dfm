@@ -255,6 +255,15 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
             HeaderHint = #8470' '#1076#1086#1082'. ('#1087#1088#1086#1076#1072#1078#1072')'
             Width = 55
           end
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 119
+          end
           object ClientName: TcxGridDBColumn
             Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
             DataBinding.FieldName = 'ClientName'

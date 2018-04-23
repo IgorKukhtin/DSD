@@ -21,6 +21,7 @@ RETURNS TABLE (-- Документ
              , OperDate_Sale         TDateTime
              , InvNumber_Sale        TVarChar
                --
+             , UnitName              TVarChar
              , ClientName            TVarChar
              , PartionId             Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
@@ -91,6 +92,7 @@ BEGIN
                       , tmpStatus.StatusCode                AS StatusCode
                       , Movement_Sale.OperDate              AS OperDate
                       , Movement_Sale.InvNumber             AS InvNumber
+                      , MovementLinkObject_From.ObjectId    AS UnitId
                       , MovementLinkObject_To.ObjectId      AS ClientId
                       , MI_Master.ObjectId                  AS GoodsId
                       , MI_Master.PartionId                 AS PartionId
@@ -141,6 +143,7 @@ BEGIN
                          , Movement_Sale.DescId                AS MovementDescId_Sale
                          , Movement_Sale.OperDate              AS OperDate_Sale
                          , Movement_Sale.InvNumber             AS InvNumber_Sale
+                         , MovementLinkObject_To.ObjectId      AS UnitId
                          , MovementLinkObject_From.ObjectId    AS ClientId
                          , MI_Master.ObjectId                  AS GoodsId
                          , MI_Master.PartionId                 AS PartionId
@@ -199,6 +202,7 @@ BEGIN
                              , Movement_Sale.DescId                AS MovementDescId_Sale
                              , Movement_Sale.OperDate              AS OperDate_Sale
                              , Movement_Sale.InvNumber             AS InvNumber_Sale
+                             , MovementLinkObject_To.ObjectId      AS UnitId
                              , MovementLinkObject_From.ObjectId    AS ClientId
                              , MI_Master.ObjectId                  AS GoodsId
                              , MI_Sale.PartionId                   AS PartionId
@@ -259,6 +263,7 @@ BEGIN
                              , tmp.MovementDescId AS MovementDescId_Sale
                              , tmp.OperDate       AS OperDate_Sale
                              , tmp.InvNumber      AS InvNumber_Sale
+                             , tmp.UnitId
                              , tmp.ClientId
                              , tmp.GoodsId
                              , tmp.PartionId
@@ -275,6 +280,7 @@ BEGIN
                                , tmp.StatusCode
                                , tmp.OperDate
                                , tmp.InvNumber
+                               , tmp.UnitId
                                , tmp.ClientId
                                , tmp.GoodsId
                                , tmp.PartionId
@@ -291,6 +297,7 @@ BEGIN
                                 , tmp.MovementDescId_Sale
                                 , tmp.OperDate_Sale
                                 , tmp.InvNumber_Sale
+                                , tmp.UnitId
                                 , tmp.ClientId
                                 , tmp.GoodsId
                                 , tmp.PartionId
@@ -311,6 +318,7 @@ BEGIN
                                   , tmp.MovementDescId_Sale
                                   , tmp.OperDate_Sale
                                   , tmp.InvNumber_Sale
+                                  , tmp.UnitId
                                   , tmp.ClientId
                                   , tmp.GoodsId
                                   , tmp.PartionId
@@ -328,6 +336,7 @@ BEGIN
                                 , tmp.MovementDescId_Sale
                                 , tmp.OperDate_Sale
                                 , tmp.InvNumber_Sale
+                                , tmp.UnitId
                                 , tmp.ClientId
                                 , tmp.GoodsId
                                 , tmp.PartionId
@@ -348,6 +357,7 @@ BEGIN
                                   , tmp.MovementDescId_Sale
                                   , tmp.OperDate_Sale
                                   , tmp.InvNumber_Sale
+                                  , tmp.UnitId
                                   , tmp.ClientId
                                   , tmp.GoodsId
                                   , tmp.PartionId
@@ -390,6 +400,7 @@ BEGIN
                      )
     -- выбираю все контейнеры по покупателю и подразделению , если выбрано
   , tmpContainer AS (SELECT Container.Id                    AS ContainerId
+                          , CLO_Unit.ObjectId               AS UnitId
                           , CLO_Client.ObjectId             AS ClientId
                           , CLO_Goods.ObjectId              AS GoodsId
                           , Container.PartionId             AS PartionId
@@ -416,11 +427,13 @@ BEGIN
                         AND Container.DescId    = zc_Container_Summ()
                     )
   , tmpDebt AS (SELECT tmpContainer.ClientId
+                     , tmpContainer.UnitId
                      , tmpContainer.GoodsId
                      , tmpContainer.PartionId
                      , tmpContainer.MI_Id
                      , SUM (tmpContainer.Debt) AS Debt
                 FROM (SELECT tmpContainer.ClientId
+                           , tmpContainer.UnitId
                            , tmpContainer.GoodsId
                            , tmpContainer.PartionId
                            , tmpContainer.MI_Id
@@ -431,6 +444,7 @@ BEGIN
                                                             ON MIContainer.ContainerId = tmpContainer.ContainerId
                                                            AND MIContainer.OperDate    > inEndDate
                       GROUP BY tmpContainer.ClientId
+                             , tmpContainer.UnitId
                              , tmpContainer.GoodsId
                              , tmpContainer.PartionId
                              , tmpContainer.MI_Id
@@ -439,6 +453,7 @@ BEGIN
                       HAVING (tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
                      ) AS tmpContainer
                 GROUP BY tmpContainer.ClientId
+                       , tmpContainer.UnitId
                        , tmpContainer.GoodsId
                        , tmpContainer.PartionId
                        , tmpContainer.MI_Id
@@ -453,6 +468,7 @@ BEGIN
                           , tmp.MovementDescId_Sale AS MovementDescId_Sale
                           , tmp.OperDate_Sale       AS OperDate_Sale
                           , tmp.InvNumber_Sale      AS InvNumber_Sale
+                          , tmp.UnitId              AS UnitId
                           , tmp.ClientId            AS ClientId
                           , tmp.PartionId           AS PartionId
                           , tmp.MI_Id               AS MI_Id
@@ -477,6 +493,7 @@ BEGIN
                                 , tmp.MovementDescId_Sale
                                 , tmp.OperDate_Sale
                                 , tmp.InvNumber_Sale
+                                , tmp.UnitId
                                 , tmp.ClientId
                                 , tmp.GoodsId
                                 , tmp.PartionId
@@ -510,6 +527,7 @@ BEGIN
                                 , 0 AS MovementDescId_Sale
                                 , NULL :: TDateTime AS OperDate_Sale
                                 , ''   :: Tvarchar  AS InvNumber_Sale
+                                , tmp.UnitId
                                 , tmp.ClientId
                                 , -1 AS GoodsId
                                 , 0  AS PartionId
@@ -531,6 +549,7 @@ BEGIN
                                       , tmp.StatusCode
                                       , tmp.OperDate
                                       , tmp.InvNumber
+                                      , tmp.UnitId
                                       , tmp.ClientId
                                  FROM tmpData_MI AS tmp
                                 ) AS tmp
@@ -547,6 +566,7 @@ BEGIN
                              , tmp.MovementDescId_Sale
                              , tmp.OperDate_Sale
                              , tmp.InvNumber_Sale
+                             , tmp.UnitId
                              , tmp.ClientId
                              , tmp.PartionId
                              , tmp.MI_Id
@@ -566,6 +586,7 @@ BEGIN
                      , tmp.MovementDescId_Sale   AS MovementDescId_Sale
                      , tmp.OperDate_Sale         AS OperDate_Sale
                      , tmp.InvNumber_Sale        AS InvNumber_Sale
+                     , tmp.UnitId                AS UnitId
                      , tmp.ClientId              AS ClientId
                      , tmp.PartionId             AS PartionId
                      , tmp.MI_Id                 AS MI_Id
@@ -593,6 +614,7 @@ BEGIN
                      , tmp.MovementDescId_Sale
                      , tmp.OperDate_Sale
                      , tmp.InvNumber_Sale
+                     , tmp.UnitId 
                      , tmp.ClientId
                      , tmp.PartionId
                      , tmp.MI_Id
@@ -613,6 +635,7 @@ BEGIN
              , tmpData.OperDate_Sale  ::TDateTime       AS OperDate_Sale
              , tmpData.InvNumber_Sale ::TVarChar        AS InvNumber_Sale
 
+             , Object_Unit.ValueData          AS UnitName
              , Object_Client.ValueData        AS ClientName
              , tmpData.PartionId              AS PartionId
              , Object_Goods.Id                AS GoodsId
@@ -664,6 +687,7 @@ BEGIN
             LEFT JOIN MovementDesc ON MovementDesc.Id = tmpData.MovementDescId
             LEFT JOIN MovementDesc AS MovementDesc_Sale ON MovementDesc_Sale.Id = tmpData.MovementDescId_Sale
 
+            LEFT JOIN Object AS Object_Unit   ON Object_Unit.Id   = tmpData.UnitId
             LEFT JOIN Object AS Object_Client ON Object_Client.Id = tmpData.ClientId
             LEFT JOIN Object AS Object_Goods  ON Object_Goods.Id  = tmpData.GoodsId
 
@@ -695,6 +719,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 23.04.18         *
  12.02.18         *
  04.07.17         *
 */
