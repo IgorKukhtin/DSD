@@ -63,9 +63,9 @@ RETURNS TABLE (PartionId            Integer
              , TotalSumm            TFloat -- Сумма по входным ценам в валюте - остаток итого с учетом долга
              , TotalSummBalance     TFloat -- Сумма по входным ценам в ГРН - остаток итого с учетом долга
              , TotalSummPriceList   TFloat -- Сумма по прайсу - остаток итого с учетом долга
+             , PriceTax             TFloat -- % наценки
              , DiscountTax          TFloat -- % Сезонной скидки !!!НА!!! zc_DateEnd
              , Amount_GoodsPrint    TFloat -- Кол-во для печати ценников
-             , ChangePercent        TFloat -- % наценки
               )
 AS
 $BODY$
@@ -87,7 +87,7 @@ BEGIN
     -- !!!замена!!!
     IF inIsPartion = TRUE THEN
        inIsPartner:= TRUE;
-       inIsSize   := TRUE;
+       -- inIsSize   := TRUE;
     END IF;
     -- !!!замена!!!
     inIsYear:= TRUE;
@@ -185,7 +185,7 @@ BEGIN
 
        , tmpData AS (SELECT tmpContainer.UnitId
                           , tmpContainer.GoodsId
-                          , CASE WHEN inisPartion = TRUE THEN tmpContainer.PartionId        ELSE 0  END AS PartionId
+                          , CASE WHEN inisPartion = TRUE AND inIsSize = TRUE THEN tmpContainer.PartionId ELSE 0 END AS PartionId
                           , CASE WHEN inisPartion = TRUE THEN tmpContainer.MovementId       ELSE 0  END AS MovementId_Partion
                           , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE '' END AS DescName_Partion
                           , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE '' END AS InvNumber_Partion
@@ -231,7 +231,7 @@ BEGIN
                           -- LEFT JOIN tmpPrice ON tmpPrice.GoodsId = Object_PartionGoods.GoodsId
                      GROUP BY tmpContainer.UnitId
                             , tmpContainer.GoodsId
-                            , CASE WHEN inisPartion = TRUE THEN tmpContainer.PartionId        ELSE 0  END
+                            , CASE WHEN inisPartion = TRUE AND inIsSize = TRUE THEN tmpContainer.PartionId ELSE 0 END
                             , CASE WHEN inisPartion = TRUE THEN tmpContainer.MovementId       ELSE 0  END
                             , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE '' END
                             , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE '' END
@@ -259,12 +259,12 @@ BEGIN
               )
  , tmpDiscountList AS (SELECT DISTINCT tmpData.UnitId, tmpData.GoodsId FROM tmpData)
 
- , tmpOL1 AS (SELECT * FROM ObjectLink WHERE ObjectLink.ChildObjectId IN (SELECT DISTINCT tmpData.GoodsId FROM tmpData)
-                                         AND ObjectLink.DescId        = zc_ObjectLink_DiscountPeriodItem_Goods()
-             )
- , tmpOL2 AS (SELECT * FROM ObjectLink WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpOL1.ObjectId FROM tmpOL1)
-                                         AND ObjectLink.DescId   = zc_ObjectLink_DiscountPeriodItem_Unit()
-             )
+          , tmpOL1 AS (SELECT * FROM ObjectLink WHERE ObjectLink.ChildObjectId IN (SELECT DISTINCT tmpData.GoodsId FROM tmpData)
+                                                  AND ObjectLink.DescId        = zc_ObjectLink_DiscountPeriodItem_Goods()
+                      )
+          , tmpOL2 AS (SELECT * FROM ObjectLink WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpOL1.ObjectId FROM tmpOL1)
+                                                  AND ObjectLink.DescId   = zc_ObjectLink_DiscountPeriodItem_Unit()
+                      )
 
  , tmpDiscount AS (SELECT ObjectLink_DiscountPeriodItem_Unit.ChildObjectId      AS UnitId
                         , ObjectLink_DiscountPeriodItem_Goods.ChildObjectId     AS GoodsId
@@ -365,22 +365,25 @@ BEGIN
            , tmpData.SummDebt                :: TFloat AS SummDebt
            , tmpData.SummDebt_profit         :: TFloat AS SummDebt_profit
 
+             -- Сумма по входным ценам в валюте - остаток итого с учетом долга
            , tmpData.TotalSummPrice          :: TFloat AS TotalSumm
+             -- Сумма по входным ценам в ГРН - остаток итого с учетом долга
            , CAST (tmpData.TotalSummPrice * tmpCurrency.Amount / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpCurrency.ParValue <> 0 THEN tmpCurrency.ParValue ELSE 1 END AS NUMERIC (16, 2)) :: TFloat AS TotalSummBalance
-
+             -- Сумма по прайсу - остаток итого с учетом долга
            , tmpData.TotalSummPriceList      :: TFloat AS TotalSummPriceList
-           , tmpDiscount.DiscountTax         :: TFloat AS DiscountTax
+             -- % наценки
+           , CAST (CASE WHEN (tmpData.TotalSummPrice * tmpCurrency.Amount / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpCurrency.ParValue <> 0 THEN tmpCurrency.ParValue ELSE 1 END)
+                              <> 0
+                        THEN (100 * tmpData.TotalSummPriceList
+                            / (tmpData.TotalSummPrice * tmpCurrency.Amount / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpCurrency.ParValue <> 0 THEN tmpCurrency.ParValue ELSE 1 END)
+                              - 100)
+                        ELSE 0
+                   END AS NUMERIC (16, 0)) :: TFloat AS PriceTax
 
+             -- % Сезонной скидки !!!НА!!! zc_DateEnd
+           , tmpDiscount.DiscountTax         :: TFloat AS DiscountTax
+             -- Кол-во для печати ценников
            , tmpGoodsPrint.Amount            :: TFloat AS Amount_GoodsPrint
-           
-           , CASE WHEN tmpData.RemainsAll <> 0 
-                  THEN  -- Цена Прайс
-                       CAST ( (tmpData.OperPriceList
-                        -- Цена вх. в ГРН
-                       -  ( (tmpData.TotalSummPrice/ tmpData.RemainsAll) * tmpCurrency.Amount / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpCurrency.ParValue <> 0 THEN tmpCurrency.ParValue ELSE 1 END)
-                        ) * 100 
-                        /  ((tmpData.TotalSummPrice/ tmpData.RemainsAll) * tmpCurrency.Amount / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpCurrency.ParValue <> 0 THEN tmpCurrency.ParValue ELSE 1 END) AS NUMERIC (16, 0))
-                  ELSE 0 END :: TFloat AS ChangePercent
 
         FROM tmpData
             LEFT JOIN Object AS Object_Unit    ON Object_Unit.Id    = tmpData.UnitId
@@ -446,6 +449,6 @@ CREATE UNIQUE INDEX idx_objecthistory_objectid_enddate_descid
   USING btree
   (objectid, enddate, descid);
 */
+
 -- тест
 -- SELECT * FROM gpReport_Goods_RemainsCurrent (inUnitId:= 1531, inBrandId:= 0, inPartnerId:= 0, inPeriodId:= 0, inStartYear:= 0, inEndYear:= 0, inUserId:= 0, inGoodsPrintId:= 0, inisPartion:= FALSE, inisPartner:= FALSE, inisSize:= TRUE, inIsYear:= FALSE, inSession:= zfCalc_UserAdmin())
-

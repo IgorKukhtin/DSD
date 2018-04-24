@@ -95,7 +95,7 @@ type
     bbPrintIn: TdxBarButton;
     PanelGoodsGroupNameFull: TPanel;
     DBLabelGoodsGroupNameFull: TcxDBLabel;
-    ChangePercent: TcxGridDBColumn;
+    PriceTax: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -349,7 +349,7 @@ object GoodsGroupForm: TGoodsGroupForm
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'Name'
+          ComponentItem = 'Name_choice'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
