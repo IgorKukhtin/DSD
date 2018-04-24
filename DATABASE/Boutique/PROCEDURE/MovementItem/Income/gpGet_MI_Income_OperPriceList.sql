@@ -26,7 +26,8 @@ BEGIN
                           UNION ALL
                            SELECT COALESCE (MIFloat_OperPrice.ValueData, 0) AS OperPrice
                            FROM MovementItem
-                                INNER JOIN Object AS Object_Goods ON Object_Goods.ValueData = TRIM (inGoodsName) 
+                                INNER JOIN Object AS Object_Goods ON Object_Goods.Id        = MovementItem.ObjectId
+                                                                 AND Object_Goods.ValueData = TRIM (inGoodsName) 
                                                                  AND Object_Goods.DescId    = zc_Object_Goods()
                                 LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
                                                             ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
@@ -42,14 +43,15 @@ BEGIN
                        FROM MovementLinkObject AS MLO_CurrencyDocument
                             LEFT JOIN ObjectFloat AS ObjectFloat_IncomeKoeff 
                                                   ON ObjectFloat_IncomeKoeff.ObjectId = MLO_CurrencyDocument.ObjectId
-                                                 AND ObjectFloat_IncomeKoeff.DescId = zc_ObjectFloat_Currency_IncomeKoeff()
+                                                 AND ObjectFloat_IncomeKoeff.DescId   = zc_ObjectFloat_Currency_IncomeKoeff()
                        WHERE MLO_CurrencyDocument.MovementId = inMovementId
-                         AND MLO_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
+                         AND MLO_CurrencyDocument.DescId     = zc_MovementLinkObject_CurrencyDocument()
                        );
 
 
      -- округление без копеек и до +/-50 гривен, т.е. последние цифры или 50 или сотни
-     ioOperPriceList:= (CAST ( (inOperPrice * vbIncomeKoeff / inCountForPrice) / 50 AS NUMERIC (16,0)) * 50) :: TFloat;
+     -- ioOperPriceList:= (CAST ( (inOperPrice * vbIncomeKoeff / inCountForPrice) / 50 AS NUMERIC (16, 0)) * 50) :: TFloat;
+     ioOperPriceList:= (CAST ( (inOperPrice * vbIncomeKoeff / inCountForPrice) / 100 AS NUMERIC (16, 0)) * 100) :: TFloat;
                 
 END;
 $BODY$

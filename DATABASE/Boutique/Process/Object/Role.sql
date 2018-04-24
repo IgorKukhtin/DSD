@@ -3,10 +3,10 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_Object_Role() RETURNS In
 DO $$
 BEGIN
 
-PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_Object_Measure()
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_Object_Role()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 1
                                   , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Role())||'> - сохранение данных.'
-                                  , inEnumName:= 'zc_Enum_Process_InsertUpdate_ObjectRole');
+                                  , inEnumName:= 'zc_Enum_Process_InsertUpdate_Object_Role');
        
 END $$;

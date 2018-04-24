@@ -4,8 +4,9 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
   ClientWidth = 1065
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -275
   ExplicitWidth = 1081
-  ExplicitHeight = 526
+  ExplicitHeight = 523
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -538,14 +539,15 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
             Width = 70
           end
-          object ChangePercent: TcxGridDBColumn
+          object PriceTax: TcxGridDBColumn
             Caption = '% '#1085#1072#1094'.'
-            DataBinding.FieldName = 'ChangePercent'
+            DataBinding.FieldName = 'PriceTax'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080' '#1076#1083#1103' '#1094#1077#1085#1099' '#1087#1088#1072#1081#1089#1072' '#1080#1079' '#1076#1086#1082
+            HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080' '#1076#1083#1103' '#1094#1077#1085#1099' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
             Options.Editing = False
             Width = 56
           end
@@ -596,14 +598,15 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1085#1072' '#1089#1077#1075#1086#1076#1085#1103
             Width = 70
           end
-          object ChangePercentLast: TcxGridDBColumn
+          object PriceTaxLast: TcxGridDBColumn
             Caption = '% '#1085#1072#1094'. ('#1089#1077#1075#1086#1076#1085#1103')'
-            DataBinding.FieldName = 'ChangePercentLast'
+            DataBinding.FieldName = 'PriceTaxLast'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080' '#1076#1083#1103' '#1094#1077#1085#1099' ('#1089#1077#1075#1086#1076#1085#1103')'
+            HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080' '#1076#1083#1103' '#1094#1077#1085#1099' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1085#1072' '#1089#1077#1075#1086#1076#1085#1103
             Options.Editing = False
             Width = 63
           end

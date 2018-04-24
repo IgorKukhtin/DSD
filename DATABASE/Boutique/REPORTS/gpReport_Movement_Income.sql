@@ -65,8 +65,8 @@ RETURNS TABLE (MovementId     Integer,
                CurrencyValue          TFloat, -- Курс из Документа <Приход от поставщика>
                ParValue               TFloat, -- Номинал из Документа <Приход от поставщика>
 
-               ChangePercent          TFloat, -- 1) % наценки для цены прайса из док 
-               ChangePercentLast      TFloat  -- 2) % наценки для цены прайса текущей
+               PriceTax          TFloat, -- 1) % наценки для цены прайса из док 
+               PriceTaxLast      TFloat  -- 2) % наценки для цены прайса текущей
   )
 AS
 $BODY$
@@ -79,7 +79,7 @@ BEGIN
     -- !!!замена!!!
     IF inIsPartion = TRUE THEN
        inIsPartner:= TRUE;
-       inIsSize   := TRUE;
+       -- inIsSize   := TRUE;
     END IF;
     -- !!!замена!!!
     IF COALESCE (inEndYear, 0) = 0 THEN
@@ -382,7 +382,7 @@ BEGIN
                                                       ) * 100 
                                                       / (CAST ( (CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSumm / tmpData.Amount ELSE 0 END)
                                                          * tmpData.CurrencyValue / CASE WHEN tmpData.ParValue <> 0 THEN tmpData.ParValue ELSE 1 END  AS NUMERIC (16, 2)))
-                  ELSE 0 END AS NUMERIC (16, 0))  :: TFloat  AS ChangePercent
+                  ELSE 0 END AS NUMERIC (16, 0))  :: TFloat  AS PriceTax
 
            , CAST (CASE WHEN tmpData.Amount <> 0 THEN ((tmpData.TotalSummPriceListLast/tmpData.Amount) 
                                                      - (CAST ( (CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSumm / tmpData.Amount ELSE 0 END)
@@ -390,7 +390,7 @@ BEGIN
                                                       ) * 100 
                                                       / (CAST ( (CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSumm / tmpData.Amount ELSE 0 END)
                                                          * tmpData.CurrencyValue / CASE WHEN tmpData.ParValue <> 0 THEN tmpData.ParValue ELSE 1 END  AS NUMERIC (16, 2)))
-                  ELSE 0 END AS NUMERIC (16, 0))  :: TFloat  AS ChangePercentLast
+                  ELSE 0 END AS NUMERIC (16, 0))  :: TFloat  AS PriceTaxLast
            
         FROM tmpData
             LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.FromId

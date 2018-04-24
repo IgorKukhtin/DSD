@@ -11,9 +11,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
 AS
 $BODY$
 BEGIN
-
   -- проверка прав пользователя на вызов процедуры
-  -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Currency());
+  PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Object_Currency());
 
   IF COALESCE (inId, 0) = 0
    THEN
@@ -54,4 +53,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_Currency (0,'2')
+-- SELECT * FROM gpGet_Object_Currency (1, zfCalc_UserAdmin())
