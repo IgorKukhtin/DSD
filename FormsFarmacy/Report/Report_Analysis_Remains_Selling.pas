@@ -138,8 +138,17 @@ procedure TReport_Analysis_Remains_SellingForm.actExportExelExecute(Sender: TObj
   var FileName : string;
 begin
   FileName := 'ExportAnalysis.xls';
-  cxExportPivotGridToExcel(FileName, cxDBPivotGrid1, False);
-  ShellExecute(Application.Handle, 'open', PWideChar(FileName), nil, nil, SW_SHOWNORMAL);
+  try
+    cxDBPivotGrid1.OptionsView.FilterFields := False;
+    cxDBPivotGrid1.OptionsView.ColumnFields := False;
+    cxDBPivotGrid1.OptionsView.DataFields := False;
+    cxExportPivotGridToExcel(FileName, cxDBPivotGrid1, False);
+    ShellExecute(Application.Handle, 'open', PWideChar(FileName), nil, nil, SW_SHOWNORMAL);
+  finally
+    cxDBPivotGrid1.OptionsView.FilterFields := True;
+    cxDBPivotGrid1.OptionsView.ColumnFields := True;
+    cxDBPivotGrid1.OptionsView.DataFields := True;
+  end;
 end;
 
 procedure TReport_Analysis_Remains_SellingForm.actSetGoodsExecute(

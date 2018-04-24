@@ -63,7 +63,7 @@ BEGIN
 				
     INSERT INTO _Result(RowData)
     SELECT
-        '<Offer Code="'||CAST(Object_Goods.ObjectCode AS TVarChar)||'" Name="'||replace(replace(replace(Object_Goods.ValueData, '"', ''),'&','&amp;'),'''','')||'" Producer="'||replace(replace(replace(COALESCE(Remains.MakerName,''),'"',''),'&','&amp;'),'''','')||'" Price="'||to_char(Object_Price.Price,'FM9999990.00')||'" Quantity="'||CAST((Remains.Amount - coalesce(Reserve_Goods.ReserveAmount, 0)) AS TVarChar)||'" />'
+        '<Offer Code="'||CAST(Object_Goods.ObjectCode AS TVarChar)||'" Name="'||replace(replace(replace(Object_Goods.ValueData, '"', ''),'&','&amp;'),'''','')||'" Producer="'||replace(replace(replace(COALESCE(Remains.MakerName,''),'"',''),'&','&amp;'),'''','')||'" Price="'||to_char(Object_Price.Price,'FM9999990.00')||'" Quantity="'||CAST((Remains.Amount - coalesce(Reserve_Goods.ReserveAmount, 0)) AS TVarChar)||'" PriceReserve="'||to_char(Object_Price.Price,'FM9999990.00')||'" />'
     FROM
         Remains
         INNER JOIN Object AS Object_Goods

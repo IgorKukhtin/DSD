@@ -404,7 +404,6 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
     Groups = <>
     OptionsView.RowGrandTotalWidth = 252
     TabOrder = 8
-    ExplicitLeft = 2
     object cxDBPivotGridField1: TcxDBPivotGridField
       AreaIndex = 0
       AllowedAreas = [faColumn, faRow, faFilter]
