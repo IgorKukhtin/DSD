@@ -43,7 +43,9 @@ $BODY$
 
     DECLARE vbIsProcess_BranchIn Boolean;
 
+    DECLARE vbWeighingCount   Integer;
     DECLARE vbStoreKeeperName TVarChar;
+
     DECLARE vbIsInfoMoney_30201 Boolean;
 
     DECLARE vbKiev Integer;
@@ -366,7 +368,11 @@ BEGIN
            
            , MovementSale_Comment.ValueData        AS SaleComment 
            , CASE WHEN TRIM (MovementOrder_Comment.ValueData) <> TRIM (COALESCE (MovementSale_Comment.ValueData, '')) THEN MovementOrder_Comment.ValueData ELSE '' END AS OrderComment
-           , False AS isPrintText
+           , FALSE AS isPrintText
+
+             -- кол-во Взвешиваний
+           , vbWeighingCount AS WeighingCount
+
        FROM (SELECT Max(tmpListDocSale.MovementId) AS MovementId
                   , MAX(tmpListDocSale.ExtraChargesPercent - tmpListDocSale.DiscountPercent)  AS ChangePercent
                   , Sum(MovementFloat_TotalCount.ValueData)         AS TotalCount
