@@ -14,7 +14,8 @@ CREATE OR REPLACE FUNCTION gpGet_MI_Income_OperPriceList(
 RETURNS TFloat
 AS
 $BODY$
-   DECLARE vbUserId  Integer;
+   DECLARE vbUserId      Integer;
+   DECLARE vbIncomeKoeff TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpGetUserBySession (inSession);
@@ -36,8 +37,19 @@ BEGIN
                            ) AS tmp
                     );
      
+     -- вытягиваем "Коэффициент при приходе" для валюты документа
+     vbIncomeKoeff := (SELECT COALESCE (ObjectFloat_IncomeKoeff.ValueData, 0)  AS IncomeKoeff
+                       FROM MovementLinkObject AS MLO_CurrencyDocument
+                            LEFT JOIN ObjectFloat AS ObjectFloat_IncomeKoeff 
+                                                  ON ObjectFloat_IncomeKoeff.ObjectId = MLO_CurrencyDocument.ObjectId
+                                                 AND ObjectFloat_IncomeKoeff.DescId = zc_ObjectFloat_Currency_IncomeKoeff()
+                       WHERE MLO_CurrencyDocument.MovementId = inMovementId
+                         AND MLO_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
+                       );
+
+
      -- округление без копеек и до +/-50 гривен, т.е. последние цифры или 50 или сотни
-     ioOperPriceList:= (CAST ( (inOperPrice * zc_Enum_GlobalConst_IncomeKoeff() / inCountForPrice) / 50 AS NUMERIC (16,0)) * 50) :: TFloat;
+     ioOperPriceList:= (CAST ( (inOperPrice * vbIncomeKoeff / inCountForPrice) / 50 AS NUMERIC (16,0)) * 50) :: TFloat;
                 
 END;
 $BODY$
@@ -46,6 +58,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 24.04.18         *
  24.03.18         *
  06.06.17         *
 */

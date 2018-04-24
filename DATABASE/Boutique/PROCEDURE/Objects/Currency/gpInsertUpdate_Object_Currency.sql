@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_Object_Currency (Integer, Integer, TVarChar, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Currency (Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Currency (Integer, Integer, TVarChar, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Currency(
  INOUT ioId           Integer,       -- Ключ объекта <Валюта>     
  INOUT ioCode         Integer,       -- Код объекта <Валюта>      
     IN inName         TVarChar,      -- Название объекта <Валюта> 
+    IN inIncomeKoeff  TFloat  ,      -- Коэффициент при приходе
     IN inSession      TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -35,6 +37,9 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Currency(), ioCode, inName);
 
+   -- сохранили <Коэффициент при приходе>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Currency_IncomeKoeff(), ioId, inIncomeKoeff);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
@@ -49,6 +54,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+24.04.18          *
 13.05.17                                                          *
 08.05.17                                                          *
 02.03.17                                                          *

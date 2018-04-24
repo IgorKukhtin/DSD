@@ -69,6 +69,17 @@ object CurrencyForm: TCurrencyForm
         HeaderAlignmentVert = vaCenter
         Width = 78
       end
+      object IncomeKoeff: TcxGridDBColumn
+        Caption = #1050#1086#1101#1092#1092'.'
+        DataBinding.FieldName = 'IncomeKoeff'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1087#1088#1080' '#1087#1088#1080#1093#1086#1076#1077
+        Options.Editing = False
+        Width = 60
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

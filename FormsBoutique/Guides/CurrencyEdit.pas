@@ -37,6 +37,8 @@ type
     edCode: TcxCurrencyEdit;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    edIncomeKoeff: TcxCurrencyEdit;
+    cxLabel8: TcxLabel;
   private
     { Private declarations }
   public
