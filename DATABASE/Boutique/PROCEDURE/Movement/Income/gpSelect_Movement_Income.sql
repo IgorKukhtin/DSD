@@ -15,6 +15,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , FromName TVarChar, ToName TVarChar
              , CurrencyDocumentName TVarChar
              , Comment TVarChar
+             , PeriodName TVarChar
+             , PeriodYear TFloat
              )
 AS
 $BODY$
@@ -50,7 +52,9 @@ BEGIN
            , Object_To.ValueData                         AS ToName
            , Object_CurrencyDocument.ValueData           AS CurrencyDocumentName
            , MS_Comment.ValueData                        AS Comment
-         
+           
+           , Object_Period.ValueData                     AS PeriodName
+           , ObjectFloat_PeriodYear.ValueData            AS PeriodYear
        FROM (SELECT Movement.Id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate 
@@ -97,6 +101,15 @@ BEGIN
                                          ON MLO_CurrencyDocument.MovementId = Movement.Id
                                         AND MLO_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
             LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MLO_CurrencyDocument.ObjectId
+            --
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Period
+                                 ON ObjectLink_Partner_Period.ObjectId = Object_From.Id
+                                AND ObjectLink_Partner_Period.DescId = zc_ObjectLink_Partner_Period()
+            LEFT JOIN Object AS Object_Period ON Object_Period.Id = ObjectLink_Partner_Period.ChildObjectId
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_PeriodYear 
+                                  ON ObjectFloat_PeriodYear.ObjectId = Object_From.Id
+                                 AND ObjectFloat_PeriodYear.DescId = zc_ObjectFloat_Partner_PeriodYear()
            ;
   
 END;
@@ -106,6 +119,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .». 
+ 24.04.18         *
  10.04.17         *
 */
 

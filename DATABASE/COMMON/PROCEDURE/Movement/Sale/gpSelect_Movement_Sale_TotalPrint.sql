@@ -155,6 +155,14 @@ BEGIN
                           LIMIT 1
                          );
 
+     -- кол-во Взвешиваний
+     vbWeighingCount:= (SELECT COUNT(*)
+                        FROM Movement
+                        WHERE Movement.ParentId IN (SELECT tmpListDocSale.MovementId FROM tmpListDocSale)
+                          AND Movement.DescId IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction())
+                          AND Movement.StatusId = zc_Enum_Status_Complete()
+                       );
+
     -- Параметр для Доходы + Продукция + Тушенка
     vbIsInfoMoney_30201:= EXISTS (SELECT 1
                                   FROM tmpListDocSale

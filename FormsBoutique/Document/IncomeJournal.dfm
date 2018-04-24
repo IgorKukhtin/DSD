@@ -170,6 +170,22 @@ object IncomeJournalForm: TIncomeJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 82
       end
+      object PeriodName: TcxGridDBColumn
+        Caption = #1057#1077#1079#1086#1085
+        DataBinding.FieldName = 'PeriodName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 76
+      end
+      object PeriodYear: TcxGridDBColumn
+        Caption = #1043#1086#1076
+        DataBinding.FieldName = 'PeriodYear'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 65
+      end
       object FromName: TcxGridDBColumn
         Caption = #1054#1090' '#1082#1086#1075#1086
         DataBinding.FieldName = 'FromName'
@@ -576,6 +592,9 @@ object IncomeJournalForm: TIncomeJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintInSecond: TdsdPrintAction
       Category = 'DSDLib'
@@ -617,6 +636,9 @@ object IncomeJournalForm: TIncomeJournalForm
       ReportNameParam.Value = 'PrintMovement_IncomeIn'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintIn: TdsdPrintAction
       Category = 'DSDLib'
@@ -657,6 +679,9 @@ object IncomeJournalForm: TIncomeJournalForm
       ReportNameParam.Value = 'PrintMovement_Income'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintSticker: TdsdPrintAction
       Category = 'DSDLib'
@@ -694,6 +719,9 @@ object IncomeJournalForm: TIncomeJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'

@@ -538,6 +538,17 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
             Width = 70
           end
+          object ChangePercent: TcxGridDBColumn
+            Caption = '% '#1085#1072#1094'.'
+            DataBinding.FieldName = 'ChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080' '#1076#1083#1103' '#1094#1077#1085#1099' '#1087#1088#1072#1081#1089#1072' '#1080#1079' '#1076#1086#1082
+            Options.Editing = False
+            Width = 56
+          end
           object TotalSummPriceList: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1043#1056#1053
             DataBinding.FieldName = 'TotalSummPriceList'
@@ -584,6 +595,17 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1085#1072' '#1089#1077#1075#1086#1076#1085#1103
             Width = 70
+          end
+          object ChangePercentLast: TcxGridDBColumn
+            Caption = '% '#1085#1072#1094'. ('#1089#1077#1075#1086#1076#1085#1103')'
+            DataBinding.FieldName = 'ChangePercentLast'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080' '#1076#1083#1103' '#1094#1077#1085#1099' ('#1089#1077#1075#1086#1076#1085#1103')'
+            Options.Editing = False
+            Width = 63
           end
           object TotalSummPriceListLast: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1043#1056#1053' ('#1089#1077#1075#1086#1076#1085#1103')'
