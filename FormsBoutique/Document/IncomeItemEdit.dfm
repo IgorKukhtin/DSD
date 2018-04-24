@@ -28,7 +28,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Height = 25
     Action = actInsertUpdate
     Default = True
-    TabOrder = 2
+    TabOrder = 11
   end
   object cxButton2: TcxButton
     Left = 316
@@ -38,7 +38,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Action = actFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
-    TabOrder = 3
+    TabOrder = 12
   end
   object cxLabel3: TcxLabel
     Left = 10
@@ -78,7 +78,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 1
+    TabOrder = 7
     Width = 91
   end
   object edGoodsName: TcxButtonEdit
@@ -89,7 +89,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 0
+    TabOrder = 1
     Width = 273
   end
   object edGoodsGroupName: TcxButtonEdit
@@ -101,7 +101,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 11
+    TabOrder = 0
     Width = 489
   end
   object edCompositionName: TcxButtonEdit
@@ -112,7 +112,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 12
+    TabOrder = 2
     Width = 273
   end
   object edGoodsInfoName: TcxButtonEdit
@@ -123,7 +123,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 13
+    TabOrder = 3
     Width = 273
   end
   object edLineFabricaName: TcxButtonEdit
@@ -134,7 +134,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 14
+    TabOrder = 4
     Width = 273
   end
   object edMeasure: TcxButtonEdit
@@ -146,7 +146,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 15
+    TabOrder = 20
     Width = 55
   end
   object cxLabel18: TcxLabel
@@ -159,7 +159,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Top = 113
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    TabOrder = 17
+    TabOrder = 8
     Width = 49
   end
   object cxLabel2: TcxLabel
@@ -172,7 +172,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Top = 246
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    TabOrder = 19
+    TabOrder = 9
     Width = 91
   end
   object cxLabel8: TcxLabel
@@ -185,13 +185,14 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Top = 293
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    TabOrder = 21
+    TabOrder = 10
     Width = 210
   end
   object cxLabel10: TcxLabel
     Left = 394
-    Top = 223
+    Top = 229
     Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
+    Visible = False
   end
   object ceCountForPrice: TcxCurrencyEdit
     Left = 395
@@ -199,7 +200,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
     EditValue = 1.000000000000000000
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    TabOrder = 23
+    TabOrder = 25
+    Visible = False
     Width = 104
   end
   object cxLabel11: TcxLabel
@@ -215,7 +217,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 25
+    TabOrder = 5
     Width = 273
   end
   object cxLabel12: TcxLabel
@@ -232,7 +234,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 27
+    TabOrder = 6
     Width = 273
   end
   object cxLabel13: TcxLabel

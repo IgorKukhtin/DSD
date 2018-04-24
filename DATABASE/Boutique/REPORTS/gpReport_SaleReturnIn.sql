@@ -441,4 +441,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpReport_SaleReturnIn(inStartDate := ('09.04.2018')::TDateTime , inEndDate := ('10.04.2018')::TDateTime , inUnitId := 0 , inIsShowAll := 'False' ,  inSession := '6');
+-- SELECT * FROM gpReport_SaleReturnIn (inStartDate:= '09.04.2018', inEndDate:= '10.04.2018', inUnitId:= 0, inIsShowAll:= FALSE, inSession:= '6');

@@ -86,9 +86,10 @@ BEGIN
                           )
            -- Результат
            SELECT
-                 CASE WHEN inisMask = False THEN tmpMI.Id ELSE 0 END Id
+                 CASE WHEN inisMask = FALSE THEN tmpMI.Id ELSE 0 END Id
                , Object_Goods.Id                AS GoodsId
-               , Object_Goods.ObjectCode        AS GoodsCode
+               -- , Object_Goods.ObjectCode        AS GoodsCode
+               , CASE WHEN inisMask = TRUE THEN lfGet_ObjectCode (0, zc_Object_Goods()) ELSE Object_Goods.ObjectCode END :: Integer AS GoodsCode
                , Object_Goods.ValueData         AS GoodsName
                , Object_GoodsGroup.Id           AS GoodsGroupId
                , Object_GoodsGroup.ValueData    AS GoodsGroupName

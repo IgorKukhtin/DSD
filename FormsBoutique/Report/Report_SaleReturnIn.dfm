@@ -6,7 +6,7 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1081
-  ExplicitHeight = 463
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -71,7 +71,6 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
       inherited cxGrid: TcxGrid
         Width = 1065
         Height = 336
-        ExplicitTop = -6
         ExplicitWidth = 1065
         ExplicitHeight = 336
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -334,11 +333,12 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
           object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
+            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 119
+            Width = 100
           end
           object ClientName: TcxGridDBColumn
             Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
@@ -1129,6 +1129,7 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
       PrinterNameParam.Component = FormParams
       PrinterNameParam.ComponentItem = 'PrinterName'
       PrinterNameParam.DataType = ftString
