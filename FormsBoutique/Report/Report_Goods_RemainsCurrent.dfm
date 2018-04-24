@@ -7,7 +7,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1185
-  ExplicitHeight = 468
+  ExplicitHeight = 471
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -489,6 +489,17 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             HeaderHint = '% '#1057#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
             Options.Editing = False
             Width = 40
+          end
+          object ChangePercent: TcxGridDBColumn
+            Caption = '% '#1085#1072#1094'.'
+            DataBinding.FieldName = 'ChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080
+            Options.Editing = False
+            Width = 56
           end
           object Amount_in: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076

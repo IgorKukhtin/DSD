@@ -65,6 +65,7 @@ RETURNS TABLE (PartionId            Integer
              , TotalSummPriceList   TFloat -- Сумма по прайсу - остаток итого с учетом долга
              , DiscountTax          TFloat -- % Сезонной скидки !!!НА!!! zc_DateEnd
              , Amount_GoodsPrint    TFloat -- Кол-во для печати ценников
+             , ChangePercent        TFloat -- % наценки
               )
 AS
 $BODY$
@@ -258,12 +259,12 @@ BEGIN
               )
  , tmpDiscountList AS (SELECT DISTINCT tmpData.UnitId, tmpData.GoodsId FROM tmpData)
 
-          , tmpOL1 AS (SELECT * FROM ObjectLink WHERE ObjectLink.ChildObjectId IN (SELECT DISTINCT tmpData.GoodsId FROM tmpData)
-                                                  AND ObjectLink.DescId        = zc_ObjectLink_DiscountPeriodItem_Goods()
-                      )
-          , tmpOL2 AS (SELECT * FROM ObjectLink WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpOL1.ObjectId FROM tmpOL1)
-                                                  AND ObjectLink.DescId   = zc_ObjectLink_DiscountPeriodItem_Unit()
-                      )
+ , tmpOL1 AS (SELECT * FROM ObjectLink WHERE ObjectLink.ChildObjectId IN (SELECT DISTINCT tmpData.GoodsId FROM tmpData)
+                                         AND ObjectLink.DescId        = zc_ObjectLink_DiscountPeriodItem_Goods()
+             )
+ , tmpOL2 AS (SELECT * FROM ObjectLink WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpOL1.ObjectId FROM tmpOL1)
+                                         AND ObjectLink.DescId   = zc_ObjectLink_DiscountPeriodItem_Unit()
+             )
 
  , tmpDiscount AS (SELECT ObjectLink_DiscountPeriodItem_Unit.ChildObjectId      AS UnitId
                         , ObjectLink_DiscountPeriodItem_Goods.ChildObjectId     AS GoodsId
@@ -371,6 +372,15 @@ BEGIN
            , tmpDiscount.DiscountTax         :: TFloat AS DiscountTax
 
            , tmpGoodsPrint.Amount            :: TFloat AS Amount_GoodsPrint
+           
+           , CASE WHEN tmpData.RemainsAll <> 0 
+                  THEN  -- Цена Прайс
+                       CAST ( (tmpData.OperPriceList
+                        -- Цена вх. в ГРН
+                       -  ( (tmpData.TotalSummPrice/ tmpData.RemainsAll) * tmpCurrency.Amount / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpCurrency.ParValue <> 0 THEN tmpCurrency.ParValue ELSE 1 END)
+                        ) * 100 
+                        /  ((tmpData.TotalSummPrice/ tmpData.RemainsAll) * tmpCurrency.Amount / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpCurrency.ParValue <> 0 THEN tmpCurrency.ParValue ELSE 1 END) AS NUMERIC (16, 0))
+                  ELSE 0 END :: TFloat AS ChangePercent
 
         FROM tmpData
             LEFT JOIN Object AS Object_Unit    ON Object_Unit.Id    = tmpData.UnitId
