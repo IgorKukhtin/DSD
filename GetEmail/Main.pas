@@ -11,6 +11,14 @@ uses
   dsdAction, ExternalLoad, IdIOHandler, IdIOHandlerSocket, IdIOHandlerStack,
   IdSSL, IdSSLOpenSSL, IdIMAP4, dsdInternetAction;
 
+const SAVE_LOG = true;
+
+type
+  TPanel = class(Vcl.ExtCtrls.TPanel)
+  private
+    procedure CMTextChanged(var Message: TMessage); message CM_TEXTCHANGED;
+  end;
+
 type
   // элемент "почтовый ящик"
   TMailItem = record
@@ -132,6 +140,20 @@ var
 implementation
 uses Authentication, Storage, CommonData, UtilConst, sevenzip, StrUtils;
 {$R *.dfm}
+
+procedure AddToLog(ALogMessage: string);
+var F: TextFile;
+begin
+  if not SAVE_LOG then Exit;
+  if (Pos('Error', ALogMessage) = 0) and (Pos('Exception', ALogMessage) = 0) then Exit;
+  AssignFile(F, ChangeFileExt(Application.ExeName,'.log'));
+  if FileExists(ChangeFileExt(Application.ExeName,'.log')) then
+    Append(F)
+  else
+    Rewrite(F);
+  WriteLn(F, DateTimeToStr(Now) + ' : ' + ALogMessage);
+  CloseFile(F);
+end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
@@ -158,6 +180,7 @@ begin
   GaugeParts.Progress:=0;
   GaugeLoadXLS.Progress:=0;
   GaugeMove.Progress:=0;
+  AddToLog('---- Start');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.cbTimerClick(Sender: TObject);
@@ -251,13 +274,14 @@ var i,nn:Integer;
 begin
      if vbIsBegin = true then exit;
      // !!!отключили таймер!!!
-     Timer.Enabled:=false;
-     Timer.Interval:=1000;
+//     Timer.Enabled:=false;
+//     Timer.Interval:=1000;
      // запущена обработка
      vbIsBegin:= true;
 
      UserNameStringList:=TStringList.Create;
      UserNameStringList.Sorted:=true;
+     try
      //
      with spSelect do
      begin
@@ -363,11 +387,13 @@ begin
        end;
      end;
      //
-     UserNameStringList.Free;
-     // завершена обработка
-     vbIsBegin:= false;
-     // !!!включили таймер!!!
-     Timer.Enabled:=true;
+     finally
+       UserNameStringList.Free;
+       // завершена обработка
+       vbIsBegin:= false;
+       // !!!включили таймер!!!
+       //Timer.Enabled:=true;
+     end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // что б отловить ошибки - запишим в лог строчку
@@ -406,13 +432,13 @@ var
   fOK,fMMO:Boolean;
   msgDate_save:TDateTime;
 begin
-     //
-     if vbIsBegin = true then exit;
-     // запущена обработка
-     vbIsBegin:= true;
-     // если НЕ было загрузка прайса - НЕ надо потом запускать оптимизацию
-     fIsOptimizeLastPriceList_View:= false;
-
+   //
+   if vbIsBegin = true then exit;
+   // запущена обработка
+   vbIsBegin:= true;
+   // если НЕ было загрузка прайса - НЕ надо потом запускать оптимизацию
+   fIsOptimizeLastPriceList_View:= false;
+   try
 
      //сессия - в эту папку будем сохранять файлики - она определяется временем запуска обработки
      StartTime:=NOW;
@@ -471,7 +497,8 @@ begin
                  try IdIMAP4.Connect(TRUE);     //IMAP
                  except
                       on E: Exception do begin
-                         ShowMessage(' ERROR - IdIMAP4.Connect(TRUE)  : ' + E.Message);
+                         PanelError.Caption:= ' ERROR - IdIMAP4.Connect(TRUE)  : ' + E.Message;
+                         PanelError.Repaint;
                        exit;
                       end;
                  end;
@@ -665,7 +692,11 @@ begin
                         // если не нашли - все равно удалить письмо в почте
                         else flag:= true;
                    end
-                   else ShowMessage('not read :' + IntToStr(i));
+                   else
+                   begin
+                    PanelError.Caption:= 'Error while retrieving message :' + IntToStr(i);
+                    PanelError.Repaint;
+                   end;
 
                    //удаление письма
                    //***if flag then IdPOP3.Delete(i);   //POP3
@@ -732,10 +763,10 @@ begin
            Application.ProcessMessages;
            Sleep(1000);
        end;//финиш - цикл по почтовым ящикам
-
+    finally
      // завершена обработка
      vbIsBegin:= false;
-
+    end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // обработка всех XLS
@@ -751,8 +782,8 @@ begin
      vbIsBegin:= true;
      // если НЕ было загрузка прайса - НЕ надо потом запускать оптимизацию
      fIsOptimizeLastPriceList_View:= false;
-
-     with ClientDataSet do begin
+     try
+       with ClientDataSet do begin
         GaugeLoadXLS.Progress:=0;
         GaugeLoadXLS.MaxValue:=RecordCount;
         Application.ProcessMessages;
@@ -774,15 +805,24 @@ begin
                                searchResult_save:=searchResult;
                                if System.SysUtils.FindNext(searchResult) <> 0
                                then begin
+                                   //
+                                   AddToLog('Найден файл '+ FieldByName('DirectoryImport').asString + searchResult_save.Name +' начало загрузки');
                                    // выполняется загрузка
                                    actExecuteImportSettings.ExternalParams.ParamByName('inAreaId').Value:= FieldByName('AreaId_load').asInteger;
                                    actExecuteImportSettings.ExternalParams.ParamByName('Directory_add').Value:= FieldByName('AreaName').asString;
                                    // выполняется загрузка
                                    mactExecuteImportSettings.Execute;
+                                   if actExecuteImportSettings.ExternalParams.ParamByName('outMsgText').Value <> '' then
+                                   begin
+                                     PanelError.Caption := actExecuteImportSettings.ExternalParams.ParamByName('outMsgText').Value;
+                                     PanelError.Repaint;
+                                   end;
                                    // если была загрузка прайса - надо потом запустить оптимизацию
                                    fIsOptimizeLastPriceList_View:= true;
                                end
                                else
+                               begin
+                                   AddToLog('Ошибка - найден НЕ ОДИН файл xls для загрузки');
                                    //ошибка - найден НЕ ОДИН файл xls для загрузки
                                    fError_SendEmail(FieldByName('Id').AsInteger
                                                   , FieldByName('ContactPersonId').AsInteger
@@ -790,15 +830,20 @@ begin
                                                   //, FieldByName('JuridicalMail').AsString
                                                   , FieldByName('DirectoryImport').asString
                                                   , '2');
+                               end;
                           end
                           else;
                               //ошибка - не найден файл xls для загрузки
                               //та не, все нормально :)
-                      except fError_SendEmail(FieldByName('Id').AsInteger
+                      except on E: Exception do
+                        begin
+                          AddToLog(E.Message);
+                          fError_SendEmail(FieldByName('Id').AsInteger
                                             , FieldByName('ContactPersonId').AsInteger
                                             , searchResult_save.TimeStamp
                                             , FieldByName('JuridicalMail').AsString
                                             , searchResult_save.Name);
+                        end
                       end;
            end;//1.if ... !!!только для zc_Enum_EmailKind_InPrice!!!
 
@@ -813,9 +858,10 @@ begin
            Application.ProcessMessages;
         end;
      end;
-
-     // завершена обработка
-     vbIsBegin:= false;
+     finally
+       // завершена обработка
+       vbIsBegin:= false;
+     end;
 
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -958,12 +1004,22 @@ begin
                                if (1=1 )
                                then
                                begin
+                                   AddToLog('Начало загрузки: '+ FieldByName('DirectoryImport').asString);
                                    // выполняется загрузка
                                    actExecuteImportSettings.ExternalParams.ParamByName('Directory_add').Value:= '';
                                    // выполняется загрузка
-                                   mactExecuteImportSettings.Execute
-                               end else //ошибка - найден НЕ ОДИН файл MMO для загрузки
-                                   ;
+                                   mactExecuteImportSettings.Execute;
+                                   if actExecuteImportSettings.ExternalParams.ParamByName('outMsgText').Value <> '' then
+                                   begin
+                                     PanelError.Caption := actExecuteImportSettings.ExternalParams.ParamByName('outMsgText').Value;
+                                     PanelError.Repaint;
+                                   end;
+                                   AddToLog('Окончание загрузки' + FieldByName('DirectoryImport').asString);
+                               end
+                               else //ошибка - найден НЕ ОДИН файл MMO для загрузки
+                               begin
+                                   AddToLog('Ошибка: найден НЕ ОДИН файл MMO для загрузки');
+                               end;
                                if actExecuteImportSettings.ExternalParams.ParamByName('outMsgText').Value <> ''
                                then begin
                                     //current directory to store the email files
@@ -987,12 +1043,15 @@ begin
                           else //ошибка - не найден файл MMO для загрузки
                                //та не, все нормально :)
                                ;
-                      except //а здесь уже ошибка
+                      except on E: Exception do //а здесь уже ошибка
+                        begin
+                             AddToLog('Exception: '+ E.Message);
                              fError_SendEmail(FieldByName('Id').AsInteger
                                             , FieldByName('ContactPersonId').AsInteger
                                             , msgDate
                                             , FieldByName('JuridicalMail').AsString + ' * ' + FieldByName('Mail').AsString
                                             , '???'+actExecuteImportSettings.ExternalParams.ParamByName('outMsgText').Value);
+                        end;
                       end;
            end;//2.if ... !!!только для zc_Enum_EmailKind_IncomeMMO!!!
 
@@ -1011,9 +1070,9 @@ begin
      if vbIsBegin = true then exit;
      // запущена обработка
      vbIsBegin:= true;
-
-     with spSelectMove do
-     begin
+     try
+       with spSelectMove do
+       begin
         StoredProcName:='gpSelect_Movement_LoadPriceList';
         OutputType:=otDataSet;
         Params.Clear;
@@ -1047,9 +1106,10 @@ begin
            Application.ProcessMessages;
         end;
      end;
-
-     // завершена обработка
-     vbIsBegin:= false;
+     finally
+       // завершена обработка
+       vbIsBegin:= false;
+     end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // обработка все
@@ -1066,7 +1126,14 @@ begin
        //инициализируем данные по всем поставщикам
        try fInitArray; except PanelHost.Caption:= '!!! ERROR - fInitArray - exit !!!'; isErr_exit:= true; exit; end;
        // обработка всей почты
-       try isErr:= true; fBeginMail; isErr:= false; except vbIsBegin:= false; PanelHost.Caption:= '!!! ERROR - fBeginMail - next !!!'; end;
+       try
+        isErr:= true; fBeginMail; isErr:= false;
+       except on E: Exception do
+        begin
+          vbIsBegin:= false;
+          PanelHost.Caption:= '!!! ERROR - fBeginMail: ' + E.Message;
+        end;
+       end;
        // обработка всех XLS - !!!Только если "Загрузка Прайса"!!!
        try if vbEmailKindDesc= 'zc_Enum_EmailKind_InPrice' then fBeginXLS; except vbIsBegin:= false; PanelHost.Caption:= '!!! ERROR - fBeginXLS - exit !!!'; isErr_exit:= true; exit; end;
        // оптимизация если была загрузка XLS - !!!Только если "Загрузка Прайса"!!!
@@ -1119,4 +1186,12 @@ begin
      end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+{ TPanel }
+
+procedure TPanel.CMTextChanged(var Message: TMessage);
+begin
+  if (Caption <> '') and (Name = 'PanelError') then
+    AddToLog(ReplaceStr(Name, 'Panel', '') + ' - ' + Caption);
+end;
+
 end.

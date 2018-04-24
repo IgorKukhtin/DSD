@@ -29,7 +29,7 @@ object CurrencyEditForm: TCurrencyEditForm
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 144
+    Top = 167
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object CurrencyEditForm: TCurrencyEditForm
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 144
+    Top = 167
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -60,6 +60,24 @@ object CurrencyEditForm: TCurrencyEditForm
     Properties.ReadOnly = True
     TabOrder = 5
     Width = 273
+  end
+  object edIncomeKoeff: TcxCurrencyEdit
+    Left = 8
+    Top = 126
+    Hint = '% '#1089#1082#1080#1076#1082#1080' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103
+    EditValue = '0'
+    ParentShowHint = False
+    Properties.DecimalPlaces = 1
+    Properties.DisplayFormat = '0.####'
+    ShowHint = True
+    TabOrder = 6
+    Width = 275
+  end
+  object cxLabel8: TcxLabel
+    Left = 8
+    Top = 103
+    Hint = '% '#1089#1082#1080#1076#1082#1080' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103
+    Caption = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1087#1088#1080' '#1087#1088#1080#1093#1086#1076#1077
   end
   object ActionList: TActionList
     Left = 152
@@ -120,6 +138,14 @@ object CurrencyEditForm: TCurrencyEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIncomeKoeff'
+        Value = Null
+        Component = edIncomeKoeff
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 96
@@ -162,6 +188,13 @@ object CurrencyEditForm: TCurrencyEditForm
         Component = edCode
         DataType = ftUnknown
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IncomeKoeff'
+        Value = Null
+        Component = edIncomeKoeff
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184
@@ -180,10 +213,10 @@ object CurrencyEditForm: TCurrencyEditForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 160
-    Top = 104
+    Top = 127
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 104
-    Top = 104
+    Top = 127
   end
 end

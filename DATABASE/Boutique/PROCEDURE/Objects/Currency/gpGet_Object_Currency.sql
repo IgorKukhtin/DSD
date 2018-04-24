@@ -6,7 +6,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Currency(
     IN inId          Integer,       -- Currency
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar) 
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , IncomeKoeff TFloat) 
 AS
 $BODY$
 BEGIN
@@ -20,16 +21,21 @@ BEGIN
        SELECT
               0 :: Integer    AS Id
            , lfGet_ObjectCode(0, zc_Object_Currency())   AS Code
-           , '' :: TVarChar  AS Name
+           , '' :: TVarChar   AS Name
+           ,  0 :: TFloat     AS IncomeKoeff 
        ;
    ELSE
        RETURN QUERY
        SELECT
-             Object.Id         AS Id
-           , Object.ObjectCode AS Code
-           , Object.ValueData  AS Name
-       FROM Object
-       WHERE Object.Id = inId;
+             Object_Currency.Id                AS Id
+           , Object_Currency.ObjectCode        AS Code
+           , Object_Currency.ValueData         AS Name
+           , ObjectFloat_IncomeKoeff.ValueData AS IncomeKoeff
+       FROM Object AS Object_Currency
+            LEFT JOIN ObjectFloat AS ObjectFloat_IncomeKoeff 
+                                  ON ObjectFloat_IncomeKoeff.ObjectId = Object_Currency.Id 
+                                 AND ObjectFloat_IncomeKoeff.DescId = zc_ObjectFloat_Currency_IncomeKoeff()
+       WHERE Object_Currency.Id = inId;
    END IF;
 
 END;
@@ -41,10 +47,11 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+24.04.18          *
 08.05.17                                                          *
 02.03.17                                                          *
 20.02.17                                                          *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Currency (1,'2')
+-- SELECT * FROM gpGet_Object_Currency (0,'2')
