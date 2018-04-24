@@ -63,7 +63,10 @@ RETURNS TABLE (MovementId     Integer,
                SummRemainsIn          TFloat, -- Сумма по входным ценам в валюте - остаток по магазину с учетом долга
                SummRemains            TFloat, -- Сумма по прайсу - остаток по магазину с учетом долга
                CurrencyValue          TFloat, -- Курс из Документа <Приход от поставщика>
-               ParValue               TFloat  -- Номинал из Документа <Приход от поставщика>
+               ParValue               TFloat, -- Номинал из Документа <Приход от поставщика>
+
+               ChangePercent          TFloat, -- 1) % наценки для цены прайса из док 
+               ChangePercentLast      TFloat  -- 2) % наценки для цены прайса текущей
   )
 AS
 $BODY$
@@ -372,6 +375,22 @@ BEGIN
            
            , tmpData.CurrencyValue  :: TFloat
            , tmpData.ParValue       :: TFloat
+           
+           , CAST (CASE WHEN tmpData.Amount <> 0 THEN ((tmpData.TotalSummPriceList/tmpData.Amount) 
+                                                     - (CAST ( (CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSumm / tmpData.Amount ELSE 0 END)
+                                                        * tmpData.CurrencyValue / CASE WHEN tmpData.ParValue <> 0 THEN tmpData.ParValue ELSE 1 END  AS NUMERIC (16, 2)))
+                                                      ) * 100 
+                                                      / (CAST ( (CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSumm / tmpData.Amount ELSE 0 END)
+                                                         * tmpData.CurrencyValue / CASE WHEN tmpData.ParValue <> 0 THEN tmpData.ParValue ELSE 1 END  AS NUMERIC (16, 2)))
+                  ELSE 0 END AS NUMERIC (16, 0))  :: TFloat  AS ChangePercent
+
+           , CAST (CASE WHEN tmpData.Amount <> 0 THEN ((tmpData.TotalSummPriceListLast/tmpData.Amount) 
+                                                     - (CAST ( (CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSumm / tmpData.Amount ELSE 0 END)
+                                                        * tmpData.CurrencyValue / CASE WHEN tmpData.ParValue <> 0 THEN tmpData.ParValue ELSE 1 END  AS NUMERIC (16, 2)))
+                                                      ) * 100 
+                                                      / (CAST ( (CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSumm / tmpData.Amount ELSE 0 END)
+                                                         * tmpData.CurrencyValue / CASE WHEN tmpData.ParValue <> 0 THEN tmpData.ParValue ELSE 1 END  AS NUMERIC (16, 2)))
+                  ELSE 0 END AS NUMERIC (16, 0))  :: TFloat  AS ChangePercentLast
            
         FROM tmpData
             LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.FromId
