@@ -1,6 +1,5 @@
 -- Function: gpSelect_Movement_Sale_TotalPrint()
 
-
 DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_TotalPrint (TDateTime, TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_TotalPrint (TDateTime, TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_TotalPrint (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);

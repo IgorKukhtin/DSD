@@ -290,16 +290,17 @@ BEGIN
      IF inUserId <> zc_User_Sybase()
         AND (vbId_income_ch <> 0 OR vbId_sale_ch <> 0)
         AND inMovementItemId > 0
-        AND (inCompositionId <> (SELECT COALESCE (Object_PartionGoods.CompositionId, 0) FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
+        AND (-- inCompositionId <> (SELECT COALESCE (Object_PartionGoods.CompositionId, 0) FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
           -- OR inGoodsInfoId   <> (SELECT COALESCE (Object_PartionGoods.GoodsInfoId, 0)   FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
-          OR inLineFabricaId <> (SELECT COALESCE (Object_PartionGoods.LineFabricaId, 0) FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
-          OR inLabelId       <> (SELECT COALESCE (Object_PartionGoods.LabelId, 0)       FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
+          -- OR inLineFabricaId <> (SELECT COALESCE (Object_PartionGoods.LineFabricaId, 0) FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
+             inLabelId       <> (SELECT COALESCE (Object_PartionGoods.LabelId, 0)       FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
             )
      THEN
         -- 2.1.1. есть ли ПРОВЕДЕННЫЕ документы - все
          IF vbId_income_ch > 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Уже есть приход № <%> от <%>.Нельзя корректировать <Цена вх.> или <Состав> или <Описание> или <Линия> или <Название>.'
+             -- RAISE EXCEPTION 'Ошибка.Уже есть приход № <%> от <%>.Нельзя корректировать <Цена вх.> или <Состав> или <Описание> или <Линия> или <Название>.'
+             RAISE EXCEPTION 'Ошибка.Уже есть приход № <%> от <%>.Нельзя корректировать <Цена вх.> или <Название>.'
                            , (SELECT Movement.InvNumber
                               FROM MovementItem
                                    INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
@@ -314,7 +315,8 @@ BEGIN
     
          -- 2.1.2. есть ли ПРОВЕДЕННЫЕ документы - все
          ELSE
-             RAISE EXCEPTION 'Ошибка.Найдено движение <%> № <%> от <%>.Нельзя корректировать <Состав> или <Описание> или <Линия> или <Название>.'
+             -- RAISE EXCEPTION 'Ошибка.Найдено движение <%> № <%> от <%>.Нельзя корректировать <Состав> или <Описание> или <Линия> или <Название>.'
+             RAISE EXCEPTION 'Ошибка.Найдено движение <%> № <%> от <%>.Нельзя корректировать <Название>.'
                            , (SELECT MovementDesc.ItemName
                               FROM MovementItem
                                    INNER JOIN Movement ON Movement.Id = MovementItem.MovementId

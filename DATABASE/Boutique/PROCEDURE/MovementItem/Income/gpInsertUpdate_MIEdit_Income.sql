@@ -336,6 +336,17 @@ BEGIN
                                                   , inUserId       := vbUserId
                                                    );
 
+     -- проверка - Уникальный vbGoodsItemId
+     IF vbUserId <> zc_User_Sybase()
+        AND EXISTS (SELECT 1 FROM Object_PartionGoods WHERE Object_PartionGoods.MovementId = inMovementId AND Object_PartionGoods.GoodsItemId = vbGoodsItemId AND Object_PartionGoods.MovementItemId <> COALESCE (ioId, 0)) THEN
+        RAISE EXCEPTION 'Ошибка.В документе уже есть Товар <% %> р.<%>.Дублирование запрещено.'
+                      , lfGet_Object_ValueData_sh ((SELECT Object_PartionGoods.LabelId     FROM Object_PartionGoods WHERE Object_PartionGoods.MovementId = inMovementId AND Object_PartionGoods.GoodsItemId = vbGoodsItemId))
+                      , lfGet_Object_ValueData    ((SELECT Object_PartionGoods.GoodsId     FROM Object_PartionGoods WHERE Object_PartionGoods.MovementId = inMovementId AND Object_PartionGoods.GoodsItemId = vbGoodsItemId))
+                      , lfGet_Object_ValueData_sh ((SELECT Object_PartionGoods.GoodsSizeId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementId = inMovementId AND Object_PartionGoods.GoodsItemId = vbGoodsItemId))
+                       ;
+     END IF;
+
+
      -- Запомнили !!!ДО изменений!!!
      IF ioId > 0
      THEN -- Цену - у текущего Элемента
