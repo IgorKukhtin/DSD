@@ -16,8 +16,8 @@ BEGIN
      RETURN QUERY 
        SELECT
              ObjectHistory_PriceListItem.Id
-           , ObjectHistory_PriceListItem.StartDate
-           , ObjectHistory_PriceListItem.EndDate
+           , CASE WHEN ObjectHistory_PriceListItem.StartDate = zc_DateStart() OR ObjectHistory_PriceListItem.StartDate < '01.01.1980' THEN NULL ELSE ObjectHistory_PriceListItem.StartDate END :: TDateTime AS StartDate
+           , CASE WHEN ObjectHistory_PriceListItem.EndDate   = zc_DateEnd() THEN NULL ELSE ObjectHistory_PriceListItem.EndDate END :: TDateTime AS EndDate
            , ObjectHistoryFloat_Value.ValueData AS ValuePrice
            , FALSE AS isErased
        FROM ObjectLink AS ObjectLink_PriceList
@@ -49,4 +49,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_ObjectHistory_PriceListGoodsItem (inPriceListId:= 372, inGoodsId:= 406, inSession := '2');
+-- SELECT * FROM gpSelect_ObjectHistory_PriceListGoodsItem (inPriceListId:= 372, inGoodsId:= 406, inSession:= zfCalc_UserAdmin());

@@ -246,15 +246,15 @@ BEGIN
            , tmpPartionGoods.FabrikaName
            --, tmpPartionGoods.GoodsSizeName
            , tmpPartionGoods.CurrencyName
-           , tmpPartionGoods.OperPriceList   ::Tfloat
-           , tmpPartionGoods.OperPrice       ::Tfloat
-           , tmpPartionGoods.Remains         ::Tfloat
-           , tmpPartionGoods.AmountDebt      ::Tfloat
-           , (COALESCE(tmpPartionGoods.Remains, 0) + COALESCE(tmpPartionGoods.AmountDebt, 0)) ::Tfloat  AS RemainsAll
+           , tmpPartionGoods.OperPriceList   :: TFloat
+           , tmpPartionGoods.OperPrice       :: TFloat
+           , tmpPartionGoods.Remains         :: TFloat
+           , tmpPartionGoods.AmountDebt      :: TFloat
+           , (COALESCE(tmpPartionGoods.Remains, 0) + COALESCE(tmpPartionGoods.AmountDebt, 0)) :: TFloat  AS RemainsAll
 
-           , CASE WHEN tmpPrice.StartDate IN (zc_DateStart(), zc_DateEnd()) THEN NULL ELSE tmpPrice.StartDate END ::TDateTime  AS StartDate
-           , CASE WHEN tmpPrice.EndDate   IN (zc_DateStart(), zc_DateEnd()) THEN NULL ELSE tmpPrice.EndDate   END ::TDateTime  AS EndDate
-           , COALESCE(tmpPrice.ValuePrice, NULL) ::TFloat  AS ValuePrice
+           , CASE WHEN tmpPrice.StartDate = zc_DateStart() OR tmpPrice.StartDate < '01.01.1980' THEN NULL ELSE tmpPrice.StartDate END :: TDateTime  AS StartDate
+           , CASE WHEN tmpPrice.EndDate   = zc_DateEnd() THEN NULL ELSE tmpPrice.EndDate   END :: TDateTime  AS EndDate
+           , COALESCE (tmpPrice.ValuePrice, 0) :: TFloat  AS ValuePrice
 
            , Object_Insert.ValueData   AS InsertName
            , Object_Update.ValueData   AS UpdateName
@@ -475,11 +475,11 @@ BEGIN
            , tmpPartionGoods.FabrikaName
            --, tmpPartionGoods.GoodsSizeName
            , tmpPartionGoods.CurrencyName
-           , tmpPartionGoods.OperPriceList   ::Tfloat
-           , tmpPartionGoods.OperPrice       ::Tfloat
-           , tmpPartionGoods.Remains         ::Tfloat
-           , tmpPartionGoods.AmountDebt      ::Tfloat
-           , (COALESCE(tmpPartionGoods.Remains, 0) + COALESCE(tmpPartionGoods.AmountDebt, 0)) ::Tfloat  AS RemainsAll
+           , tmpPartionGoods.OperPriceList   :: TFloat
+           , tmpPartionGoods.OperPrice       :: TFloat
+           , tmpPartionGoods.Remains         :: TFloat
+           , tmpPartionGoods.AmountDebt      :: TFloat
+           , (COALESCE(tmpPartionGoods.Remains, 0) + COALESCE(tmpPartionGoods.AmountDebt, 0)) :: TFloat  AS RemainsAll
            
            , CASE WHEN tmpPrice.StartDate IN (zc_DateStart(), zc_DateEnd()) THEN NULL ELSE tmpPrice.StartDate END ::TDateTime  AS StartDate
            , CASE WHEN tmpPrice.EndDate   IN (zc_DateStart(), zc_DateEnd()) THEN NULL ELSE tmpPrice.EndDate   END ::TDateTime  AS EndDate
@@ -536,4 +536,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_ObjectHistory_PriceListItem(inPriceListId := 4306 , inUnitId := 1159 , inBrandId := 710 , inPeriodId := 1174 , inOperDate := ('01.05.2017')::TDateTime , inStartYear := 2007 , inEndYear := 2007 , inShowAll := 'False' ,  inSession := zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_ObjectHistory_PriceListItem (inPriceListId := 4306, inUnitId:= 1159, inBrandId:= 710, inPeriodId:= 1174, inOperDate:= CURRENT_DATE, inStartYear:= 2007, inEndYear:= 2007, inShowAll:= FALSE, inSession:= zfCalc_UserAdmin());
