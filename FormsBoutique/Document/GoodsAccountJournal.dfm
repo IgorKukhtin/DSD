@@ -29,7 +29,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
       Left = 101
       Top = 5
       EditValue = 43101d
-      Properties.ReadOnly = True
+      Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -39,7 +39,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
       Left = 310
       Top = 5
       EditValue = 43101d
-      Properties.ReadOnly = True
+      Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1

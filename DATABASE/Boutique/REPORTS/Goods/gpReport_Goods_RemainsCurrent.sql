@@ -141,11 +141,12 @@ BEGIN
                            , Object_PartionGoods.CurrencyId
 
                            , Object_PartionGoods.MovementId
+                             -- Если есть права видеть Цену вх.
                            , CASE WHEN vbIsOperPrice = TRUE THEN Object_PartionGoods.OperPrice ELSE 0 END AS OperPrice
                            , Object_PartionGoods.CountForPrice
                            , Object_PartionGoods.OperPriceList
                            -- , CASE WHEN Container.WhereObjectId = Object_PartionGoods.UnitId THEN Object_PartionGoods.Amount ELSE 0 END AS Amount_in
-                           , Object_PartionGoods.Amount AS Amount_in
+                           , Object_PartionGoods.Amount     AS Amount_in
                            , Object_PartionGoods.UnitId     AS UnitId_in
                              --  № п/п - только для = 1 возьмем Amount_in
                            , ROW_NUMBER() OVER (PARTITION BY Container.PartionId ORDER BY CASE WHEN Container.WhereObjectId = Object_PartionGoods.UnitId THEN 0 ELSE 1 END ASC) AS Ord
@@ -212,6 +213,8 @@ BEGIN
 
                             --  только для Ord = 1
                           , SUM (CASE WHEN tmpContainer.Ord = 1 THEN tmpContainer.Amount_in ELSE 0 END) AS Amount_in
+                          , SUM (CASE WHEN tmpContainer.Ord = 1 THEN zfCalc_SummIn (tmpContainer.Amount_in, tmpContainer.OperPrice, tmpContainer.CountForPrice) ELSE 0 END) AS TotalSummPrice_in
+
                           , SUM (tmpContainer.Remains)         AS Remains
                           , SUM (tmpContainer.RemainsDebt)     AS RemainsDebt
                           , SUM (tmpContainer.RemainsAll)      AS RemainsAll
@@ -373,10 +376,10 @@ BEGIN
              -- Сумма по прайсу - остаток итого с учетом долга
            , tmpData.TotalSummPriceList      :: TFloat AS TotalSummPriceList
              -- % наценки
-           , CAST (CASE WHEN (tmpData.TotalSummPrice * tmpCurrency.Amount / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpCurrency.ParValue <> 0 THEN tmpCurrency.ParValue ELSE 1 END)
+           , CAST (CASE WHEN (tmpData.TotalSummPrice_in * tmpCurrency.Amount / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpCurrency.ParValue <> 0 THEN tmpCurrency.ParValue ELSE 1 END)
                               <> 0
-                        THEN (100 * tmpData.TotalSummPriceList
-                            / (tmpData.TotalSummPrice * tmpCurrency.Amount / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpCurrency.ParValue <> 0 THEN tmpCurrency.ParValue ELSE 1 END)
+                        THEN (100 * tmpData.Amount_in * tmpData.OperPriceList
+                            / (tmpData.TotalSummPrice_in * tmpCurrency.Amount / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpCurrency.ParValue <> 0 THEN tmpCurrency.ParValue ELSE 1 END)
                               - 100)
                         ELSE 0
                    END AS NUMERIC (16, 0)) :: TFloat AS PriceTax
