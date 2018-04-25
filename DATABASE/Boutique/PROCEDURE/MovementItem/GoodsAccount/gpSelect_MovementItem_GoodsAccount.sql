@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_GoodsAccount(
 )
 RETURNS TABLE (Id Integer, LineNum Integer, isLine TVarChar, PartionId Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , GoodsGroupNameFull TVarChar, MeasureName TVarChar
+             , GoodsGroupNameFull TVarChar, NameFull TVarChar, MeasureName TVarChar
              , CompositionGroupName TVarChar
              , CompositionName TVarChar
              , GoodsInfoName TVarChar
@@ -337,7 +337,8 @@ BEGIN
            , Object_Goods.Id                             AS GoodsId
            , Object_Goods.ObjectCode                     AS GoodsCode
            , Object_Goods.ValueData                      AS GoodsName
-           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+           , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+           , (COALESCE (ObjectString_GoodsGroupFull.ValueData, '') || COALESCE (Object_GoodsInfo.ValueData, '')) :: TVarChar AS NameFull
            , Object_Measure.ValueData                    AS MeasureName
 
            , Object_CompositionGroup.ValueData           AS CompositionGroupName
@@ -459,9 +460,9 @@ BEGIN
             LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = Object_PartionGoods.BrandId
             LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = Object_PartionGoods.PeriodId
 
-            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
-                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
-                                  AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
+            LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
+                                   ON ObjectString_GoodsGroupFull.ObjectId = tmpMI.GoodsId
+                                  AND ObjectString_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
 
             LEFT JOIN MovementDesc ON MovementDesc.Id = tmpMI.DescId_Sale
             LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
@@ -552,7 +553,8 @@ BEGIN
            , Object_Goods.Id                                               AS GoodsId
            , Object_Goods.ObjectCode                                       AS GoodsCode
            , Object_Goods.ValueData                                        AS GoodsName
-           , ObjectString_Goods_GoodsGroupFull.ValueData                   AS GoodsGroupNameFull
+           , ObjectString_GoodsGroupFull.ValueData                   AS GoodsGroupNameFull
+           , (COALESCE (ObjectString_GoodsGroupFull.ValueData, '') || COALESCE (Object_GoodsInfo.ValueData, '')) :: TVarChar AS NameFull
            , Object_Measure.ValueData                                      AS MeasureName
            , Object_CompositionGroup.ValueData                             AS CompositionGroupName
            , Object_Composition.ValueData                                  AS CompositionName
@@ -671,9 +673,9 @@ BEGIN
             LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = Object_PartionGoods.BrandId
             LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = Object_PartionGoods.PeriodId
 
-            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
-                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
-                                  AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
+            LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
+                                   ON ObjectString_GoodsGroupFull.ObjectId = tmpMI.GoodsId
+                                  AND ObjectString_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
 
            LEFT JOIN MovementItem AS MI_Sale    ON MI_Sale.Id          = tmpMI.SaleMI_Id
            LEFT JOIN Movement AS Movement_Sale  ON Movement_Sale.Id    = MI_Sale.MovementId

@@ -35,7 +35,7 @@ RETURNS TABLE (PartionId            Integer
              , PeriodName           TVarChar
              , PeriodYear           Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar, MeasureName TVarChar
+             , GoodsGroupNameFull TVarChar, NameFull TVarChar, GoodsGroupName TVarChar, MeasureName TVarChar
              , JuridicalName        TVarChar
              , CompositionGroupName TVarChar
              , CompositionName      TVarChar
@@ -338,6 +338,7 @@ BEGIN
            , Object_Goods.ObjectCode        AS GoodsCode
            , Object_Goods.ValueData         AS GoodsName
            , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+           , (COALESCE (ObjectString_GoodsGroupFull.ValueData, '') || COALESCE (Object_GoodsInfo.ValueData, '')) :: TVarChar AS NameFull
            , Object_GoodsGroup.ValueData    AS GoodsGroupName
            , Object_Measure.ValueData       AS MeasureName
            , Object_Juridical.ValueData     AS JuridicalName

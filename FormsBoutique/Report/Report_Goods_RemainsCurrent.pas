@@ -93,8 +93,8 @@ type
     bbPrint: TdxBarButton;
     actPrintIn: TdsdPrintAction;
     bbPrintIn: TdxBarButton;
-    PanelGoodsGroupNameFull: TPanel;
-    DBLabelGoodsGroupNameFull: TcxDBLabel;
+    PanelNameFull: TPanel;
+    DBLabelNameFull: TcxDBLabel;
     PriceTax: TcxGridDBColumn;
   private
     { Private declarations }

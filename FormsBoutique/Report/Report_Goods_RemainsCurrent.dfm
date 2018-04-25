@@ -772,7 +772,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       end
     end
   end
-  object PanelGoodsGroupNameFull: TPanel [2]
+  object PanelNameFull: TPanel [2]
     Left = 0
     Top = 403
     Width = 1169
@@ -780,11 +780,11 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 6
-    object DBLabelGoodsGroupNameFull: TcxDBLabel
+    object DBLabelNameFull: TcxDBLabel
       Left = 0
       Top = 0
       Align = alClient
-      DataBinding.DataField = 'GoodsGroupNameFull'
+      DataBinding.DataField = 'NameFull'
       DataBinding.DataSource = MasterDS
       ParentFont = False
       Properties.Alignment.Horz = taCenter

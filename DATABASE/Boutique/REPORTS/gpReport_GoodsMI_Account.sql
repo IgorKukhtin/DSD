@@ -25,7 +25,7 @@ RETURNS TABLE (-- Документ
              , ClientName            TVarChar
              , PartionId             Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar
+             , GoodsGroupNameFull TVarChar, NameFull TVarChar, GoodsGroupName TVarChar
              , CompositionName  TVarChar
              , GoodsInfoName    TVarChar
              , LineFabricaName  TVarChar
@@ -641,7 +641,8 @@ BEGIN
              , Object_Goods.Id                AS GoodsId
              , Object_Goods.ObjectCode        AS GoodsCode
              , CASE WHEN tmpData.GoodsId <> -1 THEN Object_Goods.ValueData ELSE 'Обмен' END ::TVarChar  AS GoodsName
-             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+             , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+           , (COALESCE (ObjectString_GoodsGroupFull.ValueData, '') || COALESCE (Object_GoodsInfo.ValueData, '')) :: TVarChar AS NameFull
              , Object_GoodsGroup.ValueData    AS GoodsGroupName
              , Object_Composition.ValueData   AS CompositionName
              , Object_GoodsInfo.ValueData     AS GoodsInfoName
@@ -703,9 +704,9 @@ BEGIN
             LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = Object_PartionGoods.PeriodId
             LEFT JOIN Object AS Object_Fabrika          ON Object_Fabrika.Id          = Object_PartionGoods.FabrikaId
 
-            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
-                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpData.GoodsId
-                                  AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
+            LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
+                                   ON ObjectString_GoodsGroupFull.ObjectId = tmpData.GoodsId
+                                  AND ObjectString_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
 
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = tmpData.MovementId

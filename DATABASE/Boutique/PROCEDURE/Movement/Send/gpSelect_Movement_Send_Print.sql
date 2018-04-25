@@ -85,7 +85,8 @@ BEGIN
                                                        AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
                        WHERE MovementItem.MovementId = inMovementId
                          AND MovementItem.DescId     = zc_MI_Master()
-                         AND MovementItem.isErased   = false
+                         AND MovementItem.isErased   = FALSE
+                         AND MovementItem.Amount     > 0
                        )
 
        -- результат

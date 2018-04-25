@@ -47,8 +47,8 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     spGet_Unit: TdsdStoredProc;
-    PanelGoodsGroupNameFull: TPanel;
-    DBLabelGoodsGroupNameFull: TcxDBLabel;
+    PanelNameFull: TPanel;
+    DBLabelNameFull: TcxDBLabel;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     spMovementComplete: TdsdStoredProc;

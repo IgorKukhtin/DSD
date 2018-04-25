@@ -68,8 +68,8 @@ type
     FormParams: TdsdFormParams;
     spGet_Printer: TdsdStoredProc;
     actGet_Printer: TdsdExecStoredProc;
-    PanelGoodsGroupNameFull: TPanel;
-    DBLabelGoodsGroupNameFull: TcxDBLabel;
+    PanelNameFull: TPanel;
+    DBLabelNameFull: TcxDBLabel;
     PartnerName: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
     spGet_PrinterNull: TdsdStoredProc;

@@ -514,7 +514,7 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
       end
     end
   end
-  object PanelGoodsGroupNameFull: TPanel [2]
+  object PanelNameFull: TPanel [2]
     Left = 0
     Top = 395
     Width = 1362
@@ -522,11 +522,11 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 6
-    object DBLabelGoodsGroupNameFull: TcxDBLabel
+    object DBLabelNameFull: TcxDBLabel
       Left = 0
       Top = 0
       Align = alClient
-      DataBinding.DataField = 'GoodsGroupNameFull'
+      DataBinding.DataField = 'NameFull'
       DataBinding.DataSource = MasterDS
       ParentFont = False
       Properties.Alignment.Horz = taCenter
