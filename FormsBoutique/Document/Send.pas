@@ -120,6 +120,11 @@ type
     bbOpenReportTo: TdxBarButton;
     bbPrintIn: TdxBarButton;
     actPrintIn: TdsdPrintAction;
+    spInsertUpdate_MI_Send_Amount: TdsdStoredProc;
+    actUpdateAmount: TdsdExecStoredProc;
+    macUpdateAmountSingl: TMultiAction;
+    macUpdateAmount: TMultiAction;
+    bbUpdateAmount: TdxBarButton;
   private
   public
   end;

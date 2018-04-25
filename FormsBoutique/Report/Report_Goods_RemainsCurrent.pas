@@ -96,6 +96,8 @@ type
     PanelNameFull: TPanel;
     DBLabelNameFull: TcxDBLabel;
     PriceTax: TcxGridDBColumn;
+    actGet_User_curr: TdsdExecStoredProc;
+    macAddGoodsPrintList_Rem: TMultiAction;
   private
     { Private declarations }
   public

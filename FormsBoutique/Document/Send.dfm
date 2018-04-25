@@ -694,6 +694,14 @@ object SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateAmount'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMIContainer'
         end
         item
@@ -810,6 +818,10 @@ object SendForm: TSendForm
     end
     object bbPrintIn: TdxBarButton
       Action = actPrintIn
+      Category = 0
+    end
+    object bbUpdateAmount: TdxBarButton
+      Action = macUpdateAmount
       Category = 0
     end
   end
@@ -935,8 +947,6 @@ object SendForm: TSendForm
         end
         item
           StoredProc = spSelectMI
-        end
-        item
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1537,6 +1547,47 @@ object SendForm: TSendForm
         end>
       isShowModal = True
     end
+    object actUpdateAmount: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      StoredProc = spInsertUpdate_MI_Send_Amount
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_MI_Send_Amount
+        end>
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1086#1089#1090#1072#1090#1082#1072
+      Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1086#1089#1090#1072#1090#1082#1072
+      ImageIndex = 30
+    end
+    object macUpdateAmountSingl: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateAmount
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1086#1089#1090#1072#1090#1082#1072
+      ImageIndex = 30
+    end
+    object macUpdateAmount: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdateAmountSingl
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1055#1077#1088#1077#1084#1077#1089#1090#1080#1090#1100' '#1086#1089#1090#1072#1090#1086#1082'"?'
+      InfoAfterExecute = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1086#1089#1090#1072#1090#1082#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1086#1089#1090#1072#1090#1082#1072
+      Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1086#1089#1090#1072#1090#1082#1072
+      ImageIndex = 30
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -2133,5 +2184,127 @@ object SendForm: TSendForm
     PackSize = 1
     Left = 567
     Top = 208
+  end
+  object spInsertUpdate_MI_Send_Amount: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_Send'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Remains'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outOperPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPrice'
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCountForPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountForPrice'
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioOperPriceList'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPriceList'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalSumm'
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalSummBalance'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalSummBalance'
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalSummPriceList'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalSummPriceList'
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCurrencyValue'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CurrencyValue'
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outParValue'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ParValue'
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 134
+    Top = 343
   end
 end
