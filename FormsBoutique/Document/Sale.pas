@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox, cxSplitter;
+  cxImageComboBox, cxSplitter, cxDBLabel;
 
 type
   TSaleForm = class(TParentForm)
@@ -185,6 +185,8 @@ type
     HeaderChanger: THeaderChanger;
     spGet_TotalSumm_byClient: TdsdStoredProc;
     actGet_TotalSumm_byClient: TdsdDataSetRefresh;
+    PanelNameFull: TPanel;
+    DBLabelNameFull: TcxDBLabel;
   private
   public
   end;

@@ -355,7 +355,7 @@ BEGIN
              , Object_Goods.ValueData         AS GoodsName
              , tmpData.BarCode_item        :: TVarChar
              , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-           , (COALESCE (ObjectString_GoodsGroupFull.ValueData, '') || COALESCE (Object_GoodsInfo.ValueData, '')) :: TVarChar AS NameFull
+             , (COALESCE (ObjectString_GoodsGroupFull.ValueData, '') || ' - ' || COALESCE (Object_GoodsInfo.ValueData, '')) :: TVarChar AS NameFull
              , Object_GoodsGroup.ValueData    AS GoodsGroupName
              , Object_Composition.ValueData   AS CompositionName
              , Object_GoodsInfo.ValueData     AS GoodsInfoName

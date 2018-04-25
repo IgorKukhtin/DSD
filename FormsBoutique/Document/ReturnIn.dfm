@@ -371,25 +371,27 @@ object ReturnInForm: TReturnInForm
     Left = 0
     Top = 156
     Width = 1075
-    Height = 406
+    Height = 376
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 406
+    ExplicitHeight = 406
+    ClientRectBottom = 376
     ClientRectRight = 1075
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 382
       object cxGrid: TcxGrid
         Left = 0
         Top = 83
         Width = 1075
-        Height = 299
+        Height = 269
         Align = alClient
         TabOrder = 0
-        ExplicitTop = 81
+        ExplicitHeight = 299
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1357,6 +1359,39 @@ object ReturnInForm: TReturnInForm
         AlignSplitter = salTop
         Control = cxGrid1
       end
+    end
+  end
+  object PanelNameFull: TPanel
+    Left = 0
+    Top = 532
+    Width = 1075
+    Height = 30
+    Align = alBottom
+    BevelOuter = bvNone
+    TabOrder = 6
+    ExplicitLeft = -94
+    ExplicitTop = 403
+    ExplicitWidth = 1169
+    object DBLabelNameFull: TcxDBLabel
+      Left = 0
+      Top = 0
+      Align = alClient
+      DataBinding.DataField = 'NameFull'
+      DataBinding.DataSource = MasterDS
+      ParentFont = False
+      Properties.Alignment.Horz = taCenter
+      Properties.Alignment.Vert = taVCenter
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clNavy
+      Style.Font.Height = -12
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+      ExplicitWidth = 1169
+      Height = 30
+      Width = 1075
+      AnchorX = 538
+      AnchorY = 15
     end
   end
   object FormParams: TdsdFormParams

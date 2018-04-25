@@ -228,7 +228,7 @@ BEGIN
            , Object_Goods.ObjectCode        AS GoodsCode
            , Object_Goods.ValueData         AS GoodsName
            , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-           , (COALESCE (ObjectString_GoodsGroupFull.ValueData, '') || COALESCE (Object_GoodsInfo.ValueData, '')) :: TVarChar AS NameFull
+           , (COALESCE (ObjectString_GoodsGroupFull.ValueData, '') || ' - ' || COALESCE (Object_GoodsInfo.ValueData, '')) :: TVarChar AS NameFull
            , Object_Measure.ValueData       AS MeasureName
 
            , Object_Composition.ValueData   AS CompositionName

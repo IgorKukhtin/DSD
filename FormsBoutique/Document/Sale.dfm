@@ -349,24 +349,27 @@ object SaleForm: TSaleForm
     Left = 0
     Top = 155
     Width = 1066
-    Height = 314
+    Height = 284
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 314
+    ExplicitHeight = 314
+    ClientRectBottom = 284
     ClientRectRight = 1066
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 290
       object cxGrid: TcxGrid
         Left = 0
         Top = 83
         Width = 1066
-        Height = 207
+        Height = 177
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 207
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -691,7 +694,7 @@ object SaleForm: TSaleForm
             Options.Editing = False
             Width = 50
           end
-                    object BrandName: TcxGridDBColumn
+          object BrandName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
             DataBinding.FieldName = 'BrandName'
             HeaderAlignmentHorz = taCenter
@@ -1361,6 +1364,39 @@ object SaleForm: TSaleForm
         AlignSplitter = salTop
         Control = cxGrid1
       end
+    end
+  end
+  object PanelNameFull: TPanel
+    Left = 0
+    Top = 439
+    Width = 1066
+    Height = 30
+    Align = alBottom
+    BevelOuter = bvNone
+    TabOrder = 6
+    ExplicitLeft = -103
+    ExplicitTop = 403
+    ExplicitWidth = 1169
+    object DBLabelNameFull: TcxDBLabel
+      Left = 0
+      Top = 0
+      Align = alClient
+      DataBinding.DataField = 'NameFull'
+      DataBinding.DataSource = MasterDS
+      ParentFont = False
+      Properties.Alignment.Horz = taCenter
+      Properties.Alignment.Vert = taVCenter
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clNavy
+      Style.Font.Height = -12
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+      ExplicitWidth = 1169
+      Height = 30
+      Width = 1066
+      AnchorX = 533
+      AnchorY = 15
     end
   end
   object FormParams: TdsdFormParams

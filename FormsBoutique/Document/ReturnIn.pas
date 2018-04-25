@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox, cxSplitter, ChoicePeriod;
+  cxImageComboBox, cxSplitter, ChoicePeriod, cxDBLabel;
 
 type
   TReturnInForm = class(TParentForm)
@@ -189,6 +189,8 @@ type
     actGet_TotalSumm_byClient: TdsdDataSetRefresh;
     PeriodChoice: TPeriodChoice;
     isLine: TcxGridDBColumn;
+    PanelNameFull: TPanel;
+    DBLabelNameFull: TcxDBLabel;
   private
   public
   end;

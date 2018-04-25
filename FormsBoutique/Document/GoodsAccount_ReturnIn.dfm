@@ -364,24 +364,27 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
     Left = 0
     Top = 156
     Width = 1054
-    Height = 310
+    Height = 280
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 310
+    ExplicitHeight = 310
+    ClientRectBottom = 280
     ClientRectRight = 1054
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 286
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 1054
-        Height = 286
+        Height = 256
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 286
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -988,6 +991,39 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
       end
     end
   end
+  object PanelNameFull: TPanel
+    Left = 0
+    Top = 436
+    Width = 1054
+    Height = 30
+    Align = alBottom
+    BevelOuter = bvNone
+    TabOrder = 6
+    ExplicitLeft = -115
+    ExplicitTop = 403
+    ExplicitWidth = 1169
+    object DBLabelNameFull: TcxDBLabel
+      Left = 0
+      Top = 0
+      Align = alClient
+      DataBinding.DataField = 'NameFull'
+      DataBinding.DataSource = MasterDS
+      ParentFont = False
+      Properties.Alignment.Horz = taCenter
+      Properties.Alignment.Vert = taVCenter
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clNavy
+      Style.Font.Height = -12
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+      ExplicitWidth = 1169
+      Height = 30
+      Width = 1054
+      AnchorX = 527
+      AnchorY = 15
+    end
+  end
   object FormParams: TdsdFormParams
     Params = <
       item
@@ -1432,6 +1468,9 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
       ReportNameParam.Value = 'PrintMovement_ReturnOut'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
