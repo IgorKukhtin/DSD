@@ -1,7 +1,5 @@
 -- Function: gpInsertUpdate_Movement_Loss()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Loss (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Loss (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Loss (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Loss(
@@ -12,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Loss(
     IN inToId                 Integer   , -- Кому (в документе)
     IN inComment              TVarChar  , -- Примечание
     IN inSession              TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS RECORD
 AS
 $BODY$
@@ -20,11 +18,23 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Loss());
-     
+
 
      -- определяется уникальный № док.
-     IF COALESCE (ioId, 0) = 0 THEN
-        ioInvNumber:= CAST (NEXTVAL ('Movement_Loss_seq') AS TVarChar);  
+     IF vbUserId = zc_User_Sybase() THEN
+        -- ioInvNumber:= ioInvNumber;
+        UPDATE Movement SET InvNumber = ioInvNumber WHERE Movement.Id = ioId;
+        -- если такой элемент не был найден
+        IF NOT FOUND THEN
+           -- Ошибка
+           RAISE EXCEPTION 'Ошибка. NOT FOUND Movement <%>', ioId;
+        END IF;
+
+        -- !!!Выход!!!
+        RETURN;
+
+     ELSEIF COALESCE (ioId, 0) = 0 THEN
+        ioInvNumber:= CAST (NEXTVAL ('Movement_Loss_seq') AS TVarChar);
      ELSEIF vbUserId = zc_User_Sybase() THEN
         ioInvNumber:= (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = ioId);
      END IF;

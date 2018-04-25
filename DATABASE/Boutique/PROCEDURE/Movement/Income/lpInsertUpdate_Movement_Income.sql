@@ -1,6 +1,5 @@
 -- Function: lpInsertUpdate_Movement_Income()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
@@ -24,6 +23,17 @@ BEGIN
      -- проверка
      IF inOperDate <> DATE_TRUNC ('DAY', inOperDate) THEN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
+     END IF;
+
+     -- проверка - Поставщик
+     IF COALESCE (inFromId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка. Не установлено значение <Поставщик>.';
+     END IF;
+     -- проверка - Подразделение
+     IF COALESCE (inToId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка. Не установлено значение <Подразделение>.';
      END IF;
 
      -- проверка

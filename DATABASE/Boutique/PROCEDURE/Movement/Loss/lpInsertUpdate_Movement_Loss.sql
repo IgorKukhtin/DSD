@@ -1,7 +1,5 @@
 -- Function: lpInsertUpdate_Movement_Loss()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Loss (Integer, TVarChar, TDateTime, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Loss (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, TFloat, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Loss (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Loss(
@@ -16,7 +14,6 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Loss(
 RETURNS Integer
 AS
 $BODY$
-   DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка
@@ -25,11 +22,18 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
 
+     -- проверка - Подразделение
+     IF COALESCE (inFromId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка. Не установлено значение <Подразделение (От кого)>.';
+     END IF;
+
+
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId        := ioId                                        
+     ioId := lpInsertUpdate_Movement (ioId        := ioId
                                     , inDescId    := zc_Movement_Loss()
                                     , inInvNumber := inInvNumber
                                     , inOperDate  := inOperDate

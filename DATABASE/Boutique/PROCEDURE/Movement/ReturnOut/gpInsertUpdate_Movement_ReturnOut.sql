@@ -1,7 +1,5 @@
 -- Function: gpInsertUpdate_Movement_ReturnOut()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnOut (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnOut (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnOut (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnOut(
@@ -15,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnOut(
    OUT outParValue            TFloat    , -- Номинал для перевода в валюту баланса
     IN inComment              TVarChar  , -- Примечание
     IN inSession              TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS RECORD
 AS
 $BODY$
@@ -26,8 +24,20 @@ BEGIN
 
 
      -- определяется уникальный № док.
-     IF COALESCE (ioId, 0) = 0 THEN
-        ioInvNumber:= CAST (NEXTVAL ('Movement_ReturnOut_seq') AS TVarChar);  
+     IF vbUserId = zc_User_Sybase() THEN
+        -- ioInvNumber:= ioInvNumber;
+        UPDATE Movement SET InvNumber = ioInvNumber WHERE Movement.Id = ioId;
+        -- если такой элемент не был найден
+        IF NOT FOUND THEN
+           -- Ошибка
+           RAISE EXCEPTION 'Ошибка. NOT FOUND Movement <%>', ioId;
+        END IF;
+
+        -- !!!Выход!!!
+        RETURN;
+
+     ELSEIF COALESCE (ioId, 0) = 0 THEN
+        ioInvNumber:= CAST (NEXTVAL ('Movement_ReturnOut_seq') AS TVarChar);
      ELSEIF vbUserId = zc_User_Sybase() THEN
         ioInvNumber:= (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = ioId);
      END IF;
@@ -47,7 +57,7 @@ BEGIN
          outCurrencyValue:= 0;
          outParValue     := 0;
      END IF;
-     
+
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement_ReturnOut (ioId                := ioId
                                               , inInvNumber         := ioInvNumber

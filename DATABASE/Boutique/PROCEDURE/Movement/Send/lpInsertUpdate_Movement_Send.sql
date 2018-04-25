@@ -1,6 +1,5 @@
 -- Function: lpInsertUpdate_Movement_Send()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Send(
@@ -15,7 +14,6 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Send(
 RETURNS Integer
 AS
 $BODY$
-   DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка
@@ -23,6 +21,23 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
+
+     -- проверка - Подразделение
+     IF COALESCE (inFromId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка. Не установлено значение <Подразделение (От кого)>.';
+     END IF;
+     -- проверка - Подразделение
+     IF COALESCE (inToId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка. Не установлено значение <Подразделение (Кому)>.';
+     END IF;
+     -- проверка - Подразделение
+     IF COALESCE (inFromId, 0) = COALESCE (inToId, 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка. Значение <Подразделение (От кого)> должно отличаться от <Подразделение (Кому)>.';
+     END IF;
+
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
