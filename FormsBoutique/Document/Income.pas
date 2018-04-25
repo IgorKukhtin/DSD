@@ -136,6 +136,7 @@ type
     bbReport_Goods: TdxBarButton;
     actPrintInSecond: TdsdPrintAction;
     bbPrintInSecond: TdxBarButton;
+    isProtocol: TcxGridDBColumn;
   private
   public
   end;

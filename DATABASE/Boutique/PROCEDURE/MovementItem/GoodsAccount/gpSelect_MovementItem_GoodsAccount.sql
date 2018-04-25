@@ -186,7 +186,7 @@ BEGIN
                              , Movement.DescId                                    AS DescId
                              , Movement.OperDate                                  AS OperDate
                              , Movement.InvNumber                                 AS InvNumber
-                             , Object_PartionMI.ObjectCode                        AS SaleMI_ID
+                             , Object_PartionMI.ObjectCode                        AS SaleMI_Id
                              , MovementItem.Amount                                AS Amount_Sale
                              , COALESCE (MIFloat_OperPriceList.ValueData, 0)      AS OperPriceList
 
@@ -275,7 +275,7 @@ BEGIN
                              , COALESCE (tmpMI_Master.DescId, tmpMI_Sale.DescId)                 AS DescId_Sale
                              , COALESCE (tmpMI_Master.OperDate, tmpMI_Sale.OperDate)             AS OperDate_Sale
                              , COALESCE (tmpMI_Master.InvNumber, tmpMI_Sale.InvNumber)           AS InvNumber_Sale
-                             , COALESCE (tmpMI_Master.SaleMI_ID, tmpMI_Sale.SaleMI_ID)           AS SaleMI_Id
+                             , COALESCE (tmpMI_Master.SaleMI_Id, tmpMI_Sale.SaleMI_Id)           AS SaleMI_Id
                              , COALESCE (tmpMI_Master.Amount_Sale, tmpMI_Sale.Amount)            AS Amount_Sale
                              , COALESCE (tmpMI_Master.OperPriceList, tmpMI_Sale.OperPriceList)   AS OperPriceList_Sale
 
@@ -488,7 +488,7 @@ BEGIN
                              , MI_Master.isErased                                        AS isErased
                              , ROW_NUMBER() OVER (PARTITION BY MI_Master.isErased ORDER BY MI_Master.Id ASC) AS Ord
 
-                             , Object_PartionMI.ObjectCode                               AS SaleMI_ID
+                             , Object_PartionMI.ObjectCode                               AS SaleMI_Id
 
                         FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                              JOIN MovementItem AS MI_Master
@@ -643,7 +643,7 @@ BEGIN
            , tmpMI_Child_Exc.Amount_EUR                         :: TFloat AS Amount_EUR_Exc    -- Сумма EUR - обмен приход
            , tmpMI_Child_Exc.Amount_GRN                         :: TFloat AS Amount_GRN_Exc    -- Сумма GRN - обмен расход
 
-           , tmpMI.SaleMI_ID                                   :: Integer AS SaleMI_Id
+           , tmpMI.SaleMI_Id                                   :: Integer AS SaleMI_Id
            , Movement_Sale.Id                                             AS MovementId_Sale
            , Movement_Sale.InvNumber                                      AS InvNumber_Sale
            , Movement_Sale.OperDate                                       AS OperDate_Sale

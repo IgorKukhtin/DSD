@@ -2,7 +2,7 @@ object IncomeForm: TIncomeForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
-  ClientHeight = 406
+  ClientHeight = 479
   ClientWidth = 925
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -160,24 +160,27 @@ object IncomeForm: TIncomeForm
     Left = 0
     Top = 123
     Width = 925
-    Height = 283
+    Height = 356
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 283
+    ExplicitHeight = 283
+    ClientRectBottom = 356
     ClientRectRight = 925
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 259
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 925
-        Height = 259
+        Height = 332
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 259
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -478,6 +481,14 @@ object IncomeForm: TIncomeForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
+          end
+          object isProtocol: TcxGridDBColumn
+            Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'isProtocol'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
           object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'

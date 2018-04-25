@@ -44,11 +44,15 @@ BEGIN
                                 , zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData) AS Summa
                                 , zfCalc_SummChangePercent (MovementItem.Amount, MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData) AS AmountToPay
                            FROM MovementItem
+                                LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
+                                                                 ON MILinkObject_PartionMI.MovementItemId = MovementItem.Id
+                                                                AND MILinkObject_PartionMI.DescId         = zc_MILinkObject_PartionMI()
+                                LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = MILinkObject_PartionMI.ObjectId
                                 LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
-                                                            ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
+                                                            ON MIFloat_OperPriceList.MovementItemId = COALESCE (Object_PartionMI.ObjectCode, MovementItem.Id)
                                                            AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
                                 LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
-                                                            ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                            ON MIFloat_ChangePercent.MovementItemId = COALESCE (Object_PartionMI.ObjectCode, MovementItem.Id)
                                                            AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
                            WHERE MovementItem.MovementId = inMovementId
                              AND MovementItem.DescId     = zc_MI_Master()
@@ -235,10 +239,10 @@ BEGIN
           , tmp_MI_res AS (SELECT tmp_MI_Master.MovementItemId
                                 , tmp_MI_Master.AmountToPay - tmp_MI_Master.AmountDiscount AS AmountToPay
                                 , tmp_MI_Master.AmountDiscount           AS AmountDiscount
-                                , COALESCE (tmp_MI_GRN_res.Amount, 0)   AS Amount_GRN
-                                , COALESCE (tmp_MI_Card_res.Amount, 0)  AS Amount_Card
-                                , COALESCE (tmp_MI_EUR_res.Amount, 0)   AS Amount_EUR_grn
-                                , COALESCE (tmp_MI_USD_res.Amount, 0)   AS Amount_USD_grn
+                                , COALESCE (tmp_MI_GRN_res.Amount, 0)    AS Amount_GRN
+                                , COALESCE (tmp_MI_Card_res.Amount, 0)   AS Amount_Card
+                                , COALESCE (tmp_MI_EUR_res.Amount, 0)    AS Amount_EUR_grn
+                                , COALESCE (tmp_MI_USD_res.Amount, 0)    AS Amount_USD_grn
                            FROM tmp_MI_Master
                                 LEFT JOIN tmp_MI_GRN_res  ON tmp_MI_GRN_res.MovementItemId  = tmp_MI_Master.MovementItemId
                                 LEFT JOIN tmp_MI_Card_res ON tmp_MI_Card_res.MovementItemId = tmp_MI_Master.MovementItemId
@@ -286,7 +290,7 @@ BEGIN
 
                            FROM tmp_MI_res
                           )
-          -- 6.2. получили реальные суммы - ќ“Ѕ–ќ—»Ћ» "хвостики" в √–Ќ если по ним»“ќ√ќ =0
+          -- 6.2. получили реальные суммы - ќ“Ѕ–ќ—»Ћ» "хвостики" в √–Ќ если по ним »“ќ√ќ = 0
         , tmp_Currency AS (SELECT tmp_Currency_all.MovementItemId
                                 , CASE WHEN (SELECT SUM (tmp.Amount_EUR_grn) FROM tmp_Currency_all AS tmp) = 0 THEN 0 ELSE tmp_Currency_all.Amount_EUR_grn END AS Amount_EUR_grn
                                 , tmp_Currency_all.Amount_EUR
@@ -494,7 +498,7 @@ $BODY$
 
 -- тест
 /*
-WITH tmp AS (SELECT * FROM lpSelect_MI_Child_calc (inMovementId:= 3190, inUnitId:= 6332, inAmountGRN:= 22, inAmountUSD:= 0, inAmountEUR:= 432 , inAmountCard:= 0, inAmountDiscount:= 0, inCurrencyValueUSD:= 0, inParValueUSD:= 1, inCurrencyValueEUR:= 29, inParValueEUR:= 1, inUserId:= zfCalc_UserAdmin() :: Integer))
+WITH tmp AS (SELECT * FROM lpSelect_MI_Child_calc (inMovementId:= 250900, inUnitId:= 1539, inAmountGRN:= 0, inAmountUSD:= 0, inAmountEUR:= 320 , inAmountCard:= 0, inAmountDiscount:= 0, inCurrencyValueUSD:= 0, inParValueUSD:= 1, inCurrencyValueEUR:= 32.2, inParValueEUR:= 1, inUserId:= zfCalc_UserAdmin() :: Integer))
 -- WITH tmp AS (SELECT * FROM lpSelect_MI_Child_calc (inMovementId:= 8, inUnitId:= 6332, inAmountGRN:= 1300, inAmountUSD:= 500, inAmountEUR:= 400, inAmountCard:= 0, inAmountDiscount:= 1000, inCurrencyValueUSD:= 25, inParValueUSD:= 1, inCurrencyValueEUR:= 30, inParValueEUR:= 1, inUserId:= zfCalc_UserAdmin() :: Integer))
 SELECT tmpAll.ParentId, tmp_GRN.Amount AS Amount_GRN, tmp_Card.Amount AS Amount_Card, tmp_EUR.Amount AS Amount_EUR, tmp_EUR.Amount_GRN AS Amount_EUR_GRN, tmp_EUR.CurrencyId AS Id_EUR, tmp_USD.Amount AS Amount_USD, tmp_USD.Amount_GRN AS Amount_USD_GRN, tmp_USD.CurrencyId AS Id_USD, tmp_EUR.CurrencyValue, tmp_EUR.ParValue, tmp_USD.CurrencyValue, tmp_USD.ParValue, tmp_EUR.CashId_Exc AS CashId_Exc_fromEUR, tmp_USD.CashId_Exc AS CashId_Exc_fromUSD
 FROM (SELECT DISTINCT tmp.ParentId FROM tmp) AS tmpAll

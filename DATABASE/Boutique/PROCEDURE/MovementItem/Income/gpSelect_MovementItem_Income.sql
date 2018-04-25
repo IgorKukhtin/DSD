@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, PartionId Integer, GoodsId Integer, GoodsCode Integer
              , Amount TFloat
              , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat
              , TotalSumm TFloat, TotalSummBalance TFloat, TotalSummPriceList TFloat
+             , isProtocol Boolean
              , isErased Boolean
               )
 AS
@@ -27,10 +28,16 @@ $BODY$
   DECLARE vbCurrencyId_Doc Integer;
   DECLARE vbCurrencyValue  TFloat;
   DECLARE vbParValue       TFloat;
+  DECLARE vbStartDate      TDateTime;
+  DECLARE vbEndDate        TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      --vbUserId:= lpGetUserBySession (inSession);
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_MI_Income());
+
+     vbStartDate:= CURRENT_DATE - INTERVAL '1 DAY';
+     vbEndDate  := CURRENT_DATE;
+
 
      -- Определили курс в документе
      SELECT MLO_CurrencyDocument.ObjectId AS CurrencyId_Doc
@@ -83,6 +90,14 @@ BEGIN
                                                         ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                                        AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
                      )
+   , tmpProtocol AS (SELECT DISTINCT MovementItemProtocol.MovementItemId
+                     FROM MovementItemProtocol
+                     WHERE MovementItemProtocol.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                       AND MovementItemProtocol.OperDate >= vbStartDate AND MovementItemProtocol.OperDate < vbEndDate + INTERVAL '1 DAY'
+                    )
+
+
+
        -- Результат
        SELECT
              tmpMI.Id
@@ -108,8 +123,11 @@ BEGIN
            , tmpMI.TotalSumm           :: TFloat AS TotalSumm
            , tmpMI.TotalSummBalance    :: TFloat AS TotalSummBalance
            , tmpMI.TotalSummPriceList  :: TFloat AS TotalSummPriceList
+           , CASE WHEN tmpProtocol.MovementItemId > 0 THEN TRUE ELSE FALSE END AS isProtocol
            , tmpMI.isErased
        FROM tmpMI
+            LEFT JOIN tmpProtocol ON tmpProtocol.MovementItemId = tmpMI.Id
+
             LEFT JOIN Object_PartionGoods               ON Object_PartionGoods.MovementItemId = tmpMI.PartionId
 
             LEFT JOIN Object AS Object_Goods            ON Object_Goods.Id       = tmpMI.GoodsId

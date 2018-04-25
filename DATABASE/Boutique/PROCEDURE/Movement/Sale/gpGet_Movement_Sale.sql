@@ -50,6 +50,9 @@ BEGIN
                                             ON MovementLinkObject_From.MovementId = Movement.Id
                                            AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
                                            AND MovementLinkObject_From.ObjectId   = vbUnitId_User
+                                    INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                           AND MovementItem.DescId     = zc_MI_Master()
+                                                           AND MovementItem.isErased   = FALSE
                                WHERE Movement.DescId   = zc_Movement_Sale()
                                  AND Movement.StatusId = zc_Enum_Status_UnComplete()
                                  AND Movement.OperDate = CURRENT_DATE
