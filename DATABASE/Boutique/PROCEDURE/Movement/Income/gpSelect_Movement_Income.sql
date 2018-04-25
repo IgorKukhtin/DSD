@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Income(
     IN inIsErased          Boolean   , -- показывать удаленные Да/Нет
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSumm TFloat, TotalSummBalance TFloat, TotalSummPriceList TFloat
              , CurrencyValue TFloat, ParValue TFloat
@@ -35,7 +35,7 @@ BEGIN
 
        SELECT
              Movement.Id
-           , Movement.InvNumber
+           , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
            , Movement.OperDate
            , Object_Status.ObjectCode                    AS StatusCode
            , Object_Status.ValueData                     AS StatusName

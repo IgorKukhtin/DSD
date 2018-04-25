@@ -74,6 +74,8 @@ BEGIN
 
                           , CASE WHEN (SELECT tmpMovement.DocumentTaxKindId FROM tmpMovement) IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                                                 , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                                                , zc_Enum_DocumentTaxKind_Goods()
+                                                                                                , zc_Enum_DocumentTaxKind_Change()
                                                                                                  )
                                   AND tmpMICorrective.LineNumTax <> 0 
                                       THEN tmpMICorrective.LineNumTax

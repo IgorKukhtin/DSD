@@ -1,6 +1,5 @@
 -- Function: gpGet_Movement_ReturnIn (Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpGet_Movement_ReturnIn (Integer, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_ReturnIn (Integer, TDateTime, TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_ReturnIn(
@@ -70,7 +69,7 @@ BEGIN
          SELECT
                0 AS Id
              , CAST (lfGet_InvNumber (0, zc_Movement_ReturnIn()) AS TVarChar) AS InvNumber
-             , inOperDate                       AS OperDate
+             , CASE WHEN inOperDate > CURRENT_DATE THEN CURRENT_DATE ELSE inOperDate END :: TDateTime AS OperDate
              , Object_Status.Code               AS StatusCode
              , Object_Status.Name               AS StatusName
             

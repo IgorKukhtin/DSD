@@ -28,7 +28,7 @@ BEGIN
          SELECT
                0 AS Id
              , CAST (lfGet_InvNumber (0, zc_Movement_ReturnOut()) AS TVarChar) AS InvNumber
-             , inOperDate            AS OperDate
+             , CASE WHEN inOperDate > CURRENT_DATE THEN CURRENT_DATE ELSE CURRENT_DATE /*inOperDate*/ END :: TDateTime AS OperDate
              , lfGet.Code            AS StatusCode
              , lfGet.Name            AS StatusName
 

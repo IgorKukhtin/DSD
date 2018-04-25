@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Loss(
     IN inIsErased          Boolean   , -- показывать удаленные Да/Нет
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSummBalance TFloat, TotalSummPriceList TFloat
              , FromName TVarChar, ToName TVarChar
@@ -31,7 +31,7 @@ BEGIN
 
        SELECT
              Movement.Id
-           , Movement.InvNumber
+           , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
            , Movement.OperDate
            , Object_Status.ObjectCode                    AS StatusCode
            , Object_Status.ValueData                     AS StatusName
@@ -94,4 +94,4 @@ $BODY$
 */
 
 -- тест
- --SELECT * FROM gpSelect_Movement_Loss (inStartDate:= '01.01.2015', inEndDate:= '01.02.2015', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Loss (inStartDate:= '01.01.2015', inEndDate:= '01.02.2015', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

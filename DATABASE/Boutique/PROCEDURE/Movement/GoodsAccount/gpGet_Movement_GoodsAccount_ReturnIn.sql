@@ -43,7 +43,7 @@ BEGIN
                0 AS Id
              --, CAST (NEXTVAL ('Movement_GoodsAccount_seq') AS TVarChar) AS InvNumber
              , CAST (lfGet_InvNumber (0, zc_Movement_GoodsAccount()) AS TVarChar) AS InvNumber
-             , inOperDate                       AS OperDate
+             , CASE WHEN inOperDate > CURRENT_DATE THEN CURRENT_DATE ELSE inOperDate END :: TDateTime AS OperDate
              , Object_Status.Code               AS StatusCode
              , Object_Status.Name               AS StatusName
             
