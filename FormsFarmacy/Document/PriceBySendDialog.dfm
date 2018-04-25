@@ -51,7 +51,7 @@ object PriceBySendDialogForm: TPriceBySendDialogForm
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 71
-    Top = 46
+    Top = 30
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <

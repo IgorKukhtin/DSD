@@ -702,6 +702,14 @@ object SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMIContainer'
         end
         item
@@ -822,6 +830,10 @@ object SendForm: TSendForm
     end
     object bbUpdateAmount: TdxBarButton
       Action = macUpdateAmount
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = macUpdateAll
       Category = 0
     end
   end
@@ -1588,6 +1600,105 @@ object SendForm: TSendForm
       Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1086#1089#1090#1072#1090#1082#1072
       ImageIndex = 30
     end
+    object spUpdatePersent: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_Discount
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_Discount
+        end>
+      Caption = #1057#1082#1080#1076#1082#1072
+      Hint = #1057#1082#1080#1076#1082#1072
+      ImageIndex = 74
+    end
+    object macUpdatePersent: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdatePersent
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1082#1080#1076#1082#1091
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1082#1080#1076#1082#1091
+      ImageIndex = 74
+    end
+    object macUpdateAll: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogDiscount
+        end
+        item
+          Action = macUpdatePersent
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' % '#1089#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1090#1086#1074#1072#1088#1072#1084'?'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' % '#1089#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' % '#1089#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
+      ImageIndex = 74
+    end
+    object ExecuteDialogDiscount: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099
+      ImageIndex = 35
+      FormName = 'TDiscountPeriodItemBySendDialogForm'
+      FormNameParam.Value = 'TDiscountPeriodItemBySendDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42856d
+          Component = FormParams
+          ComponentItem = 'StartDateDiscount'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = '0'
+          Component = GuidesTo
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = GuidesTo
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Persent'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'Persent'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inStartDate'
+          Value = 'NULL'
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -2232,24 +2343,6 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outOperPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'OperPrice'
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outCountForPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'CountForPrice'
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'ioOperPriceList'
         Value = Null
         Component = MasterCDS
@@ -2257,54 +2350,65 @@ object SendForm: TSendForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outTotalSumm'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'TotalSumm'
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outTotalSummBalance'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'TotalSummBalance'
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outTotalSummPriceList'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'TotalSummPriceList'
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outCurrencyValue'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'CurrencyValue'
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outParValue'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'ParValue'
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 134
     Top = 343
+  end
+  object spInsertUpdate_Discount: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_ObjectHistory_DiscountPeriodItemLast'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = '0'
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 42856d
+        Component = FormParams
+        ComponentItem = 'StartDateDiscount'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue'
+        Value = 0.000000000000000000
+        Component = FormParams
+        ComponentItem = 'Persent'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsLast'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 344
+    Top = 192
   end
 end

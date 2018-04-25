@@ -125,6 +125,12 @@ type
     macUpdateAmountSingl: TMultiAction;
     macUpdateAmount: TMultiAction;
     bbUpdateAmount: TdxBarButton;
+    spUpdatePersent: TdsdExecStoredProc;
+    macUpdatePersent: TMultiAction;
+    macUpdateAll: TMultiAction;
+    ExecuteDialogDiscount: TExecuteDialog;
+    spInsertUpdate_Discount: TdsdStoredProc;
+    bb: TdxBarButton;
   private
   public
   end;

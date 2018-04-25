@@ -838,6 +838,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountPeriodItemBySendDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDiscountPeriodItemBySendDialogForm');
 end;
 procedure TLoadFormTest.LoadSaleFormTest;
 begin

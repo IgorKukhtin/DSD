@@ -1014,6 +1014,10 @@
 				<Form>ClientSMSForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Document\DiscountPeriodItemBySendDialog.pas">
+				<Form>DiscountPeriodItemBySendDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
