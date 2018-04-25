@@ -92,14 +92,20 @@ BEGIN
     
     --залили пустографку для продаж по дням
     INSERT INTO tmp_SoldGoodsOneDay(GoodsId,NumberOfDay,SoldCount) 
-    SELECT Object_Goods.ID, NumberDay,0 
-    FROM tmp_AllDayCount
-        CROSS JOIN Object_Goods_View AS Object_Goods
-        INNER JOIN tmpPrice AS Object_Price
-                            ON Object_Price.GoodsId = Object_Goods.Id
-                           AND Object_Price.UnitId = inUnitId 
-    WHERE Object_Goods.IsErased = FALSE
-      AND Object_Goods.ObjectId = vbObjectId;
+       WITH 
+           tmpGoods AS (SELECT ObjectLink_Goods_Object.ObjectId AS Id
+                        FROM ObjectLink AS ObjectLink_Goods_Object
+                             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId 
+                        WHERE ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                          AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
+                          AND Object_Goods.isErased = FALSE
+                        )
+       SELECT Object_Goods.ID, NumberDay,0 
+       FROM tmp_AllDayCount
+           CROSS JOIN tmpGoods AS Object_Goods
+           INNER JOIN tmpPrice AS Object_Price
+                               ON Object_Price.GoodsId = Object_Goods.Id
+                              AND Object_Price.UnitId = inUnitId;
 
     --Таблица для продаж
     CREATE TEMP TABLE tmp_OneDaySold(
@@ -108,6 +114,7 @@ BEGIN
         Sold      TFloat,
         primary key(GoodsId,DayCount)
     ) ON COMMIT DROP;
+    
     --результат вычислений
     CREATE TEMP TABLE tmp_ResultSet(
         GoodsId integer not null,
