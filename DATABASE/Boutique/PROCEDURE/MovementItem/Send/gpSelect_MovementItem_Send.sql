@@ -123,7 +123,7 @@ BEGIN
                              INNER JOIN Container ON Container.PartionId     = Object_PartionGoods.MovementItemId
                                                  AND Container.WhereObjectId = vbUnitId_From
                                                  AND Container.DescId        = zc_Container_count()
-                                                 AND Container.Amount        <> 0
+                                                 AND COALESCE (Container.Amount,0)  <> 0
                                                  -- !!!обязательно условие, т.к. мог меняться GoodsId и тогда в Container - несколько строк!!!
                                                  AND Container.ObjectId      = Object_PartionGoods.GoodsId
                              LEFT JOIN ContainerLinkObject AS CLO_Client
@@ -153,6 +153,24 @@ BEGIN
                                                            AND OHF_Value.DescId          = zc_ObjectHistoryFloat_PriceListItem_Value()
                          )
        */
+   -- остатки
+   , tmpContainer AS (SELECT Container.ObjectId
+                           , Container.PartionId
+                           , SUM (COALESCE(Container.Amount, 0)) AS Amount
+                      FROM tmpMI
+                           INNER JOIN Container ON Container.PartionId     = tmpMI.PartionId
+                                               AND Container.WhereObjectId = vbUnitId_From
+                                               AND Container.DescId        = zc_Container_count()
+                                               AND COALESCE(Container.Amount, 0) <> 0
+                                               -- !!!обязательно условие, т.к. мог меняться GoodsId и тогда в Container - несколько строк!!!
+                                               AND Container.ObjectId      = tmpMI.GoodsId
+                           LEFT JOIN ContainerLinkObject AS CLO_Client
+                                                         ON CLO_Client.ContainerId = Container.Id
+                                                        AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
+                      WHERE CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
+                      GROUP BY Container.ObjectId
+                             , Container.PartionId
+                     )
        
            -- результат
            SELECT
@@ -253,13 +271,16 @@ BEGIN
            FROM tmpMI
                 LEFT JOIN Object_PartionGoods    ON Object_PartionGoods.MovementItemId = tmpMI.PartionId                                 
                 LEFT JOIN Movement  AS Movement_Partion ON Movement_Partion.Id = Object_PartionGoods.MovementId
+                
+                LEFT JOIN tmpContainer AS Container_From ON Container_From.PartionId = tmpMI.PartionId
+                                                        AND Container_From.ObjectId  = tmpMI.GoodsId
 
-                LEFT JOIN Container AS Container_From
+            /*    LEFT JOIN Container AS Container_From
                                     ON Container_From.PartionId     = tmpMI.PartionId
                                    AND Container_From.ObjectId      = tmpMI.GoodsId
                                    AND Container_From.WhereObjectId = vbUnitId_From
                                    AND Container_From.DescId        = zc_Container_count()
-
+*/
                 LEFT JOIN Object AS Object_Goods            ON Object_Goods.Id            = tmpMI.GoodsId
                 LEFT JOIN Object AS Object_GoodsGroup       ON Object_GoodsGroup.Id       = Object_PartionGoods.GoodsGroupId
                 LEFT JOIN Object AS Object_Measure          ON Object_Measure.Id          = Object_PartionGoods.MeasureId
@@ -315,18 +336,24 @@ BEGIN
                                                             ON MIFloat_ParValue.MovementItemId = MovementItem.Id
                                                            AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue() 
                            )
-   , tmpContainer AS (SELECT DISTINCT Container.*
+   , tmpContainer AS (SELECT Container.ObjectId
+                           , Container.PartionId
+                           , SUM (COALESCE(Container.Amount, 0)) AS Amount
                       FROM tmpMI
                            INNER JOIN Container ON Container.PartionId     = tmpMI.PartionId
                                                AND Container.WhereObjectId = vbUnitId_From
                                                AND Container.DescId        = zc_Container_count()
+                                               AND COALESCE(Container.Amount, 0) <> 0
                                                -- !!!обязательно условие, т.к. мог меняться GoodsId и тогда в Container - несколько строк!!!
                                                AND Container.ObjectId      = tmpMI.GoodsId
                            LEFT JOIN ContainerLinkObject AS CLO_Client
                                                          ON CLO_Client.ContainerId = Container.Id
                                                         AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
                       WHERE CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
+                      GROUP BY Container.ObjectId
+                             , Container.PartionId
                      )
+
            -- результат
            SELECT
                  tmpMI.Id
@@ -372,6 +399,7 @@ BEGIN
                 LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id = Object_PartionGoods.MovementId
                 
                 LEFT JOIN tmpContainer AS Container_From ON Container_From.PartionId = tmpMI.PartionId
+                                                        AND Container_From.ObjectId  = tmpMI.GoodsId
 
                 LEFT JOIN Object AS Object_GoodsGroup       ON Object_GoodsGroup.Id       = Object_PartionGoods.GoodsGroupId
                 LEFT JOIN Object AS Object_Measure          ON Object_Measure.Id          = Object_PartionGoods.MeasureId
