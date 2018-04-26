@@ -10,7 +10,12 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_PriceListGoodsItem(
 RETURNS TABLE (Id Integer, StartDate TDateTime, EndDate TDateTime, ValuePrice TFloat, isErased Boolean)
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
+
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_OH_PriceListGoodsItem());
+    --vbUserId:= lpGetUserBySession (inSession);
 
      -- Выбираем данные
      RETURN QUERY 

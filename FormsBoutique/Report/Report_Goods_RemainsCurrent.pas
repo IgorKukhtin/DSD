@@ -98,6 +98,9 @@ type
     PriceTax: TcxGridDBColumn;
     actGet_User_curr: TdsdExecStoredProc;
     macAddGoodsPrintList_Rem: TMultiAction;
+    actPriceListGoods: TdsdOpenForm;
+    bbPriceListGoods: TdxBarButton;
+    actDeleteGoodsPrintList: TdsdExecStoredProc;
   private
     { Private declarations }
   public

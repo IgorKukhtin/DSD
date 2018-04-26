@@ -131,6 +131,8 @@ type
     ExecuteDialogDiscount: TExecuteDialog;
     spInsertUpdate_Discount: TdsdStoredProc;
     bb: TdxBarButton;
+    DiscountTax_From: TcxGridDBColumn;
+    DiscountTax_To: TcxGridDBColumn;
   private
   public
   end;

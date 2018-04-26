@@ -489,7 +489,57 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
   inherited ActionList: TActionList
     Left = 39
     Top = 194
-    object actUpdateAmountChangePercentList: TMultiAction [0]
+    object actPrintSaleOrderTax: TdsdPrintAction [0]
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_SaleOrderTax
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_SaleOrderTax
+        end>
+      Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1085#1072' %'
+      Hint = #1047#1072#1103#1074#1082#1072'/'#1086#1090#1075#1088#1091#1079#1082#1072' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1085#1072' %'
+      ImageIndex = 18
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName;PartionGoods'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Sale_Order'
+      ReportNameParam.Value = 'PrintMovement_Sale_Order'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actUpdateAmountChangePercentList: TMultiAction [1]
       Category = 'UpdateAmount'
       MoveParams = <>
       ActionList = <
@@ -513,7 +563,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         #1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')>'
       ImageIndex = 42
     end
-    object spUpdateAmountChangePercent: TdsdExecStoredProc [1]
+    object spUpdateAmountChangePercent: TdsdExecStoredProc [2]
       Category = 'UpdateAmount'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -524,7 +574,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         end>
       Caption = 'spUpdateAmountPartner'
     end
-    object spUpdateAmountChangePercentList: TMultiAction [3]
+    object spUpdateAmountChangePercentList: TMultiAction [4]
       Category = 'UpdateAmount'
       MoveParams = <>
       ActionList = <
@@ -605,7 +655,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    object actUpdateAmountPartnerList: TMultiAction [10]
+    object actUpdateAmountPartnerList: TMultiAction [11]
       Category = 'UpdateAmount'
       MoveParams = <>
       ActionList = <
@@ -629,7 +679,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         #1076')>'
       ImageIndex = 41
     end
-    object spUpdateAmountPartner: TdsdExecStoredProc [20]
+    object spUpdateAmountPartner: TdsdExecStoredProc [21]
       Category = 'UpdateAmount'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -640,7 +690,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         end>
       Caption = 'spUpdateAmountPartner'
     end
-    object spUpdateAmountPartnerList: TMultiAction [22]
+    object spUpdateAmountPartnerList: TMultiAction [23]
       Category = 'UpdateAmount'
       MoveParams = <>
       ActionList = <
@@ -707,6 +757,9 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintOut: TdsdPrintAction
       Category = 'DSDLib'
@@ -760,9 +813,12 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintSaleOrder: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'Print'
       MoveParams = <
         item
           FromParam.Name = 'id'
@@ -808,6 +864,9 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -862,6 +921,9 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -950,6 +1012,9 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actGet_TTN: TdsdExecStoredProc
       Category = 'Print_TTN'
@@ -1069,6 +1134,9 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -1214,6 +1282,10 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintSaleOrderTax'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1271,6 +1343,10 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
     end
     object bbPrintPackGross: TdxBarButton
       Action = actPrintPackGross
+      Category = 0
+    end
+    object bbPrintSaleOrderTax: TdxBarButton
+      Action = actPrintSaleOrderTax
       Category = 0
     end
   end
@@ -1516,6 +1592,13 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDiffTax'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 527
@@ -1716,5 +1799,49 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
     PackSize = 1
     Left = 415
     Top = 272
+  end
+  object spSelectPrint_SaleOrderTax: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_Order_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Order'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Weighing'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDiff'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDiffTax'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 567
+    Top = 176
   end
 end

@@ -104,6 +104,9 @@ type
     spSelectPrint_Pack: TdsdStoredProc;
     bbPrintPackGross: TdxBarButton;
     actPrintPackGross: TdsdPrintAction;
+    spSelectPrint_SaleOrderTax: TdsdStoredProc;
+    actPrintSaleOrderTax: TdsdPrintAction;
+    bbPrintSaleOrderTax: TdxBarButton;
   private
     { Private declarations }
   public

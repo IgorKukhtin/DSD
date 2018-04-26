@@ -34,7 +34,7 @@ RETURNS TABLE (PartionId            Integer
              , FabrikaName          TVarChar
              , PeriodName           TVarChar
              , PeriodYear           Integer
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsNameFull TVarChar
              , GoodsGroupNameFull TVarChar, NameFull TVarChar, GoodsGroupName TVarChar, MeasureName TVarChar
              , JuridicalName        TVarChar
              , CompositionGroupName TVarChar
@@ -66,11 +66,15 @@ RETURNS TABLE (PartionId            Integer
              , PriceTax             TFloat -- % наценки
              , DiscountTax          TFloat -- % Сезонной скидки !!!НА!!! zc_DateEnd
              , Amount_GoodsPrint    TFloat -- Кол-во для печати ценников
+
+             , PriceListId_Basis    Integer  --
+             , PriceListName_Basis  TVarChar --
               )
 AS
 $BODY$
    DECLARE vbUserId      Integer;
    DECLARE vbIsOperPrice Boolean;
+   DECLARE vbPriceListName_Basis TVarChar;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_...());
@@ -83,6 +87,8 @@ BEGIN
     -- Получили - показывать ЛИ цену ВХ.
     vbIsOperPrice:= lpCheckOperPrice_visible (vbUserId);
 
+    -- для возможности изменениея цен добавояем прайс лист Базис
+    vbPriceListName_Basis := (SELECT Object.ValueData FROM Object WHERE Object.Id = zc_PriceList_Basis()) ::TVarChar;
 
     -- !!!замена!!!
     IF inIsPartion = TRUE THEN
@@ -340,6 +346,7 @@ BEGIN
            , Object_Goods.Id                AS GoodsId
            , Object_Goods.ObjectCode        AS GoodsCode
            , Object_Goods.ValueData         AS GoodsName
+           , (COALESCE (ObjectString_GoodsGroupFull.ValueData, '') ||' - '||Object_Label.ValueData||' - '||Object_Goods.ObjectCode||' - ' || Object_Goods.ValueData) ::TVarChar  AS GoodsNameFull
            , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , (COALESCE (ObjectString_GoodsGroupFull.ValueData, '') || ' - ' || COALESCE (Object_GoodsInfo.ValueData, '')) :: TVarChar AS NameFull
            , Object_GoodsGroup.ValueData    AS GoodsGroupName
@@ -388,6 +395,9 @@ BEGIN
            , tmpDiscount.DiscountTax         :: TFloat AS DiscountTax
              -- Кол-во для печати ценников
            , tmpGoodsPrint.Amount            :: TFloat AS Amount_GoodsPrint
+           
+           , zc_PriceList_Basis()  AS PriceListId_Basis
+           , vbPriceListName_Basis AS PriceListName_Basis
 
         FROM tmpData
             LEFT JOIN Object AS Object_Unit    ON Object_Unit.Id    = tmpData.UnitId
