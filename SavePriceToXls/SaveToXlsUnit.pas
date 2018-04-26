@@ -164,7 +164,7 @@ begin
     while not qryUnit.Eof do
     Begin
       qryPrice.Close;
-      qryPrice.SQL.Text := 'Select * from gpSelect_Object_Price('+qryUnit.FieldByName('Id').AsString+',0,False,False,''3'');';
+      qryPrice.SQL.Text := 'Select * from gpSelect_Object_Price_SaveToXls('+qryUnit.FieldByName('Id').AsString+',0,False,False,''3'');';
       try
         qryPrice.Open;
       except on E: Exception do
@@ -174,7 +174,7 @@ begin
       end;
       if not qryPrice.IsEmpty then
       Begin
-        FileName := SavePath + GetCorrectNameFile(qryUnit.fieldByName('ValueData').AsString)+'.xls';
+        FileName := SavePath + GetCorrectNameFile(qryUnit.fieldByName('Name').AsString)+'.xls';
         try
           ExportGridToExcel(FileName, cxGrid, True, True, True, 'xls');
         except on E:Exception DO

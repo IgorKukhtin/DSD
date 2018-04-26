@@ -24,10 +24,6 @@ object Form1: TForm1
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'TabSheet1'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -155,10 +151,6 @@ object Form1: TForm1
     object TabSheet2: TTabSheet
       Caption = 'TabSheet2'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -228,7 +220,7 @@ object Form1: TForm1
   object qryUnit: TZQuery
     Connection = ZConnection1
     SQL.Strings = (
-      'Select Id,ValueData from Object Where DescId = zc_Object_Unit();')
+      'SELECT * FROM gpSelect_Object_Unit_SaveToXls ('#39'3'#39')')
     Params = <>
     Left = 216
     Top = 48
@@ -242,8 +234,8 @@ object Form1: TForm1
     Connection = ZConnection1
     SQL.Strings = (
       
-        'Select * from gpSelect_Object_Price(:UnitId, 0, False,False,'#39'3'#39')' +
-        ';')
+        'Select * from gpSelect_Object_Price_SaveToXls(:UnitId, 0, False,' +
+        'False,'#39'3'#39');')
     Params = <
       item
         DataType = ftInteger
