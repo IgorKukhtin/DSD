@@ -29,6 +29,7 @@ RETURNS TABLE (Id Integer
              , TotalSummBalance TFloat
              , TotalSummPriceList TFloat
              , CurrencyValue TFloat, ParValue TFloat
+             , DiscountTax_From TFloat, DiscountTax_To TFloat
              , isErased Boolean
               )
 AS
@@ -36,6 +37,7 @@ $BODY$
   DECLARE vbUserId Integer;
 
   DECLARE vbUnitId_From Integer;
+  DECLARE vbUnitId_To   Integer;
   DECLARE vbPriceListId Integer;
   DECLARE vbPartnerId Integer;
   DECLARE vbOperDate TDateTime;
@@ -47,11 +49,15 @@ BEGIN
      -- данные из шапки
      SELECT Movement.OperDate
           , MovementLinkObject_From.ObjectId
-    INTO vbOperDate, vbUnitId_From 
+          , MovementLinkObject_To.ObjectId
+    INTO vbOperDate, vbUnitId_From, vbUnitId_To
      FROM Movement 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
                                       AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                       ON MovementLinkObject_To.MovementId = Movement.Id
+                                      AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
      WHERE Movement.Id = inMovementId;
 
      IF inShowAll = TRUE
@@ -171,7 +177,38 @@ BEGIN
                       GROUP BY Container.ObjectId
                              , Container.PartionId
                      )
-       
+    ---сезонная скидка
+   , tmpDiscountList AS (SELECT DISTINCT vbUnitId_From AS UnitId, tmpPartion.GoodsId FROM tmpPartion
+                        UNION
+                         SELECT DISTINCT vbUnitId_To   AS UnitId, tmpPartion.GoodsId FROM tmpPartion
+                         )
+
+   , tmpOL1 AS (SELECT * FROM ObjectLink WHERE ObjectLink.ChildObjectId IN (SELECT DISTINCT tmpPartion.GoodsId FROM tmpPartion)
+                                           AND ObjectLink.DescId        = zc_ObjectLink_DiscountPeriodItem_Goods()
+               )
+   , tmpOL2 AS (SELECT * FROM ObjectLink WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpOL1.ObjectId FROM tmpOL1)
+                                           AND ObjectLink.DescId   = zc_ObjectLink_DiscountPeriodItem_Unit()
+               )
+                      
+   , tmpDiscount AS (SELECT ObjectLink_DiscountPeriodItem_Unit.ChildObjectId      AS UnitId
+                          , ObjectLink_DiscountPeriodItem_Goods.ChildObjectId     AS GoodsId
+                          , ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData AS DiscountTax
+                     FROM tmpDiscountList
+                          INNER JOIN tmpOL1 AS ObjectLink_DiscountPeriodItem_Goods
+                                                ON ObjectLink_DiscountPeriodItem_Goods.ChildObjectId = tmpDiscountList.GoodsId
+                          INNER JOIN tmpOL2 AS ObjectLink_DiscountPeriodItem_Unit
+                                                ON ObjectLink_DiscountPeriodItem_Unit.ObjectId      = ObjectLink_DiscountPeriodItem_Goods.ObjectId
+                                               AND ObjectLink_DiscountPeriodItem_Unit.ChildObjectId = tmpDiscountList.UnitId
+                          INNER JOIN ObjectHistory AS ObjectHistory_DiscountPeriodItem
+                                                   ON ObjectHistory_DiscountPeriodItem.ObjectId = ObjectLink_DiscountPeriodItem_Goods.ObjectId
+                                                  AND ObjectHistory_DiscountPeriodItem.DescId   = zc_ObjectHistory_DiscountPeriodItem()
+                                                  AND vbOperDate >= ObjectHistory_DiscountPeriodItem.StartDate AND vbOperDate < ObjectHistory_DiscountPeriodItem.EndDate
+                                                  --AND ObjectHistory_DiscountPeriodItem.EndDate  = zc_DateEnd()
+                          LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_DiscountPeriodItem_Value
+                                                       ON ObjectHistoryFloat_DiscountPeriodItem_Value.ObjectHistoryId = ObjectHistory_DiscountPeriodItem.Id
+                                                      AND ObjectHistoryFloat_DiscountPeriodItem_Value.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value()
+                    )
+
            -- результат
            SELECT
                  0
@@ -206,6 +243,11 @@ BEGIN
 
                , tmpPartion.CurrencyValue   ::TFloat
                , tmpPartion.ParValue        ::TFloat
+
+               --сезонная скидка от кого
+               , tmpDiscount_From.DiscountTax ::TFloat AS DiscountTax_From
+               -- сезонная скидка кому
+               , tmpDiscount_From.DiscountTax ::TFloat AS DiscountTax_To
     
                , tmpMI.isErased
     
@@ -227,6 +269,14 @@ BEGIN
                 LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                        ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpPartion.GoodsId
                                       AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
+                --для подразделения от кого
+                LEFT JOIN tmpDiscount AS tmpDiscount_From 
+                                      ON tmpDiscount_From.UnitId = vbUnitId_From
+                                     AND tmpDiscount_From.GoodsId = tmpPartion.GoodsId
+                --для подразделения кому
+                LEFT JOIN tmpDiscount AS tmpDiscount_To
+                                      ON tmpDiscount_To.UnitId = vbUnitId_To
+                                     AND tmpDiscount_To.GoodsId = tmpPartion.GoodsId
            WHERE tmpMI.PartionId IS NULL
 
     UNION ALL
@@ -265,7 +315,12 @@ BEGIN
     
                , tmpMI.CurrencyValue       ::TFloat
                , tmpMI.ParValue            ::TFloat
-    
+
+               --сезонная скидка от кого
+               , tmpDiscount_From.DiscountTax ::TFloat AS DiscountTax_From
+               -- сезонная скидка кому
+               , tmpDiscount_From.DiscountTax ::TFloat AS DiscountTax_To
+
                , tmpMI.isErased
     
            FROM tmpMI
@@ -295,6 +350,15 @@ BEGIN
                 LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                        ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
                                       AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+                --для подразделения от кого
+                LEFT JOIN tmpDiscount AS tmpDiscount_From 
+                                      ON tmpDiscount_From.UnitId  = vbUnitId_From
+                                     AND tmpDiscount_From.GoodsId = tmpMI.GoodsId
+                --для подразделения кому
+                LEFT JOIN tmpDiscount AS tmpDiscount_To
+                                      ON tmpDiscount_To.UnitId  = vbUnitId_To
+                                     AND tmpDiscount_To.GoodsId = tmpMI.GoodsId
            ;
 
      ELSE 
@@ -354,6 +418,38 @@ BEGIN
                              , Container.PartionId
                      )
 
+    ---сезонная скидка
+   , tmpDiscountList AS (SELECT DISTINCT vbUnitId_From AS UnitId, tmpMI.GoodsId FROM tmpMI
+                        UNION
+                         SELECT DISTINCT vbUnitId_To   AS UnitId, tmpMI.GoodsId FROM tmpMI
+                         )
+
+   , tmpOL1 AS (SELECT * FROM ObjectLink WHERE ObjectLink.ChildObjectId IN (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
+                                           AND ObjectLink.DescId        = zc_ObjectLink_DiscountPeriodItem_Goods()
+               )
+   , tmpOL2 AS (SELECT * FROM ObjectLink WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpOL1.ObjectId FROM tmpOL1)
+                                           AND ObjectLink.DescId   = zc_ObjectLink_DiscountPeriodItem_Unit()
+               )
+                      
+   , tmpDiscount AS (SELECT ObjectLink_DiscountPeriodItem_Unit.ChildObjectId      AS UnitId
+                          , ObjectLink_DiscountPeriodItem_Goods.ChildObjectId     AS GoodsId
+                          , ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData AS DiscountTax
+                     FROM tmpDiscountList
+                          INNER JOIN tmpOL1 AS ObjectLink_DiscountPeriodItem_Goods
+                                                ON ObjectLink_DiscountPeriodItem_Goods.ChildObjectId = tmpDiscountList.GoodsId
+                          INNER JOIN tmpOL2 AS ObjectLink_DiscountPeriodItem_Unit
+                                                ON ObjectLink_DiscountPeriodItem_Unit.ObjectId      = ObjectLink_DiscountPeriodItem_Goods.ObjectId
+                                               AND ObjectLink_DiscountPeriodItem_Unit.ChildObjectId = tmpDiscountList.UnitId
+                          INNER JOIN ObjectHistory AS ObjectHistory_DiscountPeriodItem
+                                                   ON ObjectHistory_DiscountPeriodItem.ObjectId = ObjectLink_DiscountPeriodItem_Goods.ObjectId
+                                                  AND ObjectHistory_DiscountPeriodItem.DescId   = zc_ObjectHistory_DiscountPeriodItem()
+                                                  AND vbOperDate >= ObjectHistory_DiscountPeriodItem.StartDate AND vbOperDate < ObjectHistory_DiscountPeriodItem.EndDate
+                                                  --AND ObjectHistory_DiscountPeriodItem.EndDate  = zc_DateEnd()
+                          LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_DiscountPeriodItem_Value
+                                                       ON ObjectHistoryFloat_DiscountPeriodItem_Value.ObjectHistoryId = ObjectHistory_DiscountPeriodItem.Id
+                                                      AND ObjectHistoryFloat_DiscountPeriodItem_Value.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value()
+                    )
+
            -- результат
            SELECT
                  tmpMI.Id
@@ -389,7 +485,12 @@ BEGIN
     
                , tmpMI.CurrencyValue       ::TFloat
                , tmpMI.ParValue            ::TFloat
-    
+ 
+               --сезонная скидка от кого
+               , tmpDiscount_From.DiscountTax ::TFloat AS DiscountTax_From
+               -- сезонная скидка кому
+               , tmpDiscount_From.DiscountTax ::TFloat AS DiscountTax_To
+
                , tmpMI.isErased
     
            FROM tmpMI
@@ -414,6 +515,15 @@ BEGIN
                 LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                        ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
                                       AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+                --для подразделения от кого
+                LEFT JOIN tmpDiscount AS tmpDiscount_From 
+                                      ON tmpDiscount_From.UnitId  = vbUnitId_From
+                                     AND tmpDiscount_From.GoodsId = tmpMI.GoodsId
+                --для подразделения кому
+                LEFT JOIN tmpDiscount AS tmpDiscount_To
+                                      ON tmpDiscount_To.UnitId  = vbUnitId_To
+                                     AND tmpDiscount_To.GoodsId = tmpMI.GoodsId
           ;
 
      END IF;

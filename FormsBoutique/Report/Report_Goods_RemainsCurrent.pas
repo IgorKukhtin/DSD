@@ -100,6 +100,7 @@ type
     macAddGoodsPrintList_Rem: TMultiAction;
     actPriceListGoods: TdsdOpenForm;
     bbPriceListGoods: TdxBarButton;
+    actDeleteGoodsPrintList: TdsdExecStoredProc;
   private
     { Private declarations }
   public

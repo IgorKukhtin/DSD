@@ -301,6 +301,28 @@ object SendForm: TSendForm
             Options.Editing = False
             Width = 55
           end
+          object DiscountTax_From: TcxGridDBColumn
+            Caption = '% '#1089#1082'. ('#1054#1090' '#1082#1086#1075#1086')'
+            DataBinding.FieldName = 'DiscountTax_From'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1089#1077#1079#1086#1085#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080' ('#1054#1090' '#1082#1086#1075#1086')'
+            Options.Editing = False
+            Width = 73
+          end
+          object DiscountTax_To: TcxGridDBColumn
+            Caption = '% '#1089#1082'. ('#1050#1086#1084#1091')'
+            DataBinding.FieldName = 'DiscountTax_To'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1089#1077#1079#1086#1085#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080' ('#1050#1086#1084#1091')'
+            Options.Editing = False
+            Width = 80
+          end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
