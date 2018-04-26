@@ -120,7 +120,9 @@ type
     bbUpdateRecord1: TdxBarButton;
     actInsertAction: TdsdInsertUpdateAction;
     actUpdateAction: TdsdInsertUpdateAction;
+    mactInsertAction: TMultiAction;
     actRefreshMI: TdsdDataSetRefresh;
+    mactUpdateAction: TMultiAction;
     JuridicalName: TcxGridDBColumn;
     dxBarButton1: TdxBarButton;
     actPrintIn: TdsdPrintAction;
@@ -129,11 +131,27 @@ type
     spSelectPrintSticker: TdsdStoredProc;
     TotalSummBalance: TcxGridDBColumn;
     actInsertMaskAction: TdsdInsertUpdateAction;
+    mactInsertMaskAction: TMultiAction;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
     actPrintInSecond: TdsdPrintAction;
     bbPrintInSecond: TdxBarButton;
     isProtocol: TcxGridDBColumn;
+    cxLabel9: TcxLabel;
+    edGoodsPrint: TcxButtonEdit;
+    GuidesGoodsPrint: TdsdGuides;
+    spDelete_Object_GoodsPrint: TdsdStoredProc;
+    spSelectPrintStickerList: TdsdStoredProc;
+    spGet_User_curr: TdsdStoredProc;
+    spInsertUpdate_GoodsPrint: TdsdStoredProc;
+    spUpdate_FloatValue_DS: TdsdStoredProc;
+    actPrintStickerList: TdsdPrintAction;
+    actDeleteGoodsPrintList: TdsdExecStoredProc;
+    actUpdate_FloatValue_DS: TdsdExecStoredProc;
+    actInsertUpdate_GoodsPrint: TdsdExecStoredProc;
+    macAddGoodsPrintList_Rem: TMultiAction;
+    mactGoodsPrintList_Print: TMultiAction;
+    bbGoodsPrintList_Print: TdxBarButton;
   private
   public
   end;

@@ -3,7 +3,7 @@ object SendForm: TSendForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 437
-  ClientWidth = 811
+  ClientWidth = 876
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,25 +21,28 @@ object SendForm: TSendForm
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 115
-    Width = 811
+    Width = 876
     Height = 322
     Align = alClient
     TabOrder = 0
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 811
     ClientRectBottom = 322
-    ClientRectRight = 811
+    ClientRectRight = 876
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 811
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 811
+        Width = 876
         Height = 298
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 811
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -477,11 +480,12 @@ object SendForm: TSendForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 811
+    Width = 876
     Height = 89
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 5
+    ExplicitWidth = 811
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -579,6 +583,24 @@ object SendForm: TSendForm
       Top = 63
       TabOrder = 11
       Width = 423
+    end
+    object cxLabel9: TcxLabel
+      Left = 609
+      Top = 5
+      Caption = #1055#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074':'
+    end
+    object edGoodsPrint: TcxButtonEdit
+      Left = 609
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 13
+      Width = 262
     end
   end
   object FormParams: TdsdFormParams
@@ -724,7 +746,7 @@ object SendForm: TSendForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbUpdateAll'
         end
         item
           Visible = True
@@ -749,6 +771,14 @@ object SendForm: TSendForm
         item
           Visible = True
           ItemName = 'bbPrintIn'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGoodsPrintList_Print'
         end
         item
           Visible = True
@@ -854,8 +884,12 @@ object SendForm: TSendForm
       Action = macUpdateAmount
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbUpdateAll: TdxBarButton
       Action = macUpdateAll
+      Category = 0
+    end
+    object bbGoodsPrintList_Print: TdxBarButton
+      Action = mactGoodsPrintList_Print
       Category = 0
     end
   end
@@ -978,6 +1012,9 @@ object SendForm: TSendForm
         end
         item
           StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spGet_User_curr
         end
         item
           StoredProc = spSelectMI
@@ -1103,6 +1140,33 @@ object SendForm: TSendForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
+    end
+    object actPrintStickerList: TdsdPrintAction
+      Category = 'PrintSticker'
+      MoveParams = <>
+      StoredProc = spSelectPrintStickerList
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintStickerList
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074
+      Hint = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074
+      ImageIndex = 18
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <>
+      ReportName = 'PrintMovement_IncomeSticker'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.Value = 'PrintMovement_IncomeSticker'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actSetErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -1720,6 +1784,74 @@ object SendForm: TSendForm
         end>
       isShowModal = True
       OpenBeforeShow = True
+    end
+    object actDeleteGoodsPrintList: TdsdExecStoredProc
+      Category = 'PrintSticker'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spDelete_Object_GoodsPrint
+      StoredProcList = <
+        item
+          StoredProc = spDelete_Object_GoodsPrint
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1042#1057#1045' '#1080#1079' '#1087#1077#1095#1072#1090#1080' '#1094#1077#1085#1085#1080#1082#1086#1074
+      ImageIndex = 52
+    end
+    object actUpdate_FloatValue_DS: TdsdExecStoredProc
+      Category = 'PrintSticker'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      StoredProc = spUpdate_FloatValue_DS
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_FloatValue_DS
+        end>
+      Caption = 'actUpdate_FloatValue_DS'
+    end
+    object actInsertUpdate_GoodsPrint: TdsdExecStoredProc
+      Category = 'PrintSticker'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      StoredProc = spInsertUpdate_GoodsPrint
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_GoodsPrint
+        end>
+      Caption = 'actUpdate_FloatValue_DS'
+    end
+    object macAddGoodsPrintList_Rem: TMultiAction
+      Category = 'PrintSticker'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_FloatValue_DS
+        end
+        item
+          Action = actInsertUpdate_GoodsPrint
+        end>
+      View = cxGridDBTableView
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1074' '#1087#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074' '#1080' '#1085#1072#1087#1077#1095#1072#1090#1072#1090#1100' '
+      ImageIndex = 15
+    end
+    object mactGoodsPrintList_Print: TMultiAction
+      Category = 'PrintSticker'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actDeleteGoodsPrintList
+        end
+        item
+          Action = macAddGoodsPrintList_Rem
+        end
+        item
+          Action = actPrintStickerList
+        end>
+      QuestionBeforeExecute = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1087#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074' '#1076#1083#1103' '#1089#1087#1080#1089#1082#1072'?'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074' '#1076#1083#1103' '#1089#1087#1080#1089#1082#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074' '#1076#1083#1103' '#1089#1087#1080#1089#1082#1072
+      ImageIndex = 15
     end
   end
   object MasterDS: TDataSource
@@ -2432,5 +2564,266 @@ object SendForm: TSendForm
     PackSize = 1
     Left = 344
     Top = 192
+  end
+  object GuidesGoodsPrint: TdsdGuides
+    KeyField = 'Ord'
+    LookupControl = edGoodsPrint
+    Key = '0'
+    FormNameParam.Value = 'TGoodsPrintChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsPrintChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'UserId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'UserId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesGoodsPrint
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsPrint
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUserId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'UserId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUserName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 766
+    Top = 22
+  end
+  object spSelectPrintStickerList: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Income_PrintSticker'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'UserId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsPrintId'
+        Value = '0'
+        Component = GuidesGoodsPrint
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsGoodsPrint'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 759
+    Top = 232
+  end
+  object spDelete_Object_GoodsPrint: TdsdStoredProc
+    StoredProcName = 'gpDelete_Object_GoodsPrint'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioOrd'
+        Value = '0'
+        Component = GuidesGoodsPrint
+        ComponentItem = 'Key'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsPrintName'
+        Value = ''
+        Component = GuidesGoodsPrint
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outUserId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'UserId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outUserName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 840
+    Top = 184
+  end
+  object spGet_User_curr: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_User_curr'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'UserId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'UserId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 856
+    Top = 232
+  end
+  object spInsertUpdate_GoodsPrint: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_GoodsPrint'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioOrd'
+        Value = '0'
+        Component = GuidesGoodsPrint
+        ComponentItem = 'Key'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioUserId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'UserId'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsPrintName'
+        Value = ''
+        Component = edGoodsPrint
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outUserName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 856
+    Top = 280
+  end
+  object spUpdate_FloatValue_DS: TdsdStoredProc
+    StoredProcName = 'gpUpdate_FloatValue_DS'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inValue'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outValue'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 760
+    Top = 296
   end
 end
