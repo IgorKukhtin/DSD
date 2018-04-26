@@ -223,6 +223,9 @@ type
     bbOpenProduction: TdxBarButton;
     bbPrintPackGross: TdxBarButton;
     actPrintPackGross: TdsdPrintAction;
+    spSelectPrint_SaleOrderTax: TdsdStoredProc;
+    actPrintSaleOrderTax: TdsdPrintAction;
+    bbPrintSaleOrderTax: TdxBarButton;
   private
     { Private declarations }
   public

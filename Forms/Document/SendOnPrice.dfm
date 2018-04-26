@@ -595,10 +595,48 @@ inherited SendOnPriceForm: TSendOnPriceForm
   inherited ActionList: TActionList
     Left = 55
     Top = 303
+    object actPrintSaleOrderTax: TdsdPrintAction [0]
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrint_SaleOrderTax
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_SaleOrderTax
+        end>
+      Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1085#1072' %'
+      Hint = #1047#1072#1103#1074#1082#1072'/'#1086#1090#1075#1088#1091#1079#1082#1072' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1085#1072' %'
+      ImageIndex = 18
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Sale_Order'
+      ReportNameParam.Value = 'PrintMovement_Sale_Order'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    object actGoodsChoiceForm: TOpenChoiceForm [4]
+    object actGoodsChoiceForm: TOpenChoiceForm [5]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -666,7 +704,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       ReportNameParam.Value = 'PrintMovement_SendOnPrice'
       ReportNameParam.ParamType = ptInput
     end
-    object actPrintUnit: TdsdPrintAction [10]
+    object actPrintUnit: TdsdPrintAction [11]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintOut
@@ -711,8 +749,11 @@ inherited SendOnPriceForm: TSendOnPriceForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrinDiff: TdsdPrintAction [11]
+    object actPrinDiff: TdsdPrintAction [12]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintOut
@@ -758,9 +799,12 @@ inherited SendOnPriceForm: TSendOnPriceForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintSaleOrder: TdsdPrintAction [12]
-      Category = 'DSDLib'
+    object actPrintSaleOrder: TdsdPrintAction [13]
+      Category = 'Print'
       MoveParams = <>
       StoredProc = spSelectPrint_SaleOrder
       StoredProcList = <
@@ -793,8 +837,11 @@ inherited SendOnPriceForm: TSendOnPriceForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintPackGross: TdsdPrintAction [13]
+    object actPrintPackGross: TdsdPrintAction [14]
       Category = 'Print'
       MoveParams = <>
       StoredProc = spSelectPrint_Pack
@@ -824,8 +871,11 @@ inherited SendOnPriceForm: TSendOnPriceForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintOut: TdsdPrintAction [14]
+    object actPrintOut: TdsdPrintAction [15]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintOut
@@ -870,6 +920,9 @@ inherited SendOnPriceForm: TSendOnPriceForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
@@ -887,7 +940,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [19]
+    object actGoodsKindChoice: TOpenChoiceForm [20]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -914,7 +967,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
         end>
       isShowModal = True
     end
-    object UnitChoiceForm: TOpenChoiceForm [23]
+    object UnitChoiceForm: TOpenChoiceForm [24]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1071,6 +1124,9 @@ inherited SendOnPriceForm: TSendOnPriceForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object mactPrint_TTN: TMultiAction
       Category = 'Print_TTN'
@@ -1128,6 +1184,9 @@ inherited SendOnPriceForm: TSendOnPriceForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -1293,6 +1352,10 @@ inherited SendOnPriceForm: TSendOnPriceForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintSaleOrderTax'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1354,6 +1417,10 @@ inherited SendOnPriceForm: TSendOnPriceForm
     end
     object bbPrintPackGross: TdxBarButton
       Action = actPrintPackGross
+      Category = 0
+    end
+    object bbPrintSaleOrderTax: TdxBarButton
+      Action = actPrintSaleOrderTax
       Category = 0
     end
   end
@@ -2691,6 +2758,13 @@ inherited SendOnPriceForm: TSendOnPriceForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDiffTax'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 687
@@ -2777,5 +2851,49 @@ inherited SendOnPriceForm: TSendOnPriceForm
     PackSize = 1
     Left = 895
     Top = 416
+  end
+  object spSelectPrint_SaleOrderTax: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_Order_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = ''
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Weighing'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDiff'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDiffTax'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 687
+    Top = 288
   end
 end

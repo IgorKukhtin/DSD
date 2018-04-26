@@ -2,11 +2,13 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_Order_Print (Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_Order_Print (Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_Order_Print (Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale_Order_Print(
     IN inMovementId                 Integer  , -- ключ Документа Заявки
     IN inMovementId_Weighing        Integer  , -- ключ Документа взвешивания
     IN inIsDiff                     Boolean  , --
+    IN inIsDiffTax                  Boolean  , --
     IN inSession                    TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -18,6 +20,7 @@ $BODY$
     DECLARE Cursor2 refcursor;
 
     DECLARE vbMovementId Integer;
+    DECLARE vbDiffTax TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -33,8 +36,10 @@ BEGIN
      WHERE MovementLinkMovement.MovementChildId = inMovementId
        AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
 
-    ;
-
+     ;
+     -- % отклонения
+     vbDiffTax := 15;
+     
     --
     OPEN Cursor1 FOR
 
@@ -45,6 +50,7 @@ BEGIN
          , Object_From.ValueData          AS FromName
          , Object_To.ValueData            AS ToName
 
+         , vbDiffTax                      AS DiffTax
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
@@ -182,6 +188,7 @@ BEGIN
                                                     AND tmpMIOrder.PartionGoodsDate =  tmpResult_1.PartionGoodsDate
                            )
 
+       -- результат
        SELECT Object_Goods.ObjectCode  			  AS GoodsCode
             , Object_Goods.ValueData   			  AS GoodsName
             , Object_GoodsKind.ValueData                  AS GoodsKindName
@@ -207,58 +214,88 @@ BEGIN
             , tmpResult1.AmountSecond_Order_Sh
             , tmpResult1.AmountSecond_Order_Weight
 
-            , CASE WHEN tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order > 0
-                   THEN tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order
-                   ELSE 0
-              END AS CountDiff_B
-            , CASE WHEN tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order < 0
-                   THEN -1 * (tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order)
-                   ELSE 0
-              END AS CountDiff_M
+            , tmpResult1.CountDiff_B
+            , tmpResult1.CountDiff_M
 
-            , CASE WHEN tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight > 0
-                   THEN tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight
-                   ELSE 0
-              END AS WeightDiff_B
-            , CASE WHEN tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight < 0
-                   THEN -1 * (tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight)
-                   ELSE 0
-              END AS WeightDiff_M
+            , tmpResult1.WeightDiff_B
+            , tmpResult1.WeightDiff_M
+       FROM (SELECT tmpResult1.GoodsId
+                  , tmpResult1.GoodsKindId
+                  , tmpResult1.MeasureName
+      
+                  , tmpResult1.Amount
+                  , tmpResult1.Amount_Sh
+                  , tmpResult1.Amount_Weight
+      
+                  , tmpResult1.Amount_Weighing
+                  , tmpResult1.Amount_Weighing_Sh
+                  , tmpResult1.Amount_Weighing_Weight
+      
+                  , tmpResult1.PartionGoods
+      
+                  , tmpResult1.Amount_Order
+                  , tmpResult1.Amount_Order_Sh
+                  , tmpResult1.Amount_Order_Weight
+      
+                  , tmpResult1.AmountSecond_Order
+                  , tmpResult1.AmountSecond_Order_Sh
+                  , tmpResult1.AmountSecond_Order_Weight
+      
+                  , CASE WHEN tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order > 0
+                         THEN tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order
+                         ELSE 0
+                    END AS CountDiff_B
+                  , CASE WHEN tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order < 0
+                         THEN -1 * (tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order)
+                         ELSE 0
+                    END AS CountDiff_M
+      
+                  , CASE WHEN tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight > 0
+                         THEN tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight
+                         ELSE 0
+                    END AS WeightDiff_B
+                  , CASE WHEN tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight < 0
+                         THEN -1 * (tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight)
+                         ELSE 0
+                    END AS WeightDiff_M
 
-       FROM ( SELECT tmpResult.GoodsId
-                   , tmpResult.GoodsKindId
-
-                   , Object_Measure.ValueData    AS MeasureName
-
-                   , tmpResult.Amount                                                                                              :: TFloat AS Amount
-                   , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.Amount ELSE 0 END                                :: TFloat AS Amount_Sh
-                   , tmpResult.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END :: TFloat AS Amount_Weight
-
-                   , tmpResult.Amount_Weighing                                                                                              :: TFloat AS Amount_Weighing
-                   , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.Amount_Weighing ELSE 0 END                                :: TFloat AS Amount_Weighing_Sh
-                   , tmpResult.Amount_Weighing * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END :: TFloat AS Amount_Weighing_Weight
-
-                   , CASE WHEN tmpResult.PartionGoods <> '' THEN tmpResult.PartionGoods WHEN tmpResult.PartionGoodsDate <> zc_DateStart() THEN TO_CHAR (tmpResult.PartionGoodsDate, 'DD.MM.YYYY') ELSE '' END :: TVarChar AS PartionGoods
-
-                   , tmpResult.Amount_Order                                                                                              :: TFloat AS Amount_Order
-                   , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.Amount_Order ELSE 0 END                                :: TFloat AS Amount_Order_Sh
-                   , tmpResult.Amount_Order * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END :: TFloat AS Amount_Order_Weight
-
-                   , tmpResult.AmountSecond_Order                                                                                              :: TFloat AS AmountSecond_Order
-                   , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.AmountSecond_Order ELSE 0 END                                :: TFloat AS AmountSecond_Order_Sh
-                   , tmpResult.AmountSecond_Order * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END :: TFloat AS AmountSecond_Order_Weight
-
-             FROM tmpResult
-
-                  LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                 ON ObjectLink_Goods_Measure.ObjectId = tmpResult.GoodsId
-                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-                  LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-
-                  LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                  ON ObjectFloat_Weight.ObjectId = tmpResult.GoodsId
-                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-              ) AS tmpResult1
+                   --кол-во заказа по % откл.
+                  , ((COALESCE (tmpResult1.Amount_Order,0) + COALESCE (tmpResult1.AmountSecond_Order,0)) * vbDiffTax / 100) AS AmountTax
+             FROM ( SELECT tmpResult.GoodsId
+                         , tmpResult.GoodsKindId
+      
+                         , Object_Measure.ValueData    AS MeasureName
+      
+                         , tmpResult.Amount                                                                                              :: TFloat AS Amount
+                         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.Amount ELSE 0 END                                :: TFloat AS Amount_Sh
+                         , tmpResult.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END :: TFloat AS Amount_Weight
+      
+                         , tmpResult.Amount_Weighing                                                                                              :: TFloat AS Amount_Weighing
+                         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.Amount_Weighing ELSE 0 END                                :: TFloat AS Amount_Weighing_Sh
+                         , tmpResult.Amount_Weighing * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END :: TFloat AS Amount_Weighing_Weight
+      
+                         , CASE WHEN tmpResult.PartionGoods <> '' THEN tmpResult.PartionGoods WHEN tmpResult.PartionGoodsDate <> zc_DateStart() THEN TO_CHAR (tmpResult.PartionGoodsDate, 'DD.MM.YYYY') ELSE '' END :: TVarChar AS PartionGoods
+      
+                         , tmpResult.Amount_Order                                                                                              :: TFloat AS Amount_Order
+                         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.Amount_Order ELSE 0 END                                :: TFloat AS Amount_Order_Sh
+                         , tmpResult.Amount_Order * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END :: TFloat AS Amount_Order_Weight
+      
+                         , tmpResult.AmountSecond_Order                                                                                              :: TFloat AS AmountSecond_Order
+                         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.AmountSecond_Order ELSE 0 END                                :: TFloat AS AmountSecond_Order_Sh
+                         , tmpResult.AmountSecond_Order * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END :: TFloat AS AmountSecond_Order_Weight
+      
+                   FROM tmpResult
+      
+                        LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                       ON ObjectLink_Goods_Measure.ObjectId = tmpResult.GoodsId
+                                      AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                        LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+      
+                        LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                        ON ObjectFloat_Weight.ObjectId = tmpResult.GoodsId
+                                       AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                    ) AS tmpResult1
+             ) AS tmpResult1
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpResult1.GoodsId
 
@@ -272,7 +309,10 @@ BEGIN
                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpResult1.GoodsId
                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
-        WHERE inIsDiff = FALSE OR (tmpResult1.Amount + tmpResult1.Amount_Weighing) < (tmpResult1.Amount_Order + tmpResult1.AmountSecond_Order)
+        WHERE (inIsDiff = FALSE OR (tmpResult1.Amount + tmpResult1.Amount_Weighing) < (tmpResult1.Amount_Order + tmpResult1.AmountSecond_Order))
+           AND (inIsDiffTax = FALSE OR ((tmpResult1.AmountTax <= CountDiff_B AND CountDiff_B <> 0 )OR (tmpResult1.AmountTax <= CountDiff_M AND CountDiff_M <> 0 )))
+        
+        
 
       ;
 
@@ -281,11 +321,11 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Sale_Order_Print (Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.04.18         *
  09.07.15         *
 */
 -- тест

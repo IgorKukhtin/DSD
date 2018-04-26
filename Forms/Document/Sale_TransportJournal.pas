@@ -214,6 +214,9 @@ type
     OperDate_reestr: TcxGridDBColumn;
     actPrintPackGross: TdsdPrintAction;
     bbPrintPackGross: TdxBarButton;
+    spSelectPrint_SaleOrderTax: TdsdStoredProc;
+    actPrintSaleOrderTax: TdsdPrintAction;
+    bbPrintSaleOrderTax: TdxBarButton;
   private
     { Private declarations }
   public
