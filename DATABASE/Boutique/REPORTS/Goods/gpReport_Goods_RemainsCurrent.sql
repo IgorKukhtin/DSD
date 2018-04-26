@@ -330,7 +330,7 @@ BEGIN
 
            , Object_Unit.Id                 AS UnitId
            , Object_Unit.ValueData          AS UnitName
-           , Object_Unit_in.ValueData       AS UnitName
+           , Object_Unit_in.ValueData       AS UnitName_in
            , Object_Partner.ValueData       AS PartnerName
            , Object_Brand.ValueData         AS BrandName
            , Object_Fabrika.ValueData       AS FabrikaName

@@ -153,7 +153,7 @@ BEGIN
                                                            AND OHF_Value.DescId          = zc_ObjectHistoryFloat_PriceListItem_Value()
                          )
        */
-   -- остатки
+     -- остатки
    , tmpContainer AS (SELECT Container.ObjectId
                            , Container.PartionId
                            , SUM (COALESCE(Container.Amount, 0)) AS Amount

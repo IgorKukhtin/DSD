@@ -79,31 +79,24 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object OperDate: TcxGridDBColumn
+      object OperDate_Partion: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1088#1080#1093#1086#1076
-        DataBinding.FieldName = 'OperDate'
+        DataBinding.FieldName = 'OperDate_Partion'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
         Options.Editing = False
         Width = 70
       end
-      object UnitName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'UnitName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 100
-      end
-      object PartnerName: TcxGridDBColumn
-        Caption = #1055#1086'c'#1090#1072#1074#1097#1080#1082
-        DataBinding.FieldName = 'PartnerName'
+      object InvNumber_Partion: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. '#1087#1088#1080#1093#1086#1076
+        DataBinding.FieldName = 'InvNumber_Partion'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
         Options.Editing = False
-        Width = 100
+        Width = 55
       end
       object BrandName: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
@@ -128,6 +121,15 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 50
+      end
+      object PartnerName: TcxGridDBColumn
+        Caption = #1055#1086'c'#1090#1072#1074#1097#1080#1082
+        DataBinding.FieldName = 'PartnerName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
       end
       object GroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
@@ -187,30 +189,16 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         Options.Editing = False
         Width = 55
       end
-      object Remains: TcxGridDBColumn
-        Caption = #1054#1089#1090'. '#1074' '#1084#1072#1075'.'
-        DataBinding.FieldName = 'Remains'
+      object ValueDiscount: TcxGridDBColumn
+        Caption = '% '#1089#1082'.'
+        DataBinding.FieldName = 'ValueDiscount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Properties.ReadOnly = True
+        Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1086#1089#1090#1072#1090#1086#1082' '#1074' '#1084#1072#1075#1072#1079#1080#1085#1077
+        HeaderHint = '% '#1057#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
         Options.Editing = False
         Width = 70
-      end
-      object AmountDebt: TcxGridDBColumn
-        Caption = #1054#1089#1090'. '#1076#1086#1083#1075
-        DataBinding.FieldName = 'AmountDebt'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1086#1083#1075#1080' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
-        Options.Editing = False
-        Width = 60
       end
       object RemainsAll: TcxGridDBColumn
         Caption = #1054#1089#1090'. '#1080#1090#1086#1075#1086
@@ -221,9 +209,36 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1086#1089#1090#1072#1090#1086#1082' '#1080#1090#1086#1075#1086
+        HeaderHint = #1048#1090#1086#1075#1086' '#1086#1089#1090#1072#1090#1086#1082' '#1082#1086#1083'-'#1074#1086' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091' '#1089' '#1091#1095#1077#1090#1086#1084' '#1076#1086#1083#1075#1072
         Options.Editing = False
         Width = 70
+      end
+      object Remains: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1074' '#1084#1072#1075'.'
+        DataBinding.FieldName = 'Remains'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.ReadOnly = True
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' - '#1086#1089#1090#1072#1090#1086#1082' '#1074' '#1084#1072#1075#1072#1079#1080#1085#1077
+        Options.Editing = False
+        Width = 70
+      end
+      object AmountDebt: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1076#1086#1083#1075
+        DataBinding.FieldName = 'AmountDebt'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' - '#1076#1086#1083#1075#1080' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+        Options.Editing = False
+        Width = 60
       end
       object OperPriceList: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1043#1056#1053
@@ -231,16 +246,6 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
-        Options.Editing = False
-        Width = 70
-      end
-      object ValueDiscount: TcxGridDBColumn
-        Caption = '% '#1089#1082'.'
-        DataBinding.FieldName = 'ValueDiscount'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
       end
@@ -269,15 +274,6 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
-      end
-      object CompositionGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' '#1089#1086#1089#1090#1072#1074#1072
-        DataBinding.FieldName = 'CompositionGroupName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 70
       end
       object CompositionName: TcxGridDBColumn
         Caption = #1057#1086#1089#1090#1072#1074
@@ -326,6 +322,15 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 45
+      end
+      object UnitName_in: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'UnitName_in'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
       end
       object UpdateDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
@@ -901,6 +906,9 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       ReportNameParam.Value = 'PrintObjectHistory_PriceListItem'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object spUpdatePersent: TdsdExecStoredProc
       Category = 'DSDLib'

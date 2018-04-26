@@ -425,6 +425,7 @@ BEGIN
 
      -- дописали - КОЛ-ВО
      UPDATE Object_PartionGoods SET Amount = _tmpItem.OperCount, isErased = FALSE, isArc = FALSE
+                                  , OperDate = vbOperDate
      FROM _tmpItem
      WHERE Object_PartionGoods.MovementItemId = _tmpItem.MovementItemId
     ;
