@@ -46,7 +46,7 @@ BEGIN
                                                             AND MI_PromoPartner.IsErased = FALSE
                                            JOIN lfSelectMobile_Object_Partner (inIsErased:= FALSE, inSession:= inSession) AS OP ON OP.Id = MI_PromoPartner.ObjectId
                                            JOIN Movement AS Movement_Promo 
-                                                         ON Movement_Promo.Id = Movement_PromoPartner.ParentId
+                                                         ON Movement_Promo.Id       = Movement_PromoPartner.ParentId
                                                         AND Movement_Promo.StatusId = zc_Enum_Status_Complete()
                                            JOIN MovementDate AS MovementDate_StartSale
                                                              ON MovementDate_StartSale.MovementId = Movement_Promo.Id
@@ -54,9 +54,9 @@ BEGIN
                                                             AND MovementDate_StartSale.ValueData <= CURRENT_DATE
                                            JOIN MovementDate AS MovementDate_EndSale
                                                              ON MovementDate_EndSale.MovementId = Movement_Promo.Id
-                                                            AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
-                                                            AND MovementDate_EndSale.ValueData >= CURRENT_DATE
-                                      WHERE Movement_PromoPartner.DescId = zc_Movement_PromoPartner()
+                                                            AND MovementDate_EndSale.DescId     = zc_MovementDate_EndSale()
+                                                            AND MovementDate_EndSale.ValueData  >= CURRENT_DATE
+                                      WHERE Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
                                         AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
                                      )
                 , tmpPromo AS (SELECT DISTINCT tmpPromoPartner.PromoId AS Id
@@ -72,7 +72,7 @@ BEGIN
                   , tmpPromo.InvNumber
                   , tmpPromo.Operdate
                   , tmpPromo.StatusId
-                  , tmpPromo.StartSale
+                  , (tmpPromo.StartSale - INTERVAL '1 DAY') :: TDateTime AS StartSale
                   , tmpPromo.EndSale
                   , (MI_Child.ObjectId IS NULL)          AS isChangePercent
                   , MovementString_CommentMain.ValueData AS CommentMain
@@ -100,3 +100,4 @@ $BODY$
 */
 
 -- SELECT * FROM gpSelectMobile_Movement_Promo (inSyncDateIn:= zc_DateStart(), inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelectMobile_Movement_Promo (inSyncDateIn:= zc_DateStart(), inSession:= '1156045')
