@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1062#1077#1085#1091'>'
-  ClientHeight = 217
-  ClientWidth = 335
+  ClientHeight = 160
+  ClientWidth = 370
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,35 +17,30 @@
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 72
-    Top = 178
+    Left = 66
+    Top = 122
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
     ModalResult = 8
-    TabOrder = 2
+    TabOrder = 1
   end
   object cxButton2: TcxButton
-    Left = 176
-    Top = 178
+    Left = 208
+    Top = 122
     Width = 75
     Height = 25
     Action = dsdFormClose1
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 8
-    TabOrder = 3
+    TabOrder = 2
   end
   object cxLabel3: TcxLabel
     Left = 24
     Top = 59
     Caption = #1044#1072#1090#1072' '#1089' :'
-  end
-  object cxLabel2: TcxLabel
-    Left = 138
-    Top = 59
-    Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
   object edStartDate: TcxDateEdit
     Left = 24
@@ -54,16 +49,6 @@
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 0
-    Width = 92
-  end
-  object edEndDate: TcxDateEdit
-    Left = 138
-    Top = 79
-    EditValue = 42236d
-    Properties.ReadOnly = True
-    Properties.SaveTime = False
-    Properties.ShowTime = False
-    TabOrder = 1
     Width = 92
   end
   object Код: TcxLabel
@@ -80,21 +65,21 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = False
-    TabOrder = 7
-    Width = 273
+    TabOrder = 5
+    Width = 338
   end
   object cxLabel1: TcxLabel
-    Left = 24
-    Top = 109
+    Left = 208
+    Top = 55
     Caption = #1062#1077#1085#1072' :'
   end
   object cePrice: TcxCurrencyEdit
-    Left = 24
-    Top = 133
+    Left = 208
+    Top = 79
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.UseDisplayFormatWhenEditing = True
-    TabOrder = 9
+    TabOrder = 7
     Width = 120
   end
   object ActionList: TActionList
@@ -179,7 +164,6 @@
       item
         Name = 'outEndDate'
         Value = ''
-        Component = edEndDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
@@ -229,6 +213,12 @@
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isNew'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 8
@@ -244,6 +234,14 @@
         Component = dsdFormParams
         ComponentItem = 'StartDate'
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inId'
+        Value = Null
+        Component = dsdFormParams
+        ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -271,7 +269,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'GoodsName'
+        Name = 'GoodsNameFull'
         Value = ''
         Component = GoodsGuides
         ComponentItem = 'TextValue'
@@ -288,7 +286,6 @@
       item
         Name = 'EndDate'
         Value = ''
-        Component = edEndDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
@@ -315,8 +312,8 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 144
-    Top = 120
+    Left = 162
+    Top = 80
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 272

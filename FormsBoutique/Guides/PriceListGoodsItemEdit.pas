@@ -28,7 +28,6 @@ type
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     cxLabel3: TcxLabel;
-    cxLabel2: TcxLabel;
     ActionList: TActionList;
     dsdDataSetRefresh: TdsdDataSetRefresh;
     dsdFormClose1: TdsdFormClose;
@@ -38,7 +37,6 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     edStartDate: TcxDateEdit;
-    edEndDate: TcxDateEdit;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
     Код: TcxLabel;
     edGoods: TcxButtonEdit;

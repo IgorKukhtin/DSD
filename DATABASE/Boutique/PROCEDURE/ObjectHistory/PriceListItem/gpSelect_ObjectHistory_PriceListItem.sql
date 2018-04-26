@@ -10,13 +10,14 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_PriceListItem(
     IN inBrandId            Integer   , -- торгова€ марка 
     IN inPeriodId           Integer   , -- сезон
     IN inOperDate           TDateTime , -- ƒата действи€
-    IN inStartYear          Integer    , -- год с
-    IN inEndYear            Integer    , -- год по
+    IN inStartYear          Integer   , -- год с
+    IN inEndYear            Integer   , -- год по
     IN inShowAll            Boolean,   
     IN inSession            TVarChar    -- сесси€ пользовател€
 )                              
 RETURNS TABLE (Id Integer , ObjectId Integer
                 , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+                , GoodsNameFull TVarChar
                 , isErased Boolean, GoodsGroupNameFull TVarChar
                 , MeasureName TVarChar
                 , GoodsGroupId         Integer
@@ -51,7 +52,12 @@ RETURNS TABLE (Id Integer , ObjectId Integer
                )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
+    -- проверка прав пользовател€ на вызов процедуры
+    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_OH_PriceListItem());
+    --vbUserId:= lpGetUserBySession (inSession);
+    
     -- !!!замена!!!
     IF COALESCE (inEndYear, 0) = 0 THEN
        inEndYear:= 1000000;
@@ -222,6 +228,7 @@ BEGIN
            , Object_Goods.Id                      AS GoodsId               
            , Object_Goods.ObjectCode              AS GoodsCode
            , Object_Goods.ValueData               AS GoodsName
+           , (ObjectString_Goods_GoodsGroupFull.ValueData ||' - '||tmpPartionGoods.LabelName||' - '||Object_Goods.ObjectCode||' - ' || Object_Goods.ValueData) ::TVarChar AS GoodsNameFull
            , Object_Goods.isErased                AS isErased 
            
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
@@ -451,6 +458,7 @@ BEGIN
            , Object_Goods.Id                      AS GoodsId
            , Object_Goods.ObjectCode              AS GoodsCode
            , Object_Goods.ValueData               AS GoodsName
+           , (ObjectString_Goods_GoodsGroupFull.ValueData ||' - '||tmpPartionGoods.LabelName||' - '||Object_Goods.ObjectCode||' - ' || Object_Goods.ValueData) ::TVarChar AS GoodsNameFull
            , Object_Goods.isErased                AS isErased 
            
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull

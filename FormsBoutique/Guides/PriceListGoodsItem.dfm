@@ -3,7 +3,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
   Top = 0
   Caption = #1055#1088#1086#1089#1084#1086#1090#1088'/'#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1080#1089#1090#1086#1088#1080#1080' '#1094#1077#1085
   ClientHeight = 398
-  ClientWidth = 497
+  ClientWidth = 502
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,13 +18,16 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 63
-    Width = 497
-    Height = 335
+    Top = 89
+    Width = 502
+    Height = 309
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitTop = 63
+    ExplicitWidth = 497
+    ExplicitHeight = 335
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -80,11 +83,12 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
   object Panel: TPanel
     Left = 0
     Top = 26
-    Width = 497
-    Height = 37
+    Width = 502
+    Height = 63
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitWidth = 417
     object cxLabel1: TcxLabel
       Left = 4
       Top = 9
@@ -99,23 +103,23 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
           Kind = bkEllipsis
         end>
       TabOrder = 1
-      Width = 182
+      Width = 202
     end
     object cxLabel4: TcxLabel
-      Left = 268
-      Top = 9
+      Left = 4
+      Top = 37
       Caption = #1058#1086#1074#1072#1088':'
     end
     object edGoods: TcxButtonEdit
-      Left = 308
-      Top = 9
+      Left = 44
+      Top = 36
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 3
-      Width = 182
+      Width = 452
     end
   end
   object DataSource: TDataSource
@@ -484,7 +488,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPriceListForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -503,8 +507,8 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 152
-    Top = 192
+    Left = 184
+    Top = 16
   end
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
@@ -532,8 +536,8 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 376
-    Top = 16
+    Left = 320
+    Top = 32
   end
   object FormParams: TdsdFormParams
     Params = <

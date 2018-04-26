@@ -804,7 +804,7 @@ object PriceListItemForm: TPriceListItemForm
           Name = 'GoodsName'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'GoodsName'
+          ComponentItem = 'GoodsNameFull'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -1042,6 +1042,9 @@ object PriceListItemForm: TPriceListItemForm
       ReportNameParam.Value = 'PrintObjectHistory_PriceListItem'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
