@@ -169,7 +169,6 @@ uses
   LookAndFillSettings in '..\..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm},
   dsdXMLTransform in '..\..\SOURCE\COMPONENT\dsdXMLTransform.pas',
   IncomeJournal in '..\..\FormsBoutique\Document\IncomeJournal.pas' {IncomeJournalForm: TParentForm},
-  Income in '..\..\FormsBoutique\Document\Income.pas' {IncomeForm: TParentForm},
   Movement_PeriodDialog in '..\..\FormsBoutique\Document\Movement_PeriodDialog.pas' {Movement_PeriodDialogForm: TParentForm},
   IncomeItemEdit in '..\..\FormsBoutique\Document\IncomeItemEdit.pas' {IncomeItemEditForm: TParentForm},
   ReturnOutJournal in '..\..\FormsBoutique\Document\ReturnOutJournal.pas' {ReturnOutJournalForm: TParentForm},
@@ -290,7 +289,8 @@ uses
   InventoryItemEdit in '..\..\FormsBoutique\Document\InventoryItemEdit.pas' {InventoryItemEditForm: TParentForm},
   ClientSMSDialog in '..\..\FormsBoutique\Guides\ClientSMSDialog.pas' {ClientSMSDialogForm: TParentForm},
   ClientSMS in '..\..\FormsBoutique\Guides\ClientSMS.pas' {ClientSMSForm: TParentForm},
-  DiscountPeriodItemBySendDialog in '..\..\FormsBoutique\Document\DiscountPeriodItemBySendDialog.pas' {DiscountPeriodItemBySendDialogForm: TParentForm};
+  DiscountPeriodItemBySendDialog in '..\..\FormsBoutique\Document\DiscountPeriodItemBySendDialog.pas' {DiscountPeriodItemBySendDialogForm: TParentForm},
+  Income in '..\..\FormsBoutique\Document\Income.pas' {IncomeForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
