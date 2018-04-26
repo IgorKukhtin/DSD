@@ -246,7 +246,8 @@ BEGIN
          IF COALESCE (vbGoodsId, 0) = 0 AND ioId <> 0
          THEN
              -- сколько партий с этим товаром
-             IF 1 = (SELECT COUNT (*) FROM Object_PartionGoods WHERE Object_PartionGoods.GoodsId = vbGoodsId_old)
+             IF (SELECT COUNT (*) FROM Object_PartionGoods WHERE Object_PartionGoods.GoodsId = vbGoodsId_old AND Object_PartionGoods.MovementId = inMovementId)
+              = (SELECT COUNT (*) FROM Object_PartionGoods WHERE Object_PartionGoods.GoodsId = vbGoodsId_old)
              THEN
                  -- ќ—“ј¬Ћя≈ћ тот же самый
                  vbGoodsId:= vbGoodsId_old;

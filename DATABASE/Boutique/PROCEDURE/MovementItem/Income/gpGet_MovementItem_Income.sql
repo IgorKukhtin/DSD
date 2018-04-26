@@ -1,8 +1,6 @@
 -- Function: gpGet_Movement_Income()
 
-DROP FUNCTION IF EXISTS gpGet_MovementItem_Income (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_MovementItem_Income (Integer, Boolean, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpGet_MovementItem_Income(
     IN inId             Integer  , -- ключ
@@ -34,31 +32,36 @@ BEGIN
          -- Результат
          RETURN QUERY
              SELECT
-                  0 :: Integer           AS Id
-               ,  0 :: Integer           AS GoodsId
+                  0 :: Integer              AS Id
+               ,  0 :: Integer              AS GoodsId
                , lfGet_ObjectCode(0, zc_Object_Goods())  AS GoodsCode
-               , '' :: TVarChar          AS GoodsName
-               ,  0 :: Integer           AS GoodsGroupId
-               , '' :: TVarChar          AS GoodsGroupName
-               ,  0 :: Integer           AS MeasureId
-               , '' :: TVarChar          AS MeasureName
-               ,  0 :: Integer           AS JuridicalId
-               , '' :: TVarChar          AS JuridicalName
-               ,  0 :: Integer           AS CompositionId
-               , '' :: TVarChar          AS CompositionName
-               ,  0 :: Integer           AS GoodsInfoId
-               , '' :: TVarChar          AS GoodsInfoName
-               ,  0 :: Integer           AS LineFabricaId
-               , '' :: TVarChar          AS LineFabricaName
-               ,  0 :: Integer           AS LabelId
-               , '' :: TVarChar          AS LabelName
-               ,  0 :: Integer           AS GoodsSizeId
-               , '' :: TVarChar          AS GoodsSizeName
-               , 0  :: TFloat            AS Amount
-               , 0  :: TFloat            AS OperPrice
-               , 1  :: TFloat            AS CountForPrice
-               , 0  :: TFloat            AS OperPriceList
-                ;
+               , '' :: TVarChar             AS GoodsName
+               ,  0 :: Integer              AS GoodsGroupId
+               , '' :: TVarChar             AS GoodsGroupName
+               , Object_Measure.Id          AS MeasureId
+               , Object_Measure.ValueData   AS MeasureName
+               ,  0 :: Integer              AS JuridicalId
+               , '' :: TVarChar             AS JuridicalName
+               ,  0 :: Integer              AS CompositionId
+               , '' :: TVarChar             AS CompositionName
+               ,  0 :: Integer              AS GoodsInfoId
+               , '' :: TVarChar             AS GoodsInfoName
+               ,  0 :: Integer              AS LineFabricaId
+               , '' :: TVarChar             AS LineFabricaName
+               ,  0 :: Integer              AS LabelId
+               , '' :: TVarChar             AS LabelName
+               ,  0 :: Integer              AS GoodsSizeId
+               , '' :: TVarChar             AS GoodsSizeName
+               , 0  :: TFloat               AS Amount
+               , 0  :: TFloat               AS OperPrice
+               , 1  :: TFloat               AS CountForPrice
+               , 0  :: TFloat               AS OperPriceList
+             FROM Object AS Object_Measure
+             WHERE Object_Measure.DescId   = zc_Object_Measure()
+               AND Object_Measure.isErased = FALSE
+             ORDER BY Object_Measure.Id
+             LIMIT 1
+            ;
 
      ELSE
          -- Результат

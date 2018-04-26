@@ -120,9 +120,7 @@ type
     bbUpdateRecord1: TdxBarButton;
     actInsertAction: TdsdInsertUpdateAction;
     actUpdateAction: TdsdInsertUpdateAction;
-    mactInsertAction: TMultiAction;
     actRefreshMI: TdsdDataSetRefresh;
-    mactUpdateAction: TMultiAction;
     JuridicalName: TcxGridDBColumn;
     dxBarButton1: TdxBarButton;
     actPrintIn: TdsdPrintAction;
@@ -131,7 +129,6 @@ type
     spSelectPrintSticker: TdsdStoredProc;
     TotalSummBalance: TcxGridDBColumn;
     actInsertMaskAction: TdsdInsertUpdateAction;
-    mactInsertMaskAction: TMultiAction;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
     actPrintInSecond: TdsdPrintAction;

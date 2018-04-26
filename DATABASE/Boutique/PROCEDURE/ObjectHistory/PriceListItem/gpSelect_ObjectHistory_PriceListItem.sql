@@ -259,8 +259,8 @@ BEGIN
            , tmpPartionGoods.AmountDebt      :: TFloat
            , (COALESCE(tmpPartionGoods.Remains, 0) + COALESCE(tmpPartionGoods.AmountDebt, 0)) :: TFloat  AS RemainsAll
 
-           , CASE WHEN tmpPrice.StartDate = zc_DateStart() OR tmpPrice.StartDate < '01.01.1980' THEN NULL ELSE tmpPrice.StartDate END :: TDateTime  AS StartDate
-           , CASE WHEN tmpPrice.EndDate   = zc_DateEnd() THEN NULL ELSE tmpPrice.EndDate   END :: TDateTime  AS EndDate
+           , CASE WHEN tmpPrice.StartDate = zc_DateStart() OR tmpPrice.StartDate < '01.01.1980' THEN NULL ELSE tmpPrice.StartDate END :: TDateTime AS StartDate
+           , CASE WHEN tmpPrice.EndDate   = zc_DateEnd() THEN NULL ELSE tmpPrice.EndDate END :: TDateTime AS EndDate
            , COALESCE (tmpPrice.ValuePrice, 0) :: TFloat  AS ValuePrice
 
            , Object_Insert.ValueData   AS InsertName

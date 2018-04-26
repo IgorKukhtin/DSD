@@ -1,27 +1,5 @@
 -- Function: lpInsertUpdate_Object_PartionGoods
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_PartionGoods (Integer, Integer, Integer, Integer, Integer
-                                                          , TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat
-                                                          , Integer, Integer, Integer, Integer, Integer, Integer, Integer
-                                                          , Integer, Integer, Integer, Integer, Integer, Integer, Integer
-                                                           );
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_PartionGoods (Integer, Integer, Integer, Integer, Integer
-                                                          , TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat
-                                                          , Integer, Integer, Integer, Integer, Integer, Integer, Integer
-                                                          , Integer, Integer, Integer, Integer, Integer, Integer, Integer
-                                                           );
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_PartionGoods (Integer, Integer, Integer, Integer
-                                                          , TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat
-                                                          , Integer, Integer, Integer, Integer, Integer, Integer, Integer
-                                                          , Integer, Integer, Integer, Integer, Integer, Integer, Integer
-                                                           );
-
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_PartionGoods (Integer, Integer, Integer, Integer
-                                                          , TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat
-                                                          , Integer, Integer, Integer, Integer, Integer, Integer, Integer
-                                                          , Integer, Integer, Integer, Integer, Integer, Integer, Integer
-                                                           );
-
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_PartionGoods (Integer, Integer, Integer, Integer
                                                           , TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat
                                                           , Integer, Integer, Integer, Integer, Integer, Integer, Integer
@@ -312,7 +290,7 @@ BEGIN
                               WHERE MovementItem.Id = vbId_income_ch
                              )
                             ;
-    
+
          -- 2.1.2. есть ли ПРОВЕДЕННЫЕ документы - все
          ELSE
              -- RAISE EXCEPTION 'Ошибка.Найдено движение <%> № <%> от <%>.Нельзя корректировать <Состав> или <Описание> или <Линия> или <Название>.'

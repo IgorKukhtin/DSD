@@ -199,8 +199,8 @@ BEGIN
              tmpDiscount.Id
            , tmpDiscount.ObjectId
 
-           , CASE WHEN tmpDiscount.StartDate IN (zc_DateStart(), zc_DateEnd()) THEN NULL ELSE tmpDiscount.StartDate END ::TDateTime  AS StartDate
-           , CASE WHEN tmpDiscount.EndDate   IN (zc_DateStart(), zc_DateEnd()) THEN NULL ELSE tmpDiscount.EndDate   END ::TDateTime  AS EndDate
+           , CASE WHEN tmpDiscount.StartDate = zc_DateStart() OR tmpDiscount.StartDate < '01.01.1980' THEN NULL ELSE tmpDiscount.StartDate END :: TDateTime AS StartDate
+           , CASE WHEN tmpDiscount.EndDate   = zc_DateEnd() THEN NULL ELSE tmpDiscount.EndDate END :: TDateTime AS EndDate
 
            , COALESCE(tmpDiscount.ValueDiscount, NULL) :: TFloat  AS ValueDiscount
 
