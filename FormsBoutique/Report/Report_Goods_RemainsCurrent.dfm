@@ -1476,6 +1476,49 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPriceListGoods: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088'/'#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1080#1089#1090#1086#1088#1080#1080
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088'/'#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1080#1089#1090#1086#1088#1080#1080
+      ImageIndex = 28
+      FormName = 'TPriceListGoodsItemForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'PriceListId'
+          Value = 'zc_PriceList_Basis()'
+          Component = MasterCDS
+          ComponentItem = 'PriceListId_Basis'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PriceListName'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'PriceListName_Basis'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsNameFull'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1627,6 +1670,14 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         end
         item
           Visible = True
+          ItemName = 'bbPriceListGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGoodsPrintList'
         end
         item
@@ -1719,6 +1770,10 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     end
     object bbPrintIn: TdxBarButton
       Action = actPrintIn
+      Category = 0
+    end
+    object bbPriceListGoods: TdxBarButton
+      Action = actPriceListGoods
       Category = 0
     end
   end
