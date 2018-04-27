@@ -140,7 +140,7 @@ type
     cxLabel9: TcxLabel;
     edGoodsPrint: TcxButtonEdit;
     GuidesGoodsPrint: TdsdGuides;
-    spDelete_Object_GoodsPrint: TdsdStoredProc;
+    spGet_GoodsPrint_Null: TdsdStoredProc;
     spSelectPrintStickerList: TdsdStoredProc;
     spGet_User_curr: TdsdStoredProc;
     spInsertUpdate_GoodsPrint: TdsdStoredProc;

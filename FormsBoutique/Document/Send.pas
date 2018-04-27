@@ -137,7 +137,7 @@ type
     edGoodsPrint: TcxButtonEdit;
     GuidesGoodsPrint: TdsdGuides;
     spSelectPrintStickerList: TdsdStoredProc;
-    spDelete_Object_GoodsPrint: TdsdStoredProc;
+    spGet_GoodsPrint_Null: TdsdStoredProc;
     spGet_User_curr: TdsdStoredProc;
     spInsertUpdate_GoodsPrint: TdsdStoredProc;
     spUpdate_FloatValue_DS: TdsdStoredProc;

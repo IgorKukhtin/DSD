@@ -945,10 +945,13 @@ object IncomeForm: TIncomeForm
           StoredProc = spGetTotalSumm
         end
         item
+          StoredProc = spSelectMI
+        end
+        item
           StoredProc = spGet_User_curr
         end
         item
-          StoredProc = spSelectMI
+          StoredProc = spGet_GoodsPrint_Null
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1596,10 +1599,10 @@ object IncomeForm: TIncomeForm
       Category = 'PrintSticker'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spDelete_Object_GoodsPrint
+      StoredProc = spGet_GoodsPrint_Null
       StoredProcList = <
         item
-          StoredProc = spDelete_Object_GoodsPrint
+          StoredProc = spGet_GoodsPrint_Null
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1042#1057#1045' '#1080#1079' '#1087#1077#1095#1072#1090#1080' '#1094#1077#1085#1085#1080#1082#1086#1074
       ImageIndex = 52
@@ -2364,17 +2367,16 @@ object IncomeForm: TIncomeForm
     Left = 766
     Top = 22
   end
-  object spDelete_Object_GoodsPrint: TdsdStoredProc
-    StoredProcName = 'gpDelete_Object_GoodsPrint'
+  object spGet_GoodsPrint_Null: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_GoodsPrint_Null'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'ioOrd'
+        Name = 'outOrd'
         Value = '0'
         Component = GuidesGoodsPrint
         ComponentItem = 'Key'
-        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
