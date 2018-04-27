@@ -75,6 +75,12 @@ type
     spGet_PrinterNull: TdsdStoredProc;
     actGet_PrinterNull: TdsdExecStoredProc;
     mactPrint: TMultiAction;
+    BarCode_item: TcxGridDBColumn;
+    actPrint_BarCode: TdsdPrintAction;
+    macPrint_BarCode: TMultiAction;
+    spPrint_Barcode: TdsdStoredProc;
+    dsdStoredProc1: TdsdStoredProc;
+    dsdPrintAction1: TdsdPrintAction;
   private
     { Private declarations }
   public

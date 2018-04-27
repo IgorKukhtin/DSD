@@ -6,7 +6,7 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1081
-  ExplicitHeight = 460
+  ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -371,6 +371,14 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
+          end
+          object BarCode_item: TcxGridDBColumn
+            Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'BarCode_item'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1064#1090#1088#1080#1093' '#1082#1086#1076' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            Width = 80
           end
           object LabelName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -751,6 +759,20 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
       end>
   end
   inherited ActionList: TActionList
+    object macPrint_BarCode: TMultiAction [1]
+      Category = 'Print'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_PrinterNull
+        end
+        item
+          Action = actPrint_BarCode
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+    end
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -761,6 +783,89 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
           StoredProc = spGet_Unit
         end>
       Caption = 'actGet_UserUnit'
+    end
+    object actPrint_BarCode: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 43101d
+          FromParam.Component = deStart
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'StartDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 43101d
+          FromParam.Component = deEnd
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'EndDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spPrint_Barcode
+      StoredProcList = <
+        item
+          StoredProc = spPrint_Barcode
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1087#1086' '#1096'/'#1082
+      Hint = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1087#1086' '#1096'/'#1082
+      ImageIndex = 3
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 'PartnerName;GoodsCode;LabelName;GoodsSizeName'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 43101d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 43101d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintReport_SaleReturnIn_BarCode'
+      ReportNameParam.Value = 'PrintReport_SaleReturnIn_BarCode'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = Null
+      PrinterNameParam.Component = FormParams
+      PrinterNameParam.ComponentItem = 'PrinterName'
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+      PreviewWindowMaximized = False
     end
     object mactPrint: TMultiAction
       Category = 'Print'
@@ -1224,6 +1329,32 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         end>
       Caption = 'Get_Printer'
     end
+    object dsdPrintAction1: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = dsdStoredProc1
+      StoredProcList = <
+        item
+          StoredProc = dsdStoredProc1
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <>
+      ReportName = 'PrintReport_SaleReturnIn_BarCode'
+      ReportNameParam.Value = 'PrintReport_SaleReturnIn_BarCode'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1371,7 +1502,7 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
       Category = 0
     end
     object bbPrint: TdxBarButton
-      Action = mactPrint
+      Action = macPrint_BarCode
       Category = 0
     end
     object bbShowAll: TdxBarButton
@@ -1580,8 +1711,8 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 736
-    Top = 176
+    Left = 744
+    Top = 168
   end
   object spSelectPrint_Check: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Check_Print'
@@ -1698,5 +1829,78 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
     PackSize = 1
     Left = 968
     Top = 240
+  end
+  object spPrint_Barcode: TdsdStoredProc
+    StoredProcName = 'gpReport_SaleReturnIn_BarCode'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 472
+    Top = 168
+  end
+  object dsdStoredProc1: TdsdStoredProc
+    StoredProcName = 'gpReport_SaleReturnIn_BarCode'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 559
+    Top = 168
   end
 end
