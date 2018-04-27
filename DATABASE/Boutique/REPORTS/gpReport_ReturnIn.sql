@@ -299,6 +299,20 @@ BEGIN
                                   , Object_PartionGoods.CountForPrice
                                   , COALESCE (MIBoolean_Checked.ValueData, FALSE)
                                   , COALESCE (MIFloat_OperPriceList.ValueData, 0)
+                            HAVING (SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount > 0 AND MIConatiner.MovementDescId IN (zc_Movement_ReturnIn()) THEN 1 * MIConatiner.Amount ELSE 0 END) <> 0
+                                  -- С\с возврат - calc
+                                OR SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount > 0 AND MIConatiner.MovementDescId IN (zc_Movement_ReturnIn()) THEN 1 * MIConatiner.Amount
+                                     * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END
+                                     * CASE WHEN Object_PartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 ELSE COALESCE (tmpCurrency.Amount, 0) END
+                                     / CASE WHEN tmpCurrency.ParValue > 0 THEN tmpCurrency.ParValue  ELSE 1 END
+                                       ELSE 0 END) <> 0
+                                  -- Сумма возврат
+                                OR SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ() AND MIConatiner.AnalyzerId IN (zc_Enum_AnalyzerId_ReturnSumm_10501(), zc_Enum_AnalyzerId_ReturnSumm_10502()) AND MIConatiner.MovementDescId IN (zc_Movement_ReturnIn()) THEN 1 * MIConatiner.Amount ELSE 0 END) <> 0
+                                  -- С\с возврат
+                                OR SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ() AND MIConatiner.AnalyzerId = zc_Enum_AnalyzerId_ReturnSumm_10600() AND MIConatiner.MovementDescId IN (zc_Movement_ReturnIn()) THEN -1 * MIConatiner.Amount ELSE 0 END) <> 0
+                                  -- Скидка возврат
+                                OR SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ() AND MIConatiner.AnalyzerId = zc_Enum_AnalyzerId_ReturnSumm_10502() AND MIConatiner.MovementDescId IN (zc_Movement_ReturnIn()) THEN -1 * MIConatiner.Amount ELSE 0 END) <> 0
+                                    )
                           )
 
        , tmpData AS (SELECT CASE WHEN inisPartion = TRUE THEN tmpData_all.PartionId ELSE 0 END  AS PartionId
