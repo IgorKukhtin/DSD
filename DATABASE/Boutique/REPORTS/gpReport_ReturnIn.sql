@@ -35,7 +35,8 @@ RETURNS TABLE (PartionId             Integer
 
              , GoodsId               Integer
              , GoodsCode             Integer
-             , GoodsName             VarChar (100)
+             , GoodsName             TVarChar
+             , BarCode_item          TVarChar
              , GoodsInfoName         TVarChar
              , LineFabricaName       TVarChar
              , GoodsSizeId           Integer
@@ -222,7 +223,7 @@ BEGIN
                                 , ROW_NUMBER() OVER (PARTITION BY Object_PartionGoods.MovementItemId ORDER BY CASE WHEN Object_PartionGoods.UnitId = COALESCE (MIConatiner.ObjectExtId_Analyzer, Object_PartionGoods.UnitId) THEN 0 ELSE 1 END ASC) AS Ord
 
                                 , COALESCE (MIBoolean_Checked.ValueData, FALSE)         AS isChecked
-                                
+                                , MIString_BarCode.ValueData                            AS BarCode_item
                            FROM Object_PartionGoods
 
                                 LEFT JOIN MovementItemContainer AS MIConatiner
@@ -255,6 +256,10 @@ BEGIN
 
                                 LEFT JOIN tmpDiscountPeriod ON tmpDiscountPeriod.PeriodId = Object_PartionGoods.PeriodId
                                                            AND MIConatiner.OperDate BETWEEN tmpDiscountPeriod.StartDate AND tmpDiscountPeriod.EndDate
+
+                                LEFT JOIN MovementItemString AS MIString_BarCode
+                                                             ON MIString_BarCode.MovementItemId = COALESCE (Object_PartionMI.ObjectCode, MIConatiner.MovementItemId)
+                                                            AND MIString_BarCode.DescId         = zc_MIString_BarCode()
 
                            WHERE (Object_PartionGoods.PartnerId  = inPartnerId        OR inPartnerId   = 0)
                              AND (Object_PartionGoods.BrandId    = inBrandId          OR inBrandId     = 0)
@@ -299,6 +304,7 @@ BEGIN
                                   , Object_PartionGoods.CountForPrice
                                   , COALESCE (MIBoolean_Checked.ValueData, FALSE)
                                   , COALESCE (MIFloat_OperPriceList.ValueData, 0)
+                                  , MIString_BarCode.ValueData
                             HAVING (SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount > 0 AND MIConatiner.MovementDescId IN (zc_Movement_ReturnIn()) THEN 1 * MIConatiner.Amount ELSE 0 END) <> 0
                                   -- С\с возврат - calc
                                 OR SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount > 0 AND MIConatiner.MovementDescId IN (zc_Movement_ReturnIn()) THEN 1 * MIConatiner.Amount
@@ -346,6 +352,7 @@ BEGIN
                           , tmpData_all.OperPrice
                           , tmpData_all.OperPriceList
                           , tmpData_all.isChecked
+                          , tmpData_all.BarCode_item
                           , SUM (CASE WHEN tmpData_all.Ord = 1 THEN tmpData_all.Income_Amount ELSE 0 END) AS Income_Amount
 
                           , SUM (tmpData_all.Debt_Amount)           AS Debt_Amount
@@ -388,6 +395,7 @@ BEGIN
                             , tmpData_all.OperPrice
                             , tmpData_all.OperPriceList
                             , tmpData_all.isChecked
+                            , tmpData_all.BarCode_item
                     )
 
 
@@ -407,7 +415,8 @@ BEGIN
 
              , Object_Goods.Id                            AS GoodsId
              , Object_Goods.ObjectCode                    AS GoodsCode
-             , Object_Goods.ValueData    :: VarChar (100) AS GoodsName
+             , Object_Goods.ValueData    :: TVarChar      AS GoodsName
+             , tmpData.BarCode_item      :: TVarChar      AS BarCode_item
              , Object_GoodsInfo.ValueData                 AS GoodsInfoName
              , Object_LineFabrica.ValueData               AS LineFabricaName
              , Object_GoodsSize.Id                        AS GoodsSizeId

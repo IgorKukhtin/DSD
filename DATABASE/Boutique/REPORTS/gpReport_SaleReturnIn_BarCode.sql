@@ -45,6 +45,10 @@ RETURNS TABLE (PartionId             Integer
              , Sale_Summ_10203       TFloat -- Скидка клиента
              , Sale_Summ_10204       TFloat -- Доп. скидка
              , Sale_Summ_10200       TFloat -- итого сумма скидки
+             
+             , Return_Amount         TFloat
+             , Return_Summ           TFloat
+             , Return_Summ_10200     TFloat
 
   )
 AS
@@ -103,12 +107,68 @@ BEGIN
              , tmpData.Sale_Summ_10204      
              , tmpData.Sale_Summ_10200      
 
+             , 0 :: TFloat AS Return_Amount
+             , 0 :: TFloat AS Return_Summ
+             , 0 :: TFloat AS Return_Summ_10200
+             
+
         FROM gpReport_Sale (inStartDate := inStartDate, inEndDate := inEndDate, inUnitId := inUnitId
                           , inClientId := 0, inPartnerId := 0, inBrandId := 0, inPeriodId := 0
-                          , inStartYear := 0, inEndYear := 0, inisPartion := 'False' 
-                          , inisSize := TRUE, inisPartner := 'TRUE' , inisMovement := 'False'
-                          , inIsClient := 'False' , inisSale:= 'TRUE',  inSession := inSession
+                          , inStartYear := 0, inEndYear := 0, inisPartion := FALSE 
+                          , inisSize := TRUE, inisPartner := TRUE , inisMovement := FALSE
+                          , inIsClient := FALSE, inisSale := TRUE, inSession := inSession
                           ) AS tmpData
+      UNION 
+        SELECT tmpData.PartionId
+             , tmpData.BrandName
+             , tmpData.PeriodName
+             , tmpData.PeriodYear
+             , tmpData.PartnerId
+             , tmpData.PartnerName
+
+             , tmpData.GoodsGroupNameFull
+             , tmpData.GoodsGroupName
+             , tmpData.LabelName
+
+             , tmpData.GoodsId       
+             , tmpData.GoodsCode     
+             , tmpData.GoodsName
+             , tmpData.BarCode_item  
+             , tmpData.GoodsInfoName 
+             , tmpData.LineFabricaName       
+             , tmpData.GoodsSizeId   
+             , tmpData.GoodsSizeName 
+             , tmpData.MeasureName   
+
+             , tmpData.UnitName      
+             , tmpData.ClientName    
+             , tmpData.DiscountSaleKindName
+             , tmpData.ChangePercent
+
+             , tmpData.OperPriceList
+
+             , tmpData.Debt_Amount         
+             , 0 :: TFloat AS Sale_Amount
+             , 0 :: TFloat AS Sale_Summ
+             , 0 :: TFloat AS Sale_Summ_prof       
+             , 0 :: TFloat AS Sale_Summ_10100      
+             , 0 :: TFloat AS Sale_Summ_10201      
+             , 0 :: TFloat AS Sale_Summ_10202      
+             , 0 :: TFloat AS Sale_Summ_10203      
+             , 0 :: TFloat AS Sale_Summ_10204      
+             , 0 :: TFloat AS Sale_Summ_10200      
+
+             , tmpData.Return_Amount        :: TFloat
+             , tmpData.Return_Summ          :: TFloat
+             , tmpData.Return_Summ_10200    :: TFloat
+
+        FROM gpReport_ReturnIn (inStartDate := inStartDate, inEndDate := inEndDate, inUnitId := inUnitId
+                              , inClientId := 0, inPartnerId := 0, inBrandId := 0, inPeriodId := 0
+                              , inStartYear := 0, inEndYear := 0, inisPartion := FALSE 
+                              , inisSize := TRUE, inisPartner := TRUE , inisMovement := FALSE
+                              , inIsClient := FALSE,  inSession := inSession
+                              ) AS tmpData
+
            ;
 
 END;
@@ -122,5 +182,4 @@ $BODY$
 */
 
 -- тест
--- 
-SELECT * FROM gpReport_SaleReturnIn_BarCode (inStartDate:= '09.04.2018', inEndDate:= '10.04.2018', inUnitId:= 1601, inSession:= '6');
+-- SELECT * FROM gpReport_SaleReturnIn_BarCode (inStartDate:= '01.04.2018', inEndDate:= '30.04.2018', inUnitId:= 1601, inSession:= '6');
