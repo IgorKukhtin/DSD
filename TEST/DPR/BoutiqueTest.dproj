@@ -542,10 +542,6 @@
 				<Form>IncomeJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Document\Income.pas">
-				<Form>IncomeForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Document\Movement_PeriodDialog.pas">
 				<Form>Movement_PeriodDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1016,6 +1012,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Document\DiscountPeriodItemBySendDialog.pas">
 				<Form>DiscountPeriodItemBySendDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Document\Income.pas">
+				<Form>IncomeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

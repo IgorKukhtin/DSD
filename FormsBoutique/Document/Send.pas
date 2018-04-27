@@ -130,9 +130,24 @@ type
     macUpdateAll: TMultiAction;
     ExecuteDialogDiscount: TExecuteDialog;
     spInsertUpdate_Discount: TdsdStoredProc;
-    bb: TdxBarButton;
+    bbUpdateAll: TdxBarButton;
     DiscountTax_From: TcxGridDBColumn;
     DiscountTax_To: TcxGridDBColumn;
+    cxLabel9: TcxLabel;
+    edGoodsPrint: TcxButtonEdit;
+    GuidesGoodsPrint: TdsdGuides;
+    spSelectPrintStickerList: TdsdStoredProc;
+    spDelete_Object_GoodsPrint: TdsdStoredProc;
+    spGet_User_curr: TdsdStoredProc;
+    spInsertUpdate_GoodsPrint: TdsdStoredProc;
+    spUpdate_FloatValue_DS: TdsdStoredProc;
+    actPrintStickerList: TdsdPrintAction;
+    actDeleteGoodsPrintList: TdsdExecStoredProc;
+    actUpdate_FloatValue_DS: TdsdExecStoredProc;
+    actInsertUpdate_GoodsPrint: TdsdExecStoredProc;
+    macAddGoodsPrintList_Rem: TMultiAction;
+    mactGoodsPrintList_Print: TMultiAction;
+    bbGoodsPrintList_Print: TdxBarButton;
   private
   public
   end;

@@ -155,6 +155,24 @@ object IncomeForm: TIncomeForm
       TabOrder = 15
       Width = 346
     end
+    object cxLabel9: TcxLabel
+      Left = 663
+      Top = 5
+      Caption = #1055#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074':'
+    end
+    object edGoodsPrint: TcxButtonEdit
+      Left = 663
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 17
+      Width = 262
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
@@ -698,6 +716,14 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
+          ItemName = 'bbGoodsPrintList_Print'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMIProtocol'
         end
         item
@@ -765,15 +791,15 @@ object IncomeForm: TIncomeForm
       Category = 0
     end
     object bbAddMask: TdxBarButton
-      Action = actInsertMaskAction
+      Action = mactInsertMaskAction
       Category = 0
     end
     object bbInsertRecord: TdxBarButton
-      Action = actInsertAction
+      Action = mactInsertAction
       Category = 0
     end
     object bbUpdateRecord1: TdxBarButton
-      Action = actUpdateAction
+      Action = mactUpdateAction
       Category = 0
     end
     object dxBarButton1: TdxBarButton
@@ -790,6 +816,10 @@ object IncomeForm: TIncomeForm
     end
     object bbPrintInSecond: TdxBarButton
       Action = actPrintInSecond
+      Category = 0
+    end
+    object bbGoodsPrintList_Print: TdxBarButton
+      Action = mactGoodsPrintList_Print
       Category = 0
     end
   end
@@ -884,13 +914,18 @@ object IncomeForm: TIncomeForm
     object actRefreshMI: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGetTotalSumm
+      StoredProc = spSelectMI
       StoredProcList = <
+        item
+          StoredProc = spSelectMI
+        end
         item
           StoredProc = spGetTotalSumm
         end
         item
           StoredProc = spSelectMI
+        end
+        item
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -908,6 +943,9 @@ object IncomeForm: TIncomeForm
         end
         item
           StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spGet_User_curr
         end
         item
           StoredProc = spSelectMI
@@ -1379,12 +1417,25 @@ object IncomeForm: TIncomeForm
         end>
       isShowModal = False
     end
+    object mactInsertAction: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertAction
+        end
+        item
+          Action = actRefreshMI
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      ImageIndex = 0
+    end
     object actInsertAction: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      ImageIndex = 0
       FormName = 'TIncomeItemEditForm'
       FormNameParam.Value = 'TIncomeItemEditForm'
       FormNameParam.DataType = ftString
@@ -1412,16 +1463,27 @@ object IncomeForm: TIncomeForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
-      DataSource = MasterDS
-      DataSetRefresh = actRefreshMI
       IdFieldName = 'Id'
+    end
+    object mactUpdateAction: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateAction
+        end
+        item
+          Action = actRefreshMI
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      ImageIndex = 1
+      ShortCut = 115
     end
     object actUpdateAction: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      ImageIndex = 1
+      Caption = 'actInsertAction'
       FormName = 'TIncomeItemEditForm'
       FormNameParam.Value = 'TIncomeItemEditForm'
       FormNameParam.DataType = ftString
@@ -1450,17 +1512,28 @@ object IncomeForm: TIncomeForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
-      ActionType = acUpdate
-      DataSource = MasterDS
-      DataSetRefresh = actRefreshMI
       IdFieldName = 'Id'
+    end
+    object mactInsertMaskAction: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertMaskAction
+        end
+        item
+          Action = actRefreshMI
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077' <'#1058#1086#1074#1072#1088'>'
+      ImageIndex = 54
+      ShortCut = 45
     end
     object actInsertMaskAction: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077' <'#1058#1086#1074#1072#1088'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077' <'#1058#1086#1074#1072#1088'>'
-      ImageIndex = 54
       FormName = 'TIncomeItemEditForm'
       FormNameParam.Value = 'TIncomeItemEditForm'
       FormNameParam.DataType = ftString
@@ -1490,9 +1563,102 @@ object IncomeForm: TIncomeForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
-      DataSource = MasterDS
-      DataSetRefresh = actRefreshMI
       IdFieldName = 'Id'
+    end
+    object actPrintStickerList: TdsdPrintAction
+      Category = 'PrintSticker'
+      MoveParams = <>
+      StoredProc = spSelectPrintStickerList
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintStickerList
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074
+      Hint = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074
+      ImageIndex = 18
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <>
+      ReportName = 'PrintMovement_IncomeSticker'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.Value = 'PrintMovement_IncomeSticker'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actDeleteGoodsPrintList: TdsdExecStoredProc
+      Category = 'PrintSticker'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spDelete_Object_GoodsPrint
+      StoredProcList = <
+        item
+          StoredProc = spDelete_Object_GoodsPrint
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1042#1057#1045' '#1080#1079' '#1087#1077#1095#1072#1090#1080' '#1094#1077#1085#1085#1080#1082#1086#1074
+      ImageIndex = 52
+    end
+    object actUpdate_FloatValue_DS: TdsdExecStoredProc
+      Category = 'PrintSticker'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      StoredProc = spUpdate_FloatValue_DS
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_FloatValue_DS
+        end>
+      Caption = 'actUpdate_FloatValue_DS'
+    end
+    object actInsertUpdate_GoodsPrint: TdsdExecStoredProc
+      Category = 'PrintSticker'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      StoredProc = spInsertUpdate_GoodsPrint
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_GoodsPrint
+        end>
+      Caption = 'actUpdate_FloatValue_DS'
+    end
+    object macAddGoodsPrintList_Rem: TMultiAction
+      Category = 'PrintSticker'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_FloatValue_DS
+        end
+        item
+          Action = actInsertUpdate_GoodsPrint
+        end>
+      View = cxGridDBTableView
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1074' '#1087#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074' '#1080' '#1085#1072#1087#1077#1095#1072#1090#1072#1090#1100' '
+      ImageIndex = 15
+    end
+    object mactGoodsPrintList_Print: TMultiAction
+      Category = 'PrintSticker'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actDeleteGoodsPrintList
+        end
+        item
+          Action = macAddGoodsPrintList_Rem
+        end
+        item
+          Action = actPrintStickerList
+        end>
+      QuestionBeforeExecute = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1087#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074' '#1076#1083#1103' '#1089#1087#1080#1089#1082#1072'?'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074' '#1076#1083#1103' '#1089#1087#1080#1089#1082#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074' '#1076#1083#1103' '#1089#1087#1080#1089#1082#1072
+      ImageIndex = 15
     end
   end
   object MasterDS: TDataSource
@@ -2056,7 +2222,8 @@ object IncomeForm: TIncomeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 648
+    Left = 584
+    Top = 8
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -2133,5 +2300,266 @@ object IncomeForm: TIncomeForm
     PackSize = 1
     Left = 727
     Top = 200
+  end
+  object GuidesGoodsPrint: TdsdGuides
+    KeyField = 'Ord'
+    LookupControl = edGoodsPrint
+    Key = '0'
+    FormNameParam.Value = 'TGoodsPrintChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsPrintChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'UserId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'UserId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesGoodsPrint
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsPrint
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUserId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'UserId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUserName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 766
+    Top = 22
+  end
+  object spDelete_Object_GoodsPrint: TdsdStoredProc
+    StoredProcName = 'gpDelete_Object_GoodsPrint'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioOrd'
+        Value = '0'
+        Component = GuidesGoodsPrint
+        ComponentItem = 'Key'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsPrintName'
+        Value = ''
+        Component = GuidesGoodsPrint
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outUserId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'UserId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outUserName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 840
+    Top = 184
+  end
+  object spSelectPrintStickerList: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Income_PrintSticker'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'UserId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsPrintId'
+        Value = '0'
+        Component = GuidesGoodsPrint
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsGoodsPrint'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 759
+    Top = 232
+  end
+  object spGet_User_curr: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_User_curr'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'UserId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'UserId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 856
+    Top = 232
+  end
+  object spInsertUpdate_GoodsPrint: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_GoodsPrint'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioOrd'
+        Value = '0'
+        Component = GuidesGoodsPrint
+        ComponentItem = 'Key'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioUserId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'UserId'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsPrintName'
+        Value = ''
+        Component = edGoodsPrint
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outUserName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 856
+    Top = 280
+  end
+  object spUpdate_FloatValue_DS: TdsdStoredProc
+    StoredProcName = 'gpUpdate_FloatValue_DS'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inValue'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outValue'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 760
+    Top = 296
   end
 end
