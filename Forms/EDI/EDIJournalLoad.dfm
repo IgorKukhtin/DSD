@@ -4,6 +4,8 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
   ClientWidth = 1362
   AddOnFormData.OnLoadAction = actSetDefaults
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -398
+  ExplicitTop = -31
   ExplicitWidth = 1378
   ExplicitHeight = 488
   PixelsPerInch = 96
@@ -589,6 +591,14 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
             OptionsView.HeaderAutoHeight = True
             OptionsView.Indicator = True
             Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+            object OperDate_Insert: TcxGridDBColumn
+              Caption = #1044#1072#1090#1072'/'#1074#1088'. '#1089#1086#1079#1076#1072#1085#1080#1077
+              DataBinding.FieldName = 'OperDate_Insert'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderHint = #1055#1088#1086#1090#1086#1082#1086#1083' '#1079#1072#1075#1088#1091#1079#1082#1080' '#1080#1079' EDI'
+              Width = 70
+            end
             object clGoodsGLNCode: TcxGridDBColumn
               Caption = #1050#1086#1076' GLN'
               DataBinding.FieldName = 'GLNCode'

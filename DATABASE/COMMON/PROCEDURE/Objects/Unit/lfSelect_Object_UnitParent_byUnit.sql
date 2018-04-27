@@ -42,4 +42,5 @@ $BODY$
 -- тест
 -- SELECT * FROM lfSelect_Object_UnitParent_byUnit (8465) AS lfSelect_Object_UnitParent_byUnit JOIN Object_Unit_View ON Object_Unit_View.Id = lfSelect_Object_UnitParent_byUnit.UnitId ORDER BY 4
 -- SELECT * FROM lfSelect_Object_UnitParent_byUnit (8453) AS lfSelect_Object_UnitParent_byUnit JOIN Object_Unit_View ON Object_Unit_View.Id = lfSelect_Object_UnitParent_byUnit.UnitId ORDER BY 4
+-- SELECT * FROM lfSelect_Object_UnitParent_byUnit (8382) AS lfSelect_Object_UnitParent_byUnit JOIN Object_Unit_View ON Object_Unit_View.Id = lfSelect_Object_UnitParent_byUnit.UnitId ORDER BY 4
 

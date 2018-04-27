@@ -14,6 +14,7 @@ RETURNS TABLE (MovementId Integer, MovementItemId Integer, GLNCode TVarChar, Goo
              , AmountNoticeEDI TFloat, AmountNotice TFloat
              , AmountPartnerEDI TFloat, AmountPartner TFloat
              , SummPartnerEDI TFloat, SummPartner TFloat
+             , OperDate_Insert TDateTime
              , isCheck Boolean, isErased Boolean
               )
 AS
@@ -115,6 +116,18 @@ BEGIN
                                   GROUP BY tmpMI_OrderPrice.MovementId
                                          , tmpMI_OrderPrice.GoodsId
                                  )
+         -- строчна€ часть EDI - inMovementId
+       , tmpMI_find AS (SELECT MovementItem.Id
+                        FROM MovementItem
+                        WHERE MovementItem.MovementId = inMovementId
+                          AND MovementItem.DescId     =  zc_MI_Master()
+                          AND MovementItem.isErased   =  FALSE
+                       )
+       , tmpMI_Protocol AS (SELECT MovementItemProtocol.MovementItemId, MIN (MovementItemProtocol.OperDate) AS OperDate_Insert
+                            FROM MovementItemProtocol
+                            WHERE MovementItemProtocol.MovementItemId IN (SELECT DISTINCT tmpMI_find.Id FROM tmpMI_find)
+                            GROUP BY MovementItemProtocol.MovementItemId
+                           )
        -- –≈«”Ћ№“ј“
        SELECT
              tmpMI.MovementId
@@ -141,6 +154,8 @@ BEGIN
            , tmpMI.SummPartnerEDI :: TFloat AS SummPartnerEDI
            , tmpMI.SummPartner :: TFloat AS SummPartner
 
+           , CASE WHEN tmpMI.OperDate_Insert = zc_DateStart() THEN NULL ELSE tmpMI.OperDate_Insert END :: TDateTime AS OperDate_Insert
+
            , CASE WHEN tmpMI.AmountOrderEDI <> tmpMI.AmountOrder
                     OR tmpMI.AmountNoticeEDI <> tmpMI.AmountNotice
                     OR tmpMI.AmountPartnerEDI <> tmpMI.AmountPartner
@@ -148,7 +163,7 @@ BEGIN
                   THEN TRUE
                   ELSE FALSE
              END :: Boolean AS isCheck
-
+         
            , FALSE AS isErased
 
        FROM (SELECT tmpMI.MovementId
@@ -167,6 +182,7 @@ BEGIN
                   , SUM (tmpMI.AmountNotice) AS AmountNotice
                   , SUM (tmpMI.AmountPartner) AS AmountPartner
                   , SUM (tmpMI.SummPartner) AS SummPartner
+                  , MAX (tmpMI.OperDate_Insert) AS OperDate_Insert
              FROM (-- строчна€ часть EDI - inMovementId
                    SELECT inMovementId AS MovementId
                         , MAX (MovementItem.Id)                               AS MovementItemId
@@ -185,6 +201,7 @@ BEGIN
                         , 0 AS AmountNotice
                         , 0 AS AmountPartner
                         , 0 AS SummPartner
+                        , tmpMI_Protocol.OperDate_Insert
                    FROM MovementItem
                         LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                          ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -210,6 +227,8 @@ BEGIN
                                                   AND tmpMI_OrderPrice.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                         LEFT JOIN tmpMI_OrderPrice_two ON tmpMI_OrderPrice_two.MovementId = inMovementId
                                                       AND tmpMI_OrderPrice_two.GoodsId = MovementItem.ObjectId
+                        LEFT JOIN tmpMI_Protocol ON tmpMI_Protocol.MovementItemId = MovementItem.Id
+                                                      
                    WHERE MovementItem.MovementId = inMovementId
                      AND MovementItem.DescId =  zc_MI_Master()
                      AND MovementItem.isErased =  FALSE
@@ -218,6 +237,7 @@ BEGIN
                           , COALESCE (MIString_GLNCode.ValueData, '')
                           -- , COALESCE (MIFloat_Price.ValueData, COALESCE (tmpMI_OrderPrice.Price, 0))
                           , COALESCE (tmpMI_OrderPrice.Price, tmpMI_OrderPrice_two.Price)
+                          , tmpMI_Protocol.OperDate_Insert
                   UNION ALL
                    -- строчна€ часть Sale + Order
                    SELECT tmpMI_Sale_Order.MovementId
@@ -238,6 +258,7 @@ BEGIN
                                     THEN CAST (tmpMI_Sale_Order.AmountPartner * tmpMI_Sale_Order.Price / tmpMI_Sale_Order.CountForPrice AS NUMERIC (16, 2))
                                ELSE CAST (tmpMI_Sale_Order.AmountPartner * tmpMI_Sale_Order.Price AS NUMERIC (16, 2))
                           END AS SummPartner
+                        , zc_DateStart() AS OperDate_Insert
                    FROM (-- строчна€ часть Sale - vbMovementId_Sale
                          SELECT inMovementId      AS MovementId
                               , vbGoodsPropertyId AS GoodsPropertyId

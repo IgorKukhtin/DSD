@@ -191,7 +191,16 @@ where Object_Partner.DescId = zc_Object_Partner()
 
     -- Результат
     RETURN QUERY
-       WITH tmpMember AS (SELECT lfSelect.MemberId        AS MemberId
+       WITH tmpUnit_not AS (SELECT 954062 AS UnitId -- Отдел Х
+                           UNION 
+                            SELECT lfSelect.LocationId FROM lfSelect_Object_Unit_List (8382) AS lfSelect -- Админ
+                           UNION 
+                            SELECT lfSelect.LocationId FROM lfSelect_Object_Unit_List (8427) AS lfSelect -- Общефирменные
+                           UNION 
+                            SELECT lfSelect.LocationId FROM lfSelect_Object_Unit_List (8432) AS lfSelect -- Общепроизводственные
+                            
+                           )
+          , tmpMember AS (SELECT lfSelect.MemberId        AS MemberId
                                , Object_Member.DescId     AS DescId
                                , Object_Member.ObjectCode AS MemberCode
                                , Object_Member.ValueData  AS MemberName
@@ -200,7 +209,8 @@ where Object_Partner.DescId = zc_Object_Partner()
                           FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
                                INNER JOIN Object AS Object_Member ON Object_Member.Id = lfSelect.MemberId
                                LEFT  JOIN Object AS Object_Unit   ON Object_Unit.Id   = lfSelect.UnitId
-                          WHERE lfSelect.UnitId NOT IN (954062) -- Отдел Х
+                               LEFT  JOIN tmpUnit_not ON tmpUnit_not.UnitId = lfSelect.UnitId
+                          WHERE tmpUnit_not.UnitId IS NULL
                             AND Object_Member.isErased = FALSE
                             -- AND (inBranchCode= 301 OR (inBranchCode= 1 AND inIsGoodsComplete = TRUE))
                          )

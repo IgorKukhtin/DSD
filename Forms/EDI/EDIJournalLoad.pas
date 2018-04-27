@@ -195,6 +195,7 @@ type
     bbGridItemToExcel: TdxBarButton;
     bbGridProtocolToExcel: TdxBarButton;
     maEDIOrdersNOLoad: TMultiAction;
+    OperDate_Insert: TcxGridDBColumn;
   private
     { Private declarations }
   public
