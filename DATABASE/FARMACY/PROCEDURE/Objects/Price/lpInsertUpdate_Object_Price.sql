@@ -1,6 +1,5 @@
  -- Function: lpComplete_Movement_Income (Integer, Integer)
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Price (Integer, Integer, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Price (Integer, Integer, TFloat, TDateTime, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Price(
@@ -16,14 +15,14 @@ $BODY$
     DECLARE vbId Integer;
     DECLARE vbPrice_Value TFloat;
     DECLARE vbDateChange TDateTime;
-    DECLARE vbMCSValue TFloat;
+    DECLARE vbMCSValue  TFloat;
+    DECLARE vbMCSPeriod TFloat;
+    DECLARE vbMCSDay    TFloat;
 
-    DECLARE vbOperDate_StartBegin1 TDateTime;
+    -- DECLARE vbOperDate_StartBegin1 TDateTime;
     DECLARE vbOperDate_StartBegin2 TDateTime;
 BEGIN
 
-   vbOperDate_StartBegin1:= CLOCK_TIMESTAMP();
-   
    -- Если такая запись есть - достаем её ключу подр.-товар
    SELECT ObjectLink_Price_Unit.ObjectId          AS Id
         , ROUND(Price_Value.ValueData,2)::TFloat  AS Price_Value
@@ -33,11 +32,11 @@ BEGIN
              , vbPrice_Value
              , vbDateChange
              , vbMCSValue
-   FROM ObjectLink AS ObjectLink_Price_Unit
-        INNER JOIN ObjectLink AS Price_Goods
-                              ON Price_Goods.ObjectId      = ObjectLink_Price_Unit.ObjectId
-                             AND Price_Goods.DescId        = zc_ObjectLink_Price_Goods()
-                             AND Price_Goods.ChildObjectId = inGoodsId
+   FROM ObjectLink AS Price_Goods
+        INNER JOIN ObjectLink AS ObjectLink_Price_Unit
+                              ON ObjectLink_Price_Unit.ObjectId      = Price_Goods.ObjectId
+                             AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
+                             AND ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
         LEFT JOIN ObjectFloat AS Price_Value
                                ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
                               AND Price_Value.DescId   = zc_ObjectFloat_Price_Value()
@@ -47,20 +46,9 @@ BEGIN
         LEFT JOIN ObjectFloat AS MCS_Value
                               ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
                              AND MCS_Value.DescId   = zc_ObjectFloat_Price_MCSValue()
-   WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
-     AND ObjectLink_Price_Unit.ChildObjectId = inUnitId;
+   WHERE Price_Goods.DescId        = zc_ObjectLink_Price_Goods()
+     AND Price_Goods.ChildObjectId = inGoodsId;
 
-
-    -- !!!Протокол - отладка Скорости!!!
-    INSERT INTO Log_Reprice (InsertDate, StartDate, EndDate, MovementId, UserId, TextValue)
-      VALUES (CURRENT_TIMESTAMP, vbOperDate_StartBegin1, CLOCK_TIMESTAMP(), inUnitId, inUserId
-            , 'lpInsertUpdate_Object_Price'
-    || ' ' || inGoodsId             :: TVarChar
-    || ',' || inUnitId              :: TVarChar
-    || ',' || zfConvert_FloatToString (inPrice)
-    || ',' || CHR (39) || zfConvert_DateToString (inDate) || CHR (39)
-    || ',' || inUserId              :: TVarChar
-             );
 
     IF COALESCE(vbId,0)=0
     THEN
@@ -81,42 +69,37 @@ BEGIN
             -- сохранили св-во <Цена>
             PERFORM lpInsertUpdate_objectFloat (zc_ObjectFloat_Price_Value(), vbId, inPrice);
 
+
+            -- нашли, что б эти с-ва не изменять
+            SELECT OHF_MCSPeriod.ValueData AS MCSPeriod
+                 , OHF_MCSDay.ValueData    AS MCSDay
+                  INTO vbMCSPeriod, vbMCSDay
+            FROM ObjectHistory
+                 LEFT JOIN ObjectHistoryFloat AS OHF_MCSPeriod
+                                              ON OHF_MCSPeriod.ObjectHistoryId = ObjectHistory.Id
+                                             AND OHF_MCSPeriod.DescId          = zc_ObjectHistoryFloat_Price_MCSPeriod()
+                 LEFT JOIN ObjectHistoryFloat AS OHF_MCSDay
+                                              ON OHF_MCSDay.ObjectHistoryId = ObjectHistory.Id
+                                             AND OHF_MCSDay.DescId          = zc_ObjectHistoryFloat_Price_MCSDay()
+            WHERE ObjectHistory.ObjectId = vbId
+              AND ObjectHistory.EndDate  = zc_DateEnd()             -- !!!криво, но берем последнюю!!!
+              AND ObjectHistory.DescId   = zc_ObjectHistory_Price()
+           ;
+
             -- !!!Протокол - отладка Скорости!!!
             vbOperDate_StartBegin2:= CLOCK_TIMESTAMP();
 
             -- сохранили историю
-            PERFORM
-                gpInsertUpdate_ObjectHistory_Price(
-                    ioId       := 0                           :: Integer     -- ключ объекта <Элемент истории прайса>
-                  , inPriceId  := vbId                                       -- Прайс
-                  , inOperDate := CURRENT_TIMESTAMP           :: TDateTime   -- Дата действия прайса
-                  , inPrice    := inPrice                     :: TFloat      -- Цена
-                  , inMCSValue := vbMCSValue                  :: TFloat      -- НТЗ
-                  , inMCSPeriod:= COALESCE (tmp.MCSPeriod, 0) :: TFloat      -- Количество дней для анализа НТЗ
-                  , inMCSDay   := COALESCE (tmp.MCSDay, 0)    :: TFloat      -- Страховой запас дней НТЗ
-                  , inSession  := inUserId :: TVarChar
-                   )
-            FROM (WITH tmpObjectHistory AS (SELECT ObjectHistory.ObjectId
-                                                 , OHF_MCSPeriod.ValueData AS MCSPeriod
-                                                 , OHF_MCSDay.ValueData    AS MCSDay
-                                            FROM ObjectHistory
-                                                 LEFT JOIN ObjectHistoryFloat AS OHF_MCSPeriod
-                                                                              ON OHF_MCSPeriod.ObjectHistoryId = ObjectHistory.Id
-                                                                             AND OHF_MCSPeriod.DescId          = zc_ObjectHistoryFloat_Price_MCSPeriod()
-                                                 LEFT JOIN ObjectHistoryFloat AS OHF_MCSDay
-                                                                              ON OHF_MCSDay.ObjectHistoryId = ObjectHistory.Id
-                                                                             AND OHF_MCSDay.DescId          = zc_ObjectHistoryFloat_Price_MCSDay()
-                                            WHERE ObjectHistory.ObjectId = vbId
-                                               AND ObjectHistory.EndDate  = zc_DateEnd() -- !!!криво, но берем последнюю!!!
-                                               AND ObjectHistory.DescId   = zc_ObjectHistory_Price()
-                                           )
-                       -- Результат
-                       SELECT tmpObjectHistory.MCSPeriod, tmpObjectHistory.MCSDay
-                       FROM (SELECT vbId AS Id) AS tmp
-                            LEFT JOIN tmpObjectHistory ON tmpObjectHistory.ObjectId = tmp.Id
-                 ) AS tmp
-
-           ;
+            PERFORM gpInsertUpdate_ObjectHistory_Price
+                          (ioId       := 0                           :: Integer     -- ключ объекта <Элемент истории прайса>
+                         , inPriceId  := vbId                                       -- Прайс
+                         , inOperDate := CURRENT_TIMESTAMP           :: TDateTime   -- Дата действия прайса
+                         , inPrice    := inPrice                     :: TFloat      -- Цена
+                         , inMCSValue := vbMCSValue                  :: TFloat      -- НТЗ
+                         , inMCSPeriod:= COALESCE (vbMCSPeriod, 0)   :: TFloat      -- Количество дней для анализа НТЗ - нашли, что б эти с-ва не изменять
+                         , inMCSDay   := COALESCE (vbMCSDay, 0)      :: TFloat      -- Страховой запас дней НТЗ        - нашли, что б эти с-ва не изменять
+                         , inSession  := inUserId :: TVarChar
+                          );
 
           -- !!!Протокол - отладка Скорости!!!
           INSERT INTO Log_Reprice (InsertDate, StartDate, EndDate, MovementId, UserId, TextValue)
@@ -135,7 +118,7 @@ BEGIN
         PERFORM lpInsertUpdate_objectDate (zc_ObjectDate_Price_DateChange(), vbId, inDate);
 
         -- сохранили протокол
-        PERFORM lpInsert_ObjectProtocol (vbId, inUserId);
+        -- !!!! PERFORM lpInsert_ObjectProtocol (vbId, inUserId);
 
     END IF;
 

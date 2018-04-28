@@ -29,6 +29,10 @@ CREATE UNIQUE INDEX idx_ObjectHistory_ObjectId_DescId_StartDate_EndDate ON Objec
 CREATE UNIQUE INDEX idx_ObjectHistory_ObjectId_DescId_StartDate ON ObjectHistory(ObjectId, DescId, StartDate);
 CREATE UNIQUE INDEX idx_ObjectHistory_EndDate_DescId_ObjectId ON ObjectHistory(EndDate, DescId, ObjectId);
 
+-- Farmacy
+CREATE UNIQUE INDEX idx_ObjectHistory_ObjectId_StartDate_DescId ON ObjectHistory(ObjectId, StartDate, DescId);
+CREATE UNIQUE INDEX idx_ObjectHistory_ObjectId_EndDate_DescId ON ObjectHistory(ObjectId, EndDate, DescId);
+
 CREATE INDEX idx_ObjectHistory_ObjectId ON ObjectHistory(ObjectId);
 CREATE INDEX idx_ObjectHistory_DescId ON ObjectHistory(DescId);
 
