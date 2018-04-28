@@ -91,7 +91,6 @@ type
     pvGroupsName4: TcxDBPivotGridField;
     pvPeriodName_doc: TcxDBPivotGridField;
     pvPeriodYear_doc: TcxDBPivotGridField;
-    pvMonthName_doc: TcxDBPivotGridField;
     pvDayName_doc: TcxDBPivotGridField;
     cxLabel7: TcxLabel;
     edUnit: TcxButtonEdit;

@@ -390,38 +390,6 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
             Options.Editing = False
             Width = 95
           end
-          object GroupsName1: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' 1'
-            DataBinding.FieldName = 'GroupsName1'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object GroupsName2: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' 2'
-            DataBinding.FieldName = 'GroupsName2'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object GroupsName3: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' 3'
-            DataBinding.FieldName = 'GroupsName3'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object GroupsName4: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' 4'
-            DataBinding.FieldName = 'GroupsName4'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
           object LabelName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'LabelName'
@@ -674,16 +642,6 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 73
-          end
-          object Sale_SummCost_diff: TcxGridDBColumn
-            Caption = #1050#1091#1088#1089'. '#1088#1072#1079#1085'. '#1087#1088#1086#1076#1072#1078#1072
-            DataBinding.FieldName = 'Sale_SummCost_diff'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
           end
         end
       end
@@ -1496,7 +1454,7 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
     Top = 160
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_Sale'
+    StoredProcName = 'gpReport_ReturnIn'
     Params = <
       item
         Name = 'inStartDate'
@@ -1606,13 +1564,6 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
         Name = 'inIsClient'
         Value = Null
         Component = cbClient
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisSale'
-        Value = 'FALSE'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

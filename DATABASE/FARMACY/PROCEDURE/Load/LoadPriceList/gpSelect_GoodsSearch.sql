@@ -171,7 +171,7 @@ BEGIN
             inCodeSearch <> ''
         )
         AND COALESCE(JuridicalSettings.isPriceClose, FALSE) <> TRUE
-        AND (COALESCE (LoadPriceList.AreaId, 0) = inAreaId OR COALESCE(inAreaId, 0) = 0); 
+        AND (COALESCE (LoadPriceList.AreaId, 0) = inAreaId OR COALESCE(inAreaId, 0) = 0 OR COALESCE (LoadPriceList.AreaId, 0) = zc_Area_Basis() ); 
 
 END;
 $BODY$

@@ -5,7 +5,7 @@ inherited Report_SaleForm: TReport_SaleForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1192
-  ExplicitHeight = 460
+  ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -212,7 +212,6 @@ inherited Report_SaleForm: TReport_SaleForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Sale_SummCost
             end
             item
               Format = ',0.####'
@@ -292,7 +291,6 @@ inherited Report_SaleForm: TReport_SaleForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Sale_SummCost
             end
             item
               Format = ',0.####'
@@ -575,18 +573,6 @@ inherited Report_SaleForm: TReport_SaleForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081', '#1043#1056#1053
             Width = 80
-          end
-          object Sale_SummCost: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1074#1093'. '#1074' '#1074#1072#1083'.'
-            DataBinding.FieldName = 'Sale_SummCost'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1087#1086' '#1074#1093#1086#1076#1085#1099#1084' '#1094#1077#1085#1072#1084' '#1074' '#1074#1072#1083#1102#1090#1077
-            Width = 70
           end
           object Sale_Summ_prof: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1073#1099#1083#1100

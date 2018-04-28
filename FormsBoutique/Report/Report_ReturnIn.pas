@@ -69,12 +69,7 @@ type
     actRefreshClient: TdsdDataSetRefresh;
     Return_Summ_10200: TcxGridDBColumn;
     Return_SummCost_diff: TcxGridDBColumn;
-    Sale_SummCost_diff: TcxGridDBColumn;
     OperDate_doc: TcxGridDBColumn;
-    GroupsName1: TcxGridDBColumn;
-    GroupsName2: TcxGridDBColumn;
-    GroupsName3: TcxGridDBColumn;
-    GroupsName4: TcxGridDBColumn;
     DiscountSaleKindName: TcxGridDBColumn;
     GuidesStartYear: TdsdGuides;
     GuidesEndYear: TdsdGuides;
