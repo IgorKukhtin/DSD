@@ -1236,7 +1236,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actDeleteGoodsPrintList
+          Action = actGet_GoodsPrint_Null
         end
         item
           Action = macAddGoodsPrintList_Rem
@@ -1341,6 +1341,18 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       ImageIndex = 52
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1059#1076#1072#1083#1080#1090#1100' '#1042#1057#1045' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1087#1077#1095#1072#1090#1080' '#1094#1077#1085#1085#1080#1082#1086#1074'?'
       InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1091#1076#1072#1083#1077#1085#1099' '#1042#1057#1045' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1087#1077#1095#1072#1090#1080' '#1094#1077#1085#1085#1080#1082#1086#1074
+    end
+    object actGet_GoodsPrint_Null: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_GoodsPrint_Null
+      StoredProcList = <
+        item
+          StoredProc = spGet_GoodsPrint_Null
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1042#1057#1045' '#1080#1079' '#1087#1077#1095#1072#1090#1080' '#1094#1077#1085#1085#1080#1082#1086#1074
+      ImageIndex = 52
     end
     object actPrintIn: TdsdPrintAction
       Category = 'DSDLib'
@@ -2294,5 +2306,44 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       end>
     Left = 654
     Top = 65530
+  end
+  object spGet_GoodsPrint_Null: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_GoodsPrint_Null'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outOrd'
+        Value = '0'
+        Component = GuidesGoodsPrint
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsPrintName'
+        Value = ''
+        Component = GuidesGoodsPrint
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outUserId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'UserId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outUserName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 736
+    Top = 208
   end
 end

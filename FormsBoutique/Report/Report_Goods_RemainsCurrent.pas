@@ -101,6 +101,8 @@ type
     actPriceListGoods: TdsdOpenForm;
     bbPriceListGoods: TdxBarButton;
     actDeleteGoodsPrintList: TdsdExecStoredProc;
+    spGet_GoodsPrint_Null: TdsdStoredProc;
+    actGet_GoodsPrint_Null: TdsdExecStoredProc;
   private
     { Private declarations }
   public

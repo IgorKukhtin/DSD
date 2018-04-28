@@ -1595,7 +1595,7 @@ object IncomeForm: TIncomeForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actDeleteGoodsPrintList: TdsdExecStoredProc
+    object actGet_GoodsPrint_Null: TdsdExecStoredProc
       Category = 'PrintSticker'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1650,7 +1650,7 @@ object IncomeForm: TIncomeForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actDeleteGoodsPrintList
+          Action = actGet_GoodsPrint_Null
         end
         item
           Action = macAddGoodsPrintList_Rem

@@ -1783,7 +1783,7 @@ object SendForm: TSendForm
       isShowModal = True
       OpenBeforeShow = True
     end
-    object actDeleteGoodsPrintList: TdsdExecStoredProc
+    object actGet_GoodsPrint_Null: TdsdExecStoredProc
       Category = 'PrintSticker'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1838,7 +1838,7 @@ object SendForm: TSendForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actDeleteGoodsPrintList
+          Action = actGet_GoodsPrint_Null
         end
         item
           Action = macAddGoodsPrintList_Rem
