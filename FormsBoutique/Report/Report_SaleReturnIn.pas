@@ -44,7 +44,6 @@ type
     actRefreshMovement: TdsdDataSetRefresh;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
-    actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     spGet_Unit: TdsdStoredProc;
     StatusCode: TcxGridDBColumn;
@@ -72,15 +71,10 @@ type
     DBLabelNameFull: TcxDBLabel;
     PartnerName: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
-    spGet_PrinterNull: TdsdStoredProc;
     actGet_PrinterNull: TdsdExecStoredProc;
-    mactPrint: TMultiAction;
     BarCode_item: TcxGridDBColumn;
-    actPrint_BarCode: TdsdPrintAction;
-    macPrint_BarCode: TMultiAction;
-    spPrint_Barcode: TdsdStoredProc;
-    dsdStoredProc1: TdsdStoredProc;
-    dsdPrintAction1: TdsdPrintAction;
+    actPrint: TdsdPrintAction;
+    spReport_BarCode: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -1805,6 +1805,8 @@ var
 begin
   GetProfileString('Windows', 'device', '', ResStr, 255);
   result := StrPas(ResStr);
+  if Pos(',',result) > 0 then result:=Copy(result,1,Pos(',',result)-1);
+
 end;
 
 function TdsdPrintAction.LocalExecute: Boolean;
@@ -2898,7 +2900,8 @@ begin
           else
           begin
             if trim (APrinter) <> ''
-            then PrintOptions.Printer := APrinter;
+            then PrintOptions.Printer := APrinter
+            else PrintOptions.Printer := GetDefaultPrinter;
             PrepareReport;
             ShowPreparedReport;
           end;

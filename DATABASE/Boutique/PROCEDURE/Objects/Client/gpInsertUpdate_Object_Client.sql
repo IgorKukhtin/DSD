@@ -37,68 +37,6 @@ BEGIN
    inName:= TRIM (inName);
 
 
-   -- ВРЕМЕННО - для Sybase найдем Id
-   IF vbUserId = zc_User_Sybase()
-   THEN
-       -- !!!поиск - из №2 !!!
-       vbName_Sybase2:= (SELECT gpGet_Object_Client_NEW2_SYBASE (inName));
-       
-       IF vbName_Sybase2 <> ''
-       THEN
-           vbName_Sybase:= vbName_Sybase2;
-       ELSE
-           -- !!!поиск!!!
-           vbName_Sybase:= (SELECT gpGet_Object_Client_NEW_SYBASE (inName));
-
-           -- !!!поиск - из №2 + для vbName_Sybase!!!
-           vbName_Sybase2:= (SELECT gpGet_Object_Client_NEW2_SYBASE (vbName_Sybase));
-           --
-           IF vbName_Sybase2 <> ''
-           THEN
-               vbName_Sybase:= vbName_Sybase2;
-           END IF;
-
-       END IF;
-       
-       -- !!!Замена!!!
-       IF vbName_Sybase <> '' THEN inName:=  vbName_Sybase; END IF;
-
-       -- !!!Замена!!!
-       IF vbName_Sybase <> '' THEN inName:=  vbName_Sybase; END IF;
-
-       IF EXISTS (SELECT Object.Id
-                  FROM Object
-                  WHERE Object.DescId    = zc_Object_Client()
-                    AND TRIM (LOWER (Object.ValueData)) = TRIM (LOWER (inName))
-                 )
-       THEN
-           -- !!!Замена!!!
-           ioId:= (SELECT Object.Id
-                   FROM Object
-                   WHERE Object.DescId    = zc_Object_Client()
-                     AND TRIM (LOWER (Object.ValueData)) = TRIM (LOWER (inName))
-                  );
-       END IF;
-
-       -- сохраняем предыдущий !!!Коммент!!!
-       IF ioId > 0 AND TRIM (inComment) = ''
-       THEN inComment:= COALESCE ((SELECT ObjectString.ValueData FROM ObjectString WHERE ObjectString.ObjectId = ioId AND ObjectString.DescId = zc_ObjectString_Client_Comment()), '');
-       END IF;
-       
-       -- сохраняем предыдущий !!!DiscountTax!!!
-       IF ioId > 0 AND COALESCE (inDiscountTax, 0) = 0
-       THEN inDiscountTax:= COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = ioId AND ObjectFloat.DescId = zc_ObjectFloat_Client_DiscountTax()), 0);
-       END IF;
-
-       -- сохраняем предыдущий !!!DiscountTax!!!
-       IF ioId > 0 AND inDiscountTax > 0 AND inDiscountTax > COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ValueData <> 0 AND ObjectFloat.ObjectId = ioId AND ObjectFloat.DescId = zc_ObjectFloat_Client_DiscountTax()), inDiscountTax)
-       THEN inDiscountTax:= COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ValueData <> 0 AND ObjectFloat.ObjectId = ioId AND ObjectFloat.DescId = zc_ObjectFloat_Client_DiscountTax()), inDiscountTax);
-       END IF;
-
-   END IF;
-
-
-
    -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
    IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) <> 0 THEN ioCode := NEXTVAL ('Object_Client_seq');
    END IF;
@@ -118,6 +56,9 @@ BEGIN
    -- Проверка - нельзя > 30%
    IF vbUserId <> zc_User_Sybase()
       AND (inDiscountTax > 30 OR inDiscountTaxTwo > 30)
+      AND (inDiscountTax    <> COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = ioId AND ObjectFloat.DescId = zc_ObjectFloat_Client_DiscountTax()),    0)
+        OR inDiscountTaxTwo <> COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = ioId AND ObjectFloat.DescId = zc_ObjectFloat_Client_DiscountTaxTwo()), 0)
+          )
    THEN
        PERFORM lpCheckRight (inSession, zc_Enum_Process_Update_Object_Client_DiscountTax());
    END IF;

@@ -21,7 +21,7 @@ RETURNS TABLE (MovementId_Partion   Integer
              , ClientName           TVarChar
              , PartionId            Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar
+             , GoodsGroupNameFull TVarChar, NameFull TVarChar, GoodsGroupName TVarChar
              , MeasureName      TVarChar
              , CompositionName  TVarChar
              , GoodsInfoName    TVarChar
@@ -222,7 +222,8 @@ BEGIN
              , Object_Goods.Id                AS GoodsId
              , Object_Goods.ObjectCode        AS GoodsCode
              , Object_Goods.ValueData         AS GoodsName
-             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+             , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+             , (COALESCE (ObjectString_GoodsGroupFull.ValueData, '') || ' - ' || COALESCE (Object_GoodsInfo.ValueData, '')) :: TVarChar AS NameFull
              , Object_GoodsGroup.ValueData    AS GoodsGroupName
              , Object_Measure.ValueData       AS MeasureName
              , Object_Composition.ValueData   AS CompositionName
@@ -284,9 +285,9 @@ BEGIN
             LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = Object_PartionGoods.BrandId
             LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = Object_PartionGoods.PeriodId
 
-            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
-                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
-                                  AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
+            LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
+                                   ON ObjectString_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                  AND ObjectString_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
 
             LEFT JOIN MovementLinkObject AS MLO_Insert
                                          ON MLO_Insert.MovementId = tmpData.MovementId_Sale

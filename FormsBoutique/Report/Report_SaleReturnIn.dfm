@@ -6,7 +6,7 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1081
-  ExplicitHeight = 463
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -759,20 +759,6 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
       end>
   end
   inherited ActionList: TActionList
-    object macPrint_BarCode: TMultiAction [1]
-      Category = 'Print'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGet_PrinterNull
-        end
-        item
-          Action = actPrint_BarCode
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
-      ImageIndex = 3
-    end
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -784,7 +770,7 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         end>
       Caption = 'actGet_UserUnit'
     end
-    object actPrint_BarCode: TdsdPrintAction
+    object actPrint: TdsdPrintAction
       Category = 'Print'
       MoveParams = <
         item
@@ -819,10 +805,10 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
         end>
-      StoredProc = spPrint_Barcode
+      StoredProc = spReport_BarCode
       StoredProcList = <
         item
-          StoredProc = spPrint_Barcode
+          StoredProc = spReport_BarCode
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1087#1086' '#1096'/'#1082
       Hint = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1087#1086' '#1096'/'#1082
@@ -831,7 +817,7 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'PartnerName;GoodsCode;LabelName;GoodsSizeName'
+          IndexFieldNames = 'PartnerName;LabelName;GoodsCode;GoodsSizeName'
         end>
       Params = <
         item
@@ -867,84 +853,14 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
       PrinterNameParam.MultiSelectSeparator = ','
       PreviewWindowMaximized = False
     end
-    object mactPrint: TMultiAction
-      Category = 'Print'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGet_PrinterNull
-        end
-        item
-          Action = actPrint
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
-      ImageIndex = 3
-    end
     object actGet_PrinterNull: TdsdExecStoredProc
       Category = 'Print'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGet_PrinterNull
       StoredProcList = <
         item
-          StoredProc = spGet_PrinterNull
         end>
       Caption = 'Get_Printer'
-    end
-    object actPrintCheck: TdsdPrintAction
-      Category = 'Print'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProc = spSelectPrint_Check
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint_Check
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
-      Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
-      ImageIndex = 15
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'PrinterName'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'PrinterName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      Printer = 'PrinterName'
-      ReportNameParam.Value = ''
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameCheck'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.Component = FormParams
-      PrinterNameParam.ComponentItem = 'PrinterName'
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-      PreviewWindowMaximized = False
     end
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -1160,87 +1076,6 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         end>
       isShowModal = False
     end
-    object actPrint: TdsdPrintAction
-      Category = 'Print'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = '0'
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end
-        item
-          FromParam.Value = 42736d
-          FromParam.Component = deStart
-          FromParam.DataType = ftDateTime
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
-          ToParam.DataType = ftDateTime
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end
-        item
-          FromParam.Value = 42736d
-          FromParam.Component = deEnd
-          FromParam.DataType = ftDateTime
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
-          ToParam.DataType = ftDateTime
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1087#1086' '#1096'/'#1082
-      Hint = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1087#1086' '#1096'/'#1082
-      ImageIndex = 3
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = MasterCDS
-          UserName = 'frxDBDItems'
-          IndexFieldNames = 'PartnerName;OperDate;GoodsCode;LabelName;GoodsSizeName'
-        end>
-      Params = <
-        item
-          Name = 'StartDate'
-          Value = 42736d
-          Component = deStart
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = 42736d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitName'
-          Value = Null
-          Component = GuidesUnit
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintReport_SaleReturnIn'
-      ReportNameParam.Value = 'PrintReport_SaleReturnIn'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.Component = FormParams
-      PrinterNameParam.ComponentItem = 'PrinterName'
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-      PreviewWindowMaximized = False
-    end
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1290,17 +1125,6 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
       Caption = 'dsdactComplete'
       ImageIndex = 12
     end
-    object actGetReportName: TdsdExecStoredProc
-      Category = 'Print'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGetReporName
-      StoredProcList = <
-        item
-          StoredProc = spGetReporName
-        end>
-      Caption = 'actGetReportName'
-    end
     object mactPrint_Check: TMultiAction
       Category = 'Print'
       MoveParams = <>
@@ -1316,7 +1140,18 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1063#1077#1082
       Hint = #1055#1077#1095#1072#1090#1100' '#1063#1077#1082
-      ImageIndex = 3
+      ImageIndex = 15
+    end
+    object actGetReportName: TdsdExecStoredProc
+      Category = 'Print'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReporName
+      StoredProcList = <
+        item
+          StoredProc = spGetReporName
+        end>
+      Caption = 'actGetReportName'
     end
     object actGet_Printer: TdsdExecStoredProc
       Category = 'Print'
@@ -1329,31 +1164,58 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         end>
       Caption = 'Get_Printer'
     end
-    object dsdPrintAction1: TdsdPrintAction
+    object actPrintCheck: TdsdPrintAction
       Category = 'Print'
-      MoveParams = <>
-      StoredProc = dsdStoredProc1
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_Check
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc1
+          StoredProc = spSelectPrint_Check
         end>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
-      ImageIndex = 3
-      ShortCut = 16464
+      Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
       DataSets = <
         item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
           DataSet = PrintItemsCDS
-          UserName = 'frxDBDItems'
+          UserName = 'frxDBDMaster'
         end>
-      Params = <>
-      ReportName = 'PrintReport_SaleReturnIn_BarCode'
-      ReportNameParam.Value = 'PrintReport_SaleReturnIn_BarCode'
+      Params = <
+        item
+          Name = 'PrinterName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PrinterName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      Printer = 'PrinterName'
+      ReportNameParam.Value = ''
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameCheck'
       ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
+      PrinterNameParam.Component = FormParams
+      PrinterNameParam.ComponentItem = 'PrinterName'
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+      PreviewWindowMaximized = False
     end
   end
   inherited MasterDS: TDataSource
@@ -1502,7 +1364,7 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
       Category = 0
     end
     object bbPrint: TdxBarButton
-      Action = macPrint_BarCode
+      Action = actPrint
       Category = 0
     end
     object bbShowAll: TdxBarButton
@@ -1520,7 +1382,6 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
     object bbPrintCheck: TdxBarButton
       Action = mactPrint_Check
       Category = 0
-      ImageIndex = 15
     end
   end
   inherited PeriodChoice: TPeriodChoice
@@ -1804,33 +1665,10 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 928
-    Top = 184
+    Left = 360
+    Top = 152
   end
-  object spGet_PrinterNull: TdsdStoredProc
-    StoredProcName = 'gpGet_PrinterByUnit'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inUnitId'
-        Value = '0'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'gpGet_PrinterByUnit'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PrinterName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 968
-    Top = 240
-  end
-  object spPrint_Barcode: TdsdStoredProc
+  object spReport_BarCode: TdsdStoredProc
     StoredProcName = 'gpReport_SaleReturnIn_BarCode'
     DataSet = PrintItemsCDS
     DataSets = <
@@ -1864,43 +1702,6 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
       end>
     PackSize = 1
     Left = 472
-    Top = 168
-  end
-  object dsdStoredProc1: TdsdStoredProc
-    StoredProcName = 'gpReport_SaleReturnIn_BarCode'
-    DataSet = PrintItemsCDS
-    DataSets = <
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inStartDate'
-        Value = 'NULL'
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndDate'
-        Value = 'NULL'
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUnitId'
-        Value = Null
-        Component = GuidesUnit
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 559
     Top = 168
   end
 end

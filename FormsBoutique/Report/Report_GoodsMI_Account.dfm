@@ -787,7 +787,7 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
       isShowModal = False
     end
     object actPrint: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'Print'
       MoveParams = <
         item
           FromParam.Name = 'id'
@@ -830,7 +830,7 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
         item
           DataSet = MasterCDS
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'NumGroup;ValueGroup;ClientName;GoodsCode;LabelName;GoodsSizeName'
+          IndexFieldNames = 'NumGroup;ValueGroup;ClientName;LabelName;GoodsCode;GoodsSizeName'
         end>
       Params = <
         item
@@ -920,16 +920,22 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
       Caption = 'actSetErased'
       ImageIndex = 13
     end
-    object actGet_Printer: TdsdExecStoredProc
+    object mactPrint_Check: TMultiAction
       Category = 'Print'
       MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGet_Printer
-      StoredProcList = <
+      ActionList = <
         item
-          StoredProc = spGet_Printer
+          Action = actGetReportName
+        end
+        item
+          Action = actGet_Printer
+        end
+        item
+          Action = actPrintCheck
         end>
-      Caption = 'Get_Printer'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1063#1077#1082
+      Hint = #1055#1077#1095#1072#1090#1100' '#1063#1077#1082
+      ImageIndex = 15
     end
     object actGetReportName: TdsdExecStoredProc
       Category = 'Print'
@@ -941,6 +947,17 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
           StoredProc = spGetReporName
         end>
       Caption = 'actGetReportName'
+    end
+    object actGet_Printer: TdsdExecStoredProc
+      Category = 'Print'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Printer
+      StoredProcList = <
+        item
+          StoredProc = spGet_Printer
+        end>
+      Caption = 'Get_Printer'
     end
     object actPrintCheck: TdsdPrintAction
       Category = 'Print'
@@ -962,7 +979,6 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
       Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
-      ImageIndex = 15
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -995,23 +1011,6 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
       PreviewWindowMaximized = False
-    end
-    object mactPrint_Check: TMultiAction
-      Category = 'Print'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGetReportName
-        end
-        item
-          Action = actGet_Printer
-        end
-        item
-          Action = actPrintCheck
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1063#1077#1082
-      Hint = #1055#1077#1095#1072#1090#1100' '#1063#1077#1082
-      ImageIndex = 15
     end
   end
   inherited MasterDS: TDataSource

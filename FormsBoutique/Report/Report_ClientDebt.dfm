@@ -5,8 +5,9 @@ inherited Report_ClientDebtForm: TReport_ClientDebtForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -275
   ExplicitWidth = 1081
-  ExplicitHeight = 463
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -68,19 +69,19 @@ inherited Report_ClientDebtForm: TReport_ClientDebtForm
   inherited PageControl: TcxPageControl [1]
     Top = 59
     Width = 1065
-    Height = 366
+    Height = 336
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 1065
     ExplicitHeight = 366
-    ClientRectBottom = 366
+    ClientRectBottom = 336
     ClientRectRight = 1065
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1065
       ExplicitHeight = 366
       inherited cxGrid: TcxGrid
         Width = 1065
-        Height = 366
+        Height = 336
         ExplicitWidth = 1065
         ExplicitHeight = 366
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -669,6 +670,38 @@ inherited Report_ClientDebtForm: TReport_ClientDebtForm
           end
         end
       end
+    end
+  end
+  object PanelNameFull: TPanel [2]
+    Left = 0
+    Top = 395
+    Width = 1065
+    Height = 30
+    Align = alBottom
+    BevelOuter = bvNone
+    TabOrder = 6
+    ExplicitLeft = -297
+    ExplicitWidth = 1362
+    object DBLabelNameFull: TcxDBLabel
+      Left = 0
+      Top = 0
+      Align = alClient
+      DataBinding.DataField = 'NameFull'
+      DataBinding.DataSource = MasterDS
+      ParentFont = False
+      Properties.Alignment.Horz = taCenter
+      Properties.Alignment.Vert = taVCenter
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clNavy
+      Style.Font.Height = -12
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+      ExplicitWidth = 1362
+      Height = 30
+      Width = 1065
+      AnchorX = 533
+      AnchorY = 15
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore

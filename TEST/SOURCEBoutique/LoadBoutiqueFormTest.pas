@@ -683,7 +683,7 @@ end;
 //
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OH_DiscountPeriodForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OH_DiscountPeriodForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OH_DiscountPeriodDialogForm'));
@@ -711,13 +711,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_ClientDebtForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ClientDebtDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ClientDebtDialogForm');
+
   //Report_GoodsMI_SaleReturnInForm
-  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleReturnInForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleReturnInDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleReturnInDialogForm');
-       exit;
+
   // Report_GoodsMI_Account
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_AccountForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_AccountForm');
