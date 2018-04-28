@@ -19,10 +19,9 @@ BEGIN
      vbPrinter := COALESCE ((SELECT OS_Unit_Printer.ValueData 
                              FROM ObjectString AS OS_Unit_Printer
                              WHERE OS_Unit_Printer.ObjectId = inUnitId
-                               AND OS_Unit_Printer.DescId = zc_ObjectString_Unit_Printer())
-                            , '') ::TVarChar ;
+                               AND OS_Unit_Printer.DescId = zc_ObjectString_Unit_Printer()
+                            ), '') :: TVarChar ;
      RETURN vbPrinter;
-     
 
 END;
 $BODY$
