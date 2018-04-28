@@ -724,8 +724,8 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 320
-    Top = 136
+    Left = 336
+    Top = 160
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
