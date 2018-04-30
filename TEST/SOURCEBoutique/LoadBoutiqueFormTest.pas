@@ -686,10 +686,6 @@ end;
 //
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-<<<<<<< HEAD
-
-=======
->>>>>>> ++
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OH_DiscountPeriodForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OH_DiscountPeriodForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OH_DiscountPeriodDialogForm'));

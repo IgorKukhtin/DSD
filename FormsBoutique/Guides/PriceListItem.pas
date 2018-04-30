@@ -107,6 +107,7 @@ type
     bbInsertUpdate_Price: TdxBarButton;
     spGet_Current_Date: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    ExecuteDialogPriceTax: TExecuteDialog;
   private
     { Private declarations }
   public

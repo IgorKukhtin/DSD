@@ -1188,6 +1188,9 @@ object PriceListItemForm: TPriceListItemForm
       MoveParams = <>
       ActionList = <
         item
+          Action = ExecuteDialogPriceTax
+        end
+        item
           Action = macInsertUpdate_Price_List
         end
         item
@@ -1210,6 +1213,35 @@ object PriceListItemForm: TPriceListItemForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1086#1074#1091#1102' '#1094#1077#1085#1091
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1086#1074#1091#1102' '#1094#1077#1085#1091' ('#1074#1093'.'#1094#1077#1085#1072' * '#1082#1086#1101#1092'.)'
       ImageIndex = 76
+    end
+    object ExecuteDialogPriceTax: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1050#1086#1101#1092#1092'. '#1086#1090' '#1074#1093'. '#1094#1077#1085#1099
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1050#1086#1101#1092#1092'. '#1086#1090' '#1074#1093'. '#1094#1077#1085#1099
+      ImageIndex = 35
+      FormName = 'TDiscountPersentDialogForm'
+      FormNameParam.Value = 'TDiscountPersentDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'ParamValue'
+          Value = 0.000000000000000000
+          Component = edPriceTax
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ParamName'
+          Value = #1050#1086#1101#1092#1092'. '#1086#1090' '#1074#1093'. '#1094#1077#1085#1099
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
     end
   end
   object spSelect: TdsdStoredProc

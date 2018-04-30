@@ -31,8 +31,8 @@ type
     FormParams: TdsdFormParams;
     ActionList: TActionList;
     actRefreshStart: TdsdDataSetRefresh;
-    cxLabel1: TcxLabel;
-    cePersent: TcxCurrencyEdit;
+    ceValue: TcxCurrencyEdit;
+    edParamName: TcxTextEdit;
   private
     { Private declarations }
   public

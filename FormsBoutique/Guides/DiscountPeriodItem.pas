@@ -102,6 +102,7 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     InvNumber_Partion: TcxGridDBColumn;
     ExecuteDialogPersent: TExecuteDialog;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

@@ -572,6 +572,18 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         Properties.Strings = (
           'Key'
           'TextValue')
+      end
+      item
+        Component = GuidesBrand
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesPeriod
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -965,11 +977,17 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'Persent'
+          Name = 'ParamValue'
           Value = ''
           Component = edPersent
           DataType = ftFloat
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ParamName'
+          Value = '% '#1089#1082#1080#1076#1082#1080
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -1555,5 +1573,16 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
     PackSize = 1
     Left = 592
     Top = 224
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'ParamName'
+        Value = '% '#1089#1082#1080#1076#1082#1080
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 478
+    Top = 259
   end
 end

@@ -2,7 +2,7 @@ object DiscountPersentDialogForm: TDiscountPersentDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = '<% '#1057#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
+  Caption = #1042#1074#1086#1076' '#1087#1072#1088#1072#1084#1077#1090#1088#1072
   ClientHeight = 136
   ClientWidth = 238
   Color = clBtnFace
@@ -36,17 +36,39 @@ object DiscountPersentDialogForm: TDiscountPersentDialogForm
     ModalResult = 2
     TabOrder = 1
   end
-  object cxLabel1: TcxLabel
-    Left = 24
-    Top = 24
-    Caption = '% '#1089#1082#1080#1076#1082#1080' :'
-  end
-  object cePersent: TcxCurrencyEdit
+  object ceValue: TcxCurrencyEdit
     Left = 24
     Top = 47
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.UseDisplayFormatWhenEditing = True
+    TabOrder = 2
+    Width = 179
+  end
+  object edParamName: TcxTextEdit
+    AlignWithMargins = True
+    Left = 24
+    Top = 17
+    ParentCustomHint = False
+    BeepOnEnter = False
+    Enabled = False
+    ParentFont = False
+    Properties.HideSelection = False
+    Properties.ReadOnly = True
+    Style.Edges = []
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clWindowText
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.Shadow = False
+    Style.TextColor = clNone
+    Style.IsFontAssigned = True
+    StyleDisabled.BorderColor = clNone
+    StyleDisabled.TextColor = clNone
+    StyleFocused.BorderColor = clLime
+    StyleHot.BorderColor = clSilver
+    StyleHot.TextStyle = [fsBold]
     TabOrder = 3
     Width = 179
   end
@@ -70,10 +92,18 @@ object DiscountPersentDialogForm: TDiscountPersentDialogForm
   object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'Persent'
+        Name = 'ParamValue'
         Value = Null
-        Component = cePersent
+        Component = ceValue
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ParamName'
+        Value = Null
+        Component = edParamName
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
