@@ -1,7 +1,6 @@
 -- Торговая марка
 
-DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_Brand (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_Brand (Integer, Boolean,  TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Brand_isErased (Integer, Boolean,  TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_isErased_Brand(
     IN inObjectId Integer,
@@ -27,6 +26,5 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
-04.05.17                                                          *
-19.02.17                                                          *
+30.04.18                                         *
 */

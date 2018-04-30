@@ -115,6 +115,23 @@ type
     edEndYear: TcxButtonEdit;
     GuidesStartYear: TdsdGuides;
     GuidesEndYear: TdsdGuides;
+    pvCompositionName: TcxDBPivotGridField;
+    pvGoodsInfoName: TcxDBPivotGridField;
+    pvLineFabricaName: TcxDBPivotGridField;
+    pvSale_Summ_curr: TcxDBPivotGridField;
+    pvSale_Summ_10200_curr: TcxDBPivotGridField;
+    pvIncome_Summ: TcxDBPivotGridField;
+    pvReturn_Summ_curr: TcxDBPivotGridField;
+    pvReturn_Summ_10200_curr: TcxDBPivotGridField;
+    pvResult_Summ_curr: TcxDBPivotGridField;
+    pvResult_SummCost_curr: TcxDBPivotGridField;
+    pvResult_Summ_prof_curr: TcxDBPivotGridField;
+    pvResult_Summ_10200_curr: TcxDBPivotGridField;
+    pvSale_SummCost_curr: TcxDBPivotGridField;
+    pvReturn_SummCost_curr: TcxDBPivotGridField;
+    pvTax_Amount: TcxDBPivotGridField;
+    pvTax_Summ_curr: TcxDBPivotGridField;
+    pvTax_Summ_prof: TcxDBPivotGridField;
   private
   public
   end;

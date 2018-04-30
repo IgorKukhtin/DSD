@@ -1,7 +1,7 @@
 -- Function: gpSelect_Movement_Sale_Order_Print()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_Order_Print (Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_Order_Print (Integer, Integer, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_Order_Print (Integer, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_Order_Print (Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_Order_Print (Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale_Order_Print(
@@ -38,7 +38,7 @@ BEGIN
 
      ;
      -- % отклонения
-     vbDiffTax := 15;
+     vbDiffTax := 25;
      
     --
     OPEN Cursor1 FOR

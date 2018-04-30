@@ -17,12 +17,15 @@ BEGIN
 
      -- Результат
      RETURN QUERY 
+       WITH tmp AS (SELECT DISTINCT ObjectFloat_PeriodYear.ValueData :: Integer AS PeriodYear
+                    FROM ObjectFloat AS ObjectFloat_PeriodYear 
+                    WHERE ObjectFloat_PeriodYear.DescId = zc_ObjectFloat_Partner_PeriodYear()
+                   )
+       -- Результат
        SELECT tmp.PeriodYear             AS Id
             , tmp.PeriodYear :: TVarChar AS Name
             , tmp.PeriodYear :: Integer  AS PeriodYear
-       FROM (SELECT DISTINCT ObjectFloat_PeriodYear.ValueData :: Integer AS PeriodYear
-             FROM ObjectFloat AS ObjectFloat_PeriodYear 
-             WHERE ObjectFloat_PeriodYear.DescId = zc_ObjectFloat_Partner_PeriodYear()
+       FROM (SELECT tmp.PeriodYear FROM tmp
             UNION ALL
              SELECT 0 :: Integer AS PeriodYear
             ) AS tmp

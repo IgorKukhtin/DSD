@@ -38,7 +38,6 @@ object BrandForm: TBrandForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
@@ -50,6 +49,7 @@ object BrandForm: TBrandForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object Name: TcxGridDBColumn
@@ -58,6 +58,7 @@ object BrandForm: TBrandForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 325
       end
       object CountryBrandName: TcxGridDBColumn
@@ -66,15 +67,25 @@ object BrandForm: TBrandForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 122
       end
-      object Erased: TcxGridDBColumn
+      object isOLAP: TcxGridDBColumn
+        Caption = #1054#1090#1095#1077#1090' '#1054#1051#1040#1055
+        DataBinding.FieldName = 'isOLAP'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1090#1095#1077#1090' '#1092#1086#1088#1084#1080#1088#1091#1077#1082#1090#1089#1103' '#1058#1054#1051#1068#1050#1054' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1058#1052
+        Width = 55
+      end
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 78
       end
     end
@@ -431,6 +442,18 @@ object BrandForm: TBrandForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Brand'
@@ -531,5 +554,31 @@ object BrandForm: TBrandForm
     PackSize = 1
     Left = 432
     Top = 128
+  end
+  object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Brand_ReportOLAP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsReportOLAP'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'isOLAP'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 160
+    Top = 152
   end
 end

@@ -14,7 +14,7 @@ BEGIN
     vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
 
 
-    PERFORM gpInsertUpdate_MovementItem_Reprice (ioId                  := 0 -- Ключ записи
+    /*PERFORM gpInsertUpdate_MovementItem_Reprice (ioId                  := 0 -- Ключ записи
                                                , inGoodsId             := Id -- Товары
                                                , inUnitId              := 6128298 -- подразделение
                                                , inUnitId_Forwarding   := 0 -- Подразделения(основание для равенства цен)
@@ -31,6 +31,16 @@ BEGIN
                                                , inContract_Percent    := 1 -- % Корректировки наценки Договора
                                                , inGUID                := '123'  -- GUID для определения текущей переоценки
                                                , inSession             := '3'  -- сессия пользователя
+                                                )
+    FROM gpSelect_AllGoodsPrice (inUnitId := 6128298 , inUnitId_to := 0 , inMinPercent := 0 , inVAT20 := 'True' , inTaxTo := 0 , inPriceMaxTo := 0 ,  inSession := '3')
+      AS tmp;*/
+
+    PERFORM lpInsert_ObjectHistoryProtocol (inObjectId   := Id
+                                          , inUserId     := 3
+                                          , inStartDate  := CURRENT_DATE
+                                          , inEndDate    := CURRENT_DATE
+                                          , inPrice      := 1
+
                                                 )
     FROM gpSelect_AllGoodsPrice (inUnitId := 6128298 , inUnitId_to := 0 , inMinPercent := 0 , inVAT20 := 'True' , inTaxTo := 0 , inPriceMaxTo := 0 ,  inSession := '3')
       AS tmp;

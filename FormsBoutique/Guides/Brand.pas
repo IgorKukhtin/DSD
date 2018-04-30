@@ -52,7 +52,7 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     Code: TcxGridDBColumn;
     Name: TcxGridDBColumn;
-    Erased: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     actChoiceGuides: TdsdChoiceGuides;
     DBViewAddOn: TdsdDBViewAddOn;
@@ -62,6 +62,9 @@ type
     bbShowAll: TdxBarButton;
     CountryBrandName: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
+    isOLAP: TcxGridDBColumn;
+    spInsertUpdate: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
