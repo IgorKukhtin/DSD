@@ -146,12 +146,15 @@ type
     spInsertUpdate_GoodsPrint: TdsdStoredProc;
     spUpdate_FloatValue_DS: TdsdStoredProc;
     actPrintStickerList: TdsdPrintAction;
-    actDeleteGoodsPrintList: TdsdExecStoredProc;
+    actGet_GoodsPrint_Null: TdsdExecStoredProc;
     actUpdate_FloatValue_DS: TdsdExecStoredProc;
     actInsertUpdate_GoodsPrint: TdsdExecStoredProc;
     macAddGoodsPrintList_Rem: TMultiAction;
     mactGoodsPrintList_Print: TMultiAction;
     bbGoodsPrintList_Print: TdxBarButton;
+    spGet_PrinterByUser: TdsdStoredProc;
+    actGet_PrinterByUser: TdsdExecStoredProc;
+    macPrintSticker: TMultiAction;
   private
   public
   end;

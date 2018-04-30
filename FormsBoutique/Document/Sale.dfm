@@ -354,14 +354,12 @@ object SaleForm: TSaleForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 314
     ClientRectBottom = 284
     ClientRectRight = 1066
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 290
       object cxGrid: TcxGrid
         Left = 0
         Top = 83
@@ -369,7 +367,6 @@ object SaleForm: TSaleForm
         Height = 177
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 207
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1374,9 +1371,6 @@ object SaleForm: TSaleForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 6
-    ExplicitLeft = -103
-    ExplicitTop = 403
-    ExplicitWidth = 1169
     object DBLabelNameFull: TcxDBLabel
       Left = 0
       Top = 0
@@ -1392,7 +1386,6 @@ object SaleForm: TSaleForm
       Style.Font.Name = 'Tahoma'
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
-      ExplicitWidth = 1169
       Height = 30
       Width = 1066
       AnchorX = 533

@@ -106,6 +106,9 @@ type
     TotalSummBalance: TcxGridDBColumn;
     actPrintInSecond: TdsdPrintAction;
     bbPrintInSecond: TdxBarButton;
+    spGet_PrinterByUser: TdsdStoredProc;
+    actGet_PrinterByUser: TdsdExecStoredProc;
+    macPrintSticker: TMultiAction;
   private
   public
   end;

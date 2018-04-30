@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
-  ClientHeight = 292
+  ClientHeight = 347
   ClientWidth = 303
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 45
-    Top = 258
+    Top = 314
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 189
-    Top = 258
+    Top = 314
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -108,6 +108,18 @@
     TabOrder = 11
     Width = 273
   end
+  object cxLabel5: TcxLabel
+    Left = 13
+    Top = 249
+    Caption = #1055#1088#1080#1085#1090#1077#1088' ('#1087#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074')'
+  end
+  object edPrinter: TcxTextEdit
+    Left = 13
+    Top = 269
+    Properties.PasswordChar = '*'
+    TabOrder = 13
+    Width = 273
+  end
   object ActionList: TActionList
     Left = 269
     Top = 72
@@ -173,6 +185,14 @@
         Name = 'inPassword'
         Value = ''
         Component = edPassword
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrinterName'
+        Value = Null
+        Component = edPrinter
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -286,6 +306,13 @@
         Value = Null
         Component = GuidesUnit
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PrinterName'
+        Value = Null
+        Component = edPrinter
         DataType = ftString
         MultiSelectSeparator = ','
       end>

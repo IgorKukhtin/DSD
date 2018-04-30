@@ -290,7 +290,8 @@ uses
   ClientSMSDialog in '..\..\FormsBoutique\Guides\ClientSMSDialog.pas' {ClientSMSDialogForm: TParentForm},
   ClientSMS in '..\..\FormsBoutique\Guides\ClientSMS.pas' {ClientSMSForm: TParentForm},
   DiscountPeriodItemBySendDialog in '..\..\FormsBoutique\Document\DiscountPeriodItemBySendDialog.pas' {DiscountPeriodItemBySendDialogForm: TParentForm},
-  Income in '..\..\FormsBoutique\Document\Income.pas' {IncomeForm: TParentForm};
+  Income in '..\..\FormsBoutique\Document\Income.pas' {IncomeForm: TParentForm},
+  DiscountPersentDialog in '..\..\FormsBoutique\Guides\DiscountPersentDialog.pas' {DiscountPersentDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

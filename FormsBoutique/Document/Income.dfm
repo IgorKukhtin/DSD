@@ -551,9 +551,16 @@ object IncomeForm: TIncomeForm
         DataType = ftBoolean
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PrinterName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 94
-    Top = 175
+    Left = 102
+    Top = 183
   end
   object spSelectMI: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Income'
@@ -807,7 +814,7 @@ object IncomeForm: TIncomeForm
       Category = 0
     end
     object dxBarButton2: TdxBarButton
-      Action = actPrintSticker
+      Action = macPrintSticker
       Category = 0
     end
     object bbReport_Goods: TdxBarButton
@@ -1164,6 +1171,8 @@ object IncomeForm: TIncomeForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
+      PrinterNameParam.Component = FormParams
+      PrinterNameParam.ComponentItem = 'PrinterName'
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
@@ -1532,6 +1541,17 @@ object IncomeForm: TIncomeForm
       ImageIndex = 54
       ShortCut = 45
     end
+    object actGet_PrinterByUser: TdsdExecStoredProc
+      Category = 'PrintSticker'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_PrinterByUser
+      StoredProcList = <
+        item
+          StoredProc = spGet_PrinterByUser
+        end>
+      Caption = 'Get_Printer'
+    end
     object actInsertMaskAction: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1592,10 +1612,12 @@ object IncomeForm: TIncomeForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
+      PrinterNameParam.Component = FormParams
+      PrinterNameParam.ComponentItem = 'PrinterName'
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actDeleteGoodsPrintList: TdsdExecStoredProc
+    object actGet_GoodsPrint_Null: TdsdExecStoredProc
       Category = 'PrintSticker'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1650,10 +1672,13 @@ object IncomeForm: TIncomeForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actDeleteGoodsPrintList
+          Action = actGet_GoodsPrint_Null
         end
         item
           Action = macAddGoodsPrintList_Rem
+        end
+        item
+          Action = actGet_GoodsPrint_Null
         end
         item
           Action = actPrintStickerList
@@ -1662,6 +1687,20 @@ object IncomeForm: TIncomeForm
       Caption = #1055#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074' '#1076#1083#1103' '#1089#1087#1080#1089#1082#1072
       Hint = #1055#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074' '#1076#1083#1103' '#1089#1087#1080#1089#1082#1072
       ImageIndex = 15
+    end
+    object macPrintSticker: TMultiAction
+      Category = 'PrintSticker'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_PrinterByUser
+        end
+        item
+          Action = actPrintSticker
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074
+      Hint = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074
+      ImageIndex = 18
     end
   end
   object MasterDS: TDataSource
@@ -2563,5 +2602,22 @@ object IncomeForm: TIncomeForm
     PackSize = 1
     Left = 760
     Top = 296
+  end
+  object spGet_PrinterByUser: TdsdStoredProc
+    StoredProcName = 'gpGet_PrinterByUser'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'gpGet_PrinterByUser'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PrinterName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 640
+    Top = 368
   end
 end

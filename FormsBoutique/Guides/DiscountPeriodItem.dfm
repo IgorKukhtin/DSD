@@ -432,6 +432,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = '0'
       Properties.MaxLength = 4
+      Properties.ReadOnly = True
       TabOrder = 4
       Width = 31
     end
@@ -568,6 +569,18 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       end
       item
         Component = GuidesEndYear
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesBrand
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesPeriod
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -723,8 +736,8 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 320
-    Top = 136
+    Left = 336
+    Top = 160
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -928,12 +941,14 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       MoveParams = <>
       ActionList = <
         item
+          Action = ExecuteDialogPersent
+        end
+        item
           Action = macUpdatePersent
         end
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1082#1080#1076#1082#1091' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1090#1086#1074#1072#1088#1072#1084'?'
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1082#1080#1076#1082#1091
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1082#1080#1076#1082#1091
       ImageIndex = 74
@@ -949,6 +964,35 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1082#1080#1076#1082#1091
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1082#1080#1076#1082#1091
       ImageIndex = 74
+    end
+    object ExecuteDialogPersent: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' % '#1089#1082#1080#1076#1082#1080
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' % '#1089#1082#1080#1076#1082#1080
+      ImageIndex = 35
+      FormName = 'TDiscountPersentDialogForm'
+      FormNameParam.Value = 'TDiscountPersentDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'ParamValue'
+          Value = ''
+          Component = edPersent
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ParamName'
+          Value = '% '#1089#1082#1080#1076#1082#1080
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -1529,5 +1573,16 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
     PackSize = 1
     Left = 592
     Top = 224
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'ParamName'
+        Value = '% '#1089#1082#1080#1076#1082#1080
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 478
+    Top = 259
   end
 end

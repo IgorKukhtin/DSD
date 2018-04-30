@@ -45,6 +45,8 @@ type
     cxLabel4: TcxLabel;
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
+    cxLabel5: TcxLabel;
+    edPrinter: TcxTextEdit;
   private
     { Private declarations }
   public

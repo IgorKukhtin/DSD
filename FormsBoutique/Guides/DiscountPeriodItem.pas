@@ -101,6 +101,8 @@ type
     spGet_Current_Date: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     InvNumber_Partion: TcxGridDBColumn;
+    ExecuteDialogPersent: TExecuteDialog;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

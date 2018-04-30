@@ -1,17 +1,18 @@
 inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   Caption = #1054#1090#1095#1077#1090' <'#1056#1077#1077#1089#1090#1088' '#1090#1086#1074#1072#1088#1086#1074'>'
   ClientHeight = 433
-  ClientWidth = 1169
+  ClientWidth = 1161
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1185
+  ExplicitLeft = -28
+  ExplicitWidth = 1177
   ExplicitHeight = 471
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
-    Width = 1169
+    Width = 1161
     Height = 55
     ExplicitWidth = 1169
     ExplicitHeight = 55
@@ -74,7 +75,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Width = 200
     end
     object cbPartion: TcxCheckBox
-      Left = 855
+      Left = 763
       Top = 30
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470
@@ -82,10 +83,10 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       ShowHint = True
       State = cbsChecked
       TabOrder = 6
-      Width = 131
+      Width = 129
     end
     object cbSize: TcxCheckBox
-      Left = 1096
+      Left = 984
       Top = 30
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1056#1072#1079#1084#1077#1088#1099
@@ -93,10 +94,10 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       ShowHint = True
       State = cbsChecked
       TabOrder = 7
-      Width = 68
+      Width = 67
     end
     object cbPartner: TcxCheckBox
-      Left = 995
+      Left = 894
       Top = 30
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082#1080
@@ -145,8 +146,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Caption = #1043#1086#1076' '#1089' ...'
     end
     object cxLabel8: TcxLabel
-      Left = 596
-      Top = 31
+      Left = 723
+      Top = 6
       Caption = #1043#1086#1076' '#1087#1086' ...'
     end
     object cxLabel4: TcxLabel
@@ -167,12 +168,12 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Width = 200
     end
     object cxLabel9: TcxLabel
-      Left = 761
+      Left = 853
       Top = 6
       Caption = #1055#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074':'
     end
     object edGoodsPrint: TcxButtonEdit
-      Left = 859
+      Left = 949
       Top = 5
       Properties.Buttons = <
         item
@@ -181,10 +182,10 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         end>
       Properties.ReadOnly = True
       TabOrder = 18
-      Width = 300
+      Width = 212
     end
     object cbYear: TcxCheckBox
-      Left = 724
+      Left = 603
       Top = 30
       Hint = 'Visible = False '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052' ('#1044#1072'/'#1053#1077#1090')'
       Caption = 'Visible = False '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052
@@ -192,7 +193,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       ShowHint = True
       TabOrder = 19
       Visible = False
-      Width = 130
+      Width = 162
     end
     object edStartYear: TcxButtonEdit
       Left = 650
@@ -207,8 +208,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Width = 70
     end
     object edEndYear: TcxButtonEdit
-      Left = 650
-      Top = 30
+      Left = 777
+      Top = 5
       TabStop = False
       Properties.Buttons = <
         item
@@ -219,22 +220,32 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       TabOrder = 21
       Width = 70
     end
+    object cbSizeStr: TcxCheckBox
+      Left = 1051
+      Top = 30
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' '#1074#1084#1077#1089#1090#1077' ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1056#1072#1079#1084#1077#1088#1099' '#1074#1084#1077#1089#1090#1077
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 22
+      Width = 105
+    end
   end
   inherited PageControl: TcxPageControl [1]
     Top = 81
-    Width = 1169
+    Width = 1161
     Height = 322
     TabOrder = 3
     ExplicitTop = 81
     ExplicitWidth = 1169
     ExplicitHeight = 322
     ClientRectBottom = 322
-    ClientRectRight = 1169
+    ClientRectRight = 1161
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1169
       ExplicitHeight = 322
       inherited cxGrid: TcxGrid
-        Width = 1169
+        Width = 1161
         Height = 322
         ExplicitWidth = 1169
         ExplicitHeight = 322
@@ -775,11 +786,12 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   object PanelNameFull: TPanel [2]
     Left = 0
     Top = 403
-    Width = 1169
+    Width = 1161
     Height = 30
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 6
+    ExplicitWidth = 1169
     object DBLabelNameFull: TcxDBLabel
       Left = 0
       Top = 0
@@ -795,9 +807,10 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Style.Font.Name = 'Tahoma'
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
+      ExplicitWidth = 1169
       Height = 30
-      Width = 1169
-      AnchorX = 585
+      Width = 1161
+      AnchorX = 581
       AnchorY = 15
     end
   end
@@ -882,6 +895,20 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   end
   inherited ActionList: TActionList
     Top = 319
+    object macPrintSticker: TMultiAction [1]
+      Category = 'PrintSticker'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_PrinterByUser
+        end
+        item
+          Action = actPrintSticker
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074
+      Hint = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074
+      ImageIndex = 18
+    end
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1205,7 +1232,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       isShowModal = False
     end
     object actPrintSticker: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'PrintSticker'
       MoveParams = <>
       StoredProc = spSelectPrintSticker
       StoredProcList = <
@@ -1228,18 +1255,23 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
+      PrinterNameParam.Component = FormParams
+      PrinterNameParam.ComponentItem = 'PrinterName'
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
     object mactGoodsPrintList_Print: TMultiAction
-      Category = 'DSDLib'
+      Category = 'PrintSticker'
       MoveParams = <>
       ActionList = <
         item
-          Action = actDeleteGoodsPrintList
+          Action = actGet_GoodsPrint_Null
         end
         item
           Action = macAddGoodsPrintList_Rem
+        end
+        item
+          Action = actGet_PrinterByUser
         end
         item
           Action = actPrintSticker
@@ -1249,7 +1281,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       ImageIndex = 15
     end
     object macAddGoodsPrintList_Rem: TMultiAction
-      Category = 'DSDLib'
+      Category = 'PrintSticker'
       MoveParams = <>
       ActionList = <
         item
@@ -1260,7 +1292,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       ImageIndex = 15
     end
     object mactGoodsPrintList_Rem: TMultiAction
-      Category = 'DSDLib'
+      Category = 'PrintSticker'
       MoveParams = <>
       ActionList = <
         item
@@ -1310,7 +1342,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       DataSource = MasterDS
     end
     object actDeleteGoodsPrintList: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'PrintSticker'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spDelete_Object_GoodsPrint
@@ -1325,7 +1357,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         #1074#1099#1081' '#1089#1087#1080#1089#1086#1082'?'
     end
     object actDeleteGoodsPrint: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'PrintSticker'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spDelete_Object_GoodsPrint
@@ -1341,6 +1373,18 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       ImageIndex = 52
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1059#1076#1072#1083#1080#1090#1100' '#1042#1057#1045' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1087#1077#1095#1072#1090#1080' '#1094#1077#1085#1085#1080#1082#1086#1074'?'
       InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1091#1076#1072#1083#1077#1085#1099' '#1042#1057#1045' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1087#1077#1095#1072#1090#1080' '#1094#1077#1085#1085#1080#1082#1086#1074
+    end
+    object actGet_GoodsPrint_Null: TdsdExecStoredProc
+      Category = 'PrintSticker'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_GoodsPrint_Null
+      StoredProcList = <
+        item
+          StoredProc = spGet_GoodsPrint_Null
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1042#1057#1045' '#1080#1079' '#1087#1077#1095#1072#1090#1080' '#1094#1077#1085#1085#1080#1082#1086#1074
+      ImageIndex = 52
     end
     object actPrintIn: TdsdPrintAction
       Category = 'DSDLib'
@@ -1535,6 +1579,17 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         end>
       isShowModal = False
     end
+    object actGet_PrinterByUser: TdsdExecStoredProc
+      Category = 'PrintSticker'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_PrinterByUser
+      StoredProcList = <
+        item
+          StoredProc = spGet_PrinterByUser
+        end>
+      Caption = 'Get_Printer'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1631,6 +1686,14 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         Name = 'inIsSize'
         Value = Null
         Component = cbSize
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSizeStr'
+        Value = Null
+        Component = cbSizeStr
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1769,7 +1832,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Category = 0
     end
     object bbPrintSticker: TdxBarButton
-      Action = actPrintSticker
+      Action = macPrintSticker
       Category = 0
     end
     object bbGoodsPrintList_Print: TdxBarButton
@@ -2005,8 +2068,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 974
-    Top = 65526
+    Left = 982
+    Top = 54
   end
   object spInsertUpdate_GoodsPrint: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_GoodsPrint'
@@ -2084,6 +2147,13 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         Name = 'UserName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PrinterName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 248
@@ -2294,5 +2364,61 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       end>
     Left = 654
     Top = 65530
+  end
+  object spGet_GoodsPrint_Null: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_GoodsPrint_Null'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outOrd'
+        Value = '0'
+        Component = GuidesGoodsPrint
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsPrintName'
+        Value = ''
+        Component = GuidesGoodsPrint
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outUserId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'UserId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outUserName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 736
+    Top = 208
+  end
+  object spGet_PrinterByUser: TdsdStoredProc
+    StoredProcName = 'gpGet_PrinterByUser'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'gpGet_PrinterByUser'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PrinterName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 712
+    Top = 272
   end
 end

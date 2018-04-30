@@ -101,6 +101,12 @@ type
     actPriceListGoods: TdsdOpenForm;
     bbPriceListGoods: TdxBarButton;
     actDeleteGoodsPrintList: TdsdExecStoredProc;
+    spGet_GoodsPrint_Null: TdsdStoredProc;
+    actGet_GoodsPrint_Null: TdsdExecStoredProc;
+    spGet_PrinterByUser: TdsdStoredProc;
+    actGet_PrinterByUser: TdsdExecStoredProc;
+    macPrintSticker: TMultiAction;
+    cbSizeStr: TcxCheckBox;
   private
     { Private declarations }
   public
