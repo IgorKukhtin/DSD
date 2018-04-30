@@ -116,6 +116,14 @@ object UserForm: TUserForm
         Options.Editing = False
         Width = 104
       end
+      object PrinterName: TcxGridDBColumn
+        Caption = #1055#1088#1080#1085#1090#1077#1088
+        DataBinding.FieldName = 'PrinterName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1088#1080#1085#1090#1077#1088' ('#1087#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074')'
+        Width = 120
+      end
       object User_: TcxGridDBColumn
         DataBinding.FieldName = 'User_'
         HeaderAlignmentHorz = taCenter
@@ -905,6 +913,15 @@ object UserForm: TUserForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'User_'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrinterName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PrinterName'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

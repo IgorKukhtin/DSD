@@ -13,7 +13,9 @@ RETURNS TABLE (Id Integer
              , MemberId Integer
              , MemberName TVarChar
              , UnitId Integer
-             , UnitName TVarChar)
+             , UnitName TVarChar
+             , PrinterName TVarChar
+             )
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -34,7 +36,8 @@ BEGIN
            ,  0 :: Integer   AS MemberId 
            , '' :: TVarChar  AS MemberName
            ,  0 :: Integer   AS UnitId
-           , '' :: TVarChar  AS UnitName;
+           , '' :: TVarChar  AS UnitName
+           , '' :: TVarChar  AS PrinterName;
    ELSE
       RETURN QUERY 
       SELECT 
@@ -46,10 +49,15 @@ BEGIN
           , Object_Member.ValueData              AS MemberName
           , Object_Unit.Id                       AS UnitId
           , Object_Unit.ValueData                AS UnitName
+          , ObjectString_Printer.ValueData       AS PrinterName
       FROM Object AS Object_User
            LEFT JOIN ObjectString AS ObjectString_UserPassword 
                                   ON ObjectString_UserPassword.DescId = zc_ObjectString_User_Password() 
                                  AND ObjectString_UserPassword.ObjectId = Object_User.Id
+
+           LEFT JOIN ObjectString AS ObjectString_Printer
+                                  ON ObjectString_Printer.ObjectId = Object_User.Id
+                                 AND ObjectString_Printer.DescId = zc_ObjectString_User_Printer()
 
            LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                 ON ObjectLink_User_Member.ObjectId = Object_User.Id

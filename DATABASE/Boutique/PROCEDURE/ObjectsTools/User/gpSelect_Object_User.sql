@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , UnitCode_Personal Integer
              , UnitName_Personal TVarChar
              , PositionName TVarChar
+             , PrinterName TVarChar
               )
 AS
 $BODY$
@@ -56,11 +57,17 @@ END IF;
        , Object_Unit_Personal.ObjectCode  AS UnitCode_Personal
        , Object_Unit_Personal.ValueData   AS UnitName_Personal
        , Object_Position.ValueData        AS PositionName
+       
+       , ObjectString_Printer.ValueData   AS PrinterName
 
    FROM Object AS Object_User
-         LEFT JOIN ObjectString AS ObjectString_User_
-                                ON ObjectString_User_.ObjectId = Object_User.Id
-                               AND ObjectString_User_.DescId = zc_ObjectString_User_Password()
+        LEFT JOIN ObjectString AS ObjectString_User_
+                               ON ObjectString_User_.ObjectId = Object_User.Id
+                              AND ObjectString_User_.DescId = zc_ObjectString_User_Password()
+
+        LEFT JOIN ObjectString AS ObjectString_Printer
+                               ON ObjectString_Printer.ObjectId = Object_User.Id
+                              AND ObjectString_Printer.DescId = zc_ObjectString_User_Printer()
 
         LEFT JOIN ObjectLink AS ObjectLink_User_Member
                              ON ObjectLink_User_Member.ObjectId = Object_User.Id
@@ -87,6 +94,7 @@ ALTER FUNCTION gpSelect_Object_User (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+ 30.04.18         * PrinterName
  15.02.18         * add UnitId_User
  05.05.16                                                         *
  12.09.16         *
@@ -95,4 +103,4 @@ ALTER FUNCTION gpSelect_Object_User (TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_User ('5')
+-- SELECT * FROM gpSelect_Object_User (zfCalc_UserAdmin())

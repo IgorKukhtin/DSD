@@ -88,6 +88,7 @@ type
     spUnErased: TdsdStoredProc;
     UnitCode: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
+    PrinterName: TcxGridDBColumn;
   private
     { Private declarations }
   public
