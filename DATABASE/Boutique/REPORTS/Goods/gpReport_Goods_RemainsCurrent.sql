@@ -196,81 +196,81 @@ BEGIN
                      )
 
        , tmpData_All AS (SELECT tmpContainer.UnitId
-                          , tmpContainer.GoodsId
-                          , CASE WHEN inisPartion = TRUE AND inIsSize = TRUE THEN tmpContainer.PartionId ELSE 0 END AS PartionId
-                          , CASE WHEN inisPartion = TRUE THEN tmpContainer.MovementId       ELSE 0  END AS MovementId_Partion
-                          , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE '' END AS DescName_Partion
-                          , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE '' END AS InvNumber_Partion
-                          , CASE WHEN inisPartion = TRUE THEN Movement_Partion.OperDate     ELSE zc_DateStart() END AS OperDate_Partion
-                          , CASE WHEN inisPartner = TRUE THEN tmpContainer.PartnerId        ELSE 0  END AS PartnerId
-                          , CASE WHEN inisSize    = TRUE THEN tmpContainer.GoodsSizeId      ELSE 0  END AS GoodsSizeId
-
-                          , tmpContainer.BrandId
-                          , tmpContainer.PeriodId
-                          , tmpContainer.PeriodYear
-                          , ObjectLink_Partner_Fabrika.ChildObjectId AS FabrikaId
-
-                          , tmpContainer.MeasureId
-                          , tmpContainer.GoodsGroupId
-                          , tmpContainer.CompositionId
-                          , tmpContainer.CompositionGroupId
-                          , tmpContainer.GoodsInfoId
-                          , tmpContainer.LineFabricaId
-                          , tmpContainer.LabelId
-                          , tmpContainer.JuridicalId
-                          , tmpContainer.CurrencyId
-                          , tmpContainer.OperPriceList
-                          , tmpContainer.UnitId_in
-
-                            --  только для Ord = 1
-                          , SUM (CASE WHEN tmpContainer.Ord = 1 THEN tmpContainer.Amount_in ELSE 0 END) AS Amount_in
-                          , SUM (CASE WHEN tmpContainer.Ord = 1 THEN zfCalc_SummIn (tmpContainer.Amount_in, tmpContainer.OperPrice, tmpContainer.CountForPrice) ELSE 0 END) AS TotalSummPrice_in
-
-                          , SUM (tmpContainer.Remains)         AS Remains
-                          , SUM (tmpContainer.RemainsDebt)     AS RemainsDebt
-                          , SUM (tmpContainer.RemainsAll)      AS RemainsAll
-                          , SUM (tmpContainer.SummDebt)        AS SummDebt
-                          , SUM (tmpContainer.SummDebt_profit) AS SummDebt_profit
-
-
-                          , SUM (zfCalc_SummIn        (tmpContainer.RemainsAll, tmpContainer.OperPrice, tmpContainer.CountForPrice)) AS TotalSummPrice
-                          , SUM (zfCalc_SummPriceList (tmpContainer.RemainsAll, tmpContainer.OperPriceList))                         AS TotalSummPriceList
-
-                     FROM tmpContainer
-                          LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id = tmpContainer.MovementId
-                          LEFT JOIN MovementDesc AS MovementDesc_Partion ON MovementDesc_Partion.Id = Movement_Partion.DescId
-                          LEFT JOIN ObjectLink AS ObjectLink_Partner_Fabrika
-                                               ON ObjectLink_Partner_Fabrika.ObjectId = tmpContainer.PartnerId
-                                              AND ObjectLink_Partner_Fabrika.DescId   = zc_ObjectLink_Partner_Fabrika()
-                          -- LEFT JOIN tmpPrice ON tmpPrice.GoodsId = Object_PartionGoods.GoodsId
-                     GROUP BY tmpContainer.UnitId
-                            , tmpContainer.GoodsId
-                            , CASE WHEN inisPartion = TRUE AND inIsSize = TRUE THEN tmpContainer.PartionId ELSE 0 END
-                            , CASE WHEN inisPartion = TRUE THEN tmpContainer.MovementId       ELSE 0  END
-                            , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE '' END
-                            , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE '' END
-                            , CASE WHEN inisPartion = TRUE THEN Movement_Partion.OperDate     ELSE zc_DateStart() END
-                            , CASE WHEN inisPartner = TRUE THEN tmpContainer.PartnerId        ELSE 0  END
-                            , CASE WHEN inisSize    = TRUE THEN tmpContainer.GoodsSizeId      ELSE 0  END
-
-                            , tmpContainer.BrandId
-                            , tmpContainer.PeriodId
-                            , tmpContainer.PeriodYear
-                            , ObjectLink_Partner_Fabrika.ChildObjectId
-
-                            , tmpContainer.MeasureId
-                            , tmpContainer.GoodsGroupId
-                            , tmpContainer.CompositionId
-                            , tmpContainer.CompositionGroupId
-                            , tmpContainer.GoodsInfoId
-                            , tmpContainer.LineFabricaId
-                            , tmpContainer.LabelId
-                            , tmpContainer.JuridicalId
-                            , tmpContainer.CurrencyId
-                            , tmpContainer.PeriodYear
-                            , tmpContainer.OperPriceList
-                            , tmpContainer.UnitId_in
-              )
+                              , tmpContainer.GoodsId
+                              , CASE WHEN inisPartion = TRUE AND inIsSize = TRUE THEN tmpContainer.PartionId ELSE 0 END AS PartionId
+                              , CASE WHEN inisPartion = TRUE THEN tmpContainer.MovementId       ELSE 0  END AS MovementId_Partion
+                              , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE '' END AS DescName_Partion
+                              , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE '' END AS InvNumber_Partion
+                              , CASE WHEN inisPartion = TRUE THEN Movement_Partion.OperDate     ELSE zc_DateStart() END AS OperDate_Partion
+                              , CASE WHEN inisPartner = TRUE THEN tmpContainer.PartnerId        ELSE 0  END AS PartnerId
+                              , CASE WHEN inisSize    = TRUE THEN tmpContainer.GoodsSizeId      ELSE 0  END AS GoodsSizeId
+    
+                              , tmpContainer.BrandId
+                              , tmpContainer.PeriodId
+                              , tmpContainer.PeriodYear
+                              , ObjectLink_Partner_Fabrika.ChildObjectId AS FabrikaId
+    
+                              , tmpContainer.MeasureId
+                              , tmpContainer.GoodsGroupId
+                              , tmpContainer.CompositionId
+                              , tmpContainer.CompositionGroupId
+                              , tmpContainer.GoodsInfoId
+                              , tmpContainer.LineFabricaId
+                              , tmpContainer.LabelId
+                              , tmpContainer.JuridicalId
+                              , tmpContainer.CurrencyId
+                              , tmpContainer.OperPriceList
+                              , tmpContainer.UnitId_in
+    
+                                --  только для Ord = 1
+                              , SUM (CASE WHEN tmpContainer.Ord = 1 THEN tmpContainer.Amount_in ELSE 0 END) AS Amount_in
+                              , SUM (CASE WHEN tmpContainer.Ord = 1 THEN zfCalc_SummIn (tmpContainer.Amount_in, tmpContainer.OperPrice, tmpContainer.CountForPrice) ELSE 0 END) AS TotalSummPrice_in
+    
+                              , SUM (tmpContainer.Remains)         AS Remains
+                              , SUM (tmpContainer.RemainsDebt)     AS RemainsDebt
+                              , SUM (tmpContainer.RemainsAll)      AS RemainsAll
+                              , SUM (tmpContainer.SummDebt)        AS SummDebt
+                              , SUM (tmpContainer.SummDebt_profit) AS SummDebt_profit
+    
+    
+                              , SUM (zfCalc_SummIn        (tmpContainer.RemainsAll, tmpContainer.OperPrice, tmpContainer.CountForPrice)) AS TotalSummPrice
+                              , SUM (zfCalc_SummPriceList (tmpContainer.RemainsAll, tmpContainer.OperPriceList))                         AS TotalSummPriceList
+    
+                         FROM tmpContainer
+                              LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id = tmpContainer.MovementId
+                              LEFT JOIN MovementDesc AS MovementDesc_Partion ON MovementDesc_Partion.Id = Movement_Partion.DescId
+                              LEFT JOIN ObjectLink AS ObjectLink_Partner_Fabrika
+                                                   ON ObjectLink_Partner_Fabrika.ObjectId = tmpContainer.PartnerId
+                                                  AND ObjectLink_Partner_Fabrika.DescId   = zc_ObjectLink_Partner_Fabrika()
+                              -- LEFT JOIN tmpPrice ON tmpPrice.GoodsId = Object_PartionGoods.GoodsId
+                         GROUP BY tmpContainer.UnitId
+                                , tmpContainer.GoodsId
+                                , CASE WHEN inisPartion = TRUE AND inIsSize = TRUE THEN tmpContainer.PartionId ELSE 0 END
+                                , CASE WHEN inisPartion = TRUE THEN tmpContainer.MovementId       ELSE 0  END
+                                , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE '' END
+                                , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE '' END
+                                , CASE WHEN inisPartion = TRUE THEN Movement_Partion.OperDate     ELSE zc_DateStart() END
+                                , CASE WHEN inisPartner = TRUE THEN tmpContainer.PartnerId        ELSE 0  END
+                                , CASE WHEN inisSize    = TRUE THEN tmpContainer.GoodsSizeId      ELSE 0  END
+    
+                                , tmpContainer.BrandId
+                                , tmpContainer.PeriodId
+                                , tmpContainer.PeriodYear
+                                , ObjectLink_Partner_Fabrika.ChildObjectId
+    
+                                , tmpContainer.MeasureId
+                                , tmpContainer.GoodsGroupId
+                                , tmpContainer.CompositionId
+                                , tmpContainer.CompositionGroupId
+                                , tmpContainer.GoodsInfoId
+                                , tmpContainer.LineFabricaId
+                                , tmpContainer.LabelId
+                                , tmpContainer.JuridicalId
+                                , tmpContainer.CurrencyId
+                                , tmpContainer.PeriodYear
+                                , tmpContainer.OperPriceList
+                                , tmpContainer.UnitId_in
+                  )
        , tmpData AS (SELECT tmpData_All.UnitId
                           , tmpData_All.GoodsId
                           , tmpData_All.PartionId

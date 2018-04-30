@@ -4,6 +4,7 @@ inherited Report_SaleForm: TReport_SaleForm
   ClientWidth = 1176
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -43
   ExplicitWidth = 1192
   ExplicitHeight = 463
   PixelsPerInch = 96
@@ -58,7 +59,7 @@ inherited Report_SaleForm: TReport_SaleForm
       Width = 185
     end
     object cbPartion: TcxCheckBox
-      Left = 953
+      Left = 878
       Top = 5
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470
@@ -68,7 +69,7 @@ inherited Report_SaleForm: TReport_SaleForm
       Width = 129
     end
     object cbSize: TcxCheckBox
-      Left = 953
+      Left = 974
       Top = 32
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1056#1072#1079#1084#1077#1088#1099
@@ -78,18 +79,18 @@ inherited Report_SaleForm: TReport_SaleForm
       Width = 72
     end
     object cbPartner: TcxCheckBox
-      Left = 1083
+      Left = 1005
       Top = 5
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
       ParentShowHint = False
       ShowHint = True
       TabOrder = 8
-      Width = 92
+      Width = 81
     end
     object cbMovement: TcxCheckBox
-      Left = 1083
-      Top = 32
+      Left = 1085
+      Top = 5
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#8470
       ParentShowHint = False
@@ -112,21 +113,21 @@ inherited Report_SaleForm: TReport_SaleForm
         end>
       Properties.ReadOnly = True
       TabOrder = 11
-      Width = 131
+      Width = 161
     end
     object cxLabel8: TcxLabel
-      Left = 851
-      Top = 6
+      Left = 671
+      Top = 33
       Caption = #1043#1086#1076' '#1089' ...'
     end
     object cxLabel9: TcxLabel
-      Left = 844
+      Left = 770
       Top = 33
       Caption = #1043#1086#1076' '#1087#1086' ...'
     end
     object edStartYear: TcxButtonEdit
-      Left = 899
-      Top = 5
+      Left = 719
+      Top = 32
       Properties.Buttons = <
         item
           Default = True
@@ -137,7 +138,7 @@ inherited Report_SaleForm: TReport_SaleForm
       Width = 50
     end
     object edEndYear: TcxButtonEdit
-      Left = 899
+      Left = 825
       Top = 32
       TabStop = False
       Properties.Buttons = <
@@ -150,14 +151,24 @@ inherited Report_SaleForm: TReport_SaleForm
       Width = 50
     end
     object cbClient: TcxCheckBox
-      Left = 714
+      Left = 878
       Top = 32
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
       ParentShowHint = False
       ShowHint = True
       TabOrder = 16
-      Width = 113
+      Width = 88
+    end
+    object cbSizeStr: TcxCheckBox
+      Left = 1052
+      Top = 32
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' '#1074#1084#1077#1089#1090#1077' ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1056#1072#1079#1084#1077#1088#1099' '#1074#1084#1077#1089#1090#1077
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 17
+      Width = 105
     end
   end
   inherited PageControl: TcxPageControl [1]
@@ -1665,6 +1676,14 @@ inherited Report_SaleForm: TReport_SaleForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inIsSizeStr'
+        Value = 'TRUE'
+        Component = cbSizeStr
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisPartner'
         Value = Null
         Component = cbPartner
@@ -1684,13 +1703,6 @@ inherited Report_SaleForm: TReport_SaleForm
         Name = 'inIsClient'
         Value = Null
         Component = cbClient
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisSale'
-        Value = 'TRUE'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
