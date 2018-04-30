@@ -1,17 +1,18 @@
 inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   Caption = #1054#1090#1095#1077#1090' <'#1056#1077#1077#1089#1090#1088' '#1090#1086#1074#1072#1088#1086#1074'>'
   ClientHeight = 433
-  ClientWidth = 1169
+  ClientWidth = 1161
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1185
+  ExplicitLeft = -28
+  ExplicitWidth = 1177
   ExplicitHeight = 471
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
-    Width = 1169
+    Width = 1161
     Height = 55
     ExplicitWidth = 1169
     ExplicitHeight = 55
@@ -74,7 +75,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Width = 200
     end
     object cbPartion: TcxCheckBox
-      Left = 855
+      Left = 763
       Top = 30
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470
@@ -82,10 +83,10 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       ShowHint = True
       State = cbsChecked
       TabOrder = 6
-      Width = 131
+      Width = 129
     end
     object cbSize: TcxCheckBox
-      Left = 1096
+      Left = 984
       Top = 30
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1056#1072#1079#1084#1077#1088#1099
@@ -93,10 +94,10 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       ShowHint = True
       State = cbsChecked
       TabOrder = 7
-      Width = 68
+      Width = 67
     end
     object cbPartner: TcxCheckBox
-      Left = 995
+      Left = 894
       Top = 30
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082#1080
@@ -145,8 +146,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Caption = #1043#1086#1076' '#1089' ...'
     end
     object cxLabel8: TcxLabel
-      Left = 596
-      Top = 31
+      Left = 723
+      Top = 6
       Caption = #1043#1086#1076' '#1087#1086' ...'
     end
     object cxLabel4: TcxLabel
@@ -167,12 +168,12 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Width = 200
     end
     object cxLabel9: TcxLabel
-      Left = 761
+      Left = 853
       Top = 6
       Caption = #1055#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074':'
     end
     object edGoodsPrint: TcxButtonEdit
-      Left = 859
+      Left = 949
       Top = 5
       Properties.Buttons = <
         item
@@ -181,10 +182,10 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         end>
       Properties.ReadOnly = True
       TabOrder = 18
-      Width = 300
+      Width = 212
     end
     object cbYear: TcxCheckBox
-      Left = 724
+      Left = 603
       Top = 30
       Hint = 'Visible = False '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052' ('#1044#1072'/'#1053#1077#1090')'
       Caption = 'Visible = False '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052
@@ -192,7 +193,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       ShowHint = True
       TabOrder = 19
       Visible = False
-      Width = 130
+      Width = 162
     end
     object edStartYear: TcxButtonEdit
       Left = 650
@@ -207,8 +208,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Width = 70
     end
     object edEndYear: TcxButtonEdit
-      Left = 650
-      Top = 30
+      Left = 777
+      Top = 5
       TabStop = False
       Properties.Buttons = <
         item
@@ -219,22 +220,32 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       TabOrder = 21
       Width = 70
     end
+    object cbSizeStr: TcxCheckBox
+      Left = 1051
+      Top = 30
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' '#1074#1084#1077#1089#1090#1077' ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1056#1072#1079#1084#1077#1088#1099' '#1074#1084#1077#1089#1090#1077
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 22
+      Width = 105
+    end
   end
   inherited PageControl: TcxPageControl [1]
     Top = 81
-    Width = 1169
+    Width = 1161
     Height = 322
     TabOrder = 3
     ExplicitTop = 81
     ExplicitWidth = 1169
     ExplicitHeight = 322
     ClientRectBottom = 322
-    ClientRectRight = 1169
+    ClientRectRight = 1161
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1169
       ExplicitHeight = 322
       inherited cxGrid: TcxGrid
-        Width = 1169
+        Width = 1161
         Height = 322
         ExplicitWidth = 1169
         ExplicitHeight = 322
@@ -775,11 +786,12 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   object PanelNameFull: TPanel [2]
     Left = 0
     Top = 403
-    Width = 1169
+    Width = 1161
     Height = 30
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 6
+    ExplicitWidth = 1169
     object DBLabelNameFull: TcxDBLabel
       Left = 0
       Top = 0
@@ -795,9 +807,10 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Style.Font.Name = 'Tahoma'
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
+      ExplicitWidth = 1169
       Height = 30
-      Width = 1169
-      AnchorX = 585
+      Width = 1161
+      AnchorX = 581
       AnchorY = 15
     end
   end
@@ -1678,6 +1691,14 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisSizeStr'
+        Value = Null
+        Component = cbSizeStr
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsYear'
         Value = Null
         Component = cbYear
@@ -2047,8 +2068,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 974
-    Top = 65526
+    Left = 982
+    Top = 54
   end
   object spInsertUpdate_GoodsPrint: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_GoodsPrint'

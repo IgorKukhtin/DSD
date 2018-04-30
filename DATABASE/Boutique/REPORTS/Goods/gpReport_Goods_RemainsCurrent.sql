@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent(Integer,Boolean, Boolean,B
 DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent(Integer,Integer,Integer,Integer,Integer,Integer,Boolean, Boolean,Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent(Integer,Integer,Integer,Integer,Integer,Integer,Integer, TDateTime, Boolean, Boolean,Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Goods_RemainsCurrent(
     IN inUnitId           Integer  ,  -- Подразделение / группа
@@ -17,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpReport_Goods_RemainsCurrent(
     IN inIsPartion        Boolean  ,  -- показать <Документ партия №> (Да/Нет)
     IN inIsPartner        Boolean  ,  -- показать Поставщика (Да/Нет)
     IN inIsSize           Boolean  ,  -- показать Размеры (Да/Нет)
+    IN inIsSizeStr        Boolean  ,  -- показать Размеры вместе (Да/Нет)
     IN inIsYear           Boolean  ,  -- ограничение Год ТМ (Да/Нет) (выбор партий)
     IN inSession          TVarChar    -- сессия пользователя
 )
@@ -101,7 +103,10 @@ BEGIN
     IF inIsYear = TRUE AND COALESCE (inEndYear, 0) = 0 THEN
        inEndYear:= 1000000;
     END IF;
-
+    -- !!!замена!!!
+    IF inIsSizeStr = TRUE THEN
+        inIsSize   := TRUE;
+    END IF;
 
     -- таблица подразделений
     CREATE TEMP TABLE _tmpUnit (UnitId Integer) ON COMMIT DROP;
@@ -190,7 +195,7 @@ BEGIN
                         AND ((Object_PartionGoods.PeriodYear BETWEEN inStartYear AND inEndYear) OR inIsYear = FALSE)
                      )
 
-       , tmpData AS (SELECT tmpContainer.UnitId
+       , tmpData_All AS (SELECT tmpContainer.UnitId
                           , tmpContainer.GoodsId
                           , CASE WHEN inisPartion = TRUE AND inIsSize = TRUE THEN tmpContainer.PartionId ELSE 0 END AS PartionId
                           , CASE WHEN inisPartion = TRUE THEN tmpContainer.MovementId       ELSE 0  END AS MovementId_Partion
@@ -266,6 +271,75 @@ BEGIN
                             , tmpContainer.OperPriceList
                             , tmpContainer.UnitId_in
               )
+       , tmpData AS (SELECT tmpData_All.UnitId
+                          , tmpData_All.GoodsId
+                          , tmpData_All.PartionId
+                          , tmpData_All.MovementId_Partion
+                          , tmpData_All.DescName_Partion
+                          , tmpData_All.InvNumber_Partion
+                          , tmpData_All.OperDate_Partion
+                          , tmpData_All.PartnerId
+                          , CASE WHEN inIsSizeStr = TRUE THEN 0 ELSE Object_GoodsSize.id END  AS GoodsSizeId
+                          , STRING_AGG (Object_GoodsSize.ValueData, ', ') AS GoodsSizeName
+
+                          , tmpData_All.BrandId
+                          , tmpData_All.PeriodId
+                          , tmpData_All.PeriodYear
+                          , tmpData_All.FabrikaId
+                          , tmpData_All.MeasureId
+                          , tmpData_All.GoodsGroupId
+                          , tmpData_All.CompositionId
+                          , tmpData_All.CompositionGroupId
+                          , tmpData_All.GoodsInfoId
+                          , tmpData_All.LineFabricaId
+                          , tmpData_All.LabelId
+                          , tmpData_All.JuridicalId
+                          , tmpData_All.CurrencyId
+                          , tmpData_All.OperPriceList
+                          , tmpData_All.UnitId_in
+
+                          , SUM (tmpData_All.Amount_in) AS Amount_in
+                          , SUM (tmpData_All.TotalSummPrice_in) AS TotalSummPrice_in
+
+                          , SUM (tmpData_All.Remains)         AS Remains
+                          , SUM (tmpData_All.RemainsDebt)     AS RemainsDebt
+                          , SUM (tmpData_All.RemainsAll)      AS RemainsAll
+                          , SUM (tmpData_All.SummDebt)        AS SummDebt
+                          , SUM (tmpData_All.SummDebt_profit) AS SummDebt_profit
+
+
+                          , SUM (tmpData_All.TotalSummPrice)     AS TotalSummPrice
+                          , SUM (tmpData_All.TotalSummPriceList) AS TotalSummPriceList
+
+                     FROM tmpData_All
+                          LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = tmpData_All.GoodsSizeId
+                     GROUP BY tmpData_All.UnitId
+                          , tmpData_All.GoodsId
+                          , tmpData_All.PartionId
+                          , tmpData_All.MovementId_Partion
+                          , tmpData_All.DescName_Partion
+                          , tmpData_All.InvNumber_Partion
+                          , tmpData_All.OperDate_Partion
+                          , tmpData_All.PartnerId
+                          , CASE WHEN inIsSizeStr = TRUE THEN 0 ELSE Object_GoodsSize.id END
+                          , tmpData_All.BrandId
+                          , tmpData_All.PeriodId
+                          , tmpData_All.PeriodYear
+                          , tmpData_All.FabrikaId
+                          , tmpData_All.MeasureId
+                          , tmpData_All.GoodsGroupId
+                          , tmpData_All.CompositionId
+                          , tmpData_All.CompositionGroupId
+                          , tmpData_All.GoodsInfoId
+                          , tmpData_All.LineFabricaId
+                          , tmpData_All.LabelId
+                          , tmpData_All.JuridicalId
+                          , tmpData_All.CurrencyId
+                          , tmpData_All.OperPriceList
+                          , tmpData_All.UnitId_in
+              )
+
+ 
  , tmpDiscountList AS (SELECT DISTINCT tmpData.UnitId, tmpData.GoodsId FROM tmpData)
 
           , tmpOL1 AS (SELECT * FROM ObjectLink WHERE ObjectLink.ChildObjectId IN (SELECT DISTINCT tmpData.GoodsId FROM tmpData)
@@ -357,8 +431,8 @@ BEGIN
            , Object_GoodsInfo.ValueData     AS GoodsInfoName
            , Object_LineFabrica.ValueData   AS LineFabricaName
            , Object_Label.ValueData         AS LabelName
-           , Object_GoodsSize.Id            AS GoodsSizeId
-           , Object_GoodsSize.ValueData     AS GoodsSizeName
+           , tmpData.GoodsSizeId            AS GoodsSizeId
+           , tmpData.GoodsSizeName ::TVarChar AS GoodsSizeName
            , CASE WHEN vbIsOperPrice = TRUE THEN Object_Currency.ValueData ELSE '' END :: TVarChar AS CurrencyName
 
            , tmpCurrency.Amount   ::TFloat  AS CurrencyValue
@@ -412,7 +486,7 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsInfo        ON Object_GoodsInfo.Id        = tmpData.GoodsInfoId
             LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = tmpData.LineFabricaId
             LEFT JOIN Object AS Object_Label            ON Object_Label.Id            = tmpData.LabelId
-            LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = tmpData.GoodsSizeId
+            --LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = tmpData.GoodsSizeId
             LEFT JOIN Object AS Object_Juridical        ON Object_Juridical.Id        = tmpData.JuridicalId
             LEFT JOIN Object AS Object_Currency         ON Object_Currency.Id         = tmpData.CurrencyId
 
@@ -465,4 +539,4 @@ CREATE UNIQUE INDEX idx_objecthistory_objectid_enddate_descid
 */
 
 -- тест
--- SELECT * FROM gpReport_Goods_RemainsCurrent (inUnitId:= 1531, inBrandId:= 0, inPartnerId:= 0, inPeriodId:= 0, inStartYear:= 0, inEndYear:= 0, inUserId:= 0, inGoodsPrintId:= 0, inisPartion:= FALSE, inisPartner:= FALSE, inisSize:= TRUE, inIsYear:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_Goods_RemainsCurrent (inUnitId:= 1531, inBrandId:= 0, inPartnerId:= 0, inPeriodId:= 0, inStartYear:= 0, inEndYear:= 0, inUserId:= 0, inGoodsPrintId:= 0, inisPartion:= FALSE, inisPartner:= FALSE, inisSize:= TRUE, inIsSizeStr:= TRUE, inIsYear:= FALSE, inSession:= zfCalc_UserAdmin())
