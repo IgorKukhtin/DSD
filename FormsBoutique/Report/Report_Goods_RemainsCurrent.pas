@@ -103,6 +103,9 @@ type
     actDeleteGoodsPrintList: TdsdExecStoredProc;
     spGet_GoodsPrint_Null: TdsdStoredProc;
     actGet_GoodsPrint_Null: TdsdExecStoredProc;
+    spGet_PrinterByUser: TdsdStoredProc;
+    actGet_PrinterByUser: TdsdExecStoredProc;
+    macPrintSticker: TMultiAction;
   private
     { Private declarations }
   public

@@ -882,6 +882,20 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   end
   inherited ActionList: TActionList
     Top = 319
+    object macPrintSticker: TMultiAction [1]
+      Category = 'PrintSticker'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_PrinterByUser
+        end
+        item
+          Action = actPrintSticker
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074
+      Hint = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074
+      ImageIndex = 18
+    end
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1205,7 +1219,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       isShowModal = False
     end
     object actPrintSticker: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'PrintSticker'
       MoveParams = <>
       StoredProc = spSelectPrintSticker
       StoredProcList = <
@@ -1228,11 +1242,13 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
+      PrinterNameParam.Component = FormParams
+      PrinterNameParam.ComponentItem = 'PrinterName'
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
     object mactGoodsPrintList_Print: TMultiAction
-      Category = 'DSDLib'
+      Category = 'PrintSticker'
       MoveParams = <>
       ActionList = <
         item
@@ -1242,6 +1258,9 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           Action = macAddGoodsPrintList_Rem
         end
         item
+          Action = actGet_PrinterByUser
+        end
+        item
           Action = actPrintSticker
         end>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1074' '#1087#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074' '#1080' '#1085#1072#1087#1077#1095#1072#1090#1072#1090#1100' '
@@ -1249,7 +1268,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       ImageIndex = 15
     end
     object macAddGoodsPrintList_Rem: TMultiAction
-      Category = 'DSDLib'
+      Category = 'PrintSticker'
       MoveParams = <>
       ActionList = <
         item
@@ -1260,7 +1279,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       ImageIndex = 15
     end
     object mactGoodsPrintList_Rem: TMultiAction
-      Category = 'DSDLib'
+      Category = 'PrintSticker'
       MoveParams = <>
       ActionList = <
         item
@@ -1310,7 +1329,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       DataSource = MasterDS
     end
     object actDeleteGoodsPrintList: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'PrintSticker'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spDelete_Object_GoodsPrint
@@ -1325,7 +1344,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         #1074#1099#1081' '#1089#1087#1080#1089#1086#1082'?'
     end
     object actDeleteGoodsPrint: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'PrintSticker'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spDelete_Object_GoodsPrint
@@ -1343,7 +1362,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1091#1076#1072#1083#1077#1085#1099' '#1042#1057#1045' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1087#1077#1095#1072#1090#1080' '#1094#1077#1085#1085#1080#1082#1086#1074
     end
     object actGet_GoodsPrint_Null: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'PrintSticker'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spGet_GoodsPrint_Null
@@ -1546,6 +1565,17 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actGet_PrinterByUser: TdsdExecStoredProc
+      Category = 'PrintSticker'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_PrinterByUser
+      StoredProcList = <
+        item
+          StoredProc = spGet_PrinterByUser
+        end>
+      Caption = 'Get_Printer'
     end
   end
   inherited MasterDS: TDataSource
@@ -1781,7 +1811,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Category = 0
     end
     object bbPrintSticker: TdxBarButton
-      Action = actPrintSticker
+      Action = macPrintSticker
       Category = 0
     end
     object bbGoodsPrintList_Print: TdxBarButton
@@ -2097,6 +2127,13 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PrinterName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 248
     Top = 240
@@ -2345,5 +2382,22 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     PackSize = 1
     Left = 736
     Top = 208
+  end
+  object spGet_PrinterByUser: TdsdStoredProc
+    StoredProcName = 'gpGet_PrinterByUser'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'gpGet_PrinterByUser'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PrinterName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 712
+    Top = 272
   end
 end

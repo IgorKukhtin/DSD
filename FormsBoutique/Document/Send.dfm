@@ -614,6 +614,13 @@ object SendForm: TSendForm
         DataType = ftBoolean
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PrinterName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 246
     Top = 351
@@ -1164,6 +1171,8 @@ object SendForm: TSendForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
+      PrinterNameParam.Component = FormParams
+      PrinterNameParam.ComponentItem = 'PrinterName'
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
@@ -1844,12 +1853,26 @@ object SendForm: TSendForm
           Action = macAddGoodsPrintList_Rem
         end
         item
+          Action = actGet_PrinterByUser
+        end
+        item
           Action = actPrintStickerList
         end>
       QuestionBeforeExecute = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1087#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074' '#1076#1083#1103' '#1089#1087#1080#1089#1082#1072'?'
       Caption = #1055#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074' '#1076#1083#1103' '#1089#1087#1080#1089#1082#1072
       Hint = #1055#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074' '#1076#1083#1103' '#1089#1087#1080#1089#1082#1072
       ImageIndex = 15
+    end
+    object actGet_PrinterByUser: TdsdExecStoredProc
+      Category = 'PrintSticker'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_PrinterByUser
+      StoredProcList = <
+        item
+          StoredProc = spGet_PrinterByUser
+        end>
+      Caption = 'Get_Printer'
     end
   end
   object MasterDS: TDataSource
@@ -2822,5 +2845,22 @@ object SendForm: TSendForm
     PackSize = 1
     Left = 760
     Top = 296
+  end
+  object spGet_PrinterByUser: TdsdStoredProc
+    StoredProcName = 'gpGet_PrinterByUser'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'gpGet_PrinterByUser'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PrinterName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 680
+    Top = 200
   end
 end

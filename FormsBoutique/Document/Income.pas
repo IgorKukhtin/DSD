@@ -152,6 +152,9 @@ type
     macAddGoodsPrintList_Rem: TMultiAction;
     mactGoodsPrintList_Print: TMultiAction;
     bbGoodsPrintList_Print: TdxBarButton;
+    spGet_PrinterByUser: TdsdStoredProc;
+    actGet_PrinterByUser: TdsdExecStoredProc;
+    macPrintSticker: TMultiAction;
   private
   public
   end;

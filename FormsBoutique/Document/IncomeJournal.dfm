@@ -506,7 +506,7 @@ object IncomeJournalForm: TIncomeJournalForm
       Category = 0
     end
     object dxBarButton2: TdxBarButton
-      Action = actPrintSticker
+      Action = macPrintSticker
       Category = 0
     end
     object bbPrintInSecond: TdxBarButton
@@ -684,7 +684,7 @@ object IncomeJournalForm: TIncomeJournalForm
       PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintSticker: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'PrintSticker'
       MoveParams = <>
       StoredProc = spSelectPrintSticker
       StoredProcList = <
@@ -720,6 +720,8 @@ object IncomeJournalForm: TIncomeJournalForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
+      PrinterNameParam.Component = FormParams
+      PrinterNameParam.ComponentItem = 'PrinterName'
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
@@ -1087,6 +1089,17 @@ object IncomeJournalForm: TIncomeJournalForm
       Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       ImageIndex = 12
     end
+    object actGet_PrinterByUser: TdsdExecStoredProc
+      Category = 'PrintSticker'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_PrinterByUser
+      StoredProcList = <
+        item
+          StoredProc = spGet_PrinterByUser
+        end>
+      Caption = 'Get_Printer'
+    end
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1102,6 +1115,20 @@ object IncomeJournalForm: TIncomeJournalForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object macPrintSticker: TMultiAction
+      Category = 'PrintSticker'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_PrinterByUser
+        end
+        item
+          Action = actPrintSticker
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074
+      Hint = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074
+      ImageIndex = 18
     end
   end
   object spSelect: TdsdStoredProc
@@ -1327,6 +1354,13 @@ object IncomeJournalForm: TIncomeJournalForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PrinterName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -1387,5 +1421,22 @@ object IncomeJournalForm: TIncomeJournalForm
     PackSize = 1
     Left = 647
     Top = 208
+  end
+  object spGet_PrinterByUser: TdsdStoredProc
+    StoredProcName = 'gpGet_PrinterByUser'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'gpGet_PrinterByUser'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PrinterName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 624
+    Top = 296
   end
 end
