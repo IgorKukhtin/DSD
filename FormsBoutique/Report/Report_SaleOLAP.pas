@@ -85,9 +85,9 @@ type
     pvClientName: TcxDBPivotGridField;
     pvOperPrice: TcxDBPivotGridField;
     pvDebt_Amount: TcxDBPivotGridField;
-    pvGroupsName1: TcxDBPivotGridField;
-    pvGroupsName2: TcxDBPivotGridField;
     pvGroupsName3: TcxDBPivotGridField;
+    pvGroupsName2: TcxDBPivotGridField;
+    pvGroupsName1: TcxDBPivotGridField;
     pvGroupsName4: TcxDBPivotGridField;
     pvPeriodName_doc: TcxDBPivotGridField;
     pvPeriodYear_doc: TcxDBPivotGridField;

@@ -127,10 +127,10 @@ RETURNS TABLE (BrandName             VarChar (100)
              , Tax_Summ_curr         TFloat
              , Tax_Summ_prof         TFloat
 
-             , GroupsName4           VarChar (50)
-             , GroupsName3           VarChar (50)
-             , GroupsName2           VarChar (50)
              , GroupsName1           VarChar (50)
+             , GroupsName2           VarChar (50)
+             , GroupsName3           VarChar (50)
+             , GroupsName4           VarChar (50)
               )
 AS
 $BODY$
@@ -1050,9 +1050,6 @@ BEGIN
                     ELSE 0
                END :: TFloat AS Tax_Summ_prof
 
-               -- 0 - Первая Группа СНИЗУ
-             , Object_GoodsGroup1.ValueData :: VarChar (50) AS GroupsName4 -- а было AnalyticaName1, а в GroupsName4 - сейчас LabelName
-
                -- 1 - Самый Верхней уровень
              , CASE WHEN tmpData.GroupId1_parent IS NULL
                          THEN Object_GoodsGroup1.ValueData
@@ -1070,7 +1067,7 @@ BEGIN
                          THEN Object_GoodsGroup7.ValueData
                     WHEN tmpData.GroupId8_parent IS NULL
                          THEN Object_GoodsGroup8.ValueData
-               END :: VarChar (50) AS GroupsName3
+               END :: VarChar (50) AS GroupsName1
 
                -- 2 - Следующий ПОСЛЕ П.1. + !!!для "Детское" - еще Следующий!!!
              , CASE WHEN tmpData.GroupId2_parent IS NULL
@@ -1146,7 +1143,10 @@ BEGIN
                                    THEN Object_GoodsGroup6.ValueData -- Object_GoodsGroup5.ValueData
                                    ELSE Object_GoodsGroup6.ValueData
                               END
-               END :: VarChar (50) AS GroupsName1
+               END :: VarChar (50) AS GroupsName3
+
+               -- 0 - Первая Группа СНИЗУ
+             , Object_GoodsGroup1.ValueData :: VarChar (50) AS GroupsName4 -- а было AnalyticaName1, а в GroupsName4 - сейчас LabelName
 
         FROM tmpData
             LEFT JOIN tmpDayOfWeek ON tmpDayOfWeek.Ord_dow = tmpData.OrdDay_doc
