@@ -88,13 +88,13 @@ object IncomePartnerForm: TIncomePartnerForm
     end
     object edPriceWithVAT: TcxCheckBox
       Left = 797
-      Top = 18
+      Top = 23
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 9
       Width = 129
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 666
+      Left = 941
       Top = 23
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
@@ -128,7 +128,7 @@ object IncomePartnerForm: TIncomePartnerForm
       Width = 81
     end
     object edChangePercent: TcxCurrencyEdit
-      Left = 666
+      Left = 668
       Top = 63
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
@@ -139,12 +139,12 @@ object IncomePartnerForm: TIncomePartnerForm
       Width = 124
     end
     object cxLabel7: TcxLabel
-      Left = 666
+      Left = 941
       Top = 5
       Caption = '% '#1053#1044#1057
     end
     object cxLabel8: TcxLabel
-      Left = 666
+      Left = 668
       Top = 45
       Caption = '% (-)'#1057#1082'. (+)'#1053#1072#1094'. '#1055#1054#1057#1058'.'
     end
@@ -211,12 +211,12 @@ object IncomePartnerForm: TIncomePartnerForm
       Width = 157
     end
     object cxLabel12: TcxLabel
-      Left = 1023
+      Left = 941
       Top = 45
       Caption = #1050#1091#1088#1089
     end
     object edCurrencyValue: TcxCurrencyEdit
-      Left = 1023
+      Left = 941
       Top = 63
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
@@ -224,15 +224,15 @@ object IncomePartnerForm: TIncomePartnerForm
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Properties.ReadOnly = True
       TabOrder = 24
-      Width = 44
+      Width = 40
     end
     object cxLabel14: TcxLabel
-      Left = 940
+      Left = 990
       Top = 45
       Caption = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072')'
     end
     object edCurrencyDocument: TcxButtonEdit
-      Left = 940
+      Left = 990
       Top = 63
       Properties.Buttons = <
         item
@@ -245,12 +245,12 @@ object IncomePartnerForm: TIncomePartnerForm
       Width = 77
     end
     object cxLabel15: TcxLabel
-      Left = 940
+      Left = 990
       Top = 5
-      Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
+      Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1089#1090'.)'
     end
     object edCurrencyPartner: TcxButtonEdit
-      Left = 940
+      Left = 990
       Top = 23
       Properties.Buttons = <
         item
@@ -258,7 +258,7 @@ object IncomePartnerForm: TIncomePartnerForm
           Kind = bkEllipsis
         end>
       TabOrder = 28
-      Width = 127
+      Width = 77
     end
     object cxLabel16: TcxLabel
       Left = 797
@@ -334,8 +334,6 @@ object IncomePartnerForm: TIncomePartnerForm
         Height = 312
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 9
-        ExplicitTop = 152
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -480,7 +478,6 @@ object IncomePartnerForm: TIncomePartnerForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 75
           end
           object Price: TcxGridDBColumn
@@ -578,15 +575,16 @@ object IncomePartnerForm: TIncomePartnerForm
     end
   end
   object cbCalcAmountPartner: TcxCheckBox
-    Left = 714
-    Top = -4
-    Caption = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.>'
-    Enabled = False
+    Left = 668
+    Top = 23
+    Hint = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
+    Caption = #1040#1074#1090#1086#1084' '#1050#1086#1083'. '#1091' '#1087#1086#1089#1090'.'
+    ParentShowHint = False
     Properties.ReadOnly = False
+    ShowHint = True
     State = cbsChecked
     TabOrder = 6
-    Visible = False
-    Width = 220
+    Width = 124
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -993,6 +991,9 @@ object IncomePartnerForm: TIncomePartnerForm
       ReportNameParam.Value = 'PrintMovement_Income'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -2241,7 +2242,7 @@ object IncomePartnerForm: TIncomePartnerForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 960
+    Left = 1008
     Top = 72
   end
   object PrintHeaderCDS: TClientDataSet

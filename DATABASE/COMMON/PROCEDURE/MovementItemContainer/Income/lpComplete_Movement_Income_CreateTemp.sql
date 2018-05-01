@@ -31,7 +31,7 @@ BEGIN
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
                                , ContainerId_Summ Integer, ContainerId_Goods Integer, ContainerId_CountSupplier Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, UnitId_Asset Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
                                , ContainerId_GoodsTicketFuel Integer, GoodsId_TicketFuel Integer
-                               , OperCount TFloat, OperCount_Partner TFloat, OperCount_Packer TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, tmpOperSumm_Packer TFloat, OperSumm_Packer TFloat, tmpOperSumm_PartnerTo TFloat, OperSumm_PartnerTo TFloat
+                               , OperCount TFloat, OperCount_Partner TFloat, OperCount_Packer TFloat, tmpOperSumm TFloat, OperSumm TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, tmpOperSumm_Packer TFloat, OperSumm_Packer TFloat, tmpOperSumm_PartnerTo TFloat, OperSumm_PartnerTo TFloat
                                , AccountId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, InfoMoneyGroupId_Detail Integer, InfoMoneyDestinationId_Detail Integer, InfoMoneyId_Detail Integer
                                , BusinessId Integer
                                , ContainerId_ProfitLoss Integer

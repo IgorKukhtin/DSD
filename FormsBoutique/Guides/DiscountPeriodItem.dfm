@@ -420,12 +420,12 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       Width = 82
     end
     object cxLabel2: TcxLabel
-      Left = 531
+      Left = 529
       Top = 10
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1089#1082#1080#1076#1086#1082' '#1085#1072':'
     end
     object edPersent: TcxCurrencyEdit
-      Left = 786
+      Left = 793
       Top = 36
       EditValue = '0'
       Properties.AssignedValues.MinValue = True
@@ -454,12 +454,12 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       Width = 202
     end
     object cxLabel6: TcxLabel
-      Left = 297
+      Left = 306
       Top = 10
       Caption = #1057#1077#1079#1086#1085' :'
     end
     object edPeriod: TcxButtonEdit
-      Left = 339
+      Left = 349
       Top = 9
       Properties.Buttons = <
         item
@@ -468,10 +468,10 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         end>
       Properties.ReadOnly = True
       TabOrder = 8
-      Width = 175
+      Width = 165
     end
     object cxLabel7: TcxLabel
-      Left = 303
+      Left = 301
       Top = 37
       Caption = #1043#1086#1076' '#1089' ...'
     end
@@ -506,7 +506,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
     end
   end
   object cxLabel3: TcxLabel
-    Left = 531
+    Left = 530
     Top = 63
     Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1089#1082#1080#1076#1082#1080' '#1089':'
   end
@@ -520,7 +520,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
     Width = 82
   end
   object cxLabel4: TcxLabel
-    Left = 729
+    Left = 733
     Top = 63
     Caption = '% '#1089#1082#1080#1076#1082#1080':'
   end

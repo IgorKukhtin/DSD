@@ -503,7 +503,7 @@ BEGIN
      INSERT INTO _tmpItem (MovementItemId
                          , ContainerId_Summ, ContainerId_Goods, ContainerId_CountSupplier, GoodsId, GoodsKindId, AssetId, UnitId_Asset, PartionGoods, PartionGoodsDate
                          , ContainerId_GoodsTicketFuel, GoodsId_TicketFuel
-                         , OperCount, OperCount_Partner, OperCount_Packer, tmpOperSumm_Partner, OperSumm_Partner, tmpOperSumm_Packer, OperSumm_Packer, tmpOperSumm_PartnerTo, OperSumm_PartnerTo
+                         , OperCount, OperCount_Partner, OperCount_Packer, tmpOperSumm, OperSumm, tmpOperSumm_Partner, OperSumm_Partner, tmpOperSumm_Packer, OperSumm_Packer, tmpOperSumm_PartnerTo, OperSumm_PartnerTo
                          , AccountId, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId, InfoMoneyGroupId_Detail, InfoMoneyDestinationId_Detail, InfoMoneyId_Detail
                          , BusinessId
                          , ContainerId_ProfitLoss
@@ -535,6 +535,30 @@ BEGIN
                END AS OperCount_Partner
               -- количество у заготовителя
             , _tmp.OperCount_Packer
+
+              -- промежуточная сумма !!!КОЛ-ВО СКЛАД!!! - с округлением до 2-х знаков
+            , _tmp.tmpOperSumm_ChangePrice AS tmpOperSumm
+              -- конечная сумма !!!КОЛ-ВО СКЛАД!!!
+            , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
+                      -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки
+                      THEN CASE WHEN vbDiscountPercent > 0 THEN CAST ( (1 - vbDiscountPercent / 100) * (tmpOperSumm_ChangePrice) AS NUMERIC (16, 2))
+                                WHEN vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (tmpOperSumm_ChangePrice) AS NUMERIC (16, 2))
+                                ELSE (tmpOperSumm_ChangePrice)
+                           END
+                   WHEN vbVATPercent > 0
+                      -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН)
+                      THEN CASE WHEN vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * (1 - vbDiscountPercent/100) * (tmpOperSumm_ChangePrice) AS NUMERIC (16, 2))
+                                WHEN vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * (1 + vbExtraChargesPercent/100) * (tmpOperSumm_ChangePrice) AS NUMERIC (16, 2))
+                                ELSE CAST ( (1 + vbVATPercent / 100) * (tmpOperSumm_ChangePrice) AS NUMERIC (16, 2))
+                           END
+                   WHEN vbVATPercent > 0
+                      -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН)
+                      THEN CASE WHEN vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 - vbDiscountPercent/100) * (tmpOperSumm_ChangePrice) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                WHEN vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 + vbExtraChargesPercent/100) * (tmpOperSumm_ChangePrice) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                ELSE CAST ( (1 + vbVATPercent / 100) * (tmpOperSumm_ChangePrice) AS NUMERIC (16, 2))
+                           END
+              END AS OperSumm
+
 
               -- промежуточная сумма по Контрагенту - с округлением до 2-х знаков
             , _tmp.tmpOperSumm_Partner_ChangePrice AS tmpOperSumm_Partner
@@ -658,6 +682,10 @@ BEGIN
                    , CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) <> 0 THEN COALESCE (CAST (CASE WHEN Movement.DescId = zc_Movement_IncomeAsset() THEN MovementItem.Amount ELSE MIFloat_AmountPartner.ValueData END * (MIFloat_Price.ValueData - vbChangePrice) / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)), 0)
                                                                                   ELSE COALESCE (CAST (CASE WHEN Movement.DescId = zc_Movement_IncomeAsset() THEN MovementItem.Amount ELSE MIFloat_AmountPartner.ValueData END * (MIFloat_Price.ValueData - vbChangePrice) AS NUMERIC (16, 2)), 0)
                      END AS tmpOperSumm_Partner_ChangePrice
+                     -- промежуточная сумма !!!КОЛ-ВО СКЛАД!!! - с учетом скидки в цене - с округлением до 2-х знаков
+                   , CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) <> 0 THEN COALESCE (CAST (MovementItem.Amount * (MIFloat_Price.ValueData - vbChangePrice) / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)), 0)
+                                                                                  ELSE COALESCE (CAST (MovementItem.Amount * (MIFloat_Price.ValueData - vbChangePrice) AS NUMERIC (16, 2)), 0)
+                     END AS tmpOperSumm_ChangePrice
 
                      -- промежуточная сумма по Сотруднику (заготовитель) - с округлением до 2-х знаков
                    , CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) <> 0 THEN COALESCE (CAST (MIFloat_AmountPacker.ValueData * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)), 0)
@@ -775,18 +803,18 @@ BEGIN
     ;
 
 
-     -- !!!формируются суммы ПОКУПАТЕЛЮ!!!
+     -- !!!формируются суммы ПОКУПАТЕЛЮ!!! - !!!КОЛ-ВО СКЛАД!!!
      UPDATE _tmpItem SET tmpOperSumm_PartnerTo = CAST ((1 + vbChangePercent_To / 100)
                                                * CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
                                                            -- если цены с НДС или %НДС=0
-                                                           THEN (tmpOperSumm_Partner)
+                                                           THEN tmpOperSumm -- (tmpOperSumm_Partner)
                                                       -- если цены без НДС
                                                       ELSE CAST ( (1 + vbVATPercent / 100) * (tmpOperSumm_Partner) AS NUMERIC (16, 2))
                                                  END AS NUMERIC (16, 2))
                        , OperSumm_PartnerTo    = CAST ((1 + vbChangePercent_To / 100)
                                                * CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
                                                            -- если цены с НДС или %НДС=0
-                                                           THEN (tmpOperSumm_Partner)
+                                                           THEN tmpOperSumm -- (tmpOperSumm_Partner)
                                                       -- если цены без НДС
                                                       ELSE CAST ( (1 + vbVATPercent / 100) * (tmpOperSumm_Partner) AS NUMERIC (16, 2))
                                                  END AS NUMERIC (16, 2))
@@ -868,19 +896,20 @@ BEGIN
                               ELSE CAST ( (1 + vbVATPercent / 100) * tmpOperSumm_Packer AS NUMERIC (16, 2))
                          END
             END
-            -- Расчет Итоговой суммы по ПОКУПАТЕЛЮ
+            -- Расчет Итоговой суммы по ПОКУПАТЕЛЮ - !!!КОЛ-ВО СКЛАД!!!
           , CAST ((1 + vbChangePercent_To / 100)
           * CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
                     -- если цены с НДС или %НДС=0
-                    THEN tmpOperSumm_Partner
+                    THEN tmpOperSumm
                  -- если цены без НДС
-                 ELSE CAST ( (1 + vbVATPercent / 100) * tmpOperSumm_Partner AS NUMERIC (16, 2))
+                 ELSE CAST ( (1 + vbVATPercent / 100) * tmpOperSumm AS NUMERIC (16, 2))
             END AS NUMERIC (16, 2))
 
             INTO vbOperSumm_Partner, vbOperSumm_Packer, vbOperSumm_PartnerTo
 
      FROM (SELECT SUM (_tmpItem.tmpOperSumm_Partner) AS tmpOperSumm_Partner
-                , SUM (_tmpItem.tmpOperSumm_Packer) AS tmpOperSumm_Packer
+                , SUM (_tmpItem.tmpOperSumm_Packer)  AS tmpOperSumm_Packer
+                , SUM (_tmpItem.tmpOperSumm)         AS tmpOperSumm
            FROM _tmpItem
           ) AS _tmpItem
      ;
@@ -889,13 +918,13 @@ BEGIN
      -- Расчет Итоговых сумм (по элементам)
      SELECT SUM (OperSumm_Partner), SUM (OperSumm_Packer), SUM (OperSumm_PartnerTo) INTO vbOperSumm_Partner_byItem, vbOperSumm_Packer_byItem, vbOperSumm_PartnerTo_byItem FROM _tmpItem;
 
+
      -- если не равны ДВЕ Итоговые суммы по Контрагенту
      IF COALESCE (vbOperSumm_Partner, 0) <> COALESCE (vbOperSumm_Partner_byItem, 0)
      THEN
          -- на разницу корректируем самую большую сумму (теоретически может получиться Значение < 0, но эту ошибку не обрабатываем)
          UPDATE _tmpItem SET OperSumm_Partner = OperSumm_Partner - (vbOperSumm_Partner_byItem - vbOperSumm_Partner)
-         WHERE MovementItemId IN (SELECT MAX (MovementItemId) FROM _tmpItem WHERE OperSumm_Partner IN (SELECT MAX (OperSumm_Partner) FROM _tmpItem)
-                                 );
+         WHERE MovementItemId IN (SELECT MovementItemId FROM _tmpItem ORDER BY OperSumm_Partner DESC LIMIT 1);
      END IF;
 
      -- если не равны ДВЕ Итоговые суммы по Сотруднику (заготовитель)
@@ -903,8 +932,7 @@ BEGIN
      THEN
          -- на разницу корректируем самую большую сумму (теоретически может получиться Значение < 0, но эту ошибку не обрабатываем)
          UPDATE _tmpItem SET OperSumm_Packer = OperSumm_Packer - (vbOperSumm_Packer_byItem - vbOperSumm_Packer)
-         WHERE MovementItemId IN (SELECT MAX (MovementItemId) FROM _tmpItem WHERE OperSumm_Packer IN (SELECT MAX (OperSumm_Packer) FROM _tmpItem)
-                                 );
+         WHERE MovementItemId IN (SELECT MovementItemId FROM _tmpItem ORDER BY OperSumm_Packer DESC LIMIT 1);
      END IF;
 
      -- если не равны ДВЕ Итоговые суммы по ПОКУПАТЕЛЮ
@@ -912,8 +940,7 @@ BEGIN
      THEN
          -- на разницу корректируем самую большую сумму (теоретически может получиться Значение < 0, но эту ошибку не обрабатываем)
          UPDATE _tmpItem SET OperSumm_PartnerTo = OperSumm_PartnerTo - (vbOperSumm_PartnerTo_byItem - vbOperSumm_PartnerTo)
-         WHERE MovementItemId IN (SELECT MAX (MovementItemId) FROM _tmpItem WHERE OperSumm_PartnerTo IN (SELECT MAX (OperSumm_PartnerTo) FROM _tmpItem)
-                                 );
+         WHERE MovementItemId IN (SELECT MovementItemId FROM _tmpItem ORDER BY OperSumm_PartnerTo DESC LIMIT 1);
      END IF;
 
 
@@ -987,6 +1014,7 @@ BEGIN
         -- GROUP BY _tmpSumm.InfoMoneyGroupId_Detail, _tmpSumm.InfoMoneyDestinationId_Detail, _tmpSumm.InfoMoneyId_Detail, _tmpSumm.BusinessId, _tmpSumm.UnitId_Asset, _tmpSumm.GoodsId, _tmpSumm.GoodsKindId
         ;
 
+
      -- заполняем таблицу - элементы по ПОКУПАТЕЛЮ, со всеми свойствами для формирования Аналитик в проводках, здесь по !!!MovementItemId!!!
      INSERT INTO _tmpItem_SummPartner_To (MovementItemId, ContainerId_Goods, ContainerId, AccountId, ContainerId_ProfitLoss_70201, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId, BusinessId, GoodsId, OperCount_PartnerFrom, OperCount, OperSumm_Partner, OperSumm_70201)
         SELECT _tmpSumm.MovementItemId
@@ -1021,6 +1049,14 @@ BEGIN
         -- GROUP BY _tmpSumm.BusinessId, _tmpSumm.GoodsId
        ;
 
+/*
+IF inUserId = 5
+THEN
+    RAISE EXCEPTION '<%>  %', (select _tmpItem_SummPartner_To.OperCount_PartnerFrom from _tmpItem_SummPartner_To)
+    , (select _tmpItem_SummPartner_To.OperCount from _tmpItem_SummPartner_To);
+    -- 'Повторите действие через 3 мин.'
+END IF;
+*/
      -- !!!обязательно до ... _tmpItem_SummPersonal и после ...!!! - формируются <норма авто> - если есть лимит в ГРН (это ПРИОРИТЕТНЫЙ вариант)
      -- PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountFuel(), inMovementId, CASE WHEN tmp.Price <> 0 THEN MovementFloat_Limit.ValueData / tmp.Price ELSE 0 END)
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_LimitDistance(), inMovementId, CASE WHEN tmp.Price <> 0 AND MovementFloat_AmountFuel.ValueData <> 0
