@@ -147,6 +147,7 @@ BEGIN
 
     -- !!!замена!!!
     IF COALESCE (inBrandId, 0) = 0
+       AND COALESCE (inPartnerId, 0) = 0
        AND EXISTS (SELECT 1
                    FROM Object
                         INNER JOIN ObjectLink AS ObjectLink_Object

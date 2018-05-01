@@ -1,9 +1,5 @@
 -- Function:  gpReport_Goods_RemainsCurrent()
 
-DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent(Integer,Boolean, Boolean,Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent(Integer,Integer,Integer,Integer,Integer,Integer,Boolean, Boolean,Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent(Integer,Integer,Integer,Integer,Integer,Integer,Integer, TDateTime, Boolean, Boolean,Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Goods_RemainsCurrent(
@@ -197,7 +193,7 @@ BEGIN
 
        , tmpData_All AS (SELECT tmpContainer.UnitId
                               , tmpContainer.GoodsId
-                              , CASE WHEN inisPartion = TRUE AND inIsSize = TRUE THEN tmpContainer.PartionId ELSE 0 END AS PartionId
+                              , CASE WHEN inisPartion = TRUE AND inIsSize = TRUE AND inIsSizeStr = FALSE THEN tmpContainer.PartionId ELSE 0 END AS PartionId
                               , CASE WHEN inisPartion = TRUE THEN tmpContainer.MovementId       ELSE 0  END AS MovementId_Partion
                               , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE '' END AS DescName_Partion
                               , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE '' END AS InvNumber_Partion
@@ -245,7 +241,7 @@ BEGIN
                               -- LEFT JOIN tmpPrice ON tmpPrice.GoodsId = Object_PartionGoods.GoodsId
                          GROUP BY tmpContainer.UnitId
                                 , tmpContainer.GoodsId
-                                , CASE WHEN inisPartion = TRUE AND inIsSize = TRUE THEN tmpContainer.PartionId ELSE 0 END
+                                , CASE WHEN inisPartion = TRUE AND inIsSize = TRUE AND inIsSizeStr = FALSE THEN tmpContainer.PartionId ELSE 0 END
                                 , CASE WHEN inisPartion = TRUE THEN tmpContainer.MovementId       ELSE 0  END
                                 , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE '' END
                                 , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE '' END
