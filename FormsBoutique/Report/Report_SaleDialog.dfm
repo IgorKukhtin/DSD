@@ -89,14 +89,14 @@ object Report_SaleDialogForm: TReport_SaleDialogForm
     Width = 135
   end
   object cbSize: TcxCheckBox
-    Left = 151
+    Left = 137
     Top = 63
-    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
-    Caption = #1056#1072#1079#1084#1077#1088#1099
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' '#1076#1077#1090#1072#1083#1100#1085#1086' ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1056#1072#1079#1084#1077#1088#1099' '#1076#1077#1090#1072#1083'.'
     ParentShowHint = False
     ShowHint = True
     TabOrder = 9
-    Width = 74
+    Width = 104
   end
   object cxLabel1: TcxLabel
     Left = 10
@@ -133,7 +133,7 @@ object Report_SaleDialogForm: TReport_SaleDialogForm
     Width = 305
   end
   object cbPartner: TcxCheckBox
-    Left = 236
+    Left = 242
     Top = 63
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
@@ -143,7 +143,7 @@ object Report_SaleDialogForm: TReport_SaleDialogForm
     Width = 88
   end
   object cbMovement: TcxCheckBox
-    Left = 236
+    Left = 242
     Top = 34
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#8470
@@ -221,7 +221,7 @@ object Report_SaleDialogForm: TReport_SaleDialogForm
     Width = 111
   end
   object cbClient: TcxCheckBox
-    Left = 236
+    Left = 242
     Top = 7
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100

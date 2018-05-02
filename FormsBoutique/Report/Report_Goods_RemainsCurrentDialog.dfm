@@ -61,20 +61,20 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
     ParentShowHint = False
     ShowHint = True
     TabOrder = 4
-    Width = 133
+    Width = 130
   end
   object cbSize: TcxCheckBox
-    Left = 244
+    Left = 229
     Top = 12
-    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
-    Caption = #1056#1072#1079#1084#1077#1088#1099
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' '#1076#1077#1090#1072#1083#1100#1085#1086' ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1056#1072#1079#1084#1077#1088#1099' '#1076#1077#1090#1072#1083'.'
     ParentShowHint = False
     ShowHint = True
     TabOrder = 5
-    Width = 70
+    Width = 104
   end
   object cbPartner: TcxCheckBox
-    Left = 152
+    Left = 141
     Top = 12
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082#1080

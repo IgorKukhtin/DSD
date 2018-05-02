@@ -6,7 +6,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -28
   ExplicitWidth = 1177
   ExplicitHeight = 471
   PixelsPerInch = 96
@@ -14,7 +13,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   inherited Panel: TPanel [0]
     Width = 1161
     Height = 55
-    ExplicitWidth = 1169
+    ExplicitWidth = 1161
     ExplicitHeight = 55
     inherited deStart: TcxDateEdit
       Left = 22
@@ -89,12 +88,12 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Left = 984
       Top = 30
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
-      Caption = #1056#1072#1079#1084#1077#1088#1099
+      Caption = #1056#1072#1079#1084#1077#1088#1099' '#1076#1077#1090#1072#1083#1100#1085#1086
       ParentShowHint = False
       ShowHint = True
       State = cbsChecked
       TabOrder = 7
-      Width = 67
+      Width = 129
     end
     object cbPartner: TcxCheckBox
       Left = 894
@@ -220,16 +219,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       TabOrder = 21
       Width = 70
     end
-    object cbSizeStr: TcxCheckBox
-      Left = 1051
-      Top = 30
-      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' '#1074#1084#1077#1089#1090#1077' ('#1044#1072'/'#1053#1077#1090')'
-      Caption = #1056#1072#1079#1084#1077#1088#1099' '#1074#1084#1077#1089#1090#1077
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 22
-      Width = 105
-    end
   end
   inherited PageControl: TcxPageControl [1]
     Top = 81
@@ -237,17 +226,17 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     Height = 322
     TabOrder = 3
     ExplicitTop = 81
-    ExplicitWidth = 1169
+    ExplicitWidth = 1161
     ExplicitHeight = 322
     ClientRectBottom = 322
     ClientRectRight = 1161
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1169
+      ExplicitWidth = 1161
       ExplicitHeight = 322
       inherited cxGrid: TcxGrid
         Width = 1161
         Height = 322
-        ExplicitWidth = 1169
+        ExplicitWidth = 1161
         ExplicitHeight = 322
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -791,7 +780,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 6
-    ExplicitWidth = 1169
     object DBLabelNameFull: TcxDBLabel
       Left = 0
       Top = 0
@@ -807,7 +795,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Style.Font.Name = 'Tahoma'
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
-      ExplicitWidth = 1169
       Height = 30
       Width = 1161
       AnchorX = 581
@@ -1686,14 +1673,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         Name = 'inIsSize'
         Value = Null
         Component = cbSize
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisSizeStr'
-        Value = Null
-        Component = cbSizeStr
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

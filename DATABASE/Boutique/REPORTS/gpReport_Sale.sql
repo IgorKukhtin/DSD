@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpReport_Sale (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Sale (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Sale (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Sale (
     IN inStartDate        TDateTime,  -- Дата начала
@@ -14,8 +15,7 @@ CREATE OR REPLACE FUNCTION gpReport_Sale (
     IN inStartYear        Integer  ,
     IN inEndYear          Integer  ,
     IN inisPartion        Boolean  , -- показывать партии
-    IN inIsSize           Boolean  , -- показать Размеры (Да/Нет)
-    IN inIsSizeStr        Boolean  ,  -- показать Размеры вместе (Да/Нет)
+    IN inIsSize           Boolean  , -- показать Размеры детально(Да/Нет)
     IN inisPartner        Boolean  , -- показать по поставщикам
     IN inisMovement       Boolean  , -- показать по документам    
     IN inIsClient         Boolean  , -- показать Покупателя (Да/Нет)
@@ -97,17 +97,12 @@ BEGIN
     -- !!!замена!!!
     IF inIsPartion = TRUE THEN
        inIsPartner:= TRUE;
-       inIsSize   := TRUE;
     END IF;
     -- !!!замена!!!
     IF COALESCE (inEndYear, 0) = 0 THEN
        inEndYear:= 1000000;
     END IF;
 
-    -- !!!замена!!!
-    IF inIsSizeStr = TRUE THEN
-        inIsSize   := TRUE;
-    END IF;
 
     -- Результат
     RETURN QUERY
@@ -357,8 +352,8 @@ BEGIN
                           , tmpData_all.GoodsId
                           , tmpData_all.GoodsInfoId
                           , tmpData_all.LineFabricaId
-                          , CASE WHEN inIsSize  = TRUE AND inIsSizeStr = FALSE THEN tmpData_all.GoodsSizeId ELSE 0 END AS GoodsSizeId
-                          , STRING_AGG (Object_GoodsSize.ValueData, ', ')  AS GoodsSizeName
+                          , CASE WHEN inIsSize  = TRUE THEN tmpData_all.GoodsSizeId ELSE 0 END AS GoodsSizeId
+                          , STRING_AGG (Object_GoodsSize.ValueData, ', ' ORDER BY Object_GoodsSize.ValueData)  AS GoodsSizeName
                           
                           , tmpData_all.MeasureId
 
@@ -462,7 +457,7 @@ BEGIN
                             , tmpData_all.GoodsId
                             , tmpData_all.GoodsInfoId
                             , tmpData_all.LineFabricaId
-                            , CASE WHEN inIsSize  = TRUE AND inIsSizeStr = FALSE THEN tmpData_all.GoodsSizeId ELSE 0 END
+                            , CASE WHEN inIsSize  = TRUE THEN tmpData_all.GoodsSizeId ELSE 0 END
                             , tmpData_all.MeasureId
 
                             , tmpData_all.OperDate_doc
@@ -710,4 +705,4 @@ $BODY$
 */
 
 -- тест
---select * from gpReport_Sale(inStartDate := ('01.01.2017')::TDateTime , inEndDate := ('01.01.2017')::TDateTime , inUnitId := 1157 , inClientId := 0 , inPartnerId := 0 , inBrandId := 0 , inPeriodId := 0 , inStartYear := 0 , inEndYear := 0 , inisPartion := 'False' , inisSize := 'False' , inisSizeStr:= 'TRUE', inisPartner := 'False' , inisMovement := 'False' , inIsClient := 'False' , inSession := '2');
+--select * from gpReport_Sale(inStartDate := ('01.01.2017')::TDateTime , inEndDate := ('01.01.2017')::TDateTime , inUnitId := 1157 , inClientId := 0 , inPartnerId := 0 , inBrandId := 0 , inPeriodId := 0 , inStartYear := 0 , inEndYear := 0 , inisPartion := 'False' , inisSize := 'False' , inisPartner := 'False' , inisMovement := 'False' , inIsClient := 'False' , inSession := '2');
