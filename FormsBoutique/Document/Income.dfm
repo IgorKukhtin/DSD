@@ -1763,7 +1763,7 @@ object IncomeForm: TIncomeForm
           Action = macAddGoodsPrintList_Rem
         end
         item
-          Action = actGet_GoodsPrint_Null
+          Action = actGet_PrinterByUser
         end
         item
           Action = actPrintStickerList
@@ -2657,6 +2657,18 @@ object IncomeForm: TIncomeForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsSizeId'
+        Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
