@@ -155,6 +155,12 @@ type
     spGet_PrinterByUser: TdsdStoredProc;
     actGet_PrinterByUser: TdsdExecStoredProc;
     macPrintSticker: TMultiAction;
+    ExecuteDialogDiscount: TExecuteDialog;
+    spInsertUpdate_Discount: TdsdStoredProc;
+    spUpdatePersent: TdsdExecStoredProc;
+    macUpdatePersent: TMultiAction;
+    macUpdateAll: TMultiAction;
+    bbUpdateAll: TdxBarButton;
   private
   public
   end;

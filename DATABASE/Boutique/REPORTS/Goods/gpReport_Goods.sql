@@ -429,6 +429,46 @@ BEGIN
                         WHERE ObjectLink_PriceListItem_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
                           AND ObjectLink_PriceListItem_Goods.ChildObjectId = inGoodsId
                        )
+
+         , tmpDiscountList AS (SELECT inUnitId AS UnitId, inGoodsId AS GoodsId)
+        
+                  , tmpOL1 AS (SELECT * FROM ObjectLink WHERE ObjectLink.ChildObjectId = inGoodsId
+                                                          AND ObjectLink.DescId        = zc_ObjectLink_DiscountPeriodItem_Goods()
+                              )
+                  , tmpOL2 AS (SELECT * FROM ObjectLink WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpOL1.ObjectId FROM tmpOL1)
+                                                          AND ObjectLink.DescId   = zc_ObjectLink_DiscountPeriodItem_Unit()
+                              )
+        
+         , tmpDiscount AS (SELECT ObjectLink_DiscountPeriodItem_Unit.ChildObjectId      AS UnitId
+                                , ObjectLink_DiscountPeriodItem_Goods.ChildObjectId     AS GoodsId
+                                , ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData AS DiscountTax
+                           FROM tmpDiscountList
+                                INNER JOIN tmpOL1 AS ObjectLink_DiscountPeriodItem_Goods
+                                                  ON ObjectLink_DiscountPeriodItem_Goods.ChildObjectId = tmpDiscountList.GoodsId
+                                                     -- AND ObjectLink_DiscountPeriodItem_Goods.DescId       = zc_ObjectLink_DiscountPeriodItem_Goods()
+                                INNER JOIN tmpOL2 AS ObjectLink_DiscountPeriodItem_Unit
+                                                  ON ObjectLink_DiscountPeriodItem_Unit.ObjectId      = ObjectLink_DiscountPeriodItem_Goods.ObjectId
+                                                 AND ObjectLink_DiscountPeriodItem_Unit.ChildObjectId = tmpDiscountList.UnitId
+                                                     -- AND ObjectLink_DiscountPeriodItem_Unit.DescId       = zc_ObjectLink_DiscountPeriodItem_Unit()
+                                INNER JOIN ObjectHistory AS ObjectHistory_DiscountPeriodItem
+                                                         ON ObjectHistory_DiscountPeriodItem.ObjectId = ObjectLink_DiscountPeriodItem_Goods.ObjectId
+                                                        AND ObjectHistory_DiscountPeriodItem.DescId   = zc_ObjectHistory_DiscountPeriodItem()
+                                                        AND ObjectHistory_DiscountPeriodItem.EndDate  = zc_DateEnd()
+                                LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_DiscountPeriodItem_Value
+                                                             ON ObjectHistoryFloat_DiscountPeriodItem_Value.ObjectHistoryId = ObjectHistory_DiscountPeriodItem.Id
+                                                            AND ObjectHistoryFloat_DiscountPeriodItem_Value.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value()
+                          )
+         , tmpCurrency AS (SELECT lfSelect.*
+                           FROM Object
+                                CROSS JOIN lfSelect_Movement_Currency_byDate (inOperDate      := CURRENT_DATE
+                                                                            , inCurrencyFromId:= zc_Currency_Basis()
+                                                                            , inCurrencyToId  := Object.Id
+                                                                             ) AS lfSelect
+                           WHERE Object.DescId = zc_Object_Currency()
+                             AND Object.Id     <> zc_Currency_Basis()
+                             AND vbIsOperPrice = TRUE
+                          )
+
       -- Результат
       SELECT DISTINCT
              zfCalc_PartionMovementName (0, '', Movement.InvNumber, Movement.OperDate) AS InvNumberAll
@@ -456,6 +496,18 @@ BEGIN
              -- !!!ВРЕМЕННО!!!
            , CASE WHEN COALESCE (Object_PartionGoods.OperPriceList, 0) <> COALESCE (tmpPrice.Price, 0)  THEN -1 * CASE WHEN tmpPrice.Price > 0 THEN tmpPrice.Price ELSE Object_PartionGoods.OperPriceList END ELSE Object_PartionGoods.OperPriceList END :: TFLoat AS OperPriceList
 
+             -- % Сезонной скидки !!!НА!!! zc_DateEnd
+           , tmpDiscount.DiscountTax         :: TFloat AS DiscountTax
+
+             -- % наценки
+           , CAST (CASE WHEN (Object_PartionGoods.OperPrice * tmpCurrency.Amount / CASE WHEN Object_PartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpCurrency.ParValue <> 0 THEN tmpCurrency.ParValue ELSE 1 END)
+                              <> 0
+                        THEN (100 * COALESCE (Object_PartionGoods.OperPriceList, 0)
+                            / (Object_PartionGoods.OperPrice * tmpCurrency.Amount / CASE WHEN Object_PartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpCurrency.ParValue <> 0 THEN tmpCurrency.ParValue ELSE 1 END)
+                              - 100)
+                        ELSE 0
+                   END AS NUMERIC (16, 0)) :: TFloat AS PriceTax
+
       FROM Object_PartionGoods
            LEFT JOIN tmpPrice ON 1=1
            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = Object_PartionGoods.GoodsId
@@ -479,6 +531,11 @@ BEGIN
                                  AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
 
            LEFT JOIN Movement ON Movement.Id = Object_PartionGoods.MovementId
+
+           LEFT JOIN tmpDiscount ON tmpDiscount.UnitId  = Object_PartionGoods.UnitId
+                                AND tmpDiscount.GoodsId = Object_PartionGoods.GoodsId
+
+           LEFT JOIN tmpCurrency  ON tmpCurrency.CurrencyToId = Object_PartionGoods.CurrencyId
 
       WHERE Object_PartionGoods.GoodsId = inGoodsId
         -- AND ((Object_PartionGoods.MovementItemId = inPartionId AND inIsPartionAll = FALSE) OR (inIsPartionAll = TRUE))
