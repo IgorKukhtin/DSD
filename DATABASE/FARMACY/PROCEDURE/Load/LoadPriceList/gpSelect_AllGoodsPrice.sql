@@ -408,6 +408,7 @@ BEGIN
                   ) >= COALESCE (MarginCondition.MarginPercent, inMinPercent)
              )
        ))
+   AND (inUnitId_to = 0 or ResultSet.isPriceFix = FALSE)
    AND ResultSet.RemainsCount > 0
    AND (ResultSet.RemainsCount_to > 0 OR COALESCE (inUnitId_to, 0) = 0)
    ;
@@ -420,6 +421,7 @@ ALTER FUNCTION gpSelect_AllGoodsPrice (Integer,  Integer,  TFloat, Boolean, TFlo
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 03.05.18                                                                                      *
  17.04.18                                                                                      *
  01.11.17                                        * add inTaxTo
  17.10.17         * add Area
