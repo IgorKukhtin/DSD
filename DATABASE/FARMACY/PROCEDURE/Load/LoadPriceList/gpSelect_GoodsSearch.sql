@@ -1,4 +1,4 @@
--- Function: gpSelect_Movement_PriceList()
+-- Function: gpSelect_GoodsSearch()
 
 DROP FUNCTION IF EXISTS gpSelect_GoodsSearch (TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_GoodsSearch (TVarChar, TVarChar, TVarChar);
@@ -46,10 +46,10 @@ BEGIN
      -- проверяем регион пользователя
      vbAreaId:= (SELECT outAreaId FROM gpGet_Area_byUser(inSession));
      
-     IF (COALESCE (vbAreaId, 0) <> 0) AND (vbAreaId <> inAreaId)
-     THEN
-         RAISE EXCEPTION 'Не достаточно прав доступа на изменение региона';
-     END IF;
+--     IF (COALESCE (vbAreaId, 0) <> 0) AND (vbAreaId <> inAreaId)
+--     THEN
+--         RAISE EXCEPTION 'Не достаточно прав доступа на изменение региона';
+--     END IF;
       
      RETURN QUERY
      WITH DD AS (SELECT DISTINCT Object_MarginCategoryItem_View.MarginPercent
@@ -179,7 +179,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 03.05.18                                                                                     * 
  21.10.17         *
  13.10.17         *
  13.06.16         *
