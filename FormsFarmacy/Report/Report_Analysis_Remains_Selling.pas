@@ -121,11 +121,15 @@ type
     actExportExel: TAction;
     dxBarButton4: TdxBarButton;
     dxBarButton5: TdxBarButton;
+    Panel7: TPanel;
+    cxButton3: TcxButton;
+    actAddGoods: TAction;
     procedure actSetGoodsExecute(Sender: TObject);
     procedure actSetPromoExecute(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
     procedure actExportExelExecute(Sender: TObject);
+    procedure actAddGoodsExecute(Sender: TObject);
   private
   public
   end;
@@ -133,6 +137,29 @@ type
 implementation
 
 {$R *.dfm}
+
+procedure TReport_Analysis_Remains_SellingForm.actAddGoodsExecute(
+  Sender: TObject);
+var
+  I, TovarID: Integer;
+begin
+  inherited;
+  with cxDBPivotGrid1.DataController.Filter do
+  begin
+    BeginUpdate;
+    try
+      root.BoolOperatorKind := TcxFilterBoolOperatorKind.fboOr;
+      for I := 0 to cxgChoiceGoodsDBTableView.Controller.SelectedRecordCount - 1 do
+      begin
+        TovarID := cxgChoiceGoodsDBTableView.Controller.SelectedRecords[I].Values[cxgChoiceGoodsDBTableViewColumn1.Index];
+        root.AddItem(cxDBPivotGridField3, TcxFilterOperatorKind.foEqual, TovarID, IntToStr(TovarID));
+      end;
+      Active := true;
+    finally
+      EndUpdate;
+    end;
+  end;
+end;
 
 procedure TReport_Analysis_Remains_SellingForm.actExportExelExecute(Sender: TObject);
   var FileName : string;

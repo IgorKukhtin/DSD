@@ -4,7 +4,6 @@ inherited Report_SaleForm: TReport_SaleForm
   ClientWidth = 1176
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -43
   ExplicitWidth = 1192
   ExplicitHeight = 463
   PixelsPerInch = 96
@@ -71,12 +70,12 @@ inherited Report_SaleForm: TReport_SaleForm
     object cbSize: TcxCheckBox
       Left = 974
       Top = 32
-      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
-      Caption = #1056#1072#1079#1084#1077#1088#1099
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' '#1076#1077#1090#1072#1083#1100#1085#1086'('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1056#1072#1079#1084#1077#1088#1099' '#1076#1077#1090#1072#1083#1100#1085#1086
       ParentShowHint = False
       ShowHint = True
       TabOrder = 7
-      Width = 72
+      Width = 131
     end
     object cbPartner: TcxCheckBox
       Left = 1005
@@ -159,16 +158,6 @@ inherited Report_SaleForm: TReport_SaleForm
       ShowHint = True
       TabOrder = 16
       Width = 88
-    end
-    object cbSizeStr: TcxCheckBox
-      Left = 1052
-      Top = 32
-      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' '#1074#1084#1077#1089#1090#1077' ('#1044#1072'/'#1053#1077#1090')'
-      Caption = #1056#1072#1079#1084#1077#1088#1099' '#1074#1084#1077#1089#1090#1077
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 17
-      Width = 105
     end
   end
   inherited PageControl: TcxPageControl [1]
@@ -1671,14 +1660,6 @@ inherited Report_SaleForm: TReport_SaleForm
         Name = 'inisSize'
         Value = Null
         Component = cbSize
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsSizeStr'
-        Value = 'TRUE'
-        Component = cbSizeStr
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -73,7 +73,6 @@ type
     actPrintIn: TdsdPrintAction;
     bbPrint: TdxBarButton;
     bbPrintin: TdxBarButton;
-    cbSizeStr: TcxCheckBox;
   private
     { Private declarations }
   public

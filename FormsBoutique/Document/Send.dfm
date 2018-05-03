@@ -2794,6 +2794,18 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsSizeId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAmount'
         Value = Null
         Component = MasterCDS
