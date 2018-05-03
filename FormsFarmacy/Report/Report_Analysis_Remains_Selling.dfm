@@ -237,9 +237,12 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
         Left = 0
         Top = 21
         Width = 263
-        Height = 291
+        Height = 285
         Align = alClient
         TabOrder = 0
+        ExplicitLeft = 5
+        ExplicitTop = 15
+        ExplicitHeight = 234
         object cxgChoiceGoodsDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           Navigator.Buttons.Insert.Visible = False
@@ -293,14 +296,35 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
         Caption = #1052#1077#1076#1080#1082#1072#1084#1077#1085#1090#1099
         TabOrder = 1
       end
-      object cxButton2: TcxButton
+      object Panel7: TPanel
         Left = 0
-        Top = 312
+        Top = 306
         Width = 263
-        Height = 25
+        Height = 31
         Align = alBottom
-        Action = actSetGoods
+        ShowCaption = False
         TabOrder = 2
+        object cxButton2: TcxButton
+          Left = 1
+          Top = 1
+          Width = 127
+          Height = 29
+          Align = alClient
+          Action = actSetGoods
+          TabOrder = 0
+          ExplicitLeft = 5
+          ExplicitTop = 6
+          ExplicitWidth = 136
+        end
+        object cxButton3: TcxButton
+          Left = 128
+          Top = 1
+          Width = 134
+          Height = 29
+          Align = alRight
+          Action = actAddGoods
+          TabOrder = 1
+        end
       end
     end
     object Panel4: TPanel
@@ -820,7 +844,7 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
     end
     object actSetGoods: TAction
       Category = 'DSDLib'
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1092#1080#1083#1100#1090#1088' '#1085#1072' '#1087#1086#1074#1086#1076' '#1075#1088#1080#1076
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1092#1080#1083#1100#1090#1088
       Hint = #1059#1089#1090#1072#1085#1086#1089#1080#1090#1100' '#1092#1080#1083#1100#1090#1088' '#1087#1086' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1090#1086#1074#1072#1088#1072#1084' '#1085#1072' '#1087#1086#1074#1086#1076' '#1075#1088#1080#1076
       ImageIndex = 33
       OnExecute = actSetGoodsExecute
@@ -833,6 +857,15 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
         #1085#1090#1088#1072#1082#1090#1091
       ImageIndex = 34
       OnExecute = actSetPromoExecute
+    end
+    object actAddGoods: TAction
+      Category = 'DSDLib'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082' '#1092#1080#1083#1100#1090#1088#1091
+      Hint = 
+        #1044#1086#1073#1072#1074#1080#1090#1100' '#1082' '#1092#1080#1083#1100#1090#1088#1091' '#1085#1072' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1099' '#1087#1086' '#1074#1099#1073#1088#1072#1085#1085#1086#1084#1091' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1086#1084#1091' '#1082 +
+        #1086#1085#1090#1088#1072#1082#1090#1091
+      ImageIndex = 34
+      OnExecute = actAddGoodsExecute
     end
   end
   object dsdStoredProc: TdsdStoredProc
