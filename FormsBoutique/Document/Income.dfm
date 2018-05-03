@@ -13,7 +13,7 @@ object IncomeForm: TIncomeForm
   KeyPreview = True
   OldCreateOrder = False
   PopupMenu = PopupMenu
-  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
@@ -172,6 +172,34 @@ object IncomeForm: TIncomeForm
       Properties.ReadOnly = True
       TabOrder = 17
       Width = 262
+    end
+    object cxLabel5: TcxLabel
+      Left = 663
+      Top = 45
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1089' ...'
+    end
+    object deStart: TcxDateEdit
+      Left = 663
+      Top = 63
+      EditValue = 43223d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 19
+      Width = 85
+    end
+    object cxLabel6: TcxLabel
+      Left = 767
+      Top = 45
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1087#1086' ...'
+    end
+    object deEnd: TcxDateEdit
+      Left = 767
+      Top = 63
+      EditValue = 43223d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 21
+      Width = 85
     end
   end
   object cxPageControl: TcxPageControl
@@ -579,6 +607,22 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'StartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsErased'
         Value = False
         Component = actShowErased
@@ -950,6 +994,34 @@ object IncomeForm: TIncomeForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spGet_Current_Date
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spGet_User_curr
+        end
+        item
+          StoredProc = spGet_GoodsPrint_Null
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
       RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh
@@ -2513,8 +2585,8 @@ object IncomeForm: TIncomeForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 766
-    Top = 22
+    Left = 702
+    Top = 126
   end
   object spGet_GoodsPrint_Null: TdsdStoredProc
     StoredProcName = 'gpGet_Object_GoodsPrint_Null'
@@ -2797,5 +2869,34 @@ object IncomeForm: TIncomeForm
     PackSize = 1
     Left = 472
     Top = 368
+  end
+  object PeriodChoice: TPeriodChoice
+    DateStart = deStart
+    DateEnd = deEnd
+    Left = 800
+    Top = 120
+  end
+  object spGet_Current_Date: TdsdStoredProc
+    StoredProcName = 'gpGet_Current_Date'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'gpGet_Current_Date'
+        Value = 42856d
+        Component = deStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_Current_Date'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 632
+    Top = 192
   end
 end
