@@ -61,4 +61,4 @@ $BODY$
  */
 
 -- тест
--- SELECT * FROM gpSelect_Object_UserChoice ('5')
+-- SELECT * FROM gpSelect_Object_UserChoice (zfCalc_UserAdmin())

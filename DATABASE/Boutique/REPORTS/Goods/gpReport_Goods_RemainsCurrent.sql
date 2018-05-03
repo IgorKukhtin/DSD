@@ -80,10 +80,14 @@ BEGIN
 
 
     -- проверка может ли смотреть любой магазин, или только свой
-    PERFORM lpCheckUnit_byUser (inUnitId_by:= inUnitId, inUserId:= vbUserId);
+    IF vbUserId <> 1078646 OR inUnitId NOT IN (1552, 1078645)
+    THEN
+        PERFORM lpCheckUnit_byUser (inUnitId_by:= inUnitId, inUserId:= vbUserId);
+    END IF;
+    
 
     -- Получили - показывать ЛИ цену ВХ.
-    vbIsOperPrice:= lpCheckOperPrice_visible (vbUserId);
+    vbIsOperPrice:= lpCheckOperPrice_visible (vbUserId) OR vbUserId = 1078646;
 
     -- для возможности изменениея цен добавояем прайс лист Базис
     vbPriceListName_Basis := (SELECT Object.ValueData FROM Object WHERE Object.Id = zc_PriceList_Basis()) ::TVarChar;
@@ -159,7 +163,7 @@ BEGIN
                            , ROW_NUMBER() OVER (PARTITION BY Container.PartionId ORDER BY CASE WHEN Container.WhereObjectId = Object_PartionGoods.UnitId THEN 0 ELSE 1 END ASC) AS Ord
 
                       FROM Container
-                           -- INNER JOIN _tmpUnit ON _tmpUnit.UnitId = Container.WhereObjectId
+                           INNER JOIN _tmpUnit ON _tmpUnit.UnitId = Container.WhereObjectId
                            INNER JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = Container.PartionId
                                                          AND Object_PartionGoods.GoodsId        = Container.ObjectId
                            LEFT JOIN ObjectLink AS ObjectLink_Partner_Period
@@ -181,7 +185,7 @@ BEGIN
                                               AND Container_SummDebt_profit.DescId   = zc_Container_Summ()
                                               -- AND 1=0
                       WHERE Container.DescId = zc_Container_Count()
-                        AND Container.WhereObjectId = inUnitId
+                        -- AND Container.WhereObjectId = inUnitId
                         AND (Container.Amount <> 0 OR Container_SummDebt.Amount <> 0 OR Container_SummDebt_profit.Amount <> 0
                           OR inPartnerId <> 0 OR (inIsYear = TRUE AND inStartYear = inEndYear) -- OR inBrandId <> 0 -- OR (inIsYear = TRUE AND inStartYear >0)
                             )

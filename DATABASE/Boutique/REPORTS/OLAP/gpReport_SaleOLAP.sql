@@ -62,6 +62,9 @@ RETURNS TABLE (BrandName             VarChar (100)
              , Income_Amount         TFloat
              , Income_Summ           TFloat
 
+             , Remains_Amount        TFloat
+             , Remains_Summ          TFloat
+
              , Debt_Amount           TFloat
              , Sale_Amount           TFloat
              , Sale_InDiscount       TFloat

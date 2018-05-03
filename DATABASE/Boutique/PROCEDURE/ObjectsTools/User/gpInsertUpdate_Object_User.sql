@@ -68,4 +68,4 @@ $BODY$
 -- select ValueData from Object where DescId = zc_Object_User() group by ValueData having count (*) > 1
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_User ('2')
+-- SELECT * FROM gpInsertUpdate_Object_User (zfCalc_UserAdmin())

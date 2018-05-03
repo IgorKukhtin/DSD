@@ -74,7 +74,6 @@ BEGIN
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
 
-
 /*-------------------------------------------------------------------------------*/
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -87,4 +86,4 @@ END;$BODY$
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpGet_Object_User(0,'2')
+-- SELECT * FROM gpGet_Object_User (1, zfCalc_UserAdmin())

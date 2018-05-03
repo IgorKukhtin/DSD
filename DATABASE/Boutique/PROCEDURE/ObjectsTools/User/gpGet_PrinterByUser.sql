@@ -35,4 +35,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_PrinterByUser (inSession:= '2')
+-- SELECT * FROM gpGet_PrinterByUser (inSession:= zfCalc_UserAdmin())
