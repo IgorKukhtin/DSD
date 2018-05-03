@@ -1,10 +1,14 @@
 -- Function: gpSelect_Movement_Send()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Send (TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Send(
     IN inStartDate         TDateTime , -- Дата нач. периода
     IN inEndDate           TDateTime , -- Дата оконч. периода
+    IN inStartProtocol     TDateTime , -- Дата нач. для протокола
+    IN inEndProtocol       TDateTime , -- Дата оконч. для протокола
+    IN inIsProtocol        Boolean   , -- показывать протокол Да/Нет
     IN inIsErased          Boolean   , -- показывать удаленные Да/Нет
     IN inSession           TVarChar    -- сессия пользователя
 )
@@ -13,6 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , TotalCount TFloat, TotalSummBalance TFloat, TotalSummPriceList TFloat
              , FromName TVarChar, ToName TVarChar
              , Comment TVarChar
+             , isProtocol Boolean
              )
 AS
 $BODY$
@@ -28,6 +33,41 @@ BEGIN
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
+     , tmpMovement AS (SELECT Movement.id
+                       FROM tmpStatus
+                            JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate 
+                                         AND Movement.DescId = zc_Movement_Send()
+                                         AND Movement.StatusId = tmpStatus.StatusId
+                       )
+
+     , tmpMI AS (SELECT MovementItem.MovementId
+                      , MovementItem.Id
+                 FROM tmpMovement
+                     INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
+                                            AND MovementItem.DescId     = zc_MI_Master()
+                                            AND MovementItem.isErased   = FALSE
+                 )
+               
+     , tmpProtocol_MI AS (SELECT DISTINCT tmpMI.MovementId
+                          FROM tmpMI
+                               INNER JOIN (SELECT DISTINCT MovementItemProtocol.MovementItemId
+                                           FROM MovementItemProtocol
+                                           WHERE MovementItemProtocol.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                             AND MovementItemProtocol.OperDate >= inStartProtocol AND MovementItemProtocol.OperDate < inEndProtocol + INTERVAL '1 DAY'
+                                             AND inIsProtocol = TRUE) AS tmp ON tmp.MovementItemId = tmpMI.Id
+                         )
+     , tmpProtocol_Mov AS (SELECT DISTINCT MovementProtocol.MovementId
+                           FROM MovementProtocol
+                           WHERE MovementProtocol.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                             AND MovementProtocol.OperDate >= inStartProtocol AND MovementProtocol.OperDate < inEndProtocol + INTERVAL '1 DAY'
+                             AND inIsProtocol = TRUE
+                          )
+     , tmpProtocol AS (SELECT tmp.MovementId
+                       FROM tmpProtocol_MI AS tmp
+                      UNION 
+                       SELECT tmp.MovementId
+                       FROM tmpProtocol_Mov AS tmp
+                      )
 
        SELECT
              Movement.Id
@@ -44,13 +84,10 @@ BEGIN
            , Object_To.ValueData                         AS ToName
 
            , MovementString_Comment.ValueData            AS Comment
+           
+           , CASE WHEN tmpProtocol.MovementId > 0 THEN TRUE ELSE FALSE END AS isProtocol
          
-       FROM (SELECT Movement.id
-             FROM tmpStatus
-                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate 
-                               AND Movement.DescId = zc_Movement_Send()
-                               AND Movement.StatusId = tmpStatus.StatusId
-             ) AS tmpMovement
+       FROM tmpMovement
 
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -79,9 +116,10 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-
+            --
+            LEFT JOIN tmpProtocol ON tmpProtocol.MovementId = tmpMovement.Id
      ;
-  
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -89,9 +127,10 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И. 
+ 03.05.18         * add protocol
  14.06.17         * add TotalSummBalance
  25.04.17         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Send (inStartDate:= '01.01.2015', inEndDate:= '01.02.2015', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Send (inStartDate:= '01.01.2015', inEndDate:= '01.02.2015', inStartProtocol:= '01.03.2017', inEndProtocol:= '01.03.2017', inIsProtocol:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

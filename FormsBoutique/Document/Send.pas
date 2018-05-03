@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox;
+  cxImageComboBox, ChoicePeriod;
 
 type
   TSendForm = class(TParentForm)
@@ -150,6 +150,14 @@ type
     bbGoodsPrintList_Print: TdxBarButton;
     spGet_PrinterByUser: TdsdStoredProc;
     actGet_PrinterByUser: TdsdExecStoredProc;
+    cxLabel5: TcxLabel;
+    deStart: TcxDateEdit;
+    cxLabel6: TcxLabel;
+    deEnd: TcxDateEdit;
+    spGet_Current_Date: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
+    PeriodChoice: TPeriodChoice;
+    RefreshDispatcher: TRefreshDispatcher;
   private
   public
   end;

@@ -13,7 +13,7 @@ object SendForm: TSendForm
   KeyPreview = True
   OldCreateOrder = False
   PopupMenu = PopupMenu
-  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
@@ -460,6 +460,14 @@ object SendForm: TSendForm
             Options.Editing = False
             Width = 55
           end
+          object isProtocol: TcxGridDBColumn
+            Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'isProtocol'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object PartionId: TcxGridDBColumn
             DataBinding.FieldName = 'PartionId'
             Visible = False
@@ -598,6 +606,34 @@ object SendForm: TSendForm
       TabOrder = 13
       Width = 262
     end
+    object cxLabel5: TcxLabel
+      Left = 609
+      Top = 45
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1089' ...'
+    end
+    object deStart: TcxDateEdit
+      Left = 609
+      Top = 63
+      EditValue = 43223d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 15
+      Width = 85
+    end
+    object cxLabel6: TcxLabel
+      Left = 706
+      Top = 45
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1087#1086' ...'
+    end
+    object deEnd: TcxDateEdit
+      Left = 706
+      Top = 63
+      EditValue = 43223d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 17
+      Width = 85
+    end
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -638,6 +674,22 @@ object SendForm: TSendForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1002,7 +1054,34 @@ object SendForm: TSendForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
-      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spGet_Current_Date
+        end
+        item
+          StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spGet_User_curr
+        end
+        item
+          StoredProc = spGet_GoodsPrint_Null
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
       RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh
@@ -2874,5 +2953,51 @@ object SendForm: TSendForm
     PackSize = 1
     Left = 680
     Top = 200
+  end
+  object spGet_Current_Date: TdsdStoredProc
+    StoredProcName = 'gpGet_Current_Date'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'gpGet_Current_Date'
+        Value = 43223d
+        Component = deStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_Current_Date'
+        Value = 43223d
+        Component = deEnd
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 776
+    Top = 104
+  end
+  object PeriodChoice: TPeriodChoice
+    DateStart = deStart
+    DateEnd = deEnd
+    Left = 840
+    Top = 88
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefreshMI
+    ComponentList = <
+      item
+        Component = deEnd
+      end
+      item
+        Component = deStart
+      end
+      item
+        Component = PeriodChoice
+      end>
+    Left = 200
+    Top = 336
   end
 end

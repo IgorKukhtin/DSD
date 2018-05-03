@@ -168,6 +168,7 @@ type
     PeriodChoice: TPeriodChoice;
     spGet_Current_Date: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    RefreshDispatcher: TRefreshDispatcher;
   private
   public
   end;
