@@ -62,7 +62,9 @@ RETURNS TABLE (PartionId             Integer
              , Sale_InDiscount       TFloat
              , Sale_OutDiscount      TFloat
              , Sale_Summ             TFloat
+             , Sale_Summ_curr        TFloat
              , Sale_SummCost         TFloat
+             , Sale_SummCost_curr    TFloat
              , Sale_SummCost_diff    TFloat
              , Sale_Summ_prof        TFloat
              , Sale_Summ_10100       TFloat
@@ -71,6 +73,10 @@ RETURNS TABLE (PartionId             Integer
              , Sale_Summ_10203       TFloat
              , Sale_Summ_10204       TFloat
              , Sale_Summ_10200       TFloat
+             , Sale_Summ_10200_curr  TFloat
+             , Tax_Amount            TFloat
+             , Tax_Summ_curr         TFloat
+             , Tax_Summ_prof         TFloat               
 
              , GroupsName4           VarChar (50)
              , GroupsName3           VarChar (50)
@@ -208,23 +214,49 @@ BEGIN
                                 , (COALESCE (MIFloat_OperPriceList.ValueData, 0) / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END) :: TFloat  AS OperPriceList
                                   -- Кол-во Приход от поставщика - только для UnitId
                                 , Object_PartionGoods.Amount AS Income_Amount
+                                , Object_PartionGoods.Amount * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END AS Income_Summ
 
                                   -- Кол-во: Долг
                                 , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() THEN MIConatiner.Amount ELSE 0 END) AS Debt_Amount
 
                                   -- Кол-во: Только Продажа
                                 , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount < 0 AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END) :: TFloat AS Sale_Amount
-                                  -- С\с продажа - calc
-                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount < 0 AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount
-                                     * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END
-                                     * CASE WHEN Object_PartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 ELSE COALESCE (tmpCurrency.Amount, 0) END
-                                     / CASE WHEN tmpCurrency.ParValue > 0 THEN tmpCurrency.ParValue  ELSE 1 END
-                                       ELSE 0 END) :: TFloat AS Sale_SummCost_calc
-                                  -- Сумма продажа
-                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ()  AND COALESCE (MIConatiner.AnalyzerId, 0) <> zc_Enum_AnalyzerId_SaleSumm_10300() AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END) :: TFloat AS Sale_Summ
+                                  -- С\с продажа - calc из валюты в Грн
+                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount < 0 AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
+                                                 THEN -1 * MIConatiner.Amount
+                                                     * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END
+                                                     * CASE WHEN Object_PartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 ELSE COALESCE (tmpCurrency.Amount, 0) END
+                                                     / CASE WHEN tmpCurrency.ParValue > 0 THEN tmpCurrency.ParValue  ELSE 1 END
+                                            ELSE 0
+                                       END) :: TFloat AS Sale_SummCost_calc
 
-                                  -- С\с продажа
-                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ()  AND MIConatiner.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10300() AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN  1 * MIConatiner.Amount ELSE 0 END) :: TFloat AS Sale_SummCost
+                                  -- Сумма продажа
+                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ()  AND COALESCE (MIConatiner.AnalyzerId, 0) <> zc_Enum_AnalyzerId_SaleSumm_10300() AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
+                                                 THEN -1 * MIConatiner.Amount
+                                            ELSE 0
+                                       END) :: TFloat AS Sale_Summ
+                                   -- переводим в валюту 
+                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ()  AND COALESCE (MIConatiner.AnalyzerId, 0) <> zc_Enum_AnalyzerId_SaleSumm_10300() AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
+                                                 THEN -1 * MIConatiner.Amount
+                                                    / CASE WHEN Object_PartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 WHEN COALESCE (tmpCurrency.Amount, 0) = 0 THEN 1 ELSE COALESCE (tmpCurrency.Amount, 0) END
+                                                    * CASE WHEN tmpCurrency.ParValue > 0 THEN tmpCurrency.ParValue  ELSE 1 END
+                                                    -- !!!обнулили если нет КУРСА!!!
+                                                    * CASE WHEN Object_PartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 WHEN COALESCE (tmpCurrency.Amount, 0) = 0 THEN 0 ELSE 1 END
+                                            ELSE 0
+                                       END) :: TFloat AS Sale_Summ_curr
+
+                                  -- С\с продажа - ГРН
+                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ()  AND MIConatiner.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10300() AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
+                                                 THEN  1 * MIConatiner.Amount
+                                            ELSE 0
+                                       END) :: TFloat AS Sale_SummCost
+                                  -- С\с продажа - валюта
+                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount < 0 AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
+                                                 THEN -1 * MIConatiner.Amount
+                                                    * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END
+                                            ELSE 0
+                                       END) :: TFloat AS Sale_SummCost_curr
+
                                   -- Сумма Прайс
                                 , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ()  AND MIConatiner.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10100() AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END) :: TFloat AS Sale_Summ_10100
                                   -- Сезонная скидка
@@ -235,21 +267,32 @@ BEGIN
                                 , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ()  AND MIConatiner.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10203() AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN  1 * MIConatiner.Amount ELSE 0 END) :: TFloat AS Sale_Summ_10203
                                   -- скидка дополнительная
                                 , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ()  AND MIConatiner.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10204() AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN  1 * MIConatiner.Amount ELSE 0 END) :: TFloat AS Sale_Summ_10204
+
                                   -- Скидка ИТОГО
-                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ()  AND MIConatiner.AnalyzerId IN (zc_Enum_AnalyzerId_SaleSumm_10201(), zc_Enum_AnalyzerId_SaleSumm_10202(), zc_Enum_AnalyzerId_SaleSumm_10203(), zc_Enum_AnalyzerId_SaleSumm_10204()) AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN 1 * MIConatiner.Amount ELSE 0 END) :: TFloat AS Sale_Summ_10200
+                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ()  AND MIConatiner.AnalyzerId IN (zc_Enum_AnalyzerId_SaleSumm_10201(), zc_Enum_AnalyzerId_SaleSumm_10202(), zc_Enum_AnalyzerId_SaleSumm_10203(), zc_Enum_AnalyzerId_SaleSumm_10204()) AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
+                                                 THEN 1 * MIConatiner.Amount
+                                            ELSE 0
+                                       END) :: TFloat AS Sale_Summ_10200
+                                   -- переводим в валюту 
+                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ()  AND MIConatiner.AnalyzerId IN (zc_Enum_AnalyzerId_SaleSumm_10201(), zc_Enum_AnalyzerId_SaleSumm_10202(), zc_Enum_AnalyzerId_SaleSumm_10203(), zc_Enum_AnalyzerId_SaleSumm_10204()) AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
+                                                 THEN 1 * MIConatiner.Amount
+                                                    / CASE WHEN Object_PartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 WHEN COALESCE (tmpCurrency.Amount, 0) = 0 THEN 1 ELSE COALESCE (tmpCurrency.Amount, 0) END
+                                                    * CASE WHEN tmpCurrency.ParValue > 0 THEN tmpCurrency.ParValue  ELSE 1 END
+                                                    -- !!!обнулили если нет КУРСА!!!
+                                                    * CASE WHEN Object_PartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 WHEN COALESCE (tmpCurrency.Amount, 0) = 0 THEN 0 ELSE 1 END
+                                            ELSE 0
+                                       END) :: TFloat AS Sale_Summ_10200_curr
 
-                                , SUM ( CASE WHEN COALESCE(tmpDiscountPeriod.PeriodId, 0) <> 0
-                                             THEN CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount < 0 AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END
-                                             ELSE 0
-                                        END
-                                      ) :: TFloat AS Sale_Amount_InDiscount
-                                      
-                                , SUM ( CASE WHEN COALESCE(tmpDiscountPeriod.PeriodId, 0) = 0
-                                             THEN CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount < 0 AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END
-                                             ELSE 0
-                                        END
-                                      ) :: TFloat AS Sale_Amount_OutDiscount
-
+                                  -- Кол. прод. (во время скидок)
+                                , SUM (CASE WHEN COALESCE(tmpDiscountPeriod.PeriodId, 0) <> 0
+                                            THEN CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount < 0 AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END
+                                            ELSE 0
+                                       END) :: TFloat AS Sale_Amount_InDiscount
+                                  -- Кол. прод.  (вне скидок)
+                                , SUM (CASE WHEN COALESCE(tmpDiscountPeriod.PeriodId, 0) = 0
+                                            THEN CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount < 0 AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END
+                                            ELSE 0
+                                       END) :: TFloat AS Sale_Amount_OutDiscount
                                   --  № п/п
                                 , ROW_NUMBER() OVER (PARTITION BY Object_PartionGoods.MovementItemId ORDER BY CASE WHEN Object_PartionGoods.UnitId = COALESCE (MIConatiner.ObjectExtId_Analyzer, Object_PartionGoods.UnitId) THEN 0 ELSE 1 END ASC) AS Ord
 
@@ -371,21 +414,33 @@ BEGIN
                           , tmpData_all.OperPriceList
                           , tmpData_all.isChecked
                           , tmpData_all.BarCode_item
-                          , SUM (CASE WHEN tmpData_all.Ord = 1 THEN tmpData_all.Income_Amount ELSE 0 END) AS Income_Amount
 
+                          , SUM (CASE WHEN tmpData_all.Ord = 1 THEN tmpData_all.Income_Amount ELSE 0 END) AS Income_Amount
+                          , SUM (CASE WHEN tmpData_all.Ord = 1 THEN tmpData_all.Income_Summ   ELSE 0 END) AS Income_Summ
+ 
                           , SUM (tmpData_all.Sale_Amount_InDiscount)  AS Sale_InDiscount
                           , SUM (tmpData_all.Sale_Amount_OutDiscount) AS Sale_OutDiscount
-                          , SUM (tmpData_all.Debt_Amount)           AS Debt_Amount
-                          , SUM (tmpData_all.Sale_Amount)           AS Sale_Amount
+                          , SUM (tmpData_all.Debt_Amount)             AS Debt_Amount
+                          , SUM (tmpData_all.Sale_Amount)             AS Sale_Amount
+ 
+                            -- Сумма продажа
                           , SUM (tmpData_all.Sale_Summ)             AS Sale_Summ
-                          , SUM (tmpData_all.Sale_SummCost)         AS Sale_SummCost
-                          , SUM (tmpData_all.Sale_SummCost_calc)    AS Sale_SummCost_calc
+                          , SUM (tmpData_all.Sale_Summ_curr)        AS Sale_Summ_curr
+ 
+                            -- С\с продажа
+                          , SUM (tmpData_all.Sale_SummCost_calc)    AS Sale_SummCost_calc -- calc из валюты в Грн
+                          , SUM (tmpData_all.Sale_SummCost)         AS Sale_SummCost      -- ГРН
+                          , SUM (tmpData_all.Sale_SummCost_curr)    AS Sale_SummCost_curr -- валюта
+ 
                           , SUM (tmpData_all.Sale_Summ_10100)       AS Sale_Summ_10100
                           , SUM (tmpData_all.Sale_Summ_10201)       AS Sale_Summ_10201
                           , SUM (tmpData_all.Sale_Summ_10202)       AS Sale_Summ_10202
                           , SUM (tmpData_all.Sale_Summ_10203)       AS Sale_Summ_10203
                           , SUM (tmpData_all.Sale_Summ_10204)       AS Sale_Summ_10204
+ 
+                            -- Скидка ИТОГО
                           , SUM (tmpData_all.Sale_Summ_10200)       AS Sale_Summ_10200
+                          , SUM (tmpData_all.Sale_Summ_10200_curr)  AS Sale_Summ_10200_curr
 
                           , ObjectLink_Parent0.ChildObjectId AS GroupId1
                           , ObjectLink_Parent1.ChildObjectId AS GroupId1_parent
@@ -527,23 +582,52 @@ BEGIN
 
              , tmpData.OperPrice            :: TFloat
              , tmpData.OperPriceList        :: TFloat
+             
              , tmpData.Income_Amount        :: TFloat
                                             
              , tmpData.Debt_Amount          :: TFloat
              , tmpData.Sale_Amount          :: TFloat
              , tmpData.Sale_InDiscount      :: TFloat
              , tmpData.Sale_OutDiscount     :: TFloat
+
+               -- Сумма продажа
              , tmpData.Sale_Summ            :: TFloat
+             , tmpData.Sale_Summ_curr       :: TFloat
                                             
-             , tmpData.Sale_SummCost_calc   :: TFloat AS Sale_SummCost
+               -- С\с продажа
+             , tmpData.Sale_SummCost_calc   :: TFloat AS Sale_SummCost      -- calc из валюты в Грн
+             , tmpData.Sale_SummCost_curr   :: TFloat AS Sale_SummCost_curr -- валюта
+
              , (tmpData.Sale_SummCost - tmpData.Sale_SummCost_calc) :: TFloat AS Sale_SummCost_diff
              , (tmpData.Sale_Summ     - tmpData.Sale_SummCost_calc) :: TFloat AS Sale_Summ_prof
+
              , tmpData.Sale_Summ_10100      :: TFloat
              , tmpData.Sale_Summ_10201      :: TFloat
              , tmpData.Sale_Summ_10202      :: TFloat
              , tmpData.Sale_Summ_10203      :: TFloat
              , tmpData.Sale_Summ_10204      :: TFloat
+
+               -- Скидка ИТОГО
              , tmpData.Sale_Summ_10200      :: TFloat
+             , tmpData.Sale_Summ_10200_curr :: TFloat
+
+               -- % кол-во продали    / кол-во приход
+             , CASE WHEN tmpData.Sale_Amount > 0 AND tmpData.Income_Amount > 0
+                         THEN tmpData.Sale_Amount / tmpData.Income_Amount * 100
+                    ELSE 0
+               END :: TFloat AS Tax_Amount
+
+               -- % сумма с/с продали / сумма с/с приход
+             , CASE WHEN tmpData.Sale_SummCost_curr > 0 AND tmpData.Income_Summ > 0
+                         THEN tmpData.Sale_SummCost_curr / tmpData.Income_Summ * 100
+                    ELSE 0
+               END :: TFloat AS Tax_Summ_curr
+
+               -- % сумма продажа     / сумма с/с
+             , CASE WHEN tmpData.Sale_Summ_curr > 0 AND tmpData.Sale_SummCost_curr > 0
+                         THEN tmpData.Sale_Summ_curr / tmpData.Sale_SummCost_curr * 100 - 100
+                    ELSE 0
+               END :: TFloat AS Tax_Summ_prof             
                                             
                -- 0 - Первая Группа СНИЗУ
              , Object_GoodsGroup1.ValueData :: VarChar (50) AS GroupsName4 -- а было AnalyticaName1, а в GroupsName4 - сейчас LabelName

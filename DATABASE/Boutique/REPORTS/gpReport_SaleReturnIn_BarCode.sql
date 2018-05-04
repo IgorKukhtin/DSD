@@ -115,7 +115,7 @@ BEGIN
         FROM gpReport_Sale (inStartDate := inStartDate, inEndDate := inEndDate, inUnitId := inUnitId
                           , inClientId := 0, inPartnerId := 0, inBrandId := 0, inPeriodId := 0
                           , inStartYear := 0, inEndYear := 0, inisPartion := FALSE 
-                          , inisSize := TRUE, inisSizeStr := False, inisPartner := TRUE , inisMovement := FALSE
+                          , inisSize := TRUE, inisPartner := TRUE , inisMovement := FALSE
                           , inIsClient := FALSE, inSession := inSession
                           ) AS tmpData
       UNION 
