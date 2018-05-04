@@ -20,7 +20,8 @@ BEGIN
                              WHERE OS_User_Printer.ObjectId = vbUserId
                                AND OS_User_Printer.DescId = zc_ObjectString_User_Printer()
                             ), '') :: TVarChar ;
-     RETURN vbPrinter;
+     -- RETURN vbPrinter;
+     RETURN 'Godex G500';
 
 END;
 $BODY$
