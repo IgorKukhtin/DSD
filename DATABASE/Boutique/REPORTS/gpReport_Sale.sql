@@ -79,10 +79,10 @@ RETURNS TABLE (PartionId             Integer
              , Tax_Summ_curr         TFloat
              , Tax_Summ_prof         TFloat               
 
-             , GroupsName4           VarChar (50)
-             , GroupsName3           VarChar (50)
-             , GroupsName2           VarChar (50)
              , GroupsName1           VarChar (50)
+             , GroupsName2           VarChar (50)
+             , GroupsName3           VarChar (50)
+             , GroupsName4           VarChar (50)
 
              , DescName_Partion     TVarChar
              , OperDate_Partion     TDateTime
@@ -179,9 +179,9 @@ BEGIN
                             SELECT Container.Id         AS ContainerId
                                  , 0                    AS ClientId
                             FROM Container
-                            WHERE Container.DescId   = zc_Container_Summ()
+                            WHERE Container.DescId        = zc_Container_Summ()
                               AND Container.WhereObjectId = inUnitId
-                              AND Container.ObjectId = zc_Enum_Account_100301 () -- прибыль текущего периода
+                              AND Container.ObjectId      = zc_Enum_Account_100301() -- прибыль текущего периода
                            )
          , tmpData_all AS (SELECT Object_PartionGoods.MovementItemId AS PartionId
                                 , Object_PartionGoods.MovementId     AS MovementId_Partion
@@ -295,7 +295,10 @@ BEGIN
                                             ELSE 0
                                        END) :: TFloat AS Sale_Amount_OutDiscount
                                   --  № п/п
-                                , ROW_NUMBER() OVER (PARTITION BY Object_PartionGoods.MovementItemId ORDER BY CASE WHEN Object_PartionGoods.UnitId = COALESCE (MIConatiner.ObjectExtId_Analyzer, Object_PartionGoods.UnitId) THEN 0 ELSE 1 END ASC) AS Ord
+                                , ROW_NUMBER() OVER (PARTITION BY Object_PartionGoods.MovementItemId
+                                                     ORDER BY /*CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() THEN 0 ELSE 1 END ASC
+                                                            , */CASE WHEN Object_PartionGoods.UnitId = COALESCE (MIConatiner.ObjectExtId_Analyzer, Object_PartionGoods.UnitId) THEN 0 ELSE 1 END ASC
+                                                    ) AS Ord
 
                                 , COALESCE (MIBoolean_Checked.ValueData, FALSE)         AS isChecked
                                 , MIString_BarCode.ValueData                            AS BarCode_item
@@ -379,6 +382,7 @@ BEGIN
                                   , COALESCE (MIBoolean_Checked.ValueData, FALSE)
                                   , COALESCE (MIFloat_OperPriceList.ValueData, 0)
                                   , MIString_BarCode.ValueData
+                                  -- , MIConatiner.DescId
                             HAVING SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ()  AND COALESCE (MIConatiner.AnalyzerId, 0) <> zc_Enum_AnalyzerId_SaleSumm_10300() AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END) <> 0
                           )
        , tmpData AS (SELECT CASE WHEN inisPartion = TRUE AND inIsSize = TRUE THEN tmpData_all.PartionId ELSE 0 END  AS PartionId

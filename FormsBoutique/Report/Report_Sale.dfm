@@ -430,6 +430,7 @@ inherited Report_SaleForm: TReport_SaleForm
           object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -615,7 +616,7 @@ inherited Report_SaleForm: TReport_SaleForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = '% '#1056#1077#1085#1090#1072#1073#1077#1083#1100#1085#1086#1089#1090#1080
-            Width = 70
+            Width = 55
           end
           object Tax_Amount: TcxGridDBColumn
             Caption = '% '#1055#1088#1086#1076'.'
@@ -625,7 +626,7 @@ inherited Report_SaleForm: TReport_SaleForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = '% '#1055#1088#1086#1076#1072#1078' '#1086#1090' '#1087#1088#1080#1093#1086#1076#1072' ('#1076#1083#1103' '#1082#1086#1083'-'#1074#1072')'
-            Width = 70
+            Width = 55
           end
           object Tax_Summ_curr: TcxGridDBColumn
             Caption = '% '#1055#1088#1086#1076'. '#1076#1083#1103' '#1089'.'
