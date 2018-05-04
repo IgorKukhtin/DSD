@@ -337,7 +337,7 @@ BEGIN
                                   , MIString_BarCode.ValueData
                             HAVING SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ()  AND COALESCE (MIConatiner.AnalyzerId, 0) <> zc_Enum_AnalyzerId_SaleSumm_10300() AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END) <> 0
                           )
-       , tmpData AS (SELECT CASE WHEN inisPartion = TRUE THEN tmpData_all.PartionId ELSE 0 END  AS PartionId
+       , tmpData AS (SELECT CASE WHEN inisPartion = TRUE AND inIsSize = TRUE THEN tmpData_all.PartionId ELSE 0 END  AS PartionId
                           , CASE WHEN inisPartion = TRUE THEN tmpData_all.MovementId_Partion ELSE 0 END  AS MovementId_Partion
                           , tmpData_all.BrandId
                           , tmpData_all.PeriodId
@@ -442,7 +442,7 @@ BEGIN
                           LEFT JOIN ObjectLink AS ObjectLink_Parent8
                                                ON ObjectLink_Parent8.ObjectId = ObjectLink_Parent7.ChildObjectId
                                               AND ObjectLink_Parent8.DescId   = zc_ObjectLink_GoodsGroup_Parent()
-                     GROUP BY CASE WHEN inisPartion = TRUE THEN tmpData_all.PartionId ELSE 0 END
+                     GROUP BY CASE WHEN inisPartion = TRUE AND inIsSize = TRUE THEN tmpData_all.PartionId ELSE 0 END
                             , CASE WHEN inisPartion = TRUE THEN tmpData_all.MovementId_Partion ELSE 0 END
                             , tmpData_all.BrandId
                             , tmpData_all.PeriodId

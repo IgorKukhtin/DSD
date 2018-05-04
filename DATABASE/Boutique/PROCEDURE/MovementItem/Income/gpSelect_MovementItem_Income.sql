@@ -1,11 +1,14 @@
 -- Function: gpSelect_MovementItem_Income()
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_Income (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_Income (Integer, TDateTime, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Income(
-    IN inMovementId       Integer      , -- ключ Документа
-    IN inIsErased         Boolean      , --
-    IN inSession          TVarChar       -- сессия пользователя
+    IN inMovementId         Integer      , -- ключ Документа
+    IN inStartDate          TDateTime    , --
+    IN inEndDate            TDateTime    , --
+    IN inIsErased           Boolean      , --
+    IN inSession            TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, PartionId Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
@@ -28,15 +31,15 @@ $BODY$
   DECLARE vbCurrencyId_Doc Integer;
   DECLARE vbCurrencyValue  TFloat;
   DECLARE vbParValue       TFloat;
-  DECLARE vbStartDate      TDateTime;
-  DECLARE vbEndDate        TDateTime;
+--  DECLARE vbStartDate      TDateTime;
+--  DECLARE vbEndDate        TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      --vbUserId:= lpGetUserBySession (inSession);
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_MI_Income());
 
-     vbStartDate:= CURRENT_DATE - INTERVAL '1 DAY';
-     vbEndDate  := CURRENT_DATE;
+     --vbStartDate:= CURRENT_DATE - INTERVAL '1 DAY';
+     --vbEndDate  := CURRENT_DATE;
 
 
      -- Определили курс в документе
@@ -93,9 +96,8 @@ BEGIN
    , tmpProtocol AS (SELECT DISTINCT MovementItemProtocol.MovementItemId
                      FROM MovementItemProtocol
                      WHERE MovementItemProtocol.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
-                       AND MovementItemProtocol.OperDate >= vbStartDate AND MovementItemProtocol.OperDate < vbEndDate + INTERVAL '1 DAY'
+                       AND MovementItemProtocol.OperDate >= inStartDate AND MovementItemProtocol.OperDate < inEndDate + INTERVAL '1 DAY'
                     )
-
 
 
        -- Результат
@@ -153,8 +155,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 03.05.18         *
  10.04.17         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_Income (inMovementId:= 1, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_MovementItem_Income (inMovementId:= 1, inStartDate:= '01.05.2018', inEndDate := '01.05.2018', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox;
+  cxImageComboBox, ChoicePeriod;
 
 type
   TIncomeForm = class(TParentForm)
@@ -161,6 +161,14 @@ type
     macUpdatePersent: TMultiAction;
     macUpdateAll: TMultiAction;
     bbUpdateAll: TdxBarButton;
+    cxLabel5: TcxLabel;
+    deStart: TcxDateEdit;
+    cxLabel6: TcxLabel;
+    deEnd: TcxDateEdit;
+    PeriodChoice: TPeriodChoice;
+    spGet_Current_Date: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
+    RefreshDispatcher: TRefreshDispatcher;
   private
   public
   end;

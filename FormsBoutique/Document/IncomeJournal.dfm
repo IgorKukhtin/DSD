@@ -54,6 +54,42 @@ object IncomeJournalForm: TIncomeJournalForm
       Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
+    object cxLabel5: TcxLabel
+      Left = 681
+      Top = 6
+      Caption = #1089' ...'
+    end
+    object deStartProtocol: TcxDateEdit
+      Left = 708
+      Top = 5
+      EditValue = 43223d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 5
+      Width = 79
+    end
+    object deEndProtocol: TcxDateEdit
+      Left = 827
+      Top = 5
+      EditValue = 43223d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 6
+      Width = 80
+    end
+    object cxLabel6: TcxLabel
+      Left = 793
+      Top = 6
+      Caption = #1087#1086' ...'
+    end
+    object cbIsProtocol: TcxCheckBox
+      Left = 549
+      Top = 5
+      Action = actRefresh
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1087#1088#1086#1090#1086#1082#1086#1083
+      TabOrder = 8
+      Width = 124
+    end
   end
   object cxGrid: TcxGrid
     Left = 0
@@ -267,6 +303,14 @@ object IncomeJournalForm: TIncomeJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 45
+      end
+      object isProtocol: TcxGridDBColumn
+        Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1103
+        DataBinding.FieldName = 'isProtocol'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -1103,10 +1147,10 @@ object IncomeJournalForm: TIncomeJournalForm
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelect
+      StoredProc = spGet_Current_Date
       StoredProcList = <
         item
-          StoredProc = spSelect
+          StoredProc = spGet_Current_Date
         end
         item
           StoredProc = spSelect
@@ -1152,6 +1196,30 @@ object IncomeJournalForm: TIncomeJournalForm
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartProtocol'
+        Value = 'NULL'
+        Component = deStartProtocol
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndProtocol'
+        Value = 'NULL'
+        Component = deEndProtocol
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsProtocol'
+        Value = Null
+        Component = cbIsProtocol
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1438,5 +1506,34 @@ object IncomeJournalForm: TIncomeJournalForm
     PackSize = 1
     Left = 624
     Top = 296
+  end
+  object PeriodChoice1: TPeriodChoice
+    DateStart = deStartProtocol
+    DateEnd = deEndProtocol
+    Left = 768
+    Top = 48
+  end
+  object spGet_Current_Date: TdsdStoredProc
+    StoredProcName = 'gpGet_Current_Date'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'gpGet_Current_Date'
+        Value = 43223d
+        Component = deStartProtocol
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_Current_Date'
+        Value = 43223d
+        Component = deEndProtocol
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 600
+    Top = 137
   end
 end

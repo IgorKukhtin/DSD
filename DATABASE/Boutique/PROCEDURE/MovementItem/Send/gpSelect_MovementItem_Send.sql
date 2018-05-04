@@ -2,9 +2,12 @@
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_Send (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_Send (Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Send(
     IN inMovementId       Integer      , -- ключ Документа
+    IN inStartDate        TDateTime    , --
+    IN inEndDate          TDateTime    , --
     IN inShowAll          Boolean      , --
     IN inIsErased         Boolean      , -- 
     IN inSession          TVarChar       -- сессия пользователя
@@ -30,6 +33,7 @@ RETURNS TABLE (Id Integer
              , TotalSummPriceList TFloat
              , CurrencyValue TFloat, ParValue TFloat
              , DiscountTax_From TFloat, DiscountTax_To TFloat
+             , isProtocol Boolean
              , isErased Boolean
               )
 AS
@@ -209,6 +213,12 @@ BEGIN
                                                       AND ObjectHistoryFloat_DiscountPeriodItem_Value.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value()
                     )
 
+   , tmpProtocol AS (SELECT DISTINCT MovementItemProtocol.MovementItemId
+                     FROM MovementItemProtocol
+                     WHERE MovementItemProtocol.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                       AND MovementItemProtocol.OperDate >= inStartDate AND MovementItemProtocol.OperDate < inEndDate + INTERVAL '1 DAY'
+                    )
+
            -- результат
            SELECT
                  0
@@ -248,7 +258,8 @@ BEGIN
                , tmpDiscount_From.DiscountTax ::TFloat AS DiscountTax_From
                -- сезонная скидка кому
                , tmpDiscount_From.DiscountTax ::TFloat AS DiscountTax_To
-    
+
+               , FALSE          AS isProtocol
                , tmpMI.isErased
     
            FROM tmpPartion
@@ -277,6 +288,7 @@ BEGIN
                 LEFT JOIN tmpDiscount AS tmpDiscount_To
                                       ON tmpDiscount_To.UnitId = vbUnitId_To
                                      AND tmpDiscount_To.GoodsId = tmpPartion.GoodsId
+
            WHERE tmpMI.PartionId IS NULL
 
     UNION ALL
@@ -321,6 +333,7 @@ BEGIN
                -- сезонная скидка кому
                , tmpDiscount_From.DiscountTax ::TFloat AS DiscountTax_To
 
+               , CASE WHEN tmpProtocol.MovementItemId > 0 THEN TRUE ELSE FALSE END AS isProtocol
                , tmpMI.isErased
     
            FROM tmpMI
@@ -359,6 +372,9 @@ BEGIN
                 LEFT JOIN tmpDiscount AS tmpDiscount_To
                                       ON tmpDiscount_To.UnitId  = vbUnitId_To
                                      AND tmpDiscount_To.GoodsId = tmpMI.GoodsId
+
+
+                LEFT JOIN tmpProtocol ON tmpProtocol.MovementItemId = tmpMI.Id
            ;
 
      ELSE 
@@ -450,6 +466,12 @@ BEGIN
                                                       AND ObjectHistoryFloat_DiscountPeriodItem_Value.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value()
                     )
 
+   , tmpProtocol AS (SELECT DISTINCT MovementItemProtocol.MovementItemId
+                     FROM MovementItemProtocol
+                     WHERE MovementItemProtocol.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                       AND MovementItemProtocol.OperDate >= inStartDate AND MovementItemProtocol.OperDate < inEndDate + INTERVAL '1 DAY'
+                    )
+
            -- результат
            SELECT
                  tmpMI.Id
@@ -491,6 +513,7 @@ BEGIN
                -- сезонная скидка кому
                , tmpDiscount_From.DiscountTax ::TFloat AS DiscountTax_To
 
+               , CASE WHEN tmpProtocol.MovementItemId > 0 THEN TRUE ELSE FALSE END AS isProtocol
                , tmpMI.isErased
     
            FROM tmpMI
@@ -524,6 +547,8 @@ BEGIN
                 LEFT JOIN tmpDiscount AS tmpDiscount_To
                                       ON tmpDiscount_To.UnitId  = vbUnitId_To
                                      AND tmpDiscount_To.GoodsId = tmpMI.GoodsId
+
+                LEFT JOIN tmpProtocol ON tmpProtocol.MovementItemId = tmpMI.Id
           ;
 
      END IF;
@@ -536,6 +561,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 03.04.18         *
  18.04.17         *
  26.06.17         *
  21.06.17         *
@@ -543,4 +569,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_Send (inMovementId:= 241258, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_MovementItem_Send (inMovementId:= 241258, inStartDate:= '01.05.2018', inEndDate := '01.05.2018', inShowAll:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());

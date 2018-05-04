@@ -25,7 +25,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel,
-  dsdGuides, cxButtonEdit;
+  dsdGuides, cxButtonEdit, cxCheckBox;
 
 type
   TSendJournalForm = class(TParentForm)
@@ -96,6 +96,12 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     actPrintIn: TdsdPrintAction;
     bb: TdxBarButton;
+    cbIsProtocol: TcxCheckBox;
+    cxLabel5: TcxLabel;
+    deStartProtocol: TcxDateEdit;
+    cxLabel6: TcxLabel;
+    deEndProtocol: TcxDateEdit;
+    PeriodChoice1: TPeriodChoice;
   private
   public
   end;

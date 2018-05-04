@@ -193,7 +193,7 @@ BEGIN
 
        , tmpData_All AS (SELECT tmpContainer.UnitId
                               , tmpContainer.GoodsId
-                              , CASE WHEN inisPartion = TRUE THEN tmpContainer.PartionId        ELSE 0  END AS PartionId
+                              , CASE WHEN inisPartion = TRUE AND inIsSize = TRUE THEN tmpContainer.PartionId        ELSE 0  END AS PartionId
                               , CASE WHEN inisPartion = TRUE THEN tmpContainer.MovementId       ELSE 0  END AS MovementId_Partion
                               , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE '' END AS DescName_Partion
                               , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE '' END AS InvNumber_Partion
@@ -242,7 +242,7 @@ BEGIN
                               -- LEFT JOIN tmpPrice ON tmpPrice.GoodsId = Object_PartionGoods.GoodsId
                          GROUP BY tmpContainer.UnitId
                                 , tmpContainer.GoodsId
-                                , CASE WHEN inisPartion = TRUE THEN tmpContainer.PartionId        ELSE 0 END
+                                , CASE WHEN inisPartion = TRUE AND inIsSize = TRUE THEN tmpContainer.PartionId        ELSE 0 END
                                 , CASE WHEN inisPartion = TRUE THEN tmpContainer.MovementId       ELSE 0  END
                                 , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE '' END
                                 , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE '' END
