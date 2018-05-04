@@ -67,6 +67,7 @@ RETURNS TABLE (PartionId             Integer
              , Sale_SummCost_curr    TFloat
              , Sale_SummCost_diff    TFloat
              , Sale_Summ_prof        TFloat
+             , Sale_Summ_prof_curr   TFloat
              , Sale_Summ_10100       TFloat
              , Sale_Summ_10201       TFloat
              , Sale_Summ_10202       TFloat
@@ -600,6 +601,7 @@ BEGIN
 
              , (tmpData.Sale_SummCost - tmpData.Sale_SummCost_calc) :: TFloat AS Sale_SummCost_diff
              , (tmpData.Sale_Summ     - tmpData.Sale_SummCost_calc) :: TFloat AS Sale_Summ_prof
+             , (tmpData.Sale_Summ_curr- tmpData.Sale_SummCost_curr) :: TFloat AS Sale_Summ_prof_curr
 
              , tmpData.Sale_Summ_10100      :: TFloat
              , tmpData.Sale_Summ_10201      :: TFloat
