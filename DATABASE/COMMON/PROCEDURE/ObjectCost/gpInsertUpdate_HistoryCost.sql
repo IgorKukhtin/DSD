@@ -31,7 +31,10 @@ BEGIN
           return;
      END IF;*/
 
--- RETURN;
+     IF inBranchId <> 0 -- OR 1 = 1
+     THEN RETURN;
+     END IF;
+     
 -- IF inBranchId <> 8379 THEN RETURN; END IF;
 
 -- !!!ÂÐÅÌÅÍÍÎ!!!
@@ -434,6 +437,7 @@ end if;
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (1153992, 1159046, 1154906, 1145420, 1154908, 1145419) -- 06.2017
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (1153989, 1145422); -- 06.2017
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (130771, 128511, 1489115, 131613, 1453527, 129793); -- 08.2017
+     DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (1150822, 1164386, 1178003, 1177898); -- 04.2018
 
 
      
@@ -1138,5 +1142,5 @@ SELECT * FROM HistoryCost WHERE ('01.03.2017' BETWEEN StartDate AND EndDate) and
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2016', inEndDate:= '31.01.2016', inBranchId:= 8379, inItearationCount:= 1000, inInsert:= 12345, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
 
 -- òåñò
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.03.2018', inEndDate:= '31.03.2018', inBranchId:= 0, inItearationCount:= 10, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  WHERE ContainerId = 141708 -- Price <> PriceNext
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.11.2017', inEndDate:= '30.11.2017', inBranchId:= 0, inItearationCount:= 10, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') ORDER BY ABS (Price) DESC -- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.04.2018', inEndDate:= '30.04.2018', inBranchId:= 0, inItearationCount:= 100, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  ORDER BY ABS (Price) DESC -- WHERE ContainerId = 141708 -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.11.2017', inEndDate:= '30.11.2017', inBranchId:= 0, inItearationCount:= 10, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') ORDER BY ABS (Price) DESC 

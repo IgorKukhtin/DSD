@@ -30,39 +30,39 @@ BEGIN
      ELSE
          vbMemberId:= (SELECT ObjectLink_User_Member.ChildObjectId
                        FROM ObjectLink AS ObjectLink_User_Member
-                       WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                       WHERE ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
                          AND ObjectLink_User_Member.ObjectId = vbUserId
-                         AND vbUserId NOT IN (/*439994 -- Опимах А.М.
-                                            , */
+                         /*AND vbUserId NOT IN (/ *439994 -- Опимах А.М.
+                                            , * /
                                               300527  -- Пономаренко А.Р.
                                             , 1147527 -- Бондаренко Ю.А.
-                                            , 439923  -- Васильева Л.Я.
-                                            , 439925  -- Новиков Д.В.
-                                            , 1998523 -- Кувалдина И.В.
-                                             )
-                      UNION
+                                            -- , 439923  -- Васильева Л.Я.
+                                            -- , 439925  -- Новиков Д.В.
+                                            -- , 1998523 -- Кувалдина И.В.
+                                             )*/
+                      /*UNION
                        SELECT ObjectLink_User_Member.ChildObjectId
                        FROM ObjectLink AS ObjectLink_User_Member
                        WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-                         AND ObjectLink_User_Member.ObjectId = CASE /*WHEN vbUserId = 439994 -- Опимах А.М.
-                                                                         THEN 439613 -- Шворников Р.И.*/
+                         AND ObjectLink_User_Member.ObjectId = CASE / *WHEN vbUserId = 439994 -- Опимах А.М.
+                                                                         THEN 439613 -- Шворников Р.И.* /
                                                                     WHEN vbUserId IN (300527  -- Пономаренко А.Р.
                                                                                     , 1147527 -- Бондаренко Ю.А.
                                                                                      )
                                                                          THEN 300523 -- Бабенко В.П.
-                                                                    WHEN vbUserId IN (439923, 439925) -- Васильева Л.Я. + Новиков Д.В.
-                                                                         THEN 439917 -- Маховская М.В.
-                                                                    WHEN vbUserId = 1998523 -- Кувалдина И.В.
+                                                                    -- WHEN vbUserId IN (439923, 439925) -- Васильева Л.Я. + Новиков Д.В.
+                                                                    --     THEN 439917 -- Маховская М.В.
+                                                                    -- WHEN vbUserId = 1998523 -- Кувалдина И.В.
                                                                          -- THEN 1998663  -- Лобода В.В.
-                                                                         THEN 929721 -- Решетова И.А.
+                                                                    --     THEN 929721 -- Решетова И.А.
                                                                END
                          AND vbUserId IN (439994  -- Опимах А.М.
                                         , 300527  -- Пономаренко А.Р.
                                         , 1147527 -- Бондаренко Ю.А.
-                                        , 439923  -- Васильева Л.Я.
-                                        , 439925  -- Новиков Д.В.
-                                        , 1998523 -- Кувалдина И.В.
-                                         )
+                                        -- , 439923  -- Васильева Л.Я.
+                                        -- , 439925  -- Новиков Д.В.
+                                        -- , 1998523 -- Кувалдина И.В.
+                                         )*/
                       );
      END IF;
 
@@ -82,6 +82,16 @@ BEGIN
                                                  AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
                         WHERE ObjectLink.DescId = zc_ObjectLink_Unit_PersonalSheetWorkTime()
                           AND (ObjectLink_Personal_Member.ChildObjectId = vbMemberId OR vbMemberId = 0)
+                       UNION
+                        SELECT DISTINCT ObjectLink_Unit.ChildObjectId AS UnitId
+                        FROM ObjectLink
+                             INNER JOIN ObjectLink AS ObjectLink_Unit
+                                                   ON ObjectLink_Unit.ObjectId = ObjectLink.ObjectId
+                                                  AND ObjectLink_Unit.DescId   = zc_ObjectLink_MemberSheetWorkTime_Unit()
+                             INNER JOIN Object ON Object.Id       = ObjectLink.ObjectId
+                                              AND Object.isErased = FALSE
+                        WHERE ObjectLink.DescId        = zc_ObjectLink_MemberSheetWorkTime_Member()
+                          AND ObjectLink.ChildObjectId = vbMemberId
                        )
              /*tmpList AS (SELECT DISTINCT Object_Personal_View.UnitId
                         FROM Object_Personal_View

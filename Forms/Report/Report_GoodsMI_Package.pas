@@ -49,6 +49,7 @@ type
     WeightPackage_calc: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    WeightTotal: TcxGridDBColumn;
   private
     { Private declarations }
   public

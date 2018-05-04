@@ -44,6 +44,8 @@ RETURNS TABLE (OperDate               TDateTime
              , MeasureName TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar, TradeMarkName TVarChar
 
+             , WeightTotal TFloat -- Вес в упаковке - GoodsByGoodsKind
+
              , AmountSumm1 TFloat, AmountSumm2 TFloat
              , AmountSumm_Dozakaz1 TFloat, AmountSumm_Dozakaz2 TFloat
              , AmountSumm TFloat
@@ -349,6 +351,9 @@ BEGIN
            , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
            , Object_TradeMark.ValueData                 AS TradeMarkName
 
+             -- Вес в упаковке - GoodsByGoodsKind
+           , ObjectFloat_WeightTotal.ValueData AS WeightTotal
+
            , tmpMovement.Summ1                            :: TFloat AS AmountSumm1
            , tmpMovement.Summ2                            :: TFloat AS AmountSumm2
 
@@ -442,6 +447,14 @@ BEGIN
           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_goods ON View_InfoMoney_goods.InfoMoneyId = tmpMovement.InfoMoneyId
           
           LEFT JOIN tmpMLM_All ON tmpMLM_All.MovementId_Order = tmpMovement.MovementId
+
+           -- Товар и Вид товара
+          LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId     = tmpMovement.GoodsId
+                                                AND Object_GoodsByGoodsKind_View.GoodsKindId = tmpMovement.GoodsKindId
+          -- вес в упаковке: "чистый" вес + вес 1-ого пакета
+          LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
+                                ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
+                               AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
          ;
 
 END;

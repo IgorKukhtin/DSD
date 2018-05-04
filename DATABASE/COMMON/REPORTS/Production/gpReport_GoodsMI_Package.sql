@@ -23,6 +23,7 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar
              , CountPackage_calc TFloat, WeightPackage_calc TFloat
 
              , Weight_diff TFloat
+             , WeightTotal TFloat -- Вес в упаковке - GoodsByGoodsKind
               )
 AS
 $BODY$
@@ -191,6 +192,9 @@ BEGIN
 
          , ((tmpMI_Union.Amount_Send_out + tmpMI_Union.Amount_Production - tmpMI_Union.Amount_Send_in) * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
            ) :: TFloat AS Weight_diff
+
+           -- Вес в упаковке - GoodsByGoodsKind
+         , ObjectFloat_WeightTotal.ValueData AS WeightTotal
 
      FROM tmpMI_Union
           LEFT JOIN tmpReceipt ON tmpReceipt.GoodsId     = tmpMI_Union.GoodsId

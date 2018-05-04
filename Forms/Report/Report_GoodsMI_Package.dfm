@@ -5,8 +5,10 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -285
+  ExplicitTop = -112
   ExplicitWidth = 1074
-  ExplicitHeight = 572
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -207,6 +209,16 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 35
+          end
+          object WeightTotal: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1074' '#1091#1087#1072#1082#1086#1074#1082#1077
+            DataBinding.FieldName = 'WeightTotal'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object WeightPackage_one: TcxGridDBColumn
             Caption = #1042#1077#1089' 1-'#1075#1086' '#1087#1072#1082'.'
@@ -430,28 +442,34 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
           FromParam.Name = 'id'
           FromParam.Value = Null
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = '0'
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = 41640d
           FromParam.Component = deStart
           FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = 41640d
           FromParam.Component = deEnd
           FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProcList = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1091#1087#1072#1082#1086#1074#1082#1077' '
@@ -471,6 +489,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -478,6 +497,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
@@ -486,11 +506,16 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1091#1087#1072#1082#1086#1074#1082#1077
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1091#1087#1072#1082#1086#1074#1082#1077
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintByGoods: TdsdPrintAction
       Category = 'DSDLib'
@@ -499,28 +524,34 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
           FromParam.Name = 'id'
           FromParam.Value = Null
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = '0'
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = 41640d
           FromParam.Component = deStart
           FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = 41640d
           FromParam.Component = deEnd
           FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProcList = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103', '#1087#1086' '#1090#1086#1074#1072#1088#1091')'
@@ -540,6 +571,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -547,28 +579,36 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupName'
           Value = ''
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
           Value = ''
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ReportType'
           Value = '3'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -579,6 +619,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
       FormName = 'TReport_GoodsMI_PackageDialogForm'
       FormNameParam.Value = 'TReport_GoodsMI_PackageDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -586,6 +627,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -593,6 +635,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitId'
@@ -600,6 +643,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
           Component = UnitGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
@@ -608,6 +652,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -631,6 +676,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -638,6 +684,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -645,26 +692,32 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 192
@@ -762,12 +815,14 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
         Name = 'inDescId'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InDescName'
         Value = ''
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 328
     Top = 170
@@ -777,6 +832,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
     LookupControl = edUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -787,6 +843,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -795,6 +852,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 360
   end

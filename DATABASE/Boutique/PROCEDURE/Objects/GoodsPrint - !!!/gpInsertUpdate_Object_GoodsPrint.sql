@@ -22,8 +22,7 @@ $BODY$
   DECLARE vbInsertDate  TDateTime;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsInfo());
-   vbUserId:= lpGetUserBySession (inSession);
+   vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_GoodsPrint());
 
 
    -- Результат

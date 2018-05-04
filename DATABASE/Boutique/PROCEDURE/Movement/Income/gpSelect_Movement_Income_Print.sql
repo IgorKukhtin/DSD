@@ -38,14 +38,11 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income_Print());
-     vbUserId:= inSession;
-
-
-    
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
 
      -- очень важная проверка
-    IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
-    THEN
+     IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
+     THEN
         IF vbStatusId = zc_Enum_Status_Erased()
         THEN
             RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> удален.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), (SELECT DATE (OperDate) FROM Movement WHERE Id = inMovementId);
@@ -56,7 +53,7 @@ BEGIN
         END IF;
         -- это уже странная ошибка
        -- RAISE EXCEPTION 'Ошибка.Документ <%>.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId);
-    END IF;
+     END IF;
 
 
 
@@ -241,4 +238,4 @@ ALTER FUNCTION gpSelect_Movement_Income_Print (Integer,  TVarChar) OWNER TO post
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Income_Print (inMovementId := 432692, inSession:= '5');
+-- SELECT * FROM gpSelect_Movement_Income_Print (inMovementId:= 432692, inSession:= zfCalc_UserAdmin());

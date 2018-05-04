@@ -103,6 +103,7 @@ type
     cxLabel6: TcxLabel;
     edRetail: TcxButtonEdit;
     GuidesRetail: TdsdGuides;
+    WeightTotal: TcxGridDBColumn;
   private
     { Private declarations }
   public

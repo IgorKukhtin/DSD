@@ -18,8 +18,8 @@ $BODY$
     DECLARE Cursor1 refcursor;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
-     vbUserId:= lpGetUserBySession (inSession);
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
+     -- vbUserId:= lpGetUserBySession (inSession);
 
 
      IF inIsGoodsPrint = FALSE 
