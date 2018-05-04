@@ -51,7 +51,8 @@ BEGIN
 
      -- округление без копеек и до +/-50 гривен, т.е. последние цифры или 50 или сотни
      -- ioOperPriceList:= (CAST ( (inOperPrice * vbIncomeKoeff / inCountForPrice) / 50 AS NUMERIC (16, 0)) * 50) :: TFloat;
-     ioOperPriceList:= (CAST ( (inOperPrice * vbIncomeKoeff / inCountForPrice) / 100 AS NUMERIC (16, 0)) * 100) :: TFloat;
+     -- ioOperPriceList:= (CAST ( (inOperPrice * vbIncomeKoeff / inCountForPrice) / 100 AS NUMERIC (16, 0)) * 100) :: TFloat;
+     ioOperPriceList:= (CEIL ((inOperPrice * vbIncomeKoeff / inCountForPrice) / 50) * 50) :: TFloat;
                 
 END;
 $BODY$

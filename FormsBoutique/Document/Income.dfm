@@ -850,15 +850,15 @@ object IncomeForm: TIncomeForm
       Category = 0
     end
     object bbAddMask: TdxBarButton
-      Action = mactInsertMaskAction
+      Action = actInsertMaskAction
       Category = 0
     end
     object bbInsertRecord: TdxBarButton
-      Action = mactInsertAction
+      Action = actInsertAction
       Category = 0
     end
     object bbUpdateRecord1: TdxBarButton
-      Action = mactUpdateAction
+      Action = actUpdateAction
       Category = 0
     end
     object dxBarButton1: TdxBarButton
@@ -993,6 +993,7 @@ object IncomeForm: TIncomeForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefreshStart: TdsdDataSetRefresh
@@ -1021,6 +1022,7 @@ object IncomeForm: TIncomeForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh
@@ -1512,25 +1514,12 @@ object IncomeForm: TIncomeForm
         end>
       isShowModal = False
     end
-    object mactInsertAction: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actInsertAction
-        end
-        item
-          Action = actRefreshMI
-        end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      ImageIndex = 0
-    end
     object actInsertAction: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      ImageIndex = 0
       FormName = 'TIncomeItemEditForm'
       FormNameParam.Value = 'TIncomeItemEditForm'
       FormNameParam.DataType = ftString
@@ -1558,27 +1547,15 @@ object IncomeForm: TIncomeForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+      DataSource = MasterDS
+      DataSetRefresh = actRefreshMI
       IdFieldName = 'Id'
-    end
-    object mactUpdateAction: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actUpdateAction
-        end
-        item
-          Action = actRefreshMI
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      ImageIndex = 1
-      ShortCut = 115
     end
     object actUpdateAction: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'actInsertAction'
+      ImageIndex = 1
       FormName = 'TIncomeItemEditForm'
       FormNameParam.Value = 'TIncomeItemEditForm'
       FormNameParam.DataType = ftString
@@ -1607,22 +1584,9 @@ object IncomeForm: TIncomeForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+      DataSource = MasterDS
+      DataSetRefresh = actRefreshMI
       IdFieldName = 'Id'
-    end
-    object mactInsertMaskAction: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actInsertMaskAction
-        end
-        item
-          Action = actRefreshMI
-        end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077' <'#1058#1086#1074#1072#1088'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077' <'#1058#1086#1074#1072#1088'>'
-      ImageIndex = 54
-      ShortCut = 45
     end
     object actGet_PrinterByUser: TdsdExecStoredProc
       Category = 'PrintSticker'
@@ -1634,6 +1598,45 @@ object IncomeForm: TIncomeForm
           StoredProc = spGet_PrinterByUser
         end>
       Caption = 'Get_Printer'
+    end
+    object actInsertMaskAction: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077' <'#1058#1086#1074#1072#1088'>'
+      ImageIndex = 54
+      FormName = 'TIncomeItemEditForm'
+      FormNameParam.Value = 'TIncomeItemEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMask'
+          Value = 'True'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      DataSource = MasterDS
+      DataSetRefresh = actRefreshMI
+      IdFieldName = 'Id'
     end
     object ExecuteDialogDiscount: TExecuteDialog
       Category = 'DSDLib'
@@ -1690,42 +1693,6 @@ object IncomeForm: TIncomeForm
         end>
       isShowModal = True
       OpenBeforeShow = True
-    end
-    object actInsertMaskAction: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077' <'#1058#1086#1074#1072#1088'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077' <'#1058#1086#1074#1072#1088'>'
-      FormName = 'TIncomeItemEditForm'
-      FormNameParam.Value = 'TIncomeItemEditForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = '0'
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MovementId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isMask'
-          Value = 'True'
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      IdFieldName = 'Id'
     end
     object macUpdateAll: TMultiAction
       Category = 'DSDLib'
