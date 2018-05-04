@@ -631,8 +631,6 @@ BEGIN
                     ELSE 0
                END :: TFloat AS Tax_Summ_prof             
                                             
-               -- 0 - Первая Группа СНИЗУ
-             , Object_GoodsGroup1.ValueData :: VarChar (50) AS GroupsName4 -- а было AnalyticaName1, а в GroupsName4 - сейчас LabelName
 
                -- 1 - Самый Верхней уровень
              , CASE WHEN tmpData.GroupId1_parent IS NULL
@@ -651,42 +649,42 @@ BEGIN
                          THEN Object_GoodsGroup7.ValueData
                     WHEN tmpData.GroupId8_parent IS NULL
                          THEN Object_GoodsGroup8.ValueData
-               END :: VarChar (50) AS GroupsName3
+               END :: VarChar (50) AS GroupsName1
 
                -- 2 - Следующий ПОСЛЕ П.1. + !!!для "Детское" - еще Следующий!!!
              , CASE WHEN tmpData.GroupId2_parent IS NULL
                          THEN CASE WHEN TRIM (LOWER (Object_GoodsGroup1.ValueData)) = TRIM (LOWER ('Детское'))
-                                   THEN Object_Label.ValueData
+                                   THEN Object_GoodsGroup1.ValueData -- Object_Label.ValueData
                                    ELSE Object_GoodsGroup1.ValueData
                               END
                     WHEN tmpData.GroupId3_parent IS NULL
                          THEN CASE WHEN TRIM (LOWER (Object_GoodsGroup2.ValueData)) = TRIM (LOWER ('Детское'))
-                                   THEN Object_GoodsGroup1.ValueData
+                                   THEN Object_GoodsGroup2.ValueData -- Object_GoodsGroup1.ValueData
                                    ELSE Object_GoodsGroup2.ValueData
                               END
                     WHEN tmpData.GroupId4_parent IS NULL
                          THEN CASE WHEN TRIM (LOWER (Object_GoodsGroup3.ValueData)) = TRIM (LOWER ('Детское'))
-                                   THEN Object_GoodsGroup2.ValueData
+                                   THEN Object_GoodsGroup3.ValueData -- Object_GoodsGroup2.ValueData
                                    ELSE Object_GoodsGroup3.ValueData
                               END
                     WHEN tmpData.GroupId5_parent IS NULL
                          THEN CASE WHEN TRIM (LOWER (Object_GoodsGroup4.ValueData)) = TRIM (LOWER ('Детское'))
-                                   THEN Object_GoodsGroup3.ValueData
+                                   THEN Object_GoodsGroup4.ValueData -- Object_GoodsGroup3.ValueData
                                    ELSE Object_GoodsGroup4.ValueData
                               END
                     WHEN tmpData.GroupId6_parent IS NULL
                          THEN CASE WHEN TRIM (LOWER (Object_GoodsGroup5.ValueData)) = TRIM (LOWER ('Детское'))
-                                   THEN Object_GoodsGroup4.ValueData
+                                   THEN Object_GoodsGroup5.ValueData -- Object_GoodsGroup4.ValueData
                                    ELSE Object_GoodsGroup5.ValueData
                               END
                     WHEN tmpData.GroupId7_parent IS NULL
                          THEN CASE WHEN TRIM (LOWER (Object_GoodsGroup6.ValueData)) = TRIM (LOWER ('Детское'))
-                                   THEN Object_GoodsGroup5.ValueData
+                                   THEN Object_GoodsGroup6.ValueData -- Object_GoodsGroup5.ValueData
                                    ELSE Object_GoodsGroup6.ValueData
                               END
                     WHEN tmpData.GroupId8_parent IS NULL
                          THEN CASE WHEN TRIM (LOWER (Object_GoodsGroup7.ValueData)) = TRIM (LOWER ('Детское'))
-                                   THEN Object_GoodsGroup6.ValueData
+                                   THEN Object_GoodsGroup7.ValueData -- Object_GoodsGroup6.ValueData
                                    ELSE Object_GoodsGroup7.ValueData
                               END
                END :: VarChar (50) AS GroupsName2
@@ -704,30 +702,33 @@ BEGIN
                               END
                     WHEN tmpData.GroupId4_parent IS NULL
                          THEN CASE WHEN TRIM (LOWER (Object_GoodsGroup3.ValueData)) = TRIM (LOWER ('Детское'))
-                                   THEN Object_GoodsGroup1.ValueData
+                                   THEN Object_GoodsGroup2.ValueData -- Object_GoodsGroup1.ValueData
                                    ELSE Object_GoodsGroup2.ValueData
                               END
                     WHEN tmpData.GroupId5_parent IS NULL
                          THEN CASE WHEN TRIM (LOWER (Object_GoodsGroup4.ValueData)) = TRIM (LOWER ('Детское'))
-                                   THEN Object_GoodsGroup2.ValueData
+                                   THEN Object_GoodsGroup3.ValueData -- Object_GoodsGroup2.ValueData
                                    ELSE Object_GoodsGroup3.ValueData
                               END
                     WHEN tmpData.GroupId6_parent IS NULL
                          THEN CASE WHEN TRIM (LOWER (Object_GoodsGroup5.ValueData)) = TRIM (LOWER ('Детское'))
-                                   THEN Object_GoodsGroup3.ValueData
+                                   THEN Object_GoodsGroup4.ValueData -- Object_GoodsGroup3.ValueData
                                    ELSE Object_GoodsGroup4.ValueData
                               END
                     WHEN tmpData.GroupId7_parent IS NULL
                          THEN CASE WHEN TRIM (LOWER (Object_GoodsGroup6.ValueData)) = TRIM (LOWER ('Детское'))
-                                   THEN Object_GoodsGroup4.ValueData
+                                   THEN Object_GoodsGroup5.ValueData -- Object_GoodsGroup4.ValueData
                                    ELSE Object_GoodsGroup5.ValueData
                               END
                     WHEN tmpData.GroupId8_parent IS NULL
                          THEN CASE WHEN TRIM (LOWER (Object_GoodsGroup7.ValueData)) = TRIM (LOWER ('Детское'))
-                                   THEN Object_GoodsGroup5.ValueData
+                                   THEN Object_GoodsGroup6.ValueData -- Object_GoodsGroup5.ValueData
                                    ELSE Object_GoodsGroup6.ValueData
                               END
-               END :: VarChar (50) AS GroupsName1
+               END :: VarChar (50) AS GroupsName3
+
+               -- 0 - Первая Группа СНИЗУ
+             , Object_GoodsGroup1.ValueData :: VarChar (50) AS GroupsName4 -- а было AnalyticaName1, а в GroupsName4 - сейчас LabelName
 
              , MovementDesc.ItemName          AS DescName_Partion
              , Movement.OperDate              AS OperDate_Partion

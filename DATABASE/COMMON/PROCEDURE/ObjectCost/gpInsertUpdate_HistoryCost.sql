@@ -31,9 +31,9 @@ BEGIN
           return;
      END IF;*/
 
-     IF inBranchId <> 0 -- OR 1 = 1
-     THEN RETURN;
-     END IF;
+     -- IF inBranchId <> 0 -- OR 1 = 1
+     -- THEN RETURN;
+     --  END IF;
      
 -- IF inBranchId <> 8379 THEN RETURN; END IF;
 
