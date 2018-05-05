@@ -98,32 +98,12 @@ inherited Report_MotionByClientForm: TReport_MotionByClientForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = TotalPay
             end
             item
               Format = ',0.####'
               Kind = skSum
               Column = SummChangePercent
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -139,14 +119,6 @@ inherited Report_MotionByClientForm: TReport_MotionByClientForm
               Format = ',0.####'
               Kind = skSum
               Column = CountDebt_Start
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -167,10 +139,6 @@ inherited Report_MotionByClientForm: TReport_MotionByClientForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountSale
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -221,10 +189,6 @@ inherited Report_MotionByClientForm: TReport_MotionByClientForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = TotalChangePercent
             end
             item
@@ -236,14 +200,6 @@ inherited Report_MotionByClientForm: TReport_MotionByClientForm
               Format = ',0.####'
               Kind = skSum
               Column = CountDebt_Start
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -264,10 +220,6 @@ inherited Report_MotionByClientForm: TReport_MotionByClientForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountSale
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'

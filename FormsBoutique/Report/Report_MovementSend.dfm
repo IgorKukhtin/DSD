@@ -171,40 +171,14 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummPriceList
             end
             item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
               Format = ',0.####'
               Kind = skSum
               Column = Amount
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = CompositionName
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = CompositionGroupName
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
             end
             item
               Format = ',0.####'

@@ -5,9 +5,8 @@ inherited Report_ClientDebtForm: TReport_ClientDebtForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -275
   ExplicitWidth = 1081
-  ExplicitHeight = 460
+  ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -73,17 +72,17 @@ inherited Report_ClientDebtForm: TReport_ClientDebtForm
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 1065
-    ExplicitHeight = 366
+    ExplicitHeight = 336
     ClientRectBottom = 336
     ClientRectRight = 1065
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1065
-      ExplicitHeight = 366
+      ExplicitHeight = 336
       inherited cxGrid: TcxGrid
         Width = 1065
         Height = 336
         ExplicitWidth = 1065
-        ExplicitHeight = 366
+        ExplicitHeight = 336
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -99,32 +98,12 @@ inherited Report_ClientDebtForm: TReport_ClientDebtForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = TotalPay
             end
             item
               Format = ',0.####'
               Kind = skSum
               Column = SummChangePercent
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -140,14 +119,6 @@ inherited Report_ClientDebtForm: TReport_ClientDebtForm
               Format = ',0.####'
               Kind = skSum
               Column = CountDebt
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -203,10 +174,6 @@ inherited Report_ClientDebtForm: TReport_ClientDebtForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = TotalChangePercent
             end
             item
@@ -218,14 +185,6 @@ inherited Report_ClientDebtForm: TReport_ClientDebtForm
               Format = ',0.####'
               Kind = skSum
               Column = CountDebt
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -680,8 +639,6 @@ inherited Report_ClientDebtForm: TReport_ClientDebtForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 6
-    ExplicitLeft = -297
-    ExplicitWidth = 1362
     object DBLabelNameFull: TcxDBLabel
       Left = 0
       Top = 0
@@ -697,7 +654,6 @@ inherited Report_ClientDebtForm: TReport_ClientDebtForm
       Style.Font.Name = 'Tahoma'
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
-      ExplicitWidth = 1362
       Height = 30
       Width = 1065
       AnchorX = 533
