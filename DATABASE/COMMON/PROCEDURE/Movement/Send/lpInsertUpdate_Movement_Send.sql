@@ -65,4 +65,5 @@ $BODY$
 */
 
 -- тест
+-- SELECT min (OperDate), max (OperDate) FROM Movement where Desc = zc_Movement_Send() and AccessKeyId is null
 -- SELECT * FROM lpInsertUpdate_Movement_Send (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inFromId:= 1, inToId:= 2, inDocumentKindId:= 0, inComment:= '', inSession:= '2')
