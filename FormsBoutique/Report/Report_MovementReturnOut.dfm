@@ -141,45 +141,20 @@ inherited Report_MovementReturnOutForm: TReport_MovementReturnOutForm
       inherited cxGrid: TcxGrid
         Width = 1030
         Height = 339
+        ExplicitTop = -3
         ExplicitWidth = 1030
         ExplicitHeight = 339
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
             item
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummPriceList
             end
             item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
               Format = ',0.####'
               Kind = skSum
               Column = Amount
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = CompositionName
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = CompositionGroupName
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
             end
             item
               Format = ',0.####'

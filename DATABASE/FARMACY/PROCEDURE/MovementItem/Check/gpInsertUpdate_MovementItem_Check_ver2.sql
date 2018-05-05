@@ -63,13 +63,29 @@ BEGIN
                          INNER JOIN MovementItemFloat AS MIFloat_Price
                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                     AND MIFloat_Price.ValueData = inPrice                                                     
+                    WHERE MovementItem.MovementId = inMovementId 
+                      AND MovementItem.ObjectId   = inGoodsId 
+                      AND MovementItem.DescId     = zc_MI_Master()
+                      AND MovementItem.isErased   = FALSE
+                   );        
+        END IF;
+        -- если не нашли позицию с нужной ценой, ищем любую другую позицию
+        IF COALESCE(ioID, 0) = 0
+        THEN 
+            ioId:= (SELECT MovementItem.Id
+                    FROM MovementItem
+                         INNER JOIN MovementItemFloat AS MIFloat_Price
+                                                      ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                                      -- отложенные чеки с измененной ценой дублируются
                                                      -- AND MIFloat_Price.ValueData = inPrice                                                     
                     WHERE MovementItem.MovementId = inMovementId 
                       AND MovementItem.ObjectId   = inGoodsId 
                       AND MovementItem.DescId     = zc_MI_Master()
                       AND MovementItem.isErased   = FALSE
-                   );
+                    LIMIT 1
+                   );  
         END IF;
 
     END IF;
@@ -122,6 +138,7 @@ ALTER FUNCTION gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Подмогильный В.В.
+ 05.05.18                                                                                           *  в чеках может быть один товар в двух позициях
  03.05.18                                                                                           *  исправил дублирование в отложенных чеках из-за разной цены               
  10.08.16                                                                        *сохранили свойство <UID строки продажи>
  08.08.16                                        *

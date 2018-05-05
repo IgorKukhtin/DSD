@@ -66,32 +66,12 @@ inherited Report_ReturnIn_TotalErrorForm: TReport_ReturnIn_TotalErrorForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = TotalPay_Calc
             end
             item
               Format = ',0.####'
               Kind = skSum
               Column = TotalPay
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -682,6 +662,9 @@ inherited Report_ReturnIn_TotalErrorForm: TReport_ReturnIn_TotalErrorForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource

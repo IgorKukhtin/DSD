@@ -258,10 +258,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = Amount_GoodsPrint
             end
             item
@@ -309,10 +305,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
               Format = ',0.####'
               Kind = skSum
               Column = Remains
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'

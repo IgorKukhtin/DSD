@@ -4,9 +4,8 @@ inherited Report_SaleForm: TReport_SaleForm
   ClientWidth = 1176
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -400
   ExplicitWidth = 1192
-  ExplicitHeight = 460
+  ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -182,10 +181,6 @@ inherited Report_SaleForm: TReport_SaleForm
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
               Format = ',0.####'
               Kind = skSum
               Column = Income_Amount
@@ -209,10 +204,6 @@ inherited Report_SaleForm: TReport_SaleForm
               Format = ',0.####'
               Kind = skSum
               Column = Sale_Summ
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -267,10 +258,6 @@ inherited Report_SaleForm: TReport_SaleForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = Sale_SummCost_curr
             end
             item
@@ -289,10 +276,6 @@ inherited Report_SaleForm: TReport_SaleForm
               Column = Sale_Summ_prof_curr
             end>
           DataController.Summary.FooterSummaryItems = <
-            item
-              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
-              Kind = skCount
-            end
             item
               Format = ',0.####'
               Kind = skSum
@@ -317,10 +300,6 @@ inherited Report_SaleForm: TReport_SaleForm
               Format = ',0.####'
               Kind = skSum
               Column = Sale_Summ
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -376,10 +355,6 @@ inherited Report_SaleForm: TReport_SaleForm
               Format = ',0.####'
               Kind = skSum
               Column = Sale_Summ_curr
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'

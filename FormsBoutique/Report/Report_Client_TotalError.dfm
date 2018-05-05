@@ -61,38 +61,6 @@ inherited Report_Client_TotalErrorForm: TReport_Client_TotalErrorForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = TotalCount
             end
             item
@@ -131,22 +99,6 @@ inherited Report_Client_TotalErrorForm: TReport_Client_TotalErrorForm
               Column = TotalSummPay_Calc
             end>
           DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = 'C'#1090#1088#1086#1082': ,0'
-              Kind = skCount
-            end
             item
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
@@ -592,6 +544,9 @@ inherited Report_Client_TotalErrorForm: TReport_Client_TotalErrorForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -678,7 +633,6 @@ inherited Report_Client_TotalErrorForm: TReport_Client_TotalErrorForm
       item
         Name = 'inUnitId'
         Value = Null
-        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','

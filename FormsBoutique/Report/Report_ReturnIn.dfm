@@ -183,39 +183,9 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
               Format = ',0.####'
               Kind = skSum
               Column = Return_SummCost
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = CompositionName
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = CompositionGroupName
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -230,28 +200,12 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = Return_Summ_10200
             end
             item
               Format = ',0.####'
               Kind = skSum
               Column = Return_SummCost_diff
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -268,10 +222,6 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
               Format = ',0.####'
               Kind = skSum
               Column = Debt_Amount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
@@ -291,28 +241,12 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = Return_Summ_10200
             end
             item
               Format = ',0.####'
               Kind = skSum
               Column = Return_SummCost_diff
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
