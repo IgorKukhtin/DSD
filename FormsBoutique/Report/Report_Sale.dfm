@@ -4,8 +4,9 @@ inherited Report_SaleForm: TReport_SaleForm
   ClientWidth = 1176
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -403
   ExplicitWidth = 1192
-  ExplicitHeight = 463
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -625,7 +626,7 @@ inherited Report_SaleForm: TReport_SaleForm
             Width = 58
           end
           object Sale_InDiscount: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076'. '#1050#1086#1083'. ('#1087#1086' '#1089#1082'.)'
+            Caption = #1055#1088#1086#1076'. '#1050#1086#1083'. ('#1055#1054' '#1089#1082'.)'
             DataBinding.FieldName = 'Sale_InDiscount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
@@ -636,14 +637,14 @@ inherited Report_SaleForm: TReport_SaleForm
             Width = 58
           end
           object Sale_OutDiscount: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076'. '#1050#1086#1083'. ('#1073#1077#1079' '#1089#1082'.)'
+            Caption = #1055#1088#1086#1076'. '#1050#1086#1083'. ('#1044#1054' '#1089#1082'.)'
             DataBinding.FieldName = 'Sale_OutDiscount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1088#1086#1076#1072#1078#1072' '#1041#1077#1079' '#1057#1077#1079#1086#1085#1085#1099#1093' '#1089#1082#1080#1076#1086#1082
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1088#1086#1076#1072#1078#1072' '#1044#1054' '#1057#1077#1079#1086#1085#1085#1099#1093' '#1089#1082#1080#1076#1086#1082
             Width = 58
           end
           object Sale_SummCost_curr: TcxGridDBColumn

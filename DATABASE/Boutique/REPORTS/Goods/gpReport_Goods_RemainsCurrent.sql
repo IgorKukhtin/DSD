@@ -277,7 +277,7 @@ BEGIN
                           , tmpData_All.OperDate_Partion
                           , tmpData_All.PartnerId
                           , CASE WHEN inIsSize = TRUE THEN Object_GoodsSize.Id ELSE 0 END  AS GoodsSizeId
-                          , STRING_AGG (Object_GoodsSize.ValueData, ', ' ORDER BY Object_GoodsSize.ValueData) AS GoodsSizeName
+                          , STRING_AGG (Object_GoodsSize.ValueData, ', ' ORDER BY CASE WHEN LENGTH (Object_GoodsSize.ValueData) = 1 THEN '0' ELSE '' END || Object_GoodsSize.ValueData) AS GoodsSizeName
 
                           , tmpData_All.BrandId
                           , tmpData_All.PeriodId

@@ -27,7 +27,7 @@ BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Send());
---     vbUserId:= lpGetUserBySession (inSession);
+     vbUserId:= lpGetUserBySession (inSession);
 
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId

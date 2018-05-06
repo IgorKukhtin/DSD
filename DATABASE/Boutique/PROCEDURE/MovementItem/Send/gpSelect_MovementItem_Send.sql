@@ -1,7 +1,5 @@
 -- Function: gpSelect_MovementItem_Send()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_Send (Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_Send (Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Send(
@@ -48,13 +46,13 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_MI_Send());
-     --vbUserId:= lpGetUserBySession (inSession);
+
 
      -- данные из шапки
      SELECT Movement.OperDate
           , MovementLinkObject_From.ObjectId
           , MovementLinkObject_To.ObjectId
-    INTO vbOperDate, vbUnitId_From, vbUnitId_To
+            INTO vbOperDate, vbUnitId_From, vbUnitId_To
      FROM Movement 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
@@ -63,6 +61,7 @@ BEGIN
                                        ON MovementLinkObject_To.MovementId = Movement.Id
                                       AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
      WHERE Movement.Id = inMovementId;
+
 
      IF inShowAll = TRUE
      THEN

@@ -39,7 +39,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
   object deEnd: TcxDateEdit
     Left = 125
     Top = 30
-    EditValue = 42736d
+    EditValue = 43101d
     Properties.ShowTime = False
     TabOrder = 2
     Width = 85
@@ -47,7 +47,7 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
   object deStart: TcxDateEdit
     Left = 25
     Top = 30
-    EditValue = 42736d
+    EditValue = 43101d
     Properties.ShowTime = False
     TabOrder = 3
     Width = 85
@@ -64,12 +64,12 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
   end
   object cxLabel4: TcxLabel
     Left = 25
-    Top = 175
+    Top = 131
     Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
   end
   object edPartner: TcxButtonEdit
     Left = 25
-    Top = 195
+    Top = 151
     Properties.Buttons = <
       item
         Default = True
@@ -84,12 +84,12 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
   end
   object cxLabel1: TcxLabel
     Left = 25
-    Top = 85
+    Top = 178
     Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072':'
   end
   object edBrand: TcxButtonEdit
     Left = 25
-    Top = 103
+    Top = 196
     Properties.Buttons = <
       item
         Default = True
@@ -102,12 +102,12 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
   end
   object cxLabel2: TcxLabel
     Left = 25
-    Top = 130
+    Top = 223
     Caption = #1057#1077#1079#1086#1085' :'
   end
   object edPeriod: TcxButtonEdit
     Left = 25
-    Top = 150
+    Top = 243
     Properties.Buttons = <
       item
         Default = True
@@ -171,12 +171,12 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
   end
   object cxLabel3: TcxLabel
     Left = 25
-    Top = 220
+    Top = 83
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' / '#1043#1088#1091#1087#1087#1072':'
   end
   object edUnit: TcxButtonEdit
     Left = 25
-    Top = 240
+    Top = 103
     Properties.Buttons = <
       item
         Default = True

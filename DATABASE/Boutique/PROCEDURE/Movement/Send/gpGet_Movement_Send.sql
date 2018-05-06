@@ -71,7 +71,9 @@ BEGIN
         
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_Send();
+
      END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -83,4 +85,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpGet_Movement_Send(inMovementId := 12 , inOperDate := ('20.01.2017')::TDateTime ,  inSession := '2');
+-- SELECT * FROM gpGet_Movement_Send(inMovementId := 12 , inOperDate := ('20.01.2017')::TDateTime ,  inSession := '2');

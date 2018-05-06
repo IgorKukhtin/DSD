@@ -132,6 +132,15 @@ type
     pvTax_Amount: TcxDBPivotGridField;
     pvTax_Summ_curr: TcxDBPivotGridField;
     pvTax_Summ_prof: TcxDBPivotGridField;
+    pvRemains_Amount: TcxDBPivotGridField;
+    pvRemains_Amount_real: TcxDBPivotGridField;
+    pvRemains_Summ: TcxDBPivotGridField;
+    pvSale_Amount_real: TcxDBPivotGridField;
+    pvResult_Amount_real: TcxDBPivotGridField;
+    pvLoss_Amount: TcxDBPivotGridField;
+    pvTax_Amount_real: TcxDBPivotGridField;
+    SendIn_Amount: TcxDBPivotGridField;
+    SendOut_Amount: TcxDBPivotGridField;
   private
   public
   end;

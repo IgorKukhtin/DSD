@@ -1,6 +1,5 @@
 -- Function: gpSelect_MovementItem_Income()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_Income (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_Income (Integer, TDateTime, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Income(
@@ -31,15 +30,9 @@ $BODY$
   DECLARE vbCurrencyId_Doc Integer;
   DECLARE vbCurrencyValue  TFloat;
   DECLARE vbParValue       TFloat;
---  DECLARE vbStartDate      TDateTime;
---  DECLARE vbEndDate        TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     --vbUserId:= lpGetUserBySession (inSession);
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_MI_Income());
-
-     --vbStartDate:= CURRENT_DATE - INTERVAL '1 DAY';
-     --vbEndDate  := CURRENT_DATE;
 
 
      -- Определили курс в документе

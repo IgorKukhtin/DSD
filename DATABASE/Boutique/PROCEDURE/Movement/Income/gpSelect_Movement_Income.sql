@@ -1,6 +1,5 @@
 -- Function: gpSelect_Movement_Income()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Income (TDateTime, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Income (TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Income(
@@ -29,7 +28,7 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
-     --vbUserId:= lpGetUserBySession (inSession);
+
 
      -- Результат
      RETURN QUERY 
