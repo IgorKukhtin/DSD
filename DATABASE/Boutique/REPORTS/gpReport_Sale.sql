@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpReport_Sale (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Sale (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Sale (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Sale (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Sale (
     IN inStartDate        TDateTime,  -- Дата начала
@@ -19,6 +20,7 @@ CREATE OR REPLACE FUNCTION gpReport_Sale (
     IN inisPartner        Boolean  , -- показать по поставщикам
     IN inisMovement       Boolean  , -- показать по документам    
     IN inIsClient         Boolean  , -- показать Покупателя (Да/Нет)
+    IN inIsDiscount       Boolean  , -- показать % скидки (Да/Нет)
 --    IN inisSale           Boolean  , -- по каким данным форморовать отчет Да - продажа, нет - возвраты
     IN inSession          TVarChar   -- сессия пользователя
 )
@@ -321,9 +323,11 @@ BEGIN
                                 LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                             ON MIFloat_ChangePercent.MovementItemId = COALESCE (Object_PartionMI.ObjectCode, MIConatiner.MovementItemId)
                                                            AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+                                                           AND inIsDiscount                         = TRUE
                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_DiscountSaleKind
                                                                  ON MILinkObject_DiscountSaleKind.MovementItemId = COALESCE (Object_PartionMI.ObjectCode, MIConatiner.MovementItemId)
                                                                 AND MILinkObject_DiscountSaleKind.DescId         = zc_MILinkObject_DiscountSaleKind()
+                                                                AND inIsDiscount                                 = TRUE
 
                                 LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
                                                               ON MIBoolean_Checked.MovementItemId = COALESCE (Object_PartionMI.ObjectCode, MIConatiner.MovementItemId)

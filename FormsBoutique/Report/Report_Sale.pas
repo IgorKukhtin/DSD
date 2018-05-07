@@ -73,6 +73,8 @@ type
     actPrintIn: TdsdPrintAction;
     bbPrint: TdxBarButton;
     bbPrintin: TdxBarButton;
+    cbDiscount: TcxCheckBox;
+    ChangePercent: TcxGridDBColumn;
   private
     { Private declarations }
   public
