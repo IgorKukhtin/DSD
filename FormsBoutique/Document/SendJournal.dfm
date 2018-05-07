@@ -1032,17 +1032,16 @@ object SendJournalForm: TSendJournalForm
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelect
+      StoredProc = spGet_Current_Date
       StoredProcList = <
         item
-          StoredProc = spSelect
+          StoredProc = spGet_Current_Date
         end
         item
           StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
   end
@@ -1319,5 +1318,28 @@ object SendJournalForm: TSendJournalForm
     DateEnd = deEndProtocol
     Left = 768
     Top = 48
+  end
+  object spGet_Current_Date: TdsdStoredProc
+    StoredProcName = 'gpGet_Current_Date'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'gpGet_Current_Date'
+        Value = 43223d
+        Component = deStartProtocol
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_Current_Date'
+        Value = 43223d
+        Component = deEndProtocol
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 688
+    Top = 137
   end
 end
