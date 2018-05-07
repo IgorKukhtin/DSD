@@ -2189,6 +2189,10 @@ inherited MainCashForm2: TMainCashForm2
       Caption = #1055#1077#1095#1072#1090#1100' '#1085#1077#1092#1080#1089#1082#1072#1083#1100#1085#1086#1075#1086' '#1095#1077#1082#1072
       OnClick = miPrintNotFiscalCheckClick
     end
+    object mmSaveToExcel: TMenuItem
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1074' '#1101#1082#1089#1077#1083#1100
+      OnClick = mmSaveToExcelClick
+    end
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -2927,5 +2931,15 @@ inherited MainCashForm2: TMainCashForm2
     object mdCheckAMOUNT: TCurrencyField
       FieldName = 'AMOUNT'
     end
+  end
+  object SaveExcelDialog: TSaveDialog
+    Filter = 'Excel files (*.xls)|*.xls'
+    Left = 640
+  end
+  object TimerServiceRun: TTimer
+    Enabled = False
+    OnTimer = TimerServiceRunTimer
+    Left = 728
+    Top = 8
   end
 end
