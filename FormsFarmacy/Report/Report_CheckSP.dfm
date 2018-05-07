@@ -132,6 +132,12 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
+          object OperDate_Invoice: TcxGridDBColumn
+            DataBinding.FieldName = 'OperDate_Invoice'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 60
+          end
           object UnitName: TcxGridDBColumn
             Caption = #1055#1110#1076#1088#1086#1079#1076#1110#1083
             DataBinding.FieldName = 'UnitName'
@@ -628,6 +634,12 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             Visible = False
             Width = 70
           end
+          object TotalSumm_Invoice: TcxGridDBColumn
+            DataBinding.FieldName = 'TotalSumm_Invoice'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 60
+          end
         end
       end
       object cbisInsert: TcxCheckBox
@@ -918,6 +930,9 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072'('#1087#1086#1089#1090'.152)'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -952,6 +967,9 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintInvoice: TdsdPrintAction
       Category = 'DSDLib'
@@ -999,6 +1017,9 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       ReportNameParam.Value = #1057#1095#1077#1090' '#1089#1086#1094'.'#1087#1088#1086#1077#1082#1090
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actSaveMovement: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1083,6 +1104,9 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource

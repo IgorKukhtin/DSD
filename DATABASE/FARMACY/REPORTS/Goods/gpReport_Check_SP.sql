@@ -59,14 +59,15 @@ RETURNS TABLE (MovementId     Integer
   
              , PartnerMedical_FullName         TVarChar
              , PartnerMedical_JuridicalAddress TVarChar
+             , PartnerMedical_OKPO             TVarChar
              , PartnerMedical_Phone            TVarChar
-             /*, PartnerMedical_OKPO             TVarChar
+             /*
              , PartnerMedical_AccounterName    TVarChar
              , PartnerMedical_INN              TVarChar
-             , PartnerMedical_NumberVAT        TVarChar
+             , PartnerMedical_NumberVAT        TVarChar*/
              , PartnerMedical_BankAccount      TVarChar
              , PartnerMedical_BankName         TVarChar
-             , PartnerMedical_MFO              TVarChar*/
+             , PartnerMedical_MFO              TVarChar
              , ContractId          Integer
              , ContractName        TVarChar
              , Contract_StartDate                 TDateTime
@@ -78,15 +79,20 @@ RETURNS TABLE (MovementId     Integer
   
              , InvNumber_Invoice      TVarChar
              , InvNumber_Invoice_Full TVarChar
+             , OperDate_Invoice       TDateTime
+             , TotalSumm_Invoice      TFloat
+
 )
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbStartYear TDateTime;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
     vbUserId:= lpGetUserBySession (inSession);
     
+    vbStartYear := (SELECT DATE_TRUNC ('YEAR' ,inStartDate)) ::TDateTime;
     
     -- Таблицы
     CREATE TEMP TABLE tmpUnit (UnitId Integer, JuridicalId Integer) ON COMMIT DROP;
@@ -371,7 +377,8 @@ BEGIN
                               , Movement_Check.OperDateSP
                             
                               , Movement_Invoice.InvNumber                 :: TVarChar    AS InvNumber_Invoice 
-                              , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full 
+                              , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full
+                              , Movement_Invoice.OperDate                                 AS OperDate_Invoice
 
               FROM tmpMovement AS Movement_Check
                               -- счет
@@ -407,8 +414,9 @@ BEGIN
                               , Movement_Check.HospitalId
                               , Movement_Check.MedicSPName
                               , Movement_Check.OperDateSP
-                              , Movement_Check.InvNumber_Invoice 
-                              , Movement_Check.InvNumber_Invoice_Full 
+                              , Movement_Check.InvNumber_Invoice
+                              , Movement_Check.InvNumber_Invoice_Full
+                              , Movement_Check.OperDate_Invoice
 
                              , tmpGoods.GoodsMainId                                      AS GoodsMainId
 
@@ -438,7 +446,7 @@ BEGIN
                                                           ON MIFloat_Price.MovementItemId = MI_Check.Id
                                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
-                         GROUP BY  Movement_Check.Id 
+                         GROUP BY Movement_Check.Id 
                               , Movement_Check.OperDate
                               , Movement_Check.OperDate_Calc
                               , Movement_Check.UnitId
@@ -448,8 +456,9 @@ BEGIN
                               , Movement_Check.MedicSPName
                               , Movement_Check.OperDateSP
                             
-                              , Movement_Check.InvNumber_Invoice 
-                              , Movement_Check.InvNumber_Invoice_Full 
+                              , Movement_Check.InvNumber_Invoice
+                              , Movement_Check.InvNumber_Invoice_Full
+                              , Movement_Check.OperDate_Invoice
 
                                , tmpGoods.GoodsMainId
                                 
@@ -497,12 +506,16 @@ BEGIN
 
                          , ObjectHistory_PartnerMedicalDetails.FullName          AS PartnerMedical_FullName
                          , ObjectHistory_PartnerMedicalDetails.JuridicalAddress  AS PartnerMedical_JuridicalAddress
+                         , ObjectHistory_PartnerMedicalDetails.OKPO              AS PartnerMedical_OKPO
                          , ObjectHistory_PartnerMedicalDetails.Phone             AS PartnerMedical_Phone
                          , COALESCE(Object_PartnerMedical_Contract.Id,0)         AS PartnerMedical_ContractId
                          , Object_PartnerMedical_Contract.ValueData              AS PartnerMedical_ContractName
                          , ObjectDate_Signing.ValueData                          AS PartnerMedical_Contract_SigningDate
                          , ObjectDate_Start.ValueData                            AS PartnerMedical_Contract_StartDate 
                          , ObjectDate_End.ValueData                              AS PartnerMedical_Contract_EndDate 
+                         , Object_BankAccount.ValueData                          AS PartnerMedical_BankAccount
+                         , Object_Bank.ValueData                                 AS PartnerMedical_BankName
+                         , ObjectString_MFO.ValueData                            AS PartnerMedical_MFO
 
                     FROM (SELECT DISTINCT tmpMI.UnitId
                                , tmpMI.JuridicalId
@@ -543,8 +556,9 @@ BEGIN
        
                           LEFT JOIN tmpBankAccount ON tmpBankAccount.JuridicalId = tmp.JuridicalId
                                                   AND tmpBankAccount.BankAccount = ObjectHistory_JuridicalDetails.BankAccount
+
                           -- расчетный счет из договора , по идее для заклада охорони здоров'я
-                      /*    LEFT JOIN ObjectLink AS ObjectLink_Contract_BankAccount
+                          LEFT JOIN ObjectLink AS ObjectLink_Contract_BankAccount
                                                  ON ObjectLink_Contract_BankAccount.ObjectId = Object_PartnerMedical_Contract.Id
                                                 AND ObjectLink_Contract_BankAccount.DescId = zc_ObjectLink_Contract_BankAccount()
                           LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = ObjectLink_Contract_BankAccount.ChildObjectId 
@@ -554,7 +568,7 @@ BEGIN
                           LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
                           LEFT JOIN ObjectString AS ObjectString_MFO
                                                  ON ObjectString_MFO.ObjectId = Object_Bank.Id
-                                                AND ObjectString_MFO.DescId = zc_ObjectString_Bank_MFO()*/
+                                                AND ObjectString_MFO.DescId = zc_ObjectString_Bank_MFO()
                     WHERE COALESCE (Object_PartnerMedical_GroupMemberSP.ObjectCode,0) = -1
                     )
 
@@ -577,6 +591,29 @@ BEGIN
                            , tmpParam.PartnerMedical_ContractId
                     )
 
+    , tmpInvoice AS (SELECT MovementLinkObject_PartnerMedical.ObjectId                     AS HospitalId
+                          , MovementLinkObject_Juridical.ObjectId                          AS JuridicalId
+                          , SUM (COALESCE (MovementFloat_TotalSumm.ValueData,0)) ::TFloat  AS TotalSumm
+                     FROM Movement
+                          LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                                       ON MovementLinkObject_Juridical.MovementId = Movement.Id
+                                                      AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+                          
+                          LEFT JOIN MovementLinkObject AS MovementLinkObject_PartnerMedical
+                                                       ON MovementLinkObject_PartnerMedical.MovementId = Movement.Id
+                                                      AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()
+                          
+                          LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                  ON MovementFloat_TotalSumm.MovementId = Movement.Id
+                                                 AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                     WHERE Movement.DescId = zc_Movement_Invoice()
+                       AND Movement.OperDate >= vbStartYear AND Movement.OperDate <inStartDate
+                       AND Movement.StatusId = zc_Enum_Status_Complete()
+                       AND (MovementLinkObject_Juridical.ObjectId = inJuridicalId OR inJuridicalId = 0)
+                       AND (MovementLinkObject_PartnerMedical.ObjectId = inHospitalId OR inHospitalId = 0)
+                     GROUP BY MovementLinkObject_PartnerMedical.ObjectId
+                            , MovementLinkObject_Juridical.ObjectId
+                     )
 
         -- результат
         SELECT tmpData.MovementId
@@ -636,12 +673,16 @@ BEGIN
 
              , COALESCE (tmpParam.PartnerMedical_FullName, Object_PartnerMedical.ValueData) :: TVarChar AS PartnerMedical_FullName
              , tmpParam.PartnerMedical_JuridicalAddress
+             , tmpParam.PartnerMedical_OKPO  ::TVarChar
              , tmpParam.PartnerMedical_Phone
+             , tmpParam.PartnerMedical_BankAccount ::TVarChar
+             , tmpParam.PartnerMedical_BankName ::TVarChar
+             , tmpParam.PartnerMedical_MFO      ::TVarChar
              , tmpParam.PartnerMedical_ContractId                                       AS ContractId
              , COALESCE (tmpParam.PartnerMedical_ContractName, '')         ::TVarChar   AS ContractName
              , (CASE WHEN COALESCE (tmpParam.PartnerMedical_Contract_StartDate, Null) <> '01.01.2100' THEN COALESCE (tmpParam.PartnerMedical_Contract_StartDate, Null) ELSE NULL END) :: TDateTime AS Contract_StartDate
              , COALESCE (tmpParam.PartnerMedical_Contract_SigningDate, Null) :: TDateTime AS Contract_SigningDate
-
+            
              , tmpData.MedicSPName
              , tmpData.InvNumberSP
              , tmpData.OperDateSP
@@ -649,7 +690,9 @@ BEGIN
 
              , tmpData.InvNumber_Invoice
              , tmpData.InvNumber_Invoice_Full
-
+             , tmpData.OperDate_Invoice
+             
+             , tmpInvoice.TotalSumm  :: TFloat AS TotalSumm_Invoice
         FROM tmpMI AS tmpData
              LEFT JOIN Movement AS Movement_err ON Movement_err.Id = tmpData.MovementId_err
              LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit_err
@@ -674,6 +717,8 @@ BEGIN
                                 AND tmpCountR.HospitalId = tmpData.HospitalId
                                 AND COALESCE (tmpCountR.ContractId,0) = COALESCE (tmpParam.PartnerMedical_ContractId,0)
           
+             LEFT JOIN tmpInvoice ON tmpInvoice.JuridicalId = tmpData.JuridicalId
+                                 ANd tmpInvoice.HospitalId  = tmpData.HospitalId
         ORDER BY Object_Unit.ValueData 
                , Object_Juridical.ValueData
                , tmpGoodsSP.IntenalSPName
@@ -686,6 +731,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
+ 07.05.18         *
  14.02.18         * add Contract_SigningDate
  03.05.17         *
  17.04.17         *
@@ -695,3 +741,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpReport_Check_SP (inStartDate:= '01.04.2017',inEndDate:= '15.04.2017', inJuridicalId:= 0, inUnitId:= 0, inHospitalId:= 0, inSession := '3');
 -- select * from gpReport_Check_SP(inStartDate := ('01.01.2017')::TDateTime , inEndDate := ('31.12.2017')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 ,  inSession := '3');
+--select * from gpReport_Check_SP(inStartDate := ('01.03.2018')::TDateTime , inEndDate := ('15.03.2018')::TDateTime , inJuridicalId := 393052 , inUnitId := 0 , inHospitalId := 4474509 ,  inSession := '3');

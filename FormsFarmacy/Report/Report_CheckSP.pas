@@ -68,6 +68,8 @@ type
     FormParams: TdsdFormParams;
     spGetReporNameSP: TdsdStoredProc;
     bbPrint_Pact: TdxBarButton;
+    OperDate_Invoice: TcxGridDBColumn;
+    TotalSumm_Invoice: TcxGridDBColumn;
   private
     { Private declarations }
   public
