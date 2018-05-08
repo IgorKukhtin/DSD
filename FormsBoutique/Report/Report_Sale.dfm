@@ -4,9 +4,8 @@ inherited Report_SaleForm: TReport_SaleForm
   ClientWidth = 1176
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -403
   ExplicitWidth = 1192
-  ExplicitHeight = 460
+  ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -69,7 +68,7 @@ inherited Report_SaleForm: TReport_SaleForm
       Width = 129
     end
     object cbSize: TcxCheckBox
-      Left = 1005
+      Left = 1085
       Top = 32
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' '#1076#1077#1090#1072#1083#1100#1085#1086'('#1044#1072'/'#1053#1077#1090')'
       Caption = #1056#1072#1079#1084#1077#1088#1099' '#1076#1077#1090#1072#1083#1100#1085#1086
@@ -160,6 +159,16 @@ inherited Report_SaleForm: TReport_SaleForm
       TabOrder = 16
       Width = 88
     end
+    object cbDiscount: TcxCheckBox
+      Left = 1005
+      Top = 32
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' % '#1089#1082#1080#1076#1082#1080' ('#1044#1072'/'#1053#1077#1090')'
+      Caption = '% '#1057#1082#1080#1076#1082#1080
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 17
+      Width = 75
+    end
   end
   inherited PageControl: TcxPageControl [1]
     Top = 85
@@ -182,158 +191,158 @@ inherited Report_SaleForm: TReport_SaleForm
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Income_Amount
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Debt_Amount
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_Summ_prof
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_Amount
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_Summ
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_Summ_10100
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_Summ_10201
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_Summ_10202
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_Summ_10203
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_Summ_10204
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_Summ_10200
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_SummCost_diff
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_InDiscount
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_OutDiscount
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_Summ_curr
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_SummCost_curr
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_Summ_10200_curr
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_SummCost
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_Summ_prof_curr
             end>
           DataController.Summary.FooterSummaryItems = <
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Income_Amount
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Debt_Amount
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_Summ_prof
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_Amount
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_Summ
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_Summ_10100
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_Summ_10201
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_Summ_10202
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_Summ_10203
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_Summ_10204
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_Summ_10200
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_SummCost_diff
             end
@@ -343,37 +352,37 @@ inherited Report_SaleForm: TReport_SaleForm
               Column = GoodsName
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_InDiscount
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_OutDiscount
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_Summ_curr
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_SummCost_curr
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_Summ_10200_curr
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_SummCost
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Sale_Summ_prof_curr
             end>
@@ -551,6 +560,16 @@ inherited Report_SaleForm: TReport_SaleForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
             Width = 55
+          end
+          object ChangePercent: TcxGridDBColumn
+            Caption = '% '#1089#1082'.'
+            DataBinding.FieldName = 'ChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
           end
           object DiscountSaleKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1089#1082#1080#1076#1082#1080
@@ -1236,6 +1255,14 @@ inherited Report_SaleForm: TReport_SaleForm
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDiscount'
+          Value = Null
+          Component = cbDiscount
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1813,6 +1840,14 @@ inherited Report_SaleForm: TReport_SaleForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDiscount'
+        Value = Null
+        Component = cbDiscount
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 72
     Top = 160
@@ -1937,9 +1972,15 @@ inherited Report_SaleForm: TReport_SaleForm
       end
       item
         Component = deEnd
+      end
+      item
+        Component = GuidesStartYear
+      end
+      item
+        Component = GuidesEndYear
       end>
-    Left = 384
-    Top = 176
+    Left = 336
+    Top = 192
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'

@@ -95,7 +95,11 @@ begin
 //       TAuthentication.CheckLogin(TStorageFactory.GetStorage, ParamStr(1), ParamStr(2), gc_User); // не работает вместе с AllowLocalConnect := True;
        end
       else
-       if ShowModal <> mrOk then exit;
+       if ShowModal <> mrOk then
+       begin
+        Free;
+        exit;
+       end;
 
     if not gc_User.Local then
     Begin

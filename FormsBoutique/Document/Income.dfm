@@ -542,6 +542,21 @@ object IncomeForm: TIncomeForm
             Options.Editing = False
             Width = 70
           end
+          object PriceTax: TcxGridDBColumn
+            Caption = '% '#1085#1072#1094'.'
+            DataBinding.FieldName = 'PriceTax'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080
+            Width = 60
+          end
+          object Color_Calc: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_Calc'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 30
+          end
         end
         object cxGridLevel: TcxGridLevel
           GridView = cxGridDBTableView
@@ -1961,7 +1976,11 @@ object IncomeForm: TIncomeForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ValueColumn = Color_Calc
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <

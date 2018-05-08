@@ -166,6 +166,8 @@ type
     spGet_Current_Date: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     RefreshDispatcher: TRefreshDispatcher;
+    PriceTax: TcxGridDBColumn;
+    Color_Calc: TcxGridDBColumn;
   private
   public
   end;

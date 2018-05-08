@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1064#1040#1041#1051#1054#1053'>'
-  ClientHeight = 461
+  ClientHeight = 513
   ClientWidth = 377
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,8 +29,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 72
-    Top = 418
+    Left = 76
+    Top = 480
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,8 +39,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 222
-    Top = 418
+    Left = 217
+    Top = 480
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -285,6 +285,76 @@
     Top = 355
     Caption = '8-'#1086#1081
   end
+  object cxLabel17: TcxLabel
+    Left = 59
+    Top = 423
+    Caption = '1-'#1099#1081
+  end
+  object ceLevel1: TcxCurrencyEdit
+    Left = 59
+    Top = 442
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 37
+    Width = 45
+  end
+  object ceLevel2: TcxCurrencyEdit
+    Left = 111
+    Top = 442
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 38
+    Width = 45
+  end
+  object cxLabel18: TcxLabel
+    Left = 111
+    Top = 423
+    Caption = '2-'#1086#1081
+  end
+  object cxLabel19: TcxLabel
+    Left = 217
+    Top = 423
+    Caption = #1074' 1-'#1086#1081
+  end
+  object ceLeft1: TcxCurrencyEdit
+    Left = 217
+    Top = 442
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 41
+    Width = 50
+  end
+  object ceLeft2: TcxCurrencyEdit
+    Left = 275
+    Top = 442
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 42
+    Width = 50
+  end
+  object cxLabel20: TcxLabel
+    Left = 275
+    Top = 423
+    Caption = #1074#1086' 2-'#1086#1081
+  end
+  object cxLabel21: TcxLabel
+    Left = 47
+    Top = 404
+    Caption = #1064#1080#1088#1080#1085#1072' '#1091#1088#1086#1074#1085#1103
+  end
+  object cxLabel22: TcxLabel
+    Left = 205
+    Top = 404
+    Caption = #1054#1090#1089#1090#1091#1087' '#1089#1083#1077#1074#1072' '#1074' '#1089#1090#1088#1086#1082#1072#1093
+  end
   object ActionList: TActionList
     Left = 280
     Top = 68
@@ -446,6 +516,38 @@
         Name = 'inWidth10'
         Value = Null
         Component = ceWidth10
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLevel1'
+        Value = Null
+        Component = ceLevel1
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLevel2'
+        Value = Null
+        Component = ceLevel2
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLeft1'
+        Value = Null
+        Component = ceLeft1
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLeft2'
+        Value = Null
+        Component = ceLeft2
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -624,6 +726,34 @@
         Name = 'Width10'
         Value = Null
         Component = ceWidth10
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Level1'
+        Value = Null
+        Component = ceLevel1
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Level2'
+        Value = Null
+        Component = ceLevel2
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Left1'
+        Value = Null
+        Component = ceLeft1
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Left2'
+        Value = Null
+        Component = ceLeft2
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>

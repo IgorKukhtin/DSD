@@ -72,7 +72,8 @@ begin
   except
     on E: Exception do
     begin
-      if (pos('connect timed out', AnsilowerCase(E.Message)) > 0) and
+      if ((pos('connect timed out', AnsilowerCase(E.Message)) > 0) or
+          (pos('internal server error', AnsilowerCase(E.Message)) > 0)) and
          FAllowLocalConnect then
       Begin
         if CheckLocalConnect(edUserName.Text, edPassword.Text, gc_User) then

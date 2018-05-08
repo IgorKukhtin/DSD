@@ -4,6 +4,9 @@ DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_StickerFile (Integer, Integer, TV
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_StickerFile (Integer, Integer, Integer, Integer, TVarChar, TVarChar, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_StickerFile (Integer, Integer, Integer, Integer, TVarChar, TVarChar
                                                           , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_StickerFile (Integer, Integer, Integer, Integer, TVarChar, TVarChar
+                                                          , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                          , TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StickerFile(
    INOUT ioId                       Integer,     -- ид
@@ -22,6 +25,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StickerFile(
       IN inWidth8                   TFloat,
       IN inWidth9                   TFloat,
       IN inWidth10                  TFloat,
+      IN inLevel1                   TFloat, 
+      IN inLevel2                   TFloat,
+      IN inLeft1                    TFloat, 
+      IN inLeft2                    TFloat,
       IN inisDefault                Boolean ,    --
       IN inSession                  TVarChar     -- Пользователь
       )
@@ -86,6 +93,17 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Width9(), ioId, inWidth9);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Width10(), ioId, inWidth10);
+
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Level1(), ioId, inLevel1);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Level2(), ioId, inLevel2);
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Left1(), ioId, inLeft1);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Left2(), ioId, inLeft2);
    
 
    -- пытаемся найти "Способ изготовления продукта"
@@ -115,6 +133,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.05.18         *
  19.12.17         *
  23.10.17         *
 */

@@ -3,8 +3,8 @@ object Report_SaleDialogForm: TReport_SaleDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1087#1086' '#1055#1088#1086#1076#1072#1078#1072#1084'/ '#1042#1086#1079#1074#1088#1072#1090#1072#1084'>'
-  ClientHeight = 425
-  ClientWidth = 342
+  ClientHeight = 464
+  ClientWidth = 349
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,8 +17,8 @@ object Report_SaleDialogForm: TReport_SaleDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 43
-    Top = 392
+    Left = 46
+    Top = 414
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -27,8 +27,8 @@ object Report_SaleDialogForm: TReport_SaleDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 217
-    Top = 392
+    Left = 220
+    Top = 414
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -52,8 +52,8 @@ object Report_SaleDialogForm: TReport_SaleDialogForm
     Width = 90
   end
   object edUnit: TcxButtonEdit
-    Left = 10
-    Top = 117
+    Left = 13
+    Top = 139
     Properties.Buttons = <
       item
         Default = True
@@ -64,8 +64,8 @@ object Report_SaleDialogForm: TReport_SaleDialogForm
     Width = 305
   end
   object cxLabel3: TcxLabel
-    Left = 10
-    Top = 97
+    Left = 13
+    Top = 119
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
   object cxLabel6: TcxLabel
@@ -79,18 +79,18 @@ object Report_SaleDialogForm: TReport_SaleDialogForm
     Caption = #1055#1077#1088#1080#1086#1076' '#1087#1086' ...'
   end
   object cbPartion: TcxCheckBox
-    Left = 10
-    Top = 63
+    Left = 8
+    Top = 58
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470
     ParentShowHint = False
     ShowHint = True
     TabOrder = 8
-    Width = 135
+    Width = 132
   end
   object cbSize: TcxCheckBox
-    Left = 137
-    Top = 63
+    Left = 238
+    Top = 88
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' '#1076#1077#1090#1072#1083#1100#1085#1086' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1056#1072#1079#1084#1077#1088#1099' '#1076#1077#1090#1072#1083'.'
     ParentShowHint = False
@@ -99,13 +99,13 @@ object Report_SaleDialogForm: TReport_SaleDialogForm
     Width = 104
   end
   object cxLabel1: TcxLabel
-    Left = 10
-    Top = 193
+    Left = 13
+    Top = 215
     Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072':'
   end
   object edBrand: TcxButtonEdit
-    Left = 10
-    Top = 213
+    Left = 13
+    Top = 235
     Properties.Buttons = <
       item
         Default = True
@@ -116,13 +116,13 @@ object Report_SaleDialogForm: TReport_SaleDialogForm
     Width = 305
   end
   object cxLabel2: TcxLabel
-    Left = 10
-    Top = 240
+    Left = 13
+    Top = 262
     Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
   end
   object edPartner: TcxButtonEdit
-    Left = 10
-    Top = 259
+    Left = 13
+    Top = 281
     Properties.Buttons = <
       item
         Default = True
@@ -133,18 +133,18 @@ object Report_SaleDialogForm: TReport_SaleDialogForm
     Width = 305
   end
   object cbPartner: TcxCheckBox
-    Left = 242
-    Top = 63
+    Left = 149
+    Top = 58
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
     ParentShowHint = False
     ShowHint = True
     TabOrder = 14
-    Width = 88
+    Width = 83
   end
   object cbMovement: TcxCheckBox
-    Left = 242
-    Top = 34
+    Left = 238
+    Top = 58
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#8470
     ParentShowHint = False
@@ -153,13 +153,13 @@ object Report_SaleDialogForm: TReport_SaleDialogForm
     Width = 91
   end
   object cxLabel4: TcxLabel
-    Left = 10
-    Top = 146
+    Left = 13
+    Top = 168
     Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100':'
   end
   object edClient: TcxButtonEdit
-    Left = 10
-    Top = 166
+    Left = 13
+    Top = 188
     Properties.Buttons = <
       item
         Default = True
@@ -170,13 +170,13 @@ object Report_SaleDialogForm: TReport_SaleDialogForm
     Width = 305
   end
   object cxLabel5: TcxLabel
-    Left = 10
-    Top = 286
+    Left = 13
+    Top = 308
     Caption = #1057#1077#1079#1086#1085' :'
   end
   object edPeriod: TcxButtonEdit
-    Left = 10
-    Top = 305
+    Left = 13
+    Top = 327
     Properties.Buttons = <
       item
         Default = True
@@ -187,18 +187,18 @@ object Report_SaleDialogForm: TReport_SaleDialogForm
     Width = 305
   end
   object cxLabel8: TcxLabel
-    Left = 10
-    Top = 337
+    Left = 13
+    Top = 359
     Caption = #1043#1086#1076' '#1089' ...'
   end
   object cxLabel9: TcxLabel
-    Left = 154
-    Top = 337
+    Left = 157
+    Top = 359
     Caption = #1043#1086#1076' '#1087#1086' ...'
   end
   object edStartYear: TcxButtonEdit
-    Left = 10
-    Top = 357
+    Left = 13
+    Top = 379
     Properties.Buttons = <
       item
         Default = True
@@ -209,8 +209,8 @@ object Report_SaleDialogForm: TReport_SaleDialogForm
     Width = 111
   end
   object edEndYear: TcxButtonEdit
-    Left = 154
-    Top = 357
+    Left = 157
+    Top = 379
     Properties.Buttons = <
       item
         Default = True
@@ -221,14 +221,24 @@ object Report_SaleDialogForm: TReport_SaleDialogForm
     Width = 111
   end
   object cbClient: TcxCheckBox
-    Left = 242
-    Top = 7
+    Left = 8
+    Top = 88
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
     ParentShowHint = False
     ShowHint = True
     TabOrder = 24
     Width = 91
+  end
+  object cbDiscount: TcxCheckBox
+    Left = 149
+    Top = 88
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' % '#1089#1082#1080#1076#1082#1080' ('#1044#1072'/'#1053#1077#1090')'
+    Caption = '% '#1057#1082#1080#1076#1082#1080
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 25
+    Width = 75
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -237,8 +247,8 @@ object Report_SaleDialogForm: TReport_SaleDialogForm
     Top = 9
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 214
-    Top = 86
+    Left = 217
+    Top = 108
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -250,8 +260,8 @@ object Report_SaleDialogForm: TReport_SaleDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 255
-    Top = 180
+    Left = 258
+    Top = 202
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -429,9 +439,17 @@ object Report_SaleDialogForm: TReport_SaleDialogForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDiscount'
+        Value = Null
+        Component = cbDiscount
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 62
-    Top = 263
+    Left = 65
+    Top = 285
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -461,8 +479,8 @@ object Report_SaleDialogForm: TReport_SaleDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 102
-    Top = 94
+    Left = 105
+    Top = 116
   end
   object GuidesBrand: TdsdGuides
     KeyField = 'Id'
@@ -492,8 +510,8 @@ object Report_SaleDialogForm: TReport_SaleDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 110
-    Top = 206
+    Left = 113
+    Top = 228
   end
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'
@@ -523,8 +541,8 @@ object Report_SaleDialogForm: TReport_SaleDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 166
-    Top = 254
+    Left = 169
+    Top = 276
   end
   object GuidesClient: TdsdGuides
     KeyField = 'Id'
@@ -554,8 +572,8 @@ object Report_SaleDialogForm: TReport_SaleDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 150
-    Top = 158
+    Left = 153
+    Top = 180
   end
   object GuidesPeriod: TdsdGuides
     KeyField = 'Id'
@@ -585,8 +603,8 @@ object Report_SaleDialogForm: TReport_SaleDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 134
-    Top = 282
+    Left = 137
+    Top = 304
   end
   object GuidesStartYear: TdsdGuides
     KeyField = 'Id'
@@ -615,8 +633,8 @@ object Report_SaleDialogForm: TReport_SaleDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 90
-    Top = 355
+    Left = 93
+    Top = 377
   end
   object GuidesEndYear: TdsdGuides
     KeyField = 'Id'
@@ -645,7 +663,7 @@ object Report_SaleDialogForm: TReport_SaleDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 181
-    Top = 357
+    Left = 184
+    Top = 379
   end
 end

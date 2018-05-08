@@ -72,6 +72,16 @@ type
     cxLabel14: TcxLabel;
     ceWidth10: TcxCurrencyEdit;
     cxLabel13: TcxLabel;
+    cxLabel17: TcxLabel;
+    ceLevel1: TcxCurrencyEdit;
+    ceLevel2: TcxCurrencyEdit;
+    cxLabel18: TcxLabel;
+    cxLabel19: TcxLabel;
+    ceLeft1: TcxCurrencyEdit;
+    ceLeft2: TcxCurrencyEdit;
+    cxLabel20: TcxLabel;
+    cxLabel21: TcxLabel;
+    cxLabel22: TcxLabel;
   private
     { Private declarations }
   public

@@ -21,6 +21,8 @@ RETURNS TABLE (Id Integer, PartionId Integer, GoodsId Integer, GoodsCode Integer
              , Amount TFloat
              , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat
              , TotalSumm TFloat, TotalSummBalance TFloat, TotalSummPriceList TFloat
+             , PriceTax TFloat       -- % наценки
+             , Color_Calc Integer
              , isProtocol Boolean
              , isErased Boolean
               )
@@ -118,8 +120,28 @@ BEGIN
            , tmpMI.TotalSumm           :: TFloat AS TotalSumm
            , tmpMI.TotalSummBalance    :: TFloat AS TotalSummBalance
            , tmpMI.TotalSummPriceList  :: TFloat AS TotalSummPriceList
+           
+           -- % наценки
+           , CAST (CASE WHEN tmpMI.TotalSummBalance <> 0
+                        THEN (100 * tmpMI.TotalSummPriceList
+                            / tmpMI.TotalSummBalance
+                              - 100)
+                        ELSE 0
+                   END AS NUMERIC (16, 0)) :: TFloat AS PriceTax
+
+           , CASE WHEN CAST (CASE WHEN tmpMI.TotalSummBalance <> 0
+                                  THEN (100 * tmpMI.TotalSummPriceList
+                                      / tmpMI.TotalSummBalance
+                                        - 100)
+                                  ELSE 0
+                             END AS NUMERIC (16, 0)) <= 10 
+                 THEN zc_Color_Red() 
+                 ELSE zc_Color_Black() 
+              END :: Integer  AS Color_Calc
+
            , CASE WHEN tmpProtocol.MovementItemId > 0 THEN TRUE ELSE FALSE END AS isProtocol
            , tmpMI.isErased
+
        FROM tmpMI
             LEFT JOIN tmpProtocol ON tmpProtocol.MovementItemId = tmpMI.Id
 

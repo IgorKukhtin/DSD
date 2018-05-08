@@ -102,6 +102,7 @@ type
     cxLabel6: TcxLabel;
     deEndProtocol: TcxDateEdit;
     PeriodChoice1: TPeriodChoice;
+    spGet_Current_Date: TdsdStoredProc;
   private
   public
   end;

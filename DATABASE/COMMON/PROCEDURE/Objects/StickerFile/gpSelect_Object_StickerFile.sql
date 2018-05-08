@@ -13,6 +13,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Comment TVarChar
              , Width1 TFloat, Width2 TFloat, Width3 TFloat, Width4 TFloat, Width5 TFloat
              , Width6 TFloat, Width7 TFloat, Width8 TFloat, Width9 TFloat, Width10 TFloat
+             , Level1 TFloat, Level2 TFloat
+             , Left1 TFloat, Left2 TFloat
              , isDefault Boolean
              , isErased Boolean
              ) AS
@@ -57,6 +59,11 @@ BEGIN
            , ObjectFloat_Width8.ValueData    AS Width8
            , ObjectFloat_Width9.ValueData    AS Width9
            , ObjectFloat_Width10.ValueData   AS Width10
+
+           , ObjectFloat_Level1.ValueData      AS Level1
+           , ObjectFloat_Level2.ValueData      AS Level2
+           , ObjectFloat_Left1.ValueData       AS Left1
+           , ObjectFloat_Left2.ValueData       AS Left2
 
            , ObjectBoolean_Default.ValueData AS isDefault
            , Object_StickerFile.isErased     AS isErased
@@ -114,6 +121,22 @@ BEGIN
                                   ON ObjectFloat_Width10.ObjectId = Object_StickerFile.Id
                                  AND ObjectFloat_Width10.DescId = zc_ObjectFloat_StickerFile_Width10()
 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Level1
+                                  ON ObjectFloat_Level1.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Level1.DescId = zc_ObjectFloat_StickerFile_Level1()
+ 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Level2
+                                  ON ObjectFloat_Level2.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Level2.DescId = zc_ObjectFloat_StickerFile_Level2()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Left1
+                                  ON ObjectFloat_Left1.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Left1.DescId = zc_ObjectFloat_StickerFile_Left1()
+ 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Left2
+                                  ON ObjectFloat_Left2.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Left2.DescId = zc_ObjectFloat_StickerFile_Left2()
+
             LEFT JOIN ObjectLink AS ObjectLink_StickerFile_Language
                                  ON ObjectLink_StickerFile_Language.ObjectId = Object_StickerFile.Id
                                 AND ObjectLink_StickerFile_Language.DescId = zc_ObjectLink_StickerFile_Language()
@@ -157,6 +180,11 @@ BEGIN
            , CAST (0 as TFloat)  AS Width8
            , CAST (0 as TFloat)  AS Width9
            , CAST (0 as TFloat)  AS Width10
+
+           , CAST (0 as TFloat)        AS Level1
+           , CAST (0 as TFloat)        AS Level2
+           , CAST (0 as TFloat)        AS Left1
+           , CAST (0 as TFloat)        AS Left2
 
            , TRUE  :: Boolean AS isDefault
            , FALSE :: Boolean AS isErased

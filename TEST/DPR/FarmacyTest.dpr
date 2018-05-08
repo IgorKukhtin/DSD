@@ -568,7 +568,8 @@ uses
   GoodsRetailDialog in '..\..\FormsFarmacy\Guides\GoodsRetailDialog.pas' {GoodsRetailDialogForm: TParentForm},
   Goods in '..\..\FormsFarmacy\Guides\Goods.pas' {GoodsForm: TParentForm},
   PartnerMedical_Object in '..\..\FormsFarmacy\Guides\PartnerMedical_Object.pas' {PartnerMedical_ObjectForm: TParentForm},
-  MedicSP_Object in '..\..\FormsFarmacy\Guides\MedicSP_Object.pas' {MedicSP_ObjectForm: TParentForm};
+  MedicSP_Object in '..\..\FormsFarmacy\Guides\MedicSP_Object.pas' {MedicSP_ObjectForm: TParentForm},
+  Report_Analysis_Remains_Selling in '..\..\FormsFarmacy\Report\Report_Analysis_Remains_Selling.pas' {Report_Analysis_Remains_SellingForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -584,7 +585,7 @@ begin
 
   if FindCmdLineSwitch('realfarmacy', true)
   then gc_AdminPassword := 'Админ1234'
-  else gc_AdminPassword := 'Админ1111';
+  else gc_AdminPassword := 'Админ1234';
 
   gc_ProgramName := 'Farmacy.exe';
 

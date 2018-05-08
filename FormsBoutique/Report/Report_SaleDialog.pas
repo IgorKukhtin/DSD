@@ -60,6 +60,7 @@ type
     cbClient: TcxCheckBox;
     GuidesStartYear: TdsdGuides;
     GuidesEndYear: TdsdGuides;
+    cbDiscount: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -14,12 +14,12 @@ $BODY$
    DECLARE vbPrintFormName TVarChar;
 BEGIN
 
-       -- Результат
+       -- Результат 
+       -- не зависит от нашего юр.лица
        SELECT COALESCE (PrintForms_View.PrintFormName, 'Отчет по продажам Соц.проекта')
               INTO vbPrintFormName
        FROM PrintForms_View
-       WHERE PrintForms_View.JuridicalId = inJuridicalId
-         AND PrintForms_View.PartnerMedicalId = inPartnerMedicalId
+       WHERE PrintForms_View.PartnerMedicalId = inPartnerMedicalId
          AND PrintForms_View.ReportType = 'Report_Check_SP';
 
      RETURN (vbPrintFormName);
@@ -35,5 +35,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_ReportNameSP (inJuridicalId:= 393052, inPartnerMedicalId:= 3690583, inSession:= '5'); -- test
--- SELECT * FROM gpGet_ReportNameSP (inJuridicalId:= 393052, inPartnerMedicalId:= 4474509, inSession:= '5'); -- раб.
+-- SELECT * FROM gpGet_ReportNameSP (inJuridicalId:= 0, inPartnerMedicalId:= 3690583, inSession:= '5'); -- test
+-- SELECT * FROM gpGet_ReportNameSP (inJuridicalId:= 0, inPartnerMedicalId:= 4474508, inSession:= '5'); -- раб.

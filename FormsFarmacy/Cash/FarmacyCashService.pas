@@ -139,7 +139,7 @@ type
 
   private
     { Private declarations }
-
+    procedure AppException(Sender: TObject; E: Exception);
     procedure AppMsgHandler(var Msg: TMsg; var Handled: Boolean);
   public
     { Public declarations }
@@ -148,13 +148,16 @@ type
     ThreadErrorMessage:String;
 
     FiscalNumber: String;
+    FSaveRealAllRunning: boolean;
     FirstRemainsReceived: boolean;
+    FHasError: boolean;
     procedure SaveLocalVIP;
     procedure SaveRealAll;
     procedure ChangeStatus(AStatus: String);
     function InitLocalStorage: Boolean;
     function ExistNotCompletedCheck: boolean;
     procedure Add_Log(AMessage: String);
+    function GetTrayIcon: integer;
 
   end;
 
@@ -185,42 +188,50 @@ implementation
 procedure TMainCashForm2.AppMsgHandler(var Msg: TMsg; var Handled: Boolean);
 var msgStr: String;
 begin
-  Handled := (Msg.hwnd = Application.Handle) and (Msg.message = FM_SERVISE);
-  if Handled and (Msg.wParam = 2) then
-    case Msg.lParam of
-      2: actSetCashSessionId.Execute;    // обновление кеш сесии
+  try
+    Handled := (Msg.hwnd = Application.Handle) and (Msg.message = FM_SERVISE);
+    if Handled and (Msg.wParam = 2) then
+      case Msg.lParam of
+        2: actSetCashSessionId.Execute;    // обновление кеш сесии
 
-      3: begin
-          SaveRealAll;    // попросили провести чеки
-         end;
-
-      9: begin
-//           ShowMessage('запрос на выключение');
-           MainCashForm2.Close;    // закрыть сервис
-         end;
-      10: begin    // остановить проведение чеков
-            if not AllowedConduct then
-              AllowedConduct := True;
-          end;
-
-      20: begin  // разрешить проведение чеков
-            if AllowedConduct then
-             AllowedConduct := False;
+        3: begin
+            SaveRealAll;    // попросили провести чеки
            end;
 
-      30: begin // получен запрос на обновление всех данных
-             actRefreshAllExecute(nil);
-          end;
+        9: begin
+  //           ShowMessage('запрос на выключение');
+             MainCashForm2.Close;    // закрыть сервис
+           end;
+        10: begin    // остановить проведение чеков
+              if not AllowedConduct then
+                AllowedConduct := True;
+            end;
 
-      40: begin // получен запрос на обновление только остатков
-             actCashRemainsExecute(nil);
-          end;
+        20: begin  // разрешить проведение чеков
+              if AllowedConduct then
+               AllowedConduct := False;
+             end;
 
-    end;
+        30: begin // получен запрос на обновление всех данных
+               ChangeStatus('Обновление всего');
+               Add_Log('Обновление всего');
+               actRefreshAllExecute(nil);
+            end;
 
+        40: begin // получен запрос на обновление только остатков
+               actCashRemainsExecute(nil);
+            end;
+
+      end;
+  except on E: Exception do
+    Add_Log('AppMsgHandler Exception: ' + E.Message);
+  end;
 end;
 
-
+procedure TMainCashForm2.AppException(Sender: TObject; E: Exception);
+begin
+  Add_Log('Application Exception: ' + E.Message);
+end;
 
 procedure TMainCashForm2.actSetCashSessionIdExecute(Sender: TObject);
 var myFile:  TextFile;
@@ -253,9 +264,10 @@ End;
 function TMainCashForm2.ExistNotCompletedCheck: boolean;
 begin
   Result := false;
+  Add_Log('Start MutexDBF 266');
   WaitForSingleObject(MutexDBF, INFINITE);
-  FLocalDataBaseHead.Active := True;
   try
+    FLocalDataBaseHead.Active := True;
     while not FLocalDataBaseHead.eof do
     Begin
       IF not FLocalDataBaseHead.Deleted and FLocalDataBaseHead.FieldByName('NEEDCOMPL').AsBoolean then
@@ -268,6 +280,7 @@ begin
     FLocalDataBaseHead.Pack;
   finally
     FLocalDataBaseHead.Active := False;
+    Add_Log('End MutexDBF 266');
     ReleaseMutex(MutexDBF);
   end;
 end;
@@ -275,60 +288,83 @@ end;
 procedure TMainCashForm2.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   AllowedConduct := True; // Просим досрочно прекратить проведения чеков
+  Add_Log('Start MutexRefresh 290');
   WaitForSingleObject(MutexRefresh, INFINITE);
-  if CanClose then
-  Begin
-    try
-      if not gc_User.Local then
-      Begin
-        spDelete_CashSession.Execute;
-      End
-      else
-      begin
-        WaitForSingleObject(MutexRemains, INFINITE);
-        SaveLocalData(RemainsCDS,remains_lcl);
-        ReleaseMutex(MutexRemains);
-        WaitForSingleObject(MutexAlternative, INFINITE);
-        SaveLocalData(AlternativeCDS,Alternative_lcl);
-        ReleaseMutex(MutexAlternative);
-      end;
-    Except
-    end;
+  try
+    if CanClose then
+    Begin
+      try
+        if not gc_User.Local then
+        Begin
+          spDelete_CashSession.Execute;
+        End
+        else
+        begin
+          Add_Log('Start MutexRemains 302');
+          WaitForSingleObject(MutexRemains, INFINITE);
+          try
+            SaveLocalData(RemainsCDS,remains_lcl);
+          finally
+            Add_Log('End MutexRemains 302');
+            ReleaseMutex(MutexRemains);
+          end;
 
-  End;
-  ReleaseMutex(MutexRefresh);
+          Add_Log('Start MutexAlternative 311');
+          WaitForSingleObject(MutexAlternative, INFINITE);
+          try
+            SaveLocalData(AlternativeCDS,Alternative_lcl);
+          finally
+            Add_Log('End MutexAlternative 311');
+            ReleaseMutex(MutexAlternative);
+          end;
+        end;
+      Except
+      end;
+
+    End;
+  finally
+    Add_Log('End MutexRefresh 290');
+    ReleaseMutex(MutexRefresh);
+  end;
 end;
 
 
 procedure TMainCashForm2.actCashRemainsExecute(Sender: TObject);
 begin
+  if FSaveRealAllRunning then Exit; // нельзя запускать, пока отгружаются чеки
   if ExistNotCompletedCheck then Exit; // нельзя получать, пока есть неотгруженные чеки
+  Add_Log('Start MutexRemains 335');
   WaitForSingleObject(MutexRemains, INFINITE);
-  MainCashForm2.tiServise.IconIndex:=1;
   try
+    MainCashForm2.tiServise.IconIndex:=1;
     try
       MainCashForm2.spSelect_CashRemains_Diff.Execute(False, False, False);
       DiffCDS.First;
       if DiffCDS.FieldCount>0 then
       begin
+         Add_Log('Start MutexDBFDiff 344');
          WaitForSingleObject(MutexDBFDiff, INFINITE);
-         FLocalDataBaseDiff.Open;
-         while not DiffCDS.Eof  do
-         begin
-            FLocalDataBaseDiff.Append;
-            FLocalDataBaseDiff.Fields[0].AsString:=DiffCDS.Fields[0].AsString;
-            FLocalDataBaseDiff.Fields[1].AsString:=DiffCDS.Fields[1].AsString;
-            FLocalDataBaseDiff.Fields[2].AsString:=DiffCDS.Fields[2].AsString;
-            FLocalDataBaseDiff.Fields[3].AsString:=DiffCDS.Fields[3].AsString;
-            FLocalDataBaseDiff.Fields[4].AsString:=DiffCDS.Fields[4].AsString;
-            FLocalDataBaseDiff.Fields[5].AsString:=DiffCDS.Fields[5].AsString;
-            FLocalDataBaseDiff.Fields[6].AsString:=DiffCDS.Fields[6].AsString;
-            FLocalDataBaseDiff.Fields[7].AsString:=DiffCDS.Fields[7].AsString;
-            FLocalDataBaseDiff.Post;
-            DiffCDS.Next;
+         try
+           FLocalDataBaseDiff.Open;
+           while not DiffCDS.Eof  do
+           begin
+              FLocalDataBaseDiff.Append;
+              FLocalDataBaseDiff.Fields[0].AsString:=DiffCDS.Fields[0].AsString;
+              FLocalDataBaseDiff.Fields[1].AsString:=DiffCDS.Fields[1].AsString;
+              FLocalDataBaseDiff.Fields[2].AsString:=DiffCDS.Fields[2].AsString;
+              FLocalDataBaseDiff.Fields[3].AsString:=DiffCDS.Fields[3].AsString;
+              FLocalDataBaseDiff.Fields[4].AsString:=DiffCDS.Fields[4].AsString;
+              FLocalDataBaseDiff.Fields[5].AsString:=DiffCDS.Fields[5].AsString;
+              FLocalDataBaseDiff.Fields[6].AsString:=DiffCDS.Fields[6].AsString;
+              FLocalDataBaseDiff.Fields[7].AsString:=DiffCDS.Fields[7].AsString;
+              FLocalDataBaseDiff.Post;
+              DiffCDS.Next;
+           end;
+           FLocalDataBaseDiff.Close;
+         finally
+           Add_Log('End MutexDBFDiff 344');
+           ReleaseMutex(MutexDBFDiff);
          end;
-         FLocalDataBaseDiff.Close;
-         ReleaseMutex(MutexDBFDiff);
          // Отправка сообщения приложению про надобность обновить остатки из файла
          PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 1);
         end;
@@ -341,25 +377,30 @@ begin
        end;
     end;
   finally
+    Add_Log('End MutexRemains 335');
     ReleaseMutex(MutexRemains);
-    MainCashForm2.tiServise.IconIndex:=0;
+    MainCashForm2.tiServise.IconIndex := GetTrayIcon;
   end;
 
 end;
 
 procedure TMainCashForm2.actRefreshAllExecute(Sender: TObject);
 begin   //yes
+  if FSaveRealAllRunning then Exit; // нельзя запускать, пока отгружаются чеки
   if ExistNotCompletedCheck then Exit; // нельзя запускать, пока есть неотгруженные чеки
   // обновления данных с сервера
-  WaitForSingleObject(MutexRemains, INFINITE);
-  WaitForSingleObject(MutexAlternative, INFINITE);
-  MainCashForm2.tiServise.IconIndex:=1;
-  // посылаем сообщение о начале получения полных остатков
-  PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 4);
-  tiServise.Hint := 'Получение остатков';
   Add_Log('Refresh all start');
-  Application.ProcessMessages;
+  Add_Log('Start MutexRemains 390');
+  WaitForSingleObject(MutexRemains, INFINITE);
+  Add_Log('Start MutexAlternative 393');
+  WaitForSingleObject(MutexAlternative, INFINITE);
   try
+    MainCashForm2.tiServise.IconIndex:=1;
+    // посылаем сообщение о начале получения полных остатков
+    PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 4);
+    tiServise.Hint := 'Получение остатков';
+    Application.ProcessMessages;
+
     if not gc_User.Local  then
     Begin
       RemainsCDS.DisableControls;
@@ -391,13 +432,15 @@ begin   //yes
       end;
     End;
   finally
-    Add_Log('Refresh all end');
     tiServise.Hint := '';
     PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 5);
+    Add_Log('End MutexRemains 390');
     ReleaseMutex(MutexRemains);
+    Add_Log('End MutexAlternative 393');
     ReleaseMutex(MutexAlternative);
     ChangeStatus('Сохранили');
-    MainCashForm2.tiServise.IconIndex:=0;
+    MainCashForm2.tiServise.IconIndex := GetTrayIcon;
+    Add_Log('Refresh all end');
   end;
 end;
 
@@ -413,6 +456,7 @@ procedure TMainCashForm2.FormCreate(Sender: TObject);
 var
   F: String;
 begin
+  Add_Log('== Start');
   if ParamStr(1) = 'Админ' then  // показываем меню только для Админа
     tiServise.PopupMenu:=pmServise
   else tiServise.PopupMenu:=nil;
@@ -431,6 +475,7 @@ begin
   LastErr := GetLastError;
   MutexRefresh := CreateMutex(nil, false, 'farmacycashMutexRefresh');
   LastErr := GetLastError;
+  FHasError := false;
   //сгенерили гуид для определения сессии
   ChangeStatus('Установка первоначальных параметров');
 
@@ -451,16 +496,18 @@ begin
     exit;
   End;
   ChangeStatus('Инициализация локального хранилища - да');
-
+  FSaveRealAllRunning := false;
   SaveRealAll; // Проводим чеки которые остались не проведенными раньше. Учитывается CountСhecksAtOnce = 7
                // проведутся первые 7 чеков и будут ждать или таймер или пока не пройдет первая покупка
-  ChangeStatus('Получение остатков');
+  if not FHasError then
+    ChangeStatus('Получение остатков');
   FirstRemainsReceived := false;
   FormParams.ParamByName('CashSessionId').Value := iniLocalGUIDSave(GenerateGUID);
   //PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 2); // запрос кеш сесии у приложения
   TimerGetRemains.Enabled := true;
  //}
-  ChangeStatus('Готово');
+  if not FHasError then
+    ChangeStatus('Готово');
 end;
 
 // процедура обновляет параметры для введения нового чека
@@ -502,7 +549,7 @@ try
     End;
   end;
 finally
- MainCashForm2.tiServise.IconIndex:=0;
+ MainCashForm2.tiServise.IconIndex := GetTrayIcon;
 end;
 end;
 
@@ -515,8 +562,9 @@ end;
 function TMainCashForm2.InitLocalStorage: Boolean;
 begin
   Result := False;
-
+  Add_Log('Start MutexDBF 563');
   WaitForSingleObject(MutexDBF, INFINITE);
+  Add_Log('Start MutexDBFDiff 565');
   WaitForSingleObject(MutexDBFDiff, INFINITE);
 
   try
@@ -531,7 +579,9 @@ begin
       FLocalDataBaseDiff.Active := False;
     end;
   finally
+    Add_Log('End MutexDBF 563');
     ReleaseMutex(MutexDBF);
+    Add_Log('End MutexDBFDiff 565');
     ReleaseMutex(MutexDBFDiff);
   end;
 end;
@@ -553,24 +603,39 @@ begin  //+
       sp.Params.Clear;
       sp.Params.AddParam('inIsShowAll',ftBoolean,ptInput,False);
       sp.Execute(False,False);
+      Add_Log('Start MutexVip 604');
       WaitForSingleObject(MutexVip, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
-      SaveLocalData(ds,Member_lcl);
-      ReleaseMutex(MutexVip);
+      try
+        SaveLocalData(ds,Member_lcl);
+      finally
+        Add_Log('End MutexVip 604');
+        ReleaseMutex(MutexVip);
+      end;
 
       sp.StoredProcName := 'gpSelect_Movement_CheckVIP';
       sp.Params.Clear;
       sp.Params.AddParam('inIsErased',ftBoolean,ptInput,False);
       sp.Execute(False,False);
+      Add_Log('Start MutexVip 617');
       WaitForSingleObject(MutexVip, INFINITE);
-      SaveLocalData(ds,Vip_lcl);
-      ReleaseMutex(MutexVip);
+      try
+        SaveLocalData(ds,Vip_lcl);
+      finally
+        Add_Log('End MutexVip 617');
+        ReleaseMutex(MutexVip);
+      end;
 
       sp.StoredProcName := 'gpSelect_MovementItem_CheckDeferred';
       sp.Params.Clear;
       sp.Execute(False,False);
+      Add_Log('Start MutexVip 629');
       WaitForSingleObject(MutexVip, INFINITE);
-      SaveLocalData(ds,VipList_lcl);
-      ReleaseMutex(MutexVip);
+      try
+        SaveLocalData(ds,VipList_lcl);
+      finally
+        Add_Log('End MutexVip 629');
+        ReleaseMutex(MutexVip);
+      end;
     finally
       ds.free;
     end;
@@ -594,10 +659,12 @@ procedure TMainCashForm2.TimerGetRemainsTimer(Sender: TObject);
 begin
   TimerGetRemains.Enabled := False;
   TimerGetRemains.Interval := 60000;
+  Add_Log('Start MutexRefresh 660');
+  WaitForSingleObject(MutexRefresh, INFINITE);
   try
-    WaitForSingleObject(MutexRefresh, INFINITE);
     actRefreshAllExecute(nil);
   finally
+    Add_Log('End MutexRefresh 660');
     ReleaseMutex(MutexRefresh);
     TimerGetRemains.Enabled := not FirstRemainsReceived;
   end;
@@ -616,500 +683,616 @@ var
   FNeedSaveVIP: Boolean;
   fError_isComplete: Boolean;
   FNeedGetDiff: Boolean;
-begin
-  try
-    spGet_User_IsAdmin.Execute;
-    if gc_User.Local then
+  FNEEDCOMPL, FSAVE: boolean;
+  FSaveUID: string;
+  FSaveTryCount: integer;
+  bShowDisconnectMsg: boolean;
+
+  function LocateUID(AUID: string; ASave: boolean): boolean;
+  begin
+    Result := false;
+    FLocalDataBaseHead.First;
+    while not FLocalDataBaseHead.Eof do
     begin
-      gc_User.Local := False;
-      tiServise.BalloonHint := 'Связь востановлена';
-      tiServise.ShowBalloonHint;
-    end;
-  except
-    begin
-      if not gc_User.Local then
+      if (Trim(FLocalDataBaseHead.FieldByName('UID').AsString) = AUID) and
+         (FLocalDataBaseHead.FieldByName('SAVE').AsBoolean = ASAVE) then
       begin
-        gc_User.Local := True;
-        tiServise.BalloonHint := 'Локальный режим';
-        tiServise.ShowBalloonHint;
+        Result := true;
+        break;
       end;
-      Exit;
+      FLocalDataBaseHead.Next;
     end;
   end;
 
-  // Запускаем поиски чеков ели разрешено
-  if AllowedConduct then
-    Exit;
-
-  MainCashForm2.tiServise.IconIndex := 1;
-  WaitForSingleObject(MutexRefresh, INFINITE); // одновременно проведение и обновление всех остатков запрещено
-  WaitForSingleObject(MutexAllowedConduct, INFINITE); // для отмены проведения из приложения при закрытии
-  FNeedGetDiff := false;
+begin
+  if FSaveRealAllRunning then Exit;
+  FSaveRealAllRunning := true;
   try
     Add_Log('SaveReal start');
-    tiServise.Hint := 'Проведение чеков';
-    while True do
-    Begin
-      Application.ProcessMessages; // Нужно потестить отмену
-      // Выходим из цикла при получении указания постоять или перехода в локальный режим
-      if AllowedConduct or gc_User.Local then
+    try
+      MainCashForm2.tiServise.IconIndex := 4;
+      bShowDisconnectMsg := not gc_User.Local;
+      spGet_User_IsAdmin.Execute;
+      if gc_User.Local then
       begin
-        tiServise.BalloonHint := 'Останавливаем проведение чеков';
+        gc_User.Local := False;
+        Add_Log('-- Связь востановлена');
+        tiServise.BalloonHint := 'Связь востановлена';
         tiServise.ShowBalloonHint;
+        PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 6);
+      end;
+    except on E: Exception do
+      begin
+        Add_Log(E.Message);
+        if bShowDisconnectMsg then
+        begin
+          gc_User.Local := True;
+          Add_Log('-- Нет связи с интернетом');
+          tiServise.BalloonHint := 'Локальный режим';
+          tiServise.ShowBalloonHint;
+          PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 6);
+        end;
         Exit;
       end;
+    end;
 
-      WaitForSingleObject(MutexDBF, INFINITE);
-      FLocalDataBaseHead.Active := True;
-      FLocalDataBaseBody.Active := True;
-      try
-        FLocalDataBaseHead.Pack;
-        FLocalDataBaseBody.Pack;
-        FLocalDataBaseHead.First;
-        UID := '';
-        while not FLocalDataBaseHead.eof do
-        Begin
-          if not FLocalDataBaseHead.Deleted and
-            (FLocalDataBaseHead.FieldByName('NEEDCOMPL').AsBoolean
-             or not FLocalDataBaseHead.FieldByName('SAVE').AsBoolean) then
-          Begin
-            UID := trim(FLocalDataBaseHead.FieldByName('UID').AsString);
-            break;
-          End;
-          FLocalDataBaseHead.Next;
-        End;
-      finally
-        FLocalDataBaseBody.Active := False;
-        FLocalDataBaseHead.Active := False;
-        ReleaseMutex(MutexDBF);
-      end;
+    // Запускаем поиски чеков ели разрешено
+    if AllowedConduct then
+    begin
+      Add_Log('SaveReal Allowed Conduct Exit');
+      Exit;
+    end;
 
-      // если чеков нет, выходим из цикла
-      if UID = '' then
-        break;
-
-      if UID <> '' then
+    MainCashForm2.tiServise.IconIndex := 2;
+    Add_Log('Start MutexRefresh 732');
+    WaitForSingleObject(MutexRefresh, INFINITE); // одновременно проведение и обновление всех остатков запрещено
+    Add_Log('Start MutexAllowed 734');
+    WaitForSingleObject(MutexAllowedConduct, INFINITE); // для отмены проведения из приложения при закрытии
+    FNeedGetDiff := false;
+    try
+      tiServise.Hint := 'Проведение чеков';
+      FSaveUID := '';
+      FSaveTryCount := 0;
+      FHasError := false;
+      while True do
       Begin
-        Find := False;
-        WaitForSingleObject(MutexDBF, INFINITE);
-        FLocalDataBaseHead.Active := True;
-        FLocalDataBaseBody.Active := True;
-        try
-          if FLocalDataBaseHead.Locate('UID', UID, [loPartialKey]) AND not FLocalDataBaseHead.Deleted then
-          Begin
-            Find := True;
-            With Head, FLocalDataBaseHead do
-            Begin
-              ID := FieldByName('ID').AsInteger;
-              UID := FieldByName('UID').AsString;
-              DATE := FieldByName('DATE').asCurrency;
-              CASH := trim(FieldByName('CASH').AsString);
-              PAIDTYPE := FieldByName('PAIDTYPE').AsInteger;
-              MANAGER := FieldByName('MANAGER').AsInteger;
-              BAYER := trim(FieldByName('BAYER').AsString);
-              COMPL := FieldByName('COMPL').AsBoolean;
-              NEEDCOMPL := FieldByName('NEEDCOMPL').AsBoolean;
-              SAVE := FieldByName('SAVE').AsBoolean;
-              FISCID := trim(FieldByName('FISCID').AsString);
-              NOTMCS := FieldByName('NOTMCS').AsBoolean;
-              // ***20.07.16
-              DISCOUNTID := FieldByName('DISCOUNTID').AsInteger;
-              DISCOUNTN := trim(FieldByName('DISCOUNTN').AsString);
-              DISCOUNT := trim(FieldByName('DISCOUNT').AsString);
-              // ***16.08.16
-              BAYERPHONE := trim(FieldByName('BAYERPHONE').AsString);
-              CONFIRMED := trim(FieldByName('CONFIRMED').AsString);
-              NUMORDER := trim(FieldByName('NUMORDER').AsString);
-              CONFIRMEDC := trim(FieldByName('CONFIRMEDC').AsString);
-              // ***24.01.17
-              USERSESION := trim(FieldByName('USERSESION').AsString);
-              // ***08.04.17
-              PMEDICALID := FieldByName('PMEDICALID').AsInteger;
-              PMEDICALN := trim(FieldByName('PMEDICALN').AsString);
-              AMBULANCE := trim(FieldByName('AMBULANCE').AsString);
-              MEDICSP := trim(FieldByName('MEDICSP').AsString);
-              INVNUMSP := trim(FieldByName('INVNUMSP').AsString);
-              OPERDATESP := FieldByName('OPERDATESP').asCurrency;
-              // ***15.06.17
-              SPKINDID := FieldByName('SPKINDID').AsInteger;
-              // ***05.02.18
-              PROMOCODE := FieldByName('PROMOCODE').AsInteger;
+        Application.ProcessMessages; // Нужно потестить отмену
+        // Выходим из цикла при получении указания постоять или перехода в локальный режим
+        if AllowedConduct or gc_User.Local then
+        begin
+          tiServise.BalloonHint := 'Останавливаем проведение чеков';
+          tiServise.ShowBalloonHint;
+          Exit;
+        end;
 
-              FNeedSaveVIP := (MANAGER <> 0);
-            end;
-            FLocalDataBaseBody.First;
-            while not FLocalDataBaseBody.eof do
+        Add_Log('Start MutexDBF 754');
+        WaitForSingleObject(MutexDBF, INFINITE);
+        try
+          FLocalDataBaseHead.Active := True;
+          FLocalDataBaseBody.Active := True;
+          FLocalDataBaseHead.Pack;
+          FLocalDataBaseBody.Pack;
+          FLocalDataBaseHead.First;
+          UID := '';
+          while not FLocalDataBaseHead.eof do
+          Begin
+            if not FLocalDataBaseHead.Deleted and
+              (FLocalDataBaseHead.FieldByName('NEEDCOMPL').AsBoolean
+               or not FLocalDataBaseHead.FieldByName('SAVE').AsBoolean) then
             Begin
-              if (trim(FLocalDataBaseBody.FieldByName('CH_UID').AsString) = UID) AND not FLocalDataBaseBody.Deleted then
-              Begin
-                SetLength(Body, Length(Body) + 1);
-                with Body[Length(Body) - 1], FLocalDataBaseBody do
-                Begin
-                  CH_UID := trim(FieldByName('CH_UID').AsString);
-                  GOODSID := FieldByName('GOODSID').AsInteger;
-                  GOODSCODE := FieldByName('GOODSCODE').AsInteger;
-                  GOODSNAME := trim(FieldByName('GOODSNAME').AsString);
-                  NDS := FieldByName('NDS').asCurrency;
-                  AMOUNT := FieldByName('AMOUNT').asCurrency;
-                  PRICE := FieldByName('PRICE').asCurrency;
-                  // ***20.07.16
-                  PRICESALE := FieldByName('PRICESALE').asCurrency;
-                  CHPERCENT := FieldByName('CHPERCENT').asCurrency;
-                  SUMMCH := FieldByName('SUMMCH').asCurrency;
-                  // ***19.08.16
-                  AMOUNTORD := FieldByName('AMOUNTORD').asCurrency;
-                  // ***10.08.16
-                  LIST_UID := trim(FieldByName('LIST_UID').AsString);
-                End;
-              End;
-              FLocalDataBaseBody.Next;
+              UID := trim(FLocalDataBaseHead.FieldByName('UID').AsString);
+              FNEEDCOMPL := FLocalDataBaseHead.FieldByName('NEEDCOMPL').AsBoolean;
+              FSAVE := FLocalDataBaseHead.FieldByName('SAVE').AsBoolean;
+              break;
             End;
+            FLocalDataBaseHead.Next;
           End;
         finally
-          FLocalDataBaseHead.Active := False;
           FLocalDataBaseBody.Active := False;
+          FLocalDataBaseHead.Active := False;
+          Add_Log('End MutexDBF 754');
           ReleaseMutex(MutexDBF);
-        end; // Загрузили чек в head and body
-
-        // т.е. чек можно потом удалить из ДБФ
-        fError_isComplete := False; // 04.02.2017
-
-        if Find AND NOT Head.SAVE then
-        Begin
-          dsdSave := TdsdStoredProc.Create(nil);
-          try
-            try
-              // Проверить в каком состоянии документ.
-              dsdSave.StoredProcName := 'gpGet_Movement_CheckState';
-              dsdSave.OutputType := otResult;
-              dsdSave.Params.Clear;
-              dsdSave.Params.AddParam('inId', ftInteger, ptInput, Head.ID);
-              dsdSave.Params.AddParam('outState', ftInteger, ptOutput, Null);
-              dsdSave.Execute(False, False);
-              if VarToStr(dsdSave.Params.ParamByName('outState').Value) = '2' then // проведен
-              Begin
-                Add_Log('CheckState: Чек '+ IntToStr(Head.ID) +'уже проведен');
-                Head.SAVE := True;
-                Head.NEEDCOMPL := False;
-
-                WaitForSingleObject(MutexDBF, INFINITE);
-                FLocalDataBaseHead.Active := True;
-                try
-                  if FLocalDataBaseHead.Locate('ID', Head.ID, [loPartialKey]) then
-                  Begin
-                    FLocalDataBaseHead.Edit;
-                    FLocalDataBaseHead.FieldByName('NEEDCOMPL').AsBoolean := false;
-                    FLocalDataBaseHead.FieldByName('SAVE').AsBoolean := true;
-                    FLocalDataBaseHead.Post;
-                  End;
-                finally
-                  FLocalDataBaseHead.Active := False;
-                  ReleaseMutex(MutexDBF);
-                end;
-
-                // т.е. чек НЕЛЬЗЯ потом удалить из ДБФ
-                fError_isComplete := True; // 04.02.2017
-              End
-              else
-              // Если не проведен
-              Begin
-                if VarToStr(dsdSave.Params.ParamByName('outState').Value) = '3' then // Удален
-                Begin
-                  dsdSave.StoredProcName := 'gpUnComplete_Movement_Check';
-                  dsdSave.OutputType := otResult;
-                  dsdSave.Params.Clear;
-                  dsdSave.Params.AddParam('inMovementId', ftInteger, ptInput, Head.ID);
-                  dsdSave.Execute(False, False);
-                end;
-                // сохранил шапку
-                dsdSave.StoredProcName := 'gpInsertUpdate_Movement_Check_ver2';
-                dsdSave.OutputType := otResult;
-                dsdSave.Params.Clear;
-                dsdSave.Params.AddParam('ioId', ftInteger, ptInputOutput, Head.ID);
-                dsdSave.Params.AddParam('inDate', ftDateTime, ptInput, Head.DATE);
-                dsdSave.Params.AddParam('inCashRegister', ftString, ptInput, Head.CASH);
-                dsdSave.Params.AddParam('inPaidType', ftInteger, ptInput, Head.PAIDTYPE);
-                dsdSave.Params.AddParam('inManagerId', ftInteger, ptInput, Head.MANAGER);
-                dsdSave.Params.AddParam('inBayer', ftString, ptInput, Head.BAYER);
-                dsdSave.Params.AddParam('inFiscalCheckNumber', ftString, ptInput, Head.FISCID);
-                dsdSave.Params.AddParam('inNotMCS', ftBoolean, ptInput, Head.NOTMCS);
-                // ***20.07.16
-                dsdSave.Params.AddParam('inDiscountExternalId', ftInteger, ptInput, Head.DISCOUNTID);
-                dsdSave.Params.AddParam('inDiscountCardNumber', ftString, ptInput, Head.DISCOUNT);
-                // ***16.08.16
-                dsdSave.Params.AddParam('inBayerPhone', ftString, ptInput, Head.BAYERPHONE);
-                dsdSave.Params.AddParam('inConfirmedKindName', ftString, ptInput, Head.CONFIRMED);
-                dsdSave.Params.AddParam('inInvNumberOrder', ftString, ptInput, Head.NUMORDER);
-                // ***08.04.17
-                dsdSave.Params.AddParam('inPartnerMedicalId', ftInteger, ptInput, Head.PMEDICALID);
-                dsdSave.Params.AddParam('inAmbulance', ftString, ptInput, Head.AMBULANCE);
-                dsdSave.Params.AddParam('inMedicSP', ftString, ptInput, Head.MEDICSP);
-                dsdSave.Params.AddParam('inInvNumberSP', ftString, ptInput, Head.INVNUMSP);
-                dsdSave.Params.AddParam('inOperDateSP', ftDateTime, ptInput, Head.OPERDATESP);
-                // ***15.06.17
-                dsdSave.Params.AddParam('inSPKindId', ftInteger, ptInput, Head.SPKINDID);
-                // ***05.02.18
-                dsdSave.Params.AddParam('inPromoCodeId', ftInteger, ptInput, Head.PROMOCODE);
-                // ***24.01.17
-                dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
-
-                dsdSave.Execute(False, False);
-                // сохранили в локальной базе полученный номер
-                if Head.ID <> StrToInt(dsdSave.Params.ParamByName('ioID').AsString) then
-                Begin
-                  Head.ID := StrToInt(dsdSave.Params.ParamByName('ioID').AsString);
-                  WaitForSingleObject(MutexDBF, INFINITE);
-                  FLocalDataBaseHead.Active := True;
-                  try
-                    if FLocalDataBaseHead.Locate('UID', UID, [loPartialKey]) AND not FLocalDataBaseHead.Deleted then
-                    Begin
-                      FLocalDataBaseHead.Edit;
-                      FLocalDataBaseHead.FieldByName('ID').AsInteger := Head.ID;
-                      FLocalDataBaseHead.Post;
-                    End;
-                  finally
-                    FLocalDataBaseHead.Active := False;
-                    ReleaseMutex(MutexDBF);
-                  end;
-                end;
-
-                // сохранил тело
-
-                dsdSave.StoredProcName := 'gpInsertUpdate_MovementItem_Check_ver2';
-                dsdSave.OutputType := otResult;
-                dsdSave.Params.Clear;
-                dsdSave.Params.AddParam('ioId', ftInteger, ptInputOutput, Null);
-                dsdSave.Params.AddParam('inMovementId', ftInteger, ptInput, Head.ID);
-                dsdSave.Params.AddParam('inGoodsId', ftInteger, ptInput, Null);
-                dsdSave.Params.AddParam('inAmount', ftFloat, ptInput, Null);
-                dsdSave.Params.AddParam('inPrice', ftFloat, ptInput, Null);
-                // ***20.07.16
-                dsdSave.Params.AddParam('inPriceSale', ftFloat, ptInput, Null);
-                dsdSave.Params.AddParam('inChangePercent', ftFloat, ptInput, Null);
-                dsdSave.Params.AddParam('inSummChangePercent', ftFloat, ptInput, Null);
-                // ***19.08.16
-                // dsdSave.Params.AddParam('inAmountOrder',ftFloat,ptInput,Null);
-                // ***10.08.16
-                dsdSave.Params.AddParam('inList_UID', ftString, ptInput, Null);
-                //
-                dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
-
-                for I := 0 to Length(Body) - 1 do
-                Begin
-                  dsdSave.ParamByName('ioId').Value := Body[I].ID;
-                  dsdSave.ParamByName('inGoodsId').Value := Body[I].GOODSID;
-                  dsdSave.ParamByName('inAmount').Value := Body[I].AMOUNT;
-                  dsdSave.ParamByName('inPrice').Value := Body[I].PRICE;
-                  // ***20.07.16
-                  dsdSave.ParamByName('inPriceSale').Value := Body[I].PRICESALE;
-                  dsdSave.ParamByName('inChangePercent').Value := Body[I].CHPERCENT;
-                  dsdSave.ParamByName('inSummChangePercent').Value := Body[I].SUMMCH;
-                  // ***19.08.16
-                  // dsdSave.ParamByName('inAmountOrder').Value :=  Body[I].AMOUNTORD;
-                  // ***10.08.16
-                  dsdSave.ParamByName('inList_UID').Value := Body[I].LIST_UID;
-                  //
-
-                  dsdSave.Execute(False, False); // сохринили на сервере
-                  if Body[I].ID <> StrToInt(dsdSave.ParamByName('ioId').AsString) then
-                  Begin
-                    Body[I].ID := StrToInt(dsdSave.ParamByName('ioId').AsString);
-                    WaitForSingleObject(MutexDBF, INFINITE);
-                    FLocalDataBaseBody.Active := True;
-                    try
-                      FLocalDataBaseBody.First;
-                      while not FLocalDataBaseBody.eof do
-                      Begin
-                        if (trim(FLocalDataBaseBody.FieldByName('CH_UID').AsString) = UID) AND not FLocalDataBaseBody.Deleted AND
-                          (FLocalDataBaseBody.FieldByName('GOODSID').AsInteger = Body[I].GOODSID) then
-                        Begin
-                          FLocalDataBaseBody.Edit;
-                          FLocalDataBaseBody.FieldByName('ID').AsInteger := Body[I].ID;
-                          FLocalDataBaseBody.Post; // сохранили в файле
-                          break;
-                        End;
-                        FLocalDataBaseBody.Next;
-                      End;
-                    finally
-                      FLocalDataBaseBody.Active := False;
-                      ReleaseMutex(MutexDBF);
-                    end;
-                  End;
-                End; // обработали все позиции товара в чеке
-                Head.SAVE := True;
-                WaitForSingleObject(MutexDBF, INFINITE);
-                FLocalDataBaseHead.Active := True;
-                try
-                  if FLocalDataBaseHead.Locate('UID', UID, [loPartialKey]) AND not FLocalDataBaseHead.Deleted then
-                  Begin
-                    FLocalDataBaseHead.Edit;
-                    FLocalDataBaseHead.FieldByName('SAVE').AsBoolean := True;
-                    FLocalDataBaseHead.Post;
-                  End;
-                finally
-                  FLocalDataBaseHead.Active := False;
-                  ReleaseMutex(MutexDBF);
-
-                end;
-              End; // обработали чек с товарами
-            except
-              ON E: Exception do
-              Begin
-                Add_Log('InsertUpdate Check: ' + E.Message);
-
-                if gc_User.Local then
-                begin
-                  tiServise.BalloonHint := 'Останавливаем проведение чеков';
-                  tiServise.ShowBalloonHint;
-                  Exit;
-                end;
-                // -nw               SendError(E.Message);
-              End;
-            end;
-          finally
-            freeAndNil(dsdSave);
-          end;
         end;
-        // если необходимо провести чек
-        if Find AND Head.SAVE AND Head.NEEDCOMPL then
+
+        // если чеков нет, выходим из цикла
+        if UID = '' then
+          break;
+
+        if UID <> '' then
         Begin
-          dsdSave := TdsdStoredProc.Create(nil);
-          try
-            dsdSave.StoredProcName := 'gpComplete_Movement_Check_ver2_NoDiff';
-            dsdSave.OutputType := otResult;
-            dsdSave.Params.Clear;
-            dsdSave.Params.AddParam('inMovementId', ftInteger, ptInput, Head.ID);
-            dsdSave.Params.AddParam('inPaidType', ftInteger, ptInput, Head.PAIDTYPE);
-            dsdSave.Params.AddParam('inCashRegister', ftString, ptInput, Head.CASH);
-            dsdSave.Params.AddParam('inCashSessionId', ftString, ptInput, FormParams.ParamByName('CashSessionId').Value);
-            dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
-            try
-              dsdSave.Execute(False, False);
-              Head.COMPL := True;
-            except
-              on E: Exception do
-              Begin
-                Add_Log('Complete NoDIFF: ' + E.Message);
-                // -nw                 SendError(E.Message);
-                if gc_User.Local then
-                begin
-                  tiServise.BalloonHint := 'Останавливаем проведение чеков';
-                  tiServise.ShowBalloonHint;
-                  Exit;
-                end;
-              End;
-            end;
-          finally
-            freeAndNil(dsdSave);
+          if (FSaveUID = UID) and (FSaveTryCount > 2) then
+          begin
+            Add_Log('Повторная попытка отгрузить чек ' + UID);
+            tiServise.BalloonHint := 'Внимание! Повторная попытка отгрузить чек, дальнейшая выгрузка чеков в офис прекращена!';
+            tiServise.ShowBalloonHint;
+            FHasError := true;
+            Exit;
           end;
-          // удаляем проведенный чек - если можно ... 04.02.2017
-          if Head.COMPL { AND (fError_isComplete = FALSE) } // 04.07.17 - !!!временно убрал!!!
-          then
-          Begin
-            WaitForSingleObject(MutexDBF, INFINITE);
+          if FSaveUID = UID then
+            inc(FSaveTryCount)
+          else
+            FSaveTryCount := 0;
+          FSaveUID := UID;
+          Find := False;
+          Add_Log('Start MutexDBF 803');
+          WaitForSingleObject(MutexDBF, INFINITE);
+          try
             FLocalDataBaseHead.Active := True;
             FLocalDataBaseBody.Active := True;
-            try
-              if FLocalDataBaseHead.Locate('UID', UID, [loPartialKey]) AND not FLocalDataBaseHead.Deleted then
-                FLocalDataBaseHead.DeleteRecord;
+            if LocateUID(UID, FSAVE) and not FLocalDataBaseHead.Deleted then
+            Begin
+              Find := True;
+              With Head, FLocalDataBaseHead do
+              Begin
+                ID := FieldByName('ID').AsInteger;
+                UID := FieldByName('UID').AsString;
+                DATE := FieldByName('DATE').asCurrency;
+                CASH := trim(FieldByName('CASH').AsString);
+                PAIDTYPE := FieldByName('PAIDTYPE').AsInteger;
+                MANAGER := FieldByName('MANAGER').AsInteger;
+                BAYER := trim(FieldByName('BAYER').AsString);
+                COMPL := FieldByName('COMPL').AsBoolean;
+                NEEDCOMPL := FieldByName('NEEDCOMPL').AsBoolean;
+                SAVE := FieldByName('SAVE').AsBoolean;
+                FISCID := trim(FieldByName('FISCID').AsString);
+                NOTMCS := FieldByName('NOTMCS').AsBoolean;
+                // ***20.07.16
+                DISCOUNTID := FieldByName('DISCOUNTID').AsInteger;
+                DISCOUNTN := trim(FieldByName('DISCOUNTN').AsString);
+                DISCOUNT := trim(FieldByName('DISCOUNT').AsString);
+                // ***16.08.16
+                BAYERPHONE := trim(FieldByName('BAYERPHONE').AsString);
+                CONFIRMED := trim(FieldByName('CONFIRMED').AsString);
+                NUMORDER := trim(FieldByName('NUMORDER').AsString);
+                CONFIRMEDC := trim(FieldByName('CONFIRMEDC').AsString);
+                // ***24.01.17
+                USERSESION := trim(FieldByName('USERSESION').AsString);
+                // ***08.04.17
+                PMEDICALID := FieldByName('PMEDICALID').AsInteger;
+                PMEDICALN := trim(FieldByName('PMEDICALN').AsString);
+                AMBULANCE := trim(FieldByName('AMBULANCE').AsString);
+                MEDICSP := trim(FieldByName('MEDICSP').AsString);
+                INVNUMSP := trim(FieldByName('INVNUMSP').AsString);
+                OPERDATESP := FieldByName('OPERDATESP').asCurrency;
+                // ***15.06.17
+                SPKINDID := FieldByName('SPKINDID').AsInteger;
+                // ***05.02.18
+                PROMOCODE := FieldByName('PROMOCODE').AsInteger;
+
+                FNeedSaveVIP := (MANAGER <> 0);
+              end;
               FLocalDataBaseBody.First;
               while not FLocalDataBaseBody.eof do
               Begin
-                IF (trim(FLocalDataBaseBody.FieldByName('CH_UID').AsString) = UID) AND not FLocalDataBaseBody.Deleted then
-                  FLocalDataBaseBody.DeleteRecord;
+                if (trim(FLocalDataBaseBody.FieldByName('CH_UID').AsString) = UID) AND not FLocalDataBaseBody.Deleted then
+                Begin
+                  SetLength(Body, Length(Body) + 1);
+                  with Body[Length(Body) - 1], FLocalDataBaseBody do
+                  Begin
+                    CH_UID := trim(FieldByName('CH_UID').AsString);
+                    GOODSID := FieldByName('GOODSID').AsInteger;
+                    GOODSCODE := FieldByName('GOODSCODE').AsInteger;
+                    GOODSNAME := trim(FieldByName('GOODSNAME').AsString);
+                    NDS := FieldByName('NDS').asCurrency;
+                    AMOUNT := FieldByName('AMOUNT').asCurrency;
+                    PRICE := FieldByName('PRICE').asCurrency;
+                    // ***20.07.16
+                    PRICESALE := FieldByName('PRICESALE').asCurrency;
+                    CHPERCENT := FieldByName('CHPERCENT').asCurrency;
+                    SUMMCH := FieldByName('SUMMCH').asCurrency;
+                    // ***19.08.16
+                    AMOUNTORD := FieldByName('AMOUNTORD').asCurrency;
+                    // ***10.08.16
+                    LIST_UID := trim(FieldByName('LIST_UID').AsString);
+                  End;
+                End;
                 FLocalDataBaseBody.Next;
               End;
-              FLocalDataBaseHead.Pack;
-              FLocalDataBaseBody.Pack;
+            End;
+          finally
+            FLocalDataBaseHead.Active := False;
+            FLocalDataBaseBody.Active := False;
+            Add_Log('End MutexDBF 803');
+            ReleaseMutex(MutexDBF);
+          end; // Загрузили чек в head and body
+
+          // т.е. чек можно потом удалить из ДБФ
+          fError_isComplete := False; // 04.02.2017
+
+          if Find AND NOT Head.SAVE then
+          Begin
+            dsdSave := TdsdStoredProc.Create(nil);
+            try
+              try
+                // Проверить в каком состоянии документ.
+                dsdSave.StoredProcName := 'gpGet_Movement_CheckState';
+                dsdSave.OutputType := otResult;
+                dsdSave.Params.Clear;
+                dsdSave.Params.AddParam('inId', ftInteger, ptInput, Head.ID);
+                dsdSave.Params.AddParam('outState', ftInteger, ptOutput, Null);
+                dsdSave.Execute(False, False);
+                if VarToStr(dsdSave.Params.ParamByName('outState').Value) = '2' then // проведен
+                Begin
+                  Add_Log('CheckState: Чек '+ IntToStr(Head.ID) +'уже проведен');
+                  Head.SAVE := True;
+                  Head.NEEDCOMPL := False;
+
+                  Add_Log('Start MutexDBF 906');
+                  WaitForSingleObject(MutexDBF, INFINITE);
+                  try
+                    FLocalDataBaseHead.Active := True;
+                    if FLocalDataBaseHead.Locate('ID', Head.ID, []) then
+                    Begin
+                      FLocalDataBaseHead.Edit;
+                      FLocalDataBaseHead.FieldByName('NEEDCOMPL').AsBoolean := false;
+                      FLocalDataBaseHead.FieldByName('SAVE').AsBoolean := true;
+                      FLocalDataBaseHead.Post;
+                      FNEEDCOMPL := false;
+                      FSAVE := true;
+                    End;
+                  finally
+                    FLocalDataBaseHead.Active := False;
+                    Add_Log('End MutexDBF 906');
+                    ReleaseMutex(MutexDBF);
+                  end;
+
+                  // т.е. чек НЕЛЬЗЯ потом удалить из ДБФ
+                  fError_isComplete := True; // 04.02.2017
+                End
+                else
+                // Если не проведен
+                Begin
+                  if VarToStr(dsdSave.Params.ParamByName('outState').Value) = '3' then // Удален
+                  Begin
+                    dsdSave.StoredProcName := 'gpUnComplete_Movement_Check';
+                    dsdSave.OutputType := otResult;
+                    dsdSave.Params.Clear;
+                    dsdSave.Params.AddParam('inMovementId', ftInteger, ptInput, Head.ID);
+                    dsdSave.Execute(False, False);
+                  end;
+                  // сохранил шапку
+                  dsdSave.StoredProcName := 'gpInsertUpdate_Movement_Check_ver2';
+                  dsdSave.OutputType := otResult;
+                  dsdSave.Params.Clear;
+                  dsdSave.Params.AddParam('ioId', ftInteger, ptInputOutput, Head.ID);
+                  dsdSave.Params.AddParam('inDate', ftDateTime, ptInput, Head.DATE);
+                  dsdSave.Params.AddParam('inCashRegister', ftString, ptInput, Head.CASH);
+                  dsdSave.Params.AddParam('inPaidType', ftInteger, ptInput, Head.PAIDTYPE);
+                  dsdSave.Params.AddParam('inManagerId', ftInteger, ptInput, Head.MANAGER);
+                  dsdSave.Params.AddParam('inBayer', ftString, ptInput, Head.BAYER);
+                  dsdSave.Params.AddParam('inFiscalCheckNumber', ftString, ptInput, Head.FISCID);
+                  dsdSave.Params.AddParam('inNotMCS', ftBoolean, ptInput, Head.NOTMCS);
+                  // ***20.07.16
+                  dsdSave.Params.AddParam('inDiscountExternalId', ftInteger, ptInput, Head.DISCOUNTID);
+                  dsdSave.Params.AddParam('inDiscountCardNumber', ftString, ptInput, Head.DISCOUNT);
+                  // ***16.08.16
+                  dsdSave.Params.AddParam('inBayerPhone', ftString, ptInput, Head.BAYERPHONE);
+                  dsdSave.Params.AddParam('inConfirmedKindName', ftString, ptInput, Head.CONFIRMED);
+                  dsdSave.Params.AddParam('inInvNumberOrder', ftString, ptInput, Head.NUMORDER);
+                  // ***08.04.17
+                  dsdSave.Params.AddParam('inPartnerMedicalId', ftInteger, ptInput, Head.PMEDICALID);
+                  dsdSave.Params.AddParam('inAmbulance', ftString, ptInput, Head.AMBULANCE);
+                  dsdSave.Params.AddParam('inMedicSP', ftString, ptInput, Head.MEDICSP);
+                  dsdSave.Params.AddParam('inInvNumberSP', ftString, ptInput, Head.INVNUMSP);
+                  dsdSave.Params.AddParam('inOperDateSP', ftDateTime, ptInput, Head.OPERDATESP);
+                  // ***15.06.17
+                  dsdSave.Params.AddParam('inSPKindId', ftInteger, ptInput, Head.SPKINDID);
+                  // ***05.02.18
+                  dsdSave.Params.AddParam('inPromoCodeId', ftInteger, ptInput, Head.PROMOCODE);
+                  // ***24.01.17
+                  dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
+
+                  dsdSave.Execute(False, False);
+                  // сохранили в локальной базе полученный номер
+                  if Head.ID <> StrToInt(dsdSave.Params.ParamByName('ioID').AsString) then
+                  Begin
+                    Head.ID := StrToInt(dsdSave.Params.ParamByName('ioID').AsString);
+                    Add_Log('Start MutexDBF 976');
+                    WaitForSingleObject(MutexDBF, INFINITE);
+                    try
+                      FLocalDataBaseHead.Active := True;
+                      if LocateUID(UID, FSAVE) AND not FLocalDataBaseHead.Deleted then
+                      Begin
+                        FLocalDataBaseHead.Edit;
+                        FLocalDataBaseHead.FieldByName('ID').AsInteger := Head.ID;
+                        FLocalDataBaseHead.Post;
+                      End;
+                    finally
+                      FLocalDataBaseHead.Active := False;
+                      Add_Log('End MutexDBF 976');
+                      ReleaseMutex(MutexDBF);
+                    end;
+                  end;
+
+                  // сохранил тело
+
+                  dsdSave.StoredProcName := 'gpInsertUpdate_MovementItem_Check_ver2';
+                  dsdSave.OutputType := otResult;
+                  dsdSave.Params.Clear;
+                  dsdSave.Params.AddParam('ioId', ftInteger, ptInputOutput, Null);
+                  dsdSave.Params.AddParam('inMovementId', ftInteger, ptInput, Head.ID);
+                  dsdSave.Params.AddParam('inGoodsId', ftInteger, ptInput, Null);
+                  dsdSave.Params.AddParam('inAmount', ftFloat, ptInput, Null);
+                  dsdSave.Params.AddParam('inPrice', ftFloat, ptInput, Null);
+                  // ***20.07.16
+                  dsdSave.Params.AddParam('inPriceSale', ftFloat, ptInput, Null);
+                  dsdSave.Params.AddParam('inChangePercent', ftFloat, ptInput, Null);
+                  dsdSave.Params.AddParam('inSummChangePercent', ftFloat, ptInput, Null);
+                  // ***19.08.16
+                  // dsdSave.Params.AddParam('inAmountOrder',ftFloat,ptInput,Null);
+                  // ***10.08.16
+                  dsdSave.Params.AddParam('inList_UID', ftString, ptInput, Null);
+                  //
+                  dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
+
+                  for I := 0 to Length(Body) - 1 do
+                  Begin
+                    dsdSave.ParamByName('ioId').Value := Body[I].ID;
+                    dsdSave.ParamByName('inGoodsId').Value := Body[I].GOODSID;
+                    dsdSave.ParamByName('inAmount').Value := Body[I].AMOUNT;
+                    dsdSave.ParamByName('inPrice').Value := Body[I].PRICE;
+                    // ***20.07.16
+                    dsdSave.ParamByName('inPriceSale').Value := Body[I].PRICESALE;
+                    dsdSave.ParamByName('inChangePercent').Value := Body[I].CHPERCENT;
+                    dsdSave.ParamByName('inSummChangePercent').Value := Body[I].SUMMCH;
+                    // ***19.08.16
+                    // dsdSave.ParamByName('inAmountOrder').Value :=  Body[I].AMOUNTORD;
+                    // ***10.08.16
+                    dsdSave.ParamByName('inList_UID').Value := Body[I].LIST_UID;
+                    //
+
+                    Add_Log('Start Execute gpInsertUpdate_MovementItem_Check_ver2');
+                    dsdSave.Execute(False, False); // сохринили на сервере
+                    Add_Log('End Execute gpInsertUpdate_MovementItem_Check_ver2');
+                    if Body[I].ID <> StrToInt(dsdSave.ParamByName('ioId').AsString) then
+                    Begin
+                      Body[I].ID := StrToInt(dsdSave.ParamByName('ioId').AsString);
+                      Add_Log('Start MutexDBF 1034');
+                      WaitForSingleObject(MutexDBF, INFINITE);
+                      try
+                        FLocalDataBaseBody.Active := True;
+                        FLocalDataBaseBody.First;
+                        while not FLocalDataBaseBody.eof do
+                        Begin
+                          if (trim(FLocalDataBaseBody.FieldByName('CH_UID').AsString) = UID) AND not FLocalDataBaseBody.Deleted AND
+                            (FLocalDataBaseBody.FieldByName('GOODSID').AsInteger = Body[I].GOODSID) then
+                          Begin
+                            FLocalDataBaseBody.Edit;
+                            FLocalDataBaseBody.FieldByName('ID').AsInteger := Body[I].ID;
+                            FLocalDataBaseBody.Post; // сохранили в файле
+                            break;
+                          End;
+                          FLocalDataBaseBody.Next;
+                        End;
+                      finally
+                        FLocalDataBaseBody.Active := False;
+                        Add_Log('End MutexDBF 1034');
+                        ReleaseMutex(MutexDBF);
+                      end;
+                    End;
+                  End; // обработали все позиции товара в чеке
+                  Head.SAVE := True;
+                  Add_Log('Start MutexDBF 1059');
+                  WaitForSingleObject(MutexDBF, INFINITE);
+                  try
+                    FLocalDataBaseHead.Active := True;
+                    if LocateUID(UID, FSAVE) AND not FLocalDataBaseHead.Deleted then
+                    Begin
+                      FLocalDataBaseHead.Edit;
+                      FLocalDataBaseHead.FieldByName('SAVE').AsBoolean := True;
+                      FLocalDataBaseHead.Post;
+                      FSAVE := True;
+                    End;
+                  finally
+                    FLocalDataBaseHead.Active := False;
+                    Add_Log('End MutexDBF 1059');
+                    ReleaseMutex(MutexDBF);
+                  end;
+                End; // обработали чек с товарами
+              except
+                ON E: Exception do
+                Begin
+                  Add_Log('InsertUpdate Check: ' + E.Message);
+                  FHasError := true;
+                  if gc_User.Local then
+                  begin
+                    tiServise.BalloonHint := 'Останавливаем проведение чеков';
+                    tiServise.ShowBalloonHint;
+                    Exit;
+                  end;
+                  // -nw               SendError(E.Message);
+                End;
+              end;
             finally
-              FLocalDataBaseHead.Active := False;
-              FLocalDataBaseBody.Active := False;
-              ReleaseMutex(MutexDBF);
+              freeAndNil(dsdSave);
             end;
-          End;
-        end;
-        // если проводить не нужно и если можно ... 04.02.2017
+          end;
+          // если необходимо провести чек
+          if Find AND Head.SAVE AND Head.NEEDCOMPL then
+          Begin
+            dsdSave := TdsdStoredProc.Create(nil);
+            try
+              dsdSave.StoredProcName := 'gpComplete_Movement_Check_ver2_NoDiff';
+              dsdSave.OutputType := otResult;
+              dsdSave.Params.Clear;
+              dsdSave.Params.AddParam('inMovementId', ftInteger, ptInput, Head.ID);
+              dsdSave.Params.AddParam('inPaidType', ftInteger, ptInput, Head.PAIDTYPE);
+              dsdSave.Params.AddParam('inCashRegister', ftString, ptInput, Head.CASH);
+              dsdSave.Params.AddParam('inCashSessionId', ftString, ptInput, FormParams.ParamByName('CashSessionId').Value);
+              dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
+              try
+                dsdSave.Execute(False, False);
+                Head.COMPL := True;
+              except
+                on E: Exception do
+                Begin
+                  Add_Log('Complete NoDIFF: ' + E.Message);
+                  // -nw                 SendError(E.Message);
+                  FHasError := true;
+                  if gc_User.Local then
+                  begin
+                    tiServise.BalloonHint := 'Останавливаем проведение чеков';
+                    tiServise.ShowBalloonHint;
+                    Exit;
+                  end;
+                End;
+              end;
+            finally
+              freeAndNil(dsdSave);
+            end;
+            // удаляем проведенный чек - если можно ... 04.02.2017
+            if Head.COMPL { AND (fError_isComplete = FALSE) } // 04.07.17 - !!!временно убрал!!!
+            then
+            Begin
+              Add_Log('Start MutexDBF 1131');
+              WaitForSingleObject(MutexDBF, INFINITE);
+              try
+                FLocalDataBaseHead.Active := True;
+                FLocalDataBaseBody.Active := True;
+                if LocateUID(UID, FSAVE) AND not FLocalDataBaseHead.Deleted then
+                  FLocalDataBaseHead.DeleteRecord;
+                FLocalDataBaseBody.First;
+                while not FLocalDataBaseBody.eof do
+                Begin
+                  IF (trim(FLocalDataBaseBody.FieldByName('CH_UID').AsString) = UID) AND not FLocalDataBaseBody.Deleted then
+                    FLocalDataBaseBody.DeleteRecord;
+                  FLocalDataBaseBody.Next;
+                End;
+                FLocalDataBaseHead.Pack;
+                FLocalDataBaseBody.Pack;
+              finally
+                FLocalDataBaseHead.Active := False;
+                FLocalDataBaseBody.Active := False;
+                Add_Log('End MutexDBF 1131');
+                ReleaseMutex(MutexDBF);
+              end;
+            End;
+          end;
+          // если проводить не нужно и если можно ... 04.02.2017
 
-        WaitForSingleObject(MutexDBF, INFINITE);
-        FLocalDataBaseHead.Active := True;
-        FLocalDataBaseHead.First;
-        FLocalDataBaseHead.Active := False;
-        ReleaseMutex(MutexDBF);
+  //        WaitForSingleObject(MutexDBF, INFINITE);
+  //        try
+  //          FLocalDataBaseHead.Active := True;
+  //          FLocalDataBaseHead.First;
+  //          FLocalDataBaseHead.Active := False;
+  //        finally
+  //          ReleaseMutex(MutexDBF);
+  //        end;
+        End;
       End;
-    End;
 
-    // получаем Diff
-    if not ExistNotCompletedCheck and FirstRemainsReceived then
-    begin
-      tiServise.Hint := 'Получение разницы в остатках';
-      Application.ProcessMessages;
-      WaitForSingleObject(MutexRemains, INFINITE);
-      try
-        try
-          MainCashForm2.spSelect_CashRemains_Diff.Execute(False, False, False);
-          DiffCDS.First;
-          if DiffCDS.FieldCount > 0 then
-          begin
-            WaitForSingleObject(MutexDBFDiff, INFINITE);
-            FLocalDataBaseDiff.Open;
-            while not DiffCDS.eof do
-            begin
-              FLocalDataBaseDiff.Append;
-              FLocalDataBaseDiff.Fields[0].AsString := DiffCDS.Fields[0].AsString;
-              FLocalDataBaseDiff.Fields[1].AsString := DiffCDS.Fields[1].AsString;
-              FLocalDataBaseDiff.Fields[2].AsString := DiffCDS.Fields[2].AsString;
-              FLocalDataBaseDiff.Fields[3].AsString := DiffCDS.Fields[3].AsString;
-              FLocalDataBaseDiff.Fields[4].AsString := DiffCDS.Fields[4].AsString;
-              FLocalDataBaseDiff.Fields[5].AsString := DiffCDS.Fields[5].AsString;
-              FLocalDataBaseDiff.Fields[6].AsString := DiffCDS.Fields[6].AsString;
-              FLocalDataBaseDiff.Fields[7].AsString := DiffCDS.Fields[7].AsString;
-              FLocalDataBaseDiff.Post;
-              DiffCDS.Next;
-            end;
-            FLocalDataBaseDiff.Close;
-            ReleaseMutex(MutexDBFDiff);
-            // Отправка сообщения приложению про надобность обновить остатки из файла
-            PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 1);
-          end;
-        except on E: Exception do
-          begin
-            Add_Log('Receiving DIFF: ' + E.Message);
-
-            if gc_User.Local then
-            begin
-              tiServise.BalloonHint := 'Останавливаем проведение чеков';
-              tiServise.ShowBalloonHint;
-              Exit;
-            end;
-          end;
-        end;
-      finally
-        ReleaseMutex(MutexRemains);
-      end;
-      WaitForSingleObject(MutexRemains, INFINITE);
-      SaveLocalData(MainCashForm2.RemainsCDS, Remains_lcl);
-      ReleaseMutex(MutexRemains);
-      WaitForSingleObject(MutexAlternative, INFINITE);
-      SaveLocalData(MainCashForm2.AlternativeCDS, Alternative_lcl);
-      ReleaseMutex(MutexAlternative);
-      if FNeedSaveVIP then
+      // получаем Diff
+      if not ExistNotCompletedCheck and FirstRemainsReceived then
       begin
-        MainCashForm2.SaveLocalVIP;
+        MainCashForm2.tiServise.IconIndex := 3;
+        tiServise.Hint := 'Получение разницы в остатках';
+        Application.ProcessMessages;
+        Add_Log('Start MutexRemains 1173');
+        WaitForSingleObject(MutexRemains, INFINITE);
+        try
+          try
+            Add_Log('Receiving DIFF: Получаем разницу');
+            MainCashForm2.spSelect_CashRemains_Diff.Execute(False, False, False);
+            Add_Log('Receiving DIFF: Получили записей: '+ IntToStr(DiffCDS.RecordCount));
+            DiffCDS.First;
+            if DiffCDS.FieldCount > 0 then
+            begin
+              Add_Log('Start MutexDBFDiff 1184');
+              WaitForSingleObject(MutexDBFDiff, INFINITE);
+              try
+                Add_Log('Receiving DIFF: Заполняем DBFDiff');
+                FLocalDataBaseDiff.Open;
+                while not DiffCDS.eof do
+                begin
+                  FLocalDataBaseDiff.Append;
+                  FLocalDataBaseDiff.Fields[0].AsString := DiffCDS.Fields[0].AsString;
+                  FLocalDataBaseDiff.Fields[1].AsString := DiffCDS.Fields[1].AsString;
+                  FLocalDataBaseDiff.Fields[2].AsString := DiffCDS.Fields[2].AsString;
+                  FLocalDataBaseDiff.Fields[3].AsString := DiffCDS.Fields[3].AsString;
+                  FLocalDataBaseDiff.Fields[4].AsString := DiffCDS.Fields[4].AsString;
+                  FLocalDataBaseDiff.Fields[5].AsString := DiffCDS.Fields[5].AsString;
+                  FLocalDataBaseDiff.Fields[6].AsString := DiffCDS.Fields[6].AsString;
+                  FLocalDataBaseDiff.Fields[7].AsString := DiffCDS.Fields[7].AsString;
+                  FLocalDataBaseDiff.Post;
+                  DiffCDS.Next;
+                end;
+              finally
+                Add_Log('End MutexDBFDiff 1184');
+                FLocalDataBaseDiff.Close;
+                ReleaseMutex(MutexDBFDiff);
+              end;
+              // Отправка сообщения приложению про надобность обновить остатки из файла
+              PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 1);
+            end;
+          except on E: Exception do
+            begin
+              Add_Log('Receiving DIFF: ' + E.Message);
+              Add_Log(IntToStr(GetLastError) + ' - ' + SysErrorMessage(GetLastError));
+              FHasError := true;
+              if gc_User.Local then
+              begin
+                tiServise.BalloonHint := 'Останавливаем проведение чеков';
+                tiServise.ShowBalloonHint;
+                Exit;
+              end;
+            end;
+          end;
+        finally
+          Add_Log('End MutexRemains 1173');
+          ReleaseMutex(MutexRemains);
+        end;
+        Add_Log('Start MutexRemains 1228');
+        WaitForSingleObject(MutexRemains, INFINITE);
+        try
+          SaveLocalData(MainCashForm2.RemainsCDS, Remains_lcl);
+        finally
+          Add_Log('End MutexRemains 1228');
+          ReleaseMutex(MutexRemains);
+        end;
+        Add_Log('Start MutexRemains 1236');
+        WaitForSingleObject(MutexAlternative, INFINITE);
+        try
+          SaveLocalData(MainCashForm2.AlternativeCDS, Alternative_lcl);
+        finally
+          Add_Log('End MutexRemains 1236');
+          ReleaseMutex(MutexAlternative);
+        end;
+        if FNeedSaveVIP then
+        begin
+          MainCashForm2.SaveLocalVIP;
+        end;
       end;
+    finally
+      tiServise.Hint := '';
+      Add_Log('End MutexAllowed 734');
+      ReleaseMutex(MutexAllowedConduct);
+      Add_Log('End MutexRefresh 732');
+      ReleaseMutex(MutexRefresh);
     end;
   finally
+    FSaveRealAllRunning := false;
+    MainCashForm2.tiServise.IconIndex := GetTrayIcon;
     Add_Log('SaveReal end');
-    tiServise.Hint := '';
-    ReleaseMutex(MutexAllowedConduct);
-    ReleaseMutex(MutexRefresh);
-    MainCashForm2.tiServise.IconIndex := 0;
   end;
+end;
+
+function TMainCashForm2.GetTrayIcon: integer;
+begin
+  if gc_User.Local then
+    Result := 5
+  else
+    Result := 0;
 end;
 
 // что б отловить ошибки - запишим в лог чек - во время пробития чека через ЭККА
 procedure TMainCashForm2.Add_Log(AMessage: String);
 var F: TextFile;
 begin
+  if Pos('zc_enum_globalconst_connectparam', AMessage) > 0 then Exit;
+  if Pos('gpselect_object_reportexternal', AMessage) > 0 then Exit;
+  if Pos('zc_enum_globalconst_connectparam', AMessage) > 0 then Exit;
+  if Pos('Mutex', AMessage) > 0 then
+    AMessage := '     ' + AMessage;
   try
     AssignFile(F,ChangeFileExt(Application.ExeName,'.log'));
     if not fileExists(ChangeFileExt(Application.ExeName,'.log')) then
@@ -1131,6 +1314,7 @@ end;
 
 procedure TMainCashForm2.FormDestroy(Sender: TObject);
 begin
+ Add_Log('== Close');
  CloseHandle(MutexDBF);
  CloseHandle(MutexDBFDiff);
  CloseHandle(MutexVip);
