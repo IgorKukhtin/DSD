@@ -128,34 +128,34 @@ type
     actDoLoad: TExecuteImportSettingsAction;
     macStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
-    macPrintTwo: TMultiAction;
-    actPrintTwo: TdsdPrintAction;
+    macPrintJPG: TMultiAction;
+    actPrintJPG: TdsdPrintAction;
     bbPrintTwo: TdxBarButton;
-    spSelectPrintLen: TdsdStoredProc;
-    macPrintTwoLen: TMultiAction;
-    actPrintTwoLen: TdsdPrintAction;
+    macPrintJPGLen: TMultiAction;
+    actPrintJPGLen: TdsdPrintAction;
     bbPrintTwoLen: TdxBarButton;
     Panel1: TPanel;
     deDateStart: TcxDateEdit;
-    deDateUpack: TcxDateEdit;
+    deDatePack: TcxDateEdit;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
     edPartion: TcxLabel;
-    edIsDataProduction: TcxCheckBox;
-    edIsTara: TcxCheckBox;
-    edIsGoodsName: TcxCheckBox;
-    edIsDataTara: TcxCheckBox;
-    edIsDataPartion: TcxCheckBox;
-    ceNumUpack: TcxCurrencyEdit;
+    cbStartEnd: TcxCheckBox;
+    cbTare: TcxCheckBox;
+    cbGoodsName: TcxCheckBox;
+    cbPartion: TcxCheckBox;
+    ceNumPack: TcxCurrencyEdit;
     cxLabel4: TcxLabel;
     deDateProduction: TcxDateEdit;
     cxLabel5: TcxLabel;
     ceNumTech: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
-    deDateTara: TcxDateEdit;
+    deDateTare: TcxDateEdit;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     InsertProperty: TdsdInsertUpdateAction;
+    spSelectPrintJPG: TdsdStoredProc;
+    spSelectPrintJPGLen: TdsdStoredProc;
 
   private
     { Private declarations }
