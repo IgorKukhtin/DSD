@@ -49,6 +49,7 @@ RETURNS TABLE (MovementId     Integer
              , JuridicalAddress   TVarChar
              , OKPO               TVarChar
              , MainName           TVarChar
+             , MainName_Cut       TVarChar
              , AccounterName      TVarChar
              , INN                TVarChar
              , NumberVAT          TVarChar
@@ -496,6 +497,7 @@ BEGIN
                          , ObjectHistory_JuridicalDetails.JuridicalAddress
                          , ObjectHistory_JuridicalDetails.OKPO
                          , ObjectHistory_JuridicalDetails.MainName
+                         , ObjectHistory_JuridicalDetails.MainName_Cut
                          , ObjectHistory_JuridicalDetails.AccounterName
                          , ObjectHistory_JuridicalDetails.INN
                          , ObjectHistory_JuridicalDetails.NumberVAT
@@ -663,6 +665,7 @@ BEGIN
              , tmpParam.JuridicalAddress
              , tmpParam.OKPO
              , tmpParam.MainName
+             , COALESCE (tmpParam.MainName_Cut, tmpParam.MainName) :: TVarChar  AS MainName_Cut
              , tmpParam.AccounterName
              , tmpParam.INN
              , tmpParam.NumberVAT

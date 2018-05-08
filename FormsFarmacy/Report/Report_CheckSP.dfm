@@ -430,6 +430,17 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             Options.Editing = False
             Width = 155
           end
+          object MainName_Cut: TcxGridDBColumn
+            Caption = #1044#1080#1088#1077#1082#1090#1086#1088' ('#1057#1043')'
+            DataBinding.FieldName = 'MainName_Cut'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1041#1091#1093#1075#1072#1083#1090#1077#1088' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 155
+          end
           object AccounterName: TcxGridDBColumn
             Caption = #1041#1091#1093#1075#1072#1083#1090#1077#1088' ('#1057#1043')'
             DataBinding.FieldName = 'AccounterName'

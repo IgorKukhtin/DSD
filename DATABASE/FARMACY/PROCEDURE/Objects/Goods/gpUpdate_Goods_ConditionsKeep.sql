@@ -46,7 +46,9 @@ BEGIN
 
      -- пытаемся найти "условие хранения" 
      -- если не находим записывае новый элемент в справочник
-     vbConditionsKeepId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ConditionsKeep() AND UPPER (TRIM(Object.ValueData)) LIKE UPPER (TRIM(inConditionsKeepName)) );
+     vbConditionsKeepId := (SELECT Object.Id FROM Object 
+                            WHERE Object.DescId = zc_Object_ConditionsKeep() AND UPPER (TRIM(Object.ValueData)) LIKE UPPER (TRIM(inConditionsKeepName)) );
+     
      IF COALESCE (vbConditionsKeepId, 0) = 0 AND COALESCE (inConditionsKeepName, '')<> ''
      THEN
         -- записываем новый элемент
@@ -68,7 +70,8 @@ BEGIN
      -- сохранили свойство <условие хранения> у товара сети
      -- если пустое значение записываем всегда, иначе смотрим на вх.параметр inisUpdate
         -- PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_ConditionsKeep(), ObjectLink_Child_R.ChildObjectId, vbConditionsKeepId);
-        PERFORM CASE WHEN COALESCE (ObjectLink_Goods_ConditionsKeep.ChildObjectId,0) = 0 OR inisUpdate = TRUE
+ 
+ /*       PERFORM CASE WHEN COALESCE (ObjectLink_Goods_ConditionsKeep.ChildObjectId,0) = 0 OR inisUpdate = TRUE
                      THEN lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_ConditionsKeep(), ObjectLink_Child_R.ChildObjectId, vbConditionsKeepId)
                 END
         FROM ObjectLink AS ObjectLink_Goods_Object
@@ -99,7 +102,56 @@ BEGIN
                               AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
         WHERE ObjectLink_Goods_Object.ObjectId = vbId
           AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object();
-   
+ */
+        PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_ConditionsKeep(), tmp.GoodsId, vbConditionsKeepId)
+        FROM (
+              with 
+                 tmpObjectLink AS (select ObjectLink_Child_R.ChildObjectId
+                                   FROM ObjectLink AS ObjectLink_Goods_Object
+                                     -- получаем GoodsMainId
+                                     INNER JOIN ObjectLink AS ObjectLink_Child1
+                                                           ON ObjectLink_Child1.ChildObjectId = ObjectLink_Goods_Object.ObjectId
+                                                          AND ObjectLink_Child1.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                     INNER JOIN ObjectLink AS ObjectLink_Main
+                                                           ON ObjectLink_Main.ObjectId = ObjectLink_Child1.ObjectId
+                                                          AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                     -- связь с товар сети ...
+                                     INNER JOIN ObjectLink AS ObjectLink_Main_R 
+                                                           ON ObjectLink_Main_R.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                          AND ObjectLink_Main_R.DescId     = zc_ObjectLink_LinkGoods_GoodsMain()
+                                     INNER JOIN ObjectLink AS ObjectLink_Child_R 
+                                                           ON ObjectLink_Child_R.ObjectId = ObjectLink_Main_R.ObjectId
+                                                          AND ObjectLink_Child_R.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                   WHERE ObjectLink_Goods_Object.ObjectId = vbId
+                                            AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                   )
+                     
+               , tmpOL_Object AS (SELECT ObjectLink.*
+                                  FROM ObjectLink
+                                       INNER JOIN Object AS Object_Retail
+                                                         ON Object_Retail.Id = ObjectLink.ChildObjectId
+                                                        AND Object_Retail.DescId = zc_Object_Retail()
+                                  WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpObjectLink.ChildObjectId FROM tmpObjectLink)
+                                    AND ObjectLink.DescId = zc_ObjectLink_Goods_Object()
+                                 )
+              
+               , tmpOL_ConditionsKeep AS (SELECT ObjectLink.*
+                                          FROM ObjectLink
+                                          WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpObjectLink.ChildObjectId FROM tmpObjectLink)
+                                            AND ObjectLink.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+                                         )
+              
+              SELECT tmpObjectLink.ChildObjectId  AS GoodsId
+              FROM tmpObjectLink
+                 --торговая сеть
+                 INNER JOIN tmpOL_Object AS ObjectLink_Goods_Object1
+                                         ON ObjectLink_Goods_Object1.ObjectId = tmpObjectLink.ChildObjectId
+                                  
+                 LEFT JOIN tmpOL_ConditionsKeep AS ObjectLink_Goods_ConditionsKeep 
+                                                ON ObjectLink_Goods_ConditionsKeep.ObjectId = tmpObjectLink.ChildObjectId
+              WHERE COALESCE (ObjectLink_Goods_ConditionsKeep.ChildObjectId, 0) = 0 OR inisUpdate = TRUE
+              ) AS tmp
+                  ;  
 
     -- сохранили протокол
     PERFORM lpInsert_ObjectProtocol (vbId, vbUserId);
@@ -110,7 +162,8 @@ LANGUAGE plpgsql VOLATILE;
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.05.18         *
  07.01.17         *
 */
 
