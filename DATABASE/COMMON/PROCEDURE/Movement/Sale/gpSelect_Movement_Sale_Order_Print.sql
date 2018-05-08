@@ -27,6 +27,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
+     -- Нашли Продажу
      SELECT Movement.Id
             INTO vbMovementId
      FROM MovementLinkMovement
@@ -37,8 +38,30 @@ BEGIN
        AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
 
      ;
+
      -- % отклонения
-     vbDiffTax := 25;
+     vbDiffTax := (WITH tmpBranch AS (SELECT COALESCE (OL_Branch.ChildObjectId, zc_Branch_Basis()) AS BranchId
+                                      FROM MovementLinkObject AS MLO
+                                           LEFT JOIN ObjectLink AS OL_Branch
+                                                                ON OL_Branch.ObjectId = MLO.ObjectId
+                                                               AND OL_Branch.DescId   = zc_ObjectLink_Unit_Branch()
+                                      WHERE MLO.MovementId = vbMovementId
+                                        AND MLO.DescId     = zc_MovementLinkObject_From()
+                                     )
+                      , tmpToolsWeighing_Branch AS (SELECT Object_ToolsWeighing_View.*
+                                                    FROM Object_ToolsWeighing_View
+                                                    WHERE Object_ToolsWeighing_View.Name = 'BranchId'
+                                                   )
+               , tmpToolsWeighing_DiffSaleOrder AS (SELECT Object_ToolsWeighing_View.*
+                                                    FROM Object_ToolsWeighing_View
+                                                    WHERE Object_ToolsWeighing_View.Name = 'DiffSaleOrder'
+                                                   )
+                   SELECT COALESCE (zfConvert_StringToFloat(tmpToolsWeighing_DiffSaleOrder.Valuedata), 11)
+                   FROM tmpBranch
+                        LEFT JOIN tmpToolsWeighing_Branch        ON tmpToolsWeighing_Branch.ValueData       = tmpBranch.BranchId :: TVarChar
+                        LEFT JOIN tmpToolsWeighing_DiffSaleOrder ON tmpToolsWeighing_DiffSaleOrder.ParentId = tmpToolsWeighing_Branch.ParentId
+                        
+                  );
      
     --
     OPEN Cursor1 FOR

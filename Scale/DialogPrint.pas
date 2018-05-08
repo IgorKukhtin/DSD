@@ -25,6 +25,7 @@ type
     cbPrintTax: TCheckBox;
     cbPrintPreview: TCheckBox;
     cbPrintPackGross: TCheckBox;
+    cbPrintDiffOrder: TCheckBox;
     procedure cbPrintTransportClick(Sender: TObject);
     procedure cbPrintQualityClick(Sender: TObject);
     procedure cbPrintTaxClick(Sender: TObject);
@@ -52,6 +53,7 @@ begin
      else cbPrintMovement.Checked:= isMovement;
      //
      cbPrintPackGross.Checked:= FALSE;
+     cbPrintDiffOrder.Checked:= FALSE;//(MovementDescId=zc_Movement_Sale)or(MovementDescId=zc_Movement_SendOnPrice);
      //
      cbPrintAccount.Enabled:=(SettingMain.isCeh = FALSE);//or(MovementDescId=zc_Movement_Sale)or(MovementDescId<>zc_Movement_SendOnPrice);
      cbPrintTransport.Enabled:=cbPrintAccount.Enabled;
@@ -59,6 +61,7 @@ begin
      cbPrintPack.Enabled:=cbPrintAccount.Enabled;
      cbPrintSpec.Enabled:=cbPrintAccount.Enabled;
      cbPrintTax.Enabled:=cbPrintAccount.Enabled;
+     cbPrintDiffOrder.Enabled:=cbPrintAccount.Enabled;
      //
      cbPrintAccount.Checked:=(isAccount) and (cbPrintAccount.Enabled);
      cbPrintTransport.Checked:=(isTransport) and (cbPrintTransport.Enabled);

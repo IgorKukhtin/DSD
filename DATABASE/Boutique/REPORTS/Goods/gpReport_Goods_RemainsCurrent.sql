@@ -376,6 +376,8 @@ BEGIN
                              AND inGoodsPrintId > 0
                            GROUP BY Object_GoodsPrint.UserId
                                   , Object_GoodsPrint.InsertDate
+                                  , Object_GoodsPrint.UnitId
+                                  , Object_GoodsPrint.isReprice
                           ) AS tmp
                           LEFT JOIN Object_GoodsPrint ON Object_GoodsPrint.InsertDate = tmp.InsertDate
                                                      AND Object_GoodsPrint.UserId     = inUserId

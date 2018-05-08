@@ -115,6 +115,7 @@ type
     miChangeMember: TMenuItem;
     actChangeMember: TAction;
     cbPrintPackGross: TCheckBox;
+    bbSale_Order_diffTax: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -143,6 +144,7 @@ type
     procedure bbPrint_diffClick(Sender: TObject);
     procedure bbPrint_ReestrKindClick(Sender: TObject);
     procedure actChangeMemberExecute(Sender: TObject);
+    procedure bbSale_Order_diffTaxClick(Sender: TObject);
   private
     fStartWrite:Boolean;
 
@@ -336,7 +338,7 @@ begin myCheckPrintSpec;end;
 procedure TGuideMovementForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
      if Key = VK_F8 then bbSale_Order_allClick(Self);
-     if Key = VK_F9 then bbSale_Order_diffClick(Self);
+     if Key = VK_F9 then bbSale_Order_diffTaxClick(Self);
 
     if Key=13
     then
@@ -608,12 +610,17 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.bbSale_Order_allClick(Sender: TObject);
 begin
-     with CDS do Print_Sale_Order(CDS.FieldByName('MovementId_Order').AsInteger,FieldByName('Id').AsInteger,FALSE);
+     with CDS do Print_Sale_Order(CDS.FieldByName('MovementId_Order').AsInteger,FieldByName('Id').AsInteger,FALSE,FALSE);
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.bbSale_Order_diffClick(Sender: TObject);
 begin
-     with CDS do Print_Sale_Order(CDS.FieldByName('MovementId_Order').AsInteger,FieldByName('Id').AsInteger,TRUE);
+     with CDS do Print_Sale_Order(CDS.FieldByName('MovementId_Order').AsInteger,FieldByName('Id').AsInteger,TRUE,FALSE);
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.bbSale_Order_diffTaxClick(Sender: TObject);
+begin
+     with CDS do Print_Sale_Order(CDS.FieldByName('MovementId_Order').AsInteger,FieldByName('Id').AsInteger,FALSE,TRUE);
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.bbEDI_DesadvClick(Sender: TObject);

@@ -113,7 +113,7 @@ type
   function Print_PackGross(MovementDescId,MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Transport(MovementDescId,MovementId,MovementId_sale:Integer; OperDate:TDateTime; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Quality  (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
-  function Print_Sale_Order(MovementId_order,MovementId_by:Integer; isDiff:Boolean):Boolean;
+  function Print_Sale_Order(MovementId_order,MovementId_by:Integer; isDiff:Boolean; isDiffTax:Boolean):Boolean;
 
   procedure SendEDI_Invoice (MovementId: Integer);
   procedure SendEDI_OrdSpr (MovementId: Integer);
@@ -270,11 +270,12 @@ begin
   UtilPrintForm.mactPrint_QualityDoc.Execute;
 end;
 //------------------------------------------------------------------------------------------------
-procedure Print_Sale_OrderDocument(MovementId_order,MovementId_by:Integer; isDiff:Boolean);
+procedure Print_Sale_OrderDocument(MovementId_order,MovementId_by:Integer; isDiff:Boolean; isDiffTax:Boolean);
 begin
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId_order;
   UtilPrintForm.FormParams.ParamByName('MovementId_by').Value := MovementId_by;
   UtilPrintForm.FormParams.ParamByName('inIsDiff').Value := isDiff;
+  UtilPrintForm.FormParams.ParamByName('inIsDiffTax').Value := isDiffTax;
   UtilPrintForm.actPrintSaleOrder.Execute;
 end;
 //------------------------------------------------------------------------------------------------
@@ -470,7 +471,7 @@ begin
      Result:=true;
 end;
 //------------------------------------------------------------------------------------------------
-function Print_Sale_Order(MovementId_order,MovementId_by:Integer; isDiff:Boolean):Boolean;
+function Print_Sale_Order(MovementId_order,MovementId_by:Integer; isDiff:Boolean; isDiffTax:Boolean):Boolean;
 begin
      UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
      UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
@@ -481,7 +482,7 @@ begin
           try
              //Print
              if (MovementId_order <> 0)
-             then Print_Sale_OrderDocument(MovementId_order,MovementId_by,isDiff)
+             then Print_Sale_OrderDocument(MovementId_order, MovementId_by, isDiff, isDiffTax)
              else begin ShowMessage ('Ошибка.'+#10+#13+'№ заявки не установлен.'+#10+#13+'Печать <Сравнение Заявка/Отгрузка> не сформирована.');exit;end;
           except
                 ShowMessage('Ошибка.Печать <Сравнение Заявка/Отгрузка> не сформирована.');

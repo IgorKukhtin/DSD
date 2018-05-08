@@ -493,6 +493,9 @@ $BODY$
 */
 
 /*
+-- update SoldTable set areaId = 341611 where PartnerId = 1070965
+-- select distinct areaId FROM SoldTable where PartnerId = 1070965 -- select max (operDate) FROM SoldTable where PartnerId = 1070965
+
     CREATE TEMP TABLE _tmpGoods (GoodsId Integer, TradeMarkId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpPartner (PartnerId Integer, JuridicalId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpJuridical (JuridicalId Integer) ON COMMIT DROP;

@@ -74,6 +74,10 @@ BEGIN
                                                        THEN 'TRUE'
                                                   WHEN SUBSTRING (tmp.Name FROM 1 FOR 2) = 'is'
                                                        THEN 'FALSE'
+                                                  WHEN STRPOS (tmp.Name, 'Id') > 0
+                                                       THEN '0'
+                                                  WHEN STRPOS (tmp.Name, 'DiffSaleOrder') > 0
+                                                       THEN '20'
                                                   ELSE '1'
                                              END
                                            , inSession) AS Value
@@ -97,22 +101,25 @@ BEGIN
            UNION SELECT 'isCheckDelete'          AS Name WHERE inIsCeh = FALSE
            -- UNION SELECT 'isStorageLine'          AS Name WHERE inIsCeh = TRUE
 
-           UNION SELECT 'DayPrior_PriceReturn' AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'DayPrior_PriceReturn'   AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
 
-           UNION SELECT 'isGoodsComplete'    AS Name
-           UNION SELECT 'InfoMoneyId_income' AS Name WHERE 1=0 AND inIsCeh = FALSE
-           UNION SELECT 'InfoMoneyId_sale'   AS Name WHERE 1=0 AND inIsCeh = FALSE
+           UNION SELECT 'isGoodsComplete'        AS Name
+           UNION SELECT 'InfoMoneyId_income'     AS Name WHERE 1=0 AND inIsCeh = FALSE
+           UNION SELECT 'InfoMoneyId_sale'       AS Name WHERE 1=0 AND inIsCeh = FALSE
 
-           UNION SELECT 'isBox'              AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
-           UNION SELECT 'BoxCount'           AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
-           UNION SELECT 'BoxCode'            AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'isBox'                  AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'BoxCount'               AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'BoxCode'                AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
 
-           UNION SELECT 'Exception_WeightDiff' AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'Exception_WeightDiff'   AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
 
-           UNION SELECT 'WeightSkewer1'        AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
-           UNION SELECT 'WeightSkewer2'        AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
+           UNION SELECT 'WeightSkewer1'          AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
+           UNION SELECT 'WeightSkewer2'          AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
 
            UNION SELECT 'PeriodPartionGoodsDate' AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
+
+           UNION SELECT 'BranchId'               AS Name WHERE inIsCeh = FALSE
+           UNION SELECT 'DiffSaleOrder'          AS Name WHERE inIsCeh = FALSE
 
                 ) AS tmp
            ORDER BY 1

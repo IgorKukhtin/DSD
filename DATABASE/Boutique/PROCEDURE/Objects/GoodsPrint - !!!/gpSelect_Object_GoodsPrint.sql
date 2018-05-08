@@ -50,6 +50,8 @@ BEGIN
                 FROM Object_GoodsPrint
                 GROUP BY Object_GoodsPrint.UserId
                        , Object_GoodsPrint.InsertDate
+                       , Object_GoodsPrint.UnitId
+                       , Object_GoodsPrint.isReprice
                 )
 
        SELECT

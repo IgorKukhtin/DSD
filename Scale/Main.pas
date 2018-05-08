@@ -223,6 +223,7 @@ type
     bbGuideGoodsView: TSpeedButton;
     miFont: TMenuItem;
     miLine16: TMenuItem;
+    bbSale_Order_diffTax: TSpeedButton;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -256,6 +257,7 @@ type
     procedure bbUpdatePartnerClick(Sender: TObject);
     procedure bbGuideGoodsViewClick(Sender: TObject);
     procedure miFontClick(Sender: TObject);
+    procedure bbSale_Order_diffTaxClick(Sender: TObject);
   private
     Scale_BI: TCasBI;
     Scale_DB: TCasDB;
@@ -500,6 +502,15 @@ begin
                                  , ParamsMovement.ParamByName('CountPack').AsInteger
                                  , DialogPrintForm.cbPrintPreview.Checked
                                   );
+     //
+     //PrintDiffOrder
+     if (DialogPrintForm.cbPrintDiffOrder.Checked) and (Result = TRUE)
+     then Result:=Print_Sale_Order(ParamsMovement.ParamByName('OrderExternalId').AsInteger
+                                 , ParamsMovement.ParamByName('MovementId').AsInteger
+                                 , FALSE
+                                 , TRUE
+                                  );
+
      //
      //Spec
      if (DialogPrintForm.cbPrintSpec.Checked) and (Result = TRUE)
@@ -1542,7 +1553,7 @@ end;
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
      if Key = VK_F8 then bbSale_Order_allClick(Self);
-     if Key = VK_F9 then bbSale_Order_diffClick(Self);
+     if Key = VK_F9 then bbSale_Order_diffTaxClick(Self);
 
      if Key = VK_F5 then Save_Movement_all;
      if Key = VK_F2 then GetParams_MovementDesc('');
@@ -1615,12 +1626,17 @@ end;
 {------------------------------------------------------------------------}
 procedure TMainForm.bbSale_Order_allClick(Sender: TObject);
 begin
-     with ParamsMovement do Print_Sale_Order(ParamByName('OrderExternalId').AsInteger,ParamByName('MovementId').AsInteger,FALSE);
+     with ParamsMovement do Print_Sale_Order(ParamByName('OrderExternalId').AsInteger,ParamByName('MovementId').AsInteger,FALSE,FALSE);
 end;
 {------------------------------------------------------------------------}
 procedure TMainForm.bbSale_Order_diffClick(Sender: TObject);
 begin
-     with ParamsMovement do Print_Sale_Order(ParamByName('OrderExternalId').AsInteger,ParamByName('MovementId').AsInteger,TRUE);
+     with ParamsMovement do Print_Sale_Order(ParamByName('OrderExternalId').AsInteger,ParamByName('MovementId').AsInteger,TRUE,FALSE);
+end;
+{------------------------------------------------------------------------}
+procedure TMainForm.bbSale_Order_diffTaxClick(Sender: TObject);
+begin
+     with ParamsMovement do Print_Sale_Order(ParamByName('OrderExternalId').AsInteger,ParamByName('MovementId').AsInteger,FALSE,TRUE);
 end;
 {------------------------------------------------------------------------}
 procedure TMainForm.actExitExecute(Sender: TObject);

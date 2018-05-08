@@ -69,11 +69,16 @@ RETURNS TABLE (BrandName             VarChar (100)
                -- Перемещение
              , SendIn_Amount         TFloat
              , SendOut_Amount        TFloat
+             , SendIn_Summ           TFloat
+             , SendOut_Summ          TFloat
 
                -- Кол-во: Списание + Возврат поставщ.
              , Loss_Amount           TFloat
+
                -- Кол-во Остаток - "долг"
              , Debt_Amount           TFloat
+               -- Сумма Остаток - "долг"
+             , Debt_Summ             TFloat
 
                -- Кол-во продажа - с учетом "долга"
              , Sale_Amount           TFloat
@@ -396,12 +401,15 @@ BEGIN
                                 , 0 AS SendIn_Amount
                                 , 0 AS SendOut_Amount
                                 , 0 AS SendIn_Summ
+                                , 0 AS SendOut_Summ
 
                                   -- Кол-во: Списание + Возврат поставщ.
                                 , 0 AS Loss_Amount
 
                                   -- Кол-во: Долг
                                 , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() THEN MIConatiner.Amount ELSE 0 END) AS Debt_Amount
+                                  -- Сумма: Долг
+                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() THEN MIConatiner.Amount * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END ELSE 0 END) AS Debt_Summ
 
                                   -- Кол-во: Только Продажа
                                 , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount < 0 AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END) :: TFloat AS Sale_Amount
@@ -657,12 +665,15 @@ BEGIN
                                 , 0 AS SendIn_Amount
                                 , 0 AS SendOut_Amount
                                 , 0 AS SendIn_Summ
+                                , 0 AS SendOut_Summ
 
                                   -- Кол-во: Списание + Возврат поставщ.
                                 , COALESCE (tmpReturnOut.Amount, 0) AS Loss_Amount
 
                                   -- Кол-во: Долг
                                 , 0 AS Debt_Amount
+                                  -- Сумма: Долг
+                                , 0 AS Debt_Summ
 
                                   -- Кол-во: Только Продажа
                                 , 0 AS Sale_Amount
@@ -784,12 +795,15 @@ BEGIN
                                 , CASE WHEN tmp.Send_Amount > 0 THEN  1 * tmp.Send_Amount ELSE 0 END AS SendIn_Amount
                                 , CASE WHEN tmp.Send_Amount < 0 THEN -1 * tmp.Send_Amount ELSE 0 END AS SendOut_Amount
                                 , CASE WHEN tmp.Send_Amount > 0 THEN  1 * tmp.Send_Amount * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END ELSE 0 END AS SendIn_Summ
+                                , CASE WHEN tmp.Send_Amount < 0 THEN -1 * tmp.Send_Amount * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END ELSE 0 END AS SendOut_Summ
 
                                   -- Кол-во: Списание + Возврат поставщ.
                                 , 0 AS Loss_Amount
 
                                   -- Кол-во: Долг
                                 , 0 AS Debt_Amount
+                                  -- Сумма: Долг
+                                , 0 AS Debt_Summ
 
                                   -- Кол-во: Только Продажа
                                 , 0 AS Sale_Amount
@@ -908,11 +922,16 @@ BEGIN
                             , SUM (tmpData_all.SendIn_Amount)       AS SendIn_Amount
                             , SUM (tmpData_all.SendOut_Amount)      AS SendOut_Amount
                             , SUM (tmpData_all.SendIn_Summ)         AS SendIn_Summ
+                            , SUM (tmpData_all.SendOut_Summ)        AS SendOut_Summ
 
                             , SUM (tmpData_all.Sale_Amount_InDiscount)  AS Sale_InDiscount
                             , SUM (tmpData_all.Sale_Amount_OutDiscount) AS Sale_OutDiscount
+
                             , SUM (tmpData_all.Loss_Amount)             AS Loss_Amount
+
                             , SUM (tmpData_all.Debt_Amount)             AS Debt_Amount
+                            , SUM (tmpData_all.Debt_Summ)               AS Debt_Summ
+
                             , SUM (tmpData_all.Sale_Amount)             AS Sale_Amount
 
                               -- Сумма продажа
@@ -1100,6 +1119,7 @@ BEGIN
                     WHEN tmpData.Income_Amount > 0 THEN tmpData.Income_Summ        / tmpData.Income_Amount
                     WHEN tmpData.Sale_Amount   > 0 THEN tmpData.Sale_SummCost_curr / tmpData.Sale_Amount
                     WHEN tmpData.SendIn_Amount > 0 THEN tmpData.SendIn_Summ        / tmpData.SendIn_Amount
+                    WHEN tmpData.Debt_Amount   > 0 THEN tmpData.Debt_Summ          / tmpData.Debt_Amount
                     
                     ELSE 0
                END                          :: TFloat AS OperPrice
@@ -1117,11 +1137,16 @@ BEGIN
                -- Перемещение
              , tmpData.SendIn_Amount        :: TFloat AS SendIn_Amount
              , tmpData.SendOut_Amount       :: TFloat AS SendOut_Amount
+             , tmpData.SendIn_Summ          :: TFloat AS SendIn_Summ
+             , tmpData.SendIn_Summ          :: TFloat AS SendIn_Summ
 
                -- Кол-во: Списание + Возврат поставщ.
              , tmpData.Loss_Amount          :: TFloat
+
                -- Кол-во Остаток - "долг"
              , tmpData.Debt_Amount          :: TFloat
+               -- Сумма Остаток - "долг"
+             , tmpData.Debt_Summ            :: TFloat
 
                -- Кол-во продажа - с учетом "долга"
              , (tmpData.Sale_Amount + tmpData.Debt_Amount) :: TFloat AS Sale_Amount

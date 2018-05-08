@@ -136,10 +136,12 @@ BEGIN
                        WHERE ObjectLink_StickerFile_TradeMark.ObjectId = vbStickerFileId
                          AND ObjectLink_StickerFile_TradeMark.DescId = zc_ObjectLink_StickerFile_TradeMark()
                       )
-                      WHEN 340617 -- тм Повна Чаша (Фоззи)
-                           THEN 40
-                      WHEN 340618 -- тм Премія (Фоззи)
-                           THEN 62
+                      -- WHEN 340617 -- тм Повна Чаша (Фоззи)
+                      --      THEN 40
+                      -- WHEN 340618 -- тм Премія (Фоззи)
+                      --     THEN 62
+                      WHEN 0
+                           THEN 0
                       ELSE 0
                  END;
      -- При какой длине Level1 - StickerType - выводится в Level2 + при этом инфа в Level2 в 2 строки
@@ -148,7 +150,7 @@ BEGIN
                           THEN 25
                      WHEN 62 -- тм Премія (Фоззи)
                           THEN 25
-                    ELSE 30
+                    ELSE 25 -- 30
                 END;
      -- При какой длине Level2 - StickerSort и StickerNorm - выводятся в 2 строки
      vbParam2:= CASE vbAddLeft
@@ -156,7 +158,7 @@ BEGIN
                           THEN 20
                      WHEN 62 -- тм Премія (Фоззи)
                           THEN 20
-                    ELSE 30
+                    ELSE 25 -- 30
                 END;
 
      -- Был Ли перевод в несколько строк для Level1 или Level2, тогда по следующим строка НУЖЕН сдвиг

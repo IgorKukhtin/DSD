@@ -68,6 +68,7 @@ BEGIN
                   AND OL_PaidKind.DescId        = zc_ObjectLink_PersonalServiceList_PaidKind()
                   AND OL_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm() -- !!!גמע מם ֱֽ!!!
                )
+        AND 1=0
      THEN
          IF inUserId <> zfCalc_UserAdmin() :: Integer
             AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin() AND ObjectLink_UserRole_View.UserId = inUserId)

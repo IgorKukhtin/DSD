@@ -139,8 +139,11 @@ type
     pvResult_Amount_real: TcxDBPivotGridField;
     pvLoss_Amount: TcxDBPivotGridField;
     pvTax_Amount_real: TcxDBPivotGridField;
-    SendIn_Amount: TcxDBPivotGridField;
-    SendOut_Amount: TcxDBPivotGridField;
+    pvSendIn_Amount: TcxDBPivotGridField;
+    pvSendOut_Amount: TcxDBPivotGridField;
+    pvSendIn_Summ: TcxDBPivotGridField;
+    pvSendOut_Summ: TcxDBPivotGridField;
+    pvDebt_Summ: TcxDBPivotGridField;
   private
   public
   end;

@@ -71,7 +71,7 @@ object GuideMovementForm: TGuideMovementForm
         ShowHint = True
       end
       object bbChoice: TSpeedButton
-        Left = 70
+        Left = 66
         Top = 3
         Width = 31
         Height = 29
@@ -89,7 +89,7 @@ object GuideMovementForm: TGuideMovementForm
         ShowHint = True
       end
       object bbChangeMember: TSpeedButton
-        Left = 127
+        Left = 115
         Top = 3
         Width = 31
         Height = 29
@@ -126,7 +126,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbPrintClick
       end
       object bbViewMI: TSpeedButton
-        Left = 183
+        Left = 160
         Top = 3
         Width = 31
         Height = 29
@@ -280,8 +280,8 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbEDI_DesadvClick
       end
       object bbSale_Order_all: TSpeedButton
-        Left = 287
-        Top = 4
+        Left = 262
+        Top = 3
         Width = 31
         Height = 29
         Hint = #1047#1072#1103#1074#1082#1072'/'#1054#1090#1075#1088#1091#1079#1082#1072' '#1042#1057#1045' - F8'
@@ -304,11 +304,11 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbSale_Order_allClick
       end
       object bbSale_Order_diff: TSpeedButton
-        Left = 324
+        Left = 294
         Top = 3
         Width = 31
         Height = 29
-        Hint = #1047#1072#1103#1074#1082#1072'/'#1054#1090#1075#1088#1091#1079#1082#1072' '#1052#1048#1053#1059#1057' - F9'
+        Hint = #1047#1072#1103#1074#1082#1072'/'#1054#1090#1075#1088#1091#1079#1082#1072' '#1052#1048#1053#1059#1057
         Glyph.Data = {
           F6000000424DF600000000000000760000002800000010000000100000000100
           0400000000008000000000000000000000001000000000000000000000000000
@@ -323,7 +323,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbSale_Order_diffClick
       end
       object bbPrint_diff: TSpeedButton
-        Left = 373
+        Left = 377
         Top = 3
         Width = 31
         Height = 29
@@ -347,7 +347,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbPrint_diffClick
       end
       object bbPrint_ReestrKind: TSpeedButton
-        Left = 241
+        Left = 209
         Top = 3
         Width = 31
         Height = 29
@@ -364,6 +364,25 @@ object GuideMovementForm: TGuideMovementForm
         ParentShowHint = False
         ShowHint = True
         OnClick = bbPrint_ReestrKindClick
+      end
+      object bbSale_Order_diffTax: TSpeedButton
+        Left = 326
+        Top = 3
+        Width = 31
+        Height = 29
+        Hint = #1047#1072#1103#1074#1082#1072'/'#1054#1090#1075#1088#1091#1079#1082#1072' - % '#1054#1058#1050#1051#1054#1053#1045#1053#1048#1071' - F9'
+        Glyph.Data = {
+          F6000000424DF600000000000000760000002800000010000000100000000100
+          0400000000008000000000000000000000001000000000000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
+          888888880000000888888888FFFFFFF888888888000000088888880000FFFFFF
+          88888077770FFFFFF88878888880FFFFFF887888888900000008788888888887
+          77787FFFFFFFFFF7777887F0000000FF7778887FFFFFFF0FF7788887F8888807
+          77888888788888F8888888888F88888088888888877777778888}
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbSale_Order_diffTaxClick
       end
     end
     object cxDBGrid: TcxGrid

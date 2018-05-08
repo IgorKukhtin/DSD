@@ -34,6 +34,16 @@ BEGIN
      WHERE Object_PriceList.DescId = zc_Object_PriceList()
        
     UNION ALL
+     SELECT Object_Branch.Id
+          , Object_Branch.ObjectCode AS Code     
+          , Object_Branch.ValueData  AS Name
+          , ObjectDesc.ItemName
+          , Object_Branch.isErased
+     FROM Object AS Object_Branch
+          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Branch.DescId
+     WHERE Object_Branch.DescId = zc_Object_Branch()
+
+    UNION ALL
      SELECT Object_PaidKind.Id
           , Object_PaidKind.ObjectCode AS Code     
           , Object_PaidKind.ValueData  AS Name
