@@ -376,14 +376,12 @@ object ReturnInForm: TReturnInForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 406
     ClientRectBottom = 376
     ClientRectRight = 1075
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 382
       object cxGrid: TcxGrid
         Left = 0
         Top = 83
@@ -391,7 +389,6 @@ object ReturnInForm: TReturnInForm
         Height = 269
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 299
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -676,6 +673,17 @@ object ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 70
           end
+          object InsertDate_Sale: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertDate_Sale'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'DD.MM hh:mm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.) ('#1087#1088#1086#1076#1072#1078#1072')'
+            Options.Editing = False
+            Width = 100
+          end
           object InvNumber_Sale: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. ('#1087#1088#1086#1076#1072#1078#1072')'
             DataBinding.FieldName = 'InvNumber_Sale'
@@ -807,6 +815,16 @@ object ReturnInForm: TReturnInForm
             HeaderHint = '% '#1057#1082#1080#1076#1082#1080
             Options.Editing = False
             Width = 35
+          end
+          object isChecked: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088'. > 31'#1076'.'
+            DataBinding.FieldName = 'isChecked'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1079#1088#1077#1096#1077#1085' '#1042#1086#1079#1074#1088#1072#1090' >31 '#1076'. ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 50
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -1369,9 +1387,6 @@ object ReturnInForm: TReturnInForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 6
-    ExplicitLeft = -94
-    ExplicitTop = 403
-    ExplicitWidth = 1169
     object DBLabelNameFull: TcxDBLabel
       Left = 0
       Top = 0
@@ -1387,7 +1402,6 @@ object ReturnInForm: TReturnInForm
       Style.Font.Name = 'Tahoma'
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
-      ExplicitWidth = 1169
       Height = 30
       Width = 1075
       AnchorX = 538
