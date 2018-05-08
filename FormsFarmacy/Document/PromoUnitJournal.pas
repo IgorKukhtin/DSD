@@ -25,6 +25,7 @@ type
     colId: TcxGridDBColumn;
     colComment: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
+    colUnitCategoryName: TcxGridDBColumn;
   private
     { Private declarations }
   public

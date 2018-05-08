@@ -28,6 +28,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inMarginCategoryId        Integer   ,    -- ссылка на категорию наценок
     IN inProvinceCityId          Integer   ,    -- ссылка на Район
     IN inUserManagerId           Integer   ,    -- ссылка на менеджер
+    IN inUnitCategoryId          Integer   ,    -- ссылка на категорию 
     IN inSession                 TVarChar       -- сессия пользователя
 )
 RETURNS Integer
@@ -76,6 +77,9 @@ BEGIN
    -- сохранили связь с <Районом>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_ProvinceCity(), ioId, inProvinceCityId);
    
+   -- сохранили связь с <Категорией>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Category(), ioId, inUnitCategoryId);
+
    -- адрес
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Unit_Address(), ioId, inAddress);
 
@@ -148,10 +152,11 @@ END;$BODY$
 LANGUAGE plpgsql VOLATILE;
 
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 05.05.18                                                        * add UnitCategory               
  20.09.17         * add area
  15.09.17         * 
  08.08.17         * add ProvinceCity

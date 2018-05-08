@@ -457,6 +457,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_SheetWorkTime() RETURNS Integer AS
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Unit_SheetWorkTime', 'Связь подразделения с Режим работы (Шаблон табеля р.вр.)', zc_Object_Unit(), zc_Object_SheetWorkTime() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_SheetWorkTime');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_Category() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_Category'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Unit_Category', 'Связь подразделения с категорией', zc_Object_Unit(), zc_Object_UnitCategory() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_Category');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_UserRole_Role() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_UserRole_Role'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
@@ -1897,7 +1901,8 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 04.05.18                                                                                      * zc_ObjectLink_Unit_Category
  18.04.18         * zc_ObjectLink_MemberSheetWorkTime_Unit
                     zc_ObjectLink_MemberSheetWorkTime_Member
  14.02.18         * zc_ObjectLink_GoodsPropertyValue_GoodsBox

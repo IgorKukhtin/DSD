@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , TotalSumm TFloat, TotalSummAdd TFloat
              , UnitId Integer, UnitName TVarChar
+             , UnitCategoryId Integer, UnitCategoryName TVarChar
              , PersonalId Integer,  PersonalName TVarChar
              , Comment TVarChar
              )
@@ -41,6 +42,8 @@ BEGIN
            , MovementFloat_TotalSummAdd.ValueData       AS TotalSummAdd
            , Object_Unit.Id                             AS UnitId
            , Object_Unit.ValueData                      AS UnitName
+           , Object_UnitCategory.Id                     AS UnitCategoryId
+           , Object_UnitCategory.ValueData              AS UnitCategoryName
            , Object_Personal.Id                         AS PersonalId
            , Object_Personal.ValueData                  AS PersonalName
            , MovementString_Comment.ValueData           AS Comment
@@ -72,6 +75,11 @@ BEGIN
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitCategory
+                                         ON MovementLinkObject_UnitCategory.MovementId = Movement.Id
+                                        AND MovementLinkObject_UnitCategory.DescId = zc_MovementLinkObject_UnitCategory()
+            LEFT JOIN Object AS Object_UnitCategory ON Object_UnitCategory.Id = MovementLinkObject_UnitCategory.ObjectId
             ;
 
 END;
@@ -80,9 +88,10 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 08.05.18                                                                     *                   
  04.02.17         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_PromoUnit (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '2')
+-- select * from gpSelect_Movement_PromoUnit(inStartDate := ('01.04.2017')::TDateTime , inEndDate := ('30.04.2017')::TDateTime , inIsErased := 'False' ,  inSession := '3');

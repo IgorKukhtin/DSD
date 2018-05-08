@@ -9,7 +9,7 @@ inherited PromoUnitJournalForm: TPromoUnitJournalForm
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
   AddOnFormData.AddOnFormRefresh.GetStoredProc = spGet_Movement_PromoUnit
   ExplicitWidth = 785
-  ExplicitHeight = 529
+  ExplicitHeight = 530
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -88,6 +88,14 @@ inherited PromoUnitJournalForm: TPromoUnitJournalForm
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             Width = 116
+          end
+          object colUnitCategoryName: TcxGridDBColumn
+            Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103
+            DataBinding.FieldName = 'UnitCategoryName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object colUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077

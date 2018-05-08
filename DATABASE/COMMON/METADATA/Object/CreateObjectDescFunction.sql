@@ -993,7 +993,6 @@ CREATE OR REPLACE FUNCTION zc_Object_JuridicalArea() RETURNS integer AS $BODY$BE
 INSERT INTO ObjectDesc(Code, ItemName)
 SELECT 'zc_Object_JuridicalArea', 'Регион поставщика' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_JuridicalArea');
 
-
 CREATE OR REPLACE FUNCTION zc_Object_DataExcel() RETURNS integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_DataExcel'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc(Code, ItemName)
 SELECT 'zc_Object_DataExcel', 'временны данные из экселя' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_DataExcel');
@@ -1005,6 +1004,10 @@ INSERT INTO ObjectDesc (Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_Object_Fiscal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Fiscal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_Fiscal', 'Кассовый аппарат' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Fiscal');
+
+CREATE OR REPLACE FUNCTION zc_Object_UnitCategory() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_UnitCategory'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_UnitCategory', 'Категория подразделения' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_UnitCategory');
 
 
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1022,7 +1025,8 @@ INSERT INTO ObjectDesc (Code, ItemName)
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 04.05.18                                                                                        * zc_Object_UnitCategory
  18.04.18         * zc_Object_MemberSheetWorkTime
  27.12.17         * zc_Object_Fiscal
  13.12.17         * zc_Object_PromoCode
