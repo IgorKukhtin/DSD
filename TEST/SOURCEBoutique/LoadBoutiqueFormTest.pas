@@ -1327,8 +1327,8 @@ begin
 //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserProtocolForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProcessForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TProcessForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProcessForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProcessForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProtocolForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementProtocolForm'));

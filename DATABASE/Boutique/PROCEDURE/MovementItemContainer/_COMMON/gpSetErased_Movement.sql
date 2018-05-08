@@ -51,4 +51,4 @@ ALTER FUNCTION gpSetErased_Movement (Integer, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSetErased_Movement (inMovementId:= 55, inIsChild := TRUE, inSession:= '2')
+-- SELECT * FROM gpSetErased_Movement (inMovementId:= 0, inIsChild := TRUE, inSession:= '2')

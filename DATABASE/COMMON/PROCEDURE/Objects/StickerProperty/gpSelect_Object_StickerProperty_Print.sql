@@ -67,7 +67,8 @@ $BODY$
     DECLARE vbStickerFileId Integer;
     DECLARE vbParam1        Integer;
     DECLARE vbParam2        Integer;
-    DECLARE vbAddLeft       Integer;
+    DECLARE vbAddLeft1      Integer;
+    DECLARE vbAddLeft2      Integer;
     DECLARE vbAddLine       Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -131,10 +132,12 @@ BEGIN
                        );
 
      -- Сколько пробелов добавим слева, т.е. это когда слева - Фирменный знак
-     vbAddLeft:= CASE (SELECT ObjectLink_StickerFile_TradeMark.ChildObjectId
+     vbAddLeft1:= COALESCE ((SELECT ObF.ValueData :: Integer FROM ObjectFloat AS ObF WHERE ObF.ObjectId = vbStickerFileId AND ObF.DescId = zc_ObjectFloat_StickerFile_Left1() AND ObF.ValueData > 0), 0);
+     vbAddLeft2:= COALESCE ((SELECT ObF.ValueData :: Integer FROM ObjectFloat AS ObF WHERE ObF.ObjectId = vbStickerFileId AND ObF.DescId = zc_ObjectFloat_StickerFile_Left2() AND ObF.ValueData > 0), 0);
+                 /*CASE (SELECT ObjectLink_StickerFile_TradeMark.ChildObjectId
                        FROM ObjectLink AS ObjectLink_StickerFile_TradeMark
                        WHERE ObjectLink_StickerFile_TradeMark.ObjectId = vbStickerFileId
-                         AND ObjectLink_StickerFile_TradeMark.DescId = zc_ObjectLink_StickerFile_TradeMark()
+                         AND ObjectLink_StickerFile_TradeMark.DescId   = zc_ObjectLink_StickerFile_TradeMark()
                       )
                       -- WHEN 340617 -- тм Повна Чаша (Фоззи)
                       --      THEN 40
@@ -143,23 +146,26 @@ BEGIN
                       WHEN 0
                            THEN 0
                       ELSE 0
-                 END;
+                 END;*/
+
      -- При какой длине Level1 - StickerType - выводится в Level2 + при этом инфа в Level2 в 2 строки
-     vbParam1:= CASE vbAddLeft
+     vbParam1:= COALESCE ((SELECT ObF.ValueData :: Integer FROM ObjectFloat AS ObF WHERE ObF.ObjectId = vbStickerFileId AND ObF.DescId = zc_ObjectFloat_StickerFile_Level1() AND ObF.ValueData > 0), 30);
+                /*CASE vbAddLeft
                      WHEN 40 -- тм Повна Чаша (Фоззи)
                           THEN 25
                      WHEN 62 -- тм Премія (Фоззи)
                           THEN 25
                     ELSE 25 -- 30
-                END;
+                END;*/
      -- При какой длине Level2 - StickerSort и StickerNorm - выводятся в 2 строки
-     vbParam2:= CASE vbAddLeft
+     vbParam2:= COALESCE ((SELECT ObF.ValueData :: Integer FROM ObjectFloat AS ObF WHERE ObF.ObjectId = vbStickerFileId AND ObF.DescId = zc_ObjectFloat_StickerFile_Level2() AND ObF.ValueData > 0), 30);
+                /*CASE vbAddLeft
                      WHEN 40 -- тм Повна Чаша (Фоззи)
                           THEN 20
                      WHEN 62 -- тм Премія (Фоззи)
                           THEN 20
                     ELSE 25 -- 30
-                END;
+                END;*/
 
      -- Был Ли перевод в несколько строк для Level1 или Level2, тогда по следующим строка НУЖЕН сдвиг
      vbAddLine:= 0;
@@ -225,7 +231,7 @@ BEGIN
 -- [frxDBDHeader."Info"]
 
               -- Level1
-            , (REPEAT (' ', CASE WHEN vbAddLeft > 50 THEN vbAddLeft - 30 WHEN vbAddLeft > 10 THEN vbAddLeft - 15 ELSE vbAddLeft END)
+            , (REPEAT (' ', vbAddLeft1)
             || CASE WHEN LENGTH (COALESCE (Object_StickerGroup.ValueData, '') || ' ' || COALESCE (Object_StickerType.ValueData, '') || ' ' || COALESCE (Object_StickerTag.ValueData, '')) > vbParam1
                          THEN COALESCE (Object_StickerGroup.ValueData, '')
                     || ' ' || COALESCE (Object_StickerTag.ValueData, '')
@@ -237,16 +243,16 @@ BEGIN
                END) :: TVarChar AS Level1
 
               -- Level2
-            , (REPEAT (' ', vbAddLeft)
+            , (REPEAT (' ', vbAddLeft2)
             || CASE WHEN LENGTH (COALESCE (Object_StickerGroup.ValueData, '') || ' ' || COALESCE (Object_StickerType.ValueData, '') || ' ' || COALESCE (Object_StickerTag.ValueData, '')) > vbParam1
                          THEN COALESCE (Object_StickerType.ValueData, '')
                     || ' ' || COALESCE (Object_StickerSort.ValueData, '')
-               || CHR (13) || REPEAT (' ', vbAddLeft)
+               || CHR (13) || REPEAT (' ', vbAddLeft2)
                            || COALESCE (Object_StickerNorm.ValueData, '')
  
                     WHEN LENGTH (COALESCE (Object_StickerSort.ValueData, '') || ' ' || COALESCE (Object_StickerNorm.ValueData, '')) > vbParam2
                          THEN COALESCE (Object_StickerSort.ValueData, '')
-               || CHR (13) || REPEAT (' ', vbAddLeft)
+               || CHR (13) || REPEAT (' ', vbAddLeft2)
                            || COALESCE (Object_StickerNorm.ValueData, '')
  
                     ELSE COALESCE (Object_StickerSort.ValueData, '')
@@ -267,7 +273,7 @@ BEGIN
               -- !!!СКЛАД!!!
             , zfCalc_Text_parse (vbStickerFileId, Object_TradeMark_StickerFile.Id
                                  -- Сколько пробелов добавим слева, т.е. это когда слева - Фирменный знак
-                               , vbAddLeft
+                               , vbAddLeft2
                                  -- Был Ли перевод в несколько строк для Level1 или Level2, тогда по следующим строкам НУЖЕН сдвиг
                                , CASE WHEN LENGTH (COALESCE (Object_StickerGroup.ValueData, '') || ' ' || COALESCE (Object_StickerType.ValueData, '') || ' ' || COALESCE (Object_StickerTag.ValueData, '')) > vbParam1
                                         OR LENGTH (COALESCE (Object_StickerSort.ValueData, '') || ' ' || COALESCE (Object_StickerNorm.ValueData, '')) > vbParam2

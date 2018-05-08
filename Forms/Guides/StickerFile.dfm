@@ -26,7 +26,6 @@ object StickerFileForm: TStickerFileForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 887
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -178,7 +177,7 @@ object StickerFileForm: TStickerFileForm
       end
       object Width7: TcxGridDBColumn
         Caption = '7-'#1072#1103
-        DataBinding.FieldName = 'Widt7'
+        DataBinding.FieldName = 'Width7'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentVert = vaCenter

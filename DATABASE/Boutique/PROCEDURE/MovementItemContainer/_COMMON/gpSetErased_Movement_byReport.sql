@@ -69,4 +69,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSetErased_Movement_byReport (inMovementId:= 55, inSession:= '2')
+-- SELECT * FROM gpSetErased_Movement_byReport (inMovementId:= 1, inSession:= '2')

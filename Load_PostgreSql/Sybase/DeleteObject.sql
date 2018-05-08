@@ -1,3 +1,29 @@
+DO $$
+BEGIN
+
+     CREATE TEMP TABLE _tmp_del (ObjectId Integer) ON COMMIT DROP;
+     INSERT INTO _tmp_del (ObjectId )
+      select Object .Id
+-- select  *
+from Object 
+where DescId = zc_Object_GoodsGroup()
+ -- and id not in (select ChildObjectId from ObjectLink where DescId = zc_ObjectLink_GoodsGroup_parent())
+ and id not in (select ChildObjectId from ObjectLink where ChildObjectId > 0);
+
+  DELETE FROM ObjectLink WHERE ObjectId in (select ObjectId from _tmp_del);
+  -- DELETE FROM ObjectString WHERE ObjectId in (select ObjectId from _tmp_del);
+  -- DELETE FROM ObjectBLOB WHERE ObjectId in (select ObjectId from _tmp_del);
+  -- DELETE FROM ObjectFloat WHERE ObjectId in (select ObjectId from _tmp_del);
+  DELETE FROM ObjectProtocol WHERE ObjectId in (select ObjectId from _tmp_del);
+  -- DELETE FROM ObjectBoolean WHERE ObjectId in (select ObjectId from _tmp_del);
+  -- DELETE FROM ObjectDate WHERE ObjectId in (select ObjectId from _tmp_del);
+  DELETE FROM Object WHERE Id in (select ObjectId from _tmp_del);
+
+END $$;
+
+
+
+
 select lpDelete_Object (Object.Id, '5') 
 from Object
 where DescId = zc_Object_ContractGoods();

@@ -23,14 +23,44 @@ BEGIN
      SELECT Movement.DescId, Movement.OperDate INTO vbDescId, vbOperDate FROM Movement WHERE Movement.Id = inMovementId;
 
 
+     -- Вот они Роли + Пользователи: с проверкой прав = НЕЛЬЗЯ
+     IF EXISTS (SELECT 1
+                FROM Object_RoleAccessKey_View
+                WHERE Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_AccessKey_Check()
+                  AND Object_RoleAccessKey_View.UserId      = vbUserId
+               )
+     THEN
+         IF vbDescId = zc_Movement_Sale()
+         THEN
+             -- проверка прав пользователя на вызов процедуры - Ругнемся, т.к. права "забрали"
+             vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Sale());
+
+         ELSEIF vbDescId = zc_Movement_ReturnIn()
+         THEN
+             -- проверка прав пользователя на вызов процедуры - Ругнемся, т.к. права "забрали"
+             vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_ReturnIn());
+
+         ELSEIF vbDescId = zc_Movement_GoodsAccount()
+         THEN
+             -- проверка прав пользователя на вызов процедуры - Ругнемся, т.к. права "забрали"
+             vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_GoodsAccount());
+
+         ELSE
+             RAISE EXCEPTION 'Ошибка.Проведение.';
+
+         END IF;
+
+     END IF;
+
+
      -- Проверка - Вид Документа
      IF inReportKind = 1 AND vbDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
      THEN
-         RAISE EXCEPTION 'Ошибка. Удаление возможно только в Отчете <по расчетам>';
+         RAISE EXCEPTION 'Ошибка. Проведение возможно только в Отчете <по расчетам>';
 
      ELSEIF inReportKind = 2 AND vbDescId NOT IN (zc_Movement_GoodsAccount())
      THEN
-         RAISE EXCEPTION 'Ошибка. Удаление возможно только в Отчете <по продажам / возвратам>';
+         RAISE EXCEPTION 'Ошибка. Проведение возможно только в Отчете <по продажам / возвратам>';
 
      END IF;
 
@@ -95,4 +125,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpComplete_Movement_byReport (inMovementId:= 55, inSession:= '2')
+-- SELECT * FROM gpComplete_Movement_byReport (inMovementId:= 0, inSession:= '2')
