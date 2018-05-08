@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                JuridicalId Integer, JuridicalName TVarChar, 
                MarginCategoryId Integer, MarginCategoryName TVarChar,
                AreaId Integer, AreaName TVarChar,
+               UnitCategoryId Integer, UnitCategoryName TVarChar,
                isLeaf boolean, 
                TaxService TFloat, TaxServiceNigth TFloat,
                StartServiceNigth TDateTime, EndServiceNigth TDateTime,
@@ -51,6 +52,9 @@ BEGIN
 
            , CAST (0 as Integer)   AS AreaId
            , CAST ('' as TVarChar) AS AreaName
+           
+           , CAST (0 as Integer)   AS UnitCategoryId
+           , CAST ('' as TVarChar) AS UnitCategoryName
            
            , false                 AS isLeaf
            , CAST (0 as TFloat)    AS TaxService
@@ -90,6 +94,9 @@ BEGIN
       
       , Object_Area.Id                                     AS AreaId
       , Object_Area.ValueData                              AS AreaName
+      
+      , Object_UnitCategory.Id                                     AS UnitCategoryId
+      , Object_UnitCategory.ValueData                              AS UnitCategoryName
       
       , ObjectBoolean_isLeaf.ValueData                     AS isLeaf
 
@@ -141,6 +148,11 @@ BEGIN
                             AND ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
         LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Unit_Area.ChildObjectId
                 
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_Category
+                             ON ObjectLink_Unit_Category.ObjectId = Object_Unit.Id 
+                            AND ObjectLink_Unit_Category.DescId = zc_ObjectLink_Unit_Category()
+        LEFT JOIN Object AS Object_UnitCategory ON Object_UnitCategory.Id = ObjectLink_Unit_Category.ChildObjectId
+
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isLeaf 
                                 ON ObjectBoolean_isLeaf.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_isLeaf.DescId = zc_ObjectBoolean_isLeaf()
@@ -187,10 +199,11 @@ LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 05.05.18                                                        * add UnitCategory
  08.08.17         * add ProvinceCity
  06.03.17         * add Address
  08.04.16         *

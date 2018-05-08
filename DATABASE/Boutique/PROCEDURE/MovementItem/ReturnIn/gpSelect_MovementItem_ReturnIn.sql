@@ -63,9 +63,11 @@ RETURNS TABLE (Id Integer, LineNum Integer, isLine TVarChar, PartionId Integer
 
              , SaleMI_Id Integer
              , MovementId_Sale Integer, InvNumber_Sale TVarChar
-             , OperDate_Sale TDateTime , DescName TVarChar
-             , Comment TVarChar
-             , isErased Boolean
+             , OperDate_Sale TDateTime, InsertDate_Sale TDateTime
+             , DescName TVarChar
+             , Comment   TVarChar
+             , isErased  Boolean
+             , isChecked Boolean
               )
 AS
 $BODY$
@@ -92,6 +94,7 @@ BEGIN
                         SELECT Movement.Id                                        AS MovementId
                              , Movement.DescId                                    AS DescId
                              , Movement.OperDate                                  AS OperDate
+                             , MovementDate_Insert.ValueData                      AS InsertDate_Sale
                              , Movement.InvNumber                                 AS InvNumber
                              , MovementItem.Id                                    AS SaleMI_Id
                              , MovementItem.PartionId                             AS PartionId
@@ -115,6 +118,8 @@ BEGIN
                              , COALESCE (MIFloat_TotalChangePercent.ValueData, 0) AS TotalChangePercent
                                -- Итого сумма Скидки - все "Расчеты покупателей"
                              , COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0) AS TotalChangePercentPay
+                             
+                             , COALESCE (MIBoolean_Checked.ValueData, FALSE)         AS isChecked
 
                         FROM Movement
                              INNER JOIN MovementLinkObject AS MovementLinkObject_To
@@ -125,6 +130,11 @@ BEGIN
                                                            ON MovementLinkObject_From.MovementId = Movement.Id
                                                           AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
                                                           AND MovementLinkObject_From.ObjectId   = inUnitId
+
+                             LEFT JOIN MovementDate AS MovementDate_Insert
+                                                    ON MovementDate_Insert.MovementId = Movement.Id
+                                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert() 
+
                              LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                    AND MovementItem.DescId     = zc_MI_Master()
                                                    AND MovementItem.isErased   = FALSE
@@ -155,7 +165,10 @@ BEGIN
                              LEFT JOIN MovementItemFloat AS MIFloat_TotalPayReturn
                                                          ON MIFloat_TotalPayReturn.MovementItemId = MovementItem.Id
                                                         AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()
-
+                             -- возврат > 31 д.
+                             LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
+                                                           ON MIBoolean_Checked.MovementItemId = MovementItem.Id
+                                                         AND MIBoolean_Checked.DescId         = zc_MIBoolean_Checked()
                         WHERE Movement.DescId   = zc_Movement_Sale()
                           -- !!!ВРЕМЕННО - потом оставить только ПРОВЕДЕННЫЕ!!!
                           -- AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
@@ -176,11 +189,13 @@ BEGIN
                              , COALESCE (MIFloat_TotalPayOth_master.ValueData, 0)        AS TotalPayOth_master
                              , COALESCE (MIString_Comment_master.ValueData,'')           AS Comment_master
                              , MI_Master.isErased                                        AS isErased
+                             , COALESCE (MIBoolean_Checked.ValueData, FALSE)             AS isChecked
                              , ROW_NUMBER() OVER (PARTITION BY MI_Master.isErased ORDER BY MI_Master.Id ASC) AS Ord
 
                              , Movement.Id                                        AS MovementId
                              , Movement.DescId                                    AS DescId
                              , Movement.OperDate                                  AS OperDate
+                             , MovementDate_Insert.ValueData                      AS InsertDate_Sale
                              , Movement.InvNumber                                 AS InvNumber
                              , Object_PartionMI.ObjectCode                        AS SaleMI_ID
                              , MovementItem.Amount                                AS Amount_Sale
@@ -234,6 +249,15 @@ BEGIN
                              LEFT JOIN MovementItem ON MovementItem.Id = Object_PartionMI.ObjectCode
                              LEFT JOIN Movement     ON Movement.Id     = MovementItem.MovementId
 
+                             LEFT JOIN MovementDate AS MovementDate_Insert
+                                                    ON MovementDate_Insert.MovementId = Movement.Id
+                                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert() 
+
+                             -- возврат > 31 д.
+                             LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
+                                                           ON MIBoolean_Checked.MovementItemId = MovementItem.Id
+                                                          AND MIBoolean_Checked.DescId         = zc_MIBoolean_Checked()
+                                                         
                              LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
                                                          ON MIFloat_TotalChangePercent.MovementItemId = MovementItem.Id
                                                         AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()
@@ -269,11 +293,13 @@ BEGIN
                              , COALESCE (tmpMI_Master.TotalPayOth_master, 0)           AS TotalPayOth
                              , COALESCE (tmpMI_Master.Comment_master, '')              AS Comment
                              , COALESCE (tmpMI_Master.isErased, FALSE)                 AS isErased
+                             , COALESCE (tmpMI_Master.isChecked, tmpMI_Sale.isChecked, FALSE)    AS isChecked
                              , COALESCE (tmpMI_Master.Ord, 0)                          AS Ord
 
                              , COALESCE (tmpMI_Master.MovementId, tmpMI_Sale.MovementId)         AS MovementId_Sale
                              , COALESCE (tmpMI_Master.DescId, tmpMI_Sale.DescId)                 AS DescId_Sale
                              , COALESCE (tmpMI_Master.OperDate, tmpMI_Sale.OperDate)             AS OperDate_Sale
+                             , COALESCE (tmpMI_Master.InsertDate_Sale, tmpMI_Sale.InsertDate_Sale) AS InsertDate_Sale
                              , COALESCE (tmpMI_Master.InvNumber, tmpMI_Sale.InvNumber)           AS InvNumber_Sale
                              , COALESCE (tmpMI_Master.SaleMI_ID, tmpMI_Sale.SaleMI_ID)           AS SaleMI_Id
                              , COALESCE (tmpMI_Master.Amount_Sale, tmpMI_Sale.Amount, 0)         AS Amount_Sale
@@ -462,10 +488,12 @@ BEGIN
            , tmpMI.MovementId_Sale             :: Integer   AS MovementId_Sale
            , tmpMI.InvNumber_Sale              :: TVarChar  AS InvNumber_Sale
            , tmpMI.OperDate_Sale               :: TDateTime AS OperDate_Sale
+           , tmpMI.InsertDate_Sale             :: TDateTime AS InsertDate_Sale
            , MovementDesc.ItemName                          AS DescName
 
            , tmpMI.Comment                     :: TVarChar  AS Comment
            , tmpMI.isErased                    :: Boolean   AS isErased
+           , tmpMI.isChecked                   :: Boolean   AS isChecked
 
        FROM tmpMI
             -- суммы оплаты
@@ -706,14 +734,15 @@ BEGIN
            , tmpMI_Child_Exc.Amount_EUR                         :: TFloat AS Amount_EUR_Exc    -- Сумма EUR - обмен приход
            , tmpMI_Child_Exc.Amount_GRN                         :: TFloat AS Amount_GRN_Exc    -- Сумма GRN - обмен расход
 
-           , tmpMI.SaleMI_ID                                   :: Integer AS SaleMI_Id
+           , tmpMI.SaleMI_ID                                  :: Integer  AS SaleMI_Id
            , Movement_Sale.Id                                             AS MovementId_Sale
            , Movement_Sale.InvNumber                                      AS InvNumber_Sale
            , Movement_Sale.OperDate                                       AS OperDate_Sale
+           , MovementDate_Insert.ValueData                                AS InsertDate_Sale
            , MovementDesc.ItemName                                        AS DescName
            , tmpMI.Comment                                    :: TVarChar AS Comment
            , tmpMI.isErased                                               AS isErased
-
+           , COALESCE (MIBoolean_Checked.ValueData, FALSE)    :: Boolean  AS isChecked
        FROM tmpMI_Master AS tmpMI
             -- суммы оплаты
             LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.Id
@@ -750,6 +779,10 @@ BEGIN
             LEFT JOIN Movement AS Movement_Sale  ON Movement_Sale.Id    = MI_Sale.MovementId
             LEFT JOIN MovementDesc               ON MovementDesc.Id     = Movement_Sale.DescId
 
+            LEFT JOIN MovementDate AS MovementDate_Insert
+                                   ON MovementDate_Insert.MovementId = Movement_Sale.Id
+                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+                                  
            ----
            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                        ON MIFloat_ChangePercent.MovementItemId = MI_Sale.Id
@@ -780,6 +813,10 @@ BEGIN
            LEFT JOIN MovementItemFloat AS MIFloat_TotalPayReturn
                                        ON MIFloat_TotalPayReturn.MovementItemId = MI_Sale.Id
                                       AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()
+
+           LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
+                                         ON MIBoolean_Checked.MovementItemId = MI_Sale.Id
+                                        AND MIBoolean_Checked.DescId         = zc_MIBoolean_Checked()
        ;
 
        END IF;

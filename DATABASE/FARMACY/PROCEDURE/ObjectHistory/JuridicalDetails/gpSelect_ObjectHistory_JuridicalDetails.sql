@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_JuridicalDetails(
 RETURNS TABLE (Id Integer, StartDate TDateTime, 
                FullName TVarChar, JuridicalAddress TVarChar, OKPO TVarChar, INN TVarChar,
                NumberVAT TVarChar, AccounterName TVarChar, BankAccount TVarChar, Phone TVarChar, BankId Integer,
-               MainName TVarChar, Reestr TVarChar, Decision TVarChar, License TVarChar, 
+               MainName TVarChar, MainName_Cut TVarChar,
+               Reestr TVarChar, Decision TVarChar, License TVarChar, 
                DecisionDate TDateTime
 )
 AS
@@ -38,6 +39,7 @@ BEGIN
            , NULL::Integer                                                                  AS BankId
 
            , ObjectHistoryString_JuridicalDetails_MainName.ValueData                        AS MainName
+           , ObjectHistoryString_JuridicalDetails_MainName_Cut.ValueData                    AS MainName_Cut
            , ObjectHistoryString_JuridicalDetails_Reestr.ValueData                          AS Reestr
            , ObjectHistoryString_JuridicalDetails_Decision.ValueData                        AS Decision
            , ObjectHistoryString_JuridicalDetails_License.ValueData                         AS License
@@ -75,6 +77,10 @@ BEGIN
   LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_MainName
          ON ObjectHistoryString_JuridicalDetails_MainName.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
         AND ObjectHistoryString_JuridicalDetails_MainName.DescId = zc_ObjectHistoryString_JuridicalDetails_MainName()
+  LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_MainName_Cut
+         ON ObjectHistoryString_JuridicalDetails_MainName_Cut.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+        AND ObjectHistoryString_JuridicalDetails_MainName_Cut.DescId = zc_ObjectHistoryString_JuridicalDetails_MainName_Cut()
+
   LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_Reestr
          ON ObjectHistoryString_JuridicalDetails_Reestr.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
         AND ObjectHistoryString_JuridicalDetails_Reestr.DescId = zc_ObjectHistoryString_JuridicalDetails_Reestr()
@@ -102,6 +108,7 @@ ALTER FUNCTION gpSelect_ObjectHistory_JuridicalDetails (Integer, TVarChar, TVarC
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 08.05.18         *
  04.07.14         *
 
 */

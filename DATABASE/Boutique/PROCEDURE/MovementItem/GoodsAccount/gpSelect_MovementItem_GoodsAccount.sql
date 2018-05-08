@@ -60,7 +60,8 @@ RETURNS TABLE (Id Integer, LineNum Integer, isLine TVarChar, PartionId Integer
 
              , SaleMI_Id Integer
              , MovementId_Sale Integer, InvNumber_Sale TVarChar
-             , OperDate_Sale TDateTime , DescName TVarChar
+             , OperDate_Sale TDateTime, InsertDate_Sale TDateTime
+             , DescName TVarChar
              , Comment TVarChar
              , isErased Boolean
               )
@@ -91,6 +92,7 @@ BEGIN
                         SELECT Movement.Id                                        AS MovementId
                              , Movement.DescId                                    AS DescId
                              , Movement.OperDate                                  AS OperDate
+                             , MovementDate_Insert.ValueData                      AS InsertDate_Sale
                              , Movement.InvNumber                                 AS InvNumber
                              , MovementItem.Id                                    AS SaleMI_Id
                              , MovementItem.PartionId                             AS PartionId
@@ -124,6 +126,11 @@ BEGIN
                                                            ON MovementLinkObject_From.MovementId = Movement.Id
                                                           AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
                                                           AND MovementLinkObject_From.ObjectId   = inUnitId
+
+                             LEFT JOIN MovementDate AS MovementDate_Insert
+                                                    ON MovementDate_Insert.MovementId = Movement.Id
+                                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert() 
+
                              LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                    AND MovementItem.DescId     = zc_MI_Master()
                                                    AND MovementItem.isErased   = FALSE
@@ -185,6 +192,7 @@ BEGIN
                              , Movement.Id                                        AS MovementId
                              , Movement.DescId                                    AS DescId
                              , Movement.OperDate                                  AS OperDate
+                             , MovementDate_Insert.ValueData                      AS InsertDate_Sale
                              , Movement.InvNumber                                 AS InvNumber
                              , Object_PartionMI.ObjectCode                        AS SaleMI_Id
                              , MovementItem.Amount                                AS Amount_Sale
@@ -231,6 +239,10 @@ BEGIN
                              LEFT JOIN MovementItem ON MovementItem.Id = Object_PartionMI.ObjectCode
                              LEFT JOIN Movement     ON Movement.Id     = MovementItem.MovementId
 
+                             LEFT JOIN MovementDate AS MovementDate_Insert
+                                                    ON MovementDate_Insert.MovementId = Movement.Id
+                                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert() 
+
                              LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                          ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                                         AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
@@ -274,6 +286,7 @@ BEGIN
                              , COALESCE (tmpMI_Master.MovementId, tmpMI_Sale.MovementId)         AS MovementId_Sale
                              , COALESCE (tmpMI_Master.DescId, tmpMI_Sale.DescId)                 AS DescId_Sale
                              , COALESCE (tmpMI_Master.OperDate, tmpMI_Sale.OperDate)             AS OperDate_Sale
+                             , COALESCE (tmpMI_Master.InsertDate_Sale, tmpMI_Sale.InsertDate_Sale) AS InsertDate_Sale
                              , COALESCE (tmpMI_Master.InvNumber, tmpMI_Sale.InvNumber)           AS InvNumber_Sale
                              , COALESCE (tmpMI_Master.SaleMI_Id, tmpMI_Sale.SaleMI_Id)           AS SaleMI_Id
                              , COALESCE (tmpMI_Master.Amount_Sale, tmpMI_Sale.Amount)            AS Amount_Sale
@@ -433,6 +446,7 @@ BEGIN
            , tmpMI.MovementId_Sale             :: Integer   AS MovementId_Sale
            , tmpMI.InvNumber_Sale              :: TVarChar  AS InvNumber_Sale
            , tmpMI.OperDate_Sale               :: TDateTime AS OperDate_Sale
+           , tmpMI.InsertDate_Sale             :: TDateTime AS InsertDate_Sale
            , MovementDesc.ItemName                          AS DescName
 
            , tmpMI.Comment                     :: TVarChar  AS Comment
@@ -647,6 +661,7 @@ BEGIN
            , Movement_Sale.Id                                             AS MovementId_Sale
            , Movement_Sale.InvNumber                                      AS InvNumber_Sale
            , Movement_Sale.OperDate                                       AS OperDate_Sale
+           , MovementDate_Insert.ValueData                                AS InsertDate_Sale
            , MovementDesc.ItemName                                        AS DescName
            , tmpMI.Comment                                    :: TVarChar AS Comment
            , tmpMI.isErased                                               AS isErased
@@ -680,6 +695,11 @@ BEGIN
            LEFT JOIN MovementItem AS MI_Sale    ON MI_Sale.Id          = tmpMI.SaleMI_Id
            LEFT JOIN Movement AS Movement_Sale  ON Movement_Sale.Id    = MI_Sale.MovementId
            LEFT JOIN MovementDesc               ON MovementDesc.Id     = Movement_Sale.DescId
+
+           LEFT JOIN MovementDate AS MovementDate_Insert
+                                  ON MovementDate_Insert.MovementId = Movement_Sale.Id
+                                 AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+
            ----
            LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                        ON MIFloat_OperPriceList.MovementItemId = MI_Sale.Id
@@ -725,6 +745,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 08.05.18         *
  23.03.18         *
  06.07.17         *
  18.05.17         *

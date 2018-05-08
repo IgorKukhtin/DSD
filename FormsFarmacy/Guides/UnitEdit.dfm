@@ -117,7 +117,7 @@
     Top = 175
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    TabOrder = 13
+    TabOrder = 14
     Width = 90
   end
   object cbRepriceAuto: TcxCheckBox
@@ -125,7 +125,7 @@
     Top = 121
     Hint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
     Caption = #1040#1074#1090#1086' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072
-    TabOrder = 14
+    TabOrder = 15
     Width = 113
   end
   object cxLabel6: TcxLabel
@@ -138,7 +138,7 @@
     Top = 175
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    TabOrder = 16
+    TabOrder = 17
     Width = 90
   end
   object cxLabel7: TcxLabel
@@ -159,12 +159,13 @@
     Properties.DateButtons = [btnNow]
     Properties.DisplayFormat = 'HH:MM'
     Properties.Kind = ckDateTime
-    TabOrder = 19
+    TabOrder = 20
     Width = 100
   end
   object edStartServiceNigth: TcxDateEdit
     Left = 255
     Top = 175
+    EditValue = 43225d
     Properties.ArrowsForYear = False
     Properties.AssignedValues.EditFormat = True
     Properties.DateButtons = [btnNow]
@@ -173,7 +174,7 @@
     Properties.Kind = ckDateTime
     Properties.Nullstring = ' '
     Properties.YearsInMonthList = False
-    TabOrder = 20
+    TabOrder = 21
     Width = 100
   end
   object cxLabel9: TcxLabel
@@ -184,7 +185,7 @@
   object edAddress: TcxTextEdit
     Left = 15
     Top = 220
-    TabOrder = 22
+    TabOrder = 23
     Width = 449
   end
   object cxLabel10: TcxLabel
@@ -200,7 +201,7 @@
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 24
+    TabOrder = 25
     Width = 209
   end
   object cxLabel11: TcxLabel
@@ -215,7 +216,7 @@
     Properties.ReadOnly = False
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 26
+    TabOrder = 27
     Width = 90
   end
   object edCloseDate: TcxDateEdit
@@ -225,7 +226,7 @@
     Properties.ReadOnly = False
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 27
+    TabOrder = 28
     Width = 90
   end
   object cxLabel12: TcxLabel
@@ -247,7 +248,7 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 30
+    TabOrder = 31
     Width = 209
   end
   object cxLabel14: TcxLabel
@@ -264,8 +265,24 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 32
+    TabOrder = 33
     Width = 209
+  end
+  object ceUnitCategory: TcxButtonEdit
+    Left = 367
+    Top = 121
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 12
+    Width = 97
+  end
+  object cxLabel15: TcxLabel
+    Left = 367
+    Top = 102
+    Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '
   end
   object ActionList: TActionList
     Left = 396
@@ -440,6 +457,14 @@
         Name = 'inUserManagerId'
         Value = Null
         Component = GuidesUserManager
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitCategoryId'
+        Value = Null
+        Component = GuidesUnitCategory
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -630,6 +655,21 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitCategoryId'
+        Value = Null
+        Component = GuidesUnitCategory
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitCategoryName'
+        Value = Null
+        Component = GuidesUnitCategory
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 20
@@ -719,8 +759,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 152
-    Top = 104
+    Left = 128
+    Top = 112
   end
   object GuidesProvinceCity: TdsdGuides
     KeyField = 'Id'
@@ -808,5 +848,34 @@
       end>
     Left = 104
     Top = 256
+  end
+  object GuidesUnitCategory: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceUnitCategory
+    FormNameParam.Value = 'TUnitCategoryForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnitCategoryForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnitCategory
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnitCategory
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 376
+    Top = 104
   end
 end

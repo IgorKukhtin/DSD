@@ -7,6 +7,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_JuridicalDetails
     (Integer, Integer,  TDateTime, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_JuridicalDetails 
     (Integer, Integer,  TDateTime, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_JuridicalDetails 
+    (Integer, Integer,  TDateTime, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_JuridicalDetails(
  INOUT ioId                     Integer,    -- ключ объекта <Элемент истории реквизитов юр. лиц>
@@ -23,6 +25,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_JuridicalDetails(
     IN inBankAccount	        TVarChar,   -- р.счет
     IN inPhone      	        TVarChar,   -- телефон
     IN inMainName     	        TVarChar,   -- ФИО директора
+    IN inMainName_Cut  	        TVarChar,   -- ФИО директора (для подписи)
     IN inReestr     	        TVarChar,   -- Витяг з реєстру платників ПДВ
     IN inDecision     	        TVarChar,   -- № рішення про видачу ліцензії
     IN inLicense                TVarChar,   -- № ліцензії
@@ -105,6 +108,8 @@ BEGIN
 
    -- 
    PERFORM lpInsertUpdate_ObjectHistoryString(zc_ObjectHistoryString_JuridicalDetails_MainName(), ioId, inMainName);
+   -- 
+   PERFORM lpInsertUpdate_ObjectHistoryString(zc_ObjectHistoryString_JuridicalDetails_MainName_Cut(), ioId, inMainName_Cut);
    -- 
    PERFORM lpInsertUpdate_ObjectHistoryString(zc_ObjectHistoryString_JuridicalDetails_Reestr(), ioId, inReestr);
    -- 

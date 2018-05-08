@@ -18,10 +18,10 @@ uses
 type
   TPromoUnitForm = class(TAncestorDocumentForm)
     lblUnit: TcxLabel;
-    edUnit: TcxButtonEdit;
+    edUnitCategory: TcxButtonEdit;
     lblJuridical: TcxLabel;
     edPersonal: TcxButtonEdit;
-    GuidesUnit: TdsdGuides;
+    GuidesUnitCategory: TdsdGuides;
     GuidesPersonal: TdsdGuides;
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;

@@ -109,6 +109,8 @@ type
     edLicense: TcxDBTextEdit;
     chisLoadBarcode: TcxCheckBox;
     cbisDeferred: TcxCheckBox;
+    cxLabel4: TcxLabel;
+    edMainName_cut: TcxDBTextEdit;
   private
     { Private declarations }
   public

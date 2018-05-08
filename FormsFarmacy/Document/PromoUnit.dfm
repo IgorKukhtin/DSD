@@ -3,8 +3,6 @@ inherited PromoUnitForm: TPromoUnitForm
   ClientHeight = 479
   ClientWidth = 979
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitLeft = -311
-  ExplicitTop = -25
   ExplicitWidth = 995
   ExplicitHeight = 518
   PixelsPerInch = 96
@@ -208,9 +206,9 @@ inherited PromoUnitForm: TPromoUnitForm
     object lblUnit: TcxLabel
       Left = 223
       Top = 5
-      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
     end
-    object edUnit: TcxButtonEdit
+    object edUnitCategory: TcxButtonEdit
       Left = 223
       Top = 23
       Properties.Buttons = <
@@ -308,7 +306,7 @@ inherited PromoUnitForm: TPromoUnitForm
         item
           Name = 'inUnitId'
           Value = Null
-          Component = GuidesUnit
+          Component = GuidesUnitCategory
           ComponentItem = 'Key'
           MultiSelectSeparator = ','
         end>
@@ -576,16 +574,16 @@ inherited PromoUnitForm: TPromoUnitForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'UnitId'
+        Name = 'UnitCategoryId'
         Value = Null
-        Component = GuidesUnit
+        Component = GuidesUnitCategory
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'UnitName'
+        Name = 'UnitCategoryName'
         Value = Null
-        Component = GuidesUnit
+        Component = GuidesUnitCategory
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -651,9 +649,9 @@ inherited PromoUnitForm: TPromoUnitForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inUnitId'
+        Name = 'inUnitCategoryId'
         Value = Null
-        Component = GuidesUnit
+        Component = GuidesUnitCategory
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -674,7 +672,7 @@ inherited PromoUnitForm: TPromoUnitForm
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
       item
-        Guides = GuidesUnit
+        Guides = GuidesUnitCategory
       end
       item
         Guides = GuidesPersonal
@@ -694,7 +692,7 @@ inherited PromoUnitForm: TPromoUnitForm
         Control = edOperDate
       end
       item
-        Control = edUnit
+        Control = edUnitCategory
       end
       item
         Control = edPersonal
@@ -851,19 +849,19 @@ inherited PromoUnitForm: TPromoUnitForm
     Left = 652
     Top = 196
   end
-  object GuidesUnit: TdsdGuides
+  object GuidesUnitCategory: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edUnit
-    FormNameParam.Value = 'TUnit_ObjectForm'
+    LookupControl = edUnitCategory
+    FormNameParam.Value = 'TUnitCategoryForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TUnitCategoryForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesUnit
+        Component = GuidesUnitCategory
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -871,7 +869,7 @@ inherited PromoUnitForm: TPromoUnitForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesUnit
+        Component = GuidesUnitCategory
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

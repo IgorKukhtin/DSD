@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PromoUnit(
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inPersonalId          Integer   , -- Ответственный представитель маркетингового отдела
-    IN inUnitId              Integer   , -- Подразделения
+    IN inUnitCategoryId      Integer   , -- Категория подразделения
     IN inComment             TVarChar  , -- комментарий
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -34,7 +34,7 @@ BEGIN
     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_PromoUnit(), inInvNumber, inOperDate, NULL);
 
     -- сохранили связь с <Подразделения>
-    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_UnitCategory(), ioId, inUnitCategoryId);
     -- сохранили связь с <>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Personal(), ioId, inPersonalId);
 
@@ -51,7 +51,8 @@ LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 08.05.18                                                                     *
  04.02.17         *
 */
 

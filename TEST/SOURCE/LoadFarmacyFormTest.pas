@@ -908,6 +908,13 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitForFarmacyCashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitForFarmacyCashForm');
+
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitCategoryForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnitCategoryForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitCategoryEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnitCategoryEditForm');
 end;
 
 procedure TLoadFormTest.LoadUnionFormTest;
@@ -1009,6 +1016,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoCodeSignDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoCodeSignDialogForm')
 end;
+
 procedure TLoadFormTest.LoadPromoUnitFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoUnitJournalForm'));

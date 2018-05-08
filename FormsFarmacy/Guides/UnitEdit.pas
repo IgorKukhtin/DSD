@@ -70,6 +70,9 @@ type
     cxLabel14: TcxLabel;
     edArea: TcxButtonEdit;
     GuidesArea: TdsdGuides;
+    ceUnitCategory: TcxButtonEdit;
+    cxLabel15: TcxLabel;
+    GuidesUnitCategory: TdsdGuides;
   private
     { Private declarations }
   public

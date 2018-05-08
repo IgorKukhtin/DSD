@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_PromoUnit(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , UnitId Integer, UnitName TVarChar
+             , UnitCategoryId Integer, UnitCategoryName TVarChar
              , PersonalId Integer,  PersonalName TVarChar
              , Comment TVarChar
 )
@@ -45,8 +45,8 @@ BEGIN
            , Movement.OperDate                          AS OperDate
            , Object_Status.ObjectCode                   AS StatusCode
            , Object_Status.ValueData                    AS StatusName
-           , Object_Unit.Id                             AS UnitId
-           , Object_Unit.ValueData                      AS UnitName
+           , Object_UnitCategory.Id                     AS UnitCategoryId
+           , Object_UnitCategory.ValueData              AS UnitCategoryName
            , Object_Personal.Id                         AS PersonalId
            , Object_Personal.ValueData                  AS PersonalName
            , MovementString_Comment.ValueData           AS Comment
@@ -62,10 +62,10 @@ BEGIN
                                         AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitCategory
+                                         ON MovementLinkObject_UnitCategory.MovementId = Movement.Id
+                                        AND MovementLinkObject_UnitCategory.DescId = zc_MovementLinkObject_UnitCategory()
+            LEFT JOIN Object AS Object_UnitCategory ON Object_UnitCategory.Id = MovementLinkObject_UnitCategory.ObjectId
 
        WHERE Movement.Id = inMovementId;
 
@@ -78,9 +78,10 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 08.05.18                                                                     *
  04.02.17         *
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_PromoUnit (inMovementId:= 1, inSession:= '9818')
+-- SELECT * FROM gpGet_Movement_PromoUnit (inMovementId:= 5068415, inSession:= '3')

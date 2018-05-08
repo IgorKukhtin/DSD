@@ -79,6 +79,7 @@
       object JuridicalDetailTS: TcxTabSheet
         Caption = #1056#1077#1082#1074#1080#1079#1080#1090#1099
         ImageIndex = 0
+        ExplicitLeft = -2
         object edFullName: TcxDBTextEdit
           Left = 16
           Top = 19
@@ -129,7 +130,7 @@
         end
         object edBankAccount: TcxDBTextEdit
           Left = 248
-          Top = 202
+          Top = 250
           DataBinding.DataField = 'BankAccount'
           DataBinding.DataSource = JuridicalDetailsDS
           TabOrder = 7
@@ -166,7 +167,7 @@
           Caption = #1060#1048#1054' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1072
         end
         object edBank: TcxDBButtonEdit
-          Left = 352
+          Left = 396
           Top = 223
           DataBinding.DataField = 'BankName'
           DataBinding.DataSource = JuridicalDetailsDS
@@ -182,24 +183,24 @@
           Width = 193
         end
         object cxLabel12: TcxLabel
-          Left = 352
-          Top = 203
+          Left = 408
+          Top = 200
           Caption = #1041#1072#1085#1082
           Visible = False
         end
         object cxLabel13: TcxLabel
           Left = 248
-          Top = 182
+          Top = 230
           Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
         end
         object cxLabel18: TcxLabel
           Left = 248
-          Top = 230
+          Top = 278
           Caption = #1058#1077#1083#1077#1092#1086#1085
         end
         object edPhone: TcxDBTextEdit
           Left = 248
-          Top = 250
+          Top = 298
           DataBinding.DataField = 'Phone'
           DataBinding.DataSource = JuridicalDetailsDS
           TabOrder = 17
@@ -281,12 +282,12 @@
         end
         object cxLabel20: TcxLabel
           Left = 248
-          Top = 278
+          Top = 323
           Caption = #1044#1072#1090#1072' '#1088#1110#1096#1077#1085#1085#1103' '#1087#1088#1086' '#1074#1080#1076#1072#1095#1091' '#1083#1110#1094#1077#1085#1079#1110#1111
         end
         object edDecisionDate: TcxDBTextEdit
           Left = 248
-          Top = 298
+          Top = 340
           ParentCustomHint = False
           DataBinding.DataField = 'DecisionDate'
           DataBinding.DataSource = JuridicalDetailsDS
@@ -428,7 +429,7 @@
     Left = 8
     Top = 279
     Caption = #1088#1072#1079#1088#1077#1096#1080#1090#1100' '#1080#1084#1087#1086#1088#1090' '#1096#1090#1088#1080#1093'-'#1082#1086#1076#1086#1074
-    TabOrder = 17
+    TabOrder = 16
     Width = 270
   end
   object cbisDeferred: TcxCheckBox [15]
@@ -437,6 +438,19 @@
     Caption = #1080#1089#1082#1083#1102#1095#1077#1085#1080#1077' - '#1079#1072#1082#1072#1079' '#1074#1089#1077#1075#1076#1072' "'#1054#1090#1083#1086#1078#1077#1085'"'
     TabOrder = 19
     Width = 270
+  end
+  object cxLabel4: TcxLabel [16]
+    Left = 546
+    Top = 206
+    Caption = #1060#1048#1054' '#1076#1080#1088#1077#1082#1090#1086#1088#1072' ('#1076#1083#1103' '#1087#1086#1076#1087#1080#1089#1080')'
+  end
+  object edMainName_cut: TcxDBTextEdit [17]
+    Left = 546
+    Top = 226
+    DataBinding.DataField = 'MainName_cut'
+    DataBinding.DataSource = JuridicalDetailsDS
+    TabOrder = 21
+    Width = 193
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 467
@@ -1038,8 +1052,8 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 480
-    Top = 216
+    Left = 240
+    Top = 192
   end
   object spJuridicalDetailsIU: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_ObjectHistory_JuridicalDetails'
@@ -1170,6 +1184,15 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMainName_Cut'
+        Value = Null
+        Component = JuridicalDetailsCDS
+        ComponentItem = 'MainName_Cut'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inReestr'
         Value = Null
         Component = JuridicalDetailsCDS
@@ -1197,8 +1220,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 280
-    Top = 160
+    Left = 208
+    Top = 144
   end
   object spClearDefaluts: TdsdStoredProc
     StoredProcName = 'gpGet_JuridicalDetails_ClearDefault'
@@ -1222,8 +1245,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 896
-    Top = 120
+    Left = 816
+    Top = 144
   end
   object RetailGuides: TdsdGuides
     KeyField = 'Id'
