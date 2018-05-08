@@ -46,10 +46,10 @@ BEGIN
      -- проверяем регион пользователя
      vbAreaId:= (SELECT outAreaId FROM gpGet_Area_byUser(inSession));
      
---     IF (COALESCE (vbAreaId, 0) <> 0) AND (vbAreaId <> inAreaId)
---     THEN
---         RAISE EXCEPTION 'Не достаточно прав доступа на изменение региона';
---     END IF;
+     IF (COALESCE (vbAreaId, 0) <> 0) AND (vbAreaId <> inAreaId)
+     THEN
+         RAISE EXCEPTION 'Не достаточно прав доступа на изменение региона';
+     END IF;
       
      RETURN QUERY
      WITH DD AS (SELECT DISTINCT Object_MarginCategoryItem_View.MarginPercent
@@ -171,7 +171,7 @@ BEGIN
             inCodeSearch <> ''
         )
         AND COALESCE(JuridicalSettings.isPriceClose, FALSE) <> TRUE
-        AND (COALESCE (LoadPriceList.AreaId, 0) = inAreaId OR COALESCE(inAreaId, 0) = 0 OR COALESCE (LoadPriceList.AreaId, 0) = zc_Area_Basis() ); 
+        AND (LoadPriceList.AreaId = 0 OR COALESCE (LoadPriceList.AreaId, 0) = inAreaId OR COALESCE(inAreaId, 0) = 0 OR COALESCE (LoadPriceList.AreaId, 0) = zc_Area_Basis() ); 
 
 END;
 $BODY$
