@@ -13,7 +13,6 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Sale());
-     -- vbUserId:= lpGetUserBySession (inSession);
 
 
      -- Проверка - Дата Документа

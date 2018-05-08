@@ -291,7 +291,8 @@ uses
   ClientSMS in '..\..\FormsBoutique\Guides\ClientSMS.pas' {ClientSMSForm: TParentForm},
   DiscountPeriodItemBySendDialog in '..\..\FormsBoutique\Document\DiscountPeriodItemBySendDialog.pas' {DiscountPeriodItemBySendDialogForm: TParentForm},
   Income in '..\..\FormsBoutique\Document\Income.pas' {IncomeForm: TParentForm},
-  DiscountPersentDialog in '..\..\FormsBoutique\Guides\DiscountPersentDialog.pas' {DiscountPersentDialogForm: TParentForm};
+  DiscountPersentDialog in '..\..\FormsBoutique\Guides\DiscountPersentDialog.pas' {DiscountPersentDialogForm: TParentForm},
+  Process in '..\..\FormsBoutique\Guides\Process.pas' {ProcessForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

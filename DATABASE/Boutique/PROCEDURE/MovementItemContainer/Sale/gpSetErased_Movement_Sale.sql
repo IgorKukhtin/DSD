@@ -13,8 +13,19 @@ $BODY$
   DECLARE vbStatusId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_Sale());
     vbUserId:= lpGetUserBySession (inSession);
+
+
+     -- Вот они Роли + Пользователи: с проверкой прав = НЕЛЬЗЯ
+     IF EXISTS (SELECT 1
+                FROM Object_RoleAccessKey_View
+                WHERE Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_AccessKey_Check()
+                  AND Object_RoleAccessKey_View.UserId      = vbUserId
+               )
+     THEN
+         -- проверка прав пользователя на вызов процедуры - Ругнемся, т.к. права "забрали"
+         vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_Sale());
+     END IF;
 
 
     -- Проверка - Дата Документа
@@ -45,4 +56,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSetErased_Movement_Sale (inMovementId:= 1100, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSetErased_Movement_Sale (inMovementId:= 0, inSession:= zfCalc_UserAdmin())

@@ -10,6 +10,7 @@ $BODY$
 BEGIN
 
 /*
+
   RAISE EXCEPTION 'Серьезный скрипт !!!НЕ ДЛЯ РАБОЧЕЙ БАЗЫ!!!';
 
   -- Серьезный скрипт !!!НЕ ДЛЯ РАБОЧЕЙ БАЗЫ!!!
@@ -36,7 +37,7 @@ BEGIN
   DELETE FROM ContainerLinkObject WHERE ObjectId = inId;
 */
   DELETE FROM ObjectLink WHERE ObjectId = inId;
-  DELETE FROM ObjectLink WHERE ChildObjectId = inId;
+  -- DELETE FROM ObjectLink WHERE ChildObjectId = inId;
   DELETE FROM ObjectString WHERE ObjectId = inId;
   DELETE FROM ObjectBLOB WHERE ObjectId = inId;
   DELETE FROM ObjectFloat WHERE ObjectId = inId;

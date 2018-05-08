@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_PrinterByUser(
 RETURNS TVarChar
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId  Integer;
    DECLARE vbPrinter TVarChar;
 BEGIN
 
@@ -20,19 +20,18 @@ BEGIN
                              WHERE OS_User_Printer.ObjectId = vbUserId
                                AND OS_User_Printer.DescId = zc_ObjectString_User_Printer()
                             ), '') :: TVarChar ;
-     -- RETURN vbPrinter;
-     RETURN 'Godex G500';
+
+     -- RETURN 'Godex G500';
+     RETURN vbPrinter;
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
-
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  30.04.18         *
-
 */
 
 -- тест

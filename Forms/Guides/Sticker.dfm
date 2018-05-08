@@ -25,6 +25,7 @@ object StickerForm: TStickerForm
     Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 80
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -176,6 +177,7 @@ object StickerForm: TStickerForm
             Default = True
             Kind = bkEllipsis
           end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 110
@@ -205,6 +207,7 @@ object StickerForm: TStickerForm
             Default = True
             Kind = bkEllipsis
           end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
@@ -219,7 +222,7 @@ object StickerForm: TStickerForm
             Default = True
             Kind = bkEllipsis
           end>
-        Properties.ReadOnly = False
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 79
@@ -322,7 +325,6 @@ object StickerForm: TStickerForm
     Width = 4
     Height = 194
     AlignSplitter = salRight
-    ExplicitLeft = 926
   end
   object Panel: TPanel
     Left = 0
@@ -550,7 +552,7 @@ object StickerForm: TStickerForm
       end
     end
     object cxLeftSplitter: TcxSplitter
-      Left = 930
+      Left = 0
       Top = 0
       Width = 5
       Height = 194
@@ -1886,6 +1888,9 @@ object StickerForm: TStickerForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actGetReportName: TdsdExecStoredProc
       Category = 'Print'
@@ -2000,6 +2005,9 @@ object StickerForm: TStickerForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object macPrintJPGLen: TMultiAction
       Category = 'Print'
@@ -2058,6 +2066,9 @@ object StickerForm: TStickerForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
