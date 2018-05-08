@@ -116,7 +116,7 @@ BEGIN
                           , inClientId := 0, inPartnerId := 0, inBrandId := 0, inPeriodId := 0
                           , inStartYear := 0, inEndYear := 0, inisPartion := FALSE 
                           , inisSize := TRUE, inisPartner := TRUE , inisMovement := FALSE
-                          , inIsClient := FALSE, inSession := inSession
+                          , inIsClient := FALSE, inIsDiscount := TRUE, inSession := inSession
                           ) AS tmpData
       UNION 
         SELECT tmpData.PartionId

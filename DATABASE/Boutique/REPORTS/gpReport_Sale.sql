@@ -800,4 +800,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Sale(inStartDate := ('01.01.2017')::TDateTime , inEndDate := ('01.01.2017')::TDateTime , inUnitId := 1157 , inClientId := 0 , inPartnerId := 0 , inBrandId := 0 , inPeriodId := 0 , inStartYear := 0 , inEndYear := 0 , inisPartion := 'False' , inisSize := 'False' , inisPartner := 'False' , inisMovement := 'False' , inIsClient := 'False' , inSession := '2');
+-- SELECT * FROM gpReport_Sale(inStartDate := ('01.01.2017')::TDateTime , inEndDate := ('01.01.2017')::TDateTime , inUnitId := 1157 , inClientId := 0 , inPartnerId := 0 , inBrandId := 0 , inPeriodId := 0 , inStartYear := 0 , inEndYear := 0 , inisPartion := 'False' , inisSize := 'False' , inisPartner := 'False' , inisMovement := 'False' , inIsClient := 'False', inIsDiscount:= TRUE, inSession := '2');

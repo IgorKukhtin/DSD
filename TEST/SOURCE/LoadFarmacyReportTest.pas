@@ -59,9 +59,12 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-
-  LoadReportFromFile('PrintReport_CheckSP_393052_4474509', ReportPath + '\PrintReport_CheckSP_393052_4474509.fr3');
-  LoadReportFromFile('PrintReport_CheckSP_393038_4474508', ReportPath + '\PrintReport_CheckSP_393038_4474508.fr3');
+  //доп. соглащения Соц. проект
+  LoadReportFromFile('PrintReport_CheckSP_4474509', ReportPath + '\PrintReport_CheckSP_4474509.fr3');
+  LoadReportFromFile('PrintReport_CheckSP_4474508', ReportPath + '\PrintReport_CheckSP_4474508.fr3');
+  LoadReportFromFile('PrintReport_CheckSP_4474307', ReportPath + '\PrintReport_CheckSP_4474307.fr3');
+  LoadReportFromFile('PrintReport_CheckSP_4474556', ReportPath + '\PrintReport_CheckSP_4474556.fr3');
+  LoadReportFromFile('PrintReport_CheckSP_4212299', ReportPath + '\PrintReport_CheckSP_4212299.fr3');
 
   LoadReportFromFile('Реестр лекарственных препаратов', ReportPath + '\Реестр лекарственных препаратов.fr3');
   LoadReportFromFile('Счет соц.проект', ReportPath + '\Счет соц.проект.fr3');
