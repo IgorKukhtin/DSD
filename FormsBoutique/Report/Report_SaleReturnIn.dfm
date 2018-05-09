@@ -1077,6 +1077,8 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         end>
       Caption = 'dsdactSetErased'
       ImageIndex = 13
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1091#1076#1072#1083#1077#1085
     end
     object actComplete: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1092,6 +1094,8 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         end>
       Caption = 'dsdactComplete'
       ImageIndex = 12
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1088#1086#1074#1077#1076#1077#1085
     end
     object mactPrint_Check: TMultiAction
       Category = 'Print'

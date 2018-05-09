@@ -68,6 +68,8 @@ type
     spGetReporName: TdsdStoredProc;
     spGet_Printer: TdsdStoredProc;
     spSelectPrint_Check: TdsdStoredProc;
+    cbCurrency: TcxCheckBox;
+    CurrencyName: TcxGridDBColumn;
   private
     { Private declarations }
   public

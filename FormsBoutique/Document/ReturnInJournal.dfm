@@ -550,8 +550,8 @@ object ReturnInJournalForm: TReturnInJournalForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 80
-    Top = 64
+    Left = 88
+    Top = 112
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
