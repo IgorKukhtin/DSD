@@ -49,7 +49,8 @@ BEGIN
                         INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
                                                AND MovementItem.DescId     = zc_MI_Master()
                                                AND MovementItem.isErased   = FALSE
-                    )
+                    WHERE inIsProtocol = TRUE
+                   )
                   
         , tmpProtocol_MI AS (SELECT DISTINCT tmpMI.MovementId
                              FROM tmpMI
@@ -57,7 +58,8 @@ BEGIN
                                               FROM MovementItemProtocol
                                               WHERE MovementItemProtocol.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                                 AND MovementItemProtocol.OperDate >= inStartProtocol AND MovementItemProtocol.OperDate < inEndProtocol + INTERVAL '1 DAY'
-                                                AND inIsProtocol = TRUE) AS tmp ON tmp.MovementItemId = tmpMI.Id
+                                                AND inIsProtocol = TRUE
+                                             ) AS tmp ON tmp.MovementItemId = tmpMI.Id
                             )
         , tmpProtocol_Mov AS (SELECT DISTINCT MovementProtocol.MovementId
                               FROM MovementProtocol

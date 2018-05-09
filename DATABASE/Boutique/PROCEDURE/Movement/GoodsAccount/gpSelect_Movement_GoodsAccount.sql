@@ -49,15 +49,16 @@ BEGIN
                         INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
                                                AND MovementItem.DescId     = zc_MI_Master()
                                                AND MovementItem.isErased   = FALSE
-                    )
-                  
+                    WHERE inIsProtocol = TRUE
+                   )
         , tmpProtocol_MI AS (SELECT DISTINCT tmpMI.MovementId
                              FROM tmpMI
                                   INNER JOIN (SELECT DISTINCT MovementItemProtocol.MovementItemId
                                               FROM MovementItemProtocol
                                               WHERE MovementItemProtocol.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                                 AND MovementItemProtocol.OperDate >= inStartProtocol AND MovementItemProtocol.OperDate < inEndProtocol + INTERVAL '1 DAY'
-                                                AND inIsProtocol = TRUE) AS tmp ON tmp.MovementItemId = tmpMI.Id
+                                                AND inIsProtocol = TRUE
+                                             ) AS tmp ON tmp.MovementItemId = tmpMI.Id
                             )
         , tmpProtocol_Mov AS (SELECT DISTINCT MovementProtocol.MovementId
                               FROM MovementProtocol
@@ -143,4 +144,4 @@ $BODY$
 */
 
 -- тест
- --SELECT * FROM gpSelect_Movement_GoodsAccount (inStartDate:= '01.01.2015', inEndDate:= '01.02.2015', inStartProtocol:= '01.03.2017', inEndProtocol:= '01.03.2017', inIsProtocol:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_GoodsAccount (inStartDate:= '01.01.2015', inEndDate:= '01.02.2015', inStartProtocol:= '01.03.2017', inEndProtocol:= '01.03.2017', inIsProtocol:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
