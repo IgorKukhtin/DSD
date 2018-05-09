@@ -25,7 +25,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel,
-  dsdGuides, cxButtonEdit;
+  dsdGuides, cxButtonEdit, cxCheckBox;
 
 type
   TSaleJournalForm = class(TParentForm)
@@ -105,6 +105,13 @@ type
     spGet_Printer: TdsdStoredProc;
     actGet_Printer: TdsdExecStoredProc;
     macPrintCheck: TMultiAction;
+    cbIsProtocol: TcxCheckBox;
+    cxLabel5: TcxLabel;
+    deStartProtocol: TcxDateEdit;
+    cxLabel6: TcxLabel;
+    deEndProtocol: TcxDateEdit;
+    PeriodChoice1: TPeriodChoice;
+    spGet_Current_Date: TdsdStoredProc;
   private
   public
   end;

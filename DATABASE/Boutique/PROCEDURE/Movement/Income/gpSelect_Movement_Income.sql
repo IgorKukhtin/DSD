@@ -37,40 +37,40 @@ BEGIN
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
 
-   , tmpMovement AS (SELECT Movement.Id
-                     FROM tmpStatus
-                          JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate 
-                                       AND Movement.DescId   = zc_Movement_Income()
-                                       AND Movement.StatusId = tmpStatus.StatusId
-                     )
-   , tmpMI AS (SELECT MovementItem.MovementId
-                    , MovementItem.Id
-               FROM tmpMovement
-                   INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
-                                          AND MovementItem.DescId     = zc_MI_Master()
-                                          AND MovementItem.isErased   = FALSE
-               )
-             
-   , tmpProtocol_MI AS (SELECT DISTINCT tmpMI.MovementId
-                        FROM tmpMI
-                             INNER JOIN (SELECT DISTINCT MovementItemProtocol.MovementItemId
-                                         FROM MovementItemProtocol
-                                         WHERE MovementItemProtocol.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
-                                           AND MovementItemProtocol.OperDate >= inStartProtocol AND MovementItemProtocol.OperDate < inEndProtocol + INTERVAL '1 DAY'
-                                           AND inIsProtocol = TRUE) AS tmp ON tmp.MovementItemId = tmpMI.Id
-                       )
-   , tmpProtocol_Mov AS (SELECT DISTINCT MovementProtocol.MovementId
-                         FROM MovementProtocol
-                         WHERE MovementProtocol.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                           AND MovementProtocol.OperDate >= inStartProtocol AND MovementProtocol.OperDate < inEndProtocol + INTERVAL '1 DAY'
-                           AND inIsProtocol = TRUE
-                        )
-   , tmpProtocol AS (SELECT tmp.MovementId
-                     FROM tmpProtocol_MI AS tmp
-                    UNION 
-                     SELECT tmp.MovementId
-                     FROM tmpProtocol_Mov AS tmp
+        , tmpMovement AS (SELECT Movement.*
+                          FROM tmpStatus
+                               JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate 
+                                            AND Movement.DescId   = zc_Movement_Income()
+                                            AND Movement.StatusId = tmpStatus.StatusId
+                          )
+        , tmpMI AS (SELECT MovementItem.MovementId
+                         , MovementItem.Id
+                    FROM tmpMovement
+                        INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
+                                               AND MovementItem.DescId     = zc_MI_Master()
+                                               AND MovementItem.isErased   = FALSE
                     )
+                  
+        , tmpProtocol_MI AS (SELECT DISTINCT tmpMI.MovementId
+                             FROM tmpMI
+                                  INNER JOIN (SELECT DISTINCT MovementItemProtocol.MovementItemId
+                                              FROM MovementItemProtocol
+                                              WHERE MovementItemProtocol.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                                AND MovementItemProtocol.OperDate >= inStartProtocol AND MovementItemProtocol.OperDate < inEndProtocol + INTERVAL '1 DAY'
+                                                AND inIsProtocol = TRUE) AS tmp ON tmp.MovementItemId = tmpMI.Id
+                            )
+        , tmpProtocol_Mov AS (SELECT DISTINCT MovementProtocol.MovementId
+                              FROM MovementProtocol
+                              WHERE MovementProtocol.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                AND MovementProtocol.OperDate >= inStartProtocol AND MovementProtocol.OperDate < inEndProtocol + INTERVAL '1 DAY'
+                                AND inIsProtocol = TRUE
+                             )
+        , tmpProtocol AS (SELECT tmp.MovementId
+                          FROM tmpProtocol_MI AS tmp
+                         UNION 
+                          SELECT tmp.MovementId
+                          FROM tmpProtocol_Mov AS tmp
+                         )
 
 
        SELECT
@@ -97,9 +97,8 @@ BEGIN
            , ObjectFloat_PeriodYear.ValueData            AS PeriodYear
            
            , CASE WHEN tmpProtocol.MovementId > 0 THEN TRUE ELSE FALSE END AS isProtocol
-       FROM tmpMovement
-
-            LEFT JOIN Movement ON Movement.Id = tmpMovement.Id
+       FROM tmpMovement AS Movement
+            --LEFT JOIN Movement ON Movement.Id = tmpMovement.Id
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementString AS MS_Comment 
@@ -148,7 +147,7 @@ BEGIN
                                   ON ObjectFloat_PeriodYear.ObjectId = Object_From.Id
                                  AND ObjectFloat_PeriodYear.DescId = zc_ObjectFloat_Partner_PeriodYear()
             --
-            LEFT JOIN tmpProtocol ON tmpProtocol.MovementId = tmpMovement.Id
+            LEFT JOIN tmpProtocol ON tmpProtocol.MovementId = Movement.Id
            ;
   
 END;
