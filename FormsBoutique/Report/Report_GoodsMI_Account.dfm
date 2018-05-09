@@ -6,7 +6,7 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1378
-  ExplicitHeight = 460
+  ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -53,6 +53,14 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
       TabOrder = 5
       Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
       Width = 329
+    end
+    object cbCurrency: TcxCheckBox
+      Left = 696
+      Top = 5
+      Action = actRefresh
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1072#1083#1102#1090#1091' ('#1076#1072'/'#1085#1077#1090')'
+      TabOrder = 6
+      Width = 161
     end
   end
   inherited PageControl: TcxPageControl [1]
@@ -368,6 +376,13 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1074' '#1087#1088#1086#1076#1072#1078#1077', '#1043#1056#1053
             Width = 55
+          end
+          object CurrencyName: TcxGridDBColumn
+            Caption = #1042#1072#1083#1102#1090#1072
+            DataBinding.FieldName = 'CurrencyName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
           end
           object TotalPay: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1086#1087#1083#1072#1090#1072' -> '#1043#1056#1053
@@ -904,6 +919,8 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
         end>
       Caption = 'actComplete'
       ImageIndex = 12
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1088#1086#1074#1077#1076#1077#1085
     end
     object actSetErased: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -919,6 +936,8 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
         end>
       Caption = 'actSetErased'
       ImageIndex = 13
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1091#1076#1072#1083#1077#1085
     end
     object mactPrint_Check: TMultiAction
       Category = 'Print'
@@ -1052,6 +1071,14 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
         Name = 'inIsShowAll'
         Value = Null
         Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsCurrency'
+        Value = Null
+        Component = cbCurrency
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

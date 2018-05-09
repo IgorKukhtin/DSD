@@ -108,13 +108,18 @@ BEGIN
                        LEFT JOIN tmpContainer ON tmpContainer.ClientId = Object_Client.Id
 
                   WHERE Object_Client.DescId = zc_Object_Client()
-                    AND (COALESCE (tmpContainer.EndAmount, 0) <> 0 
-                                                 OR COALESCE (tmpContainer.EndSum, 0) <> 0
-                                                 OR COALESCE (tmpContainer.Summ_Period, 0) <> 0 
-                                                 OR COALESCE (tmpContainer.Amount_Period, 0) <> 0
-                                                 OR (ObjectLink_Client_InsertUnit.ChildObjectId = inUnitId 
-                                                   AND ObjectDate_Protocol_Insert.ValueData >= inStartDate AND ObjectDate_Protocol_Insert.ValueData < inEndDate + interval '1 day')
-                                                   )
+                    AND Object_Client.isErased = FALSE
+                    
+                    AND (-- показываем если есть долги
+                         COALESCE (tmpContainer.EndAmount, 0) <> 0 
+                      OR COALESCE (tmpContainer.EndSum, 0) <> 0
+                         --ИЛИ показываем если есть движени за период
+                      OR COALESCE (tmpContainer.Summ_Period, 0) <> 0 
+                      OR COALESCE (tmpContainer.Amount_Period, 0) <> 0
+                         --ИЛИ показываем если подразд.созд. = inUnitId и дата создания >= inStartDate
+                      OR ((ObjectLink_Client_InsertUnit.ChildObjectId = inUnitId )         --OR COALESCE (ObjectLink_Client_InsertUnit.ChildObjectId,0) = 0
+                        AND ObjectDate_Protocol_Insert.ValueData >= inStartDate /*AND ObjectDate_Protocol_Insert.ValueData < inEndDate + interval '1 day'*/)
+                         )
                   )
 
        --результат
@@ -155,7 +160,9 @@ BEGIN
 
        FROM (SELECT Object_Client.*
              FROM Object AS Object_Client
-             WHERE Object_Client.DescId = zc_Object_Client() AND inIsShowAll = TRUE
+             WHERE Object_Client.DescId = zc_Object_Client() 
+               AND inIsShowAll = TRUE
+               AND Object_Client.isErased = FALSE
            UNION 
              SELECT tmpClient.*
              FROM tmpClient

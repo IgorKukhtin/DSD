@@ -134,4 +134,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Loss (inStartDate:= '01.01.2015', inEndDate:= '01.02.2015', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Loss (inStartDate:= '01.01.2015', inEndDate:= '01.02.2015', inStartProtocol:= '01.03.2017', inEndProtocol:= '01.03.2017', inIsProtocol:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

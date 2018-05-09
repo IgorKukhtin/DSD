@@ -1,12 +1,14 @@
 -- Function:  gpReport_GoodsMI_Account()
 
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_Account (TDateTime,TDateTime,Integer,Boolean,TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_Account (TDateTime, TDateTime, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_Account (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION  gpReport_GoodsMI_Account(
     IN inStartDate        TDateTime,  -- Дата начала
     IN inEndDate          TDateTime,  -- Дата окончания
     IN inUnitId           Integer  ,  -- Подразделение
     IN inIsShowAll        Boolean  ,  -- Показывать все документы / только проведенные
+    IN inIsCurrency       Boolean  ,  -- Показать валюту (да/нет)
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (-- Документ
@@ -55,7 +57,8 @@ RETURNS TABLE (-- Документ
              , TotalDebt        TFloat
 
              , CurrencyValue    TFloat
-
+             , CurrencyName     TVarChar
+             
                -- Дата/вр. (созд.)
              , InsertDate       TDateTime
                -- Группа: 1 - по Товарам + 2 - Обмены
@@ -368,6 +371,11 @@ BEGIN
       -- оплаты в валюте / обмены
     , tmpMI_Child AS (SELECT MovementItem.MovementId
                            , COALESCE (MovementItem.ParentId, 0) AS ParentId
+                           , CASE WHEN inIsCurrency = TRUE THEN MILinkObject_Currency.ObjectId ELSE 0 END AS CurrencyId
+                           , SUM (CASE WHEN MILinkObject_Currency.ObjectId = zc_Currency_GRN() 
+                                       THEN MovementItem.Amount
+                                       ELSE zfCalc_CurrencyFrom (MovementItem.Amount, MIFloat_CurrencyValue.ValueData, MIFloat_ParValue.ValueData)
+                                  END) AS Pay_Child
                            , SUM (CASE WHEN MovementItem.ParentId IS NULL
                                             -- Расчетная сумма в грн для обмен
                                             THEN -1 * zfCalc_CurrencyFrom (MovementItem.Amount, MIFloat_CurrencyValue.ValueData, MIFloat_ParValue.ValueData)
@@ -397,6 +405,7 @@ BEGIN
                       GROUP BY MovementItem.ParentId
                              , MovementItem.MovementId
                              , CASE WHEN MovementItem.ParentId IS NULL THEN MIFloat_CurrencyValue.ValueData ELSE 0 END
+                             , CASE WHEN inIsCurrency = TRUE THEN MILinkObject_Currency.ObjectId ELSE 0 END
                      )
     -- выбираю все контейнеры по покупателю и подразделению , если выбрано
   , tmpContainer AS (SELECT Container.Id                    AS ContainerId
@@ -476,6 +485,7 @@ BEGIN
                           , tmp.OperPriceList       AS OperPriceList
                           , tmp.GoodsId
                           , tmp.CurrencyValue
+                          , tmp.CurrencyId
                           , SUM (tmp.SummChangePercent) AS SummChangePercent
                           , SUM (tmp.Amount)            AS Amount
                           , SUM (tmp.TotalPay_Grn)      AS TotalPay_Grn
@@ -501,10 +511,12 @@ BEGIN
                                 , tmp.ChangePercent
                                 , tmp.OperPriceList
                                 , tmpMI_Child.CurrencyValue
+                                , tmpMI_Child.CurrencyId
                                 , (tmp.SummChangePercent) AS SummChangePercent
                                 , (tmp.Amount)            AS Amount
-                                , (tmp.TotalPay)          AS TotalPay
-                                , (tmpDebt.Debt)              AS Debt
+                                --, (tmp.TotalPay)          AS TotalPay
+                                , (tmpMI_Child.Pay_Child * (CASE WHEN tmp.MovementDescId = zc_Movement_ReturnIn() THEN -1 ELSE 1 END)) :: TFloat  AS TotalPay
+                                , (tmpDebt.Debt)          AS Debt
                                 , (tmpMI_Child.Amount_GRN * (CASE WHEN tmp.MovementDescId = zc_Movement_ReturnIn() THEN -1 ELSE 1 END)) :: TFloat AS TotalPay_Grn
                                 , (tmpMI_Child.Amount_USD * (CASE WHEN tmp.MovementDescId = zc_Movement_ReturnIn() THEN -1 ELSE 1 END)) :: TFloat AS TotalPay_USD
                                 , (tmpMI_Child.Amount_EUR * (CASE WHEN tmp.MovementDescId = zc_Movement_ReturnIn() THEN -1 ELSE 1 END)) :: TFloat AS TotalPay_EUR
@@ -535,6 +547,7 @@ BEGIN
                                 , 0    :: TFloat    AS ChangePercent
                                 , 0    :: TFloat    AS OperPriceList
                                 , tmpMI_Child_Exc.CurrencyValue
+                                , tmpMI_Child_Exc.CurrencyId
                                 , 0    :: TFloat    AS SummChangePercent
                                 , 0    :: TFloat    AS Amount
                                 , 0    :: TFloat    AS TotalPay
@@ -574,6 +587,7 @@ BEGIN
                              , tmp.OperPriceList
                              , tmp.GoodsId
                              , tmp.CurrencyValue
+                             , tmp.CurrencyId
               )
     -- ???сворачиваем по продажам и возвратам???
   , tmp_All AS (SELECT CASE WHEN tmp.GoodsId <> -1 THEN 1 ELSE 2 END AS NumGroup
@@ -594,6 +608,7 @@ BEGIN
                      , tmp.OperPriceList         AS OperPriceList
                      , tmp.GoodsId
                      , tmp.CurrencyValue
+                     , tmp.CurrencyId
                      , SUM (tmp.SummChangePercent) AS SummChangePercent
                      , SUM (tmp.Amount)            AS Amount
                      , SUM (tmp.TotalPay_Grn)      AS TotalPay_Grn
@@ -602,7 +617,7 @@ BEGIN
                      , SUM (tmp.TotalPay_Card)     AS TotalPay_Card
                      , SUM (tmp.TotalPay)          AS TotalPay
                      , SUM (tmp.Debt)              AS Debt
-                     , ROW_NUMBER() OVER (PARTITION BY tmp.MI_Id ORDER BY tmp.MovementId DESC) AS Ord
+                     , ROW_NUMBER() OVER (PARTITION BY tmp.MovementId, tmp.MI_Id ORDER BY tmp.MovementId, tmp.MI_Id DESC) AS Ord
                 FROM tmpData AS tmp
                 GROUP BY CASE WHEN tmp.GoodsId <> -1 THEN 1 ELSE 2 END
                      , tmp.MovementId
@@ -622,6 +637,7 @@ BEGIN
                      , tmp.OperPriceList
                      , tmp.GoodsId
                      , tmp.CurrencyValue
+                     , tmp.CurrencyId
              )
 
   ---
@@ -657,18 +673,20 @@ BEGIN
 
              , tmpData.ChangePercent       ::TFloat
              , tmpData.OperPriceList       ::TFloat
-             , COALESCE (tmpData.SummChangePercent, 0)   ::TFloat AS SummChangePercent
-             , tmpData.Amount              ::TFloat
-             , zfCalc_SummPriceList (tmpData.Amount, tmpData.OperPriceList) AS TotalSummPriceList
+             , CASE WHEN tmpData.Ord = 1 THEN COALESCE (tmpData.SummChangePercent, 0)  ELSE 0 END :: TFloat AS SummChangePercent
+             , CASE WHEN tmpData.Ord = 1 THEN tmpData.Amount    ELSE 0 END                        :: TFloat AS Amount
+             , CASE WHEN tmpData.Ord = 1 THEN zfCalc_SummPriceList (tmpData.Amount, tmpData.OperPriceList) ELSE 0 END :: TFloat AS TotalSummPriceList
              , tmpData.TotalPay_Grn        ::TFloat
              , tmpData.TotalPay_USD        ::TFloat
              , tmpData.TotalPay_EUR        ::TFloat
              , tmpData.TotalPay_Card       ::TFloat
              , COALESCE (tmpData.TotalPay, 0) ::TFloat  AS TotalPay
-             , CASE WHEN tmpData.Ord = 1 THEN COALESCE (tmpData.Debt, 0) ELSE 0 END :: TFloat  AS TotalDebt
+             , CASE WHEN tmpData.Ord = 1 THEN COALESCE (tmpData.Debt, 0) ELSE 0 END               :: TFloat  AS TotalDebt
 
-             , tmpData.CurrencyValue         ::TFloat AS CurrencyValue
+             , tmpData.CurrencyValue           ::TFloat AS CurrencyValue
 
+             , Object_Currency.ValueData                AS CurrencyName
+             
              , MovementDate_Insert.ValueData            AS InsertDate
                -- разные группы обмены и продажи
              , tmpData.NumGroup
@@ -691,6 +709,8 @@ BEGIN
             LEFT JOIN Object AS Object_Unit   ON Object_Unit.Id   = tmpData.UnitId
             LEFT JOIN Object AS Object_Client ON Object_Client.Id = tmpData.ClientId
             LEFT JOIN Object AS Object_Goods  ON Object_Goods.Id  = tmpData.GoodsId
+
+            LEFT JOIN Object AS Object_Currency  ON Object_Currency.Id  = tmpData.CurrencyId
 
             LEFT JOIN Object_PartionGoods      ON Object_PartionGoods.MovementItemId  = tmpData.PartionId
 
@@ -719,11 +739,12 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.05.18         *               
  23.04.18         *
  12.02.18         *
  04.07.17         *
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_Account (inStartDate:= '01.04.2018', inEndDate:= '01.04.2018', inUnitId:= 506, inIsShowAll:= TRUE, inSession:= zfCalc_UserAdmin()) -- WHERE ClientName like '%Шуваев%'
+-- SELECT * FROM gpReport_GoodsMI_Account (inStartDate:= '01.04.2018', inEndDate:= '01.04.2018', inUnitId:= 506, inIsShowAll:= TRUE, inIsCurrency:= True, inSession:= zfCalc_UserAdmin()) -- WHERE ClientName like '%Шуваев%'
