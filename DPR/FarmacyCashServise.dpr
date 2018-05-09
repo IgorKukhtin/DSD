@@ -83,6 +83,8 @@ begin
 
   with TLoginForm.Create(Application) do
   Begin
+   // Отключаем сохранение параметров
+   cxPropertiesStore.Active := False;
    // Заполняем авторизационные поля
    edUserName.Text:=ParamStr(1);
    edPassword.Text:=ParamStr(2);

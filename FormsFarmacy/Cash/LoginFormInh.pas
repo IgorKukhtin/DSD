@@ -11,6 +11,17 @@ uses
   cxDropDownEdit, cxLabel, dsdDB, dxSkinsCore, dxSkinsDefaultPainters;
 
 type
+  TcxComboBoxUser = Class(TcxComboBox)
+  private
+    function GetUsers: string;
+    procedure SetUsers(const Value: string);
+  published
+    property Users: string read GetUsers write SetUsers;
+  end;
+
+  TcxComboBox = Class(TcxComboBoxUser)
+  end;
+
   TLoginForm1 = class(TLoginForm)
     cxLabel4: TcxLabel;
     edFarmacyName: TcxComboBox;
@@ -34,6 +45,19 @@ uses Storage, Authentication, CommonData, MessagesUnit, StrUtils, LocalWorkUnit,
 
 {$R *.dfm}
 
+{ TcxComboBoxUser }
+
+function TcxComboBoxUser.GetUsers: string;
+begin
+  result := Properties.Items.Text
+end;
+
+procedure TcxComboBoxUser.SetUsers(const Value: string);
+begin
+  if Value <> '' then Properties.Items.Text := Value
+end;
+
+{ TLoginForm1 }
 procedure TLoginForm1.btnOkClick(Sender: TObject);
 begin
   inherited;

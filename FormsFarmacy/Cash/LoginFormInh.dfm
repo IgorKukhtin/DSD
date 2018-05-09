@@ -1,7 +1,5 @@
 inherited LoginForm1: TLoginForm1
   OnShow = FormShow
-  ExplicitWidth = 407
-  ExplicitHeight = 190
   PixelsPerInch = 96
   TextHeight = 13
   inherited cxLabel1: TcxLabel
@@ -38,22 +36,6 @@ inherited LoginForm1: TLoginForm1
     Width = 204
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Components = <
-      item
-        Component = edUserName
-        Properties.Strings = (
-          'Properties.CharCase'
-          'Properties.Items'
-          'Text')
-      end
-      item
-        Component = LoginForm.Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Top'
-          'Width')
-      end>
     Left = 16
     Top = 8
   end
