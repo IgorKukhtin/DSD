@@ -174,37 +174,42 @@ BEGIN
                                          MIContainer.isActive
                                   FROM tmpContainer
                                          LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId
-                                                                                       AND MIContainer.OperDate >= inStartDate
+                                                                                       -- AND MIContainer.OperDate >= inStartDate
+                                                                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                   GROUP BY tmpContainer.ObjectId
                                          , tmpContainer.CashId
                                          , tmpContainer.CurrencyId
                                          , MIContainer.isActive
                                          , MIContainer.MovementItemId
                                   )
-
+          -- ¬—≈ Ò‚-‚‡
+        , tmpMovementItemLinkObject AS (SELECT MovementItemLinkObject.*
+                                        FROM MovementItemLinkObject
+                                        WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpContainerBalance.MovementItemId FROM tmpContainerBalance)
+                                       )
         , tmpMoneyPlace_Balance AS (SELECT MILO_MoneyPlace.MovementItemId
                                          , MILO_MoneyPlace.ObjectId 
-                                    FROM MovementItemLinkObject AS MILO_MoneyPlace
+                                    FROM tmpMovementItemLinkObject AS MILO_MoneyPlace
                                     WHERE MILO_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
-                                      AND MILO_MoneyPlace.MovementItemId IN (SELECT DISTINCT tmpContainerBalance.MovementItemId FROM tmpContainerBalance)
-                                    )
+                                      -- AND MILO_MoneyPlace.MovementItemId IN (SELECT DISTINCT tmpContainerBalance.MovementItemId FROM tmpContainerBalance)
+                                   )
         , tmpInfoMoney_Balance AS (SELECT MILO_InfoMoney.MovementItemId
                                         , MILO_InfoMoney.ObjectId 
-                                   FROM MovementItemLinkObject AS MILO_InfoMoney
+                                   FROM tmpMovementItemLinkObject AS MILO_InfoMoney
                                    WHERE MILO_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-                                     AND MILO_InfoMoney.MovementItemId IN (SELECT DISTINCT tmpContainerBalance.MovementItemId FROM tmpContainerBalance)
+                                     -- AND MILO_InfoMoney.MovementItemId IN (SELECT DISTINCT tmpContainerBalance.MovementItemId FROM tmpContainerBalance)
                                    )
         , tmpUnit_Balance AS (SELECT MILO_Unit.MovementItemId
                                    , MILO_Unit.ObjectId 
-                              FROM MovementItemLinkObject AS MILO_Unit
+                              FROM tmpMovementItemLinkObject AS MILO_Unit
                               WHERE MILO_Unit.DescId = zc_MILinkObject_Unit()
-                                AND MILO_Unit.MovementItemId IN (SELECT DISTINCT tmpContainerBalance.MovementItemId FROM tmpContainerBalance)
+                                -- AND MILO_Unit.MovementItemId IN (SELECT DISTINCT tmpContainerBalance.MovementItemId FROM tmpContainerBalance)
                               )
         , tmpContract_Balance AS (SELECT MILO_Contract.MovementItemId
                                        , MILO_Contract.ObjectId 
-                                  FROM MovementItemLinkObject AS MILO_Contract
+                                  FROM tmpMovementItemLinkObject AS MILO_Contract
                                   WHERE MILO_Contract.DescId = zc_MILinkObject_Contract()
-                                    AND MILO_Contract.MovementItemId IN (SELECT DISTINCT tmpContainerBalance.MovementItemId FROM tmpContainerBalance)
+                                    -- AND MILO_Contract.MovementItemId IN (SELECT DISTINCT tmpContainerBalance.MovementItemId FROM tmpContainerBalance)
                                   )
         , tmpComment_Balance AS (SELECT MIString_Comment.MovementItemId
                                       , COALESCE (MIString_Comment.ValueData, '') AS ValueData
@@ -223,7 +228,8 @@ BEGIN
                                           MIContainer.isActive
                                    FROM tmpContainer
                                           LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId_Currency
-                                                                                        AND MIContainer.OperDate >= inStartDate
+                                                                                        -- AND MIContainer.OperDate >= inStartDate
+                                                                                        AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                    WHERE tmpContainer.ContainerId_Currency > 0
                                    GROUP BY MIContainer.MovementItemId,
                                             tmpContainer.ObjectId,
@@ -231,36 +237,41 @@ BEGIN
                                             tmpContainer.CurrencyId,
                                             MIContainer.isActive
                                   )
+          -- ¬—≈ Ò‚-‚‡
+        , tmpMovementItemLinkObject_Òurr AS (SELECT MovementItemLinkObject.*
+                                             FROM MovementItemLinkObject
+                                             WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpContainerCurrency.MovementItemId FROM tmpContainerCurrency)
+                                            )
         , tmpMoneyPlace_Currency AS (SELECT MILO_MoneyPlace.MovementItemId
                                           , MILO_MoneyPlace.ObjectId 
-                                     FROM MovementItemLinkObject AS MILO_MoneyPlace
+                                     FROM tmpMovementItemLinkObject_Òurr AS MILO_MoneyPlace
                                      WHERE MILO_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
-                                       AND MILO_MoneyPlace.MovementItemId IN (SELECT DISTINCT tmpContainerCurrency.MovementItemId FROM tmpContainerCurrency)
-                                     )
+                                       -- AND MILO_MoneyPlace.MovementItemId IN (SELECT DISTINCT tmpContainerCurrency.MovementItemId FROM tmpContainerCurrency)
+                                    )
         , tmpInfoMoney_Currency AS (SELECT MILO_InfoMoney.MovementItemId
                                          , MILO_InfoMoney.ObjectId 
-                                    FROM MovementItemLinkObject AS MILO_InfoMoney
+                                    FROM tmpMovementItemLinkObject_Òurr AS MILO_InfoMoney
                                     WHERE MILO_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-                                      AND MILO_InfoMoney.MovementItemId IN (SELECT DISTINCT tmpContainerCurrency.MovementItemId FROM tmpContainerCurrency)
-                                    )
+                                      -- AND MILO_InfoMoney.MovementItemId IN (SELECT DISTINCT tmpContainerCurrency.MovementItemId FROM tmpContainerCurrency)
+                                   )
         , tmpUnit_Currency AS (SELECT MILO_Unit.MovementItemId
                                     , MILO_Unit.ObjectId 
-                               FROM MovementItemLinkObject AS MILO_Unit
+                               FROM tmpMovementItemLinkObject_Òurr AS MILO_Unit
                                WHERE MILO_Unit.DescId = zc_MILinkObject_Unit()
-                                 AND MILO_Unit.MovementItemId IN (SELECT DISTINCT tmpContainerCurrency.MovementItemId FROM tmpContainerCurrency)
-                               )
+                                 -- AND MILO_Unit.MovementItemId IN (SELECT DISTINCT tmpContainerCurrency.MovementItemId FROM tmpContainerCurrency)
+                              )
         , tmpContract_Currency AS (SELECT MILO_Contract.MovementItemId
                                         , MILO_Contract.ObjectId 
-                                   FROM MovementItemLinkObject AS MILO_Contract
+                                   FROM tmpMovementItemLinkObject_Òurr AS MILO_Contract
                                    WHERE MILO_Contract.DescId = zc_MILinkObject_Contract()
-                                     AND MILO_Contract.MovementItemId IN (SELECT DISTINCT tmpContainerCurrency.MovementItemId FROM tmpContainerCurrency)
-                                   )
+                                     -- AND MILO_Contract.MovementItemId IN (SELECT DISTINCT tmpContainerCurrency.MovementItemId FROM tmpContainerCurrency)
+                                  )
         , tmpComment_Currency AS (SELECT MIString_Comment.MovementItemId
                                        , COALESCE (MIString_Comment.ValueData, '') AS ValueData
                                   FROM MovementItemString AS MIString_Comment
                                   WHERE MIString_Comment.DescId = zc_MIString_Comment()
                                     AND MIString_Comment.MovementItemId IN (SELECT DISTINCT tmpContainerCurrency.MovementItemId FROM tmpContainerCurrency)
-                               ) 
+                                 ) 
                                    
         , Operation_all AS (-- ÓÒÚ‡ÚÓÍ  ‚ ‚‡Î˛ÚÂ ·‡Î‡ÌÒ‡
                             SELECT tmpContainer.ContainerId,

@@ -198,6 +198,8 @@ BEGIN
              , CASE WHEN Object.DescId IN (zc_Object_BankAccount(), zc_Object_Cash())
                          THEN CASE WHEN _tmpItem.CurrencyId = zc_Enum_Currency_Basis()
                                         THEN zc_Enum_Account_110301() -- Транзит + расчетный счет + расчетный счет
+                                   WHEN Object.DescId = zc_Object_Cash()
+                                        THEN zc_Enum_Account_40102() -- касса + касса в валюте
                                    ELSE zc_Enum_Account_110302() -- Транзит + расчетный счет + валютный
                               END
                     ELSE 0
