@@ -104,7 +104,7 @@ BEGIN
 
             LEFT JOIN tmpContractSettings ON tmpContractSettings.MainJuridicalId = Object_MainJuridical.Id
                                          AND tmpContractSettings.ContractId = Contract.Id
-                                         AND (COALESCE(tmpContractSettings.AreaId,0) = COALESCE(Object_Area.Id,0))
+                                         AND (COALESCE (tmpContractSettings.AreaId, 0) = COALESCE (Object_Area.Id, 0))
             --   
             LEFT JOIN LoadPriceList ON LoadPriceList.ContractId           = LastPriceList_View.ContractId
                                    AND LoadPriceList.JuridicalId          = LastPriceList_View.JuridicalId
@@ -152,7 +152,6 @@ BEGIN
                                             ON ObjectFloat_PriceLimit.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
                                            AND ObjectFloat_PriceLimit.DescId = zc_ObjectFloat_JuridicalSettings_PriceLimit()
                
-     
                       LEFT JOIN ObjectBoolean AS ObjectBoolean_isBonusVirtual
                                               ON ObjectBoolean_isBonusVirtual.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
                                              AND ObjectBoolean_isBonusVirtual.DescId = zc_ObjectBoolean_JuridicalSettings_BonusVirtual()
