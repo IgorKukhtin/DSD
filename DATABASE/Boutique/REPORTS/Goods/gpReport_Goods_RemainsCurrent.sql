@@ -184,6 +184,7 @@ BEGIN
                         -- AND Container.WhereObjectId = inUnitId
                         AND (Container.Amount <> 0 OR Container_SummDebt.Amount <> 0 OR Container_SummDebt_profit.Amount <> 0
                           OR inPartnerId <> 0 OR (inIsYear = TRUE AND inStartYear = inEndYear) -- OR inBrandId <> 0 -- OR (inIsYear = TRUE AND inStartYear >0)
+                          OR inBrandId <> 0
                             )
                         AND (ObjectLink_Partner_Period.ChildObjectId = inPeriodId   OR inPeriodId  = 0)
                         AND (Object_PartionGoods.BrandId             = inBrandId    OR inBrandId   = 0)
@@ -193,7 +194,7 @@ BEGIN
 
        , tmpData_All AS (SELECT tmpContainer.UnitId
                               , tmpContainer.GoodsId
-                              , CASE WHEN inisPartion = TRUE AND inIsSize = TRUE THEN tmpContainer.PartionId        ELSE 0  END AS PartionId
+                              , CASE WHEN inisPartion = TRUE AND inIsSize = TRUE THEN tmpContainer.PartionId ELSE 0 END AS PartionId
                               , CASE WHEN inisPartion = TRUE THEN tmpContainer.MovementId       ELSE 0  END AS MovementId_Partion
                               , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE '' END AS DescName_Partion
                               , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE '' END AS InvNumber_Partion
@@ -295,7 +296,7 @@ BEGIN
                           , tmpData_All.OperPriceList
                           , tmpData_All.UnitId_in
 
-                          , SUM (tmpData_All.Amount_in) AS Amount_in
+                          , SUM (tmpData_All.Amount_in)         AS Amount_in
                           , SUM (tmpData_All.TotalSummPrice_in) AS TotalSummPrice_in
 
                           , SUM (tmpData_All.Remains)         AS Remains
@@ -438,7 +439,10 @@ BEGIN
            , tmpCurrency.ParValue ::TFloat  AS ParValue
 
            , tmpData.Amount_in    :: TFloat AS Amount_in
-           , CASE WHEN tmpData.RemainsAll <> 0 THEN tmpData.TotalSummPrice / tmpData.RemainsAll ELSE 0 END :: TFloat AS OperPrice
+           , CASE WHEN tmpData.RemainsAll <> 0 THEN tmpData.TotalSummPrice    / tmpData.RemainsAll
+                  WHEN tmpData.Amount_in  <> 0 THEN tmpData.TotalSummPrice_in / tmpData.Amount_in
+                  ELSE 0
+             END :: TFloat AS OperPrice
            , 1                    :: TFloat AS CountForPrice
            , tmpData.OperPriceList
 
