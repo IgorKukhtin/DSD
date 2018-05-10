@@ -33,16 +33,21 @@ BEGIN
                                   , Object_ContractSettings.isErased         AS isErased
                                   , ObjectLink_MainJuridical.ChildObjectId   AS MainJuridicalId
                                   , ObjectLink_Contract.ChildObjectId        AS ContractId
+                                  , ObjectLink_Area.ChildObjectId            AS AreaId
                              FROM ObjectLink AS ObjectLink_MainJuridical
                                 INNER JOIN ObjectLink AS ObjectLink_Contract
                                                       ON ObjectLink_Contract.ObjectId = ObjectLink_MainJuridical.ObjectId
                                                      AND ObjectLink_Contract.DescId = zc_ObjectLink_ContractSettings_Contract()
+                                INNER JOIN ObjectLink AS ObjectLink_Area
+                                                      ON ObjectLink_Area.ObjectId = ObjectLink_MainJuridical.ObjectId
+                                                     AND ObjectLink_Area.DescId = zc_ObjectLink_ContractSettings_Area()
+
                                 LEFT JOIN Object AS Object_ContractSettings ON Object_ContractSettings.Id = ObjectLink_MainJuridical.ObjectId
                              WHERE ObjectLink_MainJuridical.DescId = zc_ObjectLink_ContractSettings_MainJuridical()
                              ) 
 
  ,  tmpMainJuridicalArea AS (SELECT DISTINCT ObjectLink_JuridicalRetail.ObjectId      AS MainJuridicalId
-                                 ,  ObjectLink_Unit_Area.ChildObjectId AS AreaId
+                                 ,  ObjectLink_Unit_Area.ChildObjectId                AS AreaId
                             FROM ObjectLink AS ObjectLink_JuridicalRetail 
                                  LEFT JOIN ObjectLink AS OL_Unit_Juridical 
                                                       ON OL_Unit_Juridical.ChildObjectId = ObjectLink_JuridicalRetail.ObjectId
@@ -85,8 +90,9 @@ BEGIN
            , LoadPriceList.Date_Update                          AS UpdateDate
 
        FROM LastPriceList_View 
-            JOIN tmpMainJuridicalArea ON ( LastPriceList_View.AreaId = COALESCE (tmpMainJuridicalArea.AreaId, 0)
-                                          OR COALESCE (LastPriceList_View.AreaId, 0)  = 0)
+            JOIN tmpMainJuridicalArea ON (LastPriceList_View.AreaId = COALESCE (tmpMainJuridicalArea.AreaId, 0)
+                                       OR COALESCE (LastPriceList_View.AreaId, 0)  = 0
+                                          )
             LEFT JOIN Object AS Object_MainJuridical ON Object_MainJuridical.Id = tmpMainJuridicalArea.MainJuridicalId
                                
             JOIN Object AS Object_Juridical ON Object_Juridical.Id = LastPriceList_View.JuridicalId
@@ -98,6 +104,7 @@ BEGIN
 
             LEFT JOIN tmpContractSettings ON tmpContractSettings.MainJuridicalId = Object_MainJuridical.Id
                                          AND tmpContractSettings.ContractId = Contract.Id
+                                         AND (tmpContractSettings.AreaId = Object_Area.Id OR COALESCE(tmpContractSettings.AreaId,0)=0)
             --   
             LEFT JOIN LoadPriceList ON LoadPriceList.ContractId           = LastPriceList_View.ContractId
                                    AND LoadPriceList.JuridicalId          = LastPriceList_View.JuridicalId

@@ -2,10 +2,12 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_ContractSettings(Integer, TVarChar);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_ContractSettings(Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_ContractSettings(Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_ContractSettings(
         IN inMainJuridicalId   Integer   ,    -- Гл. юр. лицо
         IN inContractId        Integer   ,    -- Договор
+        IN inAreaId            Integer   ,    -- регион
        OUT outisErased         Boolean   ,
         IN inSession           TVarChar       -- сессия пользователя
 )
@@ -19,13 +21,17 @@ BEGIN
    vbUserId:= inSession;
    --vbObjectId := lpGet_DefaultValue('zc_Object_MainJuridical', vbUserId);
 
-   -- ищем элемент <Установки для договоров> по связи торг.сеть - договор
+   -- ищем элемент <Установки для договоров> по связи торг.сеть - договор - регион
    vbId := (SELECT ObjectLink_MainJuridical.ObjectId AS Id
             FROM ObjectLink AS ObjectLink_MainJuridical
                  INNER JOIN ObjectLink AS ObjectLink_Contract
                                        ON ObjectLink_Contract.ObjectId = ObjectLink_MainJuridical.ObjectId
                                       AND ObjectLink_Contract.DescId = zc_ObjectLink_ContractSettings_Contract()
                                       AND ObjectLink_Contract.ChildObjectId = inContractId
+                 INNER JOIN ObjectLink AS ObjectLink_Area
+                                       ON ObjectLink_Area.ObjectId = ObjectLink_MainJuridical.ObjectId
+                                      AND ObjectLink_Area.DescId = zc_ObjectLink_ContractSettings_Area()
+                                      AND ObjectLink_Area.ChildObjectId = inAreaId                
             WHERE ObjectLink_MainJuridical.DescId = zc_ObjectLink_ContractSettings_MainJuridical()
               AND ObjectLink_MainJuridical.ChildObjectId = inMainJuridicalId
             );
@@ -39,6 +45,8 @@ BEGIN
         PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ContractSettings_MainJuridical(), vbId, inMainJuridicalId);
         -- сохранили связь <Договор>
         PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ContractSettings_Contract(), vbId, inContractId);
+        -- сохранили связь <Регион>
+        PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ContractSettings_Area(), vbId, inAreaId);
      
    END IF;
 
@@ -58,6 +66,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.05.18         * add inAreaId
  10.11.16         *
 */
 
