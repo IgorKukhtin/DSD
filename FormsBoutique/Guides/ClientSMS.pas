@@ -101,6 +101,7 @@ type
     PeriodChoice: TPeriodChoice;
     ExecuteDialog: TExecuteDialog;
     isMotion: TcxGridDBColumn;
+    isErased_Client: TcxGridDBColumn;
   private
     { Private declarations }
   public

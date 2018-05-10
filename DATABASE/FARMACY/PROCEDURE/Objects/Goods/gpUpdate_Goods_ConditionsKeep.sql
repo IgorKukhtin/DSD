@@ -27,7 +27,7 @@ BEGIN
      END IF;
 
      vbUserId := lpGetUserBySession (inSession);
-     vbObjectId := COALESCE(lpGet_DefaultValue('zc_Object_Retail', vbUserId), '0');
+     --vbObjectId := COALESCE(lpGet_DefaultValue('zc_Object_Retail', vbUserId), '0');
 
      -- находим товар поставщика
      SELECT ObjectString.ObjectId 
@@ -154,7 +154,7 @@ BEGIN
                   ;  
 
     -- сохранили протокол
-    PERFORM lpInsert_ObjectProtocol (vbId, vbUserId);
+    --PERFORM lpInsert_ObjectProtocol (vbId, vbUserId);
 
 END;$BODY$
 
