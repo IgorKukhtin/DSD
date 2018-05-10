@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, Name TVarChar, JuridicalId Integer, JuridicalName TVa
                Bonus TFloat, PriceLimit TFloat, ConditionalPercent TFloat,
                ContractId Integer, ContractName TVarChar, 
                MainJuridicalId Integer, MainJuridicalName TVarChar,
-               ArealId Integer, AreaName TVarChar,
+               AreaId Integer, AreaName TVarChar,
                ContractSettingsId Integer,  isErased boolean,
                StartDate TDateTime, EndDate TDateTime,
                InsertName TVarChar, InsertDate TDateTime,
@@ -104,7 +104,7 @@ BEGIN
 
             LEFT JOIN tmpContractSettings ON tmpContractSettings.MainJuridicalId = Object_MainJuridical.Id
                                          AND tmpContractSettings.ContractId = Contract.Id
-                                         AND (tmpContractSettings.AreaId = Object_Area.Id OR COALESCE(tmpContractSettings.AreaId,0)=0)
+                                         AND (COALESCE(tmpContractSettings.AreaId,0) = COALESCE(Object_Area.Id,0))
             --   
             LEFT JOIN LoadPriceList ON LoadPriceList.ContractId           = LastPriceList_View.ContractId
                                    AND LoadPriceList.JuridicalId          = LastPriceList_View.JuridicalId
@@ -195,6 +195,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 10.05.18         *
  21.03.18         *
  15.02.18         *
  17.10.17         * add Area

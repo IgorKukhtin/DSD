@@ -3,7 +3,7 @@
   ClientHeight = 311
   ClientWidth = 985
   ExplicitWidth = 1001
-  ExplicitHeight = 346
+  ExplicitHeight = 349
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -516,6 +516,14 @@
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ContractId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAreaId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AreaId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

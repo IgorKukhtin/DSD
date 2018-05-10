@@ -31,7 +31,7 @@ BEGIN
                  INNER JOIN ObjectLink AS ObjectLink_Area
                                        ON ObjectLink_Area.ObjectId = ObjectLink_MainJuridical.ObjectId
                                       AND ObjectLink_Area.DescId = zc_ObjectLink_ContractSettings_Area()
-                                      AND ObjectLink_Area.ChildObjectId = inAreaId                
+                                      AND COALESCE (ObjectLink_Area.ChildObjectId,0) = inAreaId               
             WHERE ObjectLink_MainJuridical.DescId = zc_ObjectLink_ContractSettings_MainJuridical()
               AND ObjectLink_MainJuridical.ChildObjectId = inMainJuridicalId
             );
