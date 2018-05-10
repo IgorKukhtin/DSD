@@ -19,7 +19,9 @@ BEGIN
         UNION ALL
         SELECT 59612::Integer AS Id, 'Вента_price.csv'::TVarChar AS FileName
         UNION ALL
-        SELECT 59614::Integer AS Id, 'Фра-М_price.csv'::TVarChar AS FileName;
+        SELECT 59614::Integer AS Id, 'Фра-М_price.csv'::TVarChar AS FileName
+        UNION ALL
+        SELECT 183311::Integer AS Id, 'Инт-МЭ_price.csv'::TVarChar AS FileName;
         
   
 END;
