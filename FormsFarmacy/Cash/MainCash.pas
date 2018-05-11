@@ -3181,7 +3181,7 @@ begin
               APartnerMedicalId   := FLocalDataBaseHead.FieldByName('PMEDICALID').AsInteger;
               APartnerMedicalName := trim(FLocalDataBaseHead.FieldByName('PMEDICALN').AsString);
               AMedicSP            := trim(FLocalDataBaseHead.FieldByName('MEDICSP').AsString);
-              AOperDateSP         := FLocalDataBaseHead.FieldByName('OPERDATESP').AsDateTime;
+              AOperDateSP         := FLocalDataBaseHead.FieldByName('OPERDATESP').AsCurrency;
             end;
 
             FLocalDataBaseHead.Next;
