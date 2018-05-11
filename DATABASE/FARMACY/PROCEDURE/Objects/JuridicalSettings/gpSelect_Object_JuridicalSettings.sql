@@ -38,9 +38,9 @@ BEGIN
                                 INNER JOIN ObjectLink AS ObjectLink_Contract
                                                       ON ObjectLink_Contract.ObjectId = ObjectLink_MainJuridical.ObjectId
                                                      AND ObjectLink_Contract.DescId = zc_ObjectLink_ContractSettings_Contract()
-                                INNER JOIN ObjectLink AS ObjectLink_Area
-                                                      ON ObjectLink_Area.ObjectId = ObjectLink_MainJuridical.ObjectId
-                                                     AND ObjectLink_Area.DescId = zc_ObjectLink_ContractSettings_Area()
+                                LEFT JOIN ObjectLink AS ObjectLink_Area
+                                                     ON ObjectLink_Area.ObjectId = ObjectLink_MainJuridical.ObjectId
+                                                    AND ObjectLink_Area.DescId = zc_ObjectLink_ContractSettings_Area()
 
                                 LEFT JOIN Object AS Object_ContractSettings ON Object_ContractSettings.Id = ObjectLink_MainJuridical.ObjectId
                              WHERE ObjectLink_MainJuridical.DescId = zc_ObjectLink_ContractSettings_MainJuridical()
@@ -65,9 +65,9 @@ BEGIN
            , Object_JuridicalSettings.ValueData                 AS Name 
            , Object_Juridical.Id                                AS JuridicalId
            , Object_Juridical.ValueData                         AS JuridicalName
-           , COALESCE(JuridicalSettings.isBonusVirtual, FALSE)  AS isBonusVirtual
-           , COALESCE(JuridicalSettings.isPriceClose, TRUE)     AS isPriceClose
-           , COALESCE(JuridicalSettings.isSite, FALSE)          AS isSite 
+           , COALESCE (JuridicalSettings.isBonusVirtual, FALSE) AS isBonusVirtual
+           , COALESCE (JuridicalSettings.isPriceClose, TRUE)    AS isPriceClose
+           , COALESCE (JuridicalSettings.isSite, FALSE)         AS isSite 
            , JuridicalSettings.Bonus
            , JuridicalSettings.PriceLimit             :: TFloat AS PriceLimit
            , COALESCE(ObjectFloat_ConditionalPercent.ValueData, 0) :: TFloat AS ConditionalPercent
@@ -172,7 +172,7 @@ BEGIN
 
                  AS JuridicalSettings ON JuridicalSettings.JuridicalId = LastPriceList_View.JuridicalId
                                      AND JuridicalSettings.MainJuridicalId = Object_MainJuridical.Id --ObjectLink_JuridicalRetail.ObjectId
-                                     AND JuridicalSettings.ContractId = COALESCE(LastPriceList_View.ContractId, 0)
+                                     AND JuridicalSettings.ContractId = COALESCE (LastPriceList_View.ContractId, 0)
 
             LEFT JOIN Object AS Object_JuridicalSettings ON Object_JuridicalSettings.Id = JuridicalSettings.JuridicalSettingsId
 
@@ -181,9 +181,7 @@ BEGIN
                                  AND ObjectFloat_ConditionalPercent.DescId = zc_ObjectFloat_Juridical_ConditionalPercent()
 
        WHERE (COALESCE (tmpContractSettings.isErased, False) = False OR inIsShowErased = TRUE)
---and ObjectLink_JuridicalRetail.ObjectId  =3457711
-order by Object_MainJuridical.ValueData 
---and Contract.Id =183257
+       ORDER BY Object_MainJuridical.ValueData 
 ;  
 END;
 $BODY$
