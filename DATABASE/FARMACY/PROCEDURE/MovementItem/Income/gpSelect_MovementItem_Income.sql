@@ -562,6 +562,7 @@ BEGIN
                       )
    ,  tmpMI AS (SELECT MovementItem.Id
                      , MovementItem.ObjectId              AS GoodsId
+                     , MIString_GoodsName.ValueData       AS GoodsName
                      , MILinkObject_Goods.ObjectId        AS PartnerGoodsId 
                      , MovementItem.Amount                AS Amount
                      , MIFloat_Price.ValueData            AS Price
@@ -632,6 +633,9 @@ BEGIN
                    LEFT JOIN MovementItemString AS MIString_FEA
                                                 ON MIString_FEA.MovementItemId = MovementItem.Id
                                                AND MIString_FEA.DescId = zc_MIString_FEA() 
+                   LEFT JOIN MovementItemString AS MIString_GoodsName
+                                                ON MIString_GoodsName.MovementItemId = MovementItem.Id
+                                               AND MIString_GoodsName.DescId = zc_MIString_GoodsName()                                         
                                                
                    LEFT JOIN MovementItemString AS MIString_SertificatNumber
                                                 ON MIString_SertificatNumber.MovementItemId = MovementItem.Id
@@ -745,7 +749,7 @@ BEGIN
               , Object_Goods.ObjectCode            AS GoodsCode
               , Object_Goods.ValueData             AS GoodsName
               , ObjectString_Code.ValueData        AS PartnerGoodsCode
-              , Object_PartnerGoods.ValueData      AS PartnerGoodsName
+              , COALESCE (MovementItem.GoodsName, Object_PartnerGoods.ValueData)      AS PartnerGoodsName
               , Object_Retail.ValueData            AS RetailName
               , Object_Area.ValueData              AS AreaName
               , MovementItem.Amount
@@ -883,7 +887,8 @@ ALTER FUNCTION gpSelect_MovementItem_Income (Integer, Boolean, Boolean, TVarChar
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 11.05.18                                                                                       * 
  21.12.17         * del CodeUKTZED
  11.12.17         * CodeUKTZED
  21.10.17         * add AreaName

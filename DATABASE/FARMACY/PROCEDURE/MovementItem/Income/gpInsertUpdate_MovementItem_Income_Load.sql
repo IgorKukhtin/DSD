@@ -392,7 +392,7 @@ BEGIN
      vbIsInsert:= COALESCE (vbMovementItemId, 0) = 0;
 
      -- сохранили <Элемент документа>
-     vbMovementItemId := lpInsertUpdate_MovementItem_Income (vbMovementItemId, vbMovementId, vbGoodsId, inAmount, inPrice, inFEA, inMeasure, vbUserId);
+     vbMovementItemId := lpInsertUpdate_MovementItem_Income (vbMovementItemId, vbMovementId, vbGoodsId, inGoodsName, inAmount, inPrice, inFEA, inMeasure, vbUserId);
 
      -- сохранили
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), vbMovementItemId, vbPartnerGoodsId);
@@ -446,7 +446,8 @@ LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий О.В.
+ 11.05.18                                                                                     * 
  21.12.17         * del inCodeUKTZED
  11.12.17         * inCodeUKTZED
  15.02.17         * уходим от вьюх
@@ -459,3 +460,4 @@ LANGUAGE PLPGSQL VOLATILE;
  02.12.14                        *   
 */
 --select * from gpInsertUpdate_MovementItem_Income_MMOLoad(inOKPOFrom := '36852896', inOKPOTo := '2591702304' , inInvNumber := '6612083' , inOperDate := ('15.02.2017')::TDateTime , inInvTaxNumber := '6612083' , inPaymentDate := ('27.02.2017')::TDateTime , inPriceWithVAT := 'False' , inSyncCode := 1 , inRemark := 'ЧП "Шапира И. А.", г.Днепропетровск, пр.Правды, 6' , inGoodsCode := '28036' , inGoodsName := 'Ліпримар табл. в/о 20мг №30' , inMakerCode := '292' , inMakerName := 'Пфайзер' , inCommonCode := 155344 , inVAT := 7 , inPartitionGoods := 'R71613' , inExpirationDate := ('01.05.2019')::TDateTime , inAmount := 10 , inPrice := 523.57 , inFea := '3004900000' , inMeasure := 'пак' , inSertificatNumber := 'UA/2377/01/01' , inSertificatStart := ('27.06.2014')::TDateTime , inSertificatEnd := ('27.06.2019')::TDateTime , inisLastRecord := 'True' ,  inSession := '1871720');
+
