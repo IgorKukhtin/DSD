@@ -2237,6 +2237,18 @@ inherited MainForm: TMainForm
       Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1086#1089#1090#1072#1090#1082#1086#1084' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088#1080#1086#1076#1072
       OnExecute = actReport_Analysis_Remains_SellingExecute
     end
+    object actReportMovementCheckFLForm: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093' '#1092#1080#1079'. '#1083#1080#1094#1072#1084
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093' '#1092#1080#1079'. '#1083#1080#1094#1072#1084
+      FormName = 'TReportMovementCheckFLForm'
+      FormNameParam.Value = 'TReportMovementCheckFLForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -2623,6 +2635,9 @@ inherited MainForm: TMainForm
       end
       object miReportMovementCheckFarmForm: TMenuItem
         Action = actReportMovementCheckFarmForm
+      end
+      object miReportMovementCheckFLForm: TMenuItem
+        Action = actReportMovementCheckFLForm
       end
       object N143: TMenuItem
         Action = actReportMovementCheckLight

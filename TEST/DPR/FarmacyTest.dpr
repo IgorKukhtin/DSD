@@ -571,7 +571,8 @@ uses
   MedicSP_Object in '..\..\FormsFarmacy\Guides\MedicSP_Object.pas' {MedicSP_ObjectForm: TParentForm},
   Report_Analysis_Remains_Selling in '..\..\FormsFarmacy\Report\Report_Analysis_Remains_Selling.pas' {Report_Analysis_Remains_SellingForm},
   UnitCategory in '..\..\FormsFarmacy\Guides\UnitCategory.pas' {UnitCategoryForm: TParentForm},
-  UnitCategoryEdit in '..\..\FormsFarmacy\Guides\UnitCategoryEdit.pas' {UnitCategoryEditForm: TParentForm};
+  UnitCategoryEdit in '..\..\FormsFarmacy\Guides\UnitCategoryEdit.pas' {UnitCategoryEditForm: TParentForm},
+  ReportMovementCheckFL in '..\..\FormsFarmacy\Report\ReportMovementCheckFL.pas' {ReportMovementCheckFLForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
