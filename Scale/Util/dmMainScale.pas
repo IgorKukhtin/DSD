@@ -22,6 +22,7 @@ type
     function gpSelect_Scale_StickerPack: TArrayList;
     // Scale + ScaleCeh
     function gpSelect_Scale_GoodsKindWeighing: TArrayList;
+    function gpSelect_Object_Language: TArrayList;
     function gpGet_Scale_Goods(var execParams:TParams;inBarCode:String): Boolean;
     // Scale + ScaleCeh
     function gpUpdate_Scale_MI_Erased(MovementItemId:Integer;NewValue: Boolean): Boolean;
@@ -670,6 +671,34 @@ begin
        {except
          SetLength(Result, 0);
          ShowMessage('Ошибка получения - gpSelect_Scale_GoodsKindWeighing');
+       end;}
+    end;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpSelect_Object_Language: TArrayList;
+var i: integer;
+begin
+    with spSelect do
+    begin
+       StoredProcName:='gpSelect_Object_Language';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inShowAll', ftBoolean, ptInput, FALSE);
+       //try
+         Execute;
+         DataSet.First;
+         SetLength(Result, DataSet.RecordCount);
+         for i:= 0 to DataSet.RecordCount-1 do
+         begin
+          Result[i].Id     := DataSet.FieldByName('Id').asInteger;
+          Result[i].Code   := DataSet.FieldByName('Code').asInteger;
+          Result[i].Name   := DataSet.FieldByName('Name').asString;
+          Result[i].Value  := '';
+          DataSet.Next;
+         end;
+       {except
+         SetLength(Result, 0);
+         ShowMessage('Ошибка получения - gpSelect_Object_Language');
        end;}
     end;
 end;

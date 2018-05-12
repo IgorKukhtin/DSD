@@ -9,13 +9,13 @@ const
     fmtWeight:String = ',0.#### Í„.';
     lStickerPackGroupId:Integer = 1;
 type
-
+{
   TDBObject = record
     Id:   Integer;
     Code: Integer;
     Name: string;
   end;
-
+ }
   TListItem = record
     Number: Integer;
     Id:     Integer;
@@ -120,6 +120,7 @@ var
   ChangePercentAmount_Array :TArrayList;
   PriceList_Array     :TArrayList;
   PrinterSticker_Array:TArrayList;
+  LanguageSticker_Array:TArrayList;
 
   zc_Movement_Income: Integer;
   zc_Movement_ReturnOut: Integer;

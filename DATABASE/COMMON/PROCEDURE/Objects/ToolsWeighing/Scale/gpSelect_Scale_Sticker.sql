@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Scale_Sticker(
     IN inOperDate              TDateTime,
     IN inMovementId            Integer,      -- Документ
     IN inOrderExternalId       Integer,      -- Заявка ИЛИ Договор (для возврата)
-    IN inPriceListId           Integer,
+    IN inPriceListId           Integer,      -- Сюда передается LanguageId
     IN inGoodsCode             Integer,
     IN inGoodsName             TVarChar,
     IN inBranchCode            Integer,      --
@@ -38,6 +38,9 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
 
+
+    -- временно - замена - Український
+    IF inPriceListId = 0 THEN inPriceListId:= 1196581; END IF;
 
     -- Результат - по заявке
     RETURN QUERY
@@ -85,7 +88,7 @@ BEGIN
                             )
               -- Шаблоны "по умолчанию" - для конкретной ТМ
             , tmpStickerFile AS (SELECT Object_StickerFile.Id                          AS StickerFileId
-                                                        , ObjectLink_StickerFile_TradeMark.ChildObjectId AS TradeMarkId
+                                      , ObjectLink_StickerFile_TradeMark.ChildObjectId AS TradeMarkId
                                  FROM Object AS Object_StickerFile
                                       LEFT JOIN ObjectLink AS ObjectLink_StickerFile_Juridical
                                                            ON ObjectLink_StickerFile_Juridical.ObjectId = Object_StickerFile.Id
@@ -192,9 +195,13 @@ BEGIN
                                   LEFT JOIN tmpStickerFile ON tmpStickerFile.TradeMarkId = ObjectLink_Goods_TradeMark.ChildObjectId
 
                                   LEFT JOIN Object AS Object_StickerFile ON Object_StickerFile.Id = COALESCE (ObjectLink_StickerProperty_StickerFile.ChildObjectId, COALESCE (ObjectLink_Sticker_StickerFile.ChildObjectId, tmpStickerFile.StickerFileId))
+                                  LEFT JOIN ObjectLink AS ObjectLink_StickerFile_Language
+                                                       ON ObjectLink_StickerFile_Language.ObjectId = Object_StickerFile.Id
+                                                      AND ObjectLink_StickerFile_Language.DescId   = zc_ObjectLink_StickerFile_Language()
 
                              WHERE Object_StickerProperty.DescId   = zc_Object_StickerProperty()
                                AND Object_StickerProperty.isErased = FALSE
+                               AND ObjectLink_StickerFile_Language.ChildObjectId = inPriceListId
                             )
        -- Результат - по заявке
        SELECT tmpSticker.Id

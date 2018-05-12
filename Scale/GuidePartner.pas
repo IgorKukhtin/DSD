@@ -126,6 +126,7 @@ begin
      else
      if  (ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_Sale)
        or(ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn)
+       or(ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_Inventory)
      then CDS.Filter:='MovementDescId='+IntToStr(zc_Movement_Sale)
                     + ' and ObjectDescId='+IntToStr(zc_Object_Partner)
      else if (ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_Loss)
@@ -153,7 +154,13 @@ begin
      Application.ProcessMessages;
 
      result:=ShowModal=mrOk;
-     if result then CopyValuesParamsFrom(ParamsMovement_local,execParamsMovement);
+     if result then
+       if ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_Inventory
+       then begin
+                 execParamsMovement.ParamByName('calcPartnerId').AsInteger:= ParamsMovement_local.ParamByName('calcPartnerId').AsInteger;
+                 execParamsMovement.ParamByName('ContractId').AsInteger   := ParamsMovement_local.ParamByName('ContractId').AsInteger;
+            end
+       else CopyValuesParamsFrom(ParamsMovement_local,execParamsMovement);
 end;
 {------------------------------------------------------------------------------}
 procedure TGuidePartnerForm.CancelCxFilter;

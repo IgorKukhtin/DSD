@@ -483,9 +483,19 @@ begin
        Params.ParamByName('inGoodsName').Value      := '';
        Execute;
      end
-     else if isModeSave = FALSE then Self.Caption:= 'БЕЗ СОХРАНЕНИЯ - ПРОСМОТР Этикетки'
-     else Self.Caption:= 'Печать Этикетки';
-     ;
+     else begin
+               if isModeSave = FALSE then Self.Caption:= 'БЕЗ СОХРАНЕНИЯ - ПРОСМОТР Этикетки'
+               else Self.Caption:= 'Печать Этикетки';
+               //
+               if Length(LanguageSticker_Array) > 0 then
+                 with spSelect do
+                    if Params.ParamByName('inPriceListId').Value <> execParamsMovement.ParamByName('PriceListId').AsInteger then
+                    begin
+                         // Сюда передадим inLanguageId - а после ОК в ParamsMovement будет GoodsKindId - из StickerProperty
+                         Params.ParamByName('inPriceListId').Value:= execParamsMovement.ParamByName('PriceListId').AsInteger;
+                         Execute;
+                    end;
+          end;
 
     // Показали вес с весов - получили его перед открытием
     PanelGoodsWieghtValue.Caption:=FloatToStr(ParamsMI.ParamByName('RealWeight_Get').AsFloat);
@@ -1195,7 +1205,10 @@ begin
        then Params.AddParam('inMovementId', ftInteger, ptInput, Self.Tag)
        else Params.AddParam('inMovementId', ftInteger, ptInput, 0);
        Params.AddParam('inOrderExternalId', ftInteger, ptInput, 0);
-       Params.AddParam('inPriceListId', ftInteger, ptInput, 0);
+       // Сюда передадим inLanguageId -  хотя после ОК в ParamsMovement будет GoodsKindId - из StickerProperty
+       if Length(LanguageSticker_Array) > 0
+       then Params.AddParam('inPriceListId', ftInteger, ptInput, LanguageSticker_Array[i].Id)
+       else Params.AddParam('inPriceListId', ftInteger, ptInput, 0);
        Params.AddParam('inGoodsCode', ftInteger, ptInput, 0);
        Params.AddParam('inGoodsName', ftString, ptInput, '');
        Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);

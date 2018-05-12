@@ -280,15 +280,18 @@ BEGIN
                                        THEN 1
                                        ELSE 0
                                  END
-                               , 'СКЛАД:'
+                               -- , 'СКЛАД:'
+                               , 'Склад:'
                               || ObjectBlob_Info.ValueData
-                              || 'УМОВИ ТА ТЕРМІН ЗБЕРІГАННЯ:' || COALESCE (Object_StickerPack.ValueData, '') || ':'
+                              -- || 'УМОВИ ТА ТЕРМІН ЗБЕРІГАННЯ:' || COALESCE (Object_StickerPack.ValueData, '') || ':'
+                              || 'Умови та термін зберігання:' || COALESCE (Object_StickerPack.ValueData, '') || ':'
                                   || 'за відносної вологості повітря від ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value1.ValueData, 0)) || '% '
                                   ||                                ' до ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value2.ValueData, 0)) || '% '
                                   ||               ', за температури від ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value3.ValueData, 0)) || 'С'
                                   ||                                ' до ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value4.ValueData, 0)) || 'С'
                                   ||                      ' не більш ніж ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value5.ValueData, 0)) || 'діб.'
-                              || 'ПОЖИВНА ЦІННІСТЬ ТА КАЛОРІЙНІСТЬ В 100ГР.ПРОДУКТА:'
+                              -- || 'ПОЖИВНА ЦІННІСТЬ ТА КАЛОРІЙНІСТЬ В 100ГР.ПРОДУКТА:'
+                              || 'Поживна цінність та калорійність В 100гр.продукта:'
                                   ||  ' білки не менше ' || zfConvert_FloatToString (COALESCE (Sticker_Value2.ValueData, 0)) || 'гр'
                                   || ', жири не більше ' || zfConvert_FloatToString (COALESCE (Sticker_Value3.ValueData, 0)) || 'гр'
                                   ||                ', ' || zfConvert_FloatToString (COALESCE (Sticker_Value4.ValueData, 0)) || 'кКал'

@@ -37,7 +37,7 @@ type
     spInsertUpdate: TdsdStoredProc;
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     cxLabel2: TcxLabel;
     ceComment: TcxTextEdit;
@@ -67,10 +67,10 @@ type
     cxLabel9: TcxLabel;
     ceWidth5: TcxCurrencyEdit;
     cxLabel15: TcxLabel;
-    ceWidth8: TcxCurrencyEdit;
+    ceWidth10: TcxCurrencyEdit;
     ceWidth9: TcxCurrencyEdit;
     cxLabel14: TcxLabel;
-    ceWidth10: TcxCurrencyEdit;
+    ceWidth8: TcxCurrencyEdit;
     cxLabel13: TcxLabel;
     cxLabel17: TcxLabel;
     ceLevel1: TcxCurrencyEdit;

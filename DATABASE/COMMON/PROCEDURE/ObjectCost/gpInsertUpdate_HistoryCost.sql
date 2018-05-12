@@ -437,7 +437,8 @@ end if;
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (1153992, 1159046, 1154906, 1145420, 1154908, 1145419) -- 06.2017
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (1153989, 1145422); -- 06.2017
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (130771, 128511, 1489115, 131613, 1453527, 129793); -- 08.2017
-     DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (1150822, 1164386, 1178003, 1177898); -- 04.2018
+/*   -- 04.2018
+     DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (1150822, 1164386, 1178003, 1177898);
      DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (
 select Container.Id --, O1.*, O2.*, O3.*
 from Container 
@@ -451,7 +452,7 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
                                 AND CLO3.DescId = zc_ContainerLinkObject_GoodsKind()
                                 AND CLO3.ObjectId = 8347
 );
-
+*/
      
      -- DELETE FROM _tmpMaster WHERE ABS (_tmpMaster.calcSumm) > 10123123123;
 --     DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (SELECT CLO.ContainerId FROM ContainerLinkObject as CLO WHERE CLO.DescId = zc_ContainerLinkObject_Member()

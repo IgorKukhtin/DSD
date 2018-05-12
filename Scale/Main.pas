@@ -1,4 +1,4 @@
- unit Main;
+unit Main;
 
 interface
 
@@ -224,6 +224,7 @@ type
     miFont: TMenuItem;
     miLine16: TMenuItem;
     bbSale_Order_diffTax: TSpeedButton;
+    rgLanguage: TRadioGroup;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -620,12 +621,31 @@ begin
 end;
 
 procedure TMainForm.bbUpdateUnitClick(Sender: TObject);
+var ParamsMovement_local: TParams;
 begin
-     if DialogMovementDescForm.Execute('isUpdateUnit') then
+     if ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Inventory then
      begin
-          DMMainScaleForm.gpUpdate_Scale_Movement(ParamsMovement);
-          WriteParamsMovement;
-     end;
+          Create_ParamsMovement(ParamsMovement_local);
+          CopyValuesParamsFrom(ParamsMovement,ParamsMovement_local);
+          if GuidePartnerForm.Execute(ParamsMovement_local) then
+          begin
+               // доопредел€ютс€ остальные параметры
+               DMMainScaleForm.gpGet_Scale_PartnerParams(ParamsMovement_local);
+               //
+               ParamsMovement.ParamByName('GoodsPropertyId').AsInteger:= ParamsMovement_local.ParamByName('GoodsPropertyId').AsInteger;
+               ParamsMovement.ParamByName('GoodsPropertyCode').AsInteger:= ParamsMovement_local.ParamByName('GoodsPropertyCode').AsInteger;
+               ParamsMovement.ParamByName('GoodsPropertyName').asString:= ParamsMovement_local.ParamByName('GoodsPropertyName').asString;
+               //
+               PanelPartner.Caption:= ParamsMovement_local.ParamByName('GoodsPropertyName').asString;
+          end;
+          ParamsMovement_local.Free;
+     end
+     else
+         if DialogMovementDescForm.Execute('isUpdateUnit') then
+         begin
+              DMMainScaleForm.gpUpdate_Scale_Movement(ParamsMovement);
+              WriteParamsMovement;
+         end;
      myActiveControl;
 end;
 //------------------------------------------------------------------------------------------------
@@ -752,7 +772,15 @@ begin
      //
      //GuideGoodsMovementForm
      if SettingMain.isSticker = TRUE
-     then
+     then begin
+         //
+         if (Length(LanguageSticker_Array) > 0) and (rgLanguage.ItemIndex >= 0)
+         then
+            // —юда передадим inLanguageId - а после ќ  в ParamsMovement будет GoodsKindId - из StickerProperty
+            ParamsMovement.ParamByName('PriceListId').AsInteger:= LanguageSticker_Array[GetArrayList_Index_byName(LanguageSticker_Array,rgLanguage.Items[rgLanguage.ItemIndex])].Id
+         else
+            ParamsMovement.ParamByName('PriceListId').AsInteger:= 0;
+
          // ƒиалог дл€ параметров товара - Sticker
          if GuideGoodsStickerForm.Execute (ParamsMovement, isModeSave) = TRUE
          then begin
@@ -760,7 +788,7 @@ begin
                     RefreshDataSet;
                     WriteParamsMovement;
               end
-         else
+     end
      else
      //GuideGoodsMovementForm
      if ParamsMovement.ParamByName('OrderExternalId').AsInteger<>0
@@ -1224,6 +1252,7 @@ begin
 end;
 //---------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);
+var i : Integer;
 begin
   fStartBarCode:= false;
   // определили IP
@@ -1253,6 +1282,21 @@ begin
 
   if SettingMain.isSticker = TRUE
   then PrinterSticker_Array:=DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'PrinterSticker');
+
+  LanguageSticker_Array:=DMMainScaleForm.gpSelect_Object_Language;
+  rgLanguage.Visible:= SettingMain.isSticker = TRUE;
+  if rgLanguage.Visible = TRUE then
+  begin
+       for i:= 0 to Length(LanguageSticker_Array) - 1 do
+          rgLanguage.Items.Add(LanguageSticker_Array[i].Name);
+       //
+       rgLanguage.Caption:= '';
+       rgLanguage.Height:= 35 * Length(LanguageSticker_Array);
+       //
+       if Length(LanguageSticker_Array) > 0 then rgLanguage.ItemIndex:= 0;
+  end;
+
+
   PriceList_Array:=     DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'PriceList');
   TareCount_Array:=     DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'TareCount');
   TareWeight_Array:=    DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'TareWeight');
@@ -1273,14 +1317,14 @@ begin
   //cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName').Index].Visible       :=SettingMain.isGoodsComplete = TRUE;
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible        :=(SettingMain.isGoodsComplete = FALSE) and (SettingMain.isSticker = FALSE);
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('HeadCount').Index].Visible           :=(SettingMain.isGoodsComplete = FALSE) and (SettingMain.isSticker = FALSE);
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Count').Index].Visible               :=(SettingMain.isGoodsComplete = TRUE) and (SettingMain.isSticker = FALSE);
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('LevelNumber').Index].Visible         :=(SettingMain.isGoodsComplete = TRUE) and (SettingMain.isSticker = FALSE);
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('BoxNumber').Index].Visible           :=(SettingMain.isGoodsComplete = TRUE) and (SettingMain.isSticker = FALSE);
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('BoxName').Index].Visible             :=(SettingMain.isGoodsComplete = TRUE) and (SettingMain.isSticker = FALSE);
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('BoxCount').Index].Visible            :=(SettingMain.isGoodsComplete = TRUE) and (SettingMain.isSticker = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Count').Index].Visible               :=(SettingMain.isGoodsComplete = TRUE)  and (SettingMain.isSticker = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('LevelNumber').Index].Visible         :=(SettingMain.isGoodsComplete = TRUE)  and (SettingMain.isSticker = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('BoxNumber').Index].Visible           :=(SettingMain.isGoodsComplete = TRUE)  and (SettingMain.isSticker = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('BoxName').Index].Visible             :=(SettingMain.isGoodsComplete = TRUE)  and (SettingMain.isSticker = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('BoxCount').Index].Visible            :=(SettingMain.isGoodsComplete = TRUE)  and (SettingMain.isSticker = FALSE);
   //
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('TaxDoc').Index].Visible              :=(SettingMain.isGoodsComplete = TRUE) and (SettingMain.isSticker = FALSE);
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('TaxDoc_calc').Index].Visible         :=(SettingMain.isGoodsComplete = TRUE) and (SettingMain.isSticker = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('TaxDoc').Index].Visible              :=(SettingMain.isGoodsComplete = TRUE)  and (SettingMain.isSticker = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('TaxDoc_calc').Index].Visible         :=(SettingMain.isGoodsComplete = TRUE)  and (SettingMain.isSticker = FALSE);
   //
   if SettingMain.isSticker = TRUE then
   begin
@@ -1323,10 +1367,10 @@ begin
   //local visible
   PanelPartionGoods.Visible:=SettingMain.isGoodsComplete = FALSE;
   HeadCountPanel.Visible:=PanelPartionGoods.Visible;
-  PanelCountPack.Visible:=not PanelPartionGoods.Visible;
-  BarCodePanel.Visible:=GetArrayList_Value_byName(Default_Array,'isBarCode') = AnsiUpperCase('TRUE');
-  PanelBox.Visible:=GetArrayList_Value_byName(Default_Array,'isBox') = AnsiUpperCase('TRUE');
-  TransportPanel.Visible:=GetArrayList_Value_byName(Default_Array,'isTransport') = AnsiUpperCase('TRUE');
+  PanelCountPack.Visible:=(not PanelPartionGoods.Visible) and (SettingMain.isSticker = FALSE);
+  BarCodePanel.Visible:=GetArrayList_Value_byName (Default_Array,'isBarCode') = AnsiUpperCase('TRUE');
+  PanelBox.Visible:=GetArrayList_Value_byName (Default_Array,'isBox') = AnsiUpperCase('TRUE');
+  TransportPanel.Visible:=GetArrayList_Value_byName (Default_Array,'isTransport') = AnsiUpperCase('TRUE');
 
   bbChangeHeadCount.Visible:=HeadCountPanel.Visible;
   bbChangePartionGoods.Visible:=HeadCountPanel.Visible;
@@ -1372,11 +1416,15 @@ begin
     PanelMovementDesc.Caption:=ParamByName('MovementDescName_master').asString;
     PanelPriceList.Caption:=ParamByName('PriceListName').asString;
 
-    if ParamByName('calcPartnerId').AsInteger<>0
-    then begin
-             PanelPartner.Caption:=GetPanelPartnerCaption(ParamsMovement);
-         end
-    else PanelPartner.Caption:='';
+    if ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Inventory
+    then
+        PanelPartner.Caption:= ParamsMovement.ParamByName('GoodsPropertyName').asString
+    else
+        if ParamByName('calcPartnerId').AsInteger<>0
+        then begin
+                 PanelPartner.Caption:=GetPanelPartnerCaption(ParamsMovement);
+             end
+        else PanelPartner.Caption:='';
 
     if ParamByName('ContractId').AsInteger<>0
     then PanelContract.Caption:=' є '+ParamByName('ContractNumber').asString

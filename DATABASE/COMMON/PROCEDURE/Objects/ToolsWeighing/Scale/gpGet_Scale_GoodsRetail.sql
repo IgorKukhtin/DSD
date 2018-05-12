@@ -30,6 +30,12 @@ BEGIN
      -- vbUserId:= lpGetUserBySession (inSession); убрал, что б быстрее... :)
 
 
+    -- IF inSession = '5'
+    -- THEN
+    --     RAISE EXCEPTION '<%>', lfGet_Object_ValueData (inGoodsPropertyId);
+    -- END IF;
+
+
     -- !!!меняется параметр!!!
     IF inOrderExternalId <> 0 AND COALESCE (inGoodsPropertyId, 0) = 0
     THEN

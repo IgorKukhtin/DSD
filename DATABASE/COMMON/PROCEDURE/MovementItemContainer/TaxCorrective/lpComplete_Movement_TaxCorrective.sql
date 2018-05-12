@@ -17,9 +17,12 @@ BEGIN
      vbDocumentTaxKindId:= (SELECT ObjectId  FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_DocumentTaxKind());
 
      -- Проверка ошибки
-     outMessageText:= (SELECT tmp.MessageText FROM lpSelect_TaxCorrectiveFromTax (inMovementId) AS tmp);
-     -- !!!Выход если ошибка!!!
-     IF outMessageText <> '' THEN RETURN; END IF;
+     IF '01.01.2017' < (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+     THEN
+         outMessageText:= (SELECT tmp.MessageText FROM lpSelect_TaxCorrectiveFromTax (inMovementId) AS tmp);
+         -- !!!Выход если ошибка!!!
+         IF outMessageText <> '' THEN RETURN; END IF;
+     END IF;
 
 
      -- !!!сохранили - НОВАЯ схема с 30.03.18!!!

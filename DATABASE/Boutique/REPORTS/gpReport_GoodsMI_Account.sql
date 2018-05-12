@@ -1,6 +1,5 @@
 -- Function:  gpReport_GoodsMI_Account()
 
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_Account (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_Account (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION  gpReport_GoodsMI_Account(
@@ -685,7 +684,7 @@ BEGIN
 
              , tmpData.CurrencyValue           ::TFloat AS CurrencyValue
 
-             , Object_Currency.ValueData                AS CurrencyName
+             , CASE WHEN tmpData.GoodsId <> -1 THEN Object_Currency.ValueData ELSE '' END :: TVarChar  AS CurrencyName
              
              , MovementDate_Insert.ValueData            AS InsertDate
                -- разные группы обмены и продажи

@@ -326,7 +326,7 @@ var
 implementation
 {$R *.dfm}
 uses UnilWin,DMMainScaleCeh, DMMainScale, UtilConst, DialogMovementDesc, UtilPrint
-    ,GuideMovementCeh, DialogNumberValue, DialogStringValue, DialogDateValue, DialogPrint, DialogMessage
+    ,GuideMovementCeh, DialogNumberValue,DialogStringValue, DialogDateValue, DialogPrint, DialogMessage
     ,GuideWorkProgress
     ,IdIPWatch, LookAndFillSettings;
 //------------------------------------------------------------------------------------------------
@@ -562,6 +562,7 @@ begin
                                    ,ParamsMovement.ParamByName('isTransport').asBoolean
                                    ,ParamsMovement.ParamByName('isQuality').asBoolean
                                    ,ParamsMovement.ParamByName('isPack').asBoolean
+                                   ,FALSE // isPackGross
                                    ,ParamsMovement.ParamByName('isSpec').asBoolean
                                    ,ParamsMovement.ParamByName('isTax').asBoolean
                                    )

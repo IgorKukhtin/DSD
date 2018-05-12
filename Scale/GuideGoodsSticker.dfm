@@ -97,7 +97,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       Height = 217
       Align = alClient
       TabOrder = 1
-      ExplicitHeight = 245
       object cxDBGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DS
@@ -248,7 +247,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitHeight = 379
     object PreviewPanel: TPanel
       Left = 0
       Top = 0
@@ -256,7 +254,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       Height = 407
       Align = alLeft
       TabOrder = 2
-      ExplicitHeight = 379
       object frxPreview: TfrxPreview
         Left = 1
         Top = 1
@@ -267,7 +264,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         OutlineWidth = 120
         ThumbnailVisible = False
         UseReportHints = True
-        ExplicitHeight = 377
       end
     end
     object cxSplitter1: TcxSplitter
@@ -278,7 +274,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       AlignSplitter = salRight
       AllowHotZoneDrag = False
       Control = ParamsAllPanel
-      ExplicitHeight = 379
     end
     object ParamsPanel: TPanel
       Left = 380
@@ -288,7 +283,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitHeight = 379
       object infoPanelPriceList: TPanel
         Left = 338
         Top = 0
@@ -297,7 +291,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitHeight = 320
         object gbWeightValue: TGroupBox
           Left = 0
           Top = 0
@@ -345,8 +338,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           TabOrder = 1
           WordWrap = True
           OnClick = rgPriceListClick
-          ExplicitTop = 122
-          ExplicitHeight = 158
         end
         object gbPriceListCode: TGroupBox
           Left = 0
@@ -356,7 +347,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           Align = alTop
           Caption = #1050#1086#1076
           TabOrder = 0
-          ExplicitTop = 81
           object EditPriceListCode: TEdit
             Left = 5
             Top = 17
@@ -397,7 +387,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           Align = alBottom
           BevelOuter = bvNone
           TabOrder = 4
-          ExplicitTop = 298
           object cbPreviewPrint: TcxCheckBox
             Left = 20
             Top = 0
@@ -415,7 +404,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitHeight = 320
         object gbGoodsName: TGroupBox
           Left = 0
           Top = 41
@@ -495,7 +483,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitHeight = 320
         object rgGoodsKind: TRadioGroup
           Left = 0
           Top = 41
@@ -514,7 +501,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           ParentFont = False
           TabOrder = 1
           OnClick = rgGoodsKindClick
-          ExplicitHeight = 279
         end
         object gbGoodsKindCode: TGroupBox
           Left = 0
@@ -545,7 +531,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         Height = 59
         Align = alBottom
         TabOrder = 3
-        ExplicitTop = 320
         object cbStartEnd: TcxCheckBox
           Left = 5
           Top = 5
@@ -612,7 +597,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
     AlignSplitter = salBottom
     InvertDirection = True
     Control = GridPanel
-    ExplicitTop = 379
   end
   object DS: TDataSource
     DataSet = CDS

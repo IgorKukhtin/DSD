@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1064#1040#1041#1051#1054#1053'>'
-  ClientHeight = 513
+  ClientHeight = 470
   ClientWidth = 377
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -30,7 +30,7 @@
   end
   object cxButton1: TcxButton
     Left = 76
-    Top = 480
+    Top = 439
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -40,7 +40,7 @@
   end
   object cxButton2: TcxButton
     Left = 217
-    Top = 480
+    Top = 439
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -64,23 +64,23 @@
   end
   object cxLabel2: TcxLabel
     Left = 42
-    Top = 232
+    Top = 218
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit
     Left = 40
-    Top = 250
+    Top = 236
     TabOrder = 7
     Width = 296
   end
   object cxLabel3: TcxLabel
     Left = 42
-    Top = 139
+    Top = 134
     Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
   end
   object edTradeMark: TcxButtonEdit
     Left = 40
-    Top = 158
+    Top = 153
     Properties.Buttons = <
       item
         Default = True
@@ -92,7 +92,7 @@
   end
   object edJuridical: TcxButtonEdit
     Left = 40
-    Top = 199
+    Top = 193
     Properties.Buttons = <
       item
         Default = True
@@ -104,12 +104,12 @@
   end
   object cxLabel5: TcxLabel
     Left = 42
-    Top = 96
+    Top = 93
     Caption = #1071#1079#1099#1082
   end
   object edLanguage: TcxButtonEdit
     Left = 40
-    Top = 114
+    Top = 111
     Properties.Buttons = <
       item
         Default = True
@@ -120,7 +120,7 @@
   end
   object cxLabel6: TcxLabel
     Left = 42
-    Top = 183
+    Top = 177
     Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100': '#1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100' / '#1070#1088'. '#1083#1080#1094#1086' / '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
   end
   object cbisDefault: TcxCheckBox
@@ -131,18 +131,18 @@
     Width = 97
   end
   object cxLabel16: TcxLabel
-    Left = 42
-    Top = 285
+    Left = 22
+    Top = 261
     Caption = #1064#1080#1088#1080#1085#1072' '#1089#1090#1088#1086#1082#1080
   end
   object cxLabel7: TcxLabel
-    Left = 59
-    Top = 307
+    Left = 42
+    Top = 281
     Caption = '1-'#1086#1081
   end
   object ceWidth1: TcxCurrencyEdit
-    Left = 59
-    Top = 326
+    Left = 42
+    Top = 300
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -151,13 +151,13 @@
     Width = 45
   end
   object cxLabel11: TcxLabel
-    Left = 59
-    Top = 355
+    Left = 42
+    Top = 321
     Caption = '6-'#1086#1081
   end
   object ceWidth6: TcxCurrencyEdit
-    Left = 59
-    Top = 374
+    Left = 42
+    Top = 340
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -166,8 +166,8 @@
     Width = 45
   end
   object ceWidth7: TcxCurrencyEdit
-    Left = 111
-    Top = 374
+    Left = 94
+    Top = 340
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -176,23 +176,23 @@
     Width = 45
   end
   object cxLabel12: TcxLabel
-    Left = 111
-    Top = 355
+    Left = 94
+    Top = 321
     Caption = '7-'#1086#1081
   end
   object cxLabel4: TcxLabel
-    Left = 111
-    Top = 307
+    Left = 94
+    Top = 281
     Caption = '2-'#1086#1081
   end
   object cxLabel8: TcxLabel
-    Left = 164
-    Top = 307
+    Left = 147
+    Top = 281
     Caption = '3-'#1086#1081
   end
   object ceWidth3: TcxCurrencyEdit
-    Left = 164
-    Top = 326
+    Left = 147
+    Top = 300
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -201,8 +201,8 @@
     Width = 45
   end
   object ceWidth4: TcxCurrencyEdit
-    Left = 217
-    Top = 326
+    Left = 200
+    Top = 300
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -211,8 +211,8 @@
     Width = 45
   end
   object ceWidth2: TcxCurrencyEdit
-    Left = 111
-    Top = 326
+    Left = 94
+    Top = 300
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -221,18 +221,18 @@
     Width = 45
   end
   object cxLabel10: TcxLabel
-    Left = 269
-    Top = 307
+    Left = 252
+    Top = 281
     Caption = '5-'#1086#1081
   end
   object cxLabel9: TcxLabel
-    Left = 217
-    Top = 307
+    Left = 200
+    Top = 281
     Caption = '4-'#1086#1081
   end
   object ceWidth5: TcxCurrencyEdit
-    Left = 269
-    Top = 326
+    Left = 252
+    Top = 300
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -241,13 +241,13 @@
     Width = 45
   end
   object cxLabel15: TcxLabel
-    Left = 269
-    Top = 355
+    Left = 252
+    Top = 321
     Caption = '10-'#1086#1081
   end
-  object ceWidth8: TcxCurrencyEdit
-    Left = 269
-    Top = 374
+  object ceWidth10: TcxCurrencyEdit
+    Left = 252
+    Top = 340
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -256,8 +256,8 @@
     Width = 45
   end
   object ceWidth9: TcxCurrencyEdit
-    Left = 217
-    Top = 374
+    Left = 200
+    Top = 340
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -266,13 +266,13 @@
     Width = 45
   end
   object cxLabel14: TcxLabel
-    Left = 217
-    Top = 355
+    Left = 200
+    Top = 321
     Caption = '9-'#1086#1081
   end
-  object ceWidth10: TcxCurrencyEdit
-    Left = 164
-    Top = 374
+  object ceWidth8: TcxCurrencyEdit
+    Left = 147
+    Top = 340
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -281,18 +281,18 @@
     Width = 45
   end
   object cxLabel13: TcxLabel
-    Left = 164
-    Top = 355
+    Left = 147
+    Top = 321
     Caption = '8-'#1086#1081
   end
   object cxLabel17: TcxLabel
     Left = 59
-    Top = 423
+    Top = 386
     Caption = '1-'#1099#1081
   end
   object ceLevel1: TcxCurrencyEdit
     Left = 59
-    Top = 442
+    Top = 405
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -302,7 +302,7 @@
   end
   object ceLevel2: TcxCurrencyEdit
     Left = 111
-    Top = 442
+    Top = 405
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -312,17 +312,17 @@
   end
   object cxLabel18: TcxLabel
     Left = 111
-    Top = 423
+    Top = 386
     Caption = '2-'#1086#1081
   end
   object cxLabel19: TcxLabel
     Left = 217
-    Top = 423
+    Top = 386
     Caption = #1074' 1-'#1086#1081
   end
   object ceLeft1: TcxCurrencyEdit
     Left = 217
-    Top = 442
+    Top = 405
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -332,7 +332,7 @@
   end
   object ceLeft2: TcxCurrencyEdit
     Left = 275
-    Top = 442
+    Top = 405
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -342,22 +342,22 @@
   end
   object cxLabel20: TcxLabel
     Left = 275
-    Top = 423
+    Top = 386
     Caption = #1074#1086' 2-'#1086#1081
   end
   object cxLabel21: TcxLabel
     Left = 47
-    Top = 404
+    Top = 367
     Caption = #1064#1080#1088#1080#1085#1072' '#1091#1088#1086#1074#1085#1103
   end
   object cxLabel22: TcxLabel
     Left = 205
-    Top = 404
+    Top = 367
     Caption = #1054#1090#1089#1090#1091#1087' '#1089#1083#1077#1074#1072' '#1074' '#1089#1090#1088#1086#1082#1072#1093
   end
   object ActionList: TActionList
-    Left = 280
-    Top = 68
+    Left = 216
+    Top = 20
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -562,7 +562,7 @@
       end>
     PackSize = 1
     Left = 344
-    Top = 112
+    Top = 109
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -572,7 +572,8 @@
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Top = 192
+    Left = 40
+    Top = 202
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_StickerFile'
@@ -761,7 +762,7 @@
     Left = 344
     Top = 16
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 216
     Top = 63
   end
@@ -777,8 +778,8 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 344
-    Top = 64
+    Left = 160
+    Top = 8
   end
   object GuidesTradeMark: TdsdGuides
     KeyField = 'Id'
@@ -807,7 +808,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 160
-    Top = 144
+    Top = 139
   end
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
@@ -836,7 +837,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 176
-    Top = 200
+    Top = 194
   end
   object GuidesLanguage: TdsdGuides
     KeyField = 'Id'
@@ -865,6 +866,6 @@
         MultiSelectSeparator = ','
       end>
     Left = 104
-    Top = 96
+    Top = 93
   end
 end

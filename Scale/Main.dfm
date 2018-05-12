@@ -378,7 +378,9 @@ object MainForm: TMainForm
         Top = 2
         Width = 31
         Height = 29
-        Hint = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1058#1054#1051#1068#1050#1054' '#1089#1082#1083#1072#1076
+        Hint = 
+          #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1058#1054#1051#1068#1050#1054' '#1089#1082#1083#1072#1076' '#1048#1051#1048' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1076#1083#1103' '#1089#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1048#1085#1074#1077#1085#1090#1072#1088#1080 +
+          #1079#1072#1094#1080#1080
         Glyph.Data = {
           F6000000424DF600000000000000760000002800000010000000100000000100
           0400000000008000000000000000000000001000000000000000000000000000
@@ -1248,7 +1250,7 @@ object MainForm: TMainForm
     end
     object infoPanel_Scale: TPanel
       Left = 0
-      Top = 238
+      Top = 277
       Width = 130
       Height = 29
       Align = alTop
@@ -1290,7 +1292,7 @@ object MainForm: TMainForm
     end
     object rgScale: TRadioGroup
       Left = 0
-      Top = 121
+      Top = 160
       Width = 130
       Height = 117
       Align = alTop
@@ -1300,7 +1302,7 @@ object MainForm: TMainForm
     end
     object PanelCountPack: TPanel
       Left = 0
-      Top = 267
+      Top = 306
       Width = 130
       Height = 39
       Align = alTop
@@ -1329,7 +1331,7 @@ object MainForm: TMainForm
     end
     object HeadCountPanel: TPanel
       Left = 0
-      Top = 360
+      Top = 399
       Width = 130
       Height = 39
       Align = alTop
@@ -1397,7 +1399,7 @@ object MainForm: TMainForm
     end
     object PanelBox: TPanel
       Left = 0
-      Top = 306
+      Top = 345
       Width = 130
       Height = 54
       Align = alTop
@@ -1529,7 +1531,7 @@ object MainForm: TMainForm
     end
     object TransportPanel: TPanel
       Left = 0
-      Top = 399
+      Top = 438
       Width = 130
       Height = 177
       Align = alTop
@@ -1753,6 +1755,15 @@ object MainForm: TMainForm
           TabOrder = 0
         end
       end
+    end
+    object rgLanguage: TRadioGroup
+      Left = 0
+      Top = 121
+      Width = 130
+      Height = 39
+      Align = alTop
+      Caption = 'Language'
+      TabOrder = 9
     end
   end
   object PanelInfoItem: TPanel

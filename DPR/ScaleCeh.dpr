@@ -81,7 +81,8 @@ uses
   LocalWorkUnit in '..\SOURCE\LocalWorkUnit.pas',
   IFIN_J1201009 in '..\SOURCE\MeDOC\IFIN_J1201009.pas',
   IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas',
-  LookAndFillSettings in '..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm};
+  LookAndFillSettings in '..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm},
+  DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm};
 
 {$R *.res}
 
@@ -104,6 +105,7 @@ begin
          //
          Application.CreateForm(TdmMain, dmMain);
   Application.CreateForm(TDMMainScaleCehForm, DMMainScaleCehForm);
+  Application.CreateForm(TDialogNumberValueForm, DialogNumberValueForm);
   // !!!важно первым!!!
   Application.CreateForm(TMainCehForm, MainCehForm);
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
