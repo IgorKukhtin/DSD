@@ -276,17 +276,21 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
           object MCSIsClose: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' '#1082#1086#1076
             DataBinding.FieldName = 'MCSIsClose'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 50
           end
           object MCSIsCloseDateChange: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' "'#1091#1076#1072#1083#1077#1085' '#1082#1086#1076'"'
             DataBinding.FieldName = 'MCSIsCloseDateChange'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 58
           end
           object isFirst: TcxGridDBColumn
@@ -700,6 +704,9 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actInsert_MCS: TdsdExecStoredProc
       Category = 'DSDLib'
