@@ -33,11 +33,13 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PriceListId Integer, PriceListName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
              , MemberId Integer, MemberName TVarChar
+             , MemberExpId Integer, MemberExpName TVarChar
              , ReestrKindId Integer, ReestrKindName TVarChar
              , Comment TVarChar
              , isError Boolean
              , isEDI Boolean
              , isList Boolean
+             , isPrinted Boolean
              , isPromo Boolean
              , MovementPromo TVarChar
 
@@ -82,14 +84,29 @@ BEGIN
                          UNION SELECT 0 AS AccessKeyId WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
                          UNION SELECT zc_Enum_Process_AccessKey_DocumentDnepr() AS AccessKeyId WHERE vbIsXleb = TRUE
                               )
-         , tmpPersonal AS (SELECT lfSelect.MemberId
-                                , lfSelect.PersonalId
-                                , lfSelect.UnitId
-                                , lfSelect.PositionId
-                                , lfSelect.BranchId
-                           FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
-                           WHERE lfSelect.Ord = 1
-                          )
+        , tmpPersonal AS (SELECT lfSelect.MemberId
+                               , lfSelect.PersonalId
+                               , lfSelect.UnitId
+                               , lfSelect.PositionId
+                               , lfSelect.BranchId
+                          FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                          WHERE lfSelect.Ord = 1
+                         )
+        , tmpMovement AS (SELECT Movement.id
+                          FROM tmpStatus
+                               JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_ReturnIn() AND Movement.StatusId = tmpStatus.StatusId
+                               JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
+                          WHERE inIsPartnerDate = FALSE
+                         UNION ALL
+                          SELECT MovementDate_OperDatePartner.MovementId  AS Id
+                          FROM MovementDate AS MovementDate_OperDatePartner
+                               JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId AND Movement.DescId = zc_Movement_ReturnIn()
+                               JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
+                               JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
+                          WHERE inIsPartnerDate = TRUE
+                            AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
+                            AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                         )
        -- –ÂÁÛÎ¸Ú‡Ú
        SELECT
              Movement.Id                                AS Id
@@ -142,6 +159,8 @@ BEGIN
            , Object_TaxKind.ValueData        	        AS DocumentTaxKindName
            , Object_Member.Id                           AS MemberId
            , Object_Member.ValueData                    AS MemberName
+           , Object_MemberExp.Id                        AS MemberExpId
+           , Object_MemberExp.ValueData                 AS MemberExpName
            , Object_ReestrKind.Id             	        AS ReestrKindId
            , Object_ReestrKind.ValueData       	        AS ReestrKindName
            , MovementString_Comment.ValueData           AS Comment
@@ -149,6 +168,7 @@ BEGIN
            , COALESCE (MovementLinkMovement_MasterEDI.MovementChildId, 0) <> 0 AS isEDI
 
            , COALESCE (MovementBoolean_List.ValueData, FALSE) :: Boolean AS isList
+           , COALESCE (MovementBoolean_Print.ValueData, False):: Boolean AS isPrinted
 
            , COALESCE(MovementBoolean_Promo.ValueData, FALSE) AS isPromo
            , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndReturn.ValueData) AS MovementPromo
@@ -167,21 +187,7 @@ BEGIN
            , Object_Unit.ValueData                  AS UnitName
            , CASE WHEN MovementString_GUID.ValueData <> '' THEN Object_Position.ValueData ELSE '' END :: TVarChar AS PositionName
 
-       FROM (SELECT Movement.id
-             FROM tmpStatus
-                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_ReturnIn() AND Movement.StatusId = tmpStatus.StatusId
-                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
-             WHERE inIsPartnerDate = FALSE
-            UNION ALL
-             SELECT MovementDate_OperDatePartner.MovementId  AS Id
-             FROM MovementDate AS MovementDate_OperDatePartner
-                  JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId AND Movement.DescId = zc_Movement_ReturnIn()
-                  JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
-                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
-             WHERE inIsPartnerDate = TRUE
-               AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
-               AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-            ) AS tmpMovement
+       FROM tmpMovement
 
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.id = Movement.ParentId
@@ -194,20 +200,24 @@ BEGIN
                                       ON MovementBoolean_Checked.MovementId =  Movement.Id
                                      AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                      ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_isPartner
-                                      ON MovementBoolean_isPartner.MovementId =  Movement.Id
+                                      ON MovementBoolean_isPartner.MovementId = Movement.Id
                                      AND MovementBoolean_isPartner.DescId = zc_MovementBoolean_isPartner()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Promo
-                                      ON MovementBoolean_Promo.MovementId =  Movement.Id
+                                      ON MovementBoolean_Promo.MovementId = Movement.Id
                                      AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_List
                                       ON MovementBoolean_List.MovementId = Movement.Id
                                      AND MovementBoolean_List.DescId = zc_MovementBoolean_List()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Print
+                                      ON MovementBoolean_Print.MovementId = Movement.Id
+                                     AND MovementBoolean_Print.DescId = zc_MovementBoolean_Print()
 
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id
@@ -220,13 +230,13 @@ BEGIN
                                   AND MovementDate_UpdateMobile.DescId = zc_MovementDate_UpdateMobile()
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
-                                   ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                   ON MovementDate_OperDatePartner.MovementId = Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                                     ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                     ON MovementString_InvNumberPartner.MovementId = Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
             LEFT JOIN MovementString AS MovementString_InvNumberMark
-                                     ON MovementString_InvNumberMark.MovementId =  Movement.Id
+                                     ON MovementString_InvNumberMark.MovementId = Movement.Id
                                     AND MovementString_InvNumberMark.DescId = zc_MovementString_InvNumberMark()
 
             LEFT JOIN MovementString AS MovementString_Comment
@@ -234,14 +244,14 @@ BEGIN
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
-                                    ON MovementFloat_VATPercent.MovementId =  Movement.Id
+                                    ON MovementFloat_VATPercent.MovementId = Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
-                                    ON MovementFloat_ChangePercent.MovementId =  Movement.Id
+                                    ON MovementFloat_ChangePercent.MovementId = Movement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                    ON MovementFloat_TotalCount.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalCount.MovementId = Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountPartner
                                     ON MovementFloat_TotalCountPartner.MovementId =  Movement.Id
@@ -314,6 +324,11 @@ BEGIN
                                         AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = MovementLinkObject_Member.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberExp
+                                         ON MovementLinkObject_MemberExp.MovementId = Movement.Id
+                                        AND MovementLinkObject_MemberExp.DescId = zc_MovementLinkObject_MemberExp()
+            LEFT JOIN Object AS Object_MemberExp ON Object_MemberExp.Id = MovementLinkObject_MemberExp.ObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
                                          ON MovementLinkObject_ReestrKind.MovementId = Movement.Id
                                         AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
@@ -340,7 +355,7 @@ BEGIN
                                           AND MovementLinkMovement_Promo.DescId = zc_MovementLinkMovement_Promo()
             LEFT JOIN Movement AS Movement_Promo ON Movement_Promo.Id = MovementLinkMovement_Promo.MovementChildId
             LEFT JOIN MovementDate AS MD_StartSale
-                                   ON MD_StartSale.MovementId =  Movement_Promo.Id
+                                   ON MD_StartSale.MovementId = Movement_Promo.Id
                                   AND MD_StartSale.DescId = zc_MovementDate_StartSale()
             LEFT JOIN MovementDate AS MD_EndReturn
                                    ON MD_EndReturn.MovementId =  Movement_Promo.Id
@@ -378,6 +393,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 12.05.18         *
  22.04.17         *
  05.10.16         * add inJuridicalBasisId
  14.05.16         *

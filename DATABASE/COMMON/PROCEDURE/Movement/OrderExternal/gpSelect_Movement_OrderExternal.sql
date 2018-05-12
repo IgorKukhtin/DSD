@@ -241,7 +241,7 @@ BEGIN
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Print
-                                      ON MovementBoolean_Print.MovementId =  Movement.Id
+                                      ON MovementBoolean_Print.MovementId = Movement.Id
                                      AND MovementBoolean_Print.DescId = zc_MovementBoolean_Print()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Promo

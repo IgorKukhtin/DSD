@@ -279,6 +279,9 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_GoodsGroup() RETURNS Integer AS
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_GoodsGroup', 'Группа товара' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_GoodsGroup');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_MemberExp() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_MemberExp'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_MemberExp', 'Экспедитор' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_MemberExp');
 
 
 --!!!!!!!!!!!  Аптека

@@ -136,6 +136,8 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     UpdateMobileDate: TcxGridDBColumn;
     PeriodSecMobile: TcxGridDBColumn;
+    spSavePrintState: TdsdStoredProc;
+    actSPSavePrintState: TdsdExecStoredProc;
   private
     { Private declarations }
   public
