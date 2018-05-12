@@ -226,7 +226,7 @@ BEGIN
 
            , MovementString_Comment.ValueData       AS Comment
 
-           , COALESCE (MovementBoolean_Promo.ValueData, FALSE) AS isPromo
+           , COALESCE (MovementBoolean_Promo.ValueData, FALSE):: Boolean AS isPromo
            , COALESCE (MovementBoolean_List.ValueData, FALSE) :: Boolean AS isList
            , COALESCE (MovementBoolean_Print.ValueData, False):: Boolean AS isPrinted
 
