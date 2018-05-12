@@ -1895,6 +1895,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_ContractSettings_Contract() RETURNS Int
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_ContractSettings_Contract', 'Ссылка на договор', zc_Object_ContractSettings(), zc_Object_Contract() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContractSettings_Contract');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ContractSettings_Area() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContractSettings_Area'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ContractSettings_Area', 'Ссылка на регион', zc_Object_ContractSettings(), zc_Object_Area() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContractSettings_Area');
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_ContactPerson_Area() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContactPerson_Area'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_ContactPerson_Area', 'Регион', zc_Object_ContactPerson(), zc_Object_Area() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContactPerson_Area');
@@ -1902,6 +1906,7 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 10.05.18         * zc_ObjectLink_ContactPerson_Area
  04.05.18                                                                                      * zc_ObjectLink_Unit_Category
  18.04.18         * zc_ObjectLink_MemberSheetWorkTime_Unit
                     zc_ObjectLink_MemberSheetWorkTime_Member

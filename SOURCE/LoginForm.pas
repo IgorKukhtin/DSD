@@ -10,6 +10,17 @@ uses
   dxSkinsCore, dxSkinsDefaultPainters;
 
 type
+  TcxComboBoxUser = Class(TcxComboBox)
+  private
+    function GetUsers: string;
+    procedure SetUsers(const Value: string);
+  published
+    property Users: string read GetUsers write SetUsers;
+  end;
+
+  TcxComboBox = Class(TcxComboBoxUser)
+  end;
+
   TLoginForm = class(TForm)
     edUserName: TcxComboBox;
     edPassword: TcxTextEdit;
@@ -40,6 +51,20 @@ implementation
 
 uses
   Storage, Authentication, CommonData, MessagesUnit, StrUtils, LocalWorkUnit;
+
+{ TcxComboBoxUser }
+
+function TcxComboBoxUser.GetUsers: string;
+begin
+  result := Properties.Items.Text
+end;
+
+procedure TcxComboBoxUser.SetUsers(const Value: string);
+begin
+  if Value <> '' then Properties.Items.Text := Value
+end;
+
+{ TLoginForm }
 
 procedure TLoginForm.btnOkClick(Sender: TObject);
 var TextMessage,EMessage: String;
@@ -107,7 +132,15 @@ end;
 procedure TLoginForm.FormCreate(Sender: TObject);
 begin
   with cxPropertiesStore.Components.Add do begin
+    Component := edUserName;
+    Properties.Add('Users');
+  end;
+  with cxPropertiesStore.Components.Add do begin
     Component := Self;
+    Properties.Add('Height');
+    Properties.Add('Left');
+    Properties.Add('Top');
+    Properties.Add('Width');
     Properties.Add('Users');
   end;
   cxPropertiesStore.RestoreFrom;
@@ -130,7 +163,7 @@ end;
 
 procedure TLoginForm.SetUsers(const Value: string);
 begin
-  edUserName.Properties.Items.Text := Value
+  if edUserName.Properties.Items.Text = '' then edUserName.Properties.Items.Text := Value
 end;
 
 end.

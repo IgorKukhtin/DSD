@@ -402,7 +402,15 @@ object ClientSMSForm: TClientSMSForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 78
+      end
+      object isErased_Client: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased_Client'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel

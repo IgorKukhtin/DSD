@@ -2,10 +2,8 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
   ClientHeight = 648
   ClientWidth = 1252
-  ExplicitLeft = -249
-  ExplicitTop = -168
   ExplicitWidth = 1268
-  ExplicitHeight = 687
+  ExplicitHeight = 686
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -694,9 +692,6 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object l: TcxGrid
         Left = 0
         Top = 0
@@ -1213,8 +1208,8 @@ inherited ReturnInForm: TReturnInForm
       Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
     end
     object edIsChecked: TcxCheckBox
-      Left = 635
-      Top = 56
+      Left = 631
+      Top = 45
       Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 22
       Width = 118
@@ -1361,6 +1356,14 @@ inherited ReturnInForm: TReturnInForm
       Top = 45
       Caption = #1042#1080#1079#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
     end
+    object cbPrinted: TcxCheckBox
+      Left = 631
+      Top = 81
+      Caption = #1056#1072#1089#1087#1077#1095#1072#1090#1072#1085' ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
+      TabOrder = 40
+      Width = 128
+    end
   end
   object edDocumentTaxKind: TcxButtonEdit [2]
     Left = 867
@@ -1432,7 +1435,7 @@ inherited ReturnInForm: TReturnInForm
   end
   object cbCalcAmountPartner: TcxCheckBox [10]
     Left = 497
-    Top = 95
+    Top = 97
     Caption = #1056#1072#1089#1095#1077#1090' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
     Properties.ReadOnly = False
     State = cbsChecked
@@ -1440,8 +1443,8 @@ inherited ReturnInForm: TReturnInForm
     Width = 215
   end
   object cbPromo: TcxCheckBox [11]
-    Left = 635
-    Top = 79
+    Left = 631
+    Top = 64
     Caption = #1040#1082#1094#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
     Properties.ReadOnly = True
     TabOrder = 15
@@ -2127,6 +2130,9 @@ inherited ReturnInForm: TReturnInForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_TaxCorrective_Client: TdsdPrintAction [20]
       Category = 'DSDLib'
@@ -2164,6 +2170,9 @@ inherited ReturnInForm: TReturnInForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
@@ -2305,6 +2314,9 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Action = actPrint
+        end
+        item
+          Action = actSPSavePrintState
         end>
       Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
@@ -2344,6 +2356,9 @@ inherited ReturnInForm: TReturnInForm
       ReportNameParam.Value = 'PrintMovement_ReturnIn_By_TaxCorrective'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     inherited actCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
@@ -3079,6 +3094,17 @@ inherited ReturnInForm: TReturnInForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object actSPSavePrintState: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSavePrintState
+      StoredProcList = <
+        item
+          StoredProc = spSavePrintState
+        end>
+      Caption = 'actSPSavePrintState'
     end
   end
   inherited MasterDS: TDataSource
@@ -3898,6 +3924,13 @@ inherited ReturnInForm: TReturnInForm
         Value = Null
         Component = edMemberInsertName
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPrinted'
+        Value = Null
+        Component = cbPrinted
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 224
@@ -5040,8 +5073,8 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 680
-    Top = 12
+    Left = 744
+    Top = 4
   end
   object CurrencyDocumentGuides: TdsdGuides
     KeyField = 'Id'
@@ -5772,5 +5805,36 @@ inherited ReturnInForm: TReturnInForm
     PackSize = 1
     Left = 946
     Top = 384
+  end
+  object spSavePrintState: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_ReturnIn_Print'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNewPrinted'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPrinted'
+        Value = 'False'
+        Component = cbPrinted
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 576
+    Top = 496
   end
 end

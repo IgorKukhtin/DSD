@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , InsertDate TDateTime
              , isMotion boolean
              , isErased boolean
+             , isErased_Client Boolean
   )
 AS
 $BODY$
@@ -116,10 +117,14 @@ BEGIN
                          --ИЛИ показываем если есть движени за период
                       OR COALESCE (tmpContainer.Summ_Period, 0) <> 0 
                       OR COALESCE (tmpContainer.Amount_Period, 0) <> 0
-                         --ИЛИ показываем если подразд.созд. = inUnitId и дата создания >= inStartDate
+                         -- ИЛИ показываем если подразд.созд. = inUnitId
+                      OR ObjectLink_Client_InsertUnit.ChildObjectId = inUnitId
+                      
+                      /*   --ИЛИ показываем если подразд.созд. = inUnitId и дата создания >= inStartDate
                       OR ((ObjectLink_Client_InsertUnit.ChildObjectId = inUnitId )         --OR COALESCE (ObjectLink_Client_InsertUnit.ChildObjectId,0) = 0
                         AND ObjectDate_Protocol_Insert.ValueData >= inStartDate /*AND ObjectDate_Protocol_Insert.ValueData < inEndDate + interval '1 day'*/)
-                         )
+                      */  
+                       )
                   )
 
        --результат
@@ -157,16 +162,17 @@ BEGIN
            , CASE WHEN COALESCE (tmpContainer.Amount_Period, 0) <> 0  OR COALESCE (tmpContainer.Summ_Period, 0) <> 0 THEN TRUE ELSE FALSE END AS isMotion
 
            , CASE WHEN Object_Client.isErased = TRUE OR (tmpClient.Id Is Null) THEN TRUE ELSE FALSE END   AS isErased
+           , Object_Client.isErased AS isErased_Client
 
        FROM (SELECT Object_Client.*
              FROM Object AS Object_Client
              WHERE Object_Client.DescId = zc_Object_Client() 
                AND inIsShowAll = TRUE
-               AND Object_Client.isErased = FALSE
+               --AND Object_Client.isErased = FALSE
            UNION 
              SELECT tmpClient.*
              FROM tmpClient
-             WHERE inIsShowAll = FALSE
+             --WHERE inIsShowAll = FALSE
              ) AS Object_Client
             LEFT JOIN tmpClient ON tmpClient.Id = Object_Client.Id
             LEFT JOIN ObjectLink AS ObjectLink_Client_City

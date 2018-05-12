@@ -4,10 +4,8 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   ClientWidth = 1114
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -341
-  ExplicitTop = -113
   ExplicitWidth = 1130
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -447,6 +445,13 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object PersonalName: TcxGridDBColumn
+            Caption = #1069#1082#1089#1087#1077#1076#1080#1090#1086#1088' ('#1079#1072#1103#1074#1082#1072')'
+            DataBinding.FieldName = 'MemberExpName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object CurrencyValue: TcxGridDBColumn
             Caption = #1050#1091#1088#1089
             DataBinding.FieldName = 'CurrencyValue'
@@ -492,6 +497,13 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 67
+          end
+          object isPrinted: TcxGridDBColumn
+            Caption = #1056#1072#1089#1087#1077#1095#1072#1090#1072#1085
+            DataBinding.FieldName = 'isPrinted'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object isPromo: TcxGridDBColumn
             Caption = #1040#1082#1094#1080#1103
@@ -885,6 +897,9 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     inherited actGridToExcel: TdsdGridToExcel [15]
     end
@@ -965,6 +980,9 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         end
         item
           Action = actPrint
+        end
+        item
+          Action = actSPSavePrintState
         end>
       Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
@@ -1016,6 +1034,9 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       ReportNameParam.Value = 'PrintMovement_ReturnIn_By_TaxCorrective'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_TaxCorrective_Us: TdsdPrintAction
       Category = 'DSDLib'
@@ -1053,6 +1074,9 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_TaxCorrective_Client: TdsdPrintAction
       Category = 'DSDLib'
@@ -1090,6 +1114,9 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object mactPrint_TaxCorrective_Client: TMultiAction
       Category = 'DSDLib'
@@ -1351,6 +1378,17 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actSPSavePrintState: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSavePrintState
+      StoredProcList = <
+        item
+          StoredProc = spSavePrintState
+        end>
+      Caption = 'actSPSavePrintState'
     end
   end
   inherited MasterDS: TDataSource
@@ -2328,5 +2366,37 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     PackSize = 1
     Left = 824
     Top = 48
+  end
+  object spSavePrintState: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_ReturnIn_Print'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNewPrinted'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPrinted'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isPrinted'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 760
+    Top = 336
   end
 end

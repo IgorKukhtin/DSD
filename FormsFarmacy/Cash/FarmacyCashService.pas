@@ -861,6 +861,7 @@ begin
 
                 FNeedSaveVIP := (MANAGER <> 0);
               end;
+              SetLength(Body, 0);
               FLocalDataBaseBody.First;
               while not FLocalDataBaseBody.eof do
               Begin
@@ -982,7 +983,10 @@ begin
                   // ***24.01.17
                   dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
 
+                  Add_Log('Start Execute gpInsertUpdate_Movement_Check_ver2');
+                  Add_Log('      ' + Head.UID);
                   dsdSave.Execute(False, False);
+                  Add_Log('End Execute gpInsertUpdate_Movement_Check_ver2');
                   // сохранили в локальной базе полученный номер
                   if Head.ID <> StrToInt(dsdSave.Params.ParamByName('ioID').AsString) then
                   Begin
@@ -1042,6 +1046,7 @@ begin
                     //
 
                     Add_Log('Start Execute gpInsertUpdate_MovementItem_Check_ver2');
+                    Add_Log('      ' + Body[I].CH_UID + ' ' + IntToStr(Body[I].GOODSID) + ' ' + CurrToStr(Body[I].AMOUNT) + ' ' + CurrToStr(Body[I].PRICESALE));
                     dsdSave.Execute(False, False); // сохринили на сервере
                     Add_Log('End Execute gpInsertUpdate_MovementItem_Check_ver2');
                     if Body[I].ID <> StrToInt(dsdSave.ParamByName('ioId').AsString) then

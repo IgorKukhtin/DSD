@@ -26,10 +26,12 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNum
              , StartDateTax TDateTime
              , MovementId_Partion Integer, PartionMovementName TVarChar
              , MemberId Integer, MemberName TVarChar, MemberInsertName TVarChar
+             , MemberExpId Integer, MemberExpName TVarChar
              , ReestrKindId Integer, ReestrKindName TVarChar
              , Comment TVarChar
              , isPromo Boolean
              , isList Boolean
+             , isPrinted Boolean
              )
 AS
 $BODY$
@@ -92,11 +94,16 @@ BEGIN
              , 0                                        AS MemberId
              , CAST ('' AS TVarChar)                    AS MemberName
              , CAST ('' AS TVarChar)                    AS MemberInsertName
+
+             , 0                                        AS MemberExpId
+             , CAST ('' AS TVarChar)                    AS MemberExpName
+
              , 0                   		        AS ReestrKindId
              , CAST ('' AS TVarChar)                    AS ReestrKindName 
              , CAST ('' as TVarChar) 		        AS Comment
              , CAST (FALSE AS Boolean)                  AS isPromo 
              , CAST (FALSE AS Boolean)                  AS isList
+             , CAST (FALSE AS Boolean)                  AS isPrinted
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
@@ -145,18 +152,19 @@ BEGIN
                       ORDER BY MovementItem.Id DESC
                       LIMIT 1
                      )
-   , tmpPriceList AS (SELECT Object_PriceList.Id AS PriceListId, Object_PriceList.ValueData AS PriceListName
-                      FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
-                                                                , inPartnerId      := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
-                                                                , inMovementDescId := zc_Movement_ReturnIn()
-                                                                , inOperDate_order := NULL
-                                                                , inOperDatePartner:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
-                                                                , inDayPrior_PriceReturn:= 0
-                                                                , inIsPrior        := FALSE -- !!!отказались от старых цен!!!
-                                                    ) AS tmp
-                           LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = tmp.PriceListId
-                      LIMIT 1
-                     )
+          , tmpPriceList AS (SELECT Object_PriceList.Id AS PriceListId, Object_PriceList.ValueData AS PriceListName
+                             FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
+                                                                       , inPartnerId      := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
+                                                                       , inMovementDescId := zc_Movement_ReturnIn()
+                                                                       , inOperDate_order := NULL
+                                                                       , inOperDatePartner:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
+                                                                       , inDayPrior_PriceReturn:= 0
+                                                                       , inIsPrior        := FALSE -- !!!отказались от старых цен!!!
+                                                           ) AS tmp
+                                  LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = tmp.PriceListId
+                             LIMIT 1
+                            )
+
        SELECT
              Movement.Id
            , Movement.InvNumber
@@ -210,13 +218,17 @@ BEGIN
            , Object_Member.Id                       AS MemberId
            , Object_Member.ValueData                AS MemberName
            , CASE WHEN MovementString_GUID.ValueData <> '' THEN Object_MemberInsert.ValueData ELSE '' END :: TVarChar AS MemberInsertName
+           , Object_MemberExp.Id                    AS MemberExpId
+           , Object_MemberExp.ValueData             AS MemberExpName
+
            , Object_ReestrKind.Id             	    AS ReestrKindId
            , Object_ReestrKind.ValueData       	    AS ReestrKindName
 
            , MovementString_Comment.ValueData       AS Comment
 
-           , COALESCE (MovementBoolean_Promo.ValueData, FALSE) AS isPromo
+           , COALESCE (MovementBoolean_Promo.ValueData, FALSE):: Boolean AS isPromo
            , COALESCE (MovementBoolean_List.ValueData, FALSE) :: Boolean AS isList
+           , COALESCE (MovementBoolean_Print.ValueData, False):: Boolean AS isPrinted
 
        FROM Movement
             LEFT JOIN tmpMI ON 1 = 1
@@ -254,6 +266,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_List
                                       ON MovementBoolean_List.MovementId = Movement.Id
                                      AND MovementBoolean_List.DescId = zc_MovementBoolean_List()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Print
+                                      ON MovementBoolean_Print.MovementId = Movement.Id
+                                     AND MovementBoolean_Print.DescId = zc_MovementBoolean_Print()
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -331,6 +347,11 @@ BEGIN
                                         AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = MovementLinkObject_Member.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberExp
+                                         ON MovementLinkObject_MemberExp.MovementId = Movement.Id
+                                        AND MovementLinkObject_MemberExp.DescId = zc_MovementLinkObject_MemberExp()
+            LEFT JOIN Object AS Object_MemberExp ON Object_MemberExp.Id = MovementLinkObject_MemberExp.ObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
                                          ON MovementLinkObject_ReestrKind.MovementId = Movement.Id
                                         AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
@@ -374,6 +395,7 @@ ALTER FUNCTION gpGet_Movement_ReturnIn (Integer, TDateTime, TVarChar) OWNER TO p
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.     Манько Д.А.
+ 12.05.18         *
  14.05.16         *
  10.05.16         * add StartDateTax
  21.08.15         * add isPartner

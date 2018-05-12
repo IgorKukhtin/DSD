@@ -62,7 +62,16 @@ BEGIN
      tmpWhere AS (SELECT lfSelect.UnitId               AS LocationId
                        , zc_ContainerLinkObject_Unit() AS DescId
                        , inGoodsId                     AS GoodsId
-                  FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect )
+                  FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect
+                  WHERE COALESCE (inUnitId, 0) <> 0
+                UNION
+                  SELECT Object.Id                     AS LocationId
+                       , zc_ContainerLinkObject_Unit() AS DescId
+                       , inGoodsId                     AS GoodsId
+                  FROM Object
+                  WHERE Object.DescId = zc_Object_Unit() 
+                    AND COALESCE (inUnitId, 0) = 0
+                 )
 
    , tmpContainer_Count AS (SELECT Container.Id                    AS ContainerId
                                  , COALESCE (CLO_Client.ObjectId, CLO_Location.ObjectId) AS LocationId
@@ -429,8 +438,24 @@ BEGIN
                         WHERE ObjectLink_PriceListItem_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
                           AND ObjectLink_PriceListItem_Goods.ChildObjectId = inGoodsId
                        )
+         , tmpWhere AS (SELECT lfSelect.UnitId               AS LocationId
+                             , inGoodsId                     AS GoodsId
+                        FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect
+                        WHERE COALESCE (inUnitId, 0) <> 0
+                      UNION
+                        SELECT Object.Id                     AS LocationId
+                             , inGoodsId                     AS GoodsId
+                        FROM Object
+                        WHERE Object.DescId = zc_Object_Unit() 
+                          AND COALESCE (inUnitId, 0) = 0
+                       )
 
-         , tmpDiscountList AS (SELECT inUnitId AS UnitId, inGoodsId AS GoodsId)
+         , tmpDiscountList AS --(SELECT inUnitId AS UnitId, inGoodsId AS GoodsId)
+                              (SELECT DISTINCT
+                                      tmpWhere.LocationId AS UnitId
+                                    , tmpWhere.GoodsId
+                               FROM tmpWhere
+                               )
         
                   , tmpOL1 AS (SELECT * FROM ObjectLink WHERE ObjectLink.ChildObjectId = inGoodsId
                                                           AND ObjectLink.DescId        = zc_ObjectLink_DiscountPeriodItem_Goods()
@@ -551,6 +576,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 12.05.18         *
  19.02.18         *
  26.06.17         *
 */

@@ -229,6 +229,9 @@ type
     bbMemberOpenForm: TdxBarButton;
     cxLabel24: TcxLabel;
     edMemberInsertName: TcxButtonEdit;
+    spSavePrintState: TdsdStoredProc;
+    cbPrinted: TcxCheckBox;
+    actSPSavePrintState: TdsdExecStoredProc;
   private
     { Private declarations }
   public

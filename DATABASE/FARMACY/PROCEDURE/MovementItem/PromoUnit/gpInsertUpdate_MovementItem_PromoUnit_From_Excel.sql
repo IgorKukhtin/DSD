@@ -3,7 +3,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoUnit_From_Excel (Intege
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoUnit_From_Excel(
     IN inMovementId          Integer   , -- Ключ объекта <Документ Инвентаризации>
-    IN inUnitId              Integer   , -- Ключ подразделения
+    IN inUnitCategoryId      Integer   , -- Ключ категории
     IN inGoodsCode           Integer   , -- Код товара
     IN inAmount              TFloat    , -- Количество
     IN inAmountPlanMax       TFloat    , -- кол-во для премии
@@ -29,17 +29,30 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Ошибка. В базе данных не найден товар с кодом <%>', inGoodsCode;
     END IF;
+    
+    IF NOT EXISTS(SELECT * FROM ObjectLink AS ObjectLink_Unit_Category
+                            WHERE ObjectLink_Unit_Category.ChildObjectId = inUnitCategoryId 
+                            AND ObjectLink_Unit_Category.DescId = zc_ObjectLink_Unit_Category())
+    THEN
+        RAISE EXCEPTION 'Ошибка. В базе данных не найдены подразделения с категорией <%>', 
+          (SELECT Object_UnitCategory.ValueData FROM Object AS Object_UnitCategory             
+                                               WHERE Object_UnitCategory.id = inUnitCategoryId);
+    END IF;
 
     -- нашли цену товара
-    vbPrice := (SELECT ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
+    vbPrice := (SELECT ROUND(SUM(Price_Value.ValueData) / COUNT(*),2)::TFloat  AS Price 
                 FROM ObjectLink AS ObjectLink_Price_Unit
+                     INNER JOIN ObjectLink AS ObjectLink_Unit_Category
+                             ON ObjectLink_Unit_Category.ObjectId = ObjectLink_Price_Unit.ChildObjectId
+                            AND ObjectLink_Unit_Category.ChildObjectId = inUnitCategoryId 
+                            AND ObjectLink_Unit_Category.DescId = zc_ObjectLink_Unit_Category()
                      LEFT JOIN ObjectLink AS Price_Goods
                             ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
                            AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
                      LEFT JOIN ObjectFloat AS Price_Value
                             ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                           AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
                 WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                  AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
                   AND Price_Goods.ChildObjectId = vbGoodsId);
     
     IF inAmount is not null AND (inAmount < 0)
@@ -69,7 +82,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий ОВ.
+  11.05.18                                                                                    * 
   12.06.17        * ушли от Object_Price_View
   04.02.17        *
 */

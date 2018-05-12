@@ -33,7 +33,7 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem_Income (ioId, inMovementId, inGoodsId, inAmount, inPrice, inFEA, inMeasure, vbUserId);
+     ioId := lpInsertUpdate_MovementItem_Income (ioId, inMovementId, inGoodsId, Null, inAmount, inPrice, inFEA, inMeasure, vbUserId);
 
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceSale(), ioId, inSalePrice);
      -- кол-во печатаемых стикеров
@@ -56,7 +56,8 @@ LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 11.05.18                                                                      * 
  27.01.17         *
  16.04.15                        *
  06.03.15                        *

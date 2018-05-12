@@ -482,7 +482,7 @@ begin
 
   if Handled and (Msg.wParam = 1) then   //   WPARAM = 1 значит сообщения от сервиса в приложения  WPARAM = 2 от приложения в сервис
     case Msg.lParam of
-      1: // получино сообщение на обновление diff разницы из дбф
+      1: // получено сообщение на обновление diff разницы из дбф
         if difUpdate then
         begin
           difUpdate:=false;
@@ -1424,7 +1424,7 @@ end;
 
 procedure TMainCashForm2.actSetRimainsFromMemdataExecute(Sender: TObject);  // только 2 форма
 var
-  GoodsId: Integer;
+  GoodsId, nCheckId: Integer;
   Amount_find: Currency;
   oldFilter:String;
   oldFiltered:Boolean;
@@ -1434,6 +1434,9 @@ begin
   RemainsCDS.AfterScroll := Nil;
   RemainsCDS.DisableControls;
   GoodsId := RemainsCDS.FieldByName('Id').asInteger;
+  nCheckId := 0;
+  if CheckCDS.Active and (CheckCDS.RecordCount > 0) then
+    nCheckId := CheckCDS.FieldByName('GoodsId').asInteger;
   RemainsCDS.Filtered := False;
   AlternativeCDS.Filtered := False;
   CheckCDS.DisableControls;
@@ -1515,6 +1518,8 @@ begin
     RemainsCDS.EnableControls;
     AlternativeCDS.Filtered := true;
     AlternativeCDS.EnableControls;
+    if nCheckId <> 0 then
+      CheckCDS.Locate('GoodsId', nCheckId, []);
     CheckCDS.EnableControls;
     CheckCDS.Filter := oldFilter;
     CheckCDS.Filtered:= oldFiltered;
@@ -1528,6 +1533,7 @@ end;
 procedure TMainCashForm2.actSetUpdateFromMemdataExecute(Sender: TObject);  // только 2 форма
 var
   GoodsId: Integer;
+  nCheckId: integer;
   Amount_find: Currency;
   oldFilter:String;
   oldFiltered:Boolean;
@@ -1537,6 +1543,9 @@ begin
   RemainsCDS.AfterScroll := Nil;
   RemainsCDS.DisableControls;
   GoodsId := RemainsCDS.FieldByName('Id').asInteger;
+  nCheckId := 0;
+  if CheckCDS.Active and (CheckCDS.RecordCount > 0) then
+    nCheckId := CheckCDS.FieldByName('GoodsId').AsInteger;
   RemainsCDS.Filtered := False;
   AlternativeCDS.Filtered := False;
   CheckCDS.DisableControls;
@@ -1616,6 +1625,8 @@ begin
     RemainsCDS.EnableControls;
     AlternativeCDS.Filtered := true;
     AlternativeCDS.EnableControls;
+    if nCheckId <> 0 then
+      CheckCDS.Locate('GoodsId', nCheckId, []);
     CheckCDS.EnableControls;
     CheckCDS.Filter := oldFilter;
     CheckCDS.Filtered:= oldFiltered;
@@ -2459,6 +2470,7 @@ end;
 procedure TMainCashForm2.UpdateRemainsFromDiff(ADiffCDS : TClientDataSet);
 var
   GoodsId: Integer;
+  nCheckId: integer;
   Amount_find: Currency;
   oldFilter:String;
   oldFiltered:Boolean;
@@ -2474,6 +2486,9 @@ begin
   RemainsCDS.AfterScroll := Nil;
   RemainsCDS.DisableControls;
   GoodsId := RemainsCDS.FieldByName('Id').asInteger;
+  nCheckId := 0;
+  if CheckCDS.Active and (CheckCDS.RecordCount > 0) then
+    nCheckId := CheckCDS.FieldByName('GoodsId').AsInteger;
   RemainsCDS.Filtered := False;
   AlternativeCDS.Filtered := False;
   ADIffCDS.DisableControls;
@@ -2556,6 +2571,8 @@ begin
     RemainsCDS.EnableControls;
     AlternativeCDS.Filtered := true;
     AlternativeCDS.EnableControls;
+    if nCheckId <> 0 then
+      CheckCDS.Locate('GoodsId', nCheckId, []);
     CheckCDS.EnableControls;
     CheckCDS.Filter := oldFilter;
     CheckCDS.Filtered:= oldFiltered;
@@ -3789,7 +3806,7 @@ begin
               APartnerMedicalId   := FLocalDataBaseHead.FieldByName('PMEDICALID').AsInteger;
               APartnerMedicalName := trim(FLocalDataBaseHead.FieldByName('PMEDICALN').AsString);
               AMedicSP            := trim(FLocalDataBaseHead.FieldByName('MEDICSP').AsString);
-              AOperDateSP         := FLocalDataBaseHead.FieldByName('OPERDATESP').AsDateTime;
+              AOperDateSP         := FLocalDataBaseHead.FieldByName('OPERDATESP').AsCurrency;
             end;
 
             FLocalDataBaseHead.Next;
@@ -3864,7 +3881,7 @@ begin
       nAlternativeID := AlternativeCDS.FieldByName('Id').asInteger;
     nCheckID := 0;
     if CheckCDS.Active and (CheckCDS.RecordCount > 0) then
-      nCheckID := CheckCDS.FieldByName('Id').asInteger;
+      nCheckID := CheckCDS.FieldByName('GoodsId').asInteger;
     try
       if not FileExists(Remains_lcl) or not FileExists(Alternative_lcl) then
         ShowMessage('Нет локального хранилища.');
@@ -3915,7 +3932,7 @@ begin
       if nAlternativeID <> 0 then
         AlternativeCDS.Locate('Id', nAlternativeID, []);
       if nCheckID <> 0 then
-        CheckCDS.Locate('Id', nCheckID, []);
+        CheckCDS.Locate('GoodsId', nCheckID, []);
       RemainsCDS.EnableControls;
       AlternativeCDS.EnableControls;
       MainGridDBTableView.EndUpdate;
