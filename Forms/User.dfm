@@ -161,7 +161,7 @@ object UserForm: TUserForm
         Width = 70
       end
       object MobileVesionSDK: TcxGridDBColumn
-        Caption = #1042#1077#1088#1089#1080#1103' SDK'
+        Caption = #1042#1077#1088#1089#1080#1103' SDK + ProjectMobile'
         DataBinding.FieldName = 'MobileVesionSDK'
         Visible = False
         HeaderAlignmentHorz = taCenter

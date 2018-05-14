@@ -696,6 +696,7 @@ BEGIN
                     || '_' || tmpData.PartionId  :: TVarChar
                     || '_' || zfConvert_FloatToString (tmpData.ChangePercent)
                     || '_' || zfConvert_FloatToString (tmpData.OperPriceList)
+                    || '_' || CASE WHEN MovementDesc.Id = zc_Movement_ReturnIn() THEN MovementDesc.Id :: TVarChar ELSE '' END
 
                     ELSE zfConvert_FloatToString (tmpData.CurrencyValue)
 
