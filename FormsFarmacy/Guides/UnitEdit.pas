@@ -73,6 +73,8 @@ type
     ceUnitCategory: TcxButtonEdit;
     cxLabel15: TcxLabel;
     GuidesUnitCategory: TdsdGuides;
+    ceNormOfManDays: TcxCurrencyEdit;
+    cxLabel16: TcxLabel;
   private
     { Private declarations }
   public

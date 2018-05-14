@@ -3,9 +3,12 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_UnitCategory (Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_UnitCategory(
- INOUT ioId             Integer   ,     -- ключ объекта <>
-    IN inCode           Integer   ,     -- Код объекта
-    IN inName           TVarChar  ,     -- Название объекта
+ INOUT ioId             Integer,        -- ключ объекта <>
+    IN inCode           Integer,        -- Код объекта
+    IN inName           TVarChar,       -- Название объекта
+    IN inPenaltyNonMinPlan TFloat,      -- % штрафа за невыполнение минимального плана
+    IN inPremiumImplPlan TFloat,        -- % премии за выполнение плана продаж
+    IN inMinLineByLineImplPlan TFloat,  -- Минимальный % построчного выполнения минимального плана для получения премии
     IN inSession        TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -32,7 +35,16 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_UnitCategory(), vbCode_calc, inName);
 
+   -- % штрафа за невыполнение минимального плана
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_UnitCategory_PenaltyNonMinPlan(), ioId, inPenaltyNonMinPlan);
+
+   -- % премии за выполнение плана продаж
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_UnitCategory_PremiumImplPlan(), ioId, inPremiumImplPlan);
  
+   -- Минимальный % построчного выполнения минимального плана для получения премии
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_UnitCategory_MinLineByLineImplPlan(), ioId, inMinLineByLineImplPlan);
+
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
@@ -43,6 +55,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Шаблий О.В.
+ 15.05.18         *
  05.05.18         *
 */
 
