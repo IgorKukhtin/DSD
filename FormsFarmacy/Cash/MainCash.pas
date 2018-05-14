@@ -3176,7 +3176,8 @@ begin
        FLocalDataBaseHead.First;
        while not FLocalDataBaseHead.EOF do
        begin
-            if FLocalDataBaseHead.FieldByName('PMEDICALID').AsInteger <> 0 then
+            if (FLocalDataBaseHead.FieldByName('PMEDICALID').AsInteger <> 0) and
+               not FLocalDataBaseHead.FieldByName('SAVE').AsBoolean then
             begin
               APartnerMedicalId   := FLocalDataBaseHead.FieldByName('PMEDICALID').AsInteger;
               APartnerMedicalName := trim(FLocalDataBaseHead.FieldByName('PMEDICALN').AsString);

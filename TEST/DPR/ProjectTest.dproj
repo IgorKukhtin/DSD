@@ -3377,6 +3377,14 @@
 				<Form>MemberSheetWorkTimeEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Mobile_OrderExternal_SaleDialog.pas">
+				<Form>Report_Mobile_OrderExternal_SaleDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Mobile_OrderExternal_Sale.pas">
+				<Form>Report_Mobile_OrderExternal_SaleForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

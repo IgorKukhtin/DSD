@@ -1006,7 +1006,9 @@ uses
   Report_CheckTaxCorrective_NPP in '..\..\Forms\Report\Report_CheckTaxCorrective_NPP.pas' {Report_CheckTaxCorrective_NPPForm: TParentForm},
   Report_CheckTC_NPPDialog in '..\..\Forms\Report\Report_CheckTC_NPPDialog.pas' {Report_CheckTC_NPPDialogForm: TParentForm},
   MemberSheetWorkTime in '..\..\Forms\Guides\MemberSheetWorkTime.pas' {MemberSheetWorkTimeForm: TParentForm},
-  MemberSheetWorkTimeEdit in '..\..\Forms\Guides\MemberSheetWorkTimeEdit.pas' {MemberSheetWorkTimeEditForm: TParentForm};
+  MemberSheetWorkTimeEdit in '..\..\Forms\Guides\MemberSheetWorkTimeEdit.pas' {MemberSheetWorkTimeEditForm: TParentForm},
+  Report_Mobile_OrderExternal_SaleDialog in '..\..\Forms\Report\Report_Mobile_OrderExternal_SaleDialog.pas' {Report_Mobile_OrderExternal_SaleDialogForm: TParentForm},
+  Report_Mobile_OrderExternal_Sale in '..\..\Forms\Report\Report_Mobile_OrderExternal_Sale.pas' {Report_Mobile_OrderExternal_SaleForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

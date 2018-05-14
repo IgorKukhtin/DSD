@@ -417,6 +417,8 @@ type
     miGoods_NDS_diff: TMenuItem;
     N2: TMenuItem;
     actReport_Analysis_Remains_Selling: TAction;
+    actReportMovementCheckFLForm: TdsdOpenForm;
+    miReportMovementCheckFLForm: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

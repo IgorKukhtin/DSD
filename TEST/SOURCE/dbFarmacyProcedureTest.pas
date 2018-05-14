@@ -117,14 +117,17 @@ end;
 
 procedure TdbProcedureTest.CreateUpdatePromoCodeProcedures;
 begin
-  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'Movement\Check\gpInsertUpdate_Movement_Check_ver2.sql');
+  ScriptDirectory := FarmacyProcedurePath + 'Movement\PromoUnit\';
+  ProcedureLoad;
+
+{  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'Movement\Check\gpInsertUpdate_Movement_Check_ver2.sql');
   ZQuery.ExecSQL;
 
   ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'Movement\PromoCode\gpGet_IsGoodsInPromo.sql');
   ZQuery.ExecSQL;
 
   ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'Movement\PromoCode\gpGet_PromoCode_by_GUID.sql');
-  ZQuery.ExecSQL;
+  ZQuery.ExecSQL;}
 end;
 
 procedure TdbProcedureTest.CreateMovementItemContainerProcedure;
@@ -277,7 +280,15 @@ end;
 
 procedure TdbProcedureTest.CreateObjectProcedure;
 begin
-  DirectoryLoad(CommonProcedurePath + 'OBJECTS\_COMMON\');
+  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'OBJECTS\Unit\gpGet_Object_Unit.sql');
+  ZQuery.ExecSQL;
+
+  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'OBJECTS\Unit\gpInsertUpdate_Object_Unit.sql');
+  ZQuery.ExecSQL;
+
+  DirectoryLoad(FarmacyProcedurePath + 'OBJECTS\UnitCategory\');
+
+{  DirectoryLoad(CommonProcedurePath + 'OBJECTS\_COMMON\');
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\FileTypeKind\');
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\ImportSettings\');
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\ImportSettingsItems\');
@@ -296,7 +307,7 @@ begin
   DirectoryLoad(FarmacyProcedurePath + 'OBJECTS\Member\');
 
   ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'OBJECTS\PartionGoods\gpSelect_Object_PartionGoods.sql');
-  ZQuery.ExecSQL;
+  ZQuery.ExecSQL;}
 end;
 
 procedure TdbProcedureTest.CreatePeriodCloseProcedure;
