@@ -445,7 +445,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object PersonalName: TcxGridDBColumn
+          object MemberExpName: TcxGridDBColumn
             Caption = #1069#1082#1089#1087#1077#1076#1080#1090#1086#1088' ('#1079#1072#1103#1074#1082#1072')'
             DataBinding.FieldName = 'MemberExpName'
             HeaderAlignmentHorz = taCenter

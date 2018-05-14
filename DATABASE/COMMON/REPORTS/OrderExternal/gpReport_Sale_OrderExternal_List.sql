@@ -1,13 +1,12 @@
 -- Function: gpReport_Sale_OrderExternal_List()
 
-
-DROP FUNCTION IF EXISTS gpReport_Sale_OrderExternal_List (TDateTime, TDateTime, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Sale_OrderExternal_List (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Sale_OrderExternal_List_Mobile (TDateTime, TDateTime, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Sale_OrderExternal_List(
     IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
     IN inUnitId      Integer   , -- филиал
+    IN inMemberId    Integer   , -- Торговый агент
     IN inisSale      Boolean   ,
     IN inisNoSale    Boolean   ,
     IN inSession     TVarChar    -- сессия пользователя
@@ -26,6 +25,7 @@ RETURNS TABLE (MovementId_Order Integer, InvNumber TVarChar, OperDate TDateTime,
 AS
 $BODY$
    DECLARE vbUserId Integer;
+      DECLARE vbUserId_Mobile Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
