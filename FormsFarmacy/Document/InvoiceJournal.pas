@@ -47,6 +47,7 @@ type
     isDocument: TcxGridDBColumn;
     SPName: TcxGridDBColumn;
     InvNumber_int: TcxGridDBColumn;
+    SigningDate: TcxGridDBColumn;
   private
     { Private declarations }
   public
