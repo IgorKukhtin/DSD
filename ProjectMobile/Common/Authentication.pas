@@ -61,7 +61,7 @@ type
 
 implementation
 
-uses Xml.XMLDoc, UtilConst, SysUtils, IdIPWatch, Xml.XmlIntf, CommonData;
+uses Xml.XMLDoc, UtilConst, SysUtils, IdIPWatch, Xml.XmlIntf, CommonData, uDM;
 
 {------------------------------------------------------------------------------}
 constructor TUser.Create(ALogin, APassword: string; ASession: String = '';
@@ -133,6 +133,8 @@ begin
   // Версия SDK
   try lVesionSDK:= JStringToString(TJBuild_VERSION.JavaClass.SDK); except lVesionSDK:= '???'; end;
   try lVesionSDK:= lVesionSDK + '(' + IntToStr(TJBuild_VERSION.JavaClass.SDK_INT)+')'; except lVesionSDK:= lVesionSDK + ' (?)'; end;
+  // Версия ПРОГРАММЫ - захардкодим в SDK
+  lVesionSDK:= lVesionSDK + ' + PM: ' + DM.GetCurrentVersion;
   //
   try
     if TPlatformServices.Current.SupportsPlatformService(IFMXLocaleService, IInterface(LocaleService))

@@ -5172,7 +5172,13 @@ begin
   cdsReturnInItemsWeight.AsString := ArrValue[7];           // вес
   cdsReturnInItemsTradeMarkName.AsString := ArrValue[8];    // торговая марка
   cdsReturnInItemsCount.AsString := ArrValue[9];            // количество по умолчанию
-  cdsReturnInItemsRecalcPriceName.AsString := ArrValue[10]; // цены пересчитаны или нет
+  if Length(ArrValue) >= 11
+  then
+      cdsReturnInItemsRecalcPriceName.AsString := ArrValue[10] // цены пересчитаны или нет
+  else
+      cdsReturnInItemsRecalcPriceName.AsString := '-';
+
+// ShowMessage(IntToStr(Length(ArrValue)));
 
   cdsReturnInItems.Post;
 end;
