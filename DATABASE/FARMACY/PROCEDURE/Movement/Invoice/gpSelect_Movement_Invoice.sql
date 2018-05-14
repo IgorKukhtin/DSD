@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer
              , PartnerMedicalName TVarChar
              , ContractId Integer
              , ContractName TVarChar
+             , SigningDate TDateTime
 
              , OperDateStart TDateTime
              , OperDateEnd TDateTime
@@ -103,8 +104,10 @@ BEGIN
       , Object_PartnerMedical.ValueData                        AS PartnerMedicalName 
       , MovementLinkObject_Contract.ObjectId                   AS ContractId
       , Object_Contract.ValueData                              AS ContractName
+      , COALESCE (ObjectDate_Signing.ValueData, Null) :: TDateTime AS SigningDate
       , MovementDate_OperDateStart.ValueData                   AS OperDateStart
       , MovementDate_OperDateEnd.ValueData                     AS OperDateEnd
+      
 
       , MovementDate_DateRegistered.ValueData                  AS DateRegistered
       , MovementString_InvNumberRegistered.ValueData           AS InvNumberRegistered
@@ -164,6 +167,10 @@ BEGIN
                                      ON MovementLinkObject_Contract.MovementId = Movement.Id
                                     AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
         LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+        -- дата подписания договора
+        LEFT JOIN ObjectDate AS ObjectDate_Signing
+                             ON ObjectDate_Signing.ObjectId = Object_Contract.Id
+                            AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
 
         LEFT JOIN ObjectLink AS ObjectLink_PartnerMedical_Juridical 
                              ON ObjectLink_PartnerMedical_Juridical.ObjectId = Object_PartnerMedical.Id
@@ -193,7 +200,8 @@ ALTER FUNCTION gpSelect_Movement_Invoice (TDateTime, TDateTime, Boolean, TVarCha
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.05.18         *
  15.08.17         * add InvNumber_int
  13.05.17         * add SPName
  21.04.17         *

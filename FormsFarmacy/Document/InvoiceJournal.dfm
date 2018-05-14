@@ -26,6 +26,8 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       inherited cxGrid: TcxGrid
         Width = 745
         Height = 434
+        ExplicitLeft = 80
+        ExplicitTop = 16
         ExplicitWidth = 745
         ExplicitHeight = 434
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -166,6 +168,14 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 108
+          end
+          object SigningDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1086#1076#1087#1080#1089'.'
+            DataBinding.FieldName = 'SigningDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1087#1086#1076#1087#1080#1089#1072#1085#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+            Width = 70
           end
           object TotalSummWithOutVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
@@ -420,6 +430,9 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object macPrint: TMultiAction
       Category = 'DSDLib'
