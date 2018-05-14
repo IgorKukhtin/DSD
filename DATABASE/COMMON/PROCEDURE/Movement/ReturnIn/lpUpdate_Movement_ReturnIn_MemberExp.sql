@@ -56,7 +56,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_MemberExp(), inMovementId, vbMemberExpId);
 
      -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (inMovementId, inUserId, FALSE);
+     -- PERFORM lpInsert_MovementProtocol (inMovementId, inUserId, FALSE);
 
 END;
 $BODY$
@@ -69,4 +69,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpUpdate_Movement_ReturnIn_MemberExp (5605163  , 5)
+-- SELECT * FROM lpUpdate_Movement_ReturnIn_MemberExp (5605163, 5)
