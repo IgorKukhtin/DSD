@@ -22,6 +22,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn(
    OUT outMovementId_Partion    Integer   , -- 
    OUT outPartionMovementName   TVarChar  , -- 
    OUT outMovementPromo         TVarChar  , -- 
+   OUT outMemberExpName         TVarChar  , -- Экспедитор из Заявки стронней
    OUT outChangePercent         TFloat    , -- (-)% Скидки (+)% Наценки
    OUT outPricePromo            TFloat    , -- 
     IN inSession                TVarChar    -- сессия пользователя
@@ -101,6 +102,13 @@ BEGIN
                                                                  ELSE CAST( (((1 + vbVATPercent / 100)* inPrice) * ioAmountPartner) AS NUMERIC (16, 2) ) 
                                  END
                         END;
+
+    outMemberExpName := COALESCE((SELECT Object_MemberExp.ValueData AS MemberExpName
+                                  FROM MovementLinkObject AS MovementLinkObject_MemberExp
+                                       LEFT JOIN Object AS Object_MemberExp ON Object_MemberExp.Id = MovementLinkObject_MemberExp.ObjectId
+                                  WHERE MovementLinkObject_MemberExp.MovementId = inMovementId
+                                    AND MovementLinkObject_MemberExp.DescId = zc_MovementLinkObject_MemberExp()
+                                  ), '') ::TVarChar;
                                   
 
 END;
@@ -110,6 +118,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Манько Д.А.
+ 14.05.18         *
  27.04.15         * add inMovementId_top/_MI
  14.02.14                                                         * fix lpInsertUpdate_MovementItem_ReturnIn
  13.02.14                        * lpInsertUpdate_MovementItem_ReturnIn

@@ -2,6 +2,7 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
   ClientHeight = 648
   ClientWidth = 1252
+  ExplicitLeft = -43
   ExplicitWidth = 1268
   ExplicitHeight = 686
   PixelsPerInch = 96
@@ -1297,7 +1298,7 @@ inherited ReturnInForm: TReturnInForm
       Left = 867
       Top = 103
       TabOrder = 33
-      Width = 230
+      Width = 245
     end
     object cxLabel21: TcxLabel
       Left = 8
@@ -1339,7 +1340,7 @@ inherited ReturnInForm: TReturnInForm
       Width = 64
     end
     object edReestrKind: TcxButtonEdit
-      Left = 1102
+      Left = 1115
       Top = 63
       Properties.Buttons = <
         item
@@ -1352,7 +1353,7 @@ inherited ReturnInForm: TReturnInForm
       Width = 144
     end
     object cxLabel26: TcxLabel
-      Left = 1102
+      Left = 1115
       Top = 45
       Caption = #1042#1080#1079#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
     end
@@ -1383,13 +1384,15 @@ inherited ReturnInForm: TReturnInForm
     Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
   end
   object cxLabel14: TcxLabel [4]
-    Left = 970
+    Left = 1027
     Top = 45
-    Caption = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072')'
+    Caption = #1042#1072#1083'.'#1094#1077#1085#1072
   end
   object edCurrencyDocument: TcxButtonEdit [5]
-    Left = 970
+    Left = 1027
     Top = 63
+    Hint = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072')'
+    ParentShowHint = False
     Properties.Buttons = <
       item
         Default = True
@@ -1397,16 +1400,17 @@ inherited ReturnInForm: TReturnInForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
+    ShowHint = True
     TabOrder = 9
-    Width = 78
+    Width = 55
   end
   object cxLabel16: TcxLabel [6]
-    Left = 1053
+    Left = 1085
     Top = 45
     Caption = #1050#1091#1088#1089
   end
   object edCurrencyValue: TcxCurrencyEdit [7]
-    Left = 1053
+    Left = 1085
     Top = 63
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -1414,24 +1418,27 @@ inherited ReturnInForm: TReturnInForm
     Properties.DisplayFormat = ',0.####;-,0.####; ;'
     Properties.ReadOnly = True
     TabOrder = 11
-    Width = 44
+    Width = 27
   end
   object cxLabel17: TcxLabel [8]
     Left = 970
-    Top = 5
-    Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
+    Top = 45
+    Caption = #1042#1072#1083'.'#1087#1086#1082'.'
   end
   object edCurrencyPartner: TcxButtonEdit [9]
     Left = 970
-    Top = 23
+    Top = 63
+    Hint = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
+    ParentShowHint = False
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
+    ShowHint = True
     TabOrder = 13
-    Width = 127
+    Width = 53
   end
   object cbCalcAmountPartner: TcxCheckBox [10]
     Left = 497
@@ -1472,12 +1479,12 @@ inherited ReturnInForm: TReturnInForm
     Width = 204
   end
   object cxLabel23: TcxLabel [15]
-    Left = 1102
+    Left = 1115
     Top = 5
     Caption = #1042#1086#1076#1080#1090#1077#1083#1100'/'#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088
   end
   object edMember: TcxButtonEdit [16]
-    Left = 1102
+    Left = 1115
     Top = 23
     Properties.Buttons = <
       item
@@ -1490,12 +1497,12 @@ inherited ReturnInForm: TReturnInForm
     Width = 144
   end
   object cxLabel24: TcxLabel [17]
-    Left = 1102
+    Left = 1115
     Top = 85
     Caption = #1060#1048#1054' ('#1084#1086#1073'. '#1072#1075#1077#1085#1090')'
   end
   object edMemberInsertName: TcxButtonEdit [18]
-    Left = 1102
+    Left = 1115
     Top = 103
     Properties.Buttons = <
       item
@@ -1506,6 +1513,24 @@ inherited ReturnInForm: TReturnInForm
     Properties.ReadOnly = True
     TabOrder = 22
     Width = 144
+  end
+  object cxLabel25: TcxLabel [19]
+    Left = 970
+    Top = 5
+    Caption = #1069#1082#1089#1087#1077#1076#1080#1090#1086#1088' ('#1079#1072#1103#1074#1082#1072')'
+  end
+  object edMemberExp: TcxButtonEdit [20]
+    Left = 970
+    Top = 23
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 24
+    Width = 142
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 187
@@ -3932,6 +3957,21 @@ inherited ReturnInForm: TReturnInForm
         Component = cbPrinted
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberExpId'
+        Value = Null
+        Component = GuidesMemberExp
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberExpName'
+        Value = Null
+        Component = GuidesMemberExp
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 224
     Top = 248
@@ -4355,6 +4395,14 @@ inherited ReturnInForm: TReturnInForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MovementPromo'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMemberExpName'
+        Value = Null
+        Component = GuidesMemberExp
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -5103,8 +5151,8 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1000
-    Top = 80
+    Left = 1080
+    Top = 208
   end
   object CurrencyPartnerGuides: TdsdGuides
     KeyField = 'Id'
@@ -5133,8 +5181,8 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 992
-    Top = 16
+    Left = 976
+    Top = 88
   end
   object TaxCorrectiveCDS: TClientDataSet
     Aggregates = <>
@@ -5314,8 +5362,8 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 939
-    Top = 65524
+    Left = 891
+    Top = 44
   end
   object spGetReportNameTaxCorrective: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TaxCorrective_ReportName'
@@ -5778,8 +5826,8 @@ inherited ReturnInForm: TReturnInForm
         Value = 81178
         MultiSelectSeparator = ','
       end>
-    Left = 1186
-    Top = 3
+    Left = 1170
+    Top = 83
   end
   object spUpdateMovementMember: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_ReturnIn_Member'
@@ -5836,5 +5884,39 @@ inherited ReturnInForm: TReturnInForm
     PackSize = 1
     Left = 576
     Top = 496
+  end
+  object GuidesMemberExp: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMemberExp
+    FormNameParam.Value = 'TMember_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMember_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesMemberExp
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesMemberExp
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = 81178
+        MultiSelectSeparator = ','
+      end>
+    Left = 1022
+    Top = 27
   end
 end

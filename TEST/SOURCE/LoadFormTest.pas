@@ -2648,10 +2648,16 @@ end;
 
 procedure TLoadFormTest.LoadMobileReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleOrderExtList_MobileForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleOrderExtList_MobileForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleOrderExtList_MobileDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleOrderExtList_MobileDialogForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Mobile_OrderExternal_SaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Mobile_OrderExternal_SaleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Mobile_OrderExternal_SaleDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Mobile_OrderExternal_SaleDialogForm');
+  }
 end;
 procedure TLoadFormTest.LoadModelServiceFormTest;
 begin

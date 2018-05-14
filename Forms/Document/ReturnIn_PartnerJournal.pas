@@ -134,6 +134,8 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    spSavePrintState: TdsdStoredProc;
+    actSPSavePrintState: TdsdExecStoredProc;
   private
     { Private declarations }
   public

@@ -232,6 +232,9 @@ type
     spSavePrintState: TdsdStoredProc;
     cbPrinted: TcxCheckBox;
     actSPSavePrintState: TdsdExecStoredProc;
+    cxLabel25: TcxLabel;
+    edMemberExp: TcxButtonEdit;
+    GuidesMemberExp: TdsdGuides;
   private
     { Private declarations }
   public
