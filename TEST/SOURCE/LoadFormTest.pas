@@ -90,6 +90,7 @@ type
     procedure LoadMobileTariffFormTest;
     procedure LoadMobileBillsFormTest;
     procedure LoadMobileProjectFormTest;
+    procedure LoadMobileReportFormTest;
     procedure LoadModelServiceFormTest;
     procedure LoadMovementFormTest;
     procedure LoadOrderIncomeFormTest;
@@ -2645,6 +2646,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPhotoMobileEditForm');
 end;
 
+procedure TLoadFormTest.LoadMobileReportFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Mobile_OrderExternal_SaleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Mobile_OrderExternal_SaleForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Mobile_OrderExternal_SaleDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Mobile_OrderExternal_SaleDialogForm');
+end;
 procedure TLoadFormTest.LoadModelServiceFormTest;
 begin
  //Типы модели начисления
