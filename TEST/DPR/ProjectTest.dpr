@@ -1008,7 +1008,9 @@ uses
   MemberSheetWorkTime in '..\..\Forms\Guides\MemberSheetWorkTime.pas' {MemberSheetWorkTimeForm: TParentForm},
   MemberSheetWorkTimeEdit in '..\..\Forms\Guides\MemberSheetWorkTimeEdit.pas' {MemberSheetWorkTimeEditForm: TParentForm},
   Report_Mobile_OrderExternal_SaleDialog in '..\..\Forms\Report\Report_Mobile_OrderExternal_SaleDialog.pas' {Report_Mobile_OrderExternal_SaleDialogForm: TParentForm},
-  Report_Mobile_OrderExternal_Sale in '..\..\Forms\Report\Report_Mobile_OrderExternal_Sale.pas' {Report_Mobile_OrderExternal_SaleForm: TParentForm};
+  Report_Mobile_OrderExternal_Sale in '..\..\Forms\Report\Report_Mobile_OrderExternal_Sale.pas' {Report_Mobile_OrderExternal_SaleForm: TParentForm},
+  Report_SaleOrderExtList_Mobile in '..\..\Forms\Report\Report_SaleOrderExtList_Mobile.pas' {Report_SaleOrderExtList_MobileForm: TParentForm},
+  Report_SaleOrderExtList_MobileDialog in '..\..\Forms\Report\Report_SaleOrderExtList_MobileDialog.pas' {Report_SaleOrderExtList_MobileDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -322,12 +322,12 @@ inherited MainForm: TMainForm
         end>
       isShowModal = False
     end
-    object actReport_OrderExternal_Sale_Mobile: TdsdOpenForm [16]
+    object actReport_SaleOrderExtList_Mobile: TdsdOpenForm [16]
       Category = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090
       MoveParams = <>
-      Caption = #1047#1072#1103#1074#1082#1072' / '#1054#1090#1075#1088#1091#1079#1082#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
-      FormName = 'TReport_Mobile_OrderExternal_SaleForm'
-      FormNameParam.Value = 'TReport_Mobile_OrderExternal_SaleForm'
+      Caption = #1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1079#1072#1103#1074#1086#1082' '#1080' '#1087#1088#1086#1076#1072#1078
+      FormName = 'TReport_SaleOrderExtList_MobileForm'
+      FormNameParam.Value = 'TReport_SaleOrderExtList_MobileForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
       FormNameParam.MultiSelectSeparator = ','
@@ -6763,8 +6763,8 @@ inherited MainForm: TMainForm
       object N193: TMenuItem
         Caption = '-'
       end
-      object N116: TMenuItem
-        Action = actReport_OrderExternal_Sale_Mobile
+      object miReport_SaleOrderExtList_Mobile: TMenuItem
+        Action = actReport_SaleOrderExtList_Mobile
       end
     end
     object miReportsProduction: TMenuItem [10]

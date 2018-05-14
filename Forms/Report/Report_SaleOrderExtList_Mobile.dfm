@@ -1,4 +1,4 @@
-object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
+object Report_SaleOrderExtList_MobileForm: TReport_SaleOrderExtList_MobileForm
   Left = 0
   Top = 0
   Caption = #1054#1090#1095#1077#1090' <'#1048#1090#1086#1075#1086' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084' - '#1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1079#1072#1103#1074#1086#1082' '#1080' '#1087#1088#1086#1076#1072#1078'>'
@@ -12,7 +12,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   PixelsPerInch = 96
@@ -627,6 +627,23 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
       TabOrder = 5
       Width = 236
     end
+    object cxLabel3: TcxLabel
+      Left = 403
+      Top = 32
+      Caption = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090':'
+    end
+    object edPersonalTrade: TcxButtonEdit
+      Left = 492
+      Top = 31
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 236
+    end
   end
   object cbSale: TcxCheckBox
     Left = 229
@@ -662,7 +679,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = UnitGuides
+        Component = GuidesUnit
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -805,13 +822,26 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
     Images = dmMain.ImageList
     Left = 248
     Top = 248
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -834,8 +864,8 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_SaleOrderExternalListDialogForm'
-      FormNameParam.Value = 'TReport_SaleOrderExternalListDialogForm'
+      FormName = 'TReport_SaleOrderExtList_MobileDialogForm'
+      FormNameParam.Value = 'TReport_SaleOrderExtList_MobileDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -858,7 +888,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         item
           Name = 'UnitId'
           Value = ''
-          Component = UnitGuides
+          Component = GuidesUnit
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -866,7 +896,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         item
           Name = 'UnitName'
           Value = ''
-          Component = UnitGuides
+          Component = GuidesUnit
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -885,6 +915,23 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
           Value = Null
           Component = cbNoSale
           DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalTradeId'
+          Value = Null
+          Component = GuidesPersonalTrade
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalTradeName'
+          Value = Null
+          Component = GuidesPersonalTrade
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -980,8 +1027,8 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
       PrinterNameParam.MultiSelectSeparator = ','
     end
   end
-  object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpReport_Sale_OrderExternal_List'
+  object spSelect: TdsdStoredProc
+    StoredProcName = 'gpReport_Sale_OrderExtList_Mobile'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -1007,7 +1054,15 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
       item
         Name = 'inUnitId'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberId'
+        Value = Null
+        Component = GuidesPersonalTrade
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1071,18 +1126,21 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         Component = deEnd
       end
       item
-        Component = UnitGuides
+        Component = GuidesUnit
       end
       item
         Component = cbNoSale
       end
       item
         Component = cbSale
+      end
+      item
+        Component = GuidesPersonalTrade
       end>
     Left = 512
     Top = 192
   end
-  object UnitGuides: TdsdGuides
+  object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
@@ -1094,7 +1152,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
       item
         Name = 'Key'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1103,7 +1161,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1167,5 +1225,64 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
     PackSize = 1
     Left = 607
     Top = 240
+  end
+  object GuidesPersonalTrade: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonalTrade
+    Key = '0'
+    FormNameParam.Value = 'TMemberPosition_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMemberPosition_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesPersonalTrade
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPersonalTrade
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = '149831'
+        MultiSelectSeparator = ','
+      end>
+    Left = 639
+    Top = 40
+  end
+  object spGet_PersonalTrade: TdsdStoredProc
+    StoredProcName = 'gpGetMobile_Object_Const'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'MemberId'
+        Value = '0'
+        Component = GuidesPersonalTrade
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberName'
+        Value = ''
+        Component = GuidesPersonalTrade
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 904
+    Top = 40
   end
 end

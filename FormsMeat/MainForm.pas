@@ -945,8 +945,8 @@ type
     N3: TMenuItem;
     actMemberSheetWorkTime: TdsdOpenForm;
     miMemberSheetWorkTime: TMenuItem;
-    actReport_OrderExternal_Sale_Mobile: TdsdOpenForm;
-    N116: TMenuItem;
+    actReport_SaleOrderExtList_Mobile: TdsdOpenForm;
+    miReport_SaleOrderExtList_Mobile: TMenuItem;
     N193: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
