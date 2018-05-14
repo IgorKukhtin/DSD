@@ -53,9 +53,9 @@ type
     Code: TcxGridDBColumn;
     Name: TcxGridDBColumn;
     Erased: TcxGridDBColumn;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     actChoiceGuides: TdsdChoiceGuides;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
+    DBViewAddOn: TdsdDBViewAddOn;
     actProtocol: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;

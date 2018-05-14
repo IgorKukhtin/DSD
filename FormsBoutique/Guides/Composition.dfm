@@ -34,6 +34,7 @@ object CompositionForm: TCompositionForm
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
+      OptionsBehavior.IncSearch = True
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -491,11 +492,11 @@ object CompositionForm: TCompositionForm
     Left = 464
     Top = 80
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 288
     Top = 200
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
+  object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
@@ -520,6 +521,7 @@ object CompositionForm: TCompositionForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    SearchAsFilter = False
     Left = 104
     Top = 248
   end
