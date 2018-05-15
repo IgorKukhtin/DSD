@@ -150,7 +150,7 @@ type
     miLine51: TMenuItem;
     miReport_Goods_RemainsCurrent: TMenuItem;
     actReport_Goods: TdsdOpenForm;
-    miReport_Goods: TMenuItem;
+    miReport_GoodsCode: TMenuItem;
     miReport_GoodsMI_Account: TMenuItem;
     actReport_GoodsMI_Account: TdsdOpenForm;
     actReport_SaleReturnIn: TdsdOpenForm;
@@ -208,6 +208,7 @@ type
     N2: TMenuItem;
     actClientSMS: TdsdOpenForm;
     miClientSMS: TMenuItem;
+    actReport_GoodsCode: TdsdOpenForm;
   private
     { Private declarations }
   public

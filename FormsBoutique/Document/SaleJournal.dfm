@@ -1053,6 +1053,7 @@ object SaleJournalForm: TSaleJournalForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actGet_Printer: TdsdExecStoredProc
@@ -1283,6 +1284,12 @@ object SaleJournalForm: TSaleJournalForm
       end
       item
         Component = GuidesUnit
+      end
+      item
+        Component = deStart
+      end
+      item
+        Component = deEnd
       end>
     Left = 448
     Top = 56
@@ -1345,8 +1352,8 @@ object SaleJournalForm: TSaleJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 400
-    Top = 200
+    Left = 408
+    Top = 176
   end
   object spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_Sale'

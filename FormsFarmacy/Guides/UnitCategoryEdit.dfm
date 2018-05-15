@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' <'#1050#1072#1090#1077#1075#1086#1088#1080#1102' '#1072#1087#1090#1077#1082#1080'>'
-  ClientHeight = 159
+  ClientHeight = 300
   ClientWidth = 436
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 99
-    Top = 122
+    Left = 91
+    Top = 258
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 249
-    Top = 122
+    Left = 241
+    Top = 258
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -60,6 +60,45 @@
     Properties.DisplayFormat = '0'
     TabOrder = 5
     Width = 400
+  end
+  object cePremiumImplPlan: TcxCurrencyEdit
+    Left = 23
+    Top = 177
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 6
+    Width = 186
+  end
+  object cxLabel6: TcxLabel
+    Left = 23
+    Top = 154
+    Caption = '% '#1087#1088#1077#1084#1080#1080' '#1079#1072' '#1074#1099#1087#1086#1083#1085'. '#1087#1083#1072#1085#1072' '#1087#1088#1086#1076#1072#1078
+  end
+  object cePenaltyNonMinPlan: TcxCurrencyEdit
+    Left = 23
+    Top = 127
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 8
+    Width = 186
+  end
+  object cxLabel4: TcxLabel
+    Left = 23
+    Top = 108
+    Caption = '% '#1096#1090#1088#1072#1092#1072' '#1079#1072' '#1085#1077#1074#1099#1087'. '#1084#1080#1085'. '#1087#1083#1072#1085#1072
+  end
+  object ceMinLineByLineImplPlan: TcxCurrencyEdit
+    Left = 23
+    Top = 223
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 10
+    Width = 186
+  end
+  object cxLabel2: TcxLabel
+    Left = 23
+    Top = 204
+    Caption = ' '#1052#1080#1085'. % '#1087#1086#1089#1090#1088#1086#1095#1085#1086#1075#1086' '#1074#1099#1087#1086#1083#1085'. '#1084#1080#1085'. '#1087#1083#1072#1085#1072' '#1076#1083#1103' '#1087#1086#1083#1091#1095'. '#1087#1088#1077#1084#1080#1080
   end
   object ActionList: TActionList
     Left = 252
@@ -121,6 +160,30 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PenaltyNonMinPlan'
+        Value = Null
+        Component = cePenaltyNonMinPlan
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PremiumImplPlan'
+        Value = Null
+        Component = cePremiumImplPlan
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MinLineByLineImplPlan'
+        Value = Null
+        Component = ceMinLineByLineImplPlan
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 188
@@ -161,6 +224,27 @@
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PenaltyNonMinPlan'
+        Value = Null
+        Component = cePenaltyNonMinPlan
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PremiumImplPlan'
+        Value = Null
+        Component = cePremiumImplPlan
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MinLineByLineImplPlan'
+        Value = Null
+        Component = ceMinLineByLineImplPlan
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

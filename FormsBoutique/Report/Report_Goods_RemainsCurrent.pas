@@ -106,6 +106,7 @@ type
     spGet_PrinterByUser: TdsdStoredProc;
     actGet_PrinterByUser: TdsdExecStoredProc;
     macPrintSticker: TMultiAction;
+    cbRemains: TcxCheckBox;
   private
     { Private declarations }
   public

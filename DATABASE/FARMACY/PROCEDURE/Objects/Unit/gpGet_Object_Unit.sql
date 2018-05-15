@@ -19,7 +19,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                TaxService TFloat, TaxServiceNigth TFloat,
                StartServiceNigth TDateTime, EndServiceNigth TDateTime,
                CreateDate TDateTime, CloseDate TDateTime,
-               isRepriceAuto Boolean
+               isRepriceAuto Boolean,
+               NormOfManDays Integer
                ) AS
 $BODY$
 BEGIN
@@ -111,6 +112,8 @@ BEGIN
       , COALESCE (ObjectDate_Close.ValueData, (CURRENT_DATE + INTERVAL '1 DAY'))  ::TDateTime  AS CloseDate
       
       , COALESCE(ObjectBoolean_RepriceAuto.ValueData, False) AS isRepriceAuto
+      
+      , ObjectFloat_NormOfManDays.ValueData::Integer         AS NormOfManDays
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -187,6 +190,10 @@ BEGIN
         LEFT JOIN ObjectDate AS ObjectDate_Close
                              ON ObjectDate_Close.ObjectId = Object_Unit.Id
                             AND ObjectDate_Close.DescId = zc_ObjectDate_Unit_Close()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_NormOfManDays 
+                              ON ObjectFloat_NormOfManDays.ObjectId = Object_Unit.Id
+                             AND ObjectFloat_NormOfManDays.DescId = zc_ObjectFloat_Unit_NormOfManDays()
                             
     WHERE Object_Unit.Id = inId;
 
@@ -203,6 +210,7 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 14.05.18                                                        * add NormOfManDays
  05.05.18                                                        * add UnitCategory
  08.08.17         * add ProvinceCity
  06.03.17         * add Address

@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Goods_RemainsCurrent(
     IN inUnitId           Integer  ,  -- Подразделение / группа
@@ -16,6 +17,7 @@ CREATE OR REPLACE FUNCTION gpReport_Goods_RemainsCurrent(
     IN inIsPartner        Boolean  ,  -- показать Поставщика (Да/Нет)
     IN inIsSize           Boolean  ,  -- показать Размеры детально (Да/Нет)
     IN inIsYear           Boolean  ,  -- ограничение Год ТМ (Да/Нет) (выбор партий)
+    IN inIsRemains        Boolean  ,  -- Показать с остатком = 0
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (PartionId            Integer
@@ -542,4 +544,4 @@ CREATE UNIQUE INDEX idx_objecthistory_objectid_enddate_descid
 */
 
 -- тест
--- SELECT * FROM gpReport_Goods_RemainsCurrent (inUnitId:= 1531, inBrandId:= 0, inPartnerId:= 0, inPeriodId:= 0, inStartYear:= 0, inEndYear:= 0, inUserId:= 0, inGoodsPrintId:= 0, inisPartion:= FALSE, inisPartner:= FALSE, inisSize:= TRUE, inIsYear:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_Goods_RemainsCurrent (inUnitId:= 1531, inBrandId:= 0, inPartnerId:= 0, inPeriodId:= 0, inStartYear:= 0, inEndYear:= 0, inUserId:= 0, inGoodsPrintId:= 0, inisPartion:= FALSE, inisPartner:= FALSE, inisSize:= TRUE, inIsYear:= FALSE, inIsRemains:= FALSE, inSession:= zfCalc_UserAdmin())

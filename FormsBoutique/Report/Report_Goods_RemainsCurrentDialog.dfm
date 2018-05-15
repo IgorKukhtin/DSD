@@ -3,7 +3,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1056#1077#1077#1089#1090#1088' '#1090#1086#1074#1072#1088#1086#1074'>'
-  ClientHeight = 339
+  ClientHeight = 369
   ClientWidth = 340
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 53
-    Top = 304
+    Top = 334
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
   end
   object cxButton2: TcxButton
     Left = 227
-    Top = 304
+    Top = 334
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -38,7 +38,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
   end
   object edUnit: TcxButtonEdit
     Left = 10
-    Top = 60
+    Top = 90
     Properties.Buttons = <
       item
         Default = True
@@ -50,7 +50,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
   end
   object cxLabel3: TcxLabel
     Left = 10
-    Top = 40
+    Top = 70
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' / '#1043#1088#1091#1087#1087#1072':'
   end
   object cbPartion: TcxCheckBox
@@ -64,17 +64,17 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
     Width = 130
   end
   object cbSize: TcxCheckBox
-    Left = 229
-    Top = 12
+    Left = 10
+    Top = 39
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' '#1076#1077#1090#1072#1083#1100#1085#1086' ('#1044#1072'/'#1053#1077#1090')'
-    Caption = #1056#1072#1079#1084#1077#1088#1099' '#1076#1077#1090#1072#1083'.'
+    Caption = #1056#1072#1079#1084#1077#1088#1099' '#1076#1077#1090#1072#1083#1100#1085#1086
     ParentShowHint = False
     ShowHint = True
     TabOrder = 5
-    Width = 104
+    Width = 120
   end
   object cbPartner: TcxCheckBox
-    Left = 141
+    Left = 157
     Top = 12
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082#1080
@@ -85,12 +85,12 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
   end
   object cxLabel1: TcxLabel
     Left = 10
-    Top = 96
+    Top = 126
     Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072':'
   end
   object edBrand: TcxButtonEdit
     Left = 10
-    Top = 116
+    Top = 146
     Properties.Buttons = <
       item
         Default = True
@@ -102,12 +102,12 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
   end
   object cxLabel4: TcxLabel
     Left = 10
-    Top = 192
+    Top = 222
     Caption = #1057#1077#1079#1086#1085' :'
   end
   object edPeriod: TcxButtonEdit
     Left = 10
-    Top = 211
+    Top = 241
     Properties.Buttons = <
       item
         Default = True
@@ -119,12 +119,12 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
   end
   object cxLabel2: TcxLabel
     Left = 10
-    Top = 147
+    Top = 177
     Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
   end
   object edPartner: TcxButtonEdit
     Left = 10
-    Top = 166
+    Top = 196
     Properties.Buttons = <
       item
         Default = True
@@ -136,17 +136,17 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
   end
   object cxLabel5: TcxLabel
     Left = 10
-    Top = 244
+    Top = 274
     Caption = #1043#1086#1076' '#1089' ...'
   end
   object cxLabel6: TcxLabel
     Left = 94
-    Top = 244
+    Top = 274
     Caption = #1043#1086#1076' '#1087#1086' ...'
   end
   object cbYear: TcxCheckBox
     Left = 182
-    Top = 264
+    Top = 294
     Hint = 'Visible = False '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052' ('#1044#1072'/'#1053#1077#1090')'
     Caption = 'Visible = False '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052
     ParentShowHint = False
@@ -157,7 +157,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
   end
   object edStartYear: TcxButtonEdit
     Left = 10
-    Top = 264
+    Top = 294
     Properties.Buttons = <
       item
         Default = True
@@ -169,7 +169,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
   end
   object edEndYear: TcxButtonEdit
     Left = 94
-    Top = 264
+    Top = 294
     Properties.Buttons = <
       item
         Default = True
@@ -179,13 +179,23 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
     TabOrder = 17
     Width = 80
   end
+  object cbRemains: TcxCheckBox
+    Left = 157
+    Top = 39
+    Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089' '#1086#1089#1090#1072#1090#1082#1086#1084' = 0'
+    Caption = #1054#1089#1090#1072#1090#1086#1082' = 0'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 18
+    Width = 92
+  end
   object PeriodChoice: TPeriodChoice
     Left = 263
-    Top = 41
+    Top = 71
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 262
-    Top = 193
+    Top = 223
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -198,7 +208,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 279
-    Top = 80
+    Top = 110
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -335,9 +345,17 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isRemains'
+        Value = Null
+        Component = cbRemains
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 158
-    Top = 291
+    Top = 321
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -368,7 +386,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
         MultiSelectSeparator = ','
       end>
     Left = 206
-    Top = 58
+    Top = 88
   end
   object GuidesBrand: TdsdGuides
     KeyField = 'Id'
@@ -399,7 +417,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
         MultiSelectSeparator = ','
       end>
     Left = 110
-    Top = 106
+    Top = 136
   end
   object GuidesPeriod: TdsdGuides
     KeyField = 'Id'
@@ -430,7 +448,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
         MultiSelectSeparator = ','
       end>
     Left = 126
-    Top = 202
+    Top = 232
   end
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'
@@ -461,7 +479,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
         MultiSelectSeparator = ','
       end>
     Left = 238
-    Top = 142
+    Top = 172
   end
   object GuidesStartYear: TdsdGuides
     KeyField = 'Id'
@@ -491,7 +509,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
         MultiSelectSeparator = ','
       end>
     Left = 38
-    Top = 258
+    Top = 288
   end
   object GuidesEndYear: TdsdGuides
     KeyField = 'Id'
@@ -521,7 +539,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
         MultiSelectSeparator = ','
       end>
     Left = 110
-    Top = 258
+    Top = 288
   end
   object spGet_Unit: TdsdStoredProc
     StoredProcName = 'gpGet_UnitbyUser'
@@ -553,11 +571,11 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
       end>
     PackSize = 1
     Left = 168
-    Top = 160
+    Top = 190
   end
   object ActionList: TActionList
     Left = 147
-    Top = 73
+    Top = 103
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>

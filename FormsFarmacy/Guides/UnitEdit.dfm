@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
-  ClientHeight = 389
+  ClientHeight = 431
   ClientWidth = 488
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 72
-    Top = 356
+    Top = 398
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -38,7 +38,7 @@
   end
   object cxButton2: TcxButton
     Left = 266
-    Top = 356
+    Top = 398
     Width = 75
     Height = 25
     Action = FormClose
@@ -154,6 +154,7 @@
   object edEndServiceNigth: TcxDateEdit
     Left = 364
     Top = 175
+    EditValue = 43234d
     Properties.ArrowsForYear = False
     Properties.AssignedValues.EditFormat = True
     Properties.DateButtons = [btnNow]
@@ -284,9 +285,22 @@
     Top = 102
     Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '
   end
+  object ceNormOfManDays: TcxCurrencyEdit
+    Left = 16
+    Top = 370
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 35
+    Width = 208
+  end
+  object cxLabel16: TcxLabel
+    Left = 16
+    Top = 347
+    Caption = #1053#1086#1088#1084#1072' '#1095#1077#1083#1086#1074#1077#1082#1086#1076#1085#1077#1081' '#1074' '#1084#1077#1089#1103#1094#1077
+  end
   object ActionList: TActionList
-    Left = 396
-    Top = 334
+    Left = 356
+    Top = 358
     object DataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -468,10 +482,17 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNormOfManDays'
+        Value = Null
+        Component = ceNormOfManDays
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 180
-    Top = 342
+    Top = 374
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -481,8 +502,8 @@
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 452
-    Top = 342
+    Left = 420
+    Top = 358
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Unit'
@@ -670,10 +691,16 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'NormOfManDays'
+        Value = Null
+        Component = ceNormOfManDays
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 20
-    Top = 350
+    Left = 28
+    Top = 374
   end
   object ParentGuides: TdsdGuides
     KeyField = 'Id'

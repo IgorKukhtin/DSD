@@ -1102,6 +1102,10 @@ object GoodsAccount_ReturnInJournalForm: TGoodsAccount_ReturnInJournalForm
         Component = PeriodChoice
       end
       item
+        Component = deStart
+      end
+      item
+        Component = deEnd
       end>
     Left = 448
     Top = 56

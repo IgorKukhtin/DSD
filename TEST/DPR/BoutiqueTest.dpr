@@ -292,7 +292,10 @@ uses
   DiscountPeriodItemBySendDialog in '..\..\FormsBoutique\Document\DiscountPeriodItemBySendDialog.pas' {DiscountPeriodItemBySendDialogForm: TParentForm},
   Income in '..\..\FormsBoutique\Document\Income.pas' {IncomeForm: TParentForm},
   DiscountPersentDialog in '..\..\FormsBoutique\Guides\DiscountPersentDialog.pas' {DiscountPersentDialogForm: TParentForm},
-  Process in '..\..\FormsBoutique\Guides\Process.pas' {ProcessForm: TParentForm};
+  Process in '..\..\FormsBoutique\Guides\Process.pas' {ProcessForm: TParentForm},
+  GoodsSizeChoiceByCode in '..\..\FormsBoutique\Guides\GoodsSizeChoiceByCode.pas' {GoodsSizeChoicebyCodeForm: TParentForm},
+  Report_GoodsCode in '..\..\FormsBoutique\Report\Report_GoodsCode.pas' {Report_GoodsCodeForm: TParentForm},
+  Report_GoodsCodeDialog in '..\..\FormsBoutique\Report\Report_GoodsCodeDialog.pas' {Report_GoodsCodeDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

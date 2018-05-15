@@ -363,6 +363,10 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
         Component = PeriodChoice
       end
       item
+        Component = deEnd
+      end
+      item
+        Component = deStart
       end>
   end
   inherited spMovementComplete: TdsdStoredProc

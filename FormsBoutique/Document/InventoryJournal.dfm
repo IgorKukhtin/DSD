@@ -1126,6 +1126,10 @@ object InventoryJournalForm: TInventoryJournalForm
         Component = PeriodChoice
       end
       item
+        Component = deStart
+      end
+      item
+        Component = deEnd
       end>
     Left = 584
     Top = 48

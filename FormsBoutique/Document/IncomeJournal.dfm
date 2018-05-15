@@ -1368,6 +1368,10 @@ object IncomeJournalForm: TIncomeJournalForm
         Component = PeriodChoice
       end
       item
+        Component = deEnd
+      end
+      item
+        Component = deStart
       end>
     Left = 584
     Top = 48

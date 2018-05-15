@@ -433,7 +433,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
     Properties.ReadOnly = True
     Style.BorderColor = clGray
     Style.Color = clWhite
-    TabOrder = 3
+    TabOrder = 2
     Width = 203
   end
   object PanelGoodsGroupNameFull: TPanel
@@ -899,6 +899,13 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           Component = MasterCDS
           ComponentItem = 'InvNumberAll'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
