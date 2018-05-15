@@ -57,6 +57,7 @@ type
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     actRefresh: TdsdDataSetRefresh;
+    cbRemains: TcxCheckBox;
   private
     { Private declarations }
   public
