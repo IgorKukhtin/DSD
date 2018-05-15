@@ -1,9 +1,9 @@
-object GoodsSizeChoiceForm: TGoodsSizeChoiceForm
+object GoodsSizeChoicebyCodeForm: TGoodsSizeChoicebyCodeForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1056#1072#1079#1084#1077#1088#1099' '#1090#1086#1074#1072#1088#1072'>'
   ClientHeight = 289
-  ClientWidth = 463
+  ClientWidth = 417
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object GoodsSizeChoiceForm: TGoodsSizeChoiceForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 463
+    Width = 417
     Height = 263
     Align = alClient
     TabOrder = 0
@@ -57,7 +57,7 @@ object GoodsSizeChoiceForm: TGoodsSizeChoiceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 166
+        Width = 208
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -67,7 +67,7 @@ object GoodsSizeChoiceForm: TGoodsSizeChoiceForm
   object cxLabel6: TcxLabel
     Left = 172
     Top = 78
-    Caption = #1040#1088#1090#1080#1082#1091#1083' : '
+    Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072' : '
   end
   object edGoods: TcxButtonEdit
     Left = 247
@@ -186,10 +186,6 @@ object GoodsSizeChoiceForm: TGoodsSizeChoiceForm
         item
           Visible = True
           ItemName = 'bbToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -415,7 +411,9 @@ object GoodsSizeChoiceForm: TGoodsSizeChoiceForm
       end
       item
         Name = 'inGoodsCode'
-        Value = '0'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -473,7 +471,7 @@ object GoodsSizeChoiceForm: TGoodsSizeChoiceForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TextValue'
+        Name = 'Code'
         Value = ''
         Component = GuidesGoods
         ComponentItem = 'TextValue'
@@ -481,8 +479,8 @@ object GoodsSizeChoiceForm: TGoodsSizeChoiceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 368
-    Top = 64
+    Left = 344
+    Top = 104
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -494,7 +492,7 @@ object GoodsSizeChoiceForm: TGoodsSizeChoiceForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'MasterGoodsName'
+        Name = 'MasterGoodsCode'
         Value = ''
         Component = GuidesGoods
         ComponentItem = 'TextValue'

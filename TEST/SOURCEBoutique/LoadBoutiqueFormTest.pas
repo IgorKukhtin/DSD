@@ -395,6 +395,9 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSizeChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSizeChoiceForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSizeChoicebyCodeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsSizeChoicebyCodeForm');
 end;
 
 procedure TLoadFormTest.LoadGoodsPrintFormTest;
@@ -686,6 +689,12 @@ end;
 //
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsCodeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsCodeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsCodeDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsCodeDialogForm');
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OH_DiscountPeriodForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OH_DiscountPeriodForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OH_DiscountPeriodDialogForm'));
