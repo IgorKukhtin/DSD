@@ -69,6 +69,8 @@ RETURNS TABLE (PartionId            Integer
 
              , PriceListId_Basis    Integer  --
              , PriceListName_Basis  TVarChar --
+
+             , isOlap Boolean
               )
 AS
 $BODY$
@@ -124,7 +126,27 @@ BEGIN
     -- Результат
     RETURN QUERY
     WITH
-     tmpContainer AS (SELECT Container.WhereObjectId                                   AS UnitId
+     tmpReportOLAP AS (SELECT DISTINCT Object_PartionGoods.MovementItemId AS PartionId
+                            , Object_PartionGoods.GoodsId
+                       FROM Object
+                            INNER JOIN ObjectLink AS ObjectLink_User
+                                                  ON ObjectLink_User.ObjectId      = Object.Id
+                                                 AND ObjectLink_User.DescId        = zc_ObjectLink_ReportOLAP_User()
+                                                 AND ObjectLink_User.ChildObjectId = vbUserId
+          
+                            INNER JOIN ObjectLink AS ObjectLink_Object
+                                                  ON ObjectLink_Object.ObjectId = Object.Id
+                                                 AND ObjectLink_Object.DescId   = zc_ObjectLink_ReportOLAP_Object()
+                                                 
+                            -- привязываем по партии и товару, для партии определяем какой товар, для товара определяем партии
+                            INNER JOIN Object_PartionGoods ON ObjectLink_Object.ChildObjectId = CASE WHEN Object.ObjectCode = 3 THEN Object_PartionGoods.MovementItemId ELSE Object_PartionGoods.GoodsId END
+                                               
+                       WHERE Object.DescId = zc_Object_ReportOLAP()
+                         AND Object.ObjectCode IN (2,3)
+                         AND Object.isErased = FALSE
+                       )
+
+   , tmpContainer AS (SELECT Container.WhereObjectId                                   AS UnitId
                            , Container.PartionId                                       AS PartionId
                            , Container.ObjectId                                        AS GoodsId
                            , CASE WHEN CLO_Client.ContainerId IS NULL THEN Container.Amount ELSE 0 END AS Remains
@@ -235,6 +257,8 @@ BEGIN
     
                               , SUM (zfCalc_SummIn        (tmpContainer.RemainsAll, tmpContainer.OperPrice, tmpContainer.CountForPrice)) AS TotalSummPrice
                               , SUM (zfCalc_SummPriceList (tmpContainer.RemainsAll, tmpContainer.OperPriceList))                         AS TotalSummPriceList
+                              
+                              , SUM (CASE WHEN COALESCE (tmpReportOLAP.PartionId, 0) <> 0 THEN 1 ELSE 0 END) AS byOlap
     
                          FROM tmpContainer
                               LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id = tmpContainer.MovementId
@@ -242,6 +266,10 @@ BEGIN
                               LEFT JOIN ObjectLink AS ObjectLink_Partner_Fabrika
                                                    ON ObjectLink_Partner_Fabrika.ObjectId = tmpContainer.PartnerId
                                                   AND ObjectLink_Partner_Fabrika.DescId   = zc_ObjectLink_Partner_Fabrika()
+
+                              LEFT JOIN tmpReportOLAP ON tmpReportOLAP.PartionId = tmpContainer.PartionId
+                                                     AND tmpReportOLAP.GoodsId   = tmpContainer.GoodsId
+
                               -- LEFT JOIN tmpPrice ON tmpPrice.GoodsId = Object_PartionGoods.GoodsId
                          GROUP BY tmpContainer.UnitId
                                 , tmpContainer.GoodsId
@@ -310,6 +338,8 @@ BEGIN
 
                           , SUM (tmpData_All.TotalSummPrice)     AS TotalSummPrice
                           , SUM (tmpData_All.TotalSummPriceList) AS TotalSummPriceList
+
+                          , SUM (tmpData_All.byOlap) AS byOlap
 
                      FROM tmpData_All
                           LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = tmpData_All.GoodsSizeId
@@ -477,6 +507,8 @@ BEGIN
            
            , zc_PriceList_Basis()  AS PriceListId_Basis
            , vbPriceListName_Basis AS PriceListName_Basis
+           
+           , CASE WHEN COALESCE (tmpData.byOlap, 0) <> 0 THEN TRUE ELSE FALSE END :: Boolean AS isOlap
 
         FROM tmpData
             LEFT JOIN Object AS Object_Unit    ON Object_Unit.Id    = tmpData.UnitId

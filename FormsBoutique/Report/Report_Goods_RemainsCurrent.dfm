@@ -246,6 +246,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       inherited cxGrid: TcxGrid
         Width = 1131
         Height = 322
+        ExplicitLeft = -457
+        ExplicitTop = -25
         ExplicitWidth = 1131
         ExplicitHeight = 322
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -365,6 +367,15 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object isOLAP: TcxGridDBColumn
+            Caption = #1054#1090#1095#1077#1090' '#1054#1051#1040#1055
+            DataBinding.FieldName = 'isOLAP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1095#1077#1090' '#1092#1086#1088#1084#1080#1088#1091#1077#1090#1089#1103' '#1058#1054#1051#1068#1050#1054' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1058#1086#1074#1072#1088#1086#1074
+            Options.Editing = False
+            Width = 45
+          end
           object OperDate_Partion: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'OperDate_Partion'
@@ -933,6 +944,9 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       StoredProcList = <
         item
           StoredProc = spDelete_Object_PartionGoods_ReportOLAP
+        end
+        item
+          StoredProc = spSelect
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1074#1089#1077' '#1080#1079' OLAP '
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1074#1089#1077' '#1080#1079' OLAP '
@@ -944,10 +958,10 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Category = 'Olap'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Goods_isOlap_No
+      StoredProc = spUpdate_Part_isOlap_No
       StoredProcList = <
         item
-          StoredProc = spUpdate_Goods_isOlap_No
+          StoredProc = spUpdate_Part_isOlap_No
         end>
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1086' '#1055#1072#1088#1090#1080#1080' OLAP - '#1053#1045#1058
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1086' '#1055#1072#1088#1090#1080#1080' OLAP - '#1053#1045#1058
@@ -2688,8 +2702,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 936
-    Top = 168
+    Left = 896
+    Top = 184
   end
   object spUpdate_Goods_isOlap_No: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_PartionGoods_ReportOLAP'
@@ -2736,7 +2750,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         Name = 'inObjectId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'GoodsId'
+        ComponentItem = 'PartionId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2766,7 +2780,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         Name = 'inObjectId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'GoodsId'
+        ComponentItem = 'PartionId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

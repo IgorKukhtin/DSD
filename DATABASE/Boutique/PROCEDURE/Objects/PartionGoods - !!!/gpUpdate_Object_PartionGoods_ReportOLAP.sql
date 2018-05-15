@@ -17,6 +17,11 @@ BEGIN
    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_Brand());
    vbUserId:= lpGetUserBySession (inSession);
 
+   -- проверка
+   IF COALESCE (inObjectId, 0) = 0 
+   THEN
+        RAISE EXCEPTION 'Ошибка.Элемент товара или партии не определен.'; 
+   END IF;
 
    -- Находим по св-вам
    vbReportOLAPId := lpInsertFind_Object_ReportOLAP (inCode     := inCode
