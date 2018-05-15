@@ -107,6 +107,29 @@ type
     actGet_PrinterByUser: TdsdExecStoredProc;
     macPrintSticker: TMultiAction;
     cbRemains: TcxCheckBox;
+    spUpdate_Goods_isOlapNo: TdsdExecStoredProc;
+    spUpdate_Goods_isOlapYes: TdsdExecStoredProc;
+    macUpdate_Goods_isOlapNo: TMultiAction;
+    macUpdate_Goods_isOlapYes: TMultiAction;
+    spUpdate_Goods_isOlap_Yes: TdsdStoredProc;
+    spUpdate_Goods_isOlap_No: TdsdStoredProc;
+    macUpdate_Goods_isOlapYes_list: TMultiAction;
+    macUpdate_Goods_isOlapNo_list: TMultiAction;
+    bbGoods_isOlapNo_list: TdxBarButton;
+    bbGoods_isOlapYes_list: TdxBarButton;
+    spUpdate_Part_isOlap_Yes: TdsdStoredProc;
+    spUpdate_Part_isOlap_No: TdsdStoredProc;
+    spUpdate_Part_isOlapYes: TdsdExecStoredProc;
+    macUpdate_Part_isOlapYes: TMultiAction;
+    macUpdate_Part_isOlapYes_list: TMultiAction;
+    macUpdate_Part_isOlapNo_list: TMultiAction;
+    macUpdate_Part_isOlapNo: TMultiAction;
+    spUpdate_Part_isOlapNo: TdsdExecStoredProc;
+    spDelete_Object_PartionGoods_ReportOLAP: TdsdStoredProc;
+    bbPart_isOlapYes_list: TdxBarButton;
+    bbPart_isOlapNo_list: TdxBarButton;
+    actDelete_PartionGoods_ReportOLAP: TdsdExecStoredProc;
+    bbDelete_PartionGoods_ReportOLAP: TdxBarButton;
   private
     { Private declarations }
   public
