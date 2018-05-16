@@ -82,6 +82,7 @@ object PriceListItemForm: TPriceListItemForm
       object UnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -144,6 +145,70 @@ object PriceListItemForm: TPriceListItemForm
         Options.Editing = False
         Width = 100
       end
+      object PriceTax: TcxGridDBColumn
+        Caption = '% '#1085#1072#1094'.'
+        DataBinding.FieldName = 'PriceTax'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080
+        Options.Editing = False
+        Width = 45
+      end
+      object DiscountTax: TcxGridDBColumn
+        Caption = '% '#1089#1082'.'
+        DataBinding.FieldName = 'DiscountTax'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '% '#1057#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
+        Options.Editing = False
+        Width = 45
+      end
+      object RemainsAll: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1080#1090#1086#1075#1086
+        DataBinding.FieldName = 'RemainsAll'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1086#1089#1090#1072#1090#1086#1082' '#1080#1090#1086#1075#1086
+        Options.Editing = False
+        Width = 55
+      end
+      object Remains: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1074' '#1084#1072#1075'.'
+        DataBinding.FieldName = 'Remains'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.ReadOnly = True
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1086#1089#1090#1072#1090#1086#1082' '#1074' '#1084#1072#1075#1072#1079#1080#1085#1077
+        Options.Editing = False
+        Width = 55
+      end
+      object AmountDebt: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1076#1086#1083#1075
+        DataBinding.FieldName = 'AmountDebt'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1086#1083#1075#1080' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+        Options.Editing = False
+        Width = 55
+      end
       object CurrencyName: TcxGridDBColumn
         Caption = #1042#1072#1083'. '#1074#1093'.'
         DataBinding.FieldName = 'CurrencyName'
@@ -151,6 +216,51 @@ object PriceListItemForm: TPriceListItemForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 40
+      end
+      object OperPrice: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1074#1093'.'
+        DataBinding.FieldName = 'OperPrice'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object OperPriceBalance: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1074#1093'. '#1043#1056#1053
+        DataBinding.FieldName = 'OperPriceBalance'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1043#1056#1053
+        Options.Editing = False
+        Width = 55
+      end
+      object ValuePrice: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1043#1056#1053
+        DataBinding.FieldName = 'ValuePrice'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
+        Width = 55
+      end
+      object GoodsGroupName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' ('#1090#1086#1074'.)'
+        DataBinding.FieldName = 'GoodsGroupName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 95
       end
       object StartDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1089
@@ -167,81 +277,6 @@ object PriceListItemForm: TPriceListItemForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 55
-      end
-      object Remains: TcxGridDBColumn
-        Caption = #1054#1089#1090'. '#1074' '#1084#1072#1075'.'
-        DataBinding.FieldName = 'Remains'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Properties.ReadOnly = True
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1086#1089#1090#1072#1090#1086#1082' '#1074' '#1084#1072#1075#1072#1079#1080#1085#1077
-        Options.Editing = False
-        Width = 70
-      end
-      object AmountDebt: TcxGridDBColumn
-        Caption = #1054#1089#1090'. '#1076#1086#1083#1075
-        DataBinding.FieldName = 'AmountDebt'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1086#1083#1075#1080' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
-        Options.Editing = False
-        Width = 60
-      end
-      object RemainsAll: TcxGridDBColumn
-        Caption = #1054#1089#1090'. '#1080#1090#1086#1075#1086
-        DataBinding.FieldName = 'RemainsAll'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Properties.ReadOnly = True
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1086#1089#1090#1072#1090#1086#1082' '#1080#1090#1086#1075#1086
-        Options.Editing = False
-        Width = 70
-      end
-      object OperPrice: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1074#1093'.'
-        DataBinding.FieldName = 'OperPrice'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 70
-      end
-      object OperPriceBalance: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1074#1093'. '#1043#1056#1053
-        DataBinding.FieldName = 'OperPriceBalance'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1043#1056#1053
-        Options.Editing = False
-        Width = 70
-      end
-      object ValuePrice: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1043#1056#1053
-        DataBinding.FieldName = 'ValuePrice'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
-        Width = 70
-      end
-      object GoodsGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' ('#1090#1086#1074'.)'
-        DataBinding.FieldName = 'GoodsGroupName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 95
       end
       object CompositionGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1089#1086#1089#1090#1072#1074#1072
@@ -262,33 +297,10 @@ object PriceListItemForm: TPriceListItemForm
         Options.Editing = False
         Width = 73
       end
-      object DiscountTax: TcxGridDBColumn
-        Caption = '% '#1089#1082'.'
-        DataBinding.FieldName = 'DiscountTax'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = '% '#1057#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
-        Options.Editing = False
-        Width = 40
-      end
-      object PriceTax: TcxGridDBColumn
-        Caption = '% '#1085#1072#1094'.'
-        DataBinding.FieldName = 'PriceTax'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080
-        Options.Editing = False
-        Width = 56
-      end
       object GoodsInfoName: TcxGridDBColumn
         Caption = #1054#1087#1080#1089#1072#1085#1080#1077
         DataBinding.FieldName = 'GoodsInfoName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -408,12 +420,12 @@ object PriceListItemForm: TPriceListItemForm
     BevelOuter = bvNone
     TabOrder = 2
     object cxLabel1: TcxLabel
-      Left = 3
-      Top = 10
+      Left = 26
+      Top = 11
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090':'
     end
     object edPriceList: TcxButtonEdit
-      Left = 67
+      Left = 93
       Top = 9
       Properties.Buttons = <
         item
@@ -421,46 +433,46 @@ object PriceListItemForm: TPriceListItemForm
           Kind = bkEllipsis
         end>
       TabOrder = 1
-      Width = 195
+      Width = 180
     end
     object edShowDate: TcxDateEdit
-      Left = 743
+      Left = 741
       Top = 9
       EditValue = 42856d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 2
-      Width = 100
+      Width = 96
     end
     object cxLabel2: TcxLabel
-      Left = 649
+      Left = 647
       Top = 10
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1094#1077#1085' '#1085#1072':'
     end
     object cxLabel4: TcxLabel
-      Left = 266
-      Top = 10
+      Left = 3
+      Top = 37
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object edUnit: TcxButtonEdit
-      Left = 353
-      Top = 9
+      Left = 93
+      Top = 36
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 277
+      Width = 180
     end
     object cxLabel5: TcxLabel
-      Left = 3
-      Top = 37
+      Left = 283
+      Top = 11
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072':'
     end
     object edBrand: TcxButtonEdit
-      Left = 90
-      Top = 36
+      Left = 373
+      Top = 10
       Properties.Buttons = <
         item
           Default = True
@@ -468,15 +480,15 @@ object PriceListItemForm: TPriceListItemForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 172
+      Width = 140
     end
     object cxLabel6: TcxLabel
-      Left = 266
+      Left = 330
       Top = 37
       Caption = #1057#1077#1079#1086#1085' :'
     end
     object edPeriod: TcxButtonEdit
-      Left = 308
+      Left = 373
       Top = 36
       Properties.Buttons = <
         item
@@ -485,16 +497,16 @@ object PriceListItemForm: TPriceListItemForm
         end>
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 109
+      Width = 140
     end
     object cxLabel7: TcxLabel
-      Left = 424
-      Top = 37
+      Left = 526
+      Top = 11
       Caption = #1043#1086#1076' '#1089' ...'
     end
     object edStartYear: TcxButtonEdit
-      Left = 470
-      Top = 36
+      Left = 578
+      Top = 9
       Properties.Buttons = <
         item
           Default = True
@@ -502,8 +514,7 @@ object PriceListItemForm: TPriceListItemForm
         end>
       Properties.ReadOnly = True
       TabOrder = 11
-      Text = '2000'
-      Width = 49
+      Width = 52
     end
     object cxLabel8: TcxLabel
       Left = 523
@@ -520,7 +531,6 @@ object PriceListItemForm: TPriceListItemForm
         end>
       Properties.ReadOnly = True
       TabOrder = 13
-      Text = '2018'
       Width = 52
     end
     object cxLabel9: TcxLabel
@@ -539,18 +549,18 @@ object PriceListItemForm: TPriceListItemForm
     end
   end
   object cxLabel3: TcxLabel
-    Left = 642
+    Left = 640
     Top = 63
     Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1094#1077#1085#1099' '#1089':'
   end
   object edOperDate: TcxDateEdit
-    Left = 743
+    Left = 741
     Top = 62
     EditValue = 42856d
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 7
-    Width = 100
+    Width = 96
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet

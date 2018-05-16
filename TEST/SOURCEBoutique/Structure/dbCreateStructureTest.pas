@@ -36,7 +36,7 @@ var
 implementation
 
 { TdbCreateStructureTest }
-uses zLibUtil;
+uses zLibUtil, System.SysUtils;
 
 const
   StructurePath = '..\DATABASE\Boutique\STRUCTURE\';
@@ -57,14 +57,20 @@ begin
   ZConnection.Connected := false;
   ZConnection.Database := 'postgres';
   ZConnection.Connected := true;
-  try
-    // Если база существует, то сначала надо ее удалить
-    ExecFile(CreateStructurePath + 'KIllSession.sql', ZQuery);
-    ExecFile(CreateStructurePath + 'DropDataBase.sql', ZQuery);
-  except
 
-  end;
-  ExecFile(CreateStructurePath + 'CreateDataBase.sql', ZQuery);
+  if FileExists(CreateStructurePath + 'real_DROP_andCreate_Database = YES.txt') then
+  begin
+      try
+        // Если база существует, то сначала надо ее удалить
+        // ExecFile(CreateStructurePath + 'KIllSession.sql', ZQuery);
+        // ExecFile(CreateStructurePath + 'DropDataBase.sql', ZQuery);
+      except
+      end;
+      //
+      ExecFile(CreateStructurePath + 'CreateDataBase.sql', ZQuery);
+  end
+  else raise Exception.Create('Нельзя real_DROP_andCreate_Database ');
+
 end;
 
 
@@ -216,7 +222,9 @@ end;
 
 procedure TdbCreateStructureTest.UpdateStructure;
 begin
-  DirectoryLoad(UpdateStructurePath);
+  if FileExists(CreateStructurePath + 'real_DROP_andCreate_Database = YES.txt')
+  then DirectoryLoad(UpdateStructurePath)
+  else raise Exception.Create('Нельзя real_UpdateStructure_Database ');
 end;
 
 initialization

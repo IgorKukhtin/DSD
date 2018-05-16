@@ -169,7 +169,8 @@ BEGIN
                        GROUP BY Container.PartionId
                               , Container.ObjectId
                               , Container.WhereObjectId
-                       HAVING SUM (Container.Amount)<> 0
+                       HAVING SUM (CASE WHEN CLO_Client.ContainerId IS NULL THEN COALESCE (Container.Amount, 0) ELSE 0 END) <> 0
+                           OR SUM (CASE WHEN CLO_Client.ContainerId > 0     THEN COALESCE (Container.Amount, 0) ELSE 0 END) <> 0
                       )
 
     , tmpGoods AS (SELECT tmpPartionGoods.PartnerName
@@ -608,8 +609,8 @@ BEGIN
            , tmpPartionGoods.AmountDebt      :: TFloat
            , (COALESCE(tmpPartionGoods.Remains, 0) + COALESCE(tmpPartionGoods.AmountDebt, 0)) :: TFloat  AS RemainsAll
            
-           , CASE WHEN tmpPrice.StartDate IN (zc_DateStart(), zc_DateEnd()) THEN NULL ELSE tmpPrice.StartDate END ::TDateTime  AS StartDate
-           , CASE WHEN tmpPrice.EndDate   IN (zc_DateStart(), zc_DateEnd()) THEN NULL ELSE tmpPrice.EndDate   END ::TDateTime  AS EndDate
+           , CASE WHEN tmpPrice.StartDate <= zc_DateStart() THEN NULL ELSE tmpPrice.StartDate END :: TDateTime AS StartDate
+           , CASE WHEN tmpPrice.EndDate    = zc_DateEnd()   THEN NULL ELSE tmpPrice.EndDate   END :: TDateTime AS EndDate
            , tmpPrice.ValuePrice
            
              -- % Сезонной скидки !!!НА!!! zc_DateEnd

@@ -142,7 +142,7 @@ BEGIN
                             INNER JOIN Object_PartionGoods ON ObjectLink_Object.ChildObjectId = CASE WHEN Object.ObjectCode = 3 THEN Object_PartionGoods.MovementItemId ELSE Object_PartionGoods.GoodsId END
                                                
                        WHERE Object.DescId = zc_Object_ReportOLAP()
-                         AND Object.ObjectCode IN (2,3)
+                         AND Object.ObjectCode IN (2, 3)
                          AND Object.isErased = FALSE
                        )
 
@@ -207,8 +207,9 @@ BEGIN
                       WHERE Container.DescId = zc_Container_Count()
                         -- AND Container.WhereObjectId = inUnitId
                         AND (Container.Amount <> 0 OR Container_SummDebt.Amount <> 0 OR Container_SummDebt_profit.Amount <> 0
-                          OR inPartnerId <> 0 OR (inIsYear = TRUE AND inStartYear = inEndYear) -- OR inBrandId <> 0 -- OR (inIsYear = TRUE AND inStartYear >0)
-                          OR inBrandId <> 0
+                          OR inPartnerId <> 0 -- OR (inIsYear = TRUE AND inStartYear = inEndYear) -- OR inBrandId <> 0 -- OR (inIsYear = TRUE AND inStartYear >0)
+                          -- OR inBrandId   <> 0
+                          OR inIsRemains = TRUE
                             )
                         AND (ObjectLink_Partner_Period.ChildObjectId = inPeriodId   OR inPeriodId  = 0)
                         AND (Object_PartionGoods.BrandId             = inBrandId    OR inBrandId   = 0)
