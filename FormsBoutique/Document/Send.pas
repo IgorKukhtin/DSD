@@ -158,6 +158,19 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
+    spUpdate_Part_isOlap_Yes: TdsdStoredProc;
+    spUpdate_Part_isOlap_No: TdsdStoredProc;
+    spDelete_Object_PartionGoods_ReportOLAP: TdsdStoredProc;
+    actDelete_PartionGoods_ReportOLAP: TdsdExecStoredProc;
+    macUpdate_Part_isOlapNo_list: TMultiAction;
+    macUpdate_Part_isOlapNo: TMultiAction;
+    spUpdate_Part_isOlapNo: TdsdExecStoredProc;
+    macUpdate_Part_isOlapYes_list: TMultiAction;
+    macUpdate_Part_isOlapYes: TMultiAction;
+    spUpdate_Part_isOlapYes: TdsdExecStoredProc;
+    bbPart_isOlapYes_list: TdxBarButton;
+    bbPart_isOlapNo_list: TdxBarButton;
+    bbDelete_PartionGoods_ReportOLAP: TdxBarButton;
   private
   public
   end;

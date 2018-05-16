@@ -186,6 +186,15 @@ object SendForm: TSendForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object isOLAP: TcxGridDBColumn
+            Caption = #1054#1090#1095#1077#1090' '#1054#1051#1040#1055
+            DataBinding.FieldName = 'isOLAP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1095#1077#1090' '#1092#1086#1088#1084#1080#1088#1091#1077#1090#1089#1103' '#1058#1054#1051#1068#1050#1054' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1058#1086#1074#1072#1088#1086#1074
+            Options.Editing = False
+            Width = 45
+          end
           object BrandName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
             DataBinding.FieldName = 'BrandName'
@@ -809,6 +818,26 @@ object SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'bbPart_isOlapYes_list'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPart_isOlapNo_list'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDelete_PartionGoods_ReportOLAP'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMIContainer'
         end
         item
@@ -947,6 +976,18 @@ object SendForm: TSendForm
       Action = mactGoodsPrintList_Print
       Category = 0
     end
+    object bbPart_isOlapYes_list: TdxBarButton
+      Action = macUpdate_Part_isOlapYes_list
+      Category = 0
+    end
+    object bbPart_isOlapNo_list: TdxBarButton
+      Action = macUpdate_Part_isOlapNo_list
+      Category = 0
+    end
+    object bbDelete_PartionGoods_ReportOLAP: TdxBarButton
+      Action = actDelete_PartionGoods_ReportOLAP
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1038,22 +1079,18 @@ object SendForm: TSendForm
     object actRefreshMI: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectMI
+      StoredProc = spGetTotalSumm
       StoredProcList = <
-        item
-          StoredProc = spSelectMI
-        end
         item
           StoredProc = spGetTotalSumm
         end
         item
           StoredProc = spSelectMI
-        end
-        item
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefreshStart: TdsdDataSetRefresh
@@ -1082,6 +1119,7 @@ object SendForm: TSendForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh
@@ -1154,9 +1192,16 @@ object SendForm: TSendForm
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isOperPrice'
+          Value = 'True'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_SendIn'
-      ReportNameParam.Value = 'PrintMovement_SendIn'
+      ReportName = 'PrintMovement_Send'
+      ReportNameParam.Value = 'PrintMovement_Send'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -1205,6 +1250,13 @@ object SendForm: TSendForm
           Name = 'OperDate'
           Value = 0d
           DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isOperPrice'
+          Value = 'False'
+          DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -1952,6 +2004,104 @@ object SendForm: TSendForm
           StoredProc = spGet_PrinterByUser
         end>
       Caption = 'Get_Printer'
+    end
+    object actDelete_PartionGoods_ReportOLAP: TdsdExecStoredProc
+      Category = 'Olap'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spDelete_Object_PartionGoods_ReportOLAP
+      StoredProcList = <
+        item
+          StoredProc = spDelete_Object_PartionGoods_ReportOLAP
+        end
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1074#1089#1077' '#1080#1079' OLAP '
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1074#1089#1077' '#1080#1079' OLAP '
+      ImageIndex = 72
+      QuestionBeforeExecute = #1042#1089#1077' '#1076#1072#1085#1085#1099#1077' '#1073#1091#1076#1091#1090' '#1091#1076#1072#1083#1077#1085#1099' '#1080#1079' '#1054'LAP, '#1087#1088#1086#1076#1086#1083#1078#1080#1090#1100'? '
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1080#1079' OLAP '#1091#1076#1072#1083#1077#1085#1099
+    end
+    object macUpdate_Part_isOlapNo_list: TMultiAction
+      Category = 'Olap'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_Part_isOlapNo
+        end
+        item
+          Action = actRefreshMI
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1086' '#1042#1089#1077#1084' '#1055#1072#1088#1090#1080#1103#1084' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1076#1083#1103' OLAP" - '#1053#1045#1058'?'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1086' '#1055#1072#1088#1090#1080#1080' "'#1076#1083#1103' OLAP" - '#1053#1045#1058
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1086' '#1055#1072#1088#1090#1080#1080' "'#1076#1083#1103' OLAP" - '#1053#1045#1058
+      ImageIndex = 50
+    end
+    object macUpdate_Part_isOlapNo: TMultiAction
+      Category = 'Olap'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdate_Part_isOlapNo
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1086' '#1055#1072#1088#1090#1080#1080' '#1076#1083#1103' OLAP - '#1053#1045#1058
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1086' '#1055#1072#1088#1090#1080#1080' '#1076#1083#1103' OLAP - '#1053#1045#1058
+      ImageIndex = 77
+    end
+    object spUpdate_Part_isOlapNo: TdsdExecStoredProc
+      Category = 'Olap'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Part_isOlap_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Part_isOlap_No
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1086' '#1055#1072#1088#1090#1080#1080' OLAP - '#1053#1045#1058
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1086' '#1055#1072#1088#1090#1080#1080' OLAP - '#1053#1045#1058
+      ImageIndex = 77
+    end
+    object macUpdate_Part_isOlapYes_list: TMultiAction
+      Category = 'Olap'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_Part_isOlapYes
+        end
+        item
+          Action = actRefreshMI
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1086' '#1042#1089#1077#1084' '#1055#1072#1088#1090#1080#1103#1084' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1076#1083#1103' OLAP" - '#1044#1040'?'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1086' '#1055#1072#1088#1090#1080#1080' "'#1076#1083#1103' OLAP" - '#1044#1040
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1086' '#1055#1072#1088#1090#1080#1080' "'#1076#1083#1103' OLAP" - '#1044#1040
+      ImageIndex = 47
+    end
+    object macUpdate_Part_isOlapYes: TMultiAction
+      Category = 'Olap'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdate_Part_isOlapYes
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1086' '#1055#1072#1088#1090#1080#1080' '#1076#1083#1103' OLAP - '#1044#1040
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1086' '#1055#1072#1088#1090#1080#1080' '#1076#1083#1103' OLAP - '#1044#1040
+      ImageIndex = 76
+    end
+    object spUpdate_Part_isOlapYes: TdsdExecStoredProc
+      Category = 'Olap'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Part_isOlap_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Part_isOlap_Yes
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1086' '#1055#1072#1088#1090#1080#1080' '#1076#1083#1103' OLAP - '#1044#1040
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1086' '#1055#1072#1088#1090#1080#1080' OLAP - '#1044#1040
+      ImageIndex = 76
     end
   end
   object MasterDS: TDataSource
@@ -2999,5 +3149,74 @@ object SendForm: TSendForm
       end>
     Left = 200
     Top = 336
+  end
+  object spUpdate_Part_isOlap_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_PartionGoods_ReportOLAP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inCode'
+        Value = '3'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsReportOLAP'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 544
+    Top = 128
+  end
+  object spUpdate_Part_isOlap_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_PartionGoods_ReportOLAP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inCode'
+        Value = '3'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsReportOLAP'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 496
+    Top = 128
+  end
+  object spDelete_Object_PartionGoods_ReportOLAP: TdsdStoredProc
+    StoredProcName = 'gpDelete_Object_PartionGoods_ReportOLAP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <>
+    PackSize = 1
+    Left = 600
+    Top = 136
   end
 end
