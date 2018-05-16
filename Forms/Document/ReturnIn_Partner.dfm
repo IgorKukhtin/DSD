@@ -3,7 +3,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   ClientHeight = 637
   ClientWidth = 1242
   ExplicitWidth = 1258
-  ExplicitHeight = 675
+  ExplicitHeight = 672
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -11,17 +11,17 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     Width = 1242
     Height = 354
     ExplicitTop = 166
-    ExplicitWidth = 1234
+    ExplicitWidth = 1242
     ExplicitHeight = 354
     ClientRectBottom = 354
     ClientRectRight = 1242
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1234
+      ExplicitWidth = 1242
       ExplicitHeight = 330
       inherited cxGrid: TcxGrid
         Width = 1242
         Height = 330
-        ExplicitWidth = 1234
+        ExplicitWidth = 1242
         ExplicitHeight = 330
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -342,7 +342,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitWidth = 1234
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -350,7 +349,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         Height = 330
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1234
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TaxCorrectiveDS
@@ -703,7 +701,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     Width = 1242
     Height = 140
     TabOrder = 3
-    ExplicitWidth = 1234
+    ExplicitWidth = 1242
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1183,7 +1181,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     Align = alBottom
     PopupMenu = PopupMenu
     TabOrder = 20
-    ExplicitWidth = 1234
     object cxGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DetailDS
@@ -1510,7 +1507,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     HotZoneClassName = 'TcxMediaPlayer8Style'
     AlignSplitter = salBottom
     Control = cxGrid1
-    ExplicitWidth = 1234
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 155
@@ -4056,7 +4052,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ounMemberExpName'
+        Name = 'outMemberExpName'
         Value = Null
         Component = GuidesMemberExp
         ComponentItem = 'TextValue'

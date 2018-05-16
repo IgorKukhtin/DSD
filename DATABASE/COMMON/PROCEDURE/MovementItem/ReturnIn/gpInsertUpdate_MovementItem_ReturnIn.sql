@@ -19,12 +19,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn(
     IN inPartionGoods           TVarChar  , -- Партия товара
     IN inGoodsKindId            Integer   , -- Виды товаров
     IN inAssetId                Integer   , -- Основные средства (для которых закупается ТМЦ)
-   OUT outMovementId_Partion    Integer   , -- 
-   OUT outPartionMovementName   TVarChar  , -- 
-   OUT outMovementPromo         TVarChar  , -- 
+   OUT outMovementId_Partion    Integer   , --
+   OUT outPartionMovementName   TVarChar  , --
+   OUT outMovementPromo         TVarChar  , --
    OUT outMemberExpName         TVarChar  , -- Экспедитор из Заявки стронней
    OUT outChangePercent         TFloat    , -- (-)% Скидки (+)% Наценки
-   OUT outPricePromo            TFloat    , -- 
+   OUT outPricePromo            TFloat    , --
     IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS RECORD AS
@@ -48,14 +48,14 @@ BEGIN
          inMovementId_PartionMI := COALESCE (inMovementId_PartionTop, 0);
      END IF;
 
-     -- Цена с НДС, % НДС 
+     -- Цена с НДС, % НДС
      SELECT MB_PriceWithVAT.ValueData , MF_VATPercent.ValueData
     INTO vbPriceWithVAT, vbVATPercent
-     FROM MovementBoolean AS MB_PriceWithVAT 
+     FROM MovementBoolean AS MB_PriceWithVAT
          LEFT JOIN MovementFloat AS MF_VATPercent
                                  ON MF_VATPercent.MovementId = MB_PriceWithVAT.MovementId
                                 AND MF_VATPercent.DescId = zc_MovementFloat_VATPercent()
-     WHERE MB_PriceWithVAT.MovementId = inMovementId 
+     WHERE MB_PriceWithVAT.MovementId = inMovementId
        AND MB_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT();
 
      -- параметры документа inMovementId_PartionMI
@@ -94,22 +94,32 @@ BEGIN
                                               , inUserId             := vbUserId
                                                ) AS tmp;
 
+    -- Вернули - Сумма с НДС расчетная
     outAmountSummVat:= CASE WHEN ioCountForPrice > 0
                             THEN CASE WHEN vbPriceWithVAT = TRUE THEN CAST(inPrice * ioAmountPartner/ioCountForPrice AS NUMERIC (16, 2))
-                                                                 ELSE CAST( (( (1 + vbVATPercent / 100)* inPrice) * ioAmountPartner/ioCountForPrice) AS NUMERIC (16, 2)) 
+                                                                 ELSE CAST( (( (1 + vbVATPercent / 100)* inPrice) * ioAmountPartner/ioCountForPrice) AS NUMERIC (16, 2))
                                  END
                             ELSE CASE WHEN vbPriceWithVAT = TRUE THEN CAST(inPrice * ioAmountPartner AS NUMERIC (16, 2))
-                                                                 ELSE CAST( (((1 + vbVATPercent / 100)* inPrice) * ioAmountPartner) AS NUMERIC (16, 2) ) 
+                                                                 ELSE CAST( (((1 + vbVATPercent / 100)* inPrice) * ioAmountPartner) AS NUMERIC (16, 2) )
                                  END
                         END;
 
+    -- формируется - Экспедитор из "Заявка сторонняя от покупателя"
+    IF inMovementId_PartionMI > 0 AND NOT EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_MemberExp() AND MLO.ObjectId > 0)
+    THEN
+        PERFORM lpUpdate_Movement_ReturnIn_MemberExp (inMovementId := inMovementId
+                                                    , inUserId     := vbUserId
+                                                      );
+    END IF;
+
+    -- Вернули "Экспедитор из Заявки стронней"
     outMemberExpName := COALESCE((SELECT Object_MemberExp.ValueData AS MemberExpName
                                   FROM MovementLinkObject AS MovementLinkObject_MemberExp
                                        LEFT JOIN Object AS Object_MemberExp ON Object_MemberExp.Id = MovementLinkObject_MemberExp.ObjectId
                                   WHERE MovementLinkObject_MemberExp.MovementId = inMovementId
-                                    AND MovementLinkObject_MemberExp.DescId = zc_MovementLinkObject_MemberExp()
-                                  ), '') ::TVarChar;
-                                  
+                                    AND MovementLinkObject_MemberExp.DescId     = zc_MovementLinkObject_MemberExp()
+                                  ), '') :: TVarChar;
+
 
 END;
 $BODY$

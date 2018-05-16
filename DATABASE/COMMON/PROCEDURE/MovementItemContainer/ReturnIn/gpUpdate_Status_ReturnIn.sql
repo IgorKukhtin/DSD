@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Status_ReturnIn(
  INOUT ioStatusCode          Integer   , -- Статус документа. Возвращается который должен быть
     IN inStartDateSale       TDateTime , --
    OUT outMessageText        Text      ,
+   OUT outMemberExpName      TVarChar  , -- Экспедитор из Заявки
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -32,6 +33,14 @@ BEGIN
 
      -- Вернули статус (вдруг он не изменился)
      ioStatusCode:= (SELECT Object.ObjectCode FROM Movement INNER JOIN Object ON Object.Id = Movement.StatusId WHERE Movement.Id = inMovementId);
+
+     -- Вернули "Экспедитор из Заявки стронней"
+     outMemberExpName := COALESCE((SELECT Object_MemberExp.ValueData AS MemberExpName
+                                  FROM MovementLinkObject AS MovementLinkObject_MemberExp
+                                       LEFT JOIN Object AS Object_MemberExp ON Object_MemberExp.Id = MovementLinkObject_MemberExp.ObjectId
+                                  WHERE MovementLinkObject_MemberExp.MovementId = inMovementId
+                                    AND MovementLinkObject_MemberExp.DescId = zc_MovementLinkObject_MemberExp()
+                                  ), '') :: TVarChar;
 
 END;
 $BODY$

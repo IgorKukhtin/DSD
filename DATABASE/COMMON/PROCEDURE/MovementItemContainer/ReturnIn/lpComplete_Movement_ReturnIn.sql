@@ -2426,7 +2426,7 @@ BEGIN
          OR MovementItem.isErased  <> tmp.isErased)
       ;
 
-     -- 6.0.6. получаем Экспедитора из "Заявка сторонняя от покупателя"
+     -- 6.0.6. формируется - Экспедитор из "Заявка сторонняя от покупателя"
      PERFORM lpUpdate_Movement_ReturnIn_MemberExp (inMovementId := inMovementId
                                                  , inUserId     := inUserId
                                                   );

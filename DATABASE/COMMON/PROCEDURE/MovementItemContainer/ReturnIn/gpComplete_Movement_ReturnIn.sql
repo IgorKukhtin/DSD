@@ -7,11 +7,10 @@ CREATE OR REPLACE FUNCTION gpComplete_Movement_ReturnIn(
     IN inMovementId        Integer               , -- ключ ƒокумента
     IN inStartDateSale     TDateTime             , --
    OUT outMessageText      Text                  ,
-   OUT outMemberExpName    TVarChar              , -- Ёкспедитор из «а€вки
     IN inIsLastComplete    Boolean  DEFAULT FALSE, -- это последнее проведение после расчета с/с (дл€ прихода параметр !!!не обрабатываетс€!!!)
     IN inSession           TVarChar DEFAULT ''     -- сесси€ пользовател€
 )
-RETURNS RECORD
+RETURNS Text
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -27,13 +26,6 @@ BEGIN
                                                   , inUserId         := vbUserId
                                                   , inIsLastComplete := inIsLastComplete
                                                    );
-     -- Ёкспедитор из «а€вки
-     outMemberExpName := COALESCE((SELECT Object_MemberExp.ValueData AS MemberExpName
-                                  FROM MovementLinkObject AS MovementLinkObject_MemberExp
-                                       LEFT JOIN Object AS Object_MemberExp ON Object_MemberExp.Id = MovementLinkObject_MemberExp.ObjectId
-                                  WHERE MovementLinkObject_MemberExp.MovementId = inMovementId
-                                    AND MovementLinkObject_MemberExp.DescId = zc_MovementLinkObject_MemberExp()
-                                  ), '') ::TVarChar;
 
 END;
 $BODY$
