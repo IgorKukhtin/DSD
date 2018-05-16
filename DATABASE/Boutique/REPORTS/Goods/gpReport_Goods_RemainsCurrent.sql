@@ -508,7 +508,7 @@ BEGIN
            , zc_PriceList_Basis()  AS PriceListId_Basis
            , vbPriceListName_Basis AS PriceListName_Basis
            
-           , CASE WHEN COALESCE (tmpData.byOlap, 0) <> 0 THEN TRUE ELSE FALSE END :: Boolean AS isOlap
+           , CASE WHEN COALESCE (tmpData.byOlap, 0) > 0 THEN TRUE ELSE FALSE END :: Boolean AS isOlap
 
         FROM tmpData
             LEFT JOIN Object AS Object_Unit    ON Object_Unit.Id    = tmpData.UnitId
