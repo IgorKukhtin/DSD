@@ -14,6 +14,7 @@ BEGIN
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Delete_Object_Brand());
      vbUserId:= lpGetUserBySession (inSession);
 
+
      -- удаляем все по пользователю
      PERFORM lpUpdate_Object_isErased (inObjectId:= Object.Id, inIsErased:= TRUE, inUserId:= vbUserId)
      FROM Object
@@ -21,8 +22,10 @@ BEGIN
                                ON ObjectLink_User.ObjectId      = Object.Id
                               AND ObjectLink_User.DescId        = zc_ObjectLink_ReportOLAP_User()
                               AND ObjectLink_User.ChildObjectId = vbUserId
-     WHERE Object.DescId = zc_Object_ReportOLAP()
-       AND Object.ObjectCode IN (2, 3);
+     WHERE Object.DescId     = zc_Object_ReportOLAP()
+       AND Object.ObjectCode IN (zc_ReportOLAP_Goods(), zc_ReportOLAP_Partion())
+       AND Object.isErased   = FALSE
+    ;
 
 END;
 $BODY$

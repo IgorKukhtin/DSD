@@ -1,6 +1,5 @@
 -- Function:  gpReport_SalesOLAP()
 
-DROP FUNCTION IF EXISTS gpReport_SaleOLAP (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_SaleOLAP (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_SaleOLAP (
@@ -187,6 +186,7 @@ BEGIN
     -- !!!замена!!!
     IF COALESCE (inBrandId, 0) = 0
        AND COALESCE (inPartnerId, 0) = 0
+       -- ЕСТЬ - СПИСОК Brand - отмеченные для OLAP
        AND EXISTS (SELECT 1
                    FROM Object
                         INNER JOIN ObjectLink AS ObjectLink_Object
@@ -197,9 +197,24 @@ BEGIN
                                              AND ObjectLink_User.DescId        = zc_ObjectLink_ReportOLAP_User()
                                              AND ObjectLink_User.ChildObjectId = vbUserId
                    WHERE Object.DescId      = zc_Object_ReportOLAP()
-                     AND Object.ObjectCode  = 1
+                     AND Object.ObjectCode  = zc_ReportOLAP_Brand()
                      AND Object.isErased    = FALSE
                   )
+       -- НЕТ - СПИСОК Партий/Товаров - отмеченные для OLAP
+       AND inIsMark = FALSE
+       /*NOT EXISTS (SELECT 1
+                       FROM Object
+                            INNER JOIN ObjectLink AS ObjectLink_User
+                                                  ON ObjectLink_User.ObjectId      = Object.Id
+                                                 AND ObjectLink_User.DescId        = zc_ObjectLink_ReportOLAP_User()
+                                                 AND ObjectLink_User.ChildObjectId = vbUserId
+                            INNER JOIN ObjectLink AS ObjectLink_Object
+                                                  ON ObjectLink_Object.ObjectId = Object.Id
+                                                 AND ObjectLink_Object.DescId   = zc_ObjectLink_ReportOLAP_Object()
+                       WHERE Object.DescId     = zc_Object_ReportOLAP()
+                         AND Object.ObjectCode IN (zc_ReportOLAP_Goods(), zc_ReportOLAP_Partion())
+                         AND Object.isErased   = FALSE
+                      )*/
     THEN
          inBrandId:= -1;
     END IF;
@@ -224,27 +239,47 @@ BEGIN
     -- Результат
     RETURN QUERY
       WITH 
-           -- Товары / партии отмеченные для OLAP
-          tmpReportOLAP AS (SELECT DISTINCT Object_PartionGoods.MovementItemId       AS PartionId
-                                 , CASE WHEN Object.ObjectCode = 2 THEN 1 ELSE 0 END AS Olap_Goods
-                                 , CASE WHEN Object.ObjectCode = 3 THEN 1 ELSE 0 END AS Olap_Partion
-                            FROM Object
-                                 INNER JOIN ObjectLink AS ObjectLink_User
-                                                       ON ObjectLink_User.ObjectId      = Object.Id
-                                                      AND ObjectLink_User.DescId        = zc_ObjectLink_ReportOLAP_User()
-                                                      AND ObjectLink_User.ChildObjectId = vbUserId
-               
-                                 INNER JOIN ObjectLink AS ObjectLink_Object
-                                                       ON ObjectLink_Object.ObjectId = Object.Id
-                                                      AND ObjectLink_Object.DescId   = zc_ObjectLink_ReportOLAP_Object()
-                                                      
-                                 -- привязываем по партии и товару, для партии определяем какой товар, для товара определяем партии
-                                 INNER JOIN Object_PartionGoods ON ObjectLink_Object.ChildObjectId = CASE WHEN Object.ObjectCode = 3 THEN Object_PartionGoods.MovementItemId ELSE Object_PartionGoods.GoodsId END
-                                                    
-                            WHERE Object.DescId = zc_Object_ReportOLAP()
-                              AND Object.ObjectCode IN (2,3)
-                              AND Object.isErased = FALSE
-                            )
+           -- СПИСОК Партий/Товаров - отмеченные для OLAP
+           tmpOLAP AS (SELECT ObjectLink_Object.ChildObjectId                                                AS ObjectId
+                            , CASE WHEN Object.ObjectCode = zc_ReportOLAP_Goods()   THEN TRUE ELSE FALSE END AS isOlap_Goods
+                            , CASE WHEN Object.ObjectCode = zc_ReportOLAP_Partion() THEN TRUE ELSE FALSE END AS isOlap_Partion
+                       FROM Object
+                            INNER JOIN ObjectLink AS ObjectLink_User
+                                                  ON ObjectLink_User.ObjectId      = Object.Id
+                                                 AND ObjectLink_User.DescId        = zc_ObjectLink_ReportOLAP_User()
+                                                 AND ObjectLink_User.ChildObjectId = vbUserId
+                            INNER JOIN ObjectLink AS ObjectLink_Object
+                                                  ON ObjectLink_Object.ObjectId = Object.Id
+                                                 AND ObjectLink_Object.DescId   = zc_ObjectLink_ReportOLAP_Object()
+                       WHERE Object.DescId     = zc_Object_ReportOLAP()
+                         AND Object.ObjectCode IN (zc_ReportOLAP_Goods(), zc_ReportOLAP_Partion())
+                         AND Object.isErased   = FALSE
+                      )
+            -- Товары отмеченные для OLAP -> получаем Партии
+          , tmpOLAP_goods AS (SELECT DISTINCT Object_PartionGoods.MovementItemId AS PartionId
+                              FROM tmpOLAP
+                                   INNER JOIN Object_PartionGoods ON Object_PartionGoods.GoodsId = tmpOLAP.ObjectId
+                              WHERE tmpOLAP.isOlap_Goods = TRUE
+                             )
+          -- Партии отмеченные для OLAP
+        , tmpOLAP_partion AS (SELECT DISTINCT tmpOLAP.ObjectId AS PartionId
+                              FROM tmpOLAP
+                              WHERE tmpOLAP.isOlap_Partion = TRUE
+                             )
+              -- Партии для OLAP
+            , tmpOLAP_all AS (SELECT tmpOLAP_goods.PartionId    AS PartionId
+                                  , 1                           AS Olap_Goods
+                                  , 0                           AS Olap_Partion
+                              FROM tmpOLAP_goods
+                             UNION
+                              SELECT tmpOLAP_partion.PartionId AS PartionId
+                                  , 0                          AS Olap_Goods
+                                  , 1                          AS Olap_Partion
+                              FROM tmpOLAP_partion
+                                   LEFT JOIN tmpOLAP_goods ON tmpOLAP_goods.PartionId = tmpOLAP_partion.PartionId
+                              WHERE tmpOLAP_goods.PartionId IS NULL
+                             )
+          -- Курсы
         , tmpCurrency_all AS (SELECT Movement.Id                    AS MovementId
                                    , Movement.OperDate              AS OperDate
                                    , MovementItem.Id                AS MovementItemId
@@ -316,7 +351,7 @@ BEGIN
                                WHERE Container.DescId   = zc_Container_Summ()
                                  AND Container.ObjectId = zc_Enum_Account_100301 () -- прибыль текущего периода
                               )
-          -- ТМ - выборочно, если отмечены в списке для ОЛАП
+          -- СПИСОК Brand - отмеченные для OLAP
         , tmpBrand AS (SELECT ObjectLink_Object.ChildObjectId AS BrandId
                        FROM Object
                             INNER JOIN ObjectLink AS ObjectLink_Object
@@ -327,7 +362,7 @@ BEGIN
                                                  AND ObjectLink_User.DescId        = zc_ObjectLink_ReportOLAP_User()
                                                  AND ObjectLink_User.ChildObjectId = vbUserId
                        WHERE Object.DescId      = zc_Object_ReportOLAP()
-                         AND Object.ObjectCode  = 1
+                         AND Object.ObjectCode  = zc_ReportOLAP_Brand()
                          AND Object.isErased    = FALSE
                          AND inBrandId          = -1
                       UNION ALL
@@ -336,14 +371,14 @@ BEGIN
                           
            -- список Партий
         , tmpPartionGoods AS (SELECT Object_PartionGoods.*
-                                   , tmpReportOLAP.Olap_Goods
-                                   , tmpReportOLAP.Olap_Partion
+                                   , tmpOLAP_all.Olap_Goods
+                                   , tmpOLAP_all.Olap_Partion
                               FROM Object_PartionGoods
                                    LEFT JOIN tmpBrand ON tmpBrand.BrandId = Object_PartionGoods.BrandId
-                                   LEFT JOIN tmpReportOLAP ON tmpReportOLAP.PartionId = Object_PartionGoods.MovementItemId
+                                   LEFT JOIN tmpOLAP_all ON tmpOLAP_all.PartionId = Object_PartionGoods.MovementItemId
                               WHERE (Object_PartionGoods.PartnerId  = inPartnerId OR inPartnerId = 0)
                                 AND (tmpBrand.BrandId               > 0           OR inBrandId   = 0)
-                                AND (tmpReportOLAP.PartionId        > 0           OR inIsMark    = FALSE)
+                                AND (tmpOLAP_all.PartionId          > 0           OR inIsMark    = FALSE)
                                 AND (Object_PartionGoods.PeriodId   = inPeriodId  OR inPeriodId  = 0)
                                 AND ((Object_PartionGoods.PeriodYear BETWEEN inStartYear AND inEndYear) OR inIsYear = FALSE)
                                 AND Object_PartionGoods.isErased    = FALSE
@@ -1293,6 +1328,7 @@ BEGIN
                END :: TFloat AS Tax_Summ_curr
 
                -- % Рентабельности: сумма продажи / сумма с/с - без учета "долга"
+          -- , (select count(*) from tmpOLAP) :: TFloat AS Tax_Summ_prof
              , CASE WHEN (tmpData.Sale_Summ_curr     - tmpData.Return_Summ_curr) > 0 AND (tmpData.Sale_SummCost_curr - tmpData.Return_SummCost_curr) > 0
                          THEN (tmpData.Sale_Summ_curr     - tmpData.Return_Summ_curr) / (tmpData.Sale_SummCost_curr - tmpData.Return_SummCost_curr) * 100 - 100
                     ELSE 0
@@ -1447,4 +1483,4 @@ $BODY$
 
 -- тест
 -- SELECT LabelName, GroupsName4, GroupsName3, GroupsName2, GroupsName1 FROM gpReport_SaleOLAP (inStartDate:= '01.01.2017', inEndDate:= '31.12.2017', inUnitId:= 0, inPartnerId:= 2628, inBrandId:= 0, inPeriodId:= 0, inStartYear:= 2017, inEndYear:= 2017, inIsYear:= FALSE, inIsPeriodAll:= TRUE, inIsGoods:= FALSE, inIsSize:= FALSE, inIsClient_doc:= FALSE, inIsOperDate_doc:= FALSE, inIsDay_doc:= FALSE, inIsOperPrice:= FALSE, inIsDiscount:= FALSE, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpReport_SaleOLAP (inStartDate:= '01.01.2017', inEndDate:= '31.12.2017', inUnitId:= 0, inPartnerId:= 2628, inBrandId:= 0, inPeriodId:= 0, inStartYear:= 2017, inEndYear:= 2017, inIsYear:= TRUE, inIsPeriodAll:= TRUE, inIsGoods:= FALSE, inIsSize:= FALSE, inIsClient_doc:= FALSE, inIsOperDate_doc:= FALSE, inIsDay_doc:= FALSE, inIsOperPrice:= FALSE, inIsDiscount:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_SaleOLAP (inStartDate:= '01.01.2017', inEndDate:= '31.12.2017', inUnitId:= 0, inPartnerId:= 2628, inBrandId:= 0, inPeriodId:= 0, inStartYear:= 2017, inEndYear:= 2017, inIsYear:= TRUE, inIsPeriodAll:= TRUE, inIsGoods:= FALSE, inIsSize:= FALSE, inIsClient_doc:= FALSE, inIsOperDate_doc:= FALSE, inIsDay_doc:= FALSE, inIsOperPrice:= FALSE, inIsDiscount:= FALSE, inIsMark:= FALSE, inSession:= zfCalc_UserAdmin());

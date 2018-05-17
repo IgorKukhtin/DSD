@@ -19,7 +19,7 @@ BEGIN
 
 
    -- Находим по св-вам
-   vbReportOLAPId := lpInsertFind_Object_ReportOLAP (inCode     := 1
+   vbReportOLAPId := lpInsertFind_Object_ReportOLAP (inCode     := zc_ReportOLAP_Brand()
                                                    , inObjectId := inId
                                                    , inUserId   := vbUserId
                                                     );
