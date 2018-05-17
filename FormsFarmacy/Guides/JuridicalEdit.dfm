@@ -79,7 +79,6 @@
       object JuridicalDetailTS: TcxTabSheet
         Caption = #1056#1077#1082#1074#1080#1079#1080#1090#1099
         ImageIndex = 0
-        ExplicitLeft = -2
         object edFullName: TcxDBTextEdit
           Left = 16
           Top = 19
@@ -244,7 +243,7 @@
         object cxLabel15: TcxLabel
           Left = 16
           Top = 182
-          Caption = #1060#1048#1054' '#1076#1080#1088#1077#1082#1090#1086#1088#1072
+          Caption = #1060#1048#1054' '#1076#1080#1088#1077#1082#1090#1086#1088#1072' ('#1076#1083#1103' '#1087#1086#1076#1087#1080#1089#1080')'
         end
         object edMainName: TcxDBTextEdit
           Left = 16
@@ -429,20 +428,20 @@
     Left = 8
     Top = 279
     Caption = #1088#1072#1079#1088#1077#1096#1080#1090#1100' '#1080#1084#1087#1086#1088#1090' '#1096#1090#1088#1080#1093'-'#1082#1086#1076#1086#1074
-    TabOrder = 16
+    TabOrder = 15
     Width = 270
   end
   object cbisDeferred: TcxCheckBox [15]
     Left = 8
     Top = 306
     Caption = #1080#1089#1082#1083#1102#1095#1077#1085#1080#1077' - '#1079#1072#1082#1072#1079' '#1074#1089#1077#1075#1076#1072' "'#1054#1090#1083#1086#1078#1077#1085'"'
-    TabOrder = 19
+    TabOrder = 18
     Width = 270
   end
   object cxLabel4: TcxLabel [16]
     Left = 546
     Top = 206
-    Caption = #1060#1048#1054' '#1076#1080#1088#1077#1082#1090#1086#1088#1072' ('#1076#1083#1103' '#1087#1086#1076#1087#1080#1089#1080')'
+    Caption = #1060#1048#1054' '#1076#1080#1088#1077#1082#1090#1086#1088#1072' ('#1056#1086#1076'.'#1087#1072#1076#1077#1078')'
   end
   object edMainName_cut: TcxDBTextEdit [17]
     Left = 546
@@ -952,7 +951,7 @@
   object JuridicalDetailsDS: TDataSource
     DataSet = JuridicalDetailsCDS
     Left = 448
-    Top = 176
+    Top = 136
   end
   object JuridicalDetailsCDS: TClientDataSet
     Aggregates = <>

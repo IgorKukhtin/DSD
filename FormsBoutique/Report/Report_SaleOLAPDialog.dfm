@@ -263,6 +263,16 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
     TabOrder = 26
     Width = 69
   end
+  object cbMark: TcxCheckBox
+    Left = 140
+    Top = 275
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1054#1090#1084#1077#1095#1077#1085#1085#1099#1077' '#1090#1086#1074#1072#1088#1099
+    Caption = #1054#1090#1084#1077#1095#1077#1085#1085#1099#1077
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 27
+    Width = 89
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -467,6 +477,14 @@ object Report_SaleOLAPDialogForm: TReport_SaleOLAPDialogForm
         Value = Null
         Component = cbDiscount
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMark'
+        Value = Null
+        Component = cbMark
+        DataType = ftBoolean
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 47

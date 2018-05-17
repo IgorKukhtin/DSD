@@ -13,18 +13,19 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
     Width = 902
     Height = 267
     ExplicitWidth = 902
+    ExplicitHeight = 267
     ClientRectBottom = 267
     ClientRectRight = 902
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 902
-      ExplicitHeight = 282
+      ExplicitHeight = 267
       inherited cxGrid: TcxGrid
         Top = 27
         Width = 902
         Height = 240
         ExplicitTop = 27
         ExplicitWidth = 902
-        ExplicitHeight = 255
+        ExplicitHeight = 240
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil

@@ -50,6 +50,7 @@ type
     edEndYear: TcxButtonEdit;
     GuidesStartYear: TdsdGuides;
     GuidesEndYear: TdsdGuides;
+    cbMark: TcxCheckBox;
   private
     { Private declarations }
   public

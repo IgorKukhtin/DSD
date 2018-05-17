@@ -681,7 +681,6 @@ inherited Report_GoodsCodeForm: TReport_GoodsCodeForm
         Align = alTop
         PopupMenu = PopupMenu
         TabOrder = 2
-        ExplicitTop = 3
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource
@@ -1605,6 +1604,9 @@ inherited Report_GoodsCodeForm: TReport_GoodsCodeForm
       end
       item
         Component = GuidesUnit
+      end
+      item
+        Component = GuidesPartionGoods
       end>
     Left = 352
     Top = 352
@@ -1623,15 +1625,6 @@ inherited Report_GoodsCodeForm: TReport_GoodsCodeForm
         Value = ''
         Component = GuidesPartionGoods
         ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Code'
-        Value = ''
-        Component = GuidesPartionGoods
-        ComponentItem = 'TextValue'
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
