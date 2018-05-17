@@ -74,7 +74,7 @@ type
     PartionId: TcxGridDBColumn;
     actRefreshIsGoodsSize: TdsdDataSetRefresh;
     actRefreshIsPartion: TdsdDataSetRefresh;
-    actRefreshIsPeriod: TdsdDataSetRefresh;
+    actRefreshCode: TdsdDataSetRefresh;
     cbPeriodAll: TcxCheckBox;
     InvNumberAll: TcxGridDBColumn;
     LocationDescName_by: TcxGridDBColumn;
@@ -94,6 +94,7 @@ type
     PartionId_mi: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     spGet_ReportGoods_Params: TdsdStoredProc;
+    cxLabel5: TcxLabel;
   private
     { Private declarations }
   public
