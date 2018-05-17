@@ -87,8 +87,11 @@ BEGIN
                                                      , inPriceListId := inPriceListId
                                                      , inGoodsId     := _tmpGoods.GoodsId
                                                      , inOperDate    := inOperDate
-                                                     , inValue       := CAST ((_tmpGoods.OperPrice * inTax) AS NUMERIC (16, 0)) :: TFloat
-                                                     , inUserId      := vbUserId)
+                                                                        -- округление без копеек и до +/-50 гривен, т.е. последние цифры или 50 или сотни
+                                                     , inValue       := (CEIL ((_tmpGoods.OperPrice * inTax) / 50) * 50) :: TFloat
+                                                  -- , inValue       := CAST ((_tmpGoods.OperPrice * inTax) AS NUMERIC (16, 0)) :: TFloat
+                                                     , inUserId      := vbUserId
+                                                      )
 
    FROM _tmpGoods;
 
