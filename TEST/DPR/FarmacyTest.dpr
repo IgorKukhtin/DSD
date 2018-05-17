@@ -581,7 +581,7 @@ begin
   ConnectionPath := '..\INIT\farmacy_init.php';
   EnumPath := '..\DATABASE\FARMACY\METADATA\Enum\';
   CreateStructurePath := '..\DATABASE\FARMACY\STRUCTURE\';
-  UpdateStructurePath = '..\DATABASE\FARMACY\UPDATESTRUCTURE\';
+  UpdateStructurePath := '..\DATABASE\FARMACY\UPDATESTRUCTURE\';
   LocalViewPath := '..\DATABASE\FARMACY\View\';
   LocalProcedurePath := '..\DATABASE\FARMACY\PROCEDURE\';
   LocalProcessPath := '..\DATABASE\COMMON\PROCESS\';

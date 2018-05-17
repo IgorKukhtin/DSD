@@ -30,6 +30,7 @@ type
 
 var
   CreateStructurePath: string = '..\DATABASE\COMMON\STRUCTURE\';
+  UpdateStructurePath: string = '..\DATABASE\COMMON\UPDATESTRUCTURE\';
 
 implementation
 
@@ -38,7 +39,6 @@ uses zLibUtil, System.SysUtils;
 
 const
   StructurePath = '..\DATABASE\COMMON\STRUCTURE\';
-  UpdateStructurePath = '..\DATABASE\COMMON\UPDATESTRUCTURE\';
 
 
 procedure TdbCreateStructureTest.CreateContainer;

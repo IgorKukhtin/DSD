@@ -33,18 +33,21 @@ BEGIN
 
 
    -- (т.е. вх цена 100у.е. ввели коэф = 50, новая цена должна быть 5000грн, и так для каждого товра который на остатке в маг или на долге у покупателя по этому маг)
-  
+
    -- Изменение цен (для товара цена = вх.цена * коєф.)
    PERFORM lpInsertUpdate_ObjectHistory_PriceListItem (ioId          := 0
                                                      , inPriceListId := inPriceListId
                                                      , inGoodsId     := inGoodsId
                                                      , inOperDate    := inOperDate
-                                                     , inValue       := CAST ((inOperPrice * inTax) AS NUMERIC (16, 0)) :: TFloat
-                                                     , inUserId      := vbUserId);                
+                                                                        -- округление без копеек и до +/-50 гривен, т.е. последние цифры или 50 или сотни
+                                                     , inValue       := (CEIL ((inOperPrice * inTax) / 50) * 50) :: TFloat
+                                                  -- , inValue       := CAST ((inOperPrice * inTax) AS NUMERIC (16, 0)) :: TFloat
+                                                     , inUserId      := vbUserId
+                                                      );
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-  
+
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
