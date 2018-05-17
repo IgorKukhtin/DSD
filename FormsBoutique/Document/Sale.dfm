@@ -2525,6 +2525,9 @@ object SaleForm: TSaleForm
       StoredProcList = <
         item
           StoredProc = spUpdate_isChecked
+        end
+        item
+          StoredProc = spSelectMI
         end>
       Caption = #1056#1072#1079#1088#1077#1096#1080#1090#1100' / '#1086#1090#1084#1077#1085#1080#1090#1100' "'#1042#1086#1079#1074#1088#1072#1090' '#1073#1086#1083#1100#1096#1077' '#1095#1077#1084' '#1079#1072' 31 '#1076#1077#1085#1100'"'
       Hint = #1056#1072#1079#1088#1077#1096#1080#1090#1100' / '#1086#1090#1084#1077#1085#1080#1090#1100' "'#1042#1086#1079#1074#1088#1072#1090' '#1073#1086#1083#1100#1096#1077' '#1095#1077#1084' '#1079#1072' 31 '#1076#1077#1085#1100'"'
@@ -3892,14 +3895,6 @@ object SaleForm: TSaleForm
         ComponentItem = 'isChecked'
         DataType = ftBoolean
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outisChecked'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isChecked'
-        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

@@ -587,8 +587,8 @@ BEGIN
                                --
                                -- , 1 as x1
                                
-                               , SUM (Object_PartionGoods.Olap_Goods)   AS Olap_Goods
-                               , SUM (Object_PartionGoods.Olap_Partion) AS Olap_Partion
+                               , Object_PartionGoods.Olap_Goods
+                               , Object_PartionGoods.Olap_Partion
 
                           FROM tmpPartionGoods AS Object_PartionGoods
                                -- !!!для теста!!!
@@ -655,6 +655,9 @@ BEGIN
                                  , Object_PartionGoods.CurrencyId
                                  -- , Object_PartionGoods.Amount
                                  , CASE WHEN inIsOperPrice    = TRUE THEN Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END ELSE 0 :: TFloat END
+
+                                 , Object_PartionGoods.Olap_Goods
+                                 , Object_PartionGoods.Olap_Partion
 
                          UNION ALL
                           -- 2. Приход от Поставщика
@@ -775,8 +778,8 @@ BEGIN
                                --
                                -- , 2 as x1
 
-                               , (Object_PartionGoods.Olap_Goods)   AS Olap_Goods
-                               , (Object_PartionGoods.Olap_Partion) AS Olap_Partion
+                               , Object_PartionGoods.Olap_Goods
+                               , Object_PartionGoods.Olap_Partion
 
                           FROM tmpPartionGoods AS Object_PartionGoods
                                -- !!!для теста!!!
@@ -908,8 +911,8 @@ BEGIN
                                --
                                -- , 3 as x1
 
-                               , (Object_PartionGoods.Olap_Goods)   AS Olap_Goods
-                               , (Object_PartionGoods.Olap_Partion) AS Olap_Partion
+                               , Object_PartionGoods.Olap_Goods
+                               , Object_PartionGoods.Olap_Partion
 
                           FROM tmpPartionGoods AS Object_PartionGoods
                                -- !!!для теста!!!
@@ -1014,8 +1017,8 @@ BEGIN
                             -- , SUM (tmpData_all.Result_SummCost)     AS Result_SummCost
                             -- , SUM (tmpData_all.Result_Summ_10200)   AS Result_Summ_10200
 
-                            , SUM (tmpData_all.Olap_Goods)            AS Olap_Goods
-                            , SUM (tmpData_all.Olap_Partion)          AS Olap_Partion
+                            , tmpData_all.Olap_Goods
+                            , tmpData_all.Olap_Partion
 
                             , ObjectLink_Parent0.ChildObjectId AS GroupId1
                             , ObjectLink_Parent1.ChildObjectId AS GroupId1_parent
@@ -1099,6 +1102,9 @@ BEGIN
 
                               -- , tmpData_all.x1
    
+                              , tmpData_all.Olap_Goods
+                              , tmpData_all.Olap_Partion
+
                               , ObjectLink_Parent0.ChildObjectId
                               , ObjectLink_Parent1.ChildObjectId
                               , ObjectLink_Parent1.ChildObjectId
