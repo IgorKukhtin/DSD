@@ -920,7 +920,7 @@ inherited Report_GoodsCodeForm: TReport_GoodsCodeForm
       ExplicitTop = 30
     end
     object edGoodsSize: TcxButtonEdit [2]
-      Left = 536
+      Left = 539
       Top = 30
       Properties.Buttons = <
         item
@@ -958,7 +958,7 @@ inherited Report_GoodsCodeForm: TReport_GoodsCodeForm
           Kind = bkEllipsis
         end>
       TabOrder = 4
-      Width = 152
+      Width = 120
     end
     object cxLabel8: TcxLabel
       Left = 194
@@ -975,10 +975,10 @@ inherited Report_GoodsCodeForm: TReport_GoodsCodeForm
         end>
       Properties.ReadOnly = True
       TabOrder = 6
-      Width = 276
+      Width = 279
     end
     object cbGoodsSizeAll: TcxCheckBox
-      Left = 612
+      Left = 615
       Top = 30
       Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1042#1057#1045' '#1056#1072#1079#1084#1077#1088#1099' ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1042#1089#1077' '#1056#1072#1079#1084#1077#1088#1099
@@ -1001,9 +1001,15 @@ inherited Report_GoodsCodeForm: TReport_GoodsCodeForm
       Width = 105
     end
     object cxLabel4: TcxLabel
-      Left = 491
+      Left = 494
       Top = 32
       Caption = #1056#1072#1079#1084#1077#1088':'
+    end
+    object cxLabel5: TcxLabel
+      Left = 454
+      Top = 32
+      Caption = 'Enter'
+      Style.TextColor = 6118749
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -1043,17 +1049,19 @@ inherited Report_GoodsCodeForm: TReport_GoodsCodeForm
       end>
   end
   inherited ActionList: TActionList
-    object actRefreshIsPeriod: TdsdDataSetRefresh [0]
+    object actRefreshCode: TdsdDataSetRefresh [0]
       Category = 'DSDLib'
+      ActiveControl = edGoodsCode
       MoveParams = <>
-      StoredProc = spSelect
+      StoredProc = spGet_ReportGoods_Params
       StoredProcList = <
+        item
+          StoredProc = spGet_ReportGoods_Params
+        end
         item
           StoredProc = spSelect
         end>
-      Caption = #1079#1072' '#1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
-      Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1079#1072' '#1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' ('#1044#1072'/'#1053#1077#1090')'
-      ShortCut = 116
+      ShortCut = 13
       RefreshOnTabSetChanges = False
     end
     object actRefreshIsPartion: TdsdDataSetRefresh [1]
@@ -1594,19 +1602,15 @@ inherited Report_GoodsCodeForm: TReport_GoodsCodeForm
         Component = deEnd
       end
       item
-        Component = GuidesGoodsSize
       end
       item
-        Component = edGoodsCode
       end
       item
-        Component = GuidesGoodsSize
       end
       item
         Component = GuidesUnit
       end
       item
-        Component = GuidesPartionGoods
       end>
     Left = 352
     Top = 352
@@ -1688,8 +1692,8 @@ inherited Report_GoodsCodeForm: TReport_GoodsCodeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 416
-    Top = 27
+    Left = 376
+    Top = 67
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -1718,7 +1722,8 @@ inherited Report_GoodsCodeForm: TReport_GoodsCodeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 360
+    Left = 336
+    Top = 65528
   end
   object getMovementForm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Form'
@@ -1868,7 +1873,7 @@ inherited Report_GoodsCodeForm: TReport_GoodsCodeForm
         Component = edGoodsCode
         MultiSelectSeparator = ','
       end>
-    Left = 552
+    Left = 736
     Top = 19
   end
   object DataSource: TDataSource
