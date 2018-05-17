@@ -168,8 +168,8 @@ RETURNS TABLE (BrandName             VarChar (100)
              , GroupsName3           VarChar (50)
              , GroupsName4           VarChar (50)
 
-             , isOLAP_Goods          Boolean
-             , isOLAP_Partion        Boolean
+             , isOLAP_Goods          VarChar (8)
+             , isOLAP_Partion        VarChar (8)
               )
 AS
 $BODY$
@@ -1396,8 +1396,8 @@ BEGIN
                -- 0 - Первая Группа СНИЗУ
              , Object_GoodsGroup1.ValueData :: VarChar (50) AS GroupsName4 -- а было AnalyticaName1, а в GroupsName4 - сейчас LabelName
 
-             , CASE WHEN tmpData.Olap_Goods   > 0 THEN TRUE ELSE FALSE END AS isOLAP_Goods
-             , CASE WHEN tmpData.Olap_Partion > 0 THEN TRUE ELSE FALSE END AS isOLAP_Partion
+             , CASE WHEN tmpData.Olap_Goods   > 0 THEN 'Да' ELSE 'Нет' END :: VarChar (8) AS isOLAP_Goods
+             , CASE WHEN tmpData.Olap_Partion > 0 THEN 'Да' ELSE 'Нет' END :: VarChar (8) AS isOLAP_Partion
         FROM tmpData
             LEFT JOIN tmpDayOfWeek ON tmpDayOfWeek.Ord_dow = tmpData.OrdDay_doc
 
