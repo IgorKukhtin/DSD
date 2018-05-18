@@ -70,6 +70,7 @@ type
     bbPrint_Pact: TdxBarButton;
     OperDate_Invoice: TcxGridDBColumn;
     TotalSumm_Invoice: TcxGridDBColumn;
+    JuridicalId: TcxGridDBColumn;
   private
     { Private declarations }
   public

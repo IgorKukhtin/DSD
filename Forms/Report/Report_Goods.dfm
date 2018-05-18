@@ -3,9 +3,9 @@ inherited Report_GoodsForm: TReport_GoodsForm
   ClientHeight = 341
   ClientWidth = 1026
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -372
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1042
-  ExplicitHeight = 380
+  ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -857,14 +857,14 @@ inherited Report_GoodsForm: TReport_GoodsForm
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
-      EditValue = 42005d
+      EditValue = 43101d
       Properties.SaveTime = False
       ExplicitLeft = 118
     end
     inherited deEnd: TcxDateEdit
       Left = 118
       Top = 30
-      EditValue = 42005d
+      EditValue = 43101d
       Properties.SaveTime = False
       ExplicitLeft = 118
       ExplicitTop = 30
@@ -1082,6 +1082,9 @@ inherited Report_GoodsForm: TReport_GoodsForm
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -1628,6 +1631,87 @@ inherited Report_GoodsForm: TReport_GoodsForm
         Name = 'FormName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartDate'
+        Value = 43101d
+        Component = deStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate'
+        Value = 43101d
+        Component = deEnd
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitGroupId'
+        Value = Null
+        Component = GuidesUnitGroup
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitGroupName'
+        Value = Null
+        Component = GuidesUnitGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LocationId'
+        Value = Null
+        Component = LocationGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LocationName'
+        Value = Null
+        Component = LocationGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupId'
+        Value = Null
+        Component = GoodsGroupGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupName'
+        Value = Null
+        Component = GoodsGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsId'
+        Value = Null
+        Component = GoodsGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsName'
+        Value = Null
+        Component = GoodsGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsPartner'
+        Value = Null
+        Component = cbPartner
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 296
