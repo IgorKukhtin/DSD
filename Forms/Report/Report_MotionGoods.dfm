@@ -25,7 +25,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     Height = 590
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 72
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -2140,7 +2139,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     object deStart: TcxDateEdit
       Left = 60
       Top = 5
-      EditValue = 42370d
+      EditValue = 43101d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 2
@@ -2149,7 +2148,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     object deEnd: TcxDateEdit
       Left = 60
       Top = 30
-      EditValue = 42370d
+      EditValue = 43101d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 4
@@ -2250,11 +2249,13 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Left = 1052
       Top = 6
       Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1076#1088#1072#1079#1076'. ***:'
+      Visible = False
     end
     object cxLabel9: TcxLabel
       Left = 1074
       Top = 31
       Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072' ***:'
+      Visible = False
     end
     object edUnitGroup_by: TcxButtonEdit
       Left = 1169
@@ -2266,6 +2267,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         end>
       Properties.ReadOnly = True
       TabOrder = 17
+      Visible = False
       Width = 189
     end
     object edLocation_by: TcxButtonEdit
@@ -2278,6 +2280,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         end>
       Properties.ReadOnly = True
       TabOrder = 18
+      Visible = False
       Width = 189
     end
     object cbAllMO: TcxCheckBox
@@ -3886,8 +3889,8 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     object actReport_Goods: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
-      Hint = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
+      Caption = #1054#1090#1095#1077#1090' <'#1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
       ImageIndex = 26
       FormName = 'TReport_GoodsForm'
       FormNameParam.Value = 'TReport_GoodsForm'

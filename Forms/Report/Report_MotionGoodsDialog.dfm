@@ -3,7 +3,7 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1086#1074'>'
-  ClientHeight = 296
+  ClientHeight = 274
   ClientWidth = 453
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 98
-    Top = 263
+    Top = 232
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
   end
   object cxButton2: TcxButton
     Left = 272
-    Top = 263
+    Top = 232
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -159,6 +159,7 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
     Left = 11
     Top = 206
     Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081' ***:'
+    Visible = False
   end
   object edUnitGroup_by: TcxButtonEdit
     Left = 11
@@ -170,12 +171,14 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 18
+    Visible = False
     Width = 200
   end
   object cxLabel9: TcxLabel
     Left = 240
     Top = 206
     Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072' ***:'
+    Visible = False
   end
   object edLocation_by: TcxButtonEdit
     Left = 240
@@ -187,6 +190,7 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 20
+    Visible = False
     Width = 200
   end
   object cbAllMO: TcxCheckBox

@@ -1,4 +1,4 @@
-: gpSelect_MovementItem_Send()
+-- Function: gpSelect_MovementItem_Send()
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_Send (Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
