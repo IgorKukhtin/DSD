@@ -224,6 +224,8 @@ type
     LocationName_inf: TcxGridDBColumn;
     actPrint_Goods: TdsdPrintAction;
     bbPrint_Goods: TdxBarButton;
+    actReport_Goods: TdsdOpenForm;
+    bb: TdxBarButton;
   private
   public
   end;
