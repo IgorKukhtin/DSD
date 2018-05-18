@@ -507,8 +507,8 @@ BEGIN
                                INNER JOIN ObjectHistory AS ObjectHistory_DiscountPeriodItem
                                                         ON ObjectHistory_DiscountPeriodItem.ObjectId = ObjectLink_DiscountPeriodItem_Goods.ObjectId
                                                        AND ObjectHistory_DiscountPeriodItem.DescId   = zc_ObjectHistory_DiscountPeriodItem()
-                                                       -- AND vbOperDate >= ObjectHistory_DiscountPeriodItem.StartDate AND vbOperDate < ObjectHistory_DiscountPeriodItem.EndDate
-                                                       AND ObjectHistory_DiscountPeriodItem.EndDate  = zc_DateEnd()
+                                                       AND vbOperDate >= ObjectHistory_DiscountPeriodItem.StartDate AND vbOperDate < ObjectHistory_DiscountPeriodItem.EndDate
+                                                      -- AND ObjectHistory_DiscountPeriodItem.EndDate  = zc_DateEnd()
                                LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_DiscountPeriodItem_Value
                                                             ON ObjectHistoryFloat_DiscountPeriodItem_Value.ObjectHistoryId = ObjectHistory_DiscountPeriodItem.Id
                                                            AND ObjectHistoryFloat_DiscountPeriodItem_Value.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value()
@@ -559,7 +559,7 @@ BEGIN
                --сезонная скидка от кого
                , tmpDiscount_From.DiscountTax ::TFloat AS DiscountTax_From
                -- сезонная скидка кому
-               , tmpDiscount_From.DiscountTax ::TFloat AS DiscountTax_To
+               , tmpDiscount_To.DiscountTax   ::TFloat AS DiscountTax_To
 
                , CASE WHEN tmpProtocol.MovementItemId > 0 THEN TRUE ELSE FALSE END AS isProtocol
                , CASE WHEN tmpReportOLAP.PartionId > 0 THEN TRUE ELSE FALSE END    AS isOlap
