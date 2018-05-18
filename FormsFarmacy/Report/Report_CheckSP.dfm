@@ -3,6 +3,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
   ClientHeight = 480
   ClientWidth = 1077
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -242
   ExplicitWidth = 1093
   ExplicitHeight = 518
   PixelsPerInch = 96
@@ -562,6 +563,27 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
+          object PartnerMedical_MainName: TcxGridDBColumn
+            Caption = #1043#1083'.'#1074#1088#1072#1095' ('#1047#1054#1047')'
+            DataBinding.FieldName = 'PartnerMedical_MainName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1041#1091#1093#1075#1072#1083#1090#1077#1088' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            Width = 155
+          end
+          object PartnerMedical_MainName_Cut: TcxGridDBColumn
+            Caption = #1043#1083'.'#1074#1088#1072#1095' ('#1047#1054#1047')'
+            DataBinding.FieldName = 'PartnerMedical_MainName_Cut'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1041#1091#1093#1075#1072#1083#1090#1077#1088' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 155
+          end
           object PartnerMedical_OKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054' ('#1047#1054#1047')'
             DataBinding.FieldName = 'PartnerMedical_OKPO'
@@ -646,10 +668,18 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             Width = 70
           end
           object TotalSumm_Invoice: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1087#1086' '#1076#1086#1075'.'
             DataBinding.FieldName = 'TotalSumm_Invoice'
             Visible = False
+            HeaderHint = #1048#1090#1086#1075#1086' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091' '#1089' '#1085#1072#1095#1072#1083#1072' '#1075#1086#1076#1072
             VisibleForCustomization = False
             Width = 60
+          end
+          object JuridicalId: TcxGridDBColumn
+            DataBinding.FieldName = 'JuridicalId'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 30
           end
         end
       end
