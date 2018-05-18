@@ -16,7 +16,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpGetUserBySession (inSession);
 
-     IF COALESCE(inMovementId,0) = 0
+     IF COALESCE (inMovementId, 0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка. Документ не сохранен';
      END IF;

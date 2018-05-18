@@ -53,13 +53,13 @@ BEGIN
      -- если это "другой" элемент
      IF findId > 0 AND findId <> ioId
      THEN
-         -- сохранили протокол - "удаление"
-         /*!!!PERFORM lpInsert_ObjectHistoryProtocol (ObjectHistory.ObjectId, inUserId, ObjectHistory.StartDate, ObjectHistory.EndDate, ObjectHistoryFloat_Value.ValueData, TRUE, TRUE)
+         -- сохранили протокол - "удаление" - !!!ВРЕМЕННО-вкл.
+         PERFORM lpInsert_ObjectHistoryProtocol (ObjectHistory.ObjectId, inUserId, ObjectHistory.StartDate, ObjectHistory.EndDate, ObjectHistoryFloat_Value.ValueData, TRUE, TRUE)
          FROM ObjectHistory
               LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value
                                            ON ObjectHistoryFloat_Value.ObjectHistoryId = ObjectHistory.Id
                                           AND ObjectHistoryFloat_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
-         WHERE ObjectHistory.Id = findId;*/
+         WHERE ObjectHistory.Id = findId;
 
          -- удалили "другой" элемент т.к. у него такие же параметры
          DELETE FROM ObjectHistoryDate WHERE ObjectHistoryId = findId;
@@ -81,13 +81,13 @@ BEGIN
    -- Здесь надо изменить св-во EndDate у предыдущего элемента относительно inOperDate
    UPDATE ObjectHistory SET EndDate = inOperDate WHERE Id = tmpId;
 
-   -- сохранили протокол - "изменение EndDate"
-   /*!!!!!PERFORM lpInsert_ObjectHistoryProtocol (ObjectHistory.ObjectId, inUserId, StartDate, EndDate, ObjectHistoryFloat_Value.ValueData)
+   -- сохранили протокол - "изменение EndDate" - !!!ВРЕМЕННО-вкл.
+   PERFORM lpInsert_ObjectHistoryProtocol (ObjectHistory.ObjectId, inUserId, StartDate, EndDate, ObjectHistoryFloat_Value.ValueData)
    FROM ObjectHistory
         LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value
                                      ON ObjectHistoryFloat_Value.ObjectHistoryId = ObjectHistory.Id
                                     AND ObjectHistoryFloat_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
-   WHERE ObjectHistory.Id = tmpId;*/
+   WHERE ObjectHistory.Id = tmpId;
 
 
   -- Если меняется запись, то надо запомнить предыдущий ИД
@@ -144,13 +144,13 @@ BEGIN
                                                     AND ObjectHistory.StartDate > lStartDate
                                                  ), zc_DateEnd())  
      WHERE Id = PriorId;
-     -- сохранили протокол - "изменение EndDate"
-     /*!!!!!PERFORM lpInsert_ObjectHistoryProtocol (ObjectHistory.ObjectId, inUserId, StartDate, EndDate, ObjectHistoryFloat_Value.ValueData)
+     -- сохранили протокол - "изменение EndDate" - !!!ВРЕМЕННО-вкл.
+     PERFORM lpInsert_ObjectHistoryProtocol (ObjectHistory.ObjectId, inUserId, StartDate, EndDate, ObjectHistoryFloat_Value.ValueData)
      FROM ObjectHistory
           LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value
                                        ON ObjectHistoryFloat_Value.ObjectHistoryId = ObjectHistory.Id
                                       AND ObjectHistoryFloat_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
-      WHERE ObjectHistory.Id = PriorId;*/
+      WHERE ObjectHistory.Id = PriorId;
   END IF;
 
 END;           

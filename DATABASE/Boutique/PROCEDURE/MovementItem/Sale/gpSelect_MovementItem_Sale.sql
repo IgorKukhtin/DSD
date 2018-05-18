@@ -207,6 +207,7 @@ BEGIN
                                                        AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
                       GROUP BY MovementItem.ParentId
                      )
+     -- остатки
    , tmpContainer AS (SELECT DISTINCT Container.*
                       FROM tmpMI_Master
                            INNER JOIN Container ON Container.PartionId     = tmpMI_Master.PartionId
@@ -292,6 +293,7 @@ BEGIN
 
        FROM tmpMI_Master AS tmpMI
             LEFT JOIN tmpContainer AS Container ON Container.PartionId = tmpMI.PartionId
+                                               AND Container.ObjectId  = tmpMI.GoodsId
 
             LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.Id
             LEFT JOIN tmpMI_Child AS tmpMI_Child_Exc ON tmpMI_Child_Exc.ParentId = 0

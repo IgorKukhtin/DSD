@@ -16,6 +16,10 @@ AS
 $BODY$
    DECLARE ProtocolXML TBlob;
 BEGIN
+
+-- !!!ВРЕМЕННО-вкл.
+-- RETURN;
+
      -- Подготавливаем XML для "стандартного" протокола
        WITH
        tmpObject AS (SELECT '<Field FieldName = "Начальная дата" FieldValue = "' || COALESCE (DATE (inStartDate) :: TVarChar, 'NULL') || '"/>'

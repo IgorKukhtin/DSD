@@ -121,7 +121,7 @@ BEGIN
     -- if inSession = zfCalc_UserAdmin() then
     --
     -- !!!Протокол - отладка Скорости!!!
-    INSERT INTO Log_Reprice (InsertDate, StartDate, EndDate, MovementId, UserId, TextValue)
+    /*INSERT INTO Log_Reprice (InsertDate, StartDate, EndDate, MovementId, UserId, TextValue)
       VALUES (CURRENT_TIMESTAMP, vbOperDate_StartBegin, CLOCK_TIMESTAMP(), vbMovementId, vbUserId
             , ioId                  :: TVarChar
     || ',' || inGoodsId             :: TVarChar
@@ -140,7 +140,7 @@ BEGIN
     || ',' || zfConvert_FloatToString (inContract_Percent)
     || ',' || CHR (39) || inGUID    || CHR (39)
     || ',' || CHR (39) || inSession || CHR (39)
-             );
+             );*/
     -- end If;
 
     /*if inSession = zfCalc_UserAdmin() then

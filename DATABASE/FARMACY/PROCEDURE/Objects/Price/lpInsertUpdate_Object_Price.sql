@@ -102,7 +102,7 @@ BEGIN
                           );
 
           -- !!!Протокол - отладка Скорости!!!
-          INSERT INTO Log_Reprice (InsertDate, StartDate, EndDate, MovementId, UserId, TextValue)
+          /*INSERT INTO Log_Reprice (InsertDate, StartDate, EndDate, MovementId, UserId, TextValue)
             VALUES (CURRENT_TIMESTAMP, vbOperDate_StartBegin2, CLOCK_TIMESTAMP(), inUnitId, inUserId
                   , 'gpInsertUpdate_ObjectHistory_Price'
           || ' ' || inGoodsId             :: TVarChar
@@ -110,15 +110,15 @@ BEGIN
           || ',' || zfConvert_FloatToString (inPrice)
           || ',' || CHR (39) || zfConvert_DateToString (inDate) || CHR (39)
           || ',' || inUserId              :: TVarChar
-                   );
+                   );*/
 
         END IF;
 
         -- сохранили св-во < Дата изменения >
         PERFORM lpInsertUpdate_objectDate (zc_ObjectDate_Price_DateChange(), vbId, inDate);
 
-        -- сохранили протокол
-        -- !!!! PERFORM lpInsert_ObjectProtocol (vbId, inUserId);
+        -- сохранили протокол - !!!ВРЕМЕННО-вкл.
+        PERFORM lpInsert_ObjectProtocol (vbId, inUserId);
 
     END IF;
 

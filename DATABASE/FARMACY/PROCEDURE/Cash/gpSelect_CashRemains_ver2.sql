@@ -65,16 +65,23 @@ BEGIN
                          )
        , tmpCLO AS (SELECT CLO.*
                     FROM ContainerlinkObject AS CLO
-                    WHERE CLO.ContainerId IN (SELECT tmpContainer.Id FROM tmpContainer)
+                    WHERE CLO.ContainerId IN (SELECT DISTINCT tmpContainer.Id FROM tmpContainer)
                       AND CLO.DescId = zc_ContainerLinkObject_PartionMovementItem()
                    )
-       , tmpObject AS (SELECT Object.* FROM Object WHERE Object.Id IN (SELECT tmpCLO.ObjectId FROM tmpCLO))
+       , tmpObject AS (SELECT Object.* FROM Object WHERE Object.Id IN (SELECT DISTINCT tmpCLO.ObjectId FROM tmpCLO))
+
+       , tmpMIDate AS (SELECT MovementItemDate.*
+                       FROM MovementItemDate
+                       WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpObject.ObjectCode FROM tmpObject)
+                         AND MovementItemDate.DescId = zc_MIDate_PartionGoods()
+                      )
+
        , tmpExpirationDate AS (SELECT tmpCLO.ContainerId, MIDate_ExpirationDate.ValueData
                                FROM tmpCLO
                                     INNER JOIN tmpObject ON tmpObject.Id = tmpCLO.ObjectId
-                                    INNER JOIN MovementItemDate AS MIDate_ExpirationDate
-                                                                ON MIDate_ExpirationDate.MovementItemId = tmpObject.ObjectCode
-                                                               AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+                                    INNER JOIN tmpMIDate AS MIDate_ExpirationDate
+                                                         ON MIDate_ExpirationDate.MovementItemId = tmpObject.ObjectCode
+                                                        -- AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
                                )
        , GoodsRemains AS
     (SELECT Container.ObjectId
@@ -122,8 +129,8 @@ BEGIN
 
     --залили снапшот
     INSERT INTO CashSessionSnapShot(CashSessionId,ObjectId,Price,Remains,MCSValue,Reserved,MinExpirationDate)
-    WITH 
-    tmpObject_Price AS (SELECT ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
+    WITH
+    tmpObject_Price AS (SELECT ROUND(Price_Value.ValueData,2)::TFloat  AS Price
                              , MCS_Value.ValueData                     AS MCSValue
                              , Price_Goods.ChildObjectId               AS GoodsId
                         FROM ObjectLink AS ObjectLink_Price_Unit
@@ -137,7 +144,7 @@ BEGIN
                                                  ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
                                                 AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
                         WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                          AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId                          
+                          AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                         )
     SELECT
         inCashSessionId                             AS CashSession
@@ -194,7 +201,7 @@ BEGIN
                                  WHERE Movement_Income.DescId = zc_Movement_Income()
                                    AND Movement_Income.StatusId = zc_Enum_Status_UnComplete()
                                    AND date_trunc('day', Movement_Income.OperDate) = CURRENT_DATE
-                                 GROUP BY MI_Income.ObjectId
+	                                 GROUP BY MI_Income.ObjectId
                                         , MovementLinkObject_To.ObjectId
                               )
            -- Коды Мориона
@@ -234,7 +241,7 @@ BEGIN
               -- данные из прайса
               , tmpObject_Price AS (SELECT ObjectLink_Price_Unit.ObjectId                                AS Id
                                          , Price_Goods.ChildObjectId                                     AS GoodsId
-                                         , COALESCE(Price_MCSValueOld.ValueData,0)          ::TFloat     AS MCSValueOld         
+                                         , COALESCE(Price_MCSValueOld.ValueData,0)          ::TFloat     AS MCSValueOld
                                          , MCS_StartDateMCSAuto.ValueData                                AS StartDateMCSAuto
                                          , MCS_EndDateMCSAuto.ValueData                                  AS EndDateMCSAuto
                                          , COALESCE(Price_MCSAuto.ValueData,False)          :: Boolean   AS isMCSAuto
@@ -540,6 +547,7 @@ BEGIN
             CashSessionSnapShot.CashSessionId = inCashSessionId
         ORDER BY
             Goods.Id;
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

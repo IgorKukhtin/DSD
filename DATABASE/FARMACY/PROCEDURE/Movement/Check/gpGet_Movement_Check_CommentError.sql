@@ -30,6 +30,7 @@ BEGIN
              LEFT JOIN (SELECT Movement.Id
                              , Movement.InvNumber
                              , Movement.OperDate
+                             , Movement.StatusId
                         FROM Movement
                              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -38,13 +39,13 @@ BEGIN
                              INNER JOIN MovementString AS MovementString_CommentError
                                       ON MovementString_CommentError.MovementId = Movement.Id
                                      AND MovementString_CommentError.DescId     = zc_MovementString_CommentError()
-                                     AND MovementString_CommentError.ValueData  <> ''
+                                     AND MovementString_CommentError.ValueData  > ''
                         WHERE Movement.DescId =  zc_Movement_Check()
-                          AND Movement.StatusId =  zc_Enum_Status_UnComplete()
-                          AND Movement.OperDate >= '01.10.2016'
+                          -- AND Movement.StatusId =  zc_Enum_Status_UnComplete()
+                          AND Movement.OperDate >= CURRENT_DATE - INTERVAL '1 MONTH'
                         ORDER BY Movement.Id DESC
                         -- LIMIT 1
-                       ) AS Movement ON 1=1
+                       ) AS Movement ON Movement.StatusId =  zc_Enum_Status_UnComplete()
        );
 
 END;

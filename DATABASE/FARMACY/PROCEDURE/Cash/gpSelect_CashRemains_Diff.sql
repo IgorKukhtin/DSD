@@ -63,13 +63,14 @@ BEGIN
                          )
        , tmpCLO AS (SELECT CLO.*
                     FROM ContainerlinkObject AS CLO
-                    WHERE CLO.ContainerId IN (SELECT tmpContainer.Id FROM tmpContainer)
+                    WHERE CLO.ContainerId IN (SELECT DISTINCT tmpContainer.Id FROM tmpContainer)
                       AND CLO.DescId = zc_ContainerLinkObject_PartionMovementItem()
                    )
-       , tmpObject AS (SELECT Object.Id, Object.ObjectCode FROM Object WHERE Object.Id IN (SELECT tmpCLO.ObjectId FROM tmpCLO))
+       , tmpObject AS (SELECT Object.Id, Object.ObjectCode FROM Object WHERE Object.Id IN (SELECT DISTINCT tmpCLO.ObjectId FROM tmpCLO))
+       
        , tmpExpirationDate2 AS (SELECT MIDate_ExpirationDate.MovementItemId, MIDate_ExpirationDate.ValueData
                                 FROM MovementItemDate AS MIDate_ExpirationDate
-                                WHERE MIDate_ExpirationDate.MovementItemId IN (SELECT tmpObject.ObjectCode FROM tmpObject)
+                                WHERE MIDate_ExpirationDate.MovementItemId IN (SELECT DISTINCT tmpObject.ObjectCode FROM tmpObject)
                                   AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
                                )
        , tmpExpirationDate AS (SELECT tmpCLO.ContainerId, MIDate_ExpirationDate.ValueData
@@ -128,11 +129,35 @@ BEGIN
                      UNION
                       SELECT RESERVE.GoodsId FROM RESERVE
                      )
-       , tmpPrice AS (SELECT tmpGoods.ObjectId, COALESCE (ROUND (ObjectFloat_Value.ValueData, 2), 0) AS Price, COALESCE (ObjectFloat_MCS.ValueData, 0) AS MCSValue
+       , tmpObjPrice AS (SELECT tmpGoods.ObjectId, ObjectLink_Goods.ObjectId AS PriceId
                       FROM tmpGoods
                            INNER JOIN ObjectLink AS ObjectLink_Goods
                                                  ON ObjectLink_Goods.ChildObjectId = tmpGoods.ObjectId
                                                 AND ObjectLink_Goods.DescId        = zc_ObjectLink_Price_Goods()
+                           INNER JOIN ObjectLink AS ObjectLink_Unit
+                                                 ON ObjectLink_Unit.ObjectId      = ObjectLink_Goods.ObjectId
+                                                AND ObjectLink_Unit.DescId        = zc_ObjectLink_Price_Unit()
+                                                AND ObjectLink_Unit.ChildObjectId = vbUnitId
+                     )
+       , tmpOF AS (SELECT ObjectFloat.* FROM ObjectFloat WHERE ObjectFloat.ObjectId IN (SELECT DISTINCT tmpObjPrice.PriceId FROM tmpObjPrice)
+                                                           AND ObjectFloat.DescId   IN (zc_ObjectFloat_Price_Value(), zc_ObjectFloat_Price_MCSValue())
+                                                           AND ObjectFloat.ValueData <> 0
+                  )
+       , tmpPrice AS (SELECT tmpObjPrice.ObjectId, COALESCE (ROUND (ObjectFloat_Value.ValueData, 2), 0) AS Price, COALESCE (ObjectFloat_MCS.ValueData, 0) AS MCSValue
+                      FROM tmpObjPrice
+                           LEFT JOIN tmpOF AS ObjectFloat_Value
+                                           ON ObjectFloat_Value.ObjectId = tmpObjPrice.PriceId
+                                          AND ObjectFloat_Value.DescId   = zc_ObjectFloat_Price_Value()
+                           LEFT JOIN tmpOF AS ObjectFloat_MCS
+                                           ON ObjectFloat_MCS.ObjectId = tmpObjPrice.PriceId
+                                          AND ObjectFloat_MCS.DescId = zc_ObjectFloat_Price_MCSValue()
+                     )
+       /*, tmpPrice AS (SELECT ObjectLink_Goods.ChildObjectId AS ObjectId, COALESCE (ROUND (ObjectFloat_Value.ValueData, 2), 0) AS Price, COALESCE (ObjectFloat_MCS.ValueData, 0) AS MCSValue
+                      -- FROM tmpGoods
+                      --      INNER JOIN ObjectLink AS ObjectLink_Goods
+                      --                            ON ObjectLink_Goods.ChildObjectId = tmpGoods.ObjectId
+                      --                           AND ObjectLink_Goods.DescId        = zc_ObjectLink_Price_Goods()
+                      FROM ObjectLink AS ObjectLink_Goods
                            INNER JOIN ObjectLink AS ObjectLink_Unit
                                                  ON ObjectLink_Unit.ObjectId      = ObjectLink_Goods.ObjectId
                                                 AND ObjectLink_Unit.DescId        = zc_ObjectLink_Price_Unit()
@@ -143,7 +168,9 @@ BEGIN
                            LEFT JOIN ObjectFloat AS ObjectFloat_MCS
                                                  ON ObjectFloat_MCS.ObjectId = ObjectLink_Goods.ObjectId
                                                 AND ObjectFloat_MCS.DescId = zc_ObjectFloat_Price_MCSValue()
-                     )
+                      WHERE ObjectLink_Goods.ChildObjectId IN (SELECT DISTINCT tmpGoods.ObjectId FROM tmpGoods)
+                        AND ObjectLink_Goods.DescId        = zc_ObjectLink_Price_Goods()
+                     )*/
     -- РЕЗУЛЬТАТ - заливаем разницу
     INSERT INTO _DIFF (ObjectId, GoodsCode, GoodsName, Price, Remains, MCSValue, Reserved, NewRow, Color_calc,MinExpirationDate)
        WITH tmpDiff AS (SELECT tmpPrice.ObjectId                                                 AS ObjectId
@@ -239,4 +266,4 @@ ALTER FUNCTION gpSelect_CashRemains_Diff_ver2 (Integer, TVarChar, TVarChar) OWNE
 
 -- тест
 -- SELECT * FROM gpSelect_CashRemains_Diff_ver2 (0, '{ACAF6C5B-24C4-43F0-B920-55444A167EC31}', '390016')
--- SELECT * FROM gpSelect_CashRemains_Diff_ver2 (0, '{B99F7690-905F-48E7-99DB-EDED1B007F56}', '3')
+-- SELECT * FROM gpSelect_CashRemains_Diff_ver2 (0, 'tmp1', '3')

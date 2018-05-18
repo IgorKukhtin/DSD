@@ -1,6 +1,6 @@
 -- Function: gpUpdate_MI_PersonalService_isMain()
 
-DROP FUNCTION IF EXISTS gpUpdate_MI_PersonalService_isMain (Integer, Boolean, Integer);
+DROP FUNCTION IF EXISTS gpUpdate_MI_PersonalService_isMain (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_PersonalService_isMain(
     IN inId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -12,19 +12,20 @@ $BODY$
    DECLARE vbIsInsert Boolean;
    DECLARE vbUserId Integer;
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalService());
+
 
      -- проверка
      IF COALESCE (inId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Не введена сумма.';
+         RAISE EXCEPTION 'Ошибка.Не введена сумма начисления.';
      END IF;
-     
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalService());
 
 
      -- определили признак
-     ioIsMain:= NOT ioIsMain; 
-    
+     ioIsMain:= NOT ioIsMain;
+
       -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Main(), inId, ioIsMain);
 
@@ -42,6 +43,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpUpdate_MI_PersonalService_isMain (inId:= 0, inisMain:= true, inSession:= '2')
-
---select * from gpUpdate_MI_PersonalService_isMain(inId := 4771714 , ioIsMain := 'false' ,  inSession := '5');
+-- SELECT * FROM gpUpdate_MI_PersonalService_isMain (inId:= 0, ioIsMain:= true, inSession:= '2')

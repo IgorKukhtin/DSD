@@ -109,9 +109,9 @@ BEGIN
                                   , tmpMI.Amount
                            HAVING COALESCE (SUM (Container.Amount), 0) < tmpMI.Amount
                           )
-          , tmpMIFloat AS (SELECT * FROM MovementItemFloat WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI_all.Id FROM tmpMI_all)
+          , tmpMIFloat AS (SELECT * FROM MovementItemFloat WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_all.Id FROM tmpMI_all)
                           )
-          , tmpMIString AS (SELECT * FROM MovementItemString WHERE MovementItemString.MovementItemId IN (SELECT tmpMI_all.Id FROM tmpMI_all)
+          , tmpMIString AS (SELECT * FROM MovementItemString WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI_all.Id FROM tmpMI_all)
                           )
        -- Результат
        SELECT

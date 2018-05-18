@@ -1,4 +1,4 @@
--- Function: gpSelect_MovementItem_Send()
+: gpSelect_MovementItem_Send()
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_Send (Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
@@ -201,7 +201,7 @@ BEGIN
                       GROUP BY Container.ObjectId
                              , Container.PartionId
                      )
-    ---сезонная скидка
+     --- сезонная скидка
    , tmpDiscountList AS (SELECT DISTINCT vbUnitId_From AS UnitId, tmpPartion.GoodsId FROM tmpPartion
                         UNION
                          SELECT DISTINCT vbUnitId_To   AS UnitId, tmpPartion.GoodsId FROM tmpPartion
@@ -519,7 +519,6 @@ BEGIN
                           WHERE MovementItemProtocol.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                             AND MovementItemProtocol.OperDate >= inStartDate AND MovementItemProtocol.OperDate < inEndDate + INTERVAL '1 DAY'
                          )
-
            -- результат
            SELECT
                  tmpMI.Id

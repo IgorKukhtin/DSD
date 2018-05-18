@@ -15,14 +15,19 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpGetUserBySession (inSession);
 
-     IF COALESCE(inMovementId,0) = 0
+
+     -- проверка
+     IF COALESCE (inMovementId, 0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка. Документ не сохранен';
      END IF;
  
+
      -- определяем <Месяц начислений>
      vbServiceDateId:= lpInsertFind_Object_ServiceDate (inOperDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MIDate_ServiceDate()));
 
+
+     --
      CREATE TEMP TABLE _tmpContainer (MovementItemId Integer, PersonalId Integer, UnitId Integer, PositionId Integer, InfoMoneyId Integer, SummCardSecondCash TFloat) ON COMMIT DROP;
          --
          INSERT INTO _tmpContainer (MovementItemId, PersonalId, UnitId, PositionId, InfoMoneyId, SummCardSecondCash)

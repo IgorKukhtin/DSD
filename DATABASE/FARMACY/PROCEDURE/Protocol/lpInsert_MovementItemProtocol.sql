@@ -13,6 +13,8 @@ $BODY$
  DECLARE 
    vbProtocolXML TBlob;
 BEGIN
+
+
   -- Подготавливаем XML для записи в протокол
   WITH
    tmpMovementItem AS (SELECT '<Field FieldName = "Ключ объекта" FieldValue = "' || MovementItem.ObjectId || '"/>'
