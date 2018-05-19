@@ -24,8 +24,18 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
    DECLARE vbUnitKey TVarChar;
+
+   DECLARE vbOperDate_StartBegin TDateTime;
+   DECLARE vb1 TVarChar;
+   DECLARE vb2 TVarChar;
+   DECLARE vb3 TVarChar;
 BEGIN
 -- if inSession = '3' then return; end if;
+
+
+    -- !!!Протокол - отладка Скорости!!!
+    vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
+
 
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
@@ -35,13 +45,13 @@ BEGIN
        vbUnitKey := '0';
     END IF;
     vbUnitId := vbUnitKey::Integer;
-    
+
     -- Обновили дату последнего обращения по сессии
     PERFORM lpInsertUpdate_CashSession (inCashSessionId := inCashSessionId
                                       , inDateConnect   := CURRENT_TIMESTAMP :: TDateTime
                                       , inUserId        := vbUserId
                                        );
-    
+
     --определяем разницу в остатках реальных и сессионных
     CREATE TEMP TABLE _DIFF (ObjectId  Integer
                            , GoodsCode Integer
@@ -52,12 +62,12 @@ BEGIN
                            , Reserved  TFloat
                            , NewRow    Boolean
                            , Color_calc Integer
-                           , MinExpirationDate TDateTime) ON COMMIT DROP;    
+                           , MinExpirationDate TDateTime) ON COMMIT DROP;
 
     -- Данные
     WITH tmpContainer AS (SELECT Container.Id, Container.ObjectId, Container.Amount
                           FROM Container
-                          WHERE Container.DescId = zc_Container_Count() 
+                          WHERE Container.DescId = zc_Container_Count()
                             AND Container.WhereObjectId = vbUnitId
                             AND Container.Amount <> 0
                          )
@@ -67,7 +77,7 @@ BEGIN
                       AND CLO.DescId = zc_ContainerLinkObject_PartionMovementItem()
                    )
        , tmpObject AS (SELECT Object.Id, Object.ObjectCode FROM Object WHERE Object.Id IN (SELECT DISTINCT tmpCLO.ObjectId FROM tmpCLO))
-       
+
        , tmpExpirationDate2 AS (SELECT MIDate_ExpirationDate.MovementItemId, MIDate_ExpirationDate.ValueData
                                 FROM MovementItemDate AS MIDate_ExpirationDate
                                 WHERE MIDate_ExpirationDate.MovementItemId IN (SELECT DISTINCT tmpObject.ObjectCode FROM tmpObject)
@@ -100,7 +110,7 @@ BEGIN
                                      AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
           -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
           LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
-                     
+
           LEFT OUTER JOIN MovementItemDate AS MIDate_ExpirationDate
                                            ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
                                           AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()*/
@@ -191,7 +201,7 @@ BEGIN
                            OR tmpPrice.MCSValue <> COALESCE (SESSIONDATA.MCSValue, 0)
                            OR COALESCE (GoodsRemains.Remains, 0) - COALESCE (Reserve.Amount, 0) <> COALESCE (SESSIONDATA.Remains, 0)
                            OR COALESCE (Reserve.Amount,0) <> COALESCE (SESSIONDATA.Reserved, 0)
-                       ) 
+                       )
        -- РЕЗУЛЬТАТ
        SELECT tmpDiff.ObjectId
             , Object_Goods.ObjectCode     AS GoodsCode
@@ -201,14 +211,15 @@ BEGIN
             , tmpDiff.MCSValue
             , tmpDiff.Reserved
             , tmpDiff.NewRow
-            , CASE WHEN COALESCE (ObjectBoolean_First.ValueData, FALSE) = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc 
+            , CASE WHEN COALESCE (ObjectBoolean_First.ValueData, FALSE) = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc
             , tmpDiff.MinExpirationDate
        FROM tmpDiff
             INNER JOIN Object AS Object_Goods ON Object_Goods.Id = tmpDiff.ObjectId
             LEFT JOIN ObjectBoolean AS ObjectBoolean_First
                                     ON ObjectBoolean_First.ObjectId = tmpDiff.ObjectId
                                    AND ObjectBoolean_First.DescId = zc_ObjectBoolean_Goods_First()
-      ;
+       -- RETURNING COUNT (*) INTO vb1
+       ;
 
 
     --Обновляем данные в сессии
@@ -221,8 +232,10 @@ BEGIN
     FROM
         _DIFF
     WHERE CashSessionSnapShot.CashSessionId = inCashSessionId
-      AND CashSessionSnapShot.ObjectId = _DIFF.ObjectId;
-    
+      AND CashSessionSnapShot.ObjectId = _DIFF.ObjectId
+    -- RETURNING COUNT (*)  INTO vb2
+    ;
+
     --доливаем те, что появились
     Insert Into CashSessionSnapShot(CashSessionId,ObjectId,Price,Remains,MCSValue,Reserved,MinExpirationDate)
     SELECT
@@ -236,7 +249,38 @@ BEGIN
     FROM
         _DIFF
     WHERE
-        _DIFF.NewRow = TRUE;
+        _DIFF.NewRow = TRUE
+    -- RETURNING COUNT (*)  INTO vb3
+        ;
+
+    vb1:= (SELECT COUNT (*) FROM _DIFF) :: TVarChar;
+
+    -- !!!Протокол - отладка Скорости!!!
+    INSERT INTO Log_Reprice (InsertDate, StartDate, EndDate, MovementId, UserId, TextValue)
+      VALUES (CURRENT_TIMESTAMP, vbOperDate_StartBegin, CLOCK_TIMESTAMP(), vbUnitId, vbUserId
+            , REPEAT ('0', 8 - LENGTH (vb1)) || vb1
+    || ' '   || lfGet_Object_ValueData_sh (vbUnitId)
+    || ' + ' || lfGet_Object_ValueData_sh (vbUserId)
+    || ' : ' || inMovementId          :: TVarChar
+    || ','   || vbUnitId              :: TVarChar
+    || ','   || CHR (39) || inCashSessionId || CHR (39)
+             );
+/*
+-- TRUNCATE TABLE Log_Reprice
+WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER BY InsertDate) AS Ord, TextValue_int :: TVarChar || ' ' || TextValue_calc AS TextValue_new
+             FROM
+            (SELECT Log_Reprice.*, SUBSTRING (TextValue FROM 9 FOR LENGTH (TextValue) - 8) AS TextValue_calc, SUBSTRING (TextValue FROM 1 FOR 8) :: Integer AS TextValue_int
+             FROM Log_Reprice
+             WHERE InsertDate > CURRENT_DATE
+--             AND UserId = 3
+            ) AS tmp
+            )
+   , tmp_res AS (SELECT tmp.EndDate - tmp.StartDate AS diff_curr, tmp.TextValue_new, CASE WHEN tmp_old.Ord > 0 THEN tmp.StartDate - tmp_old.EndDate ELSE NULL :: INTERVAL END AS diff_prev, tmp.Ord, tmp.* FROM tmp LEFT JOIN tmp AS tmp_old on tmp_old.TextValue_calc = tmp.TextValue_calc AND tmp_old.Ord = tmp.Ord - 1
+                 ORDER BY tmp.TextValue_calc, tmp.InsertDate DESC
+                )
+-- SELECT * FROM tmp_res
+ SELECT (SELECT SUM (diff_curr) FROM tmp_res) AS summ_d, (SELECT MAX (EndDate) FROM Log_Reprice) - (SELECT MIN (StartDate) FROM Log_Reprice) AS diffD, (SELECT COUNT (*) FROM Log_Reprice) AS CD, (SELECT MIN (StartDate) FROM Log_Reprice) AS minD, (SELECT MAX (EndDate) FROM Log_Reprice) AS maxD
+*/
     --Возвращаем разницу в клиента
     RETURN QUERY
         SELECT
@@ -260,7 +304,7 @@ ALTER FUNCTION gpSelect_CashRemains_Diff_ver2 (Integer, TVarChar, TVarChar) OWNE
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
- 16.03.16         * 
+ 16.03.16         *
  12.09.15                                                                       *CashSessionSnapShot
 */
 
