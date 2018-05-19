@@ -188,16 +188,20 @@ implementation
 function TMainCashForm2.GetInterval_CashRemains_Diff: integer;
 var dsdProc: TdsdStoredProc;
 begin
-  dsdProc := TdsdStoredProc.Create(nil);
   try
-    dsdProc.StoredProcName := 'zc_Interval_CashRemains_Diff';
-    dsdProc.OutputType := otResult;
-    dsdProc.Params.Clear;
-    dsdProc.Params.AddParam('zc_Interval_CashRemains_Diff',ftInteger,ptOutput,Null);
-    dsdProc.Execute(False,False);
-    Result := dsdProc.Params.ParamByName('zc_Interval_CashRemains_Diff').Value;
-  finally
-    FreeAndNil(dsdProc);
+    dsdProc := TdsdStoredProc.Create(nil);
+    try
+      dsdProc.StoredProcName := 'zc_Interval_CashRemains_Diff';
+      dsdProc.OutputType := otResult;
+      dsdProc.Params.Clear;
+      dsdProc.Params.AddParam('zc_Interval_CashRemains_Diff',ftInteger,ptOutput,Null);
+      dsdProc.Execute(False,False);
+      Result := dsdProc.Params.ParamByName('zc_Interval_CashRemains_Diff').Value;
+    finally
+      FreeAndNil(dsdProc);
+    end;
+  except
+    Result := TimerSaveReal.Interval;
   end;
 end;
 
@@ -536,7 +540,7 @@ begin
   End;
   ChangeStatus('Инициализация локального хранилища - да');
   FSaveRealAllRunning := false;
-  TimerSaveReal.Interval := GetInterval_CashRemains_Diff;
+  TimerSaveReal.Enabled := false;
   SaveRealAll; // Проводим чеки которые остались не проведенными раньше. Учитывается CountСhecksAtOnce = 7
                // проведутся первые 7 чеков и будут ждать или таймер или пока не пройдет первая покупка
   if not FHasError then
@@ -1319,6 +1323,7 @@ begin
     FSaveRealAllRunning := false;
     MainCashForm2.tiServise.IconIndex := GetTrayIcon;
     Add_Log('SaveReal end');
+    TimerSaveReal.Interval := GetInterval_CashRemains_Diff;
     TimerSaveReal.Enabled := true;
   end;
 end;
