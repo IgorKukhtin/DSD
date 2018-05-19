@@ -158,7 +158,7 @@ type
     function ExistNotCompletedCheck: boolean;
     procedure Add_Log(AMessage: String);
     function GetTrayIcon: integer;
-
+    function GetInterval_CashRemains_Diff: integer;
   end;
 
 
@@ -184,6 +184,22 @@ var
 implementation
 
 {$R *.dfm}
+
+function TMainCashForm2.GetInterval_CashRemains_Diff: integer;
+var dsdProc: TdsdStoredProc;
+begin
+  dsdProc := TdsdStoredProc.Create(nil);
+  try
+    dsdProc.StoredProcName := 'zc_Interval_CashRemains_Diff';
+    dsdProc.OutputType := otResult;
+    dsdProc.Params.Clear;
+    dsdProc.Params.AddParam('zc_Interval_CashRemains_Diff',ftInteger,ptOutput,Null);
+    dsdProc.Execute(False,False);
+    Result := dsdProc.Params.ParamByName('zc_Interval_CashRemains_Diff').Value;
+  finally
+    FreeAndNil(dsdProc);
+  end;
+end;
 
 procedure TMainCashForm2.AppMsgHandler(var Msg: TMsg; var Handled: Boolean);
 var msgStr: String;
@@ -385,6 +401,8 @@ begin
 end;
 
 procedure TMainCashForm2.actRefreshAllExecute(Sender: TObject);
+var nRemainsFieldCount, nAlternativeFieldCount: integer;
+    bError: boolean;
 begin   //yes
   if FSaveRealAllRunning then Exit; // нельзя запускать, пока отгружаются чеки
   if ExistNotCompletedCheck then Exit; // нельзя запускать, пока есть неотгруженные чеки
@@ -394,6 +412,7 @@ begin   //yes
   WaitForSingleObject(MutexRemains, INFINITE);
   Add_Log('Start MutexAlternative 393');
   WaitForSingleObject(MutexAlternative, INFINITE);
+  bError := false;
   try
     MainCashForm2.tiServise.IconIndex:=1;
     // посылаем сообщение о начале получения полных остатков
@@ -407,8 +426,27 @@ begin   //yes
       AlternativeCDS.DisableControls;
       try
         try
+          nRemainsFieldCount := -1;
+          if RemainsCDS.Active then
+            nRemainsFieldCount := RemainsCDS.Fields.Count;
+          nAlternativeFieldCount := -1;
+          if AlternativeCDS.Active then
+            nAlternativeFieldCount := AlternativeCDS.Fields.Count;
           //Получение остатков
           actRefresh.Execute;
+          //Проверка количества столбцов в новом наборе
+          if (nRemainsFieldCount > RemainsCDS.Fields.Count)
+             or
+             (nAlternativeFieldCount > AlternativeCDS.Fields.Count) then
+          begin
+            tiServise.BalloonHint:='Ошибка при получении остатков - были получены неполные данные.';
+            tiServise.ShowBalloonHint;
+            bError := true;
+            Add_Log('Ошибка при получении остатков');
+            Add_Log('Remains: было столбцов: '+ IntToStr(nRemainsFieldCount) + ', получено: '+ IntToStr(RemainsCDS.Fields.Count));
+            Add_Log('Alternative: было столбцов: '+ IntToStr(nAlternativeFieldCount) + ', получено: '+ IntToStr(AlternativeCDS.Fields.Count));
+            Exit;
+          end;
           //Сохранение остатков в локальной базе
           SaveLocalData(RemainsCDS,Remains_lcl);
           SaveLocalData(AlternativeCDS,Alternative_lcl);
@@ -438,7 +476,8 @@ begin   //yes
     ReleaseMutex(MutexRemains);
     Add_Log('End MutexAlternative 393');
     ReleaseMutex(MutexAlternative);
-    ChangeStatus('Сохранили');
+    if not bError then
+      ChangeStatus('Сохранили');
     MainCashForm2.tiServise.IconIndex := GetTrayIcon;
     Add_Log('Refresh all end');
   end;
@@ -497,6 +536,7 @@ begin
   End;
   ChangeStatus('Инициализация локального хранилища - да');
   FSaveRealAllRunning := false;
+  TimerSaveReal.Interval := GetInterval_CashRemains_Diff;
   SaveRealAll; // Проводим чеки которые остались не проведенными раньше. Учитывается CountСhecksAtOnce = 7
                // проведутся первые 7 чеков и будут ждать или таймер или пока не пройдет первая покупка
   if not FHasError then
@@ -709,6 +749,7 @@ begin
   FSaveRealAllRunning := true;
   try
     Add_Log('SaveReal start');
+    TimerSaveReal.Enabled := false;
     try
       MainCashForm2.tiServise.IconIndex := 4;
       bShowDisconnectMsg := not gc_User.Local;
@@ -1278,6 +1319,7 @@ begin
     FSaveRealAllRunning := false;
     MainCashForm2.tiServise.IconIndex := GetTrayIcon;
     Add_Log('SaveReal end');
+    TimerSaveReal.Enabled := true;
   end;
 end;
 
