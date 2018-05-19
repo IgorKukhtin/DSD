@@ -225,7 +225,7 @@ type
     actPrint_Goods: TdsdPrintAction;
     bbPrint_Goods: TdxBarButton;
     actReport_Goods: TdsdOpenForm;
-    bb: TdxBarButton;
+    bbReport_Goods: TdxBarButton;
   private
   public
   end;

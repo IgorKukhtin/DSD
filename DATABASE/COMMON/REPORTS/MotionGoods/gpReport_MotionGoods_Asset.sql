@@ -19,7 +19,7 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , AccountId Integer, AccountCode Integer, AccountName TVarChar, AccountName_All TVarChar
              , LocationDescName TVarChar, LocationId Integer, LocationCode Integer, LocationName TVarChar
 
-             , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
+             , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsDescName TVarChar, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, MeasureName TVarChar
              , Weight TFloat
              , PartionGoodsId Integer, PartionGoodsName TVarChar
@@ -337,6 +337,7 @@ BEGIN
         , Object_Location.ObjectCode     AS LocationCode
         , CAST (COALESCE(Object_Location.ValueData,'') AS TVarChar)     AS LocationName
 
+        , Object_GoodsGroup.Id           AS GoodsGroupId
         , Object_GoodsGroup.ValueData    AS GoodsGroupName
         , ObjectString_Goods_GroupNameFull.ValueData         AS GoodsGroupNameFull
         , ObjectDesc_Goods.ItemName      AS GoodsDescName

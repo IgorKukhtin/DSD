@@ -183,6 +183,8 @@ type
     actIsAllAuto: TdsdDataSetRefresh;
     cbAllMO: TcxCheckBox;
     cbAllAuto: TcxCheckBox;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
   private
   public
   end;

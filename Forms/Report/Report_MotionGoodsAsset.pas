@@ -213,6 +213,8 @@ type
     PartionGoodsDate: TcxGridDBColumn;
     PartnerCode: TcxGridDBColumn;
     PartnerName: TcxGridDBColumn;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
   private
   public
   end;

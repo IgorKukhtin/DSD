@@ -2501,7 +2501,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbReport_Goods'
         end
         item
           Visible = True
@@ -2659,7 +2659,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Action = actPrint_Goods
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbReport_Goods: TdxBarButton
       Action = actReport_Goods
       Category = 0
     end
