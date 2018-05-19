@@ -207,6 +207,8 @@ type
     actPrint_Inventory: TdsdPrintAction;
     bbPrint_Inventory: TdxBarButton;
     AssetToName: TcxGridDBColumn;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
   private
   public
   end;

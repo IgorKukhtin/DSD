@@ -32,13 +32,13 @@ type
     RemainsStart: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
-    GoodsGroupGuides: TdsdGuides;
+    GuidesGoodsGroup: TdsdGuides;
     FormParams: TdsdFormParams;
     GoodsKindName: TcxGridDBColumn;
     RemainsEnd: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
     cxLabel3: TcxLabel;
-    UnitGuides: TdsdGuides;
+    GuidesUnit: TdsdGuides;
     edUnit: TcxButtonEdit;
     actPrint_Real: TdsdPrintAction;
     bbPrint_Real: TdxBarButton;
@@ -53,6 +53,8 @@ type
     actPrint: TdsdPrintAction;
     GoodsGroupName: TcxGridDBColumn;
     EndDate: TcxGridDBColumn;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
   private
     { Private declarations }
   public

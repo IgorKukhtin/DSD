@@ -8,10 +8,11 @@ CREATE OR REPLACE FUNCTION gpReport_MotionGoodsWeek(
     IN inGoodsGroupId       Integer,    -- группа товара
     IN inSession            TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindName  TVarChar
              , MeasureName TVarChar
              , GoodsGroupNameFull TVarChar
+             , GoodsGroupId   Integer
              , GoodsGroupName TVarChar
              , RemainsStart TFloat
              , RemainsEnd TFloat
@@ -156,12 +157,14 @@ BEGIN
                  )
 
        -- Результат
-       SELECT
-             Object_Goods.ObjectCode                    AS GoodsCode
+       SELECT 
+             Object_Goods.Id                            AS GoodsId
+           , Object_Goods.ObjectCode                    AS GoodsCode
            , Object_Goods.ValueData                     AS GoodsName
            , Object_GoodsKind.ValueData                 AS GoodsKindName
            , Object_Measure.ValueData                   AS MeasureName
            , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
+           , Object_GoodsGroup.Id                       AS GoodsGroupId
            , Object_GoodsGroup.ValueData                AS GoodsGroupName
            
            , tmpRemains.RemainsStart   :: TFloat

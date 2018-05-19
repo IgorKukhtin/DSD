@@ -211,6 +211,8 @@ type
     SummOut_by2: TcxGridDBColumn;
     GoodsKindName_complete: TcxGridDBColumn;
     AssetToName: TcxGridDBColumn;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
   private
   public
   end;

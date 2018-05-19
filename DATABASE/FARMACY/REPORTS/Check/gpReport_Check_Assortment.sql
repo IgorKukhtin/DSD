@@ -103,12 +103,34 @@ BEGIN
                       HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
                       )
 
+   -- товары, остаток <> 0, текущей аптеки  --  товары сети
+   , tmpRemains_Ret AS (SELECT tmp.GoodsId
+                             , SUM (tmp.Amount)    AS Amount
+                        FROM (SELECT Container.Objectid      AS GoodsId
+                                   , Container.Amount - SUM (COALESCE (MIContainer.Amount, 0))  AS Amount
+                              FROM Container 
+                                   LEFT JOIN MovementItemContainer AS MIContainer
+                                                                   ON MIContainer.ContainerId = Container.Id
+                                                                  AND MIContainer.OperDate >= inDateFinal --inDateStart
+                              WHERE Container.WhereObjectId = inUnitId
+                                AND Container.DescId = zc_Container_Count()
+                              GROUP BY Container.Objectid, Container.Amount
+                              HAVING Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
+                              ) AS tmp
+                        GROUP BY tmp.GoodsId
+                        HAVING SUM (tmp.Amount) <> 0
+                       )
+
    -- связь товара сети и главного товара и свойства 
    , tmpGoods AS (SELECT tmp.GoodsId                                                   AS GoodsId
                        , ObjectLink_Main.ChildObjectId                                 AS GoodsMainId
                        , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
                   FROM (SELECT DISTINCT tmpContainer.GoodsId
-                        FROM tmpContainer) AS tmp
+                        FROM tmpContainer
+                       UNION
+                        SELECT DISTINCT tmpRemains_Ret.GoodsId
+                        FROM tmpRemains_Ret
+                        ) AS tmp
                        -- получается GoodsMainId
                        LEFT JOIN ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
                              AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
@@ -119,7 +141,7 @@ BEGIN
                               ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
                              AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
                   )
-
+                  
    -- + главный товар
    , tmpData_Container AS (SELECT tmp.UnitId
                                 , tmp.GoodsId
@@ -129,32 +151,20 @@ BEGIN
                            FROM tmpContainer AS tmp
                                 LEFT JOIN tmpGoods ON tmpGoods.GoodsId = tmp.GoodsId
                            )
+   -- остатки гл.товар
+   , tmpRemains AS (SELECT tmpGoods.GoodsMainId
+                         , tmp.GoodsId
+                         , tmp.Amount
+                    FROM tmpRemains_Ret AS tmp
+                         LEFT JOIN tmpGoods ON tmpGoods.GoodsId = tmp.GoodsId
+                    )
 
    -- ассортимент продаж текущей аптеки
    , tmpAssortmentCheck AS (SELECT DISTINCT tmpData_Container.GoodsMainId, tmpData_Container.GoodsId
                             FROM tmpData_Container
                             WHERE tmpData_Container.UnitId = inUnitId
                             )
-
-   -- товары, остаток <> 0, текущей аптеки 
-   , tmpRemains AS (SELECT tmpGoods.GoodsMainId
-                         , SUM (tmp.Amount)    AS Amount
-                    FROM (SELECT Container.Objectid      AS GoodsId
-                               , Container.Amount - SUM (COALESCE (MIContainer.Amount, 0))  AS Amount
-                          FROM Container 
-                               LEFT JOIN MovementItemContainer AS MIContainer
-                                                               ON MIContainer.ContainerId = Container.Id
-                                                              AND MIContainer.OperDate >= inDateFinal --inDateStart
-                          WHERE Container.WhereObjectId = inUnitId
-                            AND Container.DescId = zc_Container_Count()
-                          GROUP BY Container.Objectid, Container.Amount
-                          HAVING Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
-                          ) AS tmp
-                          LEFT JOIN tmpGoods ON tmpGoods.GoodsId = tmp.GoodsId
-                    GROUP BY tmpGoods.GoodsMainId
-                    HAVING SUM (tmp.Amount) <> 0
-                   )
-
+                  
    -- НТЗ , Спецконтроль кода текущей аптеки
    , tmpPrice AS (SELECT tmpGoods.GoodsMainId                     AS GoodsMainId
                        , COALESCE(MCS_Value.ValueData, 0)         AS MCS_Value
@@ -341,7 +351,7 @@ BEGIN
              , COALESCE(tmpGoodsParam.isFirst, FALSE)                :: Boolean  AS isFirst
              , COALESCE(tmpGoodsParam.isSecond, FALSE)               :: Boolean  AS isSecond
              
-             , COALESCE (tmpGoods.isSP, FALSE)                        :: Boolean  AS isSP
+             , COALESCE (tmpGoods.isSP, FALSE)                       :: Boolean  AS isSP
              , CASE WHEN COALESCE(GoodsPromo.GoodsMainId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
              , COALESCE(tmpPrice.MCSNotRecalc, FALSE)                :: Boolean  AS MCSNotRecalc
            
@@ -364,6 +374,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 19.05.18         *
  07.01.18         *
  29.08.17         *
 */

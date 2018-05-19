@@ -5,10 +5,8 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -333
-  ExplicitTop = -54
   ExplicitWidth = 1382
-  ExplicitHeight = 573
+  ExplicitHeight = 572
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1030,13 +1028,13 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
           'Date')
       end
       item
-        Component = GoodsGroupGuides
+        Component = GuidesGoodsGroup
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = UnitGuides
+        Component = GuidesUnit
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -1110,7 +1108,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
         item
           Name = 'GoodsGroupName'
           Value = ''
-          Component = GoodsGroupGuides
+          Component = GuidesGoodsGroup
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1119,7 +1117,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
         item
           Name = 'UnitName'
           Value = Null
-          Component = UnitGuides
+          Component = GuidesUnit
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1130,6 +1128,9 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_Real: TdsdPrintAction
       Category = 'DSDLib'
@@ -1200,7 +1201,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
         item
           Name = 'GoodsGroupName'
           Value = ''
-          Component = GoodsGroupGuides
+          Component = GuidesGoodsGroup
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1266,6 +1267,9 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -1289,7 +1293,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
         item
           Name = 'GoodsGroupId'
           Value = ''
-          Component = GoodsGroupGuides
+          Component = GuidesGoodsGroup
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1297,7 +1301,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
         item
           Name = 'GoodsGroupName'
           Value = ''
-          Component = GoodsGroupGuides
+          Component = GuidesGoodsGroup
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1306,7 +1310,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
         item
           Name = 'UnitId'
           Value = ''
-          Component = UnitGuides
+          Component = GuidesUnit
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1314,7 +1318,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
         item
           Name = 'UnitName'
           Value = ''
-          Component = UnitGuides
+          Component = GuidesUnit
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1323,6 +1327,105 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actReport_Goods: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
+      ImageIndex = 26
+      FormName = 'TReport_GoodsForm'
+      FormNameParam.Value = 'TReport_GoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42826d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42826d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LocationId'
+          Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LocationName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsGroupId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsGroupName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsPartner'
+          Value = 'TRUE'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   inherited MasterDS: TDataSource
@@ -1355,7 +1458,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
       item
         Name = 'inUnitId'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1363,7 +1466,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
       item
         Name = 'inGoodsGroupId'
         Value = ''
-        Component = GoodsGroupGuides
+        Component = GuidesGoodsGroup
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1396,6 +1499,14 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_Goods'
         end
         item
           Visible = True
@@ -1460,6 +1571,10 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
       Hint = #1087#1086' '#1055#1088#1072#1090#1080#1103#1084
       Visible = ivAlways
     end
+    object bbReport_Goods: TdxBarButton
+      Action = actReport_Goods
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
@@ -1483,10 +1598,10 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
         Component = deStart
       end
       item
-        Component = UnitGuides
+        Component = GuidesUnit
       end
       item
-        Component = GoodsGroupGuides
+        Component = GuidesGoodsGroup
       end
       item
       end
@@ -1497,7 +1612,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
     Left = 208
     Top = 168
   end
-  object GoodsGroupGuides: TdsdGuides
+  object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoodsGroup
     Key = '0'
@@ -1510,7 +1625,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
       item
         Name = 'Key'
         Value = ''
-        Component = GoodsGroupGuides
+        Component = GuidesGoodsGroup
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1519,20 +1634,21 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GoodsGroupGuides
+        Component = GuidesGoodsGroup
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 848
+    Left = 672
+    Top = 16
   end
   object FormParams: TdsdFormParams
     Params = <
       item
         Name = 'inUnitId'
         Value = Null
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1540,7 +1656,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
       item
         Name = 'inUnitName'
         Value = Null
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1549,7 +1665,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
       item
         Name = 'inGoodsGroupId'
         Value = Null
-        Component = GoodsGroupGuides
+        Component = GuidesGoodsGroup
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1557,7 +1673,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
       item
         Name = 'inGoodsGroupName'
         Value = #1057#1044'-'#1057#1067#1056#1068#1045
-        Component = GoodsGroupGuides
+        Component = GuidesGoodsGroup
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1566,7 +1682,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
     Left = 328
     Top = 170
   end
-  object UnitGuides: TdsdGuides
+  object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
     Key = '0'
@@ -1579,7 +1695,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
       item
         Name = 'Key'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1588,13 +1704,13 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 568
-    Top = 1
+    Left = 384
+    Top = 17
   end
 end
