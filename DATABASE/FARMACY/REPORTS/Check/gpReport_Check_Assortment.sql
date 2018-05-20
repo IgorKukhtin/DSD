@@ -199,7 +199,6 @@ BEGIN
   /* -- ассортимент товаров текущей аптеки, которые нужно исключить из выборки
    , tmpAssortment AS (SELECT tmpAssortmentCheck.GoodsId
                        FROM tmpAssortmentCheck
-                            
                        WHERE tmpRemains.GoodsId IS NOT NULL
                           OR COALESCE (tmpMCS.MCS_Value, 0) <> 0
                        ) 
