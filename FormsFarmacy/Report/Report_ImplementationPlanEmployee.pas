@@ -119,9 +119,6 @@ type
     procedure cdsListFieldsAfterOpen(DataSet: TDataSet);
     procedure ClientDataSetAfterOpen(DataSet: TDataSet);
     procedure cdsUnitAfterPost(DataSet: TDataSet);
-    procedure cxImplementationPlanEmployeeDBBandedTableView1TcxGridDBDataControllerTcxDataSummaryFooterSummaryItems2GetText(
-      Sender: TcxDataSummaryItem; const AValue: Variant; AIsFooter: Boolean;
-      var AText: string);
     procedure cxImplementationPlanEmployeeDBBandedTableView1TcxGridDBDataControllerTcxDataSummaryFooterSummaryItems3GetText(
       Sender: TcxDataSummaryItem; const AValue: Variant; AIsFooter: Boolean;
       var AText: string);
@@ -131,10 +128,14 @@ type
     procedure cdsListBandsAfterClose(DataSet: TDataSet);
     procedure cdsResultCalcFields(DataSet: TDataSet);
     procedure ClientDataSetAfterPost(DataSet: TDataSet);
+    procedure cxImplementationPlanEmployeeDBBandedTableView1TcxGridDBDataControllerTcxDataSummaryFooterSummaryItems2GetText(
+      Sender: TcxDataSummaryItem; const AValue: Variant; AIsFooter: Boolean;
+      var AText: string);
   private
     FUnit : TStrings;
     FUnitCategory : TStrings;
     FCountO : Integer;
+    FCountYes : Integer;
   public
   end;
 
@@ -330,21 +331,26 @@ procedure TReport_ImplementationPlanEmployeeForm.ClientDataSetAfterOpen(
   var cur : Currency;
 begin
   FCountO := 0;
+  FCountYes := 0;
   try
+    ClientDataSet.AfterPost :=  Nil;
     ClientDataSet.DisableControls;
     while not ClientDataSet.Eof do
     begin
       if ClientDataSet.FieldByName('Amount').AsCurrency = 0 then Inc(FCountO);
       ClientDataSet.Edit;
-      if ClientDataSet.FieldByName('AmountPlanTab').AsCurrency < 0.1 then
-        ClientDataSet.FieldByName('Consider').AsString := 'No'
-      else ClientDataSet.FieldByName('Consider').AsString := 'Yes';
+      if ClientDataSet.FieldByName('AmountPlanTab').AsCurrency >= 0.1 then
+      begin
+        ClientDataSet.FieldByName('Consider').AsString := 'Yes';
+        Inc(FCountYes);
+      end else ClientDataSet.FieldByName('Consider').AsString := 'No';
       ClientDataSet.Post;
       ClientDataSet.Next;
     end;
   finally
     ClientDataSet.First;
     ClientDataSet.EnableControls;
+    ClientDataSet.AfterPost :=  ClientDataSetAfterPost;
   end;
 
   try
@@ -366,13 +372,30 @@ begin
     cdsResult.Post;
   finally
     cdsUnitCategory.First;
-    cdsUnitCategory.EnableControls
+    cdsUnitCategory.EnableControls;
   end;
 end;
 
 procedure TReport_ImplementationPlanEmployeeForm.ClientDataSetAfterPost(
   DataSet: TDataSet);
+  var Pos : Integer;
 begin
+  if not ClientDataSet.Active then Exit;
+  Pos := ClientDataSet.RecNo;
+  FCountYes := 0;
+  try
+    ClientDataSet.DisableControls;
+    ClientDataSet.First;
+    while not ClientDataSet.Eof do
+    begin
+      if DataSet['Consider'] = 'Yes' then Inc(FCountYes);
+      ClientDataSet.Next;
+    end;
+  finally
+    ClientDataSet.RecNo := Pos;
+    ClientDataSet.EnableControls;
+  end;
+
   cdsResult.Resync([]);
 end;
 
@@ -490,24 +513,8 @@ end;
 procedure TReport_ImplementationPlanEmployeeForm.cxImplementationPlanEmployeeDBBandedTableView1TcxGridDBDataControllerTcxDataSummaryFooterSummaryItems2GetText(
   Sender: TcxDataSummaryItem; const AValue: Variant; AIsFooter: Boolean;
   var AText: string);
-  var Count, Pos : Integer;
 begin
-  if not ClientDataSet.Active then Exit;
-  Pos := ClientDataSet.RecNo;
-  Count := 0;
-  try
-    ClientDataSet.DisableControls;
-    ClientDataSet.First;
-    while not ClientDataSet.Eof do
-    begin
-      if ClientDataSet.FieldByName('Consider').AsString = 'Yes' then Inc(Count);
-      ClientDataSet.Next;
-    end;
-  finally
-    AText := IntToStr(Count);
-    ClientDataSet.RecNo := Pos;
-    ClientDataSet.EnableControls;
-  end;
+  AText := IntToStr(FCountYes);
 end;
 
 procedure TReport_ImplementationPlanEmployeeForm.cxImplementationPlanEmployeeDBBandedTableView1TcxGridDBDataControllerTcxDataSummaryFooterSummaryItems3GetText(

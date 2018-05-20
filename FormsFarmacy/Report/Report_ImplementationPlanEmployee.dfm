@@ -72,8 +72,6 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
       Height = 456
       Align = alClient
       TabOrder = 0
-      ExplicitLeft = 1
-      ExplicitTop = 2
       object cxImplementationPlanEmployeeDBBandedTableView1: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -90,8 +88,10 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
             Column = colBonusAmountTab
           end
           item
+            Kind = skCount
             OnGetText = cxImplementationPlanEmployeeDBBandedTableView1TcxGridDBDataControllerTcxDataSummaryFooterSummaryItems2GetText
             Column = colConsider
+            DisplayText = 'Yes'
           end
           item
             OnGetText = cxImplementationPlanEmployeeDBBandedTableView1TcxGridDBDataControllerTcxDataSummaryFooterSummaryItems3GetText
@@ -233,7 +233,6 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
       Height = 8
       AlignSplitter = salBottom
       Control = Panel3
-      ExplicitTop = 424
     end
     object Panel3: TPanel
       Left = 0
@@ -250,7 +249,6 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
         Height = 137
         Align = alLeft
         TabOrder = 0
-        ExplicitHeight = 169
         object cxUnitDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = dsUnit
@@ -299,9 +297,6 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
         Height = 137
         Align = alLeft
         TabOrder = 1
-        ExplicitLeft = 4
-        ExplicitTop = -2
-        ExplicitHeight = 169
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = dsUnitCategory
@@ -350,8 +345,6 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
         Height = 137
         Align = alLeft
         TabOrder = 2
-        ExplicitLeft = 895
-        ExplicitTop = -2
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = dsResult
