@@ -12,7 +12,7 @@ inherited MainCashForm: TMainCashForm
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
   ExplicitWidth = 800
-  ExplicitHeight = 584
+  ExplicitHeight = 585
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
@@ -782,6 +782,7 @@ inherited MainCashForm: TMainCashForm
         Style.Shadow = False
         Style.IsFontAssigned = True
         TabOrder = 3
+        Width = 50
       end
       object btnCheck: TcxButton
         Left = 454
@@ -901,6 +902,7 @@ inherited MainCashForm: TMainCashForm
         Style.IsFontAssigned = True
         TabOrder = 10
         OnClick = actSpecExecute
+        Width = 47
       end
       object cxButton1: TcxButton
         Left = 633

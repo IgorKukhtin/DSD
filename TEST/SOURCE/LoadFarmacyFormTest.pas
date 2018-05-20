@@ -737,6 +737,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckFLForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckFLForm');
 
+  // Отчет по выполнению плана продаж по сотруднику
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ImplementationPlanEmployeeDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ImplementationPlanEmployeeDialogForm');
+
+
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckFarmDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckFarmDialogForm');
 

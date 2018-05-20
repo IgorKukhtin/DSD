@@ -84,7 +84,6 @@
 			<DCC_DebugInformation>false</DCC_DebugInformation>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-			<Debugger_RunParams>/realfarmacy</Debugger_RunParams>
 			<DCC_ExeOutput>..\..\BIN</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_Locale>1033</VerInfo_Locale>
@@ -1915,6 +1914,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\ReportMovementCheckFL.pas">
 				<Form>ReportMovementCheckFLForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_ImplementationPlanEmployee.pas">
+				<Form>Report_ImplementationPlanEmployeeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_ImplementationPlanEmployeeDialog.pas">
+				<Form>Report_ImplementationPlanEmployeeDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

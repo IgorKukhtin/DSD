@@ -74,7 +74,8 @@ uses
   MeDocCOM in '..\SOURCE\MeDOC\MeDocCOM.pas',
   ExportSalesForSupp in '..\ExportSalesForSuppliers\ExportSalesForSupp.pas' {ExportSalesForSuppForm},
   IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas',
-  Report_Analysis_Remains_Selling in '..\FormsFarmacy\Report\Report_Analysis_Remains_Selling.pas' {Report_Analysis_Remains_SellingForm};
+  Report_Analysis_Remains_Selling in '..\FormsFarmacy\Report\Report_Analysis_Remains_Selling.pas' {Report_Analysis_Remains_SellingForm},
+  Report_ImplementationPlanEmployee in '..\FormsFarmacy\Report\Report_ImplementationPlanEmployee.pas';
 
 {$R *.res}
 

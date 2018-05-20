@@ -42,6 +42,7 @@ type
     frxPDFExport1: TfrxPDFExport;
     cxImageList1: TcxImageList;
     ImageList: TImageList;
+    cxGreenEdit: TcxStyle;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   end;

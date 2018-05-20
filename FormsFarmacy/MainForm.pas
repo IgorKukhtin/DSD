@@ -419,11 +419,14 @@ type
     actReport_Analysis_Remains_Selling: TAction;
     actReportMovementCheckFLForm: TdsdOpenForm;
     miReportMovementCheckFLForm: TMenuItem;
+    actReport_ImplementationPlanEmployee: TAction;
+    N3: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_Analysis_Remains_SellingExecute(Sender: TObject);
+    procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);
   private
     { Private declarations }
   public
@@ -439,12 +442,22 @@ implementation
 
 uses
   UploadUnloadData, Dialogs, Forms, SysUtils, IdGlobal, RepriceUnit, ExportSalesForSupp,
-  Report_Analysis_Remains_Selling;
+  Report_Analysis_Remains_Selling, Report_ImplementationPlanEmployee;
 
 
 procedure TMainForm.actReport_Analysis_Remains_SellingExecute(Sender: TObject);
 begin
   with TReport_Analysis_Remains_SellingForm.Create(nil) do
+  try
+     Show;
+  finally
+  end;
+end;
+
+procedure TMainForm.actReport_ImplementationPlanEmployeeExecute(
+  Sender: TObject);
+begin
+  with TReport_ImplementationPlanEmployeeForm.Create(nil) do
   try
      Show;
   finally
