@@ -84,7 +84,7 @@ BEGIN
                      , tmp.GroupId
                      , tmp.DescId
                 FROM tmpObject AS tmp
-                WHERE Object.Id = inObjectId 
+                -- WHERE tmp.Id = inObjectId 
                /*UNION
                 SELECT tmp.FieldXML
                      , tmp.GroupId

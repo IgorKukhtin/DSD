@@ -67,16 +67,26 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-       WITH tmpContainer AS (SELECT Container.PartionId     AS PartionId
+           WITH tmpWhere AS (SELECT lfSelect.UnitId
+                             FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect
+                             WHERE inUnitId <> 0
+                           UNION
+                             SELECT Object.Id AS UnitId
+                             FROM Object
+                             WHERE Object.DescId = zc_Object_Unit() 
+                               AND COALESCE (inUnitId, 0) = 0
+                            )
+          , tmpContainer AS (SELECT Container.PartionId     AS PartionId
                                   , Container.ObjectId      AS GoodsId
                                   , SUM (CASE WHEN CLO_Client.ContainerId IS NULL THEN Container.Amount ELSE 0 END)  AS Amount
                                   , SUM (CASE WHEN CLO_Client.ContainerId > 0     THEN Container.Amount ELSE 0 END)  AS AmountDebt
                              FROM Container
+                                  INNER JOIN tmpWhere ON tmpWhere.UnitId = Container.WhereObjectId
                                   LEFT JOIN ContainerLinkObject AS CLO_Client
                                                                 ON CLO_Client.ContainerId = Container.Id
                                                                AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
                              WHERE Container.DescId        = zc_Container_Count()
-                               AND Container.WhereObjectId = inUnitId
+                               -- AND Container.WhereObjectId = inUnitId
                                AND (Container.Amount      <> 0 OR inIsShowAll = TRUE)
                              GROUP BY Container.PartionId
                                     , Container.ObjectId

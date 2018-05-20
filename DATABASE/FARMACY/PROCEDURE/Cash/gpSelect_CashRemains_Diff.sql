@@ -252,7 +252,7 @@ BEGIN
         _DIFF.NewRow = TRUE
     -- RETURNING COUNT (*)  INTO vb3
         ;
-
+/*
     vb1:= (SELECT COUNT (*) FROM _DIFF) :: TVarChar;
 
     -- !!!Протокол - отладка Скорости!!!
@@ -265,6 +265,7 @@ BEGIN
     || ','   || vbUnitId              :: TVarChar
     || ','   || CHR (39) || inCashSessionId || CHR (39)
              );
+*/
 /*
 -- TRUNCATE TABLE Log_Reprice
 WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER BY InsertDate) AS Ord, TextValue_int :: TVarChar || ' ' || TextValue_calc AS TextValue_new
