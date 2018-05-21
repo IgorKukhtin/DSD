@@ -8,6 +8,11 @@ $BODY$
  DECLARE 
    vbProtocolXML TBlob;
 BEGIN
+
+-- !!!ВРЕМЕННО-выкл.
+ RETURN;
+
+
   -- Подготавливаем XML для записи в протокол
   WITH 
     tmpMovement AS (SELECT '<Field FieldName = "№ документа" FieldValue = "' || zfStrToXmlStr(Movement.InvNumber) || '"/>'
@@ -107,7 +112,7 @@ BEGIN
               , tmp.DescId
          FROM tmpMovementLinkObject AS tmp
         UNION
-         SELECT 'tmp.FieldXML
+         SELECT tmp.FieldXML
               , tmp.GroupId
               , tmp.DescId
          FROM tmpMovementString AS tmp
