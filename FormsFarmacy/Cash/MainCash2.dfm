@@ -12,7 +12,7 @@ inherited MainCashForm2: TMainCashForm2
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
   ExplicitWidth = 800
-  ExplicitHeight = 575
+  ExplicitHeight = 576
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
@@ -767,7 +767,7 @@ inherited MainCashForm2: TMainCashForm2
       end
       object cbSpec: TcxCheckBox
         Left = 398
-        Top = 7
+        Top = 6
         Hint = #1055#1086' '#1075#1072#1083#1086#1095#1082#1077
         Action = actSpec
         Caption = #1063#1077#1082
@@ -782,6 +782,7 @@ inherited MainCashForm2: TMainCashForm2
         Style.Shadow = False
         Style.IsFontAssigned = True
         TabOrder = 3
+        Width = 50
       end
       object btnCheck: TcxButton
         Left = 454
@@ -901,6 +902,7 @@ inherited MainCashForm2: TMainCashForm2
         Style.IsFontAssigned = True
         TabOrder = 10
         OnClick = actSpecExecute
+        Width = 47
       end
       object cxButton1: TcxButton
         Left = 633
@@ -2548,7 +2550,7 @@ inherited MainCashForm2: TMainCashForm2
     SummaryItemList = <>
     SearchAsFilter = False
     Left = 592
-    Top = 320
+    Top = 344
   end
   object spGetMoneyInCash: TdsdStoredProc
     StoredProcName = 'gpGet_Money_in_Cash'

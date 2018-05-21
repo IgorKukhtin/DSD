@@ -463,7 +463,7 @@ BEGIN
                   , tmpOL2 AS (SELECT * FROM ObjectLink WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpOL1.ObjectId FROM tmpOL1)
                                                           AND ObjectLink.DescId   = zc_ObjectLink_DiscountPeriodItem_Unit()
                               )
-        
+
          , tmpDiscount AS (SELECT ObjectLink_DiscountPeriodItem_Unit.ChildObjectId      AS UnitId
                                 , ObjectLink_DiscountPeriodItem_Goods.ChildObjectId     AS GoodsId
                                 , ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData AS DiscountTax
@@ -557,8 +557,10 @@ BEGIN
 
            LEFT JOIN Movement ON Movement.Id = Object_PartionGoods.MovementId
 
-           LEFT JOIN tmpDiscount ON tmpDiscount.UnitId  = Object_PartionGoods.UnitId
-                                AND tmpDiscount.GoodsId = Object_PartionGoods.GoodsId
+           LEFT JOIN tmpDiscount ON tmpDiscount.GoodsId = Object_PartionGoods.GoodsId
+                                AND ((inUnitId =  0 AND tmpDiscount.UnitId = Object_PartionGoods.UnitId)
+                                  OR (inUnitId <> 0 AND tmpDiscount.UnitId = inUnitId)
+                                    )
 
            LEFT JOIN tmpCurrency  ON tmpCurrency.CurrencyToId = Object_PartionGoods.CurrencyId
 

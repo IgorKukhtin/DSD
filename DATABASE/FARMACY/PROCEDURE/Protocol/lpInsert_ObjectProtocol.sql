@@ -16,8 +16,9 @@ $BODY$
    DECLARE ProtocolXML TBlob;
 BEGIN
 
--- !!!ВРЕМЕННО-вкл.
--- RETURN;
+-- !!!ВРЕМЕННО-выкл.
+ RETURN;
+
 
      -- Подготавливаем XML для "стандартного" протокола
        WITH 

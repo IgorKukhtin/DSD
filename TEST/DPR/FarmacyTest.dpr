@@ -572,7 +572,9 @@ uses
   Report_Analysis_Remains_Selling in '..\..\FormsFarmacy\Report\Report_Analysis_Remains_Selling.pas' {Report_Analysis_Remains_SellingForm},
   UnitCategory in '..\..\FormsFarmacy\Guides\UnitCategory.pas' {UnitCategoryForm: TParentForm},
   UnitCategoryEdit in '..\..\FormsFarmacy\Guides\UnitCategoryEdit.pas' {UnitCategoryEditForm: TParentForm},
-  ReportMovementCheckFL in '..\..\FormsFarmacy\Report\ReportMovementCheckFL.pas' {ReportMovementCheckFLForm: TParentForm};
+  ReportMovementCheckFL in '..\..\FormsFarmacy\Report\ReportMovementCheckFL.pas' {ReportMovementCheckFLForm: TParentForm},
+  Report_ImplementationPlanEmployee in '..\..\FormsFarmacy\Report\Report_ImplementationPlanEmployee.pas' {Report_ImplementationPlanEmployeeForm: TParentForm},
+  Report_ImplementationPlanEmployeeDialog in '..\..\FormsFarmacy\Report\Report_ImplementationPlanEmployeeDialog.pas' {Report_ImplementationPlanEmployeeDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

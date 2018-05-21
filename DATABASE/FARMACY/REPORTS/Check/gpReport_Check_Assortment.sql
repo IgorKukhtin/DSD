@@ -121,6 +121,26 @@ BEGIN
                         HAVING SUM (tmp.Amount) <> 0
                        )
 
+   -- НТЗ , Спецконтроль кода текущей аптеки
+   , tmpPrice_Ret AS (SELECT Price_Goods.ChildObjectId                AS GoodsId
+                           , COALESCE(MCS_Value.ValueData, 0)         AS MCS_Value
+                           , COALESCE(MCS_NotRecalc.ValueData, False) AS MCSNotRecalc
+                      FROM ObjectLink AS ObjectLink_Price_Unit
+                         LEFT JOIN ObjectLink AS Price_Goods
+                                              ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                             AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                         LEFT JOIN ObjectFloat AS MCS_Value
+                                               ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                              AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
+                                             -- AND COALESCE(MCS_Value.ValueData,0) = 0
+                         LEFT JOIN ObjectBoolean AS MCS_NotRecalc
+                                                 ON MCS_NotRecalc.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                AND MCS_NotRecalc.DescId = zc_ObjectBoolean_Price_MCSNotRecalc()
+                      WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                        AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
+                        --AND COALESCE(MCS_Value.ValueData,0) = 0
+                      )
+
    -- связь товара сети и главного товара и свойства 
    , tmpGoods AS (SELECT tmp.GoodsId                                                   AS GoodsId
                        , ObjectLink_Main.ChildObjectId                                 AS GoodsMainId
@@ -130,6 +150,9 @@ BEGIN
                        UNION
                         SELECT DISTINCT tmpRemains_Ret.GoodsId
                         FROM tmpRemains_Ret
+                       UNION
+                        SELECT tmpPrice_Ret.GoodsId
+                        FROM tmpPrice_Ret
                         ) AS tmp
                        -- получается GoodsMainId
                        LEFT JOIN ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
@@ -158,6 +181,14 @@ BEGIN
                     FROM tmpRemains_Ret AS tmp
                          LEFT JOIN tmpGoods ON tmpGoods.GoodsId = tmp.GoodsId
                     )
+   -- + гл.товар
+   , tmpPrice AS (SELECT tmpGoods.GoodsMainId
+                       , tmp.GoodsId
+                       , tmp.MCS_Value
+                       , tmp.MCSNotRecalc
+                  FROM tmpPrice_Ret AS tmp
+                       LEFT JOIN tmpGoods ON tmpGoods.GoodsId = tmp.GoodsId
+                  )
 
    -- ассортимент продаж текущей аптеки
    , tmpAssortmentCheck AS (SELECT DISTINCT tmpData_Container.GoodsMainId, tmpData_Container.GoodsId
@@ -165,30 +196,9 @@ BEGIN
                             WHERE tmpData_Container.UnitId = inUnitId
                             )
                   
-   -- НТЗ , Спецконтроль кода текущей аптеки
-   , tmpPrice AS (SELECT tmpGoods.GoodsMainId                     AS GoodsMainId
-                       , COALESCE(MCS_Value.ValueData, 0)         AS MCS_Value
-                       , COALESCE(MCS_NotRecalc.ValueData, False) AS MCSNotRecalc
-                  FROM ObjectLink AS ObjectLink_Price_Unit
-                     LEFT JOIN ObjectLink AS Price_Goods
-                                          ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                         AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
-                     LEFT JOIN ObjectFloat AS MCS_Value
-                                           ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                          AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
-                                         -- AND COALESCE(MCS_Value.ValueData,0) = 0
-                     LEFT JOIN ObjectBoolean AS MCS_NotRecalc
-                                             ON MCS_NotRecalc.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                            AND MCS_NotRecalc.DescId = zc_ObjectBoolean_Price_MCSNotRecalc()
-                     LEFT JOIN tmpGoods ON tmpGoods.GoodsId = Price_Goods.ChildObjectId
-                  WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                    AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
-                    --AND COALESCE(MCS_Value.ValueData,0) = 0
-                  )
   /* -- ассортимент товаров текущей аптеки, которые нужно исключить из выборки
    , tmpAssortment AS (SELECT tmpAssortmentCheck.GoodsId
                        FROM tmpAssortmentCheck
-                            
                        WHERE tmpRemains.GoodsId IS NOT NULL
                           OR COALESCE (tmpMCS.MCS_Value, 0) <> 0
                        ) 
