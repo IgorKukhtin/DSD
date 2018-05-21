@@ -29,8 +29,6 @@ uses
 type
   TReport_GoodsCodeForm = class(TAncestorReportForm)
     cxLabel3: TcxLabel;
-    edGoodsCode: TcxButtonEdit;
-    GuidesPartionGoods: TdsdGuides;
     LocationDescName: TcxGridDBColumn;
     LocationName: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
@@ -95,6 +93,12 @@ type
     cxLabel4: TcxLabel;
     spGet_ReportGoods_Params: TdsdStoredProc;
     cxLabel5: TcxLabel;
+    edGoodsCodeChoice: TcxButtonEdit;
+    GuidesPartionGoods: TdsdGuides;
+    spGet_ReportGoods_Params1: TdsdStoredProc;
+    RefreshDispatcher1: TRefreshDispatcher;
+    actRefreshChoice: TdsdDataSetRefresh;
+    edGoodsCode2: TcxCurrencyEdit;
   private
     { Private declarations }
   public
