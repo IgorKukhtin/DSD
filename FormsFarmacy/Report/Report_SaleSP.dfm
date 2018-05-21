@@ -3,8 +3,9 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
   ClientHeight = 480
   ClientWidth = 1077
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitTop = -58
   ExplicitWidth = 1093
-  ExplicitHeight = 518
+  ExplicitHeight = 515
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -126,9 +127,9 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
               Kind = skCount
               Column = UnitName
             end>
+          OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -140,13 +141,22 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             DataBinding.FieldName = 'NumLine'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 42
+          end
+          object isListSP: TcxGridDBColumn
+            Caption = #1054#1090#1084#1077#1095#1077#1085
+            DataBinding.FieldName = 'isListSP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 58
           end
           object InvNumber_Invoice_Full: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' ('#1087#1086#1089#1090'.1303)'
             DataBinding.FieldName = 'InvNumber_Invoice_Full'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object InvNumber_Invoice: TcxGridDBColumn
@@ -155,6 +165,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object OperDate: TcxGridDBColumn
@@ -164,6 +175,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 77
           end
           object UnitName: TcxGridDBColumn
@@ -212,6 +224,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object GoodsCode: TcxGridDBColumn
@@ -220,6 +233,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
+            Options.Editing = False
             Width = 60
           end
           object GoodsName: TcxGridDBColumn
@@ -227,6 +241,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 217
           end
           object MeasureName: TcxGridDBColumn
@@ -242,6 +257,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             DataBinding.FieldName = 'MemberSP'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 102
           end
           object GroupMemberSPName: TcxGridDBColumn
@@ -265,6 +281,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             DataBinding.FieldName = 'InvNumberSP'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object OperDateSP: TcxGridDBColumn
@@ -274,6 +291,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 77
           end
           object ChangePercent: TcxGridDBColumn
@@ -283,6 +301,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 78
           end
           object Amount: TcxGridDBColumn
@@ -293,6 +312,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 65
           end
           object PriceSP: TcxGridDBColumn
@@ -302,6 +322,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object PriceComp: TcxGridDBColumn
@@ -312,6 +333,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 75
           end
           object PriceOriginal: TcxGridDBColumn
@@ -321,6 +343,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 90
           end
           object SummaSP: TcxGridDBColumn
@@ -330,6 +353,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 103
           end
           object SummOriginal: TcxGridDBColumn
@@ -339,6 +363,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 103
           end
           object JuridicalFullName: TcxGridDBColumn
@@ -608,6 +633,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Caption = #1040#1076#1088#1077#1089' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
             DataBinding.FieldName = 'Unit_Address'
             Visible = False
+            Options.Editing = False
             Width = 80
           end
           object SummaComp: TcxGridDBColumn
@@ -618,12 +644,14 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 103
           end
           object CountSP: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1088#1077#1094#1077#1087#1090#1086#1074
             DataBinding.FieldName = 'CountSP'
             Visible = False
+            Options.Editing = False
             Width = 70
           end
         end
@@ -967,6 +995,18 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actUpdateDS: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateDS
+      StoredProcList = <
+        item
+          StoredProc = spUpdateDS
+        end>
+      Caption = 'actUpdateDS'
+      DataSource = MasterDS
+    end
     object actPrintInvoice: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1028,6 +1068,9 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       ReportNameParam.Value = #1057#1095#1077#1090' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 1303'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -1084,6 +1127,9 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       ReportNameParam.Value = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object macPrintInvoice: TMultiAction
       Category = 'DSDLib'
@@ -1517,5 +1563,31 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
     PackSize = 1
     Left = 592
     Top = 192
+  end
+  object spUpdateDS: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_isList'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsList'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isListSP'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 208
+    Top = 256
   end
 end

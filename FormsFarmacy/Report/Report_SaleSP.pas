@@ -70,6 +70,9 @@ type
     macPrintInvoice: TMultiAction;
     InvNumber_Invoice_Full: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
+    isListSP: TcxGridDBColumn;
+    spUpdateDS: TdsdStoredProc;
+    actUpdateDS: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

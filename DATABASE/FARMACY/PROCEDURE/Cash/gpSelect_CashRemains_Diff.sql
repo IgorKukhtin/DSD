@@ -27,8 +27,6 @@ $BODY$
 
    DECLARE vbOperDate_StartBegin TDateTime;
    DECLARE vb1 TVarChar;
-   DECLARE vb2 TVarChar;
-   DECLARE vb3 TVarChar;
 BEGIN
 -- if inSession = '3' then return; end if;
 
@@ -217,8 +215,7 @@ BEGIN
             INNER JOIN Object AS Object_Goods ON Object_Goods.Id = tmpDiff.ObjectId
             LEFT JOIN ObjectBoolean AS ObjectBoolean_First
                                     ON ObjectBoolean_First.ObjectId = tmpDiff.ObjectId
-                                   AND ObjectBoolean_First.DescId = zc_ObjectBoolean_Goods_First()
-       -- RETURNING COUNT (*) INTO vb1
+                                   AND ObjectBoolean_First.DescId   = zc_ObjectBoolean_Goods_First()
        ;
 
 
@@ -233,7 +230,6 @@ BEGIN
         _DIFF
     WHERE CashSessionSnapShot.CashSessionId = inCashSessionId
       AND CashSessionSnapShot.ObjectId = _DIFF.ObjectId
-    -- RETURNING COUNT (*)  INTO vb2
     ;
 
     --доливаем те, что появились
@@ -250,8 +246,8 @@ BEGIN
         _DIFF
     WHERE
         _DIFF.NewRow = TRUE
-    -- RETURNING COUNT (*)  INTO vb3
-        ;
+    ;
+
 /*
     vb1:= (SELECT COUNT (*) FROM _DIFF) :: TVarChar;
 
