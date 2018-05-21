@@ -39,7 +39,6 @@ type
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
     dsdStoredProc: TdsdStoredProc;
-    bbToExcel: TdxBarButton;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     Panel1: TPanel;
     deStart: TcxDateEdit;
@@ -52,8 +51,6 @@ type
     bbStaticText: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    bbPrint: TdxBarButton;
-    bbPrint2: TdxBarButton;
     bb: TdxBarControlContainerItem;
     cxSplitter1: TcxSplitter;
     dsUnitCategory: TDataSource;
@@ -62,12 +59,9 @@ type
     cdsUnit: TClientDataSet;
     dsResult: TDataSource;
     cdsResult: TClientDataSet;
-    dxBarButton1: TdxBarButton;
-    dxBarButton2: TdxBarButton;
     dxBarButton3: TdxBarButton;
     actExportExel: TdsdGridToExcel;
     dxBarButton4: TdxBarButton;
-    dxBarButton5: TdxBarButton;
     cxLabel3: TcxLabel;
     edMember: TcxButtonEdit;
     MemberGuides: TdsdGuides;
@@ -110,6 +104,8 @@ type
     cdsResultAwarding: TStringField;
     cdsResultTotal: TCurrencyField;
     cdsResultTotalExecutionLine: TCurrencyField;
+    dxBarButton1: TdxBarButton;
+    actConsider: TAction;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
     procedure cdsListBandsAfterOpen(DataSet: TDataSet);
@@ -131,6 +127,7 @@ type
     procedure cxImplementationPlanEmployeeDBBandedTableView1TcxGridDBDataControllerTcxDataSummaryFooterSummaryItems2GetText(
       Sender: TcxDataSummaryItem; const AValue: Variant; AIsFooter: Boolean;
       var AText: string);
+    procedure actConsiderExecute(Sender: TObject);
   private
     FUnit : TStrings;
     FUnitCategory : TStrings;
@@ -147,6 +144,74 @@ const aCaption : array[1..14] of String = (
   'Цена',  'Факт', 'Мин. План', '% вып. Мин. Плана', 'План для Премии',
   '% вып. Плана для премии', 'Сумма штрафа ', 'Сумма Премии', 'Мин План с уч. Табеля', '% вып. Мин. Плана с уч. Табеля ',
   'План для Премии с уч. Табеля', '% вып. Плана для премии c уч. Табеля', 'Сумма штрафа с уч. Табеля', 'Сумма Премии с уч. Табеля');
+
+procedure TReport_ImplementationPlanEmployeeForm.actConsiderExecute(
+  Sender: TObject);
+  var S : string; nPos : Integer;
+begin
+
+  if not ClientDataSet.Active then Exit;
+
+  S := '';
+  with TTaskDialog.Create(self) do
+  try
+    Caption := Self.Caption;
+    Title := 'Изменение признака';
+    Text := 'Учитывать для необходимого % построчного выполнения';
+    CommonButtons := [];
+    with TTaskDialogButtonItem(Buttons.Add) do
+    begin
+      Caption := 'Установить "Yes" на все позиции';
+      ModalResult := mrYes;
+    end;
+    with TTaskDialogButtonItem(Buttons.Add) do
+    begin
+      Caption := 'Установить "No" на все позиции';
+      ModalResult := mrNo;
+    end;
+    with TTaskDialogButtonItem(Buttons.Add) do
+    begin
+      Caption := 'Отмена';
+      ModalResult := mrCancel;
+    end;
+    Flags := [tfUseCommandLinks];
+    MainIcon := tdiNone;
+    if Execute then
+      case ModalResult of
+        mrYes : S := 'Yes';
+        mrNo : S := 'No';
+      end;
+  finally
+    Free;
+  end;
+
+  if S = '' then Exit;
+
+  nPos :=  ClientDataSet.RecNo;
+  FCountYes := 0;
+  try
+    ClientDataSet.AfterPost :=  Nil;
+    ClientDataSet.DisableControls;
+    ClientDataSet.First;
+    while not ClientDataSet.Eof do
+    begin
+      if ClientDataSet.FieldByName('Consider').AsString <> S then
+      begin
+        ClientDataSet.Edit;
+        ClientDataSet.FieldByName('Consider').AsString := S;
+        ClientDataSet.Post;
+      end;
+      if ClientDataSet.FieldByName('Consider').AsString = 'Yes' then Inc(FCountYes);
+      ClientDataSet.Next;
+    end;
+  finally
+    ClientDataSet.RecNo := nPos;
+    ClientDataSet.EnableControls;
+    ClientDataSet.AfterPost :=  ClientDataSetAfterPost;
+    ClientDataSet.Resync([]);
+    cdsResult.Resync([]);
+  end;
+end;
 
 procedure TReport_ImplementationPlanEmployeeForm.cdsListBandsAfterClose(
   DataSet: TDataSet);
@@ -262,7 +327,7 @@ begin
     Field.FieldName := cdsListFields.FieldDefs.Items[I].Name;
     Field.SetFieldType(cdsListFields.FieldDefs.Items[I].DataType);
     Field.Name := 'cds' + Field.FieldName;
-    Field.DataSet := ClientDataSet;;
+    Field.DataSet := ClientDataSet;
   end;
 
   for I := 1 to 5 do
@@ -306,12 +371,11 @@ end;
 
 procedure TReport_ImplementationPlanEmployeeForm.cdsResultCalcFields(
   DataSet: TDataSet);
-  var I : Integer;
 begin
   if not ClientDataSet.Active then Exit;
 
-  if TryStrToInt(cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryTexts[2], I) and (I <> 0) then
-    Dataset['TotalExecutionLine'] := (ClientDataSet.RecordCount - FCountO) / I * 100
+  if FCountYes <> 0 then
+    Dataset['TotalExecutionLine'] := (ClientDataSet.RecordCount - FCountO) / FCountYes * 100
   else Dataset['TotalExecutionLine'] := 0;
 
   if Dataset['Awarding'] = 'Yes' then
@@ -324,6 +388,7 @@ procedure TReport_ImplementationPlanEmployeeForm.cdsUnitAfterPost(
   DataSet: TDataSet);
 begin
   ClientDataSet.Resync([]);
+  cdsResult.Resync([]);
 end;
 
 procedure TReport_ImplementationPlanEmployeeForm.ClientDataSetAfterOpen(
