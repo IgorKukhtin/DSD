@@ -13,10 +13,18 @@ $BODY$
    DECLARE vbCurName2 TVarChar;
    DECLARE vbRec Record;
 
+   DECLARE vb1 Integer;
 BEGIN
 
 -- inStartDate:= '01.01.2013';
 -- inEndDate:= '01.01.2100';
+/*
+   IF inSession = '3' THEN
+     vb1:= 3;
+     inSession := '183242'; 
+     delete from MovementBoolean where MovementBoolean.Movementid = 9497252 and MovementBoolean.DescId = zc_MovementBoolean_Document();
+   END IF;
+*/
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
@@ -285,9 +293,11 @@ BEGIN
     WHERE
         COALESCE(ddd.AmountManual, ddd.Amount + COALESCE(AmountSecond,0)) > 0;
 
-
-    -- RAISE EXCEPTION '<%>   <%>', (select count(*) from _tmpMI_OrderInternal_Master), (select count(*) from _tmpMI_OrderInternal_Child);
-
+/*
+   IF vb1 = 3 THEN
+    RAISE EXCEPTION '<%>   <%>', (select count(*) from _tmpMI_OrderInternal_Master), (select count(*) from _tmpMI_OrderInternal_Child);
+   END IF;
+*/
 
 END;
 $BODY$

@@ -19,6 +19,9 @@ CREATE TABLE ObjectBLOB(
 /*-------------------------------------------------------------------------------*/
 /*                                  »Ì‰ÂÍÒ˚                                      */
 
+CREATE UNIQUE INDEX idx_ObjectBLOB_ObjectId_DescId ON ObjectBoolean (ObjectId, DescId);
+CREATE INDEX idx_ObjectBLOB_DescId ON ObjectBoolean (DescId);
+
 /*
  œ–»Ã≈◊¿Õ»ﬂ:
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »:

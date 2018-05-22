@@ -193,7 +193,8 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         Caption = '% '#1089#1082'.'
         DataBinding.FieldName = 'ValueDiscount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = '% '#1057#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
@@ -243,6 +244,9 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       object OperPriceList: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1043#1056#1053
         DataBinding.FieldName = 'OperPriceList'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
@@ -260,6 +264,9 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       object OperPrice: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1074#1093'.'
         DataBinding.FieldName = 'OperPrice'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False

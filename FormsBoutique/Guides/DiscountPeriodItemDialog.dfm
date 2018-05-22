@@ -39,7 +39,7 @@ object DiscountPeriodItemDialogForm: TDiscountPeriodItemDialogForm
   object edShowDate: TcxDateEdit
     Left = 129
     Top = 7
-    EditValue = 42917d
+    EditValue = 43101d
     Properties.ShowTime = False
     TabOrder = 2
     Width = 90
