@@ -68,7 +68,7 @@ BEGIN
         END IF;
         IF vbOperDateSP > vbOperDate
         THEN
-            RAISE EXCEPTION 'Проверьте дату рецепта.';
+            RAISE EXCEPTION 'Ошибка. Дата рецепта позже даты документа.';
         END IF;
     END IF;
 

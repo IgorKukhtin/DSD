@@ -124,7 +124,7 @@ BEGIN
     IF COALESCE(inPartnerMedicalId,0) <> 0 OR COALESCE(inInvNumberSP,'') <> '' THEN
           IF inOperDateSP > inOperDate
              THEN
-                 RAISE EXCEPTION 'Проверьте дату рецепта.';
+                 RAISE EXCEPTION 'Ошибка. Дата рецепта позже даты документа.';
           END IF;
        -- сохранили <>
        PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateSP(), ioId, inOperDateSP);
