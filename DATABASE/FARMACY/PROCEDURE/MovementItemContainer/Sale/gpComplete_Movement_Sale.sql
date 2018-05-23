@@ -54,6 +54,14 @@ BEGIN
     -- проверка если выбрано мед.учр. тогда проверяем заполнение остальных реквизитов
     IF COALESCE (vbPartnerMedicalId, 0) <> 0
     THEN
+        IF vbOperDateSP > vbOperDate
+        THEN
+            RAISE EXCEPTION 'Ошибка. Дата рецепта позже даты документа.';
+        END IF;
+        IF COALESCE (vbInvNumberSP, '') = ''
+        THEN
+            RAISE EXCEPTION 'Ошибка. Не заполнен реквизит Номер рецепта.';
+        END IF;       
         IF COALESCE (vbMedicSPId, 0) = 0
         THEN
             RAISE EXCEPTION 'Ошибка. Не заполнен реквизит ФИО врача.';
@@ -62,14 +70,7 @@ BEGIN
         THEN
             RAISE EXCEPTION 'Ошибка. Не заполнен реквизит ФИО пациента.';
         END IF;
-        IF COALESCE (vbInvNumberSP, '') = ''
-        THEN
-            RAISE EXCEPTION 'Ошибка. Не заполнен реквизит Номер рецепта.';
-        END IF;
-        IF vbOperDateSP > vbOperDate
-        THEN
-            RAISE EXCEPTION 'Ошибка. Дата рецепта позже даты документа.';
-        END IF;
+
     END IF;
 
     IF COALESCE (vbInvNumberSP,'') <>''
