@@ -53,18 +53,18 @@ BEGIN
                                  AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()
               WHERE Movement.Id = inMovementId
                 AND Movement.DescId = zc_Movement_Sale())
-              , False);
+              , False)  :: Boolean ;
 
     
     -- если  признак участвует в соц.проекте = TRUE . то в док. должна быть 1 строка
     IF outIsSp = TRUE
-    THEN 
+    THEN
          IF (SELECT COUNT(*) FROM MovementItem 
              WHERE MovementItem.MovementId = inMovementId 
                AND MovementItem.Id <> ioId
                AND MovementItem.IsErased = FALSE) >= 1
             THEN
-                 RAISE EXCEPTION 'Ошибка.В документе может быть только 1 препарат.', inInvNumberSP;
+                 RAISE EXCEPTION 'Ошибка.В документе может быть только 1 препарат.';
             END IF;
     END IF;    
     

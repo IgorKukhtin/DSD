@@ -781,6 +781,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleOLAPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleOLAPDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleOLAPDialogForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleOLAP_AnalysisForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleOLAP_AnalysisForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleOLAP_AnalysisDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleOLAP_AnalysisDialogForm');
 end;
 
 procedure TLoadFormTest.LoadReportProfitLossFormTest;

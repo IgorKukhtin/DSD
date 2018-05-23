@@ -1958,8 +1958,8 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 826
-    Top = 1
+    Left = 818
+    Top = 25
   end
   object GuidesEndYear: TdsdGuides
     KeyField = 'Id'

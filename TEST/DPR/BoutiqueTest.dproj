@@ -1038,6 +1038,14 @@
 				<Form>Report_GoodsCodeDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_SaleOLAP_AnalysisDialog.pas">
+				<Form>Report_SaleOLAP_AnalysisDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_SaleOLAP_Analysis.pas">
+				<Form>Report_SaleOLAP_AnalysisForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

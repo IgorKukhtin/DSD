@@ -209,6 +209,8 @@ type
     actClientSMS: TdsdOpenForm;
     miClientSMS: TMenuItem;
     actReport_GoodsCode: TdsdOpenForm;
+    actReport_SaleOLAP_Analysis: TdsdOpenForm;
+    miReport_SaleOLAP_Analysis: TMenuItem;
   private
     { Private declarations }
   public
