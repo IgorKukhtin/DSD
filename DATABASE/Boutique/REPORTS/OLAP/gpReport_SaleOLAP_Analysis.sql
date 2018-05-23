@@ -452,6 +452,10 @@ BEGIN
                           , CASE WHEN tmpSize.Ord > 70 THEN tmpOlap.Income_Amount  ELSE 0 END AS Income_Amount0
                           , CASE WHEN tmpSize.Ord > 70 THEN tmpOlap.Sale_Amount    ELSE 0 END AS Sale_Amount0
                           , CASE WHEN tmpSize.Ord > 70 THEN tmpOlap.Remains_Amount ELSE 0 END AS Remains_Amount0
+                          
+                          , COALESCE (tmpOlap.Income_Amount, 0)  AS Income_Amount
+                          , COALESCE (tmpOlap.Sale_Amount, 0)    AS Sale_Amount
+                          , COALESCE (tmpOlap.Remains_Amount, 0) AS Remains_Amount
 
                      FROM _tmpOLAP AS tmpOLAP
                           LEFT JOIN _tmpSize AS tmpSize ON tmpSize.SizeId = tmpOLAP.GoodsSizeId
@@ -754,6 +758,12 @@ BEGIN
                           , SUM( tmpData.Income_Amount0  ) AS Income_Amount0
                           , SUM( tmpData.Sale_Amount0    ) AS Sale_Amount0
                           , SUM( tmpData.Remains_Amount0 ) AS Remains_Amount0
+
+                          , SUM( tmpData.Income_Amount  ) AS Income_Amount
+                          , SUM( tmpData.Sale_Amount    ) AS Sale_Amount
+                          , SUM( tmpData.Remains_Amount ) AS Remains_Amount
+
+                          , CASE WHEN SUM(tmpData.Income_Amount) <> 0 THEN SUM( tmpData.Sale_Amount) / SUM( tmpData.Income_Amount) * 100 ELSE 0 END :: TFloat AS Persent_Sale
 
                      FROM tmpData
                      GROUP BY tmpData.BrandName

@@ -17,9 +17,11 @@ $BODY$
   DECLARE vbUnitId    Integer;
   DECLARE vbOperDate  TDateTime;
   DECLARE vbInvNumberSP TVarChar;
-  DECLARE vbOperDateSP TDateTime;
+  DECLARE vbOperDateSP  TDateTime;
   DECLARE vbPartnerMedicalId Integer;
-  DECLARE vbMedicSPId Integer;
+  DECLARE vbMedicSPId   Integer;
+  DECLARE vbMemberSPId  Integer;
+  DECLARE vbCount       Integer;
 BEGIN
     vbUserId:= inSession;
     vbGoodsName := '';
@@ -30,13 +32,15 @@ BEGIN
            Movement_Sale.InvNumberSP,
            Movement_Sale.OperDateSP ,
            Movement_Sale.PartnerMedicalId,
-           Movement_Sale.MedicSPId
+           Movement_Sale.MedicSPId,
+           Movement_Sale.MemberSPId
            INTO vbOperDate,
                 vbUnitId,
                 vbInvNumberSP,
                 vbOperDateSP,
                 vbPartnerMedicalId,
-                vbMedicSPId
+                vbMedicSPId,
+                vbMemberSPId
     FROM Movement_Sale_View AS Movement_Sale
     WHERE Movement_Sale.Id = inMovementId;
 
@@ -46,8 +50,29 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Ошибка. ПОМЕНЯЙТЕ ДАТУ НАКЛАДНОЙ НА ТЕКУЩУЮ.';
     END IF;
+    
+    -- проверка если выбрано мед.учр. тогда проверяем заполнение остальных реквизитов
+    IF COALESCE (vbPartnerMedicalId, 0) <> 0
+    THEN
+        IF COALESCE (vbMedicSPId, 0) = 0
+        THEN
+            RAISE EXCEPTION 'Ошибка. Не заполнен реквизит ФИО врача.';
+        END IF;
+        IF COALESCE (vbMemberSPId, 0) = 0
+        THEN
+            RAISE EXCEPTION 'Ошибка. Не заполнен реквизит ФИО пациента.';
+        END IF;
+        IF COALESCE (vbInvNumberSP, '') = ''
+        THEN
+            RAISE EXCEPTION 'Ошибка. Не заполнен реквизит Номер рецепта.';
+        END IF;
+        IF vbOperDateSP > vbOperDate
+        THEN
+            RAISE EXCEPTION 'Проверьте дату рецепта.';
+        END IF;
+    END IF;
 
-    IF COALESCE (vbInvNumberSP,'')<>''
+    IF COALESCE (vbInvNumberSP,'') <>''
        THEN 
            IF EXISTS(SELECT Movement.Id
                      FROM Movement 
@@ -75,39 +100,49 @@ BEGIN
           END IF;
     END IF;
 
-
+    --Проверка на пустое кол-во препарата в документе. и заполненность таб. части вообше
+    SELECT MAX (case when  COALESCE (MI_Sale.Amount, 0) = 0 THEN MI_Sale.GoodsName else '' End) AS GoodsName
+         , Count (*) AS Count_str
+     INTO vbGoodsName, vbCount
+    FROM MovementItem_Sale_View AS MI_Sale
+    WHERE MI_Sale.MovementId = inMovementId
+      AND MI_Sale.isErased = FALSE;
+    
+    IF (COALESCE (vbGoodsName, '') <> '') 
+    THEN
+        RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам кол-во продажи равно 0.', vbGoodsName;
+    END IF;
+    IF (COALESCE (vbCount, 0) = 0) 
+    THEN
+        RAISE EXCEPTION 'Ошибка. Не выбраны товары для продажи';
+    END IF;
+    
 
     --Проверка на то что бы не продали больше чем есть на остатке
-    SELECT 
-        MI_Sale.GoodsName
-      , COALESCE(MI_Sale.Amount,0)
-      , COALESCE(SUM(Container.Amount),0) 
+    SELECT MI_Sale.GoodsName
+         , COALESCE(MI_Sale.Amount,0)
+         , COALESCE(SUM(Container.Amount),0) 
     INTO 
         vbGoodsName
       , vbAmount
       , vbSaldo 
-    FROM
-        Movement_Sale_View AS Movement_Sale
-        INNER JOIN MovementItem_Sale_View AS MI_Sale
-                                          ON MI_Sale.MovementId = Movement_Sale.Id
+    FROM MovementItem_Sale_View AS MI_Sale
         LEFT OUTER JOIN Container ON MI_Sale.GoodsId = Container.ObjectId
-                                 AND Container.WhereObjectId = Movement_Sale.UnitId
+                                 AND Container.WhereObjectId = vbUnitId
                                  AND Container.DescId = zc_Container_Count()
                                  AND Container.Amount > 0
-    WHERE
-        Movement_Sale.Id = inMovementId AND
-        MI_Sale.isErased = FALSE
-    GROUP BY 
-        MI_Sale.GoodsId
-      , MI_Sale.GoodsName
-      , MI_Sale.Amount
-    HAVING 
-        COALESCE(MI_Sale.Amount,0) > COALESCE(SUM(Container.Amount),0);
+    WHERE MI_Sale.MovementId = inMovementId
+      AND MI_Sale.isErased = FALSE
+    GROUP BY MI_Sale.GoodsId
+           , MI_Sale.GoodsName
+           , MI_Sale.Amount
+    HAVING COALESCE (MI_Sale.Amount, 0) > COALESCE (SUM (Container.Amount) ,0);
     
     IF (COALESCE(vbGoodsName,'') <> '') 
     THEN
         RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам кол-во продажи <%> больше, чем есть на остатке <%>.', vbGoodsName, vbAmount, vbSaldo;
     END IF;
+
 
     /*IF EXISTS(SELECT 1
               FROM Movement AS Movement_Inventory

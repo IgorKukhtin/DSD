@@ -1,29 +1,29 @@
 inherited SaleForm: TSaleForm
   Caption = #1055#1088#1086#1076#1072#1078#1072
-  ClientHeight = 479
-  ClientWidth = 740
+  ClientHeight = 504
+  ClientWidth = 696
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 756
-  ExplicitHeight = 517
+  ExplicitWidth = 712
+  ExplicitHeight = 542
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 182
-    Width = 740
-    Height = 297
+    Top = 179
+    Width = 696
+    Height = 325
     ExplicitTop = 182
     ExplicitWidth = 740
     ExplicitHeight = 297
-    ClientRectBottom = 297
-    ClientRectRight = 740
+    ClientRectBottom = 325
+    ClientRectRight = 696
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 740
       ExplicitHeight = 273
       inherited cxGrid: TcxGrid
-        Width = 740
-        Height = 175
-        ExplicitWidth = 740
-        ExplicitHeight = 175
+        Width = 696
+        Height = 203
+        ExplicitWidth = 696
+        ExplicitHeight = 177
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -131,12 +131,14 @@ inherited SaleForm: TSaleForm
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 183
-        Width = 740
+        Top = 211
+        Width = 696
         Height = 90
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitTop = 183
+        ExplicitWidth = 740
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -234,21 +236,23 @@ inherited SaleForm: TSaleForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 175
-        Width = 740
+        Top = 203
+        Width = 696
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitTop = 175
+        ExplicitWidth = 740
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 740
-    Height = 156
+    Width = 696
+    Height = 153
     TabOrder = 3
     ExplicitWidth = 740
-    ExplicitHeight = 156
+    ExplicitHeight = 153
     inherited edInvNumber: TcxTextEdit
       Top = 22
       ExplicitTop = 22
@@ -275,12 +279,12 @@ inherited SaleForm: TSaleForm
       ExplicitHeight = 22
     end
     object lblUnit: TcxLabel
-      Left = 384
+      Left = 379
       Top = 4
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object edUnit: TcxButtonEdit
-      Left = 384
+      Left = 379
       Top = 22
       Properties.Buttons = <
         item
@@ -288,16 +292,16 @@ inherited SaleForm: TSaleForm
           Kind = bkEllipsis
         end>
       TabOrder = 7
-      Width = 270
+      Width = 275
     end
     object lblJuridical: TcxLabel
       Left = 8
-      Top = 42
+      Top = 114
       Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
     end
     object edJuridical: TcxButtonEdit
       Left = 8
-      Top = 57
+      Top = 129
       Properties.Buttons = <
         item
           Default = True
@@ -308,12 +312,12 @@ inherited SaleForm: TSaleForm
     end
     object cxLabel3: TcxLabel
       Left = 270
-      Top = 42
+      Top = 114
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKind: TcxButtonEdit
       Left = 270
-      Top = 57
+      Top = 129
       Properties.Buttons = <
         item
           Default = True
@@ -323,65 +327,70 @@ inherited SaleForm: TSaleForm
       Width = 100
     end
     object cxLabel4: TcxLabel
-      Left = 472
-      Top = 41
+      Left = 683
+      Top = 33
       Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072
+      Visible = False
     end
     object edTotalSumm: TcxCurrencyEdit
-      Left = 473
-      Top = 57
+      Left = 684
+      Top = 49
       Properties.DisplayFormat = ',0.00'
       Properties.ReadOnly = True
       TabOrder = 13
+      Visible = False
       Width = 76
     end
     object cxLabel5: TcxLabel
-      Left = 384
-      Top = 41
+      Left = 684
+      Top = 6
       Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086
+      Visible = False
     end
     object edTotalCount: TcxCurrencyEdit
-      Left = 384
-      Top = 57
+      Left = 684
+      Top = 22
       Properties.DisplayFormat = ',0.00'
       Properties.ReadOnly = True
       TabOrder = 15
+      Visible = False
       Width = 81
     end
     object cxLabel6: TcxLabel
-      Left = 556
-      Top = 41
+      Left = 683
+      Top = 60
       Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' ('#1079#1072#1082'.)'
+      Visible = False
     end
     object edTotalSummPrimeCost: TcxCurrencyEdit
-      Left = 556
-      Top = 57
+      Left = 683
+      Top = 76
       Properties.DisplayFormat = ',0.00'
       Properties.ReadOnly = True
       TabOrder = 17
+      Visible = False
       Width = 98
     end
     object cxLabel7: TcxLabel
-      Left = 270
-      Top = 77
+      Left = 379
+      Top = 114
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object edComment: TcxTextEdit
-      Left = 270
-      Top = 92
+      Left = 379
+      Top = 129
       Properties.ReadOnly = False
       TabOrder = 19
-      Width = 173
+      Width = 275
     end
     object cxLabel12: TcxLabel
-      Left = 8
-      Top = 114
+      Left = 270
+      Top = 43
       Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076'.('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
     end
     object edOperDateSP: TcxDateEdit
-      Left = 270
-      Top = 130
-      EditValue = 43131d
+      Left = 8
+      Top = 94
       Properties.AutoSelect = False
       Properties.DateButtons = [btnClear]
       Properties.SaveTime = False
@@ -390,29 +399,29 @@ inherited SaleForm: TSaleForm
       Width = 85
     end
     object cxLabel13: TcxLabel
-      Left = 270
-      Top = 115
+      Left = 8
+      Top = 79
       Caption = #1044#1072#1090#1072' '#1088#1077#1094#1077#1087#1090#1072
     end
     object cxLabel14: TcxLabel
-      Left = 363
-      Top = 114
+      Left = 101
+      Top = 79
       Caption = #1053#1086#1084#1077#1088' '#1088#1077#1094#1077#1087#1090#1072
     end
     object edInvNumberSP: TcxTextEdit
-      Left = 363
-      Top = 130
+      Left = 101
+      Top = 94
       TabOrder = 24
       Width = 80
     end
     object cxLabel16: TcxLabel
-      Left = 450
-      Top = 114
+      Left = 188
+      Top = 79
       Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072
     end
     object edPartnerMedical: TcxButtonEdit
-      Left = 8
-      Top = 130
+      Left = 270
+      Top = 59
       Properties.Buttons = <
         item
           Default = True
@@ -420,16 +429,16 @@ inherited SaleForm: TSaleForm
         end>
       Properties.ReadOnly = True
       TabOrder = 26
-      Width = 252
+      Width = 384
     end
     object cxLabel10: TcxLabel
       Left = 8
-      Top = 77
+      Top = 44
       Caption = #1042#1080#1076' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072
     end
     object edSPKind: TcxButtonEdit
       Left = 8
-      Top = 92
+      Top = 59
       Properties.Buttons = <
         item
           Default = True
@@ -442,18 +451,18 @@ inherited SaleForm: TSaleForm
     end
   end
   object cxLabel8: TcxLabel [2]
-    Left = 450
-    Top = 76
+    Left = 379
+    Top = 79
     Caption = #1060#1048#1054' '#1087#1072#1094#1080#1077#1085#1090#1072
   end
   object cxLabel9: TcxLabel [3]
-    Left = 584
-    Top = 76
-    Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1087#1072#1094#1080#1077#1085#1090#1072
+    Left = 559
+    Top = 78
+    Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1087#1072#1094'-'#1090#1072
   end
   object edGroupMemberSP: TcxButtonEdit [4]
-    Left = 584
-    Top = 92
+    Left = 559
+    Top = 94
     Properties.Buttons = <
       item
         Default = True
@@ -462,11 +471,11 @@ inherited SaleForm: TSaleForm
       end>
     Properties.ReadOnly = True
     TabOrder = 8
-    Width = 109
+    Width = 95
   end
   object edMedicSP: TcxButtonEdit [5]
-    Left = 450
-    Top = 130
+    Left = 189
+    Top = 94
     Properties.Buttons = <
       item
         Default = True
@@ -474,18 +483,18 @@ inherited SaleForm: TSaleForm
       end>
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 243
+    Width = 184
   end
   object edMemberSP: TcxButtonEdit [6]
-    Left = 450
-    Top = 92
+    Left = 379
+    Top = 94
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 10
-    Width = 128
+    Width = 175
   end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh
@@ -580,6 +589,9 @@ inherited SaleForm: TSaleForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object PrintDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -784,7 +796,7 @@ inherited SaleForm: TSaleForm
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SearchAsFilter = False
-    Top = 225
+    Top = 241
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -1051,7 +1063,7 @@ inherited SaleForm: TSaleForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 160
+    Left = 176
     Top = 272
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
@@ -1123,7 +1135,6 @@ inherited SaleForm: TSaleForm
       end
       item
         Name = 'inOperDateSP'
-        Value = 'NULL'
         Component = edOperDateSP
         DataType = ftDateTime
         ParamType = ptInput
@@ -1394,7 +1405,8 @@ inherited SaleForm: TSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 472
+    Left = 528
+    Top = 65528
   end
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
@@ -1422,8 +1434,8 @@ inherited SaleForm: TSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 64
-    Top = 40
+    Left = 120
+    Top = 168
   end
   object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
@@ -1451,8 +1463,8 @@ inherited SaleForm: TSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 512
-    Top = 32
+    Left = 600
+    Top = 65528
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_SaleExactly_Print'
@@ -1606,8 +1618,8 @@ inherited SaleForm: TSaleForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 64
-    Top = 112
+    Left = 584
+    Top = 152
   end
   object GuidesGroupMemberSP: TdsdGuides
     KeyField = 'Id'
@@ -1635,8 +1647,8 @@ inherited SaleForm: TSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 624
-    Top = 80
+    Left = 640
+    Top = 152
   end
   object GuidesMemberSP: TdsdGuides
     KeyField = 'Id'
@@ -1696,7 +1708,7 @@ inherited SaleForm: TSaleForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 528
+    Left = 656
     Top = 120
   end
   object GuidesMedicSP: TdsdGuides
@@ -1762,8 +1774,8 @@ inherited SaleForm: TSaleForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 432
-    Top = 152
+    Left = 664
+    Top = 72
   end
   object spSelectPrintCheck: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Print'
@@ -1815,8 +1827,8 @@ inherited SaleForm: TSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 128
-    Top = 88
+    Left = 40
+    Top = 65528
   end
   object spGet_SP_Prior: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale_SP_Prior'

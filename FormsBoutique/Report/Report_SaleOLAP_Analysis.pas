@@ -71,6 +71,7 @@ type
     GuidesBrand: TdsdGuides;
     GuidesEndYear: TdsdGuides;
     GuidesStartYear: TdsdGuides;
+    Persent_Sale: TcxGridDBColumn;
   private
     { Private declarations }
   public
