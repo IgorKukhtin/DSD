@@ -729,27 +729,27 @@ BEGIN
                                                          AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
                          )
       ,  tmpPrice AS (SELECT ObjectLink_Price_Unit.ObjectId          AS Id
-                               , Price_Goods.ChildObjectId               AS GoodsId
-                          FROM ObjectLink AS ObjectLink_Price_Unit
-                               INNER JOIN ObjectLink AS Price_Goods
-                                                     ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                                    AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
-                                                    AND (Price_Goods.ChildObjectId = 0 OR 0 = 0)
-   
-                               -- ограничение по торговой сети
-                               INNER JOIN ObjectLink AS ObjectLink_Goods_Object
-                                                     ON ObjectLink_Goods_Object.ObjectId = Price_Goods.ChildObjectId
-                                                    AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-                                                    AND ObjectLink_Goods_Object.ChildObjectId = 4--vbObjectId
+                           , Price_Goods.ChildObjectId               AS GoodsId
+                      FROM ObjectLink AS ObjectLink_Price_Unit
+                           INNER JOIN ObjectLink AS Price_Goods
+                                                 ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                                AND (Price_Goods.ChildObjectId = inGoodsId OR inGoodsId = 0)
 
-                          WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                            AND ObjectLink_Price_Unit.ChildObjectId = 183292
-                               )
+                           -- ограничение по торговой сети
+                           INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                 ON ObjectLink_Goods_Object.ObjectId = Price_Goods.ChildObjectId
+                                                AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                                AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
+
+                      WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                        AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
+                           )
 
 , tmpPrice_View AS (SELECT tmpPrice.Id          AS Id
                                , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
                                , MCS_Value.ValueData                     AS MCSValue 
-                               , tmpPrice.GoodsId               AS GoodsId
+                               , tmpPrice.GoodsId                        AS GoodsId
                                , price_datechange.valuedata              AS DateChange 
                                , MCS_datechange.valuedata                AS MCSDateChange 
                                , COALESCE(MCS_isClose.ValueData,False)   AS MCSIsClose 
@@ -944,10 +944,9 @@ BEGIN
                                                   AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
                               LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
                       
-                              LEFT JOIN ObjectFloat  AS ObjectFloat_NDSKind_NDS
-                                                                   ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
-                                                                  AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
-                      
+                              LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                                    ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
+                                                   AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
                            
                               LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Close
                                                       ON ObjectBoolean_Goods_Close.ObjectId = tmpGoods.GoodsId 
@@ -969,7 +968,6 @@ BEGIN
                                                     AND ObjectFloat_Goods_PercentMarkup.DescId = zc_ObjectFloat_Goods_PercentMarkup()  
                           )
 
-
   , tmpGoodsMainParam AS (SELECT tmpPrice_All.GoodsId
                                , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
                                , COALESCE (ObjectFloat_Goods_PriceRetSP.ValueData,0) ::TFloat  AS PriceRetSP
@@ -978,7 +976,7 @@ BEGIN
                                , COALESCE (ObjectFloat_Goods_PaymentSP.ValueData,0)  ::TFloat  AS PaymentSP
                                , Object_IntenalSP.ValueData                                    AS IntenalSPName
                                , ObjectDate_LastPrice.ValueData                                AS Date_LastPrice
-                               , COALESCE (tmpGoodsBarCode.BarCode, '')  :: TVarChar AS BarCode
+                               , COALESCE (tmpGoodsBarCode.BarCode, '')            :: TVarChar AS BarCode
                           FROM tmpPrice_All
                                -- получается GoodsMainId
                                LEFT JOIN ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = tmpPrice_All.Goodsid
@@ -1027,7 +1025,8 @@ BEGIN
                          FROM ObjectHistory AS ObjectHistory_Price
                          WHERE ObjectHistory_Price.ObjectId IN (SELECT DISTINCT tmpPrice_All.Id FROM tmpPrice_All) 
                            AND ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
-                           AND /*vbStartDate*/CURRENT_DATE >= ObjectHistory_Price.StartDate AND CURRENT_DATE /*vbStartDate*/ < ObjectHistory_Price.EndDate
+                           --AND vbStartDate >= ObjectHistory_Price.StartDate AND vbStartDate < ObjectHistory_Price.EndDate
+                           AND ObjectHistory_Price.EndDate = zc_DateEnd()
                          )
        , tmpOH_Float AS (SELECT ObjectHistoryFloat.*
                          FROM ObjectHistoryFloat
@@ -1242,12 +1241,12 @@ BEGIN
                                        ON ObjectHistory_Price.ObjectId = tmpPrice_All.Id 
                -- получаем значения Количество дней для анализа НТЗ из истории значений на дату                    
                LEFT JOIN tmpOH_Float AS ObjectHistoryFloat_MCSPeriod
-                                            ON ObjectHistoryFloat_MCSPeriod.ObjectHistoryId = ObjectHistory_Price.Id
-                                           AND ObjectHistoryFloat_MCSPeriod.DescId = zc_ObjectHistoryFloat_Price_MCSPeriod()
+                                     ON ObjectHistoryFloat_MCSPeriod.ObjectHistoryId = ObjectHistory_Price.Id
+                                    AND ObjectHistoryFloat_MCSPeriod.DescId = zc_ObjectHistoryFloat_Price_MCSPeriod()
                -- получаем значения Страховой запас дней НТЗ из истории значений на дату    
                LEFT JOIN tmpOH_Float AS ObjectHistoryFloat_MCSDay
-                                            ON ObjectHistoryFloat_MCSDay.ObjectHistoryId = ObjectHistory_Price.Id
-                                           AND ObjectHistoryFloat_MCSDay.DescId = zc_ObjectHistoryFloat_Price_MCSDay() 
+                                     ON ObjectHistoryFloat_MCSDay.ObjectHistoryId = ObjectHistory_Price.Id
+                                    AND ObjectHistoryFloat_MCSDay.DescId = zc_ObjectHistoryFloat_Price_MCSDay() 
  
                LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id
  
@@ -1258,6 +1257,7 @@ BEGIN
 
                -- данные из GoodsMainId
                LEFT JOIN tmpGoodsMainParam ON tmpGoodsMainParam.GoodsId = Object_Goods_View.Id
+               
                LEFT JOIN tmpMarginCategory ON tmpMarginCategory.GoodsId = Object_Goods_View.Id
             WHERE (inisShowDel = True OR Object_Goods_View.isErased = False)
               AND (Object_Goods_View.Id = inGoodsId OR inGoodsId = 0)
