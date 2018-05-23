@@ -170,8 +170,8 @@ BEGIN
                         , SUM (COALESCE (tmpContainer.Amount, 0))        AS Remains
                         , SUM (COALESCE (tmpContainer.AmountDebt, 0))    AS AmountDebt
                    FROM tmpPartionGoods
-                        LEFT JOIN tmpContainer ON tmpContainer.GoodsId   = tmpPartionGoods.GoodsId
-                                              AND tmpContainer.PartionId = tmpPartionGoods.PartionId
+                        INNER JOIN tmpContainer ON tmpContainer.GoodsId   = tmpPartionGoods.GoodsId
+                                               AND tmpContainer.PartionId = tmpPartionGoods.PartionId
                                               -- AND tmpContainer.UnitId    = tmpPartionGoods.UnitId
                    GROUP BY tmpPartionGoods.MovementId
                           , tmpPartionGoods.GoodsId

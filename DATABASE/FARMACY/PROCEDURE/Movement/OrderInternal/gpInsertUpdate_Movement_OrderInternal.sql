@@ -55,7 +55,7 @@ BEGIN
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_OrderKind(), ioId, inOrderKindId);
 
     -- сохранили протокол
-    -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+    PERFORM lpInsert_MovementProtocol (ioId, vbUserId, FALSE);
 
 END;
 $BODY$
