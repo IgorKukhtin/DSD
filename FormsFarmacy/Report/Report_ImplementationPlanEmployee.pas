@@ -473,6 +473,11 @@ procedure TReport_ImplementationPlanEmployeeForm.ClientDataSetCalcFields(
     if A > B then Result := A else Result := B;
   end;
 
+  function Min(A, B : Currency) : Currency;
+  begin
+    if A > B then Result := B else Result := A;
+  end;
+
 begin
   rnUnitCategory := cdsUnitCategory.RecNo;
   rnUnit := cdsUnit.RecNo;
@@ -511,7 +516,7 @@ begin
 
       nSum := 0;
       if cdsUnit.Locate('UnitCode', FUnit.Strings[I], []) then
-        nSum := Dataset['AmountPlan' + FUnit.Strings[I]] * cdsUnit.FieldByName('PercentAttendance').AsCurrency / 100;
+        nSum := Dataset['AmountPlan' + FUnit.Strings[I]] * Min(cdsUnit.FieldByName('PercentAttendance').AsCurrency, 100) / 100;
       Dataset['AmountPlanTab' + FUnit.Strings[I]] := nSum;
 
       if Dataset['AmountPlanTab' + FUnit.Strings[I]] > 0 then
@@ -521,7 +526,7 @@ begin
 
       nSum := 0;
       if cdsUnit.Locate('UnitCode', FUnit.Strings[I], []) then
-        nSum := Dataset['AmountPlanAward' + FUnit.Strings[I]] * cdsUnit.FieldByName('PercentAttendance').AsCurrency / 100;
+        nSum := Dataset['AmountPlanAward' + FUnit.Strings[I]] * Min(cdsUnit.FieldByName('PercentAttendance').AsCurrency, 100) / 100;
       Dataset['AmountPlanAwardTab' + FUnit.Strings[I]] := nSum;
 
       if Dataset['AmountPlanAwardTab' + FUnit.Strings[I]] > 0 then

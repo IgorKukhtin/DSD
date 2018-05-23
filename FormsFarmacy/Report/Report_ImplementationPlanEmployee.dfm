@@ -72,6 +72,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
       Height = 456
       Align = alClient
       TabOrder = 0
+      ExplicitTop = 2
       object cxImplementationPlanEmployeeDBBandedTableView1: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -100,6 +101,8 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
             Column = colAmount
           end>
         DataController.Summary.SummaryGroups = <>
+        OptionsData.Deleting = False
+        OptionsData.Inserting = False
         OptionsView.Footer = True
         OptionsView.HeaderHeight = 60
         Bands = <
@@ -247,12 +250,16 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
         Height = 137
         Align = alLeft
         TabOrder = 0
+        ExplicitLeft = 387
+        ExplicitTop = 6
         object cxUnitDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = dsUnit
           DataController.Summary.DefaultGroupSummaryItems = <>
           DataController.Summary.FooterSummaryItems = <>
           DataController.Summary.SummaryGroups = <>
+          OptionsData.Deleting = False
+          OptionsData.Inserting = False
           OptionsView.GroupByBox = False
           OptionsView.HeaderHeight = 60
           object colUnitName: TcxGridDBColumn
@@ -301,6 +308,9 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           DataController.Summary.DefaultGroupSummaryItems = <>
           DataController.Summary.FooterSummaryItems = <>
           DataController.Summary.SummaryGroups = <>
+          OptionsData.Deleting = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
           OptionsView.GroupByBox = False
           OptionsView.HeaderHeight = 60
           object colUnitCategoryName: TcxGridDBColumn
@@ -349,6 +359,8 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           DataController.Summary.DefaultGroupSummaryItems = <>
           DataController.Summary.FooterSummaryItems = <>
           DataController.Summary.SummaryGroups = <>
+          OptionsData.Deleting = False
+          OptionsData.Inserting = False
           OptionsView.GroupByBox = False
           OptionsView.HeaderHeight = 60
           object cxGridDBColumn5: TcxGridDBColumn
