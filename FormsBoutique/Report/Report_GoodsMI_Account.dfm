@@ -6,7 +6,7 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1378
-  ExplicitHeight = 463
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -918,6 +918,7 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
           StoredProc = spSelect
         end>
       Caption = 'actComplete'
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 12
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
       InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1088#1086#1074#1077#1076#1077#1085
@@ -935,6 +936,7 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
           StoredProc = spSelect
         end>
       Caption = 'actSetErased'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 13
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
       InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1091#1076#1072#1083#1077#1085

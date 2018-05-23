@@ -2996,8 +2996,9 @@ begin
             for i := 0 to List.Count - 1 do
             begin
               // если первые буквы файла order а последние .xml
-              if (copy(List[i], 1, 5) = 'order') and
-                (copy(List[i], Length(List[i]) - 3, 4) = '.xml') then
+              if ((copy(List[i], 1, 5) = 'order') and (copy(List[i], Length(List[i]) - 3, 4) = '.xml'))
+               or((AnsiUpperCase(copy(List[i], 1, 11)) = AnsiUpperCase('inbox\order')) and (copy(List[i], Length(List[i]) - 3, 4) = '.xml'))
+              then
               begin
                 DocData := gfStrFormatToDate(copy(List[i], 7, 8), 'yyyymmdd');
                 if (StartDate <= DocData) and (DocData <= EndDate) then
