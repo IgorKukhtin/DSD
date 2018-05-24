@@ -47,7 +47,8 @@ $BODY$BEGIN
         LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_DocumentKind_GoodsKind.ChildObjectId
    WHERE Object_DocumentKind.DescId = zc_Object_DocumentKind()
      AND (ObjectString_Enum.ObjectId IS NULL
-       OR Object_DocumentKind.Id IN (zc_Enum_DocumentKind_PackDiff()))
+       OR Object_DocumentKind.Id IN (zc_Enum_DocumentKind_PackDiff())
+         )
   ;
   
 END;$BODY$

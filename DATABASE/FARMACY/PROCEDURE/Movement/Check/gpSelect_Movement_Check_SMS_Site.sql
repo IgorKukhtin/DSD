@@ -1,9 +1,11 @@
 -- Function: gpSelect_Movement_OrderInternal() - проц которая вернет все заказы, по которым есть подтверждение, но нет признака "отправлено смс"
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Check_SMS_Site (TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Check_SMS_Site (TBlob, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Check_SMS_Site(
-    IN inUnitId_list      TVarChar ,  -- Список Подразделений, через зпт
+    -- IN inUnitId_list      TVarChar ,  -- Список Подразделений, через зпт
+    IN inUnitId_list      TBlob    ,  -- Список Подразделений, через зпт
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer -- ключ документа

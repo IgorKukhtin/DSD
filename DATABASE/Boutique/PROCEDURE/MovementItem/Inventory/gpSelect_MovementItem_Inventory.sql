@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer
              , BrandName    TVarChar
              , PeriodName   TVarChar
              , PeriodYear   Integer
+             , Amount_diff  TFloat
              , Amount TFloat, AmountSecond TFloat, AmountRemains TFloat, AmountSecondRemains TFloat
              , CountForPrice TFloat
              , OperPrice TFloat, OperPriceList TFloat
@@ -115,6 +116,8 @@ BEGIN
            , Object_Period.ValueData        AS PeriodName
            , Object_PartionGoods.PeriodYear AS PeriodYear
 
+           , (COALESCE (tmpMI.Amount, 0) - COALESCE (tmpMI.AmountRemains, 0)) :: TFloat AS Amount_diff
+
            , tmpMI.Amount
            , tmpMI.AmountSecond         ::TFloat
            , tmpMI.AmountRemains        ::TFloat
@@ -171,4 +174,4 @@ $BODY$
 */
 
 -- тест
---select * from gpSelect_MovementItem_Inventory(inMovementId := 23 , inIsErased := 'False' ,  inSession := zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_MovementItem_Inventory (inMovementId := 23 , inIsErased := 'False' ,  inSession := zfCalc_UserAdmin());

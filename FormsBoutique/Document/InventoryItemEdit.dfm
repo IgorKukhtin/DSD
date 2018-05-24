@@ -2,7 +2,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1058#1086#1074#1072#1088' '#1074' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1102
-  ClientHeight = 252
+  ClientHeight = 285
   ClientWidth = 408
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -17,13 +17,13 @@ object InventoryItemEditForm: TInventoryItemEditForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxLabel1: TcxLabel
-    Left = 10
-    Top = 53
+    Left = 285
+    Top = 45
     Caption = #1040#1088#1090#1080#1082#1091#1083
   end
   object cxButton1: TcxButton
     Left = 109
-    Top = 211
+    Top = 242
     Width = 75
     Height = 25
     Action = actInsertUpdate
@@ -32,7 +32,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
   end
   object cxButton2: TcxButton
     Left = 253
-    Top = 211
+    Top = 242
     Width = 75
     Height = 25
     Action = actFormClose
@@ -41,23 +41,23 @@ object InventoryItemEditForm: TInventoryItemEditForm
     TabOrder = 3
   end
   object cxLabel3: TcxLabel
-    Left = 10
-    Top = 8
+    Left = 8
+    Top = 45
     Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
   end
   object cxLabel5: TcxLabel
-    Left = 10
-    Top = 139
+    Left = 8
+    Top = 3
     Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
   end
   object cxLabel9: TcxLabel
-    Left = 289
-    Top = 97
+    Left = 192
+    Top = 90
     Caption = #1056#1072#1079#1084#1077#1088
   end
-  object ceGoodsSize: TcxButtonEdit
-    Left = 289
-    Top = 113
+  object edGoodsSize: TcxButtonEdit
+    Left = 192
+    Top = 108
     Properties.Buttons = <
       item
         Default = True
@@ -66,11 +66,11 @@ object InventoryItemEditForm: TInventoryItemEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 1
-    Width = 110
+    Width = 85
   end
-  object edGoodsName: TcxButtonEdit
-    Left = 10
-    Top = 70
+  object edGoods: TcxButtonEdit
+    Left = 283
+    Top = 64
     Properties.Buttons = <
       item
         Default = True
@@ -79,11 +79,11 @@ object InventoryItemEditForm: TInventoryItemEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 0
-    Width = 273
+    Width = 116
   end
-  object edGoodsGroupName: TcxButtonEdit
+  object edGoodsGroup: TcxButtonEdit
     Left = 8
-    Top = 26
+    Top = 64
     Properties.Buttons = <
       item
         Default = True
@@ -92,11 +92,11 @@ object InventoryItemEditForm: TInventoryItemEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 8
-    Width = 391
+    Width = 269
   end
   object edPartner: TcxButtonEdit
-    Left = 10
-    Top = 156
+    Left = 8
+    Top = 21
     Properties.Buttons = <
       item
         Default = True
@@ -105,30 +105,30 @@ object InventoryItemEditForm: TInventoryItemEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 273
+    Width = 391
   end
   object cxLabel8: TcxLabel
-    Left = 289
-    Top = 136
+    Left = 192
+    Top = 187
     Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
   end
   object ceOperPriceList: TcxCurrencyEdit
-    Left = 289
-    Top = 156
+    Left = 192
+    Top = 206
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
     TabOrder = 11
-    Width = 110
+    Width = 85
   end
   object cxLabel11: TcxLabel
-    Left = 10
-    Top = 96
+    Left = 8
+    Top = 90
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
-  object edLabelName: TcxButtonEdit
-    Left = 10
-    Top = 113
+  object edLabel: TcxButtonEdit
+    Left = 8
+    Top = 108
     Properties.Buttons = <
       item
         Default = True
@@ -137,26 +137,90 @@ object InventoryItemEditForm: TInventoryItemEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 13
-    Width = 273
+    Width = 171
   end
   object cxLabel13: TcxLabel
-    Left = 289
-    Top = 53
+    Left = 8
+    Top = 138
     Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
   end
   object edGoodsCode: TcxCurrencyEdit
-    Left = 289
-    Top = 69
+    Left = 8
+    Top = 157
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
     TabOrder = 15
-    Width = 110
+    Width = 72
+  end
+  object ceOperCount: TcxCurrencyEdit
+    Left = 8
+    Top = 206
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    Properties.ReadOnly = True
+    TabOrder = 16
+    Width = 72
+  end
+  object cxLabel2: TcxLabel
+    Left = 8
+    Top = 187
+    Caption = #1050#1086#1083'-'#1074#1086
+  end
+  object cxLabel4: TcxLabel
+    Left = 86
+    Top = 187
+    Caption = #1048#1058#1054#1043#1054' :'
+  end
+  object ceTotalCount: TcxCurrencyEdit
+    Left = 86
+    Top = 206
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    Properties.ReadOnly = True
+    TabOrder = 19
+    Width = 93
+  end
+  object cxLabel6: TcxLabel
+    Left = 86
+    Top = 138
+    Caption = #1054#1087#1080#1089#1072#1085#1080#1077
+  end
+  object edGoodsInfo: TcxButtonEdit
+    Left = 86
+    Top = 157
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 21
+    Width = 313
+  end
+  object edComposition: TcxButtonEdit
+    Left = 283
+    Top = 108
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 22
+    Width = 116
+  end
+  object cxLabel7: TcxLabel
+    Left = 285
+    Top = 89
+    Caption = #1057#1086#1089#1090#1072#1074
   end
   object ActionList: TActionList
     Left = 32
-    Top = 200
+    Top = 213
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -204,8 +268,10 @@ object InventoryItemEditForm: TInventoryItemEditForm
     Params = <
       item
         Name = 'ioId'
-        Value = '0'
-        ParamType = ptInput
+        Value = -1
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -235,6 +301,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
       item
         Name = 'inAmount'
         Value = '0'
+        Component = ceOperCount
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -254,8 +321,8 @@ object InventoryItemEditForm: TInventoryItemEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 316
-    Top = 184
+    Left = 204
+    Top = 228
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -264,15 +331,29 @@ object InventoryItemEditForm: TInventoryItemEditForm
         Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Id'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 104
-    Top = 200
+    Top = 213
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_MIInventory_Partion_byBarcode'
     DataSets = <>
     OutputType = otResult
     Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inBarCode'
         Value = Null
@@ -312,21 +393,6 @@ object InventoryItemEditForm: TInventoryItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PartnerId'
-        Value = Null
-        Component = GuidesPartner
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PartnerName'
-        Value = Null
-        Component = GuidesPartner
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'LabelId'
         Value = Null
         Component = GuidesLabel
@@ -357,6 +423,51 @@ object InventoryItemEditForm: TInventoryItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'CompositionName'
+        Value = Null
+        Component = GuidesComposition
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsInfoName'
+        Value = Null
+        Component = GuidesGoodsInfo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerId'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerName'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperCount'
+        Value = Null
+        Component = ceOperCount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalCount'
+        Value = Null
+        Component = ceTotalCount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'OperPriceList'
         Value = Null
         Component = ceOperPriceList
@@ -369,9 +480,17 @@ object InventoryItemEditForm: TInventoryItemEditForm
         Component = FormParams
         ComponentItem = 'PartionId'
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 344
+    Left = 280
+    Top = 4
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -385,20 +504,20 @@ object InventoryItemEditForm: TInventoryItemEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 176
-    Top = 56
+    Left = 360
+    Top = 220
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 201
-    Top = 208
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 313
+    Top = 176
   end
   object GuidesGoodsSize: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceGoodsSize
-    FormNameParam.Value = 'TGoodsSizeForm'
+    LookupControl = edGoodsSize
+    FormNameParam.Value = 'TGoodsSize-Form'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsSizeForm'
+    FormName = 'TGoodsSize-Form'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -418,16 +537,16 @@ object InventoryItemEditForm: TInventoryItemEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 329
-    Top = 77
+    Left = 217
+    Top = 100
   end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edGoodsName
-    FormNameParam.Value = 'TGoodsForm'
+    LookupControl = edGoods
+    FormNameParam.Value = 'TGoods-Form'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsForm'
+    FormName = 'TGoods-Form'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -536,16 +655,16 @@ object InventoryItemEditForm: TInventoryItemEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 81
-    Top = 54
+    Left = 329
+    Top = 36
   end
   object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edGoodsGroupName
-    FormNameParam.Value = 'TGoodsGroupForm'
+    LookupControl = edGoodsGroup
+    FormNameParam.Value = 'TGoodsGroup-Form'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsGroupForm'
+    FormName = 'TGoodsGroup-Form'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -606,16 +725,16 @@ object InventoryItemEditForm: TInventoryItemEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 209
-    Top = 9
+    Left = 233
+    Top = 47
   end
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPartner
-    FormNameParam.Value = 'TCompositionForm'
+    FormNameParam.Value = 'TPartner-Form'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TCompositionForm'
+    FormName = 'TPartner-Form'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -647,16 +766,16 @@ object InventoryItemEditForm: TInventoryItemEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 97
-    Top = 142
+    Left = 145
+    Top = 10
   end
   object GuidesLabel: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edLabelName
-    FormNameParam.Value = 'TLabelForm'
+    LookupControl = edLabel
+    FormNameParam.Value = 'TLabel-Form'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TLabelForm'
+    FormName = 'TLabel-Form'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -717,7 +836,106 @@ object InventoryItemEditForm: TInventoryItemEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 201
-    Top = 109
+    Left = 81
+    Top = 91
+  end
+  object GuidesGoodsInfo: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsInfo
+    FormNameParam.Value = 'TGoodsInfo-Form'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsInfo-Form'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoodsInfo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsInfo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Code'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MeasureName'
+        Value = ''
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CompositionName'
+        Value = ''
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsInfoName'
+        Value = ''
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LineFabricaName'
+        Value = ''
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LabelName'
+        Value = ''
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 65
+    Top = 245
+  end
+  object GuidesComposition: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edComposition
+    FormNameParam.Value = 'TGoodsSize-Form'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsSize-Form'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesComposition
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesComposition
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 321
+    Top = 108
   end
 end

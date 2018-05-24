@@ -48,7 +48,7 @@ type
     Code: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
-    Price: TcxGridDBColumn;
+    OperPrice: TcxGridDBColumn;
     AmountSumm: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     actUpdateMasterDS: TdsdUpdateDataSet;
@@ -129,10 +129,12 @@ type
     ClientDataSet: TClientDataSet;
     dsdDBViewAddOn1: TdsdDBViewAddOn;
     spSelectBarCode: TdsdStoredProc;
-    spGet_Partion_byBarcode: TdsdStoredProc;
-    actGoodsItemForm: TdsdOpenForm;
-    macGoodsItemForm: TMultiAction;
-    actRefresh_Goods: TdsdDataSetRefresh;
+    actGoodsItemForm2: TdsdOpenForm;
+    macGoodsItem: TMultiAction;
+    Amount_diff: TcxGridDBColumn;
+    actGoodsItem: TdsdInsertUpdateAction;
+    AmountSecond_diff: TcxGridDBColumn;
+    CurrencyName: TcxGridDBColumn;
   private
   public
   end;

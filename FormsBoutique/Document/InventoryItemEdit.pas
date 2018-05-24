@@ -34,26 +34,36 @@ type
     actInsertUpdate: TdsdInsertUpdateGuides;
     actFormClose: TdsdFormClose;
     cxPropertiesStore: TcxPropertiesStore;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLabel3: TcxLabel;
     cxLabel5: TcxLabel;
     cxLabel9: TcxLabel;
-    ceGoodsSize: TcxButtonEdit;
+    edGoodsSize: TcxButtonEdit;
     GuidesGoodsSize: TdsdGuides;
-    edGoodsName: TcxButtonEdit;
+    edGoods: TcxButtonEdit;
     GuidesGoods: TdsdGuides;
-    edGoodsGroupName: TcxButtonEdit;
+    edGoodsGroup: TcxButtonEdit;
     GuidesGoodsGroup: TdsdGuides;
     edPartner: TcxButtonEdit;
     GuidesPartner: TdsdGuides;
     cxLabel8: TcxLabel;
     ceOperPriceList: TcxCurrencyEdit;
     cxLabel11: TcxLabel;
-    edLabelName: TcxButtonEdit;
+    edLabel: TcxButtonEdit;
     GuidesLabel: TdsdGuides;
     actRefreshOperPriceList: TdsdDataSetRefresh;
     cxLabel13: TcxLabel;
     edGoodsCode: TcxCurrencyEdit;
+    ceOperCount: TcxCurrencyEdit;
+    cxLabel2: TcxLabel;
+    cxLabel4: TcxLabel;
+    ceTotalCount: TcxCurrencyEdit;
+    GuidesGoodsInfo: TdsdGuides;
+    cxLabel6: TcxLabel;
+    edGoodsInfo: TcxButtonEdit;
+    edComposition: TcxButtonEdit;
+    cxLabel7: TcxLabel;
+    GuidesComposition: TdsdGuides;
   private
     { Private declarations }
   public

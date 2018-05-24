@@ -23,7 +23,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory(
    OUT outOperPriceList                     TFloat    , -- Цена по прайсу
    OUT outAmountPriceListSumm               TFloat    , -- Сумма по прайсу
    OUT outAmountSecondPriceListSumm         TFloat    , -- Сумма по прайсу
-   OUT outAmountPriceListSummRemains        TFloat    , -- Сумма по прайсу остатка 
+   OUT outAmountPriceListSummRemains        TFloat    , -- Сумма по прайсу остатка
    OUT outAmountSecondRemainsPLSumm         TFloat    , -- Сумма по прайсу остатка
 
    OUT outAmountClient                      TFloat    , -- Количество у покупателя - Расчетный остаток
@@ -32,12 +32,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory(
 
     IN inComment                            TVarChar  , -- примечание
     IN inSession                            TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbPartionId Integer;
+
    DECLARE vbIsInsert Boolean;
    DECLARE vbOperDate TDateTime;
    DECLARE vbFromId Integer;
@@ -46,15 +46,12 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Inventory());
 
-     -- определяется признак Создание/Корректировка
-     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
-     --vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);   
-     -- определяются параметры из шапки документа
+     -- определяются параметры из документа
      SELECT Movement.OperDate
           , MovementLinkObject_From.ObjectId
           , MovementLinkObject_To.ObjectId
-   INTO vbOperDate, vbFromId, vbToId 
+            INTO vbOperDate, vbFromId, vbToId
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
@@ -64,61 +61,71 @@ BEGIN
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
      WHERE Movement.Id = inMovementId;
 
- 
-     -- получили цену из прайса на дату док. 
-     outOperPriceList := COALESCE ((SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem(vbOperDate, zc_PriceList_Basis(), inGoodsId) AS tmp), 0);
-     
-     -- данные из партии : OperPrice и CountForPrice
-     SELECT COALESCE (Object_PartionGoods.CountForPrice,1)
-          , COALESCE (Object_PartionGoods.OperPrice,0)
-    INTO outCountForPrice, outOperPrice
+
+
+     -- данные из партии : OperPrice + CountForPrice + OperPriceList
+     SELECT Object_PartionGoods.CountForPrice
+          , Object_PartionGoods.OperPrice
+          , Object_PartionGoods.OperPriceList
+            INTO outCountForPrice, outOperPrice, outOperPriceList
      FROM Object_PartionGoods
      WHERE Object_PartionGoods.MovementItemId = inPartionId;
 
-      
+
      outAmountRemains := 0;        -- вставить расчет
      outAmountSecondRemains := 0;  -- вставить расчет
      outAmountClient := 0;         -- вставить расчет
 
 
-     -- рассчет остатка
-     SELECT SUM (COALESCE (tmp.Remains,0))       AS Remains
-          , SUM (COALESCE (tmp.SecondRemains,0)) AS SecondRemains 
-    INTO outAmountRemains, outAmountSecondRemains
-     FROM 
-         (SELECT CASE WHEN Container.WhereObjectId  = vbFromId THEN Container.Amount - SUM (COALESCE (MIContainer.Amount, 0)) ELSE 0 END AS Remains 
-               , CASE WHEN Container.WhereObjectId  = vbToId THEN Container.Amount - SUM (COALESCE (MIContainer.Amount, 0)) ELSE 0 END   AS SecondRemains 
-          FROM Container 
-               LEFT JOIN MovementItemContainer AS MIContainer 
-                                               ON MIContainer.ContainerId = Container.Id
-                                              AND MIContainer.OperDate > vbOperDate
-          WHERE Container.DescId = zc_Container_count()
-            AND Container.PartionId = inPartionId
-            AND Container.ObjectId = inGoodsId
-            AND Container.WhereObjectId IN (vbFromId, vbToId)
-         GROUP BY Container.WhereObjectId
-                , Container.Amount) AS tmp;
+     -- нужен ПОИСК
+     IF ioId < 0
+     THEN
+         -- нашли
+         ioId:= (SELECT MI.Id FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.PartionId = inPartionId);
+         -- 
+         inAmount:= inAmount + COALESCE ((SELECT MI.Amount FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.PartionId = inPartionId), 0);
 
-     -- Заменили свойство <Цена за количество>
-     --IF COALESCE (outCountForPrice, 0) = 0 THEN outCountForPrice := 1; END IF;
+     END IF;
+     
 
-     -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, CASE WHEN inPartionId > 0 THEN inPartionId ELSE NULL END, inMovementId, inAmount, NULL);
-      
-      -- сохранили свойство <Цена>
+     -- проверка - Уникальный vbGoodsItemId
+     IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.PartionId = inPartionId AND MI.Id <> COALESCE (ioId, 0)) THEN
+        RAISE EXCEPTION 'Ошибка.В документе уже есть Товар <% %> р.<%>.Дублирование запрещено.'
+                      , lfGet_Object_ValueData_sh ((SELECT Object_PartionGoods.LabelId     FROM Object_PartionGoods WHERE Object_PartionGoods.GoodsId = inGoodsId AND Object_PartionGoods.MovementItemId = inPartionId))
+                      , lfGet_Object_ValueData    ((SELECT Object_PartionGoods.GoodsId     FROM Object_PartionGoods WHERE Object_PartionGoods.GoodsId = inGoodsId AND Object_PartionGoods.MovementItemId = inPartionId))
+                      , lfGet_Object_ValueData_sh ((SELECT Object_PartionGoods.GoodsSizeId FROM Object_PartionGoods WHERE Object_PartionGoods.GoodsId = inGoodsId AND Object_PartionGoods.MovementItemId = inPartionId))
+                       ;
+     END IF;
+
+     -- определяется признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
+
+     -- сохранили <Элемент документа> - здесь <Остаток факт магазин>
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inPartionId, inMovementId, inAmount, NULL);
+
+     -- сохранили свойство <Остаток факт cклад>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSecond(), ioId, inAmountSecond);
+
+     -- сохранили свойство <Цена>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPrice(), ioId, outOperPrice);
      -- сохранили свойство <Цена за количество>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, outCountForPrice);
-     -- сохранили свойство <>
+     -- сохранили свойство <Цена (прайс)>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(), ioId, outOperPriceList);
+
      -- сохранили свойство <Остаток магазин>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountRemains(), ioId, outAmountRemains);
-     -- сохранили свойство <кол-во факт cклад>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSecond(), ioId, inAmountSecond);
+     -- PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountRemains(), ioId, outAmountRemains);
      -- сохранили свойство <Остаток склад>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSecondRemains(), ioId, outAmountSecondRemains);
-     -- сохранили свойство <Остаток клиент>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountClient(), ioId, outAmountClient);
+     -- PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSecondRemains(), ioId, outAmountSecondRemains);
+     -- сохранили свойство <Остаток Покупатель>
+     -- PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountClient(), ioId, outAmountClient);
+
+     -- Остаток магазин
+     outAmountRemains:= (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_AmountRemains());
+     -- Остаток склад
+     outAmountSecondRemains:= (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_AmountSecondRemains());
+     -- Остаток Покупатель
+     outAmountClient:= (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_AmountClient());
 
      -- сохранили свойство <примечание>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
@@ -184,4 +191,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpInsertUpdate_MovementItem_Inventory(ioId := 52 , inMovementId := 23 , inGoodsId := 406 , inPartionId := 49 , inAmount := 2 , inAmountSecond := 3 , inComment := '' ,  inSession := '2');
+-- SELECT * FROM gpInsertUpdate_MovementItem_Inventory(ioId := 52 , inMovementId := 23 , inGoodsId := 406 , inPartionId := 49 , inAmount := 2 , inAmountSecond := 3 , inComment := '' ,  inSession := '2');

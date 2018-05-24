@@ -56,15 +56,23 @@ BEGIN
      END IF;
 
      -- проверка - inAmount
-     IF inAmount IS NULL
+     IF inAmount IS NULL AND inDescId = zc_MI_Master()
      THEN
-         RAISE EXCEPTION 'Ошибка-1.Не определено количество/сумма в документе № <%>.', vbInvNumber;
+         RAISE EXCEPTION 'Ошибка-1.Не определено Количество в документе № <%>.', vbInvNumber;
+     ELSEIF inAmount IS NULL AND inDescId <> zc_MI_Master()
+     THEN
+         RAISE EXCEPTION 'Ошибка-1.Не определена Сумма в документе № <%>.', vbInvNumber;
      END IF;
 
      -- проверка - inObjectId
-     IF inObjectId IS NULL
+     IF inObjectId IS NULL AND inDescId = zc_MI_Master()
      THEN
---         RAISE EXCEPTION 'Ошибка-1.Не определен Объект в документе № <%>.', vbInvNumber;
+         RAISE EXCEPTION 'Ошибка-1.Не определен Товар в документе № <%>.', vbInvNumber;
+     END IF;
+     -- проверка - inPartionId
+     IF inPartionId IS NULL AND inDescId = zc_MI_Master()
+     THEN
+         RAISE EXCEPTION 'Ошибка-1.Не определена Партия в документе № <%>.', vbInvNumber;
      END IF;
 
 
