@@ -78,6 +78,8 @@ type
     spUpdate_CountPrice: TdsdStoredProc;
     actUpdate_CountPrice: TdsdExecStoredProc;
     bbUpdate_CountPrice: TdxBarButton;
+    isNotUploadSites: TcxGridDBColumn;
+    spUpdate_Goods_isNotUploadSites: TdsdStoredProc;
   private
     { Private declarations }
   public

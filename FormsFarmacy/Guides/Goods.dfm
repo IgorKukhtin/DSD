@@ -4,7 +4,7 @@ inherited GoodsForm: TGoodsForm
   ClientWidth = 883
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 899
-  ExplicitHeight = 481
+  ExplicitHeight = 482
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -346,6 +346,14 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 60
           end
+          object isNotUploadSites: TcxGridDBColumn
+            Caption = #1053#1077' '#1074#1099#1075#1088#1091#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1072#1081#1090#1086#1074
+            DataBinding.FieldName = 'isNotUploadSites'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077' '#1074#1099#1075#1088#1091#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1072#1081#1090#1086#1074' ('#1074' '#1074#1099#1075#1088#1091#1079#1082#1072#1093' '#1076#1083#1103' '#1082#1086#1085#1090#1088' '#1072#1075#1077#1085#1090#1086#1074')'
+            Width = 60
+          end
         end
       end
     end
@@ -533,6 +541,9 @@ inherited GoodsForm: TGoodsForm
         end
         item
           StoredProc = spUpdate_Goods_isSecond
+        end
+        item
+          StoredProc = spUpdate_Goods_isNotUploadSites
         end>
       Caption = 'UpdateDataSet'
       DataSource = MasterDS
@@ -1281,5 +1292,38 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 808
     Top = 152
+  end
+  object spUpdate_Goods_isNotUploadSites: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_isNotUploadSites'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotUploadSites'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isNotUploadSites'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisNotUploadSites'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isNotUploadSites'
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 648
+    Top = 312
   end
 end
