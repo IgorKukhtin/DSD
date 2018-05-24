@@ -763,8 +763,10 @@ BEGIN
                           , SUM( tmpData.Sale_Amount    ) AS Sale_Amount
                           , SUM( tmpData.Remains_Amount ) AS Remains_Amount
 
-                          , CASE WHEN SUM(tmpData.Income_Amount) <> 0 THEN SUM( tmpData.Sale_Amount) / SUM( tmpData.Income_Amount) * 100 ELSE 0 END :: TFloat AS Persent_Sale
+                          , CAST (CASE WHEN SUM(tmpData.Income_Amount) <> 0 THEN SUM( tmpData.Sale_Amount) / SUM( tmpData.Income_Amount) * 100 ELSE 0 END AS NUMERIC (16,0)) :: TFloat AS Persent_Sale
 
+                          , 15395562          :: Integer  AS Color_Grey            --нежно серый -- 
+--                          , zc_Color_White()  :: Integer  AS Color_White 
                      FROM tmpData
                      GROUP BY tmpData.BrandName
                             , tmpData.GoodsGroupName

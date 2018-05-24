@@ -4,9 +4,8 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
   ClientWidth = 1212
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -527
   ExplicitWidth = 1228
-  ExplicitHeight = 470
+  ExplicitHeight = 469
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2355,6 +2354,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
     Top = 36
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
+    Style.Color = 15395562
     TabOrder = 4
     Width = 80
   end
