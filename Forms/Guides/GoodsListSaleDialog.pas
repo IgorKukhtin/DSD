@@ -22,6 +22,9 @@ type
     RetailGuides: TdsdGuides;
     JuridicalGuides: TdsdGuides;
     ContractGuides: TdsdGuides;
+    cxLabel8: TcxLabel;
+    edGoods: TcxButtonEdit;
+    GuidesGoods: TdsdGuides;
   private
     { Private declarations }
   public

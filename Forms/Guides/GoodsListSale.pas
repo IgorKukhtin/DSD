@@ -33,9 +33,9 @@ type
     edContract: TcxButtonEdit;
     cxLabel1: TcxLabel;
     edJuridical: TcxButtonEdit;
-    JuridicalGuides: TdsdGuides;
-    ContractGuides: TdsdGuides;
-    RetailGuides: TdsdGuides;
+    GuidesJuridical: TdsdGuides;
+    GuidesContract: TdsdGuides;
+    GuidesRetail: TdsdGuides;
     PartnerName: TcxGridDBColumn;
     RetailName: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
@@ -52,6 +52,9 @@ type
     GoodsKindCode: TcxGridDBColumn;
     GoodsKindId_List: TcxGridDBColumn;
     AmountChoice: TcxGridDBColumn;
+    edGoods: TcxButtonEdit;
+    cxLabel8: TcxLabel;
+    GuidesGoods: TdsdGuides;
   private
     { Private declarations }
   public

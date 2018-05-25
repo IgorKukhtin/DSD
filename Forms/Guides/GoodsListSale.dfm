@@ -7,7 +7,7 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1015
-  ExplicitHeight = 427
+  ExplicitHeight = 426
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -406,6 +406,23 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
       TabOrder = 3
       Width = 157
     end
+    object edGoods: TcxButtonEdit
+      Left = 773
+      Top = 4
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 4
+      Width = 220
+    end
+    object cxLabel8: TcxLabel
+      Left = 733
+      Top = 7
+      Caption = #1058#1086#1074#1072#1088':'
+    end
   end
   object cxLabel1: TcxLabel [2]
     Left = 279
@@ -605,7 +622,7 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
         item
           Name = 'RetailId'
           Value = 42309d
-          Component = RetailGuides
+          Component = GuidesRetail
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -613,7 +630,7 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
         item
           Name = 'RetailName'
           Value = 42309d
-          Component = RetailGuides
+          Component = GuidesRetail
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -622,7 +639,7 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
         item
           Name = 'JuridicalId'
           Value = ''
-          Component = JuridicalGuides
+          Component = GuidesJuridical
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -630,7 +647,7 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
         item
           Name = 'JuridicalName'
           Value = ''
-          Component = JuridicalGuides
+          Component = GuidesJuridical
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -639,7 +656,7 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
         item
           Name = 'ContractId'
           Value = Null
-          Component = ContractGuides
+          Component = GuidesContract
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -647,7 +664,24 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
         item
           Name = 'ContractName'
           Value = Null
-          Component = ContractGuides
+          Component = GuidesContract
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = GuidesGoods
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = GuidesGoods
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -672,7 +706,7 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
       item
         Name = 'inRetailId'
         Value = Null
-        Component = RetailGuides
+        Component = GuidesRetail
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -680,7 +714,7 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
       item
         Name = 'inContractId'
         Value = Null
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -688,7 +722,15 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
       item
         Name = 'inJuridicalId'
         Value = Null
-        Component = JuridicalGuides
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = GuidesGoods
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -809,7 +851,7 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
     Left = 352
     Top = 264
   end
-  object JuridicalGuides: TdsdGuides
+  object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
@@ -821,7 +863,7 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
       item
         Name = 'Key'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -829,7 +871,7 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -838,7 +880,7 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
     Left = 448
     Top = 65528
   end
-  object ContractGuides: TdsdGuides
+  object GuidesContract: TdsdGuides
     KeyField = 'Id'
     LookupControl = edContract
     FormNameParam.Value = 'TContractChoiceForm'
@@ -850,7 +892,7 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
       item
         Name = 'Key'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -858,7 +900,7 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -867,21 +909,21 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
       item
         Name = 'MasterJuridicalId'
         Value = Null
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
         Value = Null
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 672
   end
-  object RetailGuides: TdsdGuides
+  object GuidesRetail: TdsdGuides
     KeyField = 'Id'
     LookupControl = edRetail
     FormNameParam.Value = 'TRetailForm'
@@ -893,7 +935,7 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
       item
         Name = 'Key'
         Value = ''
-        Component = RetailGuides
+        Component = GuidesRetail
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -901,14 +943,14 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = RetailGuides
+        Component = GuidesRetail
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 216
-    Top = 152
+    Top = 72
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -916,15 +958,47 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
     RefreshAction = actRefresh
     ComponentList = <
       item
-        Component = JuridicalGuides
+        Component = GuidesJuridical
       end
       item
-        Component = RetailGuides
+        Component = GuidesRetail
       end
       item
-        Component = ContractGuides
+        Component = GuidesContract
+      end
+      item
+        Component = GuidesGoods
       end>
     Left = 304
     Top = 176
+  end
+  object GuidesGoods: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoods
+    FormNameParam.Value = 'TGoods_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoods_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 872
+    Top = 3
   end
 end
