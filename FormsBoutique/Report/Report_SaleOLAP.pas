@@ -145,6 +145,9 @@ type
     pvSendOut_Summ: TcxDBPivotGridField;
     pvDebt_Summ: TcxDBPivotGridField;
     cbMark: TcxCheckBox;
+    pvIncomeReal_Summ: TcxDBPivotGridField;
+    pvLoss_Summ: TcxDBPivotGridField;
+    pvIncomeReal_Amount: TcxDBPivotGridField;
   private
   public
   end;

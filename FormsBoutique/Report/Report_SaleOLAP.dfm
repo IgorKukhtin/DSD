@@ -558,7 +558,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Area = faData
       AreaIndex = 5
       IsCaptionAssigned = True
-      Caption = #1055#1088#1080#1093#1086#1076' '#1074' '#1074#1072#1083'. '
+      Caption = #1055#1088#1080#1093#1086#1076' '#1074' '#1074#1072#1083'.'
       DataBinding.FieldName = 'Income_Summ'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
@@ -567,6 +567,28 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Visible = True
       Width = 90
       UniqueName = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093'. '#1074' '#1074#1072#1083'. '
+    end
+    object pvIncomeReal_Amount: TcxDBPivotGridField
+      AreaIndex = 45
+      IsCaptionAssigned = True
+      Caption = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1082#1086#1083'.'
+      DataBinding.FieldName = 'IncomeReal_Amount'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.;-,0.; ;'
+      Width = 70
+      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1082#1086#1083'.'
+    end
+    object pvIncomeReal_Summ: TcxDBPivotGridField
+      AreaIndex = 43
+      IsCaptionAssigned = True
+      Caption = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
+      DataBinding.FieldName = 'IncomeReal_Summ'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.;-,0.; ;'
+      Width = 70
+      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
     end
     object pvSendIn_Amount: TcxDBPivotGridField
       Area = faData
@@ -622,7 +644,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Area = faData
       AreaIndex = 2
       IsCaptionAssigned = True
-      Caption = #1041#1088#1072#1082
+      Caption = #1041#1088#1072#1082' '#1082#1086#1083'.'
       DataBinding.FieldName = 'Loss_Amount'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
@@ -630,6 +652,17 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Styles.ColumnHeader = dmMain.cxRemainsContentStyle
       Width = 40
       UniqueName = #1041#1088#1072#1082' '#1082#1086#1083'. '
+    end
+    object pvLoss_Summ: TcxDBPivotGridField
+      AreaIndex = 44
+      IsCaptionAssigned = True
+      Caption = #1041#1088#1072#1082' '#1074' '#1074#1072#1083'.'
+      DataBinding.FieldName = 'Loss_Summ'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.;-,0.; ;'
+      Width = 70
+      UniqueName = #1041#1088#1072#1082' '#1074' '#1074#1072#1083'.'
     end
     object pvRemains_Amount: TcxDBPivotGridField
       Area = faData

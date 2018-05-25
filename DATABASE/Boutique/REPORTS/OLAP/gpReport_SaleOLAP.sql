@@ -57,9 +57,12 @@ RETURNS TABLE (BrandName             VarChar (100)
              , CurrencyName          VarChar (10)
              , OperPrice             TFloat
 
-               -- Приход, и здесь вычитаем если было Списание или Возврат Поставщику
+               -- Приход - только для UnitId, и здесь вычитаем если было Списание или Возврат Поставщику - только для UnitId
              , Income_Amount         TFloat
              , Income_Summ           TFloat
+               -- Приход - РЕАЛЬНЫЙ - только для UnitId, и здесь НЕ вычитаем если было Списание или Возврат Поставщику - только для UnitId
+             , IncomeReal_Amount     TFloat
+             , IncomeReal_Summ       TFloat
 
                -- Остаток - без учета "долга"
              , Remains_Amount        TFloat
@@ -73,8 +76,9 @@ RETURNS TABLE (BrandName             VarChar (100)
              , SendIn_Summ           TFloat
              , SendOut_Summ          TFloat
 
-               -- Кол-во: Списание + Возврат поставщ.
+               -- Списание + Возврат поставщ.
              , Loss_Amount           TFloat
+             , Loss_Summ             TFloat
 
                -- Кол-во Остаток - "долг"
              , Debt_Amount           TFloat
@@ -454,9 +458,12 @@ BEGIN
                                , Object_PartionGoods.CurrencyId AS CurrencyId
                                , CASE WHEN inIsOperPrice    = TRUE THEN Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END ELSE 0 :: TFloat END AS OperPrice
 
-                                 -- Кол-во Приход от поставщика - только для UnitId
+                                 -- Приход от поставщика - только для UnitId
                                , 0 AS Income_Amount
                                , 0 AS Income_Summ
+                                 -- Приход от поставщика - только для UnitId
+                               , 0 AS IncomeReal_Amount
+                               , 0 AS IncomeReal_Summ
 
                                  -- Остаток - без учета "долга"
                                , 0 AS Remains_Amount
@@ -470,8 +477,9 @@ BEGIN
                                , 0 AS SendIn_Summ
                                , 0 AS SendOut_Summ
 
-                                 -- Кол-во: Списание + Возврат поставщ.
+                                 -- Списание + Возврат поставщ.
                                , 0 AS Loss_Amount
+                               , 0 AS Loss_Summ
 
                                  -- Кол-во: Долг
                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() THEN MIConatiner.Amount ELSE 0 END) AS Debt_Amount
@@ -724,9 +732,12 @@ BEGIN
                                , Object_PartionGoods.CurrencyId AS CurrencyId
                                , CASE WHEN inIsOperPrice    = TRUE THEN Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END ELSE 0 :: TFloat END AS OperPrice
 
-                                 -- Кол-во Приход от поставщика - только для UnitId
+                                 -- Приход от поставщика - только для UnitId
                                , CASE WHEN _tmpUnit.UnitId > 0 THEN (Object_PartionGoods.Amount - COALESCE (tmpReturnOut.Amount, 0)) ELSE 0 END AS Income_Amount
                                , CASE WHEN _tmpUnit.UnitId > 0 THEN (Object_PartionGoods.Amount - COALESCE (tmpReturnOut.Amount, 0)) * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END ELSE 0 END AS Income_Summ
+                                 -- Приход от поставщика - только для UnitId
+                               , CASE WHEN _tmpUnit.UnitId > 0 THEN (Object_PartionGoods.Amount - 0) ELSE 0 END AS IncomeReal_Amount
+                               , CASE WHEN _tmpUnit.UnitId > 0 THEN (Object_PartionGoods.Amount - 0) * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END ELSE 0 END AS IncomeReal_Summ
 
                                  -- Остаток - без учета "долга"
                                , 0 AS Remains_Amount
@@ -740,8 +751,9 @@ BEGIN
                                , 0 AS SendIn_Summ
                                , 0 AS SendOut_Summ
 
-                                 -- Кол-во: Списание + Возврат поставщ.
+                                 -- Списание + Возврат поставщ.
                                , COALESCE (tmpReturnOut.Amount, 0) AS Loss_Amount
+                               , COALESCE (tmpReturnOut.Amount, 0) * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END AS Loss_Summ
 
                                  -- Кол-во: Долг
                                , 0 AS Debt_Amount
@@ -857,9 +869,12 @@ BEGIN
                                , Object_PartionGoods.CurrencyId AS CurrencyId
                                , CASE WHEN inIsOperPrice    = TRUE THEN Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END ELSE 0 :: TFloat END AS OperPrice
 
-                                 -- Кол-во Приход от поставщика - только для UnitId
+                                 -- Приход от поставщика - только для UnitId
                                , 0 AS Income_Amount
                                , 0 AS Income_Summ
+                                 -- Приход от поставщика - только для UnitId
+                               , 0 AS IncomeReal_Amount
+                               , 0 AS IncomeReal_Summ
 
                                  -- Остаток - без учета "долга"
                                , tmp.Remains_Amount        AS Remains_Amount
@@ -873,8 +888,9 @@ BEGIN
                                , CASE WHEN tmp.Send_Amount > 0 THEN  1 * tmp.Send_Amount * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END ELSE 0 END AS SendIn_Summ
                                , CASE WHEN tmp.Send_Amount < 0 THEN -1 * tmp.Send_Amount * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END ELSE 0 END AS SendOut_Summ
 
-                                 -- Кол-во: Списание + Возврат поставщ.
+                                 -- Списание + Возврат поставщ.
                                , 0 AS Loss_Amount
+                               , 0 AS Loss_Summ
 
                                  -- Кол-во: Долг
                                , 0 AS Debt_Amount
@@ -991,8 +1007,10 @@ BEGIN
                             , tmpData_all.CurrencyId
    
                             , tmpData_all.OperPrice
-                            , SUM (CASE WHEN tmpData_all.Ord = 1 THEN tmpData_all.Income_Amount ELSE 0 END) AS Income_Amount
-                            , SUM (CASE WHEN tmpData_all.Ord = 1 THEN tmpData_all.Income_Summ   ELSE 0 END) AS Income_Summ
+                            , SUM (CASE WHEN tmpData_all.Ord = 1 THEN tmpData_all.Income_Amount     ELSE 0 END) AS Income_Amount
+                            , SUM (CASE WHEN tmpData_all.Ord = 1 THEN tmpData_all.Income_Summ       ELSE 0 END) AS Income_Summ
+                            , SUM (CASE WHEN tmpData_all.Ord = 1 THEN tmpData_all.IncomeReal_Amount ELSE 0 END) AS IncomeReal_Amount
+                            , SUM (CASE WHEN tmpData_all.Ord = 1 THEN tmpData_all.IncomeReal_Summ   ELSE 0 END) AS IncomeReal_Summ
    
                             , SUM (tmpData_all.Remains_Amount)      AS Remains_Amount
                             , SUM (tmpData_all.Remains_Summ)        AS Remains_Summ
@@ -1007,6 +1025,7 @@ BEGIN
                             , SUM (tmpData_all.Sale_Amount_OutDiscount) AS Sale_OutDiscount
 
                             , SUM (tmpData_all.Loss_Amount)             AS Loss_Amount
+                            , SUM (tmpData_all.Loss_Summ)               AS Loss_Summ
 
                             , SUM (tmpData_all.Debt_Amount)             AS Debt_Amount
                             , SUM (tmpData_all.Debt_Summ)               AS Debt_Summ
@@ -1209,9 +1228,12 @@ BEGIN
                     ELSE 0
                END                          :: TFloat AS OperPrice
 
-               -- Приход, и здесь вычитаем если было Списание или Возврат Поставщику
+               -- Приход - только для UnitId, и здесь вычитаем если было Списание или Возврат Поставщику
              , tmpData.Income_Amount        :: TFloat AS Income_Amount
              , tmpData.Income_Summ          :: TFloat AS Income_Summ
+               -- Приход - РЕАЛЬНЫЙ - только для UnitId, и здесь НЕ вычитаем если было Списание или Возврат Поставщику
+             , tmpData.IncomeReal_Amount    :: TFloat AS IncomeReal_Amount
+             , tmpData.IncomeReal_Summ      :: TFloat AS IncomeReal_Summ
                                             
                -- Остаток - без учета "долга"
              , tmpData.Remains_Amount       :: TFloat AS Remains_Amount
@@ -1225,8 +1247,9 @@ BEGIN
              , tmpData.SendIn_Summ          :: TFloat AS SendIn_Summ
              , tmpData.SendIn_Summ          :: TFloat AS SendIn_Summ
 
-               -- Кол-во: Списание + Возврат поставщ.
+               -- Списание + Возврат поставщ.
              , tmpData.Loss_Amount          :: TFloat
+             , tmpData.Loss_Summ            :: TFloat
 
                -- Кол-во Остаток - "долг"
              , tmpData.Debt_Amount          :: TFloat

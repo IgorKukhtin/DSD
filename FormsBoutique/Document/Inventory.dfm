@@ -146,6 +146,11 @@ object InventoryForm: TInventoryForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountSecond_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountClient
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -254,6 +259,11 @@ object InventoryForm: TInventoryForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountSecond_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountClient
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
