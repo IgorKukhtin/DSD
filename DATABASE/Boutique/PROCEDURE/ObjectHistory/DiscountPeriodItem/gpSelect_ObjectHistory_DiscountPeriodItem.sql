@@ -92,20 +92,14 @@ BEGIN
                             , SUM (CASE WHEN CLO_Client.ContainerId IS NULL THEN COALESCE (Container.Amount, 0) ELSE 0 END)  AS Amount
                             , SUM (CASE WHEN CLO_Client.ContainerId > 0     THEN COALESCE (Container.Amount, 0) ELSE 0 END)  AS AmountDebt
                        FROM Container
-                            --INNER JOIN tmpList ON tmpList.GoodsId = Container.ObjectId
                             LEFT JOIN ContainerLinkObject AS CLO_Client
                                                           ON CLO_Client.ContainerId = Container.Id
                                                          AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
                        WHERE Container.DescId        = zc_Container_Count()
-                         AND (Container.WhereObjectId = inUnitId OR inUnitId = 0)
-                         --AND Container.Amount       <> 0
-                         -- !!!отбросили Долги Покупателей!!!
-                         -- AND CLO_Client.ContainerId IS NULL
+                        AND (Container.WhereObjectId = inUnitId OR inUnitId = 0)
                        GROUP BY Container.PartionId
                               , Container.ObjectId
                               , Container.WhereObjectId
-                       HAVING (SUM (Container.Amount) <> 0 AND inShowAll = FALSE) 
-                           OR inShowAll = TRUE
                       )
 
     , tmpGoods AS (SELECT tmpPartionGoods.MovementId
@@ -132,8 +126,8 @@ BEGIN
                         , SUM (COALESCE (tmpContainer.Amount, 0))        AS Remains
                         , SUM (COALESCE (tmpContainer.AmountDebt, 0))    AS AmountDebt
                    FROM tmpPartionGoods
-                        INNER JOIN tmpContainer ON tmpContainer.GoodsId   = tmpPartionGoods.GoodsId
-                                               AND tmpContainer.PartionId = tmpPartionGoods.PartionId
+                        LEFT JOIN tmpContainer ON tmpContainer.GoodsId   = tmpPartionGoods.GoodsId
+                                              AND tmpContainer.PartionId = tmpPartionGoods.PartionId
                                               -- AND tmpContainer.UnitId    = tmpPartionGoods.UnitId
                         LEFT JOIN Object AS Object_GoodsSize   ON Object_GoodsSize.Id   = tmpPartionGoods.GoodsSizeId
                    GROUP BY tmpPartionGoods.MovementId
@@ -155,6 +149,9 @@ BEGIN
                           , tmpPartionGoods.LineFabricaId
                           , tmpPartionGoods.LabelId
                           , CASE WHEN inIsSize  = TRUE THEN Object_GoodsSize.Id ELSE 0 END
+                   HAVING SUM (COALESCE (tmpContainer.Amount, 0)) <> 0 
+                       OR SUM (COALESCE (tmpContainer.AmountDebt, 0)) <> 0
+                       OR inShowAll = TRUE
                    )
                    
     , tmpList AS (SELECT DISTINCT tmpGoods.GoodsId 

@@ -106,7 +106,7 @@ BEGIN
                   , tmpOlap.GoodsName
                   , tmpOlap.GoodsInfoName
                   , tmpOlap.GoodsSizeId
-                  , CASE WHEN tmpOlap.GoodsSizeName = '' THEN '_' ELSE tmpOlap.GoodsSizeName END GoodsSizeName
+                  , tmpOlap.GoodsSizeName
                   , tmpOlap.GroupsName1
                   , tmpOlap.GroupsName2
                   , tmpOlap.GroupsName3
@@ -147,21 +147,19 @@ BEGIN
     INSERT INTO _tmpSize (SizeId, SizeName, Ord)
          SELECT tmp.SizeId
               , tmp.SizeName
-             -- , tmp.Amount
               , ROW_NUMBER() OVER (ORDER BY tmp.SizeName asc) AS Ord
          FROM (SELECT tmpOlap.GoodsSizeId     AS SizeId
                     , tmpOlap.GoodsSizeName   AS SizeName
-                    , SUM (COALESCE (tmpOLAP.Income_Amount,0) + COALESCE (tmpOLAP.Remains_Amount,0) + COALESCE (tmpOLAP.Sale_Amount,0)) AS Amount
                FROM _tmpOLAP AS tmpOLAP
                GROUP BY tmpOlap.GoodsSizeId
                       , tmpOlap.GoodsSizeName
-            --   HAVING SUM (COALESCE (tmpOLAP.Income_Amount,0) + COALESCE (tmpOLAP.Remains_Amount,0) + COALESCE (tmpOLAP.Sale_Amount,0)) <> 0
                ) AS tmp;
 
      /*
      select zfCalc_Word_Split (inValue:= tt.SizeName, inSep:= ';', inIndex:= ) ::TFloat AS Value1
      select STRING_AGG (DISTINCT tmpSize.SizeName,  '; ') AS SizeName
-     */            
+     */
+            
     -- Результат 1 размеры
     OPEN Cursor1 FOR
          WITH
