@@ -103,6 +103,7 @@ type
     InvNumber_Partion: TcxGridDBColumn;
     ExecuteDialogPersent: TExecuteDialog;
     FormParams: TdsdFormParams;
+    cbSize: TcxCheckBox;
   private
     { Private declarations }
   public

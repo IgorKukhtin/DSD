@@ -106,7 +106,7 @@ BEGIN
                   , tmpOlap.GoodsName
                   , tmpOlap.GoodsInfoName
                   , tmpOlap.GoodsSizeId
-                  , tmpOlap.GoodsSizeName
+                  , CASE WHEN tmpOlap.GoodsSizeName = '' THEN '_' ELSE tmpOlap.GoodsSizeName END GoodsSizeName
                   , tmpOlap.GroupsName1
                   , tmpOlap.GroupsName2
                   , tmpOlap.GroupsName3
@@ -136,17 +136,26 @@ BEGIN
                     , tmpOlap.GroupsName1
                     , tmpOlap.GroupsName2
                     , tmpOlap.GroupsName3
-                    , tmpOlap.GroupsName4;
+                    , tmpOlap.GroupsName4
+             HAVING SUM (tmpOlap.Income_Amount) <> 0
+                 OR SUM (tmpOlap.Remains_Amount) <> 0
+                 OR SUM (tmpOlap.Sale_Amount) <> 0
+             ;
 
     -- таблица размеров, нумеруем и выводим отдельно только 70 шт
     CREATE TEMP TABLE _tmpSize (SizeId Integer, SizeName TVarChar, Ord Integer) ON COMMIT DROP;
     INSERT INTO _tmpSize (SizeId, SizeName, Ord)
          SELECT tmp.SizeId
-               , SizeName
-               , ROW_NUMBER() OVER (ORDER BY tmp.SizeName asc) AS Ord
-         FROM (SELECT DISTINCT tmpOlap.GoodsSizeId AS SizeId
-                    , tmpOlap.GoodsSizeName        AS SizeName
+              , tmp.SizeName
+             -- , tmp.Amount
+              , ROW_NUMBER() OVER (ORDER BY tmp.SizeName asc) AS Ord
+         FROM (SELECT tmpOlap.GoodsSizeId     AS SizeId
+                    , tmpOlap.GoodsSizeName   AS SizeName
+                    , SUM (COALESCE (tmpOLAP.Income_Amount,0) + COALESCE (tmpOLAP.Remains_Amount,0) + COALESCE (tmpOLAP.Sale_Amount,0)) AS Amount
                FROM _tmpOLAP AS tmpOLAP
+               GROUP BY tmpOlap.GoodsSizeId
+                      , tmpOlap.GoodsSizeName
+            --   HAVING SUM (COALESCE (tmpOLAP.Income_Amount,0) + COALESCE (tmpOLAP.Remains_Amount,0) + COALESCE (tmpOLAP.Sale_Amount,0)) <> 0
                ) AS tmp;
 
      /*
@@ -458,7 +467,7 @@ BEGIN
                           , COALESCE (tmpOlap.Remains_Amount, 0) AS Remains_Amount
 
                      FROM _tmpOLAP AS tmpOLAP
-                          LEFT JOIN _tmpSize AS tmpSize ON tmpSize.SizeId = tmpOLAP.GoodsSizeId
+                           JOIN _tmpSize AS tmpSize ON tmpSize.SizeId = tmpOLAP.GoodsSizeId
                      ) 
 
          -- результат

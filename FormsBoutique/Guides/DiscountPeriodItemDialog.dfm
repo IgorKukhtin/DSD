@@ -106,7 +106,7 @@ object DiscountPeriodItemDialogForm: TDiscountPeriodItemDialogForm
     Width = 305
   end
   object cxLabel5: TcxLabel
-    Left = 154
+    Left = 103
     Top = 180
     Caption = #1043#1086#1076' '#1087#1086' ...'
   end
@@ -122,7 +122,7 @@ object DiscountPeriodItemDialogForm: TDiscountPeriodItemDialogForm
     Width = 69
   end
   object edEndYear: TcxButtonEdit
-    Left = 154
+    Left = 103
     Top = 203
     Properties.Buttons = <
       item
@@ -131,6 +131,16 @@ object DiscountPeriodItemDialogForm: TDiscountPeriodItemDialogForm
       end>
     TabOrder = 13
     Width = 69
+  end
+  object cbSize: TcxCheckBox
+    Left = 193
+    Top = 203
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' '#1076#1077#1090#1072#1083#1100#1085#1086'('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1056#1072#1079#1084#1077#1088#1099' '#1076#1077#1090#1072#1083#1100#1085#1086
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 14
+    Width = 122
   end
   object PeriodChoice: TPeriodChoice
     DateStart = edShowDate
@@ -246,6 +256,14 @@ object DiscountPeriodItemDialogForm: TDiscountPeriodItemDialogForm
         Component = GuidesEndYear
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSize'
+        Value = Null
+        Component = cbSize
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -401,8 +419,8 @@ object DiscountPeriodItemDialogForm: TDiscountPeriodItemDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 109
-    Top = 163
+    Left = 37
+    Top = 227
   end
   object spGet_Current_Date: TdsdStoredProc
     StoredProcName = 'gpGet_Current_Date'

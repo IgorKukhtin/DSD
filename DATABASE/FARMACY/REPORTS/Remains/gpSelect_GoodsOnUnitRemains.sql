@@ -224,6 +224,7 @@ BEGIN
                                                                              inUnitId   := inUnitId,
                                                                              inObjectId := vbObjectId, 
                                                                              inUserId   := vbUserId) AS tmp -- limit 1
+                                       WHERE 1=0 -- работает больше 1 мин.  много документов и строк более 180тыщ.
                                        )
   , Object_Price AS (SELECT Object_Price.Id       AS Id
                           , Object_Price.GoodsId  AS GoodsId
@@ -354,3 +355,4 @@ $BODY$
 -- тест
 --
 -- SELECT * FROM gpSelect_GoodsOnUnitRemains (inUnitId := 377613 , inRemainsDate := ('10.05.2016')::TDateTime, inIsPartion:= FALSE, inisPartionPrice:= FALSE, inisJuridical:=True, inSession := '3'::tvarchar);
+--select * from gpSelect_GoodsOnUnitRemains(inUnitId := 7433764 , inRemainsDate := ('24.05.2018')::TDateTime , inIsPartion := 'False' , inisPartionPrice := 'False' , inisJuridical := 'False' ,  inSession := '7670317');

@@ -6941,13 +6941,22 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
         Component = deEnd
       end
       item
-      end
-      item
-      end
-      item
-      end
-      item
         Component = GuidesUnit
+      end
+      item
+        Component = GuidesPartner
+      end
+      item
+        Component = GuidesBrand
+      end
+      item
+        Component = GuidesPeriod
+      end
+      item
+        Component = GuidesStartYear
+      end
+      item
+        Component = GuidesEndYear
       end>
     Left = 352
     Top = 352

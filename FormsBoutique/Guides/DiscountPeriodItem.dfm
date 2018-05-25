@@ -511,6 +511,16 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       TabOrder = 12
       Width = 52
     end
+    object cbSize: TcxCheckBox
+      Left = 733
+      Top = 9
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1056#1072#1079#1084#1077#1088#1099' '#1076#1077#1090#1072#1083#1100#1085#1086'('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1056#1072#1079#1084#1077#1088#1099' '#1076#1077#1090#1072#1083#1100#1085#1086
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 13
+      Width = 131
+    end
   end
   object cxLabel3: TcxLabel
     Left = 530
@@ -1104,6 +1114,14 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isSize'
+          Value = Null
+          Component = cbSize
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1163,6 +1181,14 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         Value = Null
         Component = GuidesEndYear
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsSize'
+        Value = Null
+        Component = cbSize
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
