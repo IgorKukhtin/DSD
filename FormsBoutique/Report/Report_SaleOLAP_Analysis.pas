@@ -71,6 +71,8 @@ type
     GuidesBrand: TdsdGuides;
     GuidesEndYear: TdsdGuides;
     GuidesStartYear: TdsdGuides;
+    Persent_Sale: TcxGridDBColumn;
+    Color_Grey: TcxGridDBColumn;
   private
     { Private declarations }
   public

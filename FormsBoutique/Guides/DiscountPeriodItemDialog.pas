@@ -50,6 +50,7 @@ type
     spGet_Current_Date: TdsdStoredProc;
     ActionList: TActionList;
     actRefreshStart: TdsdDataSetRefresh;
+    cbSize: TcxCheckBox;
   private
     { Private declarations }
   public

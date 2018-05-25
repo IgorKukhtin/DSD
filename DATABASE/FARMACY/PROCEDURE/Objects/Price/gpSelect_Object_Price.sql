@@ -931,7 +931,7 @@ BEGIN
 
                          FROM tmpGoods
                          
-                             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoods.GoodsId-- and 1=0
+                             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoods.GoodsId
 
                               LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                                    ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpGoods.GoodsId

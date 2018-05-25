@@ -1171,7 +1171,10 @@ begin
               dsdSave.Params.AddParam('inCashSessionId', ftString, ptInput, FormParams.ParamByName('CashSessionId').Value);
               dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
               try
+                Add_Log('Start Execute gpComplete_Movement_Check_ver2_NoDiff');
+                Add_Log('      ' + Head.UID + ' ID - ' + IntToStr(Head.ID));
                 dsdSave.Execute(False, False);
+                Add_Log('Start Execute gpComplete_Movement_Check_ver2_NoDiff');
                 Head.COMPL := True;
               except
                 on E: Exception do

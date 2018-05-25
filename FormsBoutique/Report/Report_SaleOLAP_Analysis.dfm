@@ -1151,6 +1151,18 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
               Format = ',0.####'
               Kind = skSum
               Column = Remains_Amount0
+            end
+            item
+              Kind = skSum
+              Column = Income_Amount
+            end
+            item
+              Kind = skSum
+              Column = Sale_Amount
+            end
+            item
+              Kind = skSum
+              Column = Remains_Amount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -2282,6 +2294,21 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
               Format = ',0.####'
               Kind = skSum
               Column = Remains_Amount0
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Income_Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains_Amount
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -4911,40 +4938,92 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
             Width = 38
           end
           object Income_Amount0: TcxGridDBColumn
-            Caption = #1055#1088#1080#1093'.0 '
-            DataBinding.FieldName = 'Income_Amount0 '
+            Caption = #1055#1088#1080#1093'.'#1087#1088'.'
+            DataBinding.FieldName = 'Income_Amount0'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1080#1093#1086#1076' 0 '
+            HeaderHint = #1055#1088#1080#1093#1086#1076' '#1086#1089#1090#1072#1083#1100#1085#1099#1077' '#1088'-'#1088#1099
             Options.Editing = False
             Width = 38
           end
           object Sale_Amount0: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076'.0 '
-            DataBinding.FieldName = 'Sale_Amount0 '
+            Caption = #1055#1088#1086#1076'. '#1087#1088'.'
+            DataBinding.FieldName = 'Sale_Amount0'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1086#1076#1072#1078#1072' 0 '
+            HeaderHint = #1055#1088#1086#1076#1072#1078#1072' '#1086#1089#1090#1072#1083#1100#1085#1099#1077' '#1088'-'#1088#1099
             Options.Editing = False
             Width = 38
           end
           object Remains_Amount0: TcxGridDBColumn
-            Caption = #1054#1089#1090'. 0 '
-            DataBinding.FieldName = 'Remains_Amount0 '
+            Caption = #1054#1089#1090'. '#1087#1088'.'
+            DataBinding.FieldName = 'Remains_Amount0'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' 0 '
+            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1086#1089#1090#1072#1083#1100#1085#1099#1077' '#1088'-'#1088#1099
             Options.Editing = False
             Width = 38
+          end
+          object Income_Amount: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093'. '#1080#1090#1086#1075#1086
+            DataBinding.FieldName = 'Income_Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1093#1086#1076'  '#1080#1090#1086#1075#1086
+            Options.Editing = False
+            Width = 45
+          end
+          object Sale_Amount: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076'. '#1080#1090#1086#1075#1086
+            DataBinding.FieldName = 'Sale_Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1076#1072#1078#1072' '#1080#1090#1086#1075#1086
+            Options.Editing = False
+            Width = 45
+          end
+          object Remains_Amount: TcxGridDBColumn
+            Caption = #1054#1089#1090'.  '#1080#1090#1086#1075#1086
+            DataBinding.FieldName = 'Remains_Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1080#1090#1086#1075#1086
+            Options.Editing = False
+            Width = 45
+          end
+          object Persent_Sale: TcxGridDBColumn
+            Caption = '% '#1087#1088#1086#1076#1072#1078
+            DataBinding.FieldName = 'Persent_Sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1087#1088#1086#1076#1072#1078
+            Width = 50
+          end
+          object Color_Grey: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_Grey'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 30
           end
         end
       end
@@ -5763,6 +5842,7 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
       end>
   end
   inherited ActionList: TActionList
+    Left = 183
     object actRefreshIsPeriod: TdsdDataSetRefresh [0]
       Category = 'DSDLib'
       MoveParams = <>
@@ -5806,15 +5886,17 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
+      Caption = #1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078' 1'
+      Hint = #1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078'1'
       ImageIndex = 3
-      ShortCut = 16464
       DataSets = <
         item
+          DataSet = MasterCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'MovementDescName_order;OperDate;ObjectByName;InvNumber'
-          GridView = cxGridDBTableView
+        end
+        item
+          DataSet = ClientDataSet
+          UserName = 'frxDBDChild'
         end>
       Params = <
         item
@@ -5840,36 +5922,47 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'LocationName'
+          Name = 'PartnerName'
           Value = ''
+          Component = GuidesPartner
+          ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
         end
         item
-          Name = 'GoodsGroupId'
+          Name = 'BrandName'
           Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsGroupName'
-          Value = Null
+          Component = GuidesBrand
+          ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
         end
         item
-          Name = 'GoodsName'
+          Name = 'PeriodName'
+          Value = Null
+          Component = GuidesPeriod
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartYear'
           Value = ''
+          Component = GuidesStartYear
+          ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
         end
         item
-          Name = 'isSumm_branch'
+          Name = 'EndYear'
           Value = Null
-          DataType = ftBoolean
+          Component = GuidesEndYear
+          ComponentItem = 'TextValue'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
+      ReportName = #1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078'1'
+      ReportNameParam.Value = #1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078'1'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -6256,6 +6349,14 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -6266,7 +6367,6 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
-      Visible = ivNever
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
@@ -6282,6 +6382,547 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        ColorColumn = Income_Amount2
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount2
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount2
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount4
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount4
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount4
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount6
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount6
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount6
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount8
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount8
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount8
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount10
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount10
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount10
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount12
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount12
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount12
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount14
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount14
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount14
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount16
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount16
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount16
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount18
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount18
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount18
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount20
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount20
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount20
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount22
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount22
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount22
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount24
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount24
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount24
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount26
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount26
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount26
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount28
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount28
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount28
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount30
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount30
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount30
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount32
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount32
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount32
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount34
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount34
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount34
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount36
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount36
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount36
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount38
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount38
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount38
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount40
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount40
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount40
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount42
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount42
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount42
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount44
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount44
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount44
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount46
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount46
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount46
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount48
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount48
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount48
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount50
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount50
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount50
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount52
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount52
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount52
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount54
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount54
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount54
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount56
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount56
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount56
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount58
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount58
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount58
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount60
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount60
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount60
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount62
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount62
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount62
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount64
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount64
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount64
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount66
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount66
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount66
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount68
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount68
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount68
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount70
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount70
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount70
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Income_Amount
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Remains_Amount
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount
+        BackGroundValueColumn = Color_Grey
+        ColorValueList = <>
+      end>
     Left = 368
   end
   inherited PeriodChoice: TPeriodChoice
@@ -6300,13 +6941,22 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
         Component = deEnd
       end
       item
-      end
-      item
-      end
-      item
-      end
-      item
         Component = GuidesUnit
+      end
+      item
+        Component = GuidesPartner
+      end
+      item
+        Component = GuidesBrand
+      end
+      item
+        Component = GuidesPeriod
+      end
+      item
+        Component = GuidesStartYear
+      end
+      item
+        Component = GuidesEndYear
       end>
     Left = 352
     Top = 352

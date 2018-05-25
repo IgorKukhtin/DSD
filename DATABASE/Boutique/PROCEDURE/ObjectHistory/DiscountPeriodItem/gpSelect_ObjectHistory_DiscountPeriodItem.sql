@@ -1,6 +1,7 @@
 -- Function: gpSelect_ObjectHistory_DiscountPeriodItem ()
 
 DROP FUNCTION IF EXISTS gpSelect_ObjectHistory_DiscountPeriodItem (Integer, Integer, Integer, TDateTime, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_ObjectHistory_DiscountPeriodItem (Integer, Integer, Integer, TDateTime, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_DiscountPeriodItem(
     IN inUnitId             Integer   , -- подразделение
@@ -9,7 +10,8 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_DiscountPeriodItem(
     IN inOperDate           TDateTime , -- Дата действия
     IN inStartYear          Integer   , -- год с
     IN inEndYear            Integer   , -- год по
-    IN inShowAll            Boolean,
+    IN inIsSize             Boolean   , -- показать Размеры детально(Да/Нет)
+    IN inShowAll            Boolean   , --
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE  (  Id Integer , ObjectId Integer
@@ -55,76 +57,33 @@ BEGIN
 
     -- Выбираем данные
      RETURN QUERY
-       WITH tmpPartionGoods AS
-                           (SELECT Object_PartionGoods.MovementId      AS MovementId
-                                 , Object_PartionGoods.MovementItemId  AS PartionId
-                                 , Object_PartionGoods.GoodsId         AS GoodsId
-                                 , Object_Partner.ValueData            AS PartnerName
-                                 , Object_Unit_in.ValueData            AS UnitName_in
-                                 , Object_PartionGoods.OperDate        AS OperDate
-                                 , Object_Currency.ValueData           AS CurrencyName
-                                 , Object_PartionGoods.OperPrice       AS OperPrice
-                                 , Object_PartionGoods.OperPriceList   AS OperPriceList
-                                 , Object_Brand.ValueData              AS BrandName
-                                 , Object_Period.ValueData             AS PeriodName
-                                 , Object_PartionGoods.PeriodYear      AS PeriodYear
-                                 , Object_Fabrika.ValueData            AS FabrikaName
-                                 , Object_GoodsGroup.ValueData         AS GoodsGroupName
-                                 , Object_Measure.ValueData            AS MeasureName
-                                 , Object_Composition.ValueData        AS CompositionName
-                                 , Object_GoodsInfo.ValueData          AS GoodsInfoName
-                                 , Object_LineFabrica.ValueData        AS LineFabricaName
-                                 , Object_Label.ValueData              AS LabelName
-                                 , Object_GoodsSize.ValueData          AS GoodsSizeName
-                            FROM Object_PartionGoods
-                                 LEFT JOIN Object AS Object_Partner     ON Object_Partner.Id     = Object_PartiONGoods.PartnerId
-                                 LEFT JOIN Object AS Object_Unit_in     ON Object_Unit_in.Id     = Object_PartionGoods.UnitId
-                                 LEFT JOIN Object AS Object_Currency    ON Object_Currency.Id    = Object_PartionGoods.CurrencyId
-                                 LEFT JOIN Object AS Object_Brand       ON Object_Brand.Id       = Object_PartionGoods.BrandId
-                                 LEFT JOIN Object AS Object_Period      ON Object_Period.Id      = Object_PartionGoods.PeriodId
-                                 LEFT JOIN Object AS Object_Fabrika     ON Object_Fabrika.Id     = Object_PartionGoods.FabrikaId
-                                 LEFT JOIN Object AS Object_GoodsGroup  ON Object_GoodsGroup.Id  = Object_PartionGoods.GoodsGroupId
-                                 LEFT JOIN Object AS Object_Measure     ON Object_Measure.Id     = Object_PartionGoods.MeasureId
-                                 LEFT JOIN Object AS Object_Composition ON Object_Composition.Id = Object_PartionGoods.CompositionId
-                                 LEFT JOIN Object AS Object_GoodsInfo   ON Object_GoodsInfo.Id   = Object_PartionGoods.GoodsInfoId
-                                 LEFT JOIN Object AS Object_LineFabrica ON Object_LineFabrica.Id = Object_PartionGoods.LineFabricaId
-                                 LEFT JOIN Object AS Object_Label       ON Object_Label.Id       = Object_PartionGoods.LabelId
-                                 LEFT JOIN Object AS Object_GoodsSize   ON Object_GoodsSize.Id   = Object_PartionGoods.GoodsSizeId
-                            WHERE Object_PartionGoods.isErased    = FALSE
-                              -- AND Object_PartionGoods.UnitId      = inUnitId
-                              AND (Object_PartionGoods.BrandId    = inBrandId  OR inBrandId  = 0)
-                              AND (Object_PartionGoods.PeriodId   = inPeriodId OR inPeriodId = 0)
-                              AND (Object_PartionGoods.PeriodYear BETWEEN inStartYear AND inEndYear)
-                           )
-          , tmpList AS (SELECT DISTINCT tmpPartionGoods.GoodsId FROM tmpPartionGoods)
-          , tmpDiscount AS (SELECT ObjectHistory_DiscountPeriodItem.Id        AS Id
-                                 , ObjectHistory_DiscountPeriodItem.ObjectId  AS ObjectId
-                                 , ObjectLink_Goods.ChildObjectId             AS GoodsId
-
-                                 , ObjectHistory_DiscountPeriodItem.StartDate
-                                 , ObjectHistory_DiscountPeriodItem.EndDate
-                                 , ObjectHistoryFloat_Value.ValueData        AS ValueDiscount
-
-                            FROM ObjectLink AS ObjectLink_Unit
-                                 LEFT JOIN ObjectLink AS ObjectLink_Goods
-                                                      ON ObjectLink_Goods.ObjectId = ObjectLink_Unit.ObjectId
-                                                     AND ObjectLink_Goods.DescId   = zc_ObjectLink_DiscountPeriodItem_Goods()
-                                 INNER JOIN tmpList ON tmpList.GoodsId = ObjectLink_Goods.ChildObjectId
-
-                                 LEFT JOIN ObjectHistory AS ObjectHistory_DiscountPeriodItem
-                                                         ON ObjectHistory_DiscountPeriodItem.ObjectId = ObjectLink_Unit.ObjectId
-                                                        AND ObjectHistory_DiscountPeriodItem.DescId   = zc_ObjectHistory_DiscountPeriodItem()
-                                                        AND inOperDate >= ObjectHistory_DiscountPeriodItem.StartDate AND inOperDate < ObjectHistory_DiscountPeriodItem.EndDate
-                                 LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value
-                                                              ON ObjectHistoryFloat_Value.ObjectHistoryId = ObjectHistory_DiscountPeriodItem.Id
-                                                             AND ObjectHistoryFloat_Value.DescId          = zc_ObjectHistoryFloat_DiscountPeriodItem_Value()
-
-                            WHERE ObjectLink_Unit.DescId        = zc_ObjectLink_DiscountPeriodItem_Unit()
-                              AND ObjectLink_Unit.ChildObjectId = inUnitId
-                              AND (ObjectHistoryFloat_Value.ValueData <> 0
-                                OR ObjectHistory_DiscountPeriodItem.StartDate > zc_DateStart()
-                                  )
-                           )
+     WITH 
+      tmpPartionGoods AS (SELECT Object_PartionGoods.MovementId
+                               , Object_PartionGoods.MovementItemId  AS PartionId
+                               , Object_PartionGoods.GoodsId
+                               , Object_PartiONGoods.PartnerId
+                               , Object_PartionGoods.UnitId
+                               , Object_PartionGoods.OperDate
+                               , Object_PartionGoods.CurrencyId
+                               , Object_PartionGoods.OperPrice
+                               , Object_PartionGoods.OperPriceList
+                               , Object_PartionGoods.BrandId
+                               , Object_PartionGoods.PeriodId
+                               , Object_PartionGoods.PeriodYear
+                               , Object_PartionGoods.FabrikaId
+                               , Object_PartionGoods.GoodsGroupId
+                               , Object_PartionGoods.MeasureId
+                               , Object_PartionGoods.CompositionId
+                               , Object_PartionGoods.GoodsInfoId
+                               , Object_PartionGoods.LineFabricaId
+                               , Object_PartionGoods.LabelId
+                               , Object_PartionGoods.GoodsSizeId
+                          FROM Object_PartionGoods
+                          WHERE Object_PartionGoods.isErased    = FALSE
+                            AND (Object_PartionGoods.BrandId    = inBrandId  OR inBrandId  = 0)
+                            AND (Object_PartionGoods.PeriodId   = inPeriodId OR inPeriodId = 0)
+                            AND (Object_PartionGoods.PeriodYear BETWEEN inStartYear AND inEndYear)
+                         )
 
       -- остаток
     , tmpContainer AS (SELECT Container.PartionId     AS PartionId
@@ -133,66 +92,103 @@ BEGIN
                             , SUM (CASE WHEN CLO_Client.ContainerId IS NULL THEN COALESCE (Container.Amount, 0) ELSE 0 END)  AS Amount
                             , SUM (CASE WHEN CLO_Client.ContainerId > 0     THEN COALESCE (Container.Amount, 0) ELSE 0 END)  AS AmountDebt
                        FROM Container
-                            INNER JOIN tmpList ON tmpList.GoodsId = Container.ObjectId
+                            --INNER JOIN tmpList ON tmpList.GoodsId = Container.ObjectId
                             LEFT JOIN ContainerLinkObject AS CLO_Client
                                                           ON CLO_Client.ContainerId = Container.Id
                                                          AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
                        WHERE Container.DescId        = zc_Container_Count()
                          AND (Container.WhereObjectId = inUnitId OR inUnitId = 0)
-                         AND Container.Amount       <> 0
+                         --AND Container.Amount       <> 0
                          -- !!!отбросили Долги Покупателей!!!
                          -- AND CLO_Client.ContainerId IS NULL
                        GROUP BY Container.PartionId
                               , Container.ObjectId
                               , Container.WhereObjectId
-                       HAVING SUM (Container.Amount)<> 0
+                       HAVING (SUM (Container.Amount) <> 0 AND inShowAll = FALSE) 
+                           OR inShowAll = TRUE
                       )
 
     , tmpGoods AS (SELECT tmpPartionGoods.MovementId
                         , tmpPartionGoods.GoodsId
                         , tmpPartionGoods.OperDate
-                        , tmpPartionGoods.UnitName_in
-                        , tmpPartionGoods.PartnerName
-                        , tmpPartionGoods.CurrencyName
+                        , tmpPartionGoods.UnitId
+                        , tmpPartionGoods.PartnerId
+                        , tmpPartionGoods.CurrencyId
                         , tmpPartionGoods.OperPrice
                         , tmpPartionGoods.OperPriceList
-                        , tmpPartionGoods.BrandName
-                        , tmpPartionGoods.PeriodName
+                        , tmpPartionGoods.BrandId
+                        , tmpPartionGoods.PeriodId
                         , tmpPartionGoods.PeriodYear
-                        , tmpPartionGoods.FabrikaName
-                        , tmpPartionGoods.GoodsGroupName
-                        , tmpPartionGoods.MeasureName
-                        , tmpPartionGoods.CompositionName
-                        , tmpPartionGoods.GoodsInfoName
-                        , tmpPartionGoods.LineFabricaName
-                        , tmpPartionGoods.LabelName
-                        , tmpPartionGoods.GoodsSizeName
+                        , tmpPartionGoods.FabrikaId
+                        , tmpPartionGoods.GoodsGroupId
+                        , tmpPartionGoods.MeasureId
+                        , tmpPartionGoods.CompositionId
+                        , tmpPartionGoods.GoodsInfoId
+                        , tmpPartionGoods.LineFabricaId
+                        , tmpPartionGoods.LabelId
+                        , CASE WHEN inIsSize  = TRUE THEN Object_GoodsSize.Id ELSE 0 END GoodsSizeId
+                        , STRING_AGG (Object_GoodsSize.ValueData, ', ' ORDER BY CASE WHEN LENGTH (Object_GoodsSize.ValueData) = 1 THEN '0' ELSE '' END || Object_GoodsSize.ValueData)  AS GoodsSizeName
+                        
                         , SUM (COALESCE (tmpContainer.Amount, 0))        AS Remains
                         , SUM (COALESCE (tmpContainer.AmountDebt, 0))    AS AmountDebt
                    FROM tmpPartionGoods
                         INNER JOIN tmpContainer ON tmpContainer.GoodsId   = tmpPartionGoods.GoodsId
                                                AND tmpContainer.PartionId = tmpPartionGoods.PartionId
                                               -- AND tmpContainer.UnitId    = tmpPartionGoods.UnitId
+                        LEFT JOIN Object AS Object_GoodsSize   ON Object_GoodsSize.Id   = tmpPartionGoods.GoodsSizeId
                    GROUP BY tmpPartionGoods.MovementId
                           , tmpPartionGoods.GoodsId
                           , tmpPartionGoods.OperDate
-                          , tmpPartionGoods.UnitName_in
-                          , tmpPartionGoods.PartnerName
-                          , tmpPartionGoods.CurrencyName
+                          , tmpPartionGoods.UnitId
+                          , tmpPartionGoods.PartnerId
+                          , tmpPartionGoods.CurrencyId
                           , tmpPartionGoods.OperPrice
                           , tmpPartionGoods.OperPriceList
-                          , tmpPartionGoods.BrandName
-                          , tmpPartionGoods.PeriodName
+                          , tmpPartionGoods.BrandId
+                          , tmpPartionGoods.PeriodId
                           , tmpPartionGoods.PeriodYear
-                          , tmpPartionGoods.FabrikaName
-                          , tmpPartionGoods.GoodsGroupName
-                          , tmpPartionGoods.MeasureName
-                          , tmpPartionGoods.CompositionName
-                          , tmpPartionGoods.GoodsInfoName
-                          , tmpPartionGoods.LineFabricaName
-                          , tmpPartionGoods.LabelName
-                          , tmpPartionGoods.GoodsSizeName
+                          , tmpPartionGoods.FabrikaId
+                          , tmpPartionGoods.GoodsGroupId
+                          , tmpPartionGoods.MeasureId
+                          , tmpPartionGoods.CompositionId
+                          , tmpPartionGoods.GoodsInfoId
+                          , tmpPartionGoods.LineFabricaId
+                          , tmpPartionGoods.LabelId
+                          , CASE WHEN inIsSize  = TRUE THEN Object_GoodsSize.Id ELSE 0 END
                    )
+                   
+    , tmpList AS (SELECT DISTINCT tmpGoods.GoodsId 
+                  FROM tmpGoods
+                  )
+    
+    , tmpDiscount AS (SELECT ObjectHistory_DiscountPeriodItem.Id        AS Id
+                           , ObjectHistory_DiscountPeriodItem.ObjectId  AS ObjectId
+                           , ObjectLink_Goods.ChildObjectId             AS GoodsId
+
+                           , ObjectHistory_DiscountPeriodItem.StartDate
+                           , ObjectHistory_DiscountPeriodItem.EndDate
+                           , ObjectHistoryFloat_Value.ValueData        AS ValueDiscount
+
+                      FROM ObjectLink AS ObjectLink_Unit
+                           LEFT JOIN ObjectLink AS ObjectLink_Goods
+                                                ON ObjectLink_Goods.ObjectId = ObjectLink_Unit.ObjectId
+                                               AND ObjectLink_Goods.DescId   = zc_ObjectLink_DiscountPeriodItem_Goods()
+                           INNER JOIN tmpList ON tmpList.GoodsId = ObjectLink_Goods.ChildObjectId
+
+                           LEFT JOIN ObjectHistory AS ObjectHistory_DiscountPeriodItem
+                                                   ON ObjectHistory_DiscountPeriodItem.ObjectId = ObjectLink_Unit.ObjectId
+                                                  AND ObjectHistory_DiscountPeriodItem.DescId   = zc_ObjectHistory_DiscountPeriodItem()
+                                                  AND inOperDate >= ObjectHistory_DiscountPeriodItem.StartDate AND inOperDate < ObjectHistory_DiscountPeriodItem.EndDate
+                           LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value
+                                                        ON ObjectHistoryFloat_Value.ObjectHistoryId = ObjectHistory_DiscountPeriodItem.Id
+                                                       AND ObjectHistoryFloat_Value.DescId          = zc_ObjectHistoryFloat_DiscountPeriodItem_Value()
+
+                      WHERE ObjectLink_Unit.DescId        = zc_ObjectLink_DiscountPeriodItem_Unit()
+                        AND ObjectLink_Unit.ChildObjectId = inUnitId
+                        AND (ObjectHistoryFloat_Value.ValueData <> 0
+                          OR ObjectHistory_DiscountPeriodItem.StartDate > zc_DateStart()
+                            )
+                     )
 
        -- Результат
        SELECT
@@ -204,13 +200,13 @@ BEGIN
 
            , COALESCE(tmpDiscount.ValueDiscount, NULL) :: TFloat  AS ValueDiscount
 
-           , Object_Insert.ValueData   AS InsertName
-           , Object_Update.ValueData   AS UpdateName
+           , Object_Insert.ValueData              AS InsertName
+           , Object_Update.ValueData              AS UpdateName
            , ObjectDate_Protocol_Insert.ValueData AS InsertDate
            , ObjectDate_Protocol_Update.ValueData AS UpdateDate
 
-           , tmpPartionGoods.PartnerName
-           , tmpPartionGoods.UnitName_in
+           , Object_Partner.ValueData            AS PartnerName
+           , Object_Unit_in.ValueData            AS UnitName_in
            , Movement.InvNumber                  AS InvNumber_Partion
            , tmpPartionGoods.OperDate            AS OperDate_Partion
 
@@ -219,7 +215,7 @@ BEGIN
            , Object_Goods.ValueData              AS GoodsName
            , Object_Goods.isErased               AS Goods_isErased
            , Object_GroupNameFull.ValueData      As GroupNameFull
-           , tmpPartionGoods.CurrencyName
+           , Object_Currency.ValueData           AS CurrencyName
            , tmpPartionGoods.OperPrice     :: TFloat
            , tmpPartionGoods.OperPriceList :: TFloat
 
@@ -227,24 +223,40 @@ BEGIN
            , tmpPartionGoods.AmountDebt      :: TFloat
            , (COALESCE (tmpPartionGoods.Remains, 0) + COALESCE (tmpPartionGoods.AmountDebt, 0)) :: TFloat  AS RemainsAll
 
-           , tmpPartionGoods.BrandName
-           , tmpPartionGoods.PeriodName
-           , tmpPartionGoods.PeriodYear
-           , tmpPartionGoods.FabrikaName
-           , tmpPartionGoods.GoodsGroupName
-           , tmpPartionGoods.MeasureName
-           , tmpPartionGoods.CompositionName
-           , tmpPartionGoods.GoodsInfoName
-           , tmpPartionGoods.LineFabricaName
-           , tmpPartionGoods.LabelName
-           , tmpPartionGoods.GoodsSizeName
-
+           , Object_Brand.ValueData              AS BrandName
+           , Object_Period.ValueData             AS PeriodName
+           , tmpPartionGoods.PeriodYear          AS PeriodYear
+           , Object_Fabrika.ValueData            AS FabrikaName
+           , Object_GoodsGroup.ValueData         AS GoodsGroupName
+           , Object_Measure.ValueData            AS MeasureName
+           , Object_Composition.ValueData        AS CompositionName
+           , Object_GoodsInfo.ValueData          AS GoodsInfoName
+           , Object_LineFabrica.ValueData        AS LineFabricaName
+           , Object_Label.ValueData              AS LabelName
+           --, Object_GoodsSize.ValueData          AS GoodsSizeName
+           , tmpPartionGoods.GoodsSizeName ::TVarChar
+         
        FROM tmpGoods AS tmpPartionGoods
             LEFT JOIN tmpDiscount ON tmpDiscount.GoodsId= tmpPartionGoods.GoodsId
 
             LEFT JOIN Movement ON Movement.Id= tmpPartionGoods.MovementId
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpPartionGoods.GoodsId
+            
+            LEFT JOIN Object AS Object_Partner     ON Object_Partner.Id     = tmpPartionGoods.PartnerId
+            LEFT JOIN Object AS Object_Unit_in     ON Object_Unit_in.Id     = tmpPartionGoods.UnitId
+            LEFT JOIN Object AS Object_Currency    ON Object_Currency.Id    = tmpPartionGoods.CurrencyId
+            LEFT JOIN Object AS Object_Brand       ON Object_Brand.Id       = tmpPartionGoods.BrandId
+            LEFT JOIN Object AS Object_Period      ON Object_Period.Id      = tmpPartionGoods.PeriodId
+            LEFT JOIN Object AS Object_Fabrika     ON Object_Fabrika.Id     = tmpPartionGoods.FabrikaId
+            LEFT JOIN Object AS Object_GoodsGroup  ON Object_GoodsGroup.Id  = tmpPartionGoods.GoodsGroupId
+            LEFT JOIN Object AS Object_Measure     ON Object_Measure.Id     = tmpPartionGoods.MeasureId
+            LEFT JOIN Object AS Object_Composition ON Object_Composition.Id = tmpPartionGoods.CompositionId
+            LEFT JOIN Object AS Object_GoodsInfo   ON Object_GoodsInfo.Id   = tmpPartionGoods.GoodsInfoId
+            LEFT JOIN Object AS Object_LineFabrica ON Object_LineFabrica.Id = tmpPartionGoods.LineFabricaId
+            LEFT JOIN Object AS Object_Label       ON Object_Label.Id       = tmpPartionGoods.LabelId
+            --LEFT JOIN Object AS Object_GoodsSize   ON Object_GoodsSize.Id   = tmpPartionGoods.GoodsSizeId
+
             LEFT JOIN ObjectString AS Object_GroupNameFull
                                    ON Object_GroupNameFull.ObjectId = Object_Goods.Id
                                   AND Object_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
@@ -265,9 +277,7 @@ BEGIN
                                  ON ObjectLink_Update.ObjectId = tmpDiscount.ObjectId
                                 AND ObjectLink_Update.DescId   = zc_ObjectLink_Protocol_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId
-       WHERE inShowAll = TRUE
-          OR (inShowAll = FALSE AND tmpDiscount.GoodsId > 0)
-       ;
+      ;
 
 END;
 $BODY$
@@ -276,6 +286,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.05.18         *
  15.03.18         *
  23.02.18         *
  01.07.17         *
@@ -285,4 +296,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_ObjectHistory_DiscountPeriodItem (inUnitId:= 506, inBrandId:= 1, inPeriodId:= 0, inOperDate:= CURRENT_DATE, inStartYear:= 0, inEndYear:= 0, inShowAll:= FALSE, inSession:= zfCalc_UserAdmin());
+-- select * from gpSelect_ObjectHistory_DiscountPeriodItem(inUnitId := 1601 , inBrandId := 0 , inPeriodId := 1624 , inOperDate := ('24.05.2018')::TDateTime , inStartYear := 2013 , inEndYear := 2015 , inIsSize := 'False', inShowAll := 'False' ,  inSession := '8');

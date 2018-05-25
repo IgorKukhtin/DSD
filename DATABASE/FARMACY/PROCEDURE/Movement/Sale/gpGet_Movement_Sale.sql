@@ -72,7 +72,7 @@ BEGIN
           , COALESCE (Object_PaidKind.ValueData, NULL) ::TVarChar AS PaidKindName
           , NULL::TVarChar                                   AS Comment
 
-          , CURRENT_DATE::TDateTime                          AS OperDateSP
+          , (CURRENT_DATE + interval '1 day')       ::TDateTime                  AS OperDateSP
           , COALESCE (Object_PartnerMedical.Id, NULL)        ::Integer   AS PartnerMedicalId
           , COALESCE (Object_PartnerMedical.ValueData, NULL) ::TVarChar  AS PartnerMedicalName
           , NULL::TVarChar                                   AS InvNumberSP
@@ -115,7 +115,7 @@ BEGIN
           , Movement_Sale.PaidKindName
           , Movement_Sale.Comment
 
-          , COALESCE(Movement_Sale.OperDateSP, Movement_Sale.OperDate) :: TDateTime AS OperDateSP
+          , COALESCE(Movement_Sale.OperDateSP, Movement_Sale.OperDate + interval '1 day' ) :: TDateTime AS OperDateSP
           , Movement_Sale.PartnerMedicalId
           , Movement_Sale.PartnerMedicalName
           , Movement_Sale.InvNumberSP

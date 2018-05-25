@@ -1,4 +1,4 @@
--- Function: gpSelect_Object_Goods()
+-- Function: gpSelect_Object_Goods_Retail()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Goods_Retail(Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Goods_Retail(TVarChar);
@@ -30,6 +30,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , MorionCode Integer, BarCode TVarChar, OrdBar Integer
              , NDS_PriceList TFloat, isNDS_dif Boolean
              , OrdPrice Integer
+             , isNotUploadSites Boolean
               ) AS
 $BODY$ 
   DECLARE vbUserId Integer;
@@ -288,6 +289,7 @@ BEGIN
            , tmpPricelistItems.GoodsNDS :: TFloat  AS NDS_PriceList
            , CASE WHEN COALESCE (tmpPricelistItems.GoodsNDS, 0) <> 0 AND inContractId <> 0 AND COALESCE (tmpPricelistItems.GoodsNDS, 0) <> Object_Goods_View.NDS THEN TRUE ELSE FALSE END AS isNDS_dif
            , tmpPricelistItems.Ord      :: Integer AS OrdPrice
+           , COALESCE(ObjectBoolean_isNotUploadSites.ValueData, false) AS isNotUploadSites
       FROM Object_Goods_View
            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = Object_Goods_View.ObjectId
            LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id 
@@ -345,6 +347,10 @@ BEGIN
            
            LEFT JOIN tmpPricelistItems ON tmpPricelistItems.GoodsMainId = ObjectLink_Main.ChildObjectId
            
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_isNotUploadSites 
+                                   ON ObjectBoolean_isNotUploadSites.ObjectId = Object_Goods_View.Id 
+                                  AND ObjectBoolean_isNotUploadSites.DescId = zc_ObjectBoolean_Goods_isNotUploadSites()
+
       WHERE Object_Goods_View.ObjectId = vbObjectId
       ;
 
@@ -355,10 +361,11 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 --ALTER FUNCTION gpSelect_Object_Goods_Retail(TVarChar) OWNER TO postgres;
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.  Шаблий О.В.
+ 24.05.18                                                                     * add isNotUploadSites
  05.01.18         * add inRetailId
  03.01.18         * add inContractId, NDS_PriceList, isNDS_dif
  22.08.17         *
@@ -380,5 +387,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Goods_Retail (inContractId := 0, inRetailId := 0, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Goods_Retail (inContractId := 0, inRetailId := 0, inSession := '3')
 -- select * from gpSelect_Object_Goods_Retail (inContractId := 183257, inRetailId := 4, inSession := '59591')
