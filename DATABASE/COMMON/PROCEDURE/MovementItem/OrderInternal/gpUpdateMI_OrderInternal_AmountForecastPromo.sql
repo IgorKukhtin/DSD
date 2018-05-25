@@ -35,7 +35,7 @@ BEGIN
 
 
      -- таблица -
-     CREATE TEMP TABLE tmpAll (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AmountForecastOrder TFloat, AmountForecastOrderPromo TFloat, AmountForecast TFloat, AmountForecastPromo TFloat
+     CREATE TEMP TABLE tmpAll (MovementItemId Integer, ContainerId Integer, GoodsId Integer, GoodsKindId Integer, AmountForecastOrder TFloat, AmountForecastOrderPromo TFloat, AmountForecast TFloat, AmountForecastPromo TFloat
                              , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat, Value6 TFloat, Value7 TFloat
                              , Promo1 TFloat, Promo2 TFloat, Promo3 TFloat, Promo4 TFloat, Promo5 TFloat, Promo6 TFloat, Promo7 TFloat
                               ) ON COMMIT DROP;
@@ -303,31 +303,32 @@ BEGIN
                        AND MovementItem.isErased   = FALSE
                     )
         -- Результат
-        INSERT INTO tmpAll (MovementItemId, GoodsId, GoodsKindId, AmountForecastOrder, AmountForecastOrderPromo, AmountForecast, AmountForecastPromo
+        INSERT INTO tmpAll (MovementItemId, ContainerId, GoodsId, GoodsKindId, AmountForecastOrder, AmountForecastOrderPromo, AmountForecast, AmountForecastPromo
                           , Value1, Value2, Value3, Value4, Value5, Value6, Value7
                           , Promo1, Promo2, Promo3, Promo4, Promo5, Promo6, Promo7
                            )
-          SELECT tmpMI.MovementItemId
-                , COALESCE (tmpMI.GoodsId,tmpAll.GoodsId)          AS GoodsId
-                , COALESCE (tmpMI.GoodsKindId, tmpAll.GoodsKindId) AS GoodsKindId
-                , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.AmountOrder, 0)      END AS AmountForecastOrder
-                , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.AmountOrderPromo, 0) END AS AmountForecastOrderPromo
-                , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.AmountSale, 0)       END AS AmountForecast
-                , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.AmountSalePromo, 0)  END AS AmountForecastPromo
-                , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Value1, 0)           END AS Value1
-                , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Value2, 0)           END AS Value2
-                , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Value3, 0)           END AS Value3
-                , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Value4, 0)           END AS Value4
-                , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Value5, 0)           END AS Value5
-                , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Value6, 0)           END AS Value6
-                , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Value7, 0)           END AS Value7
-                , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Promo1, 0)           END AS Promo1
-                , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Promo2, 0)           END AS Promo2
-                , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Promo3, 0)           END AS Promo3
-                , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Promo4, 0)           END AS Promo4
-                , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Promo5, 0)           END AS Promo5
-                , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Promo6, 0)           END AS Promo6
-                , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Promo7, 0)           END AS Promo7
+          SELECT tmpMI.MovementItemId                             AS MovementItemId
+               , COALESCE (tmpMI.ContainerId, 0)                  AS ContainerId
+               , COALESCE (tmpMI.GoodsId, tmpAll.GoodsId)         AS GoodsId
+               , COALESCE (tmpMI.GoodsKindId, tmpAll.GoodsKindId) AS GoodsKindId
+               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.AmountOrder, 0)      END AS AmountForecastOrder
+               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.AmountOrderPromo, 0) END AS AmountForecastOrderPromo
+               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.AmountSale, 0)       END AS AmountForecast
+               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.AmountSalePromo, 0)  END AS AmountForecastPromo
+               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Value1, 0)           END AS Value1
+               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Value2, 0)           END AS Value2
+               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Value3, 0)           END AS Value3
+               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Value4, 0)           END AS Value4
+               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Value5, 0)           END AS Value5
+               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Value6, 0)           END AS Value6
+               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Value7, 0)           END AS Value7
+               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Promo1, 0)           END AS Promo1
+               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Promo2, 0)           END AS Promo2
+               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Promo3, 0)           END AS Promo3
+               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Promo4, 0)           END AS Promo4
+               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Promo5, 0)           END AS Promo5
+               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Promo6, 0)           END AS Promo6
+               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Promo7, 0)           END AS Promo7
           FROM (SELECT tmpMIAll.GoodsId
                      , tmpMIAll.GoodsKindId
                      , SUM (tmpMIAll.AmountOrder)      AS AmountOrder
@@ -525,8 +526,10 @@ BEGIN
             ) AS tmpMI
             LEFT JOIN tmpAll ON tmpAll.GoodsId     = tmpMI.GoodsId
                             AND tmpAll.GoodsKindId = tmpMI.GoodsKindId
+                            AND tmpAll.ContainerId = 0
                             AND tmpMI.ContainerId  = 0
        ;
+
 
 END;
 $BODY$

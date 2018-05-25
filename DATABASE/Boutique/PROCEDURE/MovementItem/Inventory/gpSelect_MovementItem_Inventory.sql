@@ -20,7 +20,7 @@ RETURNS TABLE (Id Integer
              , BrandName    TVarChar
              , PeriodName   TVarChar
              , PeriodYear   Integer
-             , Amount_diff  TFloat
+             , Amount_diff  TFloat, AmountSecond_diff TFloat
              , Amount TFloat, AmountSecond TFloat, AmountRemains TFloat, AmountSecondRemains TFloat
              , CountForPrice TFloat
              , OperPrice TFloat, OperPriceList TFloat
@@ -116,8 +116,9 @@ BEGIN
            , Object_Period.ValueData        AS PeriodName
            , Object_PartionGoods.PeriodYear AS PeriodYear
 
-           , (COALESCE (tmpMI.Amount, 0) - COALESCE (tmpMI.AmountRemains, 0)) :: TFloat AS Amount_diff
-
+           , (COALESCE (tmpMI.Amount, 0)       - COALESCE (tmpMI.AmountRemains, 0))       :: TFloat AS Amount_diff
+           , (COALESCE (tmpMI.AmountSecond, 0) - COALESCE (tmpMI.AmountSecondRemains, 0)) :: TFloat AS AmountSecond_diff
+           
            , tmpMI.Amount
            , tmpMI.AmountSecond         ::TFloat
            , tmpMI.AmountRemains        ::TFloat
