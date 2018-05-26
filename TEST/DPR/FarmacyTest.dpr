@@ -574,7 +574,8 @@ uses
   UnitCategoryEdit in '..\..\FormsFarmacy\Guides\UnitCategoryEdit.pas' {UnitCategoryEditForm: TParentForm},
   ReportMovementCheckFL in '..\..\FormsFarmacy\Report\ReportMovementCheckFL.pas' {ReportMovementCheckFLForm: TParentForm},
   Report_ImplementationPlanEmployee in '..\..\FormsFarmacy\Report\Report_ImplementationPlanEmployee.pas' {Report_ImplementationPlanEmployeeForm: TParentForm},
-  Report_ImplementationPlanEmployeeDialog in '..\..\FormsFarmacy\Report\Report_ImplementationPlanEmployeeDialog.pas' {Report_ImplementationPlanEmployeeDialogForm: TParentForm};
+  Report_ImplementationPlanEmployeeDialog in '..\..\FormsFarmacy\Report\Report_ImplementationPlanEmployeeDialog.pas' {Report_ImplementationPlanEmployeeDialogForm: TParentForm},
+  Report_IncomeConsumptionBalance in '..\..\FormsFarmacy\Report\Report_IncomeConsumptionBalance.pas' {Report_IncomeConsumptionBalanceForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -591,7 +592,7 @@ begin
 
   if FindCmdLineSwitch('realfarmacy', true)
   then gc_AdminPassword := 'Админ1234'
-  else gc_AdminPassword := 'Админ1234';
+  else gc_AdminPassword := 'Админ1111';
 
   gc_ProgramName := 'Farmacy.exe';
 

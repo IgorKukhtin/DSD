@@ -1,4 +1,4 @@
-unit Report_Analysis_Remains_Selling;
+unit Report_IncomeConsumptionBalance;
 
 interface
 
@@ -25,10 +25,11 @@ uses
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, cxCustomPivotGrid,
   cxDBPivotGrid, cxLabel, ChoicePeriod, dxBarExtItems, cxCheckBox, cxSplitter,
-  Vcl.StdCtrls, Vcl.Menus, cxButtons, cxExportPivotGridLink;
+  Vcl.StdCtrls, Vcl.Menus, cxButtons, cxExportPivotGridLink,
+  cxGridBandedTableView, cxGridDBBandedTableView;
 
 type
-  TReport_Analysis_Remains_SellingForm = class(TForm)
+  TReport_IncomeConsumptionBalanceForm = class(TForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -43,13 +44,10 @@ type
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
-    cxDBPivotGrid: TcxDBPivotGrid;
-    pvUnitID: TcxDBPivotGridField;
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
-    PivotAddOn: TPivotAddOn;
     FormParams: TdsdFormParams;
     dsdOpenForm1: TdsdOpenForm;
     dsdExecStoredProc1: TdsdExecStoredProc;
@@ -59,34 +57,10 @@ type
     bbPrint: TdxBarButton;
     bbPrint2: TdxBarButton;
     bb: TdxBarControlContainerItem;
-    pvUnitName: TcxDBPivotGridField;
-    pvGoodsId: TcxDBPivotGridField;
-    pvGoodsName: TcxDBPivotGridField;
-    pvAmount: TcxDBPivotGridField;
-    pvOutSaldo: TcxDBPivotGridField;
-    pvGoodsGroupId: TcxDBPivotGridField;
-    pvGoodsGroupName: TcxDBPivotGridField;
-    pvNDSKindId: TcxDBPivotGridField;
-    pvNDSKindName: TcxDBPivotGridField;
-    pvPromoID: TcxDBPivotGridField;
-    pvJuridicalID: TcxDBPivotGridField;
-    pvJuridicalName: TcxDBPivotGridField;
     Panel2: TPanel;
     cxSplitter1: TcxSplitter;
     dsGoods: TDataSource;
     cdsGoods: TClientDataSet;
-    cxDBPivotGrid1: TcxDBPivotGrid;
-    cxDBPivotGridField1: TcxDBPivotGridField;
-    cxDBPivotGridField2: TcxDBPivotGridField;
-    cxDBPivotGridField3: TcxDBPivotGridField;
-    cxDBPivotGridField4: TcxDBPivotGridField;
-    cxDBPivotGridField5: TcxDBPivotGridField;
-    cxDBPivotGridField6: TcxDBPivotGridField;
-    cxDBPivotGridField7: TcxDBPivotGridField;
-    cxDBPivotGridField8: TcxDBPivotGridField;
-    cxDBPivotGridField9: TcxDBPivotGridField;
-    cxDBPivotGridField10: TcxDBPivotGridField;
-    dsdStoredProcGoods: TdsdStoredProc;
     cxgChoicePrpmo: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
     cxGridDBColumn1: TcxGridDBColumn;
@@ -97,11 +71,8 @@ type
     cxgChoiceGoodsDBTableViewColumn1: TcxGridDBColumn;
     cxgChoiceGoodsDBTableViewColumn2: TcxGridDBColumn;
     cxgChoiceGoodsLevel: TcxGridLevel;
-    dsdStoredProcPromo: TdsdStoredProc;
     dsPromo: TDataSource;
     cdsPromo: TClientDataSet;
-    dsdStoredProcPromoGoods: TdsdStoredProc;
-    dsPromoGoods: TDataSource;
     cdsPromoGoods: TClientDataSet;
     dxBarButton1: TdxBarButton;
     actSetGoods: TAction;
@@ -115,17 +86,44 @@ type
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     dxBarButton3: TdxBarButton;
-    actExportExel: TAction;
+    actExportExel: TdsdGridToExcel;
     dxBarButton4: TdxBarButton;
     dxBarButton5: TdxBarButton;
     Panel7: TPanel;
     cxButton3: TcxButton;
     actAddGoods: TAction;
+    cxIncomeConsumptionBalance: TcxGrid;
+    cxIncomeConsumptionBalanceDBBandedTableView1: TcxGridDBBandedTableView;
+    colParentName: TcxGridDBBandedColumn;
+    colUnitName: TcxGridDBBandedColumn;
+    colGoodsId: TcxGridDBBandedColumn;
+    colGoodsName: TcxGridDBBandedColumn;
+    colSaldoIn: TcxGridDBBandedColumn;
+    colSummaIn: TcxGridDBBandedColumn;
+    colAmountIncome: TcxGridDBBandedColumn;
+    colAmountIncomeSumWith: TcxGridDBBandedColumn;
+    cxIncomeConsumptionBalanceLevel1: TcxGridLevel;
+    colAmountIncomeSum: TcxGridDBBandedColumn;
+    colAmountReturnOut: TcxGridDBBandedColumn;
+    colAmountReturnOutSum: TcxGridDBBandedColumn;
+    cxIncomeConsumptionBalanceDBBandedTableView1Column1: TcxGridDBBandedColumn;
+    cxIncomeConsumptionBalanceDBBandedTableView1Column2: TcxGridDBBandedColumn;
+    cxIncomeConsumptionBalanceDBBandedTableView1Column3: TcxGridDBBandedColumn;
+    cxIncomeConsumptionBalanceDBBandedTableView1Column4: TcxGridDBBandedColumn;
+    cxIncomeConsumptionBalanceDBBandedTableView1Column5: TcxGridDBBandedColumn;
+    cxIncomeConsumptionBalanceDBBandedTableView1Column6: TcxGridDBBandedColumn;
+    cxIncomeConsumptionBalanceDBBandedTableView1Column7: TcxGridDBBandedColumn;
+    cxIncomeConsumptionBalanceDBBandedTableView1Column8: TcxGridDBBandedColumn;
+    cxIncomeConsumptionBalanceDBBandedTableView1Column9: TcxGridDBBandedColumn;
+    cxIncomeConsumptionBalanceDBBandedTableView1Column10: TcxGridDBBandedColumn;
+    cxIncomeConsumptionBalanceDBBandedTableView1Column11: TcxGridDBBandedColumn;
+    cxIncomeConsumptionBalanceDBBandedTableView1Column12: TcxGridDBBandedColumn;
+    cxIncomeConsumptionBalanceDBBandedTableView1Column13: TcxGridDBBandedColumn;
+    cxIncomeConsumptionBalanceDBBandedTableView1Column14: TcxGridDBBandedColumn;
     procedure actSetGoodsExecute(Sender: TObject);
     procedure actSetPromoExecute(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
-    procedure actExportExelExecute(Sender: TObject);
     procedure actAddGoodsExecute(Sender: TObject);
   private
   public
@@ -135,13 +133,13 @@ implementation
 
 {$R *.dfm}
 
-procedure TReport_Analysis_Remains_SellingForm.actAddGoodsExecute(
+procedure TReport_IncomeConsumptionBalanceForm.actAddGoodsExecute(
   Sender: TObject);
 var
   I, TovarID: Integer;
 begin
   inherited;
-  with cxDBPivotGrid1.DataController.Filter do
+  with cxIncomeConsumptionBalanceDBBandedTableView1.DataController.Filter do
   begin
     BeginUpdate;
     try
@@ -149,7 +147,7 @@ begin
       for I := 0 to cxgChoiceGoodsDBTableView.Controller.SelectedRecordCount - 1 do
       begin
         TovarID := cxgChoiceGoodsDBTableView.Controller.SelectedRecords[I].Values[cxgChoiceGoodsDBTableViewColumn1.Index];
-        root.AddItem(cxDBPivotGridField3, TcxFilterOperatorKind.foEqual, TovarID, IntToStr(TovarID));
+//        root.AddItem(cxDBPivotGridField3, TcxFilterOperatorKind.foEqual, TovarID, IntToStr(TovarID));
       end;
       Active := true;
     finally
@@ -158,30 +156,13 @@ begin
   end;
 end;
 
-procedure TReport_Analysis_Remains_SellingForm.actExportExelExecute(Sender: TObject);
-  var FileName : string;
-begin
-  FileName := 'ExportAnalysis.xls';
-  try
-    cxDBPivotGrid1.OptionsView.FilterFields := False;
-    cxDBPivotGrid1.OptionsView.ColumnFields := False;
-    cxDBPivotGrid1.OptionsView.DataFields := False;
-    cxExportPivotGridToExcel(FileName, cxDBPivotGrid1, False);
-    ShellExecute(Application.Handle, 'open', PWideChar(FileName), nil, nil, SW_SHOWNORMAL);
-  finally
-    cxDBPivotGrid1.OptionsView.FilterFields := True;
-    cxDBPivotGrid1.OptionsView.ColumnFields := True;
-    cxDBPivotGrid1.OptionsView.DataFields := True;
-  end;
-end;
-
-procedure TReport_Analysis_Remains_SellingForm.actSetGoodsExecute(
+procedure TReport_IncomeConsumptionBalanceForm.actSetGoodsExecute(
   Sender: TObject);
 var
   I, TovarID: Integer;
 begin
   inherited;
-  with cxDBPivotGrid1.DataController.Filter do
+  with cxIncomeConsumptionBalanceDBBandedTableView1.DataController.Filter do
   begin
     BeginUpdate;
     try
@@ -190,7 +171,7 @@ begin
       for I := 0 to cxgChoiceGoodsDBTableView.Controller.SelectedRecordCount - 1 do
       begin
         TovarID := cxgChoiceGoodsDBTableView.Controller.SelectedRecords[I].Values[cxgChoiceGoodsDBTableViewColumn1.Index];
-        root.AddItem(cxDBPivotGridField3, TcxFilterOperatorKind.foEqual, TovarID, IntToStr(TovarID));
+        root.AddItem(colGoodsId, TcxFilterOperatorKind.foEqual, TovarID, IntToStr(TovarID));
       end;
       Active := true;
     finally
@@ -199,7 +180,7 @@ begin
   end;
 end;
 
-procedure TReport_Analysis_Remains_SellingForm.actSetPromoExecute(
+procedure TReport_IncomeConsumptionBalanceForm.actSetPromoExecute(
   Sender: TObject);
 var
   I, TovarID: Integer;
@@ -235,14 +216,14 @@ begin
   end;
 end;
 
-procedure TReport_Analysis_Remains_SellingForm.FormClose(Sender: TObject;
+procedure TReport_IncomeConsumptionBalanceForm.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
   UserSettingsStorageAddOn.SaveUserSettings;
   Action:=caFree;
 end;
 
-procedure TReport_Analysis_Remains_SellingForm.FormShow(Sender: TObject);
+procedure TReport_IncomeConsumptionBalanceForm.FormShow(Sender: TObject);
 begin
   UserSettingsStorageAddOn.LoadUserSettings
 end;

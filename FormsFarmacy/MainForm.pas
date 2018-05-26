@@ -421,12 +421,16 @@ type
     miReportMovementCheckFLForm: TMenuItem;
     actReport_ImplementationPlanEmployee: TAction;
     N3: TMenuItem;
+    actReport_IncomeConsumptionBalance: TAction;
+    N116: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_Analysis_Remains_SellingExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure actReport_IncomeConsumptionBalanceExecute(Sender: TObject);
   private
     { Private declarations }
   public
@@ -442,7 +446,8 @@ implementation
 
 uses
   UploadUnloadData, Dialogs, Forms, SysUtils, IdGlobal, RepriceUnit, ExportSalesForSupp,
-  Report_Analysis_Remains_Selling, Report_ImplementationPlanEmployee;
+  Report_Analysis_Remains_Selling, Report_ImplementationPlanEmployee,
+  Report_IncomeConsumptionBalance;
 
 
 procedure TMainForm.actReport_Analysis_Remains_SellingExecute(Sender: TObject);
@@ -464,6 +469,16 @@ begin
   end;
 end;
 
+procedure TMainForm.actReport_IncomeConsumptionBalanceExecute(Sender: TObject);
+begin
+  inherited;
+  with TReport_IncomeConsumptionBalanceForm.Create(nil) do
+  try
+     Show;
+  finally
+  end;
+end;
+
 procedure TMainForm.actSaveDataExecute(Sender: TObject);
 begin
   with TdmUnloadUploadData.Create(nil) do
@@ -475,6 +490,14 @@ begin
 
   Application.ProcessMessages;
   ShowMessage('Выгрузили');
+end;
+
+procedure TMainForm.FormShow(Sender: TObject);
+begin
+  inherited;
+
+  actReport_Analysis_Remains_Selling.Visible := actReport_CheckPromo.Visible;
+  actReport_IncomeConsumptionBalance.Visible := actReport_CheckPromo.Visible;
 end;
 
 procedure TMainForm.actExportSalesForSuppClickExecute(Sender: TObject);
