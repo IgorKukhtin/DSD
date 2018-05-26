@@ -1,33 +1,33 @@
 inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078'>'
   ClientHeight = 473
-  ClientWidth = 992
+  ClientWidth = 1050
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1008
+  ExplicitWidth = 1066
   ExplicitHeight = 511
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 81
-    Width = 992
+    Width = 1050
     Height = 392
     TabOrder = 3
     ExplicitTop = 81
-    ExplicitWidth = 992
+    ExplicitWidth = 1050
     ExplicitHeight = 392
     ClientRectBottom = 392
-    ClientRectRight = 992
+    ClientRectRight = 1050
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 992
+      ExplicitWidth = 1050
       ExplicitHeight = 392
       inherited cxGrid: TcxGrid
         Top = 83
-        Width = 992
+        Width = 1050
         Height = 309
         ExplicitTop = 83
-        ExplicitWidth = 992
+        ExplicitWidth = 1050
         ExplicitHeight = 309
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -2320,6 +2320,47 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object Ord1: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'Ord1'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1090#1086#1074#1072#1088#1091
+            Options.Editing = False
+            Width = 35
+          end
+          object Ord2: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'Ord2'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1075#1088#1091#1087#1087#1077' 3'
+            Options.Editing = False
+            Width = 35
+          end
+          object Ord3: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'Ord2'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1051#1080#1085#1080#1080
+            Options.Editing = False
+            Width = 35
+          end
+          object LineFabricaName: TcxGridDBColumn
+            Caption = #1051#1080#1085#1080#1103
+            DataBinding.FieldName = 'LineFabricaName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object GroupsName3: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' 3'
+            DataBinding.FieldName = 'GroupsName3'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object BrandName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
             DataBinding.FieldName = 'BrandName'
@@ -2348,14 +2389,6 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
           object GroupsName2: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' 2'
             DataBinding.FieldName = 'GroupsName2'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object GroupsName3: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' 3'
-            DataBinding.FieldName = 'GroupsName3'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -2400,14 +2433,6 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 73
-          end
-          object LineFabricaName: TcxGridDBColumn
-            Caption = #1051#1080#1085#1080#1103
-            DataBinding.FieldName = 'LineFabricaName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
           end
           object GoodsInfoName: TcxGridDBColumn
             Caption = #1054#1087#1080#1089#1072#1085#1080#1077
@@ -5039,7 +5064,7 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
-        Width = 992
+        Width = 1050
         Height = 75
         Align = alTop
         PopupMenu = PopupMenu
@@ -5632,7 +5657,7 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 75
-        Width = 992
+        Width = 1050
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer9Style'
         AlignSplitter = salTop
@@ -5641,9 +5666,9 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
     end
   end
   inherited Panel: TPanel
-    Width = 992
+    Width = 1050
     Height = 55
-    ExplicitWidth = 992
+    ExplicitWidth = 1050
     ExplicitHeight = 55
     inherited deStart: TcxDateEdit
       Left = 79
@@ -5674,12 +5699,12 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
       ExplicitWidth = 72
     end
     object cxLabel8: TcxLabel
-      Left = 194
+      Left = 200
       Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' / '#1043#1088#1091#1087#1087#1072':'
     end
     object edUnitGroup: TcxButtonEdit
-      Left = 330
+      Left = 336
       Top = 5
       Properties.Buttons = <
         item
@@ -5691,12 +5716,12 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
       Width = 200
     end
     object cxLabel4: TcxLabel
-      Left = 263
+      Left = 269
       Top = 32
       Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
     end
     object edPartner: TcxButtonEdit
-      Left = 330
+      Left = 336
       Top = 30
       Properties.Buttons = <
         item
@@ -5791,6 +5816,29 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
       TabOrder = 16
       Width = 82
     end
+    object cbPeriodAll: TcxCheckBox
+      Left = 167
+      Top = 30
+      Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1079#1072' '#1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1079#1072' '#1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
+      ParentShowHint = False
+      Properties.ReadOnly = False
+      ShowHint = True
+      State = cbsChecked
+      TabOrder = 17
+      Width = 100
+    end
+    object cbYear: TcxCheckBox
+      Left = 906
+      Top = 31
+      Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052' ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052
+      ParentShowHint = False
+      ShowHint = True
+      State = cbsChecked
+      TabOrder = 18
+      Width = 130
+    end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -5882,17 +5930,204 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actPrintLine: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078' 1'
+      Hint = #1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078' ('#1083#1080#1085#1080#1103' '#1080' '#1075#1088#1091#1087#1087#1072')'
+      ImageIndex = 21
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'LineFabricaName;GroupsName3;LabelName;GoodsCode;GoodsInfoName'
+        end
+        item
+          DataSet = ClientDataSet
+          UserName = 'frxDBDChild'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 43101d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 43101d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerName'
+          Value = ''
+          Component = GuidesPartner
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BrandName'
+          Value = ''
+          Component = GuidesBrand
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodName'
+          Value = ''
+          Component = GuidesPeriod
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartYear'
+          Value = ''
+          Component = GuidesStartYear
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndYear'
+          Value = ''
+          Component = GuidesEndYear
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Param'
+          Value = '3'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078' ('#1083#1080#1085#1080#1103'_'#1075#1088#1091#1087#1087#1072')'
+      ReportNameParam.Value = #1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078' ('#1083#1080#1085#1080#1103'_'#1075#1088#1091#1087#1087#1072')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintGroup: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078' 1'
+      Hint = #1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078' ('#1075#1088#1091#1087#1087#1072')'
+      ImageIndex = 16
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GroupsName3;LabelName;GoodsCode;GoodsInfoName'
+        end
+        item
+          DataSet = ClientDataSet
+          UserName = 'frxDBDChild'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 43101d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 43101d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerName'
+          Value = ''
+          Component = GuidesPartner
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BrandName'
+          Value = ''
+          Component = GuidesBrand
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodName'
+          Value = ''
+          Component = GuidesPeriod
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartYear'
+          Value = ''
+          Component = GuidesStartYear
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndYear'
+          Value = ''
+          Component = GuidesEndYear
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Param'
+          Value = '2'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078' ('#1075#1088#1091#1087#1087#1072')'
+      ReportNameParam.Value = #1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078' ('#1075#1088#1091#1087#1087#1072')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
       Caption = #1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078' 1'
-      Hint = #1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078'1'
+      Hint = #1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078
       ImageIndex = 3
       DataSets = <
         item
           DataSet = MasterCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'LabelName;GoodsCode;GoodsInfoName'
         end
         item
           DataSet = ClientDataSet
@@ -5959,6 +6194,11 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
           Component = GuidesEndYear
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Param'
+          Value = '1'
           MultiSelectSeparator = ','
         end>
       ReportName = #1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078'1'
@@ -6085,6 +6325,22 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
           Name = 'isMark'
           Value = Null
           Component = cbMark
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isYear'
+          Value = Null
+          Component = cbYear
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPeriodAll'
+          Value = Null
+          Component = cbPeriodAll
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -6300,18 +6556,27 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsMark'
+        Name = 'inIsPeriodAll'
         Value = Null
-        Component = cbMark
+        Component = cbPeriodAll
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsPeriodAll'
+        Name = 'inIsYear'
         Value = Null
+        Component = cbYear
         DataType = ftBoolean
-        ParamType = ptUnknown
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsMark'
+        Value = Null
+        Component = cbMark
+        DataType = ftBoolean
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 120
@@ -6357,6 +6622,22 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintGroup'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintLine'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -6378,6 +6659,16 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
     end
     object bbReport_CollationByPartner: TdxBarButton
       Action = actReport_CollationByPartner
+      Category = 0
+    end
+    object bbPrintGroup: TdxBarButton
+      Action = actPrintGroup
+      Caption = #1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078' ('#1075#1088#1091#1087#1087#1072')'
+      Category = 0
+    end
+    object bbPrintLine: TdxBarButton
+      Action = actPrintLine
+      Caption = #1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078' ('#1083#1080#1085#1080#1103' '#1080' '#1075#1088#1091#1087#1087#1072')'
       Category = 0
     end
   end

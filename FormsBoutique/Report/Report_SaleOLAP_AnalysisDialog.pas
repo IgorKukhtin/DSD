@@ -42,6 +42,8 @@ type
     GuidesStartYear: TdsdGuides;
     GuidesEndYear: TdsdGuides;
     cbMark: TcxCheckBox;
+    cbPeriodAll: TcxCheckBox;
+    cbYear: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -73,6 +73,13 @@ type
     GuidesStartYear: TdsdGuides;
     Persent_Sale: TcxGridDBColumn;
     Color_Grey: TcxGridDBColumn;
+    cbPeriodAll: TcxCheckBox;
+    cbYear: TcxCheckBox;
+    Ord1: TcxGridDBColumn;
+    actPrintGroup: TdsdPrintAction;
+    actPrintLine: TdsdPrintAction;
+    bbPrintGroup: TdxBarButton;
+    bbPrintLine: TdxBarButton;
   private
     { Private declarations }
   public
