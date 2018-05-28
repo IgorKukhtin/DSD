@@ -168,7 +168,9 @@ end if;
 
      END IF;
 
-     PERFORM lpInsert_Movement_EDIEvents(vbMovementId, 'Загрузка ORDER из EDI', vbUserId);
+
+     -- теперь этот протокол будет в EXE
+     -- PERFORM lpInsert_Movement_EDIEvents(vbMovementId, 'Загрузка ORDER из EDI', vbUserId);
 
 
      -- Проверка

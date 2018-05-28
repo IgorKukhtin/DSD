@@ -293,4 +293,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_ObjectHistory_DiscountPeriodItem(inUnitId := 1601 , inBrandId := 0 , inPeriodId := 1624 , inOperDate := ('24.05.2018')::TDateTime , inStartYear := 2013 , inEndYear := 2015 , inIsSize := 'False', inShowAll := 'False' ,  inSession := '8');
+-- SELECT * FROM gpSelect_ObjectHistory_DiscountPeriodItem (inUnitId:= 1601, inBrandId:= 0, inPeriodId:= 1624, inOperDate:= CURRENT_DATE, inStartYear:= 2013, inEndYear:= 2015, inIsSize:= FALSE, inShowAll:= FALSE, inSession:= zfCalc_UserAdmin());

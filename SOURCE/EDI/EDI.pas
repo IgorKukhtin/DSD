@@ -2626,6 +2626,10 @@ begin
       ParamByName('inPriceOrder').Value := gfStrToFloat(ORDERPRICE);
       Execute;
     end;
+    //
+    FInsertEDIEvents.ParamByName('inMovementId').Value := MovementId;
+    FInsertEDIEvents.ParamByName('inEDIEvent').Value :='Загрузка ORDER из EDI завершена';
+    FInsertEDIEvents.Execute;
 end;
 
 procedure TEDI.INVOICESave(HeaderDataSet, ItemsDataSet: TDataSet);
