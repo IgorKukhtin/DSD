@@ -1820,6 +1820,23 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_MemberSP_GroupMemberSP', 'Связь с Категория пациента(Соц. проект)', zc_Object_MemberSP(), zc_Object_GroupMemberSP() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberSP_GroupMemberSP');
 
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_JuridicalLegalAddress_Juridical() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalLegalAddress_Juridical'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_JuridicalLegalAddress_Juridical', 'Связь Юридического адреса с Юридическим лицом', zc_Object_JuridicalLegalAddress(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalLegalAddress_Juridical');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_JuridicalActualAddress_Juridical() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalActualAddress_Juridical'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_JuridicalActualAddress_Juridical', 'Связь Фактического адреса с Юридическим лицом', zc_Object_JuridicalActualAddress(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalActualAddress_Juridical');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_JuridicalLegalAddress_Address() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalLegalAddress_Address'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_JuridicalLegalAddress_Address', 'Юридический адрес', zc_Object_JuridicalLegalAddress(), zc_Object_Address() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalLegalAddress_Address');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_JuridicalActualAddress_Address() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalActualAddress_Address'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_JuridicalActualAddress_Address', 'Фактический адрес', zc_Object_JuridicalActualAddress(), zc_Object_Address() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalActualAddress_Address');
+
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1906,6 +1923,8 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 28.05.18                                                                                      * zc_ObjectLink_JuridicalLegalAddress_Juridical, zc_ObjectLink_JuridicalActualAddress_Juridical,
+                                                                                                 zc_ObjectLink_JuridicalLegalAddress_Address, zc_ObjectLink_JuridicalActualAddress_Address  
  10.05.18         * zc_ObjectLink_ContactPerson_Area
  04.05.18                                                                                      * zc_ObjectLink_Unit_Category
  18.04.18         * zc_ObjectLink_MemberSheetWorkTime_Unit

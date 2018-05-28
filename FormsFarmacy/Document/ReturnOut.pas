@@ -76,6 +76,12 @@ type
     actPartnerDataDialog: TExecuteDialog;
     spUpdateReturnOut_PartnerData: TdsdStoredProc;
     actUpdateReturnOut_PartnerData: TdsdExecStoredProc;
+    edJuridicalLegalAddress: TcxButtonEdit;
+    cxLabel14: TcxLabel;
+    edJuridicalActualAddress: TcxButtonEdit;
+    cxLabel16: TcxLabel;
+    GuidesJuridicalLegalAddress: TdsdGuides;
+    GuidesJuridicalActualAddress: TdsdGuides;
   private
     { Private declarations }
   public
