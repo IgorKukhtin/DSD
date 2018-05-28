@@ -141,6 +141,7 @@ var
   zc_Enum_InfoMoney_30201: Integer; // Доходы + Мясное сырье + Мясное сырье
 
   zc_Enum_DocumentKind_CuterWeight: Integer; // Взвешивание п/ф факт куттера
+  zc_Enum_DocumentKind_RealWeight : Integer; // Взвешивание п/ф факт сырой
 
   zc_Object_Partner    : Integer;
   zc_Object_ArticleLoss: Integer;

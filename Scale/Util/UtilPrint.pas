@@ -140,7 +140,8 @@ begin
 
   with UtilPrintForm.spGetMovement do Execute;
 
-  if UtilPrintForm.spGetMovement.ParamByName('outDocumentKindId').Value = zc_Enum_DocumentKind_CuterWeight
+  if  (UtilPrintForm.spGetMovement.ParamByName('outDocumentKindId').Value = zc_Enum_DocumentKind_CuterWeight)
+   or (UtilPrintForm.spGetMovement.ParamByName('outDocumentKindId').Value = zc_Enum_DocumentKind_RealWeight)
   then UtilPrintForm.actPrintCeh.Execute
   else UtilPrintForm.actPrint_Send.Execute;
 end;

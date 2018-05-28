@@ -144,14 +144,19 @@ BEGIN
      END IF;
      
      -- !!! Типы документов - !!! Элементы справочника добавляет Пользователь!!!
-     IF EXISTS (SELECT Id FROM Object WHERE DescId = zc_Object_DocumentKind() AND ObjectCode = 1)
+     IF EXISTS (SELECT Id FROM Object WHERE DescId = zc_Object_DocumentKind() AND ObjectCode = 1) OR EXISTS (SELECT Id FROM Object WHERE DescId = zc_Object_DocumentKind() AND Id = zc_Enum_DocumentKind_CuterWeight())
      THEN
-         PERFORM lpUpdate_Object_Enum_byCode (inCode:= 1, inDescId:= zc_Object_DocumentKind(), inEnumName:= 'zc_Enum_DocumentKind_CuterWeight');
+         PERFORM lpUpdate_Object_Enum_byCode (inCode:= COALESCE ((SELECT ObjectCode FROM Object WHERE DescId = zc_Object_DocumentKind() AND Id = zc_Enum_DocumentKind_CuterWeight()), 1), inDescId:= zc_Object_DocumentKind(), inEnumName:= 'zc_Enum_DocumentKind_CuterWeight');
      END IF;
      -- !!! Типы документов - !!! Элементы справочника добавляет Пользователь!!!
-     IF EXISTS (SELECT Id FROM Object WHERE DescId = zc_Object_DocumentKind() AND ObjectCode = 3)
+     IF EXISTS (SELECT Id FROM Object WHERE DescId = zc_Object_DocumentKind() AND ObjectCode = 3) OR EXISTS (SELECT Id FROM Object WHERE DescId = zc_Object_DocumentKind() AND Id = zc_Enum_DocumentKind_PackDiff())
      THEN
-         PERFORM lpUpdate_Object_Enum_byCode (inCode:= 3, inDescId:= zc_Object_DocumentKind(), inEnumName:= 'zc_Enum_DocumentKind_PackDiff');
+         PERFORM lpUpdate_Object_Enum_byCode (inCode:= COALESCE ((SELECT ObjectCode FROM Object WHERE DescId = zc_Object_DocumentKind() AND Id = zc_Enum_DocumentKind_PackDiff()), 3), inDescId:= zc_Object_DocumentKind(), inEnumName:= 'zc_Enum_DocumentKind_PackDiff');
+     END IF;
+     -- !!! Типы документов - !!! Элементы справочника добавляет Пользователь!!!
+     IF EXISTS (SELECT Id FROM Object WHERE DescId = zc_Object_DocumentKind() AND ObjectCode = 4) OR EXISTS (SELECT Id FROM Object WHERE DescId = zc_Object_DocumentKind() AND Id = zc_Enum_DocumentKind_RealWeight())
+     THEN
+         PERFORM lpUpdate_Object_Enum_byCode (inCode:= COALESCE ((SELECT ObjectCode FROM Object WHERE DescId = zc_Object_DocumentKind() AND Id = zc_Enum_DocumentKind_RealWeight()), 4), inDescId:= zc_Object_DocumentKind(), inEnumName:= 'zc_Enum_DocumentKind_RealWeight');
      END IF;
 
 
