@@ -1,7 +1,7 @@
-object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
+object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
   Left = 0
   Top = 0
-  Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1086#1089#1090#1072#1090#1082#1086#1084' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088#1080#1086#1076#1072
+  Caption = #1054#1090#1095#1077#1090' '#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082
   ClientHeight = 660
   ClientWidth = 1329
   Color = clBtnFace
@@ -51,171 +51,6 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
   end
-  object cxDBPivotGrid: TcxDBPivotGrid
-    Left = 0
-    Top = 57
-    Width = 1056
-    Height = 603
-    Align = alClient
-    DataSource = DataSource
-    Groups = <>
-    OptionsView.RowGrandTotalWidth = 252
-    TabOrder = 1
-    object pvUnitID: TcxDBPivotGridField
-      AreaIndex = 0
-      AllowedAreas = [faColumn, faRow, faFilter]
-      IsCaptionAssigned = True
-      Caption = #1050#1086#1076' '#1072#1087#1090#1077#1082#1080
-      DataBinding.ValueType = 'Integer'
-      DataBinding.FieldName = 'UnitID'
-      PropertiesClassName = 'TcxTextEditProperties'
-      Visible = True
-      UniqueName = #1040'-'#1055
-    end
-    object pvUnitName: TcxDBPivotGridField
-      Area = faColumn
-      AreaIndex = 0
-      AllowedAreas = [faColumn, faRow, faFilter]
-      IsCaptionAssigned = True
-      Caption = #1040#1087#1090#1077#1082#1072
-      DataBinding.ValueType = 'String'
-      DataBinding.FieldName = 'UnitName'
-      PropertiesClassName = 'TcxTextEditProperties'
-      Visible = True
-      UniqueName = #1040#1087#1090#1077#1082#1072
-    end
-    object pvGoodsId: TcxDBPivotGridField
-      AreaIndex = 1
-      AllowedAreas = [faColumn, faRow, faFilter]
-      IsCaptionAssigned = True
-      Caption = #1050#1086#1076' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1072
-      DataBinding.ValueType = 'Integer'
-      DataBinding.FieldName = 'GoodsId'
-      PropertiesClassName = 'TcxTextEditProperties'
-      Visible = True
-      UniqueName = #1050#1086#1076' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1072
-    end
-    object pvGoodsName: TcxDBPivotGridField
-      Area = faRow
-      AreaIndex = 0
-      AllowedAreas = [faColumn, faRow, faFilter]
-      IsCaptionAssigned = True
-      Caption = #1052#1077#1076#1080#1082#1072#1084#1077#1085#1090
-      DataBinding.ValueType = 'String'
-      DataBinding.FieldName = 'GoodsName'
-      PropertiesClassName = 'TcxTextEditProperties'
-      Visible = True
-      Width = 200
-      UniqueName = #1052#1077#1076#1080#1082#1072#1084#1077#1085#1090
-    end
-    object pvAmount: TcxDBPivotGridField
-      Area = faData
-      AreaIndex = 0
-      AllowedAreas = [faFilter, faData]
-      IsCaptionAssigned = True
-      Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103
-      DataBinding.ValueType = 'Currency'
-      DataBinding.FieldName = 'Amount'
-      DisplayFormat = '0.000'
-      PropertiesClassName = 'TcxCurrencyEditProperties'
-      Properties.DecimalPlaces = 3
-      Properties.DisplayFormat = ',0.000;-,0.000'
-      Visible = True
-      UniqueName = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103
-    end
-    object pvOutSaldo: TcxDBPivotGridField
-      Area = faData
-      AreaIndex = 1
-      AllowedAreas = [faFilter, faData]
-      IsCaptionAssigned = True
-      Caption = #1054#1089#1090#1072#1090#1086#1082
-      DataBinding.ValueType = 'Currency'
-      DataBinding.FieldName = 'OutSaldo'
-      DisplayFormat = '0.000'
-      PropertiesClassName = 'TcxCurrencyEditProperties'
-      Properties.DecimalPlaces = 3
-      Properties.DisplayFormat = ',0.000;-,0.000'
-      Visible = True
-      UniqueName = #1054#1089#1090#1072#1090#1086#1082
-    end
-    object pvGoodsGroupId: TcxDBPivotGridField
-      AreaIndex = 2
-      AllowedAreas = [faColumn, faRow, faFilter]
-      IsCaptionAssigned = True
-      Caption = #1050#1086#1076' '#1075#1088#1091#1087#1087#1099
-      DataBinding.ValueType = 'Integer'
-      DataBinding.FieldName = 'GoodsGroupId'
-      PropertiesClassName = 'TcxTextEditProperties'
-      Visible = True
-      UniqueName = #1050#1086#1076' '#1075#1088#1091#1087#1087#1099
-    end
-    object pvGoodsGroupName: TcxDBPivotGridField
-      AreaIndex = 3
-      AllowedAreas = [faColumn, faRow, faFilter]
-      IsCaptionAssigned = True
-      Caption = #1043#1088#1091#1087#1087#1072
-      DataBinding.ValueType = 'String'
-      DataBinding.FieldName = 'GoodsGroupName'
-      PropertiesClassName = 'TcxTextEditProperties'
-      Visible = True
-      UniqueName = #1043#1088#1091#1087#1087#1072
-    end
-    object pvNDSKindId: TcxDBPivotGridField
-      AreaIndex = 4
-      AllowedAreas = [faColumn, faRow, faFilter]
-      IsCaptionAssigned = True
-      Caption = #1050#1086#1076' '#1053#1044#1057
-      DataBinding.ValueType = 'Integer'
-      DataBinding.FieldName = 'NDSKindId'
-      PropertiesClassName = 'TcxTextEditProperties'
-      Visible = True
-      UniqueName = #1050#1086#1076' '#1053#1044#1057
-    end
-    object pvNDSKindName: TcxDBPivotGridField
-      AreaIndex = 5
-      AllowedAreas = [faColumn, faRow, faFilter]
-      IsCaptionAssigned = True
-      Caption = #1053#1044#1057
-      DataBinding.ValueType = 'String'
-      DataBinding.FieldName = 'NDSKindName'
-      PropertiesClassName = 'TcxTextEditProperties'
-      Visible = True
-      UniqueName = #1053#1044#1057
-    end
-    object pvPromoID: TcxDBPivotGridField
-      AreaIndex = 6
-      AllowedAreas = [faColumn, faRow, faFilter]
-      IsCaptionAssigned = True
-      Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1082#1086#1085#1090#1088#1072#1082#1090
-      DataBinding.ValueType = 'String'
-      DataBinding.FieldName = 'PromoID'
-      PropertiesClassName = 'TcxTextEditProperties'
-      Visible = True
-      UniqueName = #1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1082#1086#1085#1090#1088#1072#1082#1090
-    end
-    object pvJuridicalID: TcxDBPivotGridField
-      AreaIndex = 7
-      AllowedAreas = [faColumn, faRow, faFilter]
-      IsCaptionAssigned = True
-      Caption = #1050#1086#1076' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-      DataBinding.ValueType = 'Integer'
-      DataBinding.FieldName = 'JuridicalID'
-      PropertiesClassName = 'TcxTextEditProperties'
-      Visible = True
-      UniqueName = #1050#1086#1076' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-    end
-    object pvJuridicalName: TcxDBPivotGridField
-      AreaIndex = 8
-      AllowedAreas = [faColumn, faRow, faFilter]
-      IsCaptionAssigned = True
-      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
-      DataBinding.ValueType = 'String'
-      DataBinding.FieldName = 'JuridicalName'
-      PropertiesClassName = 'TcxTextEditProperties'
-      Visible = True
-      UniqueName = #1055#1086#1089#1090#1072#1074#1097#1080#1082
-    end
-  end
   object Panel2: TPanel
     Left = 1064
     Top = 57
@@ -223,7 +58,7 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
     Height = 603
     Align = alRight
     ShowCaption = False
-    TabOrder = 3
+    TabOrder = 2
     object Panel3: TPanel
       Left = 1
       Top = 265
@@ -412,121 +247,451 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
     AlignSplitter = salRight
     Control = Panel2
   end
-  object cxDBPivotGrid1: TcxDBPivotGrid
+  object cxIncomeConsumptionBalance: TcxGrid
     Left = 0
     Top = 57
     Width = 1056
     Height = 603
     Align = alClient
-    DataSource = DataSource
-    Groups = <>
-    OptionsView.RowGrandTotalWidth = 252
-    TabOrder = 8
-    ExplicitLeft = 2
-    object cxDBPivotGridField1: TcxDBPivotGridField
-      AreaIndex = 0
-      AllowedAreas = [faColumn, faRow, faFilter]
-      IsCaptionAssigned = True
-      Caption = #1050#1086#1076' '#1072#1087#1090#1077#1082#1080
-      DataBinding.FieldName = 'UnitID'
-      Visible = True
-      UniqueName = #1040'-'#1055
+    TabOrder = 7
+    object cxIncomeConsumptionBalanceDBBandedTableView1: TcxGridDBBandedTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = DataSource
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Kind = skSum
+          Column = colSaldoIn
+        end
+        item
+          Kind = skSum
+          Column = colSummaIn
+        end
+        item
+          Kind = skSum
+          Column = colAmountIncome
+        end
+        item
+          Kind = skSum
+          Column = colAmountIncomeSumWith
+        end
+        item
+          Kind = skSum
+          Column = colAmountIncomeSum
+        end
+        item
+          Kind = skSum
+          Column = colAmountReturnOut
+        end
+        item
+          Kind = skSum
+          Column = colAmountReturnOutSum
+        end
+        item
+          Kind = skSum
+          Column = cxIncomeConsumptionBalanceDBBandedTableView1Column1
+        end
+        item
+          Kind = skSum
+          Column = cxIncomeConsumptionBalanceDBBandedTableView1Column2
+        end
+        item
+          Kind = skSum
+          Column = cxIncomeConsumptionBalanceDBBandedTableView1Column3
+        end
+        item
+          Kind = skSum
+          Column = cxIncomeConsumptionBalanceDBBandedTableView1Column4
+        end
+        item
+          Kind = skSum
+          Column = cxIncomeConsumptionBalanceDBBandedTableView1Column5
+        end
+        item
+          Kind = skSum
+          Column = cxIncomeConsumptionBalanceDBBandedTableView1Column6
+        end
+        item
+          Kind = skSum
+          Column = cxIncomeConsumptionBalanceDBBandedTableView1Column7
+        end
+        item
+          Kind = skSum
+          Column = cxIncomeConsumptionBalanceDBBandedTableView1Column8
+        end
+        item
+          Kind = skSum
+          Column = cxIncomeConsumptionBalanceDBBandedTableView1Column9
+        end
+        item
+          Kind = skSum
+          Column = cxIncomeConsumptionBalanceDBBandedTableView1Column10
+        end
+        item
+          Kind = skSum
+          Column = cxIncomeConsumptionBalanceDBBandedTableView1Column11
+        end
+        item
+          Kind = skSum
+          Column = cxIncomeConsumptionBalanceDBBandedTableView1Column12
+        end
+        item
+          Kind = skSum
+          Column = cxIncomeConsumptionBalanceDBBandedTableView1Column13
+        end
+        item
+          Kind = skSum
+          Column = cxIncomeConsumptionBalanceDBBandedTableView1Column14
+        end>
+      DataController.Summary.SummaryGroups = <>
+      OptionsData.Deleting = False
+      OptionsData.Inserting = False
+      OptionsView.Footer = True
+      OptionsView.HeaderHeight = 40
+      Bands = <
+        item
+        end
+        item
+          Caption = #1052#1077#1076#1080#1082#1072#1084#1077#1085#1090
+        end
+        item
+          Caption = #1053#1072#1095#1072#1083#1100#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
+        end
+        item
+          Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+        end
+        item
+          Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+        end
+        item
+          Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1085#1072' '#1082#1072#1089#1089#1072#1093
+        end
+        item
+          Caption = #1055#1088#1086#1076#1072#1078#1080' '#1087#1086' '#1073'/'#1085
+        end
+        item
+          Caption = #1055#1077#1088#1077#1091#1095#1077#1090
+        end
+        item
+          Caption = #1057#1087#1080#1089#1072#1085#1080#1077
+        end
+        item
+          Caption = #1055#1077#1088#1077#1084#1077#1096#1077#1085#1080#1077
+        end
+        item
+          Caption = #1050#1086#1085#1077#1095#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
+        end>
+      object colParentName: TcxGridDBBandedColumn
+        Caption = #1054#1088#1075#1072#1085#1080#1079#1072#1094#1080#1103
+        DataBinding.FieldName = 'ParentName'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 140
+        Position.BandIndex = 0
+        Position.ColIndex = 0
+        Position.RowIndex = 0
+      end
+      object colUnitName: TcxGridDBBandedColumn
+        Caption = #1040#1087#1090#1077#1082#1072
+        DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 149
+        Position.BandIndex = 0
+        Position.ColIndex = 1
+        Position.RowIndex = 0
+      end
+      object colGoodsId: TcxGridDBBandedColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'GoodsId'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 48
+        Position.BandIndex = 1
+        Position.ColIndex = 0
+        Position.RowIndex = 0
+      end
+      object colGoodsName: TcxGridDBBandedColumn
+        Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'GoodsName'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 164
+        Position.BandIndex = 1
+        Position.ColIndex = 1
+        Position.RowIndex = 0
+      end
+      object colSaldoIn: TcxGridDBBandedColumn
+        Caption = #1082#1086#1083#1080#1095#1077#1089#1090#1074#1086', '#1096#1090
+        DataBinding.FieldName = 'SaldoIn'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.000'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+        Position.BandIndex = 2
+        Position.ColIndex = 0
+        Position.RowIndex = 0
+      end
+      object colSummaIn: TcxGridDBBandedColumn
+        Caption = #1089#1091#1084#1084#1072' '#1089' '#1053#1044#1057', '#1075#1088#1085
+        DataBinding.FieldName = 'SummaIn'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 2
+        Properties.DisplayFormat = ',0.00'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+        Position.BandIndex = 2
+        Position.ColIndex = 1
+        Position.RowIndex = 0
+      end
+      object colAmountIncome: TcxGridDBBandedColumn
+        Caption = #1082#1086#1083#1080#1095#1077#1089#1090#1074#1086', '#1096#1090
+        DataBinding.FieldName = 'AmountIncome'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.000'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+        Position.BandIndex = 3
+        Position.ColIndex = 0
+        Position.RowIndex = 0
+      end
+      object colAmountIncomeSumWith: TcxGridDBBandedColumn
+        Caption = #1089#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057', '#1075#1088#1085
+        DataBinding.FieldName = 'AmountIncomeSumWith'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 2
+        Properties.DisplayFormat = ',0.00'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+        Position.BandIndex = 3
+        Position.ColIndex = 1
+        Position.RowIndex = 0
+      end
+      object colAmountIncomeSum: TcxGridDBBandedColumn
+        Caption = #1089#1091#1084#1084#1072' '#1089' '#1053#1044#1057', '#1075#1088#1085
+        DataBinding.FieldName = 'AmountIncomeSum'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+        Position.BandIndex = 3
+        Position.ColIndex = 2
+        Position.RowIndex = 0
+      end
+      object colAmountReturnOut: TcxGridDBBandedColumn
+        Caption = #1082#1086#1083#1080#1095#1077#1089#1090#1074#1086', '#1096#1090
+        DataBinding.FieldName = 'AmountReturnOut'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.000'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+        Position.BandIndex = 4
+        Position.ColIndex = 0
+        Position.RowIndex = 0
+      end
+      object colAmountReturnOutSum: TcxGridDBBandedColumn
+        Caption = #1089#1091#1084#1084#1072' '#1089' '#1053#1044#1057', '#1075#1088#1085
+        DataBinding.FieldName = 'AmountReturnOutSum'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+        Position.BandIndex = 4
+        Position.ColIndex = 1
+        Position.RowIndex = 0
+      end
+      object cxIncomeConsumptionBalanceDBBandedTableView1Column1: TcxGridDBBandedColumn
+        Caption = #1082#1086#1083#1080#1095#1077#1089#1090#1074#1086', '#1096#1090
+        DataBinding.FieldName = 'AmountCheck'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.000'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+        Position.BandIndex = 5
+        Position.ColIndex = 0
+        Position.RowIndex = 0
+      end
+      object cxIncomeConsumptionBalanceDBBandedTableView1Column2: TcxGridDBBandedColumn
+        Caption = #1089#1091#1084#1084#1072' '#1079#1072#1082#1091#1087#1082#1077' '#1089' '#1053#1044#1057', '#1075#1088#1085
+        DataBinding.FieldName = 'AmountCheckSumJuridical'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+        Position.BandIndex = 5
+        Position.ColIndex = 1
+        Position.RowIndex = 0
+      end
+      object cxIncomeConsumptionBalanceDBBandedTableView1Column3: TcxGridDBBandedColumn
+        Caption = #1089#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079'. '#1089' '#1053#1044#1057', '#1075#1088#1085
+        DataBinding.FieldName = 'AmountCheckSum'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+        Position.BandIndex = 5
+        Position.ColIndex = 2
+        Position.RowIndex = 0
+      end
+      object cxIncomeConsumptionBalanceDBBandedTableView1Column4: TcxGridDBBandedColumn
+        Caption = #1082#1086#1083#1080#1095#1077#1089#1090#1074#1086', '#1096#1090
+        DataBinding.FieldName = 'AmountSale'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.000'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+        Position.BandIndex = 6
+        Position.ColIndex = 0
+        Position.RowIndex = 0
+      end
+      object cxIncomeConsumptionBalanceDBBandedTableView1Column5: TcxGridDBBandedColumn
+        Caption = #1089#1091#1084#1084#1072' '#1079#1072#1082#1091#1087#1082#1077' '#1089' '#1053#1044#1057', '#1075#1088#1085
+        DataBinding.FieldName = 'AmountSaleSumJuridical'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+        Position.BandIndex = 6
+        Position.ColIndex = 1
+        Position.RowIndex = 0
+      end
+      object cxIncomeConsumptionBalanceDBBandedTableView1Column6: TcxGridDBBandedColumn
+        Caption = #1089#1091#1084#1084#1072' '#1079#1077#1072#1083#1080#1079'. '#1089' '#1053#1044#1057', '#1075#1088#1085
+        DataBinding.FieldName = 'AmountSaleSum'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+        Position.BandIndex = 6
+        Position.ColIndex = 2
+        Position.RowIndex = 0
+      end
+      object cxIncomeConsumptionBalanceDBBandedTableView1Column7: TcxGridDBBandedColumn
+        Caption = #1082#1086#1083#1080#1095#1077#1089#1090#1074#1086', '#1096#1090
+        DataBinding.FieldName = 'AmountInventory'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.000'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+        Position.BandIndex = 7
+        Position.ColIndex = 0
+        Position.RowIndex = 0
+      end
+      object cxIncomeConsumptionBalanceDBBandedTableView1Column8: TcxGridDBBandedColumn
+        Caption = #1089#1091#1084#1084#1072' '#1089' '#1053#1044#1057', '#1075#1088#1085
+        DataBinding.FieldName = 'AmountInventorySum'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+        Position.BandIndex = 7
+        Position.ColIndex = 1
+        Position.RowIndex = 0
+      end
+      object cxIncomeConsumptionBalanceDBBandedTableView1Column9: TcxGridDBBandedColumn
+        Caption = #1082#1086#1083#1080#1095#1077#1089#1090#1074#1086', '#1096#1090
+        DataBinding.FieldName = 'AmountLoss'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.000'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+        Position.BandIndex = 8
+        Position.ColIndex = 0
+        Position.RowIndex = 0
+      end
+      object cxIncomeConsumptionBalanceDBBandedTableView1Column10: TcxGridDBBandedColumn
+        Caption = #1089#1091#1084#1084#1072' '#1089' '#1053#1044#1057', '#1075#1088#1085
+        DataBinding.FieldName = 'AmountLossSum'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+        Position.BandIndex = 8
+        Position.ColIndex = 1
+        Position.RowIndex = 0
+      end
+      object cxIncomeConsumptionBalanceDBBandedTableView1Column11: TcxGridDBBandedColumn
+        Caption = #1082#1086#1083#1080#1095#1077#1089#1090#1074#1086', '#1096#1090
+        DataBinding.FieldName = 'AmountSend'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.000'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+        Position.BandIndex = 9
+        Position.ColIndex = 0
+        Position.RowIndex = 0
+      end
+      object cxIncomeConsumptionBalanceDBBandedTableView1Column12: TcxGridDBBandedColumn
+        Caption = #1089#1091#1084#1084#1072' '#1089' '#1053#1044#1057', '#1075#1088#1085
+        DataBinding.FieldName = 'AmountSendSum'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+        Position.BandIndex = 9
+        Position.ColIndex = 1
+        Position.RowIndex = 0
+      end
+      object cxIncomeConsumptionBalanceDBBandedTableView1Column13: TcxGridDBBandedColumn
+        Caption = #1082#1086#1083#1080#1095#1077#1089#1090#1074#1086', '#1096#1090
+        DataBinding.FieldName = 'SaldoOut'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.000'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+        Position.BandIndex = 10
+        Position.ColIndex = 0
+        Position.RowIndex = 0
+      end
+      object cxIncomeConsumptionBalanceDBBandedTableView1Column14: TcxGridDBBandedColumn
+        Caption = #1089#1091#1084#1084#1072' '#1089' '#1053#1044#1057', '#1075#1088#1085
+        DataBinding.FieldName = 'SummaOut'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+        Position.BandIndex = 10
+        Position.ColIndex = 1
+        Position.RowIndex = 0
+      end
     end
-    object cxDBPivotGridField2: TcxDBPivotGridField
-      Area = faColumn
-      AreaIndex = 0
-      AllowedAreas = [faColumn, faRow, faFilter]
-      IsCaptionAssigned = True
-      Caption = #1040#1087#1090#1077#1082#1072
-      DataBinding.FieldName = 'UnitName'
-      PropertiesClassName = 'TcxTextEditProperties'
-      Visible = True
-      UniqueName = #1040#1087#1090#1077#1082#1072
-    end
-    object cxDBPivotGridField3: TcxDBPivotGridField
-      AreaIndex = 1
-      AllowedAreas = [faColumn, faRow, faFilter]
-      IsCaptionAssigned = True
-      Caption = #1050#1086#1076' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1072
-      DataBinding.FieldName = 'GoodsId'
-      Visible = True
-      UniqueName = #1050#1086#1076' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1072
-    end
-    object cxDBPivotGridField4: TcxDBPivotGridField
-      Area = faRow
-      AreaIndex = 0
-      AllowedAreas = [faColumn, faRow, faFilter]
-      IsCaptionAssigned = True
-      Caption = #1052#1077#1076#1080#1082#1072#1084#1077#1085#1090
-      DataBinding.ValueType = 'String'
-      DataBinding.FieldName = 'GoodsName'
-      PropertiesClassName = 'TcxTextEditProperties'
-      Visible = True
-      Width = 200
-      UniqueName = #1052#1077#1076#1080#1082#1072#1084#1077#1085#1090
-    end
-    object cxDBPivotGridField5: TcxDBPivotGridField
-      Area = faData
-      AreaIndex = 0
-      AllowedAreas = [faFilter, faData]
-      IsCaptionAssigned = True
-      Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103
-      DataBinding.FieldName = 'Amount'
-      DisplayFormat = '0.000'
-      Visible = True
-      UniqueName = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103
-    end
-    object cxDBPivotGridField6: TcxDBPivotGridField
-      Area = faData
-      AreaIndex = 1
-      AllowedAreas = [faFilter, faData]
-      IsCaptionAssigned = True
-      Caption = #1054#1089#1090#1072#1090#1086#1082
-      DataBinding.FieldName = 'OutSaldo'
-      DisplayFormat = '0.000'
-      Visible = True
-      UniqueName = #1054#1089#1090#1072#1090#1086#1082
-    end
-    object cxDBPivotGridField7: TcxDBPivotGridField
-      AreaIndex = 2
-      AllowedAreas = [faColumn, faRow, faFilter]
-      IsCaptionAssigned = True
-      Caption = #1050#1086#1076' '#1075#1088#1091#1087#1087#1099
-      DataBinding.FieldName = 'GoodsGroupId'
-      Visible = True
-      UniqueName = #1050#1086#1076' '#1075#1088#1091#1087#1087#1099
-    end
-    object cxDBPivotGridField8: TcxDBPivotGridField
-      AreaIndex = 3
-      AllowedAreas = [faColumn, faRow, faFilter]
-      IsCaptionAssigned = True
-      Caption = #1043#1088#1091#1087#1087#1072
-      DataBinding.FieldName = 'GoodsGroupName'
-      Visible = True
-      UniqueName = #1043#1088#1091#1087#1087#1072
-    end
-    object cxDBPivotGridField9: TcxDBPivotGridField
-      AreaIndex = 4
-      AllowedAreas = [faColumn, faRow, faFilter]
-      IsCaptionAssigned = True
-      Caption = #1050#1086#1076' '#1053#1044#1057
-      DataBinding.FieldName = 'NDSKindId'
-      Visible = True
-      UniqueName = #1050#1086#1076' '#1053#1044#1057
-    end
-    object cxDBPivotGridField10: TcxDBPivotGridField
-      AreaIndex = 5
-      AllowedAreas = [faColumn, faRow, faFilter]
-      IsCaptionAssigned = True
-      Caption = #1053#1044#1057
-      DataBinding.FieldName = 'NDSKindName'
-      Visible = True
-      UniqueName = #1053#1044#1057
+    object cxIncomeConsumptionBalanceLevel1: TcxGridLevel
+      GridView = cxIncomeConsumptionBalanceDBBandedTableView1
     end
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 112
+    Left = 144
     Top = 264
   end
   object ClientDataSet: TClientDataSet
@@ -557,7 +722,7 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 256
+    Left = 272
     Top = 200
   end
   object dxBarManager: TdxBarManager
@@ -577,7 +742,7 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 160
+    Left = 144
     Top = 200
     DockControlHeights = (
       0
@@ -726,15 +891,6 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
       StoredProcList = <
         item
           StoredProc = dsdStoredProc
-        end
-        item
-          StoredProc = dsdStoredProcGoods
-        end
-        item
-          StoredProc = dsdStoredProcPromo
-        end
-        item
-          StoredProc = dsdStoredProcPromoGoods
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -742,18 +898,22 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actExportExel: TAction
+    object actExportExel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
+      Grid = cxIncomeConsumptionBalance
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
-      OnExecute = actExportExelExecute
+      ShortCut = 16472
+      DefaultFileName = 'IncomeConsumptionBalance'
     end
     object dsdOpenForm1: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'dsdOpenForm1'
-      FormName = 'TReport_Analysis_Remains_SellingForm'
-      FormNameParam.Value = 'TReport_Analysis_Remains_SellingForm'
+      FormName = 'TReport_IncomeConsumptionBalanceForm'
+      FormNameParam.Value = 'TReport_IncomeConsumptionBalanceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -840,12 +1000,22 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpReport_Analysis_Remains_Selling'
+    StoredProcName = 'gpReport_IncomeConsumptionBalance'
     DataSet = ClientDataSet
     DataSets = <
       item
         DataSet = ClientDataSet
+      end
+      item
+        DataSet = cdsGoods
+      end
+      item
+        DataSet = cdsPromo
+      end
+      item
+        DataSet = cdsPromoGoods
       end>
+    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inStartDate'
@@ -864,7 +1034,7 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 192
+    Left = 272
     Top = 264
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -873,8 +1043,8 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 600
-    Top = 144
+    Left = 384
+    Top = 56
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -884,21 +1054,8 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
       item
         Component = PeriodChoice
       end>
-    Left = 728
-    Top = 152
-  end
-  object PivotAddOn: TPivotAddOn
-    ErasedFieldName = 'isErased'
-    PivotGrid = cxDBPivotGrid
-    OnDblClickActionList = <
-      item
-      end>
-    ActionItemList = <
-      item
-        ShortCut = 13
-      end>
-    Left = 456
-    Top = 264
+    Left = 488
+    Top = 48
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -932,46 +1089,6 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
     Left = 40
     Top = 328
   end
-  object dsdStoredProcGoods: TdsdStoredProc
-    StoredProcName = 'gpReport_Analysis_Remains_Selling_Goods'
-    DataSet = cdsGoods
-    DataSets = <
-      item
-        DataSet = cdsGoods
-      end>
-    Params = <
-      item
-        Name = 'inStartDate'
-        Value = 42370d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndDate'
-        Value = 42370d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 274
-    Top = 329
-  end
-  object dsdStoredProcPromo: TdsdStoredProc
-    StoredProcName = 'gpReport_Analysis_Remains_Selling_Promo'
-    DataSet = cdsPromo
-    DataSets = <
-      item
-        DataSet = cdsPromo
-      end>
-    Params = <>
-    PackSize = 1
-    Left = 274
-    Top = 385
-  end
   object dsPromo: TDataSource
     DataSet = cdsPromo
     Left = 144
@@ -982,23 +1099,6 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
     Params = <>
     Left = 40
     Top = 384
-  end
-  object dsdStoredProcPromoGoods: TdsdStoredProc
-    StoredProcName = 'gpReport_Analysis_Remains_Selling_Promo_Goods'
-    DataSet = cdsPromoGoods
-    DataSets = <
-      item
-        DataSet = cdsPromoGoods
-      end>
-    Params = <>
-    PackSize = 1
-    Left = 274
-    Top = 449
-  end
-  object dsPromoGoods: TDataSource
-    DataSet = cdsPromoGoods
-    Left = 144
-    Top = 448
   end
   object cdsPromoGoods: TClientDataSet
     Aggregates = <>

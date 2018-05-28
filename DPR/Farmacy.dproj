@@ -230,6 +230,9 @@
 				<Form>Report_Analysis_Remains_SellingForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\FormsFarmacy\Report\Report_ImplementationPlanEmployee.pas"/>
+			<DCCReference Include="..\FormsFarmacy\Report\Report_IncomeConsumptionBalance.pas">
+				<Form>Report_IncomeConsumptionBalanceForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

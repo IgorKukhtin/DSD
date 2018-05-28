@@ -749,8 +749,8 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 48
-    Top = 152
+    Left = 112
+    Top = 216
   end
   inherited BarManager: TdxBarManager
     Left = 152

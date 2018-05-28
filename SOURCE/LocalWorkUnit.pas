@@ -195,16 +195,22 @@ End;
 function SaveLocalConnect(ALogin, APassword, ASession: String): Boolean;
 var
   User: TClientDataSet;
+  bNeedCreateFields: boolean;
 Begin
   result := False;
   User := TClientDataSet.Create(nil);
   try
+    bNeedCreateFields := true;
     if FileExists(users_lcl) then
     Begin
-      User.LoadFromFile(Users_lcl);
-      User.Open;
-    End
-    else
+      try
+        User.LoadFromFile(Users_lcl);
+        User.Open;
+        bNeedCreateFields := false;
+      except
+      end;
+    End;
+    if bNeedCreateFields then
     Begin
       User.FieldDefs.Add('USR',ftString,50);
       User.FieldDefs.Add('PWD',ftString,50);

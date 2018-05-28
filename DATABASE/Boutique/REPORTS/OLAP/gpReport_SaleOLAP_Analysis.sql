@@ -1,6 +1,7 @@
 -- Function:  gpReport_SaleOLAP_Analysis()
 
 DROP FUNCTION IF EXISTS gpReport_SaleOLAP_Analysis (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_SaleOLAP_Analysis (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_SaleOLAP_Analysis (
     IN inStartDate        TDateTime,  -- Дата начала
@@ -11,6 +12,8 @@ CREATE OR REPLACE FUNCTION gpReport_SaleOLAP_Analysis (
     IN inPeriodId         Integer  ,  --
     IN inStartYear        Integer  ,
     IN inEndYear          Integer  ,
+    IN inIsPeriodAll      Boolean  , -- ограничение за Весь период (Да/Нет) (движение по Документам)
+    IN inIsYear           Boolean  , -- ограничение Год ТМ (Да/Нет) (выбор партий)
     IN inIsMark           Boolean  , -- показать только отмеченные товары(Да/Нет)
     IN inSession          TVarChar   -- сессия пользователя
 )
@@ -119,7 +122,7 @@ BEGIN
                   , SUM (tmpOlap.Sale_Amount) AS Sale_Amount
              FROM gpReport_SaleOLAP (inStartDate:= inStartDate, inEndDate:= inEndDate, inUnitId:= inUnitId, inPartnerId:= inPartnerId
                                    , inBrandId:= inBrandId, inPeriodId:= inPeriodId, inStartYear:= inStartYear, inEndYear:= inEndYear
-                                   , inIsYear:= FALSE, inIsPeriodAll:= FALSE, inIsGoods:= TRUE, inIsSize:= TRUE
+                                   , inIsYear:= inIsYear, inIsPeriodAll:= inIsPeriodAll, inIsGoods:= TRUE, inIsSize:= TRUE
                                    , inIsClient_doc:= FALSE, inIsOperDate_doc:= FALSE, inIsDay_doc:= FALSE, inIsOperPrice:= FALSE
                                    , inIsDiscount:= FALSE, inIsMark:= inIsMark, inSession:= inSession) AS tmpOlap
              GROUP BY tmpOlap.BrandName
@@ -774,6 +777,9 @@ BEGIN
 
                           , 15395562          :: Integer  AS Color_Grey            --нежно серый -- 
 --                          , zc_Color_White()  :: Integer  AS Color_White 
+                          , ROW_NUMBER() OVER (ORDER BY tmpData.LabelName, tmpData.GoodsCode, tmpData.GoodsName)                                               :: integer AS Ord1 
+                          , ROW_NUMBER() OVER (ORDER BY tmpData.GroupsName3, tmpData.LabelName, tmpData.GoodsCode, tmpData.GoodsName)                          :: integer AS Ord2 
+                          , ROW_NUMBER() OVER (ORDER BY tmpData.LineFabricaName, tmpData.GroupsName3, tmpData.LabelName, tmpData.GoodsCode, tmpData.GoodsName) :: integer AS Ord3 
                      FROM tmpData
                      GROUP BY tmpData.BrandName
                             , tmpData.GoodsGroupName

@@ -1,11 +1,13 @@
 -- Function: gpSelect_Object_GoodsListSale_all (TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_GoodsListSale (Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_GoodsListSale (Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsListSale(
     IN inRetailId      Integer , -- торговая сеть
     IN inContractId    Integer , -- договор
     IN inJuridicalId   Integer , -- юр. лицо
+    IN inGoodsId       Integer , -- Товар
     IN inShowAll       Boolean , -- показать удаленные Да/нет
     IN inSession       TVarChar  -- сессия пользователя
 )
@@ -69,6 +71,7 @@ BEGIN
                               LEFT JOIN Object ON Object.Id = _tmpWord_Split_to.Word :: Integer
                           GROUP BY _tmpWord_Split_to.WordList
                          )
+
           -- Результат
           SELECT 
              Object_GoodsListSale.Id          AS Id
@@ -229,6 +232,7 @@ BEGIN
     WHERE (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
        AND (ObjectLink_GoodsListSale_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
        AND (GoodsListSale_Contract.ChildObjectId = inContractId OR inContractId = 0)
+       AND (ObjectLink_GoodsListSale_Goods.ChildObjectId = inGoodsId OR inGoodsId = 0)
     ;
 
 END;
@@ -238,6 +242,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.05.18         *
  05.05.17         *
  06.12.16         *
  10.10.16         * 

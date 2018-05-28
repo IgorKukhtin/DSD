@@ -65,6 +65,10 @@ BEGIN
       from gpSelect_Object_Price(inUnitId, inGoodsId, inisShowAll, inisShowDel,  inSession) as gpSelect_Object_Price
         LEFT OUTER JOIN Reserve AS Reserve_Goods
                                 ON Reserve_Goods.ObjectId = gpSelect_Object_Price.Id
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_isNotUploadSites 
+                                ON ObjectBoolean_isNotUploadSites.ObjectId = gpSelect_Object_Price.GoodsId 
+                               AND ObjectBoolean_isNotUploadSites.DescId = zc_ObjectBoolean_Goods_isNotUploadSites()
+      WHERE COALESCE(ObjectBoolean_isNotUploadSites.ValueData, false) = False
       ORDER BY gpSelect_Object_Price.GoodsName;
 
 END;
@@ -75,6 +79,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                 ÿ‡·ÎËÈ Œ.¬. 
+ 24.05.18         *
  26.04.18         *
 
 */

@@ -32,9 +32,15 @@ BEGIN
                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
                                                  ON MILinkObject_Goods.MovementItemId = Object_PartionMovementItem.ObjectCode
                                                 AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-                LEFT JOIN Object_Goods_View AS Object_PartnerGoods ON Object_PartnerGoods.Id = MILinkObject_Goods.ObjectId                
+                LEFT JOIN Object_Goods_View AS Object_PartnerGoods ON Object_PartnerGoods.Id = MILinkObject_Goods.ObjectId    
+                            
+                LEFT JOIN ObjectBoolean AS ObjectBoolean_isNotUploadSites 
+                                        ON ObjectBoolean_isNotUploadSites.ObjectId = Container.ObjectId 
+                                       AND ObjectBoolean_isNotUploadSites.DescId = zc_ObjectBoolean_Goods_isNotUploadSites()
             WHERE
                 Container.DescId = zc_Container_Count()
+                AND
+                COALESCE(ObjectBoolean_isNotUploadSites.ValueData, false) = False
                 AND
                 Container.WhereObjectId = inUnitId
             GROUP BY
@@ -90,12 +96,13 @@ ALTER FUNCTION gpSelect_GoodsOnUnitRemains_ForTabletki (Integer, TVarChar) OWNER
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В. 
- 15.01.16                                                                       *
+ 24.05.18                                                                                      *
  29.03.18                                                                                      *
+ 15.01.16                                                                       *
 
 
 */
 
 -- тест
--- SELECT * FROM gpSelect_GoodsOnUnitRemains_ForTabletki (inUnitId := 183292, inSession:= '2') (inUnitId := 183292, inSession:= '2')
+-- SELECT * FROM gpSelect_GoodsOnUnitRemains_ForTabletki (inUnitId := 183292, inSession:= '3')
 

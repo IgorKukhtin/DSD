@@ -66,7 +66,7 @@ BEGIN
             
     INSERT INTO tmpContainerCount(ContainerId, GoodsId, Amount)
                                 SELECT Container.Id                AS ContainerId
-                                     , Container.ObjectID          AS GoodsId
+                                     , Container.ObjectId          AS GoodsId
                                      , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS Amount
                                 FROM Container
                                     --INNER JOIN tmpUnit ON tmpUnit.UnitId = Container.WhereObjectId
@@ -85,7 +85,24 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-        WITH    tmpData_all AS (SELECT tmpContainerCount.ContainerId
+        WITH  
+        tmpContainerCount AS (SELECT Container.Id                AS ContainerId
+                                   , Container.ObjectId          AS GoodsId
+                                   , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS Amount
+                              FROM Container
+                                  --INNER JOIN tmpUnit ON tmpUnit.UnitId = Container.WhereObjectId
+                                  LEFT JOIN MovementItemContainer AS MIContainer 
+                                                                  ON MIContainer.ContainerId = Container.Id
+                                                                 AND MIContainer.OperDate >= inRemainsDate
+                              WHERE Container.DescId = zc_Container_count()
+                                AND Container.WhereObjectId = inUnitId
+                              GROUP BY Container.Id  
+                                   , Container.Amount 
+                                   , Container.ObjectId
+                              HAVING Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
+                              )
+
+              , tmpData_all AS (SELECT tmpContainerCount.ContainerId
                                      , tmpContainerCount.Amount  AS Amount
                                      , tmpContainerCount.GoodsId
                                      , MI_Income.MovementId        AS MovementId_Income
@@ -319,7 +336,7 @@ BEGIN
                                          ON ObjectHistoryFloat_Price.ObjectHistoryId = ObjectHistory_Price.Id
                                         AND ObjectHistoryFloat_Price.DescId = zc_ObjectHistoryFloat_Price_Value()
                                                         
-            LEFT JOIN SelectMinPrice_AllGoods ON SelectMinPrice_AllGoods.GoodsId = tmpData.GoodsId
+            LEFT JOIN SelectMinPrice_AllGoods ON SelectMinPrice_AllGoods.GoodsId_Retail = tmpData.GoodsId           -- связали по товару сети
             LEFT JOIN SelectMinPrice_AllGoods_onDate ON SelectMinPrice_AllGoods_onDate.GoodsId = tmpData.GoodsId
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = SelectMinPrice_AllGoods_onDate.ContractId
             
@@ -341,6 +358,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.05.18         *
  07.01.18         *
  12.08.17         *
  24.05.17         *

@@ -204,14 +204,18 @@ BEGIN
                                   ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId
                                  AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
             LEFT JOIN MarginCategory_site ON tmpGoodsAll.Price >= MarginCategory_site.MinPrice AND tmpGoodsAll.Price < MarginCategory_site.MaxPrice
-       ;
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_isNotUploadSites 
+                                    ON ObjectBoolean_isNotUploadSites.ObjectId = tmpGoodsAll.GoodsId 
+                                   AND ObjectBoolean_isNotUploadSites.DescId = zc_ObjectBoolean_Goods_isNotUploadSites()
+       WHERE COALESCE(ObjectBoolean_isNotUploadSites.ValueData, false) = False;
 
 END; $BODY$
   LANGUAGE plpgsql VOLATILE;
 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
-               Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   ßðîøåíêî Ð.Ô.
+               Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   ßðîøåíêî Ð.Ô.   Øàáëèé Î.Â.
+ 29.03.18                                                                       *
  28.09.17                                                        *
 */
 

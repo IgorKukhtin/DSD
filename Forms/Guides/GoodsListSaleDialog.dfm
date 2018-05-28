@@ -1,22 +1,22 @@
 inherited GoodsListSaleDialogForm: TGoodsListSaleDialogForm
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'>'
-  ClientHeight = 193
-  ClientWidth = 446
-  ExplicitWidth = 452
-  ExplicitHeight = 221
+  ClientHeight = 224
+  ClientWidth = 448
+  ExplicitWidth = 454
+  ExplicitHeight = 252
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 105
-    Top = 160
+    Top = 193
     ExplicitLeft = 105
-    ExplicitTop = 160
+    ExplicitTop = 193
   end
   inherited bbCancel: TcxButton
     Left = 250
-    Top = 160
+    Top = 193
     ExplicitLeft = 250
-    ExplicitTop = 160
+    ExplicitTop = 193
   end
   object cxLabel3: TcxLabel [2]
     Left = 8
@@ -69,9 +69,26 @@ inherited GoodsListSaleDialogForm: TGoodsListSaleDialogForm
     TabOrder = 7
     Width = 323
   end
+  object cxLabel8: TcxLabel [8]
+    Left = 8
+    Top = 157
+    Caption = #1058#1086#1074#1072#1088':'
+  end
+  object edGoods: TcxButtonEdit [9]
+    Left = 115
+    Top = 156
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Width = 323
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 176
-    Top = 120
+    Left = 184
+    Top = 143
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 221
@@ -133,9 +150,26 @@ inherited GoodsListSaleDialogForm: TGoodsListSaleDialogForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsName'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 101
-    Top = 112
+    Left = 45
+    Top = 183
   end
   object RetailGuides: TdsdGuides
     KeyField = 'Id'
@@ -237,5 +271,34 @@ inherited GoodsListSaleDialogForm: TGoodsListSaleDialogForm
       end>
     Left = 385
     Top = 96
+  end
+  object GuidesGoods: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoods
+    FormNameParam.Value = 'TGoods_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoods_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 312
+    Top = 131
   end
 end

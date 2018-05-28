@@ -1,4 +1,7 @@
 -- Function: gpSelect_LastPriceOut()
+/*
+  процедура вызывается в программе: SaveToXlsUnit
+*/
 
 DROP FUNCTION IF EXISTS gpSelect_LastPriceOut (Integer, TVarChar);
 
@@ -76,12 +79,17 @@ BEGIN
                                   ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
                                  AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
             LEFT OUTER JOIN DiffPrice ON ROUND(MovementItem.Amount * (1.0+(ObjectFloat_NDSKind_NDS.ValueData / 100.0)),2) between MinPrice AND MaxPrice
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_isNotUploadSites 
+                                    ON ObjectBoolean_isNotUploadSites.ObjectId = Object_Goods.Id 
+                                   AND ObjectBoolean_isNotUploadSites.DescId = zc_ObjectBoolean_Goods_isNotUploadSites()
         WHERE
             MovementItem.MovementId = vbMovementId
             AND 
             MovementItem.DescId = zc_MI_Master()
             AND 
-            MovementItem.isErased = FALSE;
+            MovementItem.isErased = FALSE
+            AND
+            COALESCE(ObjectBoolean_isNotUploadSites.ValueData, false) = False;
   
 
 END;
@@ -92,7 +100,8 @@ ALTER FUNCTION gpSelect_LastPriceOut (Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 24.05.18                                                                                      *
  12.01.16                                                                        *
  
 */
