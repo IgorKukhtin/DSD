@@ -250,12 +250,10 @@ BEGIN
 
 
        -- список документов разделения для товара из прихода от поставщика
-     , tmpSeparate AS (SELECT MIContainer.MovementId
-                       FROM (SELECT tmpIncome.ContainerId FROM tmpIncome WHERE tmpIncome.DescId = zc_Container_Count() GROUP BY tmpIncome.ContainerId) AS tmp
-                            INNER JOIN MovementItemContainer AS MIContainer
-                                                             ON MIContainer.ContainerId = tmp.ContainerId
-                                                            AND MIContainer.MovementDescId = zc_Movement_ProductionSeparate()
-                       GROUP BY MIContainer.MovementId
+     , tmpSeparate AS (SELECT DISTINCT MIContainer.MovementId
+                       FROM MovementItemContainer AS MIContainer
+                       WHERE MIContainer.ContainerId    IN (SELECT DISTINCT tmpIncome.ContainerId FROM tmpIncome WHERE tmpIncome.DescId = zc_Container_Count())
+                         AND MIContainer.MovementDescId = zc_Movement_ProductionSeparate()
                       )
 
        -- разделение - сумма приход (для расчета цены голов)
@@ -264,7 +262,7 @@ BEGIN
                                  LEFT JOIN tmpGoods ON tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
                             WHERE MIContainer.DescId = zc_MIContainer_Summ()
                               AND MIContainer.isActive = TRUE
-                              AND MIContainer.MovementId IN (SELECT tmpSeparate.MovementId FROM tmpSeparate)
+                              AND MIContainer.MovementId IN (SELECT DISTINCT tmpSeparate.MovementId FROM tmpSeparate)
                               AND tmpGoods.GoodsId IS NULL
                             )
 
@@ -277,13 +275,12 @@ BEGIN
      , tmpSeparateS AS (SELECT MAX (MIContainer.ObjectId_analyzer)  AS GoodsId
                              , SUM (MIContainer.Amount)    AS Amount_count
                         FROM MovementItemContainer AS MIContainer
-                             INNER JOIN tmpGoods ON tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
-                        WHERE MIContainer.DescId = zc_MIContainer_Count()
+                             LEFT JOIN tmpGoods ON tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
+                        WHERE MIContainer.DescId   = zc_MIContainer_Count()
                           AND MIContainer.isActive = TRUE
-                          AND MIContainer.MovementId IN (SELECT tmpSeparate.MovementId FROM tmpSeparate)
+                          AND MIContainer.MovementId IN (SELECT DISTINCT tmpSeparate.MovementId FROM tmpSeparate)
                           AND tmpGoods.GoodsId IS NULL
                        )
-
       -- Результат
       SELECT tmpMovement.InvNumber
            , tmpMovement.OperDate
