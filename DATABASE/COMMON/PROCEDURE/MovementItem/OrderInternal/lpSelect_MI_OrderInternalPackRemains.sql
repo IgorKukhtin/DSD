@@ -1877,6 +1877,7 @@ BEGIN
                                 AND ObjectLink_OrderType_Unit.DescId   = zc_ObjectLink_OrderType_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = CASE WHEN tmpMI.ContainerId > 0 OR tmpMI.UnitId_pf > 0 THEN tmpMI.UnitId_pf ELSE ObjectLink_OrderType_Unit.ChildObjectId END
            ;
+           
 
 END;
 $BODY$
