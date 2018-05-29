@@ -29,6 +29,8 @@ BEGIN
           , Movement_ReturnOut.JuridicalName
           , Movement_ReturnOut.FromName
           , Movement_ReturnOut.ReturnTypeName
+          , Movement_ReturnOut.LegalAddressName
+          , Movement_ReturnOut.ActualAddressName
           , Movement_ReturnOut.TotalSummMVAT
           , Movement_ReturnOut.TotalSumm
           , (Movement_ReturnOut.TotalSumm - Movement_ReturnOut.TotalSummMVAT) AS TotalSummVAT
