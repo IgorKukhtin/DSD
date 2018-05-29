@@ -17,6 +17,8 @@ type
     edInvNumberPartner: TcxTextEdit;
     cxLabel11: TcxLabel;
     edOperDatePartner: TcxDateEdit;
+    edAdjustingOurDate: TcxDateEdit;
+    cxLabel1: TcxLabel;
   private
     { Private declarations }
   public

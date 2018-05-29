@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_ReturnOut_PartnerData(
     IN inMovementId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumberPartner    TVarChar  , -- Номер документа
     IN inOperDatePartner     TDateTime , -- Дата документа
+    IN inAdjustingOurDate    TDateTime , -- Корректировка нашей даты
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID AS
@@ -32,9 +33,12 @@ BEGIN
         vbNeedComplete := FALSE;
     END IF;
     
+    --Сохранили Корректировка нашей даты
+    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_AdjustingOurDate(), inMovementId, CASE WHEN TRIM (inInvNumberPartner) <> '' AND inAdjustingOurDate > '01.01.2000' THEN inAdjustingOurDate ELSE NULL END);
+    
     --Сохранили дату партнера
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), inMovementId, CASE WHEN TRIM (inInvNumberPartner) <> '' AND inOperDatePartner > '01.01.2000' THEN inOperDatePartner ELSE NULL END);
-    
+
     -- Сохранили № документа партнера
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), inMovementId, inInvNumberPartner);
 
@@ -50,7 +54,8 @@ LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 29.05.18                                                                                     * 
  12.01.16                                                                        *
 
 */

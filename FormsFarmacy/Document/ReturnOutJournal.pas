@@ -57,6 +57,7 @@ type
     dxBarButton1: TdxBarButton;
     DataSetPost1: TDataSetPost;
     ExecuteDialog: TExecuteDialog;
+    AdjustingOurDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

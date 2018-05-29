@@ -142,9 +142,15 @@ CREATE OR REPLACE FUNCTION zc_MovementDate_Month() RETURNS Integer AS $BODY$BEGI
 INSERT INTO MovementDateDesc (Code, ItemName)
   SELECT 'zc_MovementDate_Month', 'Месяц акции' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Month');
 
+CREATE OR REPLACE FUNCTION zc_MovementDate_AdjustingOurDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_AdjustingOurDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_AdjustingOurDate', 'Корректировка нашей даты' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_AdjustingOurDate');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д. А.    Воробкало А.А.   Ярошенко Р.Ф.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д. А.    Воробкало А.А.   Ярошенко Р.Ф.   Шаблий О.В.
+ 28.05.18                                                                                                        * 
  25.07.17         * zc_MovementDate_Month
  08.06.17         * zc_MovementDate_Check
  24.03.17                                                                                          * zc_MovementDate_InsertMobile

@@ -850,10 +850,10 @@ procedure TLoadFormTest.LoadReturnOutFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutForm');
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutPartnerDataDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReturnOutPartnerDataDialogForm');}
+  TdsdFormStorageFactory.GetStorage.Load('TReturnOutPartnerDataDialogForm');
 end;
 
 procedure TLoadFormTest.LoadReturnTypeFormTest;

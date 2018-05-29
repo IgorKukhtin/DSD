@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer
              , IncomeOperDate TDateTime, IncomeInvNumber TVarChar
              , JuridicalName TVarChar
              , ReturnTypeName TVarChar
+             , AdjustingOurDate TDateTime
               )
 
 AS
@@ -83,6 +84,7 @@ BEGIN
            , Movement_ReturnOut_View.IncomeInvNumber
            , Movement_ReturnOut_View.JuridicalName
            , Movement_ReturnOut_View.ReturnTypeName
+           , Movement_ReturnOut_View.AdjustingOurDate
        FROM tmpUnit
            LEFT JOIN Movement_ReturnOut_View ON Movement_ReturnOut_View.FromId = tmpUnit.UnitId
                                             AND Movement_ReturnOut_View.OperDate BETWEEN inStartDate AND inEndDate
@@ -102,7 +104,8 @@ ALTER FUNCTION gpSelect_Movement_ReturnOut (TDateTime, TDateTime, Boolean, TVarC
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 29.05.18                                                                     * 
  05.01.18         * add NDS
  04.05.16         *
  06.02.15                        *

@@ -23,7 +23,9 @@ RETURNS TABLE (Id Integer
              , ReturnTypeName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , LegalAddressId Integer, LegalAddressName TVarChar 
-             , ActualAddressId Integer, ActualAddressName TVarChar )
+             , ActualAddressId Integer, ActualAddressName TVarChar 
+             , AdjustingOurDate TDateTime
+)
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -62,6 +64,7 @@ BEGIN
              , CAST('' as TVarChar)                             AS LegalAddressName
              , 0                                                AS ActualAddressId
              , CAST('' as TVarChar)                             AS ActualAddressName
+             , NULL::TDateTime                                  AS AdjustingOurDate
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -93,6 +96,7 @@ BEGIN
            , Movement_ReturnOut_View.LegalAddressName
            , Movement_ReturnOut_View.ActualAddressId
            , Movement_ReturnOut_View.ActualAddressName
+           , Movement_ReturnOut_View.AdjustingOurDate
 
        FROM Movement_ReturnOut_View       
       WHERE Movement_ReturnOut_View.Id = inMovementId;

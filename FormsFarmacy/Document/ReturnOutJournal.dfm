@@ -5,7 +5,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 823
-  ExplicitHeight = 507
+  ExplicitHeight = 508
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -222,6 +222,13 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 85
+          end
+          object AdjustingOurDate: TcxGridDBColumn
+            Caption = #1050#1086#1088#1088'. '#1085#1072#1096#1077#1081' '#1076#1072#1090#1099
+            DataBinding.FieldName = 'AdjustingOurDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 85
           end
           object IncomeOperDate: TcxGridDBColumn
@@ -542,6 +549,15 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
           Value = 'NULL'
           Component = FormParams
           ComponentItem = 'OperDatePartner'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AdjustingOurDate'
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'AdjustingOurDate'
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -912,6 +928,14 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         ComponentItem = 'OperDatePartner'
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AdjustingOurDate'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'AdjustingOurDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -1041,6 +1065,15 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         Value = 42381d
         Component = FormParams
         ComponentItem = 'OperDatePartner'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAdjustingOurDate'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'AdjustingOurDate'
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -82,6 +82,8 @@ type
     cxLabel16: TcxLabel;
     GuidesJuridicalLegalAddress: TdsdGuides;
     GuidesJuridicalActualAddress: TdsdGuides;
+    edAdjustingOurDate: TcxDateEdit;
+    cxLabel17: TcxLabel;
   private
     { Private declarations }
   public

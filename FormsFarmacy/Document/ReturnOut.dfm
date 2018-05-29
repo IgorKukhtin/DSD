@@ -321,7 +321,7 @@ inherited ReturnOutForm: TReturnOutForm
     end
     object edPriceWithVAT: TcxCheckBox
       Left = 149
-      Top = 65
+      Top = 59
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 10
       Width = 130
@@ -535,6 +535,22 @@ inherited ReturnOutForm: TReturnOutForm
       Top = 78
       Caption = #1060#1072#1082#1090#1080#1095#1077#1089#1082#1080#1081' '#1072#1076#1088#1077#1089' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
     end
+    object edAdjustingOurDate: TcxDateEdit
+      Left = 179
+      Top = 95
+      EditValue = 43248d
+      Properties.DateOnError = deNull
+      Properties.ReadOnly = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 33
+      Width = 100
+    end
+    object cxLabel17: TcxLabel
+      Left = 179
+      Top = 77
+      Caption = #1050#1086#1088#1088'. '#1085#1072#1096#1077#1081' '#1076#1072#1090#1099
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -740,6 +756,14 @@ inherited ReturnOutForm: TReturnOutForm
           ComponentItem = 'OperDatePartner'
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AdjustingOurDate'
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'AdjustingOurDate'
+          DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -1028,6 +1052,13 @@ inherited ReturnOutForm: TReturnOutForm
         Component = edOperDatePartner
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AdjustingOurDate'
+        Value = 'NULL'
+        Component = edAdjustingOurDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 280
     Top = 416
@@ -1223,6 +1254,13 @@ inherited ReturnOutForm: TReturnOutForm
         Value = Null
         Component = GuidesJuridicalActualAddress
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AdjustingOurDate'
+        Value = 'NULL'
+        Component = edAdjustingOurDate
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -1867,6 +1905,14 @@ inherited ReturnOutForm: TReturnOutForm
         Name = 'inOperDatePartner'
         Value = 'NULL'
         Component = edOperDatePartner
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAdjustingOurDate'
+        Value = 'NULL'
+        Component = edAdjustingOurDate
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','

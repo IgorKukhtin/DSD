@@ -33,6 +33,7 @@ SELECT       Movement.Id                                AS Id
            , Object_AddressLegal.ValueData              AS LegalAddressName
            , MovementLinkObject_ActualAddress.ObjectId  AS ActualAddressId
            , Object_AddressActual.ValueData             AS ActualAddressName
+           , MovementDate_AdjustingOurDate.ValueData    AS AdjustingOurDate
        FROM Movement 
             LEFT JOIN Movement_Income_View AS MovementIncome ON MovementIncome.Id = Movement.ParentId
 
@@ -113,6 +114,10 @@ SELECT       Movement.Id                                AS Id
                                  ON ObjectLink_JuridicalActualAddress_ActualAddress.ObjectId = Object_ActualAddress.Id 
                                 AND ObjectLink_JuridicalActualAddress_ActualAddress.DescId = zc_ObjectLink_JuridicalActualAddress_Address()
             LEFT JOIN Object AS Object_AddressActual ON Object_AddressActual.Id = ObjectLink_JuridicalActualAddress_ActualAddress.ChildObjectId                     
+
+            LEFT JOIN MovementDate    AS MovementDate_AdjustingOurDate
+                                      ON MovementDate_AdjustingOurDate.MovementId =  Movement.Id
+                                     AND MovementDate_AdjustingOurDate.DescId = zc_MovementDate_AdjustingOurDate()
 
            WHERE Movement.DescId = zc_Movement_ReturnOut();
 
