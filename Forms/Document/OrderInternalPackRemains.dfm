@@ -3,7 +3,7 @@
   ClientHeight = 639
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 674
+  ExplicitHeight = 677
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -4655,9 +4655,9 @@
             Options.Editing = False
             Width = 70
           end
-          object plGoodsGroupNameFull: TcxGridDBColumn
+          object plGoodsGroupNameFull_Master: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
-            DataBinding.FieldName = 'GoodsGroupNameFull'
+            DataBinding.FieldName = 'GoodsGroupNameFull_Master'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -4715,27 +4715,27 @@
             Options.Editing = False
             Width = 70
           end
-          object ploutGoodsCode: TcxGridDBColumn
+          object ploutGoodsCode_Master: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1088#1072#1089#1093#1086#1076')'
-            DataBinding.FieldName = 'GoodsCode'
+            DataBinding.FieldName = 'GoodsCode_Master'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072' '#1088#1072#1089#1093#1086#1076' '#1053#1040' '#1091#1087#1072#1082#1086#1074#1082#1091
             Options.Editing = False
             Width = 55
           end
-          object ploutGoodsName: TcxGridDBColumn
+          object ploutGoodsName_Master: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088' ('#1088#1072#1089#1093#1086#1076')'
-            DataBinding.FieldName = 'GoodsName'
+            DataBinding.FieldName = 'GoodsName_Master'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1088#1072#1089#1093#1086#1076' '#1053#1040' '#1091#1087#1072#1082#1086#1074#1082#1091
             Options.Editing = False
             Width = 150
           end
-          object ploutGoodsKindName: TcxGridDBColumn
+          object ploutGoodsKindName_Master: TcxGridDBColumn
             Caption = #1042#1080#1076' ('#1088#1072#1089#1093#1086#1076')'
-            DataBinding.FieldName = 'GoodsKindName'
+            DataBinding.FieldName = 'GoodsKindName_Master'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -4752,7 +4752,7 @@
           end
           object ploutMeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
-            DataBinding.FieldName = 'MeasureName'
+            DataBinding.FieldName = 'MeasureName_Master'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -5751,6 +5751,16 @@
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actGridPlanToExcel: TdsdGridToExcel [4]
+      Category = 'DSDLib'
+      TabSheet = cxTabSheet1
+      MoveParams = <>
+      Enabled = False
+      Grid = cxGridPlan
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+    end
     inherited actMISetErased: TdsdUpdateErased
       TabSheet = tsMain
     end
@@ -5760,7 +5770,7 @@
     inherited actUpdateMainDS: TdsdUpdateDataSet
       TabSheet = tsMain
     end
-    object actUpdateChildDS: TdsdUpdateDataSet [10]
+    object actUpdateChildDS: TdsdUpdateDataSet [11]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -5776,7 +5786,7 @@
       Caption = 'actUpdateChildDS'
       DataSource = ChildDS
     end
-    object actUpdateChildTotalDS: TdsdUpdateDataSet [11]
+    object actUpdateChildTotalDS: TdsdUpdateDataSet [12]
       Category = 'DSDLib'
       TabSheet = tsTotal
       MoveParams = <>
@@ -5786,7 +5796,7 @@
       Caption = 'actUpdateChildTotalDS'
       DataSource = ChildTotalDS
     end
-    object actPrintDiff: TdsdPrintAction [12]
+    object actPrintDiff: TdsdPrintAction [13]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintRemains
@@ -5870,7 +5880,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintDetail: TdsdPrintAction [13]
+    object actPrintDetail: TdsdPrintAction [14]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintRemains
@@ -5954,7 +5964,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintRemains: TdsdPrintAction [14]
+    object actPrintRemains: TdsdPrintAction [15]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintRemains
@@ -6082,7 +6092,7 @@
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [20]
+    object actGoodsKindChoice: TOpenChoiceForm [21]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -6109,7 +6119,7 @@
         end>
       isShowModal = True
     end
-    object actProtocolChild: TdsdOpenForm [21]
+    object actProtocolChild: TdsdOpenForm [22]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -6140,7 +6150,7 @@
         end>
       isShowModal = False
     end
-    object actProtocolTotal: TdsdOpenForm [22]
+    object actProtocolTotal: TdsdOpenForm [23]
       Category = 'DSDLib'
       TabSheet = tsTotal
       MoveParams = <>
@@ -6701,6 +6711,9 @@
       end
       item
         DataSet = ChildTotalCDS
+      end
+      item
+        DataSet = PlanCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -6916,6 +6929,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbGridPlanToExcel'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end>
     end
@@ -7007,6 +7024,10 @@
     end
     object bbProtocolTotal: TdxBarButton
       Action = actProtocolTotal
+      Category = 0
+    end
+    object bbGridPlanToExcel: TdxBarButton
+      Action = actGridPlanToExcel
       Category = 0
     end
   end
@@ -7676,8 +7697,8 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 334
-    Top = 537
+    Left = 342
+    Top = 505
   end
   object ChildTotalCDS: TClientDataSet
     Aggregates = <>
@@ -7703,7 +7724,7 @@
     ColumnEnterList = <>
     SummaryItemList = <>
     Left = 342
-    Top = 489
+    Top = 449
   end
   object spUpdateMIMasterChildTotal: TdsdStoredProc
     DataSets = <>

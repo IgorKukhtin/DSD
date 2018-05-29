@@ -232,21 +232,23 @@ type
     cxGridPlan: TcxGrid;
     cxGridDBTableViewPlan: TcxGridDBTableView;
     plNum: TcxGridDBColumn;
-    plGoodsGroupNameFull: TcxGridDBColumn;
+    plGoodsGroupNameFull_Master: TcxGridDBColumn;
     plUnitCode: TcxGridDBColumn;
     plUnitName: TcxGridDBColumn;
     plisCheck_basis: TcxGridDBColumn;
     plGoodsCode_basis: TcxGridDBColumn;
     plGoodsName_basis: TcxGridDBColumn;
     plMeasureName_basis: TcxGridDBColumn;
-    ploutGoodsCode: TcxGridDBColumn;
-    ploutGoodsName: TcxGridDBColumn;
-    ploutGoodsKindName: TcxGridDBColumn;
+    ploutGoodsCode_Master: TcxGridDBColumn;
+    ploutGoodsName_Master: TcxGridDBColumn;
+    ploutGoodsKindName_Master: TcxGridDBColumn;
     ploutMeasureName: TcxGridDBColumn;
     cxGridLevelPlan: TcxGridLevel;
     PlanDS: TDataSource;
     PlanCDS: TClientDataSet;
     dsdDBViewAddOnPlan: TdsdDBViewAddOn;
+    actGridPlanToExcel: TdsdGridToExcel;
+    bbGridPlanToExcel: TdxBarButton;
   private
     { Private declarations }
   public
