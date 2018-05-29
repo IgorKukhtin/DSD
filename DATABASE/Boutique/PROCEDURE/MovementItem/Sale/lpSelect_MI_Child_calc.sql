@@ -135,7 +135,7 @@ BEGIN
                                         -- сумма в ГРН с учетом Доп. скидки
                                       , tmpMI.AmountToPay - tmpMI.AmountDiscount AS Amount_all
                                         -- сумма в ГРН с учетом Доп. скидки - для расч. EUR
-                                      , CASE WHEN inAmountGRN > 0 OR inAmountCard > 0
+                                      , CASE WHEN inAmountGRN > 150 OR inAmountCard > 0
                                                   -- считаем что дробной части нет, т.е. она дополнится гривной
                                                   THEN zfCalc_CurrencyFrom (-- Переводим в Валюту + отбросили коп.
                                                                             FLOOR (zfCalc_CurrencyTo (tmpMI.AmountToPay - tmpMI.AmountDiscount, inCurrencyValueEUR, inParValueEUR))
@@ -167,7 +167,7 @@ BEGIN
                                 , SUM (tmpMI.Amount_calc) OVER (ORDER BY tmpMI.Amount_all ASC, tmpMI.MovementItemId ASC) AS Amount_SUM
                            FROM (SELECT tmpMI.MovementItemId
                                       , tmpMI.Amount_all - COALESCE (tmpRes.Amount, 0) AS Amount_all
-                                      , CASE WHEN inAmountGRN > 0 OR inAmountCard > 0
+                                      , CASE WHEN inAmountGRN > 155 OR inAmountCard > 0
                                                   -- считаем что дробной части нет, т.е. она дополнится гривной
                                                   THEN zfCalc_CurrencyFrom (FLOOR (zfCalc_CurrencyTo (tmpMI.Amount_all - COALESCE (tmpRes.Amount, 0), inCurrencyValueUSD, inParValueUSD))
                                                                           , inCurrencyValueUSD, inParValueUSD)
@@ -350,6 +350,7 @@ BEGIN
                                  AND tmpMI_Child.CashId   = tmpCash.CashId
        WHERE tmpMI_Child.MovementItemId > 0
           OR (tmp_MI_res.Amount_GRN + COALESCE (tmp_Currency.Amount_EUR_grn, 0)  + COALESCE (tmp_Currency.Amount_USD_grn, 0)) <> 0
+          OR tmp_MI_res.Amount_GRN     <> 0
           OR tmp_MI_res.AmountDiscount <> 0
 
       UNION ALL
