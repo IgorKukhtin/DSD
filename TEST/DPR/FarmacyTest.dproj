@@ -84,7 +84,6 @@
 			<DCC_DebugInformation>false</DCC_DebugInformation>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-			<Debugger_RunParams>/realfarmacy</Debugger_RunParams>
 			<DCC_ExeOutput>..\..\BIN</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_Locale>1033</VerInfo_Locale>
@@ -1927,6 +1926,30 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_IncomeConsumptionBalance.pas">
 				<Form>Report_IncomeConsumptionBalanceForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalLegalAddress.pas">
+				<Form>JuridicalLegalAddressForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalLegalAddressEdit.pas">
+				<Form>JuridicalLegalAddressEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Kind\Address.pas">
+				<Form>AddressForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Kind\AddressEdit.pas">
+				<Form>AddressEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalActualAddress.pas">
+				<Form>JuridicalActualAddressForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalActualAddressEdit.pas">
+				<Form>JuridicalActualAddressEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

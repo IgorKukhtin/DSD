@@ -575,7 +575,13 @@ uses
   ReportMovementCheckFL in '..\..\FormsFarmacy\Report\ReportMovementCheckFL.pas' {ReportMovementCheckFLForm: TParentForm},
   Report_ImplementationPlanEmployee in '..\..\FormsFarmacy\Report\Report_ImplementationPlanEmployee.pas' {Report_ImplementationPlanEmployeeForm: TParentForm},
   Report_ImplementationPlanEmployeeDialog in '..\..\FormsFarmacy\Report\Report_ImplementationPlanEmployeeDialog.pas' {Report_ImplementationPlanEmployeeDialogForm: TParentForm},
-  Report_IncomeConsumptionBalance in '..\..\FormsFarmacy\Report\Report_IncomeConsumptionBalance.pas' {Report_IncomeConsumptionBalanceForm};
+  Report_IncomeConsumptionBalance in '..\..\FormsFarmacy\Report\Report_IncomeConsumptionBalance.pas' {Report_IncomeConsumptionBalanceForm},
+  JuridicalLegalAddress in '..\..\FormsFarmacy\Guides\JuridicalLegalAddress.pas' {JuridicalLegalAddressForm: TParentForm},
+  JuridicalLegalAddressEdit in '..\..\FormsFarmacy\Guides\JuridicalLegalAddressEdit.pas' {JuridicalLegalAddressEditForm: TParentForm},
+  Address in '..\..\Forms\Kind\Address.pas' {AddressForm: TParentForm},
+  AddressEdit in '..\..\Forms\Kind\AddressEdit.pas' {AddressEditForm: TParentForm},
+  JuridicalActualAddress in '..\..\FormsFarmacy\Guides\JuridicalActualAddress.pas' {JuridicalActualAddressForm: TParentForm},
+  JuridicalActualAddressEdit in '..\..\FormsFarmacy\Guides\JuridicalActualAddressEdit.pas' {JuridicalActualAddressEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -4,6 +4,8 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ReturnOut
    (Integer, TVarChar, TDateTime, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ReturnOut
    (Integer, TVarChar, TDateTime, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ReturnOut
+   (Integer, TVarChar, TDateTime, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ReturnOut(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -17,7 +19,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ReturnOut(
     IN inNDSKindId           Integer   , -- Типы НДС
     IN inParentId            Integer   , -- Приходная накладная
     IN inReturnTypeId        Integer   , -- Тип возврата
-    IN inUserId              Integer    -- сессия пользователя
+    IN inLegalAddressId      Integer   , -- Юридический адрес поставщика
+    IN inActualAddressId     Integer   , -- Фактический адрес поставщика
+    IN inUserId              Integer     -- сессия пользователя
 )
 RETURNS Integer AS
 $BODY$
@@ -42,6 +46,13 @@ BEGIN
 
      -- сохранили связь с <Типом возврата>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReturnType(), ioId, inReturnTypeId);
+
+     -- сохранили связь с <Юридический адрес поставщика>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_LegalAddress(), ioId, inLegalAddressId);
+
+     -- сохранили связь с <Фактический адрес поставщика>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ActualAddress(), ioId, inActualAddressId);
+
      -- сохраняется в отдельной процедуре
      --PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDatePartner);
 
@@ -60,7 +71,8 @@ LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 28.05.18                                                                     * 
  15.09.16         *
  06.02.15                         *
 

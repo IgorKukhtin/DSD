@@ -25,7 +25,7 @@ BEGIN
                                              --, NULL::TDateTime   --inOperDatePartner
                                              , Movement_Income.PriceWithVAT
                                              , Movement_Income.ToId, Movement_Income.FromId
-                                             , Movement_Income.NDSKindId, inParentId, NULL, vbUserId) INTO outId
+                                             , Movement_Income.NDSKindId, inParentId, NULL, NULL, NULL, vbUserId) INTO outId
      FROM  Movement_Income_View AS Movement_Income 
      WHERE Movement_Income.Id = inParentId;
 
@@ -37,7 +37,8 @@ LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 28.05.18                                                                     * 
  15.06.16         * 
  10.02.15                         *
 

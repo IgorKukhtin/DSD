@@ -17,6 +17,7 @@ $BODY$
    DECLARE Cursor1 refcursor;
    DECLARE Cursor2 refcursor;
    DECLARE Cursor3 refcursor;
+   DECLARE Cursor4 refcursor;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_OrderInternal());
@@ -942,6 +943,37 @@ BEGIN
        ;
 
        RETURN NEXT Cursor3;
+
+      OPEN Cursor4 FOR
+
+       -- Результат
+       SELECT _Result_Master.Id
+            , _Result_Master.KeyId
+            , _Result_Master.GoodsId
+            , _Result_Master.GoodsCode
+            , _Result_Master.GoodsName
+            
+            , _Result_Master.GoodsId_basis
+            , _Result_Master.GoodsCode_basis
+            , _Result_Master.GoodsName_basis
+            , _Result_Master.GoodsKindId
+            , _Result_Master.GoodsKindName
+            , _Result_Master.MeasureName
+            , _Result_Master.MeasureName_basis
+            , _Result_Master.GoodsGroupNameFull
+            , _Result_Master.isCheck_basis
+
+            , _Result_Master.UnitId
+            , _Result_Master.UnitCode
+            , _Result_Master.UnitName
+            , _Result_Master.isErased
+
+            , _Result_Master.Num
+
+       FROM _Result_Master
+       
+       ;
+       RETURN NEXT Cursor4;
 
 END;
 $BODY$

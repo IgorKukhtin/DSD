@@ -228,6 +228,25 @@ type
     chGoodsCode_packTo: TcxGridDBColumn;
     chGoodsName_packTo: TcxGridDBColumn;
     chGoodsKindName_packTo: TcxGridDBColumn;
+    cxTabSheet1: TcxTabSheet;
+    cxGridPlan: TcxGrid;
+    cxGridDBTableViewPlan: TcxGridDBTableView;
+    plNum: TcxGridDBColumn;
+    plGoodsGroupNameFull: TcxGridDBColumn;
+    plUnitCode: TcxGridDBColumn;
+    plUnitName: TcxGridDBColumn;
+    plisCheck_basis: TcxGridDBColumn;
+    plGoodsCode_basis: TcxGridDBColumn;
+    plGoodsName_basis: TcxGridDBColumn;
+    plMeasureName_basis: TcxGridDBColumn;
+    ploutGoodsCode: TcxGridDBColumn;
+    ploutGoodsName: TcxGridDBColumn;
+    ploutGoodsKindName: TcxGridDBColumn;
+    ploutMeasureName: TcxGridDBColumn;
+    cxGridLevelPlan: TcxGridLevel;
+    PlanDS: TDataSource;
+    PlanCDS: TClientDataSet;
+    dsdDBViewAddOnPlan: TdsdDBViewAddOn;
   private
     { Private declarations }
   public

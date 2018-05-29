@@ -29,6 +29,10 @@ SELECT       Movement.Id                                AS Id
            , Object_ReturnType.ValueData                AS ReturnTypeName
            , MovementIncome.JuridicalId                 AS JuridicalId
            , MovementIncome.JuridicalName               AS JuridicalName
+           , MovementLinkObject_LegalAddress.ObjectId   AS LegalAddressId
+           , Object_AddressLegal.ValueData              AS LegalAddressName
+           , MovementLinkObject_ActualAddress.ObjectId  AS ActualAddressId
+           , Object_AddressActual.ValueData             AS ActualAddressName
        FROM Movement 
             LEFT JOIN Movement_Income_View AS MovementIncome ON MovementIncome.Id = Movement.ParentId
 
@@ -87,17 +91,41 @@ SELECT       Movement.Id                                AS Id
                                       ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                      AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_LegalAddress
+                                         ON MovementLinkObject_LegalAddress.MovementId = Movement.Id
+                                        AND MovementLinkObject_LegalAddress.DescId = zc_MovementLinkObject_LegalAddress()
+
+            LEFT JOIN Object AS Object_LegalAddress ON Object_LegalAddress.Id = MovementLinkObject_LegalAddress.ObjectId
+            
+            LEFT JOIN ObjectLink AS ObjectLink_JuridicalLegalAddress_ActualAddress
+                                 ON ObjectLink_JuridicalLegalAddress_ActualAddress.ObjectId = Object_LegalAddress.Id 
+                                AND ObjectLink_JuridicalLegalAddress_ActualAddress.DescId = zc_ObjectLink_JuridicalLegalAddress_Address()
+            LEFT JOIN Object AS Object_AddressLegal ON Object_AddressLegal.Id = ObjectLink_JuridicalLegalAddress_ActualAddress.ChildObjectId                     
+            
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_ActualAddress
+                                         ON MovementLinkObject_ActualAddress.MovementId = Movement.Id
+                                        AND MovementLinkObject_ActualAddress.DescId = zc_MovementLinkObject_ActualAddress()
+
+            LEFT JOIN Object AS Object_ActualAddress ON Object_ActualAddress.Id = MovementLinkObject_ActualAddress.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_JuridicalActualAddress_ActualAddress
+                                 ON ObjectLink_JuridicalActualAddress_ActualAddress.ObjectId = Object_ActualAddress.Id 
+                                AND ObjectLink_JuridicalActualAddress_ActualAddress.DescId = zc_ObjectLink_JuridicalActualAddress_Address()
+            LEFT JOIN Object AS Object_AddressActual ON Object_AddressActual.Id = ObjectLink_JuridicalActualAddress_ActualAddress.ChildObjectId                     
+
            WHERE Movement.DescId = zc_Movement_ReturnOut();
 
 ALTER TABLE Movement_ReturnOut_View
   OWNER TO postgres;
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 28.05.18                                                       * 
  06.02.15                        * 
 */
 
 -- тест
--- SELECT * FROM Movement_ReturnOut_View where id = 805
+-- SELECT * FROM Movement_ReturnOut_View where id = 7753659

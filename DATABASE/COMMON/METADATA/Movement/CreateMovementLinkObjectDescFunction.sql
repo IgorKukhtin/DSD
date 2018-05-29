@@ -354,12 +354,23 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_PromoCode() RETURNS Integer AS 
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_PromoCode', 'Промо код' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PromoCode');
 
+
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_LegalAddress() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_LegalAddress'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_LegalAddress', 'Юридический адрес' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_LegalAddress');
+
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_ActualAddress() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_ActualAddress'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_ActualAddress', 'Фактический адрес' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_ActualAddress');
+
+
 /*-------------------------------------------------------------------------------
 
                   РАСПОЛАГАЙТЕ ДЕСКИ ПО АЛФАВИТУ  !!!!!!!!!!!!!!!!!!!
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 28.05.18                                                                                      * zc_MovementLinkObject_LegalAddress, zc_MovementLinkObject_ActualAddress
  07.05.18                                                                                      * zc_MovementLinkObject_UnitCategory
  13.12.17         * zc_MovementLinkObject_PromoCode
  11.10.17         * zc_MovementLinkObject_Area

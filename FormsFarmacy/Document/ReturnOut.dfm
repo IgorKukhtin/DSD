@@ -3,26 +3,26 @@ inherited ReturnOutForm: TReturnOutForm
   ClientHeight = 526
   ClientWidth = 1001
   ExplicitWidth = 1017
-  ExplicitHeight = 564
+  ExplicitHeight = 565
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 115
+    Top = 142
     Width = 1001
-    Height = 411
-    ExplicitTop = 115
+    Height = 384
+    ExplicitTop = 142
     ExplicitWidth = 1001
-    ExplicitHeight = 411
-    ClientRectBottom = 411
+    ExplicitHeight = 384
+    ClientRectBottom = 384
     ClientRectRight = 1001
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1001
-      ExplicitHeight = 387
+      ExplicitHeight = 360
       inherited cxGrid: TcxGrid
         Width = 1001
-        Height = 387
+        Height = 360
         ExplicitWidth = 1001
-        ExplicitHeight = 387
+        ExplicitHeight = 360
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -242,10 +242,10 @@ inherited ReturnOutForm: TReturnOutForm
   end
   inherited DataPanel: TPanel
     Width = 1001
-    Height = 89
+    Height = 116
     TabOrder = 3
     ExplicitWidth = 1001
-    ExplicitHeight = 89
+    ExplicitHeight = 116
     inherited edInvNumber: TcxTextEdit
       Left = 8
       Top = 22
@@ -302,7 +302,7 @@ inherited ReturnOutForm: TReturnOutForm
       Width = 170
     end
     object edTo: TcxButtonEdit
-      Left = 434
+      Left = 436
       Top = 22
       Enabled = False
       Properties.Buttons = <
@@ -321,7 +321,7 @@ inherited ReturnOutForm: TReturnOutForm
     end
     object edPriceWithVAT: TcxCheckBox
       Left = 149
-      Top = 59
+      Top = 65
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 10
       Width = 130
@@ -462,6 +462,7 @@ inherited ReturnOutForm: TReturnOutForm
     object edOperDatePartner: TcxDateEdit
       Left = 330
       Top = 22
+      EditValue = 43248d
       Properties.DateOnError = deNull
       Properties.ReadOnly = True
       Properties.SaveTime = False
@@ -501,6 +502,38 @@ inherited ReturnOutForm: TReturnOutForm
       Properties.ShowTime = False
       TabOrder = 28
       Width = 100
+    end
+    object edJuridicalLegalAddress: TcxButtonEdit
+      Left = 282
+      Top = 95
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 29
+      Width = 350
+    end
+    object cxLabel14: TcxLabel
+      Left = 285
+      Top = 78
+      Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1081' '#1072#1076#1088#1077#1089' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+    end
+    object edJuridicalActualAddress: TcxButtonEdit
+      Left = 638
+      Top = 95
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 31
+      Width = 337
+    end
+    object cxLabel16: TcxLabel
+      Left = 641
+      Top = 78
+      Caption = #1060#1072#1082#1090#1080#1095#1077#1089#1082#1080#1081' '#1072#1076#1088#1077#1089' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1163,6 +1196,34 @@ inherited ReturnOutForm: TReturnOutForm
         Component = deIncomeOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LegalAddressId'
+        Value = Null
+        Component = GuidesJuridicalLegalAddress
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LegalAddressName'
+        Value = Null
+        Component = GuidesJuridicalLegalAddress
+        ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ActualAddressId'
+        Value = Null
+        Component = GuidesJuridicalActualAddress
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ActualAddressName'
+        Value = Null
+        Component = GuidesJuridicalActualAddress
+        ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1251,45 +1312,19 @@ inherited ReturnOutForm: TReturnOutForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inLegalAddressId'
         Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
+        Component = GuidesJuridicalLegalAddress
+        ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inActualAddressId'
         Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDatePartner'
-        Value = ''
-        Component = edOperDatePartner
-        DataType = ftDateTime
-        ParamType = ptUnknown
+        Component = GuidesJuridicalActualAddress
+        ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 162
@@ -1625,6 +1660,7 @@ inherited ReturnOutForm: TReturnOutForm
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
+    Key = '0'
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1679,7 +1715,7 @@ inherited ReturnOutForm: TReturnOutForm
         MultiSelectSeparator = ','
       end>
     Left = 304
-    Top = 48
+    Top = 40
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -1847,5 +1883,94 @@ inherited ReturnOutForm: TReturnOutForm
     PackSize = 1
     Left = 648
     Top = 256
+  end
+  object GuidesJuridicalLegalAddress: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridicalLegalAddress
+    FormNameParam.Value = 'TJuridicalLegalAddressForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridicalLegalAddressForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesJuridicalLegalAddress
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridicalLegalAddress
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalName'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 544
+    Top = 80
+  end
+  object GuidesJuridicalActualAddress: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridicalActualAddress
+    FormNameParam.Value = 'TJuridicalActualAddressForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridicalActualAddressForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesJuridicalActualAddress
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridicalActualAddress
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalName'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
+      end>
+    Left = 904
+    Top = 80
   end
 end

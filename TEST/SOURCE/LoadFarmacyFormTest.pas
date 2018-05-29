@@ -374,12 +374,14 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeMasterForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeMasterForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_NDS_diffForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_NDS_diffForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
+
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
 
@@ -848,10 +850,10 @@ procedure TLoadFormTest.LoadReturnOutFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutJournalForm'));
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutPartnerDataDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReturnOutPartnerDataDialogForm');
+  TdsdFormStorageFactory.GetStorage.Load('TReturnOutPartnerDataDialogForm');}
 end;
 
 procedure TLoadFormTest.LoadReturnTypeFormTest;
@@ -864,7 +866,7 @@ end;
 
 procedure TLoadFormTest.LoadJuridicalFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalForm'));
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalCorporateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalCorporateForm');
@@ -873,7 +875,25 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridical_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerCodeForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TPartnerCodeForm');
+  TdsdFormStorageFactory.GetStorage.Load('TPartnerCodeForm');}
+
+  // Адрес
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAddressForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAddressForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAddressEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAddressEditForm');
+
+  // Юридический адрес поставщика
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalLegalAddressForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridicalLegalAddressForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalLegalAddressEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridicalLegalAddressEditForm');
+
+  // Фактический адрес поставщика
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalActualAddressForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridicalActualAddressForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalActualAddressEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridicalActualAddressEditForm');
 end;
 
 procedure TLoadFormTest.LoadJuridicalAreaFormTest;

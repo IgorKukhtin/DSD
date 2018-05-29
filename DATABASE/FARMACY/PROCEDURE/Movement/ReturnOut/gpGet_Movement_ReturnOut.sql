@@ -21,7 +21,9 @@ RETURNS TABLE (Id Integer
              , IncomeOperDate TDateTime, IncomeInvNumber TVarChar
              , ReturnTypeId Integer
              , ReturnTypeName TVarChar
-             , JuridicalId Integer, JuridicalName TVarChar )
+             , JuridicalId Integer, JuridicalName TVarChar
+             , LegalAddressId Integer, LegalAddressName TVarChar 
+             , ActualAddressId Integer, ActualAddressName TVarChar )
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -56,6 +58,10 @@ BEGIN
              , CAST ('' AS TVarChar)                            AS ReturnTypeName
              , 0                                                AS JuridicalId
              , CAST('' as TVarChar)                             AS JuridicalName
+             , 0                                                AS LegalAddressId
+             , CAST('' as TVarChar)                             AS LegalAddressName
+             , 0                                                AS ActualAddressId
+             , CAST('' as TVarChar)                             AS ActualAddressName
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -83,6 +89,10 @@ BEGIN
            , Movement_ReturnOut_View.ReturnTypeName
            , Movement_ReturnOut_View.JuridicalId
            , Movement_ReturnOut_View.JuridicalName
+           , Movement_ReturnOut_View.LegalAddressId
+           , Movement_ReturnOut_View.LegalAddressName
+           , Movement_ReturnOut_View.ActualAddressId
+           , Movement_ReturnOut_View.ActualAddressName
 
        FROM Movement_ReturnOut_View       
       WHERE Movement_ReturnOut_View.Id = inMovementId;
@@ -97,9 +107,10 @@ ALTER FUNCTION gpGet_Movement_ReturnOut (Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 28.05.18                                                                     * 
  03.07.14                                                        *
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_ReturnOut (inMovementId:= 1, inSession:= '9818')
+-- select * from gpGet_Movement_ReturnOut(inMovementId := 7753659 ,  inSession := '3');
