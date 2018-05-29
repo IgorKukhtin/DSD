@@ -15,11 +15,12 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem(
 RETURNS Integer
 AS
 $BODY$
-  DECLARE vbStatusId   Integer;
-  DECLARE vbInvNumber  TVarChar;
-  DECLARE vbIsErased   Boolean;
-  DECLARE vbMovementId Integer;
-  DECLARE vbDescId     Integer;
+  DECLARE vbStatusId        Integer;
+  DECLARE vbInvNumber       TVarChar;
+  DECLARE vbIsErased        Boolean;
+  DECLARE vbMovementId      Integer;
+  DECLARE vbMovementDescId  Integer;
+  DECLARE vbDescId          Integer;
 BEGIN
      -- меняем параметр
      IF inParentId = 0
@@ -47,7 +48,7 @@ BEGIN
 
 
      -- определяем <Статус>
-     SELECT StatusId, InvNumber INTO vbStatusId, vbInvNumber FROM Movement WHERE Id = inMovementId;
+     SELECT StatusId, InvNumber, DescId INTO vbStatusId, vbInvNumber, vbMovementDescId FROM Movement WHERE Id = inMovementId;
 
      -- проверка - проведенные/удаленные документы Изменять нельзя + !!!временно для SYBASE -1 * zc_User_Sybase() !!!
      IF vbStatusId <> zc_Enum_Status_UnComplete() AND inUserId <> -1 * zc_User_Sybase()
@@ -70,7 +71,7 @@ BEGIN
          RAISE EXCEPTION 'Ошибка-1.Не определен Товар в документе № <%>.', vbInvNumber;
      END IF;
      -- проверка - inPartionId
-     IF inPartionId IS NULL AND inDescId = zc_MI_Master()
+     IF inPartionId IS NULL AND inDescId = zc_MI_Master() AND vbMovementDescId <> zc_Movement_Income()
      THEN
          RAISE EXCEPTION 'Ошибка-1.Не определена Партия в документе № <%>.', vbInvNumber;
      END IF;
