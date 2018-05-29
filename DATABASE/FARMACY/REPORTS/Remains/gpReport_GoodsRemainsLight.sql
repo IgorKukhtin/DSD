@@ -152,7 +152,7 @@ BEGIN
                               -- Поставшик, для элемента прихода от поставщика (или NULL)
                               INNER JOIN MovementLinkObject AS MovementLinkObject_From_Income
                                                             ON MovementLinkObject_From_Income.MovementId = tmpData_all.MovementId
-                                                           AND MovementLinkObject_From_Income.DescId     = zc_MovementLinkObject_From()
+                                                           AND MovementLinkObject_From_Income.DescId     = zc_MovementLinkObject_Juridical()
                                                            AND (MovementLinkObject_From_Income.ObjectId  = inJuridicalId OR inJuridicalId = 0)
                               -- Вид НДС, для элемента прихода от поставщика (или NULL)
                               LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind_Income
@@ -337,7 +337,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 29.05.18                                                                     *
  07.01.18         *
  12.05.17         *
 */
