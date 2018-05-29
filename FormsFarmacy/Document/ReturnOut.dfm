@@ -1340,10 +1340,6 @@ inherited ReturnOutForm: TReturnOutForm
         Control = edInvNumber
       end
       item
-      end
-      item
-      end
-      item
         Control = edOperDate
       end
       item
@@ -1362,18 +1358,13 @@ inherited ReturnOutForm: TReturnOutForm
         Control = edInvNumberPartner
       end
       item
+        Control = edReturnType
       end
       item
+        Control = edJuridicalActualAddress
       end
       item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
+        Control = edJuridicalLegalAddress
       end>
     Left = 200
     Top = 193
