@@ -3,7 +3,7 @@
   ClientHeight = 639
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 677
+  ExplicitHeight = 674
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2579,6 +2579,9 @@
     object tsTotal: TcxTabSheet
       Caption = #1042#1089#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridChildTotal: TcxGrid
         Left = 0
         Top = 0
@@ -4268,371 +4271,493 @@
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPartnerPriorTotal
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPartnerPrior
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPartnerPriorPromo
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPartnerTotal
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPartner
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPartnerNext
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPartnerPromo
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPartnerNextPromo
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plRemains
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plRemains_pack
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plCountForecastOrder
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plCountForecast
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plIncome_PACK_to
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plIncome_PACK_from
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmount_result_two
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmount_result_pack
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmount_result_pack_pack
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPackAllTotal
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPack
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPackSecond
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPackTotal
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPackNext
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPackNextSecond
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPackNextTotal
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPackAllTotal_calc
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPack_calc
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountSecondPack_calc
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPackTotal_calc
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPackNext_calc
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPackNextSecond_calc
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPackNextTotal_calc
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plPlan1
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plPlan2
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plPlan3
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plPlan4
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plPlan5
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plPlan6
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plPlan7
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plPromo1
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plPromo2
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plPromo3
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plPromo4
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plPromo5
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plPromo6
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plPromo7
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountForecastOrder
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = plAmountForecastOrderPromo
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = plAmountForecast
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = plAmountForecastPromo
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPartnerPriorTotal
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPartnerPrior
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPartnerPriorPromo
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPartnerTotal
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPartner
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPartnerNext
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPartnerPromo
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPartnerNextPromo
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plRemains
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plRemains_pack
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plCountForecastOrder
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plCountForecast
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plIncome_PACK_to
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plIncome_PACK_from
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmount_result_two
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmount_result_pack
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmount_result_pack_pack
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPackAllTotal
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPack
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPackSecond
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPackTotal
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPackNext
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPackNextSecond
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPackNextTotal
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPackAllTotal_calc
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPack_calc
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountSecondPack_calc
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPackTotal_calc
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPackNext_calc
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPackNextSecond_calc
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountPackNextTotal_calc
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plPlan1
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plPlan2
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plPlan3
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plPlan4
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plPlan5
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plPlan6
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plPlan7
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plPromo1
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plPromo2
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plPromo3
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plPromo4
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plPromo5
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plPromo6
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plPromo7
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = plAmountForecastOrder
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = plAmountForecastOrderPromo
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = plAmountForecast
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = plAmountForecastPromo
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -5760,6 +5885,7 @@
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
+      ShortCut = 16472
     end
     inherited actMISetErased: TdsdUpdateErased
       TabSheet = tsMain
