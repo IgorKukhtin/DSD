@@ -1257,9 +1257,9 @@ BEGIN
               -- Ост. в днях (по пр. !!!ИЛИ!!! по зв.) - ПОСЛЕ УПАКОВКИ
             , _Result_Child.DayCountForecast_calc
               -- Ост. в днях (по пр. !!!ИЛИ!!! по зв.) - ПОСЛЕ УПАКОВКИ
-            , _Result_Child.DayCountForecast_new AS DayCountForecast_new
+            , _Result_Child.DayCountForecast_new :: TFloat AS DayCountForecast_new
               -- Ост. в днях (по пр. !!!ИЛИ!!! по зв.) - ПОСЛЕ УПАКОВКИ
-            , _Result_Child.DayCountForecast_new_new AS DayCountForecast_new_new
+            , _Result_Child.DayCountForecast_new_new :: TFloat AS DayCountForecast_new_new
 
             , _Result_Child.ReceiptId
             , _Result_Child.ReceiptCode
@@ -1272,10 +1272,148 @@ BEGIN
             , _Result_Child.GoodsCode_packTo
             , _Result_Child.GoodsName_packTo
             , _Result_Child.GoodsKindName_packTo
-            
+
+            -- из мастера
+            , 0  :: TFloat   AS Remains_Master
+            , 0  :: TFloat   AS Remains_CEH_Master
+            , 0  :: TFloat   AS Remains_CEH_Next_Master
+            , 0  :: TFloat   AS Income_CEH_Master            
        FROM _Result_Master
             LEFT JOIN _tmpResult_Child AS _Result_Child ON _Result_Child.KeyId = _Result_Master.KeyId
-       
+      UNION 
+       SELECT _Result_Master.Id         AS Id_Master
+            , _Result_Master.KeyId
+            , _Result_Master.GoodsId    AS GoodsId_Master
+            , _Result_Master.GoodsCode  AS GoodsCode_Master
+            , _Result_Master.GoodsName  AS GoodsName_Master
+            
+            , _Result_Master.GoodsId_basis
+            , _Result_Master.GoodsCode_basis
+            , _Result_Master.GoodsName_basis
+            , _Result_Master.GoodsKindId          AS GoodsKindId_Master
+            , _Result_Master.GoodsKindName        AS GoodsKindName_Master
+            , _Result_Master.MeasureName          AS MeasureName_Master
+            , _Result_Master.MeasureName_basis
+            , _Result_Master.GoodsGroupNameFull   AS GoodsGroupNameFull_Master
+            , _Result_Master.isCheck_basis
+
+            , _Result_Master.UnitId
+            , _Result_Master.UnitCode
+            , _Result_Master.UnitName
+            , _Result_Master.isErased
+
+            , _Result_Master.Num
+
+            , 0              AS Id
+            , 0              AS ContainerId
+            , 0              AS GoodsId
+            , 0              AS GoodsCode
+            , '' :: Tvarchar AS GoodsName
+            , 0              AS GoodsKindId
+            , '' :: Tvarchar AS GoodsKindName
+            , '' :: Tvarchar AS MeasureName
+            , '' :: Tvarchar AS GoodsGroupNameFull
+
+            , 0  :: TFloat   AS AmountPack
+            , 0  :: TFloat   AS AmountPackSecond
+            , 0  :: TFloat   AS AmountPackTotal
+
+            , 0  :: TFloat   AS AmountPack_calc
+            , 0  :: TFloat   AS AmountSecondPack_calc
+            , 0  :: TFloat   AS AmountPackTotal_calc
+
+            , 0  :: TFloat   AS AmountPackNext
+            , 0  :: TFloat   AS AmountPackNextSecond
+            , 0  :: TFloat   AS AmountPackNextTotal
+
+            , 0  :: TFloat   AS AmountPackNext_calc
+            , 0  :: TFloat   AS AmountPackNextSecond_calc
+            , 0  :: TFloat   AS AmountPackNextTotal_calc
+
+            , 0  :: TFloat   AS AmountPackAllTotal
+            , 0  :: TFloat   AS AmountPackAllTotal_calc
+
+            , 0  :: TFloat   AS Amount_result_two
+            , 0  :: TFloat   AS Amount_result_pack
+            , 0  :: TFloat   AS Amount_result_pack_pack
+
+            , 0  :: TFloat   AS Income_PACK_to
+            , 0  :: TFloat   AS Income_PACK_from
+
+            , 0  :: TFloat   AS Remains
+            , 0  :: TFloat   AS Remains_pack
+
+              -- неотгуж. заявка
+            , 0  :: TFloat   AS AmountPartnerPrior
+            , 0  :: TFloat   AS AmountPartnerPriorPromo
+            , 0  :: TFloat   AS AmountPartnerPriorTotal
+              -- сегодня заявка
+            , 0  :: TFloat   AS AmountPartner
+            , 0  :: TFloat   AS AmountPartnerNext
+            , 0  :: TFloat   AS AmountPartnerPromo
+            , 0  :: TFloat   AS AmountPartnerNextPromo
+            , 0  :: TFloat   AS AmountPartnerTotal
+              -- Прогноз по прод.
+            , 0  :: TFloat   AS AmountForecast
+            , 0  :: TFloat   AS AmountForecastPromo
+              -- Прогноз по заяв.
+            , 0  :: TFloat   AS AmountForecastOrder
+            , 0  :: TFloat   AS AmountForecastOrderPromo
+
+              -- "средняя" за 1 день - продажа покупателям БЕЗ акций - Норм 1д (по пр.) без К
+            , 0  :: TFloat   AS CountForecast
+              -- "средняя" за 1 день - заказы покупателей БЕЗ акций - Норм 1д (по зв.) без К
+            , 0  :: TFloat   AS CountForecastOrder
+
+              -- "средняя" за 1 день - продажа ИЛИ заявака
+            , 0  :: TFloat   AS Plan1
+            , 0  :: TFloat   AS Plan2
+            , 0  :: TFloat   AS Plan3
+            , 0  :: TFloat   AS Plan4
+            , 0  :: TFloat   AS Plan5
+            , 0  :: TFloat   AS Plan6
+            , 0  :: TFloat   AS Plan7
+              -- "средняя" за 1 день - акции - прогноз
+            , 0  :: TFloat   AS Promo1
+            , 0  :: TFloat   AS Promo2
+            , 0  :: TFloat   AS Promo3
+            , 0  :: TFloat   AS Promo4
+            , 0  :: TFloat   AS Promo5
+            , 0  :: TFloat   AS Promo6
+            , 0  :: TFloat   AS Promo7
+              -- Ост. в днях (по пр.) - без К
+            , 0  :: TFloat   AS DayCountForecast
+              -- Ост. в днях (по зв.) - без К
+            , 0  :: TFloat   AS DayCountForecastOrder
+              -- Ост. в днях (по пр. !!!ИЛИ!!! по зв.) - ПОСЛЕ УПАКОВКИ
+            , 0  :: TFloat   AS DayCountForecast_calc
+              -- Ост. в днях (по пр. !!!ИЛИ!!! по зв.) - ПОСЛЕ УПАКОВКИ
+            , 0  :: TFloat   AS DayCountForecast_new
+              -- Ост. в днях (по пр. !!!ИЛИ!!! по зв.) - ПОСЛЕ УПАКОВКИ
+            , 0  :: TFloat   AS DayCountForecast_new_new
+
+            , 0              AS ReceiptId
+            , '' :: Tvarchar AS ReceiptCode
+            , '' :: Tvarchar AS ReceiptName
+            , 0              AS ReceiptId_basis
+            , '' :: Tvarchar AS ReceiptCode_basis
+            , '' :: Tvarchar AS ReceiptName_basis
+            , FALSE          AS isErased
+
+            , 0              AS GoodsCode_packTo
+            , '' :: Tvarchar AS GoodsName_packTo
+            , '' :: Tvarchar AS GoodsKindName_packTo
+            
+            , _Result_Master.Remains          AS Remains_Master
+            , _Result_Master.Remains_CEH      AS Remains_CEH_Master
+            , _Result_Master.Remains_CEH_Next AS Remains_CEH_Next_Master
+            , _Result_Master.Income_CEH       AS Income_CEH_Master
+
+       FROM _Result_Master
+       WHERE COALESCE (_Result_Master.Remains, 0)          <> 0
+          OR COALESCE (_Result_Master.Remains_CEH, 0)      <> 0
+          OR COALESCE (_Result_Master.Remains_CEH_Next, 0) <> 0
+          OR COALESCE (_Result_Master.Income_CEH, 0)       <> 0
        ;
        RETURN NEXT Cursor4;
 
