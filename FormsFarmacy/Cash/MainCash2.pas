@@ -472,7 +472,8 @@ begin
     try  Writeln(F,DateTimeToStr(Now) + ': ' + AMessage);
     finally CloseFile(F);
     end;
-  except
+  except on E: Exception do
+    ShowMessage('Ошибка сохранения в лог файл. Покажите это окно системному администратору: ' + #13#10 + E.Message);
   end;
 end;
 
@@ -649,6 +650,7 @@ procedure TMainCashForm2.actClearAllExecute(Sender: TObject);
 begin
   //if CheckCDS.IsEmpty then exit;
   if MessageDlg('Очистить все?',mtConfirmation,mbYesNo,0)<>mrYes then exit;
+  Add_Log('Clear all');
   //Вернуть товар в верхний грид
   FormParams.ParamByName('CheckId').Value   := 0;
   FormParams.ParamByName('ManagerId').Value := 0;
@@ -913,6 +915,7 @@ var
   dsdSave: TdsdStoredProc;
 begin
   if CheckCDS.RecordCount = 0 then exit;
+  Add_Log('PutCheckToCash');
   PaidType:=ptMoney;
   //спросили сумму и тип оплаты
   if not fShift then
@@ -951,6 +954,7 @@ begin
        if VarToStr(dsdSave.Params.ParamByName('outState').Value) = '2' then //проведен
        Begin
             ShowMessage ('Ошибка.Данный чек уже сохранен другой кассой.Для продолжения - необходимо обнулить чек и набрать позиции заново.');
+            Add_Log('Ошибка.Данный чек уже сохранен другой кассой.Для продолжения - необходимо обнулить чек и набрать позиции заново.');
             exit;
        End;
     finally
@@ -1190,6 +1194,7 @@ begin
     finally
       ReleaseMutex(MutexVip);
     end;
+    Add_Log('Select VIP - '+ VarToStr(FormParams.ParamByName('CheckId').Value));
     if VIP.Locate('Id',FormParams.ParamByName('CheckId').Value,[]) then
     Begin
       vipList.Filter := 'MovementId = '+FormParams.ParamByName('CheckId').AsString;
@@ -1216,6 +1221,11 @@ begin
         checkCDS.FieldByName('List_UID').AsString := VipList.FieldByName('List_UID').AsString;
 
         CheckCDS.Post;
+        Add_Log('Id - '+ VipList.FieldByName('Id').AsString +
+                ' GoodsCode - ' + VipList.FieldByName('GoodsCode').AsString +
+                ' GoodsName - ' + VipList.FieldByName('GoodsName').AsString +
+                ' AmountOrder - '+ VipList.FieldByName('AmountOrder').AsString +
+                ' Price - '+  VipList.FieldByName('Price').AsString);
         if FormParams.ParamByName('CheckId').Value > 0 then
           //UpdateRemainsFromCheck(CheckCDS.FieldByName('GoodsId').AsInteger, CheckCDS.FieldByName('Amount').AsFloat);
           //маленькая ошибочка, попробуем с VipList, ***20.07.16
