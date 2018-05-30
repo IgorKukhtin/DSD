@@ -2,6 +2,7 @@ inherited Report_GoodsRemainsLightForm: TReport_GoodsRemainsLightForm
   Caption = #1057#1091#1084#1084#1072#1088#1085#1099#1077' '#1086#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1089#1077#1090#1080
   ClientHeight = 364
   ClientWidth = 1134
+  AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1150
   ExplicitHeight = 402

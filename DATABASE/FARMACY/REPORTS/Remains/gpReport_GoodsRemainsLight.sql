@@ -119,6 +119,11 @@ BEGIN
                                     -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
                                     LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
                                 )
+           , tmpMIFloat AS ( SELECT MIFloat_JuridicalPrice.*
+                             FROM MovementItemFloat AS MIFloat_JuridicalPrice
+                             WHERE MIFloat_JuridicalPrice.MovementItemId IN (SELECT DISTINCT tmpData_all.MovementItemId FROM tmpData_all)
+                               AND MIFloat_JuridicalPrice.DescId IN (zc_MIFloat_JuridicalPrice(), zc_MIFloat_PriceWithVAT(), zc_MIFloat_PriceWithOutVAT())
+                            )
 
            , tmpData AS (SELECT CASE WHEN inIsPartion = TRUE THEN tmpData_all.MovementId_Income ELSE 0 END AS MovementId_Income
                               , CASE WHEN inIsPartion = TRUE THEN tmpData_all.MovementId_find   ELSE 0 END AS MovementId_find
@@ -138,15 +143,15 @@ BEGIN
                          FROM  tmpData_all
 
                               -- цена с учетом НДС, для элемента прихода от поставщика (или NULL)
-                              LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice
+                              LEFT JOIN tmpMIFloat AS MIFloat_JuridicalPrice
                                                           ON MIFloat_JuridicalPrice.MovementItemId = tmpData_all.MovementItemId
                                                          AND MIFloat_JuridicalPrice.DescId = zc_MIFloat_JuridicalPrice()
                               -- цена с учетом НДС, для элемента прихода от поставщика без % корректировки  (или NULL)
-                              LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
+                              LEFT JOIN tmpMIFloat AS MIFloat_PriceWithVAT
                                                           ON MIFloat_PriceWithVAT.MovementItemId = tmpData_all.MovementItemId
                                                          AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
                               -- цена без учета НДС, для элемента прихода от поставщика без % корректировки  (или NULL)
-                              LEFT JOIN MovementItemFloat AS MIFloat_PriceWithOutVAT
+                              LEFT JOIN tmpMIFloat AS MIFloat_PriceWithOutVAT
                                                           ON MIFloat_PriceWithOutVAT.MovementItemId = tmpData_all.MovementItemId
                                                          AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
                               -- Поставшик, для элемента прихода от поставщика (или NULL)

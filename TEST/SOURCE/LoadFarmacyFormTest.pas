@@ -614,8 +614,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OverOrderDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OverOrderDialogForm');
   //exit;
-  }
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_AssortmentForm'));
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_AssortmentForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_AssortmentdForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_AssortmentDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_AssortmentDialogForm');
@@ -714,13 +714,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_CrossForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_CrossForm');
   exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsLightForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRReport_GoodsRemainsLightForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsLightDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRReport_GoodsRemainsLightDialogForm');
-  //exit;
-  //
+  exit;
+  {//
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckLightForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckLightForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementChecLightDialogForm'));
