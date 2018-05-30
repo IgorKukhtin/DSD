@@ -3,7 +3,7 @@
   ClientHeight = 639
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 674
+  ExplicitHeight = 677
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2579,9 +2579,6 @@
     object tsTotal: TcxTabSheet
       Caption = #1042#1089#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridChildTotal: TcxGrid
         Left = 0
         Top = 0
@@ -4512,6 +4509,26 @@
               Format = ',0.####'
               Kind = skSum
               Column = plAmountForecastPromo
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = plRemains_Master
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = plRemains_CEH_Master
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = plRemains_CEH_Next_Master
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = plIncome_CEH_Master
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -4758,6 +4775,26 @@
               Format = ',0.####'
               Kind = skSum
               Column = plAmountForecastPromo
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = plRemains_Master
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = plRemains_CEH_Master
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = plRemains_CEH_Next_Master
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = plIncome_CEH_Master
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -4872,6 +4909,52 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1088#1072#1089#1093#1086#1076' '#1053#1040' '#1091#1087#1072#1082#1086#1074#1082#1091
+            Options.Editing = False
+            Width = 70
+          end
+          object plRemains_Master: TcxGridDBColumn
+            Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1053#1045' '#1091#1087#1072#1082'. '#1087#1088'-'#1074#1086
+            DataBinding.FieldName = 'Remains_Master'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1090'. '#1085#1072#1095'. - '#1053#1045' '#1091#1087#1072#1082#1086#1074#1072#1085#1085#1099#1081' ('#1087#1088#1086#1080#1079#1074'.)'
+            Options.Editing = False
+            Width = 70
+          end
+          object plRemains_CEH_Master: TcxGridDBColumn
+            Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1057#1045#1043#1054#1044#1053#1071')'
+            DataBinding.FieldName = 'Remains_CEH_Master'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1057#1045#1043#1054#1044#1053#1071')'
+            Options.Editing = False
+            Width = 75
+          end
+          object plRemains_CEH_Next_Master: TcxGridDBColumn
+            Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1055#1054#1047#1046#1045')'
+            DataBinding.FieldName = 'Remains_CEH_Next_Master'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object plIncome_CEH_Master: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093#1086#1076' '#1087#1088'-'#1074#1086' ('#1060#1040#1050#1058')'
+            DataBinding.FieldName = 'Income_CEH_Master'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
