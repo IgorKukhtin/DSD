@@ -1163,6 +1163,36 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
             item
               Kind = skSum
               Column = Remains_Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Income_Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Result_Summ_curr
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Result_SummCost_curr
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains_Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Result_Summ_prof_curr
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Result_Summ_10200_curr
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -2309,6 +2339,36 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
               Format = ',0.####'
               Kind = skSum
               Column = Remains_Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Income_Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Result_Summ_curr
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Result_SummCost_curr
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains_Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Result_Summ_prof_curr
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Result_Summ_10200_curr
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -5044,6 +5104,73 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
             HeaderHint = '% '#1087#1088#1086#1076#1072#1078
             Width = 50
           end
+          object Income_Summ: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093#1086#1076' '#1074' '#1074#1072#1083'.'
+            DataBinding.FieldName = 'Income_Summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object Result_Summ_curr: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076'. '#1074' '#1074#1072#1083'.'
+            DataBinding.FieldName = 'Result_Summ_curr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object Result_SummCost_curr: TcxGridDBColumn
+            Caption = #1057'\'#1089' '#1074' '#1074#1072#1083'.'
+            DataBinding.FieldName = 'Result_SummCost_curr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object Remains_Summ: TcxGridDBColumn
+            Caption = #1054#1089#1090'. '#1074' '#1074#1072#1083'. '
+            DataBinding.FieldName = 'Remains_Summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object Result_Summ_prof_curr: TcxGridDBColumn
+            Caption = #1055#1088#1080#1073#1099#1083#1100' '#1074' '#1074#1072#1083'.'
+            DataBinding.FieldName = 'Result_Summ_prof_curr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object Result_Summ_10200_curr: TcxGridDBColumn
+            Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1074#1072#1083'.'
+            DataBinding.FieldName = 'Result_Summ_10200_curr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1082#1080#1076#1082#1072' '#1074' '#1074#1072#1083'.'
+            Options.Editing = False
+            Width = 60
+          end
           object Color_Grey: TcxGridDBColumn
             DataBinding.FieldName = 'Color_Grey'
             Visible = False
@@ -6116,6 +6243,90 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrintBrand: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078' ('#1090#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072')'
+      Hint = #1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078' ('#1090#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072')'
+      ImageIndex = 22
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'BrandName'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 43101d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 43101d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerName'
+          Value = ''
+          Component = GuidesPartner
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BrandName'
+          Value = ''
+          Component = GuidesBrand
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodName'
+          Value = ''
+          Component = GuidesPeriod
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartYear'
+          Value = ''
+          Component = GuidesStartYear
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndYear'
+          Value = ''
+          Component = GuidesEndYear
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078' ('#1090#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072')'
+      ReportNameParam.Value = #1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078' ('#1090#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -6638,6 +6849,14 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintBrand'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -6669,6 +6888,10 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
     object bbPrintLine: TdxBarButton
       Action = actPrintLine
       Caption = #1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078' ('#1083#1080#1085#1080#1103' '#1080' '#1075#1088#1091#1087#1087#1072')'
+      Category = 0
+    end
+    object bbPrintBrand: TdxBarButton
+      Action = actPrintBrand
       Category = 0
     end
   end

@@ -80,6 +80,8 @@ type
     actPrintLine: TdsdPrintAction;
     bbPrintGroup: TdxBarButton;
     bbPrintLine: TdxBarButton;
+    actPrintBrand: TdsdPrintAction;
+    bbPrintBrand: TdxBarButton;
   private
     { Private declarations }
   public

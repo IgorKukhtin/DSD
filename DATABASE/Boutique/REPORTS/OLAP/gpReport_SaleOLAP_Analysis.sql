@@ -78,6 +78,12 @@ BEGIN
                               , Income_Amount TFloat
                               , Remains_Amount TFloat
                               , Sale_Amount TFloat
+                              , Income_Summ            TFloat    -- ѕриход в вал
+                              , Result_Summ_curr       TFloat    -- продажа в вал
+                              , Result_SummCost_curr   TFloat    -- с/с в вал
+                              , Remains_Summ           TFloat    -- остаток в вал
+                              , Result_Summ_prof_curr  TFloat    -- прибыль в вал.
+                              , Result_Summ_10200_curr TFloat    -- скидка в вал
                               ) ON COMMIT DROP;
     INSERT INTO _tmpOLAP (BrandName
                         , GoodsGroupName
@@ -85,18 +91,24 @@ BEGIN
                         , LineFabricaName
                         , CompositionName
                         , GoodsId 
-                        , GoodsCode 
-                        , GoodsName 
-                        , GoodsInfoName 
-                        , GoodsSizeId 
+                        , GoodsCode
+                        , GoodsName
+                        , GoodsInfoName
+                        , GoodsSizeId
                         , GoodsSizeName
-                        , GroupsName1 
-                        , GroupsName2 
-                        , GroupsName3 
-                        , GroupsName4 
-                        , Income_Amount 
-                        , Remains_Amount 
-                        , Sale_Amount 
+                        , GroupsName1
+                        , GroupsName2
+                        , GroupsName3
+                        , GroupsName4
+                        , Income_Amount
+                        , Remains_Amount
+                        , Sale_Amount
+                        , Income_Summ
+                        , Result_Summ_curr
+                        , Result_SummCost_curr
+                        , Remains_Summ
+                        , Result_Summ_prof_curr
+                        , Result_Summ_10200_curr
                         )
                         
              SELECT tmpOlap.BrandName
@@ -120,6 +132,14 @@ BEGIN
                   , SUM (tmpOlap.Remains_Amount) AS Remains_Amount
                   --  ол-во продажа - с учетом "долга"
                   , SUM (tmpOlap.Sale_Amount) AS Sale_Amount
+                  --
+                  , SUM (tmpOlap.Income_Summ)            AS Income_Summ     
+                  , SUM (tmpOlap.Result_Summ_curr)       AS Result_Summ_curr     
+                  , SUM (tmpOlap.Result_SummCost_curr)   AS Result_SummCost_curr
+                  , SUM (tmpOlap.Remains_Summ)           AS Remains_Summ
+                  , SUM (tmpOlap.Result_Summ_prof_curr)  AS Result_Summ_prof_curr
+                  , SUM (tmpOlap.Result_Summ_10200_curr) AS Result_Summ_10200_curr
+
              FROM gpReport_SaleOLAP (inStartDate:= inStartDate, inEndDate:= inEndDate, inUnitId:= inUnitId, inPartnerId:= inPartnerId
                                    , inBrandId:= inBrandId, inPeriodId:= inPeriodId, inStartYear:= inStartYear, inEndYear:= inEndYear
                                    , inIsYear:= inIsYear, inIsPeriodAll:= inIsPeriodAll, inIsGoods:= TRUE, inIsSize:= TRUE
@@ -143,6 +163,12 @@ BEGIN
              HAVING SUM (tmpOlap.Income_Amount) <> 0
                  OR SUM (tmpOlap.Remains_Amount) <> 0
                  OR SUM (tmpOlap.Sale_Amount) <> 0
+                 OR SUM (tmpOlap.Income_Summ) <> 0
+                 OR SUM (tmpOlap.Result_Summ_curr) <> 0
+                 OR SUM (tmpOlap.Result_SummCost_curr) <> 0
+                 OR SUM (tmpOlap.Remains_Summ) <> 0
+                 OR SUM (tmpOlap.Result_Summ_prof_curr) <> 0
+                 OR SUM (tmpOlap.Result_Summ_10200_curr) <> 0
              ;
 
     -- таблица размеров, нумеруем и выводим отдельно только 70 шт
@@ -463,9 +489,17 @@ BEGIN
                           , CASE WHEN tmpSize.Ord > 70 THEN tmpOlap.Sale_Amount    ELSE 0 END AS Sale_Amount0
                           , CASE WHEN tmpSize.Ord > 70 THEN tmpOlap.Remains_Amount ELSE 0 END AS Remains_Amount0
                           
-                          , COALESCE (tmpOlap.Income_Amount, 0)  AS Income_Amount
-                          , COALESCE (tmpOlap.Sale_Amount, 0)    AS Sale_Amount
-                          , COALESCE (tmpOlap.Remains_Amount, 0) AS Remains_Amount
+                          , COALESCE (tmpOlap.Income_Amount, 0)          AS Income_Amount
+                          , COALESCE (tmpOlap.Sale_Amount, 0)            AS Sale_Amount
+                          , COALESCE (tmpOlap.Remains_Amount, 0)         AS Remains_Amount
+
+                          --
+                          , COALESCE (tmpOlap.Income_Summ, 0)            AS Income_Summ     
+                          , COALESCE (tmpOlap.Result_Summ_curr, 0)       AS Result_Summ_curr     
+                          , COALESCE (tmpOlap.Result_SummCost_curr, 0)   AS Result_SummCost_curr
+                          , COALESCE (tmpOlap.Remains_Summ, 0)           AS Remains_Summ
+                          , COALESCE (tmpOlap.Result_Summ_prof_curr, 0)  AS Result_Summ_prof_curr
+                          , COALESCE (tmpOlap.Result_Summ_10200_curr, 0) AS Result_Summ_10200_curr
 
                      FROM _tmpOLAP AS tmpOLAP
                            JOIN _tmpSize AS tmpSize ON tmpSize.SizeId = tmpOLAP.GoodsSizeId
@@ -773,6 +807,14 @@ BEGIN
                           , SUM( tmpData.Sale_Amount    ) AS Sale_Amount
                           , SUM( tmpData.Remains_Amount ) AS Remains_Amount
 
+                          --
+                          , SUM (tmpData.Income_Summ)            AS Income_Summ     
+                          , SUM (tmpData.Result_Summ_curr)       AS Result_Summ_curr     
+                          , SUM (tmpData.Result_SummCost_curr)   AS Result_SummCost_curr
+                          , SUM (tmpData.Remains_Summ)           AS Remains_Summ
+                          , SUM (tmpData.Result_Summ_prof_curr)  AS Result_Summ_prof_curr
+                          , SUM (tmpData.Result_Summ_10200_curr) AS Result_Summ_10200_curr
+                          --
                           , CAST (CASE WHEN SUM(tmpData.Income_Amount) <> 0 THEN SUM( tmpData.Sale_Amount) / SUM( tmpData.Income_Amount) * 100 ELSE 0 END AS NUMERIC (16,0)) :: TFloat AS Persent_Sale
 
                           , 15395562          :: Integer  AS Color_Grey            --нежно серый -- 

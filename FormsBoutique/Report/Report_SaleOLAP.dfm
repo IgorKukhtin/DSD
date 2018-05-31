@@ -682,7 +682,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       AreaIndex = 12
       IsCaptionAssigned = True
       Caption = #1054#1089#1090'. '#1074' '#1074#1072#1083'. '
-      DataBinding.FieldName = 'Remains_Summ'
+      DataBinding.FieldName = 'Result_SummCost_curr'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.;-,0.; ;'
