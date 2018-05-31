@@ -559,11 +559,11 @@ begin
 
     nSum := 0;
     for I := 0 to FUnit.Count - 1 do nSum := nSum + Dataset['AmountPlanTab' + FUnit.Strings[I]];
-    Dataset['AmountPlanTab'] := nSum;
+    Dataset['AmountPlanTab'] := Min(nSum, Dataset['AmountPlan' + FUnit.Strings[0]]);
 
     nSum := 0;
     for I := 0 to FUnit.Count - 1 do nSum := nSum + Dataset['AmountPlanAwardTab' + FUnit.Strings[I]];
-    Dataset['AmountPlanAwardTab'] := nSum;
+    Dataset['AmountPlanAwardTab'] := Min(nSum, Dataset['AmountPlanAward' + FUnit.Strings[0]]);
 
     nSum := 0;
     for I := 0 to FUnit.Count - 1 do nSum := nSum + Dataset['AmountTheFineTab' + FUnit.Strings[I]];

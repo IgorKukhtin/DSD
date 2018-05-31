@@ -158,11 +158,11 @@ var
 begin
   LIniFile := TIniFile.Create(LocalAppDataPath + 'init.ini');
   try
-    FConnectionParam.HostName := LIniFile.ReadString(cDbSection, 'host', 'localhost');
+    FConnectionParam.HostName := LIniFile.ReadString(cDbSection, 'host', '172.17.2.5');
     FConnectionParam.Port := LIniFile.ReadInteger(cDbSection, 'port', 5432);
-    FConnectionParam.Database := LIniFile.ReadString(cDbSection, 'dbname', 'farmacy_test');
+    FConnectionParam.Database := LIniFile.ReadString(cDbSection, 'dbname', 'farmacy');
     FConnectionParam.User := LIniFile.ReadString(cDbSection, 'user', 'postgres');
-    FConnectionParam.Password := LIniFile.ReadString(cDbSection, 'password', 'postgres');
+    FConnectionParam.Password := LIniFile.ReadString(cDbSection, 'password', 'eej9oponahT4gah3');
   finally
     FreeAndNil(LIniFile)
   end;
@@ -363,7 +363,8 @@ begin
           for I := 0 to LStoredProc.FieldCount - 1 do
               case LStoredProc.Fields[I].DataType of
                 ftDate, ftDateTime, ftTime:
-                  Result := Result + ' ' + LStoredProc.Fields[I].FieldName + '="' + DateToISO8601(LStoredProc.Fields[I].asDateTime) + '"';
+                  if LStoredProc.Fields[I].IsNull then Result := Result + ' ' + LStoredProc.Fields[I].FieldName + '=""'
+                  else Result := Result + ' ' + LStoredProc.Fields[I].FieldName + '="' + DateToISO8601(LStoredProc.Fields[I].asDateTime) + '"';
                 ftString:
                   Result := Result + ' ' + LStoredProc.Fields[I].FieldName + '="' + StringsReplace(VarToStr(LStoredProc.Fields[I].Value), ['"'], ['&quot;']) + '"';
                 else

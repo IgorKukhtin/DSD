@@ -34,7 +34,7 @@ BEGIN
     END IF;
     
     --Сохранили Корректировка нашей даты
-    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_AdjustingOurDate(), inMovementId, CASE WHEN TRIM (inInvNumberPartner) <> '' AND inAdjustingOurDate > '01.01.2000' THEN inAdjustingOurDate ELSE NULL END);
+    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_AdjustingOurDate(), inMovementId, CASE WHEN inAdjustingOurDate > '01.01.2000' THEN inAdjustingOurDate ELSE NULL END);
     
     --Сохранили дату партнера
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), inMovementId, CASE WHEN TRIM (inInvNumberPartner) <> '' AND inOperDatePartner > '01.01.2000' THEN inOperDatePartner ELSE NULL END);
