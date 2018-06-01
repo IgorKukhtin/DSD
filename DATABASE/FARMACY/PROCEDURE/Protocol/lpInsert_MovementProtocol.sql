@@ -9,8 +9,8 @@ $BODY$
    vbProtocolXML TBlob;
 BEGIN
 
--- !!!ВРЕМЕННО-выкл.
- RETURN;
+-- !!!ВРЕМЕННО-вкл.
+-- RETURN;
 
 
   -- Подготавливаем XML для записи в протокол

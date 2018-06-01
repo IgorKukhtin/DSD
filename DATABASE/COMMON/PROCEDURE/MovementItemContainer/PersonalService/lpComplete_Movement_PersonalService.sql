@@ -127,7 +127,10 @@ BEGIN
              END IF;
          END IF;
 
-     ELSEIF 1=1 THEN
+     ELSEIF 1=1
+        -- AND inUserId <> zfCalc_UserAdmin() :: Integer
+        AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin() AND ObjectLink_UserRole_View.UserId = inUserId)
+     THEN
          -- для остальных - нельзя "следующий" месяц
          vbMovementItemId_err:= (SELECT MovementItem.Id
                                  FROM MovementItem
