@@ -50,7 +50,7 @@ BEGIN
     CREATE TEMP TABLE tmpUnit (UnitId Integer) ON COMMIT DROP;
     
     -- список подразделений
-    /*INSERT INTO tmpUnit (UnitId)
+   /* INSERT INTO tmpUnit (UnitId)
                 SELECT inUnitId AS UnitId
                 WHERE COALESCE (inUnitId, 0) <> 0
                UNION 
@@ -62,8 +62,8 @@ BEGIN
                                           AND ((ObjectLink_Juridical_Retail.ChildObjectId = inRetailId AND inUnitId = 0)
                                                OR (inRetailId = 0 AND inUnitId = 0))
                 WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical();
-     */
-            
+     
+    */        
     INSERT INTO tmpContainerCount(ContainerId, GoodsId, Amount)
                                 SELECT Container.Id                AS ContainerId
                                      , Container.ObjectId          AS GoodsId
@@ -86,7 +86,7 @@ BEGIN
     -- Результат
     RETURN QUERY
         WITH  
-        tmpContainerCount AS (SELECT Container.Id                AS ContainerId
+       /* tmpContainerCount AS (SELECT Container.Id                AS ContainerId
                                    , Container.ObjectId          AS GoodsId
                                    , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS Amount
                               FROM Container
@@ -102,7 +102,7 @@ BEGIN
                               HAVING Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
                               )
 
-              , tmpData_all AS (SELECT tmpContainerCount.ContainerId
+              ,*/ tmpData_all AS (SELECT tmpContainerCount.ContainerId
                                      , tmpContainerCount.Amount  AS Amount
                                      , tmpContainerCount.GoodsId
                                      , MI_Income.MovementId        AS MovementId_Income
