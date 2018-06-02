@@ -1121,22 +1121,25 @@ begin
                       end;
                     End;
                   End; // обработали все позиции товара в чеке
-                  Head.SAVE := True;
-                  Add_Log('Start MutexDBF 1059');
-                  WaitForSingleObject(MutexDBF, INFINITE);
-                  try
-                    FLocalDataBaseHead.Active := True;
-                    if LocateUID(UID, FSAVE) AND not FLocalDataBaseHead.Deleted then
-                    Begin
-                      FLocalDataBaseHead.Edit;
-                      FLocalDataBaseHead.FieldByName('SAVE').AsBoolean := True;
-                      FLocalDataBaseHead.Post;
-                      FSAVE := True;
-                    End;
-                  finally
-                    FLocalDataBaseHead.Active := False;
-                    Add_Log('End MutexDBF 1059');
-                    ReleaseMutex(MutexDBF);
+                  if Head.ID <> 0 then
+                  begin
+                    Head.SAVE := True;
+                    Add_Log('Start MutexDBF 1059');
+                    WaitForSingleObject(MutexDBF, INFINITE);
+                    try
+                      FLocalDataBaseHead.Active := True;
+                      if LocateUID(UID, FSAVE) AND not FLocalDataBaseHead.Deleted then
+                      Begin
+                        FLocalDataBaseHead.Edit;
+                        FLocalDataBaseHead.FieldByName('SAVE').AsBoolean := True;
+                        FLocalDataBaseHead.Post;
+                        FSAVE := True;
+                      End;
+                    finally
+                      FLocalDataBaseHead.Active := False;
+                      Add_Log('End MutexDBF 1059');
+                      ReleaseMutex(MutexDBF);
+                    end;
                   end;
                 End; // обработали чек с товарами
               except
