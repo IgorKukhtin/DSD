@@ -423,6 +423,8 @@ type
     N3: TMenuItem;
     actReport_IncomeConsumptionBalance: TAction;
     N116: TMenuItem;
+    actReport_ImplementationPlanEmployeeAll: TdsdOpenForm;
+    N163: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

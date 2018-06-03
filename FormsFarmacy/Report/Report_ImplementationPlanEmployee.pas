@@ -466,7 +466,7 @@ end;
 
 procedure TReport_ImplementationPlanEmployeeForm.ClientDataSetCalcFields(
   DataSet: TDataSet);
-  var I, rnUnitCategory, rnUnit : Integer; nSum : Currency;
+  var I, rnUnitCategory, rnUnit : Integer; nSum, nSumMax : Currency;
 
   function Max(A, B : Currency) : Currency;
   begin
@@ -557,13 +557,21 @@ begin
     for I := 0 to FUnit.Count - 1 do nSum := nSum + Dataset['Amount' + FUnit.Strings[I]];
     Dataset['Amount'] := nSum;
 
-    nSum := 0;
-    for I := 0 to FUnit.Count - 1 do nSum := nSum + Dataset['AmountPlanTab' + FUnit.Strings[I]];
-    Dataset['AmountPlanTab'] := Min(nSum, Dataset['AmountPlan' + FUnit.Strings[0]]);
+    nSum := 0; nSumMax := 0;
+    for I := 0 to FUnit.Count - 1 do
+    begin
+      nSum := nSum + Dataset['AmountPlanTab' + FUnit.Strings[I]];
+      nSumMax := Max(nSumMax, Dataset['AmountPlanTab' + FUnit.Strings[I]]);
+    end;
+    Dataset['AmountPlanTab'] := Min(nSum, nSumMax);
 
-    nSum := 0;
-    for I := 0 to FUnit.Count - 1 do nSum := nSum + Dataset['AmountPlanAwardTab' + FUnit.Strings[I]];
-    Dataset['AmountPlanAwardTab'] := Min(nSum, Dataset['AmountPlanAward' + FUnit.Strings[0]]);
+    nSum := 0; nSumMax := 0;
+    for I := 0 to FUnit.Count - 1 do
+    begin
+      nSum := nSum + Dataset['AmountPlanAwardTab' + FUnit.Strings[I]];
+      nSumMax := Max(nSumMax, Dataset['AmountPlanAwardTab' + FUnit.Strings[I]]);
+    end;
+    Dataset['AmountPlanAwardTab'] := Min(nSum, nSumMax);
 
     nSum := 0;
     for I := 0 to FUnit.Count - 1 do nSum := nSum + Dataset['AmountTheFineTab' + FUnit.Strings[I]];

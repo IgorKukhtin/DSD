@@ -715,11 +715,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_CrossForm');
   exit;
   }
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsLightForm'));
+{ TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsLightForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRReport_GoodsRemainsLightForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsLightDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TRReport_GoodsRemainsLightDialogForm');
-  exit;
+  TdsdFormStorageFactory.GetStorage.Load('TRReport_GoodsRemainsLightDialogForm');}
   {//
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckLightForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckLightForm');
@@ -740,6 +739,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckFLForm');
 
   // Отчет по выполнению плана продаж по сотруднику
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ImplementationPlanEmployeeAllForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ImplementationPlanEmployeeAllForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDataDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDataDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ImplementationPlanEmployeeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ImplementationPlanEmployeeDialogForm');
 

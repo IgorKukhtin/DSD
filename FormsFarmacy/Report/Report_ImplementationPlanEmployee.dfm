@@ -72,7 +72,6 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
       Height = 456
       Align = alClient
       TabOrder = 0
-      ExplicitTop = 2
       object cxImplementationPlanEmployeeDBBandedTableView1: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -250,8 +249,6 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
         Height = 137
         Align = alLeft
         TabOrder = 0
-        ExplicitLeft = 387
-        ExplicitTop = 6
         object cxUnitDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = dsUnit

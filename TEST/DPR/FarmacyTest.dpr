@@ -581,7 +581,9 @@ uses
   Address in '..\..\Forms\Kind\Address.pas' {AddressForm: TParentForm},
   AddressEdit in '..\..\Forms\Kind\AddressEdit.pas' {AddressEditForm: TParentForm},
   JuridicalActualAddress in '..\..\FormsFarmacy\Guides\JuridicalActualAddress.pas' {JuridicalActualAddressForm: TParentForm},
-  JuridicalActualAddressEdit in '..\..\FormsFarmacy\Guides\JuridicalActualAddressEdit.pas' {JuridicalActualAddressEditForm: TParentForm};
+  JuridicalActualAddressEdit in '..\..\FormsFarmacy\Guides\JuridicalActualAddressEdit.pas' {JuridicalActualAddressEditForm: TParentForm},
+  Report_ImplementationPlanEmployeeAll in '..\..\FormsFarmacy\Report\Report_ImplementationPlanEmployeeAll.pas' {Report_ImplementationPlanEmployeeAllForm: TParentForm},
+  DataDialog in '..\..\Forms\Document\DataDialog.pas' {DataDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
