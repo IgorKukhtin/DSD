@@ -1031,11 +1031,13 @@ begin
                   Add_Log('Start Execute gpInsertUpdate_Movement_Check_ver2');
                   Add_Log('      ' + Head.UID);
                   dsdSave.Execute(False, False);
-                  Add_Log('End Execute gpInsertUpdate_Movement_Check_ver2');
+                  Add_Log('End Execute gpInsertUpdate_Movement_Check_ver2'+
+                          ' ID = '+ dsdSave.Params.ParamByName('ioID').AsString);
                   // сохранили в локальной базе полученный номер
                   if Head.ID <> StrToInt(dsdSave.Params.ParamByName('ioID').AsString) then
                   Begin
                     Head.ID := StrToInt(dsdSave.Params.ParamByName('ioID').AsString);
+                    Add_Log('HEAD.ID - ' + IntToStr(Head.ID));
                     Add_Log('Start MutexDBF 976');
                     WaitForSingleObject(MutexDBF, INFINITE);
                     try
@@ -1091,8 +1093,9 @@ begin
                     //
 
                     Add_Log('Start Execute gpInsertUpdate_MovementItem_Check_ver2');
-                    Add_Log('      ' + Body[I].CH_UID + ' ' + IntToStr(Body[I].GOODSID) + ' ' + CurrToStr(Body[I].AMOUNT) + ' ' + CurrToStr(Body[I].PRICESALE));
+                    Add_Log('      ChildId - ' + Body[I].CH_UID + ' GoodsId - ' + IntToStr(Body[I].GOODSID) + ' Amount - ' + CurrToStr(Body[I].AMOUNT) + ' PriceSale - ' + CurrToStr(Body[I].PRICESALE));
                     dsdSave.Execute(False, False); // сохринили на сервере
+                    Add_Log('      ID - ' + IntToStr(Body[I].ID));
                     Add_Log('End Execute gpInsertUpdate_MovementItem_Check_ver2');
                     if Body[I].ID <> StrToInt(dsdSave.ParamByName('ioId').AsString) then
                     Begin
