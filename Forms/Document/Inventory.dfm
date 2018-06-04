@@ -793,8 +793,8 @@ inherited InventoryForm: TInventoryForm
           Action = actRefresh
         end>
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1086#1090#1084#1080#1085#1091#1089#1086#1074#1072#1085#1099' '#1086#1090' '#1086#1089#1090#1072#1090#1082#1072
-      Caption = #1054#1090#1085#1103#1090#1100' '#1086#1090' '#1086#1089#1090#1072#1090#1082#1072' '#1082#1086#1083'-'#1074#1086' '#1080#1079' '#1076#1088#1091#1075#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
-      Hint = #1054#1090#1085#1103#1090#1100' '#1086#1090' '#1086#1089#1090#1072#1090#1082#1072' '#1082#1086#1083'-'#1074#1086' '#1080#1079' '#1076#1088#1091#1075#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+      Caption = #1054#1090#1085#1103#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1080#1079' '#1076#1088#1091#1075#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+      Hint = #1054#1090#1085#1103#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1080#1079' '#1076#1088#1091#1075#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
       ImageIndex = 39
     end
     object actDelete_bySend: TdsdExecStoredProc
@@ -1937,6 +1937,13 @@ inherited InventoryForm: TInventoryForm
         ComponentItem = 'MovementId_Send'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsAdd'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 80
@@ -2018,7 +2025,7 @@ inherited InventoryForm: TInventoryForm
     Top = 333
   end
   object spDelete_MI_Inventory_bySend: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MI_Inventory_Amount_MinusbySend'
+    StoredProcName = 'gpInsertUpdate_MovementItem_Inventory_bySend'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2035,6 +2042,13 @@ inherited InventoryForm: TInventoryForm
         Value = '0'
         Component = FormParams
         ComponentItem = 'MovementId_Send'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsAdd'
+        Value = 'FALSE'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

@@ -1,19 +1,25 @@
 -- Function: gpInsert_MovementItem_Inventory_bySend()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory_bySend (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory_bySend (Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory_bySend(
     IN inMovementId               Integer   , -- Ключ объекта <Документ инвенторизации>
     IN inMovementId_Send          Integer   , -- Ключ объекта <Документ Перемещение>
+    IN inIsAdd                    Boolean   , -- добавить кол-во из накладной или отнять 
     IN inSession                  TVarChar    -- сессия пользователя
 )
 RETURNS void AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbKoef Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Inventory());
 
+     -- определяем нужно добавлять или минусовать кол-во из накладной перемещения
+     vbKoef := (CASE WHEN inIsAdd = True THEN 1 ELSE -1 END);
+     
      -- сохранили
      PERFORM lpInsertUpdate_MovementItem_Inventory (ioId                 := COALESCE (tmp.MovementItemId, 0)
                                                   , inMovementId         := inMovementId
@@ -44,13 +50,13 @@ BEGIN
                       , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)            AS GoodsKindId
                       , COALESCE (MIString_PartionGoods.ValueData, '')           AS PartionGoods
                       , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart()) AS PartionGoodsDate
-                      , SUM (MovementItem.Amount)                                AS Amount
+                      , SUM (MovementItem.Amount) * vbKoef                       AS Amount
                  FROM MovementItem
                     LEFT JOIN MovementItemDate AS MIDate_PartionGoods
-                                               ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
+                                               ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
                                               AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                     LEFT JOIN MovementItemString AS MIString_PartionGoods
-                                                 ON MIString_PartionGoods.MovementItemId = MovementItem.Id
+                                                 ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
                                                 AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -109,8 +115,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 04.06.18         * add inIsAdd
  17.10.16         *
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_Inventory_bySend (ioId:= 0, inMovementId:= 10, inMovementId_Send:= 1, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_MovementItem_Inventory_bySend (ioId:= 0, inMovementId:= 10, inMovementId_Send:= 1, inIsAdd := TRUE, inSession:= '2')
