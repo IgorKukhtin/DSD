@@ -89,6 +89,10 @@ type
     cbisGoodsGroupExc: TcxCheckBox;
     actRefreshGet: TdsdDataSetRefresh;
     HeaderChanger: THeaderChanger;
+    spDelete_MI_Inventory_bySend: TdsdStoredProc;
+    macDelete_bySend: TMultiAction;
+    actDelete_bySend: TdsdExecStoredProc;
+    bbDelete_bySend: TdxBarButton;
   private
     { Private declarations }
   public

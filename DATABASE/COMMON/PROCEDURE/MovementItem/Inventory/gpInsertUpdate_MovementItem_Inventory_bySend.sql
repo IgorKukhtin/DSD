@@ -10,7 +10,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory_bySend(
 RETURNS void AS
 $BODY$
    DECLARE vbUserId Integer;
-
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Inventory());
@@ -48,10 +47,10 @@ BEGIN
                       , SUM (MovementItem.Amount)                                AS Amount
                  FROM MovementItem
                     LEFT JOIN MovementItemDate AS MIDate_PartionGoods
-                                               ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                               ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                               AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                     LEFT JOIN MovementItemString AS MIString_PartionGoods
-                                                 ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
+                                                 ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                                 AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id

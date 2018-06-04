@@ -506,6 +506,9 @@ inherited InventoryForm: TInventoryForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
@@ -776,6 +779,37 @@ inherited InventoryForm: TInventoryForm
         end>
       isShowModal = True
     end
+    object macDelete_bySend: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSendOpenForm
+        end
+        item
+          Action = actDelete_bySend
+        end
+        item
+          Action = actRefresh
+        end>
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1086#1090#1084#1080#1085#1091#1089#1086#1074#1072#1085#1099' '#1086#1090' '#1086#1089#1090#1072#1090#1082#1072
+      Caption = #1054#1090#1085#1103#1090#1100' '#1086#1090' '#1086#1089#1090#1072#1090#1082#1072' '#1082#1086#1083'-'#1074#1086' '#1080#1079' '#1076#1088#1091#1075#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+      Hint = #1054#1090#1085#1103#1090#1100' '#1086#1090' '#1086#1089#1090#1072#1090#1082#1072' '#1082#1086#1083'-'#1074#1086' '#1080#1079' '#1076#1088#1091#1075#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+      ImageIndex = 39
+    end
+    object actDelete_bySend: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spDelete_MI_Inventory_bySend
+      StoredProcList = <
+        item
+          StoredProc = spDelete_MI_Inventory_bySend
+        end>
+      Caption = #1054#1090#1085#1103#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+      Hint = #1054#1090#1085#1103#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+      ImageIndex = 39
+    end
     object macInsert_bySend: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -838,6 +872,9 @@ inherited InventoryForm: TInventoryForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintSticker: TdsdPrintAction
       Category = 'DSDLib'
@@ -868,6 +905,9 @@ inherited InventoryForm: TInventoryForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -993,6 +1033,14 @@ inherited InventoryForm: TInventoryForm
         end
         item
           Visible = True
+          ItemName = 'bbDelete_bySend'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -1063,6 +1111,10 @@ inherited InventoryForm: TInventoryForm
     end
     object bbPrintStickerTermo: TdxBarButton
       Action = actPrintStickerTermo
+      Category = 0
+    end
+    object bbDelete_bySend: TdxBarButton
+      Action = macDelete_bySend
       Category = 0
     end
   end
@@ -1964,5 +2016,30 @@ inherited InventoryForm: TInventoryForm
     Action = actRefreshGet
     Left = 736
     Top = 333
+  end
+  object spDelete_MI_Inventory_bySend: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Inventory_Amount_MinusbySend'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Send'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'MovementId_Send'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 72
+    Top = 464
   end
 end
