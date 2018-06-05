@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberSP (Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberSP (Integer, Integer, TVarChar, Integer, Integer, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberSP (Integer, Integer, TVarChar, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberSP (Integer, Integer, TVarChar, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MemberSP(
  INOUT ioId	             Integer   ,    -- ключ объекта <Торговельна назва лікарського засобу (Соц. проект)> 
@@ -11,7 +12,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MemberSP(
     IN inPartnerMedicalId    Integer   ,    -- Мед. учрежд.
     IN inGroupMemberSPId     Integer   ,    -- категория пац.
 --    IN inHappyDate           TDateTime ,    -- Дата рождения
-    IN inHappyDate           TVarChar ,    -- Дата рождения
+    IN inHappyDate           TVarChar ,     -- Дата рождения
+    IN inAddress             TVarChar ,     -- адрес
+    IN inINN                 TVarChar ,     -- ИНН
+    IN inPassport            TVarChar ,     -- Серия и номер паспорта
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -39,6 +43,23 @@ BEGIN
    IF COALESCE (inGroupMemberSPId, 0) = 0
    THEN
        RAISE EXCEPTION 'Ошибка.Значение <Категория пациента> не установлено.';
+   END IF;
+   
+   --проверка для Мед.центра № 5 должны быть заполнены Адрес, ИНН, серия и номер паспорта   
+   IF inPartnerMedicalId = 3751525               ----3751525 - "Комунальний заклад "ДЦПМСД №5""
+   THEN
+       IF COALESCE (inAddress, '') = ''
+       THEN
+           RAISE EXCEPTION 'Ошибка.Значение <Адрес пациента> не установлено.';
+       END IF;
+       IF COALESCE (inINN, '') = ''
+       THEN
+           RAISE EXCEPTION 'Ошибка.Значение <ИНН пациента> не установлено.';
+       END IF;
+       IF COALESCE (inPassport, '') = ''
+       THEN
+           RAISE EXCEPTION 'Ошибка.Значение <Серия и Номер паспорта пациента> не установлено.';
+       END IF;       
    END IF;
    
    -- проверка уникальности <Наименование>
@@ -78,6 +99,12 @@ BEGIN
           PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_MemberSP_HappyDate(), ioId, vbHappyDate);
    END IF;
    
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_MemberSP_Address(), ioId, inAddress);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_MemberSP_INN(), ioId, inINN);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_MemberSP_Passport(), ioId, inPassport);
       
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

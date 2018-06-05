@@ -38,6 +38,12 @@ type
     GuidesGroupMemberSP: TdsdGuides;
     cxLabel3: TcxLabel;
     edHappyDate: TcxTextEdit;
+    edAddress: TcxTextEdit;
+    cxLabel4: TcxLabel;
+    edINN: TcxTextEdit;
+    cxLabel5: TcxLabel;
+    edPassport: TcxTextEdit;
+    cxLabel6: TcxLabel;
   private
     { Private declarations }
   public

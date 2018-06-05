@@ -1438,13 +1438,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMedicSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSPEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMedicSPEditForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberSPEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberSPEditForm');
   exit;
-
+   {
   // отчет реестр по постановлению 1303
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleSPForm');

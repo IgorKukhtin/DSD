@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' '#1060#1048#1054' '#1087#1072#1094#1080#1077#1085#1090#1072'('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
-  ClientHeight = 249
-  ClientWidth = 386
+  ClientHeight = 354
+  ClientWidth = 369
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 71
-    Top = 218
+    Top = 322
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 221
-    Top = 218
+    Top = 322
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -105,6 +105,39 @@
     Top = 26
     TabOrder = 11
     Width = 93
+  end
+  object edAddress: TcxTextEdit
+    Left = 40
+    Top = 229
+    TabOrder = 12
+    Width = 296
+  end
+  object cxLabel4: TcxLabel
+    Left = 40
+    Top = 211
+    Caption = #1040#1076#1088#1077#1089' '#1087#1072#1094#1080#1077#1085#1090#1072
+  end
+  object edINN: TcxTextEdit
+    Left = 40
+    Top = 277
+    TabOrder = 14
+    Width = 124
+  end
+  object cxLabel5: TcxLabel
+    Left = 40
+    Top = 259
+    Caption = #1048#1053#1053' '#1087#1072#1094#1080#1077#1085#1090#1072
+  end
+  object edPassport: TcxTextEdit
+    Left = 173
+    Top = 277
+    TabOrder = 16
+    Width = 163
+  end
+  object cxLabel6: TcxLabel
+    Left = 173
+    Top = 259
+    Caption = #1057#1077#1088#1080#1103' '#1080' '#1053#1086#1084#1077#1088' '#1087#1072#1089#1087#1086#1088#1090#1072
   end
   object ActionList: TActionList
     Left = 280
@@ -190,6 +223,30 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAddress'
+        Value = Null
+        Component = edAddress
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inINN'
+        Value = Null
+        Component = edINN
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPassport'
+        Value = Null
+        Component = edPassport
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -266,6 +323,27 @@
         Name = 'HappyDate'
         Value = Null
         Component = edHappyDate
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Address'
+        Value = Null
+        Component = edAddress
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'INN'
+        Value = Null
+        Component = edINN
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Passport'
+        Value = Null
+        Component = edPassport
         DataType = ftString
         MultiSelectSeparator = ','
       end>

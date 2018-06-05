@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PartnerMedicalId Integer, PartnerMedicalName TVarChar
              , GroupMemberSPId Integer, GroupMemberSPName TVarChar
              , HappyDate TDateTime
+             , Address TVarChar, INN TVarChar, Passport TVarChar
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -27,11 +28,24 @@ BEGIN
           , Object_GroupMemberSP.Id            AS GroupMemberSPId
           , Object_GroupMemberSP.ValueData     AS GroupMemberSPName
           , COALESCE (ObjectDate_HappyDate.ValueData, Null) :: TDateTime AS HappyDate
+          , COALESCE (ObjectString_Address.ValueData, '')   :: TVarChar  AS Address
+          , COALESCE (ObjectString_INN.ValueData, '')       :: TVarChar  AS INN
+          , COALESCE (ObjectString_Passport.ValueData, '')  :: TVarChar  AS Passport
           , Object_MemberSP.isErased           AS isErased
      FROM OBJECT AS Object_MemberSP
          LEFT JOIN ObjectDate AS ObjectDate_HappyDate
                               ON ObjectDate_HappyDate.ObjectId = Object_MemberSP.Id
                              AND ObjectDate_HappyDate.DescId = zc_ObjectDate_MemberSP_HappyDate()
+
+         LEFT JOIN ObjectString AS ObjectString_Address
+                                ON ObjectString_Address.ObjectId = Object_MemberSP.Id
+                               AND ObjectString_Address.DescId = zc_ObjectString_MemberSP_Address()
+         LEFT JOIN ObjectString AS ObjectString_INN
+                                ON ObjectString_INN.ObjectId = Object_MemberSP.Id
+                               AND ObjectString_INN.DescId = zc_ObjectString_MemberSP_INN()
+         LEFT JOIN ObjectString AS ObjectString_Passport
+                                ON ObjectString_Passport.ObjectId = Object_MemberSP.Id
+                               AND ObjectString_Passport.DescId = zc_ObjectString_MemberSP_Passport()
 
          LEFT JOIN ObjectLink AS ObjectLink_MemberSP_PartnerMedical
                               ON ObjectLink_MemberSP_PartnerMedical.ObjectId = Object_MemberSP.Id
@@ -54,6 +68,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 05.06.18         *
  18.01.18         *
  14.02.17         *              
 

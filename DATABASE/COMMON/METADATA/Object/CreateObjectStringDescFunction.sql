@@ -714,10 +714,27 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_ImportType_JSONParamName() RETURNS In
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_ImportType_JSONParamName', zc_Object_ImportType(), 'Имя процедуры' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ImportType_JSONParamName');
   
+CREATE OR REPLACE FUNCTION zc_ObjectString_MemberSP_INN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MemberSP_INN'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_MemberSP_INN', zc_object_MemberSP(), 'ИНН пациента' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MemberSP_INN');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_MemberSP_Address() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MemberSP_Address'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_MemberSP_Address', zc_object_MemberSP(), 'Адрес пациента' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MemberSP_Address');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_MemberSP_Passport() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MemberSP_Passport'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_MemberSP_Passport', zc_object_MemberSP(), 'Серия и номер паспорта пациента' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MemberSP_Passport');
+
+
+
   
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.
+ 05.06.18         * zc_ObjectString_MemberSP_INN
+                    zc_ObjectString_MemberSP_Address
+                    zc_ObjectString_MemberSP_Passport
  18.04.18         * zc_ObjectString_MemberSheetWorkTime_Comment
  09.02.18                                                                                       * zc_ObjectString_ImportType_JSONParamName               
  27.12.17         * zc_ObjectString_Fiscal_InvNumber
