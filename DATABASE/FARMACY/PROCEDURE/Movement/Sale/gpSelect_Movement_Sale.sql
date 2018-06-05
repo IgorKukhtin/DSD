@@ -32,6 +32,9 @@ RETURNS TABLE (Id Integer
              , MemberSPId   Integer
              , MemberSPName TVarChar
              , GroupMemberSPName TVarChar
+             , Address_MemberSP TVarChar
+             , INN_MemberSP TVarChar
+             , Passport_MemberSP TVarChar
              , SPKindId   Integer
              , SPKindName TVarChar
              , isSP Boolean
@@ -105,6 +108,10 @@ BEGIN
           , Movement_Sale.MemberSPName 
           , Movement_Sale.GroupMemberSPName
 
+          , COALESCE (ObjectString_Address.ValueData, '')   :: TVarChar  AS Address_MemberSP
+          , COALESCE (ObjectString_INN.ValueData, '')       :: TVarChar  AS INN_MemberSP
+          , COALESCE (ObjectString_Passport.ValueData, '')  :: TVarChar  AS Passport_MemberSP
+          
           , Movement_Sale.SPKindId
           , Movement_Sale.SPKindName 
 
@@ -148,7 +155,17 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MLO_Update
                                          ON MLO_Update.MovementId = Movement_Sale.Id
                                         AND MLO_Update.DescId = zc_MovementLinkObject_Update()
-            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId  
+            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId 
+            
+            LEFT JOIN ObjectString AS ObjectString_Address
+                                   ON ObjectString_Address.ObjectId = Movement_Sale.MemberSPId
+                                  AND ObjectString_Address.DescId = zc_ObjectString_MemberSP_Address()
+            LEFT JOIN ObjectString AS ObjectString_INN
+                                   ON ObjectString_INN.ObjectId = Movement_Sale.MemberSPId
+                                  AND ObjectString_INN.DescId = zc_ObjectString_MemberSP_INN()
+            LEFT JOIN ObjectString AS ObjectString_Passport
+                                   ON ObjectString_Passport.ObjectId = Movement_Sale.MemberSPId
+                                  AND ObjectString_Passport.DescId = zc_ObjectString_MemberSP_Passport() 
        ;
 
 END;
@@ -159,6 +176,7 @@ ALTER FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 05.06.18         *
  01.02.18         *
  22.03.17         *
  08.02.17         * add SP

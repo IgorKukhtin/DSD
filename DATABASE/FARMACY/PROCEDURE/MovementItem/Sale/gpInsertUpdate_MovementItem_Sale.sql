@@ -55,14 +55,15 @@ BEGIN
                 AND Movement.DescId = zc_Movement_Sale())
               , False)  :: Boolean ;
 
-    
+    -- проверку на 1 товар вдокументе добавили в проведение
     -- если  признак участвует в соц.проекте = TRUE . то в док. должна быть 1 строка
     IF outIsSp = TRUE
     THEN
          IF (SELECT COUNT(*) FROM MovementItem 
              WHERE MovementItem.MovementId = inMovementId 
                AND MovementItem.Id <> ioId
-               AND MovementItem.IsErased = FALSE) >= 1
+               AND MovementItem.IsErased = FALSE
+               AND MovementItem.Amount > 0) >= 1
             THEN
                  RAISE EXCEPTION 'Ошибка.В документе может быть только 1 препарат.';
             END IF;
@@ -96,6 +97,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.    Воробкало А.А.
+ 05.06.18         *
  09.02.17         *
  13.10.15                                                                         *
 */

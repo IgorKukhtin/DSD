@@ -31,6 +31,9 @@ RETURNS TABLE (Id Integer
              , MedicSPName TVarChar
              , MemberSPId   Integer
              , MemberSPName TVarChar
+             , Address_MemberSP TVarChar
+             , INN_MemberSP TVarChar
+             , Passport_MemberSP TVarChar
              , GroupMemberSPId Integer
              , GroupMemberSPName TVarChar
              , SPKindId   Integer
@@ -80,6 +83,9 @@ BEGIN
           , NULL::TVarChar                                   AS MedicSPName
           , NULL::Integer                                    AS MemberSPId
           , NULL::TVarChar                                   AS MemberSPName
+          , NULL  :: TVarChar                                AS Address_MemberSP
+          , NULL  :: TVarChar                                AS INN_MemberSP
+          , NULL  :: TVarChar                                AS Passport_MemberSP
 
           , NULL::Integer                                    AS GroupMemberSPId
           , NULL::TVarChar                                   AS GroupMemberSPName
@@ -124,13 +130,27 @@ BEGIN
           , Movement_Sale.MemberSPId
           , Movement_Sale.MemberSPName
 
+          , COALESCE (ObjectString_Address.ValueData, '')   :: TVarChar  AS Address_MemberSP
+          , COALESCE (ObjectString_INN.ValueData, '')       :: TVarChar  AS INN_MemberSP
+          , COALESCE (ObjectString_Passport.ValueData, '')  :: TVarChar  AS Passport_MemberSP
+
           , Movement_Sale.GroupMemberSPId
           , Movement_Sale.GroupMemberSPName
 
           , Movement_Sale.SPKindId
           , Movement_Sale.SPKindName 
-        FROM
-            Movement_Sale_View AS Movement_Sale
+        FROM Movement_Sale_View AS Movement_Sale
+
+         LEFT JOIN ObjectString AS ObjectString_Address
+                                ON ObjectString_Address.ObjectId = Movement_Sale.MemberSPId
+                               AND ObjectString_Address.DescId = zc_ObjectString_MemberSP_Address()
+         LEFT JOIN ObjectString AS ObjectString_INN
+                                ON ObjectString_INN.ObjectId = Movement_Sale.MemberSPId
+                               AND ObjectString_INN.DescId = zc_ObjectString_MemberSP_INN()
+         LEFT JOIN ObjectString AS ObjectString_Passport
+                                ON ObjectString_Passport.ObjectId = Movement_Sale.MemberSPId
+                               AND ObjectString_Passport.DescId = zc_ObjectString_MemberSP_Passport()
+            
         WHERE Movement_Sale.Id =  inMovementId;
     END IF;
 
@@ -143,6 +163,7 @@ ALTER FUNCTION gpGet_Movement_Sale (Integer, TDateTime, TVarChar) OWNER TO postg
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 05.06.18         *
  08.02.17         * add SP
  15.09.16         *
  13.10.15                                                                        *

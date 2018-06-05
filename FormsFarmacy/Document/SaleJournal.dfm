@@ -199,6 +199,32 @@ inherited SaleJournalForm: TSaleJournalForm
             Options.Editing = False
             Width = 70
           end
+          object INN_MemberSP: TcxGridDBColumn
+            Caption = #1048#1053#1053' '#1087#1072#1094#1080#1077#1085#1090#1072
+            DataBinding.FieldName = 'INN_MemberSP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object Passport_MemberSP: TcxGridDBColumn
+            Caption = #1057#1077#1088#1080#1103' '#1080' '#1085#1086#1084#1077#1088' '#1087#1072#1089#1087#1086#1088#1090#1072'  '#1087#1072#1094#1080#1077#1085#1090#1072
+            DataBinding.FieldName = 'Passport_MemberSP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1077#1088#1080#1103' '#1080' '#1085#1086#1084#1077#1088' '#1087#1072#1089#1087#1086#1088#1090#1072'  '#1087#1072#1094#1080#1077#1085#1090#1072
+            Options.Editing = False
+            Width = 100
+          end
+          object Address_MemberSP: TcxGridDBColumn
+            Caption = #1040#1076#1088#1077#1089' '#1087#1072#1094#1080#1077#1085#1090#1072
+            DataBinding.FieldName = 'Address_MemberSP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1040#1076#1088#1077#1089' '#1087#1072#1094#1080#1077#1085#1090#1072
+            Options.Editing = False
+            Width = 108
+          end
           object InvNumber_Invoice_Full: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' ('#1087#1086#1089#1090'.1303)'
             DataBinding.FieldName = 'InvNumber_Invoice_Full'
@@ -394,6 +420,9 @@ inherited SaleJournalForm: TSaleJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object macPrint: TMultiAction
       Category = 'DSDLib'

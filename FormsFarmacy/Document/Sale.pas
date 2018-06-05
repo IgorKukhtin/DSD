@@ -96,6 +96,12 @@ type
     spGet_SP_Prior: TdsdStoredProc;
     actGet_SP_Prior: TdsdExecStoredProc;
     bbGet_SP_Prior: TdxBarButton;
+    cxLabel11: TcxLabel;
+    edAddress: TcxTextEdit;
+    cxLabel17: TcxLabel;
+    edPassport: TcxTextEdit;
+    cxLabel18: TcxLabel;
+    edInn: TcxTextEdit;
   private
     { Private declarations }
   public

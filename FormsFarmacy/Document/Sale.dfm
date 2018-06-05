@@ -1,29 +1,29 @@
 inherited SaleForm: TSaleForm
   Caption = #1055#1088#1086#1076#1072#1078#1072
-  ClientHeight = 504
-  ClientWidth = 696
+  ClientHeight = 542
+  ClientWidth = 698
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 712
-  ExplicitHeight = 542
+  ExplicitWidth = 714
+  ExplicitHeight = 580
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 179
-    Width = 696
-    Height = 325
+    Top = 219
+    Width = 698
+    Height = 323
     ExplicitTop = 179
     ExplicitWidth = 696
     ExplicitHeight = 325
-    ClientRectBottom = 325
-    ClientRectRight = 696
+    ClientRectBottom = 323
+    ClientRectRight = 698
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 696
       ExplicitHeight = 301
       inherited cxGrid: TcxGrid
-        Width = 696
-        Height = 203
-        ExplicitWidth = 696
-        ExplicitHeight = 203
+        Width = 698
+        Height = 201
+        ExplicitWidth = 701
+        ExplicitHeight = 225
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -131,12 +131,14 @@ inherited SaleForm: TSaleForm
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 211
-        Width = 696
+        Top = 209
+        Width = 698
         Height = 90
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitTop = 211
+        ExplicitWidth = 696
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -234,21 +236,23 @@ inherited SaleForm: TSaleForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 203
-        Width = 696
+        Top = 201
+        Width = 698
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitTop = 203
+        ExplicitWidth = 696
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 696
-    Height = 153
+    Width = 698
+    Height = 193
     TabOrder = 3
-    ExplicitWidth = 696
-    ExplicitHeight = 153
+    ExplicitWidth = 701
+    ExplicitHeight = 193
     inherited edInvNumber: TcxTextEdit
       Top = 22
       ExplicitTop = 22
@@ -292,12 +296,12 @@ inherited SaleForm: TSaleForm
     end
     object lblJuridical: TcxLabel
       Left = 8
-      Top = 114
+      Top = 151
       Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
     end
     object edJuridical: TcxButtonEdit
       Left = 8
-      Top = 129
+      Top = 166
       Properties.Buttons = <
         item
           Default = True
@@ -308,12 +312,12 @@ inherited SaleForm: TSaleForm
     end
     object cxLabel3: TcxLabel
       Left = 270
-      Top = 114
+      Top = 151
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKind: TcxButtonEdit
       Left = 270
-      Top = 129
+      Top = 166
       Properties.Buttons = <
         item
           Default = True
@@ -369,12 +373,12 @@ inherited SaleForm: TSaleForm
     end
     object cxLabel7: TcxLabel
       Left = 379
-      Top = 114
+      Top = 151
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object edComment: TcxTextEdit
       Left = 379
-      Top = 129
+      Top = 166
       Properties.ReadOnly = False
       TabOrder = 19
       Width = 275
@@ -445,6 +449,27 @@ inherited SaleForm: TSaleForm
       TabOrder = 28
       Width = 252
     end
+    object edAddress: TcxTextEdit
+      Left = 8
+      Top = 132
+      Properties.ReadOnly = True
+      TabOrder = 29
+      Width = 365
+    end
+    object edPassport: TcxTextEdit
+      Left = 379
+      Top = 132
+      Properties.ReadOnly = True
+      TabOrder = 30
+      Width = 175
+    end
+    object edInn: TcxTextEdit
+      Left = 559
+      Top = 132
+      Properties.ReadOnly = True
+      TabOrder = 31
+      Width = 95
+    end
   end
   object cxLabel8: TcxLabel [2]
     Left = 379
@@ -492,6 +517,21 @@ inherited SaleForm: TSaleForm
     Properties.ReadOnly = True
     TabOrder = 10
     Width = 175
+  end
+  object cxLabel11: TcxLabel [7]
+    Left = 8
+    Top = 116
+    Caption = #1040#1076#1088#1077#1089' '#1087#1072#1094#1080#1077#1085#1090#1072
+  end
+  object cxLabel17: TcxLabel [8]
+    Left = 379
+    Top = 116
+    Caption = #1053#1086#1084#1077#1088' '#1080' '#1089#1077#1088#1080#1103' '#1087#1072#1089#1087#1086#1088#1090#1072' '#1087#1072#1094'-'#1090#1072
+  end
+  object cxLabel18: TcxLabel [9]
+    Left = 559
+    Top = 116
+    Caption = #1048#1053#1053' '#1087#1072#1094#1080#1077#1085#1090#1072
   end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh
@@ -1057,6 +1097,27 @@ inherited SaleForm: TSaleForm
         Value = Null
         Component = SPKindGuides
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Address_MemberSP'
+        Value = Null
+        Component = edAddress
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Passport_MemberSP'
+        Value = Null
+        Component = edPassport
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Inn_MemberSP'
+        Value = Null
+        Component = edInn
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -1704,6 +1765,30 @@ inherited SaleForm: TSaleForm
         Component = GuidesPartnerMedical
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Address'
+        Value = Null
+        Component = edAddress
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Passport'
+        Value = Null
+        Component = edPassport
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Inn'
+        Value = Null
+        Component = edInn
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 656

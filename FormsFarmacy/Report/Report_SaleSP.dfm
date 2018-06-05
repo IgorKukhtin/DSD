@@ -23,8 +23,6 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       inherited cxGrid: TcxGrid
         Width = 1077
         Height = 389
-        ExplicitLeft = 23
-        ExplicitTop = 40
         ExplicitWidth = 1077
         ExplicitHeight = 389
         inherited cxGridDBTableView: TcxGridDBTableView
