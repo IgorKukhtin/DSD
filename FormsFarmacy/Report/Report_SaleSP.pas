@@ -73,6 +73,7 @@ type
     isListSP: TcxGridDBColumn;
     spUpdateDS: TdsdStoredProc;
     actUpdateDS: TdsdUpdateDataSet;
+    HospitalId: TcxGridDBColumn;
   private
     { Private declarations }
   public

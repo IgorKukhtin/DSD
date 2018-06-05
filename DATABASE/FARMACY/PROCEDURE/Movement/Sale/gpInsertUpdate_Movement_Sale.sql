@@ -26,6 +26,9 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMedicSPId Integer;
    DECLARE vbMemberSPId Integer;
+   DECLARE vbAddress TVarChar;
+   DECLARE vbINN TVarChar; 
+   DECLARE vbPassport TVarChar;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Sale());
@@ -36,6 +39,8 @@ BEGIN
           inMemberSP:= TRIM (COALESCE (inMemberSP, ''));
 
           vbMemberSPId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_MemberSP() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inMemberSP) LIMIT 1);
+          
+          
           IF COALESCE (vbMemberSPId,0) = 0
              THEN 
                  -- не нашли Сохраняем
@@ -45,8 +50,49 @@ BEGIN
                                                                , inPartnerMedicalId := inPartnerMedicalId    -- Мед. учрежд.
                                                                , inGroupMemberSPId  := inGroupMemberSPId     -- категория пац.
                                                                , inHappyDate        := '' ::  TVarChar       -- год рождения
+                                                               , inAddress          := '' ::  TVarChar       -- адрес
+                                                               , inINN              := '' ::  TVarChar       -- ИНН
+                                                               , inPassport         := '' ::  TVarChar       -- Серия и номер паспорта
                                                                , inSession := inSession
                                                                 );
+          END IF;
+          
+          --проверка для Мед.центра № 5 должны быть заполнены Адрес, ИНН, серия и номер паспорта   
+          IF inPartnerMedicalId = 3751525               ----3751525 - "Комунальний заклад "ДЦПМСД №5""
+          THEN
+              SELECT COALESCE (ObjectString_Address.ValueData, '')   :: TVarChar  AS Address
+                   , COALESCE (ObjectString_INN.ValueData, '')       :: TVarChar  AS INN
+                   , COALESCE (ObjectString_Passport.ValueData, '')  :: TVarChar  AS Passport
+            INTO vbAddress, vbINN, vbPassport
+              FROM Object AS Object_MemberSP
+                  INNER JOIN ObjectLink AS ObjectLink_MemberSP_PartnerMedical
+                                        ON ObjectLink_MemberSP_PartnerMedical.ObjectId = Object_MemberSP.Id
+                                       AND ObjectLink_MemberSP_PartnerMedical.DescId = zc_ObjectLink_MemberSP_PartnerMedical()
+                                       AND ObjectLink_MemberSP_PartnerMedical.ChildObjectId = inPartnerMedicalId
+                  LEFT JOIN ObjectString AS ObjectString_Address
+                                         ON ObjectString_Address.ObjectId = Object_MemberSP.Id
+                                        AND ObjectString_Address.DescId = zc_ObjectString_MemberSP_Address()
+                  LEFT JOIN ObjectString AS ObjectString_INN
+                                         ON ObjectString_INN.ObjectId = Object_MemberSP.Id
+                                        AND ObjectString_INN.DescId = zc_ObjectString_MemberSP_INN()
+                  LEFT JOIN ObjectString AS ObjectString_Passport
+                                         ON ObjectString_Passport.ObjectId = Object_MemberSP.Id
+                                        AND ObjectString_Passport.DescId = zc_ObjectString_MemberSP_Passport()
+              WHERE Object_MemberSP.DescId = zc_Object_MemberSP()
+                AND Object_MemberSP.Id = vbMemberSPId;
+                
+              IF COALESCE (vbAddress, '') = ''
+              THEN
+                  RAISE EXCEPTION 'Ошибка.Значение <Адрес пациента> не установлено.';
+              END IF;
+              IF COALESCE (vbINN, '') = ''
+              THEN
+                  RAISE EXCEPTION 'Ошибка.Значение <ИНН пациента> не установлено.';
+              END IF;
+              IF COALESCE (vbPassport, '') = ''
+              THEN
+                  RAISE EXCEPTION 'Ошибка.Значение <Серия и Номер паспорта пациента> не установлено.';
+              END IF;       
           END IF;
    END IF;
 

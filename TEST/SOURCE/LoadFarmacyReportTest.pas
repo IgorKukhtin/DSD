@@ -60,7 +60,7 @@ var
  i : integer;
 begin
   //доп. соглащения Соц. проект
-  LoadReportFromFile('PrintReport_CheckSP_4474509', ReportPath + '\PrintReport_CheckSP_4474509.fr3');
+  {LoadReportFromFile('PrintReport_CheckSP_4474509', ReportPath + '\PrintReport_CheckSP_4474509.fr3');
   LoadReportFromFile('PrintReport_CheckSP_4474508', ReportPath + '\PrintReport_CheckSP_4474508.fr3');
   LoadReportFromFile('PrintReport_CheckSP_4474307', ReportPath + '\PrintReport_CheckSP_4474307.fr3');
   LoadReportFromFile('PrintReport_CheckSP_4474556', ReportPath + '\PrintReport_CheckSP_4474556.fr3');
@@ -70,7 +70,9 @@ begin
   LoadReportFromFile('Счет соц.проект', ReportPath + '\Счет соц.проект.fr3');
 
   LoadReportFromFile('Счет постановление 1303', ReportPath + '\Счет постановление 1303.fr3');
+  }
   LoadReportFromFile('Pеестр по постановлению 1303', ReportPath + '\Pеестр по постановлению 1303.fr3');
+  exit;
   LoadReportFromFile('Отчет по продажам Соц.проекта', ReportPath + '\Отчет по продажам Соц.проекта.fr3');
 
   LoadReportFromFile('Отчет по продажам Соц.проекта(пост.152)', ReportPath + '\Отчет по продажам Соц.проекта(пост.152).fr3');

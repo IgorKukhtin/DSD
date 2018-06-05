@@ -3,9 +3,8 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
   ClientHeight = 480
   ClientWidth = 1077
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitTop = -58
   ExplicitWidth = 1093
-  ExplicitHeight = 515
+  ExplicitHeight = 518
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -24,6 +23,8 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       inherited cxGrid: TcxGrid
         Width = 1077
         Height = 389
+        ExplicitLeft = 23
+        ExplicitTop = 40
         ExplicitWidth = 1077
         ExplicitHeight = 389
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -267,6 +268,32 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 155
+          end
+          object INNSP: TcxGridDBColumn
+            Caption = #1048#1053#1053' '#1087#1072#1094#1080#1077#1085#1090#1072
+            DataBinding.FieldName = 'INNSP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object PassportSP: TcxGridDBColumn
+            Caption = #1057#1077#1088#1080#1103' '#1080' '#1085#1086#1084#1077#1088' '#1087#1072#1089#1087#1086#1088#1090#1072'  '#1087#1072#1094#1080#1077#1085#1090#1072
+            DataBinding.FieldName = 'PassportSP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1077#1088#1080#1103' '#1080' '#1085#1086#1084#1077#1088' '#1087#1072#1089#1087#1086#1088#1090#1072'  '#1087#1072#1094#1080#1077#1085#1090#1072
+            Options.Editing = False
+            Width = 100
+          end
+          object AddressSP: TcxGridDBColumn
+            Caption = #1040#1076#1088#1077#1089' '#1087#1072#1094#1080#1077#1085#1090#1072
+            DataBinding.FieldName = 'AddressSP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1040#1076#1088#1077#1089' '#1087#1072#1094#1080#1077#1085#1090#1072
+            Options.Editing = False
+            Width = 108
           end
           object MedicSP: TcxGridDBColumn
             Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072
@@ -653,6 +680,13 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Visible = False
             Options.Editing = False
             Width = 70
+          end
+          object HospitalId: TcxGridDBColumn
+            DataBinding.FieldName = 'HospitalId'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 40
           end
         end
       end

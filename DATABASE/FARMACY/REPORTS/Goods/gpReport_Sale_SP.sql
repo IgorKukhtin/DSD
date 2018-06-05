@@ -28,6 +28,9 @@ RETURNS TABLE (MovementId     Integer
              , MemberSP       TVarChar
              , GroupMemberSPId Integer
              , GroupMemberSPName TVarChar
+             , AddressSP      TVarChar
+             , INNSP          TVarChar
+             , PassportSP     TVarChar
              , OperDateSP     TDateTime
              , OperDate       TDateTime
 
@@ -135,6 +138,7 @@ BEGIN
                               , COALESCE (MovementBoolean_List.ValueData, FALSE) AS isListSP
                               , MovementString_InvNumberSP.ValueData         AS InvNumberSP
                               , COALESCE (Object_MedicSP.ValueData, '')   :: TVarChar  AS MedicSP
+                              , Object_MemberSP.Id                                     AS MemberSPId
                               , COALESCE (Object_MemberSP.ValueData, '')  :: TVarChar  AS MemberSP
                               , COALESCE (MovementDate_OperDateSP.ValueData,Null) AS OperDateSP
                               , MovementLinkObject_GroupMemberSP.ObjectId         AS GroupMemberSPId
@@ -205,6 +209,7 @@ BEGIN
                               , COALESCE (MovementBoolean_List.ValueData, FALSE) AS isListSP
                               , MovementString_InvNumberSP.ValueData         AS InvNumberSP
                               , COALESCE (MovementString_MedicSP.ValueData, '') :: TVarChar  AS MedicSP
+                              , 0                                                            AS MemberSPId
                               , COALESCE (MovementString_Bayer.ValueData, '')   :: TVarChar  AS MemberSP
                               , COALESCE (MovementDate_OperDateSP.ValueData,Null) AS OperDateSP
                               , MovementLinkObject_GroupMemberSP.ObjectId         AS GroupMemberSPId
@@ -278,6 +283,7 @@ BEGIN
                               , Movement_Sale.isListSP
                               , Movement_Sale.InvNumberSP
                               , Movement_Sale.MedicSP
+                              , Movement_Sale.MemberSPId
                               , Movement_Sale.MemberSP
                               , Movement_Sale.OperDateSP
                               , Movement_Sale.GroupMemberSPId
@@ -320,6 +326,7 @@ BEGIN
                                 , Movement_Sale.isListSP
                                 , Movement_Sale.InvNumberSP
                                 , Movement_Sale.MedicSP
+                                , Movement_Sale.MemberSPId
                                 , Movement_Sale.MemberSP
                                 , Movement_Sale.OperDateSP
                                 , Movement_Sale.GroupMemberSPId
@@ -401,7 +408,7 @@ BEGIN
                                )
                            AND (COALESCE (ObjectFloat_PercentSP.ValueData,0) = inPercentSP OR COALESCE (inPercentSP,0) = 0)
                         )
-
+  
  , tmpMovDetails AS (SELECT tmpSale.Id   AS MovementId
                           , tmpSale.OperDate
                           , tmpSale.UnitId
@@ -505,6 +512,13 @@ BEGIN
                            , tmpMovDetails.HospitalId
                            , tmpMovDetails.PartnerMedical_ContractId
                     )
+    , tmpObjectString AS (SELECT ObjectString.*
+                          FROM ObjectString
+                          WHERE ObjectString.ObjectId IN (SELECT DISTINCT tmpMI.MemberSPId FROM tmpMI)
+                            AND ObjectString.DescId IN (zc_ObjectString_MemberSP_Address()
+                                                      , zc_ObjectString_MemberSP_INN()
+                                                      , zc_ObjectString_MemberSP_Passport())
+                          )
 
         -- ÂÁÛÎ¸Ú‡Ú
         SELECT tmpData.MovementId
@@ -520,6 +534,10 @@ BEGIN
              , tmpData.MemberSP
              , Object_GroupMemberSP.Id             AS GroupMemberSPId
              , Object_GroupMemberSP.ValueData      AS GroupMemberSPName
+             , COALESCE (ObjectString_Address.ValueData, '')   :: TVarChar  AS AddressSP
+             , COALESCE (ObjectString_INN.ValueData, '')       :: TVarChar  AS INNSP
+             , COALESCE (ObjectString_Passport.ValueData, '')  :: TVarChar  AS PassportSP
+          
              , tmpData.OperDateSP        :: TDateTime
              , tmpData.OperDate          :: TDateTime
              , Object_Goods.ObjectCode             AS GoodsCode
@@ -599,6 +617,16 @@ BEGIN
                                 AND tmpCountR.HospitalId = tmpData.HospitalId
                                 AND tmpCountR.ContractId = tmpMovDetails.PartnerMedical_ContractId
 
+             LEFT JOIN tmpObjectString AS ObjectString_Address
+                                       ON ObjectString_Address.ObjectId = tmpData.MemberSPId
+                                      AND ObjectString_Address.DescId = zc_ObjectString_MemberSP_Address()
+             LEFT JOIN tmpObjectString AS ObjectString_INN
+                                       ON ObjectString_INN.ObjectId = tmpData.MemberSPId
+                                      AND ObjectString_INN.DescId = zc_ObjectString_MemberSP_INN()
+             LEFT JOIN tmpObjectString AS ObjectString_Passport
+                                       ON ObjectString_Passport.ObjectId = tmpData.MemberSPId
+                                      AND ObjectString_Passport.DescId = zc_ObjectString_MemberSP_Passport()
+                                   
          ORDER BY Object_Unit.ValueData
                 , Object_PartnerMedical.ValueData
                 , ContractName
@@ -612,6 +640,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ¬ÓÓ·Í‡ÎÓ ¿.¿.
+ 05.06.18         *
  14.02.18         * add SigningDate_Contract
  24.05.17         * add zc_Movement_Check
  10.02.17         *

@@ -102,9 +102,9 @@ object MemberSPForm: TMemberSPForm
         Options.Editing = False
         Width = 100
       end
-      object Pasport: TcxGridDBColumn
+      object Passport: TcxGridDBColumn
         Caption = #1057#1077#1088#1080#1103' '#1080' '#1085#1086#1084#1077#1088' '#1087#1072#1089#1087#1086#1088#1090#1072
-        DataBinding.FieldName = 'Pasport'
+        DataBinding.FieldName = 'Passport'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
