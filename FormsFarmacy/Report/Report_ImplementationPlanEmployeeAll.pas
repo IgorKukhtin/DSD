@@ -26,6 +26,8 @@ type
     BonusAmountTab: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    NormOfManDays: TcxGridDBColumn;
+    FactOfManDays: TcxGridDBColumn;
   private
     { Private declarations }
   public

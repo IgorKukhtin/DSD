@@ -99,6 +99,10 @@ type
     spUpdateisDeferredYes: TdsdExecStoredProc;
     bbDeferredNo: TdxBarButton;
     bbDeferredYes: TdxBarButton;
+    bbWriteRestFromPoint: TdxBarButton;
+    spInsert_Send_WriteRestFromPoint: TdsdStoredProc;
+    spWriteRestFromPoint: TdsdExecStoredProc;
+    actWriteRestFromPoint: TMultiAction;
   private
     { Private declarations }
   public

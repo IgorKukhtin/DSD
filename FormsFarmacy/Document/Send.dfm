@@ -3,7 +3,7 @@ inherited SendForm: TSendForm
   ClientHeight = 550
   ClientWidth = 1015
   ExplicitWidth = 1031
-  ExplicitHeight = 588
+  ExplicitHeight = 589
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -927,6 +927,32 @@ inherited SendForm: TSendForm
       Hint = #1054#1090#1083#1086#1078#1077#1085' - '#1044#1072
       ImageIndex = 52
     end
+    object spWriteRestFromPoint: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_Send_WriteRestFromPoint
+      StoredProcList = <
+        item
+          StoredProc = spInsert_Send_WriteRestFromPoint
+        end>
+      Caption = 'spWriteRestFromPoint'
+    end
+    object actWriteRestFromPoint: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spWriteRestFromPoint
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1057#1087#1080#1089#1072#1090#1100' '#1074#1077#1089#1100' '#1086#1089#1090#1072#1090#1086#1082' '#1089' '#1090#1086#1095#1082#1080'?'
+      Caption = #1057#1087#1080#1089#1072#1090#1100' '#1074#1077#1089#1100' '#1086#1089#1090#1072#1090#1086#1082' '#1089' '#1090#1086#1095#1082#1080
+      Hint = #1057#1087#1080#1089#1072#1090#1100' '#1074#1077#1089#1100' '#1086#1089#1090#1072#1090#1086#1082' '#1089' '#1090#1086#1095#1082#1080
+      ImageIndex = 30
+    end
   end
   inherited MasterDS: TDataSource
     Top = 424
@@ -1090,11 +1116,15 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'bbWriteRestFromPoint'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end>
     end
     inherited bbAddMask: TdxBarButton
@@ -1114,6 +1144,10 @@ inherited SendForm: TSendForm
     end
     object bbDeferredYes: TdxBarButton
       Action = spUpdateisDeferredYes
+      Category = 0
+    end
+    object bbWriteRestFromPoint: TdxBarButton
+      Action = actWriteRestFromPoint
       Category = 0
     end
   end
@@ -2293,5 +2327,22 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 880
     Top = 283
+  end
+  object spInsert_Send_WriteRestFromPoint: TdsdStoredProc
+    StoredProcName = 'gpInsert_MovementItem_Send_WriteRestFromPoint'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 656
+    Top = 219
   end
 end

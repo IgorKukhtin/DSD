@@ -1,24 +1,27 @@
 inherited Report_ImplementationPlanEmployeeAllForm: TReport_ImplementationPlanEmployeeAllForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1102' '#1087#1083#1072#1085#1072' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
   ClientHeight = 504
-  ClientWidth = 817
+  ClientWidth = 920
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 833
+  ExplicitWidth = 936
   ExplicitHeight = 543
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 817
+    Width = 920
     Height = 447
-    ExplicitWidth = 806
+    ExplicitWidth = 817
+    ExplicitHeight = 447
     ClientRectBottom = 447
-    ClientRectRight = 817
+    ClientRectRight = 920
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 806
+      ExplicitWidth = 817
+      ExplicitHeight = 447
       inherited cxGrid: TcxGrid
-        Width = 817
+        Width = 920
         Height = 447
-        ExplicitWidth = 806
+        ExplicitWidth = 817
+        ExplicitHeight = 447
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -79,6 +82,20 @@ inherited Report_ImplementationPlanEmployeeAllForm: TReport_ImplementationPlanEm
             Options.Editing = False
             Width = 220
           end
+          object NormOfManDays: TcxGridDBColumn
+            Caption = #1053#1086#1088#1084#1072' '#1095#1077#1083#1086#1074#1077#1082#1086#1076#1085#1077#1081
+            DataBinding.FieldName = 'NormOfManDays'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object FactOfManDays: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090' '#1095#1077#1083#1086#1074#1077#1082#1086#1076#1085#1077#1081
+            DataBinding.FieldName = 'FactOfManDays'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
           object TotalExecutionLine: TcxGridDBColumn
             Caption = #1054#1073#1097#1080#1081' % '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103'  '#1087#1086#1089#1090#1088#1086#1095#1085#1086
             DataBinding.FieldName = 'TotalExecutionLine'
@@ -125,8 +142,8 @@ inherited Report_ImplementationPlanEmployeeAllForm: TReport_ImplementationPlanEm
     end
   end
   inherited Panel: TPanel
-    Width = 817
-    ExplicitWidth = 806
+    Width = 920
+    ExplicitWidth = 817
     inherited deStart: TcxDateEdit
       EditValue = 42491d
       TabOrder = 1

@@ -65,6 +65,8 @@ type
     PartnerGoodsName: TcxGridDBColumn;
     MakerName: TcxGridDBColumn;
     Price: TcxGridDBColumn;
+    AmountDeferred: TcxGridDBColumn;
+    MinimumLot: TcxGridDBColumn;
   private
     { Private declarations }
   public
