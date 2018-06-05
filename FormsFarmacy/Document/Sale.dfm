@@ -11,19 +11,19 @@ inherited SaleForm: TSaleForm
     Top = 219
     Width = 698
     Height = 323
-    ExplicitTop = 179
-    ExplicitWidth = 696
-    ExplicitHeight = 325
+    ExplicitTop = 219
+    ExplicitWidth = 698
+    ExplicitHeight = 323
     ClientRectBottom = 323
     ClientRectRight = 698
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 696
-      ExplicitHeight = 301
+      ExplicitWidth = 698
+      ExplicitHeight = 299
       inherited cxGrid: TcxGrid
         Width = 698
         Height = 201
-        ExplicitWidth = 701
-        ExplicitHeight = 225
+        ExplicitWidth = 698
+        ExplicitHeight = 201
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -137,8 +137,6 @@ inherited SaleForm: TSaleForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitTop = 211
-        ExplicitWidth = 696
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -242,8 +240,6 @@ inherited SaleForm: TSaleForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 203
-        ExplicitWidth = 696
       end
     end
   end
@@ -251,7 +247,7 @@ inherited SaleForm: TSaleForm
     Width = 698
     Height = 193
     TabOrder = 3
-    ExplicitWidth = 701
+    ExplicitWidth = 698
     ExplicitHeight = 193
     inherited edInvNumber: TcxTextEdit
       Top = 22
