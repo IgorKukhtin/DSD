@@ -1,5 +1,5 @@
 inherited Report_SaleSPForm: TReport_SaleSPForm
-  Caption = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303'
+  Caption = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303 ()'
   ClientHeight = 480
   ClientWidth = 1077
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
@@ -135,6 +135,14 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object isPrintLast: TcxGridDBColumn
+            Caption = #1055#1077#1095'. '#1085#1072' '#1087#1086#1089#1083'. '#1089#1090#1088'.'
+            DataBinding.FieldName = 'isPrintLast'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1077#1095#1072#1090#1072#1090#1100' '#1085#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1089#1090#1088#1072#1085#1080#1094#1077
+            Width = 40
+          end
           object NumLine: TcxGridDBColumn
             Caption = #8470' '#1079'.'#1087'.'
             DataBinding.FieldName = 'NumLine'
@@ -1115,7 +1123,9 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'UnitName;HospitalName;ContractName;OperDate;GoodsName'
+          IndexFieldNames = 
+            'JuridicalName;HospitalName;ContractName;isPrintLast;OperDate;Goo' +
+            'dsName'
           GridView = cxGridDBTableView
         end>
       Params = <

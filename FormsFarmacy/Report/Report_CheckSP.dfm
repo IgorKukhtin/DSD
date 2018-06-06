@@ -979,7 +979,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'HospitalName;NumLine'
+          IndexFieldNames = 'HospitalName;isPrintLast;NumLine'
           GridView = cxGridDBTableView
         end>
       Params = <

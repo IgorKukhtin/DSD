@@ -87,6 +87,8 @@ RETURNS TABLE (MovementId     Integer
              , Contract_SigningDate   TDateTime
              , InvNumber_Invoice      TVarChar
              , InvNumber_Invoice_Full TVarChar
+             
+             , isPrintLast       Boolean
              )
 AS
 $BODY$
@@ -591,7 +593,8 @@ BEGIN
            , tmpMovDetails.SigningDate_Contract  AS Contract_SigningDate
            , tmpData.InvNumber_Invoice
            , tmpData.InvNumber_Invoice_Full
-
+           
+           , FALSE                                             AS isPrintLast
         FROM tmpMI AS tmpData
              LEFT JOIN tmpMovDetails ON tmpData.MovementId = tmpMovDetails.MovementId
                                     AND tmpData.ChangePercent = tmpMovDetails.PercentSP
