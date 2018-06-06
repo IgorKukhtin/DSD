@@ -85,6 +85,8 @@ RETURNS TABLE (MovementId     Integer
              , OperDate_Invoice       TDateTime
              , TotalSumm_Invoice      TFloat
 
+             , isPrintLast       Boolean
+
 )
 AS
 $BODY$
@@ -662,7 +664,7 @@ BEGIN
                     THEN CAST (tmpData.Price_calc * tmpData.Amount AS NUMERIC(16,2))
                     ELSE CAST (tmpData.SummChangePercent AS NUMERIC(16,2)) 
                END                                                              :: TFloat  AS SummaSP
-             , CAST (ROW_NUMBER() OVER (PARTITION BY Object_PartnerMedical.Id ORDER BY tmpGoodsSP.IntenalSPName, tmpData.OperDate ) AS Integer) AS NumLine    --PARTITION BY Object_Juridical.ValueData
+             , CAST (ROW_NUMBER() OVER (PARTITION BY Object_PartnerMedical.Id, Object_Unit.Id ORDER BY Object_PartnerMedical.ValueData, Object_Unit.ValueData, tmpGoodsSP.IntenalSPName, tmpData.OperDate ) AS Integer) AS NumLine    --PARTITION BY Object_Juridical.ValueData
              , CAST (tmpCountR.CountInvNumberSP AS Integer) AS CountInvNumberSP
 
              , COALESCE (tmpParam.JuridicalFullName, Object_Juridical.ValueData ) :: TVarChar  AS JuridicalFullName
@@ -703,6 +705,8 @@ BEGIN
              , tmpData.OperDate_Invoice
              
              , tmpInvoice.TotalSumm                    :: TFloat AS TotalSumm_Invoice
+             
+             , FALSE                                             AS isPrintLast
         FROM tmpMI AS tmpData
              LEFT JOIN Movement AS Movement_err ON Movement_err.Id = tmpData.MovementId_err
              LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit_err

@@ -3,7 +3,6 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
   ClientHeight = 480
   ClientWidth = 1077
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -242
   ExplicitWidth = 1093
   ExplicitHeight = 518
   PixelsPerInch = 96
@@ -104,18 +103,26 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object isPrintLast: TcxGridDBColumn
+            Caption = #1055#1077#1095'. '#1085#1072' '#1087#1086#1089#1083'. '#1089#1090#1088'.'
+            DataBinding.FieldName = 'isPrintLast'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1077#1095#1072#1090#1072#1090#1100' '#1085#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1089#1090#1088#1072#1085#1080#1094#1077
+            Width = 40
+          end
           object NumLine: TcxGridDBColumn
             Caption = #8470' '#1079'.'#1087'.'
             DataBinding.FieldName = 'NumLine'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 42
           end
           object InvNumber_Invoice_Full: TcxGridDBColumn
@@ -123,6 +130,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             DataBinding.FieldName = 'InvNumber_Invoice_Full'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object InvNumber_Invoice: TcxGridDBColumn
@@ -131,11 +139,13 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object OperDate_Invoice: TcxGridDBColumn
             DataBinding.FieldName = 'OperDate_Invoice'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Width = 60
           end
@@ -168,6 +178,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             DataBinding.FieldName = 'MedicSPName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object OperDate: TcxGridDBColumn
@@ -195,6 +206,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             DataBinding.FieldName = 'InvNumberSP'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object GoodsCode: TcxGridDBColumn
@@ -218,6 +230,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             DataBinding.FieldName = 'ColSP'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 56
           end
           object IntenalSPName: TcxGridDBColumn
@@ -225,6 +238,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             DataBinding.FieldName = 'IntenalSPName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 217
           end
           object BrandSPName: TcxGridDBColumn
@@ -232,6 +246,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             DataBinding.FieldName = 'BrandSPName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 102
           end
           object KindOutSPName: TcxGridDBColumn
@@ -247,6 +262,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             DataBinding.FieldName = 'Pack'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object CountSP: TcxGridDBColumn
@@ -256,6 +272,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 122
           end
           object CodeATX: TcxGridDBColumn
@@ -263,6 +280,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             DataBinding.FieldName = 'CodeATX'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 56
           end
           object MakerSP: TcxGridDBColumn
@@ -270,6 +288,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             DataBinding.FieldName = 'MakerSP'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 97
           end
           object ReestrSP: TcxGridDBColumn
@@ -277,6 +296,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             DataBinding.FieldName = 'ReestrSP'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 116
           end
           object DateReestrSP: TcxGridDBColumn
@@ -286,6 +306,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             DataBinding.FieldName = 'DateReestrSP'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 121
           end
           object PriceOptSP: TcxGridDBColumn
@@ -293,6 +314,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             DataBinding.FieldName = 'PriceOptSP'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 91
           end
           object PriceRetSP: TcxGridDBColumn
@@ -300,6 +322,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             DataBinding.FieldName = 'PriceRetSP'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 68
           end
           object PriceSale: TcxGridDBColumn
@@ -307,6 +330,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             DataBinding.FieldName = 'PriceSale'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 91
           end
           object DailyNormSP: TcxGridDBColumn
@@ -314,6 +338,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             DataBinding.FieldName = 'DailyNormSP'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 135
           end
           object DailyCompensationSP: TcxGridDBColumn
@@ -324,6 +349,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             Properties.DisplayFormat = ',0.####; ; '
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 111
           end
           object PriceSP: TcxGridDBColumn
@@ -333,6 +359,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 90
           end
           object PaymentSP: TcxGridDBColumn
@@ -351,6 +378,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             DataBinding.FieldName = 'InsertDateSP'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 65
           end
           object GroupSP: TcxGridDBColumn
@@ -360,6 +388,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             Properties.AssignedValues.DisplayFormat = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 78
           end
           object Amount: TcxGridDBColumn
@@ -370,6 +399,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 65
           end
           object PriceCheckSP: TcxGridDBColumn
@@ -381,6 +411,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 102
           end
           object SummaSP: TcxGridDBColumn
@@ -390,6 +421,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 103
           end
           object JuridicalFullName: TcxGridDBColumn
@@ -546,6 +578,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object Contract_SigningDate: TcxGridDBColumn
@@ -562,6 +595,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             DataBinding.FieldName = 'Contract_StartDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
           end
           object PartnerMedical_MainName: TcxGridDBColumn
             Caption = #1043#1083'.'#1074#1088#1072#1095' ('#1047#1054#1047')'
@@ -665,6 +699,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             Caption = #1050#1086#1083'. '#1088#1077#1094#1077#1087#1090#1086#1074
             DataBinding.FieldName = 'CountInvNumberSP'
             Visible = False
+            Options.Editing = False
             Width = 70
           end
           object TotalSumm_Invoice: TcxGridDBColumn
@@ -672,12 +707,14 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             DataBinding.FieldName = 'TotalSumm_Invoice'
             Visible = False
             HeaderHint = #1048#1090#1086#1075#1086' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091' '#1089' '#1085#1072#1095#1072#1083#1072' '#1075#1086#1076#1072
+            Options.Editing = False
             VisibleForCustomization = False
             Width = 60
           end
           object JuridicalId: TcxGridDBColumn
             DataBinding.FieldName = 'JuridicalId'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Width = 30
           end
@@ -986,7 +1023,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'UnitName;IntenalSPName'
+          IndexFieldNames = 'HospitalName;UnitName;isPrintLast;IntenalSPName;OperDate'
           GridView = cxGridDBTableView
         end>
       Params = <

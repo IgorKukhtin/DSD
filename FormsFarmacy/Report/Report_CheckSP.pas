@@ -71,6 +71,7 @@ type
     OperDate_Invoice: TcxGridDBColumn;
     TotalSumm_Invoice: TcxGridDBColumn;
     JuridicalId: TcxGridDBColumn;
+    isPrintLast: TcxGridDBColumn;
   private
     { Private declarations }
   public
