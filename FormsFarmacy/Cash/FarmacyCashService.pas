@@ -1199,6 +1199,27 @@ begin
             finally
               freeAndNil(dsdSave);
             end;
+            // проверяем, что чек действительно проведен
+            dsdSave := TdsdStoredProc.Create(nil);
+            try
+              //Проверить в каком состоянии документ.
+              dsdSave.StoredProcName := 'gpGet_Movement_CheckState';
+              dsdSave.OutputType := otResult;
+              dsdSave.Params.Clear;
+              dsdSave.Params.AddParam('inId',ftInteger,ptInput,Head.ID);
+              dsdSave.Params.AddParam('outState',ftInteger,ptOutput,Null);
+              dsdSave.Execute(False,False);
+              if VarToStr(dsdSave.Params.ParamByName('outState').Value) = '2' then //проведен
+                Add_Log('Movement_CheckState - проведен')
+              else
+              begin
+                Add_Log('ERROR Movement_CheckState - непроведен ('+ VarToStr(dsdSave.Params.ParamByName('outState').Value)+ ')');
+                Head.COMPL := false;
+              end;
+            finally
+              freeAndNil(dsdSave);
+            end;
+
             // удаляем проведенный чек - если можно ... 04.02.2017
             if Head.COMPL { AND (fError_isComplete = FALSE) } // 04.07.17 - !!!временно убрал!!!
             then
