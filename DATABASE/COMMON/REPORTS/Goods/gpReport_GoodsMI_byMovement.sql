@@ -30,6 +30,7 @@ RETURNS TABLE (ItemName TVarChar, InvNumber TVarChar, OperDate TDateTime, OperDa
              , SummPartner_calc TFloat
              , SummPartner TFloat, SummPartner_10200 TFloat, SummPartner_10300 TFloat
              , SummDiff TFloat
+             , WeightTotal TFloat -- Вес в упаковке - GoodsByGoodsKind
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              )   
 AS
@@ -380,6 +381,9 @@ BEGIN
          , tmpOperationGroup.SummPartner_10200 :: TFloat  AS SummPartner_10200
          , tmpOperationGroup.SummPartner_10300 :: TFloat  AS SummPartner_10300
          , (tmpOperationGroup.SummPartner - tmpOperationGroup.SummPartner_calc) :: TFloat  AS SummDiff
+         
+           -- Вес в упаковке - GoodsByGoodsKind
+         , ObjectFloat_WeightTotal.ValueData   :: TFloat  AS WeightTotal
 
          , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
          , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
@@ -405,6 +409,14 @@ BEGIN
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpOperationGroup.InfoMoneyId
+          
+          -- Товар и Вид товара
+          LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId     = tmpOperationGroup.GoodsId
+                                                AND Object_GoodsByGoodsKind_View.GoodsKindId = tmpOperationGroup.GoodsKindId
+          -- вес в упаковке: "чистый" вес + вес 1-ого пакета
+          LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
+                                ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
+                               AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
    ;
 
 END;

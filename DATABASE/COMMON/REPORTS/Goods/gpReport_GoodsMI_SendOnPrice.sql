@@ -79,6 +79,8 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime
 
              , PriceIn_zavod                TFloat  --
              , PriceOut_Partner             TFloat  --
+             
+             , WeightTotal                  TFloat -- Вес в упаковке - GoodsByGoodsKind
 
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              )
@@ -304,6 +306,9 @@ BEGIN
 
            -- Цена покупателя
          , CAST (CASE WHEN tmpOperationGroup.OperCount_Partner_real <> 0 THEN tmpOperationGroup.SummOut_Partner_real   / tmpOperationGroup.OperCount_Partner_real ELSE 0 END AS NUMERIC (16, 2)) :: TFloat AS PriceOut_Partner
+
+           -- Вес в упаковке - GoodsByGoodsKind
+         , ObjectFloat_WeightTotal.ValueData   :: TFloat  AS WeightTotal
 
          , View_InfoMoney_Goods.InfoMoneyGroupName              AS InfoMoneyGroupName_goods
          , View_InfoMoney_Goods.InfoMoneyDestinationName        AS InfoMoneyDestinationName_goods
@@ -571,6 +576,14 @@ BEGIN
           LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                  ON MovementDate_OperDatePartner.MovementId =  tmpOperationGroup.MovementId
                                 AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+
+          -- Товар и Вид товара
+          LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId     = tmpOperationGroup.GoodsId
+                                                AND Object_GoodsByGoodsKind_View.GoodsKindId = tmpOperationGroup.GoodsKindId
+          -- вес в упаковке: "чистый" вес + вес 1-ого пакета
+          LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
+                                ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
+                               AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
   ;
 
 END;
