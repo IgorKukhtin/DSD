@@ -79,6 +79,14 @@ object Report_GoodsMI_PackageDialogForm: TReport_GoodsMI_PackageDialogForm
     Top = 7
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
+  object cbisDate: TcxCheckBox
+    Left = 237
+    Top = 27
+    Caption = #1087#1086' '#1076#1072#1090#1072#1084
+    Properties.ReadOnly = False
+    TabOrder = 8
+    Width = 76
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -99,8 +107,8 @@ object Report_GoodsMI_PackageDialogForm: TReport_GoodsMI_PackageDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 200
-    Top = 4
+    Left = 160
+    Top = 12
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -110,6 +118,7 @@ object Report_GoodsMI_PackageDialogForm: TReport_GoodsMI_PackageDialogForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
@@ -117,6 +126,7 @@ object Report_GoodsMI_PackageDialogForm: TReport_GoodsMI_PackageDialogForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitId'
@@ -124,6 +134,7 @@ object Report_GoodsMI_PackageDialogForm: TReport_GoodsMI_PackageDialogForm
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
@@ -132,6 +143,15 @@ object Report_GoodsMI_PackageDialogForm: TReport_GoodsMI_PackageDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDate'
+        Value = Null
+        Component = cbisDate
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 24
     Top = 112
@@ -141,6 +161,7 @@ object Report_GoodsMI_PackageDialogForm: TReport_GoodsMI_PackageDialogForm
     LookupControl = edUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -151,6 +172,7 @@ object Report_GoodsMI_PackageDialogForm: TReport_GoodsMI_PackageDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -159,6 +181,7 @@ object Report_GoodsMI_PackageDialogForm: TReport_GoodsMI_PackageDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 88
     Top = 80

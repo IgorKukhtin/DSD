@@ -5,10 +5,8 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -285
-  ExplicitTop = -112
   ExplicitWidth = 1074
-  ExplicitHeight = 569
+  ExplicitHeight = 572
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -141,6 +139,11 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
               Format = ',0.####'
               Kind = skSum
               Column = WeightPackage_calc
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = GoodsName
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -152,6 +155,13 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object OperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 48
+          end
           object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
@@ -414,6 +424,14 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
       TabOrder = 5
       Width = 210
     end
+    object cbisDate: TcxCheckBox
+      Left = 224
+      Top = 30
+      Action = actRefreshData
+      Properties.ReadOnly = False
+      TabOrder = 6
+      Width = 76
+    end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -435,6 +453,20 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
       end>
   end
   inherited ActionList: TActionList
+    object actRefreshData: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1087#1086' '#1076#1072#1090#1072#1084
+      Hint = #1087#1086' '#1076#1072#1090#1072#1084
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -653,6 +685,14 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDate'
+          Value = Null
+          Component = cbisDate
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -695,28 +735,11 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisDate'
         Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
+        Component = cbisDate
+        DataType = ftBoolean
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 112

@@ -1,14 +1,17 @@
 -- Function: gpReport_GoodsMI_Package ()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_Package (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_Package (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Package(
     IN inStartDate    TDateTime ,
     IN inEndDate      TDateTime ,
     IN inUnitId       Integer   ,
+    IN inIsDate       Boolean   , -- по датам
     IN inSession      TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar
+RETURNS TABLE (OperDate TDateTime
+             , GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar
              , GoodsCode_basis Integer, GoodsName_basis TVarChar
              , GoodsCode Integer, GoodsName TVarChar
              , GoodsKindName TVarChar, MeasureName TVarChar
@@ -43,7 +46,8 @@ BEGIN
                           AND Object_InfoMoney_View.InfoMoneyDestinationId       = zc_Enum_InfoMoneyDestination_10100() --
                              )
                      )
-   , tmpMI_Union AS  (SELECT tmpMI.GoodsId
+   , tmpMI_Union AS  (SELECT tmpMI.OperDate
+                           , tmpMI.GoodsId
                            , tmpMI.GoodsKindId
                            , tmpMI.Amount_Send_in
                            , tmpMI.Amount_Send_out
@@ -52,6 +56,8 @@ BEGIN
 
                       FROM (SELECT MIContainer.ObjectId_Analyzer           AS GoodsId
                                  , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId
+                                 , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE NULL END :: TDatetime AS OperDate
+                                 
                                  , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send()            AND MIContainer.IsActive = TRUE  THEN      MIContainer.Amount ELSE 0 END
                                       + CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion() AND MIContainer.IsActive = TRUE AND MLO_DocumentKind.ObjectId > 0 AND MIContainer.ObjectExtId_Analyzer = inUnitId
                                                   THEN MIContainer.Amount
@@ -88,6 +94,7 @@ BEGIN
                               -- AND MIContainer.Amount <> 0
                             GROUP BY MIContainer.ObjectId_Analyzer
                                    , MIContainer.ObjectIntId_Analyzer
+                                   , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE NULL END
                            ) AS tmpMI
                            INNER JOIN tmpGoods ON tmpGoods.GoodsId = tmpMI.GoodsId
                      )
@@ -150,7 +157,8 @@ BEGIN
                                         , tmpReceipt.ReceiptId
                                 )
     -- Результат
-    SELECT ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
+    SELECT tmpMI_Union.OperDate         :: TDateTime  AS OperDate
+         , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
          , Object_GoodsGroup.ValueData                AS GoodsGroupName
          , Object_Goods_basis.ObjectCode              AS GoodsCode_basis
          , Object_Goods_basis.ValueData               AS GoodsName_basis
@@ -247,14 +255,16 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_GoodsMI_Package (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpReport_GoodsMI_Package (TDateTime, TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.06.18         * add inIsDate
  28.06.15                                        * ALL
  04.04.15         *
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_Package(inStartDate:= '01.07.2017', inEndDate:= '01.07.2017', inUnitId:= 8451, inSession:= zfCalc_UserAdmin()) ORDER BY 2;
+--
+ SELECT * FROM gpReport_GoodsMI_Package(inStartDate:= '01.07.2017', inEndDate:= '01.07.2017', inUnitId:= 8451, inIsDate:= False, inSession:= zfCalc_UserAdmin()) ORDER BY 2;
