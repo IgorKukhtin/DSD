@@ -266,5 +266,4 @@ $BODY$
 */
 
 -- тест
---
- SELECT * FROM gpReport_GoodsMI_Package(inStartDate:= '01.07.2017', inEndDate:= '01.07.2017', inUnitId:= 8451, inIsDate:= False, inSession:= zfCalc_UserAdmin()) ORDER BY 2;
+-- SELECT * FROM gpReport_GoodsMI_Package(inStartDate:= '01.07.2017', inEndDate:= '01.07.2017', inUnitId:= 8451, inIsDate:= False, inSession:= zfCalc_UserAdmin()) ORDER BY 2;
