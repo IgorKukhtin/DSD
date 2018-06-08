@@ -1215,6 +1215,23 @@ begin
               begin
                 Add_Log('ERROR Movement_CheckState - непроведен ('+ VarToStr(dsdSave.Params.ParamByName('outState').Value)+ ')');
                 Head.COMPL := false;
+                Head.SAVE := false;
+                // снимаем признак сохранен, чтобы повторно сохранить документ
+                Add_Log('UnSAVE');
+                WaitForSingleObject(MutexDBF, INFINITE);
+                try
+                  FLocalDataBaseHead.Active := True;
+                  if LocateUID(UID, True) AND not FLocalDataBaseHead.Deleted then
+                  Begin
+                    FLocalDataBaseHead.Edit;
+                    FLocalDataBaseHead.FieldByName('SAVE').AsBoolean := False;
+                    FLocalDataBaseHead.Post;
+                    Add_Log('UnSAVE Completed');
+                  End;
+                finally
+                  FLocalDataBaseHead.Active := False;
+                  ReleaseMutex(MutexDBF);
+                end;
               end;
             finally
               freeAndNil(dsdSave);
