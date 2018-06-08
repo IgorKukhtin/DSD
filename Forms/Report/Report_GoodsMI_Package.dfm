@@ -512,8 +512,8 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
         item
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'GoodsGroupNameFull;GoodsName_basis;GoodsName;GoodsKindName;OperD' +
-            'ate'
+            'GoodsGroupNameFull;GoodsName_basis;OperDate;GoodsName;GoodsKindN' +
+            'ame'
           GridView = cxGridDBTableView
         end>
       Params = <
