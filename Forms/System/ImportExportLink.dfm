@@ -4,7 +4,7 @@ inherited ImportExportLinkForm: TImportExportLinkForm
   ClientWidth = 847
   AddOnFormData.isAlwaysRefresh = False
   ExplicitWidth = 863
-  ExplicitHeight = 433
+  ExplicitHeight = 434
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -109,8 +109,7 @@ inherited ImportExportLinkForm: TImportExportLinkForm
           object colText: TcxGridDBColumn
             Caption = #1058#1077#1082#1089#1090
             DataBinding.FieldName = 'SomeText'
-            PropertiesClassName = 'TcxBlobEditProperties'
-            Properties.BlobPaintStyle = bpsText
+            PropertiesClassName = 'TcxMemoProperties'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 120

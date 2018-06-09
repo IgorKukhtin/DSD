@@ -5,7 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.ActnList, Vcl.Forms,
-  Vcl.Dialogs, dsdDB, cxPropertiesStore, frxClass, dsdAddOn;
+  Vcl.Dialogs, dsdDB, cxPropertiesStore, frxClass, dsdAddOn, cxEdit,
+  cxGridCustomTableView;
 
 const
   MY_MESSAGE = WM_USER + 1;
@@ -21,6 +22,7 @@ type
     FAddOnFormData: TAddOnFormData;
     FNeedRefreshOnExecute: boolean;
     FNoHelpFile: Boolean;
+    FcxEditRepository: TcxEditRepository;
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
@@ -28,7 +30,11 @@ type
     property FormSender: TComponent read FSender write SetSender;
     procedure AfterShow(var a : TWMSHOWWINDOW); message MY_MESSAGE;
     procedure InitHelpSystem;
+    procedure InitcxEditRepository;
     procedure btnHelpClick(Sender: TObject);
+    procedure cxGridDBTableViewTextGetProperties(
+      Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AProperties: TcxCustomEditProperties);
   protected
     procedure Loaded; override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
@@ -51,17 +57,17 @@ type
 implementation
 
 uses
-  cxControls, cxContainer, cxEdit, UtilConst,
+  cxControls, cxContainer, UtilConst,
   cxGroupBox, dxBevel, cxButtons, cxGridDBTableView, cxGrid, DB, DBClient,
   dxBar, cxTextEdit, cxLabel, StdActns, cxDBTL, cxCurrencyEdit, cxDropDownEdit,
   cxDBLookupComboBox, DBGrids, cxCheckBox, cxCalendar, ExtCtrls,
   cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, frxDBSet, dxBarExtItems,
   cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView,
-  cxDBEdit, dsdAction, dsdGuides, cxDBVGrid,
-  cxDBLabel,
+  cxDBEdit, dsdAction, dsdGuides, cxDBVGrid, cxDBLabel, cxBlobEdit,
   Vcl.DBActns, cxMemo, cxGridDBChartView, ShellAPI, CommonData,
   SHDocVw, GMClasses, GMMap, GMMapVCL, GMLinkedComponents,
-  GMMarker, GMMarkerVCL, GMGeoCode, GMDirection, GMDirectionVCL, cxImage{, DataModul};
+  GMMarker, GMMarkerVCL, GMGeoCode, GMDirection, GMDirectionVCL, cxImage,
+  cxEditRepositoryItems{, DataModul};
 
 {$R *.dfm}
 
@@ -110,11 +116,13 @@ begin
   KeyPreview := true;
   FisAlreadyOpen := false;
   FNoHelpFile := False;
+  FcxEditRepository := Nil;
 end;
 
 destructor TParentForm.Destroy;
 begin
 //  ShowMessage(Self.Name);
+  if Assigned(FcxEditRepository) then FreeAndNil(FcxEditRepository);
   inherited;
 end;
 
@@ -184,6 +192,7 @@ procedure TParentForm.FormShow(Sender: TObject);
 begin
   PostMessage(Handle, MY_MESSAGE, 0, 0);
   InitHelpSystem;
+  InitcxEditRepository;
 end;
 
 procedure TParentForm.InitHelpSystem;
@@ -269,6 +278,34 @@ begin
   else
     FNoHelpFile := True;
 
+end;
+
+procedure TParentForm.cxGridDBTableViewTextGetProperties(
+  Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+  var AProperties: TcxCustomEditProperties);
+begin
+  AProperties := FcxEditRepository.Items[0].Properties;
+end;
+
+procedure TParentForm.InitcxEditRepository;
+  var C: TComponent;
+begin
+  for C in Self do
+    //Находим гриды и им присваиваем наше контекстное меню
+    if C is TcxGridDBColumn then
+      if (C as TcxGridDBColumn).Properties is TcxMemoProperties then
+        if not Assigned((C as TcxGridDBColumn).OnGetProperties) then
+  begin
+    if not Assigned(FcxEditRepository) then
+    begin
+      FcxEditRepository := TcxEditRepository.Create(Self);
+      FcxEditRepository.CreateItem(TcxEditRepositoryBlobItem);
+      TcxEditRepositoryBlobItem(FcxEditRepository.Items[0]).Properties.BlobEditKind := bekMemo;
+      TcxEditRepositoryBlobItem(FcxEditRepository.Items[0]).Properties.BlobPaintStyle := bpsText;
+    end;
+
+    (C as TcxGridDBColumn).OnGetProperties := cxGridDBTableViewTextGetProperties;
+  end;
 end;
 
 procedure TParentForm.Loaded;
