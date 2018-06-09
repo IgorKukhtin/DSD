@@ -4,27 +4,28 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
   ClientWidth = 1009
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1025
-  ExplicitHeight = 402
+  ExplicitHeight = 403
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 56
+    Top = 64
     Width = 1009
-    Height = 308
+    Height = 300
     TabOrder = 3
     ExplicitTop = 56
     ExplicitWidth = 1009
     ExplicitHeight = 308
-    ClientRectBottom = 308
+    ClientRectBottom = 300
     ClientRectRight = 1009
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1009
       ExplicitHeight = 308
       inherited cxGrid: TcxGrid
         Width = 1009
-        Height = 308
+        Height = 300
+        ExplicitTop = -5
         ExplicitWidth = 1009
-        ExplicitHeight = 308
+        ExplicitHeight = 300
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -443,9 +444,9 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
   end
   inherited Panel: TPanel
     Width = 1009
-    Height = 30
+    Height = 38
     ExplicitWidth = 1009
-    ExplicitHeight = 30
+    ExplicitHeight = 38
     inherited deStart: TcxDateEdit
       Left = 131
       Top = 4
@@ -488,24 +489,32 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
       TabOrder = 5
       Width = 201
     end
+    object cbVendorminPrices: TcxCheckBox
+      Left = 530
+      Top = 16
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1084#1080#1085#1080#1084#1072#1083#1100#1085#1099#1077' '#1094#1077#1085#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      TabOrder = 6
+      Width = 197
+    end
   end
   object cbPartion: TcxCheckBox [2]
     Left = 530
-    Top = 4
+    Top = 1
     Action = actRefreshIsPartion
     TabOrder = 6
     Width = 94
   end
   object cbPartionPrice: TcxCheckBox [3]
     Left = 627
-    Top = 4
+    Top = 1
     Action = actRefreshPartionPrice
     TabOrder = 7
     Width = 200
   end
   object cbJuridical: TcxCheckBox [4]
     Left = 840
-    Top = 4
+    Top = 1
     Action = actRefreshJuridical
     TabOrder = 8
     Width = 112
@@ -692,6 +701,14 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisVendorminPrices'
+          Value = 'False'
+          Component = cbVendorminPrices
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -745,6 +762,14 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         Name = 'inisJuridical'
         Value = Null
         Component = cbJuridical
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisVendorminPrices'
+        Value = 'False'
+        Component = cbVendorminPrices
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

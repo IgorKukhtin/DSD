@@ -32,6 +32,7 @@ type
     ñbPartion: TcxCheckBox;
     cbPartionPrice: TcxCheckBox;
     ñbJuridical: TcxCheckBox;
+    cbVendorminPrices: TcxCheckBox;
   private
     { Private declarations }
   public

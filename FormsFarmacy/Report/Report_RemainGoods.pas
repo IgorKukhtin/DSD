@@ -51,6 +51,7 @@ type
     actRefreshJuridical: TdsdDataSetRefresh;
     cbJuridical: TcxCheckBox;
     isSP: TcxGridDBColumn;
+    cbVendorminPrices: TcxCheckBox;
   private
     { Private declarations }
   public

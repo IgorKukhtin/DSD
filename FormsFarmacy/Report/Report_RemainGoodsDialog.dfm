@@ -76,7 +76,7 @@
   end
   object cbPartionPrice: TcxCheckBox
     Left = 128
-    Top = 38
+    Top = 33
     Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1087#1072#1088#1090#1080#1080' '#1094#1077#1085#1099
     TabOrder = 7
@@ -87,8 +87,16 @@
     Top = 8
     Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     Caption = #1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
-    TabOrder = 8
+    TabOrder = 9
     Width = 109
+  end
+  object cbVendorminPrices: TcxCheckBox
+    Left = 128
+    Top = 56
+    Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+    Caption = #1084#1080#1085#1080#1084#1072#1083#1100#1085#1099#1077' '#1094#1077#1085#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+    TabOrder = 8
+    Width = 197
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -159,6 +167,14 @@
         Name = 'inisJuridical'
         Value = Null
         Component = сbJuridical
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisVendorminPrices'
+        Value = 'False'
+        Component = cbVendorminPrices
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
