@@ -603,6 +603,12 @@ BEGIN
                          -- Цена в налоговой - для Корр цены
                        , tmpMI_Corr_curr.PriceTax_calc
                   FROM tmpMI_Corr_curr
+                       -- НН
+                       LEFT JOIN tmpMI_tax AS tmpMI_tax1 ON tmpMI_tax1.Kind        = 1
+                                                        AND tmpMI_tax1.GoodsId     = tmpMI_Corr_curr.GoodsId
+                                                        AND tmpMI_tax1.GoodsKindId = tmpMI_Corr_curr.GoodsKindId
+                                                        AND tmpMI_tax1.Price       = tmpMI_Corr_curr.Price
+                       -- 
                        LEFT JOIN tmpMI_Corr_all AS tmpMI_Corr_all1 ON tmpMI_Corr_all1.GoodsId     = tmpMI_Corr_curr.GoodsId
                                                                   AND tmpMI_Corr_all1.GoodsKindId = tmpMI_Corr_curr.GoodsKindId
                                                                   AND tmpMI_Corr_all1.Price       = tmpMI_Corr_curr.Price
@@ -612,6 +618,7 @@ BEGIN
                                                                   AND tmpMI_Corr_all2.Price       = tmpMI_Corr_curr.Price
                                                                   AND tmpMI_Corr_all2.Ord2        = 2 -- т.е. по св-вам БЕЗ GoodsKindId
                                                                   AND tmpMI_Corr_all2.NPP_calc    > 0
+                                                                  AND tmpMI_tax1.GoodsId          IS NULL
                  )
          -- сохранили
          INSERT INTO _tmpRes (MovementItemId, GoodsId, GoodsKindId, NPPTax_calc, NPP_calc, AmountTax_calc, SummTaxDiff_calc, Amount, OperPrice, CountForPrice, PriceTax_calc)

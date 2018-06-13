@@ -2838,7 +2838,8 @@ END IF;
                    )
      THEN
           -- Админу только отладка
-          if inUserId = 5 then RAISE EXCEPTION 'Админу только отладка'; end if;
+          if inUserId <> 5
+          then
           --
           PERFORM lpInsertUpdate_Movement_Tax_From_Kind (inMovementId            := inMovementId
                                                        , inDocumentTaxKindId     := zc_Enum_DocumentTaxKind_Tax()
@@ -2846,6 +2847,8 @@ END IF;
                                                        , inStartDateTax          := NULL
                                                        , inUserId                := inUserId
                                                         );
+           ELSE RAISE EXCEPTION 'Админу только отладка';
+           end if;
      END IF;
 
      -- 6.4. ФИНИШ - в Налоговой устанавливается признак "Проверен"

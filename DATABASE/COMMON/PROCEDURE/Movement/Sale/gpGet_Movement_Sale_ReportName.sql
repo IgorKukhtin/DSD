@@ -40,6 +40,7 @@ BEGIN
        -- Результат
        SELECT CASE -- !!!захардкодил для Contract - JuridicalInvoice!!!
                    WHEN ObjectLink_Contract_JuridicalInvoice.ChildObjectId > 0
+                    AND MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
                         THEN 'PrintMovement_SaleJuridicalInvoice'
 
                    -- !!!захардкодил для Гофротары!!!

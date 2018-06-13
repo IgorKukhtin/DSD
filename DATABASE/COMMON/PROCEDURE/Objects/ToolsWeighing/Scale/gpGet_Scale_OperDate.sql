@@ -27,7 +27,7 @@ BEGIN
                             END
                   WHEN inBranchCode = 1   -- Dnepr: Scale + ScaleCeh
                     OR inBranchCode BETWEEN 101 AND 199 -- Dnepr: UPAK + CEH-GP: ScaleCeh
-                       THEN CASE WHEN EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) >= 0 AND EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) < 10
+                       THEN CASE WHEN EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) >= 0 AND EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) < 8
                                       THEN (DATE_TRUNC ('DAY', CURRENT_TIMESTAMP) - INTERVAL '1 DAY') :: TDateTime
                                  ELSE DATE_TRUNC ('DAY', CURRENT_TIMESTAMP) :: TDateTime
                             END
