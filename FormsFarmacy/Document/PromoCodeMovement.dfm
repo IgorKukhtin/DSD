@@ -4,7 +4,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
   ClientWidth = 1023
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
   ExplicitWidth = 1039
-  ExplicitHeight = 602
+  ExplicitHeight = 603
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -293,6 +293,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
           object ObjectCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'ObjectlCode'
+            Options.Editing = False
             Width = 42
           end
           object ObjectName: TcxGridDBColumn
@@ -323,6 +324,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 176
           end
           object RetailName: TcxGridDBColumn
@@ -1011,14 +1013,14 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
           Name = 'key'
           Value = Null
           Component = DetailDCS
-          ComponentItem = 'JuridicalId'
+          ComponentItem = 'ObjectId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = DetailDCS
-          ComponentItem = 'JuridicalName'
+          ComponentItem = 'ObjectName'
           DataType = ftString
           MultiSelectSeparator = ','
         end
