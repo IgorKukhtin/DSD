@@ -169,12 +169,12 @@ BEGIN
          LEFT OUTER JOIN
          (SELECT AnalysisContainerItem.UnitID                                               AS UnitID
                , AnalysisContainerItem.GoodsId                                              AS GoodsId
-               , Sum(CASE WHEN AnalysisContainerItem.OperDate < '2018-05-01'::TDateTime THEN
+               , Sum(CASE WHEN AnalysisContainerItem.OperDate < vbEndDate THEN
                     AnalysisContainerItem.AmountCheck END)                                  AS Amount
-               , Sum(CASE WHEN AnalysisContainerItem.OperDate >= '2018-05-01'::TDateTime THEN
+               , Sum(CASE WHEN AnalysisContainerItem.OperDate >= vbEndDate THEN
                    AnalysisContainerItem.Saldo END)                                         AS Saldo
           FROM AnalysisContainerItem AS AnalysisContainerItem
-          WHERE AnalysisContainerItem.OperDate >= '2018-04-01'::TDateTime
+          WHERE AnalysisContainerItem.OperDate >= vbStartDate
           GROUP BY AnalysisContainerItem.UnitID
                  , AnalysisContainerItem.GoodsId) AS AnalysisContainerItem
           ON AnalysisContainer.UnitId = AnalysisContainerItem.UnitId AND
