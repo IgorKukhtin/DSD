@@ -665,7 +665,7 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
      WHILE vbItearation < inItearationCount AND vbCountDiff > 0
      LOOP
          -- !!!ÂÐÅÌÅÍÍÎ!!!
-         -- DELETE FROM _tmpMaster WHERE ABS (_tmpMaster.calcSumm) > 10123123123;
+         DELETE FROM _tmpMaster WHERE ABS (_tmpMaster.calcSumm) > 10123123123;
 
          -- ðàñ÷åò ñ/ñ
          UPDATE _tmpMaster SET CalcSumm          = _tmpSumm.CalcSumm

@@ -8,9 +8,9 @@ DROP FUNCTION IF EXISTS gpSelect_MovementItemContainer_Movement (Integer, Boolea
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItemContainer_Movement(
     IN inMovementId         Integer      , -- ключ Документа
-    IN inIsDestination      Boolean      , -- 
-    IN inIsParentDetail     Boolean      , -- 
-    IN inIsInfoMoneyDetail  Boolean      , -- 
+    IN inIsDestination      Boolean      , --
+    IN inIsParentDetail     Boolean      , --
+    IN inIsInfoMoneyDetail  Boolean      , --
     IN inSession            TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (InvNumber Integer, OperDate TDateTime
@@ -49,7 +49,7 @@ BEGIN
      IF 1 = 1 AND EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin(), 10898, 76933, 14604 )) -- Отчеты (управленческие) + Клиент банк-ввод документов + Касса Днепр
      THEN
 
-     RETURN QUERY 
+     RETURN QUERY
        WITH tmpMovement AS (SELECT Movement.Id AS MovementId, Movement.DescId AS MovementDescId, Movement.InvNumber, inIsDestination AS isDestination, inIsParentDetail AS isParentDetail, inIsInfoMoneyDetail AS isInfoMoneyDetail FROM Movement WHERE Movement.Id = inMovementId
                            UNION ALL
                             SELECT Movement.Id AS MovementId, Movement.DescId AS MovementDescId, Movement.InvNumber, inIsDestination AS isDestination, inIsParentDetail AS isParentDetail, inIsInfoMoneyDetail AS isInfoMoneyDetail
@@ -360,6 +360,24 @@ BEGIN
                                                               AND tmpMIContainerSumm.GoodsKindId = tmpMIContainer.GoodsKindId
                                                 )
 
+            --
+          , tmpCLO_find AS (SELECT * FROM ContainerLinkObject AS CLO WHERE CLO.ContainerId IN (SELECT DISTINCT tmpMIContainer_Summ.ContainerId_find FROM tmpMIContainer_Summ))
+            --
+          , tmpCLO AS (SELECT * FROM ContainerLinkObject AS CLO WHERE CLO.ContainerId IN (SELECT DISTINCT tmpMIContainer_Summ.ContainerId FROM tmpMIContainer_Summ))
+            --
+          , tmpMILO_Branch AS (SELECT * FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId IN (SELECT DISTINCT tmpMIContainer_Summ.MovementItemId FROM tmpMIContainer_Summ)
+                                                                              AND MILO.DescId = zc_MILinkObject_Branch()
+                              )
+            --
+          , tmpMLO_Branch AS (SELECT * FROM MovementLinkObject AS MLO WHERE MLO.MovementId IN (SELECT DISTINCT tmpMIContainer_Summ.MovementId FROM tmpMIContainer_Summ)
+                                                                        AND MLO.DescId = zc_MovementLinkObject_Branch()
+                             )
+            --
+          , tmpProfitLoss_View AS (SELECT * FROM Object_ProfitLoss_View)
+            --
+          , tmpInfoMoney_View AS (SELECT * FROM Object_InfoMoney_View)
+
+       -- Результат
        SELECT
              zfConvert_StringToNumber (tmpMovementItemContainer.InvNumber) AS InvNumber
            , tmpMovementItemContainer.OperDate
@@ -420,7 +438,7 @@ BEGIN
            , tmpMovementItemContainer.InfoMoneyCode_Detail
            , tmpMovementItemContainer.InfoMoneyName_Detail
            , Object_Currency.ValueData AS CurrencyName
-       FROM 
+       FROM
            (SELECT
                   tmpMIContainer_Summ.InvNumber
                 , tmpMIContainer_Summ.OperDate
@@ -477,7 +495,7 @@ BEGIN
 
                 , CASE WHEN tmpMIContainer_Summ.MovementDescId = zc_Movement_ProductionSeparate()
                         AND tmpMIContainer_Summ.isActive = FALSE
-                        AND tmpMIContainer_Summ.isInfoMoneyDetail = TRUE 
+                        AND tmpMIContainer_Summ.isInfoMoneyDetail = TRUE
                           THEN tmpPrice_ProductionSeparate.Price
                        WHEN SUM (tmpMIContainer_Summ.Amount_Count) <> 0
                           THEN SUM (CASE WHEN tmpMIContainer_Summ.isActive = TRUE THEN 1 ELSE -1 END * tmpMIContainer_Summ.Amount) / SUM (tmpMIContainer_Summ.Amount_Count)
@@ -548,72 +566,72 @@ BEGIN
                 , tmpMIContainer_Summ.isInfoMoneyDetail
 
             FROM tmpMIContainer_Summ
-                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Juridical
-                                               ON ContainerLinkObject_Juridical.ContainerId = tmpMIContainer_Summ.ContainerId_find
-                                              AND ContainerLinkObject_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Partner
-                                               ON ContainerLinkObject_Partner.ContainerId = tmpMIContainer_Summ.ContainerId_find
-                                              AND ContainerLinkObject_Partner.DescId = zc_ContainerLinkObject_Partner()
-                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Founder
-                                               ON ContainerLinkObject_Founder.ContainerId = tmpMIContainer_Summ.ContainerId_find
-                                              AND ContainerLinkObject_Founder.DescId = zc_ContainerLinkObject_Founder()
-                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Member
-                                               ON ContainerLinkObject_Member.ContainerId = tmpMIContainer_Summ.ContainerId_find
-                                              AND ContainerLinkObject_Member.DescId = zc_ContainerLinkObject_Member()
-                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Unit
-                                               ON ContainerLinkObject_Unit.ContainerId = tmpMIContainer_Summ.ContainerId_find
-                                              AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
-                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Car
-                                               ON ContainerLinkObject_Car.ContainerId = tmpMIContainer_Summ.ContainerId_find
-                                              AND ContainerLinkObject_Car.DescId = zc_ContainerLinkObject_Car()
-                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Cash
-                                               ON ContainerLinkObject_Cash.ContainerId = tmpMIContainer_Summ.ContainerId_find
-                                              AND ContainerLinkObject_Cash.DescId = zc_ContainerLinkObject_Cash()
-                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_BankAccount
-                                               ON ContainerLinkObject_BankAccount.ContainerId = tmpMIContainer_Summ.ContainerId_find
-                                              AND ContainerLinkObject_BankAccount.DescId = zc_ContainerLinkObject_BankAccount()
-
-                 LEFT JOIN ContainerLinkObject AS ContainerLO_Branch
-                                               ON ContainerLO_Branch.ContainerId = tmpMIContainer_Summ.ContainerId
-                                              AND ContainerLO_Branch.DescId = zc_ContainerLinkObject_Branch()
-                 LEFT JOIN ContainerLinkObject AS ContainerLO_JuridicalBasis
-                                               ON ContainerLO_JuridicalBasis.ContainerId = tmpMIContainer_Summ.ContainerId
-                                              AND ContainerLO_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
-                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Business
-                                               ON ContainerLinkObject_Business.ContainerId = tmpMIContainer_Summ.ContainerId -- tmpMIContainer_Summ.ContainerId_find
-                                              AND ContainerLinkObject_Business.DescId = zc_ContainerLinkObject_Business()
-                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_ProfitLoss
-                                               ON ContainerLinkObject_ProfitLoss.ContainerId = tmpMIContainer_Summ.ContainerId
-                                              AND ContainerLinkObject_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss()
-                 -- вот так "просто" выбираем филиал
-                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
-                                                  ON MILinkObject_Branch.MovementItemId = tmpMIContainer_Summ.MovementItemId -- MIReport_MI.MovementItemId -- COALESCE (MovementItemContainer.MovementItemId, MIReport_MI.MovementItemId)
-                                                 AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
-                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Branch
-                                              ON MovementLinkObject_Branch.MovementId = tmpMIContainer_Summ.MovementId
-                                             AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()
-
-                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Currency
-                                               ON ContainerLinkObject_Currency.ContainerId = tmpMIContainer_Summ.ContainerId
-                                              AND ContainerLinkObject_Currency.DescId = zc_ContainerLinkObject_Currency()
-
-                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_PaidKind
-                                               ON ContainerLinkObject_PaidKind.ContainerId = tmpMIContainer_Summ.ContainerId
-                                              AND ContainerLinkObject_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
-
-                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
-                                               ON ContainerLinkObject_InfoMoney.ContainerId = tmpMIContainer_Summ.ContainerId_find
-                                              AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
-                                               ON ContainerLinkObject_InfoMoneyDetail.ContainerId = tmpMIContainer_Summ.ContainerId_find
-                                              AND ContainerLinkObject_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
+                 LEFT JOIN tmpCLO_find AS ContainerLinkObject_Juridical
+                                        ON ContainerLinkObject_Juridical.ContainerId = tmpMIContainer_Summ.ContainerId_find
+                                       AND ContainerLinkObject_Juridical.DescId      = zc_ContainerLinkObject_Juridical()
+                 LEFT JOIN tmpCLO_find AS ContainerLinkObject_Partner
+                                        ON ContainerLinkObject_Partner.ContainerId = tmpMIContainer_Summ.ContainerId_find
+                                       AND ContainerLinkObject_Partner.DescId      = zc_ContainerLinkObject_Partner()
+                 LEFT JOIN tmpCLO_find AS ContainerLinkObject_Founder
+                                        ON ContainerLinkObject_Founder.ContainerId = tmpMIContainer_Summ.ContainerId_find
+                                       AND ContainerLinkObject_Founder.DescId      = zc_ContainerLinkObject_Founder()
+                 LEFT JOIN tmpCLO_find AS ContainerLinkObject_Member
+                                       ON ContainerLinkObject_Member.ContainerId = tmpMIContainer_Summ.ContainerId_find
+                                      AND ContainerLinkObject_Member.DescId      = zc_ContainerLinkObject_Member()
+                 LEFT JOIN tmpCLO_find AS ContainerLinkObject_Unit
+                                       ON ContainerLinkObject_Unit.ContainerId = tmpMIContainer_Summ.ContainerId_find
+                                      AND ContainerLinkObject_Unit.DescId      = zc_ContainerLinkObject_Unit()
+                 LEFT JOIN tmpCLO_find AS ContainerLinkObject_Car
+                                       ON ContainerLinkObject_Car.ContainerId = tmpMIContainer_Summ.ContainerId_find
+                                      AND ContainerLinkObject_Car.DescId      = zc_ContainerLinkObject_Car()
+                 LEFT JOIN tmpCLO_find AS ContainerLinkObject_Cash
+                                       ON ContainerLinkObject_Cash.ContainerId = tmpMIContainer_Summ.ContainerId_find
+                                      AND ContainerLinkObject_Cash.DescId      = zc_ContainerLinkObject_Cash()
+                 LEFT JOIN tmpCLO_find AS ContainerLinkObject_BankAccount
+                                       ON ContainerLinkObject_BankAccount.ContainerId = tmpMIContainer_Summ.ContainerId_find
+                                      AND ContainerLinkObject_BankAccount.DescId      = zc_ContainerLinkObject_BankAccount()
+                 LEFT JOIN tmpCLO_find AS ContainerLinkObject_InfoMoney
+                                       ON ContainerLinkObject_InfoMoney.ContainerId = tmpMIContainer_Summ.ContainerId_find
+                                      AND ContainerLinkObject_InfoMoney.DescId      = zc_ContainerLinkObject_InfoMoney()
+                 LEFT JOIN tmpCLO_find AS ContainerLinkObject_InfoMoneyDetail
+                                       ON ContainerLinkObject_InfoMoneyDetail.ContainerId = tmpMIContainer_Summ.ContainerId_find
+                                      AND ContainerLinkObject_InfoMoneyDetail.DescId      = zc_ContainerLinkObject_InfoMoneyDetail()
                                               -- AND 1=0
+
+                 LEFT JOIN tmpCLO AS ContainerLO_Branch
+                                               ON ContainerLO_Branch.ContainerId = tmpMIContainer_Summ.ContainerId
+                                              AND ContainerLO_Branch.DescId      = zc_ContainerLinkObject_Branch()
+                 LEFT JOIN tmpCLO AS ContainerLO_JuridicalBasis
+                                               ON ContainerLO_JuridicalBasis.ContainerId = tmpMIContainer_Summ.ContainerId
+                                              AND ContainerLO_JuridicalBasis.DescId      = zc_ContainerLinkObject_JuridicalBasis()
+                 LEFT JOIN tmpCLO AS ContainerLinkObject_Business
+                                               ON ContainerLinkObject_Business.ContainerId = tmpMIContainer_Summ.ContainerId -- tmpMIContainer_Summ.ContainerId_find
+                                              AND ContainerLinkObject_Business.DescId      = zc_ContainerLinkObject_Business()
+                 LEFT JOIN tmpCLO AS ContainerLinkObject_ProfitLoss
+                                               ON ContainerLinkObject_ProfitLoss.ContainerId = tmpMIContainer_Summ.ContainerId
+                                              AND ContainerLinkObject_ProfitLoss.DescId      = zc_ContainerLinkObject_ProfitLoss()
+                 LEFT JOIN tmpCLO AS ContainerLinkObject_Currency
+                                               ON ContainerLinkObject_Currency.ContainerId = tmpMIContainer_Summ.ContainerId
+                                              AND ContainerLinkObject_Currency.DescId      = zc_ContainerLinkObject_Currency()
+                 LEFT JOIN tmpCLO AS ContainerLinkObject_PaidKind
+                                               ON ContainerLinkObject_PaidKind.ContainerId = tmpMIContainer_Summ.ContainerId
+                                              AND ContainerLinkObject_PaidKind.DescId      = zc_ContainerLinkObject_PaidKind()
+
+                 -- вот так "просто" выбираем филиал
+                 LEFT JOIN tmpMILO_Branch AS MILinkObject_Branch
+                                          ON MILinkObject_Branch.MovementItemId = tmpMIContainer_Summ.MovementItemId -- MIReport_MI.MovementItemId -- COALESCE (MovementItemContainer.MovementItemId, MIReport_MI.MovementItemId)
+                                      -- AND MILinkObject_Branch.DescId         = zc_MILinkObject_Branch()
+                 LEFT JOIN tmpMLO_Branch AS MovementLinkObject_Branch
+                                         ON MovementLinkObject_Branch.MovementId = tmpMIContainer_Summ.MovementId
+                                     -- AND MovementLinkObject_Branch.DescId     = zc_MovementLinkObject_Branch()
+
            ) AS tmpMIContainer_Summ
 
                  LEFT JOIN tmpPrice_ProductionSeparate ON tmpPrice_ProductionSeparate.MovementItemId = tmpMIContainer_Summ.MovementItemId
                  -- LEFT JOIN tmpPrice_ProductionSeparate ON tmpPrice_ProductionSeparate.Id = tmpMIContainer_Summ.Id
 
-                 LEFT JOIN Object_ProfitLoss_View ON Object_ProfitLoss_View.ProfitLossId = tmpMIContainer_Summ.ProfitLossId
+                 LEFT JOIN tmpProfitLoss_View AS Object_ProfitLoss_View ON Object_ProfitLoss_View.ProfitLossId = tmpMIContainer_Summ.ProfitLossId
+
                  LEFT JOIN Object AS Object_Direction ON Object_Direction.Id = tmpMIContainer_Summ.DirectionId
                  LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = tmpMIContainer_Summ.DestinationId
                  LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpMIContainer_Summ.PartnerId
@@ -623,8 +641,8 @@ BEGIN
                  LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpMIContainer_Summ.BranchId
                  LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpMIContainer_Summ.PaidKindId
 
-                 LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpMIContainer_Summ.InfoMoneyId
-                 LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_Detail ON View_InfoMoney_Detail.InfoMoneyId = tmpMIContainer_Summ.InfoMoneyId_Detail
+                 LEFT JOIN tmpInfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpMIContainer_Summ.InfoMoneyId
+                 LEFT JOIN tmpInfoMoney_View AS View_InfoMoney_Detail ON View_InfoMoney_Detail.InfoMoneyId = tmpMIContainer_Summ.InfoMoneyId_Detail
 
                  LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                       ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpMIContainer_Summ.DestinationId
@@ -703,12 +721,11 @@ BEGIN
            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = tmpMovementItemContainer.CurrencyId
      ;
      END IF;
-     
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_MovementItemContainer_Movement (Integer, Boolean, Boolean, Boolean, TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
