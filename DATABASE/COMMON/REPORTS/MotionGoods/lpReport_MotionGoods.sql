@@ -461,7 +461,9 @@ BEGIN
                                        , _tmpContainer.AccountId
                                        , _tmpContainer.AccountGroupId
 
-                                       , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_SendOnPrice(), zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                       , CASE WHEN MovementBoolean_Peresort.ValueData = TRUE
+                                                   THEN -1
+                                              WHEN MIContainer.MovementDescId IN (zc_Movement_SendOnPrice(), zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
                                                AND inIsInfoMoney = FALSE
                                                    THEN MIContainer.ObjectExtId_Analyzer -- MIContainer.AnalyzerId
                                               ELSE 0
@@ -865,7 +867,11 @@ BEGIN
                                        LEFT JOIN MovementBoolean AS MovementBoolean_HistoryCost
                                                                  ON MovementBoolean_HistoryCost.MovementId = MIContainer.MovementId
                                                                 AND MovementBoolean_HistoryCost.DescId = zc_MovementBoolean_HistoryCost()
+                                       LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
+                                                                 ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
+                                                                AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
                          
+                                  WHERE MovementBoolean_Peresort.MovementId IS NULL -- !!!убрали Пересортицу!!!
                                   GROUP BY _tmpContainer.ContainerDescId
                                          , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_count ELSE 0 END
                                          , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_begin ELSE 0 END
@@ -877,7 +883,9 @@ BEGIN
                                          , _tmpContainer.AssetToId
                                          , _tmpContainer.AccountId
                                          , _tmpContainer.AccountGroupId
-                                         , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_SendOnPrice(), zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                         , CASE WHEN MovementBoolean_Peresort.ValueData = TRUE
+                                                     THEN -1
+                                                WHEN MIContainer.MovementDescId IN (zc_Movement_SendOnPrice(), zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
                                                  AND inIsInfoMoney = FALSE
                                                      THEN MIContainer.ObjectExtId_Analyzer -- MIContainer.AnalyzerId
                                                 ELSE 0

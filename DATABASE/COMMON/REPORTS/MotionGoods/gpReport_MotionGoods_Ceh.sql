@@ -160,19 +160,27 @@ BEGIN
     CREATE TEMP TABLE _tmpLocation (LocationId Integer, DescId Integer, ContainerDescId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpLocation_by (LocationId Integer) ON COMMIT DROP;
     -- таблица -
-    CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpGoods (GoodsId Integer, InfoMoneyDestinationId Integer) ON COMMIT DROP;
 
     -- товары
     IF inGoodsGroupId <> 0 AND COALESCE (inGoodsId, 0) = 0
     THEN
-        INSERT INTO _tmpGoods (GoodsId)
-          SELECT lfObject.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject;
+        INSERT INTO _tmpGoods (GoodsId, InfoMoneyDestinationId)
+          SELECT lfObject.GoodsId, 0 FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject;
     ELSE IF inGoodsId <> 0
          THEN
-             INSERT INTO _tmpGoods (GoodsId)
-               SELECT inGoodsId;
+             INSERT INTO _tmpGoods (GoodsId, InfoMoneyDestinationId)
+               SELECT inGoodsId, 0;
          END IF;
    END IF;
+   --
+   UPDATE _tmpGoods SET InfoMoneyDestinationId = View_InfoMoney.InfoMoneyDestinationId
+   FROM ObjectLink AS ObjectLink_Goods_InfoMoney
+        LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+   WHERE ObjectLink_Goods_InfoMoney.ObjectId = _tmpGoods.GoodsId
+     AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+     ;
+
 
     -- группа подразделений или подразделение или место учета (МО, Авто)
     IF inUnitGroupId <> 0 AND COALESCE (inLocationId, 0) = 0
@@ -263,6 +271,9 @@ BEGIN
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Receipt
                                                                   ON MILinkObject_Receipt.MovementItemId = MIContainer.MovementItemId
                                                                  AND MILinkObject_Receipt.DescId = zc_MILinkObject_Receipt()
+                                 LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
+                                                           ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
+                                                          AND MovementBoolean_Peresort.DescId     = zc_MovementBoolean_Peresort()
                             GROUP BY MIContainer.AnalyzerId
                                    , MIContainer.ObjectId_Analyzer
                                    , COALESCE (MILinkObject_Receipt.ObjectId, 0)
@@ -271,7 +282,13 @@ BEGIN
         , tmpOut_norm AS (-- 
                           SELECT tmpMIContainer_GP.LocationId
                                , COALESCE (ObjectLink_ReceiptChild_Goods.ChildObjectId, 0)     AS GoodsId
-                               , COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                               , CASE WHEN _tmpGoods.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
+                                                                              , zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
+                                                                              , zc_Enum_InfoMoneyDestination_30200()  -- Доходы + Мясное сырье
+                                                                               )
+                                           THEN COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, 0)
+                                      ELSE 0
+                                 END AS GoodsKindId
                                , SUM (CASE WHEN tmpMIContainer_GP.CuterCount <> 0 AND tmpMIContainer_GP.isTaxExit = TRUE
                                                 THEN tmpMIContainer_GP.CuterCount * COALESCE (ObjectFloat_Value.ValueData, 0)
                                            WHEN ObjectFloat_Value_master.ValueData <> 0
@@ -302,7 +319,13 @@ BEGIN
 
                           GROUP BY tmpMIContainer_GP.LocationId
                                  , COALESCE (ObjectLink_ReceiptChild_Goods.ChildObjectId, 0)
-                                 , COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, 0)
+                                 , CASE WHEN _tmpGoods.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
+                                                                                , zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
+                                                                                , zc_Enum_InfoMoneyDestination_30200()  -- Доходы + Мясное сырье
+                                                                                 )
+                                             THEN COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, 0)
+                                        ELSE 0
+                                   END
                           HAVING SUM (CASE WHEN ObjectFloat_Value_master.ValueData <> 0 THEN tmpMIContainer_GP.OperCount * COALESCE (ObjectFloat_Value.ValueData, 0) / ObjectFloat_Value_master.ValueData ELSE 0 END) <> 0
                          )
 
@@ -626,26 +649,28 @@ BEGIN
               , SUM (tmpMIContainer_all.CountLoss)           AS CountLoss
               , SUM (tmpMIContainer_all.CountInventory)      AS CountInventory
 
-              , SUM (tmpMIContainer_all.CountProductionIn)   AS CountProductionIn
-              , SUM (tmpMIContainer_all.CountProductionOut)  AS CountProductionOut
+              , SUM (CASE WHEN tmpMIContainer_all.LocationId_by = -1 THEN 0 ELSE tmpMIContainer_all.CountProductionIn  END) AS CountProductionIn   -- не пересорт
+              , SUM (CASE WHEN tmpMIContainer_all.LocationId_by = -1 THEN 0 ELSE tmpMIContainer_all.CountProductionOut END) AS CountProductionOut  -- не пересорт
 
-              , SUM (CASE WHEN _tmpLocation.LocationId > 0 THEN tmpMIContainer_all.CountProductionIn ELSE 0 END) AS CountProductionIn_by -- приход с произв. (если с другого подр., т.е. не пересорт)
-              , SUM (CASE WHEN _tmpLocation.LocationId > 0 THEN tmpMIContainer_all.SummProductionIn  ELSE 0 END) AS SummProductionIn_by  -- приход с произв. (если с другого подр., т.е. не пересорт)
+              , SUM (CASE WHEN _tmpLocation.LocationId > 0 AND COALESCE (tmpMIContainer_all.LocationId_by, 0) <> -1 THEN tmpMIContainer_all.CountProductionIn ELSE 0 END) AS CountProductionIn_by -- приход с произв. (если с другого подр., т.е. не пересорт)
+              , SUM (CASE WHEN _tmpLocation.LocationId > 0 AND COALESCE (tmpMIContainer_all.LocationId_by, 0) <> -1 THEN tmpMIContainer_all.SummProductionIn  ELSE 0 END) AS SummProductionIn_by  -- приход с произв. (если с другого подр., т.е. не пересорт)
 
               , SUM (CASE WHEN _tmpLocation_by.LocationId > 0 AND _tmpLocation.LocationId IS NULL
+                           AND COALESCE (tmpMIContainer_all.LocationId_by, 0) <> -1 -- не пересорт
                                THEN tmpMIContainer_all.CountSendIn
                                   + tmpMIContainer_all.CountProductionIn
                                   + tmpMIContainer_all.CountSendOnPriceIn
                           ELSE 0
                      END) AS CountIn_by -- приход с "выбранного" подр.
               , SUM (CASE WHEN _tmpLocation_by.LocationId > 0 AND _tmpLocation.LocationId IS NULL
+                           AND COALESCE (tmpMIContainer_all.LocationId_by, 0) <> -1 -- не пересорт
                                THEN tmpMIContainer_all.SummSendIn
                                   + tmpMIContainer_all.SummProductionIn
                                   + tmpMIContainer_all.SummSendOnPriceIn
                           ELSE 0
                      END) AS SummIn_by -- приход с "выбранного" подр.
 
-              , SUM (CASE WHEN _tmpLocation.LocationId IS NULL AND _tmpLocation_by.LocationId IS NULL THEN tmpMIContainer_all.CountProductionIn ELSE 0 END
+              , SUM (CASE WHEN (_tmpLocation.LocationId IS NULL AND _tmpLocation_by.LocationId IS NULL) OR tmpMIContainer_all.LocationId_by = -1 THEN tmpMIContainer_all.CountProductionIn ELSE 0 END
                    + CASE WHEN _tmpLocation_by.LocationId IS NULL
                               THEN tmpMIContainer_all.CountSendIn
                                  + tmpMIContainer_all.CountSendOnPriceIn
@@ -655,7 +680,7 @@ BEGIN
                    + tmpMIContainer_all.CountReturnIn
                    + tmpMIContainer_all.CountReturnIn_40208
                     ) AS CountOtherIn_by -- приход другой
-              , SUM (CASE WHEN _tmpLocation.LocationId IS NULL AND _tmpLocation_by.LocationId IS NULL THEN tmpMIContainer_all.SummProductionIn ELSE 0 END
+              , SUM (CASE WHEN (_tmpLocation.LocationId IS NULL AND _tmpLocation_by.LocationId IS NULL) OR tmpMIContainer_all.LocationId_by = -1 THEN tmpMIContainer_all.SummProductionIn ELSE 0 END
                    + CASE WHEN _tmpLocation_by.LocationId IS NULL
                               THEN tmpMIContainer_all.SummSendIn
                                  + tmpMIContainer_all.SummSendOnPriceIn
@@ -666,20 +691,20 @@ BEGIN
                    + tmpMIContainer_all.SummReturnIn_40208
                     ) AS SummOtherIn_by -- приход другой
 
-              , SUM (CASE WHEN _tmpLocation_by.LocationId > 0 
+              , SUM (CASE WHEN _tmpLocation_by.LocationId > 0 AND COALESCE (tmpMIContainer_all.LocationId_by, 0) <> -1
                                THEN tmpMIContainer_all.CountSendOut
                                   + tmpMIContainer_all.CountProductionOut
                                   + tmpMIContainer_all.CountSendOnPriceOut
                           ELSE 0
                      END) AS CountOut_by -- расход на "выбранное" подр.
-              , SUM (CASE WHEN _tmpLocation_by.LocationId > 0 
+              , SUM (CASE WHEN _tmpLocation_by.LocationId > 0 AND COALESCE (tmpMIContainer_all.LocationId_by, 0) <> -1
                                THEN tmpMIContainer_all.SummSendOut
                                   + tmpMIContainer_all.SummProductionOut
                                   + tmpMIContainer_all.SummSendOnPriceOut
                           ELSE 0
                      END) AS SummOut_by -- расход на "выбранное" подр.
     
-              , SUM (CASE WHEN _tmpLocation.LocationId IS NULL AND _tmpLocation_by.LocationId IS NULL THEN tmpMIContainer_all.CountProductionOut ELSE 0 END
+              , SUM (CASE WHEN (_tmpLocation.LocationId IS NULL AND _tmpLocation_by.LocationId IS NULL) OR tmpMIContainer_all.LocationId_by = -1 THEN tmpMIContainer_all.CountProductionOut ELSE 0 END
                    + CASE WHEN _tmpLocation_by.LocationId IS NULL
                                THEN tmpMIContainer_all.CountSendOut
                                   + tmpMIContainer_all.CountSendOnPriceOut
@@ -691,7 +716,7 @@ BEGIN
                    + tmpMIContainer_all.CountSale_40208
                    + tmpMIContainer_all.CountLoss
                     ) AS CountOtherOut_by -- расход другой
-              , SUM (CASE WHEN _tmpLocation.LocationId IS NULL AND _tmpLocation_by.LocationId IS NULL THEN tmpMIContainer_all.SummProductionOut ELSE 0 END
+              , SUM (CASE WHEN (_tmpLocation.LocationId IS NULL AND _tmpLocation_by.LocationId IS NULL) OR tmpMIContainer_all.LocationId_by = -1 THEN tmpMIContainer_all.SummProductionOut ELSE 0 END
                    + CASE WHEN _tmpLocation_by.LocationId IS NULL
                                THEN tmpMIContainer_all.SummSendOut
                                   + tmpMIContainer_all.SummSendOnPriceOut
@@ -736,8 +761,9 @@ BEGIN
               , SUM (tmpMIContainer_all.SummLoss)            AS SummLoss
               , SUM (tmpMIContainer_all.SummInventory)       AS SummInventory
               , SUM (tmpMIContainer_all.SummInventory_RePrice) AS SummInventory_RePrice
-              , SUM (tmpMIContainer_all.SummProductionIn)    AS SummProductionIn
-              , SUM (tmpMIContainer_all.SummProductionOut)   AS SummProductionOut
+
+              , SUM (CASE WHEN tmpMIContainer_all.LocationId_by = -1 THEN 0 ELSE tmpMIContainer_all.SummProductionIn  END) AS SummProductionIn   -- не пересорт
+              , SUM (CASE WHEN tmpMIContainer_all.LocationId_by = -1 THEN 0 ELSE tmpMIContainer_all.SummProductionOut END) AS SummProductionOut  -- не пересорт
 
               , SUM (tmpMIContainer_all.SummIncome
                    + tmpMIContainer_all.SummSendIn
@@ -913,4 +939,4 @@ ALTER FUNCTION gpReport_MotionGoods_Ceh (TDateTime, TDateTime, Integer, Integer,
 
 -- тест
 -- SELECT * FROM gpReport_MotionGoods_Ceh (inStartDate:= '01.01.2015', inEndDate:= '01.01.2015', inAccountGroupId:= 0, inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 0, inUnitGroupId_by:=0, inLocationId_by:= 0, inIsInfoMoney:= FALSE, inSession:= zfCalc_UserAdmin())
--- SELECT * from gpReport_MotionGoods_Ceh (inStartDate:= '01.08.2015', inEndDate:= '08.08.2015', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 , inUnitGroupId_by:=0, inLocationId_by:= 0, inIsInfoMoney:= TRUE, inSession := zfCalc_UserAdmin());
+-- SELECT * from gpReport_MotionGoods_Ceh (inStartDate:= '01.08.2018', inEndDate:= '01.08.2018', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 , inUnitGroupId_by:=0, inLocationId_by:= 0, inIsInfoMoney:= TRUE, inSession := zfCalc_UserAdmin());
