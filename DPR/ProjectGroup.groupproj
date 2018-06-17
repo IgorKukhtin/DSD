@@ -66,6 +66,9 @@
 			<Projects Include="Load_PostgreSqlBoutique.dproj">
 				<Dependencies/>
 			</Projects>
+			<Projects Include="Load_Repl.dproj">
+				<Dependencies/>
+			</Projects>
 			<Projects Include="EDIOrdersLoader.dproj">
 				<Dependencies/>
 			</Projects>
@@ -266,6 +269,15 @@
 		<Target Name="Load_PostgreSqlBoutique:Make">
 			<MSBuild Projects="Load_PostgreSqlBoutique.dproj" Targets="Make"/>
 		</Target>
+		<Target Name="Load_Repl">
+			<MSBuild Projects="Load_Repl.dproj"/>
+		</Target>
+		<Target Name="Load_Repl:Clean">
+			<MSBuild Projects="Load_Repl.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="Load_Repl:Make">
+			<MSBuild Projects="Load_Repl.dproj" Targets="Make"/>
+		</Target>
 		<Target Name="EDIOrdersLoader">
 			<MSBuild Projects="EDIOrdersLoader.dproj"/>
 		</Target>
@@ -276,13 +288,13 @@
 			<MSBuild Projects="EDIOrdersLoader.dproj" Targets="Make"/>
 		</Target>
 		<Target Name="Build">
-			<CallTarget Targets="ProjectComponent;ProjectDesignComponent;ProjectTest;Project;Load_PostgreSql;Load_Farmacy;FarmacyTest;Farmacy;FarmacyCash;FarmacyCashServise;ProjectCom;Scale;ScaleCeh;GetEmail;GetEmailMMO;GetEmailTEST;SavePriceToXls;ExportSalesForSuppliers;Boutique;BoutiqueTest;Load_PostgreSqlBoutique;EDIOrdersLoader"/>
+			<CallTarget Targets="ProjectComponent;ProjectDesignComponent;ProjectTest;Project;Load_PostgreSql;Load_Farmacy;FarmacyTest;Farmacy;FarmacyCash;FarmacyCashServise;ProjectCom;Scale;ScaleCeh;GetEmail;GetEmailMMO;GetEmailTEST;SavePriceToXls;ExportSalesForSuppliers;Boutique;BoutiqueTest;Load_PostgreSqlBoutique;Load_Repl;EDIOrdersLoader"/>
 		</Target>
 		<Target Name="Clean">
-			<CallTarget Targets="ProjectComponent:Clean;ProjectDesignComponent:Clean;ProjectTest:Clean;Project:Clean;Load_PostgreSql:Clean;Load_Farmacy:Clean;FarmacyTest:Clean;Farmacy:Clean;FarmacyCash:Clean;FarmacyCashServise:Clean;ProjectCom:Clean;Scale:Clean;ScaleCeh:Clean;GetEmail:Clean;GetEmailMMO:Clean;GetEmailTEST:Clean;SavePriceToXls:Clean;ExportSalesForSuppliers:Clean;Boutique:Clean;BoutiqueTest:Clean;Load_PostgreSqlBoutique:Clean;EDIOrdersLoader:Clean"/>
+			<CallTarget Targets="ProjectComponent:Clean;ProjectDesignComponent:Clean;ProjectTest:Clean;Project:Clean;Load_PostgreSql:Clean;Load_Farmacy:Clean;FarmacyTest:Clean;Farmacy:Clean;FarmacyCash:Clean;FarmacyCashServise:Clean;ProjectCom:Clean;Scale:Clean;ScaleCeh:Clean;GetEmail:Clean;GetEmailMMO:Clean;GetEmailTEST:Clean;SavePriceToXls:Clean;ExportSalesForSuppliers:Clean;Boutique:Clean;BoutiqueTest:Clean;Load_PostgreSqlBoutique:Clean;Load_Repl:Clean;EDIOrdersLoader:Clean"/>
 		</Target>
 		<Target Name="Make">
-			<CallTarget Targets="ProjectComponent:Make;ProjectDesignComponent:Make;ProjectTest:Make;Project:Make;Load_PostgreSql:Make;Load_Farmacy:Make;FarmacyTest:Make;Farmacy:Make;FarmacyCash:Make;FarmacyCashServise:Make;ProjectCom:Make;Scale:Make;ScaleCeh:Make;GetEmail:Make;GetEmailMMO:Make;GetEmailTEST:Make;SavePriceToXls:Make;ExportSalesForSuppliers:Make;Boutique:Make;BoutiqueTest:Make;Load_PostgreSqlBoutique:Make;EDIOrdersLoader:Make"/>
+			<CallTarget Targets="ProjectComponent:Make;ProjectDesignComponent:Make;ProjectTest:Make;Project:Make;Load_PostgreSql:Make;Load_Farmacy:Make;FarmacyTest:Make;Farmacy:Make;FarmacyCash:Make;FarmacyCashServise:Make;ProjectCom:Make;Scale:Make;ScaleCeh:Make;GetEmail:Make;GetEmailMMO:Make;GetEmailTEST:Make;SavePriceToXls:Make;ExportSalesForSuppliers:Make;Boutique:Make;BoutiqueTest:Make;Load_PostgreSqlBoutique:Make;Load_Repl:Make;EDIOrdersLoader:Make"/>
 		</Target>
 		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')" Project="$(BDS)\Bin\CodeGear.Group.Targets"/>
 	</Project>
