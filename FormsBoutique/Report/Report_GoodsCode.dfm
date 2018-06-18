@@ -1110,6 +1110,7 @@ inherited Report_GoodsCodeForm: TReport_GoodsCodeForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     inherited actRefresh: TdsdDataSetRefresh
@@ -1571,6 +1572,14 @@ inherited Report_GoodsCodeForm: TReport_GoodsCodeForm
         item
           Visible = True
           ItemName = 'bbReport_CollationByPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenDocument'
         end
         item
           Visible = True

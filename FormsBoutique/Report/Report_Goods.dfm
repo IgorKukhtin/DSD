@@ -6,7 +6,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1211
-  ExplicitHeight = 508
+  ExplicitHeight = 511
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1583,6 +1583,14 @@ inherited Report_GoodsForm: TReport_GoodsForm
         item
           Visible = True
           ItemName = 'bbReport_CollationByPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenDocument'
         end
         item
           Visible = True
