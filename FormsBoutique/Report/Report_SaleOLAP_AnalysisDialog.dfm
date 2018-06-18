@@ -3,8 +3,8 @@ object Report_SaleOLAP_AnalysisDialogForm: TReport_SaleOLAP_AnalysisDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078'>'
-  ClientHeight = 346
-  ClientWidth = 400
+  ClientHeight = 381
+  ClientWidth = 393
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,8 +18,8 @@ object Report_SaleOLAP_AnalysisDialogForm: TReport_SaleOLAP_AnalysisDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 102
-    Top = 308
+    Left = 96
+    Top = 348
     Width = 75
     Height = 24
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_SaleOLAP_AnalysisDialogForm: TReport_SaleOLAP_AnalysisDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 231
-    Top = 308
+    Left = 225
+    Top = 348
     Width = 75
     Height = 24
     Caption = #1054#1090#1084#1077#1085#1072
@@ -203,6 +203,23 @@ object Report_SaleOLAP_AnalysisDialogForm: TReport_SaleOLAP_AnalysisDialogForm
     TabOrder = 20
     Width = 130
   end
+  object cxLabel9: TcxLabel
+    Left = 25
+    Top = 283
+    Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
+  end
+  object edGoodsGroup: TcxButtonEdit
+    Left = 25
+    Top = 302
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 22
+    Width = 350
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -223,8 +240,8 @@ object Report_SaleOLAP_AnalysisDialogForm: TReport_SaleOLAP_AnalysisDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 321
-    Top = 301
+    Left = 315
+    Top = 341
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -367,9 +384,26 @@ object Report_SaleOLAP_AnalysisDialogForm: TReport_SaleOLAP_AnalysisDialogForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupId'
+        Value = Null
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupName'
+        Value = Null
+        Component = GuidesGoodsGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 39
-    Top = 295
+    Left = 33
+    Top = 335
   end
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'
@@ -580,5 +614,35 @@ object Report_SaleOLAP_AnalysisDialogForm: TReport_SaleOLAP_AnalysisDialogForm
       end>
     Left = 357
     Top = 5
+  end
+  object GuidesGoodsGroup: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsGroup
+    FormNameParam.Value = 'TGoodsGroupForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsGroupForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 209
+    Top = 296
   end
 end

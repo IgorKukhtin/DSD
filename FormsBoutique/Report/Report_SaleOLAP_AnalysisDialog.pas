@@ -44,6 +44,9 @@ type
     cbMark: TcxCheckBox;
     cbPeriodAll: TcxCheckBox;
     cbYear: TcxCheckBox;
+    GuidesGoodsGroup: TdsdGuides;
+    cxLabel9: TcxLabel;
+    edGoodsGroup: TcxButtonEdit;
   private
     { Private declarations }
   public

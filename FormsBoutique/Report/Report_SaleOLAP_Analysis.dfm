@@ -1,30 +1,30 @@
 inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078'>'
   ClientHeight = 473
-  ClientWidth = 1050
+  ClientWidth = 1150
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1066
+  ExplicitWidth = 1166
   ExplicitHeight = 511
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 81
-    Width = 1050
+    Width = 1150
     Height = 392
     TabOrder = 3
     ExplicitTop = 81
     ExplicitWidth = 1050
     ExplicitHeight = 392
     ClientRectBottom = 392
-    ClientRectRight = 1050
+    ClientRectRight = 1150
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1050
       ExplicitHeight = 392
       inherited cxGrid: TcxGrid
         Top = 83
-        Width = 1050
+        Width = 1150
         Height = 309
         ExplicitTop = 83
         ExplicitWidth = 1050
@@ -2400,7 +2400,7 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
           end
           object Ord3: TcxGridDBColumn
             Caption = #8470' '#1087'/'#1087
-            DataBinding.FieldName = 'Ord2'
+            DataBinding.FieldName = 'Ord3'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1051#1080#1085#1080#1080
@@ -2429,9 +2429,9 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
             Options.Editing = False
             Width = 95
           end
-          object GoodsGroupNameFull: TcxGridDBColumn
+          object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
-            DataBinding.FieldName = 'GoodsGroupNameFull'
+            DataBinding.FieldName = 'GoodsGroupName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -5191,11 +5191,12 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
-        Width = 1050
+        Width = 1150
         Height = 75
         Align = alTop
         PopupMenu = PopupMenu
         TabOrder = 2
+        ExplicitWidth = 1050
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource
@@ -5784,16 +5785,17 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 75
-        Width = 1050
+        Width = 1150
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer9Style'
         AlignSplitter = salTop
         Control = cxGrid1
+        ExplicitWidth = 1050
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1050
+    Width = 1150
     Height = 55
     ExplicitWidth = 1050
     ExplicitHeight = 55
@@ -5899,18 +5901,18 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
       Width = 155
     end
     object cxLabel6: TcxLabel
-      Left = 800
-      Top = 6
+      Left = 791
+      Top = 32
       Caption = #1043#1086#1076' '#1089' ...'
     end
     object cxLabel7: TcxLabel
-      Left = 793
-      Top = 31
+      Left = 892
+      Top = 32
       Caption = #1043#1086#1076' '#1087#1086' ...'
     end
     object edStartYear: TcxButtonEdit
-      Left = 847
-      Top = 5
+      Left = 835
+      Top = 31
       Properties.Buttons = <
         item
           Default = True
@@ -5921,7 +5923,7 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
       Width = 50
     end
     object edEndYear: TcxButtonEdit
-      Left = 847
+      Left = 943
       Top = 31
       TabStop = False
       Properties.Buttons = <
@@ -5934,7 +5936,7 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
       Width = 50
     end
     object cbMark: TcxCheckBox
-      Left = 906
+      Left = 996
       Top = 5
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1058#1054#1051#1068#1050#1054' '#1076#1083#1103' '#1057#1055#1048#1057#1050#1040' '#1055#1072#1088#1090#1080#1081'/'#1058#1086#1074#1072#1088#1086#1074
       Caption = #1057#1087#1080#1089#1086#1082' '#1055'/'#1058
@@ -5956,7 +5958,7 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
       Width = 100
     end
     object cbYear: TcxCheckBox
-      Left = 906
+      Left = 996
       Top = 31
       Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052' ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052
@@ -5966,6 +5968,23 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
       TabOrder = 18
       Width = 130
     end
+  end
+  object cxLabel9: TcxLabel [2]
+    Left = 787
+    Top = 6
+    Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074'.:'
+  end
+  object edGoodsGroup: TcxButtonEdit [3]
+    Left = 854
+    Top = 5
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 139
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -6011,6 +6030,12 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
       end
       item
         Component = GuidesEndYear
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesGoodsGroup
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -6066,13 +6091,13 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
       ImageIndex = 21
       DataSets = <
         item
-          DataSet = MasterCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'LineFabricaName;GroupsName3;LabelName;GoodsCode;GoodsInfoName'
+          GridView = cxGridDBTableView
         end
         item
-          DataSet = ClientDataSet
           UserName = 'frxDBDChild'
+          GridView = cxGridDBTableView1
         end>
       Params = <
         item
@@ -6159,13 +6184,13 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
       ImageIndex = 16
       DataSets = <
         item
-          DataSet = MasterCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GroupsName3;LabelName;GoodsCode;GoodsInfoName'
+          GridView = cxGridDBTableView
         end
         item
-          DataSet = ClientDataSet
           UserName = 'frxDBDChild'
+          GridView = cxGridDBTableView1
         end>
       Params = <
         item
@@ -6252,9 +6277,9 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
       ImageIndex = 22
       DataSets = <
         item
-          DataSet = MasterCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'BrandName'
+          GridView = cxGridDBTableView
         end>
       Params = <
         item
@@ -6336,13 +6361,13 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
       ImageIndex = 3
       DataSets = <
         item
-          DataSet = MasterCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'LabelName;GoodsCode;GoodsInfoName'
+          GridView = cxGridDBTableView
         end
         item
-          DataSet = ClientDataSet
           UserName = 'frxDBDChild'
+          GridView = cxGridDBTableView1
         end>
       Params = <
         item
@@ -6555,6 +6580,23 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupId'
+          Value = Null
+          Component = GuidesGoodsGroup
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = Null
+          Component = GuidesGoodsGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -6762,6 +6804,14 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
         Name = 'inEndYear'
         Value = Null
         Component = GuidesEndYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsGroupId'
+        Value = Null
+        Component = GuidesGoodsGroup
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -7471,6 +7521,9 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
       end
       item
         Component = GuidesEndYear
+      end
+      item
+        Component = GuidesGoodsGroup
       end>
     Left = 352
     Top = 352
@@ -7502,7 +7555,7 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 360
+    Left = 400
   end
   object getMovementForm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Form'
@@ -7772,8 +7825,8 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 861
-    Top = 19
+    Left = 885
+    Top = 59
   end
   object GuidesStartYear: TdsdGuides
     KeyField = 'Id'
@@ -7804,5 +7857,34 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
       end>
     Left = 810
     Top = 57
+  end
+  object GuidesGoodsGroup: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsGroup
+    FormNameParam.Value = 'TGoodsGroupForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsGroupForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 912
   end
 end

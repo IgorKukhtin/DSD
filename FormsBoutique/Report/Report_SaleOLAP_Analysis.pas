@@ -82,6 +82,9 @@ type
     bbPrintLine: TdxBarButton;
     actPrintBrand: TdsdPrintAction;
     bbPrintBrand: TdxBarButton;
+    cxLabel9: TcxLabel;
+    edGoodsGroup: TcxButtonEdit;
+    GuidesGoodsGroup: TdsdGuides;
   private
     { Private declarations }
   public

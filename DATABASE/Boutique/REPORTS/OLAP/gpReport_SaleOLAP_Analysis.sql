@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpReport_SaleOLAP_Analysis (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_SaleOLAP_Analysis (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_SaleOLAP_Analysis (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_SaleOLAP_Analysis (
     IN inStartDate        TDateTime,  -- Дата начала
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpReport_SaleOLAP_Analysis (
     IN inPeriodId         Integer  ,  --
     IN inStartYear        Integer  ,
     IN inEndYear          Integer  ,
+    IN inGoodsGroupId     Integer  , -- группа товаров
     IN inIsPeriodAll      Boolean  , -- ограничение за Весь период (Да/Нет) (движение по Документам)
     IN inIsYear           Boolean  , -- ограничение Год ТМ (Да/Нет) (выбор партий)
     IN inIsMark           Boolean  , -- показать только отмеченные товары(Да/Нет)
@@ -110,7 +112,11 @@ BEGIN
                         , Result_Summ_prof_curr
                         , Result_Summ_10200_curr
                         )
-                        
+        WITH tmpGoods AS (SELECT tmp.GoodsId
+                          FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS tmp
+                          WHERE COALESCE (inGoodsGroupId, 0) <> 0
+                          )
+
              SELECT tmpOlap.BrandName
                   , tmpOlap.GoodsGroupName
                   , tmpOlap.LabelName
@@ -145,6 +151,9 @@ BEGIN
                                    , inIsYear:= inIsYear, inIsPeriodAll:= inIsPeriodAll, inIsGoods:= TRUE, inIsSize:= TRUE
                                    , inIsClient_doc:= FALSE, inIsOperDate_doc:= FALSE, inIsDay_doc:= FALSE, inIsOperPrice:= FALSE
                                    , inIsDiscount:= FALSE, inIsMark:= inIsMark, inSession:= inSession) AS tmpOlap
+                  LEFT JOIN tmpGoods ON tmpGoods.GoodsId = tmpOlap.GoodsId
+             WHERE (tmpGoods.GoodsId IS NULL AND inGoodsGroupId = 0)
+                OR (tmpGoods.GoodsId IS NOT NULL AND inGoodsGroupId <> 0)
              GROUP BY tmpOlap.BrandName
                     , tmpOlap.GoodsGroupName
                     , tmpOlap.LabelName
