@@ -6,7 +6,7 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1081
-  ExplicitHeight = 460
+  ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -1191,6 +1191,26 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
       PrinterNameParam.MultiSelectSeparator = ','
       PreviewWindowMaximized = False
     end
+    object actUpdate_isChecked: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isChecked
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isChecked
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1056#1072#1079#1088#1077#1096#1080#1090#1100' / '#1086#1090#1084#1077#1085#1080#1090#1100' "'#1042#1086#1079#1074#1088#1072#1090' '#1073#1086#1083#1100#1096#1077' '#1095#1077#1084' '#1079#1072' 31 '#1076#1077#1085#1100'"'
+      Hint = #1056#1072#1079#1088#1077#1096#1080#1090#1100' / '#1086#1090#1084#1077#1085#1080#1090#1100' "'#1042#1086#1079#1074#1088#1072#1090' '#1073#1086#1083#1100#1096#1077' '#1095#1077#1084' '#1079#1072' 31 '#1076#1077#1085#1100'"'
+      ImageIndex = 77
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1088#1072#1079#1088#1077#1096#1080#1090#1100' / '#1086#1090#1084#1077#1085#1080#1090#1100' "'#1042#1086#1079#1074#1088#1072#1090' '#1073#1086#1083#1100#1096#1077' '#1095#1077#1084' '#1079#1072' 31 '#1076#1077#1085 +
+        #1100'"?'
+      InfoAfterExecute = #1056#1072#1079#1088#1077#1096#1077#1085#1086' / '#1086#1090#1084#1077#1085#1077#1085#1086
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1299,6 +1319,14 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -1355,6 +1383,10 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
     end
     object bbPrintCheck: TdxBarButton
       Action = mactPrint_Check
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actUpdate_isChecked
       Category = 0
     end
   end
@@ -1677,5 +1709,31 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
     PackSize = 1
     Left = 472
     Top = 168
+  end
+  object spUpdate_isChecked: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Checked'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementItemId_Sale'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChecked'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isChecked'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 720
+    Top = 371
   end
 end

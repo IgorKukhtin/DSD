@@ -22,6 +22,7 @@ RETURNS TABLE (MovementId          Integer
              , UnitName            TVarChar
              , ClientName          TVarChar
              , PartionId           Integer
+             , MovementItemId_Sale Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , BarCode_item        TVarChar
              , GoodsGroupNameFull TVarChar, NameFull TVarChar, GoodsGroupName TVarChar
@@ -95,7 +96,8 @@ BEGIN
                      , MovementLinkObject_From.ObjectId    AS UnitId
                      , MovementLinkObject_To.ObjectId      AS ClientId
                      , MI_Master.ObjectId                  AS GoodsId
-                     , MI_Master.PartionId
+                     , MI_Master.PartionId                 AS PartionId
+                     , MI_Master.Id                        AS MI_Id_Sale
                      , COALESCE (MIFloat_ChangePercent.ValueData, 0)  AS ChangePercent
                      , COALESCE (MIFloat_OperPriceList.ValueData, 0)  AS OperPriceList
                      , MI_Master.Amount                               AS Amount
@@ -185,7 +187,8 @@ BEGIN
                          , MovementLinkObject_To.ObjectId      AS UnitId
                          , MovementLinkObject_From.ObjectId    AS ClientId
                          , MI_Master.ObjectId                  AS GoodsId
-                         , MI_Master.PartionId
+                         , MI_Master.PartionId                 AS PartionId
+                         , MI_Sale.Id                          AS MI_Id_Sale
                          , COALESCE (MIFloat_ChangePercent.ValueData, 0)         AS ChangePercent
                          , COALESCE (MIFloat_OperPriceList.ValueData, 0)         AS OperPriceList
                          , (MI_Master.Amount) * (-1)                             AS Amount
@@ -265,6 +268,7 @@ BEGIN
                           , tmp.ClientId
                           , tmp.GoodsId
                           , tmp.PartionId
+                          , tmp.MI_Id_Sale
                           , tmp.ChangePercent
                           , tmp.OperPriceList
                           , tmp.Amount
@@ -292,6 +296,7 @@ BEGIN
                           , tmp.ClientId
                           , tmp.GoodsId
                           , tmp.PartionId
+                          , tmp.MI_Id_Sale
                           , tmp.ChangePercent
                           , tmp.OperPriceList
                           , tmp.Amount
@@ -350,6 +355,7 @@ BEGIN
              , Object_Unit.ValueData          AS UnitName
              , Object_Client.ValueData        AS ClientName
              , tmpData.PartionId
+             , tmpData.MI_Id_Sale             AS MovementItemId_Sale  -- MI_Id_Sale
              , Object_Goods.Id                AS GoodsId
              , Object_Goods.ObjectCode        AS GoodsCode
              , Object_Goods.ValueData         AS GoodsName
