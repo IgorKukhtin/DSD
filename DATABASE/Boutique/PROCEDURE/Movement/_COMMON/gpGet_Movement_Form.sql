@@ -9,19 +9,19 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Form(
 RETURNS TABLE (FormName TVarChar)
 AS
 $BODY$
+     DECLARE vbUserId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_ZakazInternal());
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Form());
 
      RETURN QUERY 
        SELECT
             COALESCE(Object_Form.ValueData, '')::TVarChar    AS FromName
 
        FROM Movement                          
-       JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
-  LEFT JOIN Object AS Object_Form ON Object_Form.Id = MovementDesc.FormId
-          
+            JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+            LEFT JOIN Object AS Object_Form ON Object_Form.Id = MovementDesc.FormId
        WHERE Movement.Id = inMovementId;
   
 END;
@@ -33,6 +33,7 @@ ALTER FUNCTION gpGet_Movement_Form (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.06.18         * 
  24.01.14                        *
 
 */
