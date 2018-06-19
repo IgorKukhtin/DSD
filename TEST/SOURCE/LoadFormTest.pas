@@ -1635,7 +1635,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_AccountForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AccountDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_AccountDialogForm');
-
+  }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AccountMotionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_AccountMotionForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportHoursWorkForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TransportHoursWorkForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportHoursWorkDialogForm'));
@@ -1816,12 +1819,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_DefrosterForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_DefrosterDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_DefrosterDialogForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_PackageForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_PackageForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_PackageDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_PackageDialogForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalCompleteDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalCompleteDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalCompleteForm'));

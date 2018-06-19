@@ -1011,7 +1011,8 @@ uses
   Report_Mobile_OrderExternal_Sale in '..\..\Forms\Report\Report_Mobile_OrderExternal_Sale.pas' {Report_Mobile_OrderExternal_SaleForm: TParentForm},
   Report_SaleOrderExtList_Mobile in '..\..\Forms\Report\Report_SaleOrderExtList_Mobile.pas' {Report_SaleOrderExtList_MobileForm: TParentForm},
   Report_SaleOrderExtList_MobileDialog in '..\..\Forms\Report\Report_SaleOrderExtList_MobileDialog.pas' {Report_SaleOrderExtList_MobileDialogForm: TParentForm},
-  Report_SaleOLAP_Analysis in '..\..\FormsBoutique\Report\Report_SaleOLAP_Analysis.pas' {Report_SaleOLAP_AnalysisForm: TParentForm};
+  Report_SaleOLAP_Analysis in '..\..\FormsBoutique\Report\Report_SaleOLAP_Analysis.pas' {Report_SaleOLAP_AnalysisForm: TParentForm},
+  Report_AccountMotion in '..\..\Forms\Report\Report_AccountMotion.pas' {Report_AccountMotionForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
