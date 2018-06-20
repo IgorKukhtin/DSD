@@ -1409,11 +1409,10 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioOperDatePartner'
+        Name = 'outOperDatePartner'
         Value = 0d
         Component = edOperDatePartner
         DataType = ftDateTime
-        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -1550,10 +1549,9 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsAuto'
         Value = 'TRUE'
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 162
