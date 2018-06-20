@@ -948,6 +948,8 @@ type
     actReport_SaleOrderExtList_Mobile: TdsdOpenForm;
     miReport_SaleOrderExtList_Mobile: TMenuItem;
     N193: TMenuItem;
+    actReport_AccountMotion: TdsdOpenForm;
+    miReport_AccountMotion: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

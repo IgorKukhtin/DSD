@@ -552,9 +552,6 @@ inherited MainForm: TMainForm
     end
     inherited actProfitLossDirection: TdsdOpenForm [60]
     end
-    inherited actMovementDesc: TdsdOpenForm
-      Enabled = False
-    end
     object actMeasure: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
@@ -1332,9 +1329,6 @@ inherited MainForm: TMainForm
       inherited miServiceGuide: TMenuItem
         object miForms: TMenuItem [0]
           Action = actForms
-        end
-        inherited miMovementDesc: TMenuItem
-          Visible = False
         end
       end
       object miUser: TMenuItem [1]

@@ -1359,8 +1359,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemContainerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemContainerForm');
 //
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementDescDataForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TMovementDescDataForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementDescDataForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementDescDataForm');
 //
 //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_PeriodDialogForm'));

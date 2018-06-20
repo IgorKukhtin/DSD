@@ -75,6 +75,9 @@ type
     BarCode_item: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     spReport_BarCode: TdsdStoredProc;
+    spUpdate_isChecked: TdsdStoredProc;
+    actUpdate_isChecked: TdsdExecStoredProc;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public
