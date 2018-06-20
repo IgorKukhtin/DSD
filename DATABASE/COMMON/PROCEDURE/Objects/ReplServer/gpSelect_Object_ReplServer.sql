@@ -37,8 +37,8 @@ BEGIN
           , ObjectFloat_CountTo.ValueData         AS CountTo
           , ObjectFloat_CountFrom.ValueData       AS CountFrom
  
-          , ObjectBoolean_ErrTo.ValueData         AS isErrTo
-          , ObjectBoolean_ErrFrom.ValueData       AS isErrFrom
+          , COALESCE (ObjectBoolean_ErrTo.ValueData, FALSE)   ::Boolean  AS isErrTo
+          , COALESCE (ObjectBoolean_ErrFrom.ValueData, FALSE) ::Boolean  AS isErrFrom
  
           , Object_ReplServer.isErased            AS isErased
          
