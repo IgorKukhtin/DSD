@@ -95,8 +95,9 @@ BEGIN
      END IF;
 
      -- определяется
-     vbIsOrderDnepr:= EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (402720, zc_Enum_Role_Admin())) -- Заявки-Днепр
+     vbIsOrderDnepr:= EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (402720)) -- Заявки-Днепр
                   AND EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = vbUnitId AND Object.ObjectCode >= 30000);
+
 
 
      -- Результат

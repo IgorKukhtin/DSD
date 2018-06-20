@@ -392,7 +392,10 @@ procedure TMainCehForm.InitializeGoodsKind(GoodsKindWeighingGroupId:Integer);
 var i,i2:Integer;
 begin
      PanelGoodsKind.Visible:=(GoodsKindWeighingGroupId>0)
-                           or((SettingMain.isGoodsComplete = TRUE)and(ParamsMovement.ParamByName('DocumentKindId').asInteger <> zc_Enum_DocumentKind_CuterWeight));
+                           or((SettingMain.isGoodsComplete = TRUE)
+                           and(ParamsMovement.ParamByName('DocumentKindId').asInteger <> zc_Enum_DocumentKind_CuterWeight)
+                           and(ParamsMovement.ParamByName('DocumentKindId').asInteger <> zc_Enum_DocumentKind_RealWeight)
+                             );
      //
      //if GoodsKindWeighingGroupId = 0 then exit;
      //
@@ -680,7 +683,8 @@ begin
      end;
 
      // доопределили параметр
-     if ParamsMovement.ParamByName('DocumentKindId').AsInteger <> zc_Enum_DocumentKind_CuterWeight
+     if  (ParamsMovement.ParamByName('DocumentKindId').AsInteger <> zc_Enum_DocumentKind_CuterWeight)
+      and(ParamsMovement.ParamByName('DocumentKindId').AsInteger <> zc_Enum_DocumentKind_RealWeight)
      then ParamsMI.ParamByName('PartionGoods').AsString:=trim(EditPartionGoods.Text);
      ParamsMI.ParamByName('isStartWeighing').AsBoolean:=gbStartWeighing.ItemIndex = 0;
 
@@ -703,8 +707,9 @@ begin
      if Result then
      begin
           MovementInfo:= '';
-          if ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_CuterWeight then
-          begin
+          if (ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_CuterWeight)
+           or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealWeight)
+          then begin
                 Create_ParamsWorkProgress(ParamsWorkProgress);
 
                 ParamsWorkProgress.ParamByName('OperDate').AsDateTime:=StrToDate(PartionDateEdit.Text);
@@ -784,7 +789,8 @@ begin
           InitializeGoodsKind(ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger);
      end;
      //***myActiveControl;
-     if ParamsMovement.ParamByName('DocumentKindId').AsInteger = zc_Enum_DocumentKind_CuterWeight
+     if (ParamsMovement.ParamByName('DocumentKindId').AsInteger = zc_Enum_DocumentKind_CuterWeight)
+      or(ParamsMovement.ParamByName('DocumentKindId').AsInteger = zc_Enum_DocumentKind_RealWeight)
      then cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible := TRUE;
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('StorageLineName').Index].Visible := ParamsMovement.ParamByName('isStorageLine').AsBoolean = TRUE;
 end;
@@ -1115,7 +1121,10 @@ begin
      end;
      //
      //Схема - через справочник - для "Взвешивание п/ф факт куттера"
-     if (1=1)and(fEnterKey13=TRUE)and(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_CuterWeight) then
+     if (1=1)and(fEnterKey13=TRUE)
+     and((ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_CuterWeight)
+       or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealWeight))
+     then
      begin
           fEnterKey13:= FALSE;
 
@@ -1644,7 +1653,8 @@ procedure TMainCehForm.WriteParamsMovement;
 begin
   PanelPartionDate.Visible:=ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean=true;
   PanelStorageLine.Visible:=ParamsMovement.ParamByName('isStorageLine').asBoolean=true;
-  PanelMovementInfo.Visible:=ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_CuterWeight;
+  PanelMovementInfo.Visible:=(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_CuterWeight)
+                          or (ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealWeight);
   //
   PanelMovementDesc.Font.Color:=clBlue;
 

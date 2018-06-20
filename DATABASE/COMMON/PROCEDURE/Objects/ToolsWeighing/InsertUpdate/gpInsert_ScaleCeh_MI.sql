@@ -60,7 +60,7 @@ BEGIN
                               ) AS tmp
                         );
      -- проверка
-     IF vbDocumentKindId = zc_Enum_DocumentKind_CuterWeight()
+     IF vbDocumentKindId IN (zc_Enum_DocumentKind_CuterWeight(), zc_Enum_DocumentKind_RealWeight())
      THEN IF zfConvert_StringToNumber (inPartionGoods) = 0
           THEN
               RAISE EXCEPTION 'Ошибка.Партия прозводства ПФ-ГП не определена. <%>', inPartionGoods;
@@ -85,8 +85,8 @@ BEGIN
                                                           , inWeightSkewer2       := inWeightSkewer2
                                                           , inWeightOther         := inWeightOther
                                                           , inPartionGoodsDate    := CASE WHEN inIsPartionGoodsDate = TRUE AND COALESCE (vbDocumentKindId, 0) = 0 THEN inPartionGoodsDate ELSE NULL END :: TDateTime
-                                                          , inPartionGoods        := CASE WHEN vbDocumentKindId = zc_Enum_DocumentKind_CuterWeight() AND zfConvert_StringToNumber (inPartionGoods) > 0 THEN '' ELSE inPartionGoods END
-                                                          , inMovementItemId      := CASE WHEN vbDocumentKindId = zc_Enum_DocumentKind_CuterWeight() AND zfConvert_StringToNumber (inPartionGoods) > 0 THEN zfConvert_StringToNumber (inPartionGoods) ELSE 0 END
+                                                          , inPartionGoods        := CASE WHEN vbDocumentKindId IN (zc_Enum_DocumentKind_CuterWeight(), zc_Enum_DocumentKind_RealWeight()) AND zfConvert_StringToNumber (inPartionGoods) > 0 THEN '' ELSE inPartionGoods END
+                                                          , inMovementItemId      := CASE WHEN vbDocumentKindId IN (zc_Enum_DocumentKind_CuterWeight(), zc_Enum_DocumentKind_RealWeight()) AND zfConvert_StringToNumber (inPartionGoods) > 0 THEN zfConvert_StringToNumber (inPartionGoods) ELSE 0 END
                                                           , inGoodsKindId         := CASE WHEN (SELECT View_InfoMoney.InfoMoneyDestinationId
                                                                                                 FROM ObjectLink AS ObjectLink_Goods_InfoMoney
                                                                                                      LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId

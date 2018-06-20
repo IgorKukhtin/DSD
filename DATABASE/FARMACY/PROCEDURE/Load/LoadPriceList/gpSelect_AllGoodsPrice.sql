@@ -244,7 +244,7 @@ BEGIN
             Coalesce(ObjectBoolean_Goods_IsPromo.ValueData, False) :: Boolean   AS IsPromo,
             Object_Goods.Price    AS PriceFix_Goods
         FROM
-            lpSelectMinPrice_A llGoods(inUnitId   := inUnitId
+            lpSelectMinPrice_AllGoods(inUnitId   := inUnitId
                                     , inObjectId := -1 * vbObjectId -- !!!со знаком "-" что бы НЕ учитывать маркет. контракт!!!
                                     , inUserId   := vbUserId
                                     ) AS SelectMinPrice_AllGoods

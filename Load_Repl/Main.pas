@@ -19,11 +19,27 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  Datasnap.DBClient, cxCurrencyEdit;
 
 type
+   TReplServerItem = record
+     Id             :Integer;
+     Code           :Integer;
+     Name           :string;
+     HostName       :string;
+     Users          :string;
+     Passwords      :string;
+     Port           :string;
+     DataBases      :string;
+     Start_toChild  :TDateTime;
+     Start_fromChild:TDateTime;
+   end;
+   TArrayReplServer = array of TReplServerItem;
+
   TMainForm = class(TForm)
-    DataSource: TDataSource;
+    ObjectGUID²DS: TDataSource;
+    PanelGrid: TPanel;
     DBGrid: TDBGrid;
     ButtonPanel: TPanel;
     OKGuideButton: TButton;
@@ -31,10 +47,9 @@ type
     StopButton: TButton;
     CloseButton: TButton;
     toSqlQuery: TZQuery;
+    spSelect_ObjectGUID: TdsdStoredProc;
     toStoredProc: TdsdStoredProc;
-    toStoredProc_two: TdsdStoredProc;
     toZConnection: TZConnection;
-    toStoredProc_three: TdsdStoredProc;
     toSqlQuery_two: TZQuery;
     DatabaseSybase: TDatabase;
     fromQuery: TQuery;
@@ -46,6 +61,15 @@ type
     Splitter1: TSplitter;
     PanelReplServer: TPanel;
     rgReplServer: TRadioGroup;
+    ObjectGUIDCDS: TClientDataSet;
+    FormParams: TdsdFormParams;
+    PanelCB: TPanel;
+    cbProtocol: TCheckBox;
+    spSelect_ReplServer_load: TdsdStoredProc;
+    ReplServerCDS: TClientDataSet;
+    LabelObjectDescId: TLabel;
+    EditObjectDescId: TcxCurrencyEdit;
+    EditRecord: TcxCurrencyEdit;
 
     procedure OKGuideButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -60,8 +84,6 @@ type
     procedure EDB_EngineErrorMsg(E:EDBEngineError);
     function myExecToStoredProc_ZConnection:Boolean;
     function myExecToStoredProc:Boolean;
-    function myExecToStoredProc_two:Boolean;
-    function myExecToStoredProc_three:Boolean;
 
     procedure myShowSql(mySql:TStrings);
     procedure MyDelay(mySec:Integer);
@@ -91,6 +113,9 @@ type
     procedure myEnabledCB (cb:TCheckBox);
     procedure myDisabledCB (cb:TCheckBox);
 
+    procedure pOpen_ObjectGUID (NumConnect : Integer);
+    function gpSelect_ReplServer_load: TArrayReplServer;
+
   public
   end;
 
@@ -98,6 +123,7 @@ type
 
 var
   MainForm: TMainForm;
+  ArrayReplServer : TArrayReplServer;
 
 implementation
 uses Authentication, CommonData, Storage, SysUtils, Dialogs, Graphics, UtilConst;
@@ -109,6 +135,48 @@ var
 begin
   CreateGUID(G);
   Result := GUIDToString(G);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.gpSelect_ReplServer_load: TArrayReplServer;
+var i: integer;
+begin
+    rgReplServer.Items.Clear;
+    //
+    with spSelect_ReplServer_load do
+    begin
+       //try
+         Execute;
+         DataSet.First;
+         SetLength(Result, DataSet.RecordCount);
+         for i:= 0 to DataSet.RecordCount-1 do
+         begin
+          Result[i].Id         := DataSet.FieldByName('Id').asInteger;
+          Result[i].Code       := DataSet.FieldByName('Code').asInteger;
+          Result[i].Name       := DataSet.FieldByName('Name').asString;
+          Result[i].HostName   := DataSet.FieldByName('HostName').asString;
+          Result[i].Users      := DataSet.FieldByName('Users').asString;
+          Result[i].Passwords  := DataSet.FieldByName('Passwords').asString;
+          Result[i].Port       := DataSet.FieldByName('Port').asString;
+          Result[i].DataBases  := DataSet.FieldByName('DataBases').asString;
+          Result[i].Start_toChild   := DataSet.FieldByName('Start_toChild').asDateTime;
+          Result[i].Start_fromChild := DataSet.FieldByName('Start_fromChild').asDateTime;
+          //
+          rgReplServer.Items.Add (IntToStr(Result[i].Code) + '('+IntToStr(Result[i].Id)+')'
+                         + ' '  + Result[i].HostName
+                         + ' '  +  '('+Result[i].Port+')'
+                         + ' '  + Result[i].Users
+                         + ' '  + Result[i].DataBases
+                         + ' '  +  '('+DateTimeToStr(Result[i].Start_toChild)+')'
+                         + ' '  +  '('+DateTimeToStr(Result[i].Start_fromChild)+')'
+                                  );
+          //
+          DataSet.Next;
+         end;
+       {except
+         SetLength(Result, 0);
+         ShowMessage('Îøèáêà ïîëó÷åíèÿ - gpSelect_ReplServer_load');
+       end;}
+    end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.StopButtonClick(Sender: TObject);
@@ -348,34 +416,6 @@ begin
      result:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-function TMainForm.myExecToStoredProc_two:Boolean;
-begin
-    result:=false;
-     // toStoredProc_two.Prepared:=true;
-     // try
-     toStoredProc_two.Execute;
-     //except
-           //on E:EDBEngineError do begin EDB_EngineErrorMsg(E);exit;end;
-           //on E:EADOError do begin EADO_EngineErrorMsg(E);exit;end;
-           //exit;
-     //end;
-     result:=true;
-end;
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-function TMainForm.myExecToStoredProc_three:Boolean;
-begin
-    result:=false;
-     // toStoredProc_three.Prepared:=true;
-     // try
-     toStoredProc_three.Execute;
-     //except
-           //on E:EDBEngineError do begin EDB_EngineErrorMsg(E);exit;end;
-           //on E:EADOError do begin EADO_EngineErrorMsg(E);exit;end;
-           //exit;
-     //end;
-     result:=true;
-end;
-//----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.EADO_EngineErrorMsg(E:EADOError);
 begin
   MessageDlg(E.Message,mtError,[mbOK],0);
@@ -434,29 +474,45 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.IniConnectionTo(NumConnect : Integer) : Boolean;
-var myHostName, myUser, myPassword, myPort, myDataBase : String;
 begin
-        myHostName:= myGetWord(rgReplServer.Items[NumConnect], 1 + 1);
-        myUser    := myGetWord(rgReplServer.Items[NumConnect], 2 + 1);
-        myPassword:= myGetWord(rgReplServer.Items[NumConnect], 3 + 1);
-        myPort    := myGetWord(rgReplServer.Items[NumConnect], 4 + 1);
-        myDataBase:= myGetWord(rgReplServer.Items[NumConnect], 5 + 1);
-     //
      with toZConnection do begin
         Connected:=false;
-        HostName:= myHostName;  // 'localhost'
-        User    := myUser;      // 'postgres'
-        Password:= myPassword;  // 'postgres'
-        Port    := StrToInt(myPort);      // '5432'
-        DataBase:= myDataBase;  //  'project'
+        HostName:= ArrayReplServer[NumConnect-1].HostName;
+        User    := ArrayReplServer[NumConnect-1].Users;
+        Password:= ArrayReplServer[NumConnect-1].Passwords;
+        Port    := StrToInt(ArrayReplServer[NumConnect-1].Port);
+        DataBase:= ArrayReplServer[NumConnect-1].DataBases;
         //
         try Connected:=true; except ShowMessage ('not Connected');end;
         //
         Result:= Connected;
-        if Result then rgReplServer.ItemIndex:= NumConnect + 1 - 1
+        if Result then rgReplServer.ItemIndex:= NumConnect - 1
         else rgReplServer.ItemIndex:= 0;
 
      end;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pOpen_ObjectGUID (NumConnect : Integer);
+begin
+     with spSelect_ObjectGUID do
+     begin
+       //try
+         //
+         ParamByName('inStartDate').Value:= ArrayReplServer[NumConnect-1].Start_toChild;
+         ParamByName('inDataBaseId').Value:= ArrayReplServer[NumConnect-1].Id;
+         try ParamByName('inDescId').Value:= StrToInt(EditObjectDescId.Text); except ParamByName('inDescId').Value:= 0; end;
+         ParamByName('inIsProtocol').Value:= cbProtocol.Checked;
+         ParamByName('inIsGUID_null').Value:= false;
+         //
+         Execute;
+         //
+         EditRecord.Text:= IntToStr (Dataset.RecordCount);
+       {except
+         SetLength(Result, 0);
+         ShowMessage('Îøèáêà ïîëó÷åíèÿ - gpSelect_Scale_GoodsKindWeighing');
+       end;}
+     end;
+
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);
@@ -464,16 +520,13 @@ begin
      Gauge.Visible:=false;
      Gauge.Progress:=0;
      //
-     beginConnectionTo:= 0;
-     IniConnectionTo(beginConnectionTo);
+     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Àäìèí', 'qsxqsxw1', gc_User);
+     if not Assigned (gc_User) then ShowMessage ('not Assigned (gc_User)');
      //
+     ArrayReplServer:= gpSelect_ReplServer_load;
      //
      fStop:=true;
      //
-
-     //
-     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Àäìèí', 'qsxqsxw1', gc_User);
-     if not Assigned (gc_User) then ShowMessage ('not Assigned (gc_User)');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.OKGuideButtonClick(Sender: TObject);
@@ -493,19 +546,20 @@ begin
      tmpDate1:=NOw;
 
 
-     DataSource.DataSet:=fromQuery;
      CursorGridChange;
 
      //
      //
-     //if not fStop then pLoadGuide_Client;
+     beginConnectionTo:= 2;
+     IniConnectionTo(beginConnectionTo);
+     if not fStop then pOpen_ObjectGUID (beginConnectionTo);
      //
      //
      Gauge.Visible:=false;
      DBGrid.Enabled:=true;
      OKGuideButton.Enabled:=true;
      //
-     toZConnection.Connected:=false;
+     //toZConnection.Connected:=false;
      //
      tmpDate2:=NOw;
      if (tmpDate2-tmpDate1)>=1

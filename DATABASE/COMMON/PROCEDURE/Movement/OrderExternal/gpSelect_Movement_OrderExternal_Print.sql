@@ -28,6 +28,7 @@ $BODY$
     DECLARE vbContractId          Integer;
     DECLARE vbRetailId            Integer;
     DECLARE vbFromId              Integer;
+    DECLARE vbUnitId              Integer;
     DECLARE vbJuridicalId         Integer;
     DECLARE vbOperDate            TDateTime;
     DECLARE vbIsOrderByLine       Boolean;
@@ -49,10 +50,11 @@ BEGIN
           , COALESCE (MovementLinkObject_Contract.ObjectId, 0)       AS ContractId
           , COALESCE (MovementLinkObject_Retail.ObjectId, 0)         AS RetailId
           , COALESCE (MovementLinkObject_From.ObjectId, 0)           AS FromId
+          , COALESCE (MovementLinkObject_To.ObjectId, 0)             AS UnitId
           , ObjectLink_Partner_Juridical.ChildObjectId               AS JuridicalId
           , CASE WHEN Movement.AccessKeyId = zc_Enum_Process_AccessKey_DocumentKiev() THEN TRUE ELSE FALSE END AS isOrderByLine
             INTO vbDescId, vbStatusId, vbOperDate, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
-               , vbGoodsPropertyId, vbGoodsPropertyId_basis, vbContractId, vbRetailId, vbFromId, vbJuridicalId, vbIsOrderByLine
+               , vbGoodsPropertyId, vbGoodsPropertyId_basis, vbContractId, vbRetailId, vbFromId, vbUnitId, vbJuridicalId, vbIsOrderByLine
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -72,6 +74,9 @@ BEGIN
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                       ON MovementLinkObject_To.MovementId = Movement.Id
+                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
@@ -336,7 +341,23 @@ BEGIN
     RETURN NEXT Cursor1;
 
     OPEN Cursor2 FOR
-     WITH tmpObject_GoodsPropertyValue AS
+       WITH -- Остатки
+            tmpRemains AS (SELECT Container.ObjectId                          AS GoodsId
+                                , Container.Amount                            AS Amount
+                                , COALESCE (CLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
+                           FROM ContainerLinkObject AS CLO_Unit
+                                INNER JOIN Container ON Container.Id = CLO_Unit.ContainerId AND Container.DescId = zc_Container_Count() AND Container.Amount <> 0
+                                LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                              ON CLO_GoodsKind.ContainerId = CLO_Unit.ContainerId
+                                                             AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                                LEFT JOIN ContainerLinkObject AS CLO_Account
+                                                              ON CLO_Account.ContainerId = CLO_Unit.ContainerId
+                                                             AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
+                           WHERE CLO_Unit.ObjectId = vbUnitId
+                             AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                             AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
+                          )
+          , tmpObject_GoodsPropertyValue AS
        (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
              , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId      AS GoodsId
              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0)  AS GoodsKindId
@@ -499,18 +520,21 @@ BEGIN
            , Object_GoodsKind.ValueData      AS GoodsKindName
            , Object_Measure.ValueData        AS MeasureName
 
-           , tmpMI.Amount                    AS Amount
-           , tmpMI.AmountSecond              AS AmountSecond
-           , tmpMI.Price                     AS Price
-           , tmpMI.CountForPrice             AS CountForPrice
+           , tmpMI.Amount          :: TFloat AS Amount
+           , tmpMI.AmountSecond    :: TFloat AS AmountSecond
+           , tmpMI.Price           :: TFloat AS Price
+           , tmpMI.CountForPrice   :: TFloat AS CountForPrice
 
            , CASE WHEN vbPriceWithVAT = FALSE OR vbVATPercent = 0
                        -- если цены без НДС или %НДС = 0
                        THEN tmpMI.AmountSumm
                        -- если цены с НДС
                   ELSE CAST ((tmpMI.Summ / (1 + vbVATPercent / 100)) AS NUMERIC (16, 2))
-             END AS SummMVAT
-           , tmpMI.Summ AS SummPVAT
+             END :: TFloat AS SummMVAT
+
+           , tmpMI.Summ :: TFloat AS SummPVAT
+
+           , COALESCE (tmpRemains.Amount, 0)  :: TFloat AS AmountRemains
 
        FROM (SELECT tmpMI.MovementItemId
                   , tmpMI.GoodsId
@@ -548,10 +572,26 @@ BEGIN
             LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = tmpMI.GoodsId
                                                         AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = tmpMI.GoodsKindId
 
-          LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
-                                 ON ObjectString_Goods_GroupNameFull.ObjectId = tmpMI.GoodsId
-                                AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+            LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
+                                   ON ObjectString_Goods_GroupNameFull.ObjectId = tmpMI.GoodsId
+                                  AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMI.GoodsId
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+            LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyDestination
+                                 ON ObjectLink_InfoMoney_InfoMoneyDestination.ObjectId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                AND ObjectLink_InfoMoney_InfoMoneyDestination.DescId = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
+            LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI.GoodsId
+                                AND tmpRemains.GoodsKindId = CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901() -- Ирна
+                                                                                                                  , zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                                                                                                  , zc_Enum_InfoMoney_30201() -- Мясное сырье
+                                                                                                                   )
+                                                                       THEN tmpMI.GoodsKindId
+                                                                  WHEN ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье                                                                                       THEN tmpMI_Goods.GoodsKindId
+                                                                       THEN tmpMI.GoodsKindId
+                                                                  ELSE 0
+                                                             END
        WHERE tmpMI.Amount <> 0 OR tmpMI.AmountSecond <> 0
        -- ORDER BY ObjectString_Goods_GroupNameFull.ValueData, Object_Goods.ValueData, Object_GoodsKind.ValueData
        ;

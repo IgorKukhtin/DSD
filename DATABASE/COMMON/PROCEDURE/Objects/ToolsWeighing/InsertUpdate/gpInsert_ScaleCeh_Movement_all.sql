@@ -348,7 +348,8 @@ BEGIN
     IF COALESCE (vbMovementId_begin, 0) = 0
     THEN
         -- сохранили
-        vbMovementId_begin:= (SELECT CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbDocumentKindId = zc_Enum_DocumentKind_CuterWeight()
+        vbMovementId_begin:= (SELECT CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion()
+                                           AND vbDocumentKindId IN (zc_Enum_DocumentKind_CuterWeight(), zc_Enum_DocumentKind_RealWeight())
                                                     -- !!!нет Документа!!!
                                                THEN 0
                                           WHEN vbMovementDescId = zc_Movement_Loss()
@@ -420,7 +421,7 @@ BEGIN
                                  );
 
          -- только НЕ для <Взвешивание п/ф факт куттера>
-         IF vbMovementDescId <> zc_Movement_ProductionUnion() OR vbDocumentKindId <> zc_Enum_DocumentKind_CuterWeight()
+         IF vbMovementDescId <> zc_Movement_ProductionUnion() OR vbDocumentKindId NOT IN (zc_Enum_DocumentKind_CuterWeight(), zc_Enum_DocumentKind_RealWeight())
          THEN
              -- Проверка
              IF COALESCE (vbMovementId_begin, 0) = 0
@@ -581,6 +582,13 @@ BEGIN
                        WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbDocumentKindId = zc_Enum_DocumentKind_CuterWeight()
                                  -- <Приход с производства> - Взвешивание п/ф факт куттера
                             THEN lpUpdate_MI_ProductionUnion_CuterWeight
+                                                         (inId                  := tmp.MovementItemId_Partion
+                                                        , inAmount              := tmp.Amount
+                                                        , inUserId              := vbUserId
+                                                         )
+                       WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbDocumentKindId = zc_Enum_DocumentKind_RealWeight()
+                                 -- <Приход с производства> - Взвешивание п/ф факт сырой
+                            THEN lpUpdate_MI_ProductionUnion_RealWeight
                                                          (inId                  := tmp.MovementItemId_Partion
                                                         , inAmount              := tmp.Amount
                                                         , inUserId              := vbUserId
@@ -978,7 +986,7 @@ BEGIN
                                               , inSession        := inSession);
           ELSE
                -- <Приход с производства>
-               IF vbMovementDescId = zc_Movement_ProductionUnion() AND vbDocumentKindId <> zc_Enum_DocumentKind_CuterWeight()
+               IF vbMovementDescId = zc_Movement_ProductionUnion() AND vbDocumentKindId NOT IN (zc_Enum_DocumentKind_CuterWeight(), zc_Enum_DocumentKind_RealWeight())
                THEN
                    -- создаются временные таблицы - для формирование данных для проводок - <Перемещение по цене>
                    PERFORM lpComplete_Movement_ProductionUnion_CreateTemp();
