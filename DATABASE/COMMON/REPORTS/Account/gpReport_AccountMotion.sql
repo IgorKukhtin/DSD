@@ -1,6 +1,7 @@
 -- Function: gpReport_Account ()
 
 DROP FUNCTION IF EXISTS gpReport_AccountMotion (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_AccountMotion (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_AccountMotion (
     IN inStartDate              TDateTime ,  
@@ -14,28 +15,30 @@ CREATE OR REPLACE FUNCTION gpReport_AccountMotion (
     IN inProfitLossDirectionId  Integer , 
     IN inProfitLossId           Integer ,
     IN inBranchId               Integer ,
+    IN inIsMovement             Boolean ,
+    IN inIsGoods                Boolean ,
+    IN inIsGoodsKind            Boolean ,
+    IN inIsDetail               Boolean ,
     IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS TABLE  (InvNumber Integer, MovementId Integer, OperDate TDateTime, MovementDescName TVarChar
               , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
-             -- , PersonalCode Integer, PersonalName TVarChar
-             -- , JuridicalCode Integer, JuridicalName TVarChar
+
               , JuridicalBasisCode Integer, JuridicalBasisName TVarChar
               , BusinessCode Integer, BusinessName TVarChar
               , PaidKindName TVarChar, ContractName TVarChar
-             -- , CarModelName TVarChar, CarCode Integer, CarName TVarChar
+
               , ObjectId_Direction Integer, ObjectCode_Direction Integer, ObjectName_Direction TVarChar
               , ObjectCode_Destination Integer, ObjectName_Destination TVarChar
               , DescName_Direction TVarChar
               , DescName_Destination TVarChar
+              , GoodsKindName TVarChar
 
-              --, PersonalCode_inf Integer, PersonalName_inf TVarChar
-              --, CarModelName_inf TVarChar, CarCode_inf Integer, CarName_inf TVarChar
               , RouteCode_inf Integer, RouteName_inf TVarChar
               , UnitCode_inf Integer, UnitName_inf TVarChar
               , BranchCode_inf Integer, BranchName_inf TVarChar
               , BusinessCode_inf Integer, BusinessName_inf TVarChar
-              , SummStart TFloat, SummIn TFloat, SummOut TFloat, SummEnd TFloat, OperPrice TFloat
+              , SummStart TFloat, SummIn TFloat, SummOut TFloat, SummEnd TFloat--, OperPrice TFloat
               , AccountGroupCode Integer, AccountGroupName TVarChar
               , AccountDirectionCode Integer, AccountDirectionName TVarChar
               , AccountCode Integer, AccountName TVarChar, AccountName_All TVarChar
@@ -43,6 +46,10 @@ RETURNS TABLE  (InvNumber Integer, MovementId Integer, OperDate TDateTime, Movem
               , AccountDirectionCode_inf Integer, AccountDirectionName_inf TVarChar
               , AccountCode_inf Integer, AccountName_inf TVarChar, AccountName_All_inf TVarChar
               , ProfitLossName_All_inf TVarChar
+
+              , InfoMoneyId_Detail Integer, InfoMoneyCode_Detail Integer
+              , InfoMoneyGroupName_Detail TVarChar, InfoMoneyDestinationName_Detail TVarChar
+              , InfoMoneyName_Detail TVarChar, InfoMoneyName_all_Detail TVarChar
               )  
 AS
 $BODY$
@@ -73,7 +80,11 @@ BEGIN
          inProfitLossDirectionId := inProfitLossDirectionId, 
          inProfitLossId          := inProfitLossId,
          inBranchId              := inBranchId,
-         inUserId                := vbUserId
+         inUserId                := vbUserId,
+         inIsMovement            := inIsMovement,
+         inIsGoods               := inIsGoods,
+         inIsGoodsKind           := inIsGoodsKind,
+         inIsDetail              := inIsDetail
        ) AS tmp
     WHERE tmp.SummStart <> 0 OR tmp.SummIn <> 0 OR tmp.SummOut <> 0 OR tmp.SummEnd <> 0
    ;

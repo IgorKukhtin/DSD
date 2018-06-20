@@ -276,6 +276,15 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
         HeaderAlignmentVert = vaCenter
         Width = 88
       end
+      object GoodsKindName: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GoodsKindName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object JuridicalBasisName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1075#1083#1072#1074#1085#1086#1077')'
         DataBinding.FieldName = 'JuridicalBasisName'
@@ -473,6 +482,50 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
         Options.Editing = False
         Width = 70
       end
+      object InfoMoneyCode_Detail: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1059#1055' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+        DataBinding.FieldName = 'InfoMoneyCode_Detail'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 45
+      end
+      object InfoMoneyGroupName_Detail: TcxGridDBColumn
+        Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103'  ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+        DataBinding.FieldName = 'InfoMoneyGroupName_Detail'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object InfoMoneyDestinationName_Detail: TcxGridDBColumn
+        Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077'  ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+        DataBinding.FieldName = 'InfoMoneyDestinationName_Detail'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object InfoMoneyName_Detail: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103'  ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+        DataBinding.FieldName = 'InfoMoneyName_Detail'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object InfoMoneyName_all_Detail: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+        DataBinding.FieldName = 'InfoMoneyName_all_Detail'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 200
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -665,6 +718,47 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
       Properties.ReadOnly = True
       TabOrder = 10
       Width = 200
+    end
+    object cbMovement: TcxCheckBox
+      Left = 952
+      Top = 6
+      Action = actRefreshMovement
+      Caption = #1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 22
+      Width = 102
+    end
+    object cbGoods: TcxCheckBox
+      Left = 952
+      Top = 29
+      Hint = #1087#1086' '#1090#1086#1074#1072#1088#1072#1084' ('#1076#1072'/'#1085#1077#1090')'
+      Action = actRefreshGoods
+      Caption = #1087#1086' '#1090#1086#1074#1072#1088#1072#1084
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 23
+      Width = 81
+    end
+    object cbGoodskind: TcxCheckBox
+      Left = 1060
+      Top = 33
+      Hint = #1087#1086' '#1074#1080#1076#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1076#1072'/'#1085#1077#1090')'
+      Action = actRefreshGoodsKind
+      Caption = #1087#1086' '#1074#1080#1076#1072#1084' '#1090#1086#1074#1072#1088#1072
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 24
+      Width = 111
+    end
+    object cbDetail: TcxCheckBox
+      Left = 1060
+      Top = 6
+      Action = actRefreshDetail
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 25
+      Width = 74
     end
   end
   object DataSource: TDataSource
@@ -868,13 +962,69 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
     Images = dmMain.ImageList
     Left = 232
     Top = 240
+    object actRefreshDetail: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1076#1077#1090#1072#1083#1100#1085#1086
+      Hint = #1076#1077#1090#1072#1083#1100#1085#1086' ('#1076#1072'/'#1085#1077#1090')'
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshGoodsKind: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' ('#1076#1072'/'#1085#1077#1090')'
+      Hint = #1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' ('#1076#1072'/'#1085#1077#1090')'
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshGoods: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' ('#1076#1072'/'#1085#1077#1090')'
+      Hint = #1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' ('#1076#1072'/'#1085#1077#1090')'
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshMovement: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' ('#1076#1072'/'#1085#1077#1090')'
+      Hint = #1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' ('#1076#1072'/'#1085#1077#1090')'
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1182,7 +1332,7 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
       OpenBeforeShow = True
     end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpReport_AccountMotion'
     DataSet = ClientDataSet
     DataSets = <
@@ -1277,10 +1427,42 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsMovement'
+        Value = Null
+        Component = cbMovement
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsGoods'
+        Value = Null
+        Component = cbGoods
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsGoodsKind'
+        Value = Null
+        Component = cbGoodskind
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDetail'
+        Value = Null
+        Component = cbDetail
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 152
-    Top = 248
+    Left = 136
+    Top = 240
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

@@ -1,6 +1,7 @@
 -- Function: lpReport_byAccount ()
 
 DROP FUNCTION IF EXISTS lpReport_AccountMotion (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean);
+DROP FUNCTION IF EXISTS lpReport_AccountMotion (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean);
 
 CREATE OR REPLACE FUNCTION lpReport_AccountMotion (
     IN inStartDate              TDateTime ,  
@@ -15,7 +16,10 @@ CREATE OR REPLACE FUNCTION lpReport_AccountMotion (
     IN inProfitLossId           Integer ,
     IN inBranchId               Integer ,
     IN inUserId                 Integer ,
-    IN inIsMovement             Boolean Default false   -- сессия пользователя
+    IN inIsMovement             Boolean ,
+    IN inIsGoods                Boolean ,
+    IN inIsGoodsKind            Boolean ,
+    IN inIsDetail               Boolean 
 )
 RETURNS TABLE  (InvNumber Integer, MovementId Integer, OperDate TDateTime, MovementDescName TVarChar
               , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
@@ -26,11 +30,12 @@ RETURNS TABLE  (InvNumber Integer, MovementId Integer, OperDate TDateTime, Movem
               , ObjectCode_Destination Integer, ObjectName_Destination TVarChar
               , DescName_Direction TVarChar
               , DescName_Destination TVarChar
+              , GoodsKindName TVarChar 
               , RouteCode_inf Integer, RouteName_inf TVarChar
               , UnitCode_inf Integer, UnitName_inf TVarChar
               , BranchCode_inf Integer, BranchName_inf TVarChar
               , BusinessCode_inf Integer, BusinessName_inf TVarChar
-              , SummStart TFloat, SummIn TFloat, SummOut TFloat, SummEnd TFloat, OperPrice TFloat
+              , SummStart TFloat, SummIn TFloat, SummOut TFloat, SummEnd TFloat--, OperPrice TFloat
               , AccountGroupCode Integer, AccountGroupName TVarChar
               , AccountDirectionCode Integer, AccountDirectionName TVarChar
               , AccountCode Integer, AccountName TVarChar, AccountName_All TVarChar
@@ -38,6 +43,10 @@ RETURNS TABLE  (InvNumber Integer, MovementId Integer, OperDate TDateTime, Movem
               , AccountDirectionCode_inf Integer, AccountDirectionName_inf TVarChar
               , AccountCode_inf Integer, AccountName_inf TVarChar, AccountName_All_inf TVarChar
               , ProfitLossName_All_inf TVarChar
+              
+              , InfoMoneyId_Detail Integer, InfoMoneyCode_Detail Integer
+              , InfoMoneyGroupName_Detail TVarChar, InfoMoneyDestinationName_Detail TVarChar
+              , InfoMoneyName_Detail TVarChar, InfoMoneyName_all_Detail TVarChar
               )  
 AS
 $BODY$
@@ -50,29 +59,6 @@ BEGIN
          inUserId:= NULL;
          RETURN;
      END IF;
-
-
-    -- !!!определяется - будет ли разворачиваться по документам для Прибыль текущего периода
-    -- 
-    vbIsMovement:= (((zc_Enum_Account_100301() NOT IN (SELECT AccountId FROM Object_Account_View WHERE (AccountGroupId = COALESCE (inAccountGroupId, 0) AND COALESCE (inAccountDirectionId, 0) = 0 AND COALESCE (inAccountId, 0) = 0)
-                                                                                                    OR (AccountDirectionId = COALESCE (inAccountDirectionId, 0) AND COALESCE (inAccountId, 0) = 0)
-                                                                                                     OR AccountId = COALESCE (inAccountId, 0))
-                      AND (COALESCE (inAccountId, 0) <> 0 AND COALESCE (inAccountDirectionId, 0) = 0 AND COALESCE (inAccountGroupId, 0) = 0) -- OR COALESCE (inAccountDirectionId, 0) <> 0)
-                     )
-                  OR (zc_Enum_Account_100301() IN (SELECT AccountId FROM Object_Account_View WHERE (AccountGroupId = COALESCE (inAccountGroupId, 0) AND COALESCE (inAccountDirectionId, 0) = 0 AND COALESCE (inAccountId, 0) = 0)
-                                                                                                OR (AccountDirectionId = COALESCE (inAccountDirectionId, 0) AND COALESCE (inAccountId, 0) = 0)
-                                                                                                 OR AccountId = COALESCE (inAccountId, 0))
-                      AND COALESCE (inProfitLossId, 0) <> 0)
-                    )
-                AND (inStartDate = inEndDate
-                     OR inUserId  = 5
-                    )
-                   )
-                OR inIsMovement
-                OR (inProfitLossId <> 0 AND inBusinessId <> 0)-- 8371 - Мясо 
-                OR (inAccountGroupId = zc_Enum_AccountGroup_110000()) -- Транзит
-                  ;
-
 
     --
     -- RAISE EXCEPTION 'vbIsMovement = <%>', vbIsMovement;
@@ -116,36 +102,37 @@ BEGIN
                                    OR (tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) <> 0)
                               )
 
-    , tmpContainer_Motion AS (SELECT tmpContainer.BusinessId      AS BusinessId
-                                , tmpContainer.ContainerId           AS ContainerId
-                                , tmpContainer.AccountId             AS AccountId
-                                , MIContainer.ContainerId_Analyzer
-                                                                
-                                , CASE WHEN vbIsMovement = TRUE THEN MIContainer.ObjectId_Analyzer ELSE 0 END :: Integer AS ObjectId_inf
-                                , MIContainer.MovementItemId         AS MovementItemId
-      
-                                , MIContainer.MovementId
-
-                                , CASE WHEN vbIsMovement = TRUE THEN MIContainer.OperDate ELSE NULL END :: TDateTime AS OperDate
-                                                                                    
-                                , CASE WHEN tmpContainer.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
-                                            THEN tmpContainer.ContainerId
-                                       ELSE MIContainer.ContainerId_Analyzer
-                                  END                                AS ContainerId_ProfitLoss
-                                ,  (CASE WHEN MIContainer.isActive = TRUE AND COALESCE (MIContainer.AccountId, 0) <> zc_Enum_Account_100301() -- прибыль текущего периода
-                                                 THEN MIContainer.Amount
-                                            ELSE 0
-                                       END)                          AS SummIn
-                                ,  (CASE WHEN MIContainer.isActive = FALSE OR MIContainer.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
-                                                 THEN -1 * MIContainer.Amount
-                                            ELSE 0
-                                       END)                          AS SummOut
-                                , MIContainer.Amount
-                           FROM tmpContainer
-                                INNER JOIN MovementItemContainer AS MIContainer
-                                                                 ON MIContainer.ContainerId = tmpContainer.ContainerId
-                                                                AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                           )
+    , tmpContainer_Motion AS (SELECT tmpContainer.BusinessId            AS BusinessId
+                                   , tmpContainer.ContainerId           AS ContainerId
+                                   , tmpContainer.AccountId             AS AccountId
+                                   , MIContainer.ContainerId_Analyzer
+                                   , CASE WHEN (inIsGoodsKind = TRUE AND inIsGoods = TRUE) THEN MIContainer.ObjectIntId_Analyzer ELSE 0 END AS GoodsKindId
+                                                                   
+                                   , CASE WHEN inIsMovement = TRUE THEN MIContainer.ObjectId_Analyzer ELSE 0 END :: Integer AS ObjectId_inf
+                                   , MIContainer.MovementItemId         AS MovementItemId
+         
+                                   , MIContainer.MovementId
+   
+                                   , CASE WHEN inIsMovement = TRUE THEN MIContainer.OperDate ELSE NULL END :: TDateTime AS OperDate
+                                                                                       
+                                   , CASE WHEN tmpContainer.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
+                                               THEN tmpContainer.ContainerId
+                                          ELSE MIContainer.ContainerId_Analyzer
+                                     END                                AS ContainerId_ProfitLoss
+                                   ,  (CASE WHEN MIContainer.isActive = TRUE AND COALESCE (MIContainer.AccountId, 0) <> zc_Enum_Account_100301() -- прибыль текущего периода
+                                                    THEN MIContainer.Amount
+                                               ELSE 0
+                                          END)                          AS SummIn
+                                   ,  (CASE WHEN MIContainer.isActive = FALSE OR MIContainer.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
+                                                    THEN -1 * MIContainer.Amount
+                                               ELSE 0
+                                          END)                          AS SummOut
+                                   , MIContainer.Amount
+                              FROM tmpContainer
+                                   INNER JOIN MovementItemContainer AS MIContainer
+                                                                    ON MIContainer.ContainerId = tmpContainer.ContainerId
+                                                                   AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                              )
     , tmpAnalyzer AS (SELECT Container.Id
                            , Container.ObjectId
                       FROM Container
@@ -163,49 +150,51 @@ BEGIN
                          WHERE MovementItemContainer.MovementItemId IN (SELECT tmpContainer_Motion.MovementItemId FROM tmpContainer_Motion)
                            AND MovementItemContainer.DescId = zc_MIContainer_Count()
                          )
-    , tmpMotion AS (SELECT tmpContainer.BusinessId      AS BusinessId
-                                , tmpContainer.ContainerId           AS ContainerId
-                                , tmpContainer.AccountId             AS AccountId
-                                , tmpContainer.ContainerId_Analyzer   AS ContainerId_inf
-                                , Container.ObjectId                 AS AccountId_inf
-                                
-                                , tmpContainer.ObjectId_inf
-                                , tmpContainer.MovementItemId         AS MovementItemId
-      
-                                , Movement.DescId                                                                    AS MovementDescId
-                                , CASE WHEN vbIsMovement = TRUE THEN Movement.Id          ELSE 0    END :: Integer   AS MovementId
-                                , CASE WHEN vbIsMovement = TRUE THEN Movement.InvNumber   ELSE ''   END :: TVarChar  AS InvNumber
-                                , tmpContainer.OperDate
-                                                                                    
-                                , tmpContainer.ContainerId_ProfitLoss
-                                , SUM (tmpContainer.SummIn)                          AS SummIn
-                                , SUM (tmpContainer.SummOut)                          AS SummOut
-      
-                                , CASE WHEN COALESCE (MIContainer_Count.Amount, 0) <> 0 THEN ABS (tmpContainer.Amount) / ABS (MIContainer_Count.Amount) ELSE 0 END AS OperPrice
-      
-                           FROM tmpContainer_Motion AS tmpContainer
-                                
-                                LEFT JOIN tmpAnalyzer AS Container ON Container.Id = tmpContainer.ContainerId_Analyzer
-                                LEFT JOIN tmpMovement AS Movement ON Movement.Id = tmpContainer.MovementId
-                                
-                                LEFT JOIN tmpMIContainer AS MIContainer_Count ON MIContainer_Count.MovementItemId = tmpContainer.MovementItemId
-                                                                                    --AND MIContainer_Count.DescId = zc_MIContainer_Count()
-                                                                                    AND Movement.DescId IN (zc_Movement_Transport(), zc_Movement_Income())
-                           GROUP BY tmpContainer.BusinessId
-                                  , tmpContainer.ContainerId
-                                  , tmpContainer.AccountId
-      
-                                  , tmpContainer.ContainerId_Analyzer
-                                  , Container.ObjectId
-                                  , tmpContainer.ObjectId_inf
-                                  , Movement.DescId
-                                  , CASE WHEN vbIsMovement = TRUE THEN Movement.Id          ELSE 0    END
-                                  , CASE WHEN vbIsMovement = TRUE THEN Movement.InvNumber   ELSE ''   END
-                                  , tmpContainer.OperDate
-                                  , tmpContainer.MovementItemId
-                                  , CASE WHEN COALESCE (MIContainer_Count.Amount, 0) <> 0 THEN ABS (tmpContainer.Amount) / ABS (MIContainer_Count.Amount) ELSE 0 END
-                                  , tmpContainer.ContainerId_ProfitLoss
-                           )
+    , tmpMotion AS (SELECT tmpContainer.BusinessId             AS BusinessId
+                         , tmpContainer.ContainerId            AS ContainerId
+                         , tmpContainer.AccountId              AS AccountId
+                         , tmpContainer.ContainerId_Analyzer   AS ContainerId_inf
+                         , Container.ObjectId                  AS AccountId_inf
+                         , tmpContainer.GoodsKindId
+                         
+                         , tmpContainer.ObjectId_inf
+                         , tmpContainer.MovementItemId         AS MovementItemId
+
+                         , Movement.DescId                                                                    AS MovementDescId
+                         , CASE WHEN inIsMovement = TRUE THEN Movement.Id          ELSE 0    END :: Integer   AS MovementId
+                         , CASE WHEN inIsMovement = TRUE THEN Movement.InvNumber   ELSE ''   END :: TVarChar  AS InvNumber
+                         , tmpContainer.OperDate
+                                                                             
+                         , tmpContainer.ContainerId_ProfitLoss
+                         , SUM (tmpContainer.SummIn)                          AS SummIn
+                         , SUM (tmpContainer.SummOut)                          AS SummOut
+
+                         --, CASE WHEN COALESCE (MIContainer_Count.Amount, 0) <> 0 THEN ABS (tmpContainer.Amount) / ABS (MIContainer_Count.Amount) ELSE 0 END AS OperPrice
+
+                    FROM tmpContainer_Motion AS tmpContainer
+                         
+                         LEFT JOIN tmpAnalyzer AS Container ON Container.Id = tmpContainer.ContainerId_Analyzer
+                         LEFT JOIN tmpMovement AS Movement ON Movement.Id = tmpContainer.MovementId
+                         
+                         LEFT JOIN tmpMIContainer AS MIContainer_Count ON MIContainer_Count.MovementItemId = tmpContainer.MovementItemId
+                                                                             --AND MIContainer_Count.DescId = zc_MIContainer_Count()
+                                                                             AND Movement.DescId IN (zc_Movement_Transport(), zc_Movement_Income())
+                    GROUP BY tmpContainer.BusinessId
+                           , tmpContainer.ContainerId
+                           , tmpContainer.AccountId
+
+                           , tmpContainer.ContainerId_Analyzer
+                           , Container.ObjectId
+                           , tmpContainer.ObjectId_inf
+                           , Movement.DescId
+                           , CASE WHEN inIsMovement = TRUE THEN Movement.Id          ELSE 0    END
+                           , CASE WHEN inIsMovement = TRUE THEN Movement.InvNumber   ELSE ''   END
+                           , tmpContainer.OperDate
+                           , tmpContainer.MovementItemId
+                           --, CASE WHEN COALESCE (MIContainer_Count.Amount, 0) <> 0 THEN ABS (tmpContainer.Amount) / ABS (MIContainer_Count.Amount) ELSE 0 END
+                           , tmpContainer.ContainerId_ProfitLoss
+                           , tmpContainer.GoodsKindId
+                    )
 
     , tmpData AS (SELECT tmp.BusinessId
                        , tmp.ContainerId
@@ -214,6 +203,7 @@ BEGIN
                        , tmp.AccountId_inf
                        , tmp.ContainerId_ProfitLoss
                        , tmp.ObjectId_inf
+                       , tmp.GoodsKindId
                        , tmp.MovementId
                        , tmp.MovementDescId
                        , tmp.InvNumber
@@ -222,9 +212,9 @@ BEGIN
                        , 0 AS SummEnd
                        , tmp.SummIn
                        , tmp.SummOut
-                       , tmp.OperPrice
+                       --, tmp.OperPrice
 
-                       , CASE WHEN vbIsMovement = TRUE THEN MILinkObject_MoneyPlace.ObjectId ELSE 0 END :: Integer AS MoneyPlaceId_inf
+                       , CASE WHEN inIsMovement = TRUE THEN MILinkObject_MoneyPlace.ObjectId ELSE 0 END :: Integer AS MoneyPlaceId_inf
                        , MILinkObject_Route.ObjectId  AS RouteId_inf
                        , MILinkObject_Unit.ObjectId   AS UnitId_inf
                        , MILinkObject_Branch.ObjectId AS BranchId_inf
@@ -253,6 +243,7 @@ BEGIN
                              , 0 AS AccountId_inf
                              , 0 AS ContainerId_ProfitLoss
                              , 0 AS ObjectId_inf
+                             , 0 AS GoodsKindId
                              , 0 AS MovementId
                              , 0 AS MovementDescId
                              , ''   :: TVarChar  AS InvNumber
@@ -261,7 +252,6 @@ BEGIN
                              , tmp.SummEnd
                              , 0 AS SummIn
                              , 0 AS SummOut
-                             , 0 AS OperPrice
                              , 0 AS MoneyPlaceId_inf
                              , 0 AS RouteId_inf
                              , 0 AS UnitId_inf
@@ -276,6 +266,7 @@ BEGIN
                              , tmp.AccountId_inf
                              , tmp.ContainerId_ProfitLoss
                              , tmp.ObjectId_inf
+                             , tmp.GoodsKindId
                              , tmp.MovementId
                              , tmp.MovementDescId
                              , tmp.InvNumber
@@ -284,7 +275,6 @@ BEGIN
                              , 0 AS SummEnd
                              , tmp.SummIn
                              , tmp.SummOut
-                             , tmp.OperPrice
                              , tmp.MoneyPlaceId_inf
                              , tmp.RouteId_inf
                              , tmp.UnitId_inf
@@ -325,12 +315,20 @@ BEGIN
                      FROM tmpCLO 
                      WHERE tmpCLO.ContainerId IN (SELECT DISTINCT tmpReport_All.ContainerId_inf FROM tmpReport_All)
                      )    
-                                                                                   
+    , tmpInfoMoneyDetail AS (SELECT CLO_InfoMoneyDetail.*
+                             FROM ContainerLinkObject AS CLO_InfoMoneyDetail
+                             WHERE CLO_InfoMoneyDetail.ContainerId IN (SELECT tmpReport_All.ContainerId FROM tmpReport_All)
+                               AND CLO_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
+                               AND inIsDetail = TRUE
+                             )
+        --LEFT JOIN Object_InfoMoney_View AS View_InfoMoneyDetail ON View_InfoMoneyDetail.InfoMoneyId = CLO_InfoMoneyDetail.ObjectId
+                                                                                           
     , tmpReport AS (SELECT ContainerLO_JuridicalBasis.ObjectId AS JuridicalBasisId
                          , tmpReport_All.BusinessId
                          , COALESCE (ContainerLO_InfoMoney.ObjectId, ContainerLO_InfoMoney_inf.ObjectId) AS InfoMoneyId
                          , ContainerLO_PaidKind.ObjectId  AS PaidKindId
                          , ContainerLO_Contract.ObjectId  AS ContractId
+                         , tmpReport_All.GoodsKindId
                          , CASE WHEN tmpReport_All.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
                                      THEN tmpReport_All.ObjectId_inf
                                 ELSE COALESCE (ContainerLO_Cash.ObjectId, COALESCE (ContainerLO_BankAccount.ObjectId, COALESCE (ContainerLO_Juridical.ObjectId, COALESCE (ContainerLO_Unit.ObjectId, COALESCE (ContainerLO_Car.ObjectId, COALESCE (ContainerLO_Member.ObjectId
@@ -361,8 +359,9 @@ BEGIN
                          , tmpReport_All.MoneyPlaceId_inf
                          , tmpReport_All.UnitId_inf
                          , tmpReport_All.RouteId_inf
+                         
+                         , CLO_InfoMoneyDetail.ObjectId AS ObjectId_Detail
             
-                         , tmpReport_All.OperPrice
                     FROM tmpReport_All
                         LEFT JOIN tmpCLO AS ContainerLO_JuridicalBasis ON ContainerLO_JuridicalBasis.ContainerId = tmpReport_All.ContainerId
                                                                                    AND ContainerLO_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
@@ -432,9 +431,14 @@ BEGIN
                         LEFT JOIN tmpCLO AS ContainerLO_Goods ON ContainerLO_Goods.ContainerId = tmpReport_All.ContainerId
                                                                           AND ContainerLO_Goods.DescId = zc_ContainerLinkObject_Goods()
                                                                           AND ContainerLO_Goods.ObjectId > 0
+                                                                          AND inIsGoods = TRUE
                         LEFT JOIN tmpCLO_inf AS ContainerLO_Goods_inf ON ContainerLO_Goods_inf.ContainerId = tmpReport_All.ContainerId_inf
                                                                               AND ContainerLO_Goods_inf.DescId = zc_ContainerLinkObject_Goods()
                                                                               AND ContainerLO_Goods_inf.ObjectId > 0
+                                                                              AND inIsGoods = TRUE
+                        LEFT JOIN tmpInfoMoneyDetail AS CLO_InfoMoneyDetail 
+                                                     ON CLO_InfoMoneyDetail.ContainerId = tmpReport_All.ContainerId
+
                     GROUP BY ContainerLO_JuridicalBasis.ObjectId
                            , tmpReport_All.BusinessId
                            , COALESCE (ContainerLO_InfoMoney.ObjectId, ContainerLO_InfoMoney_inf.ObjectId)
@@ -466,8 +470,9 @@ BEGIN
                            , tmpReport_All.BranchId_inf
                            , tmpReport_All.UnitId_inf
                            , tmpReport_All.RouteId_inf
-            
-                           , tmpReport_All.OperPrice
+                           
+                           , CLO_InfoMoneyDetail.ObjectId
+                           , tmpReport_All.GoodsKindId
                     )
                
                
@@ -475,7 +480,7 @@ BEGIN
     SELECT zfConvert_StringToNumber (tmpReport.InvNumber) AS InvNumber
          , tmpReport.MovementId
          , tmpReport.OperDate
-         , MovementDesc.ItemName AS MovementDescName
+         , MovementDesc.ItemName             AS MovementDescName
          , View_InfoMoney.InfoMoneyCode
          , View_InfoMoney.InfoMoneyGroupName
          , View_InfoMoney.InfoMoneyDestinationName
@@ -494,6 +499,7 @@ BEGIN
          , Object_Destination.ValueData    AS ObjectName_Destination
          , ObjectDesc_Direction.ItemName   AS DescName_Direction
          , ObjectDesc_Destination.ItemName AS DescName_Destination
+         , Object_GoodsKind.ValueData      AS GoodsKindName
 
          , Object_Route_inf.ObjectCode    AS RouteCode_inf
          , Object_Route_inf.ValueData     AS RouteName_inf
@@ -509,19 +515,31 @@ BEGIN
          , tmpReport.SummIn    :: TFloat AS SummIn
          , tmpReport.SummOut   :: TFloat AS SummOut
          , tmpReport.SummEnd   :: TFloat AS SummEnd
-         , tmpReport.OperPrice :: TFloat AS OperPrice
+         
+         , View_Account.AccountGroupCode
+         , View_Account.AccountGroupName
+         , View_Account.AccountDirectionCode
+         , View_Account.AccountDirectionName
+         , View_Account.AccountCode
+         , View_Account.AccountName
+         , View_Account.AccountName_All
 
-         , View_Account.AccountGroupCode, View_Account.AccountGroupName
-         , View_Account.AccountDirectionCode, View_Account.AccountDirectionName
-         , View_Account.AccountCode, View_Account.AccountName
-         , View_Account.AccountName_all AS AccountName_All
-
-         , View_Account_inf.AccountGroupCode AS AccountGroupCode_inf, View_Account_inf.AccountGroupName AS AccountGroupName_inf
-         , View_Account_inf.AccountDirectionCode AS AccountDirectionCode_inf, View_Account_inf.AccountDirectionName AS AccountDirectionName_inf
-         , View_Account_inf.AccountCode AS AccountCode_inf, View_Account_inf.AccountName AS AccountName_inf
-         , View_Account_inf.AccountName_all AS AccountName_All_inf
+         , View_Account_inf.AccountGroupCode      AS AccountGroupCode_inf
+         , View_Account_inf.AccountGroupName      AS AccountGroupName_inf
+         , View_Account_inf.AccountDirectionCode  AS AccountDirectionCode_inf
+         , View_Account_inf.AccountDirectionName  AS AccountDirectionName_inf
+         , View_Account_inf.AccountCode           AS AccountCode_inf
+         , View_Account_inf.AccountName           AS AccountName_inf
+         , View_Account_inf.AccountName_all       AS AccountName_All_inf
 
          , View_ProfitLoss_inf.ProfitLossName_all AS ProfitLossName_All_inf
+
+         , View_InfoMoneyDetail.InfoMoneyId              AS InfoMoneyId_Detail
+         , View_InfoMoneyDetail.InfoMoneyCode            AS InfoMoneyCode_Detail
+         , View_InfoMoneyDetail.InfoMoneyGroupName       AS InfoMoneyGroupName_Detail
+         , View_InfoMoneyDetail.InfoMoneyDestinationName AS InfoMoneyDestinationName_Detail
+         , View_InfoMoneyDetail.InfoMoneyName            AS InfoMoneyName_Detail
+         , View_InfoMoneyDetail.InfoMoneyName_all        AS InfoMoneyName_all_Detail
 
    FROM tmpReport
 
@@ -531,11 +549,13 @@ BEGIN
        LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = tmpReport.ContractId
 
        LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpReport.InfoMoneyId
+       LEFT JOIN Object_InfoMoney_View AS View_InfoMoneyDetail ON View_InfoMoneyDetail.InfoMoneyId = tmpReport.ObjectId_Detail
 
        LEFT JOIN Object AS Object_Business_inf ON Object_Business_inf.Id = tmpReport.BusinessId_inf
        LEFT JOIN Object AS Object_Branch_inf ON Object_Branch_inf.Id = tmpReport.BranchId_inf
        LEFT JOIN Object AS Object_Unit_inf ON Object_Unit_inf.Id = tmpReport.UnitId_inf
        LEFT JOIN Object AS Object_Route_inf ON Object_Route_inf.Id = tmpReport.RouteId_inf
+       LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpReport.GoodsKindId
 
        LEFT JOIN MovementDesc ON MovementDesc.Id = tmpReport.MovementDescId
 
@@ -545,15 +565,15 @@ BEGIN
        LEFT JOIN Object_ProfitLoss_View AS View_ProfitLoss_inf ON View_ProfitLoss_inf.ProfitLossId = tmpReport.ProfitLossId_inf
 
        LEFT JOIN Object AS Object_Direction   ON Object_Direction.Id
-                         = CASE WHEN tmpReport.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash()) -- AND tmpReport.ObjectId_Destination > 0 AND tmpReport.ObjectId_Direction > 0
-                                     THEN CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.ObjectId_Direction ELSE /*tmpReport.ObjectId_Direction*/ tmpReport.ObjectId_Destination END
+                         = CASE WHEN tmpReport.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
+                                     THEN CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.ObjectId_Direction ELSE tmpReport.ObjectId_Destination END
                                 ELSE COALESCE (tmpReport.ObjectId_Direction
                                              , CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.ObjectId_inf ELSE tmpReport.MoneyPlaceId_inf END
                                               )
                            END
        LEFT JOIN Object AS Object_Destination ON Object_Destination.Id
-                         = CASE WHEN tmpReport.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash()) -- AND tmpReport.ObjectId_Destination > 0 AND tmpReport.ObjectId_Direction > 0
-                                     THEN CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.ObjectId_Destination ELSE /*tmpReport.ObjectId_Destination*/ tmpReport.ObjectId_Direction END
+                         = CASE WHEN tmpReport.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash()) 
+                                     THEN CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.ObjectId_Destination ELSE tmpReport.ObjectId_Direction END
                                 ELSE COALESCE (tmpReport.ObjectId_Destination
                                              , CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.MoneyPlaceId_inf ELSE tmpReport.ObjectId_inf END
                                               )

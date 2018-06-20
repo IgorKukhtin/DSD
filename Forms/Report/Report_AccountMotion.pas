@@ -13,7 +13,7 @@ uses
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, dsdGuides,
   cxButtonEdit, ChoicePeriod, cxLabel, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox;
 
 type
   TReport_AccountMotionForm = class(TParentForm)
@@ -28,7 +28,7 @@ type
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     actExportToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
     dsdDBViewAddOn: TdsdDBViewAddOn;
@@ -109,6 +109,14 @@ type
     bbPrint: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    actRefreshMovement: TdsdDataSetRefresh;
+    cbMovement: TcxCheckBox;
+    cbGoods: TcxCheckBox;
+    actRefreshGoods: TdsdDataSetRefresh;
+    actRefreshDetail: TdsdDataSetRefresh;
+    actRefreshGoodsKind: TdsdDataSetRefresh;
+    cbGoodskind: TcxCheckBox;
+    cbDetail: TcxCheckBox;
   private
   public
   end;
