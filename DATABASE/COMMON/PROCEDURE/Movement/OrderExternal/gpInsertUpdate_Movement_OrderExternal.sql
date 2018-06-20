@@ -3,31 +3,33 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternal(
- INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
-    IN inInvNumber           TVarChar  , -- Номер документа
-    IN inInvNumberPartner    TVarChar  , -- Номер заявки у контрагента
-    IN inOperDate            TDateTime , -- Дата документа
-   OUT outOperDatePartner    TDateTime , -- Дата отгрузки со склада
-   OUT outOperDatePartner_sale TDateTime , -- Дата расходного документа у контрагента
-    IN inOperDateMark        TDateTime , -- Дата маркировки
-   OUT outPriceWithVAT       Boolean   , -- Цена с НДС (да/нет)
-   OUT outVATPercent         TFloat    , -- % НДС
-    IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
-    IN inFromId              Integer   , -- От кого (в документе)
-    IN inToId                Integer   , -- Кому (в документе)
-    IN inPaidKindId          Integer   , -- Виды форм оплаты
-    IN inContractId          Integer   , -- Договора
-    IN inRouteId             Integer   , -- Маршрут
-    IN inRouteSortingId      Integer   , -- Сортировки маршрутов
- INOUT ioPersonalId          Integer   , -- Сотрудник (экспедитор)
-   OUT outPersonalName       TVarChar  , -- Сотрудник (экспедитор)
- INOUT ioPriceListId         Integer   , -- Прайс лист
-   OUT outPriceListName      TVarChar  , -- Прайс лист
-    IN inPartnerId           Integer   , -- Контрагент
-    IN inComment             TVarChar  , -- Примечание
-    IN inSession             TVarChar    -- сессия пользователя
+ INOUT ioId                      Integer   , -- Ключ объекта <Документ Перемещение>
+    IN inInvNumber               TVarChar  , -- Номер документа
+    IN inInvNumberPartner        TVarChar  , -- Номер заявки у контрагента
+    IN inOperDate                TDateTime , -- Дата документа
+ INOUT ioOperDatePartner         TDateTime , -- Дата отгрузки со склада
+   OUT outOperDatePartner_sale   TDateTime , -- Дата расходного документа у контрагента
+    IN inOperDateMark            TDateTime , -- Дата маркировки
+   OUT outPriceWithVAT           Boolean   , -- Цена с НДС (да/нет)
+   OUT outVATPercent             TFloat    , -- % НДС
+    IN inChangePercent           TFloat    , -- (-)% Скидки (+)% Наценки
+    IN inFromId                  Integer   , -- От кого (в документе)
+    IN inToId                    Integer   , -- Кому (в документе)
+    IN inPaidKindId              Integer   , -- Виды форм оплаты
+    IN inContractId              Integer   , -- Договора
+    IN inRouteId                 Integer   , -- Маршрут
+    IN inRouteSortingId          Integer   , -- Сортировки маршрутов
+ INOUT ioPersonalId              Integer   , -- Сотрудник (экспедитор)
+   OUT outPersonalName           TVarChar  , -- Сотрудник (экспедитор)
+ INOUT ioPriceListId             Integer   , -- Прайс лист
+   OUT outPriceListName          TVarChar  , -- Прайс лист
+    IN inPartnerId               Integer   , -- Контрагент
+    IN inComment                 TVarChar  , -- Примечание
+    IN inIsAuto                  Boolean   , -- режим расчета  Дата отгрузки TRUE - расчет, FALSE - ручной режим
+    IN inSession                 TVarChar    -- сессия пользователя
 )
 RETURNS RECORD AS
 $BODY$
@@ -49,8 +51,12 @@ BEGIN
      END IF;
 
      -- 1. эти параметры всегда из Контрагента
-     outOperDatePartner:= inOperDate + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = inFromId AND DescId = zc_ObjectFloat_Partner_PrepareDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL;
-     outOperDatePartner_sale:= outOperDatePartner + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = inFromId AND DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL;
+     IF inIsAuto = TRUE   -- если стоит режим расчета даты отгрузки Авто, тогда расчитаваем значение 
+     THEN 
+         ioOperDatePartner:= inOperDate + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = inFromId AND DescId = zc_ObjectFloat_Partner_PrepareDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL;
+     END IF;
+     -- расчет от zc_MovementDate_OperDatePartner
+     outOperDatePartner_sale:= ioOperDatePartner + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = inFromId AND DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL;
 
      -- 2. эти параметры всегда из Прайс-листа
      IF COALESCE (ioPriceListId, 0) = 0
@@ -115,7 +121,7 @@ BEGIN
                                                  , inInvNumber           := inInvNumber
                                                  , inInvNumberPartner    := inInvNumberPartner
                                                  , inOperDate            := inOperDate
-                                                 , inOperDatePartner     := outOperDatePartner
+                                                 , inOperDatePartner     := ioOperDatePartner
                                                  , inOperDateMark        := inOperDateMark
                                                  , inPriceWithVAT        := outPriceWithVAT
                                                  , inVATPercent          := outVATPercent
@@ -135,6 +141,8 @@ BEGIN
      -- Комментарий
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
+     -- сохранили свойство <Режим расчета>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), ioId, inIsAuto);
 
 
 END;
@@ -144,6 +152,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.06.18         *
  13.09.15         * add ioPersonalId, ioPersonalName
  26.05.15         * add inPartnerId
  18.08.14                                        * add lpInsertUpdate_Movement_OrderExternal

@@ -28,6 +28,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , DayCount TFloat
              , isPrinted Boolean
              , isPromo Boolean
+             , isAuto Boolean
              , Comment TVarChar
               )
 AS
@@ -100,7 +101,8 @@ BEGIN
              , (1 + EXTRACT (DAY FROM ((CURRENT_DATE - INTERVAL '1 DAY') - (CURRENT_DATE - INTERVAL '7 DAY')))) :: TFloat AS DayCount
              , CAST (FALSE AS Boolean)                          AS isPrinted
              , CAST (FALSE AS Boolean)                          AS isPromo 
-             , CAST ('' as TVarChar) 		        AS Comment
+             , CAST (TRUE  AS Boolean)                          AS isAuto
+             , CAST ('' as TVarChar) 		                AS Comment
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_To ON Object_To.Id = CASE WHEN (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbObjectId_Branch_Constraint) = 11 -- ÙËÎË‡Î «‡ÔÓÓÊ¸Â
@@ -142,7 +144,7 @@ BEGIN
            , Object_Status.ObjectCode                   AS StatusCode
            , Object_Status.ValueData                    AS StatusName
            , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
-           , (Movement.OperDate + ((COALESCE (ObjectFloat_PrepareDayCount.ValueData, 0) + COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0)) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_sale
+           , (MovementDate_OperDatePartner.ValueData + ((COALESCE (ObjectFloat_PrepareDayCount.ValueData, 0) + COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0)) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_sale
            , MovementDate_OperDateMark.ValueData        AS OperDateMark
            , COALESCE (MovementDate_OperDateStart.ValueData, Movement.OperDate - (INTERVAL '7 DAY')) :: TDateTime      AS OperDateStart
            , COALESCE (MovementDate_OperDateEnd.ValueData, Movement.OperDate - (INTERVAL '1 DAY')) :: TDateTime        AS OperDateEnd           
@@ -184,6 +186,7 @@ BEGIN
                           )) :: TFloat AS DayCount
            , COALESCE (MovementBoolean_Print.ValueData, FALSE) AS isPrinted
            , COALESCE (MovementBoolean_Promo.ValueData, FALSE) AS isPromo 
+           , COALESCE (MovementBoolean_isAuto.ValueData, TRUE) AS isAuto
            , MovementString_Comment.ValueData       AS Comment
 
        FROM Movement
@@ -194,26 +197,30 @@ BEGIN
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
 
             LEFT JOIN MovementDate AS MovementDate_OperDateMark
-                                   ON MovementDate_OperDateMark.MovementId =  Movement.Id
+                                   ON MovementDate_OperDateMark.MovementId = Movement.Id
                                   AND MovementDate_OperDateMark.DescId = zc_MovementDate_OperDateMark()
 
             LEFT JOIN MovementDate AS MovementDate_OperDateStart
-                                   ON MovementDate_OperDateStart.MovementId =  Movement.Id
+                                   ON MovementDate_OperDateStart.MovementId = Movement.Id
                                   AND MovementDate_OperDateStart.DescId = zc_MovementDate_OperDateStart()
             LEFT JOIN MovementDate AS MovementDate_OperDateEnd
-                                   ON MovementDate_OperDateEnd.MovementId =  Movement.Id
+                                   ON MovementDate_OperDateEnd.MovementId = Movement.Id
                                   AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                      ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
             LEFT JOIN MovementBoolean AS MovementBoolean_Print
-                                      ON MovementBoolean_Print.MovementId =  Movement.Id
+                                      ON MovementBoolean_Print.MovementId = Movement.Id
                                      AND MovementBoolean_Print.DescId = zc_MovementBoolean_Print()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Promo
-                                      ON MovementBoolean_Promo.MovementId =  Movement.Id
+                                      ON MovementBoolean_Promo.MovementId = Movement.Id
                                      AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                      ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                     AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
@@ -306,6 +313,7 @@ ALTER FUNCTION gpGet_Movement_OrderExternal (Integer, TDateTime, TVarChar) OWNER
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 20.06.18         * add isAuto
  25.11.15         * add Promo
  21.05.15         * add Retail, Partner
  09.02.15         * add DayCount

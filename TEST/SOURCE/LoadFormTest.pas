@@ -796,6 +796,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalUnitJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalUnitJournalForm');
   //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternal_DatePartnerDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderExternal_DatePartnerDialogForm');
 end;
 
 procedure TLoadFormTest.LoadOrderTypeFormTest;

@@ -105,6 +105,13 @@ type
     actPrintTotal: TdsdPrintAction;
     spSelectPrintTotal: TdsdStoredProc;
     bbPrintTotal: TdxBarButton;
+    actUpdateOperDatePartner: TdsdDataSetRefresh;
+    ExecuteDialogUpdateOperDatePartner: TExecuteDialog;
+    macUpdateOperDatePartner: TMultiAction;
+    cbAuto: TcxCheckBox;
+    spUpdateMovement_OperDatePartner: TdsdStoredProc;
+    actRefreshGet: TdsdDataSetRefresh;
+    bbUpdateOperDatePartner: TdxBarButton;
   private
     { Private declarations }
   public
