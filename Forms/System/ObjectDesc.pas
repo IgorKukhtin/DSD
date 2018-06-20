@@ -11,11 +11,12 @@ uses
   cxPropertiesStore, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGrid, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, cxPCdxBarPopupMenu,
-  dxSkinsdxBarPainter, cxPC;
+  dxSkinsdxBarPainter, cxPC, Vcl.Menus;
 
 type
   TObjectDescForm = class(TAncestorEnumForm)
-    colName: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
   private
     { Private declarations }
   public

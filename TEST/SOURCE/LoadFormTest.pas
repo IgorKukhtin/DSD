@@ -122,6 +122,7 @@ type
     procedure LoadQualityParamsFormTest;
     procedure LoadQualityDocFormTest;
     procedure LoadQualityNumberFormTest;
+    procedure LoadReplFormTest;
     procedure LoadReestrFormTest;
     procedure LoadReestrKindFormTest;
     procedure LoadReportFormTest;
@@ -838,7 +839,7 @@ end;
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
   // exit;
-
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDataDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDataDialogForm');
 
@@ -868,9 +869,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProtocolForm');
-  {
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectDescForm'));
   TdsdFormStorageFactory.GetStorage.Load('TObjectDescForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TFormsForm'));
@@ -884,12 +886,12 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserProtocolForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementProtocolForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPeriodCloseForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPeriodCloseForm');
   exit;
@@ -1361,6 +1363,24 @@ procedure TLoadFormTest.LoadReestrKindFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReestrKindForm');
+end;
+
+procedure TLoadFormTest.LoadReplFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReplServerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReplServerForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReplServerEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReplServerEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReplObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReplObjectForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReplObjectEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReplObjectEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReplMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReplMovementForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReplMovementEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReplMovementEditForm');
 end;
 
 procedure TLoadFormTest.LoadReestrFormTest;

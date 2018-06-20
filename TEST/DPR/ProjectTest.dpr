@@ -1013,7 +1013,13 @@ uses
   Report_SaleOrderExtList_MobileDialog in '..\..\Forms\Report\Report_SaleOrderExtList_MobileDialog.pas' {Report_SaleOrderExtList_MobileDialogForm: TParentForm},
   Report_SaleOLAP_Analysis in '..\..\FormsBoutique\Report\Report_SaleOLAP_Analysis.pas' {Report_SaleOLAP_AnalysisForm: TParentForm},
   Report_AccountMotion in '..\..\Forms\Report\Report_AccountMotion.pas' {Report_AccountMotionForm: TParentForm},
-  OrderExternal_DatePartnerDialog in '..\..\Forms\Document\OrderExternal_DatePartnerDialog.pas' {OrderExternal_DatePartnerDialogForm: TParentForm};
+  OrderExternal_DatePartnerDialog in '..\..\Forms\Document\OrderExternal_DatePartnerDialog.pas' {OrderExternal_DatePartnerDialogForm: TParentForm},
+  ReplMovementEdit in '..\..\Forms\Guides\ReplMovementEdit.pas' {ReplMovementEditForm: TParentForm},
+  ReplObjectEdit in '..\..\Forms\Guides\ReplObjectEdit.pas' {ReplObjectEditForm: TParentForm},
+  ReplServerEdit in '..\..\Forms\Guides\ReplServerEdit.pas' {ReplServerEditForm: TParentForm},
+  ReplServer in '..\..\Forms\Guides\ReplServer.pas' {ReplServerForm: TParentForm},
+  ReplMovement in '..\..\Forms\Guides\ReplMovement.pas' {ReplMovementForm: TParentForm},
+  ReplObject in '..\..\Forms\Guides\ReplObject.pas' {ReplObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
