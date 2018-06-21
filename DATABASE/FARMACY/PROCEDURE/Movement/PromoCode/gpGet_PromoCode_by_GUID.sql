@@ -24,6 +24,7 @@ $BODY$
     DECLARE vbPromoChecked              Boolean;
     DECLARE vbPromoErased               Boolean;
     DECLARE vbPromoName                 TVarChar;
+    DECLARE vbBayerName                 TVarChar;
 BEGIN
 
     outPromoCodeID            := 0;
@@ -55,10 +56,11 @@ BEGIN
         PromoCode.id,
         CASE WHEN PromoCode.amount > 0 THEN TRUE ELSE FALSE END as PromoCodeChecked,
         PromoCode.iserased,
-        PromoAction.valuedata
+        PromoAction.valuedata,
+        MIString_Bayer.ValueData
     INTO
         vbStatusID, vbStartPromo, vbEndPromo, vbForSite, vbOneCode, vbPromoCodeChangePercent,
-        vbPromoID, vbPromoChecked, vbPromoErased, vbPromoName
+        vbPromoID, vbPromoChecked, vbPromoErased, vbPromoName, vbBayerName
     FROM
         MovementItemString PromoCode_GUID
         INNER JOIN MovementItem PromoCode
@@ -79,6 +81,8 @@ BEGIN
                 ON LinkPromoAction.movementid = Promo.id AND LinkPromoAction.descid = zc_MovementLinkObject_PromoCode()
         INNER JOIN Object PromoAction
                 ON PromoAction.id = LinkPromoAction.objectid
+        LEFT JOIN MovementItemString MIString_Bayer
+                ON PromoCode.ID = MIString_Bayer.MovementItemId AND MIString_Bayer.DescId = zc_MIString_Bayer()
     WHERE
         PromoCode_GUID.descid = zc_MIString_GUID() AND PromoCode_GUID.valuedata = inPromoGUID;
 
@@ -106,12 +110,12 @@ BEGIN
         RAISE EXCEPTION 'Промокод неактивен';
     END IF;
 
-    IF vbForSite THEN
-        RAISE EXCEPTION 'Промокод только для сайта';
+    IF vbForSite and COALESCE(vbBayerName, '') = '' THEN
+        RAISE EXCEPTION 'Промокод не выдан на сайте';
     END IF;
     
     -- проверка на уникальность промокода
-    IF vbOneCode THEN
+    IF vbOneCode OR vbForSite THEN
         IF EXISTS(SELECT * FROM MovementFloat 
                     WHERE descid = zc_MovementFloat_MovementItemId() AND valuedata = vbPromoID) THEN
             RAISE EXCEPTION 'Данный промокод уже использован';
@@ -144,6 +148,10 @@ $BODY$
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Подмогильный В.В.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 16.06.18               
  02.02.18                                                                                        *
 */
+
+-- тест
+-- select * from gpGet_PromoCode_by_GUID(inPromoGUID := '894ac34f' ,  inSession := '3354092');

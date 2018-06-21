@@ -42,9 +42,19 @@ BEGIN
      inCodeUKTZED          TVarChar  
     );
     
+    DROP TABLE IF EXISTS tblJSON_temp;
+    CREATE TABLE tblJSON_temp
+    (
+      inJSON                Text -- json 
+    );
+    
+    INSERT INTO tblJSON_temp
+    SELECT inJSON;    
+    
     INSERT INTO tblJSON
     SELECT *
-    FROM json_populate_recordset(null::tblJSON, replace(inJSON, '&quot;', '\"')::json);
+    FROM json_populate_recordset(null::tblJSON, replace(replace(replace(inJSON, '&quot;', '\"'), CHR(9),''), CHR(10),'')::json);
+    --FROM json_populate_recordset(null::tblJSON, inJSON::json);
     
     CREATE INDEX idx_tblJSON_CommonCode ON tblJSON USING btree (inCommonCode);
     CREATE INDEX idx_tblJSON_BarCode ON tblJSON USING btree (inBarCode);     
