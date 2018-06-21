@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReplServer(
     IN inName            TVarChar  ,    -- Название объекта 
     IN inHost            TVarChar  ,    -- 
     IN inUser            TVarChar  ,    -- 
-    IN inPassword        TVarChar  ,    -- 
+    IN inPassword        TVarChar  ,    --
     IN inPort            TVarChar  ,    -- 
     IN inDataBase        TVarChar  ,    -- 
     IN inSession         TVarChar       -- сессия пользователя

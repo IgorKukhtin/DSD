@@ -25,6 +25,7 @@ RETURNS TABLE (InvNumberTransport Integer, OperDate TDateTime
              , AmountFuel TFloat, AmountColdHour TFloat, AmountColdDistance TFloat
              , Amount_Distance_calc TFloat, Amount_ColdHour_calc TFloat, Amount_ColdDistance_calc TFloat
              , SumTransportAdd TFloat, SumTransportAddLong TFloat, SumTransportTaxi TFloat
+             , CountDoc_Reestr TFloat, TotalCountKg_Reestr TFloat
               )
 AS
 $BODY$
@@ -449,6 +450,33 @@ BEGIN
                                 OR MIFloat_Weight.ValueData <> 0 OR MIFloat_WeightTransport.ValueData <> 0
                                   )
                            )
+         -- вытаскиваем из реестра виз кол-во накладных и вес
+         , tmpDataReestr AS (SELECT tmp.MovementId                                           AS MovementId
+                                  , Count (DISTINCT MovementFloat_MovementItemId.MovementId) AS CountDoc
+                                  , SUM (MovementFloat_TotalCountKg.ValueData)               AS TotalCountKg
+                             FROM (SELECT DISTINCT tmpTransport.MovementId FROM tmpTransport) AS tmp
+                                  INNER JOIN MovementLinkMovement AS MovementLinkMovement_Transport
+                                                                  ON MovementLinkMovement_Transport.MovementChildId = tmp.MovementId
+                                                                 AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
+                                  INNER JOIN Movement AS Movement_Reestr 
+                                                      ON Movement_Reestr.Id = MovementLinkMovement_Transport.MovementId
+                                                     AND Movement_Reestr.DescId = zc_Movement_Reestr()
+                                                     AND Movement_Reestr.StatusId <> zc_Enum_Status_Erased()  --IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())   --zc_Enum_Status_Erased()
+                                  -- строки реестра
+                                  INNER JOIN MovementItem ON MovementItem.MovementId = MovementLinkMovement_Transport.MovementId
+                                                         AND MovementItem.DescId     = zc_MI_Master()
+                                                         AND MovementItem.isErased   = FALSE
+                                  -- связь с накладными
+                                  LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
+                                                          ON MovementFloat_MovementItemId.ValueData = MovementItem.Id
+                                                         AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
+                                  -- вес накладных
+                                  LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
+                                                          ON MovementFloat_TotalCountKg.MovementId = MovementFloat_MovementItemId.MovementId -- Movement_Sale.Id
+                                                         AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
+                             GROUP BY tmp.MovementId
+                             )
+
         -- результат
         SELECT zfConvert_StringToNumber (tmpFuel.InvNumber) AS InvNumberTransport
              , tmpFuel.OperDate
@@ -489,13 +517,16 @@ BEGIN
              , MAX (tmpFuel.SumTransportAddLong)      :: TFloat AS SumTransportAddLong
              , MAX (tmpFuel.SumTransportTaxi)         :: TFloat AS SumTransportTaxi
 
+             , MAX (tmpDataReestr.CountDoc)           :: TFloat AS CountDoc_Reestr
+             , MAX (tmpDataReestr.TotalCountKg)       :: TFloat AS TotalCountKg_Reestr
+
               -- группировка по всем
         FROM (SELECT tmpAll.MovementId
                    , tmpAll.InvNumber
                    , tmpAll.OperDate
                    , tmpAll.CarId
                    , tmpAll.PersonalDriverId
-                   ,  (tmpAll.RouteId)         AS RouteId
+                   , (tmpAll.RouteId)             AS RouteId
                    , MAX (tmpAll.RouteKindId)     AS RouteKindId
                    , MAX (tmpAll.RateFuelKindId)  AS RateFuelKindId
                    , (tmpAll.FuelId)              AS FuelId
@@ -527,6 +558,8 @@ BEGIN
                    , MAX (tmpAll.SumTransportAdd)          AS SumTransportAdd
                    , MAX (tmpAll.SumTransportAddLong)      AS SumTransportAddLong
                    , MAX (tmpAll.SumTransportTaxi)         AS SumTransportTaxi
+                   
+                   , ROW_NUMBER() OVER (PARTITION BY tmpAll.MovementId ORDER BY tmpAll.MovementId, MAX (tmpAll.Weight) desc) AS Ord
               FROM
              (-- 2.1. Начальный остаток (!!!расчетный!!!) + Расход топлива
               SELECT tmpTransport.MovementId
@@ -656,6 +689,10 @@ BEGIN
                             AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
              LEFT JOIN Object_Unit_View AS ViewObject_Unit
                                    ON ViewObject_Unit.Id = ObjectLink_Car_Unit.ChildObjectId
+                                   
+             -- данные из реестра виз
+             LEFT JOIN tmpDataReestr ON tmpDataReestr.MovementId = tmpFuel.MovementId
+                                     AND tmpFuel.Ord = 1
         WHERE COALESCE (ViewObject_Unit.BranchId, 0) = inBranchId 
            OR inBranchId = 0 
            OR (inBranchId = zc_Branch_Basis() AND COALESCE (ViewObject_Unit.BranchId, 0) = 0)   
@@ -681,6 +718,7 @@ ALTER FUNCTION gpReport_Transport (TDateTime, TDateTime, Integer, Integer, TVarC
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.06.18         * add tmpDataReestr
  07.07.14                                       * add Weight and WeightTransport
  09.02.14         * ограничения для zc_Branch_Basis()
  12.12.13         * add inBranchId     
@@ -690,3 +728,5 @@ ALTER FUNCTION gpReport_Transport (TDateTime, TDateTime, Integer, Integer, TVarC
 
 -- тест
 -- SELECT * FROM gpReport_Transport (inStartDate:= '01.01.2016', inEndDate:= '01.01.2016', inCarId:= null,  inBranchId:= 1, inSession:= zfCalc_UserAdmin());
+--select * from gpReport_Transport(inStartDate := ('01.12.2016')::TDateTime , inEndDate := ('31.12.2016')::TDateTime , inCarId := 0 , inBranchId := 0 ,  inSession := '5') as tt----
+--where InvNumberTransport = 38113

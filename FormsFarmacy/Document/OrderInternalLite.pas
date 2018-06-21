@@ -67,6 +67,8 @@ type
     Price: TcxGridDBColumn;
     AmountDeferred: TcxGridDBColumn;
     MinimumLot: TcxGridDBColumn;
+    OperDate_Zakaz: TcxGridDBColumn;
+    cxGridDBTableViewColumn2: TcxGridDBColumn;
   private
     { Private declarations }
   public

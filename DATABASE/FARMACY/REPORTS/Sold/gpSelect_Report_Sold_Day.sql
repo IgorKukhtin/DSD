@@ -33,6 +33,8 @@ BEGIN
     vbEndDate := date_trunc('month', inMonth) + Interval '1 MONTH';
     vbDayInMonth := (DATE_PART('day', vbEndDate - vbStartDate))::TFloat;
     
+    -- Контролшь использования подразделения
+    inUnitId := gpGet_CheckingUser_Unit(inUnitId, inSession);
     
     CREATE TEMP TABLE _TIME(
         PlanDate          TDateTime,  --Месяц плана
@@ -251,8 +253,9 @@ ALTER FUNCTION gpSelect_Report_SoldDay (TDateTime, Integer, Boolean, TVarChar) O
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А. Шаблий О.В.
- 28.09.15                                                                        *
+ 21.06.15                                                                                     *
  31.03.15                                                                                     *
+ 28.09.15                                                                        *
 */
 /*
 -- !!!

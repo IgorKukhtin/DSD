@@ -27,6 +27,8 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
     vbUserId:= lpGetUserBySession (inSession);
+    -- Контролшь использования подразделения
+    inUnitId := gpGet_CheckingUser_Unit(inUnitId, inSession);
 
     -- определяется <Торговая сеть>
     --vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
@@ -363,7 +365,8 @@ $BODY$
    
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 21.06.18                                                                                     *
  24.01.18         *
  09.10.17         *
 */

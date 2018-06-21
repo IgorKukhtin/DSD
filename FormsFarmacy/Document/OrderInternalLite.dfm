@@ -362,6 +362,24 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             HeaderAlignmentVert = vaCenter
             Width = 62
           end
+          object OperDate_Zakaz: TcxGridDBColumn
+            Caption = #1041#1083#1080#1078'. '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'OperDate_Zakaz'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1073#1083#1080#1078#1072#1081#1097#1077#1075#1086' '#1079#1072#1082#1072#1079#1072
+            Options.Editing = False
+            Width = 62
+          end
+          object cxGridDBTableViewColumn2: TcxGridDBColumn
+            Caption = #1041#1083#1080#1078'. '#1076#1086#1089#1090#1072#1074#1082#1072
+            DataBinding.FieldName = 'OperDate_Dostavka'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1073#1083#1080#1078#1072#1081#1097#1077#1081' '#1076#1086#1089#1090#1072#1074#1082#1080
+            Options.Editing = False
+            Width = 62
+          end
         end
       end
       object cxSplitter1: TcxSplitter

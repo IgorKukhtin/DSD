@@ -838,6 +838,8 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDataTimeDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDataTimeDialogForm');
   // exit;
  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDataDialogForm'));
@@ -1896,21 +1898,22 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_FuelForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FuelDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_FuelDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TransportForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TransportDialogForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TransportListForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportListDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TransportListDialogForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Transport_ProfitLossForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Transport_ProfitLossForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Transport_ProfitLossDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Transport_ProfitLossDialogForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadReportWageFormTest;
