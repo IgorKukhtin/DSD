@@ -311,8 +311,24 @@ end if;*/
                                        , inOperDate);
      -- !!!если по заявке, тогда берется из неё OperDatePartner, вообще - надо только для филиалов!!!
      inOperDate:= CASE WHEN vbBranchId   = zc_Branch_Basis()
+                         AND EXISTS (SELECT 1
+                                     FROM MovementLinkMovement
+                                          INNER JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                                                          ON MovementLinkMovement_Order.MovementChildId = MovementLinkMovement.MovementChildId
+                                                                         AND MovementLinkMovement_Order.DescId          = zc_MovementLinkMovement_Order()
+                                          INNER JOIN Movement ON Movement.Id       = MovementLinkMovement_Order.MovementId
+                                                             AND Movement.DescId   = zc_Movement_Sale()
+                                                             AND Movement.OperDate = inOperDate - INTERVAL '1 DAY'
+                                                             AND Movement.StatusId = zc_Enum_Status_Complete()
+                                     WHERE MovementLinkMovement.MovementId = inMovementId
+                                       AND MovementLinkMovement.DescId     = zc_MovementLinkMovement_Order()
+                                    )
+                            THEN inOperDate - INTERVAL '1 DAY' -- !!!сдвигаем на 1 день, т.к. НЕ успели закрыть до 8:00!!!
+
+                       WHEN vbBranchId   = zc_Branch_Basis()
                          OR inBranchCode = 2 -- филиал Киев
                             THEN inOperDate
+
                        ELSE vbOperDatePartner_order
                   END;
 

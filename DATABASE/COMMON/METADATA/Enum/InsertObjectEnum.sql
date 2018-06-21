@@ -277,6 +277,10 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_Trial(),     inDescId:= zc_Object_WorkTimeKind(), inCode:= 8, inName:= 'пробная смена' , inEnumName:= 'zc_Enum_WorkTimeKind_Trial');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_DayOff(),    inDescId:= zc_Object_WorkTimeKind(), inCode:= 9, inName:= 'Выходной'      , inEnumName:= 'zc_Enum_WorkTimeKind_DayOff');
 
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 13, inDescId:= zc_Object_WorkTimeKind(), inEnumName:= 'zc_Enum_WorkTimeKind_WorkD');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 14, inDescId:= zc_Object_WorkTimeKind(), inEnumName:= 'zc_Enum_WorkTimeKind_WorkN');
+
+
      -- !!! Типы формирования налогового документа
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DocumentTaxKind_Tax(),      		 inDescId:= zc_Object_DocumentTaxKind(), inCode:= 1, inName:= 'Налоговая',                                                   inEnumName:= 'zc_Enum_DocumentTaxKind_Tax');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(),  inDescId:= zc_Object_DocumentTaxKind(), inCode:= 2, inName:= 'Сводная налоговая по юр.л.(реализация)',                      inEnumName:= 'zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS');
