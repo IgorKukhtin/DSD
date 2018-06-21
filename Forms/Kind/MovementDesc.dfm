@@ -24,7 +24,6 @@ object MovementDescForm: TMovementDescForm
     Height = 239
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 533
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -35,6 +34,7 @@ object MovementDescForm: TMovementDescForm
       DataController.Summary.SummaryGroups = <>
       OptionsBehavior.IncSearch = True
       OptionsBehavior.IncSearchItem = clMovementDescName
+      OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
@@ -51,6 +51,7 @@ object MovementDescForm: TMovementDescForm
         Visible = False
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 45
       end
       object clMovementDescName: TcxGridDBColumn
@@ -58,6 +59,7 @@ object MovementDescForm: TMovementDescForm
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 252
       end
     end
