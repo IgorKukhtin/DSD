@@ -45,10 +45,11 @@ $BODY$
   DECLARE vbIsPartionDate_UnitFrom Boolean;
   DECLARE vbJuridicalId_Basis_From Integer;
   DECLARE vbBusinessId_From Integer;
+
+  DECLARE vbBranchId_To Integer;
 /*
   DECLARE vbUnitId_To Integer;
   DECLARE vbMemberId_To Integer;
-  DECLARE vbBranchId_To Integer;
   DECLARE vbAccountDirectionId_To Integer;
   DECLARE vbIsPartionDate_UnitTo Boolean;
   DECLARE vbJuridicalId_Basis_To Integer;
@@ -109,7 +110,10 @@ END IF;
 
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN MovementLinkObject_From.ObjectId ELSE 0 END, 0) AS UnitId_From
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Member() THEN MovementLinkObject_From.ObjectId ELSE 0 END, 0) AS MemberId_From
+
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN ObjectLink_UnitFrom_Branch.ChildObjectId WHEN Object_From.DescId = zc_Object_Member() THEN 0 ELSE 0 END, 0) AS BranchId_From
+          , COALESCE (ObjectLink_UnitTo_Branch.ChildObjectId, 0) AS BranchId_To
+          
           , COALESCE (ObjectLink_UnitFrom_AccountDirection.ChildObjectId, 0) AS AccountDirectionId_From -- јналитики счетов - направлени€ !!!обрабатываютс€ только дл€ подразделени€!!!
           , COALESCE (ObjectBoolean_PartionDate_From.ValueData, FALSE) AS isPartionDate_UnitFrom
 
@@ -117,7 +121,7 @@ END IF;
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN ObjectLink_UnitFrom_Business.ChildObjectId WHEN Object_From.DescId = zc_Object_Member() THEN 0 ELSE 0 END, 0) AS BusinessId_From
 
             INTO vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
-               , vbMovementDescId, vbOperDate, vbOperDatePartner, vbUnitId_From, vbMemberId_From, vbBranchId_From, vbAccountDirectionId_From, vbIsPartionDate_UnitFrom
+               , vbMovementDescId, vbOperDate, vbOperDatePartner, vbUnitId_From, vbMemberId_From, vbBranchId_From, vbBranchId_To, vbAccountDirectionId_From, vbIsPartionDate_UnitFrom
                , vbJuridicalId_Basis_From, vbBusinessId_From
      FROM Movement
           LEFT JOIN MovementDate AS MovementDate_OperDatePartner
@@ -158,6 +162,13 @@ END IF;
                                ON ObjectLink_UnitFrom_Business.ObjectId = MovementLinkObject_From.ObjectId
                               AND ObjectLink_UnitFrom_Business.DescId = zc_ObjectLink_Unit_Business()
                               AND Object_From.DescId = zc_Object_Unit()
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                       ON MovementLinkObject_To.MovementId = Movement.Id
+                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+          LEFT JOIN ObjectLink AS ObjectLink_UnitTo_Branch
+                               ON ObjectLink_UnitTo_Branch.ObjectId = MovementLinkObject_To.ObjectId
+                              AND ObjectLink_UnitTo_Branch.DescId = zc_ObjectLink_Unit_Branch()
 
      WHERE Movement.Id = inMovementId
        AND Movement.DescId = zc_Movement_SendOnPrice()
@@ -999,8 +1010,11 @@ END IF;
                        ) AS _tmpItemSumm_group ON _tmpItemSumm_group.MovementItemId = _tmpItem.MovementItemId
         WHERE zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
           AND _tmpItem.isLossMaterials = FALSE -- !!!если Ќ≈ списание!!!
-          AND (vbBranchId_From = 0                  -- + только если
-            OR vbBranchId_From = zc_Branch_Basis()) -- + со склада на филиал
+          AND ((vbBranchId_From = 0                  -- + только если
+             OR vbBranchId_From = zc_Branch_Basis()) -- + со склада на филиал
+               
+            OR (vbBranchId_From > 0 AND vbBranchId_To > 0 AND vbBranchId_From <> zc_Branch_Basis() AND vbBranchId_To <> zc_Branch_Basis())
+              )
        ;
 
      -- 1.2.4. !!!ѕроверка - в этом случае корреспонденци€ между с/с и ѕрибыль будущих периодов должна быть одинаковой

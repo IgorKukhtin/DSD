@@ -3,7 +3,7 @@ inherited OrderExternalForm: TOrderExternalForm
   ClientHeight = 411
   ClientWidth = 1362
   ExplicitWidth = 1378
-  ExplicitHeight = 449
+  ExplicitHeight = 446
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -678,13 +678,13 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 168
   end
   object cbAuto: TcxCheckBox [4]
-    Left = 1026
-    Top = 87
-    Caption = #1088#1077#1078#1080#1084' '#1088#1072#1089#1095#1077#1090#1072' '#1076#1072#1090#1099' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1072#1074#1090#1086#1084#1072#1090'. ('#1076#1072' / '#1085#1077#1090')'
+    Left = 179
+    Top = 83
+    Caption = #1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1087#1086' '#1092#1086#1088#1084#1091#1083#1077' ('#1076#1072'/'#1085#1077#1090')'
     Properties.ReadOnly = True
     State = cbsChecked
     TabOrder = 8
-    Width = 287
+    Width = 207
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -708,6 +708,7 @@ inherited OrderExternalForm: TOrderExternalForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     inherited actRefresh: TdsdDataSetRefresh
@@ -928,6 +929,7 @@ inherited OrderExternalForm: TOrderExternalForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 67
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object ExecuteDialogUpdateOperDatePartner: TExecuteDialog

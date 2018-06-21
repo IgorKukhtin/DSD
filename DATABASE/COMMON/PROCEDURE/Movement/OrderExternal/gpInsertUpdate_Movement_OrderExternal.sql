@@ -1,7 +1,5 @@
 -- Function: gpInsertUpdate_Movement_OrderExternal()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternal(
@@ -51,10 +49,12 @@ BEGIN
 
      vbisAuto := COALESCE ( (SELECT MovementBoolean.ValueData FROM MovementBoolean WHERE MovementBoolean.DescId = zc_MovementBoolean_isAuto() AND MovementBoolean.MovementId = ioId), TRUE) :: Boolean ;
      -- 1. эти параметры всегда из Контрагента
-     IF vbisAuto = TRUE   -- если стоит режим расчета даты отгрузки Авто, тогда расчитаваем значение 
+     IF vbisAuto = TRUE
      THEN 
+         -- для этого режима -  расчитаваем значение 
          outOperDatePartner:= inOperDate + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = inFromId AND DescId = zc_ObjectFloat_Partner_PrepareDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL;
      ELSE
+         -- для этого режима - берем св-во
          outOperDatePartner:= (SELECT MovementDate.ValueData
                                FROM MovementDate 
                                WHERE MovementDate.MovementId = ioId
