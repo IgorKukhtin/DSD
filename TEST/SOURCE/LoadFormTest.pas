@@ -838,6 +838,8 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDataTimeDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDataTimeDialogForm');
   // exit;
  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDataDialogForm'));

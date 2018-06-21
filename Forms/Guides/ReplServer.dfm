@@ -1,7 +1,7 @@
 object ReplServerForm: TReplServerForm
   Left = 0
   Top = 0
-  Caption = #1054#1089#1085#1086#1074#1085#1099#1077' '#1089#1088#1077#1076#1089#1090#1074#1072
+  Caption = #1057#1077#1088#1074#1077#1088#1072' '#1076#1083#1103' '#1056#1077#1087#1083#1080#1082#1080' '#1041#1044
   ClientHeight = 346
   ClientWidth = 895
   Color = clBtnFace
@@ -33,7 +33,12 @@ object ReplServerForm: TReplServerForm
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = #1057#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = Name
+        end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
@@ -46,6 +51,7 @@ object ReplServerForm: TReplServerForm
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
       OptionsView.CellAutoHeight = True
+      OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderAutoHeight = True
       OptionsView.HeaderHeight = 60
@@ -107,6 +113,7 @@ object ReplServerForm: TReplServerForm
       object StartTo: TcxGridDBColumn
         Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1085#1072#1095#1072#1083#1072' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1074' '#1073#1072#1079#1091'-Child'
         DataBinding.FieldName = 'StartTo'
+        PropertiesClassName = 'TcxDateEditProperties'
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -116,6 +123,7 @@ object ReplServerForm: TReplServerForm
       object StartFrom: TcxGridDBColumn
         Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1085#1072#1095#1072#1083#1072' '#1087#1086#1083#1091#1095#1077#1085#1080#1103' '#1080#1079' '#1073#1072#1079#1099'-Child'
         DataBinding.FieldName = 'StartFrom'
+        PropertiesClassName = 'TcxDateEditProperties'
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -125,6 +133,7 @@ object ReplServerForm: TReplServerForm
       object EndTo: TcxGridDBColumn
         Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1074' '#1073#1072#1079#1091'-Child'
         DataBinding.FieldName = 'EndTo'
+        PropertiesClassName = 'TcxDateEditProperties'
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -134,6 +143,7 @@ object ReplServerForm: TReplServerForm
       object EndFrom: TcxGridDBColumn
         Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103' '#1087#1086#1083#1091#1095#1077#1085#1080#1103' '#1080#1079' '#1073#1072#1079#1099'-Child'
         DataBinding.FieldName = 'EndFrom'
+        PropertiesClassName = 'TcxDateEditProperties'
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -142,6 +152,8 @@ object ReplServerForm: TReplServerForm
       object CountTo: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1087#1072#1082#1077#1090#1086#1074' '#1074' '#1087#1086#1089#1083'. '#1089#1077#1089#1089#1080#1080' '#1087#1088#1080' '#1086#1090#1087#1088#1072#1074#1082#1077' '#1074' '#1073#1072#1079#1091'-Child'
         DataBinding.FieldName = 'CountTo'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderHint = #1082#1086#1083'-'#1074#1086' '#1087#1072#1082#1077#1090#1086#1074' '#1074' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1089#1077#1089#1089#1080#1080' '#1087#1088#1080' '#1086#1090#1087#1088#1072#1074#1082#1077' '#1074' '#1073#1072#1079#1091'-Child'
@@ -150,6 +162,8 @@ object ReplServerForm: TReplServerForm
       object CountFrom: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1087#1072#1082#1077#1090#1086#1074' '#1074' '#1087#1086#1089#1083'. '#1089#1077#1089#1089#1080#1080' '#1087#1088#1080' '#1087#1086#1083#1091#1095#1077#1085#1080#1080' '#1080#1079' '#1073#1072#1079#1099'-Child'
         DataBinding.FieldName = 'CountFrom'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderHint = #1082#1086#1083'-'#1074#1086' '#1087#1072#1082#1077#1090#1086#1074' '#1074' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1089#1077#1089#1089#1080#1080' '#1087#1088#1080' '#1087#1086#1083#1091#1095#1077#1085#1080#1080' '#1080#1079' '#1073#1072#1079#1099'-Child'
@@ -270,6 +284,18 @@ object ReplServerForm: TReplServerForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateStartTo'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateStartFrom'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -345,11 +371,32 @@ object ReplServerForm: TReplServerForm
       Action = ProtocolOpenForm
       Category = 0
     end
+    object bbUpdateStartTo: TdxBarButton
+      Action = macUpdateStartTo
+      Category = 0
+    end
+    object bbUpdateStartFrom: TdxBarButton
+      Action = macUpdateStartFrom
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 280
     Top = 152
+    object actUpdateStartFrom: TdsdDataSetRefresh
+      Category = 'UpdateDate'
+      MoveParams = <>
+      StoredProc = spUpdate_ReplServer_StartFrom
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_ReplServer_StartFrom
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 77
+      RefreshOnTabSetChanges = True
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -363,6 +410,31 @@ object ReplServerForm: TReplServerForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object ExecuteDialogUpdateStartFrom: TExecuteDialog
+      Category = 'UpdateDate'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' / '#1074#1088#1077#1084#1103
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' / '#1074#1088#1077#1084#1103
+      ImageIndex = 77
+      FormName = 'TDataTimeDialogForm'
+      FormNameParam.Value = 'TDataTimeDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inOperDate'
+          Value = 43282d
+          Component = ClientDataSet
+          ComponentItem = 'StartFrom'
+          DataType = ftDateTime
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -384,6 +456,20 @@ object ReplServerForm: TReplServerForm
       DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
+    end
+    object macUpdateStartFrom: TMultiAction
+      Category = 'UpdateDate'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogUpdateStartFrom
+        end
+        item
+          Action = actUpdateStartFrom
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1085#1072#1095#1072#1083#1086' '#1087#1086#1083#1091#1095#1077#1085#1080#1103' '#1080#1079' '#1073#1072#1079#1099'-Child'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1085#1072#1095#1072#1083#1086' '#1087#1086#1083#1091#1095#1077#1085#1080#1103' '#1080#1079' '#1073#1072#1079#1099'-Child'
+      ImageIndex = 77
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -503,6 +589,60 @@ object ReplServerForm: TReplServerForm
         end>
       isShowModal = False
     end
+    object actUpdateStartTo: TdsdDataSetRefresh
+      Category = 'UpdateDate'
+      MoveParams = <>
+      StoredProc = spUpdate_ReplServer_StartTo
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_ReplServer_StartTo
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 76
+      RefreshOnTabSetChanges = True
+    end
+    object ExecuteDialogUpdateStartTo: TExecuteDialog
+      Category = 'UpdateDate'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' / '#1074#1088#1077#1084#1103
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' / '#1074#1088#1077#1084#1103
+      ImageIndex = 76
+      FormName = 'TDataTimeDialogForm'
+      FormNameParam.Value = 'TDataTimeDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inOperDate'
+          Value = 43282d
+          Component = ClientDataSet
+          ComponentItem = 'StartTo'
+          DataType = ftDateTime
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macUpdateStartTo: TMultiAction
+      Category = 'UpdateDate'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogUpdateStartTo
+        end
+        item
+          Action = actUpdateStartTo
+        end
+        item
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1085#1072#1095#1072#1083#1086' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1074' '#1073#1072#1079#1091'-Child'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1085#1072#1095#1072#1083#1086' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1074' '#1073#1072#1079#1091'-Child'
+      ImageIndex = 76
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ReplServer'
@@ -564,5 +704,71 @@ object ReplServerForm: TReplServerForm
     SummaryItemList = <>
     Left = 448
     Top = 112
+  end
+  object spUpdate_ReplServer_StartTo: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_ReplServer_Start'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 43282d
+        Component = ClientDataSet
+        ComponentItem = 'StartTo'
+        DataType = ftDateTime
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsTo'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 698
+    Top = 160
+  end
+  object spUpdate_ReplServer_StartFrom: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_ReplServer_Start'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = ClientDataSet
+        ComponentItem = 'StartFrom'
+        DataType = ftDateTime
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsTo'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 690
+    Top = 208
   end
 end

@@ -1019,7 +1019,8 @@ uses
   ReplServerEdit in '..\..\Forms\Guides\ReplServerEdit.pas' {ReplServerEditForm: TParentForm},
   ReplServer in '..\..\Forms\Guides\ReplServer.pas' {ReplServerForm: TParentForm},
   ReplMovement in '..\..\Forms\Guides\ReplMovement.pas' {ReplMovementForm: TParentForm},
-  ReplObject in '..\..\Forms\Guides\ReplObject.pas' {ReplObjectForm: TParentForm};
+  ReplObject in '..\..\Forms\Guides\ReplObject.pas' {ReplObjectForm: TParentForm},
+  DataTimeDialog in '..\..\Forms\System\DataTimeDialog.pas' {DataTimeDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

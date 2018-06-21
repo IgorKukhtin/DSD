@@ -20,7 +20,8 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, dxSkinsdxBarPainter, dsdAddOn,
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox;
+  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
+  cxCalendar, cxCurrencyEdit;
 
 type
   TReplServerForm = class(TParentForm)
@@ -69,6 +70,16 @@ type
     CountFrom: TcxGridDBColumn;
     isErrTo: TcxGridDBColumn;
     isErrFrom: TcxGridDBColumn;
+    spUpdate_ReplServer_StartTo: TdsdStoredProc;
+    actUpdateStartTo: TdsdDataSetRefresh;
+    ExecuteDialogUpdateStartTo: TExecuteDialog;
+    macUpdateStartTo: TMultiAction;
+    bbUpdateStartTo: TdxBarButton;
+    spUpdate_ReplServer_StartFrom: TdsdStoredProc;
+    actUpdateStartFrom: TdsdDataSetRefresh;
+    ExecuteDialogUpdateStartFrom: TExecuteDialog;
+    macUpdateStartFrom: TMultiAction;
+    bbUpdateStartFrom: TdxBarButton;
   private
     { Private declarations }
   public
