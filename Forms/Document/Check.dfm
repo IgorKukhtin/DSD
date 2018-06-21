@@ -3,7 +3,7 @@ inherited CheckForm: TCheckForm
   ClientHeight = 523
   ClientWidth = 817
   ExplicitWidth = 833
-  ExplicitHeight = 562
+  ExplicitHeight = 561
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1490,8 +1490,8 @@ inherited CheckForm: TCheckForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 482
-    Top = 336
+    Left = 378
+    Top = 384
   end
   object spUpdate_SpParam: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Check_SpParam'

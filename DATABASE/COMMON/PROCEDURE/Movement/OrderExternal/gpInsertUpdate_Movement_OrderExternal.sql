@@ -5,33 +5,34 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternal(
- INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
-    IN inInvNumber           TVarChar  , -- Номер документа
-    IN inInvNumberPartner    TVarChar  , -- Номер заявки у контрагента
-    IN inOperDate            TDateTime , -- Дата документа
-   OUT outOperDatePartner    TDateTime , -- Дата отгрузки со склада
-   OUT outOperDatePartner_sale TDateTime , -- Дата расходного документа у контрагента
-    IN inOperDateMark        TDateTime , -- Дата маркировки
-   OUT outPriceWithVAT       Boolean   , -- Цена с НДС (да/нет)
-   OUT outVATPercent         TFloat    , -- % НДС
-    IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
-    IN inFromId              Integer   , -- От кого (в документе)
-    IN inToId                Integer   , -- Кому (в документе)
-    IN inPaidKindId          Integer   , -- Виды форм оплаты
-    IN inContractId          Integer   , -- Договора
-    IN inRouteId             Integer   , -- Маршрут
-    IN inRouteSortingId      Integer   , -- Сортировки маршрутов
- INOUT ioPersonalId          Integer   , -- Сотрудник (экспедитор)
-   OUT outPersonalName       TVarChar  , -- Сотрудник (экспедитор)
- INOUT ioPriceListId         Integer   , -- Прайс лист
-   OUT outPriceListName      TVarChar  , -- Прайс лист
-    IN inPartnerId           Integer   , -- Контрагент
-    IN inComment             TVarChar  , -- Примечание
-    IN inSession             TVarChar    -- сессия пользователя
+ INOUT ioId                      Integer   , -- Ключ объекта <Документ Перемещение>
+    IN inInvNumber               TVarChar  , -- Номер документа
+    IN inInvNumberPartner        TVarChar  , -- Номер заявки у контрагента
+    IN inOperDate                TDateTime , -- Дата документа
+   OUT outOperDatePartner        TDateTime , -- Дата отгрузки со склада
+   OUT outOperDatePartner_sale   TDateTime , -- Дата расходного документа у контрагента
+    IN inOperDateMark            TDateTime , -- Дата маркировки
+   OUT outPriceWithVAT           Boolean   , -- Цена с НДС (да/нет)
+   OUT outVATPercent             TFloat    , -- % НДС
+    IN inChangePercent           TFloat    , -- (-)% Скидки (+)% Наценки
+    IN inFromId                  Integer   , -- От кого (в документе)
+    IN inToId                    Integer   , -- Кому (в документе)
+    IN inPaidKindId              Integer   , -- Виды форм оплаты
+    IN inContractId              Integer   , -- Договора
+    IN inRouteId                 Integer   , -- Маршрут
+    IN inRouteSortingId          Integer   , -- Сортировки маршрутов
+ INOUT ioPersonalId              Integer   , -- Сотрудник (экспедитор)
+   OUT outPersonalName           TVarChar  , -- Сотрудник (экспедитор)
+ INOUT ioPriceListId             Integer   , -- Прайс лист
+   OUT outPriceListName          TVarChar  , -- Прайс лист
+    IN inPartnerId               Integer   , -- Контрагент
+    IN inComment                 TVarChar  , -- Примечание
+    IN inSession                 TVarChar    -- сессия пользователя
 )
 RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbisAuto Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
@@ -48,8 +49,18 @@ BEGIN
      THEN inToId:= 133049; -- Склад реализации мясо
      END IF;
 
+     vbisAuto := COALESCE ( (SELECT MovementBoolean.ValueData FROM MovementBoolean WHERE MovementBoolean.DescId = zc_MovementBoolean_isAuto() AND MovementBoolean.MovementId = ioId), TRUE) :: Boolean ;
      -- 1. эти параметры всегда из Контрагента
-     outOperDatePartner:= inOperDate + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = inFromId AND DescId = zc_ObjectFloat_Partner_PrepareDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL;
+     IF vbisAuto = TRUE   -- если стоит режим расчета даты отгрузки Авто, тогда расчитаваем значение 
+     THEN 
+         outOperDatePartner:= inOperDate + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = inFromId AND DescId = zc_ObjectFloat_Partner_PrepareDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL;
+     ELSE
+         outOperDatePartner:= (SELECT MovementDate.ValueData
+                               FROM MovementDate 
+                               WHERE MovementDate.MovementId = ioId
+                                 AND MovementDate.DescId = zc_MovementDate_OperDatePartner());
+     END IF;
+     -- расчет от zc_MovementDate_OperDatePartner
      outOperDatePartner_sale:= outOperDatePartner + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = inFromId AND DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL;
 
      -- 2. эти параметры всегда из Прайс-листа
@@ -135,8 +146,6 @@ BEGIN
      -- Комментарий
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
-
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -144,6 +153,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.06.18         *
  13.09.15         * add ioPersonalId, ioPersonalName
  26.05.15         * add inPartnerId
  18.08.14                                        * add lpInsertUpdate_Movement_OrderExternal

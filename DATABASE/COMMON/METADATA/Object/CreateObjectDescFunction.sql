@@ -6,6 +6,15 @@ CREATE OR REPLACE FUNCTION zc_Object_ReplServer() RETURNS Integer AS $BODY$BEGIN
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_ReplServer', 'Сервера для Реплики БД' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ReplServer');
 
+CREATE OR REPLACE FUNCTION zc_Object_ReplMovement() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ReplMovement'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_ReplMovement', 'Репликация документов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ReplMovement');
+
+CREATE OR REPLACE FUNCTION zc_Object_ReplObject() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ReplObject'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_ReplObject', 'Репликация справочников' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ReplObject');
+
+--
 CREATE OR REPLACE FUNCTION zc_Object_Account() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Account'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_Account', 'Счет' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Account');
@@ -1042,6 +1051,8 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 20.06.18         * zc_Object_ReplMovement
+                    zc_Object_ReplObject
  28.05.18                                                                                        * zc_Object_Address, zc_Object_JuridicalLegalAddress, zc_Object_JuridicalActualAddress
  04.05.18                                                                                        * zc_Object_UnitCategory
  18.04.18         * zc_Object_MemberSheetWorkTime

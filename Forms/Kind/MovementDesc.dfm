@@ -3,7 +3,7 @@ object MovementDescForm: TMovementDescForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1080#1076#1099' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'>'
   ClientHeight = 265
-  ClientWidth = 533
+  ClientWidth = 462
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,10 +20,11 @@ object MovementDescForm: TMovementDescForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 533
+    Width = 462
     Height = 239
     Align = alClient
     TabOrder = 0
+    ExplicitWidth = 533
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -183,6 +184,7 @@ object MovementDescForm: TMovementDescForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -190,6 +192,15 @@ object MovementDescForm: TMovementDescForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Code'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

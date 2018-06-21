@@ -950,6 +950,14 @@ type
     N193: TMenuItem;
     actReport_AccountMotion: TdsdOpenForm;
     miReport_AccountMotion: TMenuItem;
+    actReplServer: TdsdOpenForm;
+    actReplMovement: TdsdOpenForm;
+    actReplObject: TdsdOpenForm;
+    miRepl: TMenuItem;
+    N194: TMenuItem;
+    miReplServer: TMenuItem;
+    miReplObject: TMenuItem;
+    miReplMovement: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

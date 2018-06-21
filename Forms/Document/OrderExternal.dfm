@@ -413,7 +413,7 @@ inherited OrderExternalForm: TOrderExternalForm
     object edOperDatePartner: TcxDateEdit
       Left = 183
       Top = 63
-      EditValue = 42195d
+      EditValue = 43282d
       Enabled = False
       Properties.ReadOnly = True
       Properties.SaveTime = False
@@ -677,6 +677,15 @@ inherited OrderExternalForm: TOrderExternalForm
     Text = ' '
     Width = 168
   end
+  object cbAuto: TcxCheckBox [4]
+    Left = 1026
+    Top = 87
+    Caption = #1088#1077#1078#1080#1084' '#1088#1072#1089#1095#1077#1090#1072' '#1076#1072#1090#1099' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1072#1074#1090#1086#1084#1072#1090'. ('#1076#1072' / '#1085#1077#1090')'
+    Properties.ReadOnly = True
+    State = cbsChecked
+    TabOrder = 8
+    Width = 287
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
     Top = 552
@@ -688,10 +697,23 @@ inherited OrderExternalForm: TOrderExternalForm
   inherited ActionList: TActionList
     Left = 15
     Top = 262
+    object actRefreshGet: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = True
+    end
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    object actPrintTotal: TdsdPrintAction [8]
+    object actPrintTotal: TdsdPrintAction [9]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintTotal
@@ -731,6 +753,9 @@ inherited OrderExternalForm: TOrderExternalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
@@ -785,7 +810,7 @@ inherited OrderExternalForm: TOrderExternalForm
     inherited actMovementItemContainer: TdsdOpenForm
       Enabled = False
     end
-    object actGoodsKindChoice: TOpenChoiceForm [14]
+    object actGoodsKindChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -812,7 +837,7 @@ inherited OrderExternalForm: TOrderExternalForm
         end>
       isShowModal = True
     end
-    object actRefreshPrice: TdsdDataSetRefresh [19]
+    object actRefreshPrice: TdsdDataSetRefresh [20]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -891,6 +916,73 @@ inherited OrderExternalForm: TOrderExternalForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actUpdateOperDatePartner: TdsdDataSetRefresh
+      Category = 'OperDatePartner'
+      MoveParams = <>
+      StoredProc = spUpdateMovement_OperDatePartner
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMovement_OperDatePartner
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 67
+      RefreshOnTabSetChanges = True
+    end
+    object ExecuteDialogUpdateOperDatePartner: TExecuteDialog
+      Category = 'OperDatePartner'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1086#1090#1075#1088#1091#1079#1082#1080
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1086#1090#1075#1088#1091#1079#1082#1080
+      ImageIndex = 67
+      FormName = 'TOrderExternal_DatePartnerDialogForm'
+      FormNameParam.Value = 'TOrderExternal_DatePartnerDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inOperDatePartner'
+          Value = 43282d
+          Component = edOperDatePartner
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inIsAuto'
+          Value = Null
+          Component = cbAuto
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inIsAuto'
+          Value = 'False'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macUpdateOperDatePartner: TMultiAction
+      Category = 'OperDatePartner'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogUpdateOperDatePartner
+        end
+        item
+          Action = actUpdateOperDatePartner
+        end
+        item
+          Action = actRefreshGet
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1095#1077#1082#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1095#1077#1082#1072
+      ImageIndex = 67
     end
   end
   inherited MasterDS: TDataSource
@@ -1000,6 +1092,14 @@ inherited OrderExternalForm: TOrderExternalForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateOperDatePartner'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -1060,6 +1160,11 @@ inherited OrderExternalForm: TOrderExternalForm
     object bbPrintTotal: TdxBarButton
       Action = actPrintTotal
       Caption = #1055#1077#1095#1072#1090#1100' '#1080#1090#1086#1075#1086' '#1087#1086' '#1070#1088'.'#1083#1080#1094#1091
+      Category = 0
+    end
+    object bbUpdateOperDatePartner: TdxBarButton
+      Action = macUpdateOperDatePartner
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1086#1090#1075#1088#1091#1079#1082#1080
       Category = 0
     end
   end
@@ -1460,6 +1565,13 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = cbPromo
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isAuto'
+        Value = Null
+        Component = cbAuto
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1637,6 +1749,13 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = ceComment
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = 'True'
+        Component = cbAuto
+        DataType = ftBoolean
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 162
@@ -2257,7 +2376,7 @@ inherited OrderExternalForm: TOrderExternalForm
         MultiSelectSeparator = ','
       end>
     Left = 1138
-    Top = 67
+    Top = 155
   end
   object PriceListGuides: TdsdGuides
     KeyField = 'Id'
@@ -2475,5 +2594,54 @@ inherited OrderExternalForm: TOrderExternalForm
     PackSize = 1
     Left = 383
     Top = 232
+  end
+  object spUpdateMovement_OperDatePartner: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_OrderExternal_OperDatePartner'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFromId'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDatePartner'
+        Value = 42261d
+        Component = edOperDatePartner
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsAuto'
+        Value = 'edInvNumber'
+        Component = cbAuto
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 826
+    Top = 264
   end
 end

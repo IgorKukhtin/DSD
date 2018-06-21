@@ -2,6 +2,23 @@
 --------------------------- !!! НОВАЯ СХЕМА !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_ReplServer_StartTo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ReplServer_StartTo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ReplServer(), 'zc_ObjectDate_ReplServer_StartTo', 'Дата/время начала отправки в базу-Child' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ReplServer_StartTo');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_ReplServer_EndTo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ReplServer_EndTo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ReplServer(), 'zc_ObjectDate_ReplServer_EndTo', 'Дата/время завершения отправки в базу-Child' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ReplServer_EndTo');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_ReplServer_StartFrom() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ReplServer_StartFrom'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ReplServer(), 'zc_ObjectDate_ReplServer_StartFrom', 'Дата/время начала получения из базы-Child' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ReplServer_StartFrom');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_ReplServer_EndFrom() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ReplServer_EndFrom'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ReplServer(), 'zc_ObjectDate_ReplServer_EndFrom', 'Дата/время завершения получения из базы-Child' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ReplServer_EndFrom');
+
+--
 CREATE OR REPLACE FUNCTION zc_ObjectDate_Personal_In() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Personal_In'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Personal(), 'zc_ObjectDate_Personal_In', 'Дата принятия у сотрудника' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Personal_In');
@@ -296,6 +313,7 @@ INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 20.06.18         * zc_ObjectDate_ReplServer_...
  14.05.18                                                                                     * zc_ObjectFloat_Unit_NormOfManDays, zc_ObjectFloat_UnitCategory_PenaltyNonMinPlan
                                                                                                 zc_ObjectFloat_UnitCategory_PremiumImplPlan, zc_ObjectFloat_UnitCategory_MinLineByLineImplPlan 
  18.01.18         * zc_ObjectDate_MemberSP_HappyDate

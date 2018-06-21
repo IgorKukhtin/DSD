@@ -1547,6 +1547,12 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 296

@@ -1,7 +1,15 @@
 --------------------------- !!!!!!!!!!!!!!!!!!!
 --------------------------- !!! НОВАЯ СХЕМА !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_ReplServer_CountTo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReplServer_CountTo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ReplServer(), 'zc_ObjectFloat_ReplServer_CountTo', 'кол-во пакетов в последней сессии при отправке в базу-Child' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReplServer_CountTo');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_ReplServer_CountFrom() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReplServer_CountFrom'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ReplServer(), 'zc_ObjectFloat_ReplServer_CountFrom', 'кол-во пакетов в последней сессии при получении из базы-Child' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReplServer_CountFrom');
+
+--
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_Box_Volume() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Box_Volume'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Box(), 'zc_ObjectFloat_Box_Volume', 'Объем, м3.' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Box_Volume');
@@ -1072,6 +1080,8 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 20.06.18         * zc_ObjectFloat_ReplServer_CountTo
+                    zc_ObjectFloat_ReplServer_CountFrom
  18.02.18         * zc_ObjectFloat_GoodsByGoodsKind_WeightPackageSticker
  05.12.17         * zc_ObjectFloat_WorkTimeKind_Tax
  02.11.17         * zc_ObjectFloat_GoodsReportSale_..........
