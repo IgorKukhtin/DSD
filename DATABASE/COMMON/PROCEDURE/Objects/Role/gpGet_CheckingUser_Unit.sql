@@ -16,11 +16,10 @@ BEGIN
     -- Ограничение на просмотр товарного справочника
     vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
     
-    IF (vbUserId <> 3) AND EXISTS(SELECT DefaultValue.DefaultValue
-                              FROM gpSelect_Object_RoleUser (inSession) as Object_RoleUser
-                                   INNER JOIN DefaultValue ON DefaultValue.UserKeyId = Object_RoleUser.RoleId
-                                   INNER JOIN DefaultKeys ON DefaultKeys.Id = DefaultValue.DefaultKeyId
-                              WHERE DefaultKeys.Key = 'zc_Object_Retail' AND  Object_RoleUser.ID = vbUserId) 
+    IF (vbUserId <> 3) AND EXISTS(SELECT Object.Id FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+                                            LEFT JOIN Object ON Object.Id = Object_RoleUser.RoleId
+                                                            AND Object.DescId = zc_Object_Role()
+                                  WHERE Object_RoleUser.ID = vbUserId AND Object.ValueData = 'Франчайзи') 
     THEN
       IF NOT EXISTS(SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
                 FROM ObjectLink AS ObjectLink_Unit_Juridical
@@ -68,4 +67,4 @@ ALTER FUNCTION gpGet_CheckingUser_Unit(integer, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpGet_CheckingUser_Unit(0, '3')
+-- SELECT * FROM gpGet_CheckingUser_Unit(0, '183242')

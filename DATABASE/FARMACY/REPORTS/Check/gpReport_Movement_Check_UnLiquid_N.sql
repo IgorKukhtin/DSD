@@ -28,6 +28,8 @@ BEGIN
     vbUserId:= lpGetUserBySession (inSession);
     -- Ограничение на просмотр товарного справочника
     vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
+    -- Контролшь использования подразделения
+    inUnitId := gpGet_CheckingUser_Unit(inUnitId, inSession);
 
 
     -- отбросили время
