@@ -50,11 +50,10 @@ object ReplServerForm: TReplServerForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
-      OptionsView.CellAutoHeight = True
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
+      OptionsView.GroupSummaryLayout = gslAlignWithColumnsAndDistribute
       OptionsView.HeaderAutoHeight = True
-      OptionsView.HeaderHeight = 60
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object Code: TcxGridDBColumn
@@ -118,7 +117,7 @@ object ReplServerForm: TReplServerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1085#1072#1095#1072#1083#1072' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1074' '#1073#1072#1079#1091'-Child'
-        Width = 86
+        Width = 94
       end
       object StartFrom: TcxGridDBColumn
         Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1085#1072#1095#1072#1083#1072' '#1087#1086#1083#1091#1095#1077#1085#1080#1103' '#1080#1079' '#1073#1072#1079#1099'-Child'
@@ -157,7 +156,7 @@ object ReplServerForm: TReplServerForm
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderHint = #1082#1086#1083'-'#1074#1086' '#1087#1072#1082#1077#1090#1086#1074' '#1074' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1089#1077#1089#1089#1080#1080' '#1087#1088#1080' '#1086#1090#1087#1088#1072#1074#1082#1077' '#1074' '#1073#1072#1079#1091'-Child'
-        Width = 60
+        Width = 89
       end
       object CountFrom: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1087#1072#1082#1077#1090#1086#1074' '#1074' '#1087#1086#1089#1083'. '#1089#1077#1089#1089#1080#1080' '#1087#1088#1080' '#1087#1086#1083#1091#1095#1077#1085#1080#1080' '#1080#1079' '#1073#1072#1079#1099'-Child'
@@ -167,7 +166,7 @@ object ReplServerForm: TReplServerForm
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderHint = #1082#1086#1083'-'#1074#1086' '#1087#1072#1082#1077#1090#1086#1074' '#1074' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1089#1077#1089#1089#1080#1080' '#1087#1088#1080' '#1087#1086#1083#1091#1095#1077#1085#1080#1080' '#1080#1079' '#1073#1072#1079#1099'-Child'
-        Width = 60
+        Width = 93
       end
       object isErrTo: TcxGridDBColumn
         Caption = #1041#1099#1083#1072' '#1086#1096#1080#1073#1082#1072' '#1087#1088#1080' '#1086#1090#1087#1088#1072#1074#1082#1077' '#1074' '#1073#1072#1079#1091'-Child'

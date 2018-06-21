@@ -3,7 +3,7 @@ object Report_TransportForm: TReport_TransportForm
   Top = 0
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1091#1090#1077#1074#1099#1084' '#1083#1080#1089#1090#1072#1084
   ClientHeight = 395
-  ClientWidth = 1329
+  ClientWidth = 1336
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,10 +20,11 @@ object Report_TransportForm: TReport_TransportForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 1329
+    Width = 1336
     Height = 338
     Align = alClient
     TabOrder = 0
+    ExplicitWidth = 1329
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -157,6 +158,16 @@ object Report_TransportForm: TReport_TransportForm
           Format = ',0.##'
           Kind = skSum
           Column = SumTransportTaxi
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = CountDoc_Reestr
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = TotalCountKg_Reestr
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -269,6 +280,16 @@ object Report_TransportForm: TReport_TransportForm
           Format = ',0.##'
           Kind = skSum
           Column = SumTransportTaxi
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = CountDoc_Reestr
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = TotalCountKg_Reestr
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -585,6 +606,30 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 58
       end
+      object CountDoc_Reestr: TcxGridDBColumn
+        Caption = #1050#1086#1083'.'#1076#1086#1082'. ('#1074' '#1088#1077#1077#1089#1090#1088#1077' '#1074#1080#1079')'
+        DataBinding.FieldName = 'CountDoc_Reestr'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'. '#1076#1086#1082'. ('#1074' '#1088#1077#1077#1089#1090#1088#1077' '#1074#1080#1079')'
+        Options.Editing = False
+        Width = 70
+      end
+      object TotalCountKg_Reestr: TcxGridDBColumn
+        Caption = #1048#1090#1086#1075#1086' '#1042#1077#1089' ('#1074' '#1088#1077#1077#1089#1090#1088#1077' '#1074#1080#1079')'
+        DataBinding.FieldName = 'TotalCountKg_Reestr'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1077#1089' ('#1074' '#1088#1077#1077#1089#1090#1088#1077' '#1074#1080#1079')'
+        Options.Editing = False
+        Width = 76
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -593,10 +638,11 @@ object Report_TransportForm: TReport_TransportForm
   object Panel1: TPanel
     Left = 0
     Top = 26
-    Width = 1329
+    Width = 1336
     Height = 31
     Align = alTop
     TabOrder = 5
+    ExplicitWidth = 1329
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
