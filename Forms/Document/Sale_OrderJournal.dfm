@@ -5,7 +5,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -71
   ExplicitWidth = 1202
   ExplicitHeight = 573
   PixelsPerInch = 96
@@ -16,17 +15,17 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     Height = 374
     TabOrder = 3
     ExplicitTop = 76
-    ExplicitWidth = 1177
+    ExplicitWidth = 1186
     ExplicitHeight = 374
     ClientRectBottom = 374
     ClientRectRight = 1186
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1177
+      ExplicitWidth = 1186
       ExplicitHeight = 374
       inherited cxGrid: TcxGrid
         Width = 1186
         Height = 374
-        ExplicitWidth = 1177
+        ExplicitWidth = 1186
         ExplicitHeight = 374
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -314,6 +313,13 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
+          end
+          object RetailName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
@@ -757,7 +763,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   inherited Panel: TPanel
     Width = 1186
     Height = 50
-    ExplicitWidth = 1177
+    ExplicitWidth = 1186
     ExplicitHeight = 50
     inherited deStart: TcxDateEdit
       Left = 112
@@ -810,7 +816,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     Align = alBottom
     TabOrder = 6
     Visible = False
-    ExplicitWidth = 1177
     object ExportXmlGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ExportDS

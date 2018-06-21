@@ -24,7 +24,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
-             , JuridicalName_To TVarChar, OKPO_To TVarChar
+             , JuridicalName_To TVarChar, OKPO_To TVarChar, RetailName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar
 
                -- Заявка
@@ -150,6 +150,7 @@ BEGIN
            , View_Contract_InvNumber.ContractTagName        AS ContractTagName
            , Object_JuridicalTo.ValueData                   AS JuridicalName_To
            , ObjectHistory_JuridicalDetails_View.OKPO       AS OKPO_To
+           , Object_Retail.ValueData                        AS RetailName
            , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
            , View_InfoMoney.InfoMoneyName_all               AS InfoMoneyName
 
@@ -314,6 +315,11 @@ BEGIN
             LEFT JOIN Object AS Object_JuridicalTo ON Object_JuridicalTo.Id = ObjectLink_Partner_Juridical.ChildObjectId
             LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_JuridicalTo.Id
             LEFT JOIN tmpBranchJuridical ON tmpBranchJuridical.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
