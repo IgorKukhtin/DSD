@@ -84,7 +84,8 @@ BEGIN
            , Object_Status.ObjectCode                       AS StatusCode
            , Object_Status.ValueData                        AS StatusName
            , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
-           , (Movement.OperDate + ((COALESCE (ObjectFloat_PrepareDayCount.ValueData, 0) + COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0)) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_sale
+           --, (Movement.OperDate + ((COALESCE (ObjectFloat_PrepareDayCount.ValueData, 0) + COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0)) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_sale
+           , (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_sale
            , MovementDate_OperDateMark.ValueData            AS OperDateMark
            , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner
            , Object_From.Id                                 AS FromId
