@@ -17,6 +17,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , Weight TFloat
              , WeightPackage TFloat, WeightPackageSticker TFloat
              , WeightTotal TFloat, ChangePercentAmount TFloat
+             , WeightMin TFloat, WeightMax TFloat
+             , Height TFloat, Length TFloat, Width TFloat
              , isOrder Boolean, isScaleCeh Boolean, isNotMobile Boolean
              , GoodsSubId Integer, GoodsSubCode Integer, GoodsSubName TVarChar, MeasureSubName TVarChar
              , GoodsKindSubId Integer, GoodsKindSubName TVarChar 
@@ -60,6 +62,13 @@ BEGIN
            , COALESCE (ObjectFloat_WeightPackageSticker.ValueData,0)::TFloat  AS WeightPackageSticker
            , COALESCE (ObjectFloat_WeightTotal.ValueData,0)         ::TFloat  AS WeightTotal
            , COALESCE (ObjectFloat_ChangePercentAmount.ValueData,0) ::TFloat  AS ChangePercentAmount
+           
+           , COALESCE (ObjectFloat_WeightMin.ValueData,0)       ::TFloat  AS WeightMin
+           , COALESCE (ObjectFloat_WeightMax.ValueData,0)       ::TFloat  AS WeightMax
+           , COALESCE (ObjectFloat_Height.ValueData,0)          ::TFloat  AS Height
+           , COALESCE (ObjectFloat_Length.ValueData,0)          ::TFloat  AS Length
+           , COALESCE (ObjectFloat_Width.ValueData,0)           ::TFloat  AS Width
+                      
            , COALESCE (ObjectBoolean_Order.ValueData, False)           AS isOrder
            , COALESCE (ObjectBoolean_ScaleCeh.ValueData, False)        AS isScaleCeh
            , COALESCE (ObjectBoolean_NotMobile.ValueData, False)       AS isNotMobile
@@ -98,7 +107,27 @@ BEGIN
            LEFT JOIN ObjectFloat AS ObjectFloat_ChangePercentAmount
                                  ON ObjectFloat_ChangePercentAmount.ObjectId = Object_GoodsByGoodsKind_View.Id 
                                 AND ObjectFloat_ChangePercentAmount.DescId = zc_ObjectFloat_GoodsByGoodsKind_ChangePercentAmount()
-                                                                
+--
+           LEFT JOIN ObjectFloat AS ObjectFloat_WeightMin
+                                 ON ObjectFloat_WeightMin.ObjectId = Object_GoodsByGoodsKind_View.Id 
+                                AND ObjectFloat_WeightMin.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightMin()
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_WeightMax
+                                 ON ObjectFloat_WeightMax.ObjectId = Object_GoodsByGoodsKind_View.Id 
+                                AND ObjectFloat_WeightMax.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightMax()
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_Height
+                                 ON ObjectFloat_Height.ObjectId = Object_GoodsByGoodsKind_View.Id 
+                                AND ObjectFloat_Height.DescId = zc_ObjectFloat_GoodsByGoodsKind_Height()
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_Length
+                                 ON ObjectFloat_Length.ObjectId = Object_GoodsByGoodsKind_View.Id 
+                                AND ObjectFloat_Length.DescId = zc_ObjectFloat_GoodsByGoodsKind_Length()
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_Width
+                                 ON ObjectFloat_Width.ObjectId = Object_GoodsByGoodsKind_View.Id 
+                                AND ObjectFloat_Width.DescId = zc_ObjectFloat_GoodsByGoodsKind_Width()
+--                           
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Order
                                    ON ObjectBoolean_Order.ObjectId = Object_GoodsByGoodsKind_View.Id 
                                   AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
@@ -203,6 +232,7 @@ ALTER FUNCTION gpSelect_Object_GoodsByGoodsKind (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».  
+ 22.06.18        * 
  18.02.18        * add WeightPackageSticker  
  21.12.17        * add GoodsSPack, GoodsKindPack
  09.06.17        * add NotMobile

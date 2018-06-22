@@ -183,6 +183,63 @@ inherited GoodsByGoodsKind_StickerForm: TGoodsByGoodsKind_StickerForm
             Options.Editing = False
             Width = 60
           end
+          object WeightMin: TcxGridDBColumn
+            Caption = #1052#1080#1085'. '#1074#1077#1089
+            DataBinding.FieldName = 'WeightMin'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1084#1080#1085#1080#1084#1072#1083#1100#1085#1099#1081' '#1074#1077#1089
+            Options.Editing = False
+            Width = 70
+          end
+          object WeightMax: TcxGridDBColumn
+            Caption = #1052#1072#1093'. '#1074#1077#1089
+            DataBinding.FieldName = 'WeightMax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1084#1072#1082#1089#1080#1084#1072#1083#1100#1085#1099#1081' '#1074#1077#1089
+            Options.Editing = False
+            Width = 70
+          end
+          object Height: TcxGridDBColumn
+            Caption = #1042#1099#1089#1086#1090#1072
+            DataBinding.FieldName = 'Height'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Length: TcxGridDBColumn
+            Caption = #1044#1083#1080#1085#1072
+            DataBinding.FieldName = 'Length'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Width: TcxGridDBColumn
+            Caption = #1064#1080#1088#1080#1085#1072
+            DataBinding.FieldName = 'Width'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object isOrder: TcxGridDBColumn
             Caption = #1048#1089#1087#1086#1083#1100#1079#1091#1077#1090#1089#1103' '#1074' '#1079#1072#1103#1074#1082#1072#1093
             DataBinding.FieldName = 'isOrder'

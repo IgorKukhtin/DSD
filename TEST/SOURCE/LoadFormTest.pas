@@ -467,6 +467,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_StickerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_StickerForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_VMCForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_VMCForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_VMCDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_VMCDialogForm');
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsExternalForm');
