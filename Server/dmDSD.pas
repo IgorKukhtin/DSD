@@ -274,16 +274,17 @@ begin
     begin
       if LDocument.Nodes[nNode].NodeCount > 0 then
         FillDSDStoredProcParam(LDocument.Nodes[nNode], LStoredProc);
-      StoredProcExecute(LStoredProc);
       Inc(nNode);
+      if nNode < LDocument.NodeCount then StoredProcExecute(LStoredProc);
 
-      for I := 0 to LDocument.Nodes[nNode].NodeCount - 1 do
-      begin
-        LStoredProc.ParamsList := TList<TDSDStoredProcParam>.Create;
-        if LDocument.Nodes[nNode].Nodes[I].NodeCount > 0 then
-          FillDSDStoredProcParam(LDocument.Nodes[nNode].Nodes[I], LStoredProc);
-        if I < (LDocument.Nodes[nNode].NodeCount - 1) then StoredProcExecute(LStoredProc);
-      end;
+      if nNode < LDocument.NodeCount then
+        for I := 0 to LDocument.Nodes[nNode].NodeCount - 1 do
+        begin
+          LStoredProc.ParamsList := TList<TDSDStoredProcParam>.Create;
+          if LDocument.Nodes[nNode].Nodes[I].NodeCount > 0 then
+            FillDSDStoredProcParam(LDocument.Nodes[nNode].Nodes[I], LStoredProc);
+          if I < (LDocument.Nodes[nNode].NodeCount - 1) then StoredProcExecute(LStoredProc);
+        end;
     end else
     begin
       if LDocument.Nodes[nNode].NodeCount > 0 then
