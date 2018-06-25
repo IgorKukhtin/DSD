@@ -70,6 +70,8 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
     vbUserId:= lpGetUserBySession (inSession);
+    -- Контролшь использования подразделения
+    PERFORM lpCheckingUser_Retail(inUnitId, inRetailId, inSession);
 
     vbDateStartPromo := date_trunc('month', inDateStart);
     vbDatEndPromo := date_trunc('month', inDateFinal) + interval '1 month'; 
