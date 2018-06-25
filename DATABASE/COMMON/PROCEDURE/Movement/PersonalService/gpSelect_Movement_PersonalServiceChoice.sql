@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ServiceDate TDateTime
              , TotalSumm TFloat, TotalSummToPay TFloat, TotalSummCash TFloat, TotalSummService TFloat, TotalSummCard TFloat, TotalSummMinus TFloat, TotalSummAdd TFloat
              , TotalSummHoliday TFloat, TotalSummCardRecalc TFloat, TotalSummSocialIn TFloat, TotalSummSocialAdd TFloat, TotalSummChild TFloat
+             , TotalSummAddOth TFloat, TotalSummAddOthRecalc TFloat
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JurIdicalId Integer, JurIdicalName TVarChar
@@ -64,15 +65,18 @@ BEGIN
             - COALESCE (MovementFloat_TotalSummCardSecondCash.ValueData, 0)
              ) :: TFloat AS TotalSummCash
            , MovementFloat_TotalSummService .ValueData  AS TotalSummService 
-           , MovementFloat_TotalSummCard.ValueData      AS TotalSummCard
+           
            , MovementFloat_TotalSummMinus.ValueData     AS TotalSummMinus
            , MovementFloat_TotalSummAdd.ValueData       AS TotalSummAdd
            , MovementFloat_TotalSummHoliday.ValueData     AS TotalSummHoliday
-           , MovementFloat_TotalSummCardRecalc.ValueData  AS TotalSummCardRecalc
+
            , MovementFloat_TotalSummSocialIn.ValueData    AS TotalSummSocialIn
            , MovementFloat_TotalSummSocialAdd.ValueData   AS TotalSummSocialAdd
            , MovementFloat_TotalSummChild.ValueData       AS TotalSummChild
 
+           , MovementFloat_TotalSummAddOth.ValueData        AS TotalSummAddOth
+           , MovementFloat_TotalSummAddOthRecalc.ValueData  AS TotalSummAddOthRecalc
+           
            , MovementString_Comment.ValueData           AS Comment
            , Object_PersonalServiceList.Id              AS PersonalServiceListId
            , Object_PersonalServiceList.ValueData       AS PersonalServiceListName
@@ -144,6 +148,13 @@ BEGIN
                                     ON MovementFloat_TotalSummChild.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummChild.DescId = zc_MovementFloat_TotalSummChild()
 
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummAddOth
+                                    ON MovementFloat_TotalSummAddOth.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummAddOth.DescId = zc_MovementFloat_TotalSummAddOth()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummAddOthRecalc
+                                    ON MovementFloat_TotalSummAddOthRecalc.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummAddOthRecalc.DescId = zc_MovementFloat_TotalSummAddOthRecalc()
+
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
@@ -167,6 +178,8 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 25.06.18         * TotalSummAddOth
+                    TotalSummAddOthRecalc
  20.04.16         * Holiday
  05.04.15                                        * all
  23.10.14         *
