@@ -960,6 +960,8 @@ type
     miReplMovement: TMenuItem;
     actGoodsByGoodsKind_VMC: TdsdOpenForm;
     miGoodsByGoodsKind_VMC: TMenuItem;
+    actGoodsPropertyBox: TdsdOpenForm;
+    miGoodsPropertyBox: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

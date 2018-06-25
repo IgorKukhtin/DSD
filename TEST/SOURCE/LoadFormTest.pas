@@ -1329,6 +1329,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TBoxForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBoxEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBoxEditForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPropertyBoxForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyBoxForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPropertyBoxEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyBoxEditForm');
 end;
 
 procedure TLoadFormTest.LoadConditionPromoFormTest;
