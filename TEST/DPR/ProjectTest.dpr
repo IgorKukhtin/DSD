@@ -1019,7 +1019,11 @@ uses
   ReplServer in '..\..\Forms\Guides\ReplServer.pas' {ReplServerForm: TParentForm},
   ReplMovement in '..\..\Forms\Guides\ReplMovement.pas' {ReplMovementForm: TParentForm},
   ReplObject in '..\..\Forms\Guides\ReplObject.pas' {ReplObjectForm: TParentForm},
-  DataTimeDialog in '..\..\Forms\System\DataTimeDialog.pas' {DataTimeDialogForm: TParentForm};
+  DataTimeDialog in '..\..\Forms\System\DataTimeDialog.pas' {DataTimeDialogForm: TParentForm},
+  GoodsByGoodsKind_VMC in '..\..\Forms\Guides\GoodsByGoodsKind_VMC.pas' {GoodsByGoodsKind_VMCForm: TParentForm},
+  GoodsByGoodsKind_VMCDialog in '..\..\Forms\Guides\GoodsByGoodsKind_VMCDialog.pas' {GoodsByGoodsKind_VMCDialogForm: TParentForm},
+  GoodsPropertyBox in '..\..\Forms\Guides\GoodsPropertyBox.pas' {GoodsPropertyBoxForm: TParentForm},
+  GoodsPropertyBoxEdit in '..\..\Forms\Guides\GoodsPropertyBoxEdit.pas' {GoodsPropertyBoxEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

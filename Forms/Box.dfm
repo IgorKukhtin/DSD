@@ -3,7 +3,7 @@ object BoxForm: TBoxForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1071#1097#1080#1082#1086#1074'>'
   ClientHeight = 376
-  ClientWidth = 390
+  ClientWidth = 502
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object BoxForm: TBoxForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 390
+    Width = 502
     Height = 350
     Align = alClient
     TabOrder = 0
@@ -70,6 +70,9 @@ object BoxForm: TBoxForm
       object BoxVolume: TcxGridDBColumn
         Caption = #1054#1073#1098#1077#1084', '#1084'3.'
         DataBinding.FieldName = 'BoxVolume'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Width = 70
@@ -77,8 +80,44 @@ object BoxForm: TBoxForm
       object BoxWeight: TcxGridDBColumn
         Caption = #1042#1077#1089' '#1103#1097#1080#1082#1072
         DataBinding.FieldName = 'BoxWeight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Width = 70
+      end
+      object BoxHeight: TcxGridDBColumn
+        Caption = #1042#1099#1089#1086#1090#1072
+        DataBinding.FieldName = 'BoxHeight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object BoxLength: TcxGridDBColumn
+        Caption = #1044#1083#1080#1085#1072
+        DataBinding.FieldName = 'BoxLength'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object BoxWidth: TcxGridDBColumn
+        Caption = #1064#1080#1088#1080#1085#1072
+        DataBinding.FieldName = 'BoxWidth'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
     end
@@ -255,10 +294,12 @@ object BoxForm: TBoxForm
       FormName = 'TBoxEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource
@@ -275,6 +316,7 @@ object BoxForm: TBoxForm
       FormName = 'TBoxEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -282,6 +324,7 @@ object BoxForm: TBoxForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -330,6 +373,7 @@ object BoxForm: TBoxForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -337,6 +381,14 @@ object BoxForm: TBoxForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Code'
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -376,6 +428,7 @@ object BoxForm: TBoxForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 96

@@ -2,7 +2,7 @@ object BoxEditForm: TBoxEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1071#1097#1080#1082'>'
-  ClientHeight = 281
+  ClientHeight = 291
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@ object BoxEditForm: TBoxEditForm
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 224
+    Top = 256
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object BoxEditForm: TBoxEditForm
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 224
+    Top = 256
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -88,6 +88,51 @@ object BoxEditForm: TBoxEditForm
     TabOrder = 9
     Width = 273
   end
+  object cxLabel5: TcxLabel
+    Left = 10
+    Top = 196
+    Caption = #1042#1099#1089#1086#1090#1072
+  end
+  object edHeight: TcxCurrencyEdit
+    Left = 10
+    Top = 215
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    TabOrder = 11
+    Width = 80
+  end
+  object cxLabel6: TcxLabel
+    Left = 107
+    Top = 196
+    Caption = #1044#1083#1080#1085#1072
+  end
+  object edLength: TcxCurrencyEdit
+    Left = 107
+    Top = 215
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    TabOrder = 13
+    Width = 80
+  end
+  object cxLabel7: TcxLabel
+    Left = 203
+    Top = 196
+    Caption = #1064#1080#1088#1080#1085#1072
+  end
+  object edWidth: TcxCurrencyEdit
+    Left = 203
+    Top = 215
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    TabOrder = 15
+    Width = 80
+  end
   object ActionList: TActionList
     Left = 152
     Top = 56
@@ -107,6 +152,7 @@ object BoxEditForm: TBoxEditForm
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -116,6 +162,7 @@ object BoxEditForm: TBoxEditForm
     end
     object dsdFormClose: TdsdFormClose
       MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -129,12 +176,14 @@ object BoxEditForm: TBoxEditForm
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = edCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -142,6 +191,7 @@ object BoxEditForm: TBoxEditForm
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBoxVolume'
@@ -149,6 +199,7 @@ object BoxEditForm: TBoxEditForm
         Component = ceBoxVolume
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBoxWeight'
@@ -156,6 +207,31 @@ object BoxEditForm: TBoxEditForm
         Component = ceBoxWeight
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBoxHeight'
+        Value = Null
+        Component = edHeight
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBoxLength'
+        Value = Null
+        Component = edLength
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBoxWidth'
+        Value = Null
+        Component = edWidth
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 96
@@ -167,6 +243,7 @@ object BoxEditForm: TBoxEditForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 96
     Top = 8
@@ -182,30 +259,56 @@ object BoxEditForm: TBoxEditForm
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = edCode
         DataType = ftUnknown
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BoxVolume'
         Value = Null
         Component = ceBoxVolume
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BoxWeight'
         Value = Null
         Component = ceBoxWeight
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BoxHeight'
+        Value = Null
+        Component = edHeight
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BoxLength'
+        Value = Null
+        Component = edLength
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BoxWidth'
+        Value = Null
+        Component = edWidth
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184

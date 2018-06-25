@@ -24,7 +24,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
-             , JuridicalName_To TVarChar, OKPO_To TVarChar
+             , JuridicalName_To TVarChar, OKPO_To TVarChar, RetailName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , RouteGroupName TVarChar, RouteName TVarChar, PersonalName TVarChar
              , RetailName_order TVarChar
@@ -452,7 +452,14 @@ BEGIN
                             WHERE ObjectLink_Partner_Juridical.ObjectId IN (SELECT DISTINCT tmpTo.Id FROM tmpTo)
                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                             )
-     
+       , tmpRetail_JuridicalTo AS (SELECT ObjectLink_Juridical_Retail.ObjectId AS JuridicalId_To
+                                        , Object_Retail.ValueData              AS RetailName
+                                   FROM ObjectLink AS ObjectLink_Juridical_Retail
+                                        LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+                                   WHERE ObjectLink_Juridical_Retail.ObjectId IN (SELECT DISTINCT tmpJuridicalTo.Id FROM tmpJuridicalTo)
+                                     AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                   )
+
        , tmpObjectBoolean_To AS (SELECT ObjectBoolean.*
                                  FROM ObjectBoolean
                                  WHERE ObjectBoolean.ObjectId IN (SELECT DISTINCT tmpTo.Id FROM tmpTo)
@@ -555,16 +562,17 @@ BEGIN
            , Object_To.ValueData                            AS ToName
            , Object_PaidKind.Id                             AS PaidKindId
            , Object_PaidKind.ValueData                      AS PaidKindName
-           , tmpContract_InvNumber.ContractId             AS ContractId
-           , tmpContract_InvNumber.ContractCode           AS ContractCode
-           , tmpContract_InvNumber.InvNumber              AS ContractName
+           , tmpContract_InvNumber.ContractId               AS ContractId
+           , tmpContract_InvNumber.ContractCode             AS ContractCode
+           , tmpContract_InvNumber.InvNumber                AS ContractName
            , tmpContract_InvNumber.ContractTagName
            , Object_JuridicalTo.ValueData                   AS JuridicalName_To
            , ObjectHistory_JuridicalDetails_View.OKPO       AS OKPO_To
-           , tmpContract_InvNumber.InfoMoneyGroupName              AS InfoMoneyGroupName
-           , tmpContract_InvNumber.InfoMoneyDestinationName        AS InfoMoneyDestinationName
-           , tmpContract_InvNumber.InfoMoneyCode                   AS InfoMoneyCode
-           , tmpContract_InvNumber.InfoMoneyName                   AS InfoMoneyName
+           , tmpRetail_JuridicalTo.RetailName    ::TVarChar AS RetailName
+           , tmpContract_InvNumber.InfoMoneyGroupName       AS InfoMoneyGroupName
+           , tmpContract_InvNumber.InfoMoneyDestinationName AS InfoMoneyDestinationName
+           , tmpContract_InvNumber.InfoMoneyCode            AS InfoMoneyCode
+           , tmpContract_InvNumber.InfoMoneyName            AS InfoMoneyName
 
            , Object_RouteGroup.ValueData                    AS RouteGroupName
            , Object_Route.ValueData                         AS RouteName
@@ -874,6 +882,8 @@ BEGIN
             LEFT JOIN tmpCarModel AS Object_CarModel ON Object_CarModel.CarId = Object_Car.Id
   
             LEFT JOIN tmpPersonalDriver AS Object_PersonalDriver ON Object_PersonalDriver.MovementId =  Movement_Transport.Id
+            
+            LEFT JOIN tmpRetail_JuridicalTo ON tmpRetail_JuridicalTo.JuridicalId_To = Object_JuridicalTo.Id
 
      WHERE /*(vbIsXleb = FALSE OR (View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_30103() -- Хлеб
                                 AND vbIsXleb = TRUE))

@@ -1,5 +1,5 @@
-inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1058#1086#1074#1072#1088' '#1080' '#1042#1080#1076' '#1090#1086#1074#1072#1088#1072'> ('#1079#1072#1103#1074#1082#1080')'
+inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1058#1086#1074#1072#1088' '#1080' '#1042#1080#1076' '#1090#1086#1074#1072#1088#1072'> ('#1042#1052#1057')'
   ClientHeight = 420
   ClientWidth = 1030
   ExplicitWidth = 1046
@@ -194,7 +194,6 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1084#1080#1085#1080#1084#1072#1083#1100#1085#1099#1081' '#1074#1077#1089
-            Options.Editing = False
             Width = 70
           end
           object WeightMax: TcxGridDBColumn
@@ -206,7 +205,6 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1084#1072#1082#1089#1080#1084#1072#1083#1100#1085#1099#1081' '#1074#1077#1089
-            Options.Editing = False
             Width = 70
           end
           object Height: TcxGridDBColumn
@@ -217,7 +215,6 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
             Properties.DisplayFormat = '0.####;-0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object Length: TcxGridDBColumn
@@ -228,7 +225,6 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
             Properties.DisplayFormat = '0.####;-0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object Width: TcxGridDBColumn
@@ -239,7 +235,6 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
             Properties.DisplayFormat = '0.####;-0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object isOrder: TcxGridDBColumn
@@ -247,6 +242,7 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
             DataBinding.FieldName = 'isOrder'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 96
           end
           object isScaleCeh: TcxGridDBColumn
@@ -263,6 +259,7 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
             DataBinding.FieldName = 'isNotMobile'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 110
           end
           object InfoMoneyCode: TcxGridDBColumn
@@ -475,6 +472,154 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
         end>
       isShowModal = False
     end
+    object ExecuteDialogUpdate: TExecuteDialog
+      Category = 'UpdateDate'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099
+      ImageIndex = 77
+      FormName = 'TGoodsByGoodsKind_VMCDialogForm'
+      FormNameParam.Value = 'TGoodsByGoodsKind_VMCDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inWeightMin'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inWeightMin'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inWeightMax'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inWeightMax'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inHeight'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inHeight'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inLength'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inLength'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inWidth'
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'inWidth'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inWeightMin'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'WeightMin'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inWeightMax'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'WeightMax'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inHeight'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Height'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inLength'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Length'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inWidth'
+          Value = 'NULL'
+          Component = MasterCDS
+          ComponentItem = 'Width'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdateList: TdsdDataSetRefresh
+      Category = 'UpdateDate'
+      MoveParams = <>
+      StoredProc = spInsertUpdateList
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateList
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 77
+      ShortCut = 16455
+      RefreshOnTabSetChanges = True
+    end
+    object macUpdateList: TMultiAction
+      Category = 'UpdateDate'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateList
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdateList'
+    end
+    object macUpdate: TMultiAction
+      Category = 'UpdateDate'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogUpdate
+        end
+        item
+          Action = macUpdateList
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1076#1083#1103' '#1042#1052#1057' '#1042#1057#1045#1052' '#1090#1086#1074#1072#1088#1072#1084'?'
+      InfoAfterExecute = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1076#1083#1103' '#1042#1052#1057' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1099
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1076#1083#1103' '#1042#1089#1077#1093
+      ImageIndex = 77
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -503,6 +648,14 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
         item
           Visible = True
           ItemName = 'bbInsertRecord'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate'
         end
         item
           Visible = True
@@ -541,13 +694,17 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
       Action = ProtocolOpenForm
       Category = 0
     end
+    object bbUpdate: TdxBarButton
+      Action = macUpdate
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 136
     Top = 184
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_GoodsByGoodsKind_isOrder'
+    StoredProcName = 'gpInsertUpdate_Object_GoodsByGoodsKind_VMC'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -576,25 +733,135 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisOrder'
+        Name = 'inWeightMin'
         Value = 'Felse'
         Component = MasterCDS
-        ComponentItem = 'isOrder'
-        DataType = ftBoolean
+        ComponentItem = 'WeightMin'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisNotMobile'
+        Name = 'inWeightMax'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'isNotMobile'
-        DataType = ftBoolean
+        ComponentItem = 'WeightMax'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inHeight'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Height'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLength'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Length'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWidth'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Width'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 304
     Top = 112
+  end
+  object spInsertUpdateList: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_GoodsByGoodsKind_VMC'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeightMin'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inWeightMin'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeightMax'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inWeightMax'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inHeight'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inHeight'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLength'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inLength'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWidth'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inWidth'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 416
+    Top = 120
+  end
+  object FormParams: TdsdFormParams
+    Params = <>
+    Left = 400
+    Top = 216
   end
 end

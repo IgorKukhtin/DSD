@@ -1134,6 +1134,9 @@ BEGIN
                        THEN '1905'
                   ELSE '0'
               END :: TVarChar AS GoodsCodeUKTZED
+              
+            -- Залоговая цена без НДС, грн
+            , 60  :: TFloat AS Price_Pledge
 
        FROM tmpMI
             LEFT JOIN tmpUKTZED ON tmpUKTZED.GoodsGroupId = tmpMI.GoodsGroupId

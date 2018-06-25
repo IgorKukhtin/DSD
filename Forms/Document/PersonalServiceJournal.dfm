@@ -4,6 +4,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   ClientWidth = 1221
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -118
   ExplicitWidth = 1237
   ExplicitHeight = 442
   PixelsPerInch = 96
@@ -164,6 +165,16 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummNalogRetRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummAddOth
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummAddOthRecalc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -300,6 +311,16 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummNalogRetRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummAddOth
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummAddOthRecalc
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -481,6 +502,28 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 85
+          end
+          object TotalSummAddOth: TcxGridDBColumn
+            Caption = #1055#1088#1077#1084#1080#1103' ('#1088#1072#1089#1087#1088#1077#1076'.)'
+            DataBinding.FieldName = 'TotalSummAddOth'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1077#1084#1080#1103' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086')'
+            Width = 85
+          end
+          object TotalSummAddOthRecalc: TcxGridDBColumn
+            Caption = #1055#1088#1077#1084#1080#1103' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076'.)'
+            DataBinding.FieldName = 'TotalSummAddOthRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1077#1084#1080#1103' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
             Width = 85
           end
           object TotalSummChild: TcxGridDBColumn
@@ -793,6 +836,9 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -841,6 +887,9 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actIsServiceDate: TdsdDataSetRefresh
       Category = 'DSDLib'

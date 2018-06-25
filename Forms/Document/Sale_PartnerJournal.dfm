@@ -316,6 +316,13 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
+          object RetailName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'TotalCount'
@@ -916,6 +923,9 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actDialog_TTN: TdsdOpenForm [3]
       Category = 'Print_TTN'
@@ -996,6 +1006,9 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_Transport: TdsdPrintAction [6]
       Category = 'Print_TTN'
@@ -1032,6 +1045,9 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_Transport_ReportName: TdsdExecStoredProc [7]
       Category = 'Print_TTN'
@@ -1112,6 +1128,9 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintPack_Transport: TdsdPrintAction [10]
       Category = 'Print_TTN'
@@ -1153,6 +1172,9 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_ExpInvoice: TdsdPrintAction [11]
       Category = 'Print_Export'
@@ -1201,6 +1223,9 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TSale_PartnerForm'
@@ -1360,6 +1385,9 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actMovementCheck: TdsdOpenForm [28]
       Category = 'DSDLib'
@@ -1695,6 +1723,9 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintTax_Client: TdsdPrintAction
       Category = 'Print_Tax'
@@ -1735,6 +1766,9 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -1775,6 +1809,9 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_Account: TdsdPrintAction
       Category = 'Print_Account'
@@ -1811,6 +1848,9 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actSPPrintSaleProcName: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1897,6 +1937,9 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_ExpPack: TdsdPrintAction
       Category = 'Print_Export'
@@ -1941,6 +1984,9 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_Spec: TdsdPrintAction
       Category = 'Print_Fozzy'
@@ -1984,6 +2030,9 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_QualityDoc: TdsdPrintAction
       Category = 'Print_QualityDoc'
@@ -2032,6 +2081,9 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actDialog_QualityDoc: TdsdOpenForm
       Category = 'Print_QualityDoc'
@@ -2189,6 +2241,9 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object macPrintPack: TMultiAction
       Category = 'Print'
@@ -2281,6 +2336,9 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object mactPrint_Sale_Total_To: TMultiAction
       Category = 'Print_Total'
@@ -2393,6 +2451,9 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object mactPrint_Sale_Total_List: TMultiAction
       Category = 'Print_Total'
@@ -2469,6 +2530,9 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource

@@ -467,6 +467,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_StickerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_StickerForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_VMCForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_VMCForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_VMCDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_VMCDialogForm');
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsExternalForm');
@@ -1324,6 +1329,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TBoxForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBoxEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBoxEditForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPropertyBoxForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyBoxForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPropertyBoxEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyBoxEditForm');
 end;
 
 procedure TLoadFormTest.LoadConditionPromoFormTest;

@@ -15,17 +15,17 @@ inherited SaleJournalForm: TSaleJournalForm
     Height = 560
     TabOrder = 3
     ExplicitTop = 81
-    ExplicitWidth = 1242
+    ExplicitWidth = 1237
     ExplicitHeight = 560
     ClientRectBottom = 560
     ClientRectRight = 1237
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1242
+      ExplicitWidth = 1237
       ExplicitHeight = 560
       inherited cxGrid: TcxGrid
         Width = 1237
         Height = 560
-        ExplicitWidth = 1242
+        ExplicitWidth = 1237
         ExplicitHeight = 560
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -318,6 +318,13 @@ inherited SaleJournalForm: TSaleJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
+          end
+          object RetailName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
@@ -769,7 +776,7 @@ inherited SaleJournalForm: TSaleJournalForm
   inherited Panel: TPanel
     Width = 1237
     Height = 55
-    ExplicitWidth = 1242
+    ExplicitWidth = 1237
     ExplicitHeight = 55
     inherited deStart: TcxDateEdit
       Left = 98

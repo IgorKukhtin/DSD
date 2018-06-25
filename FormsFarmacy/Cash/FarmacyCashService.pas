@@ -731,6 +731,7 @@ var
   FSaveUID: string;
   FSaveTryCount: integer;
   bShowDisconnectMsg: boolean;
+  BodySaved: boolean;
 
   function LocateUID(AUID: string; ASave: boolean): boolean;
   begin
@@ -822,6 +823,7 @@ begin
           while not FLocalDataBaseHead.eof do
           Begin
             if not FLocalDataBaseHead.Deleted and
+              (Trim(FLocalDataBaseHead.FieldByName('UID').AsString) <> '') and
               (FLocalDataBaseHead.FieldByName('NEEDCOMPL').AsBoolean
                or not FLocalDataBaseHead.FieldByName('SAVE').AsBoolean) then
             Begin
@@ -1076,6 +1078,8 @@ begin
                   //
                   dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
 
+                  BodySaved := true;
+
                   for I := 0 to Length(Body) - 1 do
                   Begin
                     dsdSave.ParamByName('ioId').Value := Body[I].ID;
@@ -1095,7 +1099,7 @@ begin
                     Add_Log('Start Execute gpInsertUpdate_MovementItem_Check_ver2');
                     Add_Log('      ChildId - ' + Body[I].CH_UID + ' GoodsId - ' + IntToStr(Body[I].GOODSID) + ' Amount - ' + CurrToStr(Body[I].AMOUNT) + ' PriceSale - ' + CurrToStr(Body[I].PRICESALE));
                     dsdSave.Execute(False, False); // сохринили на сервере
-                    Add_Log('      ID - ' + IntToStr(Body[I].ID));
+                    Add_Log('      ID - ' + dsdSave.ParamByName('ioId').AsString);
                     Add_Log('End Execute gpInsertUpdate_MovementItem_Check_ver2');
                     if Body[I].ID <> StrToInt(dsdSave.ParamByName('ioId').AsString) then
                     Begin
@@ -1123,8 +1127,13 @@ begin
                         ReleaseMutex(MutexDBF);
                       end;
                     End;
+                    if Body[I].ID = 0 then
+                    begin
+                      Add_Log('Body was not saved!');
+                      BodySaved := false;
+                    end;
                   End; // обработали все позиции товара в чеке
-                  if Head.ID <> 0 then
+                  if (Head.ID <> 0) and BodySaved then
                   begin
                     Head.SAVE := True;
                     Add_Log('Start MutexDBF 1059');

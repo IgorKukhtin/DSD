@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , SummChild TFloat, SummChildRecalc TFloat, SummMinusExt TFloat, SummMinusExtRecalc TFloat
              , SummTransport TFloat, SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
              , TotalSummChild TFloat, SummDiff TFloat
+             , SummAddOth TFloat, SummAddOthRecalc TFloat
              , Comment TVarChar
              , isErased Boolean
              , isAuto Boolean
@@ -225,6 +226,9 @@ BEGIN
             , COALESCE (tmpMIChild.Amount, 0)                                                :: TFloat AS TotalSummChild
             , (COALESCE (tmpMIChild.Amount, 0) - COALESCE (MIFloat_SummService.ValueData, 0)) :: TFloat AS SummDiff
 
+            , MIFloat_SummAddOth.ValueData              AS SummAddOth
+            , MIFloat_SummAddOthRecalc.ValueData        AS SummAddOthRecalc
+            
             , MIString_Comment.ValueData       AS Comment
             , tmpAll.isErased
             , COALESCE (MIBoolean_isAuto.ValueData, FALSE) :: Boolean  AS isAuto
@@ -324,6 +328,13 @@ BEGIN
                                         ON MIFloat_SummPhone.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummPhone.DescId = zc_MIFloat_SummPhone()
 
+            LEFT JOIN MovementItemFloat AS MIFloat_SummAddOth
+                                        ON MIFloat_SummAddOth.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummAddOth.DescId = zc_MIFloat_SummAddOth()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummAddOthRecalc
+                                        ON MIFloat_SummAddOthRecalc.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummAddOthRecalc.DescId = zc_MIFloat_SummAddOthRecalc()
+
             LEFT JOIN MovementItemBoolean AS MIBoolean_Main
                                           ON MIBoolean_Main.MovementItemId = tmpAll.MovementItemId
                                          AND MIBoolean_Main.DescId = zc_MIBoolean_Main()
@@ -366,6 +377,8 @@ ALTER FUNCTION gpSelect_MovementItem_PersonalService (Integer, Boolean, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 25.06.18         * add SummAddOth,
+                        SummAddOthRecalc
  05.01.18         * add SummNalogRet
                         SummNalogRetRecalc
  20.06.17         * add SummCardSecondCash

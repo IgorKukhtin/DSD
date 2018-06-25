@@ -25,7 +25,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
-             , JuridicalName_To TVarChar, OKPO_To TVarChar
+             , JuridicalName_To TVarChar, OKPO_To TVarChar, RetailName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , RouteGroupName TVarChar, RouteName TVarChar, PersonalName TVarChar
              , RetailName_order TVarChar

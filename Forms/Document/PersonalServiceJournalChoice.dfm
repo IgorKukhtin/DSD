@@ -64,6 +64,16 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummCash
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummAddOth
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummAddOthRecalc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -100,6 +110,16 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummCash
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummAddOth
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummAddOthRecalc
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -208,6 +228,28 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object TotalSummAddOth: TcxGridDBColumn
+            Caption = #1055#1088#1077#1084#1080#1103' ('#1088#1072#1089#1087#1088#1077#1076'.)'
+            DataBinding.FieldName = 'TotalSummAddOth'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1077#1084#1080#1103' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086')'
+            Width = 85
+          end
+          object TotalSummAddOthRecalc: TcxGridDBColumn
+            Caption = #1055#1088#1077#1084#1080#1103' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076'.)'
+            DataBinding.FieldName = 'TotalSummAddOthRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1077#1084#1080#1103' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
+            Width = 92
           end
           object TotalSummHoliday: TcxGridDBColumn
             Caption = #1054#1090#1087#1091#1089#1082#1085#1099#1077
@@ -383,6 +425,9 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
