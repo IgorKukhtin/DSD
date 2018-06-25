@@ -101,6 +101,7 @@ BEGIN
                                                         , inSummNalogRetRecalc := 0
                                                         , inSummMinus          := COALESCE (gpSelect.SummMinus, 0)
                                                         , inSummAdd            := COALESCE (gpSelect.SummAdd, 0)
+                                                        , inSummAddOthRecalc   := COALESCE (gpSelect.SummAddOthRecalc, 0)
                                                         , inSummHoliday        := COALESCE (gpSelect.SummHoliday, 0)
                                                         , inSummSocialIn       := COALESCE (gpSelect.SummSocialIn, 0)
                                                         , inSummSocialAdd      := COALESCE (gpSelect.SummSocialAdd, 0)

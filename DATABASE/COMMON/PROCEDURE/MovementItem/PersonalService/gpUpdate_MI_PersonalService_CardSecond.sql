@@ -197,6 +197,7 @@ BEGIN
                                                         , inSummNalogRecalc    := 0
                                                         , inSummMinus          := 0
                                                         , inSummAdd            := 0
+                                                        , inSummAddOthRecalc   := 0
                                                         , inSummHoliday        := 0
                                                         , inSummSocialIn       := 0
                                                         , inSummSocialAdd      := 0

@@ -27,7 +27,8 @@ BEGIN
       -- Результат
        CREATE TEMP TABLE tmpMI (MovementItemId Integer, PersonalId Integer, isMain Boolean
              , UnitId Integer, PositionId Integer, InfoMoneyId Integer, MemberId Integer, PersonalServiceListId Integer
-             , Amount TFloat, SummService TFloat, SummCardRecalc TFloat, SummCardSecondRecalc TFloat, SummCardSecondCash TFloat, SummNalogRecalc TFloat, SummNalogRetRecalc TFloat, SummNalogRet TFloat, SummMinus TFloat, SummAdd TFloat
+             , Amount TFloat, SummService TFloat, SummCardRecalc TFloat, SummCardSecondRecalc TFloat, SummCardSecondCash TFloat
+             , SummNalogRecalc TFloat, SummNalogRetRecalc TFloat, SummNalogRet TFloat, SummMinus TFloat, SummAdd TFloat, SummAddOthRecalc TFloat
              , SummHoliday TFloat, SummSocialIn TFloat, SummSocialAdd TFloat, SummChildRecalc TFloat, SummMinusExtRecalc TFloat) ON COMMIT DROP;
 
        WITH tmpMI AS (SELECT MAX (MovementItem.Id)                     AS MovementItemId
@@ -54,7 +55,8 @@ BEGIN
                              , MILinkObject_InfoMoney.ObjectId
                      )
          INSERT INTO tmpMI  (MovementItemId, PersonalId, isMain, UnitId, PositionId, InfoMoneyId, MemberId, PersonalServiceListId
-                           , Amount, SummService, SummCardRecalc, SummCardSecondRecalc, SummCardSecondCash, SummNalogRecalc, SummNalogRetRecalc, SummNalogRet, SummMinus, SummAdd
+                           , Amount, SummService, SummCardRecalc, SummCardSecondRecalc, SummCardSecondCash
+                           , SummNalogRecalc, SummNalogRetRecalc, SummNalogRet, SummMinus, SummAdd, SummAddOthRecalc
                            , SummHoliday, SummSocialIn, SummSocialAdd, SummChildRecalc, SummMinusExtRecalc)
             SELECT COALESCE (tmpMI.MovementItemId, 0)        AS MovementItemId
                  , MovementItem.ObjectId                     AS PersonalId
@@ -74,6 +76,7 @@ BEGIN
                  , COALESCE (MIFloat_SummNalogRet.ValueData, 0)        :: TFloat  AS SummNalogRet
                  , COALESCE (MIFloat_SummMinus.ValueData, 0)           :: TFloat  AS SummMinus
                  , COALESCE (MIFloat_SummAdd.ValueData, 0)             :: TFloat  AS SummAdd
+                 , COALESCE (MIFloat_SummAddOthRecalc.ValueData, 0)    :: TFloat  AS SummAddOthRecalc
                  , COALESCE (MIFloat_SummHoliday.ValueData, 0)         :: TFloat  AS SummHoliday
                  , COALESCE (MIFloat_SummSocialIn.ValueData, 0)        :: TFloat  AS SummSocialIn
                  , COALESCE (MIFloat_SummSocialAdd.ValueData, 0)       :: TFloat  AS SummSocialAdd
@@ -128,6 +131,9 @@ BEGIN
                  LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
                                              ON MIFloat_SummAdd.MovementItemId = MovementItem.Id
                                             AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
+                 LEFT JOIN MovementItemFloat AS MIFloat_SummAddOthRecalc
+                                             ON MIFloat_SummAddOthRecalc.MovementItemId = MovementItem.Id
+                                            AND MIFloat_SummAddOthRecalc.DescId = zc_MIFloat_SummAddOthRecalc()
 
                  LEFT JOIN MovementItemFloat AS MIFloat_SummHoliday
                                              ON MIFloat_SummHoliday.MovementItemId = MovementItem.Id
@@ -172,6 +178,7 @@ BEGIN
                                                         , inSummNalogRetRecalc := SummNalogRetRecalc
                                                         , inSummMinus          := SummMinus
                                                         , inSummAdd            := SummAdd
+                                                        , inSummAddOthRecalc   := SummAddOthRecalc
                                                         , inSummHoliday        := SummHoliday
                                                         , inSummSocialIn       := SummSocialIn
                                                         , inSummSocialAdd      := SummSocialAdd

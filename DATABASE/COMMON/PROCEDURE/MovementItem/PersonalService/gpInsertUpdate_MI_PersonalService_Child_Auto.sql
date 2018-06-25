@@ -232,6 +232,7 @@ BEGIN
                                                                         , inSummNalogRetRecalc     := 0
                                                                         , inSummMinus              := 0
                                                                         , inSummAdd                := 0
+                                                                        , inSummAddOthRecalc       := 0
                                                                         , inSummHoliday            := 0
                                                                         , inSummSocialIn           := 0
                                                                         , inSummSocialAdd          := 0
@@ -340,6 +341,7 @@ BEGIN
                                                           , inSummNalogRetRecalc     := COALESCE (MIFloat_SummNalogRetRecalc.ValueData, 0)
                                                           , inSummMinus              := COALESCE (MIFloat_SummMinus.ValueData, 0)
                                                           , inSummAdd                := COALESCE (MIFloat_SummAdd.ValueData, 0)
+                                                          , inSummAddOthRecalc       := COALESCE (MIFloat_SummAddOthRecalc.ValueData, 0)
                                                           , inSummHoliday            := COALESCE (MIFloat_SummHoliday.ValueData, 0)
                                                           , inSummSocialIn           := COALESCE (MIFloat_SummSocialIn.ValueData, 0)
                                                           , inSummSocialAdd          := COALESCE (MIFloat_SummSocialAdd.ValueData, 0)
@@ -378,6 +380,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
                                         ON MIFloat_SummAdd.MovementItemId = MovementItem.Id
                                        AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummAddOthRecalc
+                                        ON MIFloat_SummAddOthRecalc.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummAddOthRecalc.DescId = zc_MIFloat_SummAddOthRecalc()
             LEFT JOIN MovementItemFloat AS MIFloat_SummHoliday
                                         ON MIFloat_SummHoliday.MovementItemId = MovementItem.Id
                                        AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()

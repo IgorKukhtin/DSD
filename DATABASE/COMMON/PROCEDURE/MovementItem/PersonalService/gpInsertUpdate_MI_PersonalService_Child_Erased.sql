@@ -67,6 +67,7 @@ BEGIN
                                                              , inSummNalogRetRecalc     := 0
                                                              , inSummMinus              := MIFloat_SummMinus.ValueData
                                                              , inSummAdd                := MIFloat_SummAdd.ValueData
+                                                             , inSummAddOthRecalc       := MIFloat_SummAddOthRecalc.ValueData
                                                              , inSummHoliday            := MIFloat_SummHoliday.ValueData
                                                              , inSummSocialIn           := MIFloat_SummSocialIn.ValueData
                                                              , inSummSocialAdd          := MIFloat_SummSocialAdd.ValueData
@@ -101,6 +102,9 @@ BEGIN
                LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
                                            ON MIFloat_SummAdd.MovementItemId = MovementItem.Id
                                           AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
+               LEFT JOIN MovementItemFloat AS MIFloat_SummAddOthRecalc
+                                           ON MIFloat_SummAddOthRecalc.MovementItemId = MovementItem.Id
+                                          AND MIFloat_SummAddOthRecalc.DescId = zc_MIFloat_SummAddOthRecalc()
                LEFT JOIN MovementItemFloat AS MIFloat_SummHoliday
                                            ON MIFloat_SummHoliday.MovementItemId = MovementItem.Id
                                           AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
