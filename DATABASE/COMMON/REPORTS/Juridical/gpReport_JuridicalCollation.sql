@@ -50,7 +50,11 @@ RETURNS TABLE (MovementSumm TFloat,
                FromName TVarChar,
                ToName TVarChar,
                PartionMovementName TVarChar,
-               PaymentDate TDateTime)
+               PaymentDate TDateTime,
+               InvNumber_Transport TVarChar,
+               OperDate_Transport TDateTime,
+               CarName TVarChar,
+               PersonalDriverName TVarChar)
 AS
 $BODY$
   DECLARE vbPartionMovementId Integer;
@@ -186,6 +190,11 @@ BEGIN
 
         , Object_PartionMovement.ValueData AS PartionMovementName
         , ObjectDate_PartionMovement_Payment.ValueData AS PaymentDate
+        
+        , Movement_Transport.InvNumber              AS InvNumber_Transport
+        , Movement_Transport.OperDate               AS OperDate_Transport
+        , Object_Car.ValueData                      AS CarName
+        , Object_PersonalDriver.ValueData           AS PersonalDriverName
           
     FROM  (SELECT tmpContainer.AccountId,
                   tmpContainer.InfoMoneyId,
@@ -327,7 +336,7 @@ BEGIN
       LEFT JOIN Movement ON Movement.Id = Operation.MovementId
       LEFT JOIN MovementDesc ON Movement.DescId = MovementDesc.Id
       LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                               ON MovementString_InvNumberPartner.MovementId =  Operation.MovementId
+                               ON MovementString_InvNumberPartner.MovementId = Operation.MovementId
                               AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
       LEFT JOIN MovementItemString AS MIString_Comment
@@ -386,6 +395,21 @@ BEGIN
                                                       END
       LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Operation.PaidKindId
       
+      LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
+                                     ON MovementLinkMovement_Transport.MovementId = Operation.MovementId
+                                    AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
+      LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
+
+      LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
+                                   ON MovementLinkObject_Car.MovementId = Movement_Transport.Id
+                                  AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
+      LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
+
+      LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
+                                   ON MovementLinkObject_PersonalDriver.MovementId = Movement_Transport.Id
+                                  AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
+      LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
+                
   ORDER BY Operation.OperationSort
          , MovementDesc.Id
          , Operation.OperDate

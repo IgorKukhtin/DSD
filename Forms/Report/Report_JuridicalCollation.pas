@@ -114,6 +114,7 @@ type
     actSaveReportCollationState: TdsdExecStoredProc;
     spSavePrintObject_Buh: TdsdStoredProc;
     actSPSaveObject_Buh: TdsdExecStoredProc;
+    InvNumber_Transport: TcxGridDBColumn;
   private
     { Private declarations }
   public
