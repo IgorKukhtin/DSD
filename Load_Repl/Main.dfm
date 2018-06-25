@@ -1,4 +1,4 @@
-﻿object MainForm: TMainForm
+object MainForm: TMainForm
   Left = 202
   Top = 180
   Caption = 'Load_Repl - MainForm'
@@ -18,7 +18,7 @@
   object Splitter1: TSplitter
     Left = 581
     Top = 0
-    Height = 521
+    Height = 533
     Align = alRight
     ExplicitLeft = 683
     ExplicitTop = 32
@@ -28,81 +28,393 @@
     Left = 0
     Top = 0
     Width = 581
-    Height = 521
+    Height = 533
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 442
-    object DBGrid: TDBGrid
-      Left = 0
-      Top = 41
-      Width = 581
-      Height = 480
-      Align = alClient
-      DataSource = ObjectGUIDІDS
-      TabOrder = 0
-      TitleFont.Charset = DEFAULT_CHARSET
-      TitleFont.Color = clWindowText
-      TitleFont.Height = -11
-      TitleFont.Name = 'MS Sans Serif'
-      TitleFont.Style = []
-    end
-    object PanelCB: TPanel
+    ExplicitHeight = 521
+    object PanelGridObject: TPanel
       Left = 0
       Top = 0
       Width = 581
-      Height = 41
-      Align = alTop
+      Height = 133
+      Align = alClient
+      BevelOuter = bvNone
+      TabOrder = 0
+      ExplicitHeight = 123
+      object DBGridObject: TDBGrid
+        Left = 0
+        Top = 41
+        Width = 508
+        Height = 92
+        Align = alClient
+        DataSource = ObjectDS
+        TabOrder = 0
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -11
+        TitleFont.Name = 'MS Sans Serif'
+        TitleFont.Style = []
+      end
+      object PanelCB: TPanel
+        Left = 0
+        Top = 0
+        Width = 581
+        Height = 41
+        Align = alTop
+        BevelOuter = bvNone
+        TabOrder = 1
+        object LabelObjectDescId: TLabel
+          Left = 222
+          Top = 16
+          Width = 159
+          Height = 13
+          Caption = #1054#1076#1080#1085' '#1080#1083#1080' '#1042#1057#1045' '#1089#1087#1088#1072#1074', DescId =  '
+        end
+        object cbProtocol: TCheckBox
+          Left = 16
+          Top = 13
+          Width = 209
+          Height = 17
+          Caption = #1055#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' / '#1080#1085#1072#1095#1077' '#1042#1057#1045
+          Checked = True
+          State = cbChecked
+          TabOrder = 0
+        end
+        object EditObjectDescId: TEdit
+          Left = 381
+          Top = 11
+          Width = 121
+          Height = 21
+          TabOrder = 1
+        end
+      end
+      object PanelInfoObject: TPanel
+        Left = 508
+        Top = 41
+        Width = 73
+        Height = 92
+        Align = alRight
+        TabOrder = 2
+        ExplicitLeft = 509
+        ExplicitTop = 36
+        ExplicitHeight = 144
+        object LabelObject: TLabel
+          Left = 1
+          Top = 1
+          Width = 71
+          Height = 13
+          Align = alTop
+          Alignment = taCenter
+          Caption = 'Object'
+          ExplicitWidth = 31
+        end
+        object EditRecordObject: TcxCurrencyEdit
+          Left = 1
+          Top = 14
+          Align = alTop
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taVCenter
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = ',0.'
+          Properties.EditFormat = ',0.'
+          Properties.ReadOnly = True
+          TabOrder = 0
+          ExplicitTop = 5
+          ExplicitWidth = 70
+          Width = 71
+        end
+      end
+    end
+    object PanelGridObjectString: TPanel
+      Left = 0
+      Top = 133
+      Width = 581
+      Height = 80
+      Align = alBottom
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitLeft = 201
-      ExplicitTop = 48
-      ExplicitWidth = 185
-      object LabelObjectDescId: TLabel
-        Left = 222
-        Top = 16
-        Width = 159
-        Height = 13
-        Caption = #1054#1076#1080#1085' '#1080#1083#1080' '#1042#1057#1045' '#1089#1087#1088#1072#1074', DescId =  '
-      end
-      object cbProtocol: TCheckBox
-        Left = 16
-        Top = 13
-        Width = 209
-        Height = 17
-        Caption = #1055#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' / '#1080#1085#1072#1095#1077' '#1042#1057#1045
-        Checked = True
-        State = cbChecked
+      ExplicitTop = 185
+      object DBGridObjectString: TDBGrid
+        Left = 0
+        Top = 0
+        Width = 508
+        Height = 80
+        Align = alClient
+        DataSource = ObjectStringDS
         TabOrder = 0
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -11
+        TitleFont.Name = 'MS Sans Serif'
+        TitleFont.Style = []
       end
-      object EditObjectDescId: TcxCurrencyEdit
-        Left = 383
-        Top = 12
-        Properties.Alignment.Horz = taRightJustify
-        Properties.Alignment.Vert = taVCenter
-        Properties.AssignedValues.DisplayFormat = True
-        Properties.DecimalPlaces = 0
+      object PanelInfoObjectString: TPanel
+        Left = 508
+        Top = 0
+        Width = 73
+        Height = 80
+        Align = alRight
         TabOrder = 1
-        Width = 52
+        ExplicitLeft = 509
+        ExplicitTop = 35
+        ExplicitHeight = 144
+        object LabelObjectString: TLabel
+          Left = 1
+          Top = 1
+          Width = 71
+          Height = 13
+          Align = alTop
+          Alignment = taCenter
+          Caption = 'ObjectString'
+          ExplicitWidth = 58
+        end
+        object EditRecordObjectString: TcxCurrencyEdit
+          Left = 1
+          Top = 14
+          Align = alTop
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taVCenter
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = ',0.'
+          Properties.EditFormat = ',0.'
+          Properties.ReadOnly = True
+          TabOrder = 0
+          ExplicitTop = 15
+          ExplicitWidth = 70
+          Width = 71
+        end
       end
-      object EditRecord: TcxCurrencyEdit
-        Left = 512
-        Top = 11
-        Properties.Alignment.Horz = taRightJustify
-        Properties.Alignment.Vert = taVCenter
-        Properties.DecimalPlaces = 0
-        Properties.DisplayFormat = ',0.'
-        Properties.ReadOnly = True
-        TabOrder = 2
-        Width = 63
+    end
+    object PanelGridObjectFloat: TPanel
+      Left = 0
+      Top = 213
+      Width = 581
+      Height = 80
+      Align = alBottom
+      BevelOuter = bvNone
+      TabOrder = 2
+      ExplicitTop = 282
+      object DBGridObjectFloat: TDBGrid
+        Left = 0
+        Top = 0
+        Width = 508
+        Height = 80
+        Align = alClient
+        DataSource = ObjectFloatDS
+        TabOrder = 0
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -11
+        TitleFont.Name = 'MS Sans Serif'
+        TitleFont.Style = []
+      end
+      object PanelInfoObjectFloat: TPanel
+        Left = 508
+        Top = 0
+        Width = 73
+        Height = 80
+        Align = alRight
+        TabOrder = 1
+        ExplicitHeight = 97
+        object LabelObjectFloat: TLabel
+          Left = 1
+          Top = 1
+          Width = 71
+          Height = 13
+          Align = alTop
+          Alignment = taCenter
+          Caption = 'ObjectFloat'
+          ExplicitWidth = 54
+        end
+        object EditRecordObjectFloat: TcxCurrencyEdit
+          Left = 1
+          Top = 14
+          Align = alTop
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taVCenter
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = ',0.'
+          Properties.EditFormat = ',0.'
+          Properties.ReadOnly = True
+          TabOrder = 0
+          Width = 71
+        end
+      end
+    end
+    object PanelGridObjectDate: TPanel
+      Left = 0
+      Top = 293
+      Width = 581
+      Height = 80
+      Align = alBottom
+      BevelOuter = bvNone
+      TabOrder = 3
+      ExplicitTop = 282
+      object DBGridObjectDate: TDBGrid
+        Left = 0
+        Top = 0
+        Width = 508
+        Height = 80
+        Align = alClient
+        DataSource = ObjectDateDS
+        TabOrder = 0
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -11
+        TitleFont.Name = 'MS Sans Serif'
+        TitleFont.Style = []
+      end
+      object PanelInfoObjectDate: TPanel
+        Left = 508
+        Top = 0
+        Width = 73
+        Height = 80
+        Align = alRight
+        TabOrder = 1
+        object LabelObjectDate: TLabel
+          Left = 1
+          Top = 1
+          Width = 71
+          Height = 13
+          Align = alTop
+          Alignment = taCenter
+          Caption = 'ObjectDate'
+          ExplicitWidth = 54
+        end
+        object EditRecordObjectDate: TcxCurrencyEdit
+          Left = 1
+          Top = 14
+          Align = alTop
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taVCenter
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = ',0.'
+          Properties.EditFormat = ',0.'
+          Properties.ReadOnly = True
+          TabOrder = 0
+          Width = 71
+        end
+      end
+    end
+    object PanelGridObjectBoolean: TPanel
+      Left = 0
+      Top = 373
+      Width = 581
+      Height = 80
+      Align = alBottom
+      BevelOuter = bvNone
+      TabOrder = 4
+      ExplicitTop = 282
+      object DBGridObjectBoolean: TDBGrid
+        Left = 0
+        Top = 0
+        Width = 508
+        Height = 80
+        Align = alClient
+        DataSource = ObjectBooleanDS
+        TabOrder = 0
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -11
+        TitleFont.Name = 'MS Sans Serif'
+        TitleFont.Style = []
+      end
+      object PanelInfoObjectBoolean: TPanel
+        Left = 508
+        Top = 0
+        Width = 73
+        Height = 80
+        Align = alRight
+        TabOrder = 1
+        ExplicitLeft = 509
+        ExplicitTop = 6
+        object LabelObjectBoolean: TLabel
+          Left = 1
+          Top = 1
+          Width = 71
+          Height = 13
+          Align = alTop
+          Alignment = taCenter
+          Caption = 'ObjectBoolean'
+          ExplicitWidth = 70
+        end
+        object EditRecordObjectBoolean: TcxCurrencyEdit
+          Left = 1
+          Top = 14
+          Align = alTop
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taVCenter
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = ',0.'
+          Properties.EditFormat = ',0.'
+          Properties.ReadOnly = True
+          TabOrder = 0
+          Width = 71
+        end
+      end
+    end
+    object PanelGridObjectLink: TPanel
+      Left = 0
+      Top = 453
+      Width = 581
+      Height = 80
+      Align = alBottom
+      BevelOuter = bvNone
+      TabOrder = 5
+      ExplicitTop = 282
+      object DBGridObjectLink: TDBGrid
+        Left = 0
+        Top = 0
+        Width = 508
+        Height = 80
+        Align = alClient
+        DataSource = ObjectLinkDS
+        TabOrder = 0
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -11
+        TitleFont.Name = 'MS Sans Serif'
+        TitleFont.Style = []
+      end
+      object PanelInfoObjectLink: TPanel
+        Left = 508
+        Top = 0
+        Width = 73
+        Height = 80
+        Align = alRight
+        TabOrder = 1
+        object LabelObjectLink: TLabel
+          Left = 1
+          Top = 1
+          Width = 71
+          Height = 13
+          Align = alTop
+          Alignment = taCenter
+          Caption = 'ObjectLink'
+          ExplicitWidth = 51
+        end
+        object EditRecordObjectLink: TcxCurrencyEdit
+          Left = 1
+          Top = 14
+          Align = alTop
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taVCenter
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = ',0.'
+          Properties.EditFormat = ',0.'
+          Properties.ReadOnly = True
+          TabOrder = 0
+          Width = 71
+        end
       end
     end
   end
   object ButtonPanel: TPanel
     Left = 0
-    Top = 521
+    Top = 533
     Width = 1025
-    Height = 64
+    Height = 52
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
@@ -118,7 +430,7 @@
     end
     object OKGuideButton: TButton
       Left = 56
-      Top = 25
+      Top = 23
       Width = 88
       Height = 25
       Caption = #1047#1072#1087#1091#1089#1090#1080#1090#1100
@@ -127,7 +439,7 @@
     end
     object StopButton: TButton
       Left = 149
-      Top = 25
+      Top = 23
       Width = 88
       Height = 25
       Caption = #1054#1089#1090#1072#1085#1086#1074#1080#1090#1100
@@ -136,7 +448,7 @@
     end
     object CloseButton: TButton
       Left = 243
-      Top = 25
+      Top = 23
       Width = 88
       Height = 25
       Caption = #1042#1099#1093#1086#1076
@@ -148,13 +460,14 @@
     Left = 584
     Top = 0
     Width = 441
-    Height = 521
+    Height = 533
     ActivePage = TabSheet1
     Align = alRight
     TabOrder = 2
+    ExplicitHeight = 521
     object TabSheet1: TTabSheet
       Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080' - '#1044#1086#1082#1091#1084#1077#1085#1090#1099
-      ExplicitWidth = 572
+      ExplicitHeight = 493
       object PanelReplServer: TPanel
         Left = 0
         Top = 0
@@ -163,7 +476,6 @@
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 572
         object rgReplServer: TRadioGroup
           Left = 0
           Top = 0
@@ -172,24 +484,22 @@
           Align = alClient
           Caption = #1057#1077#1088#1074#1077#1088#1099
           Items.Strings = (
-            '1. integer-srv.alan.dp.ua admin vas6ok 5432 project'
-            '2. localhost postgres postgres 5432 project')
+            '1. integer-srv.alan.dp.ua'
+            '2. project-vds.vds.colocall.com')
           TabOrder = 0
-          ExplicitLeft = -1
-          ExplicitWidth = 572
         end
       end
     end
     object TabSheet2: TTabSheet
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' '#1092#1072#1081#1083#1086#1074
       ImageIndex = 1
-      ExplicitWidth = 572
+      ExplicitHeight = 493
     end
   end
-  object ObjectGUIDІDS: TDataSource
-    DataSet = ObjectGUIDCDS
-    Left = 104
-    Top = 168
+  object ObjectDS: TDataSource
+    DataSet = ObjectCDS
+    Left = 400
+    Top = 88
   end
   object toSqlQuery: TZQuery
     Connection = toZConnection
@@ -203,11 +513,27 @@
   end
   object spSelect_ObjectGUID: TdsdStoredProc
     StoredProcName = 'gpSelect_ObjectGUID'
-    DataSet = ObjectGUIDCDS
+    DataSet = ObjectCDS
     DataSets = <
       item
-        DataSet = ObjectGUIDCDS
+        DataSet = ObjectCDS
+      end
+      item
+        DataSet = ObjectStringCDS
+      end
+      item
+        DataSet = ObjectFloatCDS
+      end
+      item
+        DataSet = ObjectDateCDS
+      end
+      item
+        DataSet = ObjectBooleanCDS
+      end
+      item
+        DataSet = ObjectLinkCDS
       end>
+    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inStartDate'
@@ -223,8 +549,9 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDescId'
+        Name = 'inDescCode'
         Value = Null
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -243,8 +570,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 48
-    Top = 160
+    Left = 368
+    Top = 40
   end
   object toStoredProc: TdsdStoredProc
     DataSets = <>
@@ -289,27 +616,27 @@
   object fromQuery: TQuery
     DatabaseName = 'tProfiManagerDS'
     SessionName = 'Default'
-    Left = 194
-    Top = 169
+    Left = 242
+    Top = 121
   end
   object fromSqlQuery: TQuery
     DatabaseName = 'tProfiManagerDS'
     SessionName = 'Default'
-    Left = 306
-    Top = 171
+    Left = 194
+    Top = 83
   end
   object fromQuery_two: TQuery
     DatabaseName = 'tProfiManagerDS'
     SessionName = 'Default'
     Left = 196
-    Top = 232
+    Top = 136
   end
-  object ObjectGUIDCDS: TClientDataSet
+  object ObjectCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 96
-    Top = 216
+    Left = 456
+    Top = 72
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -360,5 +687,65 @@
     Params = <>
     Left = 336
     Top = 320
+  end
+  object ObjectStringCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 464
+    Top = 144
+  end
+  object ObjectStringDS: TDataSource
+    DataSet = ObjectStringCDS
+    Left = 408
+    Top = 160
+  end
+  object ObjectFloatCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 464
+    Top = 224
+  end
+  object ObjectFloatDS: TDataSource
+    DataSet = ObjectFloatCDS
+    Left = 408
+    Top = 240
+  end
+  object ObjectDateDS: TDataSource
+    DataSet = ObjectDateCDS
+    Left = 400
+    Top = 320
+  end
+  object ObjectDateCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 456
+    Top = 304
+  end
+  object ObjectBooleanDS: TDataSource
+    DataSet = ObjectBooleanCDS
+    Left = 408
+    Top = 400
+  end
+  object ObjectBooleanCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 464
+    Top = 384
+  end
+  object ObjectLinkDS: TDataSource
+    DataSet = ObjectLinkCDS
+    Left = 400
+    Top = 480
+  end
+  object ObjectLinkCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 456
+    Top = 464
   end
 end

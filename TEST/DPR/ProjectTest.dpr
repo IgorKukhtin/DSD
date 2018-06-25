@@ -1011,7 +1011,6 @@ uses
   Report_Mobile_OrderExternal_Sale in '..\..\Forms\Report\Report_Mobile_OrderExternal_Sale.pas' {Report_Mobile_OrderExternal_SaleForm: TParentForm},
   Report_SaleOrderExtList_Mobile in '..\..\Forms\Report\Report_SaleOrderExtList_Mobile.pas' {Report_SaleOrderExtList_MobileForm: TParentForm},
   Report_SaleOrderExtList_MobileDialog in '..\..\Forms\Report\Report_SaleOrderExtList_MobileDialog.pas' {Report_SaleOrderExtList_MobileDialogForm: TParentForm},
-  Report_SaleOLAP_Analysis in '..\..\FormsBoutique\Report\Report_SaleOLAP_Analysis.pas' {Report_SaleOLAP_AnalysisForm: TParentForm},
   Report_AccountMotion in '..\..\Forms\Report\Report_AccountMotion.pas' {Report_AccountMotionForm: TParentForm},
   OrderExternal_DatePartnerDialog in '..\..\Forms\Document\OrderExternal_DatePartnerDialog.pas' {OrderExternal_DatePartnerDialogForm: TParentForm},
   ReplMovementEdit in '..\..\Forms\Guides\ReplMovementEdit.pas' {ReplMovementEditForm: TParentForm},
@@ -1022,7 +1021,9 @@ uses
   ReplObject in '..\..\Forms\Guides\ReplObject.pas' {ReplObjectForm: TParentForm},
   DataTimeDialog in '..\..\Forms\System\DataTimeDialog.pas' {DataTimeDialogForm: TParentForm},
   GoodsByGoodsKind_VMC in '..\..\Forms\Guides\GoodsByGoodsKind_VMC.pas' {GoodsByGoodsKind_VMCForm: TParentForm},
-  GoodsByGoodsKind_VMCDialog in '..\..\Forms\Guides\GoodsByGoodsKind_VMCDialog.pas' {GoodsByGoodsKind_VMCDialogForm: TParentForm};
+  GoodsByGoodsKind_VMCDialog in '..\..\Forms\Guides\GoodsByGoodsKind_VMCDialog.pas' {GoodsByGoodsKind_VMCDialogForm: TParentForm},
+  GoodsPropertyBox in '..\..\Forms\Guides\GoodsPropertyBox.pas' {GoodsPropertyBoxForm: TParentForm},
+  GoodsPropertyBoxEdit in '..\..\Forms\Guides\GoodsPropertyBoxEdit.pas' {GoodsPropertyBoxEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

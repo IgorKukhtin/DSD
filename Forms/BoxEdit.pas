@@ -31,6 +31,12 @@ type
     cxLabel4: TcxLabel;
     ceBoxVolume: TcxCurrencyEdit;
     ceBoxWeight: TcxCurrencyEdit;
+    cxLabel5: TcxLabel;
+    edHeight: TcxCurrencyEdit;
+    cxLabel6: TcxLabel;
+    edLength: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
+    edWidth: TcxCurrencyEdit;
   private
     { Private declarations }
   public

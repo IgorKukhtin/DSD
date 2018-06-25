@@ -1329,6 +1329,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TBoxForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBoxEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBoxEditForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPropertyBoxForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyBoxForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPropertyBoxEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyBoxEditForm');
 end;
 
 procedure TLoadFormTest.LoadConditionPromoFormTest;
@@ -1664,10 +1669,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_AccountForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AccountDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_AccountDialogForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AccountMotionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_AccountMotionForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportHoursWorkForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TransportHoursWorkForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportHoursWorkDialogForm'));
@@ -1728,12 +1733,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSoldForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSoldDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSoldDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalCollationForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalCollationForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalCollationDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalCollationDialogForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportCollation_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportCollation_ObjectForm');
 

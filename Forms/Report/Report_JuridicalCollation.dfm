@@ -3,9 +3,8 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   ClientHeight = 410
   ClientWidth = 1015
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -361
   ExplicitWidth = 1031
-  ExplicitHeight = 449
+  ExplicitHeight = 448
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -218,6 +217,46 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
+          end
+          object InvNumber_Transport: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1055'.'#1083'.'
+            DataBinding.FieldName = 'InvNumber_Transport'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
+            Options.Editing = False
+            Width = 61
+          end
+          object OperDate_Transport: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1055'.'#1083'.'
+            DataBinding.FieldName = 'OperDate_Transport'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
+            Options.Editing = False
+            Width = 70
+          end
+          object CarName: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' '#1055'.'#1083'.'
+            DataBinding.FieldName = 'CarName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
+            Options.Editing = False
+            Width = 80
+          end
+          object PersonalDriverName: TcxGridDBColumn
+            Caption = #1042#1086#1076#1080#1090#1077#1083#1100' '#1055'.'#1083'.'
+            DataBinding.FieldName = 'PersonalDriverName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
+            Options.Editing = False
+            Width = 70
           end
           object StartRemains: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1076#1086#1083#1075' ('#1040#1082#1090#1080#1074')'
@@ -995,6 +1034,9 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1040#1082#1090' '#1089#1074#1077#1088#1082#1080')'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object macPrint: TMultiAction
       Category = 'DSDLib'
@@ -1201,6 +1243,9 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       ReportNameParam.Value = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1081')'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object macPrintOfficial: TMultiAction
       Category = 'DSDLib'
@@ -1415,6 +1460,9 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       ReportNameParam.Value = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1074' '#1074#1072#1083#1102#1090#1077')'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object macPrintCurrency: TMultiAction
       Category = 'DSDLib'
@@ -1606,6 +1654,9 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1080#1079' '#1072#1082#1090#1072' '#1089#1074#1077#1088#1082#1080
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'

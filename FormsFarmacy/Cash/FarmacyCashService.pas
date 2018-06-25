@@ -1377,7 +1377,10 @@ begin
     end;
   finally
     FSaveRealAllRunning := false;
-    MainCashForm2.tiServise.IconIndex := GetTrayIcon;
+    if FHasError then
+      MainCashForm2.tiServise.IconIndex := 6
+    else
+      MainCashForm2.tiServise.IconIndex := GetTrayIcon;
     Add_Log('SaveReal end');
     TimerSaveReal.Interval := GetInterval_CashRemains_Diff;
     TimerSaveReal.Enabled := true;

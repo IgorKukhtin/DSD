@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
@@ -25,7 +26,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
     IN inSummNalogRetRecalc     TFloat    , -- Налоги - возмещение к ЗП (ввод)
     IN inSummMinus              TFloat    , -- Сумма удержания
     IN inSummAdd                TFloat    , -- Сумма премия
-
+    IN inSummAddOthRecalc       TFloat    , -- Сумма премия (ввод для распределения)
+    
     IN inSummHoliday            TFloat    , -- Сумма отпускные    
     IN inSummSocialIn           TFloat    , -- Сумма соц выплаты (из зарплаты)
     IN inSummSocialAdd          TFloat    , -- Сумма соц выплаты (доп. зарплате)
@@ -216,6 +218,8 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAdd (), ioId, inSummAdd );
      -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAddOthRecalc(), ioId, inSummAddOthRecalc);
+     -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummHoliday (), ioId, inSummHoliday );
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummSocialIn(), ioId, inSummSocialIn);
@@ -266,6 +270,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.06.18         * inSummAddOthRecalc
  05.01.18         * add inSummNalogRetRecalc
  20.06.17         * add inSummCardSecondCash
  24.02.17         * add SummMinusExtRecalc, CHANGE inSummChild on inSummChildRecalc

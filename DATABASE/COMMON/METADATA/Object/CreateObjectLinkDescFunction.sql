@@ -1836,6 +1836,20 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_JuridicalActualAddress_Address() RETURN
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_JuridicalActualAddress_Address', 'Фактический адрес', zc_Object_JuridicalActualAddress(), zc_Object_Address() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalActualAddress_Address');
 
+--
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsPropertyBox_Goods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsPropertyBox_Goods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_GoodsPropertyBox_Goods', 'Связь с Товарами', zc_Object_GoodsPropertyBox(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsPropertyBox_Goods');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsPropertyBox_GoodsKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsPropertyBox_GoodsKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_GoodsPropertyBox_GoodsKind', 'Связь с Видами товаров', zc_Object_GoodsPropertyBox(), zc_Object_GoodsKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsPropertyBox_GoodsKind');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsPropertyBox_Box() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsPropertyBox_Box'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_GoodsPropertyBox_Box', 'Связь с ящиком', zc_Object_GoodsPropertyBox(), zc_Object_Box() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsPropertyBox_Box');
+
+
 
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!

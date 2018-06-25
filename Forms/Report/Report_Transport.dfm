@@ -24,7 +24,6 @@ object Report_TransportForm: TReport_TransportForm
     Height = 338
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 1329
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -630,6 +629,13 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 76
       end
+      object InvNumber_Reestr: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082' ('#1088#1077#1077#1089#1090#1088')'
+        DataBinding.FieldName = 'InvNumber_Reestr'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -642,7 +648,6 @@ object Report_TransportForm: TReport_TransportForm
     Height = 31
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 1329
     object deStart: TcxDateEdit
       Left = 101
       Top = 5

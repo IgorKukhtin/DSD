@@ -48,6 +48,8 @@ $BODY$
   DECLARE vbTotalSummChildRecalc      TFloat;
   DECLARE vbTotalSummMinusExt         TFloat;
   DECLARE vbTotalSummMinusExtRecalc   TFloat;
+  DECLARE vbTotalSummAddOth           TFloat;
+  DECLARE vbTotalSummAddOthRecalc     TFloat;
 
   DECLARE vbTotalSummTransport        TFloat;
   DECLARE vbTotalSummTransportAdd     TFloat;
@@ -285,6 +287,8 @@ BEGIN
           , OperSumm_Phone
           , OperSumm_NalogRet
           , OperSumm_NalogRetRecalc
+          , OperSumm_AddOth
+          , OperSumm_AddOthRecalc
 
             INTO vbOperCount_Master, vbOperCount_Child, vbOperCount_Partner, vbOperCount_Second, vbOperCount_Tare, vbOperCount_Sh, vbOperCount_Kg, vbOperCount_ShFrom, vbOperCount_KgFrom
                , vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_PVAT_original, vbOperSumm_Partner, vbOperSumm_PartnerFrom, vbOperSumm_Currency
@@ -294,6 +298,7 @@ BEGIN
                , vbTotalSummChild, vbTotalSummChildRecalc, vbTotalSummMinusExt, vbTotalSummMinusExtRecalc
                , vbTotalSummTransport, vbTotalSummTransportAdd, vbTotalSummTransportAddLong, vbTotalSummTransportTaxi, vbTotalSummPhone
                , vbTotalSummNalogRet, vbTotalSummNalogRetRecalc
+               , vbTotalSummAddOth, vbTotalSummAddOthRecalc
 
      FROM  -- Расчет Итоговых суммы
           (WITH tmpMI AS (SELECT Movement.DescId AS MovementDescId
@@ -372,6 +377,9 @@ BEGIN
                                , SUM (COALESCE (MIFloat_AmountTax_calc.ValueData, 0))         AS AmountTax_calc
                                , SUM (COALESCE (MIFloat_SummTaxDiff_calc.ValueData, 0))       AS SummTaxDiff_calc
                                , SUM (COALESCE (MIFloat_PriceTax_calc.ValueData, 0))          AS PriceTax_calc
+
+                               , SUM (COALESCE (MIFloat_SummAddOth.ValueData, 0))           AS OperSumm_AddOth
+                               , SUM (COALESCE (MIFloat_SummAddOthRecalc.ValueData, 0))     AS OperSumm_AddOthRecalc
 
                           FROM Movement
                                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
@@ -503,6 +511,15 @@ BEGIN
                                LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRetRecalc
                                                            ON MIFloat_SummNalogRetRecalc.MovementItemId = MovementItem.Id
                                                           AND MIFloat_SummNalogRetRecalc.DescId = zc_MIFloat_SummNalogRetRecalc()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummAddOth
+                                                           ON MIFloat_SummAddOth.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummAddOth.DescId = zc_MIFloat_SummAddOth()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummAddOthRecalc
+                                                           ON MIFloat_SummAddOthRecalc.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummAddOthRecalc.DescId = zc_MIFloat_SummAddOthRecalc()
                                                           AND Movement.DescId = zc_Movement_PersonalService()
 
                                LEFT JOIN MovementItemFloat AS MIFloat_SummTransport
@@ -696,6 +713,8 @@ BEGIN
                 , OperSumm_Phone
                 , OperSumm_NalogRet
                 , OperSumm_NalogRetRecalc
+                , OperSumm_AddOth
+                , OperSumm_AddOthRecalc
            FROM
                  -- получили 1 запись + !!! перевели в валюту если надо!!!
                 (SELECT SUM (CASE WHEN tmpMI.myLevel = 2 AND vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
@@ -788,6 +807,8 @@ BEGIN
                       , SUM (tmpMI.OperSumm_Phone)            AS OperSumm_Phone
                       , SUM (tmpMI.OperSumm_NalogRet)         AS OperSumm_NalogRet
                       , SUM (tmpMI.OperSumm_NalogRetRecalc)   AS OperSumm_NalogRetRecalc
+                      , SUM (tmpMI.OperSumm_AddOth)           AS OperSumm_AddOth
+                      , SUM (tmpMI.OperSumm_AddOthRecalc)     AS OperSumm_AddOthRecalc
                   FROM (SELECT tmpMI.GoodsId
                              , tmpMI.GoodsKindId
                              , tmpMI.myLevel
@@ -901,6 +922,9 @@ BEGIN
                             , tmpMI.OperSumm_NalogRet
                             , tmpMI.OperSumm_NalogRetRecalc
 
+                            , tmpMI.OperSumm_AddOth
+                            , tmpMI.OperSumm_AddOthRecalc
+
                         FROM (SELECT tmpMI.MovementDescId
                                    , tmpMI.MovementItemId
                                    , tmpMI.DescId
@@ -969,6 +993,8 @@ BEGIN
                                    , tmpMI.OperSumm_NalogRet
                                    , tmpMI.OperSumm_NalogRetRecalc
 
+                                   , tmpMI.OperSumm_AddOth
+                                   , tmpMI.OperSumm_AddOthRecalc
                               FROM tmpMI
                              UNION ALL
                               SELECT tmpMI.MovementDescId
@@ -1049,6 +1075,8 @@ BEGIN
                                    , tmpMI.OperSumm_NalogRet
                                    , tmpMI.OperSumm_NalogRetRecalc
 
+                                   , tmpMI.OperSumm_AddOth
+                                   , tmpMI.OperSumm_AddOthRecalc
                               FROM tmpMI
                               WHERE vbIsNPP_calc = TRUE
                              ) AS tmpMI
@@ -1153,6 +1181,11 @@ BEGIN
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummNalogRet(), inMovementId, vbTotalSummNalogRet);
          -- Сохранили свойство <Налоги - возмещение к ЗП (ввод)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummNalogRetRecalc(), inMovementId, vbTotalSummNalogRetRecalc);
+
+         -- Сохранили свойство <Премия (распределено)>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummAddOth(), inMovementId, vbTotalSummAddOth);
+         -- Сохранили свойство <Премия (ввод для распределения)>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummAddOthRecalc(), inMovementId, vbTotalSummAddOthRecalc);
      ELSE
          -- Сохранили свойство <Итого количество("главные элементы")>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), inMovementId, vbOperCount_Master + vbOperCount_Packer);
@@ -1202,6 +1235,8 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.06.18         * SummAddOth
+                    SummAddOthRecalc
  27.02.18         * zc_Movement_LossPersonal
  05.01.18         * vbTotalSummNalogRet
                     vbTotalSummNalogRetRecalc
