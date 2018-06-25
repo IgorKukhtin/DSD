@@ -38,9 +38,9 @@ type
    TArrayReplServer = array of TReplServerItem;
 
   TMainForm = class(TForm)
-    ObjectGUIDІDS: TDataSource;
+    ObjectDS: TDataSource;
     PanelGrid: TPanel;
-    DBGrid: TDBGrid;
+    DBGridObject: TDBGrid;
     ButtonPanel: TPanel;
     OKGuideButton: TButton;
     Gauge: TGauge;
@@ -61,15 +61,52 @@ type
     Splitter1: TSplitter;
     PanelReplServer: TPanel;
     rgReplServer: TRadioGroup;
-    ObjectGUIDCDS: TClientDataSet;
+    ObjectCDS: TClientDataSet;
     FormParams: TdsdFormParams;
     PanelCB: TPanel;
     cbProtocol: TCheckBox;
     spSelect_ReplServer_load: TdsdStoredProc;
     ReplServerCDS: TClientDataSet;
     LabelObjectDescId: TLabel;
-    EditObjectDescId: TcxCurrencyEdit;
-    EditRecord: TcxCurrencyEdit;
+    PanelInfoObject: TPanel;
+    EditRecordObject: TcxCurrencyEdit;
+    PanelGridObjectString: TPanel;
+    DBGridObjectString: TDBGrid;
+    PanelInfoObjectString: TPanel;
+    EditRecordObjectString: TcxCurrencyEdit;
+    LabelObjectString: TLabel;
+    LabelObject: TLabel;
+    PanelGridObjectFloat: TPanel;
+    DBGridObjectFloat: TDBGrid;
+    PanelInfoObjectFloat: TPanel;
+    LabelObjectFloat: TLabel;
+    EditRecordObjectFloat: TcxCurrencyEdit;
+    PanelGridObjectDate: TPanel;
+    DBGridObjectDate: TDBGrid;
+    PanelInfoObjectDate: TPanel;
+    LabelObjectDate: TLabel;
+    EditRecordObjectDate: TcxCurrencyEdit;
+    PanelGridObjectBoolean: TPanel;
+    DBGridObjectBoolean: TDBGrid;
+    PanelInfoObjectBoolean: TPanel;
+    LabelObjectBoolean: TLabel;
+    EditRecordObjectBoolean: TcxCurrencyEdit;
+    PanelGridObjectLink: TPanel;
+    DBGridObjectLink: TDBGrid;
+    PanelInfoObjectLink: TPanel;
+    LabelObjectLink: TLabel;
+    EditRecordObjectLink: TcxCurrencyEdit;
+    ObjectStringCDS: TClientDataSet;
+    ObjectStringDS: TDataSource;
+    ObjectFloatCDS: TClientDataSet;
+    ObjectFloatDS: TDataSource;
+    ObjectDateDS: TDataSource;
+    ObjectDateCDS: TClientDataSet;
+    ObjectBooleanDS: TDataSource;
+    ObjectBooleanCDS: TClientDataSet;
+    ObjectLinkDS: TDataSource;
+    ObjectLinkCDS: TClientDataSet;
+    EditObjectDescId: TEdit;
 
     procedure OKGuideButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -183,7 +220,14 @@ procedure TMainForm.StopButtonClick(Sender: TObject);
 begin
      if MessageDlg('Действительно остановить загрузку?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
      fStop:=true;
-     DBGrid.Enabled:=true;
+
+     DBGridObject.Enabled:=true;
+     DBGridObjectString.Enabled:=true;
+     DBGridObjectFloat.Enabled:=true;
+     DBGridObjectDate.Enabled:=true;
+     DBGridObjectBoolean.Enabled:=true;
+     DBGridObjectLink.Enabled:=true;
+
      OKGuideButton.Enabled:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -443,8 +487,8 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.CursorGridChange;
 begin
-     if Assigned (DBGrid.DataSource.DataSet)
-     then
+     //if Assigned (DBGrid.DataSource.DataSet)
+     //then
        //if сbNotVisibleCursor.Checked
        //then DBGrid.DataSource.DataSet.DisableControls
        //else DBGrid.DataSource.DataSet.EnableControls;
@@ -498,15 +542,23 @@ begin
      begin
        //try
          //
-         ParamByName('inStartDate').Value:= ArrayReplServer[NumConnect-1].Start_toChild;
-         ParamByName('inDataBaseId').Value:= ArrayReplServer[NumConnect-1].Id;
-         try ParamByName('inDescId').Value:= StrToInt(EditObjectDescId.Text); except ParamByName('inDescId').Value:= 0; end;
-         ParamByName('inIsProtocol').Value:= cbProtocol.Checked;
+         ParamByName('inStartDate').Value  := ArrayReplServer[NumConnect-1].Start_toChild;
+         ParamByName('inDataBaseId').Value := ArrayReplServer[NumConnect-1].Id;
+         ParamByName('inDescCode').Value   := EditObjectDescId.Text;
+         ParamByName('inIsProtocol').Value := cbProtocol.Checked;
          ParamByName('inIsGUID_null').Value:= false;
          //
          Execute;
          //
-         EditRecord.Text:= IntToStr (Dataset.RecordCount);
+         EditRecordObject.Text:= IntToStr (ObjectCDS.RecordCount);
+         EditRecordObjectString.Text:= IntToStr (ObjectStringCDS.RecordCount);
+         EditRecordObjectFloat.Text:= IntToStr (ObjectFloatCDS.RecordCount);
+         EditRecordObjectDate.Text:= IntToStr (ObjectDateCDS.RecordCount);
+         EditRecordObjectBoolean.Text:= IntToStr (ObjectBooleanCDS.RecordCount);
+         EditRecordObjectLink.Text:= IntToStr (ObjectLinkCDS.RecordCount);
+         //
+         //Dataset.
+         //
        {except
          SetLength(Result, 0);
          ShowMessage('Ошибка получения - gpSelect_Scale_GoodsKindWeighing');
@@ -538,7 +590,9 @@ begin
      if MessageDlg('Действительно загрузить выбранные справочники?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
      //
      fStop:=false;
-     DBGrid.Enabled:=false;
+
+     //DBGrid.Enabled:=false;
+
      OKGuideButton.Enabled:=false;
      //
      Gauge.Visible:=true;
@@ -556,7 +610,7 @@ begin
      //
      //
      Gauge.Visible:=false;
-     DBGrid.Enabled:=true;
+     //DBGrid.Enabled:=true;
      OKGuideButton.Enabled:=true;
      //
      //toZConnection.Connected:=false;

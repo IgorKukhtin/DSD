@@ -3393,10 +3393,6 @@
 				<Form>Report_SaleOrderExtList_MobileDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Report\Report_SaleOLAP_Analysis.pas">
-				<Form>Report_SaleOLAP_AnalysisForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_AccountMotion.pas">
 				<Form>Report_AccountMotionForm</Form>
 				<DesignClass>TParentForm</DesignClass>
