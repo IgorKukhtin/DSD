@@ -4,10 +4,8 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
   ClientWidth = 1187
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -414
-  ExplicitTop = -61
   ExplicitWidth = 1203
-  ExplicitHeight = 518
+  ExplicitHeight = 521
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -270,6 +268,22 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #8470' '#1076#1086#1082'. '#1087#1088#1086#1076#1072#1078#1080' / '#1087#1077#1088#1077#1084#1077#1097'.'#1087#1086' '#1094#1077#1085#1077
             Width = 60
+          end
+          object OperDatePartner_order: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080
+            DataBinding.FieldName = 'OperDatePartner_order'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' ('#1079#1072#1103#1074#1082#1072')'
+            Width = 70
+          end
+          object OperDatePartner_sale: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+            DataBinding.FieldName = 'OperDatePartner_sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1079#1072#1103#1074#1082#1072')'
+            Width = 80
           end
           object ContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
@@ -1805,8 +1819,8 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
   end
   object FormParams: TdsdFormParams
     Params = <>
-    Left = 320
-    Top = 154
+    Left = 288
+    Top = 178
   end
   object GuidesRouteSorting: TdsdGuides
     KeyField = 'Id'

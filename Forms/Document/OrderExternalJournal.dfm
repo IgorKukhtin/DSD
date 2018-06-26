@@ -606,6 +606,9 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object mactSilentPrint: TMultiAction [1]
       Category = 'Print'
@@ -683,6 +686,9 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object mactSilentList: TMultiAction [5]
       Category = 'Print'
@@ -788,6 +794,9 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actSPSavePrintState: TdsdExecStoredProc
       Category = 'Print'
@@ -1220,6 +1229,10 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       end>
     Left = 400
     Top = 200
+  end
+  inherited spMovementReComplete: TdsdStoredProc
+    Left = 440
+    Top = 168
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
