@@ -29,8 +29,8 @@ type
     OperDate: TcxGridDBColumn;
     JuridicalName: TcxGridDBColumn;
     TotalSumm: TcxGridDBColumn;
+    PaymentSum: TcxGridDBColumn;
     PaySumm: TcxGridDBColumn;
-    SummaSale: TcxGridDBColumn;
     tsPivot: TcxTabSheet;
     cxSplitter1: TcxSplitter;
     grChart: TcxGrid;
@@ -39,7 +39,7 @@ type
     dgUnit: TcxGridDBChartDataGroup;
     serTotalSumm: TcxGridDBChartSeries;
     serPaySumm: TcxGridDBChartSeries;
-    serSummaSale: TcxGridDBChartSeries;
+    serPaymentSum: TcxGridDBChartSeries;
     grChartLevel1: TcxGridLevel;
     cxDBPivotGrid1: TcxDBPivotGrid;
     pcolOperDate: TcxDBPivotGridField;
