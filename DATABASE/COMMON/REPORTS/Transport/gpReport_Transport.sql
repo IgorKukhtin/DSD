@@ -25,7 +25,7 @@ RETURNS TABLE (InvNumberTransport Integer, OperDate TDateTime
              , AmountFuel TFloat, AmountColdHour TFloat, AmountColdDistance TFloat
              , Amount_Distance_calc TFloat, Amount_ColdHour_calc TFloat, Amount_ColdDistance_calc TFloat
              , SumTransportAdd TFloat, SumTransportAddLong TFloat, SumTransportTaxi TFloat
-             , CountDoc_Reestr TFloat, TotalCountKg_Reestr TFloat
+             , CountDoc_Reestr TFloat, TotalCountKg_Reestr TFloat, InvNumber_Reestr TVarChar
               )
 AS
 $BODY$
@@ -451,16 +451,17 @@ BEGIN
                                   )
                            )
          -- вытаскиваем из реестра виз кол-во накладных и вес
-         , tmpDataReestr AS (SELECT tmp.MovementId                                           AS MovementId
-                                  , Count (DISTINCT MovementFloat_MovementItemId.MovementId) AS CountDoc
-                                  , SUM (MovementFloat_TotalCountKg.ValueData)               AS TotalCountKg
+         , tmpDataReestr AS (SELECT tmp.MovementId                                            AS MovementId
+                                  , STRING_AGG (DISTINCT Movement_Reestr.InvNumber, ';')      AS InvNumber
+                                  , COUNT (DISTINCT MovementFloat_MovementItemId.MovementId)  AS CountDoc
+                                  , SUM (MovementFloat_TotalCountKg.ValueData)                AS TotalCountKg
                              FROM (SELECT DISTINCT tmpTransport.MovementId FROM tmpTransport) AS tmp
                                   INNER JOIN MovementLinkMovement AS MovementLinkMovement_Transport
                                                                   ON MovementLinkMovement_Transport.MovementChildId = tmp.MovementId
                                                                  AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
                                   INNER JOIN Movement AS Movement_Reestr 
-                                                      ON Movement_Reestr.Id = MovementLinkMovement_Transport.MovementId
-                                                     AND Movement_Reestr.DescId = zc_Movement_Reestr()
+                                                      ON Movement_Reestr.Id       = MovementLinkMovement_Transport.MovementId
+                                                     AND Movement_Reestr.DescId   = zc_Movement_Reestr()
                                                      AND Movement_Reestr.StatusId <> zc_Enum_Status_Erased()  --IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())   --zc_Enum_Status_Erased()
                                   -- строки реестра
                                   INNER JOIN MovementItem ON MovementItem.MovementId = MovementLinkMovement_Transport.MovementId
@@ -517,8 +518,9 @@ BEGIN
              , MAX (tmpFuel.SumTransportAddLong)      :: TFloat AS SumTransportAddLong
              , MAX (tmpFuel.SumTransportTaxi)         :: TFloat AS SumTransportTaxi
 
-             , MAX (tmpDataReestr.CountDoc)           :: TFloat AS CountDoc_Reestr
-             , MAX (tmpDataReestr.TotalCountKg)       :: TFloat AS TotalCountKg_Reestr
+             , MAX (tmpDataReestr.CountDoc)           :: TFloat   AS CountDoc_Reestr
+             , MAX (tmpDataReestr.TotalCountKg)       :: TFloat   AS TotalCountKg_Reestr
+             , MAX (tmpDataReestr.InvNumber)          :: TVarChar AS InvNumber_Reestr
 
               -- группировка по всем
         FROM (SELECT tmpAll.MovementId

@@ -153,7 +153,8 @@ BEGIN
       UNION ALL
        SELECT 0                   :: Integer  AS Id
             , 0                   :: Integer  AS Code
-            , 'ќчистить значение' :: TVarChar AS Name
+            -- , 'ќчистить значение' :: TVarChar AS Name
+            , '”ƒјЋ»“№ «начение'  :: TVarChar AS Name
 
             , 0                   :: Integer  AS GoodsGroupId
             , ''                  :: TVarChar AS GoodsGroupName

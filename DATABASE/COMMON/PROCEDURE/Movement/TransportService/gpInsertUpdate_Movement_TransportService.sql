@@ -70,6 +70,8 @@ BEGIN
          ioAmount:= COALESCE (inWeightTransport, 0) * vbValue;
      ELSE
      IF inContractConditionKindId IN (zc_Enum_ContractConditionKind_TransportOneTrip()   -- Ставка за маршрут в одну сторону, грн 
+                                    , zc_Enum_ContractConditionKind_TransportOneTrip10() -- Ставка за маршрут 10т. в одну сторону, грн 
+                                    , zc_Enum_ContractConditionKind_TransportOneTrip20() -- Ставка за маршрут 20т. в одну сторону, грн 
                                     , zc_Enum_ContractConditionKind_TransportRoundTrip() -- Ставка за маршрут в обе стороны, грн
                                     --, zc_Enum_ContractConditionKind_TransportPoint()   -- Ставка за точку, грн 
                                      )
