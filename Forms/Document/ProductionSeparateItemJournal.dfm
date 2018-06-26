@@ -5,7 +5,7 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1089
-  ExplicitHeight = 574
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -340,6 +340,9 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_Ceh: TdsdPrintAction
       Category = 'DSDLib'
@@ -392,6 +395,9 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -856,6 +862,14 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementItemId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
