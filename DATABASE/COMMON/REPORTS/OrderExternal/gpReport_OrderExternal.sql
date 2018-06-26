@@ -21,6 +21,9 @@ RETURNS TABLE (OperDate               TDateTime
              , InvNumber_Master       TVarChar
              , OperDate_Master        TDateTime
              , OperDatePartner_Master TDateTime
+             
+             , OperDatePartner_order  TDateTime
+             , OperDatePartner_sale   TDateTime
            
              , ContractCode Integer, ContractNumber TVarChar, ContractTagName TVarChar, ContractTagGroupName TVarChar
              , FromCode Integer, FromName TVarChar
@@ -132,7 +135,9 @@ BEGIN
                                       ELSE -- если цены без НДС
                                            1 + MovementFloat_VATPercent.ValueData / 100
                                END AS Price
-                 
+
+                             , CASE WHEN inIsByDoc = TRUE THEN MovementDate_OperDatePartner.ValueData ELSE Null END  :: TDateTime  AS OperDatePartner_order
+                             , CASE WHEN inIsByDoc = TRUE THEN (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) ELSE Null END :: TDateTime AS OperDatePartner_sale
                         FROM Movement
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -203,6 +208,10 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+
+                            LEFT JOIN ObjectFloat AS ObjectFloat_DocumentDayCount 
+                                                  ON ObjectFloat_DocumentDayCount.ObjectId = MovementLinkObject_From.ObjectId 
+                                                 AND ObjectFloat_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
                  
                         WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                           AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -231,7 +240,10 @@ BEGIN
                             , MIFloat_CountForPrice.ValueData
                             , MIFloat_Price.ValueData
                             , ObjectLink_Partner_Juridical.ChildObjectId
-                            , ObjectLink_Juridical_Retail.ChildObjectId 
+                            , ObjectLink_Juridical_Retail.ChildObjectId
+
+                            , CASE WHEN inIsByDoc = TRUE THEN MovementDate_OperDatePartner.ValueData ELSE Null END
+                            , CASE WHEN inIsByDoc = TRUE THEN (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) ELSE Null END
                           )
 
      , tmpMovement AS (SELECT tmpMovement2.MovementId
@@ -247,6 +259,8 @@ BEGIN
                             , tmpMovement2.GoodsKindId
                             , tmpMovement2.GoodsId
                             , tmpMovement2.InfoMoneyId
+                            , tmpMovement2.OperDatePartner_order
+                            , tmpMovement2.OperDatePartner_sale
                 
                            , SUM (Amount1 + Amount2 + tmpMovement2.AmountSecond1 + tmpMovement2.AmountSecond2) AS Amount
                            , SUM (Amount1 + Amount2 )                                AS AmountZakaz
@@ -286,6 +300,8 @@ BEGIN
                               , tmpMovement2.InfoMoneyId
                               , tmpMovement2.JuridicalId
                               , tmpMovement2.RetailId
+                              , tmpMovement2.OperDatePartner_order
+                              , tmpMovement2.OperDatePartner_sale
                       )
      -- выбираем для заказов документы продажи и перемещения по цене 
      , tmpMLM AS (SELECT MovementLinkMovement.*
@@ -313,11 +329,14 @@ BEGIN
              Movement.OperDate                          AS OperDate
            , Movement.InvNumber                         AS InvNumber
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
-           
+
            , tmpMLM_All.InvNumber                       AS InvNumber_Master
            , tmpMLM_All.OperDate                        AS OperDate_Master
            , tmpMLM_All.OperDatePartner                 AS OperDatePartner_Master
-           
+
+           , tmpMovement.OperDatePartner_order  :: TDateTime
+           , tmpMovement.OperDatePartner_sale   :: TDateTime
+
            , View_Contract_InvNumber.ContractCode
            , View_Contract_InvNumber.InvNumber          AS ContractNumber
            , View_Contract_InvNumber.ContractTagName
@@ -465,6 +484,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.06.18         *
  18.04.18         *
  25.05.17         *
  29.06.15                                        * ALL

@@ -617,7 +617,7 @@ object MemberForm: TMemberForm
     Top = 160
   end
   object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
+    StoredProcName = 'gpUpdate_Object_Member_IsErased'
     DataSets = <>
     OutputType = otResult
     Params = <
