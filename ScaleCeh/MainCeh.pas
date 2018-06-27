@@ -226,6 +226,9 @@ type
     EditStorageLine: TcxButtonEdit;
     miFont: TMenuItem;
     miLine16: TMenuItem;
+    PanelArticleLoss: TPanel;
+    LabelArticleLoss: TLabel;
+    EditArticleLoss: TcxButtonEdit;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -292,6 +295,8 @@ type
     procedure EditStorageLinePropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
     procedure miFontClick(Sender: TObject);
+    procedure EditArticleLossPropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
   private
     oldGoodsId, oldGoodsCode : Integer;
     fEnterKey13:Boolean;
@@ -327,7 +332,7 @@ implementation
 {$R *.dfm}
 uses UnilWin,DMMainScaleCeh, DMMainScale, UtilConst, DialogMovementDesc, UtilPrint
     ,GuideMovementCeh, DialogNumberValue,DialogStringValue, DialogDateValue, DialogPrint, DialogMessage
-    ,GuideWorkProgress
+    ,GuideWorkProgress,GuideArticleLoss
     ,IdIPWatch, LookAndFillSettings;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -530,6 +535,13 @@ begin
                              ActiveControl:=EditStorageLine;
                              exit;
                    end;
+     end;
+     //Проверка
+     if  (ParamsMovement.ParamByName('ToId').asInteger = 0)
+      and(ParamsMovement.ParamByName('isArticleLoss').AsBoolean = FALSE)
+     then begin
+         ShowMessage('Ошибка.Статья списания НЕ выбрана.');
+         exit;
      end;
      //Проверка
      if ParamsMovement.ParamByName('MovementId').AsInteger=0
@@ -1034,6 +1046,38 @@ begin
           //
           EditStorageLine.Text:= ParamsMI.ParamByName('StorageLineName').AsString;
      end;
+end;
+{------------------------------------------------------------------------}
+procedure TMainCehForm.EditArticleLossPropertiesButtonClick(Sender: TObject;AButtonIndex: Integer);
+var lParams:TParams;
+begin
+     if ParamsMovement.ParamByName('isArticleLoss').AsBoolean = FALSE
+     then begin
+               ShowMessage ('Ошибка.Для данного документ нет выбора <Статья списания>.');
+               exit;
+     end;
+     //
+     Create_ParamsArticleLoss(lParams);
+     lParams.ParamByName('MovementId').asInteger:=ParamsMovement.ParamByName('MovementId').asInteger;
+     lParams.ParamByName('ArticleLossId').asInteger:=ParamsMovement.ParamByName('ToId').asInteger;
+      //
+      if GuideArticleLossForm.Execute(lParams) then
+      begin
+           //обязательно
+           if ParamsMovement.ParamByName('MovementId').AsInteger = 0 then
+           begin
+                 if not DMMainScaleCehForm.gpInsertUpdate_ScaleCeh_Movement(ParamsMovement)
+                 then exit;
+                 //
+                 lParams.ParamByName('MovementId').asInteger:=ParamsMovement.ParamByName('MovementId').asInteger;
+           end;
+           //
+           EditArticleLoss.Text:=lParams.ParamByName('ArticleLossName').asString;
+           ParamsMovement.ParamByName('ToId').asInteger:=lParams.ParamByName('ArticleLossId').asInteger;
+           ParamsMovement.ParamByName('ToName').asString:=lParams.ParamByName('ArticleLossName').asString;
+           DMMainScaleCehForm.gpUpdate_ScaleCeh_Movement_ArticleLoss(lParams);
+      end;
+      lParams.Free;
 end;
 {------------------------------------------------------------------------}
 procedure TMainCehForm.bbChoice_UnComleteClick(Sender: TObject);
@@ -1653,8 +1697,12 @@ procedure TMainCehForm.WriteParamsMovement;
 begin
   PanelPartionDate.Visible:=ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean=true;
   PanelStorageLine.Visible:=ParamsMovement.ParamByName('isStorageLine').asBoolean=true;
+  PanelArticleLoss.Visible:=ParamsMovement.ParamByName('isArticleLoss').asBoolean=true;
   PanelMovementInfo.Visible:=(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_CuterWeight)
                           or (ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealWeight);
+  //
+  if PanelArticleLoss.Visible = true
+  then EditArticleLoss.Text:=ParamsMovement.ParamByName('ToName').asString;
   //
   PanelMovementDesc.Font.Color:=clBlue;
 

@@ -83,6 +83,7 @@ type
   procedure Create_ParamsPersonal(var Params:TParams; idx:String);
   procedure Create_ParamsPersonalComplete(var Params:TParams);
   procedure Create_ParamsWorkProgress(var Params:TParams);
+  procedure Create_ParamsArticleLoss(var Params:TParams);
 
   // создает TParam с названием поля _Name и типом _DataType и добавляет к TParams
   procedure ParamAdd(var execParams:TParams;_Name:String;_DataType:TFieldType);
@@ -228,6 +229,7 @@ begin
      ParamAdd(Params,'isSendOnPriceIn',ftBoolean);
      ParamAdd(Params,'isPartionGoodsDate',ftBoolean);
      ParamAdd(Params,'isStorageLine',ftBoolean);
+     ParamAdd(Params,'isArticleLoss',ftBoolean);
      ParamAdd(Params,'isLockStartWeighing',ftBoolean);
 
      ParamAdd(Params,'OrderExternalId',ftInteger);
@@ -344,6 +346,15 @@ begin
           ParamAdd(Params,'NumPack_Sticker',ftFloat);            // № партии  упаковки, по умолчанию = 1 (для режим 3)
           ParamAdd(Params,'NumTech_Sticker',ftFloat);            // № смены технологов, по умолчанию = 1 (для режим 3)
      end;
+end;
+{------------------------------------------------------------------------}
+procedure Create_ParamsArticleLoss(var Params:TParams);
+begin
+     Params:=nil;
+     ParamAdd(Params,'MovementId', ftInteger);   //
+     ParamAdd(Params,'ArticleLossId', ftInteger);   //
+     ParamAdd(Params,'ArticleLossCode', ftInteger); //
+     ParamAdd(Params,'ArticleLossName', ftString);  //
 end;
 {------------------------------------------------------------------------}
 procedure Create_ParamsPersonal(var Params:TParams;idx:String);

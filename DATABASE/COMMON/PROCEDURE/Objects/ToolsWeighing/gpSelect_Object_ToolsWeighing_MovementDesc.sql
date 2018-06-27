@@ -25,6 +25,7 @@ RETURNS TABLE (Number              Integer
              , isSendOnPriceIn     Boolean
              , isPartionGoodsDate  Boolean
              , isStorageLine       Boolean
+             , isArticleLoss       Boolean
              , isTransport_link    Boolean
              , isLockStartWeighing Boolean
                )
@@ -72,12 +73,13 @@ BEGIN
                                        , isSendOnPriceIn          Boolean
                                        , isPartionGoodsDate       Boolean
                                        , isStorageLine            Boolean
+                                       , isArticleLoss            Boolean
                                        , isTransport_link         Boolean
                                        , isLockStartWeighing      Boolean
                                        , ItemName                 TVarChar
                                         ) ON COMMIT DROP;
     -- формирование
-    INSERT INTO _tmpToolsWeighing (Number, MovementDescId, FromId, ToId, PaidKindId, InfoMoneyId, GoodsId_ReWork, DocumentKindId, GoodsKindWeighingGroupId, ColorGridValue, OrderById, isSendOnPriceIn, isPartionGoodsDate, isStorageLine, isTransport_link, isLockStartWeighing, ItemName)
+    INSERT INTO _tmpToolsWeighing (Number, MovementDescId, FromId, ToId, PaidKindId, InfoMoneyId, GoodsId_ReWork, DocumentKindId, GoodsKindWeighingGroupId, ColorGridValue, OrderById, isSendOnPriceIn, isPartionGoodsDate, isStorageLine, isArticleLoss, isTransport_link, isLockStartWeighing, ItemName)
        SELECT tmp.Number
             , CASE WHEN TRIM (tmp.MovementDescId)           <> '' THEN TRIM (tmp.MovementDescId)           ELSE '0' END :: Integer AS MovementDescId
             , CASE WHEN TRIM (tmp.FromId)                   <> '' THEN TRIM (tmp.FromId)                   ELSE '0' END :: Integer AS FromId
@@ -125,6 +127,7 @@ BEGIN
 
             , CASE WHEN tmp.isPartionGoodsDate  = 'TRUE' THEN TRUE ELSE FALSE END AS isPartionGoodsDate
             , CASE WHEN tmp.isStorageLine       = 'TRUE' THEN TRUE ELSE FALSE END AS isStorageLine
+            , CASE WHEN tmp.isArticleLoss       = 'TRUE' THEN TRUE ELSE FALSE END AS isArticleLoss
             , CASE WHEN tmp.isTransport_link    = 'TRUE' THEN TRUE ELSE FALSE END AS isTransport_link
             , CASE WHEN tmp.isLockStartWeighing = 'TRUE' THEN TRUE ELSE FALSE END AS isLockStartWeighing
             
@@ -138,7 +141,11 @@ BEGIN
                    ELSE MovementDesc.ItemName
               END AS ItemName
 
-       FROM (SELECT tmp.Number
+       FROM (
+             SELECT tmp.*
+                  , CASE WHEN inIsCeh = TRUE AND vbIsSticker = FALSE AND tmp.MovementDescId = zc_Movement_Loss() :: TVarChar THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isArticleLoss', 'FALSE', inSession) ELSE ''  END AS isArticleLoss
+             FROM
+            (SELECT tmp.Number
                   , gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'DescId'    ,               '0',      inSession) AS MovementDescId
                   , gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'FromId'    ,               '0',      inSession) AS FromId
                   , gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'ToId'      ,               '0',      inSession) AS ToId
@@ -155,6 +162,7 @@ BEGIN
                   , CASE WHEN inIsCeh = TRUE OR  vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isTransport_link',   'FALSE',                                                     inSession)          END AS isTransport_link
                   
              FROM (SELECT GENERATE_SERIES (1, vbCount) AS Number) AS tmp
+            ) AS tmp
             ) AS tmp
             LEFT JOIN Object AS Object_From ON Object_From.Id = CASE WHEN TRIM (tmp.FromId) <> '' THEN TRIM (tmp.FromId) ELSE '0' END :: Integer
             LEFT JOIN Object AS Object_To   ON Object_To.Id   = CASE WHEN TRIM (tmp.ToId)   <> '' THEN TRIM (tmp.ToId)   ELSE '0' END :: Integer
@@ -300,6 +308,7 @@ BEGIN
            , _tmpToolsWeighing.isSendOnPriceIn
            , _tmpToolsWeighing.isPartionGoodsDate
            , _tmpToolsWeighing.isStorageLine
+           , _tmpToolsWeighing.isArticleLoss
            , _tmpToolsWeighing.isTransport_link
            , _tmpToolsWeighing.isLockStartWeighing
 
@@ -360,6 +369,7 @@ BEGIN
             , tmp.isSendOnPriceIn
             , FALSE AS isPartionGoodsDate
             , FALSE AS isStorageLine
+            , FALSE AS isArticleLoss
             , FALSE AS isTransport_link
             , FALSE AS isLockStartWeighing
        FROM (SELECT DISTINCT

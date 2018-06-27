@@ -82,7 +82,8 @@ uses
   IFIN_J1201009 in '..\SOURCE\MeDOC\IFIN_J1201009.pas',
   IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas',
   LookAndFillSettings in '..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm},
-  DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm};
+  DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm},
+  GuideArticleLoss in '..\ScaleCeh\GuideArticleLoss.pas' {GuideArticleLossForm};
 
 {$R *.res}
 
@@ -106,6 +107,7 @@ begin
          Application.CreateForm(TdmMain, dmMain);
   Application.CreateForm(TDMMainScaleCehForm, DMMainScaleCehForm);
   Application.CreateForm(TDialogNumberValueForm, DialogNumberValueForm);
+  Application.CreateForm(TGuideArticleLossForm, GuideArticleLossForm);
   // !!!важно первым!!!
   Application.CreateForm(TMainCehForm, MainCehForm);
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
@@ -118,6 +120,7 @@ begin
          Application.CreateForm(TDialogPrintForm, DialogPrintForm);
          Application.CreateForm(TDialogMessageForm, DialogMessageForm);
          Application.CreateForm(TGuideWorkProgressForm, GuideWorkProgressForm);
+         Application.CreateForm(TGuideArticleLossForm, GuideArticleLossForm);
   end
   else
 
@@ -146,6 +149,8 @@ begin
          Application.CreateForm(TDialogPrintForm, DialogPrintForm);
          Application.CreateForm(TDialogMessageForm, DialogMessageForm);
          Application.CreateForm(TGuideWorkProgressForm, GuideWorkProgressForm);
+         Application.CreateForm(TGuideArticleLossForm, GuideArticleLossForm);
+
   end;
   //
   Application.Run;

@@ -1149,6 +1149,52 @@ object MainCehForm: TMainCehForm
         Width = 120
       end
     end
+    object PanelArticleLoss: TPanel
+      Left = 0
+      Top = 120
+      Width = 130
+      Height = 40
+      Align = alTop
+      BevelInner = bvRaised
+      BevelOuter = bvNone
+      TabOrder = 6
+      object LabelArticleLoss: TLabel
+        Left = 1
+        Top = 1
+        Width = 128
+        Height = 14
+        Align = alTop
+        Caption = '   '#1057#1090#1072#1090#1100#1103' '#1089#1087#1080#1089#1072#1085#1080#1103
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clRed
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 100
+      end
+      object EditArticleLoss: TcxButtonEdit
+        Left = 4
+        Top = 15
+        ParentFont = False
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        Properties.OnButtonClick = EditArticleLossPropertiesButtonClick
+        Style.Font.Charset = RUSSIAN_CHARSET
+        Style.Font.Color = clBlack
+        Style.Font.Height = -11
+        Style.Font.Name = 'Arial'
+        Style.Font.Style = [fsBold]
+        Style.IsFontAssigned = True
+        TabOrder = 0
+        Text = 'EditArticleLoss'
+        Width = 120
+      end
+    end
   end
   object PanelInfoItem: TPanel
     Left = 352

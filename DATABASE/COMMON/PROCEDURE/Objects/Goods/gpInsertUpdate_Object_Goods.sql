@@ -37,10 +37,11 @@ BEGIN
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Goods());
    
    -- !!! Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
-   vbCode:=lfGet_ObjectCode (inCode, zc_Object_Goods());
+   -- vbCode:=lfGet_ObjectCode (inCode, zc_Object_Goods());
+   vbCode:=inCode;
    
    -- проверка уникальности <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), vbCode);
+   IF vbCode <> 0 THEN PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), vbCode); END IF;
    -- !!! проверка уникальности <Наименование>
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Goods(), inName);
 

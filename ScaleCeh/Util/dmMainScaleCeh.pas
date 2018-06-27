@@ -37,6 +37,7 @@ type
     function gpInsertUpdate_ScaleCeh_Movement(var execParamsMovement:TParams): Boolean;
     function gpInsert_ScaleCeh_MI(var execParamsMovement:TParams;var execParamsMI:TParams): Boolean;
     function gpInsert_MovementCeh_all(var execParamsMovement:TParams): Boolean;
+    function gpUpdate_ScaleCeh_Movement_ArticleLoss(execParams:TParams): Boolean;
     //
     //ScaleCeh
     function gpGet_ScaleCeh_Movement_checkPartion(MovementId,GoodsId:Integer;PartionGoods:String;OperCount:Double): Boolean;
@@ -113,12 +114,12 @@ begin
          ParamByName('MovementDescNumber').AsInteger:= DataSet.FieldByName('MovementDescNumber').asInteger;
 
          ParamByName('MovementDescId').AsInteger:= DataSet.FieldByName('MovementDescId').asInteger;
-         ParamByName('FromId').AsInteger:= DataSet.FieldByName('ToId').asInteger;
-         ParamByName('FromCode').AsInteger:= DataSet.FieldByName('ToCode').asInteger;
-         ParamByName('FromName').asString:= DataSet.FieldByName('ToName').asString;
-         ParamByName('ToId').AsInteger:= DataSet.FieldByName('FromId').asInteger;
-         ParamByName('ToCode').AsInteger:= DataSet.FieldByName('FromCode').asInteger;
-         ParamByName('ToName').asString:= DataSet.FieldByName('FromName').asString;
+         ParamByName('FromId').AsInteger:= DataSet.FieldByName('FromId').asInteger;
+         ParamByName('FromCode').AsInteger:= DataSet.FieldByName('FromCode').asInteger;
+         ParamByName('FromName').asString:= DataSet.FieldByName('FromName').asString;
+         ParamByName('ToId').AsInteger:= DataSet.FieldByName('ToId').asInteger;
+         ParamByName('ToCode').AsInteger:= DataSet.FieldByName('ToCode').asInteger;
+         ParamByName('ToName').asString:= DataSet.FieldByName('ToName').asString;
 
        end;
 
@@ -276,6 +277,25 @@ begin
        {except
          Result := '';
          ShowMessage('Ошибка получения - gpUpdate_Scale_MILinkObject');
+       end;}
+    end;
+    Result:=true;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleCehForm.gpUpdate_ScaleCeh_Movement_ArticleLoss(execParams:TParams): Boolean;
+begin
+    Result:=false;
+    with spSelect do begin
+       StoredProcName:='gpUpdate_ScaleCeh_Movement_ArticleLoss';
+       OutputType:=otResult;
+       Params.Clear;
+       Params.AddParam('inMovementId', ftInteger, ptInput, execParams.ParamByName('MovementId').AsInteger);
+       Params.AddParam('inArticleLossId', ftInteger, ptInput, execParams.ParamByName('ArticleLossId').AsInteger);
+       //try
+         Execute;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpUpdate_ScaleCeh_Movement_ArticleLoss');
        end;}
     end;
     Result:=true;

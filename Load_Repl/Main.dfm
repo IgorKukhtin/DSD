@@ -102,12 +102,11 @@ object MainForm: TMainForm
         object LabelObject: TLabel
           Left = 1
           Top = 1
-          Width = 71
+          Width = 31
           Height = 13
           Align = alTop
           Alignment = taCenter
           Caption = 'Object'
-          ExplicitWidth = 31
         end
         object EditRecordObject: TcxCurrencyEdit
           Left = 1
@@ -121,7 +120,6 @@ object MainForm: TMainForm
           Properties.ReadOnly = True
           TabOrder = 0
           ExplicitTop = 5
-          ExplicitWidth = 70
           Width = 71
         end
       end
@@ -162,12 +160,11 @@ object MainForm: TMainForm
         object LabelObjectString: TLabel
           Left = 1
           Top = 1
-          Width = 71
+          Width = 58
           Height = 13
           Align = alTop
           Alignment = taCenter
           Caption = 'ObjectString'
-          ExplicitWidth = 58
         end
         object EditRecordObjectString: TcxCurrencyEdit
           Left = 1
@@ -181,7 +178,6 @@ object MainForm: TMainForm
           Properties.ReadOnly = True
           TabOrder = 0
           ExplicitTop = 15
-          ExplicitWidth = 70
           Width = 71
         end
       end
@@ -220,12 +216,11 @@ object MainForm: TMainForm
         object LabelObjectFloat: TLabel
           Left = 1
           Top = 1
-          Width = 71
+          Width = 54
           Height = 13
           Align = alTop
           Alignment = taCenter
           Caption = 'ObjectFloat'
-          ExplicitWidth = 54
         end
         object EditRecordObjectFloat: TcxCurrencyEdit
           Left = 1
@@ -275,12 +270,11 @@ object MainForm: TMainForm
         object LabelObjectDate: TLabel
           Left = 1
           Top = 1
-          Width = 71
+          Width = 54
           Height = 13
           Align = alTop
           Alignment = taCenter
           Caption = 'ObjectDate'
-          ExplicitWidth = 54
         end
         object EditRecordObjectDate: TcxCurrencyEdit
           Left = 1
@@ -332,12 +326,11 @@ object MainForm: TMainForm
         object LabelObjectBoolean: TLabel
           Left = 1
           Top = 1
-          Width = 71
+          Width = 70
           Height = 13
           Align = alTop
           Alignment = taCenter
           Caption = 'ObjectBoolean'
-          ExplicitWidth = 70
         end
         object EditRecordObjectBoolean: TcxCurrencyEdit
           Left = 1
@@ -387,12 +380,11 @@ object MainForm: TMainForm
         object LabelObjectLink: TLabel
           Left = 1
           Top = 1
-          Width = 71
+          Width = 51
           Height = 13
           Align = alTop
           Alignment = taCenter
           Caption = 'ObjectLink'
-          ExplicitWidth = 51
         end
         object EditRecordObjectLink: TcxCurrencyEdit
           Left = 1
@@ -467,6 +459,9 @@ object MainForm: TMainForm
     ExplicitHeight = 521
     object TabSheet1: TTabSheet
       Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080' - '#1044#1086#1082#1091#1084#1077#1085#1090#1099
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
       ExplicitHeight = 493
       object PanelReplServer: TPanel
         Left = 0
@@ -493,6 +488,9 @@ object MainForm: TMainForm
     object TabSheet2: TTabSheet
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' '#1092#1072#1081#1083#1086#1074
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
       ExplicitHeight = 493
     end
   end
