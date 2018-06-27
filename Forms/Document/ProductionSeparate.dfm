@@ -3,7 +3,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   ClientHeight = 678
   ClientWidth = 903
   ExplicitWidth = 919
-  ExplicitHeight = 713
+  ExplicitHeight = 716
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -388,6 +388,9 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actUpdateChildDS: TdsdUpdateDataSet [10]
       Category = 'DSDLib'
@@ -812,8 +815,8 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 410
-    Top = 184
+    Left = 450
+    Top = 200
   end
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <

@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionSeparate_Item(
     IN inJuridicalBasisId  Integer ,
     IN inSession           TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, MovementItemId Integer
+               , InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
                , TotalCount TFloat, TotalCountChild TFloat, PartionGoods TVarChar
                , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
                , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
@@ -39,6 +40,7 @@ BEGIN
              --                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
                          )
         , tmpMI_Master AS (SELECT tmpMovement.Id                     AS MovementId
+                                , MovementItem.Id                    AS MovementItemId
                                 , MovementItem.ObjectId              AS GoodsId
                                 , MILinkObject_GoodsKind.ObjectId    AS GoodsKindId
                                 , MILinkObject_StorageLine.ObjectId  AS StorageLineId
@@ -56,6 +58,7 @@ BEGIN
                                                                  ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
                                                                 AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
                            GROUP BY tmpMovement.Id 
+                                  , MovementItem.Id
                                   , MovementItem.ObjectId
                                   , MILinkObject_GoodsKind.ObjectId
                                   , MILinkObject_StorageLine.ObjectId
@@ -63,6 +66,7 @@ BEGIN
                          
      SELECT
              Movement.Id                          AS Id
+           , tmpMI_Master.MovementItemId          AS MovementItemId
            , Movement.InvNumber                   AS InvNumber
            , Movement.OperDate                    AS OperDate
            , Object_Status.ObjectCode             AS StatusCode
@@ -131,6 +135,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.06.18         * MovementItemId
  10.08.17         * add gpSelect_Movement_ProductionSeparate_Item
  05.10.16         * add inJuridicalBasisId
  03.06.14                                                        *

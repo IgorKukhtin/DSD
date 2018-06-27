@@ -3,7 +3,7 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
   ClientHeight = 678
   ClientWidth = 903
   ExplicitWidth = 919
-  ExplicitHeight = 717
+  ExplicitHeight = 716
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -407,6 +407,9 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actUpdateChildDS: TdsdUpdateDataSet [10]
       Category = 'DSDLib'
@@ -893,6 +896,14 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId'
         Value = Null
         Component = MasterCDS
@@ -929,12 +940,6 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
         Value = 'TRUE'
         DataType = ftBoolean
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -1107,6 +1112,14 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId'
         Value = Null
         Component = ChildCDS
@@ -1143,14 +1156,6 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
         Value = 'FALSE'
         DataType = ftBoolean
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        Component = ChildCDS
-        ComponentItem = 'HeadCount'
-        DataType = ftFloat
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item

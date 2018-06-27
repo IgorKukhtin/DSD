@@ -4,9 +4,11 @@ DROP FUNCTION IF EXISTS gpUpdate_MI_ProductionSeparate_StorageLine (Integer, Int
 DROP FUNCTION IF EXISTS gpUpdate_MI_ProductionSeparate_StorageLine (Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_MI_ProductionSeparate_StorageLine (Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_MI_ProductionSeparate_StorageLine (Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_ProductionSeparate_StorageLine (Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_ProductionSeparate_StorageLine(
     IN inMovementId          Integer   , -- Id документа
+    IN inMovementItemId      Integer   , --
     IN inGoodsId             Integer   , -- товар
     IN inGoodsKindId         Integer   , -- вид товара
     IN inStorageLineId       Integer   , -- линия пр-ва
@@ -22,7 +24,12 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_MI_ProductionSeparate_StorageLine());
 
-   -- выбираем строки куда записываем значение линии пр-ва
+   -- сохранили <линию пр-ва>
+   PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_StorageLine(), inMovementItemId, inStorageLineId);
+   -- сохранили протокол
+   PERFORM lpInsert_MovementItemProtocol (inMovementItemId, vbUserId, FALSE);
+
+/*   -- выбираем строки куда записываем значение линии пр-ва
    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_StorageLine(), MovementItem.Id, inStorageLineId)  -- сохранили <линию пр-ва>
          , lpInsert_MovementItemProtocol (MovementItem.Id, vbUserId, FALSE)                                         -- сохранили протокол
    FROM MovementItem 
@@ -40,8 +47,8 @@ BEGIN
      AND MovementItem.ObjectId = inGoodsId
      AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = inGoodsKindId
      AND COALESCE (MILinkObject_StorageLine.ObjectId,0) = ioStorageLineId_old
-   ;
-   
+     ;*/
+      
    --
    ioStorageLineId_old:= inStorageLineId;
 
@@ -52,6 +59,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.06.18         * add inMovementItemId
  25.01.18         * add inIsDescMaster
  14.08.17         *
 */

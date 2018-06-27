@@ -270,20 +270,20 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             Width = 60
           end
           object OperDatePartner_order: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080
+            Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076', '#1088#1072#1089#1095'.)'
             DataBinding.FieldName = 'OperDatePartner_order'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' ('#1079#1072#1103#1074#1082#1072')'
-            Width = 70
+            HeaderHint = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076') '#1088#1072#1089#1095#1077#1090' '#1080#1079' '#1079#1072#1103#1074#1082#1080
+            Width = 80
           end
           object OperDatePartner_sale: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082' '#1091' '#1087#1086#1082' ('#1088#1072#1089#1095'.)'
             DataBinding.FieldName = 'OperDatePartner_sale'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1079#1072#1103#1074#1082#1072')'
-            Width = 80
+            HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.  '#1088#1072#1089#1095#1077#1090' '#1080#1079' '#1079#1072#1103#1074#1082#1080
+            Width = 62
           end
           object ContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
