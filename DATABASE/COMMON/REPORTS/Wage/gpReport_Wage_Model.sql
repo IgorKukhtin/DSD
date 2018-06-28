@@ -818,10 +818,10 @@ AS  (SELECT
              , MI_SheetWorkTime.PositionLevelId
              , MI_SheetWorkTime.StorageLineId
              , MI_SheetWorkTime.Amount
-             , SUM (MI_SheetWorkTime.Amount) OVER (PARTITION BY MI_SheetWorkTime.PositionId, MI_SheetWorkTime.PositionLevelId, MI_SheetWorkTime.StorageLineId) AS SUM_MemberHours
+             , SUM (MI_SheetWorkTime.Amount) OVER (PARTITION BY                            MI_SheetWorkTime.PositionId, MI_SheetWorkTime.PositionLevelId, MI_SheetWorkTime.StorageLineId) AS SUM_MemberHours
              , SUM (MI_SheetWorkTime.Amount) OVER (PARTITION BY MI_SheetWorkTime.OperDate, MI_SheetWorkTime.PositionId, MI_SheetWorkTime.PositionLevelId, MI_SheetWorkTime.StorageLineId) AS AmountInDay
-             , COUNT(*) OVER (PARTITION BY MI_SheetWorkTime.OperDate, MI_SheetWorkTime.PositionId, MI_SheetWorkTime.PositionLevelId) AS Count_MemberInDay
-             , COUNT(*) OVER (PARTITION BY MI_SheetWorkTime.PositionId, MI_SheetWorkTime.PositionLevelId) AS Count_Member
+             , COUNT(*)                      OVER (PARTITION BY MI_SheetWorkTime.OperDate, MI_SheetWorkTime.PositionId, MI_SheetWorkTime.PositionLevelId, MI_SheetWorkTime.StorageLineId) AS Count_MemberInDay
+             , COUNT(*)                      OVER (PARTITION BY                            MI_SheetWorkTime.PositionId, MI_SheetWorkTime.PositionLevelId, MI_SheetWorkTime.StorageLineId) AS Count_Member
         FROM (SELECT MI_SheetWorkTime.OperDate
                    , MI_SheetWorkTime.MemberId
                    , MI_SheetWorkTime.MemberName
@@ -854,8 +854,8 @@ AS  (SELECT
             , Movement_Sheet.PositionLevelId
             , Movement_Sheet.StorageLineId
             , (Movement_Sheet.Amount) AS Amount
-            , SUM (Movement_Sheet.Amount) OVER (PARTITION BY Movement_Sheet.PositionId, Movement_Sheet.PositionLevelId) AS AmountInMonth
-            , COUNT(*) OVER (PARTITION BY Movement_Sheet.PositionId, Movement_Sheet.PositionLevelId) AS Count_Member
+            , SUM (Movement_Sheet.Amount) OVER (PARTITION BY Movement_Sheet.PositionId, Movement_Sheet.PositionLevelId, Movement_Sheet.StorageLineId) AS AmountInMonth
+            , COUNT(*)                    OVER (PARTITION BY Movement_Sheet.PositionId, Movement_Sheet.PositionLevelId, Movement_Sheet.StorageLineId) AS Count_Member
        FROM (SELECT Movement_Sheet.MemberId
                   , Movement_Sheet.MemberName
                   , Movement_Sheet.PersonalGroupId
