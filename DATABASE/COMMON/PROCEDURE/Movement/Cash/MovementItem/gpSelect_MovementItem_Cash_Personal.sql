@@ -114,6 +114,7 @@ BEGIN
 --                                 , SUM (COALESCE (tmpSummNalog.SummNalog, 0))             AS SummNalog
                                    , SUM (COALESCE (MIFloat_SummMinus.ValueData, 0))        AS SummMinus
                                    , SUM (COALESCE (MIFloat_SummAdd.ValueData, 0))          AS SummAdd
+                                   , SUM (COALESCE (MIFloat_SummAddOth.ValueData, 0))       AS SummAddOth
                                    , SUM (COALESCE (MIFloat_SummHoliday.ValueData, 0))      AS SummHoliday
                                    , SUM (COALESCE (MIFloat_SummSocialIn.ValueData, 0))     AS SummSocialIn
                                    , SUM (COALESCE (MIFloat_SummSocialAdd.ValueData, 0))    AS SummSocialAdd
@@ -173,6 +174,9 @@ BEGIN
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
                                                                ON MIFloat_SummAdd.MovementItemId = MovementItem.Id
                                                               AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummAddOth
+                                                               ON MIFloat_SummAddOth.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummAddOth.DescId = zc_MIFloat_SummAddOth()
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummHoliday
                                                                ON MIFloat_SummHoliday.MovementItemId = MovementItem.Id
                                                               AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
@@ -249,6 +253,7 @@ BEGIN
                                    , COALESCE (tmpSummNalog.SummNalog, 0) AS SummNalog
                                    , tmpParent_all.SummMinus
                                    , tmpParent_all.SummAdd
+                                   , tmpParent_all.SummAddOth
                                    , tmpParent_all.SummHoliday
                                    , tmpParent_all.SummSocialIn
                                    , tmpParent_all.SummSocialAdd
@@ -280,6 +285,7 @@ BEGIN
                                    , 0 AS SummNalog
                                    , 0 AS SummMinus
                                    , 0 AS SummAdd
+                                   , 0 AS SummAddOth
                                    , 0 AS SummHoliday
                                    , 0 AS SummSocialIn
                                    , 0 AS SummSocialAdd
@@ -390,6 +396,7 @@ BEGIN
                                    , tmpParent.SummNalog
                                    , tmpParent.SummMinus
                                    , tmpParent.SummAdd
+                                   , tmpParent.SummAddOth
                                    , tmpParent.SummHoliday
                                    , tmpParent.SummSocialIn
                                    , tmpParent.SummSocialAdd
@@ -421,6 +428,7 @@ BEGIN
                                    , tmpService.SummNalog
                                    , tmpService.SummMinus
                                    , tmpService.SummAdd
+                                   , tmpService.SummAddOth
                                    , tmpService.SummHoliday
                                    , tmpService.SummSocialIn
                                    , tmpService.SummSocialAdd
@@ -477,7 +485,7 @@ BEGIN
             , tmpData.SummCardSecondCAsh  :: TFloat AS SummCardSecondCash
             , tmpData.SummNalog        :: TFloat AS SummNalog
             , tmpData.SummMinus        :: TFloat AS SummMinus
-            , tmpData.SummAdd          :: TFloat AS SummAdd
+            , (tmpData.SummAdd + tmpData.SummAddOth) :: TFloat AS SummAdd
             , tmpData.SummHoliday      :: TFloat AS SummHoliday
             , tmpData.SummSocialIn     :: TFloat AS SummSocialIn
             , tmpData.SummSocialAdd    :: TFloat AS SummSocialAdd

@@ -34,6 +34,27 @@ BEGIN
      END IF;
 
 
+     -- !!!СНАЧАЛА - пересчитали сумму затраты!!!
+     PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, MovementItem.DescId, MovementItem.ObjectId, MovementItem.MovementId
+                    -- SummService
+                  , COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummService()), 0)
+                    -- SummMinus
+                  - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummMinus()), 0)
+                    -- SummAdd
+                  + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummAdd()), 0)
+                    -- SummAddOth
+                  + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummAddOth()), 0)
+                    -- SummHoliday
+                  + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummHoliday()), 0)
+                    -- 
+                  , MovementItem.ParentId
+                  )
+     FROM MovementItem
+     WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.DescId     = zc_MI_Master()
+       AND MovementItem.isErased   = FALSE;
+
+
      -- Нашли
      vbServiceDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MIDate_ServiceDate());
      -- Нашли
@@ -1081,6 +1102,8 @@ BEGIN
                                                                                                  + tmpMovement.SummNalogRet
                                                                                                  - tmpMovement.SummChild
                                                                                                  - tmpMovement.SummMinusExt
+
+                                                                                                 + tmpMovement.SummAddOth
                                               )
              -- Сумма ГСМ (удержание за заправку, хотя может быть и доплатой...)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTransport()       , tmpMovement.MovementItemId, tmpMovement.SummTransport)
@@ -1102,6 +1125,7 @@ BEGIN
                                , COALESCE (MIFloat_SummNalogRet.ValueData, 0)  AS SummNalogRet
                                , COALESCE (MIFloat_SummChild.ValueData, 0)     AS SummChild
                                , COALESCE (MIFloat_SummMinusExt.ValueData, 0)  AS SummMinusExt
+                               , COALESCE (MIFloat_SummAddOth.ValueData, 0)    AS SummAddOth
                          FROM MovementItem
                               LEFT JOIN MovementItemFloat AS MIFloat_SummSocialAdd
                                                           ON MIFloat_SummSocialAdd.MovementItemId = MovementItem.Id
@@ -1118,6 +1142,9 @@ BEGIN
                               LEFT JOIN MovementItemFloat AS MIFloat_SummMinusExt
                                                           ON MIFloat_SummMinusExt.MovementItemId = MovementItem.Id
                                                          AND MIFloat_SummMinusExt.DescId = zc_MIFloat_SummMinusExt()
+                              LEFT JOIN MovementItemFloat AS MIFloat_SummAddOth
+                                                          ON MIFloat_SummAddOth.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_SummAddOth.DescId = zc_MIFloat_SummAddOth()
                               LEFT JOIN _tmpItem ON _tmpItem.MovementItemId = MovementItem.Id
                                                 AND _tmpItem.IsMaster       = TRUE
                          WHERE MovementItem.MovementId = inMovementId
@@ -1142,6 +1169,7 @@ BEGIN
                 , tmpMI.SummNalogRet
                 , tmpMI.SummChild
                 , tmpMI.SummMinusExt
+                , tmpMI.SummAddOth
                 , COALESCE (SUM (CASE WHEN tmpMI.ObjectId = tmpMI.ObjectIntId_Analyzer THEN tmpMIContainer.SummTransport        ELSE 0 END), 0) AS SummTransport
                 , COALESCE (SUM (CASE WHEN tmpMI.ObjectId = tmpMI.ObjectIntId_Analyzer THEN tmpMIContainer.SummTransportAdd     ELSE 0 END), 0) AS SummTransportAdd
                 , COALESCE (SUM (CASE WHEN tmpMI.ObjectId = tmpMI.ObjectIntId_Analyzer THEN tmpMIContainer.SummTransportAddLong ELSE 0 END), 0) AS SummTransportAddLong
@@ -1156,6 +1184,7 @@ BEGIN
                   , tmpMI.SummNalogRet
                   , tmpMI.SummChild
                   , tmpMI.SummMinusExt
+                  , tmpMI.SummAddOth
           ) AS tmpMovement
            ;
 

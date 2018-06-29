@@ -1,6 +1,6 @@
 -- Function: gpUpdate_MI_PersonalService_NULL()
 
-DROP FUNCTION IF EXISTS gpUpdate_MI_PersonalService_NULL (Integer, VarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_PersonalService_NULL (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_PersonalService_NULL(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
@@ -42,6 +42,7 @@ BEGIN
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummNalogRetRecalc(), MovementItem.Id, 0)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChildRecalc(), MovementItem.Id, 0)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummMinusExtRecalc(), MovementItem.Id, 0)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAddOthRecalc(), MovementItem.Id, 0)
      FROM MovementItem
      WHERE MovementItem.MovementId = inMovementId
        AND MovementItem.DescId = zc_MI_Master();

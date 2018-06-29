@@ -5,7 +5,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1203
-  ExplicitHeight = 521
+  ExplicitHeight = 518
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -282,7 +282,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             DataBinding.FieldName = 'OperDatePartner_sale'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.  '#1088#1072#1089#1095#1077#1090' '#1080#1079' '#1079#1072#1103#1074#1082#1080
+            HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'. '#1088#1072#1089#1095#1077#1090' '#1080#1079' '#1079#1072#1103#1074#1082#1080
             Width = 62
           end
           object ContractCode: TcxGridDBColumn

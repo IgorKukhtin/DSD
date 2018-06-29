@@ -1,6 +1,5 @@
 -- Function: gpReport_Personal
 
-DROP FUNCTION IF EXISTS gpReport_Personal (TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Personal (TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Personal(
@@ -112,7 +111,7 @@ BEGIN
                , SUM (Operation_all.MoneySummCard)       AS MoneySummCard
                , SUM (Operation_all.MoneySummCardSecond) AS MoneySummCardSecond
                , SUM (Operation_all.MoneySummCash)       AS MoneySummCash
-               , SUM (Operation_all.ServiceSumm) AS ServiceSumm
+               , SUM (Operation_all.ServiceSumm)         AS ServiceSumm
                , SUM (Operation_all.IncomeSumm)            AS IncomeSumm
                , SUM (Operation_all.SummTransportAdd)      AS SummTransportAdd
                , SUM (Operation_all.SummTransportAddLong)  AS SummTransportAddLong

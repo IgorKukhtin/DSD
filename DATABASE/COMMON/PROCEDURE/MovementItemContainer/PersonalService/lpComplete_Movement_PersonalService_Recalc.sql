@@ -183,7 +183,8 @@ BEGIN
             , tmpMI_from.SummChildRecalc
             , tmpMI_from.SummMinusExtRecalc
             , tmpMI_from.SummAddOthRecalc
-            , CASE WHEN tmpMI_to.MovementItemId_to IS NULL AND tmpMovement_to.StatusId = zc_Enum_Status_Complete() THEN TRUE ELSE FALSE END AS isMovementComplete
+            -- , CASE WHEN tmpMI_to.MovementItemId_to IS NULL AND tmpMovement_to.StatusId = zc_Enum_Status_Complete() THEN TRUE ELSE FALSE END AS isMovementComplete
+            , CASE WHEN tmpMovement_to.StatusId = zc_Enum_Status_Complete() THEN TRUE ELSE FALSE END AS isMovementComplete
        FROM tmpMI_from
             -- из списка берется только один
             LEFT JOIN (SELECT tmpMI_to.MovementItemId_from, MAX (tmpMI_to.MovementItemId_to) AS MovementItemId_to FROM tmpMI_to WHERE tmpMI_to.MovementItemId_to <> 0 GROUP BY tmpMI_to.MovementItemId_from) AS tmp ON tmp.MovementItemId_from = tmpMI_from.MovementItemId

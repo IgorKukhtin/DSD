@@ -65,6 +65,7 @@ BEGIN
            , Object_Juridical.ValueData                      AS JuridicalName
            , (COALESCE (MovementFloat_TotalSummService.ValueData, 0)
             + COALESCE (MovementFloat_TotalSummAdd.ValueData, 0)
+            + COALESCE (MovementFloat_TotalSummAddOth.ValueData, 0)
             + COALESCE (MovementFloat_TotalSummHoliday.ValueData, 0)
             -- + COALESCE (MovementFloat_TotalSummSocialAdd.ValueData, 0)
              ) :: TFloat AS TotalSummService
@@ -154,6 +155,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummAdd
                                     ON MovementFloat_TotalSummAdd.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummAdd.DescId = zc_MovementFloat_TotalSummAdd()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummAddOth
+                                    ON MovementFloat_TotalSummAddOth.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummAddOth.DescId = zc_MovementFloat_TotalSummAddOth()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummHoliday
                                     ON MovementFloat_TotalSummHoliday.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummHoliday.DescId = zc_MovementFloat_TotalSummHoliday()
@@ -251,6 +255,7 @@ BEGIN
                            , COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)   AS SummCardSecondCash
                            , COALESCE (MIFloat_SummService.ValueData, 0)      AS SummService
                            , COALESCE (MIFloat_SummAdd.ValueData, 0)          AS SummAdd
+                           , COALESCE (MIFloat_SummAddOth.ValueData, 0)       AS SummAddOth
                            , COALESCE (MIFloat_SummHoliday.ValueData, 0)      AS SummHoliday
 
                            , COALESCE (MIFloat_SummMinus.ValueData, 0)        AS SummMinus
@@ -316,6 +321,9 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
                                                        ON MIFloat_SummAdd.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummAddOth
+                                                       ON MIFloat_SummAddOth.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummAddOth.DescId = zc_MIFloat_SummAddOth()
                            LEFT JOIN MovementItemFloat AS MIFloat_SummHoliday
                                                        ON MIFloat_SummHoliday.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
@@ -372,6 +380,7 @@ BEGIN
                            , SUM (tmpMI_all.SummCardSecondCash)   AS SummCardSecondCash
                            , SUM (tmpMI_all.SummService)      AS SummService
                            , SUM (tmpMI_all.SummAdd)          AS SummAdd
+                           , SUM (tmpMI_all.SummAddOth)       AS SummAddOth
                            , SUM (tmpMI_all.SummHoliday)      AS SummHoliday
 
                            , SUM (tmpMI_all.SummMinus)        AS SummMinus
@@ -409,9 +418,10 @@ BEGIN
                            , SUM (tmpMI_all.SummNalogRet)     AS SummNalogRet
                            , SUM (tmpMI_all.SummCard)         AS SummCard
                            , SUM (tmpMI_all.SummCardSecond)   AS SummCardSecond
-                           , SUM (tmpMI_all.SummCardSecondCash)   AS SummCardSecondCash
+                           , SUM (tmpMI_all.SummCardSecondCash)  AS SummCardSecondCash
                            , SUM (tmpMI_all.SummService)      AS SummService
                            , SUM (tmpMI_all.SummAdd)          AS SummAdd
+                           , SUM (tmpMI_all.SummAddOth)       AS SummAddOth
                            , SUM (tmpMI_all.SummHoliday)      AS SummHoliday
 
                            , SUM (tmpMI_all.SummMinus)        AS SummMinus
@@ -470,6 +480,7 @@ BEGIN
                             , tmpMI.SummCardSecondCash
                             , tmpMI.SummService
                             , tmpMI.SummAdd
+                            , tmpMI.SummAddOth
                             , tmpMI.SummHoliday
 
                             , tmpMI.SummMinus
@@ -493,6 +504,7 @@ BEGIN
                             , 0 AS SummCardSecondCash
                             , 0 AS SummService
                             , 0 AS SummAdd
+                            , 0 AS SummAddOth
                             , 0 AS SummHoliday
 
                             , 0 AS SummMinus
@@ -582,7 +594,7 @@ BEGIN
             , tmpMIContainer.SummNalogRet   :: TFloat AS SummNalogRet
 --            , tmpAll.SummCardRecalc       :: TFloat AS SummCardRecalc
             , tmpAll.SummMinus              :: TFloat AS SummMinus
-            , tmpAll.SummAdd                :: TFloat AS SummAdd
+            , (tmpAll.SummAdd + tmpAll.SummAddOth) :: TFloat AS SummAdd
 --            , tmpAll.SummSocialIn         :: TFloat AS SummSocialIn
 --            , tmpAll.SummSocialAdd        :: TFloat AS SummSocialAdd
             , tmpAll.SummChild              :: TFloat AS SummChild
@@ -638,6 +650,7 @@ BEGIN
           OR 0 <> tmpAll.SummPhone
           OR 0 <> tmpAll.SummCardSecond
           OR 0 <> tmpAll.SummAdd
+          OR 0 <> tmpAll.SummAddOth
           -- OR 0 <> tmpAll.SummNalog
           -- OR 0 <> tmpAll.SummNalogRet
        ORDER BY Object_Personal.ValueData
