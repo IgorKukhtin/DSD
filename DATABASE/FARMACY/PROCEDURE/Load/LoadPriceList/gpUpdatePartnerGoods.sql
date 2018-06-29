@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Movement_BankAccount()
+-- Function: gpUpdatePartnerGoods()
 
 DROP FUNCTION IF EXISTS gpUpdatePartnerGoods (Integer, TVarChar);
 
@@ -44,7 +44,7 @@ BEGIN
            LEFT JOIN tmpArea ON tmpArea.JuridicalId = LoadPriceList.JuridicalId
                             AND tmpArea.AreaId      = LoadPriceList.AreaId
       WHERE LoadPriceList.Id = inId;
-
+      
      -- Создаем общие коды, которых еще нет
      PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Object(), lpInsertUpdate_Object(0, zc_Object_Goods(), CommonCode, LoadPriceListItem.GoodsName), zc_Enum_GlobalConst_Marion())
             FROM LoadPriceListItem WHERE LoadPriceListItem.LoadPriceListId = inId
@@ -88,7 +88,12 @@ BEGIN
           AND LoadPriceListItem.LoadPriceListId  = inId 
           AND ((COALESCE(Object_Goods.GoodsName, '') <> LoadPriceListItem.GoodsName)
             OR (COALESCE(Object_Goods.MakerName, '') <> LoadPriceListItem.ProducerName)
-              );
+              )
+        GROUP BY Object_Goods.Id  ,
+           LoadPriceListItem.GoodsCode  ,
+           LoadPriceListItem.GoodsName  ,
+           LoadPriceListItem.ProducerName , 
+           LoadPriceListItem.CodeUKTZED;
 
      -- Тут устанавливаем связь между товарами покупателей и главным товаром
 
@@ -105,7 +110,9 @@ BEGIN
           WHERE GoodsId <> 0 AND LoadPriceListItem.LoadPriceListId = inId
            AND (LoadPriceListItem.GoodsId, Object_Goods.Id) NOT IN 
                (SELECT GoodsMainId, GoodsId FROM Object_LinkGoods_View
-                       WHERE ObjectId = vbJuridicalId);
+                       WHERE ObjectId = vbJuridicalId)
+        GROUP BY LoadPriceListItem.GoodsId , 
+                 Object_Goods.Id ;
    
       -- Выбираем коды Мориона, у которых нет стыковки с главным 
 
@@ -157,7 +164,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Шаблий О.В.
+ 19.06.18                                                                   * Удаление неправельных связей
  22.10.14                        *  Пока убрали стыковку с кодами Мориона и штрихкодами автоматом и добавили производителя
  17.10.14                        *  
  03.10.14                        *  
