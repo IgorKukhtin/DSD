@@ -79,6 +79,8 @@ type
     edInvNumber_PromoCode_Full: TcxTextEdit;
     edUnitName: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
+    edManualDiscount: TcxTextEdit;
+    cxLabel20: TcxLabel;
   private
     { Private declarations }
   public

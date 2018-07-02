@@ -3,7 +3,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
   ClientHeight = 524
   ClientWidth = 985
   ExplicitWidth = 1001
-  ExplicitHeight = 562
+  ExplicitHeight = 563
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -298,6 +298,10 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             Options.Editing = False
             Width = 60
           end
+          object Color_AmountManual: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_AmountManual'
+            Visible = False
+          end
         end
       end
     end
@@ -336,8 +340,10 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       ExplicitTop = 45
     end
     inherited ceStatus: TcxButtonEdit
+      Left = 9
       Top = 63
       TabOrder = 7
+      ExplicitLeft = 9
       ExplicitTop = 63
       ExplicitWidth = 158
       ExplicitHeight = 22
@@ -617,6 +623,9 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       ReportNameParam.Value = #1056#1072#1089#1093#1086#1076#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103'_'#1076#1083#1103'_'#1084#1077#1085#1077#1076#1078#1077#1088#1072
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ChoiceReasonDifferences: TOpenChoiceForm
       Category = 'DSDLib'
@@ -792,6 +801,9 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       ReportNameParam.Value = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintSticker: TdsdPrintAction
       Category = 'DSDLib'
@@ -846,6 +858,9 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintSticker_notPrice: TdsdPrintAction
       Category = 'DSDLib'
@@ -900,6 +915,61 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actConductMovement: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actspConduct_Movement
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1055#1088#1086#1080#1079#1074#1077#1089#1090#1080' '#1087#1088#1080#1093#1086#1076' '#1087#1086#1079#1080#1094#1080#1081' '#1089' '#1079#1072#1087#1086#1083#1085#1077#1085#1085#1099#1084' '#1092#1072#1082#1090#1080#1095#1077#1089#1082#1080#1084' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086#1084'?'
+      Caption = #1055#1088#1080#1093#1086#1076' '#1087#1086#1079#1080#1094#1080#1081' '#1089' '#1079#1072#1087#1086#1083#1085#1077#1085#1085#1099#1084' '#1092#1072#1082#1090#1080#1095#1077#1089#1082#1080#1084' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086#1084
+      Hint = #1055#1088#1080#1093#1086#1076' '#1087#1086#1079#1080#1094#1080#1081' '#1089' '#1079#1072#1087#1086#1083#1085#1077#1085#1085#1099#1084' '#1092#1072#1082#1090#1080#1095#1077#1089#1082#1080#1084' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086#1084
+      ImageIndex = 12
+    end
+    object actspConduct_Movement: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spConduct_Movement_Income
+      StoredProcList = <
+        item
+          StoredProc = spConduct_Movement_Income
+        end>
+      Caption = 'actspConduct_Movement'
+    end
+    object actUnConductMovement: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actspUnConduct_Movement
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1093#1086#1076' '#1087#1086#1079#1080#1094#1080#1081' '#1089' '#1079#1072#1087#1086#1083#1085#1077#1085#1085#1099#1084' '#1092#1072#1082#1090#1080#1095#1077#1089#1082#1080#1084' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086#1084'?'
+      Caption = #1054#1090#1084#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1087#1086#1079#1080#1094#1080#1081' '#1089' '#1079#1072#1087#1086#1083#1085#1077#1085#1085#1099#1084' '#1092#1072#1082#1090#1080#1095#1077#1089#1082#1080#1084' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086#1084'.'
+      Hint = #1054#1090#1084#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1087#1086#1079#1080#1094#1080#1081' '#1089' '#1079#1072#1087#1086#1083#1085#1077#1085#1085#1099#1084' '#1092#1072#1082#1090#1080#1095#1077#1089#1082#1080#1084' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086#1084'.'
+      ImageIndex = 11
+    end
+    object actspUnConduct_Movement: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUnConduct_Movement_Income
+      StoredProcList = <
+        item
+          StoredProc = spUnConduct_Movement_Income
+        end>
+      Caption = 'actspUnConduct_Movement'
     end
   end
   inherited MasterDS: TDataSource
@@ -1040,6 +1110,18 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbisDocument'
         end
         item
@@ -1104,6 +1186,18 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       Action = actPrintSticker_notPrice
       Category = 0
     end
+    object dxBarButton3: TdxBarButton
+      Action = actConductMovement
+      Category = 0
+    end
+    object dxBarButton4: TdxBarButton
+      Action = actUnConductMovement
+      Category = 0
+    end
+    object dxBarStatic1: TdxBarStatic
+      Category = 0
+      Visible = ivAlways
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
@@ -1113,6 +1207,11 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       end
       item
         ValueColumn = WarningColor
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountManual
+        BackGroundValueColumn = Color_AmountManual
         ColorValueList = <>
       end>
     SummaryItemList = <
@@ -1501,7 +1600,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 160
+    Left = 168
     Top = 368
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
@@ -1712,8 +1811,8 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 632
-    Top = 80
+    Left = 680
+    Top = 64
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -1821,6 +1920,13 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = MasterCDS
         ComponentItem = 'AmountDiff'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outColor_AmountManual'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Color_AmountManual'
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -1958,5 +2064,39 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     PackSize = 1
     Left = 719
     Top = 264
+  end
+  object spConduct_Movement_Income: TdsdStoredProc
+    StoredProcName = 'gpConduct_Movement_Income'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 832
+    Top = 320
+  end
+  object spUnConduct_Movement_Income: TdsdStoredProc
+    StoredProcName = 'gpUnConduct_Movement_Income'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 832
+    Top = 368
   end
 end

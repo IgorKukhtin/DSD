@@ -35,7 +35,8 @@ RETURNS TABLE (
   SPKindId Integer,
   SPKindName TVarChar,
   SPTax TFloat,
-  Color_CalcDoc Integer
+  Color_CalcDoc Integer,
+  ManualDiscount Integer
  )
 AS
 $BODY$
@@ -140,6 +141,7 @@ BEGIN
                    WHEN Object_ConfirmedKind.Id = zc_Enum_ConfirmedKind_UnComplete() AND tmpErr.MovementId IS NULL THEN zc_Color_Yelow() -- желтый
                    ELSE zc_Color_White()
              END  AS Color_CalcDoc
+            , MovementFloat_ManualDiscount.ValueData::Integer AS ManualDiscount
 
        FROM tmpMov
             LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id 
@@ -231,6 +233,9 @@ BEGIN
                                   ON ObjectFloat_SPTax.ObjectId = Object_SPKind.Id
                                  AND ObjectFloat_SPTax.DescId   = zc_ObjectFloat_SPKind_Tax()
 
+            LEFT JOIN MovementFloat AS MovementFloat_ManualDiscount
+                                    ON MovementFloat_ManualDiscount.MovementId =  Movement.Id
+                                   AND MovementFloat_ManualDiscount.DescId = zc_MovementFloat_ManualDiscount()
        ;
 
 END;
@@ -240,7 +245,8 @@ ALTER FUNCTION gpSelect_Movement_CheckVIP (Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В.
+ 30.06.18                                                                                    *
  31.10.16         *
  10.08.16                                                                     * оптимизация
  07.04.16         * ушли от вьюхи
