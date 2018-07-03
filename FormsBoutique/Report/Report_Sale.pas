@@ -75,6 +75,7 @@ type
     bbPrintin: TdxBarButton;
     cbDiscount: TcxCheckBox;
     ChangePercent: TcxGridDBColumn;
+    GoodsSizeName_real: TcxGridDBColumn;
   private
     { Private declarations }
   public

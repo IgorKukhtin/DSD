@@ -45,6 +45,7 @@ RETURNS TABLE (PartionId             Integer
              , LineFabricaName       TVarChar
              , GoodsSizeId           Integer
              , GoodsSizeName         VarChar (25)
+             , GoodsSizeName_real    VarChar (25)
              , MeasureName           TVarChar
 
              , UnitName              VarChar (100)
@@ -409,7 +410,8 @@ BEGIN
                           , tmpData_all.GoodsId
                           , tmpData_all.GoodsInfoId
                           , tmpData_all.LineFabricaId
-                          , CASE WHEN inIsSize  = TRUE THEN tmpData_all.GoodsSizeId ELSE 0 END AS GoodsSizeId
+                          , CASE WHEN inIsSize  = TRUE THEN tmpData_all.GoodsSizeId ELSE 0 END     AS GoodsSizeId
+                          , CASE WHEN inIsSize  = TRUE THEN Object_GoodsSize.ValueData ELSE '' END AS GoodsSizeName_real
                           , STRING_AGG (Object_GoodsSize.ValueData, ', ' ORDER BY CASE WHEN LENGTH (Object_GoodsSize.ValueData) = 1 THEN '0' ELSE '' END || Object_GoodsSize.ValueData)  AS GoodsSizeName
                           
                           , tmpData_all.MeasureId
@@ -527,6 +529,7 @@ BEGIN
                             , tmpData_all.GoodsInfoId
                             , tmpData_all.LineFabricaId
                             , CASE WHEN inIsSize  = TRUE THEN tmpData_all.GoodsSizeId ELSE 0 END
+                            , CASE WHEN inIsSize  = TRUE THEN Object_GoodsSize.ValueData ELSE '' END
                             , tmpData_all.MeasureId
 
                             , tmpData_all.OperDate_doc
@@ -584,6 +587,7 @@ BEGIN
              , Object_LineFabrica.ValueData               AS LineFabricaName
              , tmpData.GoodsSizeId                        AS GoodsSizeId
              , tmpData.GoodsSizeName      :: VarChar (25) AS GoodsSizeName
+             , tmpData.GoodsSizeName_real :: VarChar (25) AS GoodsSizeName_real
              , Object_Measure.ValueData                   AS MeasureName
 
              , Object_Unit.ValueData        :: VarChar (100) AS UnitName
@@ -801,6 +805,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 03.07.18         *
  21.02.18         *
 */
 
