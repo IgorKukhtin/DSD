@@ -520,6 +520,12 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
             HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
             Width = 70
           end
+          object GoodsSizeName_real: TcxGridDBColumn
+            DataBinding.FieldName = 'GoodsSizeName_real'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 30
+          end
         end
       end
     end
@@ -968,7 +974,7 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
           Name = 'GoodsSizeName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsSizeName'
+          ComponentItem = 'GoodsSizeName_real'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1070,7 +1076,7 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
           Name = 'GoodsSizeName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsSizeName'
+          ComponentItem = 'GoodsSizeName_real'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','

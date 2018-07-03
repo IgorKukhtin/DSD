@@ -41,6 +41,7 @@ RETURNS TABLE (PartionId             Integer
              , LineFabricaName       TVarChar
              , GoodsSizeId           Integer
              , GoodsSizeName         VarChar (25)
+             , GoodsSizeName_real    TVarChar
              , MeasureName           TVarChar
 
              , UnitName              VarChar (100)
@@ -336,7 +337,10 @@ BEGIN
                           , tmpData_all.GoodsId
                           , tmpData_all.GoodsInfoId
                           , tmpData_all.LineFabricaId
-                          , CASE WHEN inIsSize  = TRUE THEN tmpData_all.GoodsSizeId ELSE 0 END AS GoodsSizeId
+                          , CASE WHEN inIsSize  = TRUE THEN tmpData_all.GoodsSizeId ELSE 0 END     AS GoodsSizeId
+                          , CASE WHEN inIsSize  = TRUE THEN Object_GoodsSize.ValueData ELSE '' END AS GoodsSizeName_real
+                          , STRING_AGG (Object_GoodsSize.ValueData, ', ' ORDER BY CASE WHEN LENGTH (Object_GoodsSize.ValueData) = 1 THEN '0' ELSE '' END || Object_GoodsSize.ValueData)  AS GoodsSizeName
+
                           , tmpData_all.MeasureId
 
                           , tmpData_all.OperDate_doc
@@ -363,8 +367,8 @@ BEGIN
                           , SUM (tmpData_all.Return_Summ_10200)     AS Return_Summ_10200
                           , SUM (tmpData_all.Result_Amount)         AS Result_Amount
 
-                     FROM tmpData_all AS tmpData_all
-
+                     FROM tmpData_all
+                          LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = tmpData_all.GoodsSizeId
                      GROUP BY CASE WHEN inisPartion = TRUE THEN tmpData_all.PartionId ELSE 0 END
                             , CASE WHEN inisPartion = TRUE THEN tmpData_all.MovementId_Partion ELSE 0 END
                             , tmpData_all.BrandId
@@ -381,6 +385,7 @@ BEGIN
                             , tmpData_all.GoodsInfoId
                             , tmpData_all.LineFabricaId
                             , CASE WHEN inIsSize  = TRUE THEN tmpData_all.GoodsSizeId ELSE 0 END
+                            , CASE WHEN inIsSize  = TRUE THEN Object_GoodsSize.ValueData ELSE '' END
                             , tmpData_all.MeasureId
 
                             , tmpData_all.OperDate_doc
@@ -419,8 +424,9 @@ BEGIN
              , tmpData.BarCode_item      :: TVarChar      AS BarCode_item
              , Object_GoodsInfo.ValueData                 AS GoodsInfoName
              , Object_LineFabrica.ValueData               AS LineFabricaName
-             , Object_GoodsSize.Id                        AS GoodsSizeId
-             , Object_GoodsSize.ValueData :: VarChar (25) AS GoodsSizeName
+             , tmpData.GoodsSizeId            AS GoodsSizeId
+             , tmpData.GoodsSizeName       ::VarChar (25) AS GoodsSizeName
+             , tmpData.GoodsSizeName_real  ::TVarChar     AS GoodsSizeName_real
              , Object_Measure.ValueData                   AS MeasureName
 
              , Object_Unit.ValueData        :: VarChar (100) AS UnitName
@@ -480,7 +486,7 @@ BEGIN
             LEFT JOIN Object AS Object_CompositionGroup ON Object_CompositionGroup.Id = tmpData.CompositionGroupId
             LEFT JOIN Object AS Object_GoodsInfo        ON Object_GoodsInfo.Id        = tmpData.GoodsInfoId
             LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = tmpData.LineFabricaId
-            LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = tmpData.GoodsSizeId
+            --LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = tmpData.GoodsSizeId
             LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = tmpData.BrandId
             LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = tmpData.PeriodId
             LEFT JOIN Object AS Object_Measure          ON Object_Measure.Id          = tmpData.MeasureId

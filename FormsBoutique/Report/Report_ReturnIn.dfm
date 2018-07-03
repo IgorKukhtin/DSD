@@ -577,6 +577,12 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 73
           end
+          object GoodsSizeName_real: TcxGridDBColumn
+            DataBinding.FieldName = 'GoodsSizeName_real'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 30
+          end
         end
       end
     end
@@ -1154,7 +1160,7 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
           Name = 'GoodsSizeName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsSizeName'
+          ComponentItem = 'GoodsSizeName_real'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','

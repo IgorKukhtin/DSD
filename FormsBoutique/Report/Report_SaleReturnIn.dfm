@@ -1707,8 +1707,8 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 472
-    Top = 168
+    Left = 504
+    Top = 160
   end
   object spUpdate_isChecked: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_Checked'

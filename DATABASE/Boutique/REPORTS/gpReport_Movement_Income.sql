@@ -38,6 +38,7 @@ RETURNS TABLE (MovementId     Integer,
                LineFabricaName TVarChar,
                LabelName TVarChar,
                GoodsSizeId Integer, GoodsSizeName TVarChar,
+               GoodsSizeName_real TVarChar,
                CurrencyName  TVarChar,
 
                OperPrice              TFloat,
@@ -153,7 +154,7 @@ BEGIN
                                 , tmpMovementIncome.PeriodId
                                 , MI_Income.PartionId
                                 , MI_Income.ObjectId             AS GoodsId
-                                , CASE WHEN inisSize = TRUE THEN Object_PartionGoods.GoodsSizeId  ELSE 0 END  AS GoodsSizeId
+                                , Object_PartionGoods.GoodsSizeId
                                 , Object_PartionGoods.MeasureId
                                 , Object_PartionGoods.GoodsGroupId
                                 , Object_PartionGoods.CompositionId
@@ -261,7 +262,9 @@ BEGIN
                        , tmp.FabrikaId
                        , tmp.PeriodId
                        , tmp.GoodsId
-                       , CASE WHEN inisSize = TRUE THEN tmp.GoodsSizeId ELSE 0 END  AS GoodsSizeId
+                       , CASE WHEN inisSize = TRUE THEN tmp.GoodsSizeId ELSE 0 END              AS GoodsSizeId
+                       , CASE WHEN inIsSize  = TRUE THEN Object_GoodsSize.ValueData ELSE '' END AS GoodsSizeName_real
+                       , STRING_AGG (Object_GoodsSize.ValueData, ', ' ORDER BY CASE WHEN LENGTH (Object_GoodsSize.ValueData) = 1 THEN '0' ELSE '' END || Object_GoodsSize.ValueData)  AS GoodsSizeName
                        , tmp.MeasureId
                        , tmp.GoodsGroupId
                        , tmp.CompositionId
@@ -294,6 +297,9 @@ BEGIN
                                              AND tmpContainer.UnitId     = tmp.ToId
                        LEFT JOIN tmpContainer_sum ON tmpContainer_sum.GoodsId    = tmp.GoodsId
                                                  AND tmpContainer_sum.PartionId  = tmp.PartionId
+
+                       LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = tmp.GoodsSizeId
+
                   GROUP BY CASE WHEN inIsPartion = TRUE THEN tmp.MovementId ELSE -1 END
                          , tmp.InvNumber
                          , tmp.OperDate
@@ -305,6 +311,7 @@ BEGIN
                          , tmp.PeriodId
                          , tmp.GoodsId
                          , CASE WHEN inisSize = TRUE THEN tmp.GoodsSizeId ELSE 0 END
+                         , CASE WHEN inIsSize  = TRUE THEN Object_GoodsSize.ValueData ELSE '' END
                          , tmp.MeasureId
                          , tmp.GoodsGroupId
                          , tmp.CompositionId
@@ -345,8 +352,9 @@ BEGIN
            , Object_GoodsInfo.ValueData     AS GoodsInfoName
            , Object_LineFabrica.ValueData   AS LineFabricaName
            , Object_Label.ValueData         AS LabelName
-           , Object_GoodsSize.Id            AS GoodsSizeId
-           , Object_GoodsSize.ValueData     AS GoodsSizeName
+           , tmpData.GoodsSizeId            AS GoodsSizeId
+           , tmpData.GoodsSizeName       ::TVarChar  AS GoodsSizeName
+           , tmpData.GoodsSizeName_real  ::TVarChar  AS GoodsSizeName_real
            , Object_Currency.ValueData      AS CurrencyName
 
            , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSumm  / tmpData.Amount ELSE 0 END          ::TFloat AS OperPrice
@@ -404,7 +412,7 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsInfo        ON Object_GoodsInfo.Id        = tmpData.GoodsInfoId
             LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = tmpData.LineFabricaId
             LEFT JOIN Object AS Object_Label            ON Object_Label.Id            = tmpData.LabelId
-            LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = tmpData.GoodsSizeId
+            --LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = tmpData.GoodsSizeId
             LEFT JOIN Object AS Object_Juridical        ON Object_Juridical.Id        = tmpData.JuridicalId
             LEFT JOIN Object AS Object_Currency         ON Object_Currency.Id         = tmpData.CurrencyId
 
