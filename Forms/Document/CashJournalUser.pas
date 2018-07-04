@@ -27,7 +27,7 @@ type
     MoneyPlaceCode: TcxGridDBColumn;
     ceCash: TcxButtonEdit;
     cxLabel3: TcxLabel;
-    CashGuides: TdsdGuides;
+    GuidesCash: TdsdGuides;
     InfoMoneyName_all: TcxGridDBColumn;
     MemberName: TcxGridDBColumn;
     PositionName: TcxGridDBColumn;
@@ -42,14 +42,19 @@ type
     PersonalServiceListName: TcxGridDBColumn;
     cxLabel15: TcxLabel;
     ceCurrency: TcxButtonEdit;
-    CurrencyGuides: TdsdGuides;
+    GuidesCurrency: TdsdGuides;
     cxLabel27: TcxLabel;
     edJuridicalBasis: TcxButtonEdit;
-    JuridicalBasisGuides: TdsdGuides;
+    GuidesJuridicalBasis: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     UnitName_Mobile: TcxGridDBColumn;
     PositionName_Mobile: TcxGridDBColumn;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spSelectPrint: TdsdStoredProc;
+    actPrint: TdsdPrintAction;
+    bbPrint: TdxBarButton;
   private
     { Private declarations }
   public
