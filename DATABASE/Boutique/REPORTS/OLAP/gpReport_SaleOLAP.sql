@@ -91,16 +91,16 @@ RETURNS TABLE (BrandName             VarChar (100)
              , Sale_Amount_real      TFloat
 
                -- Кол-во продажа - ПО Сезонным скидкам
-             , Sale_InDiscount       TFloat
+             , Result_InDiscount       TFloat
                -- Кол-во продажа - ДО Сезонных скидок
-             , Sale_OutDiscount      TFloat
+             , Result_OutDiscount      TFloat
 
-             , Sale_SummCost_curr_InD   TFloat
-             , Sale_SummCost_curr_OutD  TFloat
-             , Sale_Summ_InD            TFloat
-             , Sale_Summ_OutD           TFloat
-             , Sale_Summ_10200_InD      TFloat
-             , Sale_Summ_10200_OutD     TFloat
+             , Result_SummCost_curr_InD   TFloat
+             , Result_SummCost_curr_OutD  TFloat
+             , Result_Summ_InD            TFloat
+             , Result_Summ_OutD           TFloat
+             , Result_Summ_10200_InD      TFloat
+             , Result_Summ_10200_OutD     TFloat
 
                -- Сумма продажа - без учета "долга"
              , Sale_Summ             TFloat
@@ -634,6 +634,17 @@ BEGIN
                                            ELSE 0
                                       END) AS Sale_Amount_OutDiscount
 
+                                 -- Кол-во: Только Возврат (ПО Сезонным скидкам)
+                               , SUM (CASE WHEN COALESCE(tmpDiscountPeriod_Ret.PeriodId, 0) <> 0
+                                           THEN CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount > 0 AND MIConatiner.MovementDescId IN (zc_Movement_ReturnIn()) THEN 1 * MIConatiner.Amount ELSE 0 END
+                                           ELSE 0
+                                      END) AS Return_Amount_InDiscount
+                                 -- Кол-во: Только Возврат (ДО Сезонных скидок)
+                               , SUM (CASE WHEN COALESCE(tmpDiscountPeriod_Ret.PeriodId, 0) = 0
+                                           THEN CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount > 0 AND MIConatiner.MovementDescId IN (zc_Movement_ReturnIn()) THEN 1 * MIConatiner.Amount ELSE 0 END
+                                           ELSE 0
+                                      END) AS Return_Amount_OutDiscount
+
                                   -- С\с продажа - валюта (ПО Сезонным скидкам)
                                , SUM (CASE WHEN COALESCE(tmpDiscountPeriod.PeriodId, 0) <> 0
                                            THEN CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount < 0 AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
@@ -688,6 +699,60 @@ BEGIN
                                            ELSE 0
                                       END) AS Sale_Summ_10200_OutDiscount
 
+                                 -- С\с возврат - валюта (ПО Сезонным скидкам)
+                               , SUM (CASE WHEN COALESCE(tmpDiscountPeriod_Ret.PeriodId, 0) <> 0
+                                           THEN CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount > 0 AND MIConatiner.MovementDescId IN (zc_Movement_ReturnIn())
+                                                          THEN 1 * MIConatiner.Amount
+                                                             * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END
+                                                     ELSE 0
+                                                END
+                                           ELSE 0
+                                      END) AS Return_SummCost_curr_InDiscount
+                                 -- С\с возврат - валюта (ДО Сезонных скидок)
+                               , SUM (CASE WHEN COALESCE(tmpDiscountPeriod_Ret.PeriodId, 0) = 0
+                                           THEN CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount > 0 AND MIConatiner.MovementDescId IN (zc_Movement_ReturnIn())
+                                                          THEN 1 * MIConatiner.Amount
+                                                             * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END
+                                                     ELSE 0
+                                                END
+                                           ELSE 0
+                                      END) AS Return_SummCost_curr_OutDiscount
+
+                                 -- Сумма возврат (ПО Сезонным скидкам)
+                               , SUM (CASE WHEN COALESCE(tmpDiscountPeriod_Ret.PeriodId, 0) <> 0
+                                           THEN CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ() AND MIConatiner.AnalyzerId IN (zc_Enum_AnalyzerId_ReturnSumm_10501(), zc_Enum_AnalyzerId_ReturnSumm_10502()) AND MIConatiner.MovementDescId IN (zc_Movement_ReturnIn())
+                                                          THEN 1 * MIConatiner.Amount
+                                                     ELSE 0
+                                                END
+                                           ELSE 0
+                                      END) AS Return_Summ_InDiscount
+                                 -- Сумма возврат (ДО Сезонных скидок)
+                               , SUM (CASE WHEN COALESCE(tmpDiscountPeriod_Ret.PeriodId, 0) = 0
+                                           THEN CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ() AND MIConatiner.AnalyzerId IN (zc_Enum_AnalyzerId_ReturnSumm_10501(), zc_Enum_AnalyzerId_ReturnSumm_10502()) AND MIConatiner.MovementDescId IN (zc_Movement_ReturnIn())
+                                                          THEN 1 * MIConatiner.Amount
+                                                     ELSE 0
+                                                END
+                                           ELSE 0
+                                      END) AS Return_Summ_OutDiscount
+
+                                 -- Скидка возврат (ПО Сезонным скидкам)
+                               , SUM (CASE WHEN COALESCE(tmpDiscountPeriod_Ret.PeriodId, 0) <> 0
+                                           THEN CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ() AND MIConatiner.AnalyzerId = zc_Enum_AnalyzerId_ReturnSumm_10502() AND MIConatiner.MovementDescId IN (zc_Movement_ReturnIn())
+                                                          THEN -1 * MIConatiner.Amount
+                                                     ELSE 0
+                                                END
+                                           ELSE 0
+                                      END) AS Return_Summ_10200_InDiscount
+                                 -- Скидка возврат (ДО Сезонных скидок)
+                               , SUM (CASE WHEN COALESCE(tmpDiscountPeriod_Ret.PeriodId, 0) = 0
+                                           THEN CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ() AND MIConatiner.AnalyzerId = zc_Enum_AnalyzerId_ReturnSumm_10502() AND MIConatiner.MovementDescId IN (zc_Movement_ReturnIn())
+                                                          THEN -1 * MIConatiner.Amount
+                                                     ELSE 0
+                                                END
+                                           ELSE 0
+                                      END) AS Return_Summ_10200_OutDiscount
+
+
                                --
                                -- , 1 as x1
                                
@@ -714,7 +779,7 @@ BEGIN
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
                                                                 ON MILinkObject_PartionMI.MovementItemId = MIConatiner.MovementItemId
                                                                AND MILinkObject_PartionMI.DescId         = zc_MILinkObject_PartionMI()
-                                                               AND inIsDiscount                          = TRUE
+                                                               --AND inIsDiscount                          = TRUE
                                LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = MILinkObject_PartionMI.ObjectId
                                LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                            ON MIFloat_ChangePercent.MovementItemId = COALESCE (Object_PartionMI.ObjectCode, MIConatiner.MovementItemId)
@@ -727,6 +792,14 @@ BEGIN
 
                                LEFT JOIN tmpDiscountPeriod ON tmpDiscountPeriod.PeriodId = Object_PartionGoods.PeriodId
                                                           AND MIConatiner.OperDate BETWEEN tmpDiscountPeriod.StartDate AND tmpDiscountPeriod.EndDate
+
+                               -- док. продажи для док.возврата
+                               LEFT JOIN MovementItem AS MovementItem_Sale ON MovementItem_Sale.Id = Object_PartionMI.ObjectCode
+                               LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MovementItem_Sale.MovementId
+                               -- период скидок для возврата по дате продажи
+                               LEFT JOIN tmpDiscountPeriod AS tmpDiscountPeriod_Ret 
+                                                           ON tmpDiscountPeriod_Ret.PeriodId = Object_PartionGoods.PeriodId
+                                                          AND Movement_Sale.OperDate BETWEEN tmpDiscountPeriod_Ret.StartDate AND tmpDiscountPeriod_Ret.EndDate
 
                           -- WHERE (MIConatiner.ContainerId      > 0 OR inIsPeriodAll = TRUE)
                           --   AND (tmpContainerDebt.ContainerId > 0 OR MIConatiner.PartionId IS NULL)
@@ -883,6 +956,11 @@ BEGIN
                                  -- Кол-во продажа (ДО Сезонных скидок)
                                , 0 AS Sale_Amount_OutDiscount
 
+                                 -- Кол-во: Только Возврат (ПО Сезонным скидкам)
+                               , 0 AS Return_Amount_InDiscount
+                                 -- Кол-во: Только Возврат (ДО Сезонных скидок)
+                               , 0 AS Return_Amount_OutDiscount
+
                                   -- С\с продажа - валюта (ПО Сезонным скидкам)
                                , 0 AS Sale_SummCost_curr_InDiscount
                                   -- С\с продажа - валюта (ДО Сезонных скидок)
@@ -895,7 +973,19 @@ BEGIN
                                , 0 AS Sale_Summ_10200_InDiscount
                                  -- Скидка ИТОГО (ДО Сезонных скидок)
                                , 0 AS Sale_Summ_10200_OutDiscount
-                                      
+                                    
+                                 -- С\с возврат - валюта (ПО Сезонным скидкам)
+                               , 0 AS Return_SummCost_curr_InDiscount
+                                 -- С\с возврат - валюта (ДО Сезонных скидок)
+                               , 0 AS Return_SummCost_curr_OutDiscount
+                                 -- Сумма возврат (ПО Сезонным скидкам)
+                               , 0 AS Return_Summ_InDiscount
+                                 -- Сумма возврат (ДО Сезонных скидок)
+                               , 0 AS Return_Summ_OutDiscount
+                                 -- Скидка возврат (ПО Сезонным скидкам)
+                               , 0 AS Return_Summ_10200_InDiscount
+                                 -- Скидка возврат (ДО Сезонных скидок)
+                               , 0 AS Return_Summ_10200_OutDiscount  
                                --
                                -- , 2 as x1
 
@@ -1033,6 +1123,11 @@ BEGIN
                                  -- Кол-во продажа (ДО Сезонных скидок)
                                , 0 AS Sale_Amount_OutDiscount
 
+                                 -- Кол-во: Только Возврат (ПО Сезонным скидкам)
+                               , 0 AS Return_Amount_InDiscount
+                                 -- Кол-во: Только Возврат (ДО Сезонных скидок)
+                               , 0 AS Return_Amount_OutDiscount
+
                                   -- С\с продажа - валюта (ПО Сезонным скидкам)
                                , 0 AS Sale_SummCost_curr_InDiscount
                                   -- С\с продажа - валюта (ДО Сезонных скидок)
@@ -1045,6 +1140,19 @@ BEGIN
                                , 0 AS Sale_Summ_10200_InDiscount
                                  -- Скидка ИТОГО (ДО Сезонных скидок)
                                , 0 AS Sale_Summ_10200_OutDiscount
+
+                                 -- С\с возврат - валюта (ПО Сезонным скидкам)
+                               , 0 AS Return_SummCost_curr_InDiscount
+                                 -- С\с возврат - валюта (ДО Сезонных скидок)
+                               , 0 AS Return_SummCost_curr_OutDiscount
+                                 -- Сумма возврат (ПО Сезонным скидкам)
+                               , 0 AS Return_Summ_InDiscount
+                                 -- Сумма возврат (ДО Сезонных скидок)
+                               , 0 AS Return_Summ_OutDiscount
+                                 -- Скидка возврат (ПО Сезонным скидкам)
+                               , 0 AS Return_Summ_10200_InDiscount
+                                 -- Скидка возврат (ДО Сезонных скидок)
+                               , 0 AS Return_Summ_10200_OutDiscount
                                
                                --
                                -- , 3 as x1
@@ -1111,6 +1219,9 @@ BEGIN
                             , SUM (tmpData_all.Sale_Amount_InDiscount)  AS Sale_InDiscount
                             , SUM (tmpData_all.Sale_Amount_OutDiscount) AS Sale_OutDiscount
 
+                            , SUM (tmpData_all.Return_Amount_InDiscount)  AS Return_InDiscount
+                            , SUM (tmpData_all.Return_Amount_OutDiscount) AS Return_OutDiscount
+
                             , SUM (tmpData_all.Loss_Amount)             AS Loss_Amount
                             , SUM (tmpData_all.Loss_Summ)               AS Loss_Summ
 
@@ -1164,6 +1275,13 @@ BEGIN
                             , SUM (tmpData_all.Sale_Summ_OutDiscount)            AS Sale_Summ_OutDiscount
                             , SUM (tmpData_all.Sale_Summ_10200_InDiscount)       AS Sale_Summ_10200_InDiscount
                             , SUM (tmpData_all.Sale_Summ_10200_OutDiscount)      AS Sale_Summ_10200_OutDiscount
+
+                            , SUM (tmpData_all.Return_SummCost_curr_InDiscount)    AS Return_SummCost_curr_InDiscount
+                            , SUM (tmpData_all.Return_SummCost_curr_OutDiscount)   AS Return_SummCost_curr_OutDiscount
+                            , SUM (tmpData_all.Return_Summ_InDiscount)             AS Return_Summ_InDiscount
+                            , SUM (tmpData_all.Return_Summ_OutDiscount)            AS Return_Summ_OutDiscount
+                            , SUM (tmpData_all.Return_Summ_10200_InDiscount)       AS Return_Summ_10200_InDiscount
+                            , SUM (tmpData_all.Return_Summ_10200_OutDiscount)      AS Return_Summ_10200_OutDiscount
                                
                             , tmpData_all.Olap_Goods
                             , tmpData_all.Olap_Partion
@@ -1356,16 +1474,16 @@ BEGIN
              , tmpData.Sale_Amount          :: TFloat AS Sale_Amount_real
 
                -- Кол-во продажа - ПО Сезонным скидкам
-             , tmpData.Sale_InDiscount      :: TFloat
+             , (COALESCE (tmpData.Sale_InDiscount,0) - COALESCE (tmpData.Return_InDiscount,0))      :: TFloat AS Result_InDiscount
                -- Кол-во продажа - ДО Сезонных скидок
-             , tmpData.Sale_OutDiscount     :: TFloat
+             , (COALESCE (tmpData.Sale_OutDiscount,0) - COALESCE (tmpData.Return_OutDiscount,0))    :: TFloat AS Result_OutDiscount
 
-             , tmpData.Sale_SummCost_curr_InDiscount   :: TFloat
-             , tmpData.Sale_SummCost_curr_OutDiscount  :: TFloat
-             , tmpData.Sale_Summ_InDiscount            :: TFloat
-             , tmpData.Sale_Summ_OutDiscount           :: TFloat
-             , tmpData.Sale_Summ_10200_InDiscount      :: TFloat
-             , tmpData.Sale_Summ_10200_OutDiscount     :: TFloat
+             , (tmpData.Sale_SummCost_curr_InDiscount  - tmpData.Return_SummCost_curr_InDiscount)   :: TFloat  AS Result_SummCost_curr_InD
+             , (tmpData.Sale_SummCost_curr_OutDiscount - tmpData.Return_SummCost_curr_OutDiscount)  :: TFloat  AS Result_SummCost_curr_OutD
+             , (tmpData.Sale_Summ_InDiscount           - tmpData.Return_Summ_InDiscount)            :: TFloat  AS Result_Summ_InD
+             , (tmpData.Sale_Summ_OutDiscount          - tmpData.Return_Summ_OutDiscount)           :: TFloat  AS Result_Summ_OutD
+             , (tmpData.Sale_Summ_10200_InDiscount     - tmpData.Return_Summ_10200_InDiscount)      :: TFloat  AS Result_Summ_10200_InD
+             , (tmpData.Sale_Summ_10200_OutDiscount    - tmpData.Return_Summ_10200_OutDiscount)     :: TFloat  AS Result_Summ_10200_OutD
                             
                -- Сумма продажа - без учета "долга"
              , tmpData.Sale_Summ            :: TFloat

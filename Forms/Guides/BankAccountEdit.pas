@@ -50,6 +50,9 @@ type
     cxLabel9: TcxLabel;
     edBeneficiarysBank: TcxButtonEdit;
     dsdBeneficiarysBankGuides: TdsdGuides;
+    cxLabel10: TcxLabel;
+    edAccount: TcxButtonEdit;
+    GuidesAccount: TdsdGuides;
   private
     { Private declarations }
   public

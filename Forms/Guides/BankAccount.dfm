@@ -81,6 +81,15 @@ object BankAccountForm: TBankAccountForm
         HeaderAlignmentVert = vaCenter
         Width = 124
       end
+      object AccountName: TcxGridDBColumn
+        Caption = #1057#1095#1077#1090' ('#1073#1072#1083#1072#1085#1089')'
+        DataBinding.FieldName = 'AccountName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1095#1077#1090' ('#1073#1072#1083#1072#1085#1089')'
+        Options.Editing = False
+        Width = 100
+      end
       object CorrespondentBankName: TcxGridDBColumn
         Caption = #1041#1072#1085#1082' '#1082#1086#1088#1088#1077#1089#1087#1086#1085#1076#1077#1085#1090' '#1076#1083#1103' '#1089#1095#1077#1090#1072
         DataBinding.FieldName = 'CorrespondentBankName'

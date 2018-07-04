@@ -66,6 +66,7 @@ type
     spErasedUnErased: TdsdStoredProc;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    AccountName: TcxGridDBColumn;
   private
     { Private declarations }
   public

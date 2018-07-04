@@ -516,96 +516,96 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Width = 55
       UniqueName = #1044#1086#1083#1075' '#1057'/'#1057
     end
-    object pvSale_InDiscount: TcxDBPivotGridField
+    object pvResult_InDiscount: TcxDBPivotGridField
       Area = faData
       AreaIndex = 17
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076'. '#1055#1054' '#1089#1082'.'
-      DataBinding.FieldName = 'Sale_InDiscount'
+      DataBinding.FieldName = 'Result_InDiscount'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.;-,0.; ;'
       Styles.ColumnHeader = dmMain.cxHeaderStyle
       UniqueName = 'AmountDebetStart'
     end
-    object pvSale_OutDiscount: TcxDBPivotGridField
+    object pvResult_OutDiscount: TcxDBPivotGridField
       Area = faData
       AreaIndex = 21
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076'. '#1044#1054' '#1089#1082'.'
-      DataBinding.FieldName = 'Sale_OutDiscount'
+      DataBinding.FieldName = 'Result_OutDiscount'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.;-,0.; ;'
       Styles.ColumnHeader = dmMain.cxHeaderStyle
       UniqueName = 'AmountDebetStart'
     end
-    object pvSale_SummCost_curr_InD: TcxDBPivotGridField
+    object pvResult_SummCost_curr_InD: TcxDBPivotGridField
       Area = faData
       AreaIndex = 18
       IsCaptionAssigned = True
-      Caption = #1055#1088#1086#1076'. '#1074' '#1074#1072#1083'. '#1055#1054' '#1089#1082'.'
-      DataBinding.FieldName = 'Sale_SummCost_curr_InD'
+      Caption = #1057'\'#1089' '#1074' '#1074#1072#1083'. '#1055#1054' '#1089#1082'.'
+      DataBinding.FieldName = 'Result_SummCost_curr_InD'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.;-,0.; ;'
       Styles.ColumnHeader = dmMain.cxHeaderStyle
       UniqueName = 'AmountDebetStart'
     end
-    object pvSale_SummCost_curr_OutD: TcxDBPivotGridField
+    object pvResult_SummCost_curr_OutD: TcxDBPivotGridField
       Area = faData
       AreaIndex = 22
       IsCaptionAssigned = True
-      Caption = #1055#1088#1086#1076'. '#1074' '#1074#1072#1083'. '#1044#1054' '#1089#1082'.'
-      DataBinding.FieldName = 'Sale_SummCost_curr_OutD'
+      Caption = #1057'\'#1089' '#1074' '#1074#1072#1083'. '#1044#1054' '#1089#1082'.'
+      DataBinding.FieldName = 'Result_SummCost_curr_OutD'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.;-,0.; ;'
       Styles.ColumnHeader = dmMain.cxHeaderStyle
       UniqueName = 'AmountDebetStart'
     end
-    object pvSale_Summ_InD: TcxDBPivotGridField
+    object pvResult_Summ_InD: TcxDBPivotGridField
       Area = faData
       AreaIndex = 19
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076'. '#1074' '#1043#1056#1053' '#1055#1054' '#1089#1082'.'
-      DataBinding.FieldName = 'Sale_Summ_InD'
+      DataBinding.FieldName = 'Result_Summ_InD'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.;-,0.; ;'
       Styles.ColumnHeader = dmMain.cxHeaderStyle
       UniqueName = 'AmountDebetStart'
     end
-    object pvSale_Summ_OutD: TcxDBPivotGridField
+    object pvResult_Summ_OutD: TcxDBPivotGridField
       Area = faData
       AreaIndex = 23
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076'. '#1074' '#1043#1056#1053' '#1044#1054' '#1089#1082'.'
-      DataBinding.FieldName = 'Sale_Summ_OutD'
+      DataBinding.FieldName = 'Result_Summ_OutD'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.;-,0.; ;'
       Styles.ColumnHeader = dmMain.cxHeaderStyle
       UniqueName = 'AmountDebetStart'
     end
-    object pvSale_Summ_10200_InD: TcxDBPivotGridField
+    object pvResult_Summ_10200_InD: TcxDBPivotGridField
       Area = faData
       AreaIndex = 20
       IsCaptionAssigned = True
       Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1043#1056#1053' '#1055#1054' '#1089#1082'.'
-      DataBinding.FieldName = 'Sale_Summ_10200_InD'
+      DataBinding.FieldName = 'Result_Summ_10200_InD'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.;-,0.; ;'
       Styles.ColumnHeader = dmMain.cxHeaderStyle
       UniqueName = 'AmountDebetStart'
     end
-    object pvSale_Summ_10200_OutD: TcxDBPivotGridField
+    object pvResult_Summ_10200_OutD: TcxDBPivotGridField
       Area = faData
       AreaIndex = 24
       IsCaptionAssigned = True
       Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1043#1056#1053' '#1044#1054' '#1089#1082'.'
-      DataBinding.FieldName = 'Sale_Summ_10200_OutD'
+      DataBinding.FieldName = 'Result_Summ_10200_OutD'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.;-,0.; ;'

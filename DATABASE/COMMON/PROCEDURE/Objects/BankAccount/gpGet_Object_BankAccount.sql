@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean,
                JuridicalId Integer, JuridicalName TVarChar,
                BankId Integer, BankName TVarChar,
                CurrencyId Integer, CurrencyName TVarChar,
+               AccountId Integer, AccountName TVarChar,
                CorrespondentBankId Integer, CorrespondentBankName TVarChar,
                BeneficiarysBankId Integer, BeneficiarysBankName TVarChar,
                CorrespondentAccount TVarChar, BeneficiarysBankAccount TVarChar, BeneficiarysAccount TVarChar
@@ -36,6 +37,8 @@ BEGIN
            , CAST (0 as Integer)   AS CurrencyId
            , CAST ('' as TVarChar) AS CurrencyName
 
+           , CAST (0 as Integer)   AS AccountId
+           , CAST ('' as TVarChar) AS AccountName
            , CAST (0 as Integer)   AS CorrespondentBankId
            , CAST ('' as TVarChar) AS CorrespondentBankName
            , CAST (0 as Integer)   AS BeneficiarysBankId
@@ -56,6 +59,8 @@ BEGIN
            , Bank.ValueData      AS BankName
            , Currency.Id         AS CurrencyId
            , Currency.ValueData  AS CurrencyName
+           , Object_Account.Id                                  AS AccountId
+           , Object_Account.ValueData                           AS AccountName
            , Object_CorrespondentBank.Id                        AS CorrespondentBankId
            , Object_CorrespondentBank.ValueData                 AS CorrespondentBankName
            , Object_BeneficiarysBank.Id                         AS BeneficiarysBankId
@@ -81,11 +86,18 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_BankAccount_CorrespondentBank
                              ON ObjectLink_BankAccount_CorrespondentBank.ObjectId = Object.Id
                             AND ObjectLink_BankAccount_CorrespondentBank.DescId = zc_ObjectLink_BankAccount_CorrespondentBank()
+        LEFT JOIN Object AS Object_CorrespondentBank ON Object_CorrespondentBank.Id = ObjectLink_BankAccount_CorrespondentBank.ChildObjectId
+
         LEFT JOIN ObjectLink AS ObjectLink_BankAccount_BeneficiarysBank
                              ON ObjectLink_BankAccount_BeneficiarysBank.ObjectId = Object.Id
                             AND ObjectLink_BankAccount_BeneficiarysBank.DescId = zc_ObjectLink_BankAccount_BeneficiarysBank()
-        LEFT JOIN Object AS Object_CorrespondentBank ON Object_CorrespondentBank.Id = ObjectLink_BankAccount_CorrespondentBank.ChildObjectId
         LEFT JOIN Object AS Object_BeneficiarysBank ON Object_BeneficiarysBank.Id = ObjectLink_BankAccount_BeneficiarysBank.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Account
+                             ON ObjectLink_BankAccount_Account.ObjectId = Object.Id
+                            AND ObjectLink_BankAccount_Account.DescId = zc_ObjectLink_BankAccount_Account()
+        LEFT JOIN Object AS Object_Account ON Object_Account.Id = ObjectLink_BankAccount_Account.ChildObjectId
+        
         LEFT JOIN ObjectString AS OS_BankAccount_CorrespondentAccount
                                ON OS_BankAccount_CorrespondentAccount.ObjectId = Object.Id
                               AND OS_BankAccount_CorrespondentAccount.DescId = zc_ObjectString_BankAccount_CorrespondentAccount()
