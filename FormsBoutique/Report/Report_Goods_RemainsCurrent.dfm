@@ -7,7 +7,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1147
-  ExplicitHeight = 468
+  ExplicitHeight = 471
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -779,6 +779,12 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Options.Editing = False
             Width = 100
           end
+          object GoodsSizeName_real: TcxGridDBColumn
+            DataBinding.FieldName = 'GoodsSizeName_real'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 30
+          end
         end
       end
     end
@@ -1320,7 +1326,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           Name = 'GoodsSizeName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsSizeName'
+          ComponentItem = 'GoodsSizeName_real'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','

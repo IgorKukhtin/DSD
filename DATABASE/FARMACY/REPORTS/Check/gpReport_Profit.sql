@@ -50,8 +50,8 @@ BEGIN
         -- данные из проводок
         , tmpData_ContainerAll AS (SELECT MIContainer.MovementItemId AS MI_Id
                                      , COALESCE (MIContainer.AnalyzerId,0) :: Integer  AS MovementItemId
-                                     , MIContainer.MovementId        AS MovementId
-                                     , COALESCE (MIContainer.WhereObjectId_analyzer,0) AS UnitId
+                                     , MIContainer.MovementId                          AS MovementId
+                                     , MIContainer.WhereObjectId_analyzer              AS UnitId
                                      , MIContainer.ObjectId_analyzer                   AS GoodsId
                                      , SUM (COALESCE (-1 * MIContainer.Amount, 0))     AS Amount
                                      , SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0)) AS SummaSale
@@ -60,16 +60,17 @@ BEGIN
                                   AND MIContainer.MovementDescId = zc_Movement_Check()
                                   AND MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < inEndDate + INTERVAL '1 DAY'
                                -- AND MIContainer.OperDate >= '03.10.2016' AND MIContainer.OperDate < '01.12.2016'
-                                GROUP BY COALESCE (MIContainer.WhereObjectId_analyzer,0)
+                                GROUP BY MIContainer.WhereObjectId_analyzer
                                        , MIContainer.ObjectId_analyzer    
                                        , COALESCE (MIContainer.AnalyzerId,0)
                                        , MIContainer.MovementItemId
                                        , MIContainer.MovementId
-                                HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
+                                --HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
                                )
         , tmpData_Container AS (SELECT tmpData_ContainerAll.*
                                 FROM tmpData_ContainerAll
                                      INNER JOIN tmpUnit ON tmpUnit.UnitId = tmpData_ContainerAll.UnitId
+                                WHERE tmpData_ContainerAll.Amount <> 0
                                )
         -- док. соц проекта, если заполнен № рецепта
         , tmpMS_InvNumberSP AS (SELECT tmp.MovementId
@@ -379,7 +380,7 @@ BEGIN
                                         , DATE_TRUNC('Month', MIContainer.OperDate)       AS OperDate
                                         , MIContainer.MovementId                          AS MovementId
                                         , COALESCE (MIContainer.AnalyzerId,0) :: Integer  AS MovementItemId
-                                        , COALESCE (MIContainer.WhereObjectId_analyzer,0) AS UnitId
+                                        , MIContainer.WhereObjectId_analyzer              AS UnitId
                                         , MIContainer.ObjectId_analyzer                   AS GoodsId
                                         , SUM (COALESCE (-1 * MIContainer.Amount, 0))     AS Amount
                                         , SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0)) AS SummaSale
@@ -391,13 +392,14 @@ BEGIN
                                           , MIContainer.ObjectId_analyzer
                                           , COALESCE (MIContainer.AnalyzerId,0)
                                           , MIContainer.MovementItemId
-                                          , COALESCE (MIContainer.WhereObjectId_analyzer,0)
+                                          , MIContainer.WhereObjectId_analyzer
                                           , MIContainer.MovementId
-                                   HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
+                                   --HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
                                   )
         , tmpData_Container AS (SELECT tmpData_ContainerAll.*
                                 FROM tmpData_ContainerAll
                                      INNER JOIN tmpUnit ON tmpUnit.UnitId = tmpData_ContainerAll.UnitId
+                                WHERE tmpData_ContainerAll.Amount <> 0
                                )
 
         , tmpMIF_SummChangePercent AS (SELECT MIFloat_SummChangePercent.*
@@ -602,5 +604,5 @@ $BODY$
 */
 -- тест
 -- SELECT * FROM gpReport_Profit (inUnitId:= 0, inStartDate:= '20150801'::TDateTime, inEndDate:= '20150810'::TDateTime, inIsPartion:= FALSE, inSession:= '3')
--- SELECT * from gpReport_Profit(inStartDate := ('01.11.2016')::TDateTime , inEndDate := ('05.11.2016')::TDateTime , inJuridical1Id := 59610 ::Integer , inJuridical2Id := 59612  ::Integer,  inSession := '3'::TVarChar);
--- FETCH ALL "<unnamed portal 10>";
+--select * from gpReport_Profit(inStartDate := ('01.06.2018')::TDateTime , inEndDate := ('30.06.2018')::TDateTime , inJuridical1Id := 59611 , inJuridical2Id := 183352 ,  inSession := '3');
+--FETCH ALL "<unnamed portal 1>";

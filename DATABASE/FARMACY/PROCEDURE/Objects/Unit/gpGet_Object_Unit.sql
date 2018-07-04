@@ -68,6 +68,7 @@ BEGIN
            , CAST ((CURRENT_DATE + INTERVAL '1 DAY') as TDateTime) AS CloseDate
 
            , False                 AS isRepriceAuto
+           , CAST (0 as Integer)   AS NormOfManDays
 ;
    ELSE
        RETURN QUERY 

@@ -369,10 +369,15 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_PriceMax() RETURNS Integer AS $BODY$
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_PriceMax', 'Макс. розн.цена' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_PriceMax');
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_ManualDiscount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_ManualDiscount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_ManualDiscount', 'Ручная скидка' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_ManualDiscount');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 29.06.18                                                                                     * zc_MovementFloat_ManualDiscount
  25.06.18         * zc_MovementFloat_TotalSummAddOth
                     zc_MovementFloat_TotalSummAddOthRecalc
  05.01.18         * zc_MovementFloat_TotalSummNalogRet

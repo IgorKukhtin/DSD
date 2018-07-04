@@ -3,7 +3,7 @@ inherited CheckForm: TCheckForm
   ClientHeight = 523
   ClientWidth = 817
   ExplicitWidth = 833
-  ExplicitHeight = 561
+  ExplicitHeight = 562
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -364,6 +364,18 @@ inherited CheckForm: TCheckForm
       TabOrder = 19
       Width = 147
     end
+    object edManualDiscount: TcxTextEdit
+      Left = 732
+      Top = 92
+      Properties.ReadOnly = True
+      TabOrder = 20
+      Width = 69
+    end
+    object cxLabel20: TcxLabel
+      Left = 732
+      Top = 77
+      Caption = #1056#1091#1095'. '#1089#1082#1080#1076#1082#1072
+    end
   end
   object edInvNumberOrder: TcxTextEdit [2]
     Left = 155
@@ -391,28 +403,28 @@ inherited CheckForm: TCheckForm
     Width = 212
   end
   object cxLabel8: TcxLabel [6]
-    Left = 477
+    Left = 464
     Top = 76
     Caption = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072
   end
   object edConfirmedKind: TcxTextEdit [7]
-    Left = 477
+    Left = 464
     Top = 92
     Hint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1057#1086#1089#1090#1086#1103#1085#1080#1077' VIP-'#1095#1077#1082#1072')'
     Properties.ReadOnly = True
     TabOrder = 11
-    Width = 160
+    Width = 136
   end
   object edConfirmedKindClient: TcxTextEdit [8]
-    Left = 641
+    Left = 603
     Top = 92
     Hint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1082#1083#1080#1077#1085#1090#1091')'
     Properties.ReadOnly = True
     TabOrder = 12
-    Width = 160
+    Width = 128
   end
   object cxLabel11: TcxLabel [9]
-    Left = 641
+    Left = 602
     Top = 76
     Hint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1082#1083#1080#1077#1085#1090#1091')'
     Caption = #1057#1090#1072#1090#1091#1089' '#1057#1052#1057
@@ -455,16 +467,16 @@ inherited CheckForm: TCheckForm
     Width = 116
   end
   object cxLabel16: TcxLabel [16]
-    Left = 477
+    Left = 464
     Top = 114
     Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072
   end
   object edMedicSP: TcxTextEdit [17]
-    Left = 477
+    Left = 464
     Top = 130
     Properties.ReadOnly = True
     TabOrder = 21
-    Width = 108
+    Width = 123
   end
   object cxLabel17: TcxLabel [18]
     Left = 590
@@ -472,11 +484,11 @@ inherited CheckForm: TCheckForm
     Caption = #8470' '#1072#1084#1073#1091#1083#1072#1090#1086#1088#1080#1080' '
   end
   object edAmbulance: TcxTextEdit [19]
-    Left = 590
+    Left = 589
     Top = 130
     Properties.ReadOnly = True
     TabOrder = 23
-    Width = 89
+    Width = 93
   end
   object cxLabel18: TcxLabel [20]
     Left = 684
@@ -1331,6 +1343,12 @@ inherited CheckForm: TCheckForm
         Value = Null
         Component = edInvNumber_PromoCode_Full
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ManualDiscount'
+        Value = Null
+        Component = edManualDiscount
         MultiSelectSeparator = ','
       end>
     Left = 112

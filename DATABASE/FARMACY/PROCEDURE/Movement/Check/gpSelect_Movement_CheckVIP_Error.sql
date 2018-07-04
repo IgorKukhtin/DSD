@@ -17,7 +17,8 @@ RETURNS TABLE (
   CashRegisterName TVarChar,
   CashMemberId Integer,
   CashMember TVarCHar,
-  CommentError TVarChar
+  CommentError TVarChar,
+  ManualDiscount Integer
  )
 AS
 $BODY$
@@ -62,10 +63,10 @@ BEGIN
             , Object_Unit.ValueData                      AS UnitName
             , Object_CashRegister.ValueData              AS CashRegisterName
             , MovementLinkObject_CheckMember.ObjectId    AS CashMemberId
-           , CASE WHEN COALESCE (Object_CashMember.ValueData, '') = '' THEN zc_Member_Site() ELSE Object_CashMember.ValueData END :: TVarChar AS CashMember
+            , CASE WHEN COALESCE (Object_CashMember.ValueData, '') = '' THEN zc_Member_Site() ELSE Object_CashMember.ValueData END :: TVarChar AS CashMember
 
             , tmpMov.CommentError
-
+            , MovementFloat_ManualDiscount.ValueData::Integer AS ManualDiscount
        FROM tmpMov
             LEFT JOIN Movement ON Movement.Id = tmpMov.Id 
 
@@ -93,8 +94,11 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckMember
                                          ON MovementLinkObject_CheckMember.MovementId = Movement.Id
                                         AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
-  	    LEFT JOIN Object AS Object_CashMember ON Object_CashMember.Id = MovementLinkObject_CheckMember.ObjectId
+    	    LEFT JOIN Object AS Object_CashMember ON Object_CashMember.Id = MovementLinkObject_CheckMember.ObjectId
   	    
+            LEFT JOIN MovementFloat AS MovementFloat_ManualDiscount
+                                    ON MovementFloat_ManualDiscount.MovementId =  Movement.Id
+                                   AND MovementFloat_ManualDiscount.DescId = zc_MovementFloat_ManualDiscount()
    
        ;
 
@@ -104,7 +108,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В.
+ 30.06.18                                                                                    *
  30.10.16         *
 */
 

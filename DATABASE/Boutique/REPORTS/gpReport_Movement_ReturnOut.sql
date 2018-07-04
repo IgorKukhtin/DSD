@@ -45,6 +45,7 @@ RETURNS TABLE (
                LineFabricaName TVarChar,
                LabelName TVarChar,
                GoodsSizeId Integer, GoodsSizeName TVarChar,
+               GoodsSizeName_real  TVarChar,
                CurrencyName  TVarChar,
 
                OperPrice           TFloat,
@@ -118,88 +119,156 @@ BEGIN
                                   AND (ObjectLink_Partner_Period.ChildObjectId = inPeriodId OR inPeriodId = 0) 
                               )
 
-     , tmpData  AS  (SELECT tmpMovementReturnOut.InvNumber
-                          , tmpMovementReturnOut.OperDate
-                          , tmpMovementReturnOut.DescName
-                          , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE CAST (NULL AS TVarChar)  END    AS DescName_Partion
-                          , CASE WHEN inisPartion = TRUE THEN Movement_Partion.Id           ELSE -1 END                          AS MovementId_Partion
-                          , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE CAST (NULL AS TVarChar)  END    AS InvNumber_Partion
-                          , CASE WHEN inisPartion = TRUE THEN Movement_Partion.OperDate     ELSE CAST (NULL AS TDateTime) END    AS OperDate_Partion
-
-                          , tmpMovementReturnOut.FromId
-                          , tmpMovementReturnOut.ToId
-                          , tmpMovementReturnOut.BrandId
-                          , tmpMovementReturnOut.FabrikaId
-                          , tmpMovementReturnOut.PeriodId
-                          , Object_PartionGoods.PeriodYear
-
-                          , MI_ReturnOut.ObjectId             AS GoodsId
-                          , CASE WHEN inisSize = TRUE THEN Object_PartionGoods.GoodsSizeId  ELSE 0 END  AS GoodsSizeId
-                          , Object_PartionGoods.MeasureId
-                          , Object_PartionGoods.GoodsGroupId
-                          , Object_PartionGoods.CompositionId
-                          , Object_PartionGoods.CompositionGroupId
-                          , Object_PartionGoods.GoodsInfoId
-                          , Object_PartionGoods.LineFabricaId 
-                          , Object_PartionGoods.LabelId
-                          , Object_PartionGoods.JuridicalId
-                          , Object_PartionGoods.CurrencyId
-
-                          , COALESCE (MIFloat_CountForPrice.ValueData, 1)      AS CountForPrice
-                          , SUM (COALESCE (MI_ReturnOut.Amount, 0))            AS Amount
-
-                          , SUM (zfCalc_SummIn (MI_ReturnOut.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData)) AS TotalSumm
-                          , SUM (zfCalc_SummPriceList (MI_ReturnOut.Amount, MIFloat_OperPriceList.ValueData))                       AS TotalSummPriceList
-                          , SUM (zfCalc_SummPriceList (MI_ReturnOut.Amount, Object_PartionGoods.OperPriceList))                     AS TotalSummPriceListLast
-
-                     FROM tmpMovementReturnOut
-                          INNER JOIN MovementItem AS MI_ReturnOut 
-                                                  ON MI_ReturnOut.MovementId = tmpMovementReturnOut.MovementId
-                                                 AND MI_ReturnOut.isErased   = False
-                          INNER JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MI_ReturnOut.PartionId
-                                                  --      AND (Object_PartionGoods.BrandId = inBrandId OR inBrandId = 0)
-                          LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id = Object_PartionGoods.MovementId
-                          LEFT JOIN MovementDesc AS MovementDesc_Partion ON MovementDesc_Partion.Id = Movement_Partion.DescId 
-
-                          LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                                      ON MIFloat_CountForPrice.MovementItemId = MI_ReturnOut.Id
-                                                     AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-                          LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
-                                                      ON MIFloat_OperPrice.MovementItemId = MI_ReturnOut.Id
-                                                     AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()
-                          LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
-                                                      ON MIFloat_OperPriceList.MovementItemId = MI_ReturnOut.Id
-                                                     AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
-                                                     
-                     WHERE (Object_PartionGoods.PeriodYear BETWEEN inStartYear AND inEndYear)
-                                                                           
-                     GROUP BY tmpMovementReturnOut.InvNumber
-                            , tmpMovementReturnOut.OperDate
-                            , tmpMovementReturnOut.DescName
-                            , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE CAST (NULL AS TVarChar)  END
-                            , CASE WHEN inisPartion = TRUE THEN Movement_Partion.Id           ELSE -1                       END  
-                            , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE CAST (NULL AS TVarChar)  END
-                            , CASE WHEN inisPartion = TRUE THEN Movement_Partion.OperDate     ELSE CAST (NULL AS TDateTime) END
-                            , tmpMovementReturnOut.FromId
-                            , tmpMovementReturnOut.ToId
-                            , MI_ReturnOut.ObjectId
-                            , CASE WHEN inisSize = TRUE THEN Object_PartionGoods.GoodsSizeId  ELSE 0 END 
-                            , Object_PartionGoods.MeasureId
-                            , Object_PartionGoods.GoodsGroupId
-                            , Object_PartionGoods.CompositionId
-                            , Object_PartionGoods.CompositionGroupId
-                            , Object_PartionGoods.GoodsInfoId
-                            , Object_PartionGoods.LineFabricaId 
-                            , Object_PartionGoods.LabelId
-                            , Object_PartionGoods.JuridicalId
-                            , COALESCE (MIFloat_CountForPrice.ValueData, 1)
-                            , tmpMovementReturnOut.BrandId
-                            , tmpMovementReturnOut.FabrikaId
-                            , tmpMovementReturnOut.PeriodId
-                            , Object_PartionGoods.CurrencyId
-                            , Object_PartionGoods.PeriodYear
-              )
+     , tmpData_All  AS (SELECT tmpMovementReturnOut.InvNumber
+                             , tmpMovementReturnOut.OperDate
+                             , tmpMovementReturnOut.DescName
+                             , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE CAST (NULL AS TVarChar)  END    AS DescName_Partion
+                             , CASE WHEN inisPartion = TRUE THEN Movement_Partion.Id           ELSE -1 END                          AS MovementId_Partion
+                             , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE CAST (NULL AS TVarChar)  END    AS InvNumber_Partion
+                             , CASE WHEN inisPartion = TRUE THEN Movement_Partion.OperDate     ELSE CAST (NULL AS TDateTime) END    AS OperDate_Partion
+   
+                             , tmpMovementReturnOut.FromId
+                             , tmpMovementReturnOut.ToId
+                             , tmpMovementReturnOut.BrandId
+                             , tmpMovementReturnOut.FabrikaId
+                             , tmpMovementReturnOut.PeriodId
+                             , Object_PartionGoods.PeriodYear
+   
+                             , MI_ReturnOut.ObjectId             AS GoodsId
+                             , Object_PartionGoods.GoodsSizeId
+                             , Object_PartionGoods.MeasureId
+                             , Object_PartionGoods.GoodsGroupId
+                             , Object_PartionGoods.CompositionId
+                             , Object_PartionGoods.CompositionGroupId
+                             , Object_PartionGoods.GoodsInfoId
+                             , Object_PartionGoods.LineFabricaId 
+                             , Object_PartionGoods.LabelId
+                             , Object_PartionGoods.JuridicalId
+                             , Object_PartionGoods.CurrencyId
+   
+                             , COALESCE (MIFloat_CountForPrice.ValueData, 1)      AS CountForPrice
+                             , SUM (COALESCE (MI_ReturnOut.Amount, 0))            AS Amount
+   
+                             , SUM (zfCalc_SummIn (MI_ReturnOut.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData)) AS TotalSumm
+                             , SUM (zfCalc_SummPriceList (MI_ReturnOut.Amount, MIFloat_OperPriceList.ValueData))                       AS TotalSummPriceList
+                             , SUM (zfCalc_SummPriceList (MI_ReturnOut.Amount, Object_PartionGoods.OperPriceList))                     AS TotalSummPriceListLast
+   
+                        FROM tmpMovementReturnOut
+                             INNER JOIN MovementItem AS MI_ReturnOut 
+                                                     ON MI_ReturnOut.MovementId = tmpMovementReturnOut.MovementId
+                                                    AND MI_ReturnOut.isErased   = False
+                             INNER JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MI_ReturnOut.PartionId
+                                                     --      AND (Object_PartionGoods.BrandId = inBrandId OR inBrandId = 0)
+                             LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id = Object_PartionGoods.MovementId
+                             LEFT JOIN MovementDesc AS MovementDesc_Partion ON MovementDesc_Partion.Id = Movement_Partion.DescId 
+   
+                             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                         ON MIFloat_CountForPrice.MovementItemId = MI_ReturnOut.Id
+                                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                             LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
+                                                         ON MIFloat_OperPrice.MovementItemId = MI_ReturnOut.Id
+                                                        AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()
+                             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
+                                                         ON MIFloat_OperPriceList.MovementItemId = MI_ReturnOut.Id
+                                                        AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
+                                                        
+                        WHERE (Object_PartionGoods.PeriodYear BETWEEN inStartYear AND inEndYear)
+                                                                              
+                        GROUP BY tmpMovementReturnOut.InvNumber
+                               , tmpMovementReturnOut.OperDate
+                               , tmpMovementReturnOut.DescName
+                               , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE CAST (NULL AS TVarChar)  END
+                               , CASE WHEN inisPartion = TRUE THEN Movement_Partion.Id           ELSE -1                       END  
+                               , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE CAST (NULL AS TVarChar)  END
+                               , CASE WHEN inisPartion = TRUE THEN Movement_Partion.OperDate     ELSE CAST (NULL AS TDateTime) END
+                               , tmpMovementReturnOut.FromId
+                               , tmpMovementReturnOut.ToId
+                               , MI_ReturnOut.ObjectId
+                               , Object_PartionGoods.GoodsSizeId
+                               , Object_PartionGoods.MeasureId
+                               , Object_PartionGoods.GoodsGroupId
+                               , Object_PartionGoods.CompositionId
+                               , Object_PartionGoods.CompositionGroupId
+                               , Object_PartionGoods.GoodsInfoId
+                               , Object_PartionGoods.LineFabricaId 
+                               , Object_PartionGoods.LabelId
+                               , Object_PartionGoods.JuridicalId
+                               , COALESCE (MIFloat_CountForPrice.ValueData, 1)
+                               , tmpMovementReturnOut.BrandId
+                               , tmpMovementReturnOut.FabrikaId
+                               , tmpMovementReturnOut.PeriodId
+                               , Object_PartionGoods.CurrencyId
+                               , Object_PartionGoods.PeriodYear
+                 )
               
+     , tmpData  AS (SELECT tmpData_All.InvNumber
+                         , tmpData_All.OperDate
+                         , tmpData_All.DescName
+                         , tmpData_All.DescName_Partion
+                         , tmpData_All.MovementId_Partion
+                         , tmpData_All.InvNumber_Partion
+                         , tmpData_All.OperDate_Partion
+
+                         , tmpData_All.FromId
+                         , tmpData_All.ToId
+                         , tmpData_All.BrandId
+                         , tmpData_All.FabrikaId
+                         , tmpData_All.PeriodId
+                         , tmpData_All.PeriodYear
+
+                         , tmpData_All.GoodsId
+                         , CASE WHEN inIsSize  = TRUE THEN tmpData_All.GoodsSizeId ELSE 0 END     AS GoodsSizeId
+                         , CASE WHEN inIsSize  = TRUE THEN Object_GoodsSize.ValueData ELSE '' END AS GoodsSizeName_real
+                         , STRING_AGG (Object_GoodsSize.ValueData, ', ' ORDER BY CASE WHEN LENGTH (Object_GoodsSize.ValueData) = 1 THEN '0' ELSE '' END || Object_GoodsSize.ValueData)  AS GoodsSizeName
+
+                         , tmpData_All.MeasureId
+                         , tmpData_All.GoodsGroupId
+                         , tmpData_All.CompositionId
+                         , tmpData_All.CompositionGroupId
+                         , tmpData_All.GoodsInfoId
+                         , tmpData_All.LineFabricaId 
+                         , tmpData_All.LabelId
+                         , tmpData_All.JuridicalId
+                         , tmpData_All.CurrencyId
+                         , tmpData_All.CountForPrice
+
+                         , SUM (tmpData_All.Amount)                 AS Amount
+                         , SUM (tmpData_All.TotalSumm)              AS TotalSumm
+                         , SUM (tmpData_All.TotalSummPriceList)     AS TotalSummPriceList
+                         , SUM (tmpData_All.TotalSummPriceListLast) AS TotalSummPriceListLast
+
+                    FROM tmpData_All
+                         LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = tmpData_All.GoodsSizeId
+                    GROUP BY tmpData_All.InvNumber
+                           , tmpData_All.OperDate
+                           , tmpData_All.DescName
+                           , tmpData_All.DescName_Partion
+                           , tmpData_All.MovementId_Partion
+                           , tmpData_All.InvNumber_Partion
+                           , tmpData_All.OperDate_Partion
+  
+                           , tmpData_All.FromId
+                           , tmpData_All.ToId
+                           , tmpData_All.BrandId
+                           , tmpData_All.FabrikaId
+                           , tmpData_All.PeriodId
+                           , tmpData_All.PeriodYear
+  
+                           , tmpData_All.GoodsId
+                           , CASE WHEN inIsSize  = TRUE THEN tmpData_All.GoodsSizeId ELSE 0 END
+                           , CASE WHEN inIsSize  = TRUE THEN Object_GoodsSize.ValueData ELSE '' END
+  
+                           , tmpData_All.MeasureId
+                           , tmpData_All.GoodsGroupId
+                           , tmpData_All.CompositionId
+                           , tmpData_All.CompositionGroupId
+                           , tmpData_All.GoodsInfoId
+                           , tmpData_All.LineFabricaId 
+                           , tmpData_All.LabelId
+                           , tmpData_All.JuridicalId
+                           , tmpData_All.CurrencyId
+                           , tmpData_All.CountForPrice
+                     )
 
         SELECT
              tmpData.InvNumber
@@ -229,8 +298,9 @@ BEGIN
            , Object_GoodsInfo.ValueData     AS GoodsInfoName
            , Object_LineFabrica.ValueData   AS LineFabricaName
            , Object_Label.ValueData         AS LabelName
-           , Object_GoodsSize.Id            AS GoodsSizeId
-           , Object_GoodsSize.ValueData     AS GoodsSizeName
+           , tmpData.GoodsSizeId            AS GoodsSizeId
+           , tmpData.GoodsSizeName       ::TVarChar  AS GoodsSizeName
+           , tmpData.GoodsSizeName_real  ::TVarChar  AS GoodsSizeName_real
            , Object_Currency.ValueData      AS CurrencyName
            
            , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSumm  / tmpData.Amount ELSE 0 END          :: TFloat AS OperPrice
@@ -254,7 +324,7 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsInfo        ON Object_GoodsInfo.Id        = tmpData.GoodsInfoId
             LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = tmpData.LineFabricaId 
             LEFT JOIN Object AS Object_Label            ON Object_Label.Id            = tmpData.LabelId
-            LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = tmpData.GoodsSizeId
+            --LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = tmpData.GoodsSizeId
             LEFT JOIN Object AS Object_Juridical        ON Object_Juridical.Id        = tmpData.JuridicalId
             LEFT JOIN Object AS Object_Currency         ON Object_Currency.Id         = tmpData.CurrencyId
 

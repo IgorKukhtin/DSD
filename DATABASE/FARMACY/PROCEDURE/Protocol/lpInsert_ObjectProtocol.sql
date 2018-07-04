@@ -16,9 +16,12 @@ $BODY$
    DECLARE ProtocolXML TBlob;
 BEGIN
 
--- !!!ВРЕМЕННО-выкл.
- RETURN;
-
+   -- -- !!!ВРЕМЕННО-выкл. для всех кроме спр. физ.лиц
+   IF (SELECT Object.DescId FROM Object WHERE Object.Id = inObjectId) <> zc_Object_Member()
+   THEN
+       -- !!!ВРЕМЕННО-выкл.
+       RETURN;
+   END IF;
 
      -- Подготавливаем XML для "стандартного" протокола
        WITH 

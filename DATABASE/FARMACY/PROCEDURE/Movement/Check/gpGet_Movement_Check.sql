@@ -28,6 +28,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              
              , InvNumber_PromoCode_Full TVarChar
              , GUID_PromoCode TVarChar
+             , ManualDiscount Integer
 )
 AS
 $BODY$
@@ -73,6 +74,7 @@ BEGIN
 
            , ('№ ' || Movement_PromoCode.InvNumber || ' от ' || Movement_PromoCode.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_PromoCode_Full
            , MIString_GUID.ValueData                 ::TVarChar AS GUID_PromoCode
+           , Movement_Check.ManualDiscount                      AS ManualDiscount
            
         FROM Movement_Check_View AS Movement_Check
              LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
@@ -102,7 +104,8 @@ ALTER FUNCTION gpGet_Movement_Check (Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 29.06.18                                                                      * add ManualDiscount
  14.12.17         * add PromoCode
  26.04.17         * add PartnerMedicalId
  07.04.17         *

@@ -102,6 +102,16 @@ type
     actPrintSticker_notPrice: TdsdPrintAction;
     bbPrintSticker_notPrice: TdxBarButton;
     isDeferred: TcxGridDBColumn;
+    spConduct_Movement_Income: TdsdStoredProc;
+    spUnConduct_Movement_Income: TdsdStoredProc;
+    actConductMovement: TMultiAction;
+    actUnConductMovement: TMultiAction;
+    dxBarButton3: TdxBarButton;
+    dxBarButton4: TdxBarButton;
+    dxBarStatic1: TdxBarStatic;
+    actspConduct_Movement: TdsdExecStoredProc;
+    actspUnConduct_Movement: TdsdExecStoredProc;
+    Color_AmountManual: TcxGridDBColumn;
   private
     { Private declarations }
   public

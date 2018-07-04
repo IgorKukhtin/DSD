@@ -4,9 +4,8 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
   ClientWidth = 1065
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -275
   ExplicitWidth = 1081
-  ExplicitHeight = 523
+  ExplicitHeight = 526
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -723,6 +722,12 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object GoodsSizeName_real: TcxGridDBColumn
+            DataBinding.FieldName = 'GoodsSizeName_real'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 30
+          end
         end
       end
     end
@@ -1158,7 +1163,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
           Name = 'GoodsSizeName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsSizeName'
+          ComponentItem = 'GoodsSizeName_real'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','

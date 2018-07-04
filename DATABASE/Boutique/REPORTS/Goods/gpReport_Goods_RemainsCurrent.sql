@@ -44,6 +44,7 @@ RETURNS TABLE (PartionId            Integer
              , LabelName            TVarChar
              , GoodsSizeId          Integer
              , GoodsSizeName        TVarChar
+             , GoodsSizeName_real   TVarChar
              , CurrencyName         TVarChar
 
              , CurrencyValue        TFloat -- Курс    !!!НА!!! CURRENT_DATE
@@ -308,7 +309,8 @@ BEGIN
                           , tmpData_All.InvNumber_Partion
                           , tmpData_All.OperDate_Partion
                           , tmpData_All.PartnerId
-                          , CASE WHEN inIsSize = TRUE THEN Object_GoodsSize.Id ELSE 0 END  AS GoodsSizeId
+                          , CASE WHEN inIsSize = TRUE THEN Object_GoodsSize.Id ELSE 0 END          AS GoodsSizeId
+                          , CASE WHEN inIsSize  = TRUE THEN Object_GoodsSize.ValueData ELSE '' END AS GoodsSizeName_real
                           , STRING_AGG (Object_GoodsSize.ValueData, ', ' ORDER BY CASE WHEN LENGTH (Object_GoodsSize.ValueData) = 1 THEN '0' ELSE '' END || Object_GoodsSize.ValueData) AS GoodsSizeName
 
                           , tmpData_All.BrandId
@@ -353,6 +355,7 @@ BEGIN
                           , tmpData_All.OperDate_Partion
                           , tmpData_All.PartnerId
                           , CASE WHEN inIsSize = TRUE THEN Object_GoodsSize.Id ELSE 0 END
+                          , CASE WHEN inIsSize  = TRUE THEN Object_GoodsSize.ValueData ELSE '' END
                           , tmpData_All.BrandId
                           , tmpData_All.PeriodId
                           , tmpData_All.PeriodYear
@@ -465,7 +468,8 @@ BEGIN
            , Object_LineFabrica.ValueData   AS LineFabricaName
            , Object_Label.ValueData         AS LabelName
            , tmpData.GoodsSizeId            AS GoodsSizeId
-           , tmpData.GoodsSizeName ::TVarChar AS GoodsSizeName
+           , tmpData.GoodsSizeName      ::TVarChar AS GoodsSizeName
+           , tmpData.GoodsSizeName_real ::TVarChar AS GoodsSizeName_real
            , CASE WHEN vbIsOperPrice = TRUE THEN Object_Currency.ValueData ELSE '' END :: TVarChar AS CurrencyName
 
            , tmpCurrency.Amount   ::TFloat  AS CurrencyValue
@@ -554,6 +558,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 03.07.18         *
  15.03.18         * add RemainsAll
  19.02.18         *
  22.06.17         *

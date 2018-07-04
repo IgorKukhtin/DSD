@@ -304,10 +304,25 @@ BEGIN
                                               AND MovementLinkMovement_TransportGoods.DescId = zc_MovementLinkMovement_TransportGoods()
                 LEFT JOIN Movement AS Movement_TransportGoods ON Movement_TransportGoods.Id = MovementLinkMovement_TransportGoods.MovementChildId
 
+
+                -- реестр
+                LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
+                                        ON MovementFloat_MovementItemId.MovementId = Movement.Id
+                                       AND MovementFloat_MovementItemId.DescId     = zc_MovementFloat_MovementItemId()
+                LEFT JOIN MovementItem AS MI_reestr 
+                                       ON MI_reestr.Id       = MovementFloat_MovementItemId.ValueData :: Integer
+                                      AND MI_reestr.isErased = FALSE
+                -- П/л (реестр)
+                LEFT JOIN MovementLinkMovement AS MLM_Transport_reestr
+                                               ON MLM_Transport_reestr.MovementId = MI_reestr.MovementId
+                                              AND MLM_Transport_reestr.DescId     = zc_MovementLinkMovement_Transport()
+                --LEFT JOIN Movement AS Movement_Transport_reestr ON Movement_Transport_reestr.Id = MLM_Transport_reestr.MovementChildId
+       
                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
                                                ON MovementLinkMovement_Transport.MovementId = Movement.Id
                                               AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
-                LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
+                                              
+                LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = COALESCE (MLM_Transport_reestr.MovementChildId, MovementLinkMovement_Transport.MovementChildId)
 
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
                                              ON MovementLinkObject_Car.MovementId = Movement_Transport.Id
@@ -371,6 +386,7 @@ ALTER FUNCTION gpGet_Movement_Sale (Integer, TDateTime, TFloat, TVarChar) OWNER 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.07.18         *
  03.10.16         * add Movement_Production
  28.06.16         * add ReestrKind
  21.12.15         * add Print
