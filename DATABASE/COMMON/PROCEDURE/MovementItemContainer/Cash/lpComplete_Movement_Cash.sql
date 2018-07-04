@@ -256,7 +256,9 @@ BEGIN
                END AS ServiceDateId
 
              , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
-             , CASE WHEN ObjectLink_Partner_Unit.ChildObjectId > 0
+             , CASE WHEN -- если Контрагент - "Павильоны" + это Бизнес у кассы - "Павильоны"
+                     AND ObjectLink_Partner_Unit.ChildObjectId > 0
+                     AND ObjectLink_Cash_Business.ChildObjectId > 0
                          THEN zc_Enum_PaidKind_SecondForm() -- !!!меняется на НАЛ!!!
                     ELSE _tmpItem.PaidKindId -- !!!НЕ Всегда НАЛ!!!
                END AS PaidKindId
@@ -329,6 +331,8 @@ BEGIN
                                                            AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
              LEFT JOIN ObjectLink AS ObjectLink_Cash_Branch ON ObjectLink_Cash_Branch.ObjectId = _tmpItem.ObjectId
                                                            AND ObjectLink_Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
+             LEFT JOIN ObjectLink AS ObjectLink_Cash_Business ON ObjectLink_Cash_Business.ObjectId = _tmpItem.ObjectId
+                                                             AND ObjectLink_Cash_Business.DescId   = zc_ObjectLink_Cash_Business()
              LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDoc
                                      ON ObjectBoolean_PartionDoc.ObjectId = ObjectLink_Cash_Branch.ChildObjectId
                                     AND ObjectBoolean_PartionDoc.DescId = zc_ObjectBoolean_Branch_PartionDoc()

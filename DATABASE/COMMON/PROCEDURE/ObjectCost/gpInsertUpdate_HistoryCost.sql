@@ -665,7 +665,7 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
      WHILE vbItearation < inItearationCount AND vbCountDiff > 0
      LOOP
          -- !!!ÂÐÅÌÅÍÍÎ!!!
-         DELETE FROM _tmpMaster WHERE ABS (_tmpMaster.calcSumm) > 10123123123;
+         -- DELETE FROM _tmpMaster WHERE ABS (_tmpMaster.calcSumm) > 10123123123;
 
          -- ðàñ÷åò ñ/ñ
          UPDATE _tmpMaster SET CalcSumm          = _tmpSumm.CalcSumm
@@ -1155,5 +1155,4 @@ SELECT * FROM HistoryCost WHERE ('01.03.2017' BETWEEN StartDate AND EndDate) and
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2016', inEndDate:= '31.01.2016', inBranchId:= 8379, inItearationCount:= 1000, inInsert:= 12345, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
 
 -- òåñò
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.04.2018', inEndDate:= '30.04.2018', inBranchId:= 0, inItearationCount:= 100, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  ORDER BY ABS (Price) DESC -- WHERE ContainerId = 141708 -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.11.2017', inEndDate:= '30.11.2017', inBranchId:= 0, inItearationCount:= 10, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') ORDER BY ABS (Price) DESC 
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.06.2018', inEndDate:= '28.06.2018', inBranchId:= 0, inItearationCount:= 200, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  ORDER BY ABS (Price) DESC -- WHERE ContainerId = 141708 -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext

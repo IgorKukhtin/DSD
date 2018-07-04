@@ -23,10 +23,10 @@ BEGIN
           , Object_ReplServer.ObjectCode    AS Code
           , Object_ReplServer.ValueData     AS Name
           
-          , COALESCE (ObjectDate_StartTo.ValueData, CURRENT_DATE)    ::TDateTime AS StartTo
-          , COALESCE (ObjectDate_StartFrom.ValueData, CURRENT_DATE ) ::TDateTime AS StartFrom
-          , COALESCE (ObjectDate_EndTo.ValueData, CURRENT_DATE)      ::TDateTime AS EndTo
-          , COALESCE (ObjectDate_EndFrom.ValueData, CURRENT_DATE )   ::TDateTime AS EndFrom
+          , COALESCE (ObjectDate_StartTo.ValueData, NULL)    ::TDateTime AS StartTo
+          , COALESCE (ObjectDate_StartFrom.ValueData, NULL ) ::TDateTime AS StartFrom
+          , COALESCE (ObjectDate_EndTo.ValueData, NULL)      ::TDateTime AS EndTo
+          , COALESCE (ObjectDate_EndFrom.ValueData, NULL )   ::TDateTime AS EndFrom
           
           , ObjectString_Host.ValueData           AS Host
           , ObjectString_User.ValueData           AS UserName                                                                                                       

@@ -26,28 +26,18 @@ BEGIN
      -- Результат
      RETURN QUERY
         SELECT
-             123                      :: Integer  AS Id
-           , 1                        :: Integer  AS Code
-           , 'Name - 1'               :: TVarChar AS Name
-           , 'integer-srv.alan.dp.ua' :: TVarChar AS HostName
-           , 'admin'                  :: TVarChar AS Users
-           , 'vas6ok'                 :: TVarChar AS Passwords
-           , '5432'                   :: TVarChar AS Port
-           , 'project'                :: TVarChar AS DataBases
-           , (CURRENT_TIMESTAMP - INTERVAL '720 MIN') :: TDateTime AS Start_toChild
-           , (CURRENT_TIMESTAMP - INTERVAL '720 MIN') :: TDateTime AS Start_fromChild
-       UNION ALL
-        SELECT
-             456                      :: Integer  AS Id
-           , 2                        :: Integer  AS Code
-           , 'Name - 2'               :: TVarChar AS Name
-           , 'project-vds.vds.colocall.com' :: TVarChar AS HostName
-           , 'admin'                  :: TVarChar AS Users
-           , 'vas6ok'                 :: TVarChar AS Passwords
-           , '5432'                   :: TVarChar AS Port
-           , 'project'                :: TVarChar AS DataBases
-           , (CURRENT_TIMESTAMP - INTERVAL '720 MIN') :: TDateTime AS Start_toChild
-           , (CURRENT_TIMESTAMP - INTERVAL '720 MIN') :: TDateTime AS Start_fromChild
+             gpSelect.Id
+           , gpSelect.Code
+           , gpSelect.Name
+           , gpSelect.Host      AS HostName
+           , gpSelect.UserName  AS Users
+           , gpSelect.Password  AS Passwords
+           , gpSelect.Port
+           , gpSelect.DataBaseName AS DataBases
+           , COALESCE (gpSelect.StartTo,   CURRENT_TIMESTAMP - INTERVAL '1 DAY') :: TDateTime AS Start_toChild
+           , COALESCE (gpSelect.StartFrom, CURRENT_TIMESTAMP - INTERVAL '1 DAY') :: TDateTime AS Start_fromChild
+        FROM gpSelect_Object_ReplServer (inSession) AS gpSelect
+        ORDER BY 2
       ;
 
 

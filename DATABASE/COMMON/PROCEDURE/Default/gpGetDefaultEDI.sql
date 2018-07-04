@@ -14,7 +14,8 @@ BEGIN
    IF 1=1 -- inSession <> zfCalc_UserAdmin()
    THEN
    RETURN QUERY
-    SELECT  'ftpex.edi.su'::TVarChar AS Host
+    -- SELECT  'ftpex.edi.su'::TVarChar AS Host
+    SELECT  'ftp.edi-n.com'::TVarChar AS Host
           , 'uatovalanftp'::TVarChar   AS UserName
           , 'ftp349067'::TVarChar      AS Password;
    ELSE

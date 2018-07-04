@@ -60,6 +60,9 @@ BEGIN
          AND MovementItemDate.DescId = zc_MIDate_PartionGoods();
    END IF;
 
+   -- Открыли партию
+   PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionClose(), ioId, FALSE);
+
    -- сохранили свойство <Партия товара>
    PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate);
    -- сохранили свойство <Партия товара>

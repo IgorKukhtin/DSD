@@ -47,8 +47,7 @@ type
     StopButton: TButton;
     CloseButton: TButton;
     toSqlQuery: TZQuery;
-    spSelect_ObjectGUID: TdsdStoredProc;
-    toStoredProc: TdsdStoredProc;
+    spSelect_ReplObject: TdsdStoredProc;
     toZConnection: TZConnection;
     toSqlQuery_two: TZQuery;
     DatabaseSybase: TDatabase;
@@ -69,33 +68,33 @@ type
     ReplServerCDS: TClientDataSet;
     LabelObjectDescId: TLabel;
     PanelInfoObject: TPanel;
-    EditRecordObject: TcxCurrencyEdit;
+    EditCountObject: TcxCurrencyEdit;
     PanelGridObjectString: TPanel;
     DBGridObjectString: TDBGrid;
     PanelInfoObjectString: TPanel;
-    EditRecordObjectString: TcxCurrencyEdit;
+    EditCountStringObject: TcxCurrencyEdit;
     LabelObjectString: TLabel;
     LabelObject: TLabel;
     PanelGridObjectFloat: TPanel;
     DBGridObjectFloat: TDBGrid;
     PanelInfoObjectFloat: TPanel;
     LabelObjectFloat: TLabel;
-    EditRecordObjectFloat: TcxCurrencyEdit;
+    EditCountFloatObject: TcxCurrencyEdit;
     PanelGridObjectDate: TPanel;
     DBGridObjectDate: TDBGrid;
     PanelInfoObjectDate: TPanel;
     LabelObjectDate: TLabel;
-    EditRecordObjectDate: TcxCurrencyEdit;
+    EditCountDateObject: TcxCurrencyEdit;
     PanelGridObjectBoolean: TPanel;
     DBGridObjectBoolean: TDBGrid;
     PanelInfoObjectBoolean: TPanel;
     LabelObjectBoolean: TLabel;
-    EditRecordObjectBoolean: TcxCurrencyEdit;
+    EditCountBooleanObject: TcxCurrencyEdit;
     PanelGridObjectLink: TPanel;
     DBGridObjectLink: TDBGrid;
     PanelInfoObjectLink: TPanel;
     LabelObjectLink: TLabel;
-    EditRecordObjectLink: TcxCurrencyEdit;
+    EditCountLinkObject: TcxCurrencyEdit;
     ObjectStringCDS: TClientDataSet;
     ObjectStringDS: TDataSource;
     ObjectFloatCDS: TClientDataSet;
@@ -107,6 +106,12 @@ type
     ObjectLinkDS: TDataSource;
     ObjectLinkCDS: TClientDataSet;
     EditObjectDescId: TEdit;
+    spInsert_ReplObject: TdsdStoredProc;
+    EditMinIdObject: TcxCurrencyEdit;
+    EditMaxIdObject: TcxCurrencyEdit;
+    EditCountIterationObject: TEdit;
+    cbGUID: TCheckBox;
+    cbOnlyOpen: TCheckBox;
 
     procedure OKGuideButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -119,19 +124,21 @@ type
 
     procedure EADO_EngineErrorMsg(E:EADOError);
     procedure EDB_EngineErrorMsg(E:EDBEngineError);
-    function myExecToStoredProc_ZConnection:Boolean;
-    function myExecToStoredProc:Boolean;
 
     procedure myShowSql(mySql:TStrings);
     procedure MyDelay(mySec:Integer);
 
     function myReplaceStr(const S, Srch, Replace: string): string;
-    function FormatToVarCharServer_notNULL(_Value:string):string;
-    function FormatToVarCharServer_isSpace(_Value:string):string;
-    function FormatToDateServer_notNULL(_Date:TDateTime):string;
-    function FormatToDatePostgres_notNULL(_Date:TDateTime):string;
-    function FormatToDateTimeServer(_Date:TDateTime):string;
-    function FormatToDateTimeServerNOSec(_Date:TDateTime):string;
+    function ConvertToVarChar_notNULL(_Value:string):string;
+
+    function ConvertToVarChar(_Value:string):string;
+    function ConvertToBoolean(_Value, isNull : Boolean) : string;
+    function ConvertToDate(_Value : TDateTime; isNull : Boolean) : string;
+    function ConvertToInt(_Value:Integer):string;
+
+    function FormatToDate(_Date:TDateTime):string;
+    function FormatToDateTime(_Date:TDateTime):string;
+    function FormatToDateTime_folder(_Date:TDateTime):string;
 
     function fOpenSqFromQuery (mySql:String):Boolean;
     function fExecSqFromQuery (mySql:String):Boolean;
@@ -150,8 +157,13 @@ type
     procedure myEnabledCB (cb:TCheckBox);
     procedure myDisabledCB (cb:TCheckBox);
 
-    procedure pOpen_ObjectGUID (NumConnect : Integer);
     function gpSelect_ReplServer_load: TArrayReplServer;
+    procedure pInsert_ReplObject (NumConnect : Integer);
+    procedure pSendAllTo_ReplObject ;
+    procedure pSendPackTo_ReplObject(Num_main, CountPack : Integer);
+    procedure pOpen_ReplObject (StartId, EndId : LongInt);
+
+    procedure AddToLog(S, myFile, myFolder: string; isError : Boolean);
 
   public
   end;
@@ -163,7 +175,7 @@ var
   ArrayReplServer : TArrayReplServer;
 
 implementation
-uses Authentication, CommonData, Storage, SysUtils, Dialogs, Graphics, UtilConst;
+uses Authentication, CommonData, Storage, SysUtils, Dialogs, Graphics, UtilConst, StrUtils;
 {$R *.dfm}
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function GenerateGUID: String;
@@ -171,7 +183,7 @@ var
   G: TGUID;
 begin
   CreateGUID(G);
-  Result := GUIDToString(G);
+  Result := MainForm.FormatToDateTime_folder(now) + ' - ' + GUIDToString(G);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.gpSelect_ReplServer_load: TArrayReplServer;
@@ -367,11 +379,30 @@ begin
      ShowMessage('Error.OpenSql'+#10+#13+Str);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-function TMainForm.FormatToVarCharServer_notNULL(_Value:string):string;
+function TMainForm.ConvertToVarChar_notNULL(_Value:string):string;
 begin if trim(_Value)='' then Result:=chr(39)+''+chr(39) else Result:=chr(39)+trim(_Value)+chr(39);end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-function TMainForm.FormatToVarCharServer_isSpace(_Value:string):string;
+function TMainForm.ConvertToVarChar(_Value:string):string;
 begin Result:=chr(39)+(_Value)+chr(39);end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.ConvertToBoolean(_Value, isNull:Boolean):string;
+begin
+     if isNull = TRUE then Result:='NULL'
+     else
+     if _Value = TRUE then Result:='TRUE' else Result:='FALSE';
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.ConvertToDate(_Value : TDateTime; isNull : Boolean) : string;
+begin
+     if isNull = TRUE then Result:='NULL'
+     else
+         Result:= FormatToDateTime(_Value);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.ConvertToInt(_Value:Integer):string;
+begin
+     if _Value = 0 THEN Result:='null' ELSE Result:=IntToStr(_Value);
+end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.myReplaceStr(const S, Srch, Replace: string): string;
 var
@@ -390,74 +421,57 @@ begin
   until I <= 0;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-function TMainForm.FormatToDateServer_notNULL(_Date:TDateTime):string;
+function TMainForm.FormatToDate (_Date:TDateTime):string;
 var
   Year, Month, Day: Word;
+  myMonth, myDay : String;
 begin
      DecodeDate(_Date,Year,Month,Day);
-     result:=chr(39)+IntToStr(Year)+'-'+IntToStr(Month)+'-'+IntToStr(Day)+chr(39);
+     //
+     if Month   < 10 then myMonth := '0' else myMonth := '';
+     if Day     < 10 then myDay   := '0' else myDay   := '';
+     //
+     result:=chr(39) + myDay + IntToStr(Day) + '.' + myMonth + IntToStr(Month) + '.' + IntToStr(Year) + chr(39);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-function TMainForm.FormatToDatePostgres_notNULL(_Date:TDateTime):string;
-var
-  Year, Month, Day: Word;
-begin
-     DecodeDate(_Date,Year,Month,Day);
-     result:=chr(39)+IntToStr(Day)+'.'+IntToStr(Month)+'.'+IntToStr(Year)+chr(39);
-end;
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-function TMainForm.FormatToDateTimeServer(_Date:TDateTime):string;
+function TMainForm.FormatToDateTime (_Date:TDateTime):string;
 var
   Year, Month, Day: Word;
   AHour, AMinute, ASecond, MSec: Word;
+  myMonth, myDay, myHour, myMinute, mySecond : String;
 begin
      DecodeDate(_Date,Year,Month,Day);
      DecodeTime(_Date,AHour, AMinute, ASecond, MSec);
-//     result:=chr(39)+GetStringValue('select zf_FormatToDateServer('+IntToStr(Year)+','+IntToStr(Month)+','+IntToStr(Day)+')as RetV')+chr(39);
-     if Year <= 1900
-     then result:='null'
-     else result:=chr(39)+IntToStr(Year)+'-'+IntToStr(Month)+'-'+IntToStr(Day)+' '+IntToStr(AHour)+':'+IntToStr(AMinute)+':'+IntToStr(ASecond)+chr(39);
+     //
+     if Month   < 10 then myMonth := '0' else myMonth := '';
+     if Day     < 10 then myDay   := '0' else myDay   := '';
+     if AHour   < 10 then myHour  := '0' else myHour  := '';
+     if AMinute < 10 then myMinute:= '0' else myMinute:= '';
+     if ASecond < 10 then mySecond:= '0' else mySecond:= '';
+     //
+     result:=chr(39) + myDay  + IntToStr(Day)   + '.' + myMonth  + IntToStr(Month)   + '.' + IntToStr(Year)
+               + ' ' + myHour + IntToStr(AHour) + ':' + myMinute + IntToStr(AMinute) + ':' + mySecond + IntToStr(ASecond)
+               + chr(39);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-function TMainForm.FormatToDateTimeServerNOSec(_Date:TDateTime):string;
+function TMainForm.FormatToDateTime_folder(_Date:TDateTime):string;
 var
   Year, Month, Day: Word;
   AHour, AMinute, ASecond, MSec: Word;
+  myMonth, myDay, myHour, myMinute, mySecond : String;
 begin
      DecodeDate(_Date,Year,Month,Day);
      DecodeTime(_Date,AHour, AMinute, ASecond, MSec);
-//     result:=chr(39)+GetStringValue('select zf_FormatToDateServer('+IntToStr(Year)+','+IntToStr(Month)+','+IntToStr(Day)+')as RetV')+chr(39);
-     if Year <= 1900
-     then result:='null'
-     else result:=chr(39)+IntToStr(Year)+'-'+IntToStr(Month)+'-'+IntToStr(Day)+' '+IntToStr(AHour)+':'+IntToStr(AMinute)+':0'+chr(39);
-end;
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-function TMainForm.myExecToStoredProc_ZConnection:Boolean;
-begin
-    result:=false;
-    ShowMessage ('ERROR - toStoredProc_ZConnection on myExecToStoredProc_ZConnection')
-    {toStoredProc_ZConnection.Prepared:=true;
-     try toStoredProc_ZConnection.ExecProc;
-     except
-           //on E:EDBEngineError do begin EDB_EngineErrorMsg(E);exit;end;
-           on E:EADOError do begin EADO_EngineErrorMsg(E);exit;end;
-
-     end;
-     result:=true;}
-end;
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-function TMainForm.myExecToStoredProc:Boolean;
-begin
-    result:=false;
-     // toStoredProc.Prepared:=true;
-     //try
-     toStoredProc.Execute;
-     //except
-           //on E:EDBEngineError do begin EDB_EngineErrorMsg(E);exit;end;
-           //on E:EADOError do begin EADO_EngineErrorMsg(E);exit;end;
-           //exit;
-     //end;
-     result:=true;
+     //
+     if Month   < 10 then myMonth := '0' else myMonth := '';
+     if Day     < 10 then myDay   := '0' else myDay   := '';
+     if AHour   < 10 then myHour  := '0' else myHour  := '';
+     if AMinute < 10 then myMinute:= '0' else myMinute:= '';
+     if ASecond < 10 then mySecond:= '0' else mySecond:= '';
+     //
+     result:={chr(39) +} IntToStr(Year)  + '-' + myMonth + IntToStr(Month) + '-' + myDay + IntToStr(Day)
+                 + ' ' + myHour + IntToStr(AHour) + ':' + myMinute + IntToStr(AMinute) + ':' + mySecond + IntToStr(ASecond)
+                {+ chr(39)};
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.EADO_EngineErrorMsg(E:EADOError);
@@ -536,26 +550,28 @@ begin
      end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pOpen_ObjectGUID (NumConnect : Integer);
+procedure TMainForm.pInsert_ReplObject (NumConnect : Integer);
 begin
-     with spSelect_ObjectGUID do
+     with spInsert_ReplObject do
      begin
        //try
          //
+         ParamByName('inSessionGUID').Value:= GenerateGUID;
          ParamByName('inStartDate').Value  := ArrayReplServer[NumConnect-1].Start_toChild;
-         ParamByName('inDataBaseId').Value := ArrayReplServer[NumConnect-1].Id;
          ParamByName('inDescCode').Value   := EditObjectDescId.Text;
          ParamByName('inIsProtocol').Value := cbProtocol.Checked;
-         ParamByName('inIsGUID_null').Value:= false;
          //
          Execute;
          //
-         EditRecordObject.Text:= IntToStr (ObjectCDS.RecordCount);
-         EditRecordObjectString.Text:= IntToStr (ObjectStringCDS.RecordCount);
-         EditRecordObjectFloat.Text:= IntToStr (ObjectFloatCDS.RecordCount);
-         EditRecordObjectDate.Text:= IntToStr (ObjectDateCDS.RecordCount);
-         EditRecordObjectBoolean.Text:= IntToStr (ObjectBooleanCDS.RecordCount);
-         EditRecordObjectLink.Text:= IntToStr (ObjectLinkCDS.RecordCount);
+         EditCountObject.Text          := IntToStr (ParamByName('outCount').Value);
+         EditMinIdObject.Text          := IntToStr (ParamByName('outMinId').Value);
+         EditMaxIdObject.Text          := IntToStr (ParamByName('outMaxId').Value);
+         EditCountIterationObject.Text := IntToStr (ParamByName('outCountIteration').Value) + ' / ' + IntToStr (ParamByName('outCountPack').Value);
+         EditCountStringObject.Text    := IntToStr (ParamByName('outCountString').Value);
+         EditCountFloatObject.Text     := IntToStr (ParamByName('outCountFloat').Value);
+         EditCountDateObject.Text      := IntToStr (ParamByName('outCountDate').Value);
+         EditCountBooleanObject.Text   := IntToStr (ParamByName('outCountBoolean').Value);
+         EditCountLinkObject.Text      := IntToStr (ParamByName('outCountLink').Value);
          //
          //Dataset.
          //
@@ -564,7 +580,238 @@ begin
          ShowMessage('Ошибка получения - gpSelect_Scale_GoodsKindWeighing');
        end;}
      end;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pOpen_ReplObject (StartId, EndId : LongInt);
+begin
+     with spSelect_ReplObject do
+     begin
+       //try
+         //
+         ParamByName('inSessionGUID').Value:= spInsert_ReplObject.ParamByName('inSessionGUID').Value;
+         ParamByName('inStartId').Value    := StartId;
+         ParamByName('inEndId').Value      := EndId;
+         ParamByName('inDataBaseId').Value := ArrayReplServer[0].Id;
+         //
+         Execute;
+         //
+         //
+         //Dataset.
+         //
+       {except
+         SetLength(Result, 0);
+         ShowMessage('Ошибка получения - gpSelect_Scale_GoodsKindWeighing');
+       end;}
+     end;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pSendPackTo_ReplObject (Num_main, CountPack : Integer);
+var StrPack : String;
+    i, num  : Integer;
+    nextL   : String;
+begin
+     i:=0;
+     num:=0;
+     StrPack:= '';
+     nextL  := #13;
+     //
+     with ObjectCDS do begin
+        First;
+        while not EOF  do
+        begin
+             //сначала "шапка"
+             if StrPack = ''
+             then begin
+                  StrPack:= ' DO $$' + nextL
+                          + ' DECLARE vbId Integer;' + nextL
+                          + ' BEGIN' + nextL + nextL + nextL
+                          ;
+                  num:= num + 1;
+             end;
+             // обнулили Id
+             StrPack:= StrPack + ' vbId:= 0;' + nextL;
+             // Нашли Id
+             if cbGUID.Checked = TRUE
+             then StrPack:= StrPack
+                          + ' vbId:= (SELECT ObjectId FROM ObjectString WHERE ValueData = ' + ConvertToVarChar(FieldByName('GUID').AsString) + ' and DescId = zc_ObjectString_GUID());'
+                          + nextL
+             else StrPack:= StrPack
+                          + ' vbId:= (SELECT Id FROM Object WHERE Id = ' + IntToStr(FieldByName('ObjectId').AsInteger) + ');'
+                          + nextL
+                          + nextL
+                          ;
+             // попробовали UPDATE
+             StrPack:= StrPack
+                     + ' IF vbId > 0 THEN'
+                     + nextL
+                     + '    UPDATE Object SET DescId      = ' + IntToStr(FieldByName('DescId').AsInteger)
+                     + nextL
+                     + '                    , ObjectCode  = ' + IntToStr(FieldByName('ObjectCode').AsInteger)
+                     + nextL
+                     + '                    , ValueData   = ' + ConvertToVarChar(FieldByName('ValueData').AsString)
+                     + nextL
+                     + '                    , isErased    = ' + ConvertToBoolean(FieldByName('isErased').AsBoolean, FALSE)
+                     + nextL
+                     + '                    , AccessKeyId = ' + ConvertToInt(FieldByName('AccessKeyId').AsInteger)
+                     + nextL
+                     + '    WHERE Id = vbId;'
+                     + nextL
+                     + ' END IF;'
+                     + nextL
+                     + nextL;
+             // иначе INSERT
+             if cbGUID.Checked = TRUE
+             then StrPack:= StrPack
+                          + ' IF NOT FOUND OR COALESCE (vbId, 0) = 0 THEN'
+                          + nextL
+                          + '    INSERT INTO Object (DescId, ObjectCode, ValueData, AccessKeyId)'
+                          + nextL
+                          + '    VALUES (' + IntToStr(FieldByName('DescId').AsInteger)
+                          +           ', ' + IntToStr(FieldByName('ObjectCode').AsInteger)
+                          +           ', ' + ConvertToVarChar(FieldByName('ValueData').AsString)
+                          +           ', ' + ConvertToInt(FieldByName('AccessKeyId').AsInteger)
+                          +           ')'
+                          + nextL
+                          + '    RETURNING Id INTO vbId;'
+                          + nextL
+                          + ' END IF;'
+                          + nextL
+                          + nextL
+              else StrPack:= StrPack
+                          + ' IF NOT FOUND OR COALESCE (vbId, 0) = 0 THEN'
+                          + nextL
+                          + '    INSERT INTO Object (Id, DescId, ObjectCode, ValueData, AccessKeyId)'
+                          + nextL
+                          + '    VALUES (' + IntToStr(FieldByName('ObjectId').AsInteger)
+                          +           ', ' + IntToStr(FieldByName('DescId').AsInteger)
+                          +           ', ' + IntToStr(FieldByName('ObjectCode').AsInteger)
+                          +           ', ' + ConvertToVarChar(FieldByName('ValueData').AsString)
+                          +           ', ' + ConvertToInt(FieldByName('AccessKeyId').AsInteger)
+                          +           ')'
+                          + nextL
+                          + '     RETURNING Id INTO vbId;'
+                          + nextL
+                          + nextL
+                          + ' END IF;'
+                          + nextL
+                          + nextL;
+             // коммент
+             StrPack:= StrPack + ' -----' + nextL;
+             // всегда - сохранили  GUID
+             StrPack:= StrPack
+                        // попробовали UPDATE
+                   +    ' UPDATE ObjectString SET ValueData   = ' + ConvertToVarChar(FieldByName('GUID').AsString)
+                   + nextL
+                   +    ' WHERE ObjectId = vbId AND DescId = zc_ObjectString_GUID();'
+                   + nextL
+                   + nextL
+                        // иначе INSERT
+                    + ' IF NOT FOUND THEN'
+                    + nextL
+                    + '    INSERT INTO ObjectString (ObjectId, DescId, ValueData)'
+                    + nextL
+                    + '    VALUES (vbId, zc_ObjectString_GUID(),' + ConvertToVarChar(FieldByName('GUID').AsString) + ');'
+                    + nextL
+                    + ' END IF;'
+                    + nextL
+                    + nextL;
+             //
+             //
+             i:= i+1;
+             // коммент
+             StrPack:= StrPack + ' ------ end ' + IntToStr(Num_main) + ':' + IntToStr(num) + '/' + IntToStr(i) +' ----------------------' + nextL + nextL;
+             //
+             if i = CountPack then
+             begin
+                  i:= 0;
+                  // финиш - СКРИПТ
+                  StrPack:= StrPack + ' END $$;';
+                  //
+                  // !!!сохранили - СКРИПТ!!!
+                  //ExecToSql(StrPack);
+                  // !!!сохранили - в ФАЙЛ!!!
+                  //ShowMessage (StrPack);
+                  AddToLog(StrPack, 'Object', spInsert_ReplObject.ParamByName('inSessionGUID').Value, false);
+                  //
+                  // обнулили
+                  StrPack:= '';
+                  //exit;
+             end;
+             //
+             //
+             Next;
 
+        end;
+     end;
+     //
+     // еще РАЗ
+     if i > 0 then
+     begin
+          // финиш - СКРИПТ
+          StrPack:= StrPack + ' END $$;';
+          //
+          // !!!сохранили - СКРИПТ!!!
+          //ExecToSql(StrPack);
+          // !!!сохранили - в ФАЙЛ!!!
+          //ShowMessage (StrPack);
+          AddToLog(StrPack, 'Object', spInsert_ReplObject.ParamByName('inSessionGUID').Value, false);
+          //
+          //
+     end;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.AddToLog(S, myFile, myFolder: string; isError : Boolean);
+var
+  LogFileName: string;
+  LogFile: TextFile;
+begin
+  Application.ProcessMessages;
+
+  myFolder:= ReplaceStr(myFolder, ':', '_');
+
+  ForceDirectories(ChangeFileExt(Application.ExeName, '') + '\' + myFolder);
+
+  LogFileName := ChangeFileExt(Application.ExeName, '') + '\' + myFolder + '\' + myFile + '.log';
+
+  AssignFile(LogFile, LogFileName);
+
+  if FileExists(LogFileName) then
+    Append(LogFile)
+  else
+    Rewrite(LogFile);
+
+  Writeln(LogFile, s);
+  CloseFile(LogFile);
+  Application.ProcessMessages;
+end;
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pSendAllTo_ReplObject ;
+var StartId, EndId : Integer;
+    num : Integer;
+begin
+     // стартовый период для Id
+     StartId:= spInsert_ReplObject.ParamByName('outMinId').Value;
+     EndId  := StartId + spInsert_ReplObject.ParamByName('outCountIteration').Value;
+     num    := 0;
+
+     while StartId <= spInsert_ReplObject.ParamByName('outMaxId').Value do
+     begin
+          num:= num + 1;
+
+          // открыли данные с... по...
+          pOpen_ReplObject (StartId, EndId);
+          //
+          // если только просмотр - !!!ВЫХОД!!!
+          if cbOnlyOpen.Checked = TRUE then exit;
+          //
+          //делаем скрипт на НЕСКОЛЬКО пакетов и сохраняем данные в БАЗЕ-To
+          pSendPackTo_ReplObject(num, spInsert_ReplObject.ParamByName('outCountPack').Value);
+          //
+          // следующий период для Id
+          StartId:= EndId + 1;
+          EndId  := StartId + spInsert_ReplObject.ParamByName('outCountIteration').Value;
+     end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);
@@ -606,7 +853,8 @@ begin
      //
      beginConnectionTo:= 2;
      IniConnectionTo(beginConnectionTo);
-     if not fStop then pOpen_ObjectGUID (beginConnectionTo);
+     if not fStop then pInsert_ReplObject (beginConnectionTo);
+     if not fStop then pSendAllTo_ReplObject;
      //
      //
      Gauge.Visible:=false;

@@ -28,7 +28,7 @@ BEGIN
             , Object_Measure.ValueData              AS MeasureName
             , CAST (NULL AS TFloat)                 AS Amount
 
-            , CAST (NULL AS Boolean)                AS PartionClose
+            , CAST (NULL AS Boolean)                AS isPartionClose
             , CAST (NULL AS TDateTime)              AS PartionGoodsDate
             , CAST (NULL AS TVarchar)               AS PartionGoods
 
@@ -101,7 +101,7 @@ BEGIN
 
             , MovementItem.Amount               AS Amount
 
-            , MIBoolean_PartionClose.ValueData  AS PartionClose
+            , MIBoolean_PartionClose.ValueData  AS isPartionClose
             , MIDate_PartionGoods.ValueData     AS PartionGoodsDate
             , MIString_PartionGoods.ValueData   AS PartionGoods
 
@@ -220,7 +220,7 @@ BEGIN
 
             , MovementItem.Amount               AS Amount
 
-            , MIBoolean_PartionClose.ValueData  AS PartionClose
+            , MIBoolean_PartionClose.ValueData  AS isPartionClose
             , MIDate_PartionGoods.ValueData     AS PartionGoodsDate
             , MIString_PartionGoods.ValueData   AS PartionGoods
 

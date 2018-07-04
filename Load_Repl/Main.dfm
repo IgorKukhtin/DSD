@@ -2,7 +2,7 @@ object MainForm: TMainForm
   Left = 202
   Top = 180
   Caption = 'Load_Repl - MainForm'
-  ClientHeight = 585
+  ClientHeight = 627
   ClientWidth = 1025
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@ object MainForm: TMainForm
   object Splitter1: TSplitter
     Left = 581
     Top = 0
-    Height = 533
+    Height = 575
     Align = alRight
     ExplicitLeft = 683
     ExplicitTop = 32
@@ -28,25 +28,23 @@ object MainForm: TMainForm
     Left = 0
     Top = 0
     Width = 581
-    Height = 533
+    Height = 575
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitHeight = 521
     object PanelGridObject: TPanel
       Left = 0
       Top = 0
       Width = 581
-      Height = 133
+      Height = 175
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitHeight = 123
       object DBGridObject: TDBGrid
         Left = 0
         Top = 41
         Width = 508
-        Height = 92
+        Height = 134
         Align = alClient
         DataSource = ObjectDS
         TabOrder = 0
@@ -88,17 +86,22 @@ object MainForm: TMainForm
           Height = 21
           TabOrder = 1
         end
+        object cbGUID: TCheckBox
+          Left = 511
+          Top = 13
+          Width = 98
+          Height = 17
+          Caption = 'Find GUID'
+          TabOrder = 2
+        end
       end
       object PanelInfoObject: TPanel
         Left = 508
         Top = 41
         Width = 73
-        Height = 92
+        Height = 134
         Align = alRight
         TabOrder = 2
-        ExplicitLeft = 509
-        ExplicitTop = 36
-        ExplicitHeight = 144
         object LabelObject: TLabel
           Left = 1
           Top = 1
@@ -108,7 +111,7 @@ object MainForm: TMainForm
           Alignment = taCenter
           Caption = 'Object'
         end
-        object EditRecordObject: TcxCurrencyEdit
+        object EditCountObject: TcxCurrencyEdit
           Left = 1
           Top = 14
           Align = alTop
@@ -119,20 +122,53 @@ object MainForm: TMainForm
           Properties.EditFormat = ',0.'
           Properties.ReadOnly = True
           TabOrder = 0
-          ExplicitTop = 5
           Width = 71
+        end
+        object EditMinIdObject: TcxCurrencyEdit
+          Left = 1
+          Top = 35
+          Align = alTop
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taVCenter
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = ',0.'
+          Properties.EditFormat = ',0.'
+          Properties.ReadOnly = True
+          TabOrder = 1
+          Width = 71
+        end
+        object EditMaxIdObject: TcxCurrencyEdit
+          Left = 1
+          Top = 56
+          Align = alTop
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taVCenter
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = ',0.'
+          Properties.EditFormat = ',0.'
+          Properties.ReadOnly = True
+          TabOrder = 2
+          Width = 71
+        end
+        object EditCountIterationObject: TEdit
+          Left = 1
+          Top = 77
+          Width = 71
+          Height = 21
+          Align = alTop
+          TabOrder = 3
+          ExplicitWidth = 70
         end
       end
     end
     object PanelGridObjectString: TPanel
       Left = 0
-      Top = 133
+      Top = 175
       Width = 581
       Height = 80
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitTop = 185
       object DBGridObjectString: TDBGrid
         Left = 0
         Top = 0
@@ -154,9 +190,6 @@ object MainForm: TMainForm
         Height = 80
         Align = alRight
         TabOrder = 1
-        ExplicitLeft = 509
-        ExplicitTop = 35
-        ExplicitHeight = 144
         object LabelObjectString: TLabel
           Left = 1
           Top = 1
@@ -166,7 +199,7 @@ object MainForm: TMainForm
           Alignment = taCenter
           Caption = 'ObjectString'
         end
-        object EditRecordObjectString: TcxCurrencyEdit
+        object EditCountStringObject: TcxCurrencyEdit
           Left = 1
           Top = 14
           Align = alTop
@@ -177,20 +210,18 @@ object MainForm: TMainForm
           Properties.EditFormat = ',0.'
           Properties.ReadOnly = True
           TabOrder = 0
-          ExplicitTop = 15
           Width = 71
         end
       end
     end
     object PanelGridObjectFloat: TPanel
       Left = 0
-      Top = 213
+      Top = 255
       Width = 581
       Height = 80
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 2
-      ExplicitTop = 282
       object DBGridObjectFloat: TDBGrid
         Left = 0
         Top = 0
@@ -212,7 +243,6 @@ object MainForm: TMainForm
         Height = 80
         Align = alRight
         TabOrder = 1
-        ExplicitHeight = 97
         object LabelObjectFloat: TLabel
           Left = 1
           Top = 1
@@ -222,7 +252,7 @@ object MainForm: TMainForm
           Alignment = taCenter
           Caption = 'ObjectFloat'
         end
-        object EditRecordObjectFloat: TcxCurrencyEdit
+        object EditCountFloatObject: TcxCurrencyEdit
           Left = 1
           Top = 14
           Align = alTop
@@ -239,13 +269,12 @@ object MainForm: TMainForm
     end
     object PanelGridObjectDate: TPanel
       Left = 0
-      Top = 293
+      Top = 335
       Width = 581
       Height = 80
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 3
-      ExplicitTop = 282
       object DBGridObjectDate: TDBGrid
         Left = 0
         Top = 0
@@ -276,7 +305,7 @@ object MainForm: TMainForm
           Alignment = taCenter
           Caption = 'ObjectDate'
         end
-        object EditRecordObjectDate: TcxCurrencyEdit
+        object EditCountDateObject: TcxCurrencyEdit
           Left = 1
           Top = 14
           Align = alTop
@@ -293,13 +322,12 @@ object MainForm: TMainForm
     end
     object PanelGridObjectBoolean: TPanel
       Left = 0
-      Top = 373
+      Top = 415
       Width = 581
       Height = 80
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 4
-      ExplicitTop = 282
       object DBGridObjectBoolean: TDBGrid
         Left = 0
         Top = 0
@@ -321,8 +349,6 @@ object MainForm: TMainForm
         Height = 80
         Align = alRight
         TabOrder = 1
-        ExplicitLeft = 509
-        ExplicitTop = 6
         object LabelObjectBoolean: TLabel
           Left = 1
           Top = 1
@@ -332,7 +358,7 @@ object MainForm: TMainForm
           Alignment = taCenter
           Caption = 'ObjectBoolean'
         end
-        object EditRecordObjectBoolean: TcxCurrencyEdit
+        object EditCountBooleanObject: TcxCurrencyEdit
           Left = 1
           Top = 14
           Align = alTop
@@ -349,13 +375,12 @@ object MainForm: TMainForm
     end
     object PanelGridObjectLink: TPanel
       Left = 0
-      Top = 453
+      Top = 495
       Width = 581
       Height = 80
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 5
-      ExplicitTop = 282
       object DBGridObjectLink: TDBGrid
         Left = 0
         Top = 0
@@ -386,7 +411,7 @@ object MainForm: TMainForm
           Alignment = taCenter
           Caption = 'ObjectLink'
         end
-        object EditRecordObjectLink: TcxCurrencyEdit
+        object EditCountLinkObject: TcxCurrencyEdit
           Left = 1
           Top = 14
           Align = alTop
@@ -404,7 +429,7 @@ object MainForm: TMainForm
   end
   object ButtonPanel: TPanel
     Left = 0
-    Top = 533
+    Top = 575
     Width = 1025
     Height = 52
     Align = alBottom
@@ -421,7 +446,7 @@ object MainForm: TMainForm
       ExplicitWidth = 1307
     end
     object OKGuideButton: TButton
-      Left = 56
+      Left = 159
       Top = 23
       Width = 88
       Height = 25
@@ -430,7 +455,7 @@ object MainForm: TMainForm
       OnClick = OKGuideButtonClick
     end
     object StopButton: TButton
-      Left = 149
+      Left = 252
       Top = 23
       Width = 88
       Height = 25
@@ -439,7 +464,7 @@ object MainForm: TMainForm
       OnClick = StopButtonClick
     end
     object CloseButton: TButton
-      Left = 243
+      Left = 346
       Top = 23
       Width = 88
       Height = 25
@@ -447,22 +472,31 @@ object MainForm: TMainForm
       TabOrder = 2
       OnClick = CloseButtonClick
     end
+    object cbOnlyOpen: TCheckBox
+      Left = 16
+      Top = 27
+      Width = 97
+      Height = 17
+      Caption = #1090#1086#1083#1100#1082#1086' OPEN'
+      Checked = True
+      State = cbChecked
+      TabOrder = 3
+    end
   end
   object PageControl: TPageControl
     Left = 584
     Top = 0
     Width = 441
-    Height = 533
+    Height = 575
     ActivePage = TabSheet1
     Align = alRight
     TabOrder = 2
-    ExplicitHeight = 521
     object TabSheet1: TTabSheet
       Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080' - '#1044#1086#1082#1091#1084#1077#1085#1090#1099
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0
-      ExplicitHeight = 493
+      ExplicitHeight = 0
       object PanelReplServer: TPanel
         Left = 0
         Top = 0
@@ -491,7 +525,7 @@ object MainForm: TMainForm
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0
-      ExplicitHeight = 493
+      ExplicitHeight = 0
     end
   end
   object ObjectDS: TDataSource
@@ -509,8 +543,8 @@ object MainForm: TMainForm
     Left = 56
     Top = 320
   end
-  object spSelect_ObjectGUID: TdsdStoredProc
-    StoredProcName = 'gpSelect_ObjectGUID'
+  object spSelect_ReplObject: TdsdStoredProc
+    StoredProcName = 'gpSelect_ReplObject'
     DataSet = ObjectCDS
     DataSets = <
       item
@@ -534,9 +568,21 @@ object MainForm: TMainForm
     OutputType = otMultiDataSet
     Params = <
       item
-        Name = 'inStartDate'
+        Name = 'inSessionGUID'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartId'
         Value = 'NULL'
-        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndId'
+        Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -545,38 +591,10 @@ object MainForm: TMainForm
         Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDescCode'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsProtocol'
-        Value = Null
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsGUID_null'
-        Value = Null
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 368
     Top = 40
-  end
-  object toStoredProc: TdsdStoredProc
-    DataSets = <>
-    Params = <>
-    PackSize = 1
-    Left = 80
-    Top = 104
   end
   object toZConnection: TZConnection
     ControlsCodePage = cCP_UTF16
@@ -637,33 +655,7 @@ object MainForm: TMainForm
     Top = 72
   end
   object FormParams: TdsdFormParams
-    Params = <
-      item
-        Name = 'inStartDate'
-        Value = 'NULL'
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDataBaseId'
-        Value = Null
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDescId'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsProtocol'
-        Value = Null
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
+    Params = <>
     Left = 72
     Top = 16
   end
@@ -745,5 +737,92 @@ object MainForm: TMainForm
     Params = <>
     Left = 456
     Top = 464
+  end
+  object spInsert_ReplObject: TdsdStoredProc
+    StoredProcName = 'gpInsert_ReplObject'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inSessionGUID'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDate'
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescCode'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsProtocol'
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCount'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMinId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMaxId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCountString'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCountFloat'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCountDate'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCountBoolean'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCountLink'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCountIteration'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCountPack'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 280
+    Top = 56
   end
 end

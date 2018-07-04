@@ -249,7 +249,16 @@ BEGIN
              FULL JOIN tmpMI_child ON tmpMI_child.MovementItemId = tmpMI_find.MovementItemId
        ;
 
-
+/*
+if inUserId = 5
+then
+    RAISE EXCEPTION '<%>  <%>', lfGet_Object_ValueData_sh ((select _tmpItem_Partion_child.GoodsId from _tmpItem_Partion_child where _tmpItem_Partion_child.MovementItemId_parent = 113026053 ))
+--    , lfGet_Object_ValueData_sh ((select _tmpItem_Partion.GoodsId from _tmpItem_Partion where _tmpItem_Partion.MovementItemId = 113026053 ))
+    , (select count(*) from _tmpItem_Partion)
+--      INSERT INTO _tmpItem_Partion (MovementItemId, GoodsId, GoodsKindId, ReceiptId, PartionGoodsDate, OperCount, Count_onCount)
+    ;
+end if;
+*/
 
      -- удал€ютс€ элементы - расход на производство
      PERFORM lpSetErased_MovementItem (inMovementItemId:= _tmpItem_Partion_child.MovementItemId

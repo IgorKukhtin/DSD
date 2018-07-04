@@ -16,6 +16,23 @@ BEGIN
      -- таблица
      DELETE FROM _tmpMI_Recalc;
 
+
+     -- обновили PersonalServiceListId
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PersonalServiceList(), MovementItem.Id, ObjectLink_Personal_PersonalServiceList.ChildObjectId)
+     FROM MovementItem
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalServiceList
+                                           ON MILinkObject_PersonalServiceList.MovementItemId = MovementItem.Id
+                                          AND MILinkObject_PersonalServiceList.DescId         = zc_MILinkObject_PersonalServiceList()
+          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                               ON ObjectLink_Personal_PersonalServiceList.ObjectId = MovementItem.ObjectId
+                              AND ObjectLink_Personal_PersonalServiceList.DescId   = zc_ObjectLink_Personal_PersonalServiceList()
+     WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.DescId     = zc_MI_Master()
+       AND MovementItem.isErased   = FALSE
+       AND MILinkObject_PersonalServiceList.ObjectId IS NULL;
+     
+
+
      -- сохранили список по всем документам за соответствующий <Месяц начислений>
      INSERT INTO _tmpMovement_Recalc (MovementId, StatusId, PersonalServiceListId, PaidKindId, ServiceDate)
         SELECT Movement.Id AS MovementId

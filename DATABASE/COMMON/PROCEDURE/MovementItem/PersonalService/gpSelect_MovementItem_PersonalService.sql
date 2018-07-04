@@ -48,6 +48,7 @@ BEGIN
      vbInfoMoneyId_def:= (SELECT Object_InfoMoney_View.InfoMoneyId FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_60101()); -- 60101 Заработная плата + Заработная плата
      -- определяется
      vbIsSummCardRecalc:= COALESCE (inMovementId, 0) = 0
+                       -- OR 1=1
                        OR EXISTS (SELECT ObjectLink_PersonalServiceList_PaidKind.ChildObjectId
                                   FROM MovementLinkObject AS MovementLinkObject_PersonalServiceList
                                        INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind

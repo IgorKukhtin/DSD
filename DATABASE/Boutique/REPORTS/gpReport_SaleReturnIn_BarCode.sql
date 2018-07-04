@@ -118,6 +118,7 @@ BEGIN
                           , inisSize := TRUE, inisPartner := TRUE , inisMovement := FALSE
                           , inIsClient := FALSE, inIsDiscount := TRUE, inSession := inSession
                           ) AS tmpData
+        WHERE tmpData.Sale_Amount <> 0
       UNION 
         SELECT tmpData.PartionId
              , tmpData.BrandName
@@ -168,8 +169,8 @@ BEGIN
                               , inisSize := TRUE, inisPartner := TRUE , inisMovement := FALSE
                               , inIsClient := FALSE,  inSession := inSession
                               ) AS tmpData
-
-           ;
+        WHERE tmpData.Return_Amount <> 0
+       ;
 
 END;
 $BODY$
