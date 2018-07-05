@@ -1103,7 +1103,7 @@ BEGIN
                                                                                                  - tmpMovement.SummChild
                                                                                                  - tmpMovement.SummMinusExt
 
-                                                                                                 + tmpMovement.SummAddOth
+                                                                                                 -- + tmpMovement.SummAddOth
                                               )
              -- Сумма ГСМ (удержание за заправку, хотя может быть и доплатой...)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTransport()       , tmpMovement.MovementItemId, tmpMovement.SummTransport)

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_CheckBonus (
     IN inEndDate             TDateTime ,
     IN inPaidKindID          Integer   ,
     IN inJuridicalId         Integer   ,
-    IN inisMovement          Boolean   , -- по документам
+    -- IN inisMovement          Boolean   , -- по документам
     IN inSessiON             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (OperDate_Movement TDateTime, InvNumber_Movement TVarChar, DescName_Movement TVarChar
@@ -31,7 +31,13 @@ RETURNS TABLE (OperDate_Movement TDateTime, InvNumber_Movement TVarChar, DescNam
               )  
 AS
 $BODY$
+
+declare inisMovement          Boolean ; -- по документам
+
 BEGIN
+
+inisMovement:= FALSE;
+
 
     RETURN QUERY
       WITH tmpContract_all AS (SELECT View_Contract.* FROM Object_Contract_View AS View_Contract WHERE (View_Contract.PaidKindId  = inPaidKindId  OR COALESCE (inPaidKindId, 0)  = 0)
@@ -119,6 +125,8 @@ BEGIN
                                       INNER JOIN ObjectLink AS ObjectLink_ContractCondition_BonusKind
                                                             ON ObjectLink_ContractCondition_BonusKind.ChildObjectId = tmpContractConditionKind.BonusKindId
                                                            AND ObjectLink_ContractCondition_BonusKind.DescId = zc_ObjectLink_ContractCondition_BonusKind()
+                                      INNER JOIN Object AS Object_ContractCondition ON Object_ContractCondition.Id       = ObjectLink_ContractCondition_BonusKind.ObjectId
+                                                                                   AND Object_ContractCondition.isErased = FALSE
                                       INNER JOIN ObjectFloat AS ObjectFloat_Value
                                                              ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_BonusKind.ObjectId
                                                             AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()

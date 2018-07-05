@@ -39,13 +39,14 @@ $BODY$
 
     DECLARE vbWeighingCount   Integer;
     DECLARE vbStoreKeeperName TVarChar;
-    
+
     DECLARE vbIsInfoMoney_30201 Boolean;
     DECLARE vbIsInfoMoney_30200 Boolean;
 
     DECLARE vbKiev Integer;
 
     DECLARE vbIsLongUKTZED Boolean;
+    DECLARE vbIsFozziTare  Boolean;
 
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -53,8 +54,8 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- !!! для Киева
-     vbKiev := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Unit() AND Object.Id = 8411 );    
- 
+     vbKiev := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Unit() AND Object.Id = 8411 );
+
 
      -- кол-во Взвешиваний
      vbWeighingCount:= (SELECT COUNT(*)
@@ -92,7 +93,7 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.В документе от <%> неверное значение дата у покупателя <%>.', zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId))
                                                                                              , zfConvert_DateToString ((SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MovementDate_OperDatePartner()));
      END IF;
-     
+
 
 
      -- параметры из документа
@@ -114,8 +115,13 @@ BEGIN
             END AS isInfoMoney_30200
           , COALESCE (ObjectBoolean_isLongUKTZED.ValueData, TRUE)    AS isLongUKTZED
 
+          , CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId = 310854 -- Фоззі
+                     THEN TRUE
+                 ELSE FALSE
+            END AS isFozziTare
+
             INTO vbOperDate, vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId, vbContractId, vbIsDiscountPrice
-               , vbIsInfoMoney_30200, vbIsLongUKTZED
+               , vbIsInfoMoney_30200, vbIsLongUKTZED, vbIsFozziTare
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -143,12 +149,15 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+          LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                               ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                              AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
           LEFT JOIN ObjectBoolean AS ObjectBoolean_isDiscountPrice
                                   ON ObjectBoolean_isDiscountPrice.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                                 AND ObjectBoolean_isDiscountPrice.DescId = zc_ObjectBoolean_Juridical_isDiscountPrice() 
+                                 AND ObjectBoolean_isDiscountPrice.DescId = zc_ObjectBoolean_Juridical_isDiscountPrice()
 
           LEFT JOIN ObjectBoolean AS ObjectBoolean_isLongUKTZED
-                                  ON ObjectBoolean_isLongUKTZED.ObjectId = MovementLinkObject_To.ObjectId 
+                                  ON ObjectBoolean_isLongUKTZED.ObjectId = MovementLinkObject_To.ObjectId
                                  AND ObjectBoolean_isLongUKTZED.DescId = zc_ObjectBoolean_Juridical_isLongUKTZED()
 
           /*LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
@@ -160,6 +169,38 @@ BEGIN
      WHERE Movement.Id = inMovementId AND Movement.DescId <> zc_Movement_SendOnPrice()
        -- AND Movement.StatusId = zc_Enum_Status_Complete()
     ;
+
+     -- !!!надо определить - ...!!!
+     IF vbIsFozziTare = TRUE
+     THEN
+         vbIsFozziTare:= FALSE;
+         /*vbIsFozziTare:= 2 = (SELECT MAX (CASE WHEN MIFloat_AmountPartner.ValueData <> 0
+                                                AND ObjectLink_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_10202() -- Прочее сырье + Оболочка
+                                                                                         , zc_Enum_InfoMoney_10203() -- Прочее сырье + Упаковка
+                                                                                         , zc_Enum_InfoMoney_10204() -- Прочее сырье + Прочее сырье
+                                                                                         , zc_Enum_InfoMoney_20601() -- Общефирменные + "Прочие материалы"
+                                                                                          )
+                                                    THEN 1
+
+                                               WHEN MIFloat_AmountPartner.ValueData <> 0
+                                                AND ObjectLink_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20501() -- Общефирменные + "Оборотная тара"
+                                                                                          )
+                                                    THEN 2
+
+                                               WHEN MIFloat_AmountPartner.ValueData <> 0
+                                                    THEN 3
+                                               ELSE 0
+                                          END) AS Ord2
+                              FROM MovementItem
+                                   LEFT JOIN ObjectLink AS ObjectLink_InfoMoney
+                                                        ON ObjectLink_InfoMoney.ObjectId = MovementItem.ObjectId
+                                                       AND ObjectLink_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
+                              WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
+                             );*/
+     END IF;
 
      -- !!!надо определить - есть ли скидка в цене!!!
      vbIsChangePrice:= vbIsDiscountPrice = TRUE                              -- у Юр лица есть галка
@@ -261,7 +302,7 @@ BEGIN
                                WHEN Movement.DescId IN (zc_Movement_SendOnPrice()) AND vbIsProcess_BranchIn = TRUE
                                     THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                                ELSE MovementItem.Amount
- 
+
                           END) AS Amount
               FROM MovementItem
                    INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
@@ -307,7 +348,7 @@ BEGIN
     vbIsInfoMoney_30201:= EXISTS (SELECT 1
                                   FROM MovementItem
                                        INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                                             ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId 
+                                                             ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
                                                             AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                                                             AND ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30102()
                                   WHERE MovementItem.MovementId = inMovementId
@@ -441,7 +482,7 @@ BEGIN
            , COALESCE (OH_JuridicalDetails_Invoice.BankName,         OH_JuridicalDetails_To.BankName)            AS BankName_Invoice
            , COALESCE (OH_JuridicalDetails_Invoice.MFO,              OH_JuridicalDetails_To.MFO)                 AS BankMFO_Invoice
            , COALESCE (OH_JuridicalDetails_Invoice.Phone,            OH_JuridicalDetails_To.Phone)               AS Phone_Invoice
-           
+
            , CASE WHEN COALESCE (Object_PersonalCollation.ValueData, '') = '' THEN '' ELSE zfConvert_FIO (Object_PersonalCollation.ValueData, 2, FALSE) END :: TVarChar        AS PersonalCollationName
            --, CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId = 310855 /*Варус*/ THEN ObjectString_Partner_GLNCode.ValueData ELSE ObjectString_Juridical_GLNCode.ValueData END AS BuyerGLNCode
            --, ObjectString_Partner_GLNCode.ValueData AS DeliveryPlaceGLNCode
@@ -531,7 +572,7 @@ BEGIN
 
            , MS_InvNumberPartner_Master.ValueData               AS InvNumberPartner_Master
 
-           , CASE WHEN (vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0) AND vbPaidKindId = zc_Enum_PaidKind_SecondForm() 
+           , CASE WHEN (vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0) AND vbPaidKindId = zc_Enum_PaidKind_SecondForm()
                         THEN ' та знижкой'
                   ELSE ''
              END AS Price_info
@@ -539,21 +580,24 @@ BEGIN
            , vbIsInfoMoney_30201 AS isInfoMoney_30201
            , vbIsInfoMoney_30200 AS isInfoMoney_30200
 
-           , CASE WHEN COALESCE (ObjectString_PlaceOf.ValueData, '') <> '' THEN COALESCE (ObjectString_PlaceOf.ValueData, '') 
+           , CASE WHEN COALESCE (ObjectString_PlaceOf.ValueData, '') <> '' THEN COALESCE (ObjectString_PlaceOf.ValueData, '')
                   ELSE '' -- 'м.Днiпро'
-                  END  :: TVarChar   AS PlaceOf 
-           , CASE WHEN COALESCE (Object_Personal_View.PersonalName, '') <> '' THEN zfConvert_FIO (Object_Personal_View.PersonalName, 2, FALSE) ELSE '' END AS PersonalBookkeeperName   -- бухгалтер из спр.Филиалы 
-           
-           , MovementSale_Comment.ValueData        AS SaleComment 
+                  END  :: TVarChar   AS PlaceOf
+           , CASE WHEN COALESCE (Object_Personal_View.PersonalName, '') <> '' THEN zfConvert_FIO (Object_Personal_View.PersonalName, 2, FALSE) ELSE '' END AS PersonalBookkeeperName   -- бухгалтер из спр.Филиалы
+
+           , MovementSale_Comment.ValueData        AS SaleComment
            , CASE WHEN TRIM (MovementOrder_Comment.ValueData) <> TRIM (COALESCE (MovementSale_Comment.ValueData, '')) THEN MovementOrder_Comment.ValueData ELSE '' END AS OrderComment
            , CASE WHEN Movement.DescId = zc_Movement_Loss() THEN TRUE ELSE FALSE END isMovementLoss
 
            , CASE WHEN Position(UPPER('обмен') in UPPER(View_Contract.InvNumber)) > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPrintText
-           
+
            , CASE WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() THEN TRUE ELSE FALSE END :: Boolean AS isFirstForm
 
              -- кол-во Взвешиваний
            , vbWeighingCount AS WeighingCount
+
+             --
+           , COALESCE (vbIsFozziTare, FALSE) :: Boolean AS isFozziTare
 
        FROM Movement
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
@@ -571,10 +615,10 @@ BEGIN
                                      ON MovementString_InvNumberOrder.MovementId =  Movement.Id
                                     AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
 
-            LEFT JOIN MovementString AS MovementSale_Comment 
+            LEFT JOIN MovementString AS MovementSale_Comment
                                      ON MovementSale_Comment.MovementId = Movement.Id
                                     AND MovementSale_Comment.DescId = zc_MovementString_Comment()
-            LEFT JOIN MovementString AS MovementOrder_Comment 
+            LEFT JOIN MovementString AS MovementOrder_Comment
                                      ON MovementOrder_Comment.MovementId = Movement_order.Id
                                     AND MovementOrder_Comment.DescId = zc_MovementString_Comment()
 
@@ -627,17 +671,17 @@ BEGIN
                                 AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
             LEFT JOIN ObjectString AS ObjectString_PlaceOf
                                    ON ObjectString_PlaceOf.ObjectId = COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
-                                  AND ObjectString_PlaceOf.DescId = zc_objectString_Branch_PlaceOf()      
+                                  AND ObjectString_PlaceOf.DescId = zc_objectString_Branch_PlaceOf()
         LEFT JOIN ObjectLink AS ObjectLink_Branch_Personal
                              ON ObjectLink_Branch_Personal.ObjectId = ObjectLink_Unit_Branch.ChildObjectId
                             AND ObjectLink_Branch_Personal.DescId = zc_ObjectLink_Branch_Personal()
-        LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Branch_Personal.ChildObjectId     
+        LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Branch_Personal.ChildObjectId
         LEFT JOIN ObjectLink AS ObjectLink_Branch_PersonalStore
                              ON ObjectLink_Branch_PersonalStore.ObjectId = ObjectLink_Unit_Branch.ChildObjectId
                             AND ObjectLink_Branch_PersonalStore.DescId = zc_ObjectLink_Branch_PersonalStore()
-        LEFT JOIN Object_Personal_View AS Object_PersonalStore_View ON Object_PersonalStore_View.PersonalId = ObjectLink_Branch_PersonalStore.ChildObjectId  
+        LEFT JOIN Object_Personal_View AS Object_PersonalStore_View ON Object_PersonalStore_View.PersonalId = ObjectLink_Branch_PersonalStore.ChildObjectId
 
-                                                             
+
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
                                          ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id
@@ -680,11 +724,11 @@ BEGIN
                                  ON ObjectLink_Contract_PersonalCollation.ObjectId = View_Contract.ContractId
                                 AND ObjectLink_Contract_PersonalCollation.DescId = zc_ObjectLink_Contract_PersonalCollation()
             LEFT JOIN Object AS Object_PersonalCollation ON Object_PersonalCollation.Id = ObjectLink_Contract_PersonalCollation.ChildObjectId
-                                
+
             LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalInvoice
                                  ON ObjectLink_Contract_JuridicalInvoice.ObjectId = View_Contract.ContractId
                                 AND ObjectLink_Contract_JuridicalInvoice.DescId = zc_ObjectLink_Contract_JuridicalInvoice()
-                                
+
             LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = NULL
 
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
@@ -708,12 +752,12 @@ BEGIN
                                                                 ON OH_JuridicalDetails_To.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object_To.Id)
                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_To.StartDate
                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_To.EndDate
-                                                            
+
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_Invoice
                                                                 ON OH_JuridicalDetails_Invoice.JuridicalId = ObjectLink_Contract_JuridicalInvoice.ChildObjectId
                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_Invoice.StartDate
                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_Invoice.EndDate
-                                                                                                                           
+
             LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                  ON ObjectLink_Juridical_Retail.ObjectId = OH_JuridicalDetails_To.JuridicalId
                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
@@ -765,7 +809,7 @@ BEGIN
 
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_Bank_From
                                                                 ON OH_JuridicalDetails_Bank_From.JuridicalId = Object_BankAccount.BankJuridicalId
-                                                               AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_Bank_From.StartDate 
+                                                               AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_Bank_From.StartDate
                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_Bank_From.EndDate
 
             LEFT JOIN ObjectHistoryString AS OHS_JD_JuridicalAddress_Bank_From
@@ -829,7 +873,7 @@ BEGIN
             LEFT JOIN MovementString AS MS_InvNumberPartner_Master ON MS_InvNumberPartner_Master.MovementId = MovementLinkMovement_Master.MovementChildId
                                                                   AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()
 
-            
+
 
        WHERE Movement.Id =  inMovementId
          AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -845,7 +889,7 @@ BEGIN
              , Object_GoodsPropertyValue.ValueData  AS Name
              , ObjectFloat_Amount.ValueData         AS Amount
              , ObjectFloat_AmountDoc.ValueData      AS AmountDoc
-             , ObjectFloat_BoxCount.ValueData       AS BoxCount             
+             , ObjectFloat_BoxCount.ValueData       AS BoxCount
              , ObjectString_BarCode.ValueData       AS BarCode
              , ObjectString_Article.ValueData       AS Article
              , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
@@ -888,12 +932,12 @@ BEGIN
        )
      , tmpObject_GoodsPropertyValueGroup AS
        (SELECT tmpObject_GoodsPropertyValue.GoodsId
-             , tmpObject_GoodsPropertyValue.Name             
+             , tmpObject_GoodsPropertyValue.Name
              , tmpObject_GoodsPropertyValue.Article
              , tmpObject_GoodsPropertyValue.ArticleGLN
              , tmpObject_GoodsPropertyValue.BarCode
              , tmpObject_GoodsPropertyValue.BarCodeGLN
-             , tmpObject_GoodsPropertyValue.BoxCount             
+             , tmpObject_GoodsPropertyValue.BoxCount
         FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Article <> '' OR ArticleGLN <> '' OR BarCode <> '' OR BarCodeGLN <> '' OR Name <> '' GROUP BY GoodsId
              ) AS tmpGoodsProperty_find
              LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
@@ -1009,10 +1053,17 @@ BEGIN
                     , ObjectLink_GoodsGroup.ChildObjectId
             )
       , tmpGoods AS (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
-      , tmpUKTZED AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED (tmp.GoodsGroupId) AS CodeUKTZED 
+      , tmpUKTZED AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED (tmp.GoodsGroupId) AS CodeUKTZED
                       FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp
                      )
-
+        -- Цены из прайса
+      , tmpPriceList AS (SELECT lfSelect.GoodsId    AS GoodsId
+                              , lfSelect.ValuePrice AS Price_basis
+                         FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
+                                                                  , inOperDate   := (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
+                                                                   ) AS lfSelect
+                         WHERE lfSelect.ValuePrice <> 0
+                        )
       -- Результат
       SELECT COALESCE (Object_GoodsByGoodsKind_View.Id, Object_Goods.Id) AS Id
            , Object_Goods.ObjectCode         AS GoodsCode
@@ -1041,7 +1092,7 @@ BEGIN
                        THEN CAST ((tmpMI.AmountPartner / tmpObject_GoodsPropertyValue.AmountDoc) AS NUMERIC (16, 4))
                   ELSE 0
              END AS AmountDocBox
-           
+
            , COALESCE (tmpObject_GoodsPropertyValue.Name, '')       AS GoodsName_Juridical
            , COALESCE (tmpObject_GoodsPropertyValue.Amount, 0)      AS AmountInPack_Juridical
            , COALESCE (tmpObject_GoodsPropertyValue.AmountDoc, 0)   AS AmountDocInPack_Juridical
@@ -1134,9 +1185,9 @@ BEGIN
                        THEN '1905'
                   ELSE '0'
               END :: TVarChar AS GoodsCodeUKTZED
-              
+
             -- Залоговая цена без НДС, грн
-            , 60  :: TFloat AS Price_Pledge
+            , CASE WHEN tmpPriceList.Price_basis > 0 THEN tmpPriceList.Price_basis ELSE 60 END :: TFloat AS Price_Pledge
 
        FROM tmpMI
             LEFT JOIN tmpUKTZED ON tmpUKTZED.GoodsGroupId = tmpMI.GoodsGroupId
@@ -1171,13 +1222,18 @@ BEGIN
             LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
                                                   AND Object_GoodsByGoodsKind_View.GoodsKindId = Object_GoodsKind.Id
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
                                    ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
 
+            LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpMI.GoodsId
+
        WHERE tmpMI.AmountPartner <> 0
+         AND ((vbIsFozziTare = TRUE AND ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_20501()) -- Общефирменные + "Оборотная тара"
+           OR vbIsFozziTare = FALSE
+             )
        ORDER BY CASE WHEN vbGoodsPropertyId IN (83954  -- Метро
                                               , 83963  -- Ашан
                                               , 404076 -- Новус
@@ -1256,7 +1312,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  26.11.15         *
- 17.09.15         * 
+ 17.09.15         *
  13.11.14                                                       * fix
  12.11.14                                        * add AmountOrder
  17.10.14                                                       *
