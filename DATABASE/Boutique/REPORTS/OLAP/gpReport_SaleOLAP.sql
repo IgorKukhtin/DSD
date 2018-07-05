@@ -790,8 +790,10 @@ BEGIN
                                                                AND MILinkObject_DiscountSaleKind.DescId         = zc_MILinkObject_DiscountSaleKind()
                                                                AND inIsDiscount                                 = TRUE
 
+                               LEFT JOIN Movement ON Movement.Id = MIConatiner.MovementId
                                LEFT JOIN tmpDiscountPeriod ON tmpDiscountPeriod.PeriodId = Object_PartionGoods.PeriodId
-                                                          AND MIConatiner.OperDate BETWEEN tmpDiscountPeriod.StartDate AND tmpDiscountPeriod.EndDate
+                                                          --AND MIConatiner.OperDate BETWEEN tmpDiscountPeriod.StartDate AND tmpDiscountPeriod.EndDate
+                                                          AND Movement.OperDate BETWEEN tmpDiscountPeriod.StartDate AND tmpDiscountPeriod.EndDate
 
                                -- док. продажи для док.возврата
                                LEFT JOIN MovementItem AS MovementItem_Sale ON MovementItem_Sale.Id = Object_PartionMI.ObjectCode

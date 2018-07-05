@@ -1566,6 +1566,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_MemberSheetWorkTime_Member() RETURNS In
  INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
  SELECT 'zc_ObjectLink_MemberSheetWorkTime_Member', 'Физ.лицо', zc_Object_MemberSheetWorkTime(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberSheetWorkTime_Member');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_MemberPersonalServiceList_PersonalServiceList() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberPersonalServiceList_PersonalServiceList'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+ INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+ SELECT 'zc_ObjectLink_MemberPersonalServiceList_PersonalServiceList', 'Ведомость начисления', zc_Object_MemberPersonalServiceList(), zc_Object_PersonalServiceList() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberPersonalServiceList_PersonalServiceList');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_MemberPersonalServiceList_Member() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberPersonalServiceList_Member'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+ INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+ SELECT 'zc_ObjectLink_MemberPersonalServiceList_Member', 'Физ.лицо', zc_Object_MemberPersonalServiceList(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberPersonalServiceList_Member');
+
 
 --!!! АПТЕКА
 

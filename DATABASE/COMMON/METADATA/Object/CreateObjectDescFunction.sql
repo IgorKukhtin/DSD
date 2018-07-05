@@ -834,6 +834,11 @@ CREATE OR REPLACE FUNCTION zc_Object_MemberSheetWorkTime() RETURNS integer AS $B
 INSERT INTO ObjectDesc(Code, ItemName)
 SELECT 'zc_Object_MemberSheetWorkTime', 'Доступ к Табелю рабочего времени' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MemberSheetWorkTime');
 
+CREATE OR REPLACE FUNCTION zc_Object_MemberPersonalServiceList() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_MemberPersonalServiceList'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_MemberPersonalServiceList', 'Доступ к Ведомости начисления' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MemberPersonalServiceList');
+
+
 
 --!!! Аптека
 CREATE OR REPLACE FUNCTION zc_Object_FileTypeKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_FileTypeKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
