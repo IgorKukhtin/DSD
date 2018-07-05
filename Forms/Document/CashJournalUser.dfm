@@ -5,10 +5,8 @@ inherited CashJournalUserForm: TCashJournalUserForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -255
-  ExplicitTop = -111
   ExplicitWidth = 998
-  ExplicitHeight = 604
+  ExplicitHeight = 603
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -500,14 +498,14 @@ inherited CashJournalUserForm: TCashJournalUserForm
         item
           Name = 'inCashId_top'
           Value = ''
-          Component = CashGuides
+          Component = GuidesCash
           ComponentItem = 'Key'
           MultiSelectSeparator = ','
         end
         item
           Name = 'inCurrencyId_top'
           Value = 0
-          Component = CurrencyGuides
+          Component = GuidesCurrency
           ComponentItem = 'Key'
           MultiSelectSeparator = ','
         end>
@@ -539,14 +537,14 @@ inherited CashJournalUserForm: TCashJournalUserForm
         item
           Name = 'inCashId_top'
           Value = ''
-          Component = CashGuides
+          Component = GuidesCash
           ComponentItem = 'Key'
           MultiSelectSeparator = ','
         end
         item
           Name = 'inCurrencyId_top'
           Value = Null
-          Component = CurrencyGuides
+          Component = GuidesCurrency
           ComponentItem = 'Key'
           MultiSelectSeparator = ','
         end>
@@ -579,14 +577,14 @@ inherited CashJournalUserForm: TCashJournalUserForm
         item
           Name = 'CashId'
           Value = Null
-          Component = CashGuides
+          Component = GuidesCash
           ComponentItem = 'Key'
           MultiSelectSeparator = ','
         end
         item
           Name = 'CashName'
           Value = Null
-          Component = CashGuides
+          Component = GuidesCash
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -594,14 +592,14 @@ inherited CashJournalUserForm: TCashJournalUserForm
         item
           Name = 'CurrencyId'
           Value = Null
-          Component = CurrencyGuides
+          Component = GuidesCurrency
           ComponentItem = 'Key'
           MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
           Value = Null
-          Component = CurrencyGuides
+          Component = GuidesCurrency
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -655,6 +653,65 @@ inherited CashJournalUserForm: TCashJournalUserForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1054#1090#1095#1077#1090#1072' - '#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1054#1090#1095#1077#1090#1072' - '#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 'cashname;GroupId;InfoMoneyName_all;MoneyPlaceName;Comment'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42736d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42736d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isCurrency'
+          Value = 'False'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077
+      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -686,7 +743,7 @@ inherited CashJournalUserForm: TCashJournalUserForm
       item
         Name = 'inCashId'
         Value = ''
-        Component = CashGuides
+        Component = GuidesCash
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -694,7 +751,7 @@ inherited CashJournalUserForm: TCashJournalUserForm
       item
         Name = 'inCurrencyId'
         Value = Null
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -702,7 +759,7 @@ inherited CashJournalUserForm: TCashJournalUserForm
       item
         Name = 'inJuridicalBasisId'
         Value = Null
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -788,6 +845,14 @@ inherited CashJournalUserForm: TCashJournalUserForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -807,6 +872,10 @@ inherited CashJournalUserForm: TCashJournalUserForm
       Action = actReport_CashUser
       Category = 0
     end
+    object bbPrint: TdxBarButton
+      Action = actPrint
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 472
@@ -822,13 +891,13 @@ inherited CashJournalUserForm: TCashJournalUserForm
         Component = PeriodChoice
       end
       item
-        Component = CashGuides
+        Component = GuidesCash
       end
       item
-        Component = CurrencyGuides
+        Component = GuidesCurrency
       end
       item
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
       end>
   end
   inherited spMovementComplete: TdsdStoredProc
@@ -867,7 +936,7 @@ inherited CashJournalUserForm: TCashJournalUserForm
       item
         Name = 'CashId_top'
         Value = ''
-        Component = CashGuides
+        Component = GuidesCash
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -875,7 +944,7 @@ inherited CashJournalUserForm: TCashJournalUserForm
       item
         Name = 'CashName_top'
         Value = ''
-        Component = CashGuides
+        Component = GuidesCash
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -884,7 +953,7 @@ inherited CashJournalUserForm: TCashJournalUserForm
       item
         Name = 'CurrencyId'
         Value = Null
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -892,7 +961,7 @@ inherited CashJournalUserForm: TCashJournalUserForm
       item
         Name = 'CurrencyName'
         Value = Null
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -904,7 +973,7 @@ inherited CashJournalUserForm: TCashJournalUserForm
     Left = 384
     Top = 120
   end
-  object CashGuides: TdsdGuides
+  object GuidesCash: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceCash
     FormNameParam.Value = 'TCash_ObjectForm'
@@ -916,14 +985,14 @@ inherited CashJournalUserForm: TCashJournalUserForm
       item
         Name = 'Key'
         Value = ''
-        Component = CashGuides
+        Component = GuidesCash
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = CashGuides
+        Component = GuidesCash
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -931,7 +1000,7 @@ inherited CashJournalUserForm: TCashJournalUserForm
     Left = 552
     Top = 65533
   end
-  object CurrencyGuides: TdsdGuides
+  object GuidesCurrency: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceCurrency
     Key = '0'
@@ -944,14 +1013,14 @@ inherited CashJournalUserForm: TCashJournalUserForm
       item
         Name = 'Key'
         Value = ''
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -967,7 +1036,7 @@ inherited CashJournalUserForm: TCashJournalUserForm
     Left = 736
     Top = 65532
   end
-  object JuridicalBasisGuides: TdsdGuides
+  object GuidesJuridicalBasis: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridicalBasis
     Key = '0'
@@ -980,7 +1049,7 @@ inherited CashJournalUserForm: TCashJournalUserForm
       item
         Name = 'Key'
         Value = '0'
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -988,7 +1057,7 @@ inherited CashJournalUserForm: TCashJournalUserForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1004,14 +1073,14 @@ inherited CashJournalUserForm: TCashJournalUserForm
       item
         Name = 'JuridicalBasisId'
         Value = '0'
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalBasisName'
         Value = ''
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1019,5 +1088,67 @@ inherited CashJournalUserForm: TCashJournalUserForm
     PackSize = 1
     Left = 824
     Top = 48
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 724
+    Top = 281
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 724
+    Top = 334
+  end
+  object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpReport_Cash'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 42736d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 42736d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAccountId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCashId'
+        Value = ''
+        Component = GuidesCash
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyId'
+        Value = Null
+        Component = GuidesCurrency
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 655
+    Top = 320
   end
 end

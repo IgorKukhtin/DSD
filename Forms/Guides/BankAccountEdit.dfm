@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
-  ClientHeight = 343
+  ClientHeight = 321
   ClientWidth = 666
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,8 +29,8 @@
     Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
   end
   object cxButton1: TcxButton
-    Left = 200
-    Top = 298
+    Left = 368
+    Top = 284
     Width = 75
     Height = 25
     Action = dsdExecStoredProc
@@ -39,8 +39,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 344
-    Top = 298
+    Left = 512
+    Top = 284
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -178,6 +178,24 @@
     TabOrder = 21
     Width = 273
   end
+  object cxLabel10: TcxLabel
+    Left = 40
+    Top = 267
+    Cursor = crDrag
+    Caption = #1057#1095#1077#1090' ('#1073#1072#1083#1072#1085#1089')'
+  end
+  object edAccount: TcxButtonEdit
+    Left = 40
+    Top = 290
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 23
+    Width = 273
+  end
   object ActionList: TActionList
     Left = 296
     Top = 72
@@ -199,6 +217,7 @@
     object dsdExecStoredProc: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -208,6 +227,7 @@
     end
     object dsdFormClose: TdsdFormClose
       MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -221,12 +241,14 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -234,24 +256,36 @@
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
         Value = ''
         Component = dsdJuridicalGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBankId'
         Value = ''
         Component = dsdBankGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCurrencyId'
         Value = ''
         Component = dsdCurrencyGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAccountId'
+        Value = Null
+        Component = GuidesAccount
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCorrespondentBankId'
@@ -259,6 +293,7 @@
         Component = dsdCorrBankGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBeneficiarysBankId'
@@ -266,6 +301,7 @@
         Component = dsdBeneficiarysBankGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCorrespondentAccount'
@@ -273,6 +309,7 @@
         Component = edCorrespondentAccount
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBeneficiarysBankAccount'
@@ -280,6 +317,7 @@
         Component = edBeneficiarysBankAccount
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBeneficiarysAccount'
@@ -287,6 +325,7 @@
         Component = edBeneficiarysAccount
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 240
@@ -298,6 +337,7 @@
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 232
     Top = 8
@@ -313,23 +353,27 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = ''
         Component = dsdJuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -337,12 +381,14 @@
         Component = dsdJuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BankId'
         Value = ''
         Component = dsdBankGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BankName'
@@ -350,12 +396,14 @@
         Component = dsdBankGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyId'
         Value = ''
         Component = dsdCurrencyGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyName'
@@ -363,12 +411,14 @@
         Component = dsdCurrencyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CorrespondentBankId'
         Value = Null
         Component = dsdCorrBankGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CorrespondentBankName'
@@ -376,12 +426,14 @@
         Component = dsdCorrBankGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BeneficiarysBankId'
         Value = Null
         Component = dsdBeneficiarysBankGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BeneficiarysBankName'
@@ -389,24 +441,43 @@
         Component = dsdBeneficiarysBankGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CorrespondentAccount'
         Value = Null
         Component = edCorrespondentAccount
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BeneficiarysBankAccount'
         Value = Null
         Component = edBeneficiarysBankAccount
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BeneficiarysAccount'
         Value = Null
         Component = edBeneficiarysAccount
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AccountId'
+        Value = Null
+        Component = GuidesAccount
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AccountName'
+        Value = Null
+        Component = GuidesAccount
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 176
@@ -417,6 +488,7 @@
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridicalForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -425,6 +497,7 @@
         Value = ''
         Component = dsdJuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -432,6 +505,7 @@
         Component = dsdJuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 288
     Top = 125
@@ -441,6 +515,7 @@
     LookupControl = edBank
     FormNameParam.Value = 'TBankForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBankForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -449,6 +524,7 @@
         Value = ''
         Component = dsdBankGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -456,6 +532,7 @@
         Component = dsdBankGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 312
     Top = 173
@@ -465,6 +542,7 @@
     LookupControl = edCurrency
     FormNameParam.Value = 'TCurrencyForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCurrencyForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -473,6 +551,7 @@
         Value = ''
         Component = dsdCurrencyGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -480,13 +559,14 @@
         Component = dsdCurrencyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 312
     Top = 229
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 24
-    Top = 32
+    Left = 176
+    Top = 200
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -507,6 +587,7 @@
     LookupControl = edCorrespondentBank
     FormNameParam.Value = 'TBankForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBankForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -515,6 +596,7 @@
         Value = ''
         Component = dsdCorrBankGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -522,6 +604,7 @@
         Component = dsdCorrBankGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 616
     Top = 165
@@ -531,6 +614,7 @@
     LookupControl = edBeneficiarysBank
     FormNameParam.Value = 'TBankForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBankForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -539,6 +623,7 @@
         Value = ''
         Component = dsdBeneficiarysBankGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -546,8 +631,36 @@
         Component = dsdBeneficiarysBankGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 616
     Top = 25
+  end
+  object GuidesAccount: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edAccount
+    FormNameParam.Value = 'TAccount_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TAccount_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesAccount
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesAccount
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 200
+    Top = 269
   end
 end

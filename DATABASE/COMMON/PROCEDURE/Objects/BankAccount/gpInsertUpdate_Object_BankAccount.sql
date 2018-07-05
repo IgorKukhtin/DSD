@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_BankAccount(Integer,Integer,TVarChar,Integer,Integer,Integer,TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_BankAccount(Integer,Integer,TVarChar,Integer,Integer,Integer,Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_BankAccount(Integer,Integer,TVarChar,Integer,Integer,Integer,Integer,Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_BankAccount(
  INOUT ioId	                 Integer,       -- ключ объекта < Счет>
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_BankAccount(
     IN inBankId              Integer,       -- Банк
     IN inCurrencyId          Integer,       -- Валюта
 
+    IN inAccountId           Integer,       -- Счет баланс
     IN inCorrespondentBankId Integer,       -- Банк корреспондент для счета
     IN inBeneficiarysBankId  Integer,       -- Банк бенефициара
     IN inCorrespondentAccount TVarChar,     -- Счет в банке - корреспонденте
@@ -47,7 +49,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BankAccount_Juridical(), ioId, inJuridicalId);
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BankAccount_Bank(), ioId, inBankId);
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BankAccount_Currency(), ioId, inCurrencyId);
-
+   --
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BankAccount_Account(), ioId, inAccountId);
+   
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BankAccount_CorrespondentBank(), ioId, inCorrespondentBankId);
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BankAccount_BeneficiarysBank(), ioId, inBeneficiarysBankId);
 
@@ -60,15 +64,15 @@ BEGIN
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_BankAccount (Integer,Integer,TVarChar,Integer,Integer,Integer,Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.07.18         * add inAccountId
  10.10.14                                                       *
  08.05.14                                        * add lpCheckRight
- 10.06.13          *
+ 10.06.13         *
 */
 
 -- тест

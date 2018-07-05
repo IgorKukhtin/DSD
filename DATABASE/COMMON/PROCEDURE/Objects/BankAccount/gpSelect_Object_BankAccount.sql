@@ -6,7 +6,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_BankAccount(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean,
-               JuridicalName TVarChar, BankName TVarChar, CurrencyId Integer, CurrencyName TVarChar,
+               JuridicalName TVarChar, BankName TVarChar,
+               CurrencyId Integer, CurrencyName TVarChar,
+               AccountId Integer, AccountName TVarChar,
                CorrespondentBankId Integer, CorrespondentBankName TVarChar,
                BeneficiarysBankId Integer, BeneficiarysBankName TVarChar,
                CorrespondentAccount TVarChar, BeneficiarysBankAccount TVarChar, BeneficiarysAccount TVarChar
@@ -26,6 +28,9 @@ $BODY$BEGIN
            , Object_BankAccount_View.BankName
            , Object_BankAccount_View.CurrencyId
            , Object_BankAccount_View.CurrencyName
+
+           , Object_Account.Id                                  AS AccountId
+           , Object_Account.ValueData                           AS AccountName
            , Object_CorrespondentBank.Id                        AS CorrespondentBankId
            , Object_CorrespondentBank.ValueData                 AS CorrespondentBankName
            , Object_BeneficiarysBank.Id                         AS BeneficiarysBankId
@@ -48,6 +53,12 @@ $BODY$BEGIN
                             AND ObjectLink_BankAccount_BeneficiarysBank.DescId = zc_ObjectLink_BankAccount_BeneficiarysBank()
         LEFT JOIN Object AS Object_CorrespondentBank ON Object_CorrespondentBank.Id = ObjectLink_BankAccount_CorrespondentBank.ChildObjectId
         LEFT JOIN Object AS Object_BeneficiarysBank ON Object_BeneficiarysBank.Id = ObjectLink_BankAccount_BeneficiarysBank.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Account
+                             ON ObjectLink_BankAccount_Account.ObjectId = Object_BankAccount_View.Id
+                            AND ObjectLink_BankAccount_Account.DescId = zc_ObjectLink_BankAccount_Account()
+        LEFT JOIN Object AS Object_Account ON Object_Account.Id = ObjectLink_BankAccount_Account.ChildObjectId
+        
         LEFT JOIN ObjectString AS OS_BankAccount_CorrespondentAccount
                                ON OS_BankAccount_CorrespondentAccount.ObjectId = Object_BankAccount_View.Id
                               AND OS_BankAccount_CorrespondentAccount.DescId = zc_ObjectString_BankAccount_CorrespondentAccount()
