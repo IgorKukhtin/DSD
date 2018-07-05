@@ -1023,7 +1023,9 @@ uses
   GoodsByGoodsKind_VMC in '..\..\Forms\Guides\GoodsByGoodsKind_VMC.pas' {GoodsByGoodsKind_VMCForm: TParentForm},
   GoodsByGoodsKind_VMCDialog in '..\..\Forms\Guides\GoodsByGoodsKind_VMCDialog.pas' {GoodsByGoodsKind_VMCDialogForm: TParentForm},
   GoodsPropertyBox in '..\..\Forms\Guides\GoodsPropertyBox.pas' {GoodsPropertyBoxForm: TParentForm},
-  GoodsPropertyBoxEdit in '..\..\Forms\Guides\GoodsPropertyBoxEdit.pas' {GoodsPropertyBoxEditForm: TParentForm};
+  GoodsPropertyBoxEdit in '..\..\Forms\Guides\GoodsPropertyBoxEdit.pas' {GoodsPropertyBoxEditForm: TParentForm},
+  MemberPersonalServiceList in '..\..\Forms\Guides\MemberPersonalServiceList.pas' {MemberPersonalServiceListForm: TParentForm},
+  MemberPersonalServiceListEdit in '..\..\Forms\Guides\MemberPersonalServiceListEdit.pas' {MemberPersonalServiceListEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
