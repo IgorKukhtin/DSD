@@ -290,6 +290,12 @@ type
     mmSaveToExcel: TMenuItem;
     SaveExcelDialog: TSaveDialog;
     TimerServiceRun: TTimer;
+    actManualDiscount: TAction;
+    miManualDiscount: TMenuItem;
+    pnlManualDiscount: TPanel;
+    Label9: TLabel;
+    Label15: TLabel;
+    edManualDiscount: TcxCurrencyEdit;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -353,7 +359,8 @@ type
     procedure actSetPromoCodeExecute(Sender: TObject); //***05.02.18
     procedure miPrintNotFiscalCheckClick(Sender: TObject);
     procedure mmSaveToExcelClick(Sender: TObject);
-    procedure TimerServiceRunTimer(Sender: TObject); //***12.02.18
+    procedure TimerServiceRunTimer(Sender: TObject);
+    procedure actManualDiscountExecute(Sender: TObject); //***12.02.18
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -408,7 +415,7 @@ type
       ADiscountExternalId: Integer; ADiscountExternalName, ADiscountCardNumber: String;
       APartnerMedicalId: Integer; APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP : String;
       AOperDateSP : TDateTime;
-      ASPKindId: Integer; ASPKindName : String; ASPTax : Currency; APromoCodeID : Integer;
+      ASPKindId: Integer; ASPKindName : String; ASPTax : Currency; APromoCodeID, AManualDiscount : Integer;
       NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 
     //проверили что есть остаток
@@ -680,6 +687,8 @@ begin
   FormParams.ParamByName('PromoCodeGUID').Value             := '';
   FormParams.ParamByName('PromoName').Value                 := '';
   FormParams.ParamByName('PromoCodeChangePercent').Value    := 0.0;
+  //***27.06.18
+  FormParams.ParamByName('ManualDiscount').Value            := 0;
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
@@ -701,6 +710,8 @@ begin
   lblPromoName.Caption := '';
   lblPromoCode.Caption := '';
   edPromoCodeChangePrice.Value := 0;
+  pnlManualDiscount.Visible := false;
+  edManualDiscount.Value := 0;
 end;
 
 procedure TMainCashForm2.actClearMoneyExecute(Sender: TObject);
@@ -709,7 +720,7 @@ begin
 end;
 
 procedure TMainCashForm2.actExecuteLoadVIPExecute(Sender: TObject);
-var lMsg: String;
+  var lMsg: String; nRecNo : integer;
 begin
   inherited;
   //
@@ -785,6 +796,43 @@ begin
     if (FormParams.ParamByName('BayerPhone').AsString <> '')
     then lblBayer.Caption := lblBayer.Caption + ' * ' + FormParams.ParamByName('BayerPhone').AsString;
 
+    //***30.06.18
+    if FormParams.ParamByName('ManualDiscount').Value > 0 then
+    begin
+      pnlManualDiscount.Visible := True;
+      edManualDiscount.Value := FormParams.ParamByName('ManualDiscount').Value;
+
+      CheckCDS.DisableControls;
+      try
+        CheckCDS.Filtered := False;
+        nRecNo := CheckCDS.RecNo;
+
+        CheckCDS.First;
+        while not CheckCDS.Eof do
+        begin
+
+          if checkCDS.FieldByName('ChangePercent').asCurrency <> FormParams.ParamByName('ManualDiscount').Value then
+          begin
+            checkCDS.Edit;
+            checkCDS.FieldByName('Price').asCurrency    := checkCDS.FieldByName('PriceSale').asCurrency
+                                                           * (1 - Self.FormParams.ParamByName('ManualDiscount').Value/100);
+            checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('ManualDiscount').Value;
+            CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency);
+            checkCDS.FieldByName('SummChangePercent').asCurrency :=  GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('PriceSale').asCurrency) -
+              CheckCDS.FieldByName('Summ').asCurrency;
+            checkCDS.Post;
+          end;
+          CheckCDS.Next;
+        end;
+      finally
+        CheckCDS.RecNo := nRecNo;
+        CheckCDS.Filtered := True;
+        CheckCDS.EnableControls;
+      end;
+
+      CalcTotalSumm;
+    end;
+
     pnlVIP.Visible := true;
   End;
   if not gc_User.Local then
@@ -856,6 +904,75 @@ begin
   if isScaner = true
   then ActiveControl := ceScaner
   else ActiveControl := lcName;
+end;
+
+procedure TMainCashForm2.actManualDiscountExecute(Sender: TObject);
+  var S : string; I, nRecNo : integer;
+begin
+  inherited;
+
+  if (Self.FormParams.ParamByName('SPTax').Value <> 0)
+     and (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
+  begin
+    ShowMessage('Применен соц проект.'#13#10'Для променениея ручной скидки обнулите чек и набрать позиции заново..');
+    Exit;
+  end;
+
+  if (DiscountServiceForm.gCode = 2) then
+  begin
+    ShowMessage('Применен дисконт.'#13#10'Для променениея ручной скидки обнулите чек и набрать позиции заново..');
+    Exit;
+  end;
+
+  if FormParams.ParamByName('PromoCodeGUID').Value <> '' then
+  begin
+    ShowMessage('Установлен промокод.'#13#10'Для променениея ручной скидки обнулите чек и набрать позиции заново..');
+    Exit;
+  end;
+
+  S := '';
+  while True do
+  begin
+    S := InputBox('Ручная скидка', 'Процент скидки: ', S);
+    if S = '' then Exit;
+    if not TryStrToInt(S, I) or (I < 0) or (I > 50) then
+    begin
+      ShowMessage('Должно быть число от 0 до 50.');
+    end else Break;
+  end;
+
+  FormParams.ParamByName('ManualDiscount').Value := I;
+  pnlManualDiscount.Visible := FormParams.ParamByName('ManualDiscount').Value > 0;
+  edManualDiscount.Value := FormParams.ParamByName('ManualDiscount').Value;
+
+  CheckCDS.DisableControls;
+  try
+    CheckCDS.Filtered := False;
+    nRecNo := CheckCDS.RecNo;
+
+    CheckCDS.First;
+    while not CheckCDS.Eof do
+    begin
+
+      if checkCDS.FieldByName('ChangePercent').asCurrency <> FormParams.ParamByName('ManualDiscount').Value then
+      begin
+        checkCDS.Edit;
+        checkCDS.FieldByName('Price').asCurrency    := checkCDS.FieldByName('PriceSale').asCurrency
+                                                       * (1 - Self.FormParams.ParamByName('ManualDiscount').Value/100);
+        checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('ManualDiscount').Value;
+        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency);
+        checkCDS.FieldByName('SummChangePercent').asCurrency :=  GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('PriceSale').asCurrency) -
+          CheckCDS.FieldByName('Summ').asCurrency;
+        checkCDS.Post;
+      end;
+      CheckCDS.Next;
+    end;
+  finally
+    CheckCDS.RecNo := nRecNo;
+    CheckCDS.Filtered := True;
+    CheckCDS.EnableControls;
+  end;
+  CalcTotalSumm;
 end;
 
 //проверили что есть остаток
@@ -1003,6 +1120,8 @@ begin
                    FormParams.ParamByName('SPTax').Value,
                    //***05.02.18
                    FormParams.ParamByName('PromoCodeID').Value,
+                   //***27.06.18
+                   FormParams.ParamByName('ManualDiscount').Value,
 
                    True,         // NeedComplete
                    CheckNumber,  // FiscalCheckNumber
@@ -1425,6 +1544,9 @@ begin
   FormParams.ParamByName('PromoCodeGUID').Value           := PromoCodeGUID;
   FormParams.ParamByName('PromoName').Value               := PromoName;
   FormParams.ParamByName('PromoCodeChangePercent').Value  := PromoCodeChangePercent;
+  //***27.06.18
+  FormParams.ParamByName('ManualDiscount').Value          := 0;
+
 
   pnlPromoCode.Visible          := PromoCodeId > 0;
   lblPromoName.Caption          := '  ' + PromoName + '  ';
@@ -1708,6 +1830,8 @@ begin
               ,FormParams.ParamByName('SPTax').Value
               //***05.02.18
               ,FormParams.ParamByName('PromoCodeID').Value
+              //***27.06.18
+              ,FormParams.ParamByName('ManualDiscount').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -1782,6 +1906,8 @@ begin
               ,FormParams.ParamByName('SPTax').Value
               //***05.02.18
               ,FormParams.ParamByName('PromoCodeID').Value
+              //***27.06.18
+              ,FormParams.ParamByName('ManualDiscount').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -1929,6 +2055,8 @@ begin
               ,FormParams.ParamByName('SPTax').Value
               //***05.02.18
               ,FormParams.ParamByName('PromoCodeID').Value
+              //***27.06.18
+              ,FormParams.ParamByName('ManualDiscount').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -2250,6 +2378,7 @@ var lQuantity, lPrice, lPriceSale, lChangePercent, lSummChangePercent : Currency
     lGoodsId_bySoldRegim : Integer;
     lPriceSale_bySoldRegim, lPrice_bySoldRegim : Currency;
 begin
+
   if ceAmount.Value = 0 then
      exit;
   if not assigned(SourceClientDataSet) then
@@ -2324,7 +2453,14 @@ begin
                lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
                // цена СО скидкой
                lPrice_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency * (1 - Self.FormParams.ParamByName('PromoCodeChangePercent').Value/100);
-             end else begin
+             end else if (Self.FormParams.ParamByName('ManualDiscount').Value > 0) then
+             begin
+               // цена БЕЗ скидки
+               lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
+               // цена СО скидкой
+               lPrice_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency * (1 - Self.FormParams.ParamByName('ManualDiscount').Value/100);
+             end else
+                  begin
                        // цена БЕЗ скидки
                        lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
                        // цена СО скидкой в этом случае такая же
@@ -2376,6 +2512,11 @@ begin
          else if (Self.FormParams.ParamByName('PromoCodeID').Value > 0)
          then begin
                  lChangePercent     := Self.FormParams.ParamByName('PromoCodeChangePercent').Value;
+                 lSummChangePercent := (lPriceSale_bySoldRegim - lPrice_bySoldRegim);
+              end
+         else  if (Self.FormParams.ParamByName('ManualDiscount').Value > 0) then
+              begin
+                 lChangePercent     := Self.FormParams.ParamByName('ManualDiscount').Value;
                  lSummChangePercent := (lPriceSale_bySoldRegim - lPrice_bySoldRegim);
               end
          else begin
@@ -2739,6 +2880,8 @@ begin
   FormParams.ParamByName('PromoCodeGUID').Value             := '';
   FormParams.ParamByName('PromoName').Value                 := '';
   FormParams.ParamByName('PromoCodeChangePercent').Value    := 0.0;
+  //***27.06.18
+  FormParams.ParamByName('ManualDiscount').Value            := 0;
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
@@ -2758,6 +2901,8 @@ begin
   lblPromoName.Caption := '';
   lblPromoCode.Caption := '';
   edPromoCodeChangePrice.Value := 0;
+  pnlManualDiscount.Visible := false;
+  edManualDiscount.Value := 0;
   try
     CheckCDS.EmptyDataSet;
   finally
@@ -3204,8 +3349,20 @@ begin
             checkCDS.FieldByName('SummChangePercent').asCurrency := CheckCDS.FieldByName('Amount').asCurrency
                                                                     * RemainsCDS.FieldByName('Price').asCurrency
                                                                     * (Self.FormParams.ParamByName('PromoCodeChangePercent').Value/100);
-        end
-        else begin
+        end else
+        if (Self.FormParams.ParamByName('ManualDiscount').Value > 0) then
+        begin
+           // на всяк случай - УСТАНОВИМ скидку еще разок
+            checkCDS.FieldByName('PriceSale').asCurrency:= RemainsCDS.FieldByName('Price').asCurrency;
+            checkCDS.FieldByName('Price').asCurrency    := RemainsCDS.FieldByName('Price').asCurrency
+                                                           * (1 - Self.FormParams.ParamByName('ManualDiscount').Value/100);
+            // и УСТАНОВИМ скидку
+            checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('ManualDiscount').Value;
+            checkCDS.FieldByName('SummChangePercent').asCurrency := CheckCDS.FieldByName('Amount').asCurrency
+                                                                    * RemainsCDS.FieldByName('Price').asCurrency
+                                                                    * (Self.FormParams.ParamByName('ManualDiscount').Value/100);
+        end else
+        begin
             // на всяк случай условие - восстановим если Цена БЕЗ скидки была запонена
             if checkCDS.FieldByName('PriceSale').asCurrency > 0
             then checkCDS.FieldByName('Price').asCurrency        := checkCDS.FieldByName('PriceSale').asCurrency;
@@ -3238,7 +3395,7 @@ function TMainCashForm2.SaveLocal(ADS :TClientDataSet; AManagerId: Integer; AMan
       ADiscountExternalId: Integer; ADiscountExternalName, ADiscountCardNumber: String;
       APartnerMedicalId: Integer; APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP : String;
       AOperDateSP : TDateTime;
-      ASPKindId: Integer; ASPKindName : String; ASPTax : Currency; APromoCodeID : Integer;
+      ASPKindId: Integer; ASPKindName : String; ASPTax : Currency; APromoCodeID, AManualDiscount : Integer;
       NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 var
   NextVIPId: integer;
@@ -3408,7 +3565,9 @@ begin
                                          //***15.06.17
                                          ASPKindId,                //Id Вид СП
                                          //***02.02.18
-                                         APromoCodeID               //Id промокода
+                                         APromoCodeID,             //Id промокода
+                                         //***27.06.18
+                                         AManualDiscount           //Ручная скидка
                                         ]);
       End
       else
@@ -3447,6 +3606,8 @@ begin
         FLocalDataBaseHead.FieldByName('SPKINDID').Value   := ASPKindId;  //Id Вид СП
         //***02.02.18
         FLocalDataBaseHead.FieldByName('PROMOCODE').Value  := APromoCodeID;  //Id промокода
+        //***27.06.18
+        FLocalDataBaseHead.FieldByName('MANUALDISC').Value := AManualDiscount; // Ручная скидка
 
         FLocalDataBaseHead.Post;
       End;

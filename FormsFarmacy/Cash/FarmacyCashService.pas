@@ -51,7 +51,9 @@ type
     //***15.06.17
     SPKINDID    : Integer;       //Id Вид СП
     //***05.02.18
-    PROMOCODE    : Integer;      //Id промокода
+    PROMOCODE   : Integer;       //Id промокода
+    //***21.06.18
+    MANUALDISC  : Integer;       //Ручная скидка
   end;
   TBodyRecord = record
     ID: Integer;            //ид записи
@@ -905,6 +907,8 @@ begin
                 SPKINDID := FieldByName('SPKINDID').AsInteger;
                 // ***05.02.18
                 PROMOCODE := FieldByName('PROMOCODE').AsInteger;
+                // ***21.06.18
+                MANUALDISC := FieldByName('MANUALDISC').AsInteger;
 
                 FNeedSaveVIP := (MANAGER <> 0);
               end;
@@ -1027,6 +1031,8 @@ begin
                   dsdSave.Params.AddParam('inSPKindId', ftInteger, ptInput, Head.SPKINDID);
                   // ***05.02.18
                   dsdSave.Params.AddParam('inPromoCodeId', ftInteger, ptInput, Head.PROMOCODE);
+                  // ***05.02.18
+                  dsdSave.Params.AddParam('inManualDiscount', ftInteger, ptInput, Head.MANUALDISC);
                   // ***24.01.17
                   dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
 
