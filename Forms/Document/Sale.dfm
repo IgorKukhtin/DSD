@@ -1244,7 +1244,44 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_ExpSpec: TdsdPrintAction [9]
+    object actPrint_PackWeight: TdsdPrintAction [9]
+      Category = 'Print_Fozzy'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1090#1072#1088#1072' ('#1092#1086#1079#1079#1080')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1090#1072#1088#1072' ('#1092#1086#1079#1079#1080')'
+      ImageIndex = 19
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_SalePackWeight_Fozzy'
+      ReportNameParam.Value = 'PrintMovement_SalePackWeight_Fozzy'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_ExpSpec: TdsdPrintAction [10]
       Category = 'Print_Export'
       MoveParams = <>
       StoredProc = spSelectPrint_ExpInvoice
@@ -1287,7 +1324,7 @@
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    object actAssetGoodsChoiceForm: TOpenChoiceForm [12]
+    object actAssetGoodsChoiceForm: TOpenChoiceForm [13]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1321,7 +1358,7 @@
         end>
       isShowModal = True
     end
-    object actOpenReportForm: TdsdOpenForm [16]
+    object actOpenReportForm: TdsdOpenForm [17]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -1490,7 +1527,7 @@
       ReportNameParam.ComponentItem = 'ReportNameSale'
       ReportNameParam.ParamType = ptInput
     end
-    object mactPrint_Sale: TMultiAction [21]
+    object mactPrint_Sale: TMultiAction [22]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -1508,7 +1545,7 @@
       ImageIndex = 3
       ShortCut = 16464
     end
-    object mactPrint_Tax_Client: TMultiAction [22]
+    object mactPrint_Tax_Client: TMultiAction [23]
       Category = 'Print_Tax'
       MoveParams = <>
       ActionList = <
@@ -1522,7 +1559,7 @@
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       ImageIndex = 18
     end
-    object mactPrint_Account: TMultiAction [23]
+    object mactPrint_Account: TMultiAction [24]
       Category = 'Print_Account'
       MoveParams = <>
       ActionList = <
@@ -1536,7 +1573,7 @@
       Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
       ImageIndex = 21
     end
-    object actPrintTax_Client: TdsdPrintAction [24]
+    object actPrintTax_Client: TdsdPrintAction [25]
       Category = 'Print_Tax'
       MoveParams = <>
       StoredProc = spSelectTax_Client
@@ -1579,7 +1616,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Account: TdsdPrintAction [25]
+    object actPrint_Account: TdsdPrintAction [26]
       Category = 'Print_Account'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -1618,7 +1655,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_ExpPack: TdsdPrintAction [26]
+    object actPrint_ExpPack: TdsdPrintAction [27]
       Category = 'Print_Export'
       MoveParams = <>
       StoredProc = spSelectPrint_ExpPack
@@ -1669,7 +1706,7 @@
         item
         end>
     end
-    object actPrintSaleOrderTax: TdsdPrintAction [29]
+    object actPrintSaleOrderTax: TdsdPrintAction [30]
       Category = 'Print'
       MoveParams = <>
       StoredProc = spSelectPrint_SaleOrderTax
@@ -1707,7 +1744,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actGoodsKindChoice: TOpenChoiceForm [32]
+    object actGoodsKindChoice: TOpenChoiceForm [33]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2401,6 +2438,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbPrint_PackWeight'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2616,6 +2657,10 @@
     end
     object bbPrintSaleOrderTax: TdxBarButton
       Action = actPrintSaleOrderTax
+      Category = 0
+    end
+    object bbPrint_PackWeight: TdxBarButton
+      Action = actPrint_PackWeight
       Category = 0
     end
   end

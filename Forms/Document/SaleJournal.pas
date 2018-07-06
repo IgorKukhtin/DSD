@@ -248,6 +248,8 @@ type
     actPrintSaleOrderTax: TdsdPrintAction;
     spSelectPrint_SaleOrderTax: TdsdStoredProc;
     bbPrintSaleOrderTax: TdxBarButton;
+    bbPrint_PackWeight: TdxBarButton;
+    actPrint_PackWeight: TdsdPrintAction;
   private
     { Private declarations }
   public
