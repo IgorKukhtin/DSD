@@ -22,7 +22,12 @@ RETURNS TABLE (Id Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbJuridicalId Integer;
 BEGIN
+
+    -- Контролшь использования подразделения
+    vbJuridicalId := gpGet_User_JuridicalId(inSession);
+
     RETURN QUERY
         WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                      UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
@@ -43,6 +48,7 @@ BEGIN
             INNER JOIN tmpStatus ON Movement_Payment.StatusId = tmpStatus.StatusId
         WHERE
             Movement_Payment.OperDate BETWEEN inStartDate AND inEndDate
+          AND (vbJuridicalId = 0 OR Movement_Payment.JuridicalId = vbJuridicalId)  
         ORDER BY InvNumber;
 
 END;
@@ -53,6 +59,7 @@ ALTER FUNCTION gpSelect_Movement_Payment (TDateTime, TDateTime, Boolean, TVarCha
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 04.07.18                                                                                       *
  29.10.15                                                                        *
 */

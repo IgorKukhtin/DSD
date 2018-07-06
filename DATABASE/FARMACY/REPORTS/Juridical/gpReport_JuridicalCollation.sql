@@ -31,10 +31,18 @@ RETURNS TABLE(
   )
 AS
 $BODY$
+   DECLARE vbJuridicalId Integer;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
+    
+    vbJuridicalId := gpGet_User_JuridicalId(inSession);
+    
+    IF (vbJuridicalId <> 0) AND (inJuridical_BasisId <> vbJuridicalId) 
+    THEN
+       inJuridical_BasisId := vbJuridicalId;
+    END IF;
 
     -- Один запрос, который считает остаток и движение. 
     RETURN QUERY  

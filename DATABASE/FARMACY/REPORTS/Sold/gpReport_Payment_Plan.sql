@@ -18,6 +18,8 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
+
+    PERFORM lpCheckingUser_Juridical(inOurJuridicalId, inSession);
   
     RETURN QUERY
         WITH
