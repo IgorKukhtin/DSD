@@ -1,16 +1,25 @@
 -- Function: gpInsertUpdate_Movement_Cash()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     ,Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
  INOUT ioInvNumber            TVarChar  , -- Номер документа
     IN inOperDate             TDateTime , -- Дата документа
-    IN inFromId               Integer   , -- От кого (в документе)
-    IN inToId                 Integer   , -- Кому (в документе)
-    IN inCurrencyDocumentId   Integer   , -- Валюта (документа)
-   OUT outCurrencyValue       TFloat    , -- курс валюты
-   OUT outParValue            TFloat    , -- Номинал для перевода в валюту баланса
+    IN inCurrencyPartnerValue TFloat    ,
+    IN inParPartnerValue      TFloat    ,
+    IN inAmountCurrency       TFloat    ,
+    IN inAmount               TFloat    ,
+
+    IN inAmount_MI            TFloat    ,    
+    IN inCashId               Integer   , --
+    IN inMoneyPlaceId         Integer   , --
+    IN inInfoMoneyId          Integer   ,
+    IN inUnitId               Integer   ,
+    IN inCurrencyId           Integer   , --
+   OUT outCurrencyValue       TFloat    , --
+   OUT outParValue            TFloat    , --
     IN inComment              TVarChar  , -- Примечание
     IN inSession              TVarChar    -- сессия пользователя
 )
@@ -37,7 +46,7 @@ BEGIN
         RETURN;
 
      ELSEIF COALESCE (ioId, 0) = 0 THEN
-        ioInvNumber:= CAST (NEXTVAL ('Movement_Cash_seq') AS TVarChar);
+        ioInvNumber:= CAST (NEXTVAL ('movement_cash_seq') AS TVarChar);
      ELSEIF vbUserId = zc_User_Sybase() THEN
         ioInvNumber:= (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = ioId);
      END IF;
@@ -49,8 +58,8 @@ BEGIN
          SELECT COALESCE (tmp.Amount, 1), COALESCE (tmp.ParValue,0)
                 INTO outCurrencyValue, outParValue
          FROM lfSelect_Movement_Currency_byDate (inOperDate      := inOperDate -- (SELECT Movement.OperDate FROM Movement  WHERE Movement.Id = ioId)
-                                               , inCurrencyFromId:= zc_Currency_Basis()
-                                               , inCurrencyToId  := inCurrencyDocumentId
+                                               , inCurrencyCashId:= zc_Currency_Basis()
+                                               , inCurrencyToId  := inCurrencyId
                                                 ) AS tmp;
      ELSE
          -- курс не нужен
@@ -61,17 +70,24 @@ BEGIN
 
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement_Cash (ioId                := ioId
-                                           , inInvNumber         := ioInvNumber
-                                           , inOperDate          := inOperDate
-                                           , inFromId            := inFromId
-                                           , inToId              := inToId
-                                           , inCurrencyDocumentId:= inCurrencyDocumentId
-                                           , inCurrencyValue     := outCurrencyValue
-                                           , inParValue          := outParValue
-                                           , inComment           := inComment
-                                           , inUserId            := vbUserId
-                                            );
+     ioId := lpInsertUpdate_Movement_Cash (ioId                    := ioId
+                                         , inInvNumber             := ioInvNumber
+                                         , inOperDate              := inOperDate
+                                         , inCurrencyPartnerValue  := inCurrencyPartnerValue
+                                         , inParPartnerValue       := inParPartnerValue     
+                                         , inAmountCurrency        := inAmountCurrency      
+                                         , inAmount                := inAmount              
+                                         , inAmount_MI             := inAmount_MI           
+                                         , inCashId                := inCashId              
+                                         , inMoneyPlaceId          := inMoneyPlaceId        
+                                         , inInfoMoneyId           := inInfoMoneyId         
+                                         , inUnitId                := inUnitId              
+                                         , inCurrencyId            := inCurrencyId     
+                                         , inCurrencyValue         := outCurrencyValue
+                                         , inParValue              := outParValue     
+                                         , inComment               := inComment             
+                                         , inUserId                := vbUserId
+                                          );
 
 END;
 $BODY$
@@ -80,8 +96,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 08.05.17         *
- 10.04.17         *
+ 05.07.18         *
  */
 
 -- тест
