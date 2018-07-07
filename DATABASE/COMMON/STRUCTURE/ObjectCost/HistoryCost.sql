@@ -36,6 +36,7 @@ CREATE TABLE HistoryCost(
 /*                                  Индексы                                      */
 
 CREATE UNIQUE INDEX idx_HistoryCost_ObjectCostId_StartDate_EndDate ON HistoryCost(ObjectCostId, StartDate, EndDate);
+
 /*-------------------------------------------------------------------------------*/
 
 

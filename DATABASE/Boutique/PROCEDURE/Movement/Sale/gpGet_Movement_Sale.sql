@@ -53,6 +53,7 @@ BEGIN
                                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                            AND MovementItem.DescId     = zc_MI_Master()
                                                            AND MovementItem.isErased   = FALSE
+                                                           AND MovementItem.Amount     > 0
                                WHERE Movement.DescId   = zc_Movement_Sale()
                                  AND Movement.StatusId = zc_Enum_Status_UnComplete()
                                  AND Movement.OperDate = CURRENT_DATE

@@ -89,6 +89,31 @@ BEGIN
      -- , tmp1 AS (SELECT DISTINCT HistoryCost.ContainerId FROM HistoryCost WHERE ('01.04.2016' BETWEEN StartDate AND EndDate) AND ABS (Price) = 1.1234 AND CalcSumm > 1000000)
      -- , tmp_err AS (SELECT DISTINCT MovementItemContainer.MovementId FROM tmp1 INNER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = tmp1.ContainerId AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate)
 
+     , tmpContainer AS (SELECT 1250361 AS ContainerId
+                       UNION
+                        SELECT 1736845 AS ContainerId
+                       )
+     , tmpGoodsContainer AS (/*SELECT DISTINCT CLO.ObjectId AS GoodsId
+                               FROM tmpContainer
+                                    INNER JOIN ContainerLinkObject AS CLO
+                                                                   ON CLO.ContainerId = tmpContainer.ContainerId
+                                                                 AND CLO.DescId       = zc_ContainerLinkObject_Goods()*/
+                             SELECT 5662  AS GoodsId
+                            UNION
+                             SELECT 3902   AS GoodsId
+                            UNION
+                             SELECT 607384   AS GoodsId
+                            UNION
+                             SELECT 1076606   AS GoodsId
+                            )
+     /*, tmpMovContainer AS (SELECT DISTINCT Movement.Id AS MovementId
+                           FROM Movement
+                                INNER JOIN MovementItem  ON MovementItem.MovementId = Movement.Id
+                                                        AND MovementItem.isErased   = FALSE
+                                INNER JOIN tmpGoodsContainer  ON tmpGoodsContainer.GoodsId = MovementItem.ObjectId
+                           WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                             AND Movement.StatusId = zc_Enum_Status_Complete()
+                          )*/
      -- Результат
      SELECT tmp.MovementId
           , tmp.OperDate
@@ -377,6 +402,8 @@ BEGIN
        AND Movement.StatusId = zc_Enum_Status_Complete()
        -- AND inIsBefoHistoryCost = TRUE -- *****
     ) AS tmp
+    -- INNER JOIN tmpMovContainer ON tmpMovContainer.MovementId = tmp.MovementId
+    
     -- WHERE tmp.MovementId >= 2212722 OR tmp.Code = 'zc_Movement_Inventory'
     ;
 
