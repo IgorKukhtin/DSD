@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
+             , Amount TFloat
              , CashId Integer, CashName TVarChar
              , MoneyPlaceId Integer, MoneyPlaceName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
@@ -41,7 +42,8 @@ BEGIN
              , CAST (1 AS TFloat)    AS ParValue
              , CAST (0 AS TFloat)    AS CurrencyPartnerValue
              , CAST (1 AS TFloat)    AS ParPartnerValue
-             
+             , CAST (0 AS TFloat)    AS Amount
+
              , 0                     AS CashId
              , CAST ('' AS TVarChar) AS CashName
              , 0                     AS MoneyPlaceId
@@ -57,7 +59,7 @@ BEGIN
              , CAST ('' AS TVarChar) AS CurrencyName
              , 0                     AS CurrencyPartnerId
              , CAST ('' AS TVarChar) AS CurrencyPartnerName
-
+             
              , CAST ('' AS TVarChar) AS Comment
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfGet
@@ -77,55 +79,81 @@ BEGIN
              , MovementFloat_ParValue.ValueData      AS ParValue
              , MovementFloat_CurrencyPartnerValue.ValueData AS CurrencyPartnerValue
              , MovementFloat_ParPartnerValue.ValueData      AS ParPartnerValue
+             , MovementItem.Amount                   AS Amount
              
-             , Object_From.Id                        AS FromId
-             , Object_From.ValueData                 AS FromName
-             , Object_To.Id                          AS ToId
-             , Object_To.ValueData                   AS ToName
+             , Object_Cash.Id                        AS CashId
+             , Object_Cash.ValueData                 AS CashName
+             , Object_MoneyPlace.Id                  AS MoneyPlaceId
+             , Object_MoneyPlace.ValueData           AS MoneyPlaceName
 
-             , Object_CurrencyDocument.Id            AS CurrencyDocumentId
-             , Object_CurrencyDocument.ValueData     AS CurrencyDocumentName
+             , Object_InfoMoney.Id                   AS InfoMoneyId
+             , Object_InfoMoney.ValueData            AS InfoMoneyName
+             , Object_Unit.Id                        AS UnitId
+             , Object_Unit.ValueData                 AS UnitName
+
+             , Object_Currency.Id                    AS CurrencyId
+             , Object_Currency.ValueData             AS CurrencyName
+
+             , Object_CurrencyPartner.Id             AS CurrencyPartnertId
+             , Object_CurrencyPartner.ValueData      AS CurrencyPartnerName
 
              , MovementString_Comment.ValueData      AS Comment
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-            LEFT JOIN MovementString AS MovementString_Comment
-                                     ON MovementString_Comment.MovementId = Movement.Id
-                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
-
             LEFT JOIN MovementFloat AS MovementFloat_ParValue
-                                    ON MovementFloat_ParValue.MovementId =  Movement.Id
+                                    ON MovementFloat_ParValue.MovementId = Movement.Id
                                    AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
             LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
                                     ON MovementFloat_CurrencyValue.MovementId =  Movement.Id
                                    AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
 
             LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
-                                    ON MovementFloat_ParPartnerValue.MovementId =  Movement.Id
+                                    ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
                                    AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParPartnerValue()
             LEFT JOIN MovementFloat AS MovementFloat_CurrencyPartnerValue
                                     ON MovementFloat_CurrencyPartnerValue.MovementId =  Movement.Id
                                    AND MovementFloat_CurrencyPartnerValue.DescId = zc_MovementFloat_CurrencyPartnerValue()
 ---
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                         ON MovementLinkObject_From.MovementId = Movement.Id
-                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = Movement.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                   AND MovementItem.DescId     = zc_MI_Master()
+                                   
+            LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = MovementItem.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
-                                         ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
-                                        AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
-            LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MovementLinkObject_CurrencyDocument.ObjectId
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                             ON MILinkObject_MoneyPlace.MovementId = MovementItem.Id
+                                            AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+            LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = MILinkObject_MoneyPlace.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_CurrencyPartner
+                                             ON MILinkObject_CurrencyPartner.MovementId = MovementItem.Id
+                                            AND MILinkObject_CurrencyPartner.DescId = zc_MILinkObject_CurrencyPartner()
+            LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MILinkObject_CurrencyPartner.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
+                                             ON MILinkObject_Currency.MovementId = MovementItem.Id
+                                            AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
+            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                             ON MILinkObject_InfoMoney.MovementId = MovementItem.Id
+                                            AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = MILinkObject_InfoMoney.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                             ON MILinkObject_Unit.MovementId = MovementItem.Id
+                                            AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
 
        WHERE Movement.Id     = inMovementId
-         AND Movement.DescId = zc_Movement_Cash();
+         AND Movement.DescId = zc_Movement_Cash()
+       LIMIT 1   --
+       ;
 
      END IF;
 END;
@@ -135,8 +163,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 08.09.17         *
- 10.04.17         *
+ 05.07.18         *
 */
 
 -- ÚÂÒÚ

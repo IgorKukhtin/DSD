@@ -337,8 +337,10 @@ BEGIN
                                                             ON MIFloat_OperPriceList.MovementItemId = COALESCE (Object_PartionMI.ObjectCode, MIConatiner.MovementItemId)
                                                            AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
 
+                                LEFT JOIN Movement ON Movement.Id = MIConatiner.MovementId
                                 LEFT JOIN tmpDiscountPeriod ON tmpDiscountPeriod.PeriodId = Object_PartionGoods.PeriodId
-                                                           AND MIConatiner.OperDate BETWEEN tmpDiscountPeriod.StartDate AND tmpDiscountPeriod.EndDate
+                                                           --AND MIConatiner.OperDate BETWEEN tmpDiscountPeriod.StartDate AND tmpDiscountPeriod.EndDate
+                                                           AND Movement.OperDate BETWEEN tmpDiscountPeriod.StartDate AND tmpDiscountPeriod.EndDate
 
                                 LEFT JOIN MovementItemString AS MIString_BarCode
                                                              ON MIString_BarCode.MovementItemId = COALESCE (Object_PartionMI.ObjectCode, MIConatiner.MovementItemId)

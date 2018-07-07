@@ -1,6 +1,6 @@
 DO $$
 BEGIN
-  IF (SELECT COUNT(*) from pg_statio_all_sequences where relname = 'movement_Cash_seq') = 0 THEN 
+  IF (SELECT COUNT(*) from pg_statio_all_sequences where relname = 'movement_cash_seq') = 0 THEN 
     CREATE SEQUENCE Movement_Cash_seq 
     INCREMENT 1
     MINVALUE 1
@@ -16,6 +16,5 @@ END $$;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 28.10.13                        *
- 23.10.13                                        *
+ 05.07.18         *
 */

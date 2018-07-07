@@ -187,6 +187,8 @@ type
     bbOpenProduction: TdxBarButton;
     actPrintPackGross: TdsdPrintAction;
     bbPrintPackGross: TdxBarButton;
+    bbPrint_PackWeight: TdxBarButton;
+    actPrint_PackWeight: TdsdPrintAction;
   private
     { Private declarations }
   public

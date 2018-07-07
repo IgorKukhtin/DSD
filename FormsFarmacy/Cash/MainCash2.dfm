@@ -210,9 +210,9 @@ inherited MainCashForm2: TMainCashForm2
   end
   object MainPanel: TPanel [2]
     Left = 0
-    Top = 98
+    Top = 119
     Width = 784
-    Height = 240
+    Height = 219
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
@@ -220,7 +220,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 0
       Top = 0
       Width = 784
-      Height = 207
+      Height = 186
       Align = alClient
       TabOrder = 0
       object MainGridDBTableView: TcxGridDBTableView
@@ -707,7 +707,7 @@ inherited MainCashForm2: TMainCashForm2
     end
     object SearchPanel: TPanel
       Left = 0
-      Top = 207
+      Top = 186
       Width = 784
       Height = 33
       Align = alBottom
@@ -1342,6 +1342,53 @@ inherited MainCashForm2: TMainCashForm2
       Width = 60
     end
   end
+  object pnlManualDiscount: TPanel [8]
+    Left = 0
+    Top = 98
+    Width = 784
+    Height = 21
+    Align = alTop
+    Color = 15656679
+    ParentBackground = False
+    TabOrder = 8
+    Visible = False
+    object Label9: TLabel
+      Left = 1
+      Top = 1
+      Width = 94
+      Height = 19
+      Align = alLeft
+      Caption = '     '#1056#1091#1095#1085#1072#1103' '#1089#1082#1080#1076#1082#1072'.'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clGray
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      ExplicitHeight = 13
+    end
+    object Label15: TLabel
+      Left = 522
+      Top = 2
+      Width = 41
+      Height = 13
+      Align = alCustom
+      Caption = #1057#1082#1080#1076#1082#1072' '
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clGray
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object edManualDiscount: TcxCurrencyEdit
+      Left = 567
+      Top = -1
+      Properties.DisplayFormat = ',0.00;-,0.00'
+      TabOrder = 0
+      Width = 60
+    end
+  end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
@@ -1476,6 +1523,13 @@ inherited MainCashForm2: TMainCashForm2
           Component = FormParams
           ComponentItem = 'ConfirmedKindClientName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ManualDiscount'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ManualDiscount'
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -1716,6 +1770,13 @@ inherited MainCashForm2: TMainCashForm2
           Component = FormParams
           ComponentItem = 'SPKindName'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ManualDiscount'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ManualDiscount'
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1940,6 +2001,11 @@ inherited MainCashForm2: TMainCashForm2
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1086#1084#1086#1082#1086#1076
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1086#1084#1086#1082#1086#1076
       OnExecute = actSetPromoCodeExecute
+    end
+    object actManualDiscount: TAction
+      Caption = #1044#1072#1090#1100' '#1088#1091#1095#1085#1091#1102' '#1089#1082#1080#1076#1082#1091
+      ShortCut = 120
+      OnExecute = actManualDiscountExecute
     end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
@@ -2187,6 +2253,9 @@ inherited MainCashForm2: TMainCashForm2
     object miSetPromo: TMenuItem
       Action = actSetPromoCode
     end
+    object miManualDiscount: TMenuItem
+      Action = actManualDiscount
+    end
     object miPrintNotFiscalCheck: TMenuItem
       Caption = #1055#1077#1095#1072#1090#1100' '#1085#1077#1092#1080#1089#1082#1072#1083#1100#1085#1086#1075#1086' '#1095#1077#1082#1072
       OnClick = miPrintNotFiscalCheckClick
@@ -2360,9 +2429,14 @@ inherited MainCashForm2: TMainCashForm2
         Value = 0.000000000000000000
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ManualDiscount'
+        Value = Null
+        MultiSelectSeparator = ','
       end>
     Left = 32
-    Top = 72
+    Top = 56
   end
   object spSelectCheck: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Check'
@@ -2671,8 +2745,8 @@ inherited MainCashForm2: TMainCashForm2
     Enabled = False
     Interval = 360000
     OnTimer = TimerSaveAllTimer
-    Left = 76
-    Top = 56
+    Left = 84
+    Top = 40
   end
   object TimerMoneyInCash: TTimer
     Enabled = False
