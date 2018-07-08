@@ -3,9 +3,8 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
   ClientHeight = 319
   ClientWidth = 990
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -336
   ExplicitWidth = 1006
-  ExplicitHeight = 358
+  ExplicitHeight = 357
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -113,6 +112,29 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
+          end
+          object OperDate_TaxCorrective: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1082#1086#1088#1088'.'
+            DataBinding.FieldName = 'OperDate_TaxCorrective'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object OperDate_Tax: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1085#1072#1083#1086#1075'.'
+            DataBinding.FieldName = 'OperDate_Tax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object isDate_Err: TcxGridDBColumn
+            Caption = #1054#1096#1080#1073#1082#1072' '#1076#1072#1090#1099
+            DataBinding.FieldName = 'isDate_Err'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1096#1080#1073#1082#1072' '#1044#1072#1090#1072' '#1082#1086#1088'. '#1088#1072#1085#1100#1096#1077' '#1076#1072#1090#1099' '#1085#1072#1083#1086#1075'.'
+            Width = 30
           end
           object DocumentTaxKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'.'#1076#1086#1082'.'

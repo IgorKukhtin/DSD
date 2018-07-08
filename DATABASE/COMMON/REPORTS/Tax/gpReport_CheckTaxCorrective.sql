@@ -8,7 +8,9 @@ CREATE OR REPLACE FUNCTION gpReport_CheckTaxCorrective (
     IN inDocumentTaxKindId   Integer   , -- тип корректировки
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (InvNumber_ReturnIn TVarChar, InvNumberPartner_ReturnIn TVarChar, InvNumber_TaxCorrective TVarChar, InvNumberPartner_TaxCorrective TVarChar
+RETURNS TABLE (InvNumber_ReturnIn TVarChar, InvNumberPartner_ReturnIn TVarChar
+             , InvNumber_TaxCorrective TVarChar, InvNumberPartner_TaxCorrective TVarChar
+             , OperDate_TaxCorrective TDateTime, OperDate_Tax TDateTime
              , FromCode Integer, FromName TVarChar
              , ToCode Integer, ToName TVarChar
              , ContractName TVarChar, ContractTagName TVarChar
@@ -23,6 +25,7 @@ RETURNS TABLE (InvNumber_ReturnIn TVarChar, InvNumberPartner_ReturnIn TVarChar, 
              , Summ_TaxCorrective TFloat
              , Summ_Diff TFloat
              , Difference Boolean
+             , isDate_Err Boolean
               )  
 AS
 $BODY$
@@ -50,6 +53,7 @@ BEGIN
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                   ON MovementLinkObject_Contract.MovementId = Movement.Id
                                                  AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+
                 WHERE Movement.DescId = zc_Movement_TaxCorrective()
                   AND Movement.StatusId = zc_Enum_Status_Complete() 
                   AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -96,31 +100,34 @@ BEGIN
                (SELECT JuridicalId, ContractId FROM tmpUnit_Corrective GROUP BY JuridicalId, ContractId
                )
 
-    SELECT Movement_ReturnIn.InvNumber AS InvNumber_ReturnIn
-         , MovementString_InvNumberPartner_ReturnIn.ValueData AS InvNumberPartner_ReturnIn
-         , Movement_TaxCorrective.InvNumber AS InvNumber_TaxCorrective
+
+    SELECT Movement_ReturnIn.InvNumber                     AS InvNumber_ReturnIn
+         , MovementString_InvNumberPartner_ReturnIn.ValueData      AS InvNumberPartner_ReturnIn
+         , Movement_TaxCorrective.InvNumber                AS InvNumber_TaxCorrective
          , MovementString_InvNumberPartner_TaxCorrective.ValueData AS InvNumberPartner_TaxCorrective
-         , Object_From.ObjectCode AS FromCode
-         , Object_From.ValueData AS FromName
-         , Object_To.ObjectCode AS ToCode
-         , Object_To.ValueData AS ToName
-         , View_Contract_InvNumber.InvNumber AS ContractName
-         , View_Contract_InvNumber.ContractTagName
-         , Object_DocumentTaxKind.ValueData AS DocumentTaxKindName
-         , Object_Partner.ObjectCode AS PartnerCode
-         , Object_Partner.ValueData AS PartnerName
+         , Movement_TaxCorrective.OperDate                 AS OperDate_TaxCorrective
+         , Movement_DocumentChild.OperDate                 AS OperDate_Tax
+         , Object_From.ObjectCode                          AS FromCode
+         , Object_From.ValueData                           AS FromName
+         , Object_To.ObjectCode                            AS ToCode
+         , Object_To.ValueData                             AS ToName
+         , View_Contract_InvNumber.InvNumber               AS ContractName
+         , View_Contract_InvNumber.ContractTagName         AS ContractTagName
+         , Object_DocumentTaxKind.ValueData                AS DocumentTaxKindName
+         , Object_Partner.ObjectCode                       AS PartnerCode
+         , Object_Partner.ValueData                        AS PartnerName
      
          , View_InfoMoney.InfoMoneyGroupName
          , View_InfoMoney.InfoMoneyDestinationName
          , View_InfoMoney.InfoMoneyCode
          , View_InfoMoney.InfoMoneyName
 
-         , Object_Goods.ObjectCode    AS GoodsCode
-         , Object_Goods.ValueData     AS GoodsName
-         , Object_GoodsKind.ValueData AS GoodsKindName
+         , Object_Goods.ObjectCode           AS GoodsCode
+         , Object_Goods.ValueData            AS GoodsName
+         , Object_GoodsKind.ValueData        AS GoodsKindName
      
-         , tmpGroupMovement.Price :: TFloat AS Price
-         , tmpGroupMovement.Amount_ReturnIn :: TFloat AS Amount_ReturnIn
+         , tmpGroupMovement.Price                :: TFloat AS Price
+         , tmpGroupMovement.Amount_ReturnIn      :: TFloat AS Amount_ReturnIn
          , tmpGroupMovement.Amount_TaxCorrective :: TFloat AS Amount_TaxCorrective
         
            -- сумма
@@ -156,6 +163,7 @@ BEGIN
                      THEN TRUE 
                 ELSE FALSE
            END :: Boolean AS Difference
+         , CASE WHEN Movement_TaxCorrective.OperDate < Movement_DocumentChild.OperDate THEN TRUE ELSE FALSE END ::Boolean AS isDate_Err
 
     FROM (SELECT tmpMovement.FromId
                , tmpMovement.ToId
@@ -696,7 +704,7 @@ BEGIN
 
                      LEFT JOIN MovementLinkMovement ON MovementLinkMovement.MovementId  = Movement.Id
                                                    AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
-
+                                                                        
                      LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                  ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                 AND MIFloat_Price.DescId = zc_MIFloat_Price()    
@@ -766,8 +774,14 @@ BEGIN
                                  AND MovementString_InvNumberPartner_ReturnIn.DescId = zc_MovementString_InvNumberPartner()
          LEFT JOIN Movement AS Movement_TaxCorrective ON Movement_TaxCorrective.Id = tmpGroupMovement.MovementId_TaxCorrective
          LEFT JOIN MovementString AS MovementString_InvNumberPartner_TaxCorrective
-                                  ON MovementString_InvNumberPartner_TaxCorrective.MovementId =  Movement_TaxCorrective.Id
+                                  ON MovementString_InvNumberPartner_TaxCorrective.MovementId = Movement_TaxCorrective.Id
                                  AND MovementString_InvNumberPartner_TaxCorrective.DescId = zc_MovementString_InvNumberPartner()
+         -- налоговая Накладная
+         LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
+                                        ON MovementLinkMovement_Child.MovementId = Movement_TaxCorrective.Id
+                                       AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
+         LEFT JOIN Movement AS Movement_DocumentChild ON Movement_DocumentChild.Id = MovementLinkMovement_Child.MovementChildId
+                     
          LEFT JOIN Object AS Object_From ON Object_From.Id = tmpGroupMovement.FromId
          LEFT JOIN Object AS Object_To ON Object_To.Id = tmpGroupMovement.ToId
          LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpGroupMovement.PartnerId
@@ -778,9 +792,9 @@ BEGIN
          LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
     WHERE tmpGroupMovement.Amount_ReturnIn <> tmpGroupMovement.Amount_TaxCorrective
        OR (inDocumentTaxKindId <> 0
-           AND (tmpGroupMovement.Amount_ReturnIn <> 0
-                OR tmpGroupMovement.Amount_TaxCorrective <> 0)
+           AND (tmpGroupMovement.Amount_ReturnIn <> 0 OR tmpGroupMovement.Amount_TaxCorrective <> 0)
           )
+       OR (Movement_TaxCorrective.OperDate < Movement_DocumentChild.OperDate)
    ;
             
 END;
@@ -791,11 +805,12 @@ ALTER FUNCTION gpReport_CheckTaxCorrective (TDateTime, TDateTime, Integer, TVarC
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.07.18         *
  15.09.14                                        * add InvNumberPartner...
  29.08.14                                        * add tmpUnit_Corrective
  12.07.14                                        * add Summ_...
  03.05.14                                        * all
- 18.02.14         *  
+ 18.02.14         *
 */
 
 -- тест

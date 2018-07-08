@@ -902,6 +902,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
       Caption = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'  ('#1076#1072'/'#1085#1077#1090')'
       Hint = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'  ('#1076#1072'/'#1085#1077#1090')'
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     inherited actRefresh: TdsdDataSetRefresh
@@ -1443,8 +1444,8 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
     Top = 200
   end
   inherited BarManager: TdxBarManager
-    Left = 200
-    Top = 208
+    Left = 224
+    Top = 200
     DockControlHeights = (
       0
       0
@@ -1534,6 +1535,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
   end
   inherited PopupMenu: TPopupMenu
     Left = 144
+    Top = 256
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 56
@@ -1594,8 +1596,8 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
   end
   object FormParams: TdsdFormParams
     Params = <>
-    Left = 152
-    Top = 226
+    Left = 224
+    Top = 250
   end
   object GuidesRouteSorting: TdsdGuides
     KeyField = 'Id'
