@@ -50,6 +50,23 @@ BEGIN
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
+        , tmpMemberPersonalServiceList
+                     AS (SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+                         FROM ObjectLink AS ObjectLink_User_Member
+                              INNER JOIN ObjectLink AS ObjectLink_MemberPersonalServiceList
+                                                    ON ObjectLink_MemberPersonalServiceList.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                                   AND ObjectLink_MemberPersonalServiceList.DescId        = zc_ObjectLink_MemberPersonalServiceList_Member()
+                              LEFT JOIN ObjectBoolean ON ObjectBoolean.ObjectId = ObjectLink_MemberPersonalServiceList.ObjectId
+                                                     AND ObjectBoolean.DescId   = zc_ObjectBoolean_MemberPersonalServiceList_All()
+                              LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList
+                                                   ON ObjectLink_PersonalServiceList.ObjectId = ObjectLink_MemberPersonalServiceList.ObjectId
+                                                  AND ObjectLink_PersonalServiceList.DescId   = zc_ObjectLink_MemberPersonalServiceList_PersonalServiceList()
+                              LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+                                                                            AND (Object_PersonalServiceList.Id    = ObjectLink_PersonalServiceList.ChildObjectId
+                                                                              OR ObjectBoolean.ValueData          = TRUE)
+                         WHERE ObjectLink_User_Member.ObjectId = vbUserId
+                           AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+                        )
         , tmpUserAll AS (SELECT UserId FROM Constant_User_LevelMax01_View WHERE UserId = vbUserId /*AND UserId <> 9464*/) -- Документы-меню (управленцы) AND <> Рудик Н.В. + ЗП просмотр ВСЕ
         , tmpRoleAccessKey AS (SELECT DISTINCT AccessKeyId_PersonalService AS AccessKeyId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId
                               UNION
@@ -70,20 +87,30 @@ BEGIN
                          UNION SELECT zc_Enum_Process_AccessKey_PersonalServiceZaporozhye() FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId and AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceSbit() GROUP BY AccessKeyId_PersonalService
                               )
 
-        , tmpMovement AS (SELECT Movement.id
+        , tmpMovement AS (SELECT Movement.Id, MovementLinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId
                           FROM tmpStatus
                                INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_PersonalService() AND Movement.StatusId = tmpStatus.StatusId
-                               INNER JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+                               LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                                            ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
+                                                           AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                               LEFT JOIN tmpMemberPersonalServiceList ON tmpMemberPersonalServiceList.PersonalServiceListId = MovementLinkObject_PersonalServiceList.ObjectId
                           WHERE inIsServiceDate = FALSE
+                            AND (tmpRoleAccessKey.AccessKeyId > 0 OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
                          UNION ALL
-                          SELECT MovementDate_ServiceDate.MovementId  AS Id
+                          SELECT MovementDate_ServiceDate.MovementId  AS Id, MovementLinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId
                           FROM MovementDate AS MovementDate_ServiceDate
                                JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId AND Movement.DescId = zc_Movement_PersonalService()
                                JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
-                               JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+                               LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                                            ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
+                                                           AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                               LEFT JOIN tmpMemberPersonalServiceList ON tmpMemberPersonalServiceList.PersonalServiceListId = MovementLinkObject_PersonalServiceList.ObjectId
                           WHERE inIsServiceDate = TRUE
                             AND MovementDate_ServiceDate.ValueData BETWEEN DATE_TRUNC ('MONTH', inStartDate) AND (DATE_TRUNC ('MONTH', inEndDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
                             AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
+                            AND (tmpRoleAccessKey.AccessKeyId > 0 OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
                          )
                          
         , tmpSign AS (SELECT tmpMovement.Id
@@ -254,10 +281,7 @@ BEGIN
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
-                                         ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
-                                        AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
-            LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = MovementLinkObject_PersonalServiceList.ObjectId
+            LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = tmpMovement.PersonalServiceListId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                          ON MovementLinkObject_Juridical.MovementId = Movement.Id

@@ -1,4 +1,4 @@
-﻿-- Function: gpSelect_ReplObject(TVarChar)
+﻿-- для SessionGUID - возвращает "блоками" данные из табл. ReplObject - для формирования скриптов
 
 DROP FUNCTION IF EXISTS gpSelect_ReplObject (TVarChar, Integer, Integer, Integer, TVarChar);
 
@@ -95,7 +95,13 @@ BEGIN
         , ObjectStringDesc.Code     :: VarChar (50) AS DescName
         , ObjectStringDesc.ItemName :: VarChar (50) AS ItemName
 
-        , ObjectString.ValueData                    AS ValueData
+        , ObjectString.ValueData                    AS ValueDataS
+        , 0                         :: TFloat       AS ValueDataF
+        , NULL                      :: TDateTime    AS ValueDataD
+        , NULL                      :: Boolean      AS ValueDataB
+        , FALSE                     :: Boolean      AS isValuDNull
+        , FALSE                     :: Boolean      AS isValuBNull
+
         , (ReplObject.ObjectId :: TVarChar || ' - ' || inDataBaseId :: TVarChar) :: TVarChar AS GUID
 
      FROM ReplObject
@@ -103,7 +109,7 @@ BEGIN
           LEFT JOIN  ObjectStringDesc ON ObjectStringDesc.Id   = ObjectString.DescId
      WHERE ReplObject.SessionGUID = inSessionGUID
        AND ((ReplObject.Id BETWEEN inStartId AND inEndId) OR inEndId = 0)
-     ORDER BY ReplObject.ObjectId
+     ORDER BY ReplObject.ObjectId, ObjectString.DescId
     ;
      --
      RETURN NEXT Cur_ObjectString;
@@ -117,7 +123,14 @@ BEGIN
         , ObjectFloat.DescId                        AS DescId
         , ObjectFloatDesc.Code      :: VarChar (50) AS DescName
         , ObjectFloatDesc.ItemName  :: VarChar (50) AS ItemName
-        , ObjectFloat.ValueData     :: TFloat       AS ValueData
+
+        , ''                        :: VarChar (1)  AS ValueDataS
+        , ObjectFloat.ValueData     :: TFloat       AS ValueDataF
+        , NULL                      :: TDateTime    AS ValueDataD
+        , NULL                      :: Boolean      AS ValueDataB
+        , FALSE                     :: Boolean      AS isValuDNull
+        , FALSE                     :: Boolean      AS isValuBNull
+
         , (ReplObject.ObjectId :: TVarChar || ' - ' || inDataBaseId :: TVarChar) :: TVarChar AS GUID
 
      FROM ReplObject
@@ -125,7 +138,7 @@ BEGIN
           LEFT JOIN  ObjectFloatDesc ON ObjectFloatDesc.Id   = ObjectFloat.DescId
      WHERE ReplObject.SessionGUID = inSessionGUID
        AND ((ReplObject.Id BETWEEN inStartId AND inEndId) OR inEndId = 0)
-     ORDER BY ReplObject.ObjectId
+     ORDER BY ReplObject.ObjectId, ObjectFloat.DescId
     ;
      --
      RETURN NEXT Cur_ObjectFloat;
@@ -139,8 +152,14 @@ BEGIN
         , ObjectDate.DescId                         AS DescId
         , ObjectDateDesc.Code       :: VarChar (50) AS DescName
         , ObjectDateDesc.ItemName   :: VarChar (50) AS ItemName
-        , ObjectDate.ValueData                      AS ValueData
-        , CASE WHEN ObjectDate.ValueData IS NULL THEN TRUE ELSE FALSE END :: Boolean AS isValueNull
+
+        , ''                        :: VarChar (1)  AS ValueDataS
+        , 0                         :: TFloat       AS ValueDataF
+        , ObjectDate.ValueData                      AS ValueDataD
+        , NULL :: Boolean                           AS ValueDataB
+        , CASE WHEN ObjectDate.ValueData IS NULL THEN TRUE ELSE FALSE END :: Boolean AS isValuDNull
+        , FALSE                     :: Boolean      AS isValuBNull
+
         , (ReplObject.ObjectId :: TVarChar || ' - ' || inDataBaseId :: TVarChar) :: TVarChar AS GUID
 
      FROM ReplObject
@@ -148,7 +167,7 @@ BEGIN
           LEFT JOIN  ObjectDateDesc ON ObjectDateDesc.Id   = ObjectDate.DescId
      WHERE ReplObject.SessionGUID = inSessionGUID
        AND ((ReplObject.Id BETWEEN inStartId AND inEndId) OR inEndId = 0)
-     ORDER BY ReplObject.ObjectId
+     ORDER BY ReplObject.ObjectId, ObjectDate.DescId
     ;
      --
      RETURN NEXT Cur_ObjectDate;
@@ -162,7 +181,14 @@ BEGIN
         , ObjectBoolean.DescId                      AS DescId
         , ObjectBooleanDesc.Code    :: VarChar (50) AS DescName
         , ObjectBooleanDesc.ItemName:: VarChar (50) AS ItemName
-        , ObjectBoolean.ValueData                   AS ValueData
+
+        , ''                        :: VarChar (1)  AS ValueDataS
+        , 0                         :: TFloat       AS ValueDataF
+        , NULL                      :: TDateTime    AS ValueDataD
+        , ObjectBoolean.ValueData                   AS ValueDataB
+        , FALSE                     :: Boolean      AS isValuDNull
+        , CASE WHEN ObjectBoolean.ValueData IS NULL THEN TRUE ELSE FALSE END :: Boolean AS isValuBNull
+
         , (ReplObject.ObjectId :: TVarChar || ' - ' || inDataBaseId :: TVarChar) :: TVarChar AS GUID
 
      FROM ReplObject
@@ -170,7 +196,7 @@ BEGIN
           LEFT JOIN  ObjectBooleanDesc ON ObjectBooleanDesc.Id   = ObjectBoolean.DescId
      WHERE ReplObject.SessionGUID = inSessionGUID
        AND ((ReplObject.Id BETWEEN inStartId AND inEndId) OR inEndId = 0)
-     ORDER BY ReplObject.ObjectId
+     ORDER BY ReplObject.ObjectId, ObjectBoolean.DescId
     ;
      --
      RETURN NEXT Cur_ObjectBoolean;

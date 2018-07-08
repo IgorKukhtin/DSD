@@ -1,4 +1,4 @@
-﻿--Function: gpSelect_ObjectGUID(TVarChar)
+﻿-- настройки Серверов - для Коннекта - куда будут переброшены данные
 
 DROP FUNCTION IF EXISTS gpSelect_ReplServer_load (TVarChar);
 

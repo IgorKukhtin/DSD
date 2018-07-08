@@ -46,7 +46,6 @@ $BODY$
     DECLARE vbKiev Integer;
 
     DECLARE vbIsLongUKTZED Boolean;
-    DECLARE vbIsFozziTare  Boolean;
 
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -115,13 +114,8 @@ BEGIN
             END AS isInfoMoney_30200
           , COALESCE (ObjectBoolean_isLongUKTZED.ValueData, TRUE)    AS isLongUKTZED
 
-          , CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId = 310854 -- Фоззі
-                     THEN TRUE
-                 ELSE FALSE
-            END AS isFozziTare
-
             INTO vbOperDate, vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId, vbContractId, vbIsDiscountPrice
-               , vbIsInfoMoney_30200, vbIsLongUKTZED, vbIsFozziTare
+               , vbIsInfoMoney_30200, vbIsLongUKTZED
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -149,9 +143,9 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-          LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                               ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                              AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
+          -- LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+          --                      ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+          --                     AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
           LEFT JOIN ObjectBoolean AS ObjectBoolean_isDiscountPrice
                                   ON ObjectBoolean_isDiscountPrice.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                  AND ObjectBoolean_isDiscountPrice.DescId = zc_ObjectBoolean_Juridical_isDiscountPrice()
@@ -170,37 +164,6 @@ BEGIN
        -- AND Movement.StatusId = zc_Enum_Status_Complete()
     ;
 
-     -- !!!надо определить - ...!!!
-     IF vbIsFozziTare = TRUE
-     THEN
-         vbIsFozziTare:= FALSE;
-         /*vbIsFozziTare:= 2 = (SELECT MAX (CASE WHEN MIFloat_AmountPartner.ValueData <> 0
-                                                AND ObjectLink_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_10202() -- Прочее сырье + Оболочка
-                                                                                         , zc_Enum_InfoMoney_10203() -- Прочее сырье + Упаковка
-                                                                                         , zc_Enum_InfoMoney_10204() -- Прочее сырье + Прочее сырье
-                                                                                         , zc_Enum_InfoMoney_20601() -- Общефирменные + "Прочие материалы"
-                                                                                          )
-                                                    THEN 1
-
-                                               WHEN MIFloat_AmountPartner.ValueData <> 0
-                                                AND ObjectLink_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20501() -- Общефирменные + "Оборотная тара"
-                                                                                          )
-                                                    THEN 2
-
-                                               WHEN MIFloat_AmountPartner.ValueData <> 0
-                                                    THEN 3
-                                               ELSE 0
-                                          END) AS Ord2
-                              FROM MovementItem
-                                   LEFT JOIN ObjectLink AS ObjectLink_InfoMoney
-                                                        ON ObjectLink_InfoMoney.ObjectId = MovementItem.ObjectId
-                                                       AND ObjectLink_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
-                                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                                              AND MIFloat_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
-                              WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
-                             );*/
-     END IF;
 
      -- !!!надо определить - есть ли скидка в цене!!!
      vbIsChangePrice:= vbIsDiscountPrice = TRUE                              -- у Юр лица есть галка
@@ -595,9 +558,6 @@ BEGIN
 
              -- кол-во Взвешиваний
            , vbWeighingCount AS WeighingCount
-
-             --
-           , COALESCE (vbIsFozziTare, FALSE) :: Boolean AS isFozziTare
 
        FROM Movement
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
@@ -1186,9 +1146,15 @@ BEGIN
                   ELSE '0'
               END :: TVarChar AS GoodsCodeUKTZED
 
-            -- Залоговая цена без НДС, грн
-            , CASE WHEN tmpPriceList.Price_basis > 0 THEN tmpPriceList.Price_basis ELSE 60 END :: TFloat AS Price_Pledge
-
+              -- Залоговая цена без НДС, грн
+            , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_20501() AND tmpPriceList.Price_basis > 0 THEN tmpPriceList.Price_basis
+                   WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_20501() THEN 60
+                   ELSE 0
+              END :: TFloat AS Price_Pledge
+            , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_20501() -- Общефирменные + "Оборотная тара"
+                        THEN TRUE
+                   ELSE FALSE
+              END :: Boolean AS isFozziTare
        FROM tmpMI
             LEFT JOIN tmpUKTZED ON tmpUKTZED.GoodsGroupId = tmpMI.GoodsGroupId
             LEFT JOIN tmpMI_Order ON tmpMI_Order.GoodsId     = tmpMI.GoodsId
@@ -1231,9 +1197,6 @@ BEGIN
             LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpMI.GoodsId
 
        WHERE tmpMI.AmountPartner <> 0
-         AND ((vbIsFozziTare = TRUE AND ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_20501()) -- Общефирменные + "Оборотная тара"
-           OR vbIsFozziTare = FALSE
-             )
        ORDER BY CASE WHEN vbGoodsPropertyId IN (83954  -- Метро
                                               , 83963  -- Ашан
                                               , 404076 -- Новус

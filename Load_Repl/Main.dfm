@@ -105,11 +105,12 @@ object MainForm: TMainForm
         object LabelObject: TLabel
           Left = 1
           Top = 1
-          Width = 31
+          Width = 71
           Height = 13
           Align = alTop
           Alignment = taCenter
           Caption = 'Object'
+          ExplicitWidth = 31
         end
         object EditCountObject: TcxCurrencyEdit
           Left = 1
@@ -157,7 +158,6 @@ object MainForm: TMainForm
           Height = 21
           Align = alTop
           TabOrder = 3
-          ExplicitWidth = 70
         end
       end
     end
@@ -193,11 +193,12 @@ object MainForm: TMainForm
         object LabelObjectString: TLabel
           Left = 1
           Top = 1
-          Width = 58
+          Width = 71
           Height = 13
           Align = alTop
           Alignment = taCenter
           Caption = 'ObjectString'
+          ExplicitWidth = 58
         end
         object EditCountStringObject: TcxCurrencyEdit
           Left = 1
@@ -246,11 +247,12 @@ object MainForm: TMainForm
         object LabelObjectFloat: TLabel
           Left = 1
           Top = 1
-          Width = 54
+          Width = 71
           Height = 13
           Align = alTop
           Alignment = taCenter
           Caption = 'ObjectFloat'
+          ExplicitWidth = 54
         end
         object EditCountFloatObject: TcxCurrencyEdit
           Left = 1
@@ -299,11 +301,12 @@ object MainForm: TMainForm
         object LabelObjectDate: TLabel
           Left = 1
           Top = 1
-          Width = 54
+          Width = 71
           Height = 13
           Align = alTop
           Alignment = taCenter
           Caption = 'ObjectDate'
+          ExplicitWidth = 54
         end
         object EditCountDateObject: TcxCurrencyEdit
           Left = 1
@@ -352,11 +355,12 @@ object MainForm: TMainForm
         object LabelObjectBoolean: TLabel
           Left = 1
           Top = 1
-          Width = 70
+          Width = 71
           Height = 13
           Align = alTop
           Alignment = taCenter
           Caption = 'ObjectBoolean'
+          ExplicitWidth = 70
         end
         object EditCountBooleanObject: TcxCurrencyEdit
           Left = 1
@@ -405,11 +409,12 @@ object MainForm: TMainForm
         object LabelObjectLink: TLabel
           Left = 1
           Top = 1
-          Width = 51
+          Width = 71
           Height = 13
           Align = alTop
           Alignment = taCenter
           Caption = 'ObjectLink'
+          ExplicitWidth = 51
         end
         object EditCountLinkObject: TcxCurrencyEdit
           Left = 1
@@ -478,8 +483,6 @@ object MainForm: TMainForm
       Width = 97
       Height = 17
       Caption = #1090#1086#1083#1100#1082#1086' OPEN'
-      Checked = True
-      State = cbChecked
       TabOrder = 3
     end
   end
@@ -493,10 +496,6 @@ object MainForm: TMainForm
     TabOrder = 2
     object TabSheet1: TTabSheet
       Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080' - '#1044#1086#1082#1091#1084#1077#1085#1090#1099
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object PanelReplServer: TPanel
         Left = 0
         Top = 0
@@ -518,14 +517,36 @@ object MainForm: TMainForm
           TabOrder = 0
         end
       end
+      object PanelError: TPanel
+        Left = 0
+        Top = 161
+        Width = 433
+        Height = 386
+        Align = alClient
+        TabOrder = 1
+        ExplicitLeft = 508
+        ExplicitTop = 0
+        ExplicitWidth = 73
+        ExplicitHeight = 80
+        object MemoError: TMemo
+          Left = 1
+          Top = 1
+          Width = 431
+          Height = 384
+          Align = alClient
+          Lines.Strings = (
+            'MemoError')
+          TabOrder = 0
+          ExplicitLeft = 160
+          ExplicitTop = 88
+          ExplicitWidth = 185
+          ExplicitHeight = 89
+        end
+      end
     end
     object TabSheet2: TTabSheet
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' '#1092#1072#1081#1083#1086#1074
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
   end
   object ObjectDS: TDataSource

@@ -6,7 +6,7 @@ inherited SaleJournalForm: TSaleJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1253
-  ExplicitHeight = 679
+  ExplicitHeight = 676
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -4141,6 +4141,9 @@ inherited SaleJournalForm: TSaleJournalForm
       end
       item
         DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintItemsSverkaCDS
       end>
     OutputType = otMultiDataSet
     Params = <

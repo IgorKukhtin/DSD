@@ -818,7 +818,7 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
                , '<XML>'
               || '<Field FieldName = "Код" FieldValue = "HistoryCost"/>'
               || '<Field FieldName = "Название" FieldValue = "end - CALC"/>'
-              || '<Field FieldName = "BranchId" FieldValue = "' || inBranchId :: TVarChar || '"/>'
+              || '<Field FieldName = "BranchId" FieldValue = "' || lfGet_Object_ValueData_sh (inBranchId) || '"/>'
               || '<Field FieldName = "Itearation" FieldValue = "' || vbItearation :: TVarChar || '"/>'
               || '<Field FieldName = "Time" FieldValue = "'     || (CLOCK_TIMESTAMP() - vbOperDate_StartBegin) :: TVarChar || '"/>'
               || '</XML>'
@@ -851,7 +851,7 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
                , '<XML>'
               || '<Field FieldName = "Код" FieldValue = "HistoryCost"/>'
               || '<Field FieldName = "Название" FieldValue = "end - DELETE-1"/>'
-              || '<Field FieldName = "BranchId" FieldValue = "' || inBranchId :: TVarChar || '"/>'
+              || '<Field FieldName = "BranchId" FieldValue = "' || lfGet_Object_ValueData_sh (inBranchId) || '"/>'
               || '<Field FieldName = "Time" FieldValue = "'     || (CLOCK_TIMESTAMP() - vbOperDate_StartBegin) :: TVarChar || '"/>'
               || '</XML>'
                , TRUE;
@@ -871,7 +871,7 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
                , '<XML>'
               || '<Field FieldName = "Код" FieldValue = "HistoryCost"/>'
               || '<Field FieldName = "Название" FieldValue = "end - delete-2"/>'
-              || '<Field FieldName = "BranchId" FieldValue = "' || inBranchId :: TVarChar || '"/>'
+              || '<Field FieldName = "BranchId" FieldValue = "' || lfGet_Object_ValueData_sh (inBranchId) || '"/>'
               || '<Field FieldName = "Time" FieldValue = "'     || (CLOCK_TIMESTAMP() - vbOperDate_StartBegin) :: TVarChar || '"/>'
               || '</XML>'
                , TRUE;
@@ -949,7 +949,7 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
                , '<XML>'
               || '<Field FieldName = "Код" FieldValue = "HistoryCost"/>'
               || '<Field FieldName = "Название" FieldValue = "end - DELETE-1"/>'
-              || '<Field FieldName = "BranchId" FieldValue = "' || inBranchId :: TVarChar || '"/>'
+              || '<Field FieldName = "BranchId" FieldValue = "' || lfGet_Object_ValueData_sh (inBranchId) || '"/>'
               || '<Field FieldName = "Time" FieldValue = "'     || (CLOCK_TIMESTAMP() - vbOperDate_StartBegin) :: TVarChar || '"/>'
               || '</XML>'
                , TRUE;
@@ -968,7 +968,7 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
                , '<XML>'
               || '<Field FieldName = "Код" FieldValue = "HistoryCost"/>'
               || '<Field FieldName = "Название" FieldValue = "end - delete-2"/>'
-              || '<Field FieldName = "BranchId" FieldValue = "' || inBranchId :: TVarChar || '"/>'
+              || '<Field FieldName = "BranchId" FieldValue = "' || lfGet_Object_ValueData_sh (inBranchId) || '"/>'
               || '<Field FieldName = "Time" FieldValue = "'     || (CLOCK_TIMESTAMP() - vbOperDate_StartBegin) :: TVarChar || '"/>'
               || '</XML>'
                , TRUE;
@@ -1023,7 +1023,7 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
            , '<XML>'
           || '<Field FieldName = "Код" FieldValue = "HistoryCost"/>'
           || '<Field FieldName = "Название" FieldValue = "end - insert ALL"/>'
-          || '<Field FieldName = "BranchId" FieldValue = "' || inBranchId :: TVarChar || '"/>'
+          || '<Field FieldName = "BranchId" FieldValue = "' || lfGet_Object_ValueData_sh (inBranchId) || '"/>'
           || '<Field FieldName = "Time" FieldValue = "'     || (CLOCK_TIMESTAMP() - vbOperDate_StartBegin) :: TVarChar || '"/>'
           || '</XML>'
            , TRUE;
@@ -1060,7 +1060,7 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
            , '<XML>'
           || '<Field FieldName = "Код" FieldValue = "HistoryCost"/>'
           || '<Field FieldName = "Название" FieldValue = "end - update Price"/>'
-          || '<Field FieldName = "BranchId" FieldValue = "' || inBranchId :: TVarChar || '"/>'
+          || '<Field FieldName = "BranchId" FieldValue = "' || lfGet_Object_ValueData_sh (inBranchId) || '"/>'
           || '<Field FieldName = "Time" FieldValue = "'     || (CLOCK_TIMESTAMP() - vbOperDate_StartBegin) :: TVarChar || '"/>'
           || '</XML>'
            , TRUE;

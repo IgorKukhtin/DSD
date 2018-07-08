@@ -1,4 +1,4 @@
-﻿-- Function: gpInsert_ReplObject
+﻿-- для SessionGUID - Insert всех данных Object в табл. ReplObject - из которой потом "блоками" идет чтение и формирование скриптов + возвращает сколько всего записей
 
 DROP FUNCTION IF EXISTS gpInsert_ReplObject (TVarChar, TDateTime, TVarChar, Boolean, TVarChar);
 
@@ -15,23 +15,23 @@ CREATE OR REPLACE FUNCTION gpInsert_ReplObject(
    OUT outCountDate      Integer,
    OUT outCountBoolean   Integer,
    OUT outCountLink      Integer,
-   OUT outCountIteration Integer,
-   OUT outCountPack      Integer,
+   OUT outCountIteration Integer,       -- захардкодили = 3000 - по сколько записей будет возвращать gpSelect_ReplObject, т.е. inStartId and inEndId
+   OUT outCountPack      Integer,       -- захардкодили =  100 - сколько записей в одном Sql для вызова
     IN inSession         TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
 AS
 $BODY$
-    DECLARE vbDescId          Integer;
+    DECLARE vbDescId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_PaidKind());
 
 
-     -- 
+     -- !!!удаление "старых" сессий!!!
      DELETE FROM ReplObject WHERE OperDate < CURRENT_DATE - INTERVAL '2 DAY';
 
-     -- 
+     -- если надо только один Desc
      vbDescId:= COALESCE((SELECT ObjectDesc.Id FROM ObjectDesc WHERE LOWER (ObjectDesc.Code) = LOWER (inDescCode)), 0);
 
 
@@ -128,13 +128,13 @@ BEGIN
 
      -- Результат
      SELECT
-          COUNT (*)
-        , MIN (ReplObject.Id)
-        , MAX (ReplObject.Id)
-          -- !!!временно ЗАХАРДКОДИЛИ!!!
-        , 10000 AS CountIteration
-          -- !!!временно ЗАХАРДКОДИЛИ!!!
-        , 100   AS CountPack
+          COUNT (*)           AS outCount
+        , MIN (ReplObject.Id) AS outMinId
+        , MAX (ReplObject.Id) AS outMaxId
+          -- !!!временно ЗАХАРДКОДИЛИ!!! - по сколько записей будет возвращать gpSelect_ReplObject, т.е. inStartId and inEndId
+        , 3000                AS CountIteration
+          -- !!!временно ЗАХАРДКОДИЛИ!!! - сколько записей в одном Sql для вызова
+        , 100                 AS CountPack
           -- 
           INTO outCount, outMinId, outMaxId, outCountIteration, outCountPack
      FROM ReplObject

@@ -188,10 +188,9 @@ BEGIN
                                                          WHEN zc_Enum_InfoMoney_21151()
                                                               THEN zc_Enum_Account_30205() -- ֵÊֵֿׁ׀ׂ-ְֳ׀־ׂ׀ִֵֹ
                                                     END
-                                          WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40300() AND _tmpItem.ObjectId IN (76977 -- נאססקועםûי סקוע AND 26009000250571 ֿ׃ְׂ "װ²ִ־ְֱֽÊ"
-                                                                                                                                      , 76969 -- נאססקועםûי סקוע AND 26007010192834 ְֿׂ "ְֱֽÊ ֲ־ׁׂ־Ê"
-                                                                                                                                       )
-                                               THEN zc_Enum_Account_40302() -- נאססקועםûי מגונהנאפע
+                                          WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40300() AND 0 < (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = _tmpItem.ObjectId AND OL.DescId = zc_ObjectLink_BankAccount_Account())
+                                               -- THEN zc_Enum_Account_40302() -- נאססקועםûי מגונהנאפע
+                                               THEN (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = _tmpItem.ObjectId AND OL.DescId = zc_ObjectLink_BankAccount_Account())
 
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40300() AND _tmpItem.CurrencyId <> zc_Enum_Currency_Basis()
                                                THEN zc_Enum_Account_40303() -- נאסקועםûי סקוע גאכ‏עםûי
