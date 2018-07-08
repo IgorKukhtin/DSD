@@ -14,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpReport_OrderExternal_Sale(
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (OperDate TDateTime, OperDatePartner TDateTime
+             , OperDate_Sale TDateTime, OperDatePartner_Sale TDateTime 
              , InvNumber TVarChar, InvNumberOrderPartner TVarChar
              , FromDescName TVarChar, FromId Integer, FromCode Integer, FromName TVarChar
              , RouteId Integer, RouteName TVarChar
@@ -28,15 +29,26 @@ RETURNS TABLE (OperDate TDateTime, OperDatePartner TDateTime
              , Amount_Weight2 TFloat, Amount_Sh2 TFloat
              , Amount_Weight_Itog TFloat, Amount_Sh_Itog TFloat
              , Amount_Weight_Dozakaz TFloat, Amount_Sh_Dozakaz TFloat
-             , Amount12 TFloat, Amount_WeightSK TFloat
-             , AmountSale_Weight TFloat, AmountSale_Sh TFloat
+             , Amount_Order TFloat, Amount_Dozakaz TFloat
+             , Amount_WeightSK TFloat
+             , AmountSalePartner_Weight TFloat, AmountSalePartner_Sh TFloat
+             , AmountSale_Weight TFloat, AmountSale_Sh TFloat, AmountSale TFloat
              , PriceSale TFloat, SumSale TFloat
              , InfoMoneyName TVarChar
+             
+             , CountDiff_B  TFloat
+             , CountDiff_M  TFloat
+             , WeightDiff_B TFloat
+             , WeightDiff_M TFloat
+             , AmountTax    TFloat
+             , DiffTax      TFloat
+             , isPrint_M    Boolean
               )
 
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbDiffTax TFloat;
 BEGIN
 
     -- Ограничения по товарам
@@ -50,6 +62,25 @@ BEGIN
            SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods();
     END IF;
 
+
+    vbDiffTax := (WITH tmpBranch AS (SELECT COALESCE (OL_Branch.ChildObjectId, zc_Branch_Basis()) AS BranchId
+                                     FROM ObjectLink AS OL_Branch
+                                     WHERE OL_Branch.ObjectId = inToId
+                                       AND OL_Branch.DescId   = zc_ObjectLink_Unit_Branch()
+                                     )
+                     , tmpToolsWeighing_Branch AS (SELECT Object_ToolsWeighing_View.*
+                                                   FROM Object_ToolsWeighing_View
+                                                   WHERE Object_ToolsWeighing_View.Name = 'BranchId'
+                                                   )
+                     , tmpToolsWeighing_DiffSaleOrder AS (SELECT Object_ToolsWeighing_View.*
+                                                          FROM Object_ToolsWeighing_View
+                                                          WHERE Object_ToolsWeighing_View.Name = 'DiffSaleOrder'
+                                                          )
+                  SELECT COALESCE (zfConvert_StringToFloat(tmpToolsWeighing_DiffSaleOrder.Valuedata), 11)
+                  FROM tmpBranch
+                       LEFT JOIN tmpToolsWeighing_Branch        ON tmpToolsWeighing_Branch.ValueData       = tmpBranch.BranchId :: TVarChar
+                       LEFT JOIN tmpToolsWeighing_DiffSaleOrder ON tmpToolsWeighing_DiffSaleOrder.ParentId = tmpToolsWeighing_Branch.ParentId
+                  );
 
      RETURN QUERY
      WITH
@@ -91,13 +122,16 @@ BEGIN
                               AND ObjectString_ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
 
                    WHERE ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
-                         )
+                   )
 
  , tmpMovement2 AS (
                     SELECT
-                          Movement.OperDate
+                          Movement.OperDate                                                                                                                  AS OperDate
                         , MovementDate_OperDatePartner.ValueData                                                                                             AS OperDatePartner
-                        , MovementString_InvNumberPartner.ValueData                                                                                          AS invnumberorderpartner
+                        , CASE WHEN TRIM (COALESCE (MovementString_InvNumberPartner.ValueData, '')) <> ''
+                              THEN MovementString_InvNumberPartner.ValueData
+                               ELSE '***' || Movement.InvNumber
+                          END                            :: TVarChar AS InvNumberOrderPartner
                         , MovementLinkObject_From.ObjectId                                                                                                   AS FromId
                         , MovementLinkObject_Route.ObjectId                                                                                                  AS RouteId
                         , 0                                                                                                                                  AS RouteSortingId
@@ -186,13 +220,16 @@ BEGIN
                         , Movement.OperDate
                         , MovementDate_OperDatePartner.ValueData
                         , MovementString_InvNumberPartner.ValueData
-             
-                      )
+                        , CASE WHEN TRIM (COALESCE (MovementString_InvNumberPartner.ValueData, '')) <> ''
+                              THEN MovementString_InvNumberPartner.ValueData
+                               ELSE '***' || Movement.InvNumber
+                          END
+                     )
 
     , tmpMovementOrder AS (SELECT
                                   tmpMovement2.OperDate
                                 , tmpMovement2.OperDatePartner
-                                , tmpMovement2.invnumberorderpartner
+                                , CASE WHEN inIsByDoc = TRUE THEN tmpMovement2.InvNumberOrderPartner ELSE '' END AS InvNumberOrderPartner
                                 , tmpMovement2.FromId             AS FromId
                                 , tmpMovement2.RouteId            AS RouteId
                                 , tmpMovement2.RouteSortingId     AS RouteSortingId
@@ -204,22 +241,20 @@ BEGIN
                                 , tmpMovement2.AmountSummTotal    AS AmountSummTotal
                                 , tmpMovement2.AmountSumm_Dozakaz AS AmountSumm_Dozakaz
                      
-                                , CAST ((Amount1 * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) AS TFloat)            AS Amount_Weight1
-                                , CAST ((CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN Amount1 ELSE 0 END) AS TFloat)                                              AS Amount_Sh1
+                                , CAST ((tmpMovement2.Amount1 * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) AS TFloat)            AS Amount_Weight1
+                                , CAST ((CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN Amount1 ELSE 0 END) AS TFloat)                                                           AS Amount_Sh1
                      
-                                , CAST ((Amount2 * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) AS TFloat)            AS Amount_Weight2
-                                , CAST ((CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN Amount2 ELSE 0 END) AS TFloat)                                              AS Amount_Sh2
+                                , CAST ((tmpMovement2.Amount2 * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) AS TFloat)            AS Amount_Weight2
+                                , CAST ((CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN Amount2 ELSE 0 END) AS TFloat)                                                           AS Amount_Sh2
                      
-                                , CAST (( (Amount1+Amount2) * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) AS TFloat) AS Amount_Weight_Itog
-                                , CAST ((CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN (Amount1+Amount2) ELSE 0 END) AS TFloat)                                    AS Amount_Sh_Itog
+                                , CAST (( (tmpMovement2.Amount1 + tmpMovement2.Amount2) * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) AS TFloat) AS Amount_Weight_Itog
+                                , CAST ((CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN (tmpMovement2.Amount1 + tmpMovement2.Amount2) ELSE 0 END) AS TFloat)                                    AS Amount_Sh_Itog
                      
-                                , CAST ((Amount_Dozakaz * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) AS TFloat)     AS Amount_Weight_Dozakaz
-                                , CAST ((CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN Amount_Dozakaz ELSE 0 END) AS TFloat)                                       AS Amount_Sh_Dozakaz
+                                , CAST ((tmpMovement2.Amount_Dozakaz * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) AS TFloat)     AS Amount_Weight_Dozakaz
+                                , CAST ((CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMovement2.Amount_Dozakaz ELSE 0 END) AS TFloat)                                       AS Amount_Sh_Dozakaz
                      
-                                , CAST ((Amount1 + Amount2) AS TFloat)                                                                                                                       AS Amount12
-                                , CAST (0 AS TFloat)               AS AmountSale_Weight
-                                , CAST (0 AS TFloat)               AS AmountSale_Sh
-                     
+                                , CAST ((tmpMovement2.Amount1 + tmpMovement2.Amount2) AS TFloat)                                                                                                          AS Amount12
+                                , CAST (tmpMovement2.Amount_Dozakaz AS TFloat)                                                                                                                            AS Amount_Dozakaz
                      
                            FROM tmpMovement2 AS tmpMovement2
                                LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = tmpMovement2.GoodsId
@@ -230,24 +265,30 @@ BEGIN
                           )
 
     --     ПРОДАЖИ -------------------
-    , tmpMovementSaleTop AS (SELECT
-                                    Movement.Id                                AS MovementId
+    , tmpMovementSaleTop AS (SELECT Movement.Id                                AS MovementId
                                   , Movement_Order.OperDate                    AS OperDate
                                   , Movement.OperDate                          AS OperDatePartner
+                                  , Movement.InvNumber                         AS InvNumber
 
+                                  , CASE WHEN TRIM (COALESCE (MovementString_InvNumberOrder.ValueData, '')) <> ''
+                                              THEN MovementString_InvNumberOrder.ValueData
+                                         ELSE '***' || Movement_Order.InvNumber
+                                    END                            :: TVarChar AS InvNumberOrderPartner
+                                  
                                   , MovementLinkObject_From.ObjectId           AS FromId
                                   , MovementLinkObject_Route.ObjectId          AS RouteId
                                   , 0                                          AS RouteSortingId
                                   , MovementLinkObject_PaidKind.ObjectId       AS PaidKindId
-                                  , CASE WHEN TRIM (COALESCE (MovementString_InvNumberOrder.ValueData, '')) <> ''
-                                              THEN MovementString_InvNumberOrder.ValueData
-                                         ELSE '***' || Movement_Order.InvNumber
-                                    END :: TVarChar AS InvNumberOrderPartner
-                                  , Movement.InvNumber
+                                  , CASE WHEN inIsByDoc = TRUE THEN Movement.OperDate ELSE NULL END            ::TDateTime AS OperDate_Sale
+                                  , CASE WHEN inIsByDoc = TRUE THEN MovementDate_OperDatePartner.ValueData ELSE NULL END ::TDateTime AS OperDatePartner_Sale
                               FROM Movement
 
+                                  LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                                         ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                                        AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+
                                   LEFT JOIN MovementString AS MovementString_InvNumberOrder
-                                                           ON MovementString_InvNumberOrder.MovementId =  Movement.Id
+                                                           ON MovementString_InvNumberOrder.MovementId = Movement.Id
                                                           AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
                        
                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -276,19 +317,25 @@ BEGIN
                                 AND (COALESCE (MovementLinkObject_From.ObjectId,0) = CASE WHEN inFromId <> 0 THEN inFromId ELSE COALESCE (MovementLinkObject_From.ObjectId,0) END)
                                 AND (COALESCE (MovementLinkObject_Route.ObjectId,0) = CASE WHEN inRouteId <> 0 THEN inRouteId ELSE COALESCE (MovementLinkObject_Route.ObjectId,0) END)
                               GROUP BY Movement.Id
-                                  , MovementLinkObject_From.ObjectId
-                                  , MovementLinkObject_Route.ObjectId
-                                  , MovementLinkObject_PaidKind.ObjectId
-                                  , Movement_Order.OperDate
-                                  , Movement.OperDate
-                                  , MovementString_InvNumberOrder.ValueData,Movement_Order.InvNumber,Movement.InvNumber
+                                     , MovementLinkObject_From.ObjectId
+                                     , MovementLinkObject_Route.ObjectId
+                                     , MovementLinkObject_PaidKind.ObjectId
+                                     , Movement_Order.OperDate
+                                     , Movement_Order.InvNumber
+                                     , Movement.OperDate
+                                     , Movement.InvNumber
+                                     , MovementString_InvNumberOrder.ValueData
+                                     , CASE WHEN inIsByDoc = TRUE THEN Movement.OperDate ELSE NULL END
+                                     , CASE WHEN inIsByDoc = TRUE THEN MovementDate_OperDatePartner.ValueData ELSE NULL END
                               )
 
     , tmpMovementSale AS (SELECT
                                  tmpMovementSaleTop.OperDate                AS OperDate
                                , tmpMovementSaleTop.OperDatePartner         AS OperDatePartner
-                               , tmpMovementSaleTop.InvNumber
-                               , tmpMovementSaleTop.InvNumberOrderPartner::TVarChar
+                               , tmpMovementSaleTop.OperDate_Sale
+                               , tmpMovementSaleTop.OperDatePartner_Sale
+                               , CASE WHEN inIsByDoc = TRUE THEN tmpMovementSaleTop.InvNumber ELSE '' END             AS InvNumber
+                               , CASE WHEN inIsByDoc = TRUE THEN tmpMovementSaleTop.InvNumberOrderPartner ELSE '' END AS InvNumberOrderPartner
                                , tmpMovementSaleTop.FromId
                                , tmpMovementSaleTop.RouteId
                                , tmpMovementSaleTop.RouteSortingId
@@ -314,8 +361,11 @@ BEGIN
                                , CAST (0 AS TFloat)                         AS Amount_Sh_Dozakaz
                                , CAST (0 AS TFloat)                         AS Amount12
                     
-                               , CAST (SUM((MIFloat_AmountPartner.ValueData * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ))) AS TFloat) AS AmountSale_Weight
-                               , CAST (SUM((CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN MIFloat_AmountPartner.ValueData ELSE 0 END)) AS TFloat)                                   AS AmountSale_Sh
+                               , CAST (SUM ((MIFloat_AmountPartner.ValueData * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ))) AS TFloat) AS AmountSalePartner_Weight    -- Вес у покупателя
+                               , CAST (SUM ((CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN MIFloat_AmountPartner.ValueData ELSE 0 END)) AS TFloat)                                   AS AmountSalePartner_Sh        -- кол-во у покупателя
+                               , CAST (SUM ((MovementItem.Amount * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ))) AS TFloat)             AS AmountSale_Weight  -- Вес склад
+                               , CAST (SUM ((CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN MovementItem.Amount ELSE 0 END)) AS TFloat)                                               AS AmountSale_Sh      -- кол-во склад
+                               , CAST (SUM (MovementItem.Amount) AS TFloat)                                                                                                                                    AS AmountSale
                                , MIFloat_Price.ValueData                                                              AS PriceSale
                                , CAST (SUM((MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData)) AS TFloat)    AS SumSale
                            FROM tmpMovementSaleTop
@@ -329,19 +379,20 @@ BEGIN
                                                                 ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                     
-                                LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                                            ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                                           AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                               LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                           ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                   
+                               LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                           ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                               LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                           ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
                     
-                                LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                            ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                           AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                                            ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                                           AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-                    
-                               LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
-                                                                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                               LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure 
+                                                    ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                                   AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                                LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                                      ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
                                                     AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
@@ -355,44 +406,53 @@ BEGIN
                                , MovementItem.ObjectId
                                , tmpMovementSaleTop.OperDate
                                , tmpMovementSaleTop.OperDatePartner
-                               , tmpMovementSaleTop.InvNumber
-                               , tmpMovementSaleTop.InvNumberOrderPartner
+                               , CASE WHEN inIsByDoc = TRUE THEN tmpMovementSaleTop.InvNumber ELSE '' END
+                               , CASE WHEN inIsByDoc = TRUE THEN tmpMovementSaleTop.InvNumberOrderPartner ELSE '' END
                                , MIFloat_Price.ValueData
+                               , tmpMovementSaleTop.OperDate_Sale
+                               , tmpMovementSaleTop.OperDatePartner_Sale
                            )
 
-    , tmpMovementAll AS (SELECT
-                                tmpMovementOrder.OperDate
+    , tmpMovementAll AS (SELECT tmpMovementOrder.OperDate
                               , tmpMovementOrder.OperDatePartner
-                              , Null AS InvNumber
+                              , Null :: TDateTime AS OperDate_Sale
+                              , Null :: TDateTime AS OperDatePartner_Sale
+                              , Null              AS InvNumber
                               , tmpMovementOrder.InvNumberOrderPartner
-                              , tmpMovementOrder.FromId             AS FromId
-                              , tmpMovementOrder.RouteId            AS RouteId
-                              , tmpMovementOrder.RouteSortingId     AS RouteSortingId
-                              , tmpMovementOrder.PaidKindId         AS PaidKindId
-                              , tmpMovementOrder.GoodsKindId        AS GoodsKindId
-                              , tmpMovementOrder.GoodsId            AS GoodsId
-                              , tmpMovementOrder.AmountSumm1        AS AmountSumm1
-                              , tmpMovementOrder.AmountSumm2        AS AmountSumm2
-                              , tmpMovementOrder.AmountSummTotal    AS AmountSummTotal
-                              , tmpMovementOrder.AmountSumm_Dozakaz AS AmountSumm_Dozakaz
-                              , tmpMovementOrder.Amount_Weight1     AS Amount_Weight1
-                              , tmpMovementOrder.Amount_Sh1         AS Amount_Sh1
-                              , tmpMovementOrder.Amount_Weight2     AS Amount_Weight2
-                              , tmpMovementOrder.Amount_Sh2         AS Amount_Sh2
-                              , tmpMovementOrder.Amount_Weight_Itog AS Amount_Weight_Itog
-                              , tmpMovementOrder.Amount_Sh_Itog     AS Amount_Sh_Itog
+                              , tmpMovementOrder.FromId                AS FromId
+                              , tmpMovementOrder.RouteId               AS RouteId
+                              , tmpMovementOrder.RouteSortingId        AS RouteSortingId
+                              , tmpMovementOrder.PaidKindId            AS PaidKindId
+                              , tmpMovementOrder.GoodsKindId           AS GoodsKindId
+                              , tmpMovementOrder.GoodsId               AS GoodsId
+                              , tmpMovementOrder.AmountSumm1           AS AmountSumm1
+                              , tmpMovementOrder.AmountSumm2           AS AmountSumm2
+                              , tmpMovementOrder.AmountSummTotal       AS AmountSummTotal
+                              , tmpMovementOrder.AmountSumm_Dozakaz    AS AmountSumm_Dozakaz
+                              , tmpMovementOrder.Amount_Weight1        AS Amount_Weight1
+                              , tmpMovementOrder.Amount_Sh1            AS Amount_Sh1
+                              , tmpMovementOrder.Amount_Weight2        AS Amount_Weight2
+                              , tmpMovementOrder.Amount_Sh2            AS Amount_Sh2
+                              , tmpMovementOrder.Amount_Weight_Itog    AS Amount_Weight_Itog
+                              , tmpMovementOrder.Amount_Sh_Itog        AS Amount_Sh_Itog
                               , tmpMovementOrder.Amount_Weight_Dozakaz AS Amount_Weight_Dozakaz
-                              , tmpMovementOrder.Amount_Sh_Dozakaz  AS Amount_Sh_Dozakaz
-                              , tmpMovementOrder.Amount12           AS Amount12
-                              , tmpMovementOrder.AmountSale_Weight  AS AmountSale_Weight
-                              , tmpMovementOrder.AmountSale_Sh      AS AmountSale_Sh
-                              , CAST (0 AS TFloat)    AS PriceSale
-                              , CAST (0 AS TFloat)    AS SumSale
+                              , tmpMovementOrder.Amount_Sh_Dozakaz     AS Amount_Sh_Dozakaz
+                              , tmpMovementOrder.Amount12              AS Amount12
+                              , tmpMovementOrder.Amount_Dozakaz        AS Amount_Dozakaz
+                              , CAST (0 AS TFloat)                     AS AmountSalePartner_Weight
+                              , CAST (0 AS TFloat)                     AS AmountSalePartner_Sh
+                              , CAST (0 AS TFloat)                     AS AmountSale_Weight
+                              , CAST (0 AS TFloat)                     AS AmountSale_Sh
+                              , CAST (0 AS TFloat)                     AS AmountSale
+                              , CAST (0 AS TFloat)                     AS PriceSale
+                              , CAST (0 AS TFloat)                     AS SumSale
                           FROM tmpMovementOrder
                           UNION ALL
                           SELECT
                                 tmpMovementSale.OperDate
                               , tmpMovementSale.OperDatePartner
+                              , tmpMovementSale.OperDate_Sale
+                              , tmpMovementSale.OperDatePartner_Sale
                               , tmpMovementSale.InvNumber
                               , tmpMovementSale.InvNumberOrderPartner
                               , tmpMovementSale.FromId             AS FromId
@@ -414,62 +474,126 @@ BEGIN
                               , tmpMovementSale.Amount_Weight_Dozakaz AS Amount_Weight_Dozakaz
                               , tmpMovementSale.Amount_Sh_Dozakaz  AS Amount_Sh_Dozakaz
                               , tmpMovementSale.Amount12           AS Amount12
+                              , CAST (0 AS TFloat)                 AS Amount_Dozakaz
+                              , tmpMovementSale.AmountSalePartner_Weight  AS AmountSalePartner_Weight
+                              , tmpMovementSale.AmountSalePartner_Sh      AS AmountSalePartner_Sh
                               , tmpMovementSale.AmountSale_Weight  AS AmountSale_Weight
                               , tmpMovementSale.AmountSale_Sh      AS AmountSale_Sh
+                              , tmpMovementSale.AmountSale         AS AmountSale
                               , tmpMovementSale.PriceSale
                               , tmpMovementSale.SumSale
                    
                           FROM tmpMovementSale
                          )
 
-    , tmpMovement AS (SELECT
-                             tmpMovementAll.OperDate         AS OperDate
-                           , tmpMovementAll.OperDatePartner  AS OperDatePartner
-                
-                           , Max(tmpMovementAll.InvNumber)   AS InvNumber
-                           , Max(tmpMovementAll.InvNumberOrderPartner) AS InvNumberOrderPartner
-                
-                           , tmpMovementAll.FromId                       AS FromId
-                           , COALESCE (tmpMovementAll.RouteId, 0)        AS RouteId
-                           , COALESCE (tmpMovementAll.RouteSortingId, 0) AS RouteSortingId
-                
-                           , tmpMovementAll.PaidKindId         AS PaidKindId
-                           , tmpMovementAll.GoodsKindId        AS GoodsKindId
-                           , tmpMovementAll.GoodsId            AS GoodsId
-                
-                           , CAST (SUM((tmpMovementAll.AmountSumm1)) AS TFloat)         AS AmountSumm1
-                           , CAST (SUM((tmpMovementAll.AmountSumm2)) AS TFloat)         AS AmountSumm2
-                           , CAST (SUM((tmpMovementAll.AmountSummTotal)) AS TFloat)     AS AmountSummTotal
-                           , CAST (SUM((tmpMovementAll.AmountSumm_Dozakaz)) AS TFloat)  AS AmountSumm_Dozakaz
-                           , CAST (SUM((tmpMovementAll.Amount_Weight1)) AS TFloat)      AS Amount_Weight1
-                           , CAST (SUM((tmpMovementAll.Amount_Sh1)) AS TFloat)          AS Amount_Sh1
-                           , CAST (SUM((tmpMovementAll.Amount_Weight2)) AS TFloat)      AS Amount_Weight2
-                           , CAST (SUM((tmpMovementAll.Amount_Sh2)) AS TFloat)          AS Amount_Sh2
-                           , CAST (SUM((tmpMovementAll.Amount_Weight_Itog)) AS TFloat)  AS Amount_Weight_Itog
-                           , CAST (SUM((tmpMovementAll.Amount_Sh_Itog)) AS TFloat)      AS Amount_Sh_Itog
-                           , CAST (SUM((tmpMovementAll.Amount_Weight_Dozakaz)) AS TFloat)  AS Amount_Weight_Dozakaz
-                           , CAST (SUM((tmpMovementAll.Amount_Sh_Dozakaz)) AS TFloat)   AS Amount_Sh_Dozakaz
-                           , CAST (SUM((tmpMovementAll.Amount12)) AS TFloat)            AS Amount12
-                           , CAST (SUM((tmpMovementAll.AmountSale_Weight)) AS TFloat)   AS AmountSale_Weight
-                           , CAST (SUM((tmpMovementAll.AmountSale_Sh)) AS TFloat)       AS AmountSale_Sh
-                           , CAST (Max(tmpMovementAll.PriceSale) AS TFloat)        AS  PriceSale
-                           , CAST (SUM((tmpMovementAll.SumSale)) AS TFloat)            AS SumSale
-                       FROM tmpMovementAll
-                       GROUP BY
-                             tmpMovementAll.FromId
-                           , COALESCE (tmpMovementAll.RouteId, 0)
-                           , COALESCE (tmpMovementAll.RouteSortingId, 0)
-                           , tmpMovementAll.PaidKindId
-                           , tmpMovementAll.GoodsKindId
-                           , tmpMovementAll.GoodsId
-                           , tmpMovementAll.OperDate
-                           , tmpMovementAll.OperDatePartner
-                           )
+    , tmpMovement AS (SELECT tmp.OperDate
+                           , tmp.OperDatePartner
+                           , tmp.OperDate_Sale
+                           , tmp.OperDatePartner_Sale
+                           , tmp.InvNumber
+                           , tmp.InvNumberOrderPartner
+                           , tmp.FromId
+                           , tmp.RouteId
+                           , tmp.RouteSortingId
+                           , tmp.PaidKindId
+                           , tmp.GoodsKindId
+                           , tmp.GoodsId
+                           , tmp.AmountSumm1
+                           , tmp.AmountSumm2
+                           , tmp.AmountSummTotal
+                           , tmp.AmountSumm_Dozakaz
+                           , tmp.Amount_Weight1
+                           , tmp.Amount_Sh1
+                           , tmp.Amount_Weight2
+                           , tmp.Amount_Sh2
+                           , tmp.Amount_Weight_Itog
+                           , tmp.Amount_Sh_Itog
+                           , tmp.Amount_Weight_Dozakaz
+                           , tmp.Amount_Sh_Dozakaz
+                           , tmp.Amount12
+                           , tmp.Amount_Dozakaz
+                           , tmp.AmountSalePartner_Weight
+                           , tmp.AmountSalePartner_Sh
+                           , tmp.AmountSale_Weight
+                           , tmp.AmountSale_Sh
+                           , tmp.AmountSale
+                           , tmp.PriceSale
+                           , tmp.SumSale
+
+                          , CASE WHEN COALESCE (tmp.AmountSale_Sh,0) - COALESCE (tmp.Amount_Sh_Itog,0) > 0
+                                 THEN COALESCE (tmp.AmountSale_Sh,0) - COALESCE (tmp.Amount_Sh_Itog,0)
+                                 ELSE 0
+                            END :: TFloat AS CountDiff_B
+                          , CASE WHEN       COALESCE (tmp.AmountSale_Sh,0) - COALESCE (tmp.Amount_Sh_Itog,0) < 0
+                                 THEN -1 * (COALESCE (tmp.AmountSale_Sh,0) - COALESCE (tmp.Amount_Sh_Itog,0))
+                                 ELSE 0
+                            END :: TFloat AS CountDiff_M
+
+                          , CASE WHEN COALESCE (tmp.AmountSale_Weight,0) - COALESCE (tmp.Amount_Weight_Itog,0) > 0
+                                 THEN COALESCE (tmp.AmountSale_Weight,0) - COALESCE (tmp.Amount_Weight_Itog,0)
+                                 ELSE 0
+                            END :: TFloat AS WeightDiff_B
+                          , CASE WHEN       COALESCE (tmp.AmountSale_Weight,0) - COALESCE (tmp.Amount_Weight_Itog,0) < 0
+                                 THEN -1 * (COALESCE (tmp.AmountSale_Weight,0) - COALESCE (tmp.Amount_Weight_Itog,0))
+                                 ELSE 0
+                            END :: TFloat AS WeightDiff_M
+                           --кол-во заказа по % откл.
+                          , ((COALESCE (tmp.Amount12,0) + COALESCE (tmp.Amount_Dozakaz,0)) * vbDiffTax / 100) :: TFloat AS AmountTax
+
+                       FROM
+                           (SELECT tmpMovementAll.OperDate         AS OperDate
+                                 , tmpMovementAll.OperDatePartner  AS OperDatePartner
+                                 , MAX(tmpMovementAll.OperDate_Sale)           AS OperDate_Sale
+                                 , MAX(tmpMovementAll.OperDatePartner_Sale)    AS OperDatePartner_Sale
+                                 , MAX(tmpMovementAll.InvNumber)               AS InvNumber
+                                 , (tmpMovementAll.InvNumberOrderPartner)      AS InvNumberOrderPartner
+                                 , tmpMovementAll.FromId                       AS FromId
+                                 , COALESCE (tmpMovementAll.RouteId, 0)        AS RouteId
+                                 , COALESCE (tmpMovementAll.RouteSortingId, 0) AS RouteSortingId
+                                 , tmpMovementAll.PaidKindId         AS PaidKindId
+                                 , tmpMovementAll.GoodsKindId        AS GoodsKindId
+                                 , tmpMovementAll.GoodsId            AS GoodsId
+                                 , CAST (SUM((tmpMovementAll.AmountSumm1)) AS TFloat)         AS AmountSumm1
+                                 , CAST (SUM((tmpMovementAll.AmountSumm2)) AS TFloat)         AS AmountSumm2
+                                 , CAST (SUM((tmpMovementAll.AmountSummTotal)) AS TFloat)     AS AmountSummTotal
+                                 , CAST (SUM((tmpMovementAll.AmountSumm_Dozakaz)) AS TFloat)  AS AmountSumm_Dozakaz
+                                 , CAST (SUM((tmpMovementAll.Amount_Weight1)) AS TFloat)      AS Amount_Weight1
+                                 , CAST (SUM((tmpMovementAll.Amount_Sh1)) AS TFloat)          AS Amount_Sh1
+                                 , CAST (SUM((tmpMovementAll.Amount_Weight2)) AS TFloat)      AS Amount_Weight2
+                                 , CAST (SUM((tmpMovementAll.Amount_Sh2)) AS TFloat)          AS Amount_Sh2
+                                 , CAST (SUM((tmpMovementAll.Amount_Weight_Itog)) AS TFloat)  AS Amount_Weight_Itog
+                                 , CAST (SUM((tmpMovementAll.Amount_Sh_Itog)) AS TFloat)      AS Amount_Sh_Itog
+                                 , CAST (SUM((tmpMovementAll.Amount_Weight_Dozakaz)) AS TFloat)  AS Amount_Weight_Dozakaz
+                                 , CAST (SUM((tmpMovementAll.Amount_Sh_Dozakaz)) AS TFloat)   AS Amount_Sh_Dozakaz
+                                 , CAST (SUM((tmpMovementAll.Amount12)) AS TFloat)            AS Amount12
+                                 , CAST (SUM((tmpMovementAll.Amount_Dozakaz)) AS TFloat)      AS Amount_Dozakaz
+                                 , CAST (SUM((tmpMovementAll.AmountSalePartner_Weight)) AS TFloat)   AS AmountSalePartner_Weight
+                                 , CAST (SUM((tmpMovementAll.AmountSalePartner_Sh)) AS TFloat)       AS AmountSalePartner_Sh
+                                 , CAST (SUM((tmpMovementAll.AmountSale_Weight)) AS TFloat)   AS AmountSale_Weight
+                                 , CAST (SUM((tmpMovementAll.AmountSale_Sh)) AS TFloat)       AS AmountSale_Sh
+                                 , CAST (SUM((tmpMovementAll.AmountSale)) AS TFloat)          AS AmountSale
+                                 , CAST (MAX(tmpMovementAll.PriceSale) AS TFloat)             AS PriceSale
+                                 , CAST (SUM((tmpMovementAll.SumSale)) AS TFloat)             AS SumSale
+                             FROM tmpMovementAll
+                             GROUP BY
+                                   tmpMovementAll.FromId
+                                 , COALESCE (tmpMovementAll.RouteId, 0)
+                                 , COALESCE (tmpMovementAll.RouteSortingId, 0)
+                                 , tmpMovementAll.PaidKindId
+                                 , tmpMovementAll.GoodsKindId
+                                 , tmpMovementAll.GoodsId
+                                 , tmpMovementAll.OperDate
+                                 , tmpMovementAll.OperDatePartner
+                                 , tmpMovementAll.InvNumberOrderPartner
+                             ) AS tmp
+                      )
 
        -- запрос
        SELECT
              tmpMovement.OperDate        ::TDateTime    AS OperDate
            , tmpMovement.OperDatePartner ::TDateTime    AS OperDatePartner
+           , tmpMovement.OperDate_Sale        ::TDateTime 
+           , tmpMovement.OperDatePartner_Sale ::TDateTime 
            , tmpMovement.InvNumber        ::TVarChar
            , tmpMovement.InvNumberOrderPartner  ::TVarChar
            , ObjectDesc_From.ItemName                   AS FromDescName
@@ -507,14 +631,25 @@ BEGIN
 
            , tmpMovement.Amount_Weight_Dozakaz          AS Amount_Weight_Dozakaz
            , tmpMovement.Amount_Sh_Dozakaz              AS Amount_Sh_Dozakaz
-           , tmpMovement.Amount12                       AS Amount12
+           , tmpMovement.Amount12                       AS Amount_Order
+           , tmpMovement.Amount_Dozakaz                 AS Amount_Dozakaz
            , CAST (0 AS TFloat)                         AS Amount_WeightSK
+           , tmpMovement.AmountSalePartner_Weight       AS AmountSalePartner_Weight
+           , tmpMovement.AmountSalePartner_Sh           AS AmountSalePartner_Sh
            , tmpMovement.AmountSale_Weight              AS AmountSale_Weight
            , tmpMovement.AmountSale_Sh                  AS AmountSale_Sh
+           , tmpMovement.AmountSale                     AS AmountSale
            , tmpMovement.PriceSale
            , tmpMovement.SumSale
            , Object_InfoMoney_View.InfoMoneyName        AS InfoMoneyName
-
+           
+           , tmpMovement.CountDiff_B  :: TFloat AS CountDiff_B
+           , tmpMovement.CountDiff_M  :: TFloat AS CountDiff_M
+           , tmpMovement.WeightDiff_B :: TFloat AS WeightDiff_B
+           , tmpMovement.WeightDiff_M :: TFloat AS WeightDiff_M
+           , tmpMovement.AmountTax    :: TFloat AS AmountTax
+           , vbDiffTax                :: TFloat AS DiffTax
+           , CASE WHEN tmpMovement.AmountTax <= tmpMovement.CountDiff_M AND tmpMovement.CountDiff_M <> 0 THEN TRUE ELSE FALSE END AS isPrint_M
        FROM tmpMovement
           LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
           LEFT JOIN ObjectDesc AS ObjectDesc_From ON ObjectDesc_From.Id = Object_From.DescId
@@ -557,6 +692,7 @@ ALTER FUNCTION gpReport_OrderExternal_Sale (TDateTime, TDateTime, Integer, Integ
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.07.18         *
  09.12.15         * add
  02.09.14                                                        *
 */

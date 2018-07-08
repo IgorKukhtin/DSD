@@ -37,7 +37,7 @@ type
     GoodsGroupNameFull: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
     actPrint_byByer: TdsdPrintAction;
-    bbPrint: TdxBarButton;
+    bbPrintPrint_byByer: TdxBarButton;
     RouteName: TcxGridDBColumn;
     FromName: TcxGridDBColumn;
     bbPrint_byPack: TdxBarButton;
@@ -58,7 +58,7 @@ type
     Amount_Weight_Dozakaz: TcxGridDBColumn;
     Amount_Sh_Dozakaz: TcxGridDBColumn;
     AmountSumm_Dozakaz: TcxGridDBColumn;
-    Amount12: TcxGridDBColumn;
+    Amount_Order: TcxGridDBColumn;
     actPrint_byPack: TdsdPrintAction;
     actPrint_byProduction: TdsdPrintAction;
     bbPrint_byProduction: TdxBarButton;
@@ -71,7 +71,7 @@ type
     actPrint_byRouteItog: TdsdPrintAction;
     bbPrint_byRouteItog: TdxBarButton;
     InfoMoneyName: TcxGridDBColumn;
-    edByDoc: TcxCheckBox;
+    cbByDoc: TcxCheckBox;
     AmountSale_Weight: TcxGridDBColumn;
     AmountSale_Sh: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
@@ -83,6 +83,18 @@ type
     Article: TcxGridDBColumn;
     InvNumberOrderPartner: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
+    actPrint: TdsdPrintAction;
+    bbPrint: TdxBarButton;
+    CountDiff_B: TcxGridDBColumn;
+    CountDiff_M: TcxGridDBColumn;
+    WeightDiff_B: TcxGridDBColumn;
+    WeightDiff_M: TcxGridDBColumn;
+    Amount_Dozakaz: TcxGridDBColumn;
+    AmountSale: TcxGridDBColumn;
+    AmountTax: TcxGridDBColumn;
+    DiffTax: TcxGridDBColumn;
+    isPrint_M: TcxGridDBColumn;
+    actRefreshDoc: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
