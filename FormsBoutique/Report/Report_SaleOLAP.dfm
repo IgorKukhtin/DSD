@@ -281,6 +281,8 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     Groups = <>
     OptionsView.RowGrandTotalWidth = 272
     TabOrder = 1
+    ExplicitLeft = 64
+    ExplicitTop = 61
     object pvLabelName: TcxDBPivotGridField
       Area = faRow
       AreaIndex = 1
@@ -1870,8 +1872,8 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       item
         Component = cbDay_doc
       end>
-    Left = 496
-    Top = 224
+    Left = 472
+    Top = 248
   end
   object PivotAddOn: TPivotAddOn
     ErasedFieldName = 'isErased'

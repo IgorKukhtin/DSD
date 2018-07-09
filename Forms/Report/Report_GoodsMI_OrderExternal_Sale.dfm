@@ -718,10 +718,11 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             Width = 60
           end
           object isPrint_M: TcxGridDBColumn
+            Caption = #1052#1077#1085#1100#1096#1077' '#1079#1072#1103#1074#1082#1080
             DataBinding.FieldName = 'isPrint_M'
-            Visible = False
-            VisibleForCustomization = False
-            Width = 30
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
           end
           object Diff_M: TcxGridDBColumn
             DataBinding.FieldName = 'Diff_M'
@@ -1329,7 +1330,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'InvNumberOrderPartner'
+          IndexFieldNames = 'fromname;InvNumberOrderPartner'
           GridView = cxGridDBTableView
         end>
       Params = <

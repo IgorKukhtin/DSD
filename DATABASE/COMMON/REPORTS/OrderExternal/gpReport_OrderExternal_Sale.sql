@@ -597,8 +597,8 @@ BEGIN
            , tmpMovement.OperDatePartner ::TDateTime    AS OperDatePartner
            , tmpMovement.OperDate_Sale        ::TDateTime 
            , tmpMovement.OperDatePartner_Sale ::TDateTime 
-           , tmpMovement.InvNumber        ::TVarChar
-           , tmpMovement.InvNumberOrderPartner  ::TVarChar
+           , tmpMovement.InvNumber            ::TVarChar
+           , COALESCE (tmpMovement.InvNumberOrderPartner, '')  ::TVarChar AS InvNumberOrderPartner
            , ObjectDesc_From.ItemName                   AS FromDescName
            , Object_From.Id                             AS FromId
            , Object_From.ObjectCode                     AS FromCode

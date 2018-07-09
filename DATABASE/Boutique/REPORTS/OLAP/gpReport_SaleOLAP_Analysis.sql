@@ -136,8 +136,8 @@ BEGIN
                   , SUM (tmpOlap.Income_Amount) AS Income_Amount
                   -- Остаток - без учета "долга"
                   , SUM (tmpOlap.Remains_Amount) AS Remains_Amount
-                  -- Кол-во продажа - с учетом "долга"
-                  , SUM (tmpOlap.Sale_Amount) AS Sale_Amount
+                  -- Кол-во продажа - с учетом "долга"            
+                  , SUM (tmpOlap.Result_Amount) AS Sale_Amount    -- Кол. Итог - с учетом "долга" 
                   --
                   , SUM (tmpOlap.Income_Summ)            AS Income_Summ     
                   , SUM (tmpOlap.Result_Summ_curr)       AS Result_Summ_curr     
