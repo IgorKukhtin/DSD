@@ -95,6 +95,7 @@ type
     DiffTax: TcxGridDBColumn;
     isPrint_M: TcxGridDBColumn;
     actRefreshDoc: TdsdDataSetRefresh;
+    Diff_M: TcxGridDBColumn;
   private
     { Private declarations }
   public

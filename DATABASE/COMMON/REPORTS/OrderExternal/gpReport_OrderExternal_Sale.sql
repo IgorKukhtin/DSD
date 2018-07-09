@@ -40,6 +40,7 @@ RETURNS TABLE (OperDate TDateTime, OperDatePartner TDateTime
              , CountDiff_M  TFloat
              , WeightDiff_B TFloat
              , WeightDiff_M TFloat
+             , Diff_M       TFloat
              , AmountTax    TFloat
              , DiffTax      TFloat
              , isPrint_M    Boolean
@@ -539,6 +540,8 @@ BEGIN
                             END :: TFloat AS WeightDiff_M
                            --кол-во заказа по % откл.
                           , ((COALESCE (tmp.Amount12,0) + COALESCE (tmp.Amount_Dozakaz,0)) * vbDiffTax / 100) :: TFloat AS AmountTax
+                          --вес заказа по % откл.
+                          , ((COALESCE (tmp.Amount_Weight_Itog,0)) * vbDiffTax / 100) :: TFloat AS WeightTax
 
                        FROM
                            (SELECT tmpMovementAll.OperDate         AS OperDate
@@ -647,9 +650,10 @@ BEGIN
            , tmpMovement.CountDiff_M  :: TFloat AS CountDiff_M
            , tmpMovement.WeightDiff_B :: TFloat AS WeightDiff_B
            , tmpMovement.WeightDiff_M :: TFloat AS WeightDiff_M
+           , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMovement.CountDiff_M ELSE tmpMovement.WeightDiff_M END :: TFloat AS Diff_M
            , tmpMovement.AmountTax    :: TFloat AS AmountTax
            , vbDiffTax                :: TFloat AS DiffTax
-           , CASE WHEN tmpMovement.AmountTax <= tmpMovement.CountDiff_M AND tmpMovement.CountDiff_M <> 0 THEN TRUE ELSE FALSE END AS isPrint_M
+           , CASE WHEN ( tmpMovement.CountDiff_M <> 0) OR (tmpMovement.WeightDiff_M <> 0) THEN TRUE ELSE FALSE END AS isPrint_M
        FROM tmpMovement
           LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
           LEFT JOIN ObjectDesc AS ObjectDesc_From ON ObjectDesc_From.Id = Object_From.DescId

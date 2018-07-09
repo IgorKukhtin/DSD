@@ -723,6 +723,12 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             VisibleForCustomization = False
             Width = 30
           end
+          object Diff_M: TcxGridDBColumn
+            DataBinding.FieldName = 'Diff_M'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 60
+          end
         end
       end
     end
@@ -1343,7 +1349,22 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
         end
         item
           Name = 'maintext'
-          Value = #1088'/'#1089#1095#1077#1090#1091
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerName'
+          Value = Null
+          Component = GuidesPartner
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = Null
+          Component = GuidesTo
+          ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
