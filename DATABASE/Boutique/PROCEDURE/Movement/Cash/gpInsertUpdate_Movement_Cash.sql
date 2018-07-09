@@ -1,7 +1,7 @@
 -- Function: gpInsertUpdate_Movement_Cash()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
-                                                     ,Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TFloat
+                                                     ,Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
@@ -9,8 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash(
     IN inOperDate             TDateTime , -- Дата документа
     IN inCurrencyPartnerValue TFloat    ,
     IN inParPartnerValue      TFloat    ,
-    --IN inAmountCurrency       TFloat    ,
-    IN inAmount               TFloat    , -- сумма обмен
+
     IN inAmountIn             TFloat    , -- Сумма прихода
     IN inAmountOut            TFloat    , -- Сумма расхода
     
@@ -18,9 +17,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash(
     IN inMoneyPlaceId         Integer   , --
     IN inInfoMoneyId          Integer   ,
     IN inUnitId               Integer   ,
-    IN inCurrencyId           Integer   , --
-   OUT outCurrencyValue       TFloat    , --
-   OUT outParValue            TFloat    , --
     IN inComment              TVarChar  , -- Примечание
     IN inSession              TVarChar    -- сессия пользователя
 )
@@ -28,7 +24,6 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbAmountCurrency TFloat;   
    DECLARE vbAmount TFloat;
    DECLARE vbAmountIn TFloat;
    DECLARE vbAmountOut TFloat;
@@ -54,23 +49,6 @@ BEGIN
         ioInvNumber:= CAST (NEXTVAL ('movement_cash_seq') AS TVarChar);
      ELSEIF vbUserId = zc_User_Sybase() THEN
         ioInvNumber:= (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = ioId);
-     END IF;
-
-     -- Если НЕ Базовая Валюта
-     IF inCurrencyDocumentId <> zc_Currency_Basis()
-     THEN
-         -- Определили курс на Дату документа
-         SELECT COALESCE (tmp.Amount, 1), COALESCE (tmp.ParValue,0)
-                INTO outCurrencyValue, outParValue
-         FROM lfSelect_Movement_Currency_byDate (inOperDate      := inOperDate -- (SELECT Movement.OperDate FROM Movement  WHERE Movement.Id = ioId)
-                                               , inCurrencyCashId:= zc_Currency_Basis()
-                                               , inCurrencyToId  := inCurrencyId
-                                                ) AS tmp;
-     ELSE
-         -- курс не нужен
-         outCurrencyValue:= 0;
-         outParValue     := 0;
-
      END IF;
 
      -- !!!очень важный расчет!!!
