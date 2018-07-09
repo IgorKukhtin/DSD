@@ -141,7 +141,7 @@ BEGIN
                         , MovementItem.ObjectId                                                                                                              AS GoodsId
                         , CAST (SUM((CASE WHEN Movement.OperDate = MovementDate_OperDatePartner.ValueData THEN MovementItem.Amount ELSE 0 END)) AS TFloat)   AS Amount1
                         , CAST (SUM((CASE WHEN Movement.OperDate <> MovementDate_OperDatePartner.ValueData THEN MovementItem.Amount ELSE 0 END)) AS TFloat)  AS Amount2
-                        , CAST (SUM((MIFloat_AmountSecond.ValueData )) AS TFloat)                                                                            AS Amount_Dozakaz
+                        , CAST (SUM(COALESCE(MIFloat_AmountSecond.ValueData, 0)) AS TFloat)                                                                  AS Amount_Dozakaz
 
                         , CAST (SUM(CASE WHEN MIFloat_CountForPrice.ValueData > 0
                                         THEN CAST ( ( COALESCE ((CASE WHEN Movement.OperDate = MovementDate_OperDatePartner.ValueData THEN MovementItem.Amount ELSE 0 END), 0) ) * COALESCE (MIFloat_Price.ValueData,0) / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
@@ -228,9 +228,9 @@ BEGIN
                      )
 
     , tmpMovementOrder AS (SELECT
-                                  tmpMovement2.OperDate
-                                , tmpMovement2.OperDatePartner
-                                , CASE WHEN inIsByDoc = TRUE THEN tmpMovement2.InvNumberOrderPartner ELSE '' END AS InvNumberOrderPartner
+                                  CASE WHEN inIsByDoc = TRUE THEN tmpMovement2.OperDate ELSE NULL END ::TDateTime        AS OperDate
+                                , CASE WHEN inIsByDoc = TRUE THEN tmpMovement2.OperDatePartner ELSE NULL END ::TDateTime AS OperDatePartner
+                                , CASE WHEN inIsByDoc = TRUE THEN tmpMovement2.InvNumberOrderPartner ELSE '' END         AS InvNumberOrderPartner
                                 , tmpMovement2.FromId             AS FromId
                                 , tmpMovement2.RouteId            AS RouteId
                                 , tmpMovement2.RouteSortingId     AS RouteSortingId
@@ -242,20 +242,20 @@ BEGIN
                                 , tmpMovement2.AmountSummTotal    AS AmountSummTotal
                                 , tmpMovement2.AmountSumm_Dozakaz AS AmountSumm_Dozakaz
                      
-                                , CAST ((tmpMovement2.Amount1 * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) AS TFloat)            AS Amount_Weight1
-                                , CAST ((CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN Amount1 ELSE 0 END) AS TFloat)                                                           AS Amount_Sh1
+                                , CAST (SUM(tmpMovement2.Amount1 * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) AS TFloat)            AS Amount_Weight1
+                                , CAST (SUM(CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN Amount1 ELSE 0 END) AS TFloat)                                                           AS Amount_Sh1
                      
-                                , CAST ((tmpMovement2.Amount2 * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) AS TFloat)            AS Amount_Weight2
-                                , CAST ((CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN Amount2 ELSE 0 END) AS TFloat)                                                           AS Amount_Sh2
+                                , CAST (SUM(tmpMovement2.Amount2 * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) AS TFloat)            AS Amount_Weight2
+                                , CAST (SUM(CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN Amount2 ELSE 0 END) AS TFloat)                                                           AS Amount_Sh2
                      
-                                , CAST (( (tmpMovement2.Amount1 + tmpMovement2.Amount2) * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) AS TFloat) AS Amount_Weight_Itog
-                                , CAST ((CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN (tmpMovement2.Amount1 + tmpMovement2.Amount2) ELSE 0 END) AS TFloat)                                    AS Amount_Sh_Itog
+                                , CAST (SUM( (tmpMovement2.Amount1 + tmpMovement2.Amount2) * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) AS TFloat) AS Amount_Weight_Itog
+                                , CAST (SUM(CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN (tmpMovement2.Amount1 + tmpMovement2.Amount2) ELSE 0 END) AS TFloat)                                    AS Amount_Sh_Itog
                      
-                                , CAST ((tmpMovement2.Amount_Dozakaz * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) AS TFloat)     AS Amount_Weight_Dozakaz
-                                , CAST ((CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMovement2.Amount_Dozakaz ELSE 0 END) AS TFloat)                                       AS Amount_Sh_Dozakaz
+                                , CAST (SUM(tmpMovement2.Amount_Dozakaz * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) AS TFloat)     AS Amount_Weight_Dozakaz
+                                , CAST (SUM(CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMovement2.Amount_Dozakaz ELSE 0 END) AS TFloat)                                       AS Amount_Sh_Dozakaz
                      
-                                , CAST ((tmpMovement2.Amount1 + tmpMovement2.Amount2) AS TFloat)                                                                                                          AS Amount12
-                                , CAST (tmpMovement2.Amount_Dozakaz AS TFloat)                                                                                                                            AS Amount_Dozakaz
+                                , CAST (SUM(tmpMovement2.Amount1 + tmpMovement2.Amount2) AS TFloat)                                                                                                          AS Amount12
+                                , CAST (SUM(tmpMovement2.Amount_Dozakaz) AS TFloat)                                                                                                                          AS Amount_Dozakaz
                      
                            FROM tmpMovement2 AS tmpMovement2
                                LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = tmpMovement2.GoodsId
@@ -263,12 +263,25 @@ BEGIN
                                LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                                      ON ObjectFloat_Weight.ObjectId = tmpMovement2.GoodsId
                                                     AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                           GROUP BY CASE WHEN inIsByDoc = TRUE THEN tmpMovement2.OperDate ELSE NULL END
+                                  , CASE WHEN inIsByDoc = TRUE THEN tmpMovement2.OperDatePartner ELSE NULL END
+                                  , CASE WHEN inIsByDoc = TRUE THEN tmpMovement2.InvNumberOrderPartner ELSE '' END
+                                  , tmpMovement2.FromId
+                                  , tmpMovement2.RouteId
+                                  , tmpMovement2.RouteSortingId
+                                  , tmpMovement2.PaidKindId
+                                  , tmpMovement2.GoodsKindId
+                                  , tmpMovement2.GoodsId
+                                  , tmpMovement2.AmountSumm1
+                                  , tmpMovement2.AmountSumm2
+                                  , tmpMovement2.AmountSummTotal
+                                  , tmpMovement2.AmountSumm_Dozakaz
                           )
 
     --     ПРОДАЖИ -------------------
     , tmpMovementSaleTop AS (SELECT Movement.Id                                AS MovementId
-                                  , Movement_Order.OperDate                    AS OperDate
-                                  , Movement.OperDate                          AS OperDatePartner
+                                  , CASE WHEN inIsByDoc = TRUE THEN Movement_Order.OperDate ELSE NULL END ::TDateTime AS OperDate
+                                  , CASE WHEN inIsByDoc = TRUE THEN Movement.OperDate ELSE NULL END ::TDateTime       AS OperDatePartner
                                   , Movement.InvNumber                         AS InvNumber
 
                                   , CASE WHEN TRIM (COALESCE (MovementString_InvNumberOrder.ValueData, '')) <> ''
@@ -321,13 +334,13 @@ BEGIN
                                      , MovementLinkObject_From.ObjectId
                                      , MovementLinkObject_Route.ObjectId
                                      , MovementLinkObject_PaidKind.ObjectId
-                                     , Movement_Order.OperDate
                                      , Movement_Order.InvNumber
-                                     , Movement.OperDate
                                      , Movement.InvNumber
                                      , MovementString_InvNumberOrder.ValueData
                                      , CASE WHEN inIsByDoc = TRUE THEN Movement.OperDate ELSE NULL END
                                      , CASE WHEN inIsByDoc = TRUE THEN MovementDate_OperDatePartner.ValueData ELSE NULL END
+                                     , CASE WHEN inIsByDoc = TRUE THEN Movement_Order.OperDate ELSE NULL END
+                                     , CASE WHEN inIsByDoc = TRUE THEN Movement.OperDate ELSE NULL END
                               )
 
     , tmpMovementSale AS (SELECT
@@ -521,27 +534,27 @@ BEGIN
                            , tmp.PriceSale
                            , tmp.SumSale
 
-                          , CASE WHEN COALESCE (tmp.AmountSale_Sh,0) - COALESCE (tmp.Amount_Sh_Itog,0) > 0
-                                 THEN COALESCE (tmp.AmountSale_Sh,0) - COALESCE (tmp.Amount_Sh_Itog,0)
+                          , CASE WHEN COALESCE (tmp.AmountSale_Sh,0) - COALESCE (tmp.Amount_Sh_Itog,0) - COALESCE (tmp.Amount_Sh_Dozakaz,0) > 0
+                                 THEN COALESCE (tmp.AmountSale_Sh,0) - COALESCE (tmp.Amount_Sh_Itog,0) - COALESCE (tmp.Amount_Sh_Dozakaz,0)
                                  ELSE 0
                             END :: TFloat AS CountDiff_B
-                          , CASE WHEN       COALESCE (tmp.AmountSale_Sh,0) - COALESCE (tmp.Amount_Sh_Itog,0) < 0
-                                 THEN -1 * (COALESCE (tmp.AmountSale_Sh,0) - COALESCE (tmp.Amount_Sh_Itog,0))
+                          , CASE WHEN       COALESCE (tmp.AmountSale_Sh,0) - COALESCE (tmp.Amount_Sh_Itog,0) - COALESCE (tmp.Amount_Sh_Dozakaz,0) < 0
+                                 THEN -1 * (COALESCE (tmp.AmountSale_Sh,0) - COALESCE (tmp.Amount_Sh_Itog,0))- COALESCE (tmp.Amount_Sh_Dozakaz,0)
                                  ELSE 0
                             END :: TFloat AS CountDiff_M
 
-                          , CASE WHEN COALESCE (tmp.AmountSale_Weight,0) - COALESCE (tmp.Amount_Weight_Itog,0) > 0
-                                 THEN COALESCE (tmp.AmountSale_Weight,0) - COALESCE (tmp.Amount_Weight_Itog,0)
+                          , CASE WHEN COALESCE (tmp.AmountSale_Weight,0) - COALESCE (tmp.Amount_Weight_Itog,0) - COALESCE (tmp.Amount_Weight_Dozakaz,0) > 0
+                                 THEN COALESCE (tmp.AmountSale_Weight,0) - COALESCE (tmp.Amount_Weight_Itog,0)- COALESCE (tmp.Amount_Weight_Dozakaz,0)
                                  ELSE 0
                             END :: TFloat AS WeightDiff_B
-                          , CASE WHEN       COALESCE (tmp.AmountSale_Weight,0) - COALESCE (tmp.Amount_Weight_Itog,0) < 0
-                                 THEN -1 * (COALESCE (tmp.AmountSale_Weight,0) - COALESCE (tmp.Amount_Weight_Itog,0))
+                          , CASE WHEN       COALESCE (tmp.AmountSale_Weight,0) - COALESCE (tmp.Amount_Weight_Itog,0)- COALESCE (tmp.Amount_Weight_Dozakaz,0) < 0
+                                 THEN -1 * (COALESCE (tmp.AmountSale_Weight,0) - COALESCE (tmp.Amount_Weight_Itog,0)- COALESCE (tmp.Amount_Weight_Dozakaz,0))
                                  ELSE 0
                             END :: TFloat AS WeightDiff_M
                            --кол-во заказа по % откл.
                           , ((COALESCE (tmp.Amount12,0) + COALESCE (tmp.Amount_Dozakaz,0)) * vbDiffTax / 100) :: TFloat AS AmountTax
                           --вес заказа по % откл.
-                          , ((COALESCE (tmp.Amount_Weight_Itog,0)) * vbDiffTax / 100) :: TFloat AS WeightTax
+                          , ((COALESCE (tmp.Amount_Weight_Itog,0)+ COALESCE (tmp.Amount_Weight_Dozakaz,0)) * vbDiffTax / 100) :: TFloat AS WeightTax
 
                        FROM
                            (SELECT tmpMovementAll.OperDate         AS OperDate
@@ -653,7 +666,7 @@ BEGIN
            , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMovement.CountDiff_M ELSE tmpMovement.WeightDiff_M END :: TFloat AS Diff_M
            , tmpMovement.AmountTax    :: TFloat AS AmountTax
            , vbDiffTax                :: TFloat AS DiffTax
-           , CASE WHEN ( tmpMovement.CountDiff_M <> 0) OR (tmpMovement.WeightDiff_M <> 0) THEN TRUE ELSE FALSE END AS isPrint_M
+           , CASE WHEN ( tmpMovement.CountDiff_M <> 0 AND tmpMovement.CountDiff_M >= tmpMovement.AmountTax) OR (tmpMovement.WeightDiff_M <> 0 AND tmpMovement.WeightDiff_M >= WeightTax ) THEN TRUE ELSE FALSE END AS isPrint_M
        FROM tmpMovement
           LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
           LEFT JOIN ObjectDesc AS ObjectDesc_From ON ObjectDesc_From.Id = Object_From.DescId

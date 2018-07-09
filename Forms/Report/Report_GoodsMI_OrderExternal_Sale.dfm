@@ -24,6 +24,8 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
       inherited cxGrid: TcxGrid
         Width = 1092
         Height = 296
+        ExplicitLeft = 256
+        ExplicitTop = -20
         ExplicitWidth = 1092
         ExplicitHeight = 296
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -300,14 +302,14 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
           Styles.Footer = nil
           Styles.Header = nil
           object OperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1079#1072#1082#1072#1079#1072
+            Caption = #1044#1072#1090#1072' ('#1079#1072#1103#1074#1082#1072')'
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 40
+            Width = 57
           end
           object OperDatePartner: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080
+            Caption = #1044#1072#1090#1072' '#1089#1082#1083#1072#1076' ('#1079#1072#1103#1074#1082#1072')'
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -336,7 +338,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             Width = 70
           end
           object InvNumber: TcxGridDBColumn
-            Caption = #8470' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1087#1088#1086#1076'.)'
+            Caption = #8470' '#1076#1086#1082'. ('#1087#1088#1086#1076'.)'
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -895,8 +897,8 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
       end>
   end
   inherited ActionList: TActionList
-    Left = 95
-    Top = 135
+    Left = 407
+    Top = 239
     object actRefreshDoc: TdsdDataSetRefresh [0]
       Category = 'DSDLib'
       TabSheet = tsMain
@@ -1350,6 +1352,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
         end
         item
           Name = 'maintext'
+          Value = Null
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -1552,8 +1555,8 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    Left = 696
-    Top = 136
+    Left = 712
+    Top = 200
   end
   inherited PopupMenu: TPopupMenu
     Left = 144

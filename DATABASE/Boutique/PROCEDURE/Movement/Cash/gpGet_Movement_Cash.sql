@@ -73,7 +73,7 @@ BEGIN
              , MovementFloat_CurrencyPartnerValue.ValueData AS CurrencyPartnerValue
              , MovementFloat_ParPartnerValue.ValueData      AS ParPartnerValue
              
-             , CASE WHEN COALESCE (tmpMI.Amount,0) < 0 THEN tmpMI.Amount ELSE 0 END AS AmountOut
+             , CASE WHEN COALESCE (tmpMI.Amount,0) < 0 THEN -1 * tmpMI.Amount ELSE 0 END AS AmountOut
              , CASE WHEN COALESCE (tmpMI.Amount,0) > 0 THEN tmpMI.Amount ELSE 0 END AS AmountIn
              
              , Object_Cash.Id                        AS CashId

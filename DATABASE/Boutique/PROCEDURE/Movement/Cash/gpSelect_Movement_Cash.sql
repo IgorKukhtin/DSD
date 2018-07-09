@@ -99,8 +99,8 @@ BEGIN
            , MovementDate_Insert.ValueData               AS InsertDate
            , Object_Insert.ValueData                     AS InsertName
            
-           , CASE WHEN COALESCE (tmpMI.Amount,0) < 0 THEN tmpMI.Amount ELSE 0 END AS AmountOut
-           , CASE WHEN COALESCE (tmpMI.Amount,0) > 0 THEN tmpMI.Amount ELSE 0 END AS AmountIn
+           , CASE WHEN COALESCE (tmpMI.Amount,0) < 0 THEN -1 * tmpMI.Amount  ELSE 0 END AS AmountOut
+           , CASE WHEN COALESCE (tmpMI.Amount,0) > 0 THEN tmpMI.Amount ELSE 0 END       AS AmountIn
 
            , Object_Cash.Id                              AS CashId
            , Object_Cash.ValueData                       AS CashName
