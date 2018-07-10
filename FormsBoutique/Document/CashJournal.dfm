@@ -27,7 +27,7 @@ object CashJournalForm: TCashJournalForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 43101d
+      EditValue = 43313d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -37,7 +37,7 @@ object CashJournalForm: TCashJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 43101d
+      EditValue = 43313d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -62,7 +62,7 @@ object CashJournalForm: TCashJournalForm
     object deStartProtocol: TcxDateEdit
       Left = 708
       Top = 5
-      EditValue = 43223d
+      EditValue = 43313d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 5
@@ -71,7 +71,7 @@ object CashJournalForm: TCashJournalForm
     object deEndProtocol: TcxDateEdit
       Left = 827
       Top = 5
-      EditValue = 43223d
+      EditValue = 43313d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 6

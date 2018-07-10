@@ -51,6 +51,7 @@ type
     procedure LoadCountryBrandFormTest;
     procedure LoadCurrencyMovementFormTest;
     procedure LoadCashFormTest;
+    procedure LoadCashMovementFormTest;
     procedure LoadCurrencyFormTest;
     procedure LoadDiscountFormTest;
     procedure LoadDiscountToolsFormTest;
@@ -439,6 +440,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCashForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashEditForm');
+end;
+
+procedure TLoadFormTest.LoadCashMovementFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCashJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashOperationForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCashOperationForm');
 end;
 
 procedure TLoadFormTest.LoadLabelFormTest;

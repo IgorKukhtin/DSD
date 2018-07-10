@@ -298,7 +298,9 @@ uses
   Report_GoodsCodeDialog in '..\..\FormsBoutique\Report\Report_GoodsCodeDialog.pas' {Report_GoodsCodeDialogForm: TParentForm},
   Report_SaleOLAP_AnalysisDialog in '..\..\FormsBoutique\Report\Report_SaleOLAP_AnalysisDialog.pas' {Report_SaleOLAP_AnalysisDialogForm: TParentForm},
   Report_SaleOLAP_Analysis in '..\..\FormsBoutique\Report\Report_SaleOLAP_Analysis.pas' {Report_SaleOLAP_AnalysisForm: TParentForm},
-  MovementDescForms in '..\..\FormsBoutique\System\MovementDescForms.pas' {MovementDescDataForm: TParentForm};
+  MovementDescForms in '..\..\FormsBoutique\System\MovementDescForms.pas' {MovementDescDataForm: TParentForm},
+  CashJournal in '..\..\FormsBoutique\Document\CashJournal.pas' {CashJournalForm: TParentForm},
+  CashOperation in '..\..\FormsBoutique\Document\CashOperation.pas' {CashOperationForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
