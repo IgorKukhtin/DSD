@@ -300,7 +300,8 @@ uses
   Report_SaleOLAP_Analysis in '..\..\FormsBoutique\Report\Report_SaleOLAP_Analysis.pas' {Report_SaleOLAP_AnalysisForm: TParentForm},
   MovementDescForms in '..\..\FormsBoutique\System\MovementDescForms.pas' {MovementDescDataForm: TParentForm},
   CashJournal in '..\..\FormsBoutique\Document\CashJournal.pas' {CashJournalForm: TParentForm},
-  CashOperation in '..\..\FormsBoutique\Document\CashOperation.pas' {CashOperationForm: TParentForm};
+  CashOperation in '..\..\FormsBoutique\Document\CashOperation.pas' {CashOperationForm: TParentForm},
+  MoneyPlaceCash_Object in '..\..\FormsBoutique\Guides\MoneyPlaceCash_Object.pas' {MoneyPlaceCash_ObjectForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

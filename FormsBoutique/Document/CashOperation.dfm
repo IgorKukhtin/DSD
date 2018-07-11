@@ -1,24 +1,24 @@
 ﻿inherited CashOperationForm: TCashOperationForm
   ActiveControl = ceAmountIn
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
-  ClientHeight = 365
-  ClientWidth = 563
+  ClientHeight = 265
+  ClientWidth = 494
   AddOnFormData.isSingle = False
-  ExplicitWidth = 569
-  ExplicitHeight = 393
+  ExplicitWidth = 500
+  ExplicitHeight = 293
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 168
-    Top = 329
-    ExplicitLeft = 168
-    ExplicitTop = 329
+    Left = 150
+    Top = 225
+    ExplicitLeft = 150
+    ExplicitTop = 225
   end
   inherited bbCancel: TcxButton
-    Left = 312
-    Top = 329
-    ExplicitLeft = 312
-    ExplicitTop = 329
+    Left = 294
+    Top = 225
+    ExplicitLeft = 294
+    ExplicitTop = 225
   end
   object cxLabel1: TcxLabel [2]
     Left = 130
@@ -37,12 +37,12 @@
   end
   object cxLabel4: TcxLabel [5]
     Left = 15
-    Top = 231
+    Top = 159
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   object cxLabel5: TcxLabel [6]
-    Left = 15
-    Top = 156
+    Left = 245
+    Top = 105
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
   object ceCash: TcxButtonEdit [7]
@@ -51,7 +51,6 @@
     Properties.Buttons = <
       item
         Default = True
-        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
@@ -60,7 +59,7 @@
   end
   object ceUnit: TcxButtonEdit [8]
     Left = 15
-    Top = 251
+    Top = 179
     Properties.Buttons = <
       item
         Default = True
@@ -71,8 +70,8 @@
     Width = 215
   end
   object ceInfoMoney: TcxButtonEdit [9]
-    Left = 15
-    Top = 175
+    Left = 245
+    Top = 124
     Properties.Buttons = <
       item
         Default = True
@@ -80,7 +79,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 8
-    Width = 305
+    Width = 236
   end
   object ceOperDate: TcxDateEdit [10]
     Left = 130
@@ -122,15 +121,15 @@
     Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091
   end
   object cxLabel10: TcxLabel [15]
-    Left = 15
-    Top = 278
+    Left = 245
+    Top = 160
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [16]
-    Left = 15
-    Top = 297
+    Left = 245
+    Top = 179
     TabOrder = 9
-    Width = 535
+    Width = 236
   end
   object cxLabel3: TcxLabel [17]
     Left = 130
@@ -194,57 +193,25 @@
     Properties.Buttons = <
       item
         Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    ShowHint = False
-    TabOrder = 25
-    Width = 63
-  end
-  object cxLabel16: TcxLabel [26]
-    Left = 389
-    Top = 52
-    Caption = 'C'#1091#1084#1084#1072' '#1075#1088#1085', '#1086#1073#1084#1077#1085
-  end
-  object ceAmountSumm: TcxCurrencyEdit [27]
-    Left = 389
-    Top = 70
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
-    TabOrder = 27
-    Width = 92
-  end
-  object cxLabel20: TcxLabel [28]
-    Left = 475
-    Top = 140
-    Caption = #1042#1072#1083#1102#1090#1072' '#1082#1086#1085#1090#1088'.'
-  end
-  object ceCurrencyPartner: TcxButtonEdit [29]
-    Left = 475
-    Top = 160
-    ParentShowHint = False
-    Properties.Buttons = <
-      item
-        Default = True
         Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
     ShowHint = False
-    TabOrder = 29
-    Width = 75
+    TabOrder = 25
+    Width = 92
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 59
-    Top = 318
+    Left = 417
+    Top = 206
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 24
-    Top = 326
+    Left = 14
+    Top = 206
   end
   inherited ActionList: TActionList
-    Left = 95
-    Top = 325
+    Left = 61
+    Top = 213
     inherited InsertUpdateGuides: TdsdInsertUpdateGuides [0]
     end
     inherited actRefresh: TdsdDataSetRefresh [1]
@@ -253,8 +220,8 @@
     end
   end
   inherited FormParams: TdsdFormParams
-    Left = 136
-    Top = 326
+    Left = 118
+    Top = 222
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Cash'
@@ -309,7 +276,6 @@
       item
         Name = 'inAmountSumm'
         Value = Null
-        Component = ceAmountSumm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -408,8 +374,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 464
-    Top = 262
+    Left = 456
+    Top = 110
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Cash'
@@ -436,7 +402,7 @@
         Value = '0'
         Component = FormParams
         ComponentItem = 'inCashId_top'
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -444,7 +410,7 @@
         Value = ''
         Component = FormParams
         ComponentItem = 'inCurrencyId_top'
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -478,7 +444,6 @@
       item
         Name = 'AmountSumm'
         Value = Null
-        Component = ceAmountSumm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -620,15 +585,11 @@
       item
         Name = 'CurrencyPartnerId'
         Value = Null
-        Component = CurrencyPartnerGuides
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyPartnerName'
         Value = Null
-        Component = CurrencyPartnerGuides
-        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -660,16 +621,16 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 411
-    Top = 254
+    Left = 403
+    Top = 102
   end
   object CashGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceCash
-    FormNameParam.Value = 'TCash_ObjectForm'
+    FormNameParam.Value = 'TCashForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TCash_ObjectForm'
+    FormName = 'TCashForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -731,8 +692,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 104
-    Top = 240
+    Left = 112
+    Top = 168
   end
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
@@ -741,7 +702,7 @@
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoney_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -758,8 +719,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 376
-    Top = 180
+    Left = 344
+    Top = 100
   end
   object ObjectlGuides: TdsdGuides
     KeyField = 'Id'
@@ -836,20 +797,16 @@
       item
         Name = 'CurrencyId'
         Value = Null
-        Component = CurrencyPartnerGuides
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyName'
         Value = Null
-        Component = CurrencyPartnerGuides
-        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 368
-    Top = 140
+    Left = 96
+    Top = 108
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Name = 'Id'
@@ -862,8 +819,8 @@
         Guides = CashGuides
       end>
     ActionItemList = <>
-    Left = 512
-    Top = 246
+    Left = 248
+    Top = 214
   end
   object CurrencyGuides: TdsdGuides
     KeyField = 'Id'
@@ -913,58 +870,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 396
-    Top = 19
-  end
-  object CurrencyPartnerGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceCurrencyPartner
-    FormNameParam.Value = 'TCurrencyValue_ForCashForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TCurrencyValue_ForCashForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = CurrencyPartnerGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = CurrencyPartnerGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDate'
-        Value = 42475d
-        Component = ceOperDate
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ParValue'
-        Value = 1.000000000000000000
-        Component = ceParPartnerValue
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CurrencyValue'
-        Value = 0.000000000000000000
-        Component = ceCurrencyPartnerValue
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 493
-    Top = 160
+    Left = 340
+    Top = 11
   end
 end

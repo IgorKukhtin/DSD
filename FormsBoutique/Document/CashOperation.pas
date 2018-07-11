@@ -41,12 +41,7 @@ type
     ceParPartnerValue: TcxCurrencyEdit;
     cxLabel15: TcxLabel;
     ceCurrency: TcxButtonEdit;
-    cxLabel16: TcxLabel;
-    ceAmountSumm: TcxCurrencyEdit;
     CurrencyGuides: TdsdGuides;
-    cxLabel20: TcxLabel;
-    ceCurrencyPartner: TcxButtonEdit;
-    CurrencyPartnerGuides: TdsdGuides;
   private
     { Private declarations }
   public

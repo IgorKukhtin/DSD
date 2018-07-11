@@ -49,8 +49,7 @@ BEGIN
                                             AND Movement.DescId   = zc_Movement_Cash()
                                             AND Movement.StatusId = tmpStatus.StatusId
                           )
-        , tmpMI AS (SELECT MovementItem.MovementId
-                         , MovementItem.Id
+        , tmpMI AS (SELECT MovementItem.*
                     FROM tmpMovement
                         INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
                                                AND MovementItem.DescId     = zc_MI_Master()
@@ -93,14 +92,11 @@ BEGIN
            , MF_CurrencyPartnerValue.ValueData           AS CurrencyPartnerValue
            , MF_ParPartnerValue.ValueData                AS ParPartnerValue
 
-           , MF_AmountCurrency.ValueData                 AS AmountCurrency
-           , MF_Amount.ValueData                         AS Amount
-           
            , MovementDate_Insert.ValueData               AS InsertDate
            , Object_Insert.ValueData                     AS InsertName
            
-           , CASE WHEN COALESCE (tmpMI.Amount,0) < 0 THEN -1 * tmpMI.Amount  ELSE 0 END AS AmountOut
-           , CASE WHEN COALESCE (tmpMI.Amount,0) > 0 THEN tmpMI.Amount ELSE 0 END       AS AmountIn
+           , CASE WHEN COALESCE (tmpMI.Amount,0) < 0 THEN -1 * tmpMI.Amount  ELSE 0 END :: TFloat AS AmountOut
+           , CASE WHEN COALESCE (tmpMI.Amount,0) > 0 THEN tmpMI.Amount ELSE 0 END       :: TFloat AS AmountIn
 
            , Object_Cash.Id                              AS CashId
            , Object_Cash.ValueData                       AS CashName
@@ -144,23 +140,24 @@ BEGIN
             LEFT JOIN tmpProtocol ON tmpProtocol.MovementId = Movement.Id
             
             LEFT JOIN tmpMI ON tmpMI.MovementId = Movement.Id
+            LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = tmpMI.ObjectId
 
             LEFT JOIN MovementItemString AS MIString_Comment
-                                         ON MIString_Comment.MovementItemId = MovementItem.Id
+                                         ON MIString_Comment.MovementItemId = tmpMI.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
-                                             ON MILinkObject_MoneyPlace.MovementId = MovementItem.Id
+                                             ON MILinkObject_MoneyPlace.MovementItemId = tmpMI.Id
                                             AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
             LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = MILinkObject_MoneyPlace.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
-                                             ON MILinkObject_InfoMoney.MovementId = MovementItem.Id
+                                             ON MILinkObject_InfoMoney.MovementItemId = tmpMI.Id
                                             AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = MILinkObject_InfoMoney.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                             ON MILinkObject_Unit.MovementId = MovementItem.Id
+                                             ON MILinkObject_Unit.MovementItemId = tmpMI.Id
                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
            ;

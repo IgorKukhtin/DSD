@@ -8,7 +8,10 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Cash(
     IN inSession     TVarChar            -- сессия пользователя
    
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, CurrencyName TVarChar, UnitName TVarChar, isErased boolean)
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , CurrencyId Integer, CurrencyName TVarChar
+             , UnitName TVarChar
+             , isErased boolean)
 AS
 $BODY$
 BEGIN
@@ -22,6 +25,7 @@ BEGIN
              Object_Cash.Id               AS Id
            , Object_Cash.ObjectCode       AS Code
            , Object_Cash.ValueData        AS Name
+           , Object_Currency.Id           AS CurrencyId
            , Object_Currency.ValueData    AS CurrencyName
            , Object_Unit.ValueData        AS UnitName
            , Object_Cash.isErased         AS isErased
@@ -47,6 +51,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+10.07.18          *
 09.05.17                                                         *
 20.02.17                                                         *
 */

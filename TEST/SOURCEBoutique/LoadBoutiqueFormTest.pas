@@ -94,6 +94,7 @@ type
     procedure LoadSaleFormTest;
     procedure LoadServiceFormTest;
     procedure LoadSendFormTest;
+    procedure LoadObjectUnionFormTest;
     procedure LoadUnitFormTest;
     procedure FormTest;
 
@@ -101,7 +102,7 @@ type
 //    procedure LoadOrderSheduleFormTest;
 //    procedure LoadOrderInternalFormTest;
 //    procedure LoadOrderExternalFormTest;
-//    procedure LoadObjectUnionFormTest;
+
 //    procedure LoadOverFormTest;
 //    procedure LoadOverSettingsFormTest;
 //    procedure LoadPaidKindFormTest;
@@ -466,6 +467,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TLineFabricaEditForm');
 end;
 
+procedure TLoadFormTest.LoadObjectUnionFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMoneyPlaceCash_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMoneyPlaceCash_ObjectForm');
+
+end;
 //
 //procedure TLoadFormTest.LoadBankFormTest;
 //begin

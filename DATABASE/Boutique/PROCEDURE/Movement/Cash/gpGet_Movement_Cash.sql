@@ -17,7 +17,6 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , InfoMoneyId Integer, InfoMoneyName TVarChar
              , UnitId Integer, UnitName TVarChar
              , CurrencyId Integer, CurrencyName TVarChar
-             , CurrencyPartnerId Integer, CurrencyPartnerName TVarChar
              , Comment TVarChar
                )
 AS
@@ -54,6 +53,9 @@ BEGIN
              , 0                     AS UnitId
              , CAST ('' AS TVarChar) AS UnitName
 
+             , 0                     AS CurrencyId
+             , CAST ('' AS TVarChar) AS CurrencyName
+
              , CAST ('' AS TVarChar) AS Comment
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfGet
@@ -73,8 +75,8 @@ BEGIN
              , MovementFloat_CurrencyPartnerValue.ValueData AS CurrencyPartnerValue
              , MovementFloat_ParPartnerValue.ValueData      AS ParPartnerValue
              
-             , CASE WHEN COALESCE (tmpMI.Amount,0) < 0 THEN -1 * tmpMI.Amount ELSE 0 END AS AmountOut
-             , CASE WHEN COALESCE (tmpMI.Amount,0) > 0 THEN tmpMI.Amount ELSE 0 END AS AmountIn
+             , CASE WHEN COALESCE (MovementItem.Amount,0) < 0 THEN -1 * MovementItem.Amount ELSE 0 END :: TFloat AS AmountOut
+             , CASE WHEN COALESCE (MovementItem.Amount,0) > 0 THEN MovementItem.Amount ELSE 0 END      :: TFloat AS AmountIn
              
              , Object_Cash.Id                        AS CashId
              , Object_Cash.ValueData                 AS CashName
@@ -86,7 +88,10 @@ BEGIN
              , Object_Unit.Id                        AS UnitId
              , Object_Unit.ValueData                 AS UnitName
 
-             , MIString_Comment.ValueData            AS Comment
+             , Object_Currency.Id                        AS CurrencyId
+             , Object_Currency.ValueData                 AS CurrencyName
+
+             , MIString_Comment.ValueData  ::TVarChar           AS Comment
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -110,22 +115,27 @@ BEGIN
                                    
             LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = MovementItem.ObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Cash_Currency
+                                 ON ObjectLink_Cash_Currency.ObjectId = Object_Cash.Id
+                                AND ObjectLink_Cash_Currency.DescId = zc_ObjectLink_Cash_Currency()
+            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Cash_Currency.ChildObjectId
+
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
-                                             ON MILinkObject_MoneyPlace.MovementId = MovementItem.Id
+                                             ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
                                             AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
             LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = MILinkObject_MoneyPlace.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
-                                             ON MILinkObject_InfoMoney.MovementId = MovementItem.Id
+                                             ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                             AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = MILinkObject_InfoMoney.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                             ON MILinkObject_Unit.MovementId = MovementItem.Id
+                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
 
