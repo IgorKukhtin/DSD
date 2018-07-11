@@ -24,8 +24,6 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
       inherited cxGrid: TcxGrid
         Width = 1092
         Height = 296
-        ExplicitLeft = 256
-        ExplicitTop = -20
         ExplicitWidth = 1092
         ExplicitHeight = 296
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -320,7 +318,14 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 72
+          end
+          object InvNumber_Order: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082' ('#1079#1072#1103#1074#1082#1072')'
+            DataBinding.FieldName = 'InvNumber_Order'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object OperDate_Sale: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1089#1082#1083#1072#1076' ('#1087#1088#1086#1076'.)'

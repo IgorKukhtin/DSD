@@ -96,6 +96,7 @@ type
     isPrint_M: TcxGridDBColumn;
     actRefreshDoc: TdsdDataSetRefresh;
     Diff_M: TcxGridDBColumn;
+    InvNumber_Order: TcxGridDBColumn;
   private
     { Private declarations }
   public
