@@ -190,4 +190,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Cash (inCashId :=0, inStartDate:= '01.03.2018', inEndDate:= '01.03.2019', inStartProtocol:= '01.03.2017', inEndProtocol:= '01.03.2017', inIsProtocol:= FALSE, inIsErased:= FALSE,inSession:= zfCalc_UserAdmin())
+-- select * from gpSelect_Movement_Cash(inCashId := 0 , inStartDate := ('01.07.2018')::TDateTime , inEndDate := ('31.08.2018')::TDateTime , inStartProtocol := ('12.07.2018')::TDateTime , inEndProtocol := ('12.07.2018')::TDateTime , inIsProtocol := 'False' , inIsErased := 'False' ,  inSession := '8');

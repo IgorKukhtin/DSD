@@ -1,5 +1,5 @@
 ﻿inherited CashOperationForm: TCashOperationForm
-  ActiveControl = ceAmountIn
+  ActiveControl = edAmountIn
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
   ClientHeight = 265
   ClientWidth = 514
@@ -37,7 +37,7 @@
   end
   object cxLabel4: TcxLabel [5]
     Left = 15
-    Top = 159
+    Top = 160
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   object cxLabel5: TcxLabel [6]
@@ -45,7 +45,7 @@
     Top = 105
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
-  object ceCash: TcxButtonEdit [7]
+  object edCash: TcxButtonEdit [7]
     Left = 245
     Top = 25
     Properties.Buttons = <
@@ -57,9 +57,9 @@
     TabOrder = 3
     Width = 146
   end
-  object ceUnit: TcxButtonEdit [8]
+  object edUnit: TcxButtonEdit [8]
     Left = 15
-    Top = 179
+    Top = 181
     Properties.Buttons = <
       item
         Default = True
@@ -69,7 +69,7 @@
     TabOrder = 7
     Width = 215
   end
-  object ceInfoMoney: TcxButtonEdit [9]
+  object edInfoMoney: TcxButtonEdit [9]
     Left = 245
     Top = 124
     Properties.Buttons = <
@@ -79,10 +79,10 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 8
-    Width = 236
+    Width = 264
   end
-  object ceOperDate: TcxDateEdit [10]
-    Left = 130
+  object edOperDate: TcxDateEdit [10]
+    Left = 139
     Top = 25
     EditValue = 42475d
     Properties.SaveTime = False
@@ -90,7 +90,7 @@
     TabOrder = 2
     Width = 100
   end
-  object ceAmountIn: TcxCurrencyEdit [11]
+  object edAmountIn: TcxCurrencyEdit [11]
     Left = 15
     Top = 70
     Properties.DecimalPlaces = 2
@@ -103,7 +103,7 @@
     Top = 52
     Caption = #1055#1088#1080#1093#1086#1076', '#1089#1091#1084#1084#1072
   end
-  object ceObject: TcxButtonEdit [13]
+  object edObject: TcxButtonEdit [13]
     Left = 15
     Top = 124
     Properties.Buttons = <
@@ -125,18 +125,18 @@
     Top = 160
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
-  object ceComment: TcxTextEdit [16]
+  object edComment: TcxTextEdit [16]
     Left = 245
-    Top = 179
+    Top = 181
     TabOrder = 9
-    Width = 236
+    Width = 264
   end
   object cxLabel3: TcxLabel [17]
     Left = 130
     Top = 52
     Caption = #1056#1072#1089#1093#1086#1076', '#1089#1091#1084#1084#1072
   end
-  object ceAmountOut: TcxCurrencyEdit [18]
+  object edAmountOut: TcxCurrencyEdit [18]
     Left = 130
     Top = 70
     Properties.DecimalPlaces = 2
@@ -157,7 +157,7 @@
     Top = 52
     Caption = #1050#1091#1088#1089' ('#1086#1073#1084#1077#1085')'
   end
-  object ceCurrencyPartnerValue: TcxCurrencyEdit [21]
+  object edCurrencyPartnerValue: TcxCurrencyEdit [21]
     Left = 245
     Top = 70
     Properties.DecimalPlaces = 4
@@ -171,7 +171,7 @@
     Top = 52
     Caption = #1053#1086#1084#1080#1085#1072#1083' ('#1086#1073#1084'.)'
   end
-  object ceParPartnerValue: TcxCurrencyEdit [23]
+  object edParPartnerValue: TcxCurrencyEdit [23]
     Left = 322
     Top = 70
     EditValue = 1.000000000000000000
@@ -182,11 +182,11 @@
     Width = 69
   end
   object cxLabel15: TcxLabel [24]
-    Left = 397
+    Left = 401
     Top = 5
     Caption = #1042#1072#1083#1102#1090#1072
   end
-  object ceCurrency: TcxButtonEdit [25]
+  object edCurrency: TcxButtonEdit [25]
     Left = 401
     Top = 25
     ParentShowHint = False
@@ -206,7 +206,7 @@
     Top = 52
     Caption = #1050#1091#1088#1089
   end
-  object ceCurrencyValue: TcxCurrencyEdit [27]
+  object edCurrencyValue: TcxCurrencyEdit [27]
     Left = 401
     Top = 70
     Properties.DecimalPlaces = 4
@@ -220,7 +220,7 @@
     Top = 52
     Caption = #1053#1086#1084#1080#1085#1072#1083
   end
-  object ceParValue: TcxCurrencyEdit [29]
+  object edParValue: TcxCurrencyEdit [29]
     Left = 462
     Top = 70
     EditValue = 1.000000000000000000
@@ -274,7 +274,7 @@
       item
         Name = 'inOperDate'
         Value = 0d
-        Component = ceOperDate
+        Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -282,7 +282,7 @@
       item
         Name = 'inCurrencyPartnerValue'
         Value = Null
-        Component = ceCurrencyPartnerValue
+        Component = edCurrencyPartnerValue
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -290,7 +290,7 @@
       item
         Name = 'inParPartnerValue'
         Value = Null
-        Component = ceParPartnerValue
+        Component = edParPartnerValue
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -298,7 +298,7 @@
       item
         Name = 'inAmountIn'
         Value = 0.000000000000000000
-        Component = ceAmountIn
+        Component = edAmountIn
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -306,7 +306,7 @@
       item
         Name = 'inAmountOut'
         Value = 0.000000000000000000
-        Component = ceAmountOut
+        Component = edAmountOut
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -354,7 +354,7 @@
       item
         Name = 'inComment'
         Value = ''
-        Component = ceComment
+        Component = edComment
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -408,28 +408,28 @@
       item
         Name = 'OperDate'
         Value = 0d
-        Component = ceOperDate
+        Component = edOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'AmountIn'
         Value = 0.000000000000000000
-        Component = ceAmountIn
+        Component = edAmountIn
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'AmountOut'
         Value = 0.000000000000000000
-        Component = ceAmountOut
+        Component = edAmountOut
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'Comment'
         Value = ''
-        Component = ceComment
+        Component = edComment
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -496,14 +496,14 @@
       item
         Name = 'CurrencyPartnerValue'
         Value = Null
-        Component = ceCurrencyPartnerValue
+        Component = edCurrencyPartnerValue
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'ParPartnerValue'
         Value = Null
-        Component = ceParPartnerValue
+        Component = edParPartnerValue
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -525,14 +525,14 @@
       item
         Name = 'CurrencyValue'
         Value = Null
-        Component = ceCurrencyValue
+        Component = edCurrencyValue
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'ParValue'
         Value = Null
-        Component = ceParValue
+        Component = edParValue
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -541,7 +541,7 @@
   end
   object GuidesCash: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceCash
+    LookupControl = edCash
     FormNameParam.Value = 'TCashForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -585,7 +585,7 @@
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceUnit
+    LookupControl = edUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -612,7 +612,7 @@
   end
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceInfoMoney
+    LookupControl = edInfoMoney
     FormNameParam.Value = 'TInfoMoney_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -639,7 +639,7 @@
   end
   object GuidesObjectl: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceObject
+    LookupControl = edObject
     FormNameParam.Value = 'TMoneyPlaceCash_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -736,7 +736,7 @@
   end
   object GuidesCurrency: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceCurrency
+    LookupControl = edCurrency
     FormNameParam.Value = 'TCurrencyForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -761,7 +761,7 @@
       item
         Name = 'inOperDate'
         Value = 'NULL'
-        Component = ceOperDate
+        Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -769,7 +769,7 @@
       item
         Name = 'ParValue'
         Value = Null
-        Component = ceParPartnerValue
+        Component = edParPartnerValue
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -777,7 +777,7 @@
       item
         Name = 'CurrencyValue'
         Value = Null
-        Component = ceCurrencyPartnerValue
+        Component = edCurrencyPartnerValue
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

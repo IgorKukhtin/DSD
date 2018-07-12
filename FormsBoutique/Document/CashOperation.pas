@@ -17,35 +17,35 @@ type
     cxLabel2: TcxLabel;
     cxLabel4: TcxLabel;
     cxLabel5: TcxLabel;
-    ceCash: TcxButtonEdit;
-    ceUnit: TcxButtonEdit;
-    ceInfoMoney: TcxButtonEdit;
-    ceOperDate: TcxDateEdit;
-    ceAmountIn: TcxCurrencyEdit;
+    edCash: TcxButtonEdit;
+    edUnit: TcxButtonEdit;
+    edInfoMoney: TcxButtonEdit;
+    edOperDate: TcxDateEdit;
+    edAmountIn: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
     GuidesCash: TdsdGuides;
     GuidesUnit: TdsdGuides;
     GuidesInfoMoney: TdsdGuides;
-    ceObject: TcxButtonEdit;
+    edObject: TcxButtonEdit;
     GuidesObjectl: TdsdGuides;
     cxLabel6: TcxLabel;
     GuidesFiller: TGuidesFiller;
     cxLabel10: TcxLabel;
-    ceComment: TcxTextEdit;
+    edComment: TcxTextEdit;
     cxLabel3: TcxLabel;
-    ceAmountOut: TcxCurrencyEdit;
+    edAmountOut: TcxCurrencyEdit;
     edInvNumber: TcxTextEdit;
     cxLabel13: TcxLabel;
-    ceCurrencyPartnerValue: TcxCurrencyEdit;
+    edCurrencyPartnerValue: TcxCurrencyEdit;
     cxLabel14: TcxLabel;
-    ceParPartnerValue: TcxCurrencyEdit;
+    edParPartnerValue: TcxCurrencyEdit;
     cxLabel15: TcxLabel;
-    ceCurrency: TcxButtonEdit;
+    edCurrency: TcxButtonEdit;
     GuidesCurrency: TdsdGuides;
     cxLabel8: TcxLabel;
-    ceCurrencyValue: TcxCurrencyEdit;
+    edCurrencyValue: TcxCurrencyEdit;
     cxLabel9: TcxLabel;
-    ceParValue: TcxCurrencyEdit;
+    edParValue: TcxCurrencyEdit;
   private
     { Private declarations }
   public

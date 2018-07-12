@@ -185,4 +185,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Cash (inMovementId:= 1, inOperDate:= CURRENT_DATE, inSession:= zfCalc_UserAdmin())
+-- select * from gpGet_Movement_Cash(inMovementId := 0 , inOperDate := ('31.08.2018')::TDateTime , inCashId := 0 , inCurrencyId := 0 ,  inSession := '8');
