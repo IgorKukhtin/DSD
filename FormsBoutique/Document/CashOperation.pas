@@ -23,11 +23,11 @@ type
     ceOperDate: TcxDateEdit;
     ceAmountIn: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
-    CashGuides: TdsdGuides;
-    UnitGuides: TdsdGuides;
-    InfoMoneyGuides: TdsdGuides;
+    GuidesCash: TdsdGuides;
+    GuidesUnit: TdsdGuides;
+    GuidesInfoMoney: TdsdGuides;
     ceObject: TcxButtonEdit;
-    ObjectlGuides: TdsdGuides;
+    GuidesObjectl: TdsdGuides;
     cxLabel6: TcxLabel;
     GuidesFiller: TGuidesFiller;
     cxLabel10: TcxLabel;
@@ -41,7 +41,11 @@ type
     ceParPartnerValue: TcxCurrencyEdit;
     cxLabel15: TcxLabel;
     ceCurrency: TcxButtonEdit;
-    CurrencyGuides: TdsdGuides;
+    GuidesCurrency: TdsdGuides;
+    cxLabel8: TcxLabel;
+    ceCurrencyValue: TcxCurrencyEdit;
+    cxLabel9: TcxLabel;
+    ceParValue: TcxCurrencyEdit;
   private
     { Private declarations }
   public

@@ -1,8 +1,10 @@
 -- Function: gpSelect_Movement_Cash()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Cash (TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Cash (Integer, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Cash(
+    IN inCashId            Integer   , -- касса
     IN inStartDate         TDateTime , -- Дата нач. периода
     IN inEndDate           TDateTime , -- Дата оконч. периода
     IN inStartProtocol     TDateTime , -- Дата нач. для протокола
@@ -44,19 +46,24 @@ BEGIN
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
 
-        , tmpMovement AS (SELECT Movement.*
-                          FROM tmpStatus
-                               JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate 
-                                            AND Movement.DescId   = zc_Movement_Cash()
-                                            AND Movement.StatusId = tmpStatus.StatusId
-                          )
+        , tmpMovement_All AS (SELECT Movement.*
+                              FROM tmpStatus
+                                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate 
+                                                AND Movement.DescId   = zc_Movement_Cash()
+                                                AND Movement.StatusId = tmpStatus.StatusId
+                              )
         , tmpMI AS (SELECT MovementItem.*
-                    FROM tmpMovement
+                    FROM tmpMovement_All AS tmpMovement
                         INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
                                                AND MovementItem.DescId     = zc_MI_Master()
                                                AND MovementItem.isErased   = FALSE
+                                               AND (MovementItem.ObjectId = inCashId OR inCashId = 0)  
                    )
-                  
+        , tmpMovement AS (SELECT tmpMovement_All.*
+                          FROM tmpMovement_All
+                              INNER JOIN tmpMI ON tmpMI.MovementId = tmpMovement_All.Id
+                          )
+        
         , tmpProtocol_MI AS (SELECT DISTINCT tmpMI.MovementId
                              FROM tmpMI
                                   INNER JOIN (SELECT DISTINCT MovementItemProtocol.MovementItemId
@@ -68,7 +75,7 @@ BEGIN
                             )
         , tmpProtocol_Mov AS (SELECT DISTINCT MovementProtocol.MovementId
                               FROM MovementProtocol
-                              WHERE MovementProtocol.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                              WHERE MovementProtocol.MovementId IN (SELECT DISTINCT tmpMI.MovementId FROM tmpMI)
                                 AND MovementProtocol.OperDate >= inStartProtocol AND MovementProtocol.OperDate < inEndProtocol + INTERVAL '1 DAY'
                                 AND inIsProtocol = TRUE
                              )
@@ -143,7 +150,7 @@ BEGIN
             --
             LEFT JOIN tmpProtocol ON tmpProtocol.MovementId = Movement.Id
             
-            LEFT JOIN tmpMI ON tmpMI.MovementId = Movement.Id
+            INNER JOIN tmpMI ON tmpMI.MovementId = Movement.Id
             LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = tmpMI.ObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Cash_Currency
@@ -178,9 +185,9 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И. 
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  05.07.18         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '01.03.2017', inEndDate:= '01.03.2017', inStartProtocol:= '01.03.2017', inEndProtocol:= '01.03.2017', inIsProtocol:= FALSE, inIsErased:= FALSE,inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Cash (inCashId :=0, inStartDate:= '01.03.2018', inEndDate:= '01.03.2019', inStartProtocol:= '01.03.2017', inEndProtocol:= '01.03.2017', inIsProtocol:= FALSE, inIsErased:= FALSE,inSession:= zfCalc_UserAdmin())

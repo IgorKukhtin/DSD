@@ -2,9 +2,9 @@
   ActiveControl = ceAmountIn
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
   ClientHeight = 265
-  ClientWidth = 494
+  ClientWidth = 514
   AddOnFormData.isSingle = False
-  ExplicitWidth = 500
+  ExplicitWidth = 520
   ExplicitHeight = 293
   PixelsPerInch = 96
   TextHeight = 13
@@ -55,7 +55,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 3
-    Width = 124
+    Width = 146
   end
   object ceUnit: TcxButtonEdit [8]
     Left = 15
@@ -155,7 +155,7 @@
   object cxLabel13: TcxLabel [20]
     Left = 245
     Top = 52
-    Caption = #1050#1091#1088#1089
+    Caption = #1050#1091#1088#1089' ('#1086#1073#1084#1077#1085')'
   end
   object ceCurrencyPartnerValue: TcxCurrencyEdit [21]
     Left = 245
@@ -167,9 +167,9 @@
     Width = 68
   end
   object cxLabel14: TcxLabel [22]
-    Left = 322
+    Left = 320
     Top = 52
-    Caption = #1053#1086#1084#1080#1085#1072#1083
+    Caption = #1053#1086#1084#1080#1085#1072#1083' ('#1086#1073#1084'.)'
   end
   object ceParPartnerValue: TcxCurrencyEdit [23]
     Left = 322
@@ -179,15 +179,15 @@
     Properties.DisplayFormat = ',0.'
     Properties.ReadOnly = False
     TabOrder = 23
-    Width = 47
+    Width = 69
   end
   object cxLabel15: TcxLabel [24]
-    Left = 389
+    Left = 397
     Top = 5
     Caption = #1042#1072#1083#1102#1090#1072
   end
   object ceCurrency: TcxButtonEdit [25]
-    Left = 389
+    Left = 401
     Top = 25
     ParentShowHint = False
     Properties.Buttons = <
@@ -199,7 +199,36 @@
     Properties.ReadOnly = True
     ShowHint = False
     TabOrder = 25
-    Width = 92
+    Width = 108
+  end
+  object cxLabel8: TcxLabel [26]
+    Left = 401
+    Top = 52
+    Caption = #1050#1091#1088#1089
+  end
+  object ceCurrencyValue: TcxCurrencyEdit [27]
+    Left = 401
+    Top = 70
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    Properties.ReadOnly = False
+    TabOrder = 27
+    Width = 59
+  end
+  object cxLabel9: TcxLabel [28]
+    Left = 462
+    Top = 52
+    Caption = #1053#1086#1084#1080#1085#1072#1083
+  end
+  object ceParValue: TcxCurrencyEdit [29]
+    Left = 462
+    Top = 70
+    EditValue = 1.000000000000000000
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0.'
+    Properties.ReadOnly = False
+    TabOrder = 29
+    Width = 47
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 417
@@ -285,7 +314,7 @@
       item
         Name = 'inCashId'
         Value = ''
-        Component = CashGuides
+        Component = GuidesCash
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -293,7 +322,7 @@
       item
         Name = 'inCurrencyId'
         Value = Null
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -301,7 +330,7 @@
       item
         Name = 'inMoneyPlaceId'
         Value = ''
-        Component = ObjectlGuides
+        Component = GuidesObjectl
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -309,7 +338,7 @@
       item
         Name = 'inInfoMoneyId'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -317,7 +346,7 @@
       item
         Name = 'inUnitId'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -357,16 +386,16 @@
         Name = 'inCashId'
         Value = '0'
         Component = FormParams
-        ComponentItem = 'inCashId_top'
-        ParamType = ptUnknown
+        ComponentItem = 'CashId'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inCurrencyId'
         Value = ''
         Component = FormParams
-        ComponentItem = 'inCurrencyId_top'
-        ParamType = ptUnknown
+        ComponentItem = 'CurrencyId'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -407,14 +436,14 @@
       item
         Name = 'CashId'
         Value = ''
-        Component = CashGuides
+        Component = GuidesCash
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'CashName'
         Value = ''
-        Component = CashGuides
+        Component = GuidesCash
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -422,14 +451,14 @@
       item
         Name = 'MoneyPlaceId'
         Value = ''
-        Component = ObjectlGuides
+        Component = GuidesObjectl
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MoneyPlaceName'
         Value = ''
-        Component = ObjectlGuides
+        Component = GuidesObjectl
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -437,14 +466,14 @@
       item
         Name = 'InfoMoneyId'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -452,14 +481,14 @@
       item
         Name = 'UnitId'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -481,22 +510,36 @@
       item
         Name = 'CurrencyId'
         Value = Null
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyName'
         Value = Null
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyValue'
+        Value = Null
+        Component = ceCurrencyValue
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ParValue'
+        Value = Null
+        Component = ceParValue
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 403
     Top = 102
   end
-  object CashGuides: TdsdGuides
+  object GuidesCash: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceCash
     FormNameParam.Value = 'TCashForm'
@@ -508,14 +551,14 @@
       item
         Name = 'Key'
         Value = ''
-        Component = CashGuides
+        Component = GuidesCash
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = CashGuides
+        Component = GuidesCash
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -523,7 +566,7 @@
       item
         Name = 'CurrencyId'
         Value = Null
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -531,7 +574,7 @@
       item
         Name = 'CurrencyName'
         Value = Null
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -540,7 +583,7 @@
     Left = 287
     Top = 13
   end
-  object UnitGuides: TdsdGuides
+  object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
@@ -552,14 +595,14 @@
       item
         Name = 'Key'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -567,7 +610,7 @@
     Left = 112
     Top = 168
   end
-  object InfoMoneyGuides: TdsdGuides
+  object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
     FormNameParam.Value = 'TInfoMoney_ObjectForm'
@@ -579,14 +622,14 @@
       item
         Name = 'Key'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -594,7 +637,7 @@
     Left = 344
     Top = 100
   end
-  object ObjectlGuides: TdsdGuides
+  object GuidesObjectl: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceObject
     FormNameParam.Value = 'TMoneyPlaceCash_ObjectForm'
@@ -606,14 +649,14 @@
       item
         Name = 'Key'
         Value = ''
-        Component = ObjectlGuides
+        Component = GuidesObjectl
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = ObjectlGuides
+        Component = GuidesObjectl
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -621,14 +664,14 @@
       item
         Name = 'InfoMoneyId'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName_all'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -686,34 +729,31 @@
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
     IdParam.MultiSelectSeparator = ','
-    GuidesList = <
-      item
-        Guides = CashGuides
-      end>
+    GuidesList = <>
     ActionItemList = <>
     Left = 248
     Top = 214
   end
-  object CurrencyGuides: TdsdGuides
+  object GuidesCurrency: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceCurrency
-    FormNameParam.Value = 'TCurrencyValue_ForCashForm'
+    FormNameParam.Value = 'TCurrencyForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TCurrencyValue_ForCashForm'
+    FormName = 'TCurrencyForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -742,7 +782,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 340
-    Top = 11
+    Left = 484
+    Top = 123
   end
 end

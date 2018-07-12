@@ -1,10 +1,13 @@
 -- Function: gpGet_Movement_Cash (Integer, TDateTime, TVarChar)
 
 DROP FUNCTION IF EXISTS gpGet_Movement_Cash (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Cash (Integer, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Cash(
     IN inMovementId        Integer  , -- ключ Документа
     IN inOperDate          TDateTime, -- ключ Документа
+    IN inCashId            Integer  ,
+    IN inCurrencyId        Integer  ,
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
@@ -22,10 +25,29 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbCurrencyValue TFloat;
+   DECLARE vbParValue TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Cash());
      vbUserId:= lpGetUserBySession (inSession);
+
+     -- Если НЕ Базовая Валюта
+     IF inCurrencyId <> zc_Currency_Basis()
+     THEN
+         -- Определили курс на Дату документа
+         SELECT COALESCE (tmp.Amount, 1), COALESCE (tmp.ParValue,0)
+                INTO vbCurrencyValue, vbParValue
+         FROM lfSelect_Movement_Currency_byDate (inOperDate      := inOperDate
+                                               , inCurrencyFromId:= zc_Currency_Basis()
+                                               , inCurrencyToId  := inCurrencyId
+                                                ) AS tmp;
+     ELSE
+         -- курс не нужен
+         vbCurrencyValue:= 0;
+         vbParValue     := 0;
+
+     END IF;
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -37,28 +59,36 @@ BEGIN
              , lfGet.Code            AS StatusCode
              , lfGet.Name            AS StatusName
 
-             , CAST (0 AS TFloat)    AS CurrencyValue
-             , CAST (1 AS TFloat)    AS ParValue
+             , vbCurrencyValue       AS CurrencyValue
+             , vbParValue            AS ParValue
              , CAST (0 AS TFloat)    AS CurrencyPartnerValue
              , CAST (1 AS TFloat)    AS ParPartnerValue
+
              , CAST (0 AS TFloat)    AS AmountOut
              , CAST (0 AS TFloat)    AS AmountIn
 
-             , 0                     AS CashId
-             , CAST ('' AS TVarChar) AS CashName
+             , Object_Cash.Id        AS CashId
+             , Object_Cash.ValueData AS CashName
              , 0                     AS MoneyPlaceId
              , CAST ('' AS TVarChar) AS MoneyPlaceName
              , 0                     AS InfoMoneyId
              , CAST ('' AS TVarChar) AS InfoMoneyName
-             , 0                     AS UnitId
-             , CAST ('' AS TVarChar) AS UnitName
+             , Object_Unit.Id        AS UnitId
+             , Object_Unit.ValueData AS UnitName
 
-             , 0                     AS CurrencyId
-             , CAST ('' AS TVarChar) AS CurrencyName
+             , Object_Currency.Id        AS CurrencyId
+             , Object_Currency.ValueData AS CurrencyName
 
              , CAST ('' AS TVarChar) AS Comment
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfGet
+            LEFT JOIN ObjectLink AS ObjectLink_User_Unit
+                                 ON ObjectLink_User_Unit.ObjectId = vbUserId
+                                AND ObjectLink_User_Unit.DescId = zc_ObjectLink_User_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_User_Unit.ChildObjectId
+            
+            LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = inCashId
+            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = inCurrencyId
          ;
      ELSE
 
@@ -91,7 +121,7 @@ BEGIN
              , Object_Currency.Id                        AS CurrencyId
              , Object_Currency.ValueData                 AS CurrencyName
 
-             , MIString_Comment.ValueData  ::TVarChar           AS Comment
+             , MIString_Comment.ValueData  ::TVarChar    AS Comment
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -141,7 +171,6 @@ BEGIN
 
        WHERE Movement.Id     = inMovementId
          AND Movement.DescId = zc_Movement_Cash()
-       LIMIT 1   --
        ;
 
      END IF;

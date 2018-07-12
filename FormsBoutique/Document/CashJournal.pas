@@ -118,6 +118,13 @@ type
     InfoMoneyName: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
     CurrencyName: TcxGridDBColumn;
+    cxLabel3: TcxLabel;
+    ceCash: TcxButtonEdit;
+    cxLabel15: TcxLabel;
+    ceCurrency: TcxButtonEdit;
+    GuidesCash: TdsdGuides;
+    GuidesCurrency: TdsdGuides;
+    actGetCashByUser: TdsdStoredProc;
   private
   public
   end;

@@ -15,17 +15,18 @@ object CashJournalForm: TCashJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
     Top = 0
     Width = 911
-    Height = 31
+    Height = 57
     Align = alTop
     TabOrder = 1
     object deStart: TcxDateEdit
-      Left = 101
+      Left = 118
       Top = 5
       EditValue = 43313d
       Properties.ReadOnly = False
@@ -35,8 +36,8 @@ object CashJournalForm: TCashJournalForm
       Width = 85
     end
     object deEnd: TcxDateEdit
-      Left = 310
-      Top = 5
+      Left = 118
+      Top = 29
       EditValue = 43313d
       Properties.ReadOnly = False
       Properties.SaveTime = False
@@ -45,23 +46,23 @@ object CashJournalForm: TCashJournalForm
       Width = 85
     end
     object cxLabel1: TcxLabel
-      Left = 10
+      Left = 27
       Top = 6
       Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object cxLabel2: TcxLabel
-      Left = 200
-      Top = 6
+      Left = 8
+      Top = 30
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object cxLabel5: TcxLabel
-      Left = 681
-      Top = 6
+      Left = 686
+      Top = 30
       Caption = #1089' ...'
     end
     object deStartProtocol: TcxDateEdit
-      Left = 708
-      Top = 5
+      Left = 713
+      Top = 29
       EditValue = 43313d
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -70,7 +71,7 @@ object CashJournalForm: TCashJournalForm
     end
     object deEndProtocol: TcxDateEdit
       Left = 827
-      Top = 5
+      Top = 29
       EditValue = 43313d
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -78,28 +79,67 @@ object CashJournalForm: TCashJournalForm
       Width = 80
     end
     object cxLabel6: TcxLabel
-      Left = 793
-      Top = 6
+      Left = 795
+      Top = 30
       Caption = #1087#1086' ...'
     end
     object cbIsProtocol: TcxCheckBox
-      Left = 549
-      Top = 5
+      Left = 686
+      Top = 3
       Action = actRefresh
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1087#1088#1086#1090#1086#1082#1086#1083
       TabOrder = 8
       Width = 124
     end
+    object cxLabel3: TcxLabel
+      Left = 264
+      Top = 7
+      Caption = #1050#1072#1089#1089#1072':'
+    end
+    object ceCash: TcxButtonEdit
+      Left = 302
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 10
+      Width = 203
+    end
+    object cxLabel15: TcxLabel
+      Left = 521
+      Top = 6
+      Caption = #1042#1072#1083#1102#1090#1072':'
+    end
+    object ceCurrency: TcxButtonEdit
+      Left = 570
+      Top = 4
+      ParentShowHint = False
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      ShowHint = False
+      TabOrder = 12
+      Width = 65
+    end
   end
   object cxGrid: TcxGrid
     Left = 0
-    Top = 57
+    Top = 83
     Width = 911
-    Height = 382
+    Height = 356
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 57
+    ExplicitHeight = 382
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -280,6 +320,7 @@ object CashJournalForm: TCashJournalForm
       object ParPartnerValue: TcxGridDBColumn
         Caption = #1053#1086#1084#1080#1085#1072#1083' ('#1086#1073#1084#1077#1085')'
         DataBinding.FieldName = 'ParPartnerValue'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
@@ -355,7 +396,7 @@ object CashJournalForm: TCashJournalForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 16
-    Top = 64
+    Top = 80
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -375,7 +416,7 @@ object CashJournalForm: TCashJournalForm
     ShowShortCutInHint = True
     UseSystemFont = True
     Left = 48
-    Top = 64
+    Top = 88
     DockControlHeights = (
       0
       0
@@ -541,7 +582,7 @@ object CashJournalForm: TCashJournalForm
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 80
-    Top = 64
+    Top = 80
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -773,6 +814,36 @@ object CashJournalForm: TCashJournalForm
           Value = 'NULL'
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CashId'
+          Value = Null
+          Component = GuidesCash
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CashName'
+          Value = Null
+          Component = GuidesCash
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyId'
+          Value = Null
+          Component = GuidesCurrency
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyName'
+          Value = Null
+          Component = GuidesCurrency
+          ComponentItem = 'TextValue'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -1162,6 +1233,14 @@ object CashJournalForm: TCashJournalForm
       end>
     Params = <
       item
+        Name = 'inCashId'
+        Value = Null
+        Component = GuidesCash
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inStartDate'
         Value = 41640d
         Component = deStart
@@ -1233,7 +1312,7 @@ object CashJournalForm: TCashJournalForm
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
     Left = 112
-    Top = 64
+    Top = 88
     object N3: TMenuItem
       Action = actInsert
     end
@@ -1350,6 +1429,9 @@ object CashJournalForm: TCashJournalForm
       end
       item
         Component = deStart
+      end
+      item
+        Component = GuidesCash
       end>
     Left = 584
     Top = 48
@@ -1475,7 +1557,101 @@ object CashJournalForm: TCashJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 600
-    Top = 137
+    Left = 632
+    Top = 169
+  end
+  object GuidesCash: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceCash
+    FormNameParam.Value = 'TCashForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCashForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesCash
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesCash
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId'
+        Value = '0'
+        Component = GuidesCurrency
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName'
+        Value = ''
+        Component = GuidesCurrency
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 376
+    Top = 65533
+  end
+  object GuidesCurrency: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceCurrency
+    Key = '0'
+    FormNameParam.Value = 'TCurrencyForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCurrencyForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesCurrency
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesCurrency
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 42736d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 589
+    Top = 4
+  end
+  object actGetCashByUser: TdsdStoredProc
+    StoredProcName = 'gpGet_CashByUser'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'gpGet_Current_Date'
+        Value = 43313d
+        Component = deEndProtocol
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 728
+    Top = 225
   end
 end

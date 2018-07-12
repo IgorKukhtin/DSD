@@ -29,10 +29,6 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbAmount TFloat;
-   DECLARE vbAmountIn TFloat;
-   DECLARE vbAmountOut TFloat;
-   DECLARE vbAmountCurrency TFloat;
    DECLARE vbCurrencyValue TFloat;
    DECLARE vbParValue TFloat;   
 BEGIN
@@ -58,55 +54,24 @@ BEGIN
      ELSEIF vbUserId = zc_User_Sybase() THEN
         ioInvNumber:= (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = ioId);
      END IF;
-
-/*
-     -- !!!очень важный расчет!!!
-     IF inAmountIn <> 0 THEN
-        IF inCurrencyId <> zc_Enum_Currency_Basis()
-        THEN
-             -- запишем оригинал - сумму в валюте
-             vbAmountCurrency := inAmountIn;
-             -- сумму в ГРН - посчитаем - кроме обмена
-             vbAmount         := CASE WHEN inAmount > 0 THEN inAmount ELSE CAST (inAmountIn * outCurrencyValue / outParValue AS NUMERIC (16, 2)) END;
-             -- это значение в ГРН - сохраним
-             vbAmountIn       := vbAmount;
-
-        ELSE -- ВСЕ в ГРН
-             vbAmount         := inAmountIn;
-             vbAmountIn       := inAmountIn;
-        END IF;
-
-     ELSE
-        IF inCurrencyId <> zc_Enum_Currency_Basis()
-        THEN
-             -- запишем оригинал - сумму в валюте
-             vbAmountCurrency := -1 * inAmountOut;
-             -- сумму в ГРН - посчитаем - кроме обмена
-             vbAmount         := -1 * CASE WHEN inAmount > 0 THEN inAmount ELSE CAST (inAmountOut * outCurrencyValue / outParValue AS NUMERIC (16, 2)) END;
-             -- это значение в ГРН - сохраним
-             vbAmountOut      := ABS (vbAmount);
-             
-             -- !!!определяется ТАК значение!!!
-             vbCurrencyValue      := inCurrencyPartnerValue;
-             vbParValue           := inParPartnerValue;
-          
-        ELSE -- ВСЕ в ГРН
-             vbAmount         := -1 * inAmountOut;
-             vbAmountOut      := inAmountOut;
-
-             -- !!!определяется ТАК значение!!!
-             vbCurrencyValue      := 0;
-             vbParValue           := 0;
-        END IF;
-     END IF;
-
-     -- проверка
-     IF COALESCE (vbAmount, 0) = 0 AND inCurrencyId <> 0
-     THEN
-        RAISE EXCEPTION 'Ошибка.Сумма пересчета из валюты <%> в валюту <%> не должна быть = 0.', lfGet_Object_ValueData (inCurrencyId), lfGet_Object_ValueData (zc_Enum_Currency_Basis());
-     END IF;
-*/
      
+     -- Если НЕ Базовая Валюта
+     IF inCurrencyId <> zc_Currency_Basis()
+     THEN
+         -- Определили курс на Дату документа
+         SELECT COALESCE (tmp.Amount, 1), COALESCE (tmp.ParValue,0)
+                INTO vbCurrencyValue, vbParValue
+         FROM lfSelect_Movement_Currency_byDate (inOperDate      := inOperDate
+                                               , inCurrencyFromId:= zc_Currency_Basis()
+                                               , inCurrencyToId  := inCurrencyId
+                                                ) AS tmp;
+     ELSE
+         -- курс не нужен
+         vbCurrencyValue:= 0;
+         vbParValue     := 0;
+
+     END IF;
+
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement_Cash (ioId                    := ioId
                                          , inInvNumber             := ioInvNumber
