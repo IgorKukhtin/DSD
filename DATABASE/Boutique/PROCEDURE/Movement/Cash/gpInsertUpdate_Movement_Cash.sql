@@ -3,6 +3,10 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TFloat
                                                      ,Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TFloat
+                                                     ,Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
  INOUT ioInvNumber            TVarChar  , -- Номер документа
@@ -14,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash(
     IN inAmountOut            TFloat    , -- Сумма расхода
     
     IN inCashId               Integer   , --
+    IN inCurrencyId           Integer   , --
     IN inMoneyPlaceId         Integer   , --
     IN inInfoMoneyId          Integer   ,
     IN inUnitId               Integer   ,
@@ -27,6 +32,9 @@ $BODY$
    DECLARE vbAmount TFloat;
    DECLARE vbAmountIn TFloat;
    DECLARE vbAmountOut TFloat;
+   DECLARE vbAmountCurrency TFloat;
+   DECLARE vbCurrencyValue TFloat;
+   DECLARE vbParValue TFloat;   
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash());
@@ -51,6 +59,7 @@ BEGIN
         ioInvNumber:= (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = ioId);
      END IF;
 
+/*
      -- !!!очень важный расчет!!!
      IF inAmountIn <> 0 THEN
         IF inCurrencyId <> zc_Enum_Currency_Basis()
@@ -76,10 +85,18 @@ BEGIN
              vbAmount         := -1 * CASE WHEN inAmount > 0 THEN inAmount ELSE CAST (inAmountOut * outCurrencyValue / outParValue AS NUMERIC (16, 2)) END;
              -- это значение в ГРН - сохраним
              vbAmountOut      := ABS (vbAmount);
-
+             
+             -- !!!определяется ТАК значение!!!
+             vbCurrencyValue      := inCurrencyPartnerValue;
+             vbParValue           := inParPartnerValue;
+          
         ELSE -- ВСЕ в ГРН
              vbAmount         := -1 * inAmountOut;
              vbAmountOut      := inAmountOut;
+
+             -- !!!определяется ТАК значение!!!
+             vbCurrencyValue      := 0;
+             vbParValue           := 0;
         END IF;
      END IF;
 
@@ -88,24 +105,25 @@ BEGIN
      THEN
         RAISE EXCEPTION 'Ошибка.Сумма пересчета из валюты <%> в валюту <%> не должна быть = 0.', lfGet_Object_ValueData (inCurrencyId), lfGet_Object_ValueData (zc_Enum_Currency_Basis());
      END IF;
+*/
      
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement_Cash (ioId                    := ioId
                                          , inInvNumber             := ioInvNumber
                                          , inOperDate              := inOperDate
                                          , inCurrencyPartnerValue  := inCurrencyPartnerValue
-                                         , inParPartnerValue       := inParPartnerValue     
-                                         , inAmountCurrency        := vbAmountCurrency      
-                                         , inAmount                := inAmount              
-                                         , inAmountIn              := vbAmountIn
-                                         , inAmountOut             := vbAmountOut
-                                         , inCashId                := inCashId              
+                                         , inParPartnerValue       := inParPartnerValue  
+            
+                                         , inAmountIn              := inAmountIn
+                                         , inAmountOut             := inAmountOut
+                                         , inCurrencyValue         := vbCurrencyValue
+                                         , inParValue              := vbParValue 
+                                         
+                                         , inCashId                := inCashId   
+                                         , inCurrencyId            := inCurrencyId           
                                          , inMoneyPlaceId          := inMoneyPlaceId        
                                          , inInfoMoneyId           := inInfoMoneyId         
                                          , inUnitId                := inUnitId              
-                                         , inCurrencyId            := inCurrencyId     
-                                         , inCurrencyValue         := outCurrencyValue
-                                         , inParValue              := outParValue     
                                          , inComment               := inComment             
                                          , inUserId                := vbUserId
                                           );

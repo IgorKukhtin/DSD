@@ -48,8 +48,8 @@ type
     Status: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
-    FromName: TcxGridDBColumn;
-    ToName: TcxGridDBColumn;
+    ParPartnerValue: TcxGridDBColumn;
+    CashName: TcxGridDBColumn;
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
@@ -64,9 +64,9 @@ type
     bbDelete: TdxBarButton;
     actSetErased: TdsdChangeMovementStatus;
     spMovementSetErased: TdsdStoredProc;
-    TotalCount: TcxGridDBColumn;
-    TotalSumm: TcxGridDBColumn;
-    TotalSummPriceList: TcxGridDBColumn;
+    MoneyPlaceName: TcxGridDBColumn;
+    ItemName: TcxGridDBColumn;
+    AmountOut: TcxGridDBColumn;
     bbStatic: TdxBarStatic;
     actGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
@@ -77,7 +77,7 @@ type
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
     CurrencyValue: TcxGridDBColumn;
-    CurrencyDocumentName: TcxGridDBColumn;
+    CurrencyPartnerValue: TcxGridDBColumn;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
     actProtocol: TdsdOpenForm;
@@ -102,7 +102,7 @@ type
     dxBarButton1: TdxBarButton;
     actPrintSticker: TdsdPrintAction;
     dxBarButton2: TdxBarButton;
-    TotalSummBalance: TcxGridDBColumn;
+    AmountIn: TcxGridDBColumn;
     actPrintInSecond: TdsdPrintAction;
     bbPrintInSecond: TdxBarButton;
     spGet_PrinterByUser: TdsdStoredProc;
@@ -115,6 +115,9 @@ type
     cbIsProtocol: TcxCheckBox;
     PeriodChoice1: TPeriodChoice;
     spGet_Current_Date: TdsdStoredProc;
+    InfoMoneyName: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    CurrencyName: TcxGridDBColumn;
   private
   public
   end;

@@ -21,7 +21,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , AmountOut TFloat
              , AmountIn  TFloat
              , CashId Integer, CashName TVarChar
-             , MoneyPlaceId Integer, MoneyPlaceName TVarChar
+             , CurrencyId Integer, CurrencyName TVarChar
+             , MoneyPlaceId Integer, MoneyPlaceName TVarChar, ItemName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
              , UnitId Integer, UnitName TVarChar
              , Comment TVarChar
@@ -100,8 +101,11 @@ BEGIN
 
            , Object_Cash.Id                              AS CashId
            , Object_Cash.ValueData                       AS CashName
+           , Object_Currency.Id                          AS CurrencyId
+           , Object_Currency.ValueData                   AS CurrencyName
            , Object_MoneyPlace.Id                        AS MoneyPlaceId
            , Object_MoneyPlace.ValueData                 AS MoneyPlaceName
+           , ObjectDesc.ItemName
 
            , Object_InfoMoney.Id                         AS InfoMoneyId
            , Object_InfoMoney.ValueData                  AS InfoMoneyName
@@ -142,6 +146,11 @@ BEGIN
             LEFT JOIN tmpMI ON tmpMI.MovementId = Movement.Id
             LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = tmpMI.ObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Cash_Currency
+                                 ON ObjectLink_Cash_Currency.ObjectId = Object_Cash.Id
+                                AND ObjectLink_Cash_Currency.DescId = zc_ObjectLink_Cash_Currency()
+            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Cash_Currency.ChildObjectId
+
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = tmpMI.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -150,6 +159,7 @@ BEGIN
                                              ON MILinkObject_MoneyPlace.MovementItemId = tmpMI.Id
                                             AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
             LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = MILinkObject_MoneyPlace.ObjectId
+            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_MoneyPlace.DescId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                              ON MILinkObject_InfoMoney.MovementItemId = tmpMI.Id

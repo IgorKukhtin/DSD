@@ -363,6 +363,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 100
           end
           object FromDescName: TcxGridDBColumn
@@ -1337,7 +1338,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'fromname;InvNumberOrderPartner'
+          IndexFieldNames = 'fromname;InvNumber_Order;GoodsName;GoodsKindName'
           GridView = cxGridDBTableView
         end>
       Params = <

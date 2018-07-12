@@ -235,11 +235,11 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inInvNumber'
+        Name = 'ioInvNumber'
         Value = '0'
         Component = edInvNumber
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -247,108 +247,6 @@
         Value = 0d
         Component = ceOperDate
         DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inServiceDate'
-        Value = 41640d
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountIn'
-        Value = 0.000000000000000000
-        Component = ceAmountIn
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountOut'
-        Value = 0.000000000000000000
-        Component = ceAmountOut
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountSumm'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inComment'
-        Value = ''
-        Component = ceComment
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCashId'
-        Value = ''
-        Component = CashGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMoneyPlaceId'
-        Value = ''
-        Component = ObjectlGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPositionId'
-        Value = ''
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMemberId'
-        Value = ''
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inContractId'
-        Value = ''
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inInfoMoneyId'
-        Value = ''
-        Component = InfoMoneyGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUnitId'
-        Value = ''
-        Component = UnitGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId_Invoice'
-        Value = Null
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCurrencyId'
-        Value = Null
-        Component = CurrencyGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -369,8 +267,66 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMovementId_Partion'
+        Name = 'inAmountIn'
+        Value = 0.000000000000000000
+        Component = ceAmountIn
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountOut'
+        Value = 0.000000000000000000
+        Component = ceAmountOut
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCashId'
+        Value = ''
+        Component = CashGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyId'
         Value = Null
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMoneyPlaceId'
+        Value = ''
+        Component = ObjectlGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = ''
+        Component = ceComment
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -442,18 +398,6 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AmountSumm'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ServiceDate'
-        Value = 41640d
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'Comment'
         Value = ''
         Component = ceComment
@@ -506,39 +450,6 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'MemberId'
-        Value = ''
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MemberName'
-        Value = ''
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionId'
-        Value = ''
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionName'
-        Value = ''
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ContractId'
-        Value = ''
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ContractInvNumber'
-        Value = ''
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'UnitId'
         Value = ''
         Component = UnitGuides
@@ -579,45 +490,6 @@
         Value = Null
         Component = CurrencyGuides
         ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CurrencyPartnerId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CurrencyPartnerName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MovementId_Partion'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PartionMovementName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MovementId_Invoice'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumber_Invoice'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Comment_Invoice'
-        Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
       end>
