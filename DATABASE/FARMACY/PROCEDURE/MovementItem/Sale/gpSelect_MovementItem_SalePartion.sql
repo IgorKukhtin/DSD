@@ -50,31 +50,25 @@ BEGIN
                                       AND Container.WhereObjectId = vbUnitId
                                       AND Container.Amount > 0
                                  )
-                   ,tmpRemainsPartion AS (SELECT tmpRemains.*
-                                               , Object_PartionMovementItem.ObjectCode :: Integer AS MI_Id_Income
+                  ,tmpRemainsPartion AS (SELECT tmpRemains.*
+                                               , MI_Income.MovementId                             AS MovementId                            
+                                               , CASE WHEN COALESCE(MovementBoolean_PriceWithVAT.ValueData,FALSE) = TRUE
+                                                 THEN  MIFloat_Price.ValueData
+                                                 ELSE (MIFloat_Price.ValueData * (1 + ObjectFloat_NDSKind_NDS.ValueData/100))::TFloat
+                                                 END::TFloat AS PriceWithVAT
                                         FROM
                                             tmpRemains
                                             LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
                                                                                 ON CLI_MI.ContainerId = tmpRemains.Id
                                                                                AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
                                             LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
-                                          )
-                   ,tmpRemainsInfo AS ( SELECT
-                                            tmpRemains.ObjectId                   AS GoodsId
-                                           ,SUM(tmpRemains.Amount)::TFloat        AS Amount
-                                           ,CASE WHEN COALESCE(MovementBoolean_PriceWithVAT.ValueData,FALSE) = TRUE
-                                               THEN  MIFloat_Price.ValueData
-                                               ELSE (MIFloat_Price.ValueData * (1 + ObjectFloat_NDSKind_NDS.ValueData/100))::TFloat
-                                            END::TFloat AS PriceWithVAT
-                                           ,MLO_From.ObjectId                     AS JuridicalId
-                                        FROM
-                                            tmpRemainsPartion AS tmpRemains
-                                            LEFT OUTER JOIN MovementItem AS MI_Income ON MI_Income.Id = tmpRemains.MI_Id_Income
-                                            
+
+                                            LEFT OUTER JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode :: Integer
+
                                             LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
                                                                        ON MIFloat_Price.MovementItemId = MI_Income.Id
                                                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                                                      
+
                                             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                                                       ON MovementBoolean_PriceWithVAT.MovementId = MI_Income.MovementId
                                                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
@@ -85,16 +79,21 @@ BEGIN
                                             LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
                                                                   ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
                                                                  AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
-            
+                                          )
+                   ,tmpRemainsInfo AS ( SELECT
+                                            tmpRemains.ObjectId                   AS GoodsId
+                                           ,SUM(tmpRemains.Amount)::TFloat        AS Amount
+                                           ,tmpRemains.PriceWithVAT               AS PriceWithVAT
+                                           ,MLO_From.ObjectId                     AS JuridicalId
+                                        FROM
+                                            tmpRemainsPartion AS tmpRemains
+                                                        
                                             LEFT OUTER JOIN MovementLinkObject AS MLO_From
-                                                                               ON MLO_From.MovementId = MI_Income.MovementId
+                                                                               ON MLO_From.MovementId = tmpRemains.MovementId
                                                                               AND MLO_From.DescId = zc_MovementLinkObject_From()
                                         GROUP BY
                                             tmpRemains.ObjectId
-                                           ,CASE WHEN COALESCE(MovementBoolean_PriceWithVAT.ValueData,FALSE) = TRUE
-                                               THEN  MIFloat_Price.ValueData
-                                               ELSE (MIFloat_Price.ValueData * (1 + ObjectFloat_NDSKind_NDS.ValueData/100))::TFloat
-                                            END
+                                           ,tmpRemains.PriceWithVAT
                                            ,MLO_From.ObjectId
                                       )
                 SELECT
