@@ -243,9 +243,9 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
       ShowCaption = False
       TabOrder = 2
       object cxUnit: TcxGrid
-        Left = 393
+        Left = 1
         Top = 1
-        Width = 496
+        Width = 400
         Height = 137
         Align = alLeft
         TabOrder = 0
@@ -267,25 +267,25 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
             Width = 183
           end
           object colNormOfManDays: TcxGridDBColumn
-            Caption = #1053#1086#1088#1084#1072' '#1095#1077#1083#1086#1074#1077#1082#1086#1076#1085#1077#1081
+            Caption = #1053#1086#1088#1084#1072' '#1095#1077#1083#1086#1074#1077#1082#1086' '#1076#1085#1077#1081
             DataBinding.FieldName = 'NormOfManDays'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 100
+            Width = 64
           end
           object colFactOfManDays: TcxGridDBColumn
-            Caption = #1060#1072#1082#1090' '#1063#1077#1083#1086#1074#1077#1082#1086#1076#1085#1077#1081
+            Caption = #1060#1072#1082#1090' '#1063#1077#1083#1086#1074#1077#1082#1086' '#1076#1085#1077#1081
             DataBinding.FieldName = 'FactOfManDays'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 92
+            Width = 59
           end
           object colPercentAttendance: TcxGridDBColumn
             Caption = '% '#1087#1088#1080#1089#1091#1090#1089#1090#1074#1080#1103' '#1085#1072' '#1072#1087#1090#1077#1082#1077
             DataBinding.FieldName = 'PercentAttendance'
             HeaderAlignmentHorz = taCenter
             Styles.Content = dmMain.cxGreenEdit
-            Width = 104
+            Width = 75
           end
         end
         object cxUnitLevel1: TcxGridLevel
@@ -293,9 +293,9 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
         end
       end
       object cxUnitCategory: TcxGrid
-        Left = 1
+        Left = 649
         Top = 1
-        Width = 392
+        Width = 328
         Height = 137
         Align = alLeft
         TabOrder = 1
@@ -315,28 +315,28 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
             DataBinding.FieldName = 'UnitCategoryName'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 78
+            Width = 66
           end
           object colPenaltyNonMinPlan: TcxGridDBColumn
             Caption = '% '#1076#1083#1103' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1096#1090#1088#1072#1092#1072
             DataBinding.FieldName = 'PenaltyNonMinPlan'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 100
+            Width = 81
           end
           object colPremiumImplPlan: TcxGridDBColumn
             Caption = '% '#1076#1083#1103' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1088#1077#1084#1080#1080
             DataBinding.FieldName = 'PremiumImplPlan'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 92
+            Width = 69
           end
           object colMinLineByLineImplPlan: TcxGridDBColumn
             Caption = #1053#1077#1086#1073#1093#1086#1076#1080#1084#1099#1081' % '#1087#1086#1089#1090#1088#1086#1095#1085#1086#1075#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080
             DataBinding.FieldName = 'MinLineByLineImplPlan'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 104
+            Width = 91
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -344,9 +344,9 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
         end
       end
       object cxResult: TcxGrid
-        Left = 889
+        Left = 401
         Top = 1
-        Width = 296
+        Width = 248
         Height = 137
         Align = alLeft
         TabOrder = 2
@@ -367,7 +367,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 87
+            Width = 77
           end
           object cxGridDBColumn6: TcxGridDBColumn
             Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1087#1088#1077#1084#1080#1080':'
@@ -379,7 +379,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
               'No')
             HeaderAlignmentHorz = taCenter
             Styles.Content = dmMain.cxGreenEdit
-            Width = 100
+            Width = 82
           end
           object cxGridDBColumn7: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086':'
@@ -388,7 +388,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 92
+            Width = 70
           end
         end
         object cxGridLevel2: TcxGridLevel
@@ -772,19 +772,20 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
   object dsUnit: TDataSource
     DataSet = cdsUnit
     Left = 144
-    Top = 384
+    Top = 440
   end
   object cdsUnit: TClientDataSet
     Aggregates = <>
     Params = <>
+    AfterOpen = cdsUnitAfterOpen
     AfterPost = cdsUnitAfterPost
     Left = 40
-    Top = 384
+    Top = 440
   end
   object dsResult: TDataSource
     DataSet = cdsResult
     Left = 144
-    Top = 448
+    Top = 384
   end
   object cdsResult: TClientDataSet
     Active = True
@@ -800,7 +801,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     StoreDefs = True
     OnCalcFields = cdsResultCalcFields
     Left = 40
-    Top = 448
+    Top = 384
     Data = {
       370000009619E0BD010000001800000001000000000003000000370008417761
       7264696E6701004900000001000557494454480200020003000000}

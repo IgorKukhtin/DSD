@@ -17,11 +17,10 @@ BEGIN
 -- !!!ВРЕМЕННО-выкл.
 -- RETURN;
 
-
   -- Подготавливаем XML для записи в протокол
   WITH
    tmpMovementItem AS (SELECT '<Field FieldName = "Ключ объекта" FieldValue = "' || MovementItem.ObjectId || '"/>'
-                           || '<Field FieldName = "Объект" FieldValue = "' || zfStrToXmlStr (COALESCE (Object.ValueData, 'NULL')) || '"/>'
+                           || '<Field FieldName = "Объект" FieldValue = "' || zfStrToXmlText (COALESCE (Object.ValueData, 'NULL')) || '"/>'
                            || '<Field FieldName = "Значение" FieldValue = "' || MovementItem.Amount || '"/>'
                            || CASE WHEN MovementItem.ParentId <> 0 THEN '<Field FieldName = "ParentId" FieldValue = "' || MovementItem.ParentId || '"/>' ELSE '' END
                            || '<Field FieldName = "Удален" FieldValue = "' || MovementItem.isErased || '"/>'
@@ -51,7 +50,7 @@ BEGIN
                              AND inIsErased IS NULL
                            )
 
- , tmpMovementItemLinkObject AS (SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementItemLinkObjectDesc.ItemName) || '" FieldValue = "' || zfStrToXmlStr(COALESCE (Object.ValueData, 'NULL')) || '"/>' AS FieldXML
+ , tmpMovementItemLinkObject AS (SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementItemLinkObjectDesc.ItemName) || '" FieldValue = "' || zfStrToXmlText(COALESCE (Object.ValueData, 'NULL')) || '"/>' AS FieldXML
                                       , 4 AS GroupId
                                       , MovementItemLinkObject.DescId
                                  FROM MovementItemLinkObject
@@ -61,7 +60,7 @@ BEGIN
                                    AND inIsErased IS NULL
                                  )
 
- , tmpMovementItemString AS (SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementItemStringDesc.ItemName) || '" FieldValue = "' || zfStrToXmlStr(COALESCE (MovementItemString.ValueData, 'NULL')) || '"/>' AS FieldXML
+ , tmpMovementItemString AS (SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementItemStringDesc.ItemName) || '" FieldValue = "' || zfStrToXmlText(COALESCE (MovementItemString.ValueData, 'NULL')) || '"/>' AS FieldXML
                                   , 5 AS GroupId
                                   , MovementItemString.DescId
                              FROM MovementItemString
@@ -85,32 +84,32 @@ BEGIN
   FROM
    (SELECT D.FieldXML
     FROM
-        (SELECT tmp.FieldXML
+        (SELECT tmp.FieldXML :: TVarChar
               , tmp.GroupId
               , tmp.DescId
          FROM tmpMovementItem AS tmp
         UNION
-         SELECT tmp.FieldXML
+         SELECT tmp.FieldXML :: TVarChar
               , tmp.GroupId
               , tmp.DescId
          FROM tmpMovementItemFloat AS tmp
         UNION
-         SELECT tmp.FieldXML
+         SELECT tmp.FieldXML :: TVarChar
               , tmp.GroupId
               , tmp.DescId
          FROM tmpMovementItemDate AS tmp
         UNION
-         SELECT tmp.FieldXML
+         SELECT tmp.FieldXML :: TVarChar
               , tmp.GroupId
               , tmp.DescId
          FROM tmpMovementItemLinkObject AS tmp
         UNION
-         SELECT tmp.FieldXML
+         SELECT tmp.FieldXML :: TVarChar
               , tmp.GroupId
               , tmp.DescId
          FROM tmpMovementItemString AS tmp
         UNION
-         SELECT tmp.FieldXML
+         SELECT tmp.FieldXML :: TVarChar
               , tmp.GroupId
               , tmp.DescId
          FROM tmpMovementItemBoolean AS tmp
@@ -129,7 +128,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 10.07.18                                                                      *  add zfStrToXmlText
  30.04.18         * запросы через WITH
  09.02.15                         * add zfStrToXmlStr
  09.10.14                                        * add MovementItem.isErased
