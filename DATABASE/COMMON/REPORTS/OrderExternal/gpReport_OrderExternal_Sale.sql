@@ -107,8 +107,8 @@ BEGIN
                                                 AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
        
                             LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
-                                    ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                   AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+                                                 ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
        
                             INNER JOIN ObjectString AS ObjectString_Article
                                                     ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
@@ -205,9 +205,8 @@ BEGIN
         
                             FROM Movement
                                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
-                                                               ON MovementLinkMovement_Order.MovementChildId = Movement.Id  --  заявка --MovementLinkMovement_Order.MovementId = Movement.Id
+                                                               ON MovementLinkMovement_Order.MovementChildId = Movement.Id  --  заявка 
                                                               AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
-                                --LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MovementLinkMovement_Order.MovementId  -- продажа
                                      
                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                              ON MovementLinkObject_From.MovementId = Movement.Id
@@ -225,9 +224,9 @@ BEGIN
                                                        ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                                       AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                      
-                                 LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                                                          ON MovementString_InvNumberPartner.MovementId =  Movement.Id
-                                                         AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+                                LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                                         ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                                        AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
         
                             WHERE MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
                               AND Movement.DescId = zc_Movement_OrderExternal()
@@ -323,39 +322,39 @@ BEGIN
                                                  ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
                                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
                      GROUP BY  tmpSale.MovementId_Sale
-                              , tmpSale.OperDate_Sale
-                              , tmpSale.OperDatePartner_Sale
-                              , tmpSale.InvNumber_Sale
-                              
-                              , tmpSale.MovementId_Order
-                              , tmpSale.OperDate_Order
-                              , tmpSale.OperDatePartner_Order
-                              , tmpSale.InvNumber_Order
-                              , tmpSale.InvNumberPartner_Order
+                             , tmpSale.OperDate_Sale
+                             , tmpSale.OperDatePartner_Sale
+                             , tmpSale.InvNumber_Sale
+                             
+                             , tmpSale.MovementId_Order
+                             , tmpSale.OperDate_Order
+                             , tmpSale.OperDatePartner_Order
+                             , tmpSale.InvNumber_Order
+                             , tmpSale.InvNumberPartner_Order
 
-                              , tmpSale.FromId
-                              , tmpSale.RouteId
-                              , tmpSale.PaidKindId
+                             , tmpSale.FromId
+                             , tmpSale.RouteId
+                             , tmpSale.PaidKindId
 
-                            , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())
-                            , MovementItem.ObjectId
-                            , MIFloat_Price.ValueData
+                             , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())
+                             , MovementItem.ObjectId
+                             , MIFloat_Price.ValueData
                      )
     -- данные по всем заявкам
-    , tmpMI_Order AS (SELECT   tmpMovement2.MovementId_Sale
-                              , tmpMovement2.OperDate_Sale
-                              , tmpMovement2.OperDatePartner_Sale
-                              , tmpMovement2.InvNumber_Sale
-                              
-                              , tmpMovement2.MovementId_Order
-                              , tmpMovement2.OperDate_Order
-                              , tmpMovement2.OperDatePartner_Order
-                              , tmpMovement2.InvNumber_Order
-                              , tmpMovement2.InvNumberPartner_Order
+    , tmpMI_Order AS (SELECT tmpMovement2.MovementId_Sale
+                           , tmpMovement2.OperDate_Sale
+                           , tmpMovement2.OperDatePartner_Sale
+                           , tmpMovement2.InvNumber_Sale
+                           
+                           , tmpMovement2.MovementId_Order
+                           , tmpMovement2.OperDate_Order
+                           , tmpMovement2.OperDatePartner_Order
+                           , tmpMovement2.InvNumber_Order
+                           , tmpMovement2.InvNumberPartner_Order
 
-                              , tmpMovement2.FromId
-                              , tmpMovement2.RouteId
-                              , tmpMovement2.PaidKindId
+                           , tmpMovement2.FromId
+                           , tmpMovement2.RouteId
+                           , tmpMovement2.PaidKindId
 
                            , tmpMovement2.GoodsKindId
                            , tmpMovement2.GoodsId
@@ -381,19 +380,19 @@ BEGIN
                            , CAST (SUM(tmpMovement2.Amount_Dozakaz) AS TFloat)                                                                                                                          AS Amount_Dozakaz
                       FROM (
                             SELECT tmpOrder.MovementId_Sale
-                              , tmpOrder.OperDate_Sale
-                              , tmpOrder.OperDatePartner_Sale
-                              , tmpOrder.InvNumber_Sale
-                              
-                              , tmpOrder.MovementId_Order
-                              , tmpOrder.OperDate_Order
-                              , tmpOrder.OperDatePartner_Order
-                              , tmpOrder.InvNumber_Order
-                              , tmpOrder.InvNumberPartner_Order
-
-                              , tmpOrder.FromId
-                              , tmpOrder.RouteId
-                              , tmpOrder.PaidKindId
+                                 , tmpOrder.OperDate_Sale
+                                 , tmpOrder.OperDatePartner_Sale
+                                 , tmpOrder.InvNumber_Sale
+                                 
+                                 , tmpOrder.MovementId_Order
+                                 , tmpOrder.OperDate_Order
+                                 , tmpOrder.OperDatePartner_Order
+                                 , tmpOrder.InvNumber_Order
+                                 , tmpOrder.InvNumberPartner_Order
+   
+                                 , tmpOrder.FromId
+                                 , tmpOrder.RouteId
+                                 , tmpOrder.PaidKindId
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())                                                                   AS GoodsKindId
                                  , MovementItem.ObjectId                                                                                                              AS GoodsId
                                  , CAST (SUM((CASE WHEN tmpOrder.OperDate_Order = tmpOrder.OperDatePartner_Order THEN MovementItem.Amount ELSE 0 END)) AS TFloat)                 AS Amount1
@@ -444,19 +443,19 @@ BEGIN
                                                              ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                             AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
                           GROUP BY tmpOrder.MovementId_Sale
-                              , tmpOrder.OperDate_Sale
-                              , tmpOrder.OperDatePartner_Sale
-                              , tmpOrder.InvNumber_Sale
-                              
-                              , tmpOrder.MovementId_Order
-                              , tmpOrder.OperDate_Order
-                              , tmpOrder.OperDatePartner_Order
-                              , tmpOrder.InvNumber_Order
-                              , tmpOrder.InvNumberPartner_Order
-
-                              , tmpOrder.FromId
-                              , tmpOrder.RouteId
-                              , tmpOrder.PaidKindId
+                                 , tmpOrder.OperDate_Sale
+                                 , tmpOrder.OperDatePartner_Sale
+                                 , tmpOrder.InvNumber_Sale
+                                 
+                                 , tmpOrder.MovementId_Order
+                                 , tmpOrder.OperDate_Order
+                                 , tmpOrder.OperDatePartner_Order
+                                 , tmpOrder.InvNumber_Order
+                                 , tmpOrder.InvNumberPartner_Order
+   
+                                 , tmpOrder.FromId
+                                 , tmpOrder.RouteId
+                                 , tmpOrder.PaidKindId
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())
                                  , MovementItem.ObjectId
                           ) AS tmpMovement2
@@ -479,156 +478,152 @@ BEGIN
                               , tmpMovement2.FromId
                               , tmpMovement2.RouteId
                               , tmpMovement2.PaidKindId
-                             , tmpMovement2.GoodsKindId
-                             , tmpMovement2.GoodsId
-                             , tmpMovement2.AmountSumm1
-                             , tmpMovement2.AmountSumm2
-                             , tmpMovement2.AmountSummTotal
-                             , tmpMovement2.AmountSumm_Dozakaz 
+                              , tmpMovement2.GoodsKindId
+                              , tmpMovement2.GoodsId
+                              , tmpMovement2.AmountSumm1
+                              , tmpMovement2.AmountSumm2
+                              , tmpMovement2.AmountSummTotal
+                              , tmpMovement2.AmountSumm_Dozakaz 
                     )
      -----
-    , tmpDataUnion AS (SELECT  tmpMovementOrder.MovementId_Sale
-                              , tmpMovementOrder.OperDate_Sale
-                              , tmpMovementOrder.OperDatePartner_Sale
-                              , tmpMovementOrder.InvNumber_Sale
-                              
-                              , tmpMovementOrder.MovementId_Order
-                              , tmpMovementOrder.OperDate_Order
-                              , tmpMovementOrder.OperDatePartner_Order
-                              , tmpMovementOrder.InvNumber_Order
-                              , tmpMovementOrder.InvNumberPartner_Order
+    , tmpDataUnion AS (SELECT tmpMovementOrder.MovementId_Sale
+                            , tmpMovementOrder.OperDate_Sale
+                            , tmpMovementOrder.OperDatePartner_Sale
+                            , tmpMovementOrder.InvNumber_Sale
+                            
+                            , tmpMovementOrder.MovementId_Order
+                            , tmpMovementOrder.OperDate_Order
+                            , tmpMovementOrder.OperDatePartner_Order
+                            , tmpMovementOrder.InvNumber_Order
+                            , tmpMovementOrder.InvNumberPartner_Order
 
-                              , tmpMovementOrder.FromId
-                              , tmpMovementOrder.RouteId
-                              , tmpMovementOrder.PaidKindId
+                            , tmpMovementOrder.FromId
+                            , tmpMovementOrder.RouteId
+                            , tmpMovementOrder.PaidKindId
 
-                              , tmpMovementOrder.GoodsKindId
-                              , tmpMovementOrder.GoodsId
+                            , tmpMovementOrder.GoodsKindId
+                            , tmpMovementOrder.GoodsId
 
-                              , tmpMovementOrder.AmountSumm1           AS AmountSumm1
-                              , tmpMovementOrder.AmountSumm2           AS AmountSumm2
-                              , tmpMovementOrder.AmountSummTotal       AS AmountSummTotal
-                              , tmpMovementOrder.AmountSumm_Dozakaz    AS AmountSumm_Dozakaz
-                              , tmpMovementOrder.Amount_Weight1        AS Amount_Weight1
-                              , tmpMovementOrder.Amount_Sh1            AS Amount_Sh1
-                              , tmpMovementOrder.Amount_Weight2        AS Amount_Weight2
-                              , tmpMovementOrder.Amount_Sh2            AS Amount_Sh2
-                              , tmpMovementOrder.Amount_Weight_Itog    AS Amount_Weight_Itog
-                              , tmpMovementOrder.Amount_Sh_Itog        AS Amount_Sh_Itog
-                              , tmpMovementOrder.Amount_Weight_Dozakaz AS Amount_Weight_Dozakaz
-                              , tmpMovementOrder.Amount_Sh_Dozakaz     AS Amount_Sh_Dozakaz
-                              , tmpMovementOrder.Amount12              AS Amount12
-                              , tmpMovementOrder.Amount_Dozakaz        AS Amount_Dozakaz
-                              , CAST (0 AS TFloat)                     AS AmountSalePartner_Weight
-                              , CAST (0 AS TFloat)                     AS AmountSalePartner_Sh
-                              , CAST (0 AS TFloat)                     AS AmountSale_Weight
-                              , CAST (0 AS TFloat)                     AS AmountSale_Sh
-                              , CAST (0 AS TFloat)                     AS AmountSale
-                              , CAST (0 AS TFloat)                     AS PriceSale
-                              , CAST (0 AS TFloat)                     AS SumSale
-                          FROM tmpMI_Order AS tmpMovementOrder
-                          UNION ALL
-                          SELECT
-                                tmpMovementSale.MovementId_Sale
-                              , tmpMovementSale.OperDate_Sale
-                              , tmpMovementSale.OperDatePartner_Sale
-                              , tmpMovementSale.InvNumber_Sale
-                              
-                              , tmpMovementSale.MovementId_Order
-                              , tmpMovementSale.OperDate_Order
-                              , tmpMovementSale.OperDatePartner_Order
-                              , tmpMovementSale.InvNumber_Order
-                              , tmpMovementSale.InvNumberPartner_Order
+                            , tmpMovementOrder.AmountSumm1           AS AmountSumm1
+                            , tmpMovementOrder.AmountSumm2           AS AmountSumm2
+                            , tmpMovementOrder.AmountSummTotal       AS AmountSummTotal
+                            , tmpMovementOrder.AmountSumm_Dozakaz    AS AmountSumm_Dozakaz
+                            , tmpMovementOrder.Amount_Weight1        AS Amount_Weight1
+                            , tmpMovementOrder.Amount_Sh1            AS Amount_Sh1
+                            , tmpMovementOrder.Amount_Weight2        AS Amount_Weight2
+                            , tmpMovementOrder.Amount_Sh2            AS Amount_Sh2
+                            , tmpMovementOrder.Amount_Weight_Itog    AS Amount_Weight_Itog
+                            , tmpMovementOrder.Amount_Sh_Itog        AS Amount_Sh_Itog
+                            , tmpMovementOrder.Amount_Weight_Dozakaz AS Amount_Weight_Dozakaz
+                            , tmpMovementOrder.Amount_Sh_Dozakaz     AS Amount_Sh_Dozakaz
+                            , tmpMovementOrder.Amount12              AS Amount12
+                            , tmpMovementOrder.Amount_Dozakaz        AS Amount_Dozakaz
+                            , CAST (0 AS TFloat)                     AS AmountSalePartner_Weight
+                            , CAST (0 AS TFloat)                     AS AmountSalePartner_Sh
+                            , CAST (0 AS TFloat)                     AS AmountSale_Weight
+                            , CAST (0 AS TFloat)                     AS AmountSale_Sh
+                            , CAST (0 AS TFloat)                     AS AmountSale
+                            , CAST (0 AS TFloat)                     AS PriceSale
+                            , CAST (0 AS TFloat)                     AS SumSale
+                       FROM tmpMI_Order AS tmpMovementOrder
+                    UNION ALL
+                       SELECT tmpMovementSale.MovementId_Sale
+                            , tmpMovementSale.OperDate_Sale
+                            , tmpMovementSale.OperDatePartner_Sale
+                            , tmpMovementSale.InvNumber_Sale
+                            
+                            , tmpMovementSale.MovementId_Order
+                            , tmpMovementSale.OperDate_Order
+                            , tmpMovementSale.OperDatePartner_Order
+                            , tmpMovementSale.InvNumber_Order
+                            , tmpMovementSale.InvNumberPartner_Order
+    
+                            , tmpMovementSale.FromId
+                            , tmpMovementSale.RouteId
+                            , tmpMovementSale.PaidKindId
+    
+                            , tmpMovementSale.GoodsKindId
+                            , tmpMovementSale.GoodsId
+                            , CAST (0 AS TFloat)     AS AmountSumm1
+                            , CAST (0 AS TFloat)     AS AmountSumm2
+                            , CAST (0 AS TFloat)     AS AmountSummTotal
+                            , CAST (0 AS TFloat)     AS AmountSumm_Dozakaz
+                            , CAST (0 AS TFloat)     AS Amount_Weight1
+                            , CAST (0 AS TFloat)     AS Amount_Sh1
+                            , CAST (0 AS TFloat)     AS Amount_Weight2
+                            , CAST (0 AS TFloat)     AS Amount_Sh2
+                            , CAST (0 AS TFloat)     AS Amount_Weight_Itog
+                            , CAST (0 AS TFloat)     AS Amount_Sh_Itog
+                            , CAST (0 AS TFloat)     AS Amount_Weight_Dozakaz
+                            , CAST (0 AS TFloat)     AS Amount_Sh_Dozakaz
+                            , CAST (0 AS TFloat)     AS Amount12
+                            , CAST (0 AS TFloat)     AS Amount_Dozakaz
+                            , tmpMovementSale.AmountSalePartner_Weight  AS AmountSalePartner_Weight
+                            , tmpMovementSale.AmountSalePartner_Sh      AS AmountSalePartner_Sh
+                            , tmpMovementSale.AmountSale_Weight  AS AmountSale_Weight
+                            , tmpMovementSale.AmountSale_Sh      AS AmountSale_Sh
+                            , tmpMovementSale.AmountSale         AS AmountSale
+                            , tmpMovementSale.PriceSale
+                            , tmpMovementSale.SumSale
+                 
+                       FROM tmpMI_Sale AS tmpMovementSale
+                      )
 
-                              , tmpMovementSale.FromId
-                              , tmpMovementSale.RouteId
-                              , tmpMovementSale.PaidKindId
+    , tmpData AS (SELECT tmpDataUnion.MovementId_Sale
+                       , tmpDataUnion.OperDate_Sale
+                       , tmpDataUnion.OperDatePartner_Sale
+                       , tmpDataUnion.InvNumber_Sale
+                       
+                       , tmpDataUnion.MovementId_Order
+                       , tmpDataUnion.OperDate_Order
+                       , tmpDataUnion.OperDatePartner_Order
+                       , tmpDataUnion.InvNumber_Order
+                       , tmpDataUnion.InvNumberPartner_Order
 
-                              , tmpMovementSale.GoodsKindId
-                              , tmpMovementSale.GoodsId
-                              , CAST (0 AS TFloat)     AS AmountSumm1
-                              , CAST (0 AS TFloat)     AS AmountSumm2
-                              , CAST (0 AS TFloat)     AS AmountSummTotal
-                              , CAST (0 AS TFloat)     AS AmountSumm_Dozakaz
-                              , CAST (0 AS TFloat)     AS Amount_Weight1
-                              , CAST (0 AS TFloat)     AS Amount_Sh1
-                              , CAST (0 AS TFloat)     AS Amount_Weight2
-                              , CAST (0 AS TFloat)     AS Amount_Sh2
-                              , CAST (0 AS TFloat)     AS Amount_Weight_Itog
-                              , CAST (0 AS TFloat)     AS Amount_Sh_Itog
-                              , CAST (0 AS TFloat)     AS Amount_Weight_Dozakaz
-                              , CAST (0 AS TFloat)     AS Amount_Sh_Dozakaz
-                              , CAST (0 AS TFloat)     AS Amount12
-                              , CAST (0 AS TFloat)     AS Amount_Dozakaz
-                              , tmpMovementSale.AmountSalePartner_Weight  AS AmountSalePartner_Weight
-                              , tmpMovementSale.AmountSalePartner_Sh      AS AmountSalePartner_Sh
-                              , tmpMovementSale.AmountSale_Weight  AS AmountSale_Weight
-                              , tmpMovementSale.AmountSale_Sh      AS AmountSale_Sh
-                              , tmpMovementSale.AmountSale         AS AmountSale
-                              , tmpMovementSale.PriceSale
-                              , tmpMovementSale.SumSale
-                   
-                          FROM tmpMI_Sale AS tmpMovementSale
+                       , tmpDataUnion.FromId
+                       , tmpDataUnion.RouteId
+                       , tmpDataUnion.PaidKindId
+
+                       , tmpDataUnion.GoodsKindId
+                       , tmpDataUnion.GoodsId
+
+                       , SUM (tmpDataUnion.AmountSumm1)           AS AmountSumm1
+                       , SUM (tmpDataUnion.AmountSumm2)           AS AmountSumm2
+                       , SUM (tmpDataUnion.AmountSummTotal)       AS AmountSummTotal
+                       , SUM (tmpDataUnion.AmountSumm_Dozakaz)    AS AmountSumm_Dozakaz
+                       , SUM (tmpDataUnion.Amount_Weight1)        AS Amount_Weight1
+                       , SUM (tmpDataUnion.Amount_Sh1)            AS Amount_Sh1
+                       , SUM (tmpDataUnion.Amount_Weight2)        AS Amount_Weight2
+                       , SUM (tmpDataUnion.Amount_Sh2)            AS Amount_Sh2
+                       , SUM (tmpDataUnion.Amount_Weight_Itog)    AS Amount_Weight_Itog
+                       , SUM (tmpDataUnion.Amount_Sh_Itog)        AS Amount_Sh_Itog
+                       , SUM (tmpDataUnion.Amount_Weight_Dozakaz) AS Amount_Weight_Dozakaz
+                       , SUM (tmpDataUnion.Amount_Sh_Dozakaz)     AS Amount_Sh_Dozakaz
+                       , SUM (tmpDataUnion.Amount12)              AS Amount12
+                       , SUM (tmpDataUnion.Amount_Dozakaz)        AS Amount_Dozakaz
+                       , SUM (tmpDataUnion.AmountSalePartner_Weight)  AS AmountSalePartner_Weight
+                       , SUM (tmpDataUnion.AmountSalePartner_Sh)      AS AmountSalePartner_Sh
+                       , SUM (tmpDataUnion.AmountSale_Weight)     AS AmountSale_Weight
+                       , SUM (tmpDataUnion.AmountSale_Sh)         AS AmountSale_Sh
+                       , SUM (tmpDataUnion.AmountSale)            AS AmountSale
+                       , MAX (tmpDataUnion.PriceSale)             AS PriceSale
+                       , SUM (tmpDataUnion.SumSale)               AS SumSale
+                  FROM tmpDataUnion
+                  GROUP BY tmpDataUnion.MovementId_Sale
+                         , tmpDataUnion.OperDate_Sale
+                         , tmpDataUnion.OperDatePartner_Sale
+                         , tmpDataUnion.InvNumber_Sale
+                         , tmpDataUnion.MovementId_Order
+                         , tmpDataUnion.OperDate_Order
+                         , tmpDataUnion.OperDatePartner_Order
+                         , tmpDataUnion.InvNumber_Order
+                         , tmpDataUnion.InvNumberPartner_Order
+                         , tmpDataUnion.FromId
+                         , tmpDataUnion.RouteId
+                         , tmpDataUnion.PaidKindId
+                         , tmpDataUnion.GoodsKindId
+                         , tmpDataUnion.GoodsId
                   )
-
-   , tmpData AS (SELECT  tmpDataUnion.MovementId_Sale
-                              , tmpDataUnion.OperDate_Sale
-                              , tmpDataUnion.OperDatePartner_Sale
-                              , tmpDataUnion.InvNumber_Sale
-                              
-                              , tmpDataUnion.MovementId_Order
-                              , tmpDataUnion.OperDate_Order
-                              , tmpDataUnion.OperDatePartner_Order
-                              , tmpDataUnion.InvNumber_Order
-                              , tmpDataUnion.InvNumberPartner_Order
-
-                              , tmpDataUnion.FromId
-                              , tmpDataUnion.RouteId
-                              , tmpDataUnion.PaidKindId
-
-                              , tmpDataUnion.GoodsKindId
-                              , tmpDataUnion.GoodsId
-
-                              , SUM (tmpDataUnion.AmountSumm1)           AS AmountSumm1
-                              , SUM (tmpDataUnion.AmountSumm2)           AS AmountSumm2
-                              , SUM (tmpDataUnion.AmountSummTotal)       AS AmountSummTotal
-                              , SUM (tmpDataUnion.AmountSumm_Dozakaz)    AS AmountSumm_Dozakaz
-                              , SUM (tmpDataUnion.Amount_Weight1)        AS Amount_Weight1
-                              , SUM (tmpDataUnion.Amount_Sh1)            AS Amount_Sh1
-                              , SUM (tmpDataUnion.Amount_Weight2)        AS Amount_Weight2
-                              , SUM (tmpDataUnion.Amount_Sh2)            AS Amount_Sh2
-                              , SUM (tmpDataUnion.Amount_Weight_Itog)    AS Amount_Weight_Itog
-                              , SUM (tmpDataUnion.Amount_Sh_Itog)        AS Amount_Sh_Itog
-                              , SUM (tmpDataUnion.Amount_Weight_Dozakaz) AS Amount_Weight_Dozakaz
-                              , SUM (tmpDataUnion.Amount_Sh_Dozakaz)     AS Amount_Sh_Dozakaz
-                              , SUM (tmpDataUnion.Amount12)              AS Amount12
-                              , SUM (tmpDataUnion.Amount_Dozakaz)        AS Amount_Dozakaz
-                              , SUM (tmpDataUnion.AmountSalePartner_Weight)  AS AmountSalePartner_Weight
-                              , SUM (tmpDataUnion.AmountSalePartner_Sh)      AS AmountSalePartner_Sh
-                              , SUM (tmpDataUnion.AmountSale_Weight)  AS AmountSale_Weight
-                              , SUM (tmpDataUnion.AmountSale_Sh)      AS AmountSale_Sh
-                              , SUM (tmpDataUnion.AmountSale)         AS AmountSale
-                              , MAX (tmpDataUnion.PriceSale)         AS PriceSale
-                              , SUM (tmpDataUnion.SumSale)           AS SumSale
-                          FROM tmpDataUnion
-            GROUP BY tmpDataUnion.MovementId_Sale
-                              , tmpDataUnion.OperDate_Sale
-                              , tmpDataUnion.OperDatePartner_Sale
-                              , tmpDataUnion.InvNumber_Sale
-                              
-                              , tmpDataUnion.MovementId_Order
-                              , tmpDataUnion.OperDate_Order
-                              , tmpDataUnion.OperDatePartner_Order
-                              , tmpDataUnion.InvNumber_Order
-                              , tmpDataUnion.InvNumberPartner_Order
-
-                              , tmpDataUnion.FromId
-                              , tmpDataUnion.RouteId
-                              , tmpDataUnion.PaidKindId
-
-                              , tmpDataUnion.GoodsKindId
-                              , tmpDataUnion.GoodsId
-          )
 
     , tmpData_All AS (SELECT tmp.OperDate_Order
                            , tmp.OperDatePartner_Order
