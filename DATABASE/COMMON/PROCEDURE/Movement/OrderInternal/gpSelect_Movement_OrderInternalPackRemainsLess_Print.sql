@@ -29,22 +29,26 @@ RETURNS TABLE (FromId               Integer
              , AmountPartnerPriorTotal_sh TFloat
              , Remains_pack_sh            TFloat
 
-
+             , Amount_result_pack_       TFloat
+             , AmountPartnerPriorTotal_  TFloat
+             , Remains_pack_             TFloat
+                
              , AmountPartner              TFloat
+             , AmountPartner_w            TFloat
              , AmountPartner_sh           TFloat
+             
              , AmountPartnerPromo         TFloat
+             , AmountPartnerPromo_w       TFloat
              , AmountPartnerPromo_sh      TFloat
-             , AmountPartnerNext          TFloat
-             , AmountPartnerNext_sh       TFloat
-             , AmountPartnerNextPromo     TFloat
-             , AmountPartnerNextPromo_sh  TFloat
+
              , AmountPartnerPrior         TFloat
+             , AmountPartnerPrior_w      TFloat
              , AmountPartnerPrior_sh      TFloat
+             
              , AmountPartnerPriorPromo    TFloat
+             , AmountPartnerPriorPromo_w TFloat
              , AmountPartnerPriorPromo_sh TFloat
              
-             , Amount1         TFloat
-             , Amount2         TFloat
               )
 AS
 $BODY$
@@ -98,12 +102,35 @@ BEGIN
                             FROM lfSelect_Object_Unit_byGroup (vbFromId) AS tmp
                             )
               -- данные по недостающим товарам из _Result_Child
-              , tmpGoods_Less AS (SELECT *
+              , tmpGoods_Less AS (SELECT _Result_Child.GoodsId         
+                                       , _Result_Child.GoodsCode
+                                       , _Result_Child.GoodsName    
+                                       , _Result_Child.GoodsKindId  
+                                       , _Result_Child.GoodsKindName
+                                       , _Result_Child.MeasureId  
+                                       , _Result_Child.MeasureName       
+                                       , _Result_Child.GoodsGroupNameFull
+                                       
+                                       , SUM (_Result_Child.Amount_result_pack)      AS Amount_result_pack
+                                       , SUM (_Result_Child.Amount_result_pack_pack) AS Amount_result_pack_pack
+                                       , SUM (_Result_Child.AmountPartnerPriorTotal) AS AmountPartnerPriorTotal
+                                       , SUM (_Result_Child.AmountPartnerTotal)      AS AmountPartnerTotal
+                                       , SUM (_Result_Child.Income_PACK_from)        AS Income_PACK_from
+                                       , SUM (_Result_Child.Remains)                 AS Remains
+                                       , SUM (_Result_Child.Remains_pack)            AS Remains_pack
+                                       , SUM (_Result_Child.AmountPackAllTotal)      AS AmountPackAllTotal
                                    FROM _Result_Child
                                    WHERE (_Result_Child.Amount_result_pack_pack < 0
                                       OR _Result_Child.Amount_result_pack < 0)
                                       AND _Result_Child.GoodsKindId <> zc_GoodsKind_Basis()
-                                      
+                                   GROUP BY _Result_Child.GoodsId         
+                                          , _Result_Child.GoodsCode
+                                          , _Result_Child.GoodsName    
+                                          , _Result_Child.GoodsKindId  
+                                          , _Result_Child.GoodsKindName
+                                          , _Result_Child.MeasureId  
+                                          , _Result_Child.MeasureName       
+                                          , _Result_Child.GoodsGroupNameFull
                                   )
               -- выбираем заявки
               , tmpMovementOrder AS (SELECT Movement.Id
@@ -208,48 +235,54 @@ BEGIN
                 , tmpGoods_Less.MeasureName       
                 , tmpGoods_Less.GoodsGroupNameFull
                 
-                , tmpGoods_Less.Amount_result_pack
-                , tmpGoods_Less.Amount_result_pack_pack
-                , tmpGoods_Less.AmountPartnerPriorTotal
-                , tmpGoods_Less.AmountPartnerTotal
-                , tmpGoods_Less.Income_PACK_from
-                , tmpGoods_Less.Remains
-                , tmpGoods_Less.Remains_pack
-                , tmpGoods_Less.AmountPackAllTotal
+                , tmpGoods_Less.Amount_result_pack      :: TFloat
+                , tmpGoods_Less.Amount_result_pack_pack :: TFloat
+                , tmpGoods_Less.AmountPartnerPriorTotal :: TFloat
+                , tmpGoods_Less.AmountPartnerTotal      :: TFloat
+                , tmpGoods_Less.Income_PACK_from        :: TFloat
+                , tmpGoods_Less.Remains                 :: TFloat
+                , tmpGoods_Less.Remains_pack            :: TFloat
+                , tmpGoods_Less.AmountPackAllTotal      :: TFloat
                 
 
-                , tmpGoods_Less.Amount_result_pack      * (CASE WHEN tmpGoods_Less.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END ))                         :: TFloat AS Amount_result_pack_sh
-                , tmpGoods_Less.AmountPartnerPriorTotal * (CASE WHEN tmpGoods_Less.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END ))                         :: TFloat AS AmountPartnerPriorTotal_sh
-                , tmpGoods_Less.Remains_pack            * (CASE WHEN tmpGoods_Less.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END ))                         :: TFloat AS Remains_pack_sh
+                , (tmpGoods_Less.Amount_result_pack      * (CASE WHEN tmpGoods_Less.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END ))                         :: TFloat AS Amount_result_pack_sh
+                , (tmpGoods_Less.AmountPartnerPriorTotal * (CASE WHEN tmpGoods_Less.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END ))                         :: TFloat AS AmountPartnerPriorTotal_sh
+                , (tmpGoods_Less.Remains_pack            * (CASE WHEN tmpGoods_Less.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END ))                         :: TFloat AS Remains_pack_sh
+
+                , (tmpGoods_Less.Amount_result_pack      / (CASE WHEN tmpGoods_Less.MeasureId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) :: TFloat AS Amount_result_pack_
+                , (tmpGoods_Less.AmountPartnerPriorTotal / (CASE WHEN tmpGoods_Less.MeasureId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) :: TFloat AS AmountPartnerPriorTotal_
+                , (tmpGoods_Less.Remains_pack            / (CASE WHEN tmpGoods_Less.MeasureId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) :: TFloat AS Remains_pack_
+
 
                   -- заказ покупателя БЕЗ акций, сегодня + завтра
-                , (tmpMIOrder.AmountPartner * (CASE WHEN tmpGoods_Less.MeasureId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ))          :: TFloat AS AmountPartner
+                , tmpMIOrder.AmountPartner                                                                                                                  :: TFloat AS AmountPartner
+                , (tmpMIOrder.AmountPartner * (CASE WHEN tmpGoods_Less.MeasureId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ))          :: TFloat AS AmountPartner_w
                 , (tmpMIOrder.AmountPartner * (CASE WHEN tmpGoods_Less.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END ))                                     :: TFloat AS AmountPartner_sh
                   -- заказ покупателя ТОЛЬКО Акции, сегодня + завтра
-                , (tmpMIOrder.AmountPartnerPromo * (CASE WHEN tmpGoods_Less.MeasureId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ))     :: TFloat AS AmountPartnerPromo
+                , tmpMIOrder.AmountPartnerPromo                                                                                                             :: TFloat AS AmountPartnerPromo
+                , (tmpMIOrder.AmountPartnerPromo * (CASE WHEN tmpGoods_Less.MeasureId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ))     :: TFloat AS AmountPartnerPromo_w
                 , (tmpMIOrder.AmountPartnerPromo * (CASE WHEN tmpGoods_Less.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END ))                                :: TFloat AS AmountPartnerPromo_sh
-                  -- "информативно" заказ покупателя БЕЗ акций, завтра
-                , (tmpMIOrder.AmountPartnerNext * (CASE WHEN tmpGoods_Less.MeasureId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ))      :: TFloat AS AmountPartnerNext
-                , (tmpMIOrder.AmountPartnerNext * (CASE WHEN tmpGoods_Less.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END ))                                 :: TFloat AS AmountPartnerNext_sh
-                  -- "информативно" заказ покупателя ТОЛЬКО Акции, завтра
-                , (tmpMIOrder.AmountPartnerNextPromo * (CASE WHEN tmpGoods_Less.MeasureId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) :: TFloat AS AmountPartnerNextPromo
-                , (tmpMIOrder.AmountPartnerNextPromo * (CASE WHEN tmpGoods_Less.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END ))                            :: TFloat AS AmountPartnerNextPromo_sh
                   -- заказ покупателя БЕЗ акций, неотгруж - вчера
-                , (tmpMIOrder.AmountPartnerPrior * (CASE WHEN tmpGoods_Less.MeasureId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ))     :: TFloat AS AmountPartnerPrior
+                , tmpMIOrder.AmountPartnerPrior                                                                                                             :: TFloat AS AmountPartnerPrior
+                , (tmpMIOrder.AmountPartnerPrior * (CASE WHEN tmpGoods_Less.MeasureId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ))     :: TFloat AS AmountPartnerPrior_w
                 , (tmpMIOrder.AmountPartnerPrior * (CASE WHEN tmpGoods_Less.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END ))                                :: TFloat AS AmountPartnerPrior_sh
                   -- заказ покупателя ТОЛЬКО Акции, неотгруж - вчера
-                , (tmpMIOrder.AmountPartnerPriorPromo * (CASE WHEN tmpGoods_Less.MeasureId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )):: TFloat AS AmountPartnerPriorPromo
+                , tmpMIOrder.AmountPartnerPriorPromo                                                                                                        :: TFloat AS AmountPartnerPriorPromo
+                , (tmpMIOrder.AmountPartnerPriorPromo * (CASE WHEN tmpGoods_Less.MeasureId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )):: TFloat AS AmountPartnerPriorPromo_w
                 , (tmpMIOrder.AmountPartnerPriorPromo * (CASE WHEN tmpGoods_Less.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END ))                           :: TFloat AS AmountPartnerPriorPromo_sh
 
            FROM tmpMIOrder
-                INNER JOIN tmpGoods_Less ON tmpGoods_Less.GoodsId     = tmpMIOrder.GoodsId
+                 JOIN tmpGoods_Less ON tmpGoods_Less.GoodsId     = tmpMIOrder.GoodsId
                                         AND tmpGoods_Less.GoodsKindId = tmpMIOrder.GoodsKindId
                 INNER JOIN Object AS Object_From ON Object_From.Id = tmpMIOrder.FromId
 
                 LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                       ON ObjectFloat_Weight.ObjectId = tmpMIOrder.GoodsId
                                      AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-                
+           WHERE tmpMIOrder.AmountPartner <> 0
+              OR tmpMIOrder.AmountPartnerPromo <> 0
+              OR tmpMIOrder.AmountPartnerPrior <> 0
+              OR tmpMIOrder.AmountPartnerPriorPromo <> 0
            ORDER BY tmpGoods_Less.GoodsName, Object_From.ValueData
 
           ;
