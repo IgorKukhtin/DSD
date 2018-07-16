@@ -6188,7 +6188,7 @@
         item
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName;FromName;'
+          IndexFieldNames = 'GoodsName;GoodsKindName;FromName;'
         end>
       Params = <
         item

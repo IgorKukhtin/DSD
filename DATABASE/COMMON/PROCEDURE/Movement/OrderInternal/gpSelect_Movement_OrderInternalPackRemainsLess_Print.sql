@@ -89,8 +89,10 @@ BEGIN
               -- данные по недостающим товарам из _Result_Child
               , tmpGoods_Less AS (SELECT *
                                    FROM _Result_Child
-                                   WHERE _Result_Child.Amount_result_pack_pack < 0
-                                      OR _Result_Child.Amount_result_pack < 0
+                                   WHERE (_Result_Child.Amount_result_pack_pack < 0
+                                      OR _Result_Child.Amount_result_pack < 0)
+                                      AND _Result_Child.GoodsKindId <> zc_GoodsKind_Basis()
+                                      
                                   )
               -- выбираем заявки
               , tmpMovementOrder AS (SELECT Movement.Id
