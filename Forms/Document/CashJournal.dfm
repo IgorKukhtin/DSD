@@ -23,8 +23,6 @@ inherited CashJournalForm: TCashJournalForm
       inherited cxGrid: TcxGrid
         Width = 975
         Height = 494
-        ExplicitLeft = 3
-        ExplicitTop = 304
         ExplicitWidth = 975
         ExplicitHeight = 494
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1226,8 +1224,8 @@ inherited CashJournalForm: TCashJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 733
-    Top = 65532
+    Left = 709
+    Top = 4
   end
   object spUpdate_Invoice: TdsdStoredProc
     StoredProcName = 'gpUpdate_MovementLink_Invoice'

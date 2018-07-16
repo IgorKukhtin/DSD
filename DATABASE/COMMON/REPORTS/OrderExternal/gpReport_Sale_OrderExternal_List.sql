@@ -32,21 +32,21 @@ BEGIN
      -- Результат
      RETURN QUERY 
   WITH tmpOrderExternal AS (SELECT Movement.Id
-                                , Movement.InvNumber                             AS InvNumber
-                                , Movement.OperDate                              AS OperDate
-                                , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
-                                , ObjectDesc_From.ItemName                       AS FromDescName
-                                , Object_From.Id                                 AS FromId
-                                , Object_From.ValueData                          AS FromName
-                                , Object_To.Id                                   AS ToId
-                                , Object_To.ValueData                            AS ToName
-
-                                , MovementFloat_TotalSummPVAT.ValueData          AS TotalSummPVAT
-                                , MovementFloat_TotalSumm.ValueData              AS TotalSumm
-                                , MovementFloat_TotalCountKg.ValueData           AS TotalCountKg
-                                , MovementFloat_TotalCountSh.ValueData           AS TotalCountSh
-                                , MovementFloat_TotalCount.ValueData             AS TotalCount
-                                , MovementFloat_TotalCountSecond.ValueData       AS TotalCountSecond
+                                 , Movement.InvNumber                             AS InvNumber
+                                 , Movement.OperDate                              AS OperDate
+                                 , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
+                                 , ObjectDesc_From.ItemName                       AS FromDescName
+                                 , Object_From.Id                                 AS FromId
+                                 , Object_From.ValueData                          AS FromName
+                                 , Object_To.Id                                   AS ToId
+                                 , Object_To.ValueData                            AS ToName
+ 
+                                 , MovementFloat_TotalSummPVAT.ValueData          AS TotalSummPVAT
+                                 , MovementFloat_TotalSumm.ValueData              AS TotalSumm
+                                 , MovementFloat_TotalCountKg.ValueData           AS TotalCountKg
+                                 , MovementFloat_TotalCountSh.ValueData           AS TotalCountSh
+                                 , MovementFloat_TotalCount.ValueData             AS TotalCount
+                                 , MovementFloat_TotalCountSecond.ValueData       AS TotalCountSecond
 
                             FROM Movement 
                                  LEFT JOIN MovementDate AS MovementDate_OperDatePartner

@@ -50,6 +50,9 @@ type
     InvNumberPartner_TaxCorrective: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    isDate_Err: TcxGridDBColumn;
+    OperDate_TaxCorrective: TcxGridDBColumn;
+    OperDate_Tax: TcxGridDBColumn;
   private
     { Private declarations }
   public

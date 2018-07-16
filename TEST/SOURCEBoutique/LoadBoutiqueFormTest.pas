@@ -51,6 +51,7 @@ type
     procedure LoadCountryBrandFormTest;
     procedure LoadCurrencyMovementFormTest;
     procedure LoadCashFormTest;
+    procedure LoadCashMovementFormTest;
     procedure LoadCurrencyFormTest;
     procedure LoadDiscountFormTest;
     procedure LoadDiscountToolsFormTest;
@@ -93,6 +94,7 @@ type
     procedure LoadSaleFormTest;
     procedure LoadServiceFormTest;
     procedure LoadSendFormTest;
+    procedure LoadObjectUnionFormTest;
     procedure LoadUnitFormTest;
     procedure FormTest;
 
@@ -100,7 +102,7 @@ type
 //    procedure LoadOrderSheduleFormTest;
 //    procedure LoadOrderInternalFormTest;
 //    procedure LoadOrderExternalFormTest;
-//    procedure LoadObjectUnionFormTest;
+
 //    procedure LoadOverFormTest;
 //    procedure LoadOverSettingsFormTest;
 //    procedure LoadPaidKindFormTest;
@@ -441,6 +443,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCashEditForm');
 end;
 
+procedure TLoadFormTest.LoadCashMovementFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCashJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashOperationForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCashOperationForm');
+end;
+
 procedure TLoadFormTest.LoadLabelFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLabelForm'));
@@ -457,6 +467,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TLineFabricaEditForm');
 end;
 
+procedure TLoadFormTest.LoadObjectUnionFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMoneyPlaceCash_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMoneyPlaceCash_ObjectForm');
+
+end;
 //
 //procedure TLoadFormTest.LoadBankFormTest;
 //begin

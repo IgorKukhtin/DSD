@@ -211,6 +211,9 @@ type
     actReport_GoodsCode: TdsdOpenForm;
     actReport_SaleOLAP_Analysis: TdsdOpenForm;
     miReport_SaleOLAP_Analysis: TMenuItem;
+    actCashJournal: TdsdOpenForm;
+    N3: TMenuItem;
+    N4: TMenuItem;
   private
     { Private declarations }
   public

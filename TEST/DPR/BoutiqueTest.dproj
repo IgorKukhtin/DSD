@@ -1050,6 +1050,18 @@
 				<Form>MovementDescDataForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Document\CashJournal.pas">
+				<Form>CashJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Document\CashOperation.pas">
+				<Form>CashOperationForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\MoneyPlaceCash_Object.pas">
+				<Form>MoneyPlaceCash_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -1,33 +1,39 @@
 -- Function: lpInsertUpdate_Movement_Cash()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat
-                                                     ,Integer, Integer, Integer, Integer, Integer, TVarChar, TFloat, TFloat, Integer);
-
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TFloat
+                                                     ,Integer, Integer, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TFloat
+                                                     ,Integer, Integer, Integer, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TFloat,TFloat,TFloat
+                                                     ,Integer, Integer, Integer, Integer, Integer, TVarChar, Integer);
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Cash(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
     IN inInvNumber            TVarChar  , -- Номер документа
     IN inOperDate             TDateTime , -- Дата документа
     IN inCurrencyPartnerValue TFloat    ,
     IN inParPartnerValue      TFloat    ,
-    IN inAmountCurrency       TFloat    ,
-    IN inAmount               TFloat    ,
+ 
+    IN inAmountIn             TFloat    , -- Сумма прихода
+    IN inAmountOut            TFloat    , -- Сумма расхода
 
-    IN inAmount_MI            TFloat    ,    
-    IN inCashId               Integer   , --
+    IN inCurrencyValue        TFloat    , --
+    IN inParValue             TFloat    , --
+    
+    IN inCashId               Integer   , --+
+    IN inCurrencyId           Integer   ,
     IN inMoneyPlaceId         Integer   , --
     IN inInfoMoneyId          Integer   ,
     IN inUnitId               Integer   ,
-    IN inCurrencyId           Integer   , --
-    IN inCurrencyValue        TFloat    , --
-    IN inParValue             TFloat    , --
     IN inComment              TVarChar  , -- Примечание
     IN inUserId               Integer     -- пользователь
 )
 RETURNS Integer
 AS
 $BODY$
-   DECLARE vbIsInsert     Boolean;
-   DECLARE vbId_sale_part Integer;
+   DECLARE vbIsInsert       Boolean;
+   DECLARE vbAmount         TFloat;
+   DECLARE vbMovementItemId Integer;
+   DECLARE vbCurrencyPartnerId Integer;
 BEGIN
      -- проверка
      IF inOperDate <> DATE_TRUNC ('DAY', inOperDate) THEN
@@ -39,12 +45,7 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка. Не установлено значение <Касса>.';
      END IF;
-
-     -- проверка
-     IF COALESCE (inCurrencyId, 0) = 0 THEN
-        RAISE EXCEPTION 'Ошибка.Не установлено значение <Валюта>.';
-     END IF;
-
+/*
      -- Если НЕ Базовая Валюта
      IF inCurrencyId <> zc_Currency_Basis() THEN
         -- проверка
@@ -56,7 +57,7 @@ BEGIN
            RAISE EXCEPTION 'Ошибка.Не определено значение <Номинал>.';
         END IF;
      END IF;
-
+*/
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -70,18 +71,57 @@ BEGIN
                                    , inUserId    := inUserId
                                     );
 
+
+     IF vbIsInsert = TRUE
+     THEN
+         -- сохранили свойство <Дата создания> - при загрузке с моб устр., здесь дата загрузки
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
+         -- сохранили связь с <Пользователь>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
+     END IF;
+
+
      -- сохранили свойство <Курс для перевода в валюту баланса>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), ioId, inCurrencyValue);
      -- сохранили свойство <Курс для перевода в валюту баланса>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParValue(), ioId, inParValue);
 
-     -- сохранили связь с <От кого (в документе)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
-     -- сохранили связь с <Кому (в документе)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyPartnerValue(), ioId, inCurrencyPartnerValue);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParPartnerValue(), ioId, inParPartnerValue);
+    
+     
+----     
+     -- поиск <Элемент документа>
+     SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
+     -- определяется признак Создание/Корректировка
+     vbIsInsert:= COALESCE (vbMovementItemId, 0) = 0;
 
-     -- сохранили связь с <Валюта (документа)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CurrencyDocument(), ioId, inCurrencyDocumentId);
+     -- расчет
+     IF inAmountIn <> 0 THEN
+        vbAmount := inAmountIn;
+     ELSE
+        vbAmount := -1 * inAmountOut;
+     END IF;
+
+     -- определяем
+     vbCurrencyPartnerId:= zc_Currency_Basis();
+                                   
+     -- сохранили <Элемент документа>
+     vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inCashId, Null::integer, ioId, vbAmount, Null, inUserId);
+
+
+     -- сохранили связь с <Объект>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_MoneyPlace(), vbMovementItemId, inMoneyPlaceId);
+     -- сохранили связь с <статьи>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), vbMovementItemId, inInfoMoneyId);
+      -- сохранили связь с <Подразделением>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbMovementItemId, inUnitId);
+    
+     -- сохранили свойство <Примечание>
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
+
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
@@ -96,8 +136,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
- 09.06.17                                                       *  add inUserId in lpInsertUpdate_Movement
- 10.04.17         *
+ 06.07.18         *
 */
 
 -- тест

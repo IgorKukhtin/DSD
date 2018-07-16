@@ -128,11 +128,15 @@ type
       Sender: TcxDataSummaryItem; const AValue: Variant; AIsFooter: Boolean;
       var AText: string);
     procedure actConsiderExecute(Sender: TObject);
+    procedure cdsUnitAfterOpen(DataSet: TDataSet);
   private
     FUnit : TStrings;
     FUnitCategory : TStrings;
     FCountO : Integer;
     FCountYes : Integer;
+
+    FUnitCalck : Integer;
+    FUnitCategoryID : Integer;
   public
   end;
 
@@ -384,6 +388,31 @@ begin
   else Dataset['Total'] := 0;
 end;
 
+procedure TReport_ImplementationPlanEmployeeForm.cdsUnitAfterOpen(
+  DataSet: TDataSet);
+  var nCount : integer;
+begin
+  FUnitCalck := 0;
+  nCount := 0;
+  try
+    cdsUnit.DisableControls;
+    cdsUnit.First;
+    while not cdsUnit.Eof do
+    begin
+      if nCount < cdsUnit.FieldByName('FactOfManDays').AsInteger then
+      begin
+        nCount := cdsUnit.FieldByName('FactOfManDays').AsInteger;
+        FUnitCategoryID := cdsUnit.FieldByName('UnitCategoryId').AsInteger;
+        FUnitCalck := cdsUnit.RecNo - 1;
+      end;
+      cdsUnit.Next;
+    end;
+  finally
+    cdsUnit.First;
+    cdsUnit.EnableControls;
+  end;
+end;
+
 procedure TReport_ImplementationPlanEmployeeForm.cdsUnitAfterPost(
   DataSet: TDataSet);
 begin
@@ -393,7 +422,7 @@ end;
 
 procedure TReport_ImplementationPlanEmployeeForm.ClientDataSetAfterOpen(
   DataSet: TDataSet);
-  var cur : Currency;
+ // var cur : Currency;
 begin
   FCountO := 0;
   FCountYes := 0;
@@ -402,7 +431,8 @@ begin
     ClientDataSet.DisableControls;
     while not ClientDataSet.Eof do
     begin
-      if ClientDataSet.FieldByName('Amount').AsCurrency = 0 then Inc(FCountO);
+      if (ClientDataSet.FieldByName('Amount').AsCurrency = 0) or
+        (ClientDataSet.FieldByName('Amount').AsCurrency < ClientDataSet.FieldByName('AmountPlanTab').AsCurrency) then Inc(FCountO);
       ClientDataSet.Edit;
       if ClientDataSet.FieldByName('AmountPlanTab').AsCurrency >= 0.1 then
       begin
@@ -419,19 +449,24 @@ begin
   end;
 
   try
-    cur := 0;
-    cdsUnitCategory.DisableControls;
-    cdsUnitCategory.First;
-    while not cdsUnitCategory.Eof do
-    begin
-      cur := cur + cdsUnitCategory.FieldByName('MinLineByLineImplPlan').AsCurrency;
-      cdsUnitCategory.Next;
-    end;
+//    cur := 0;
+//    cdsUnitCategory.DisableControls;
+//    cdsUnitCategory.First;
+//    while not cdsUnitCategory.Eof do
+//    begin
+//      cur := cur + cdsUnitCategory.FieldByName('MinLineByLineImplPlan').AsCurrency;
+//      cdsUnitCategory.Next;
+//    end;
+
 
     if cdsResult.RecordCount = 0 then cdsResult.Append
     else cdsResult.Edit;
-    if (cdsUnitCategory.RecordCount > 0) and (cdsResult.FieldByName('TotalExecutionLine').AsCurrency >=
-      (cur / cdsUnitCategory.RecordCount)) then
+//    if (cdsUnitCategory.RecordCount > 0) and (cdsResult.FieldByName('TotalExecutionLine').AsCurrency >=
+//      (cur / cdsUnitCategory.RecordCount)) then
+//      cdsResult.FieldByName('Awarding').AsString := 'Yes'
+    if (FCountYes <> 0) and cdsUnitCategory.Locate('UnitCategoryCode', FUnitCategoryID, []) and
+      (((ClientDataSet.RecordCount - FCountO) / FCountYes * 100) >=
+      cdsUnitCategory.FieldByName('MinLineByLineImplPlan').AsCurrency) then
       cdsResult.FieldByName('Awarding').AsString := 'Yes'
     else cdsResult.FieldByName('Awarding').AsString := 'No';
     cdsResult.Post;
@@ -557,28 +592,48 @@ begin
     for I := 0 to FUnit.Count - 1 do nSum := nSum + Dataset['Amount' + FUnit.Strings[I]];
     Dataset['Amount'] := nSum;
 
-    nSum := 0; nSumMax := 0;
-    for I := 0 to FUnit.Count - 1 do
-    begin
-      nSum := nSum + Dataset['AmountPlanTab' + FUnit.Strings[I]];
-      nSumMax := Max(nSumMax, Dataset['AmountPlanTab' + FUnit.Strings[I]]);
-    end;
-    Dataset['AmountPlanTab'] := Min(nSum, nSumMax);
+//    nSum := 0; nSumMax := 0;
+//    for I := 0 to FUnit.Count - 1 do
+//    begin
+//      nSum := nSum + Dataset['AmountPlanTab' + FUnit.Strings[I]];
+//      nSumMax := Max(nSumMax, Dataset['AmountPlanTab' + FUnit.Strings[I]]);
+//    end;
+//    Dataset['AmountPlanTab'] := Min(nSum, nSumMax);
+    Dataset['AmountPlanTab'] := Dataset['AmountPlanTab' + FUnit.Strings[FUnitCalck]];
 
-    nSum := 0; nSumMax := 0;
-    for I := 0 to FUnit.Count - 1 do
-    begin
-      nSum := nSum + Dataset['AmountPlanAwardTab' + FUnit.Strings[I]];
-      nSumMax := Max(nSumMax, Dataset['AmountPlanAwardTab' + FUnit.Strings[I]]);
-    end;
-    Dataset['AmountPlanAwardTab'] := Min(nSum, nSumMax);
+//    nSum := 0; nSumMax := 0;
+//    for I := 0 to FUnit.Count - 1 do
+//    begin
+//      nSum := nSum + Dataset['AmountPlanAwardTab' + FUnit.Strings[I]];
+//      nSumMax := Max(nSumMax, Dataset['AmountPlanAwardTab' + FUnit.Strings[I]]);
+//    end;
+//    Dataset['AmountPlanAwardTab'] := Min(nSum, nSumMax);
+    Dataset['AmountPlanAwardTab'] := Dataset['AmountPlanAwardTab' + FUnit.Strings[FUnitCalck]];
+
+//    nSum := 0;
+//    for I := 0 to FUnit.Count - 1 do nSum := nSum + Dataset['AmountTheFineTab' + FUnit.Strings[I]];
+//    Dataset['AmountTheFineTab'] := nSum;
 
     nSum := 0;
-    for I := 0 to FUnit.Count - 1 do nSum := nSum + Dataset['AmountTheFineTab' + FUnit.Strings[I]];
+    if Dataset['Amount'] < Dataset['AmountPlanTab'] then
+    begin
+      if cdsUnitCategory.Locate('UnitCategoryCode', FUnitCategoryID, []) then
+        nSum := Max(Dataset['AmountPlanTab'] - Dataset['Amount'], 0) *
+                Dataset['Price' + FUnit.Strings[FUnitCalck]] * cdsUnitCategory.FieldByName('PenaltyNonMinPlan').AsCurrency / 100;
+    end;
     Dataset['AmountTheFineTab'] := nSum;
 
+//    nSum := 0;
+//    for I := 0 to FUnit.Count - 1 do nSum := nSum + Dataset['BonusAmountTab' + FUnit.Strings[I]];
+//    Dataset['BonusAmountTab'] := nSum;
+
     nSum := 0;
-    for I := 0 to FUnit.Count - 1 do nSum := nSum + Dataset['BonusAmountTab' + FUnit.Strings[I]];
+    if Dataset['Amount'] >= Dataset['AmountPlanAwardTab'] then
+    begin
+      if cdsUnitCategory.Locate('UnitCategoryCode', FUnitCategoryID, []) then
+        nSum := Dataset['AmountPlanAwardTab'] * Dataset['Price' + FUnit.Strings[FUnitCalck]] *
+        cdsUnitCategory.FieldByName('PremiumImplPlan').AsCurrency / 100;
+    end;
     Dataset['BonusAmountTab'] := nSum;
   finally
     cdsUnitCategory.RecNo := rnUnitCategory;
@@ -624,6 +679,7 @@ begin
   FUnit := TStringList.Create;
   FUnitCategory := TStringList.Create;
   FCountO := 0;
+  FUnitCalck := 0;
 end;
 
 procedure TReport_ImplementationPlanEmployeeForm.FormDestroy(Sender: TObject);

@@ -249,6 +249,11 @@ type
     dsdDBViewAddOnPlan: TdsdDBViewAddOn;
     actGridPlanToExcel: TdsdGridToExcel;
     bbGridPlanToExcel: TdxBarButton;
+    spSelectPrintRemainsLess: TdsdStoredProc;
+    actPrintRemainsLess: TdsdPrintAction;
+    bbPrintRemainsLess: TdxBarButton;
+    actPrintRemainsLessUpak: TdsdPrintAction;
+    bbPrintRemainsLessUpak: TdxBarButton;
   private
     { Private declarations }
   public

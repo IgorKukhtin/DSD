@@ -3,10 +3,8 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
   ClientHeight = 555
   ClientWidth = 982
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -345
-  ExplicitTop = -101
   ExplicitWidth = 998
-  ExplicitHeight = 594
+  ExplicitHeight = 593
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -610,6 +608,9 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_byElements: TdsdPrintAction
       Category = 'DSDLib'
@@ -683,6 +684,9 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_byElements_byComments: TdsdPrintAction
       Category = 'DSDLib'
@@ -727,6 +731,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
       DataSets = <
         item
           UserName = 'frxDBDItems'
+          IndexFieldNames = 'BankAccountName;GroupId;InfoMoneyName_all;MoneyPlaceName;Comment'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -755,6 +760,9 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'

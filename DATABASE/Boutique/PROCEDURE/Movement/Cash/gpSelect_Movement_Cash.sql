@@ -1,8 +1,10 @@
 -- Function: gpSelect_Movement_Cash()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Cash (TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Cash (Integer, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Cash(
+    IN inCashId            Integer   , -- касса
     IN inStartDate         TDateTime , -- Дата нач. периода
     IN inEndDate           TDateTime , -- Дата оконч. периода
     IN inStartProtocol     TDateTime , -- Дата нач. для протокола
@@ -15,10 +17,18 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
-             , AmountCurrency TFloat, Amount TFloat
              , InsertDate TDateTime
              , InsertName TVarChar
-             
+           
+             , AmountOut TFloat
+             , AmountIn  TFloat
+             , CashId Integer, CashName TVarChar
+             , CurrencyId Integer, CurrencyName TVarChar
+             , MoneyPlaceId Integer, MoneyPlaceName TVarChar, ItemName TVarChar
+             , InfoMoneyId Integer, InfoMoneyName TVarChar
+             , UnitId Integer, UnitName TVarChar
+             , Comment TVarChar
+           
              , isProtocol Boolean
              )
 AS
@@ -36,21 +46,24 @@ BEGIN
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
 
-        , tmpMovement AS (SELECT Movement.*
-                          FROM tmpStatus
-                               JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate 
-                                            AND Movement.DescId   = zc_Movement_Cash()
-                                            AND Movement.StatusId = tmpStatus.StatusId
-                          )
-        , tmpMI AS (SELECT MovementItem.MovementId
-                         , MovementItem.Id
-                    FROM tmpMovement
+        , tmpMovement_All AS (SELECT Movement.*
+                              FROM tmpStatus
+                                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate 
+                                                AND Movement.DescId   = zc_Movement_Cash()
+                                                AND Movement.StatusId = tmpStatus.StatusId
+                              )
+        , tmpMI AS (SELECT MovementItem.*
+                    FROM tmpMovement_All AS tmpMovement
                         INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
                                                AND MovementItem.DescId     = zc_MI_Master()
                                                AND MovementItem.isErased   = FALSE
-                    WHERE inIsProtocol = TRUE
+                                               AND (MovementItem.ObjectId = inCashId OR inCashId = 0)  
                    )
-                  
+        , tmpMovement AS (SELECT tmpMovement_All.*
+                          FROM tmpMovement_All
+                              INNER JOIN tmpMI ON tmpMI.MovementId = tmpMovement_All.Id
+                          )
+        
         , tmpProtocol_MI AS (SELECT DISTINCT tmpMI.MovementId
                              FROM tmpMI
                                   INNER JOIN (SELECT DISTINCT MovementItemProtocol.MovementItemId
@@ -62,7 +75,7 @@ BEGIN
                             )
         , tmpProtocol_Mov AS (SELECT DISTINCT MovementProtocol.MovementId
                               FROM MovementProtocol
-                              WHERE MovementProtocol.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                              WHERE MovementProtocol.MovementId IN (SELECT DISTINCT tmpMI.MovementId FROM tmpMI)
                                 AND MovementProtocol.OperDate >= inStartProtocol AND MovementProtocol.OperDate < inEndProtocol + INTERVAL '1 DAY'
                                 AND inIsProtocol = TRUE
                              )
@@ -87,22 +100,30 @@ BEGIN
            , MF_CurrencyPartnerValue.ValueData           AS CurrencyPartnerValue
            , MF_ParPartnerValue.ValueData                AS ParPartnerValue
 
-           , MF_AmountCurrency.ValueData                 AS AmountCurrency
-           , MF_Amount.ValueData                         AS Amount
-           
            , MovementDate_Insert.ValueData               AS InsertDate
            , Object_Insert.ValueData                     AS InsertName
            
+           , CASE WHEN COALESCE (tmpMI.Amount,0) < 0 THEN -1 * tmpMI.Amount  ELSE 0 END :: TFloat AS AmountOut
+           , CASE WHEN COALESCE (tmpMI.Amount,0) > 0 THEN tmpMI.Amount ELSE 0 END       :: TFloat AS AmountIn
+
+           , Object_Cash.Id                              AS CashId
+           , Object_Cash.ValueData                       AS CashName
+           , Object_Currency.Id                          AS CurrencyId
+           , Object_Currency.ValueData                   AS CurrencyName
+           , Object_MoneyPlace.Id                        AS MoneyPlaceId
+           , Object_MoneyPlace.ValueData                 AS MoneyPlaceName
+           , ObjectDesc.ItemName
+
+           , Object_InfoMoney.Id                         AS InfoMoneyId
+           , Object_InfoMoney.ValueData                  AS InfoMoneyName
+           , Object_Unit.Id                              AS UnitId
+           , Object_Unit.ValueData                       AS UnitName
+
+           , MIString_Comment.ValueData                  AS Comment 
+
            , CASE WHEN tmpProtocol.MovementId > 0 THEN TRUE ELSE FALSE END AS isProtocol
        FROM tmpMovement AS Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-
-            LEFT JOIN MovementFloat AS MF_AmountCurrency
-                                    ON MF_AmountCurrency.MovementId = Movement.Id
-                                   AND MF_AmountCurrency.DescId = zc_MovementFloat_AmountCurrency()
-            LEFT JOIN MovementFloat AS MF_Amount
-                                    ON MF_Amount.MovementId = Movement.Id
-                                   AND MF_Amount.DescId = zc_MovementFloat_Amount()
 
             LEFT JOIN MovementFloat AS MF_ParValue
                                     ON MF_ParValue.MovementId = Movement.Id
@@ -128,6 +149,34 @@ BEGIN
                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
             --
             LEFT JOIN tmpProtocol ON tmpProtocol.MovementId = Movement.Id
+            
+            INNER JOIN tmpMI ON tmpMI.MovementId = Movement.Id
+            LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = tmpMI.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Cash_Currency
+                                 ON ObjectLink_Cash_Currency.ObjectId = Object_Cash.Id
+                                AND ObjectLink_Cash_Currency.DescId = zc_ObjectLink_Cash_Currency()
+            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Cash_Currency.ChildObjectId
+
+            LEFT JOIN MovementItemString AS MIString_Comment
+                                         ON MIString_Comment.MovementItemId = tmpMI.Id
+                                        AND MIString_Comment.DescId = zc_MIString_Comment()
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                             ON MILinkObject_MoneyPlace.MovementItemId = tmpMI.Id
+                                            AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+            LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = MILinkObject_MoneyPlace.ObjectId
+            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_MoneyPlace.DescId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                             ON MILinkObject_InfoMoney.MovementItemId = tmpMI.Id
+                                            AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = MILinkObject_InfoMoney.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                             ON MILinkObject_Unit.MovementItemId = tmpMI.Id
+                                            AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
            ;
   
 END;
@@ -136,9 +185,9 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И. 
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  05.07.18         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '01.03.2017', inEndDate:= '01.03.2017', inStartProtocol:= '01.03.2017', inEndProtocol:= '01.03.2017', inIsProtocol:= FALSE, inIsErased:= FALSE,inSession:= zfCalc_UserAdmin())
+-- select * from gpSelect_Movement_Cash(inCashId := 0 , inStartDate := ('01.07.2018')::TDateTime , inEndDate := ('31.08.2018')::TDateTime , inStartProtocol := ('12.07.2018')::TDateTime , inEndProtocol := ('12.07.2018')::TDateTime , inIsProtocol := 'False' , inIsErased := 'False' ,  inSession := '8');
