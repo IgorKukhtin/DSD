@@ -535,6 +535,7 @@ BEGIN
            , tmpMovement_all.GoodsKindComplete_ToId
            , tmpMovement_all.StorageLineId_From
            , tmpMovement_all.StorageLineId_To
+           , CASE WHEN inSession = '5' THEN tmpMovement_all.MovementId ELSE 0 END AS MovementId
         FROM tmpMovement_all
              LEFT JOIN tmpGoodsMaster_out ON tmpGoodsMaster_out.MovementId = tmpMovement_all.MovementId
                                          AND tmpMovement_all.IsActive      = TRUE
@@ -555,6 +556,7 @@ BEGIN
            , tmpMovement_all.GoodsKindComplete_ToId
            , tmpMovement_all.StorageLineId_From
            , tmpMovement_all.StorageLineId_To
+           , CASE WHEN inSession = '5' THEN tmpMovement_all.MovementId ELSE 0 END
        )
          -- Модели начисления + необходимые документы для расчета по Кол-во голов
        , tmpMovement_HeadCount AS
@@ -671,6 +673,7 @@ BEGIN
                        ELSE tmpMovement.Amount
                   END)
            , 2) :: TFloat AS Amount -- Общая сумма, грн
+           , CASE WHEN inSession = '5' THEN tmpMovement.MovementId ELSE 0 END AS MovementId
         FROM Setting_Wage_1 AS Setting
              LEFT JOIN tmpMovement ON tmpMovement.MovementDescId = Setting.MovementDescId
                                   AND tmpMovement.IsActive = Setting.IsActive
@@ -717,6 +720,7 @@ BEGIN
 
         GROUP BY
              Setting.StaffListId
+           , CASE WHEN inSession = '5' THEN tmpMovement.MovementId ELSE 0 END
            , Setting.UnitId
            , Setting.PositionId
            , Setting.PositionLevelId
@@ -919,7 +923,7 @@ BEGIN
        ,Setting.ServiceModelName
        ,Setting.Price
        ,Setting.FromId
-       ,Setting.FromName
+       ,(Setting.FromName || COALESCE (Movement.InvNumber, '') ) :: TVarChar AS FromName
        ,Setting.ToId
        ,Setting.ToName
        ,Setting.MovementDescId
@@ -1027,6 +1031,8 @@ BEGIN
 
         LEFT JOIN Object AS Object_StorageLine_From ON Object_StorageLine_From.Id = ServiceModelMovement.StorageLineId_From
         LEFT JOIN Object AS Object_StorageLine_To   ON Object_StorageLine_To.Id   = ServiceModelMovement.StorageLineId_To
+
+        LEFT JOIN Movement ON Movement.Id = ServiceModelMovement.MovementId
 
     WHERE Setting.SelectKindId NOT IN (zc_Enum_SelectKind_MI_Master(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MovementCount())
 

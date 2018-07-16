@@ -15,6 +15,7 @@ RETURNS TABLE (Id                Integer
              , DataBases         TVarChar
              , Start_toChild     TDateTime
              , Start_fromChild   TDateTime
+             , OID_last          BigInt
               )
 AS
 $BODY$
@@ -36,6 +37,7 @@ BEGIN
            , gpSelect.DataBaseName AS DataBases
            , COALESCE (gpSelect.StartTo,   CURRENT_TIMESTAMP - INTERVAL '1 DAY') :: TDateTime AS Start_toChild
            , COALESCE (gpSelect.StartFrom, CURRENT_TIMESTAMP - INTERVAL '1 DAY') :: TDateTime AS Start_fromChild
+           , gpSelect.OID_last
         FROM gpSelect_Object_ReplServer (inSession) AS gpSelect
         ORDER BY 2
       ;

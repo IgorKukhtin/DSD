@@ -195,6 +195,7 @@ BEGIN
                                                         , inSummCardSecondRecalc:= _tmpMI.SummCardSecondRecalc
                                                         , inSummCardSecondCash := 0
                                                         , inSummNalogRecalc    := 0
+                                                        , inSummNalogRetRecalc := 0
                                                         , inSummMinus          := 0
                                                         , inSummAdd            := 0
                                                         , inSummAddOthRecalc   := 0

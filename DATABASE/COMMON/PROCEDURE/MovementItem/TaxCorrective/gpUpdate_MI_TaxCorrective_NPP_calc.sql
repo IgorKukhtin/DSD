@@ -27,6 +27,17 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_TaxCorrective());
 
 
+     -- проверка
+     IF  EXISTS (SELECT MovementId FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_Registered() AND ValueData = TRUE)
+      OR EXISTS (SELECT MovementId FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_Electron()   AND ValueData = TRUE)
+     THEN
+         RAISE EXCEPTION 'ќшибка.”становлен признак <Ёлектронный документ> в <%> є <%> от <%>.<»зменение> невозможно.', (SELECT MovementDesc.ItemName FROM Movement JOIN MovementDesc ON MovementDesc.Id = Movement.DescId WHERE Movement.Id = inMovementId)
+                                                                                                       , (SELECT InvNumber FROM Movement WHERE Id = inMovementId)
+                                                                                                       , zfConvert_DateToString ((SELECT OperDate FROM Movement WHERE Id = inMovementId))
+                                                                                                        ;
+     END IF;
+
+
      -- определ€ютс€ параметры дл€ < орректировка>
      SELECT Movement.OperDate
           , MovementLinkMovement_Child.MovementChildId AS MovementId_tax

@@ -2,7 +2,7 @@ object MainForm: TMainForm
   Left = 202
   Top = 180
   Caption = 'Load_Repl - MainForm'
-  ClientHeight = 627
+  ClientHeight = 635
   ClientWidth = 1025
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@ object MainForm: TMainForm
   object Splitter1: TSplitter
     Left = 581
     Top = 0
-    Height = 575
+    Height = 580
     Align = alRight
     ExplicitLeft = 683
     ExplicitTop = 32
@@ -28,7 +28,7 @@ object MainForm: TMainForm
     Left = 0
     Top = 0
     Width = 581
-    Height = 575
+    Height = 580
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
@@ -36,7 +36,7 @@ object MainForm: TMainForm
       Left = 0
       Top = 0
       Width = 581
-      Height = 175
+      Height = 180
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
@@ -44,7 +44,7 @@ object MainForm: TMainForm
         Left = 0
         Top = 41
         Width = 508
-        Height = 134
+        Height = 139
         Align = alClient
         DataSource = ObjectDS
         TabOrder = 0
@@ -80,7 +80,7 @@ object MainForm: TMainForm
           TabOrder = 0
         end
         object EditObjectDescId: TEdit
-          Left = 381
+          Left = 384
           Top = 11
           Width = 121
           Height = 21
@@ -99,18 +99,17 @@ object MainForm: TMainForm
         Left = 508
         Top = 41
         Width = 73
-        Height = 134
+        Height = 139
         Align = alRight
         TabOrder = 2
         object LabelObject: TLabel
           Left = 1
           Top = 1
-          Width = 71
+          Width = 31
           Height = 13
           Align = alTop
           Alignment = taCenter
           Caption = 'Object'
-          ExplicitWidth = 31
         end
         object EditCountObject: TcxCurrencyEdit
           Left = 1
@@ -163,7 +162,7 @@ object MainForm: TMainForm
     end
     object PanelGridObjectString: TPanel
       Left = 0
-      Top = 175
+      Top = 180
       Width = 581
       Height = 80
       Align = alBottom
@@ -193,12 +192,11 @@ object MainForm: TMainForm
         object LabelObjectString: TLabel
           Left = 1
           Top = 1
-          Width = 71
+          Width = 58
           Height = 13
           Align = alTop
           Alignment = taCenter
           Caption = 'ObjectString'
-          ExplicitWidth = 58
         end
         object EditCountStringObject: TcxCurrencyEdit
           Left = 1
@@ -217,7 +215,7 @@ object MainForm: TMainForm
     end
     object PanelGridObjectFloat: TPanel
       Left = 0
-      Top = 255
+      Top = 260
       Width = 581
       Height = 80
       Align = alBottom
@@ -247,12 +245,11 @@ object MainForm: TMainForm
         object LabelObjectFloat: TLabel
           Left = 1
           Top = 1
-          Width = 71
+          Width = 54
           Height = 13
           Align = alTop
           Alignment = taCenter
           Caption = 'ObjectFloat'
-          ExplicitWidth = 54
         end
         object EditCountFloatObject: TcxCurrencyEdit
           Left = 1
@@ -271,7 +268,7 @@ object MainForm: TMainForm
     end
     object PanelGridObjectDate: TPanel
       Left = 0
-      Top = 335
+      Top = 340
       Width = 581
       Height = 80
       Align = alBottom
@@ -301,12 +298,11 @@ object MainForm: TMainForm
         object LabelObjectDate: TLabel
           Left = 1
           Top = 1
-          Width = 71
+          Width = 54
           Height = 13
           Align = alTop
           Alignment = taCenter
           Caption = 'ObjectDate'
-          ExplicitWidth = 54
         end
         object EditCountDateObject: TcxCurrencyEdit
           Left = 1
@@ -325,7 +321,7 @@ object MainForm: TMainForm
     end
     object PanelGridObjectBoolean: TPanel
       Left = 0
-      Top = 415
+      Top = 420
       Width = 581
       Height = 80
       Align = alBottom
@@ -355,12 +351,11 @@ object MainForm: TMainForm
         object LabelObjectBoolean: TLabel
           Left = 1
           Top = 1
-          Width = 71
+          Width = 70
           Height = 13
           Align = alTop
           Alignment = taCenter
           Caption = 'ObjectBoolean'
-          ExplicitWidth = 70
         end
         object EditCountBooleanObject: TcxCurrencyEdit
           Left = 1
@@ -379,7 +374,7 @@ object MainForm: TMainForm
     end
     object PanelGridObjectLink: TPanel
       Left = 0
-      Top = 495
+      Top = 500
       Width = 581
       Height = 80
       Align = alBottom
@@ -409,12 +404,11 @@ object MainForm: TMainForm
         object LabelObjectLink: TLabel
           Left = 1
           Top = 1
-          Width = 71
+          Width = 51
           Height = 13
           Align = alTop
           Alignment = taCenter
           Caption = 'ObjectLink'
-          ExplicitWidth = 51
         end
         object EditCountLinkObject: TcxCurrencyEdit
           Left = 1
@@ -434,9 +428,9 @@ object MainForm: TMainForm
   end
   object ButtonPanel: TPanel
     Left = 0
-    Top = 575
+    Top = 580
     Width = 1025
-    Height = 52
+    Height = 55
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
@@ -452,7 +446,7 @@ object MainForm: TMainForm
     end
     object OKGuideButton: TButton
       Left = 159
-      Top = 23
+      Top = 26
       Width = 88
       Height = 25
       Caption = #1047#1072#1087#1091#1089#1090#1080#1090#1100
@@ -461,7 +455,7 @@ object MainForm: TMainForm
     end
     object StopButton: TButton
       Left = 252
-      Top = 23
+      Top = 26
       Width = 88
       Height = 25
       Caption = #1054#1089#1090#1072#1085#1086#1074#1080#1090#1100
@@ -470,7 +464,7 @@ object MainForm: TMainForm
     end
     object CloseButton: TButton
       Left = 346
-      Top = 23
+      Top = 26
       Width = 88
       Height = 25
       Caption = #1042#1099#1093#1086#1076
@@ -479,23 +473,59 @@ object MainForm: TMainForm
     end
     object cbOnlyOpen: TCheckBox
       Left = 16
-      Top = 27
+      Top = 30
       Width = 97
       Height = 17
       Caption = #1090#1086#1083#1100#1082#1086' OPEN'
       TabOrder = 3
+    end
+    object cbDesc: TCheckBox
+      Left = 448
+      Top = 30
+      Width = 86
+      Height = 17
+      Caption = #1090#1086#1083#1100#1082#1086' Desc'
+      TabOrder = 4
+    end
+    object cbClientDataSet: TCheckBox
+      Left = 621
+      Top = 30
+      Width = 126
+      Height = 17
+      Caption = 'CDS - '#1076#1083#1103' '#1073#1072#1079#1099' From '
+      TabOrder = 5
+    end
+    object cbShowGrid: TCheckBox
+      Left = 755
+      Top = 30
+      Width = 168
+      Height = 17
+      Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1074' '#1043#1056#1048#1044#1077
+      TabOrder = 6
+    end
+    object cbProc: TCheckBox
+      Left = 536
+      Top = 30
+      Width = 81
+      Height = 17
+      Caption = #1090#1086#1083#1100#1082#1086' Proc'
+      TabOrder = 7
     end
   end
   object PageControl: TPageControl
     Left = 584
     Top = 0
     Width = 441
-    Height = 575
+    Height = 580
     ActivePage = TabSheet1
     Align = alRight
     TabOrder = 2
     object TabSheet1: TTabSheet
       Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080' - '#1044#1086#1082#1091#1084#1077#1085#1090#1099
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object PanelReplServer: TPanel
         Left = 0
         Top = 0
@@ -521,36 +551,32 @@ object MainForm: TMainForm
         Left = 0
         Top = 161
         Width = 433
-        Height = 386
+        Height = 391
         Align = alClient
         TabOrder = 1
-        ExplicitLeft = 508
-        ExplicitTop = 0
-        ExplicitWidth = 73
-        ExplicitHeight = 80
-        object MemoError: TMemo
+        object MemoMsg: TMemo
           Left = 1
           Top = 1
           Width = 431
-          Height = 384
+          Height = 389
           Align = alClient
           Lines.Strings = (
-            'MemoError')
+            'MemoMsg')
           TabOrder = 0
-          ExplicitLeft = 160
-          ExplicitTop = 88
-          ExplicitWidth = 185
-          ExplicitHeight = 89
         end
       end
     end
     object TabSheet2: TTabSheet
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' '#1092#1072#1081#1083#1086#1074
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
   end
   object ObjectDS: TDataSource
-    DataSet = ObjectCDS
+    DataSet = fQueryObject
     Left = 400
     Top = 88
   end
@@ -564,29 +590,13 @@ object MainForm: TMainForm
     Left = 56
     Top = 320
   end
-  object spSelect_ReplObject: TdsdStoredProc
-    StoredProcName = 'gpSelect_ReplObject'
+  object spSelect_ReplObject_old: TdsdStoredProc
+    StoredProcName = 'gpSelect_ReplObject_old'
     DataSet = ObjectCDS
     DataSets = <
       item
         DataSet = ObjectCDS
-      end
-      item
-        DataSet = ObjectStringCDS
-      end
-      item
-        DataSet = ObjectFloatCDS
-      end
-      item
-        DataSet = ObjectDateCDS
-      end
-      item
-        DataSet = ObjectBooleanCDS
-      end
-      item
-        DataSet = ObjectLinkCDS
       end>
-    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inSessionGUID'
@@ -641,33 +651,6 @@ object MainForm: TMainForm
     Left = 56
     Top = 368
   end
-  object DatabaseSybase: TDatabase
-    AliasName = 'tProfiManagerDS'
-    DatabaseName = 'tProfiManagerDS'
-    KeepConnection = False
-    LoginPrompt = False
-    SessionName = 'Default'
-    Left = 175
-    Top = 31
-  end
-  object fromQuery: TQuery
-    DatabaseName = 'tProfiManagerDS'
-    SessionName = 'Default'
-    Left = 242
-    Top = 121
-  end
-  object fromSqlQuery: TQuery
-    DatabaseName = 'tProfiManagerDS'
-    SessionName = 'Default'
-    Left = 194
-    Top = 83
-  end
-  object fromQuery_two: TQuery
-    DatabaseName = 'tProfiManagerDS'
-    SessionName = 'Default'
-    Left = 196
-    Top = 136
-  end
   object ObjectCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
@@ -680,8 +663,8 @@ object MainForm: TMainForm
     Left = 72
     Top = 16
   end
-  object spSelect_ReplServer_load: TdsdStoredProc
-    StoredProcName = 'gpSelect_ReplServer_load'
+  object spSelect_ReplServer_load_old: TdsdStoredProc
+    StoredProcName = 'gpSelect_ReplServer_load_old'
     DataSet = ReplServerCDS
     DataSets = <
       item
@@ -689,15 +672,15 @@ object MainForm: TMainForm
       end>
     Params = <>
     PackSize = 1
-    Left = 288
-    Top = 264
+    Left = 176
+    Top = 80
   end
   object ReplServerCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 336
-    Top = 320
+    Left = 176
+    Top = 136
   end
   object ObjectStringCDS: TClientDataSet
     Aggregates = <>
@@ -707,7 +690,7 @@ object MainForm: TMainForm
     Top = 144
   end
   object ObjectStringDS: TDataSource
-    DataSet = ObjectStringCDS
+    DataSet = fQueryObjectString
     Left = 408
     Top = 160
   end
@@ -719,36 +702,36 @@ object MainForm: TMainForm
     Top = 224
   end
   object ObjectFloatDS: TDataSource
-    DataSet = ObjectFloatCDS
+    DataSet = fQueryObjectFloat
     Left = 408
     Top = 240
   end
   object ObjectDateDS: TDataSource
-    DataSet = ObjectDateCDS
+    DataSet = fQueryObjectDate
     Left = 400
-    Top = 320
+    Top = 312
   end
   object ObjectDateCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
     Left = 456
-    Top = 304
+    Top = 296
   end
   object ObjectBooleanDS: TDataSource
-    DataSet = ObjectBooleanCDS
+    DataSet = fQueryObjectBoolean
     Left = 408
-    Top = 400
+    Top = 384
   end
   object ObjectBooleanCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
     Left = 464
-    Top = 384
+    Top = 368
   end
   object ObjectLinkDS: TDataSource
-    DataSet = ObjectLinkCDS
+    DataSet = fQueryObjectLink
     Left = 400
     Top = 480
   end
@@ -759,8 +742,8 @@ object MainForm: TMainForm
     Left = 456
     Top = 464
   end
-  object spInsert_ReplObject: TdsdStoredProc
-    StoredProcName = 'gpInsert_ReplObject'
+  object spInsert_ReplObject_old: TdsdStoredProc
+    StoredProcName = 'gpInsert_ReplObject_old'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -843,7 +826,309 @@ object MainForm: TMainForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 280
-    Top = 56
+    Left = 264
+    Top = 64
+  end
+  object fromZConnection: TZConnection
+    ControlsCodePage = cCP_UTF16
+    UTF8StringsAsWideField = True
+    Catalog = 'public'
+    DesignConnection = True
+    HostName = 'localhost'
+    Port = 5432
+    Database = 'project'
+    User = 'postgres'
+    Password = 'postgres'
+    Protocol = 'postgresql-9'
+    Left = 56
+    Top = 96
+  end
+  object fromSqlQuery: TZQuery
+    Connection = fromZConnection
+    SQL.Strings = (
+      'select  * from Object')
+    Params = <>
+    Properties.Strings = (
+      'select * from Object order by 1 desc')
+    Left = 56
+    Top = 152
+  end
+  object fQueryObject: TZQuery
+    Connection = fromZConnection
+    SQL.Strings = (
+      'select  * from Object')
+    Params = <>
+    Properties.Strings = (
+      'select * from Object order by 1 desc')
+    Left = 344
+    Top = 104
+  end
+  object fQueryObjectString: TZQuery
+    Connection = fromZConnection
+    SQL.Strings = (
+      'select  * from Object')
+    Params = <>
+    Properties.Strings = (
+      'select * from Object order by 1 desc')
+    Left = 336
+    Top = 184
+  end
+  object fQueryObjectFloat: TZQuery
+    Connection = fromZConnection
+    SQL.Strings = (
+      'select  * from Object')
+    Params = <>
+    Properties.Strings = (
+      'select * from Object order by 1 desc')
+    Left = 336
+    Top = 256
+  end
+  object fQueryObjectDate: TZQuery
+    Connection = fromZConnection
+    SQL.Strings = (
+      'select  * from Object')
+    Params = <>
+    Properties.Strings = (
+      'select * from Object order by 1 desc')
+    Left = 344
+    Top = 328
+  end
+  object fQueryObjectBoolean: TZQuery
+    Connection = fromZConnection
+    SQL.Strings = (
+      'select  * from Object')
+    Params = <>
+    Properties.Strings = (
+      'select * from Object order by 1 desc')
+    Left = 328
+    Top = 392
+  end
+  object fQueryObjectLink: TZQuery
+    Connection = fromZConnection
+    SQL.Strings = (
+      'select  * from Object')
+    Params = <>
+    Properties.Strings = (
+      'select * from Object order by 1 desc')
+    Left = 336
+    Top = 472
+  end
+  object spSelect_ReplObjectString_old: TdsdStoredProc
+    StoredProcName = 'gpSelect_ReplObjectString_old'
+    DataSet = ObjectStringCDS
+    DataSets = <
+      item
+        DataSet = ObjectStringCDS
+      end>
+    Params = <
+      item
+        Name = 'inSessionGUID'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartId'
+        Value = 'NULL'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDataBaseId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 464
+    Top = 176
+  end
+  object spSelect_ReplObjectFloat_old: TdsdStoredProc
+    StoredProcName = 'gpSelect_ReplObjectFloat_old'
+    DataSet = ObjectFloatCDS
+    DataSets = <
+      item
+        DataSet = ObjectFloatCDS
+      end>
+    Params = <
+      item
+        Name = 'inSessionGUID'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartId'
+        Value = 'NULL'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDataBaseId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 464
+    Top = 248
+  end
+  object spSelect_ReplObjectDate_old: TdsdStoredProc
+    StoredProcName = 'gpSelect_ReplObjectDate_old'
+    DataSet = ObjectDateCDS
+    DataSets = <
+      item
+        DataSet = ObjectDateCDS
+      end>
+    Params = <
+      item
+        Name = 'inSessionGUID'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartId'
+        Value = 'NULL'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDataBaseId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 472
+    Top = 312
+  end
+  object spSelect_ReplObjectBoolean_old: TdsdStoredProc
+    StoredProcName = 'gpSelect_ReplObjectBoolean_old'
+    DataSet = ObjectBooleanCDS
+    DataSets = <
+      item
+        DataSet = ObjectBooleanCDS
+      end>
+    Params = <
+      item
+        Name = 'inSessionGUID'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartId'
+        Value = 'NULL'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDataBaseId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 488
+    Top = 368
+  end
+  object spSelect_ReplObjectLink_old: TdsdStoredProc
+    StoredProcName = 'gpSelect_ReplObjectLink_old'
+    DataSet = ObjectLinkCDS
+    DataSets = <
+      item
+        DataSet = ObjectLinkCDS
+      end>
+    Params = <
+      item
+        Name = 'inSessionGUID'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartId'
+        Value = 'NULL'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDataBaseId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 472
+    Top = 424
+  end
+  object tmpCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 208
+    Top = 344
+  end
+  object spExecSql: TdsdStoredProc
+    StoredProcName = 'gpExecSql'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inSqlText'
+        Value = Null
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 192
+    Top = 200
+  end
+  object fromSqlQuery_two: TZQuery
+    Connection = fromZConnection
+    SQL.Strings = (
+      'select  * from Object')
+    Params = <>
+    Properties.Strings = (
+      'select * from Object order by 1 desc')
+    Left = 56
+    Top = 200
   end
 end

@@ -1129,7 +1129,10 @@ begin
                     end
                else
                    //если в ШК - Id документа заявки
-                   if Pos(zc_BarCodePref_Movement,EditBarCode.Text)=1
+                   if (Pos(zc_BarCodePref_Movement, EditBarCode.Text) = 1)
+                   and (Pos('20204979',EditBarCode.Text) <> 1)
+                   and (Pos('20204982',EditBarCode.Text) <> 1)
+                   and (Pos('20204983',EditBarCode.Text) <> 1)
                    then begin
                              GetParams_MovementDesc(EditBarCode.Text);
                              EditBarCode.Text:='';

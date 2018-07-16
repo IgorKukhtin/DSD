@@ -62,7 +62,7 @@ uses
 
 begin
   Application.Initialize;
-  ConnectionPath := '..\INIT\init.php';
+  ConnectionPath := '..\INIT\init_repl.php';
   Logger.Enabled := FindCmdLineSwitch('log');
   gc_ProgramName := 'Load_repl.exe';
 

@@ -11,7 +11,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Host TVarChar, UserName TVarChar, Password TVarChar, Port TVarChar, DataBaseName TVarChar
              , CountTo TFloat, CountFrom TFloat
              , isErrTo Boolean, isErrFrom Boolean
-             , isErased Boolean) AS
+             , OID_last BigInt
+             , isErased Boolean
+              ) AS
 $BODY$
 BEGIN
 
@@ -39,6 +41,8 @@ BEGIN
  
           , COALESCE (ObjectBoolean_ErrTo.ValueData, FALSE)   ::Boolean  AS isErrTo
           , COALESCE (ObjectBoolean_ErrFrom.ValueData, FALSE) ::Boolean  AS isErrFrom
+          
+          , (863668436)                :: BigInt  AS OID_last
  
           , Object_ReplServer.isErased            AS isErased
          
