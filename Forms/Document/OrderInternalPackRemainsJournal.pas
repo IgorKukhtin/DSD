@@ -51,6 +51,11 @@ type
     actPrintDiff: TdsdPrintAction;
     bbPrintDetail: TdxBarButton;
     bbPrintDiff: TdxBarButton;
+    spSelectPrintRemainsLess: TdsdStoredProc;
+    actPrintRemainsLessUpak: TdsdPrintAction;
+    actPrintRemainsLess: TdsdPrintAction;
+    bbPrintRemainsLess: TdxBarButton;
+    bbPrintRemainsLessUpak: TdxBarButton;
   private
     { Private declarations }
   public

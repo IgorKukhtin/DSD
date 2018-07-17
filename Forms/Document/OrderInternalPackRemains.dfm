@@ -6099,7 +6099,7 @@
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1047#1072#1103#1074#1082#1072' ('#1044#1077#1090#1072#1083#1100#1085#1086')'
       Hint = #1055#1077#1095#1072#1090#1100' '#1047#1072#1103#1074#1082#1072' ('#1044#1077#1090#1072#1083#1100#1085#1086')'
-      ImageIndex = 16
+      ImageIndex = 21
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -6183,7 +6183,7 @@
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1091#1087#1072#1082#1086#1074#1082#1080
       Hint = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1091#1087#1072#1082#1086#1074#1082#1080
-      ImageIndex = 15
+      ImageIndex = 16
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -7301,7 +7301,6 @@
     object bbPrintDetail: TdxBarButton [6]
       Action = actPrintDetail
       Category = 0
-      ImageIndex = 21
     end
     object bbPrintDiff: TdxBarButton [7]
       Action = actPrintDiff
@@ -7392,7 +7391,6 @@
     object bbPrintRemainsLessUpak: TdxBarButton
       Action = actPrintRemainsLessUpak
       Category = 0
-      ImageIndex = 16
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
