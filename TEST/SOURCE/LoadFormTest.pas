@@ -1581,6 +1581,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionUnion_OlapForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnion_OlapForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionUnion_OlapDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnion_OlapDialogForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckTaxCorrective_NPPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckTaxCorrective_NPPForm');

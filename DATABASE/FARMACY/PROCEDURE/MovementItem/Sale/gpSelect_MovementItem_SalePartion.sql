@@ -50,12 +50,9 @@ BEGIN
                                       AND Container.WhereObjectId = vbUnitId
                                       AND Container.Amount > 0
                                  )
-                  ,tmpRemainsPartion AS (SELECT tmpRemains.*
-                                               , MI_Income.MovementId                             AS MovementId                            
-                                               , CASE WHEN COALESCE(MovementBoolean_PriceWithVAT.ValueData,FALSE) = TRUE
-                                                 THEN  MIFloat_Price.ValueData
-                                                 ELSE (MIFloat_Price.ValueData * (1 + ObjectFloat_NDSKind_NDS.ValueData/100))::TFloat
-                                                 END::TFloat AS PriceWithVAT
+                  ,tmpRemainsIncome AS (SELECT tmpRemains.*
+                                               , MI_Income.Id              AS IncomeId
+                                               , MI_Income.MovementId      AS MovementId
                                         FROM
                                             tmpRemains
                                             LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
@@ -64,21 +61,39 @@ BEGIN
                                             LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
 
                                             LEFT OUTER JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode :: Integer
+                                 )
+                  ,tmpRemainsPrice AS ( SELECT tmpRemains.*
+                                               , MIFloat_Price.ValueData     AS Price
+                                        FROM
+                                            tmpRemainsIncome AS tmpRemains
 
                                             LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
-                                                                       ON MIFloat_Price.MovementItemId = MI_Income.Id
+                                                                       ON MIFloat_Price.MovementItemId = tmpRemains.IncomeId
                                                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                 )
+                                                                 
+                                 
+                                 
+                  ,tmpRemainsPartion AS (SELECT tmpRemains.*
+                                               , CASE WHEN COALESCE(MovementBoolean_PriceWithVAT.ValueData,FALSE) = TRUE
+                                                 THEN  tmpRemains.Price
+                                                 ELSE (tmpRemains.Price * (1 + ObjectFloat_NDSKind_NDS.ValueData/100))::TFloat
+                                                 END::TFloat AS PriceWithVAT
+                                        FROM
+                                            tmpRemainsPrice AS tmpRemains
 
                                             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                                                      ON MovementBoolean_PriceWithVAT.MovementId = MI_Income.MovementId
+                                                                      ON MovementBoolean_PriceWithVAT.MovementId = tmpRemains.MovementId
                                                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
                                                                      
                                             LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
-                                                                         ON MovementLinkObject_NDSKind.MovementId = MI_Income.MovementId
+                                                                         ON MovementLinkObject_NDSKind.MovementId = tmpRemains.MovementId
                                                                         AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
                                             LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
                                                                   ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
                                                                  AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
+                                                                 
+                                                                 
                                           )
                    ,tmpRemainsInfo AS ( SELECT
                                             tmpRemains.ObjectId                   AS GoodsId
@@ -96,6 +111,7 @@ BEGIN
                                            ,tmpRemains.PriceWithVAT
                                            ,MLO_From.ObjectId
                                       )
+                                      
                 SELECT
                     tmpRemainsInfo.GoodsId
                    ,tmpRemainsInfo.Amount
@@ -108,7 +124,7 @@ BEGIN
                 FROM
                     tmpRemainsInfo
                     LEFT OUTER JOIN Object AS Object_Juridical
-                                           ON Object_Juridical.Id = tmpRemainsInfo.JuridicalId;
+                                           ON Object_Juridical.Id = tmpRemainsInfo.JuridicalId; 
         ELSE
             RETURN QUERY
                 WITH 

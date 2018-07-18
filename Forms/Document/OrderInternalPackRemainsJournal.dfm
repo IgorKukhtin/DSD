@@ -6,7 +6,7 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1089
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -383,6 +383,9 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintDetail: TdsdPrintAction
       Category = 'DSDLib'
@@ -465,6 +468,9 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintRemains: TdsdPrintAction
       Category = 'DSDLib'
@@ -548,6 +554,9 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -596,6 +605,9 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -643,6 +655,172 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actPrintRemainsLessUpak: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'Id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintRemainsLess
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintRemainsLess
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1091#1087#1072#1082#1086#1074#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1091#1087#1072#1082#1086#1074#1082#1080
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsName;GoodsKindName;FromName;'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = 42132d
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'FromName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'ToName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isUpak'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1084#1077#1085#1100#1096#1077' '#1079#1072#1082#1072#1079#1072')'
+      ReportNameParam.Value = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1084#1077#1085#1100#1096#1077' '#1079#1072#1082#1072#1079#1072')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintRemainsLess: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'Id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintRemainsLess
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintRemainsLess
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1084#1077#1085#1100#1096#1077' '#1079#1072#1082#1072#1079#1072')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1084#1077#1085#1100#1096#1077' '#1079#1072#1082#1072#1079#1072')'
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsName;GoodsKindName;FromName;'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = 42132d
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'FromName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'ToName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isUpak'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1084#1077#1085#1100#1096#1077' '#1079#1072#1082#1072#1079#1072')'
+      ReportNameParam.Value = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1084#1077#1085#1100#1096#1077' '#1079#1072#1082#1072#1079#1072')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -781,6 +959,14 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
         end
         item
           Visible = True
+          ItemName = 'bbPrintRemainsLess'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintRemainsLessUpak'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -810,10 +996,20 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
     object bbPrintDetail: TdxBarButton
       Action = actPrintDetail
       Category = 0
+      ImageIndex = 21
     end
     object bbPrintDiff: TdxBarButton
       Action = actPrintDiff
       Category = 0
+    end
+    object bbPrintRemainsLess: TdxBarButton
+      Action = actPrintRemainsLess
+      Category = 0
+    end
+    object bbPrintRemainsLessUpak: TdxBarButton
+      Action = actPrintRemainsLessUpak
+      Category = 0
+      ImageIndex = 16
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1041,5 +1237,25 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
     PackSize = 1
     Left = 855
     Top = 320
+  end
+  object spSelectPrintRemainsLess: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_OrderInternalPackRemainsLess_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 527
+    Top = 144
   end
 end
