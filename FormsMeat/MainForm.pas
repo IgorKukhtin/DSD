@@ -964,6 +964,9 @@ type
     miGoodsPropertyBox: TMenuItem;
     actMemberPersonalServiceList: TdsdOpenForm;
     miMemberPersonalServiceList: TMenuItem;
+    actReport_ProductionUnion_Olap: TdsdOpenForm;
+    miReport_ProductionUnion_Olap: TMenuItem;
+    N116: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
