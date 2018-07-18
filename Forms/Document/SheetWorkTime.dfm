@@ -206,6 +206,22 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Position.ColIndex = 0
         Position.RowIndex = 0
       end
+      object Color_Calc: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'Color_Calc'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = MultiAction
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Visible = False
+        MinWidth = 40
+        Width = 40
+        Position.BandIndex = 1
+        Position.ColIndex = 1
+        Position.RowIndex = 0
+      end
       object isErased: TcxGridDBBandedColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -512,6 +528,9 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -1050,15 +1069,19 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = Color_Calc
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'ValueField'
     TemplateColumn = Value
-    Left = 384
-    Top = 272
+    Left = 440
+    Top = 280
   end
   object HeaderCDS: TClientDataSet
     Aggregates = <>

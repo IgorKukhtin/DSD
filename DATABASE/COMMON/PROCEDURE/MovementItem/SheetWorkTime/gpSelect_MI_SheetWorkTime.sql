@@ -33,14 +33,15 @@ BEGIN
      CREATE TEMP TABLE tmpMI ON COMMIT DROP AS
                                           SELECT tmpOperDate.operdate
                                                , MI_SheetWorkTime.Amount
-                                               , COALESCE(MI_SheetWorkTime.ObjectId, 0) AS MemberId
-                                               , COALESCE(MIObject_Position.ObjectId, 0) AS PositionId
-                                               , COALESCE(MIObject_PositionLevel.ObjectId, 0) AS PositionLevelId
-                                               , COALESCE(MIObject_StorageLine.ObjectId, 0)   AS StorageLineId
-                                               , COALESCE(MIObject_PersonalGroup.ObjectId, 0) AS PersonalGroupId
-                                               , MIObject_WorkTimeKind.ObjectId
+                                               , COALESCE(MI_SheetWorkTime.ObjectId, 0)        AS MemberId
+                                               , COALESCE(MIObject_Position.ObjectId, 0)       AS PositionId
+                                               , COALESCE(MIObject_PositionLevel.ObjectId, 0)  AS PositionLevelId
+                                               , COALESCE(MIObject_StorageLine.ObjectId, 0)    AS StorageLineId
+                                               , COALESCE(MIObject_PersonalGroup.ObjectId, 0)  AS PersonalGroupId
+                                               , MIObject_WorkTimeKind.ObjectId                AS ObjectId
                                                , ObjectString_WorkTimeKind_ShortName.ValueData AS ShortName
                                                , CASE WHEN MI_SheetWorkTime.isErased = TRUE THEN 0 ELSE 1 END AS isErased
+                                               , CASE WHEN COALESCE (MI_SheetWorkTime.Amount, 0) <> 0 THEN 15395562 ELSE 0 END AS Color_Calc   -- светло серый
                                           FROM tmpOperDate
                                                JOIN Movement ON Movement.operDate = tmpOperDate.OperDate
                                                              AND Movement.DescId = zc_Movement_SheetWorkTime()
@@ -79,7 +80,8 @@ BEGIN
        vbIndex := vbIndex + 1;
        vbCrossString := vbCrossString || ', DAY' || vbIndex || ' VarChar[]'; 
        vbFieldNameText := vbFieldNameText || ', DAY' || vbIndex || '[1] AS Value'||vbIndex||'  '||
-                          ', DAY' || vbIndex || '[2]::Integer  AS TypeId'||vbIndex||' ';
+                                             ', DAY' || vbIndex || '[2]::Integer  AS TypeId'||vbIndex||' '||
+                                             ', DAY' || vbIndex || '[3] AS Color_Calc'||vbIndex||' ';
      END LOOP;
 
 
@@ -107,6 +109,7 @@ BEGIN
                , Object_StorageLine.Id           AS StorageLineId
                , Object_StorageLine.ValueData    AS StorageLineName
                , CASE WHEN tmp.isErased = 0 THEN TRUE ELSE FALSE END AS isErased
+               --, CASE WHEN COALESCE (tmp.Amount, 0) <> 0 THEN zc_Color_Red() ELSE 0 END AS Color_Calc1
                , tmp.Amount                      AS AmountHours'
                || vbFieldNameText ||
         ' FROM
@@ -115,11 +118,12 @@ BEGIN
                                                , COALESCE (Movement_Data.PositionId, Object_Data.PositionId)           -- AS PositionId
                                                , COALESCE (Movement_Data.PositionLevelId, Object_Data.PositionLevelId) -- AS PositionLevelId
                                                , COALESCE (Movement_Data.PersonalGroupId, Object_Data.PersonalGroupId) -- AS PersonalGroupId
-                                               , COALESCE (Movement_Data.StorageLineId, Object_Data.StorageLineId) -- AS PositionLevelId
+                                               , COALESCE (Movement_Data.StorageLineId, Object_Data.StorageLineId)     -- AS PositionLevelId
                                                 ] :: Integer[]
                                          , COALESCE (Movement_Data.OperDate, Object_Data.OperDate) AS OperDate
-                                         , ARRAY[zfCalc_ViewWorkHour (COALESCE(Movement_Data.Amount, 0), Movement_Data.ShortName) :: VarChar
+                                         , ARRAY[COALESCE (Movement_Data.Color_Calc, 0) :: VarChar--zfCalc_ViewWorkHour (COALESCE(Movement_Data.Amount, 0), Movement_Data.ShortName) :: VarChar
                                                , COALESCE (Movement_Data.ObjectId, 0) :: VarChar
+                                               , COALESCE (Movement_Data.Color_Calc, 0) :: VarChar
                                                 ] :: TVarChar
                                     FROM (SELECT * FROM tmpMI WHERE tmpMI.isErased = 1 OR ' || inisErased :: TVarChar || ' = TRUE) AS Movement_Data
                                         FULL JOIN  
