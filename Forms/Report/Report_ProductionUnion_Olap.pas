@@ -64,7 +64,6 @@ type
     pvGoodsKindName: TcxDBPivotGridField;
     pvChildGoodsName: TcxDBPivotGridField;
     pvChildGoodsKindName: TcxDBPivotGridField;
-    pvHeadCount: TcxDBPivotGridField;
     pvChildAmount: TcxDBPivotGridField;
     pvSumm: TcxDBPivotGridField;
     cxLabel3: TcxLabel;
