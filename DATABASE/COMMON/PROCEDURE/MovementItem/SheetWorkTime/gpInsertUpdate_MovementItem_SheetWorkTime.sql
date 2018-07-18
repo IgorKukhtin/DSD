@@ -57,12 +57,27 @@ BEGIN
         ELSE
 /*        IF (vbValue >= 0 AND vbValue <= 24 AND POSITION ('0' IN zfGet_ViewWorkHour ('0', ioTypeId)) = 1) --  AND zfConvert_StringToNumber (ioValue) > 0)
         OR (ioTypeId = 0 AND vbValue >= 0 AND vbValue <= 24)
-        THEN
-*/
-           ioTypeId := CASE WHEN COALESCE (ioTypeId, 0) = 0 OR POSITION ('0' IN zfGet_ViewWorkHour ('0', ioTypeId)) = 0
-                                 THEN zc_Enum_WorkTimeKind_Work()
-                            ELSE ioTypeId
-                       END;
+        THEN*/
+            IF zfConvert_StringToFloat(SPLIT_PART (UPPER (TRIM (ioValue)), '/', 1)) > 0 AND SPLIT_PART (UPPER (TRIM (ioValue)), '/', 2) <> ''
+               AND EXISTS (SELECT 1
+                           FROM ObjectString AS ObjectString_WorkTimeKind_ShortName
+                           WHERE ObjectString_WorkTimeKind_ShortName.ValueData = 'FM99/' || SPLIT_PART (UPPER (TRIM (ioValue)), '/', 2)
+                             AND ObjectString_WorkTimeKind_ShortName.DescId = zc_ObjectString_WorkTimeKind_ShortName()
+                          )
+               -- AND inSession = '5'
+            THEN
+               ioTypeId:= (SELECT ObjectString_WorkTimeKind_ShortName.ObjectId
+                           FROM ObjectString AS ObjectString_WorkTimeKind_ShortName
+                           WHERE ObjectString_WorkTimeKind_ShortName.ValueData = 'FM99/' || SPLIT_PART (UPPER (TRIM (ioValue)), '/', 2)
+                             AND ObjectString_WorkTimeKind_ShortName.DescId = zc_ObjectString_WorkTimeKind_ShortName()
+                          );
+            ELSE
+               ioTypeId := CASE WHEN COALESCE (ioTypeId, 0) = 0 OR POSITION ('0' IN zfGet_ViewWorkHour ('0', ioTypeId)) = 0
+                                     THEN zc_Enum_WorkTimeKind_Work()
+                                ELSE ioTypeId
+                           END;
+            END IF;
+        --
         vbValue := zfConvert_ViewWorkHourToHour (ioValue);
 
         END IF;
