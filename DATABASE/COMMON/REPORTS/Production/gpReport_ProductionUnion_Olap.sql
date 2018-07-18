@@ -212,7 +212,7 @@ BEGIN
          --
          , tmpMIAmountReceipt1 AS (SELECT MovementItemFloat.*
                                    FROM MovementItemFloat
-                                   WHERE MovementItemFloat.MovementId IN (SELECT DISTINCT tmpOut1.MovementItemId FROM tmpOut1)
+                                   WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpOut1.MovementItemId FROM tmpOut1)
                                      AND MovementItemFloat.DescId = zc_MIFloat_AmountReceipt()
                                   )
                                  
@@ -285,7 +285,7 @@ BEGIN
          --
          , tmpMIAmountReceipt2 AS (SELECT MovementItemFloat.*
                                    FROM MovementItemFloat
-                                   WHERE MovementItemFloat.MovementId IN (SELECT DISTINCT tmpOut2.MovementItemId FROM tmpOut2)
+                                   WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpOut2.MovementItemId FROM tmpOut2)
                                      AND MovementItemFloat.DescId = zc_MIFloat_AmountReceipt()
                                   )
 
