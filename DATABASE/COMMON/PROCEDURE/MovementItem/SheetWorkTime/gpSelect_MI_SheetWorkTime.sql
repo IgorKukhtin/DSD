@@ -121,7 +121,7 @@ BEGIN
                                                , COALESCE (Movement_Data.StorageLineId, Object_Data.StorageLineId)     -- AS PositionLevelId
                                                 ] :: Integer[]
                                          , COALESCE (Movement_Data.OperDate, Object_Data.OperDate) AS OperDate
-                                         , ARRAY[COALESCE (Movement_Data.Color_Calc, 0) :: VarChar--zfCalc_ViewWorkHour (COALESCE(Movement_Data.Amount, 0), Movement_Data.ShortName) :: VarChar
+                                         , ARRAY[zfCalc_ViewWorkHour (COALESCE(Movement_Data.Amount, 0), Movement_Data.ShortName) :: VarChar
                                                , COALESCE (Movement_Data.ObjectId, 0) :: VarChar
                                                , COALESCE (Movement_Data.Color_Calc, 0) :: VarChar
                                                 ] :: TVarChar
