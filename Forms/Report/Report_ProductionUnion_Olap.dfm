@@ -1,7 +1,7 @@
 object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
   Left = 0
   Top = 0
-  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' ('#1054#1051#1040#1055')'
+  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1091' ('#1054#1051#1040#1055')'
   ClientHeight = 448
   ClientWidth = 1362
   Color = clBtnFace
@@ -222,7 +222,6 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       IsCaptionAssigned = True
       Caption = #1050#1086#1076' '#1090#1086#1074'. ('#1087#1088#1080#1093#1086#1076')'
       DataBinding.FieldName = 'GoodsCode'
-      Visible = True
       Width = 50
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
@@ -241,7 +240,6 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       IsCaptionAssigned = True
       Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1080#1093#1086#1076')'
       DataBinding.FieldName = 'GoodsKindName'
-      Visible = True
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object pvPartionGoods: TcxDBPivotGridField
@@ -249,7 +247,6 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       IsCaptionAssigned = True
       Caption = #1055#1072#1088#1090#1080#1103' ('#1087#1088#1080#1093#1086#1076')'
       DataBinding.FieldName = 'PartionGoods'
-      Visible = True
       UniqueName = #1043#1088#1091#1087#1087#1072' 2'
     end
     object pvAmount: TcxDBPivotGridField
@@ -260,10 +257,10 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       DataBinding.FieldName = 'Amount'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.;-,0.; ;'
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Styles.ColumnHeader = dmMain.cxRemainsContentStyle
       Visible = True
-      Width = 115
+      Width = 80
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvChildAmount: TcxDBPivotGridField
@@ -274,24 +271,66 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       DataBinding.FieldName = 'ChildAmount'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.;-,0.; ;'
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Styles.ColumnHeader = dmMain.cxRemainsContentStyle
       Visible = True
-      Width = 55
+      Width = 80
+      UniqueName = #1044#1086#1083#1075' '#1057'/'#1057
+    end
+    object pvChildAmountCalc: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 6
+      IsCaptionAssigned = True
+      Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1095#1077#1090' ('#1088#1072#1089#1093#1086#1076')'
+      DataBinding.FieldName = 'ChildAmountCalc'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Visible = True
+      Width = 80
       UniqueName = #1044#1086#1083#1075' '#1057'/'#1057
     end
     object pvChildAmountReceipt: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 4
+      AreaIndex = 7
       IsCaptionAssigned = True
       Caption = #1050#1086#1083'-'#1074#1086' 1 '#1082#1091#1090#1077#1088' ('#1088#1072#1089#1093#1086#1076')'
       DataBinding.FieldName = 'ChildAmountReceipt'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.;-,0.; ;'
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Styles.ColumnHeader = dmMain.cxRemainsContentStyle
       Visible = True
-      Width = 55
+      Width = 80
+      UniqueName = #1044#1086#1083#1075' '#1057'/'#1057
+    end
+    object pvChildAmount_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 4
+      IsCaptionAssigned = True
+      Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076') '#1074#1077#1089
+      DataBinding.FieldName = 'ChildAmount_Weight'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Visible = True
+      Width = 80
+      UniqueName = #1044#1086#1083#1075' '#1057'/'#1057
+    end
+    object pvChildAmountReceipt_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 5
+      IsCaptionAssigned = True
+      Caption = #1050#1086#1083'-'#1074#1086' 1 '#1082#1091#1090#1077#1088' ('#1088#1072#1089#1093#1086#1076') '#1074#1077#1089
+      DataBinding.FieldName = 'ChildAmountReceipt_Weight'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Visible = True
+      Width = 80
       UniqueName = #1044#1086#1083#1075' '#1057'/'#1057
     end
     object pvMainPrice: TcxDBPivotGridField
@@ -301,7 +340,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       DataBinding.FieldName = 'MainPrice'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.;-,0.; ;'
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
       Width = 55
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
@@ -312,7 +351,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       DataBinding.FieldName = 'Summ'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.;-,0.; ;'
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
       Width = 70
       UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
     end
@@ -321,7 +360,6 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       IsCaptionAssigned = True
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1088#1072#1089#1093#1086#1076')'
       DataBinding.FieldName = 'ChildGoodsGroupName'
-      Visible = True
       UniqueName = #1043#1088#1091#1087#1087#1072' 1'
     end
     object pvChildGoodsCode: TcxDBPivotGridField
@@ -352,7 +390,6 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       IsCaptionAssigned = True
       Caption = #1055#1072#1088#1090#1080#1103' ('#1088#1072#1089#1093#1086#1076')'
       DataBinding.FieldName = 'ChildPartionGoods'
-      Visible = True
       Width = 200
       UniqueName = #1043#1088#1091#1087#1087#1072' 3'
     end
@@ -364,7 +401,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       DataBinding.FieldName = 'ChildPrice'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.;-,0.; ;'
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
       Styles.ColumnHeader = dmMain.cxHeaderStyle
       UniqueName = 'AmountDebetStart'
     end
@@ -376,9 +413,89 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       DataBinding.FieldName = 'ChildSumm'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.;-,0.; ;'
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
       Styles.ColumnHeader = dmMain.cxHeaderStyle
       UniqueName = 'AmountDebetStart'
+    end
+    object pvInfoMoneyCode: TcxDBPivotGridField
+      AreaIndex = 15
+      IsCaptionAssigned = True
+      Caption = #1050#1086#1076' '#1059#1055
+      DataBinding.FieldName = 'InfoMoneyCode'
+      Width = 55
+      UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
+    end
+    object pvInfoMoneyGroupName: TcxDBPivotGridField
+      AreaIndex = 16
+      IsCaptionAssigned = True
+      Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+      DataBinding.FieldName = 'InfoMoneyGroupName'
+      Width = 55
+      UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
+    end
+    object pvInfoMoneyDestinationName: TcxDBPivotGridField
+      AreaIndex = 17
+      IsCaptionAssigned = True
+      Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+      DataBinding.FieldName = 'InfoMoneyDestinationName'
+      Width = 55
+      UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
+    end
+    object pvInfoMoneyName: TcxDBPivotGridField
+      AreaIndex = 18
+      IsCaptionAssigned = True
+      Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+      DataBinding.FieldName = 'InfoMoneyName'
+      Width = 55
+      UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
+    end
+    object pvInfoMoneyName_all: TcxDBPivotGridField
+      AreaIndex = 19
+      IsCaptionAssigned = True
+      Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
+      DataBinding.FieldName = 'InfoMoneyName_all'
+      Width = 55
+      UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
+    end
+    object pvInfoMoneyCode_Detail: TcxDBPivotGridField
+      AreaIndex = 20
+      IsCaptionAssigned = True
+      Caption = #1050#1086#1076' '#1059#1055' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      DataBinding.FieldName = 'InfoMoneyCode_Detail'
+      Width = 55
+      UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
+    end
+    object pvInfoMoneyGroupName_Detail: TcxDBPivotGridField
+      AreaIndex = 21
+      IsCaptionAssigned = True
+      Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103'  ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      DataBinding.FieldName = 'InfoMoneyGroupName_Detail'
+      Width = 55
+      UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
+    end
+    object pvInfoMoneyDestinationName_Detail: TcxDBPivotGridField
+      AreaIndex = 22
+      IsCaptionAssigned = True
+      Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077'  ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      DataBinding.FieldName = 'InfoMoneyDestinationName_Detail'
+      Width = 55
+      UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
+    end
+    object pvInfoMoneyName_Detail: TcxDBPivotGridField
+      AreaIndex = 23
+      IsCaptionAssigned = True
+      Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103'  ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      DataBinding.FieldName = 'InfoMoneyName_Detail'
+      Width = 55
+      UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
+    end
+    object pvInfoMoneyName_all_Detail: TcxDBPivotGridField
+      AreaIndex = 24
+      IsCaptionAssigned = True
+      Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      DataBinding.FieldName = 'InfoMoneyName_all_Detail'
+      Width = 55
+      UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
   end
   object cxLabel7: TcxLabel
