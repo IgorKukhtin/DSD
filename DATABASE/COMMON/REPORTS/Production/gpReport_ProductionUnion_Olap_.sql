@@ -1,5 +1,5 @@
 -- Function: gpReport_GoodsMI_ProductionUnion ()
-
+ временный
 DROP FUNCTION IF EXISTS gpReport_ProductionUnion_Olap (TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_ProductionUnion_Olap (
@@ -955,6 +955,7 @@ BEGIN
              LEFT JOIN ObjectFloat AS ObjectFloat_WeightChild
                                    ON ObjectFloat_WeightChild.ObjectId = Object_GoodsChild.Id
                                   AND ObjectFloat_WeightChild.DescId = zc_ObjectFloat_Goods_Weight()
+
   ;
          
 END;
