@@ -1071,6 +1071,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <
       item
+        ColorColumn = Value
         BackGroundValueColumn = Color_Calc
         ColorValueList = <>
       end>

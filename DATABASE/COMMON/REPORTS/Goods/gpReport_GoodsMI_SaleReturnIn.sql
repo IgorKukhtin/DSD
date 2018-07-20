@@ -405,10 +405,10 @@ BEGIN
                                                              ON ContainerLO_InfoMoney.ContainerId = CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service(), zc_Movement_PriceCorrective()) THEN MIContainer.ContainerId ELSE MIContainer.ContainerId_Analyzer END
                                                             AND ContainerLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
                                                             AND (ContainerLO_InfoMoney.ObjectId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
-                              INNER JOIN ContainerLinkObject AS ContainerLO_PaidKind
+                              /*INNER JOIN ContainerLinkObject AS ContainerLO_PaidKind
                                                              ON ContainerLO_PaidKind.ContainerId = CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service(), zc_Movement_PriceCorrective()) THEN MIContainer.ContainerId ELSE MIContainer.ContainerId_Analyzer END
                                                             AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
-                                                            AND (ContainerLO_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
+                                                            AND (ContainerLO_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)*/
                               /*LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                                            ON MovementLinkObject_Partner.MovementId = MIContainer.MovementId
                                                           AND MovementLinkObject_Partner.DescId = CASE WHEN MIContainer.MovementDescId = zc_Movement_PriceCorrective() THEN zc_MovementLinkObject_Partner() ELSE tmpAnalyzer.MLO_DescId END
@@ -486,6 +486,11 @@ BEGIN
                               LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Contract
                                                             ON ContainerLinkObject_Contract.ContainerId = tmpOperationGroup2.ContainerId_Analyzer
                                                            AND ContainerLinkObject_Contract.DescId = zc_ContainerLinkObject_Contract()
+
+                              INNER JOIN ContainerLinkObject AS ContainerLO_PaidKind
+                                                             ON ContainerLO_PaidKind.ContainerId = tmpOperationGroup2.ContainerId_Analyzer
+                                                            AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
+                                                            AND (ContainerLO_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
 
                               LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                                    ON ObjectLink_Goods_Measure.ObjectId = tmpOperationGroup2.GoodsId

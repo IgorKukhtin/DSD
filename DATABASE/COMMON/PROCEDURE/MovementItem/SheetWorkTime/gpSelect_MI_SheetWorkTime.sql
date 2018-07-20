@@ -79,9 +79,9 @@ BEGIN
      WHILE (vbIndex < vbDayCount) LOOP
        vbIndex := vbIndex + 1;
        vbCrossString := vbCrossString || ', DAY' || vbIndex || ' VarChar[]'; 
-       vbFieldNameText := vbFieldNameText || ', DAY' || vbIndex || '[1] AS Value'||vbIndex||'  '||
-                                             ', DAY' || vbIndex || '[2]::Integer  AS TypeId'||vbIndex||' '||
-                                             ', DAY' || vbIndex || '[3] AS Color_Calc'||vbIndex||' ';
+       vbFieldNameText := vbFieldNameText || ', DAY' || vbIndex || '[1] AS Value' || vbIndex ||'  '||
+                                             ', DAY' || vbIndex || '[2]::Integer  AS TypeId' || vbIndex ||' '||
+                                             ', DAY' || vbIndex || '[3] AS Color_Calc' || vbIndex ||' ';
      END LOOP;
 
 
@@ -121,8 +121,10 @@ BEGIN
                                                , COALESCE (Movement_Data.StorageLineId, Object_Data.StorageLineId)     -- AS PositionLevelId
                                                 ] :: Integer[]
                                          , COALESCE (Movement_Data.OperDate, Object_Data.OperDate) AS OperDate
-                                         , ARRAY[zfCalc_ViewWorkHour (COALESCE(Movement_Data.Amount, 0), Movement_Data.ShortName) :: VarChar
-                                               , COALESCE (Movement_Data.ObjectId, 0) :: VarChar
+                                         , ARRAY[(zfCalc_ViewWorkHour (COALESCE(Movement_Data.Amount, 0), Movement_Data.ShortName)
+                                               -- || CHR(32) || Movement_Data.Color_Calc :: TVarChar
+                                                 ) :: VarChar
+                                               , COALESCE (Movement_Data.ObjectId,   0) :: VarChar
                                                , COALESCE (Movement_Data.Color_Calc, 0) :: VarChar
                                                 ] :: TVarChar
                                     FROM (SELECT * FROM tmpMI WHERE tmpMI.isErased = 1 OR ' || inisErased :: TVarChar || ' = TRUE) AS Movement_Data
