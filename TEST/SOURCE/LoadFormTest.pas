@@ -999,14 +999,16 @@ end;
 
 procedure TLoadFormTest.LoadTaxFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxJournalForm');
    //08.04.14 Dima
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxJournalChoiceForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedocJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMedocJournalForm');
   //09.06.15
@@ -1015,6 +1017,7 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementString_INNEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementString_INNEditForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadTaxCorrectiveTest;
