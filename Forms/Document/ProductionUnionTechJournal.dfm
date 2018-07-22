@@ -5,7 +5,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1092
-  ExplicitHeight = 720
+  ExplicitHeight = 723
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -882,6 +882,9 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     inherited actPrint: TdsdPrintAction
       MoveParams = <
@@ -1273,6 +1276,9 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       ReportNameParam.Value = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actUnCompleteList: TMultiAction [27]
       Category = 'DSDLib'
@@ -1519,6 +1525,9 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       ReportNameParam.Value = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1080#1090#1086#1075#1080')'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actReport_TaxLoss: TdsdPrintAction [40]
       Category = 'DSDLib'
@@ -1604,6 +1613,9 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       ReportNameParam.Value = #1055#1088#1080#1093#1086#1076' '#1085#1072' '#1089#1082#1083#1072#1076' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1087#1086#1090#1077#1088#1100' ('#1080#1090#1086#1075#1080')'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actReceiptChoice: TOpenChoiceForm [41]
       Category = 'DSDLib'
@@ -1775,6 +1787,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
   end
