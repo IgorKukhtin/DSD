@@ -152,11 +152,18 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       Width = 148
     end
     object cbIsMovement: TcxCheckBox
-      Left = 1096
+      Left = 1101
       Top = 5
       Caption = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
       TabOrder = 15
-      Width = 172
+      Width = 105
+    end
+    object cbisPartion: TcxCheckBox
+      Left = 1101
+      Top = 29
+      Caption = #1055#1086' '#1087#1072#1088#1090#1080#1103#1084
+      TabOrder = 16
+      Width = 105
     end
   end
   object cxDBPivotGrid: TcxDBPivotGrid
@@ -977,18 +984,19 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'isGroupMovement'
+          Name = 'isMovement'
           Value = 'False'
           Component = cbIsMovement
           DataType = ftBoolean
-          ParamType = ptInputOutput
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'isGroupPartion'
+          Name = 'isPartion'
           Value = 'False'
+          Component = cbisPartion
           DataType = ftBoolean
-          ParamType = ptInputOutput
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -1040,6 +1048,14 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
         Name = 'inIsMovement'
         Value = Null
         Component = cbIsMovement
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPartion'
+        Value = Null
+        Component = cbisPartion
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

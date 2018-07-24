@@ -90,6 +90,7 @@ type
     deEnd2: TcxDateEdit;
     cxLabel10: TcxLabel;
     PeriodChoice2: TPeriodChoice;
+    cbisPartion: TcxCheckBox;
   private
   public
   end;

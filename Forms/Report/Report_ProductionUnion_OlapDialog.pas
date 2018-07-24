@@ -47,6 +47,7 @@ type
     cxLabel10: TcxLabel;
     deEnd2: TcxDateEdit;
     PeriodChoice1: TPeriodChoice;
+    cbisPartion: TcxCheckBox;
   private
     { Private declarations }
   public

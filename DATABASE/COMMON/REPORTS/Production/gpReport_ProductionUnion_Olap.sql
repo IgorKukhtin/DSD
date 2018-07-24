@@ -1,6 +1,7 @@
 -- Function: gpReport_GoodsMI_ProductionUnion ()
 
 DROP FUNCTION IF EXISTS gpReport_ProductionUnion_Olap (TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_ProductionUnion_Olap (TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_ProductionUnion_Olap (
     IN inStartDate          TDateTime ,  
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_ProductionUnion_Olap (
     IN inStartDate2         TDateTime ,  
     IN inEndDate2           TDateTime ,
     IN inIsMovement         Boolean   ,
+    IN inIsPartion          Boolean   ,
     IN inGoodsGroupId       Integer   ,
     IN inGoodsId            Integer   ,
     IN inChildGoodsGroupId  Integer   ,
@@ -163,7 +165,7 @@ BEGIN
                                             ELSE COALESCE (ObjectLink_GoodsKindComplete.ChildObjectId, 0)
                                        END AS GoodsKindId_complete
                                      --, CASE WHEN inIsMovement = FALSE THEN 0 ELSE COALESCE (ContainerLO_PartionGoods.ObjectId, 0) END AS PartionGoodsId
-                                     , COALESCE (ContainerLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
+                                     , CASE WHEN inIsPartion = TRUE THEN COALESCE (ContainerLO_PartionGoods.ObjectId, 0) ELSE 0 END AS PartionGoodsId
                                      , CLO_InfoMoney.ObjectId             AS InfoMoneyId
                                      , CLO_InfoMoneyDetail.ObjectId       AS InfoMoneyId_Detail
                                 FROM tmpMI_ContainerIn1 AS tmp
@@ -329,7 +331,7 @@ BEGIN
                                , tmpMI_ContainerOut.GoodsId       
                                , tmpMI_ContainerOut.GoodsKindId 
                                --, CASE WHEN inIsMovement = FALSE THEN 0 ELSE COALESCE (ContainerLO_PartionGoods.ObjectId, 0) END AS PartionGoodsId
-                               , COALESCE (ContainerLO_PartionGoods.ObjectId, 0)     AS PartionGoodsId
+                               , CASE WHEN inIsPartion = TRUE THEN COALESCE (ContainerLO_PartionGoods.ObjectId, 0) ELSE 0 END AS PartionGoodsId
                                , SUM (CASE WHEN tmpMI_ContainerOut.MIContainerDescId = zc_MIContainer_Count() THEN tmpMI_ContainerOut.Amount ELSE 0 END) AS OperCount
                                , SUM (CASE WHEN tmpMI_ContainerOut.MIContainerDescId = zc_MIContainer_Summ()  THEN tmpMI_ContainerOut.Amount ELSE 0 END) AS OperSumm
                                , SUM (COALESCE (MIFloat_AmountReceipt.ValueData, 0)) AS AmountReceipt
@@ -363,7 +365,7 @@ BEGIN
                                -- привязывваем рецептуры
                                LEFT JOIN tmpReceipt ON tmpReceipt.MovementItemId = tmpMI_ContainerOut.MovementItemId_master
                                                    AND tmpReceipt.GoodsId        = tmpMI_ContainerOut.GoodsId
-                                                   AND COALESCE (tmpReceipt.GoodsKindId ,0)   = COALESCE (tmpMI_ContainerOut.GoodsKindId,0)
+                                                   AND COALESCE (tmpReceipt.GoodsKindId ,0) = COALESCE (tmpMI_ContainerOut.GoodsKindId,0)
                                                    AND tmpMI_ContainerOut.MIContainerDescId = zc_MIContainer_Count()
                                                  
                           GROUP BY tmpMI_ContainerOut.OperDate
@@ -379,7 +381,7 @@ BEGIN
                                  , tmpMI_ContainerOut.InfoMoneyId_Detail_in
                                  , tmpMI_ContainerOut.GoodsId       
                                  , tmpMI_ContainerOut.GoodsKindId 
-                                 , COALESCE (ContainerLO_PartionGoods.ObjectId, 0)
+                                 , CASE WHEN inIsPartion = TRUE THEN COALESCE (ContainerLO_PartionGoods.ObjectId, 0) ELSE 0 END
                                  , COALESCE (MIBoolean_TaxExit.ValueData, FALSE)
                                  , COALESCE (MIBoolean_WeightMain.ValueData, FALSE)
                          )
@@ -571,7 +573,7 @@ BEGIN
                                             ELSE COALESCE (ObjectLink_GoodsKindComplete.ChildObjectId, 0)
                                        END AS GoodsKindId_complete
                                      --, CASE WHEN inIsMovement = FALSE THEN 0 ELSE COALESCE (ContainerLO_PartionGoods.ObjectId, 0) END AS PartionGoodsId
-                                     , COALESCE (ContainerLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
+                                     , CASE WHEN inIsPartion = TRUE THEN COALESCE (ContainerLO_PartionGoods.ObjectId, 0) ELSE 0 END AS PartionGoodsId
                                      , CLO_InfoMoney.ObjectId             AS InfoMoneyId
                                      , CLO_InfoMoneyDetail.ObjectId       AS InfoMoneyId_Detail
                                 FROM tmpMI_ContainerIn2 AS tmp
@@ -735,7 +737,7 @@ BEGIN
                                , tmpMI_ContainerOut.GoodsId       
                                , tmpMI_ContainerOut.GoodsKindId
                                --, CASE WHEN inIsMovement = FALSE THEN 0 ELSE COALESCE (ContainerLO_PartionGoods.ObjectId, 0) END AS PartionGoodsId
-                               , COALESCE (ContainerLO_PartionGoods.ObjectId, 0)     AS PartionGoodsId
+                               , CASE WHEN inIsPartion = TRUE THEN COALESCE (ContainerLO_PartionGoods.ObjectId, 0) ELSE 0 END AS PartionGoodsId
                                , SUM (CASE WHEN tmpMI_ContainerOut.MIContainerDescId = zc_MIContainer_Count() THEN tmpMI_ContainerOut.Amount ELSE 0 END) AS OperCount
                                , SUM (CASE WHEN tmpMI_ContainerOut.MIContainerDescId = zc_MIContainer_Summ()  THEN tmpMI_ContainerOut.Amount ELSE 0 END) AS OperSumm
                                , SUM (COALESCE (MIFloat_AmountReceipt.ValueData, 0)) AS AmountReceipt
@@ -786,7 +788,7 @@ BEGIN
                                  , tmpMI_ContainerOut.InfoMoneyId_Detail_in
                                  , tmpMI_ContainerOut.GoodsId       
                                  , tmpMI_ContainerOut.GoodsKindId 
-                                 , COALESCE (ContainerLO_PartionGoods.ObjectId, 0)
+                                 , CASE WHEN inIsPartion = TRUE THEN COALESCE (ContainerLO_PartionGoods.ObjectId, 0) ELSE 0 END 
                                  , COALESCE (MIBoolean_TaxExit.ValueData, FALSE)
                                  , COALESCE (MIBoolean_WeightMain.ValueData, FALSE)
                          )
@@ -804,7 +806,6 @@ BEGIN
                                        , tmpContainer_in.GoodsKindId_complete             AS GoodsKindId_complete
                                        , SUM (CASE WHEN tmpMI_ContainerIn.MIContainerDescId = zc_MIContainer_Count() THEN tmpMI_ContainerIn.Amount ELSE 0 END) AS OperCount
                                        , SUM (CASE WHEN tmpMI_ContainerIn.MIContainerDescId = zc_MIContainer_Summ()  THEN tmpMI_ContainerIn.Amount ELSE 0 END) AS OperSumm
-
 
                                       , 0 AS PartionGoodsId_out
                                       , 0 AS GoodsId_out
@@ -1100,4 +1101,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_ProductionUnion_Olap (inStartDate:= '01.06.2018', inEndDate:= '01.06.2018', inStartDate2:= '05.06.2017', inEndDate2:= '05.06.2017', inIsMovement:= FALSE, inGoodsGroupId:= 0, inGoodsId:= 0, inChildGoodsGroupId:= 0, inChildGoodsId:=0, inFromId:= 0, inToId:= 0, inSession:= zfCalc_UserAdmin()) limit 1;
+-- SELECT * FROM gpReport_ProductionUnion_Olap (inStartDate:= '01.06.2018', inEndDate:= '01.06.2018', inStartDate2:= '05.06.2017', inEndDate2:= '05.06.2017', inIsMovement:= FALSE, inIsPartion:= FALSE, inGoodsGroupId:= 0, inGoodsId:= 0, inChildGoodsGroupId:= 0, inChildGoodsId:=0, inFromId:= 0, inToId:= 0, inSession:= zfCalc_UserAdmin()) limit 1;

@@ -196,6 +196,14 @@ object Report_ProductionUnion_OlapDialogForm: TReport_ProductionUnion_OlapDialog
     TabOrder = 22
     Width = 90
   end
+  object cbisPartion: TcxCheckBox
+    Left = 241
+    Top = 54
+    Caption = #1055#1086' '#1087#1072#1088#1090#1080#1103#1084
+    Properties.ReadOnly = False
+    TabOrder = 23
+    Width = 184
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -355,7 +363,7 @@ object Report_ProductionUnion_OlapDialogForm: TReport_ProductionUnion_OlapDialog
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isGroupMovement'
+        Name = 'isMovement'
         Value = Null
         Component = cbGroupMovement
         DataType = ftBoolean
@@ -363,8 +371,9 @@ object Report_ProductionUnion_OlapDialogForm: TReport_ProductionUnion_OlapDialog
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isGroupPartion'
+        Name = 'isPartion'
         Value = Null
+        Component = cbisPartion
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
