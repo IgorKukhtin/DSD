@@ -72,6 +72,10 @@ BEGIN
         '<Offer Code="'||CAST(Object_Goods.ObjectCode AS TVarChar)||'" Name="'||replace(replace(replace(Object_Goods.ValueData, '"', ''),'&','&amp;'),'''','')||'" Producer="'||replace(replace(replace(COALESCE(Remains.MakerName,''),'"',''),'&','&amp;'),'''','')||'" Price="'||to_char(Object_Price.Price,'FM9999990.00')||'" Quantity="'||CAST((Remains.Amount - coalesce(Reserve_Goods.ReserveAmount, 0)) AS TVarChar)||'" PriceReserve="'||to_char(Object_Price.Price,'FM9999990.00')||'" />'
     FROM
         Remains
+        INNER JOIN (SELECT MIN(Remains.ObjectId) AS ObjectId FROM Remains 
+                                INNER JOIN Object AS Object_Goods
+                                                  ON Object_Goods.Id = Remains.ObjectId GROUP BY Object_Goods.ObjectCode) AS T1
+                                                  ON T1.ObjectId = Remains.ObjectId
         INNER JOIN Object AS Object_Goods
                           ON Object_Goods.Id = Remains.ObjectId
         LEFT OUTER JOIN Object_Price_View AS Object_Price
@@ -96,6 +100,7 @@ ALTER FUNCTION gpSelect_GoodsOnUnitRemains_ForTabletki (Integer, TVarChar) OWNER
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В. 
+ 23.07.18                                                                                      *
  24.05.18                                                                                      *
  29.03.18                                                                                      *
  15.01.16                                                                       *
