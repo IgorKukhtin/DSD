@@ -1008,7 +1008,6 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
-      RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
     object ExecuteDialog: TExecuteDialog
@@ -1407,7 +1406,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -1455,6 +1454,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         Component = ClientDataSet
         ComponentItem = 'StartDate'
         DataType = ftDateTime
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -1463,6 +1463,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         Component = ClientDataSet
         ComponentItem = 'EndDate'
         DataType = ftDateTime
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     PackSize = 1
