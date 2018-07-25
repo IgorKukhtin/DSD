@@ -1,4 +1,4 @@
-unit Report_ProductionUnion_Olap;
+unit Report_Sale_Olap;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   cxButtonEdit;
 
 type
-  TReport_ProductionUnion_OlapForm = class(TParentForm)
+  TReport_Sale_OlapForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -55,40 +55,24 @@ type
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     pvAmount: TcxDBPivotGridField;
-    pvMainPrice: TcxDBPivotGridField;
-    pvChildGoodsGroupName: TcxDBPivotGridField;
     pvPartionGoods: TcxDBPivotGridField;
-    pvChildPartionGoods: TcxDBPivotGridField;
-    pvChildGoodsCode: TcxDBPivotGridField;
     dxBarStatic: TdxBarStatic;
     pvGoodsKindName: TcxDBPivotGridField;
-    pvChildGoodsName: TcxDBPivotGridField;
-    pvChildGoodsKindName: TcxDBPivotGridField;
-    pvChildAmount: TcxDBPivotGridField;
     pvSumm: TcxDBPivotGridField;
     cxLabel3: TcxLabel;
-    cxLabel5: TcxLabel;
-    edToGroup: TcxButtonEdit;
-    edFromGroup: TcxButtonEdit;
+    edUnitGroup: TcxButtonEdit;
     cxLabel4: TcxLabel;
-    cxLabel6: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
-    edChildGoodsGroup: TcxButtonEdit;
     cxLabel8: TcxLabel;
-    edChildGoods: TcxButtonEdit;
     edGoods: TcxButtonEdit;
     cbIsMovement: TcxCheckBox;
-    GuidesFromGroup: TdsdGuides;
-    GuidesToGroup: TdsdGuides;
+    GuidesUnitGroup: TdsdGuides;
     GuidesGoodsGroup: TdsdGuides;
-    GuidesChildGoodsGroup: TdsdGuides;
     GuidesGoods: TdsdGuides;
-    GuidesChildGoods: TdsdGuides;
     cxLabel7: TcxLabel;
     deStart2: TcxDateEdit;
     cxLabel9: TcxLabel;
     deEnd2: TcxDateEdit;
-    cxLabel10: TcxLabel;
     PeriodChoice2: TPeriodChoice;
     cbisPartion: TcxCheckBox;
   private
@@ -100,6 +84,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_ProductionUnion_OlapForm);
+  RegisterClass(TReport_Sale_OlapForm);
 
 end.
