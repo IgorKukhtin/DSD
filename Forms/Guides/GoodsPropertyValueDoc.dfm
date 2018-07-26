@@ -55,7 +55,7 @@ object GoodsPropertyValueDocForm: TGoodsPropertyValueDocForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 67
+        Width = 59
       end
       object clGoodsGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
@@ -63,7 +63,7 @@ object GoodsPropertyValueDocForm: TGoodsPropertyValueDocForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 123
+        Width = 107
       end
       object clGoodsGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
@@ -80,7 +80,7 @@ object GoodsPropertyValueDocForm: TGoodsPropertyValueDocForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 30
+        Width = 26
       end
       object clGoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
@@ -96,7 +96,7 @@ object GoodsPropertyValueDocForm: TGoodsPropertyValueDocForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 67
+        Width = 59
       end
       object GoodsBoxCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1075#1086#1092#1088'.'
@@ -105,7 +105,7 @@ object GoodsPropertyValueDocForm: TGoodsPropertyValueDocForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1076' '#1075#1086#1092#1088#1086#1103#1097#1080#1082
         Options.Editing = False
-        Width = 27
+        Width = 23
       end
       object GoodsBoxName: TcxGridDBColumn
         Caption = #1043#1086#1092#1088#1086#1103#1097#1080#1082
@@ -121,7 +121,7 @@ object GoodsPropertyValueDocForm: TGoodsPropertyValueDocForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 64
+        Width = 56
       end
       object clGoodsKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -137,7 +137,7 @@ object GoodsPropertyValueDocForm: TGoodsPropertyValueDocForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 47
+        Width = 41
       end
       object colMeasureName: TcxGridDBColumn
         Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -145,7 +145,7 @@ object GoodsPropertyValueDocForm: TGoodsPropertyValueDocForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 30
+        Width = 26
       end
       object ceName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
@@ -153,7 +153,7 @@ object GoodsPropertyValueDocForm: TGoodsPropertyValueDocForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 65
+        Width = 57
       end
       object clisOrder: TcxGridDBColumn
         Caption = #1048#1089#1087#1086#1083#1100#1079#1091#1077#1090#1089#1103' '#1074' '#1079#1072#1103#1074#1082#1072#1093
@@ -161,7 +161,7 @@ object GoodsPropertyValueDocForm: TGoodsPropertyValueDocForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 75
+        Width = 66
       end
       object BoxCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1077#1076'. '#1074' '#1103#1097'.'
@@ -172,7 +172,7 @@ object GoodsPropertyValueDocForm: TGoodsPropertyValueDocForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 52
+        Width = 45
       end
       object ceAmount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'. '#1087#1088#1080' '#1089#1082#1072#1085'.'
@@ -183,7 +183,7 @@ object GoodsPropertyValueDocForm: TGoodsPropertyValueDocForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 52
+        Width = 45
       end
       object ceAmountDoc: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'. '#1074#1083#1086#1078'.'
@@ -194,7 +194,7 @@ object GoodsPropertyValueDocForm: TGoodsPropertyValueDocForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1083'-'#1074#1086' '#1096#1090'. '#1074#1083#1086#1078#1077#1085#1080#1077
-        Width = 69
+        Width = 61
       end
       object BarCodeShort: TcxGridDBColumn
         Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076' ('#1087#1086#1080#1089#1082')'
@@ -202,7 +202,7 @@ object GoodsPropertyValueDocForm: TGoodsPropertyValueDocForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 49
+        Width = 42
       end
       object ceBarCode: TcxGridDBColumn
         Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076
@@ -210,7 +210,7 @@ object GoodsPropertyValueDocForm: TGoodsPropertyValueDocForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 50
+        Width = 44
       end
       object clArticle: TcxGridDBColumn
         Caption = #1040#1088#1090#1080#1082#1091#1083
@@ -218,7 +218,7 @@ object GoodsPropertyValueDocForm: TGoodsPropertyValueDocForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 49
+        Width = 43
       end
       object clBarCodeGLN: TcxGridDBColumn
         Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076' GLN'
@@ -226,7 +226,7 @@ object GoodsPropertyValueDocForm: TGoodsPropertyValueDocForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 49
+        Width = 43
       end
       object clArticleGLN: TcxGridDBColumn
         Caption = #1040#1088#1090#1080#1082#1091#1083' GLN'
@@ -234,7 +234,14 @@ object GoodsPropertyValueDocForm: TGoodsPropertyValueDocForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 49
+        Width = 43
+      end
+      object CodeSticker: TcxGridDBColumn
+        Caption = #1050#1086#1076' PLU'
+        DataBinding.FieldName = 'CodeSticker'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 46
       end
       object GroupName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1087#1087#1099
@@ -242,7 +249,7 @@ object GoodsPropertyValueDocForm: TGoodsPropertyValueDocForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 49
+        Width = 40
       end
       object ceisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -829,6 +836,15 @@ object GoodsPropertyValueDocForm: TGoodsPropertyValueDocForm
         Component = ClientDataSet
         ComponentItem = 'AmountDoc'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCodeSticker'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'CodeSticker'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

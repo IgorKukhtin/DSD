@@ -57,21 +57,26 @@ BEGIN
      RETURN QUERY
        WITH
            tmpStatus AS (SELECT zc_Enum_Status_UnComplete() AS StatusId UNION ALL SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE)
-         , tmpMov AS (SELECT Movement.Id
+  
+       , tmpMovAll AS (SELECT Movement.Id
+                      FROM Movement 
+                            INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
+                            INNER JOIN MovementBoolean AS MovementBoolean_Deferred
+                                                       ON Movement.Id = MovementBoolean_Deferred.MovementId
+                                                      AND MovementBoolean_Deferred.DescId    = zc_MovementBoolean_Deferred()
+                                                      AND MovementBoolean_Deferred.ValueData = TRUE
+                      WHERE Movement.DescId = zc_Movement_Check()
+                    )
+       , tmpMov AS (SELECT Movement.Id
                            , MovementLinkObject_Unit.ObjectId AS UnitId
-                      FROM MovementBoolean AS MovementBoolean_Deferred
-                        INNER JOIN Movement ON Movement.Id     = MovementBoolean_Deferred.MovementId
-                                           AND Movement.DescId = zc_Movement_Check()
-                        INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
+                      FROM tmpMovAll AS Movement 
+         
                         INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                                     AND (MovementLinkObject_Unit.ObjectId = vbUnitId OR vbUnitId = 0 /*OR MovementLinkObject_Unit.MovementId = 3400557*/)
-                                                     -- AND MovementLinkObject_Unit.ObjectId = vbUnitId
-                      WHERE MovementBoolean_Deferred.DescId    = zc_MovementBoolean_Deferred()
-                        AND MovementBoolean_Deferred.ValueData = TRUE
-                      )
-      , tmpMI_all AS (SELECT tmpMov.Id AS MovementId, tmpMov.UnitId, MovementItem.ObjectId AS GoodsId, SUM (MovementItem.Amount) AS Amount
+                                                     AND (MovementLinkObject_Unit.ObjectId = vbUnitId OR vbUnitId = 0)
+                     )
+       , tmpMI_all AS (SELECT tmpMov.Id AS MovementId, tmpMov.UnitId, MovementItem.ObjectId AS GoodsId, SUM (MovementItem.Amount) AS Amount
                       FROM tmpMov
                            INNER JOIN MovementItem
                                    ON MovementItem.MovementId = tmpMov.Id

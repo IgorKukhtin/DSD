@@ -1,9 +1,9 @@
-object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
+object Report_Sale_OlapForm: TReport_Sale_OlapForm
   Left = 0
   Top = 0
-  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1091' ('#1054#1051#1040#1055')'
+  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' ('#1054#1051#1040#1055')'
   ClientHeight = 448
-  ClientWidth = 1362
+  ClientWidth = 977
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
   object PanelHead: TPanel
     Left = 0
     Top = 0
-    Width = 1362
+    Width = 977
     Height = 55
     Align = alTop
     TabOrder = 0
@@ -57,29 +57,12 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       Width = 76
     end
     object cxLabel3: TcxLabel
-      Left = 331
-      Top = 6
-      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1086#1090' '#1082#1086#1075#1086'):'
+      Left = 327
+      Top = 7
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
-    object cxLabel5: TcxLabel
-      Left = 345
-      Top = 30
-      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1082#1086#1084#1091'):'
-    end
-    object edToGroup: TcxButtonEdit
-      Left = 465
-      Top = 29
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 6
-      Width = 169
-    end
-    object edFromGroup: TcxButtonEdit
-      Left = 465
+    object edUnitGroup: TcxButtonEdit
+      Left = 415
       Top = 5
       Properties.Buttons = <
         item
@@ -87,48 +70,32 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 7
-      Width = 169
+      TabOrder = 5
+      Width = 195
     end
     object cxLabel4: TcxLabel
-      Left = 638
+      Left = 614
       Top = 6
-      Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074'.'#1087#1088#1080#1093'.:'
-    end
-    object cxLabel6: TcxLabel
-      Left = 638
-      Top = 32
-      Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074'.'#1088#1072#1089#1093':'
+      Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 733
+      Left = 709
       Top = 5
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 10
-      Width = 147
-    end
-    object edChildGoodsGroup: TcxButtonEdit
-      Left = 733
-      Top = 29
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      TabOrder = 11
-      Width = 147
+      TabOrder = 7
+      Width = 236
     end
     object cxLabel8: TcxLabel
-      Left = 884
-      Top = 6
-      Caption = #1058#1086#1074#1072#1088' '#1087#1088#1080#1093':'
+      Left = 665
+      Top = 30
+      Caption = #1058#1086#1074#1072#1088':'
     end
-    object edChildGoods: TcxButtonEdit
-      Left = 949
+    object edGoods: TcxButtonEdit
+      Left = 709
       Top = 29
       Properties.Buttons = <
         item
@@ -136,40 +103,28 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 13
-      Width = 148
-    end
-    object edGoods: TcxButtonEdit
-      Left = 949
-      Top = 5
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 14
-      Width = 148
+      TabOrder = 9
+      Width = 236
     end
     object cbIsMovement: TcxCheckBox
-      Left = 1101
-      Top = 5
+      Left = 341
+      Top = 29
       Caption = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
-      TabOrder = 15
+      TabOrder = 10
       Width = 105
     end
     object cbisPartion: TcxCheckBox
-      Left = 1101
+      Left = 477
       Top = 29
       Caption = #1055#1086' '#1087#1072#1088#1090#1080#1103#1084
-      TabOrder = 16
+      TabOrder = 11
       Width = 105
     end
   end
   object cxDBPivotGrid: TcxDBPivotGrid
     Left = 0
     Top = 81
-    Width = 1362
+    Width = 977
     Height = 367
     Align = alClient
     DataSource = DataSource
@@ -193,49 +148,24 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvOperDate: TcxDBPivotGridField
-      AreaIndex = 17
+      AreaIndex = 9
       IsCaptionAssigned = True
       Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
       DataBinding.FieldName = 'OperDate'
       Visible = True
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
-    object pvDocumentKindName: TcxDBPivotGridField
-      AreaIndex = 18
-      IsCaptionAssigned = True
-      Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      DataBinding.FieldName = 'DocumentKindName'
-      Visible = True
-      UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
-    end
-    object pvReceiptName: TcxDBPivotGridField
-      AreaIndex = 19
-      IsCaptionAssigned = True
-      Caption = #1056#1077#1094#1077#1087#1090#1091#1088#1072
-      DataBinding.FieldName = 'ReceiptName'
-      Visible = True
-      UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
-    end
-    object pvisPeresort: TcxDBPivotGridField
-      AreaIndex = 25
-      IsCaptionAssigned = True
-      Caption = #1055#1077#1088#1077#1089#1086#1088#1090'.'
-      DataBinding.FieldName = 'isPeresort'
-      Visible = True
-      Width = 55
-      UniqueName = #1057#1095#1077#1090' - '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
-    end
     object pvGoodsGroupName: TcxDBPivotGridField
-      AreaIndex = 23
+      AreaIndex = 12
       IsCaptionAssigned = True
-      Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1080#1093#1086#1076')'
+      Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
       DataBinding.FieldName = 'GoodsGroupName'
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
     object pvGoodsCode: TcxDBPivotGridField
       AreaIndex = 1
       IsCaptionAssigned = True
-      Caption = #1050#1086#1076' '#1090#1086#1074'. ('#1087#1088#1080#1093#1086#1076')'
+      Caption = #1050#1086#1076' '#1090#1086#1074'.'
       DataBinding.FieldName = 'GoodsCode'
       Width = 50
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -244,72 +174,65 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       Area = faRow
       AreaIndex = 0
       IsCaptionAssigned = True
-      Caption = #1058#1086#1074#1072#1088' ('#1087#1088#1080#1093#1086#1076')'
+      Caption = #1058#1086#1074#1072#1088
       DataBinding.FieldName = 'GoodsName'
       Visible = True
-      Width = 55
+      Width = 90
       UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
     end
     object pvGoodsKindName: TcxDBPivotGridField
-      AreaIndex = 5
+      AreaIndex = 3
       IsCaptionAssigned = True
-      Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1080#1093#1086#1076')'
+      Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
       DataBinding.FieldName = 'GoodsKindName'
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
-    object pvGoodsKindName_complete: TcxDBPivotGridField
-      AreaIndex = 16
-      IsCaptionAssigned = True
-      Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' '#1043#1055' ('#1087#1088#1080#1093#1086#1076')'
-      DataBinding.FieldName = 'GoodsKindName_complete'
-      UniqueName = #1057#1086#1089#1090#1072#1074
-    end
     object pvGoodsGroupNameFull: TcxDBPivotGridField
-      AreaIndex = 6
+      AreaIndex = 4
       IsCaptionAssigned = True
-      Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077') ('#1087#1088#1080#1093#1086#1076')'
+      Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
       DataBinding.FieldName = 'GoodsGroupNameFull'
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object pvGoodsGroupAnalystName: TcxDBPivotGridField
-      AreaIndex = 7
+      AreaIndex = 5
       IsCaptionAssigned = True
-      Caption = #1043#1088#1091#1087#1087#1072' '#1072#1085#1072#1083#1080#1090#1080#1082#1080' ('#1087#1088#1080#1093#1086#1076')'
+      Caption = #1043#1088#1091#1087#1087#1072' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
       DataBinding.FieldName = 'GoodsGroupAnalystName'
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object pvTradeMarkName: TcxDBPivotGridField
-      AreaIndex = 8
+      AreaIndex = 6
       IsCaptionAssigned = True
-      Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072' ('#1087#1088#1080#1093#1086#1076')'
+      Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
       DataBinding.FieldName = 'TradeMarkName'
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object pvGoodsTagName: TcxDBPivotGridField
-      AreaIndex = 9
+      AreaIndex = 7
       IsCaptionAssigned = True
-      Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1080#1093#1086#1076')'
+      Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072
       DataBinding.FieldName = 'GoodsTagName'
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object pvGoodsPlatformName: TcxDBPivotGridField
-      AreaIndex = 10
+      AreaIndex = 8
       IsCaptionAssigned = True
-      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' '#1087#1083#1086#1097#1072#1076#1082#1072' ('#1087#1088#1080#1093#1086#1076')'
+      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' '#1087#1083#1086#1097#1072#1076#1082#1072
       DataBinding.FieldName = 'GoodsPlatformName'
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object pvPartionGoods: TcxDBPivotGridField
-      AreaIndex = 20
+      AreaIndex = 10
       IsCaptionAssigned = True
-      Caption = #1055#1072#1088#1090#1080#1103' ('#1087#1088#1080#1093#1086#1076')'
+      Caption = #1055#1072#1088#1090#1080#1103
       DataBinding.FieldName = 'PartionGoods'
       UniqueName = #1043#1088#1091#1087#1087#1072' 2'
     end
     object pvPartionGoods_Date: TcxDBPivotGridField
-      AreaIndex = 21
+      AreaIndex = 11
       IsCaptionAssigned = True
-      Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080' ('#1087#1088#1080#1093#1086#1076')'
+      Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
       DataBinding.FieldName = 'PartionGoods_Date'
       UniqueName = #1043#1088#1091#1087#1087#1072' 2'
     end
@@ -317,7 +240,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       Area = faData
       AreaIndex = 0
       IsCaptionAssigned = True
-      Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
+      Caption = #1050#1086#1083'-'#1074#1086
       DataBinding.FieldName = 'Amount'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
@@ -327,205 +250,20 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       Width = 80
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
-    object pvChildAmount: TcxDBPivotGridField
-      Area = faData
-      AreaIndex = 3
-      IsCaptionAssigned = True
-      Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
-      DataBinding.FieldName = 'ChildAmount'
-      PropertiesClassName = 'TcxCurrencyEditProperties'
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.####;-,0.####; ;'
-      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
-      Visible = True
-      Width = 80
-      UniqueName = #1044#1086#1083#1075' '#1057'/'#1057
-    end
-    object pvChildAmountCalc: TcxDBPivotGridField
-      Area = faData
-      AreaIndex = 6
-      IsCaptionAssigned = True
-      Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1095#1077#1090' ('#1088#1072#1089#1093#1086#1076')'
-      DataBinding.FieldName = 'ChildAmountCalc'
-      PropertiesClassName = 'TcxCurrencyEditProperties'
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.####;-,0.####; ;'
-      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
-      Visible = True
-      Width = 80
-      UniqueName = #1044#1086#1083#1075' '#1057'/'#1057
-    end
-    object pvChildAmountReceipt: TcxDBPivotGridField
-      Area = faData
-      AreaIndex = 7
-      IsCaptionAssigned = True
-      Caption = #1053#1086#1088#1084#1072' ('#1088#1072#1089#1093#1086#1076')'
-      DataBinding.FieldName = 'ChildAmountReceipt'
-      PropertiesClassName = 'TcxCurrencyEditProperties'
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.####;-,0.####; ;'
-      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
-      Visible = True
-      Width = 80
-      UniqueName = #1044#1086#1083#1075' '#1057'/'#1057
-    end
-    object pvChildAmount_Weight: TcxDBPivotGridField
-      Area = faData
-      AreaIndex = 4
-      IsCaptionAssigned = True
-      Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076') '#1074#1077#1089
-      DataBinding.FieldName = 'ChildAmount_Weight'
-      PropertiesClassName = 'TcxCurrencyEditProperties'
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.####;-,0.####; ;'
-      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
-      Visible = True
-      Width = 80
-      UniqueName = #1044#1086#1083#1075' '#1057'/'#1057
-    end
-    object pvChildAmountReceipt_Weight: TcxDBPivotGridField
-      Area = faData
-      AreaIndex = 5
-      IsCaptionAssigned = True
-      Caption = #1053#1086#1088#1084#1072' ('#1088#1072#1089#1093#1086#1076') '#1074#1077#1089
-      DataBinding.FieldName = 'ChildAmountReceipt_Weight'
-      PropertiesClassName = 'TcxCurrencyEditProperties'
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.####;-,0.####; ;'
-      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
-      Visible = True
-      Width = 80
-      UniqueName = #1044#1086#1083#1075' '#1057'/'#1057
-    end
-    object pvMainPrice: TcxDBPivotGridField
-      AreaIndex = 27
-      IsCaptionAssigned = True
-      Caption = #1062#1077#1085#1072' c/c ('#1087#1088#1080#1093#1086#1076')'
-      DataBinding.FieldName = 'MainPrice'
-      PropertiesClassName = 'TcxCurrencyEditProperties'
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.##;-,0.##; ;'
-      Width = 55
-      UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
-    end
     object pvSumm: TcxDBPivotGridField
-      AreaIndex = 28
+      AreaIndex = 13
       IsCaptionAssigned = True
-      Caption = #1057#1091#1084#1084#1072' c/c ('#1087#1088#1080#1093#1086#1076')'
+      Caption = #1057#1091#1084#1084#1072
       DataBinding.FieldName = 'Summ'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Visible = True
       Width = 70
       UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
     end
-    object pvChildGoodsGroupName: TcxDBPivotGridField
-      AreaIndex = 22
-      IsCaptionAssigned = True
-      Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1088#1072#1089#1093#1086#1076')'
-      DataBinding.FieldName = 'ChildGoodsGroupName'
-      UniqueName = #1043#1088#1091#1087#1087#1072' 1'
-    end
-    object pvChildGoodsCode: TcxDBPivotGridField
-      AreaIndex = 24
-      IsCaptionAssigned = True
-      Caption = #1050#1086#1076' '#1090#1086#1074'. ('#1088#1072#1089#1093#1086#1076')'
-      DataBinding.FieldName = 'ChildGoodsCode'
-      UniqueName = #1043#1088#1091#1087#1087#1072' 4'
-    end
-    object pvChildGoodsName: TcxDBPivotGridField
-      Area = faRow
-      AreaIndex = 1
-      IsCaptionAssigned = True
-      Caption = #1058#1086#1074#1072#1088' ('#1088#1072#1089#1093#1086#1076')'
-      DataBinding.FieldName = 'ChildGoodsName'
-      Visible = True
-      UniqueName = #1054#1087#1080#1089#1072#1085#1080#1077
-    end
-    object pvChildGoodsKindName: TcxDBPivotGridField
-      AreaIndex = 26
-      IsCaptionAssigned = True
-      Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1088#1072#1089#1093#1086#1076')'
-      DataBinding.FieldName = 'ChildGoodsKindName'
-      UniqueName = #1051#1080#1085#1080#1103
-    end
-    object pvChildGoodsGroupNameFull: TcxDBPivotGridField
-      AreaIndex = 11
-      IsCaptionAssigned = True
-      Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077') ('#1088#1072#1089#1093#1086#1076')'
-      DataBinding.FieldName = 'ChildGoodsGroupNameFull'
-      UniqueName = #1057#1086#1089#1090#1072#1074
-    end
-    object pvChildGoodsGroupAnalystName: TcxDBPivotGridField
-      AreaIndex = 12
-      IsCaptionAssigned = True
-      Caption = #1043#1088#1091#1087#1087#1072' '#1072#1085#1072#1083#1080#1090#1080#1082#1080' ('#1088#1072#1089#1093#1086#1076')'
-      DataBinding.FieldName = 'ChildGoodsGroupAnalystName'
-      UniqueName = #1057#1086#1089#1090#1072#1074
-    end
-    object pvChildTradeMarkName: TcxDBPivotGridField
-      AreaIndex = 13
-      IsCaptionAssigned = True
-      Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072' ('#1088#1072#1089#1093#1086#1076')'
-      DataBinding.FieldName = 'ChildTradeMarkName'
-      UniqueName = #1057#1086#1089#1090#1072#1074
-    end
-    object pvChildGoodsTagName: TcxDBPivotGridField
-      AreaIndex = 14
-      IsCaptionAssigned = True
-      Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072' ('#1088#1072#1089#1093#1086#1076')'
-      DataBinding.FieldName = 'ChildGoodsTagName'
-      UniqueName = #1057#1086#1089#1090#1072#1074
-    end
-    object pvChildGoodsPlatformName: TcxDBPivotGridField
-      AreaIndex = 15
-      IsCaptionAssigned = True
-      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' '#1087#1083#1086#1097#1072#1076#1082#1072' ('#1088#1072#1089#1093#1086#1076')'
-      DataBinding.FieldName = 'ChildGoodsPlatformName'
-      UniqueName = #1057#1086#1089#1090#1072#1074
-    end
-    object pvChildPartionGoods: TcxDBPivotGridField
-      AreaIndex = 3
-      IsCaptionAssigned = True
-      Caption = #1055#1072#1088#1090#1080#1103' ('#1088#1072#1089#1093#1086#1076')'
-      DataBinding.FieldName = 'ChildPartionGoods'
-      Width = 200
-      UniqueName = #1043#1088#1091#1087#1087#1072' 3'
-    end
-    object pvChildPartionGoods_Date: TcxDBPivotGridField
-      AreaIndex = 4
-      IsCaptionAssigned = True
-      Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080' ('#1088#1072#1089#1093#1086#1076')'
-      DataBinding.FieldName = 'ChildPartionGoods_Date'
-      Width = 200
-      UniqueName = #1043#1088#1091#1087#1087#1072' 3'
-    end
-    object pvChildPrice: TcxDBPivotGridField
-      Area = faData
-      AreaIndex = 1
-      IsCaptionAssigned = True
-      Caption = #1062#1077#1085#1072' c/c  ('#1088#1072#1089#1093#1086#1076')'
-      DataBinding.FieldName = 'ChildPrice'
-      PropertiesClassName = 'TcxCurrencyEditProperties'
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.##;-,0.##; ;'
-      Styles.ColumnHeader = dmMain.cxHeaderStyle
-      UniqueName = 'AmountDebetStart'
-    end
-    object pvChildSumm: TcxDBPivotGridField
-      Area = faData
-      AreaIndex = 2
-      IsCaptionAssigned = True
-      Caption = #1057#1091#1084#1084#1072' c/c ('#1088#1072#1089#1093#1086#1076')'
-      DataBinding.FieldName = 'ChildSumm'
-      PropertiesClassName = 'TcxCurrencyEditProperties'
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.##;-,0.##; ;'
-      Styles.ColumnHeader = dmMain.cxHeaderStyle
-      UniqueName = 'AmountDebetStart'
-    end
     object pvInfoMoneyCode: TcxDBPivotGridField
-      AreaIndex = 29
+      AreaIndex = 14
       IsCaptionAssigned = True
       Caption = #1050#1086#1076' '#1059#1055
       DataBinding.FieldName = 'InfoMoneyCode'
@@ -533,7 +271,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvInfoMoneyGroupName: TcxDBPivotGridField
-      AreaIndex = 30
+      AreaIndex = 15
       IsCaptionAssigned = True
       Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
       DataBinding.FieldName = 'InfoMoneyGroupName'
@@ -541,7 +279,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvInfoMoneyDestinationName: TcxDBPivotGridField
-      AreaIndex = 31
+      AreaIndex = 16
       IsCaptionAssigned = True
       Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
       DataBinding.FieldName = 'InfoMoneyDestinationName'
@@ -549,7 +287,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvInfoMoneyName: TcxDBPivotGridField
-      AreaIndex = 32
+      AreaIndex = 17
       IsCaptionAssigned = True
       Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
       DataBinding.FieldName = 'InfoMoneyName'
@@ -557,7 +295,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvInfoMoneyName_all: TcxDBPivotGridField
-      AreaIndex = 33
+      AreaIndex = 18
       IsCaptionAssigned = True
       Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
       DataBinding.FieldName = 'InfoMoneyName_all'
@@ -565,7 +303,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvInfoMoneyCode_Detail: TcxDBPivotGridField
-      AreaIndex = 34
+      AreaIndex = 19
       IsCaptionAssigned = True
       Caption = #1050#1086#1076' '#1059#1055' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
       DataBinding.FieldName = 'InfoMoneyCode_Detail'
@@ -573,7 +311,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvInfoMoneyGroupName_Detail: TcxDBPivotGridField
-      AreaIndex = 35
+      AreaIndex = 20
       IsCaptionAssigned = True
       Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103'  ('#1076#1077#1090#1072#1083#1100#1085#1086')'
       DataBinding.FieldName = 'InfoMoneyGroupName_Detail'
@@ -581,7 +319,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvInfoMoneyDestinationName_Detail: TcxDBPivotGridField
-      AreaIndex = 36
+      AreaIndex = 21
       IsCaptionAssigned = True
       Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077'  ('#1076#1077#1090#1072#1083#1100#1085#1086')'
       DataBinding.FieldName = 'InfoMoneyDestinationName_Detail'
@@ -589,7 +327,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvInfoMoneyName_Detail: TcxDBPivotGridField
-      AreaIndex = 37
+      AreaIndex = 22
       IsCaptionAssigned = True
       Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103'  ('#1076#1077#1090#1072#1083#1100#1085#1086')'
       DataBinding.FieldName = 'InfoMoneyName_Detail'
@@ -597,7 +335,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvInfoMoneyName_all_Detail: TcxDBPivotGridField
-      AreaIndex = 38
+      AreaIndex = 23
       IsCaptionAssigned = True
       Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
       DataBinding.FieldName = 'InfoMoneyName_all_Detail'
@@ -633,13 +371,8 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
     EditValue = 43101d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 9
+    TabOrder = 8
     Width = 79
-  end
-  object cxLabel10: TcxLabel
-    Left = 885
-    Top = 32
-    Caption = #1058#1086#1074#1072#1088' '#1088#1072#1089#1093':'
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -683,19 +416,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
           'Date')
       end
       item
-        Component = GuidesChildGoods
-        Properties.Strings = (
-          'key'
-          'TextValue')
-      end
-      item
-        Component = GuidesChildGoodsGroup
-        Properties.Strings = (
-          'key'
-          'TextValue')
-      end
-      item
-        Component = GuidesFromGroup
+        Component = GuidesUnitGroup
         Properties.Strings = (
           'key'
           'TextValue')
@@ -708,12 +429,6 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       end
       item
         Component = GuidesGoodsGroup
-        Properties.Strings = (
-          'key'
-          'TextValue')
-      end
-      item
-        Component = GuidesToGroup
         Properties.Strings = (
           'key'
           'TextValue')
@@ -844,8 +559,8 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_ProductionUnion_OlapDialogForm'
-      FormNameParam.Value = 'TReport_ProductionUnion_OlapDialogForm'
+      FormName = 'TReport_Sale_OlapDialogForm'
+      FormNameParam.Value = 'TReport_Sale_OlapDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -884,7 +599,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
         item
           Name = 'FromGroupId'
           Value = ''
-          Component = GuidesFromGroup
+          Component = GuidesUnitGroup
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -892,7 +607,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
         item
           Name = 'FromGroupName'
           Value = ''
-          Component = GuidesFromGroup
+          Component = GuidesUnitGroup
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -901,16 +616,12 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
         item
           Name = 'ToGroupId'
           Value = ''
-          Component = GuidesToGroup
-          ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'ToGroupName'
           Value = ''
-          Component = GuidesToGroup
-          ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -918,16 +629,12 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
         item
           Name = 'GoodsGroupId'
           Value = ''
-          Component = GuidesChildGoodsGroup
-          ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupName'
           Value = ''
-          Component = GuidesChildGoodsGroup
-          ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -952,16 +659,12 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
         item
           Name = 'GoodsId'
           Value = ''
-          Component = GuidesChildGoods
-          ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
           Value = ''
-          Component = GuidesChildGoods
-          ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1005,7 +708,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
     end
   end
   object spReport: TdsdStoredProc
-    StoredProcName = 'gpReport_ProductionUnion_Olap'
+    StoredProcName = 'gpReport_Sale_Olap'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -1077,33 +780,9 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inChildGoodsGroupId'
-        Value = Null
-        Component = GuidesChildGoodsGroup
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inChildGoodsId'
-        Value = Null
-        Component = GuidesChildGoods
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inFromId'
         Value = Null
-        Component = GuidesFromGroup
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inToId'
-        Value = Null
-        Component = GuidesToGroup
+        Component = GuidesUnitGroup
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1155,9 +834,9 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
     Left = 360
     Top = 184
   end
-  object GuidesFromGroup: TdsdGuides
+  object GuidesUnitGroup: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edFromGroup
+    LookupControl = edUnitGroup
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1168,7 +847,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesFromGroup
+        Component = GuidesUnitGroup
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1177,45 +856,14 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesFromGroup
+        Component = GuidesUnitGroup
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 520
-    Top = 8
-  end
-  object GuidesToGroup: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edToGroup
-    FormNameParam.Value = 'TUnitTreeForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnitTreeForm'
-    PositionDataSet = 'ClientDataSet'
-    ParentDataSet = 'TreeDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesToGroup
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesToGroup
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 560
-    Top = 24
+    Left = 496
+    Top = 65528
   end
   object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'
@@ -1246,35 +894,6 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
       end>
     Left = 760
   end
-  object GuidesChildGoodsGroup: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edChildGoodsGroup
-    FormNameParam.Value = 'TGoodsGroup_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsGroup_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesChildGoodsGroup
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesChildGoodsGroup
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 808
-    Top = 32
-  end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
@@ -1302,37 +921,8 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 992
-    Top = 65531
-  end
-  object GuidesChildGoods: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edChildGoods
-    FormNameParam.Value = 'TGoodsFuel_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsFuel_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesChildGoods
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesChildGoods
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 1008
-    Top = 27
+    Left = 720
+    Top = 11
   end
   object PeriodChoice2: TPeriodChoice
     DateStart = deStart2

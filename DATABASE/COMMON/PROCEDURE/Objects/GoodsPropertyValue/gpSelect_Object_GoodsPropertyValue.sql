@@ -10,7 +10,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsPropertyValue(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Amount TFloat, BoxCount TFloat, AmountDoc TFloat
-             , BarCodeShort TVarChar, BarCode TVarChar, Article TVarChar, BarCodeGLN TVarChar, ArticleGLN TVarChar, GroupName TVarChar
+             , BarCodeShort TVarChar, BarCode TVarChar, Article TVarChar, BarCodeGLN TVarChar, ArticleGLN TVarChar
+             , CodeSticker TVarChar
+             , GroupName TVarChar
              , GoodsPropertyId Integer, GoodsPropertyName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, MeasureName TVarChar
@@ -51,6 +53,7 @@ BEGIN
        , ObjectString_Article.ValueData       AS Article
        , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
        , ObjectString_ArticleGLN.ValueData    AS ArticleGLN
+       , ObjectString_CodeSticker.ValueData   AS CodeSticker
        , ObjectString_GroupName.ValueData     AS GroupName
 
        , Object_GoodsProperty.Id              AS GoodsPropertyId
@@ -113,6 +116,10 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_GroupName
                                ON ObjectString_GroupName.ObjectId = Object_GoodsPropertyValue.Id
                               AND ObjectString_GroupName.DescId = zc_ObjectString_GoodsPropertyValue_GroupName()
+
+        LEFT JOIN ObjectString AS ObjectString_CodeSticker
+                               ON ObjectString_CodeSticker.ObjectId = Object_GoodsPropertyValue.Id
+                              AND ObjectString_CodeSticker.DescId = zc_ObjectString_GoodsPropertyValue_CodeSticker()
 
         LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
                              ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = Object_GoodsPropertyValue.Id
@@ -211,6 +218,7 @@ BEGIN
        , tmpObjectLink.Article
        , tmpObjectLink.BarCodeGLN
        , tmpObjectLink.ArticleGLN
+       , tmpObjectLink.CodeSticker
        , tmpObjectLink.GroupName
 
        , Object_GoodsProperty.Id              AS GoodsPropertyId
@@ -251,6 +259,7 @@ BEGIN
                         , ObjectString_Article.ValueData       AS Article
                         , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
                         , ObjectString_ArticleGLN.ValueData    AS ArticleGLN
+                        , ObjectString_CodeSticker.ValueData   AS CodeSticker
                         , ObjectString_GroupName.ValueData     AS GroupName
 
                         , Object_GoodsKind.Id                  AS GoodsKindId
@@ -291,25 +300,29 @@ BEGIN
                                              ON ObjectString_BarCodeShort.ObjectId = Object_GoodsPropertyValue.Id
                                             AND ObjectString_BarCodeShort.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeShort()
                       LEFT JOIN ObjectString AS ObjectString_BarCode
-                                ON ObjectString_BarCode.ObjectId = Object_GoodsPropertyValue.Id 
-                              AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
+                                             ON ObjectString_BarCode.ObjectId = Object_GoodsPropertyValue.Id 
+                                            AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
 
                       LEFT JOIN ObjectString AS ObjectString_Article
-                               ON ObjectString_Article.ObjectId = Object_GoodsPropertyValue.Id 
-                              AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
+                                             ON ObjectString_Article.ObjectId = Object_GoodsPropertyValue.Id 
+                                            AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
 
                       LEFT JOIN ObjectString AS ObjectString_BarCodeGLN
-                               ON ObjectString_BarCodeGLN.ObjectId = Object_GoodsPropertyValue.Id  
-                              AND ObjectString_BarCodeGLN.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeGLN()
+                                             ON ObjectString_BarCodeGLN.ObjectId = Object_GoodsPropertyValue.Id  
+                                            AND ObjectString_BarCodeGLN.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeGLN()
 
                       LEFT JOIN ObjectString AS ObjectString_ArticleGLN
-                               ON ObjectString_ArticleGLN.ObjectId = Object_GoodsPropertyValue.Id 
-                              AND ObjectString_ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
+                                             ON ObjectString_ArticleGLN.ObjectId = Object_GoodsPropertyValue.Id 
+                                            AND ObjectString_ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
 
                      LEFT JOIN ObjectString AS ObjectString_GroupName
-                               ON ObjectString_GroupName.ObjectId = Object_GoodsPropertyValue.Id 
-                              AND ObjectString_GroupName.DescId = zc_ObjectString_GoodsPropertyValue_GroupName()                      
-                              
+                                            ON ObjectString_GroupName.ObjectId = Object_GoodsPropertyValue.Id 
+                                           AND ObjectString_GroupName.DescId = zc_ObjectString_GoodsPropertyValue_GroupName()                      
+
+                     LEFT JOIN ObjectString AS ObjectString_CodeSticker
+                                            ON ObjectString_CodeSticker.ObjectId = Object_GoodsPropertyValue.Id
+                                           AND ObjectString_CodeSticker.DescId = zc_ObjectString_GoodsPropertyValue_CodeSticker()
+
                    WHERE ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
                       AND (ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = inGoodsPropertyId)  
                    ) AS tmpObjectLink ON tmpObjectLink.GoodsId = tmpGoods.GoodsId 
@@ -328,6 +341,7 @@ END;$BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 25.07.18         * add CodeSticker
  14.02.18         * add GoodsBox
  22.06.17         * add AmountDoc
  03.05.17         * add GoodsGroupName, GoodsGroupNameFull

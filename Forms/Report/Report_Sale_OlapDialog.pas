@@ -1,4 +1,4 @@
-unit Report_ProductionUnion_OlapDialog;
+unit Report_Sale_OlapDialog;
 
 interface
 
@@ -12,7 +12,7 @@ uses
   dxSkinsDefaultPainters, cxCheckBox;
 
 type
-  TReport_ProductionUnion_OlapDialogForm = class(TParentForm)
+  TReport_Sale_OlapDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     deEnd: TcxDateEdit;
@@ -27,21 +27,12 @@ type
     cxLabel5: TcxLabel;
     edFromGroup: TcxButtonEdit;
     FromGroupGuides: TdsdGuides;
-    cxLabel8: TcxLabel;
-    edToGroup: TcxButtonEdit;
-    ToGroupGuides: TdsdGuides;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
-    cxLabel1: TcxLabel;
-    edChildGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;
-    ChildGoodsGroupGuides: TdsdGuides;
     cxLabel2: TcxLabel;
     edGoods: TcxButtonEdit;
-    edChildGoods: TcxButtonEdit;
-    cxLabel3: TcxLabel;
     GoodsGuides: TdsdGuides;
-    ChildGoodsGuides: TdsdGuides;
     cxLabel9: TcxLabel;
     deStart2: TcxDateEdit;
     cxLabel10: TcxLabel;
@@ -59,6 +50,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_ProductionUnion_OlapDialogForm);
+  RegisterClass(TReport_Sale_OlapDialogForm);
 
 end.
