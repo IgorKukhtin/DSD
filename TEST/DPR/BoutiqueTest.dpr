@@ -301,7 +301,9 @@ uses
   MovementDescForms in '..\..\FormsBoutique\System\MovementDescForms.pas' {MovementDescDataForm: TParentForm},
   CashJournal in '..\..\FormsBoutique\Document\CashJournal.pas' {CashJournalForm: TParentForm},
   CashOperation in '..\..\FormsBoutique\Document\CashOperation.pas' {CashOperationForm: TParentForm},
-  MoneyPlaceCash_Object in '..\..\FormsBoutique\Guides\MoneyPlaceCash_Object.pas' {MoneyPlaceCash_ObjectForm: TParentForm};
+  MoneyPlaceCash_Object in '..\..\FormsBoutique\Guides\MoneyPlaceCash_Object.pas' {MoneyPlaceCash_ObjectForm: TParentForm},
+  Report_Sale_AnalysisDialog in '..\..\FormsBoutique\Report\Report_Sale_AnalysisDialog.pas' {Report_Sale_AnalysisDialogForm: TParentForm},
+  Report_Sale_Analysis in '..\..\FormsBoutique\Report\Report_Sale_Analysis.pas' {Report_Sale_AnalysisForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

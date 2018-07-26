@@ -214,6 +214,9 @@ type
     actCashJournal: TdsdOpenForm;
     N3: TMenuItem;
     N4: TMenuItem;
+    actReport_Sale_Analysis: TdsdOpenForm;
+    N5: TMenuItem;
+    N6: TMenuItem;
   private
     { Private declarations }
   public
