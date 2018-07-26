@@ -170,12 +170,13 @@ begin
      try
      fStartShowReport:= TRUE;
      //
-     if fStickerPropertyId = CDS.FieldByName('Id').asInteger
+     if (fStickerPropertyId = CDS.FieldByName('Id').asInteger) and (CDS.RecordCount = 1)
      then exit;
-     fStickerPropertyId:= CDS.FieldByName('Id').asInteger;
      //
      if (CDS.FieldByName('StickerFileName').asString = '')or (CDS.RecordCount <> 1)
      then begin
+              if fStickerPropertyId = -1 then exit;
+              fStickerPropertyId:= -1;
               //Application.ProcessMessages;
               //Sleep(10);
               //Application.ProcessMessages;
@@ -191,6 +192,7 @@ begin
               //Application.ProcessMessages;
           end
      else begin
+              fStickerPropertyId:= CDS.FieldByName('Id').asInteger;
               //Application.ProcessMessages;
               //Sleep(10);
               //Application.ProcessMessages;

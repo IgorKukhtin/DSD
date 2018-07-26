@@ -40,6 +40,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , UserName TVarChar
              , isPromo Boolean
              , MovementPromo TVarChar
+             , BranchCode    Integer
               )
 AS
 $BODY$
@@ -169,6 +170,8 @@ BEGIN
 
              , COALESCE (MovementBoolean_Promo.ValueData, False) AS isPromo
              , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndSale.ValueData) AS MovementPromo
+             
+             , MovementFloat_BranchCode.ValueData :: Integer AS BranchCode
 
        FROM tmpStatus
             INNER JOIN Movement ON Movement.DescId = zc_Movement_WeighingPartner()
@@ -365,6 +368,10 @@ BEGIN
             LEFT JOIN MovementDate AS MD_EndSale
                                    ON MD_EndSale.MovementId =  Movement_Promo.Id
                                   AND MD_EndSale.DescId = zc_MovementDate_EndSale()
+
+            LEFT JOIN MovementFloat AS MovementFloat_BranchCode
+                                    ON MovementFloat_BranchCode.MovementId =  Movement.Id
+                                   AND MovementFloat_BranchCode.DescId = zc_MovementFloat_BranchCode()
            ;
 
 END;
@@ -404,4 +411,4 @@ where Movement.Id = tmp.Id
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_WeighingPartner (inStartDate:= '01.06.2016', inEndDate:= '02.06.2016', inJuridicalBasisId:= zc_Juridical_Basis(), inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_WeighingPartner (inStartDate:= '01.06.2018', inEndDate:= '02.06.2018', inJuridicalBasisId:= zc_Juridical_Basis(), inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

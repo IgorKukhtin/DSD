@@ -68,6 +68,16 @@ end if;*/
          RAISE EXCEPTION 'Ошибка.Нет данных для документа.';
      END IF;
 
+     -- проверка
+     IF inBranchCode <> COALESCE((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_BranchCode()), inBranchCode)
+     THEN
+         RAISE EXCEPTION 'Ошибка.У Вас в настройках код Филиала = <%>.Документ можно закрыть на компьютере где код Филиала = <%>.'
+                       , inBranchCode
+                       , (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioId AND MF.DescId = zc_MovementFloat_BranchCode())
+                        ;
+     END IF;
+
+
      -- проверка - договор не Маркетинг
      IF (SELECT 1
          FROM MovementLinkMovement AS MovementLinkMovement_Order
@@ -311,6 +321,7 @@ end if;*/
                                        , inOperDate);
      -- !!!если по заявке, тогда берется из неё OperDatePartner, вообще - надо только для филиалов!!!
      inOperDate:= CASE WHEN vbBranchId   = zc_Branch_Basis()
+                         -- AND inSession <> '5'
                          AND EXISTS (SELECT 1
                                      FROM MovementLinkMovement
                                           INNER JOIN MovementLinkMovement AS MovementLinkMovement_Order
@@ -430,7 +441,9 @@ end if;*/
                                                         AND Movement.OperDate = inOperDate
                                                         AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
                                 WHERE MovementLinkMovement.MovementId = inMovementId
-                                  AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order());
+                                  AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
+                                  -- AND inSession <> '5'
+                              );
      END IF;
      IF vbMovementDescId = zc_Movement_Inventory()
      THEN
@@ -726,7 +739,7 @@ end if;*/
 
 
         -- !!!Налоговая!!!
-        IF vbIsTax = TRUE
+        IF vbIsTax = TRUE -- AND inSession <> '5'
         THEN
              -- сохранили
              PERFORM lpInsertUpdate_Movement_Tax_From_Kind (inMovementId            := vbMovementId_begin
@@ -1523,7 +1536,13 @@ end if;*/
 
 -- !!! ВРЕМЕННО !!!
 IF inSession = '5' AND 1=1 THEN
-    RAISE EXCEPTION 'Admin - Test = OK - %', inBranchCode; -- 'Повторите действие через 3 мин.'
+    RAISE EXCEPTION 'Admin - Test = OK : %  %  %  % %'
+  , inBranchCode -- 'Повторите действие через 3 мин.'
+  , vbMovementId_begin
+  , (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_begin)
+  , (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId_begin AND MD.DescId = zc_MovementDate_OperDatePartner())
+  , (SELECT  MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = vbMovementId_begin AND MLM.DescId = zc_MovementLinkMovement_Master())
+   ;
 END IF;
 
 

@@ -148,6 +148,11 @@ BEGIN
                                                          AND tmpCurrency_next.CurrencyToId   = tmpCurrency_all.CurrencyToId
                                                          AND tmpCurrency_next.Ord            = tmpCurrency_all.Ord + 1
                           )
+         , tmpUnit AS (SELECT Object.Id AS UnitId
+                           FROM Object
+                           WHERE Object.DescId = zc_Object_Unit()
+                             AND (Object.Id = inUnitId OR inUnitId = 0)
+                          )
 
          , tmpDiscountPeriod AS (SELECT ObjectLink_DiscountPeriod_Period.ChildObjectId AS PeriodId
                                       , ObjectDate_StartDate.ValueData                 AS StartDate
@@ -176,14 +181,16 @@ BEGIN
                                                                 ON CLO_Client.ContainerId = Container.Id
                                                                AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
                                                                AND (CLO_Client.ObjectId = inClientId OR inClientId = 0)
+                                 INNER JOIN tmpUnit ON tmpUnit.UnitId = Container.WhereObjectId
                             WHERE Container.DescId   = zc_Container_Count()
-                              AND Container.WhereObjectId = inUnitId
+                              -- AND Container.WhereObjectId = inUnitId
                            UNION ALL
                             SELECT Container.Id         AS ContainerId
                                  , 0                    AS ClientId
                             FROM Container
+                                 INNER JOIN tmpUnit ON tmpUnit.UnitId = Container.WhereObjectId
                             WHERE Container.DescId        = zc_Container_Summ()
-                              AND Container.WhereObjectId = inUnitId
+                              -- AND Container.WhereObjectId = inUnitId
                               AND Container.ObjectId      = zc_Enum_Account_100301() -- прибыль текущего периода
                            )
          , tmpData_all AS (SELECT Object_PartionGoods.MovementItemId AS PartionId
@@ -345,6 +352,9 @@ BEGIN
                                 LEFT JOIN MovementItemString AS MIString_BarCode
                                                              ON MIString_BarCode.MovementItemId = COALESCE (Object_PartionMI.ObjectCode, MIConatiner.MovementItemId)
                                                             AND MIString_BarCode.DescId         = zc_MIString_BarCode() 
+
+                                INNER JOIN tmpUnit ON tmpUnit.UnitId = COALESCE (MIConatiner.ObjectExtId_Analyzer, Object_PartionGoods.UnitId)
+
                            WHERE (Object_PartionGoods.PartnerId  = inPartnerId        OR inPartnerId   = 0)
                              AND (Object_PartionGoods.BrandId    = inBrandId          OR inBrandId     = 0)
                              AND (Object_PartionGoods.PeriodId   = inPeriodId         OR inPeriodId    = 0)
@@ -352,7 +362,7 @@ BEGIN
                              AND (MIConatiner.ContainerId        > 0                  )
                              AND (tmpContainer.ContainerId       > 0                  OR MIConatiner.PartionId IS NULL)
                              AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
-                             AND inUnitId = COALESCE (MIConatiner.ObjectExtId_Analyzer, Object_PartionGoods.UnitId)
+                             -- AND inUnitId = COALESCE (MIConatiner.ObjectExtId_Analyzer, Object_PartionGoods.UnitId)
                              AND (inClientId = 0 OR inClientId = CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ() THEN MIConatiner.WhereObjectId_Analyzer ELSE tmpContainer.ClientId END )
                       
                            GROUP BY Object_PartionGoods.MovementItemId

@@ -43,7 +43,7 @@ object MainForm: TMainForm
       object DBGridObject: TDBGrid
         Left = 0
         Top = 41
-        Width = 508
+        Width = 481
         Height = 139
         Align = alClient
         DataSource = ObjectDS
@@ -72,7 +72,7 @@ object MainForm: TMainForm
         object cbProtocol: TCheckBox
           Left = 16
           Top = 13
-          Width = 209
+          Width = 200
           Height = 17
           Caption = #1055#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' / '#1080#1085#1072#1095#1077' '#1042#1057#1045
           Checked = True
@@ -96,67 +96,85 @@ object MainForm: TMainForm
         end
       end
       object PanelInfoObject: TPanel
-        Left = 508
+        Left = 481
         Top = 41
-        Width = 73
+        Width = 100
         Height = 139
         Align = alRight
         TabOrder = 2
-        object LabelObject: TLabel
-          Left = 1
-          Top = 1
-          Width = 31
-          Height = 13
-          Align = alTop
-          Alignment = taCenter
-          Caption = 'Object'
-        end
-        object EditCountObject: TcxCurrencyEdit
-          Left = 1
-          Top = 14
-          Align = alTop
-          Properties.Alignment.Horz = taRightJustify
-          Properties.Alignment.Vert = taVCenter
-          Properties.DecimalPlaces = 0
-          Properties.DisplayFormat = ',0.'
-          Properties.EditFormat = ',0.'
-          Properties.ReadOnly = True
-          TabOrder = 0
-          Width = 71
-        end
-        object EditMinIdObject: TcxCurrencyEdit
-          Left = 1
-          Top = 35
-          Align = alTop
-          Properties.Alignment.Horz = taRightJustify
-          Properties.Alignment.Vert = taVCenter
-          Properties.DecimalPlaces = 0
-          Properties.DisplayFormat = ',0.'
-          Properties.EditFormat = ',0.'
-          Properties.ReadOnly = True
-          TabOrder = 1
-          Width = 71
-        end
-        object EditMaxIdObject: TcxCurrencyEdit
-          Left = 1
-          Top = 56
-          Align = alTop
-          Properties.Alignment.Horz = taRightJustify
-          Properties.Alignment.Vert = taVCenter
-          Properties.DecimalPlaces = 0
-          Properties.DisplayFormat = ',0.'
-          Properties.EditFormat = ',0.'
-          Properties.ReadOnly = True
-          TabOrder = 2
-          Width = 71
-        end
         object EditCountIterationObject: TEdit
           Left = 1
-          Top = 77
-          Width = 71
+          Top = 75
+          Width = 98
+          Height = 21
+          Align = alBottom
+          TabOrder = 0
+          ExplicitTop = 64
+        end
+        object cbProc: TCheckBox
+          Left = 5
+          Top = 26
+          Width = 42
+          Height = 17
+          Caption = 'Proc'
+          TabOrder = 1
+        end
+        object cbDesc: TCheckBox
+          Left = 50
+          Top = 26
+          Width = 48
+          Height = 17
+          Caption = 'Desc'
+          TabOrder = 2
+        end
+        object cbObject: TCheckBox
+          Left = 5
+          Top = 41
+          Width = 48
+          Height = 17
+          Caption = 'Object'
+          Checked = True
+          State = cbChecked
+          TabOrder = 3
+        end
+        object cbObjectHistory: TCheckBox
+          Left = 5
+          Top = 56
+          Width = 90
+          Height = 17
+          Caption = 'ObjectHistory'
+          Checked = True
+          State = cbChecked
+          TabOrder = 4
+        end
+        object EditMaxIdObject: TEdit
+          Left = 1
+          Top = 96
+          Width = 98
+          Height = 21
+          Align = alBottom
+          TabOrder = 5
+          ExplicitLeft = 3
+          ExplicitTop = 91
+        end
+        object EditMinIdObject: TEdit
+          Left = 1
+          Top = 117
+          Width = 98
+          Height = 21
+          Align = alBottom
+          TabOrder = 6
+          ExplicitLeft = 19
+          ExplicitTop = 75
+        end
+        object EditCountObject: TEdit
+          Left = 1
+          Top = 1
+          Width = 98
           Height = 21
           Align = alTop
-          TabOrder = 3
+          TabOrder = 7
+          ExplicitTop = 64
         end
       end
     end
@@ -171,7 +189,7 @@ object MainForm: TMainForm
       object DBGridObjectString: TDBGrid
         Left = 0
         Top = 0
-        Width = 508
+        Width = 481
         Height = 80
         Align = alClient
         DataSource = ObjectStringDS
@@ -183,33 +201,30 @@ object MainForm: TMainForm
         TitleFont.Style = []
       end
       object PanelInfoObjectString: TPanel
-        Left = 508
+        Left = 481
         Top = 0
-        Width = 73
+        Width = 100
         Height = 80
         Align = alRight
         TabOrder = 1
         object LabelObjectString: TLabel
           Left = 1
           Top = 1
-          Width = 58
+          Width = 98
           Height = 13
           Align = alTop
           Alignment = taCenter
           Caption = 'ObjectString'
+          ExplicitWidth = 58
         end
-        object EditCountStringObject: TcxCurrencyEdit
+        object EditCountStringObject: TEdit
           Left = 1
           Top = 14
+          Width = 98
+          Height = 21
           Align = alTop
-          Properties.Alignment.Horz = taRightJustify
-          Properties.Alignment.Vert = taVCenter
-          Properties.DecimalPlaces = 0
-          Properties.DisplayFormat = ',0.'
-          Properties.EditFormat = ',0.'
-          Properties.ReadOnly = True
           TabOrder = 0
-          Width = 71
+          ExplicitTop = 64
         end
       end
     end
@@ -224,7 +239,7 @@ object MainForm: TMainForm
       object DBGridObjectFloat: TDBGrid
         Left = 0
         Top = 0
-        Width = 508
+        Width = 481
         Height = 80
         Align = alClient
         DataSource = ObjectFloatDS
@@ -236,33 +251,30 @@ object MainForm: TMainForm
         TitleFont.Style = []
       end
       object PanelInfoObjectFloat: TPanel
-        Left = 508
+        Left = 481
         Top = 0
-        Width = 73
+        Width = 100
         Height = 80
         Align = alRight
         TabOrder = 1
         object LabelObjectFloat: TLabel
           Left = 1
           Top = 1
-          Width = 54
+          Width = 98
           Height = 13
           Align = alTop
           Alignment = taCenter
           Caption = 'ObjectFloat'
+          ExplicitWidth = 54
         end
-        object EditCountFloatObject: TcxCurrencyEdit
+        object EditCountFloatObject: TEdit
           Left = 1
           Top = 14
+          Width = 98
+          Height = 21
           Align = alTop
-          Properties.Alignment.Horz = taRightJustify
-          Properties.Alignment.Vert = taVCenter
-          Properties.DecimalPlaces = 0
-          Properties.DisplayFormat = ',0.'
-          Properties.EditFormat = ',0.'
-          Properties.ReadOnly = True
           TabOrder = 0
-          Width = 71
+          ExplicitTop = 64
         end
       end
     end
@@ -277,7 +289,7 @@ object MainForm: TMainForm
       object DBGridObjectDate: TDBGrid
         Left = 0
         Top = 0
-        Width = 508
+        Width = 481
         Height = 80
         Align = alClient
         DataSource = ObjectDateDS
@@ -289,33 +301,30 @@ object MainForm: TMainForm
         TitleFont.Style = []
       end
       object PanelInfoObjectDate: TPanel
-        Left = 508
+        Left = 481
         Top = 0
-        Width = 73
+        Width = 100
         Height = 80
         Align = alRight
         TabOrder = 1
         object LabelObjectDate: TLabel
           Left = 1
           Top = 1
-          Width = 54
+          Width = 98
           Height = 13
           Align = alTop
           Alignment = taCenter
           Caption = 'ObjectDate'
+          ExplicitWidth = 54
         end
-        object EditCountDateObject: TcxCurrencyEdit
+        object EditCountDateObject: TEdit
           Left = 1
-          Top = 14
-          Align = alTop
-          Properties.Alignment.Horz = taRightJustify
-          Properties.Alignment.Vert = taVCenter
-          Properties.DecimalPlaces = 0
-          Properties.DisplayFormat = ',0.'
-          Properties.EditFormat = ',0.'
-          Properties.ReadOnly = True
+          Top = 58
+          Width = 98
+          Height = 21
+          Align = alBottom
           TabOrder = 0
-          Width = 71
+          ExplicitTop = 64
         end
       end
     end
@@ -330,7 +339,7 @@ object MainForm: TMainForm
       object DBGridObjectBoolean: TDBGrid
         Left = 0
         Top = 0
-        Width = 508
+        Width = 481
         Height = 80
         Align = alClient
         DataSource = ObjectBooleanDS
@@ -342,33 +351,30 @@ object MainForm: TMainForm
         TitleFont.Style = []
       end
       object PanelInfoObjectBoolean: TPanel
-        Left = 508
+        Left = 481
         Top = 0
-        Width = 73
+        Width = 100
         Height = 80
         Align = alRight
         TabOrder = 1
         object LabelObjectBoolean: TLabel
           Left = 1
           Top = 1
-          Width = 70
+          Width = 98
           Height = 13
           Align = alTop
           Alignment = taCenter
           Caption = 'ObjectBoolean'
+          ExplicitWidth = 70
         end
-        object EditCountBooleanObject: TcxCurrencyEdit
+        object EditCountBooleanObject: TEdit
           Left = 1
           Top = 14
+          Width = 98
+          Height = 21
           Align = alTop
-          Properties.Alignment.Horz = taRightJustify
-          Properties.Alignment.Vert = taVCenter
-          Properties.DecimalPlaces = 0
-          Properties.DisplayFormat = ',0.'
-          Properties.EditFormat = ',0.'
-          Properties.ReadOnly = True
           TabOrder = 0
-          Width = 71
+          ExplicitTop = 64
         end
       end
     end
@@ -383,7 +389,7 @@ object MainForm: TMainForm
       object DBGridObjectLink: TDBGrid
         Left = 0
         Top = 0
-        Width = 508
+        Width = 481
         Height = 80
         Align = alClient
         DataSource = ObjectLinkDS
@@ -395,33 +401,30 @@ object MainForm: TMainForm
         TitleFont.Style = []
       end
       object PanelInfoObjectLink: TPanel
-        Left = 508
+        Left = 481
         Top = 0
-        Width = 73
+        Width = 100
         Height = 80
         Align = alRight
         TabOrder = 1
         object LabelObjectLink: TLabel
           Left = 1
           Top = 1
-          Width = 51
+          Width = 98
           Height = 13
           Align = alTop
           Alignment = taCenter
           Caption = 'ObjectLink'
+          ExplicitWidth = 51
         end
-        object EditCountLinkObject: TcxCurrencyEdit
+        object EditCountLinkObject: TEdit
           Left = 1
           Top = 14
+          Width = 98
+          Height = 21
           Align = alTop
-          Properties.Alignment.Horz = taRightJustify
-          Properties.Alignment.Vert = taVCenter
-          Properties.DecimalPlaces = 0
-          Properties.DisplayFormat = ',0.'
-          Properties.EditFormat = ',0.'
-          Properties.ReadOnly = True
           TabOrder = 0
-          Width = 71
+          ExplicitTop = 64
         end
       end
     end
@@ -479,37 +482,23 @@ object MainForm: TMainForm
       Caption = #1090#1086#1083#1100#1082#1086' OPEN'
       TabOrder = 3
     end
-    object cbDesc: TCheckBox
-      Left = 448
-      Top = 30
-      Width = 86
-      Height = 17
-      Caption = #1090#1086#1083#1100#1082#1086' Desc'
-      TabOrder = 4
-    end
     object cbClientDataSet: TCheckBox
-      Left = 621
+      Left = 447
       Top = 30
       Width = 126
       Height = 17
       Caption = 'CDS - '#1076#1083#1103' '#1073#1072#1079#1099' From '
-      TabOrder = 5
+      Checked = True
+      State = cbChecked
+      TabOrder = 4
     end
     object cbShowGrid: TCheckBox
-      Left = 755
+      Left = 579
       Top = 30
-      Width = 168
+      Width = 158
       Height = 17
       Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1074' '#1043#1056#1048#1044#1077
-      TabOrder = 6
-    end
-    object cbProc: TCheckBox
-      Left = 536
-      Top = 30
-      Width = 81
-      Height = 17
-      Caption = #1090#1086#1083#1100#1082#1086' Proc'
-      TabOrder = 7
+      TabOrder = 5
     end
   end
   object PageControl: TPageControl
@@ -522,10 +511,6 @@ object MainForm: TMainForm
     TabOrder = 2
     object TabSheet1: TTabSheet
       Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080' - '#1044#1086#1082#1091#1084#1077#1085#1090#1099
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object PanelReplServer: TPanel
         Left = 0
         Top = 0
@@ -569,16 +554,12 @@ object MainForm: TMainForm
     object TabSheet2: TTabSheet
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' '#1092#1072#1081#1083#1086#1074
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
   end
   object ObjectDS: TDataSource
     DataSet = fQueryObject
-    Left = 400
-    Top = 88
+    Left = 312
+    Top = 144
   end
   object toSqlQuery: TZQuery
     Connection = toZConnection
@@ -587,11 +568,11 @@ object MainForm: TMainForm
     Params = <>
     Properties.Strings = (
       'select * from Object order by 1 desc')
-    Left = 56
-    Top = 320
+    Left = 72
+    Top = 272
   end
-  object spSelect_ReplObject_old: TdsdStoredProc
-    StoredProcName = 'gpSelect_ReplObject_old'
+  object spSelect_ReplObject: TdsdStoredProc
+    StoredProcName = 'gpSelect_ReplObject'
     DataSet = ObjectCDS
     DataSets = <
       item
@@ -622,10 +603,17 @@ object MainForm: TMainForm
         Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gConnectHost'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 368
-    Top = 40
+    Left = 247
+    Top = 119
   end
   object toZConnection: TZConnection
     ControlsCodePage = cCP_UTF16
@@ -638,8 +626,8 @@ object MainForm: TMainForm
     User = 'postgres'
     Password = 'postgres'
     Protocol = 'postgresql-9'
-    Left = 56
-    Top = 272
+    Left = 24
+    Top = 256
   end
   object toSqlQuery_two: TZQuery
     Connection = toZConnection
@@ -648,102 +636,109 @@ object MainForm: TMainForm
     Params = <>
     Properties.Strings = (
       'select * from Object order by 1 desc')
-    Left = 56
-    Top = 368
+    Left = 40
+    Top = 304
   end
   object ObjectCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 456
-    Top = 72
+    Left = 300
+    Top = 104
   end
   object FormParams: TdsdFormParams
     Params = <>
-    Left = 72
-    Top = 16
+    Left = 26
+    Top = 78
   end
-  object spSelect_ReplServer_load_old: TdsdStoredProc
-    StoredProcName = 'gpSelect_ReplServer_load_old'
+  object spSelect_ReplServer_load: TdsdStoredProc
+    StoredProcName = 'gpSelect_ReplServer_load'
     DataSet = ReplServerCDS
     DataSets = <
       item
         DataSet = ReplServerCDS
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'gConnectHost'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
-    Left = 176
-    Top = 80
+    Left = 112
+    Top = 54
   end
   object ReplServerCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 176
-    Top = 136
+    Left = 156
+    Top = 36
   end
   object ObjectStringCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 464
-    Top = 144
+    Left = 312
+    Top = 184
   end
   object ObjectStringDS: TDataSource
     DataSet = fQueryObjectString
-    Left = 408
-    Top = 160
+    Left = 312
+    Top = 208
   end
   object ObjectFloatCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 464
-    Top = 224
+    Left = 296
+    Top = 253
   end
   object ObjectFloatDS: TDataSource
     DataSet = fQueryObjectFloat
-    Left = 408
-    Top = 240
+    Left = 304
+    Top = 277
   end
   object ObjectDateDS: TDataSource
     DataSet = fQueryObjectDate
-    Left = 400
-    Top = 312
+    Left = 312
+    Top = 384
   end
   object ObjectDateCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 456
-    Top = 296
+    Left = 290
+    Top = 349
   end
   object ObjectBooleanDS: TDataSource
     DataSet = fQueryObjectBoolean
-    Left = 408
-    Top = 384
+    Left = 312
+    Top = 456
   end
   object ObjectBooleanCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 464
-    Top = 368
+    Left = 288
+    Top = 424
   end
   object ObjectLinkDS: TDataSource
     DataSet = fQueryObjectLink
-    Left = 400
-    Top = 480
+    Left = 307
+    Top = 530
   end
   object ObjectLinkCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 456
-    Top = 464
+    Left = 272
+    Top = 508
   end
-  object spInsert_ReplObject_old: TdsdStoredProc
-    StoredProcName = 'gpInsert_ReplObject_old'
+  object spInsert_ReplObject: TdsdStoredProc
+    StoredProcName = 'gpInsert_ReplObject'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -776,17 +771,13 @@ object MainForm: TMainForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inDataBaseId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outCount'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outMinId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outMaxId'
         Value = Null
         MultiSelectSeparator = ','
       end
@@ -816,6 +807,41 @@ object MainForm: TMainForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'outCountHistory'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCountHistoryString'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCountHistoryFloat'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCountHistoryDate'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCountHistoryLink'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMinId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMaxId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outCountIteration'
         Value = Null
         MultiSelectSeparator = ','
@@ -824,10 +850,17 @@ object MainForm: TMainForm
         Name = 'outCountPack'
         Value = Null
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gConnectHost'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 264
-    Top = 64
+    Left = 128
+    Top = 83
   end
   object fromZConnection: TZConnection
     ControlsCodePage = cCP_UTF16
@@ -840,8 +873,8 @@ object MainForm: TMainForm
     User = 'postgres'
     Password = 'postgres'
     Protocol = 'postgresql-9'
-    Left = 56
-    Top = 96
+    Left = 29
+    Top = 140
   end
   object fromSqlQuery: TZQuery
     Connection = fromZConnection
@@ -850,8 +883,8 @@ object MainForm: TMainForm
     Params = <>
     Properties.Strings = (
       'select * from Object order by 1 desc')
-    Left = 56
-    Top = 152
+    Left = 77
+    Top = 127
   end
   object fQueryObject: TZQuery
     Connection = fromZConnection
@@ -860,8 +893,8 @@ object MainForm: TMainForm
     Params = <>
     Properties.Strings = (
       'select * from Object order by 1 desc')
-    Left = 344
-    Top = 104
+    Left = 247
+    Top = 92
   end
   object fQueryObjectString: TZQuery
     Connection = fromZConnection
@@ -870,8 +903,8 @@ object MainForm: TMainForm
     Params = <>
     Properties.Strings = (
       'select * from Object order by 1 desc')
-    Left = 336
-    Top = 184
+    Left = 240
+    Top = 168
   end
   object fQueryObjectFloat: TZQuery
     Connection = fromZConnection
@@ -880,8 +913,8 @@ object MainForm: TMainForm
     Params = <>
     Properties.Strings = (
       'select * from Object order by 1 desc')
-    Left = 336
-    Top = 256
+    Left = 232
+    Top = 264
   end
   object fQueryObjectDate: TZQuery
     Connection = fromZConnection
@@ -890,8 +923,8 @@ object MainForm: TMainForm
     Params = <>
     Properties.Strings = (
       'select * from Object order by 1 desc')
-    Left = 344
-    Top = 328
+    Left = 224
+    Top = 336
   end
   object fQueryObjectBoolean: TZQuery
     Connection = fromZConnection
@@ -900,8 +933,8 @@ object MainForm: TMainForm
     Params = <>
     Properties.Strings = (
       'select * from Object order by 1 desc')
-    Left = 328
-    Top = 392
+    Left = 224
+    Top = 408
   end
   object fQueryObjectLink: TZQuery
     Connection = fromZConnection
@@ -910,11 +943,11 @@ object MainForm: TMainForm
     Params = <>
     Properties.Strings = (
       'select * from Object order by 1 desc')
-    Left = 336
-    Top = 472
+    Left = 216
+    Top = 496
   end
-  object spSelect_ReplObjectString_old: TdsdStoredProc
-    StoredProcName = 'gpSelect_ReplObjectString_old'
+  object spSelect_ReplObjectString: TdsdStoredProc
+    StoredProcName = 'gpSelect_ReplObjectString'
     DataSet = ObjectStringCDS
     DataSets = <
       item
@@ -945,13 +978,20 @@ object MainForm: TMainForm
         Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gConnectHost'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 464
-    Top = 176
+    Left = 240
+    Top = 200
   end
-  object spSelect_ReplObjectFloat_old: TdsdStoredProc
-    StoredProcName = 'gpSelect_ReplObjectFloat_old'
+  object spSelect_ReplObjectFloat: TdsdStoredProc
+    StoredProcName = 'gpSelect_ReplObjectFloat'
     DataSet = ObjectFloatCDS
     DataSets = <
       item
@@ -982,13 +1022,20 @@ object MainForm: TMainForm
         Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gConnectHost'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 464
-    Top = 248
+    Left = 232
+    Top = 293
   end
-  object spSelect_ReplObjectDate_old: TdsdStoredProc
-    StoredProcName = 'gpSelect_ReplObjectDate_old'
+  object spSelect_ReplObjectDate: TdsdStoredProc
+    StoredProcName = 'gpSelect_ReplObjectDate'
     DataSet = ObjectDateCDS
     DataSets = <
       item
@@ -1019,13 +1066,20 @@ object MainForm: TMainForm
         Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gConnectHost'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 472
-    Top = 312
+    Left = 224
+    Top = 360
   end
-  object spSelect_ReplObjectBoolean_old: TdsdStoredProc
-    StoredProcName = 'gpSelect_ReplObjectBoolean_old'
+  object spSelect_ReplObjectBoolean: TdsdStoredProc
+    StoredProcName = 'gpSelect_ReplObjectBoolean'
     DataSet = ObjectBooleanCDS
     DataSets = <
       item
@@ -1056,13 +1110,20 @@ object MainForm: TMainForm
         Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gConnectHost'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 488
-    Top = 368
+    Left = 224
+    Top = 440
   end
-  object spSelect_ReplObjectLink_old: TdsdStoredProc
-    StoredProcName = 'gpSelect_ReplObjectLink_old'
+  object spSelect_ReplObjectLink: TdsdStoredProc
+    StoredProcName = 'gpSelect_ReplObjectLink'
     DataSet = ObjectLinkCDS
     DataSets = <
       item
@@ -1093,20 +1154,20 @@ object MainForm: TMainForm
         Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gConnectHost'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 472
-    Top = 424
+    Left = 216
+    Top = 520
   end
-  object tmpCDS: TClientDataSet
-    Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
-    Params = <>
-    Left = 208
-    Top = 344
-  end
-  object spExecSql: TdsdStoredProc
-    StoredProcName = 'gpExecSql'
+  object spExecSql_repl_to: TdsdStoredProc
+    StoredProcName = 'gpExecSql_repl'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1116,10 +1177,17 @@ object MainForm: TMainForm
         DataType = ftWideString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gConnectHost'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 192
-    Top = 200
+    Left = 120
+    Top = 216
   end
   object fromSqlQuery_two: TZQuery
     Connection = fromZConnection
@@ -1128,7 +1196,7 @@ object MainForm: TMainForm
     Params = <>
     Properties.Strings = (
       'select * from Object order by 1 desc')
-    Left = 56
-    Top = 200
+    Left = 64
+    Top = 168
   end
 end

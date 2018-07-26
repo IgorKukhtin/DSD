@@ -45,6 +45,7 @@ type
   end;
 
   function ConvertXMLParamToStrings(XMLParam: String): String;
+  function GetXMLParam_gConnectHost(XMLParam: String): String;
 
 implementation
 
@@ -348,6 +349,27 @@ begin
   end;
 end;
 
+function GetXMLParam_gConnectHost(XMLParam: String): String;
+var i: integer;
+begin
+   result := '';
+   //
+   // захардкодил НАЗВАНИЕ параметра - если он есть, тогда в нем "другой" Веб-сервер
+   if Pos('<gConnectHost ', XMLParam) > 0
+   then
+       with LoadXMLData(XMLParam).DocumentElement do
+        with ChildNodes.First do
+         for i := 0 to ChildNodes.Count - 1 do
+          with ChildNodes[i] do
+           if NodeName = 'gConnectHost' then
+           begin
+              //result := PrepareValue(GetAttribute('Value'), GetAttribute('DataType'));
+              result := GetAttribute('Value');
+              if result <> '' then result := 'http://' + result;
+              break
+           end;
+end;
+
 function TStorage.CheckConnectionType(pData: string): TConnectionType;
 var
   S: string;
@@ -410,10 +432,14 @@ begin
     AttemptCount := 0;
     ok := False;
 
-    if FConnectionList.CurrentConnection[CType] <> nil then
-      CString := FConnectionList.CurrentConnection[CType].CString
-    else
-      CString := FConnectionList.FirstConnection(CType).CString;
+    // если есть "такое" НАЗВАНИЕ параметра, тогда в нем "другой" Веб-сервер
+    CString:= GetXMLParam_gConnectHost(pData);
+    //
+    if CString = '' then
+      if FConnectionList.CurrentConnection[CType] <> nil then
+        CString := FConnectionList.CurrentConnection[CType].CString
+      else
+        CString := FConnectionList.FirstConnection(CType).CString;
 
     try
       repeat

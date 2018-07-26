@@ -71,7 +71,7 @@ BEGIN
          RAISE EXCEPTION 'Ошибка-1.Не определен Товар в документе № <%>.', vbInvNumber;
      END IF;
      -- проверка - inPartionId
-     IF inPartionId IS NULL AND inDescId = zc_MI_Master() AND vbMovementDescId <> zc_Movement_Income()
+     IF inPartionId IS NULL AND inDescId = zc_MI_Master() AND vbMovementDescId NOT IN (zc_Movement_Income(), zc_Movement_Currency())
      THEN
          RAISE EXCEPTION 'Ошибка-1.Не определена Партия в документе № <%>.', vbInvNumber;
      END IF;

@@ -49,7 +49,7 @@ type
     StopButton: TButton;
     CloseButton: TButton;
     toSqlQuery: TZQuery;
-    spSelect_ReplObject_old: TdsdStoredProc;
+    spSelect_ReplObject: TdsdStoredProc;
     toZConnection: TZConnection;
     toSqlQuery_two: TZQuery;
     PageControl: TPageControl;
@@ -62,37 +62,30 @@ type
     FormParams: TdsdFormParams;
     PanelCB: TPanel;
     cbProtocol: TCheckBox;
-    spSelect_ReplServer_load_old: TdsdStoredProc;
+    spSelect_ReplServer_load: TdsdStoredProc;
     ReplServerCDS: TClientDataSet;
     LabelObjectDescId: TLabel;
     PanelInfoObject: TPanel;
-    EditCountObject: TcxCurrencyEdit;
     PanelGridObjectString: TPanel;
     DBGridObjectString: TDBGrid;
     PanelInfoObjectString: TPanel;
-    EditCountStringObject: TcxCurrencyEdit;
     LabelObjectString: TLabel;
-    LabelObject: TLabel;
     PanelGridObjectFloat: TPanel;
     DBGridObjectFloat: TDBGrid;
     PanelInfoObjectFloat: TPanel;
     LabelObjectFloat: TLabel;
-    EditCountFloatObject: TcxCurrencyEdit;
     PanelGridObjectDate: TPanel;
     DBGridObjectDate: TDBGrid;
     PanelInfoObjectDate: TPanel;
     LabelObjectDate: TLabel;
-    EditCountDateObject: TcxCurrencyEdit;
     PanelGridObjectBoolean: TPanel;
     DBGridObjectBoolean: TDBGrid;
     PanelInfoObjectBoolean: TPanel;
     LabelObjectBoolean: TLabel;
-    EditCountBooleanObject: TcxCurrencyEdit;
     PanelGridObjectLink: TPanel;
     DBGridObjectLink: TDBGrid;
     PanelInfoObjectLink: TPanel;
     LabelObjectLink: TLabel;
-    EditCountLinkObject: TcxCurrencyEdit;
     ObjectStringCDS: TClientDataSet;
     ObjectStringDS: TDataSource;
     ObjectFloatCDS: TClientDataSet;
@@ -104,17 +97,15 @@ type
     ObjectLinkDS: TDataSource;
     ObjectLinkCDS: TClientDataSet;
     EditObjectDescId: TEdit;
-    spInsert_ReplObject_old: TdsdStoredProc;
-    EditMinIdObject: TcxCurrencyEdit;
-    EditMaxIdObject: TcxCurrencyEdit;
+    spInsert_ReplObject: TdsdStoredProc;
     EditCountIterationObject: TEdit;
     cbGUID: TCheckBox;
     cbOnlyOpen: TCheckBox;
     PanelError: TPanel;
     MemoMsg: TMemo;
-    cbDesc: TCheckBox;
     fromZConnection: TZConnection;
     fromSqlQuery: TZQuery;
+    fromSqlQuery_two: TZQuery;
     fQueryObject: TZQuery;
     fQueryObjectString: TZQuery;
     fQueryObjectFloat: TZQuery;
@@ -122,16 +113,25 @@ type
     fQueryObjectBoolean: TZQuery;
     fQueryObjectLink: TZQuery;
     cbClientDataSet: TCheckBox;
-    spSelect_ReplObjectString_old: TdsdStoredProc;
-    spSelect_ReplObjectFloat_old: TdsdStoredProc;
-    spSelect_ReplObjectDate_old: TdsdStoredProc;
-    spSelect_ReplObjectBoolean_old: TdsdStoredProc;
-    spSelect_ReplObjectLink_old: TdsdStoredProc;
+    spSelect_ReplObjectString: TdsdStoredProc;
+    spSelect_ReplObjectFloat: TdsdStoredProc;
+    spSelect_ReplObjectDate: TdsdStoredProc;
+    spSelect_ReplObjectBoolean: TdsdStoredProc;
+    spSelect_ReplObjectLink: TdsdStoredProc;
     cbShowGrid: TCheckBox;
-    tmpCDS: TClientDataSet;
-    spExecSql: TdsdStoredProc;
-    fromSqlQuery_two: TZQuery;
+    spExecSql_repl_to: TdsdStoredProc;
     cbProc: TCheckBox;
+    cbDesc: TCheckBox;
+    cbObject: TCheckBox;
+    cbObjectHistory: TCheckBox;
+    EditMaxIdObject: TEdit;
+    EditMinIdObject: TEdit;
+    EditCountObject: TEdit;
+    EditCountStringObject: TEdit;
+    EditCountFloatObject: TEdit;
+    EditCountDateObject: TEdit;
+    EditCountBooleanObject: TEdit;
+    EditCountLinkObject: TEdit;
 
     procedure OKGuideButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -139,9 +139,12 @@ type
     procedure CloseButtonClick(Sender: TObject);
     procedure ButtonPanelDblClick(Sender: TObject);
   private
+    fBegin_All : Boolean;
     fStop : Boolean;
     gSessionGUID : String;
-    outMinId, outCountIteration, outMaxId, outCountPack : Integer;
+    outMinId, outMaxId, outCountIteration, outCountPack : Integer;
+    outCount, outCountString, outCountFloat, outCountDate, outCountBoolean, outCountLink : Integer;
+    outCountHistory, outCountHistoryString, outCountHistoryFloat, outCountHistoryDate, outCountHistoryLink : Integer;
 
     procedure myShowSql(mySql:TStrings);
     procedure MyDelay(mySec:Integer);
@@ -174,9 +177,10 @@ type
 
     function fOpenSqToQuery (mySql:String):Boolean;
     function fExecSqToQuery (mySql:String):String;
-    function fOpenSqToQuery_two (mySql:String):Boolean;
-    function fExecSqToQuery_two (mySql:String):Boolean;
+    //function fOpenSqToQuery_two (mySql:String):Boolean;
+    //function fExecSqToQuery_two (mySql:String):Boolean;
 
+    function fExecSql_repl_to (mySql:String):String;
 
     procedure CursorGridChange;
 
@@ -184,20 +188,28 @@ type
     procedure myDisabledCB (cb:TCheckBox);
 
     function gpSelect_ReplServer_load: TArrayReplServer;
-    function IniConnectionFrom (isOpen   : Boolean): Boolean;
-    function IniConnectionTo   (isGetDesc: Boolean): Boolean;
+    function IniConnectionFrom (isConnected : Boolean): Boolean;
+    function IniConnectionTo   (_PropertyName : String; isGetDesc   : Boolean): Boolean;
+
+    function fObject_andProperty_while : Boolean;
+    function fObjectLink_while : Boolean;
+    function fObjectHistory_while : Boolean;
+    function fObjectHistory_Property_while : Boolean;
 
     function pInsert_ReplObject : Boolean;
     function pSendAllTo_ReplObject  : Boolean;
-    function pOpen_ReplObject (isObjectLink : Boolean; Num_main : Integer; StartId, EndId : LongInt) : Boolean;
-    function pSendPackTo_ReplObject(Num_main, CountPack : Integer) : Boolean;
-    function pSendPackTo_ReplObjectProperty(Num_main, CountPack : Integer; QueryData : TClientDataSet) : Boolean;
+    function pOpen_ReplObject (isObjectLink : Boolean; Num_main : Integer; StartId, EndId : LongInt; isHistory : Boolean) : Boolean;
+    function pSendPackTo_ReplObject(Num_main, CountPack : Integer; isHistory : Boolean) : Boolean;
+    function pSendPackTo_ReplObjectProperty(Num_main, CountPack : Integer; CDSData : TClientDataSet; isHistory : Boolean) : Boolean;
+    function fMove_ObjectHistory_repl : Boolean;
 
     procedure AddToLog(S, myFile, myFolder: string; isError : Boolean);
     procedure AddToMemoMsg(S: String; isError : Boolean);
 
     procedure pSendAllTo_ReplObjectDesc;
     function pSendAllTo_ReplProc : Boolean;
+
+    function pBegin_All : Boolean;
 
   public
   end;
@@ -253,18 +265,34 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.gpSelect_ReplServer_load: TArrayReplServer;
 var i: integer;
+    lCDS : TClientDataSet;
 begin
-    if not IniConnectionFrom(TRUE) then exit;
-    //
     rgReplServer.Items.Clear;
     //
-    fOpenSqFromQuery ('select * from gpSelect_ReplServer_load (CAST (NULL AS TVarChar))');
+    if cbClientDataSet.Checked = TRUE
+    then
+      with spSelect_ReplServer_load do
+      begin
+         // !!!ОДИН РАЗ - ЗАХАРДКОДИЛ!!!
+         if Assigned(ArrayReplServer)
+         then ParamByName('gConnectHost').Value := ArrayReplServer[0].HostName
+         else ParamByName('gConnectHost').Value := 'integer-srv2.alan.dp.ua';
+         Execute;
+         lCDS:= TClientDataSet(DataSet);
+      end
+    else
+    begin
+         // Подключились к серверу From - ОБЯЗАТЕЛЬНО
+         if not IniConnectionFrom (TRUE) then exit;
+         fOpenSqFromQuery ('select * from gpSelect_ReplServer_load (CAST (NULL AS TVarChar), CAST (NULL AS TVarChar))');
+         lCDS:= TClientDataSet(fromSqlQuery);
+    end;
     //
-    with fromSqlQuery do
+    with lCDS do
     begin
          First;
          //
-         if Assigned (ArrayReplServer) then FreeAndNil (ArrayReplServer);
+         if Assigned (Result) then begin SetLength(Result, 0);Finalize(Result);Result:=nil;end;
          SetLength(Result, RecordCount);
          //
          for i:= 0 to RecordCount-1 do
@@ -398,6 +426,20 @@ begin
      Result:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.fExecSql_repl_to (mySql:String):String;
+begin
+     Result:= '';
+     //
+     with spExecSql_repl_to do
+     begin
+          ParamByName('inSqlText').Value    := mySql;
+          ParamByName('gConnectHost').Value := '';
+          try Execute;
+          except on E:Exception do Result:= E.Message;
+          end;
+     end;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fExecSqToQuery (mySql:String):String;
 begin
      with toSqlQuery,Sql do begin
@@ -415,7 +457,7 @@ begin
 end;
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-function TMainForm.fOpenSqToQuery_two (mySql:String):Boolean;
+{function TMainForm.fOpenSqToQuery_two (mySql:String):Boolean;
 begin
      with toSqlQuery_two,Sql do begin
         Clear;
@@ -425,9 +467,9 @@ begin
         end;
      end;
      Result:=true;
-end;
+end;}
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-function TMainForm.fExecSqToQuery_two (mySql:String):Boolean;
+{function TMainForm.fExecSqToQuery_two (mySql:String):Boolean;
 begin
      with toSqlQuery_two,Sql do begin
         Clear;
@@ -435,7 +477,7 @@ begin
         try ExecSql except ShowMessage('fExecSqToQuery'+#10+#13+mySql);Result:=false;exit;end;
      end;
      Result:=true;
-end;
+end;}
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.MyDelay(mySec:Integer);
 var
@@ -488,15 +530,20 @@ function TMainForm.ConvertValueToVarChar(PropertyName : string;
                                    ChildObjectId: Integer
                                   ):string;
 begin
-     if PropertyName = 'ObjectString' then Result:= ConvertFromVarChar(_ValueS)
+     if (PropertyName = 'ObjectString')or(PropertyName = 'ObjectHistoryString')
+     then Result:= ConvertFromVarChar(_ValueS)
      else
-     if PropertyName = 'ObjectFloat' then Result:= ConvertFromFloat(_ValueF)
+     if (PropertyName = 'ObjectFloat')or(PropertyName = 'ObjectHistoryFloat')
+     then Result:= ConvertFromFloat(_ValueF)
      else
-     if PropertyName = 'ObjectDate' then Result:= ConvertFromDateTime(_ValueD, _isNullD)
+     if (PropertyName = 'ObjectDate')or(PropertyName = 'ObjectHistoryDate')
+     then Result:= ConvertFromDateTime(_ValueD, _isNullD)
      else
-     if PropertyName = 'ObjectBoolean' then Result:= ConvertFromBoolean(_ValueB, _isNullB)
+     if (PropertyName = 'ObjectBoolean')
+     then Result:= ConvertFromBoolean(_ValueB, _isNullB)
      else
-     if PropertyName = 'ObjectLink' then Result:= ConvertFromInt(ChildObjectId)
+     if (PropertyName = 'ObjectLink')or(PropertyName = 'ObjectHistoryLink')
+     then Result:= ConvertFromInt(ChildObjectId)
      else ShowMessage('ConvertValueToVarChar - PropertyName : ' + PropertyName + ' ???')
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -632,9 +679,12 @@ begin
 
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-function TMainForm.IniConnectionFrom(isOpen : Boolean): Boolean;
+function TMainForm.IniConnectionFrom(isConnected : Boolean): Boolean;
+//From: соединение - ПРЯМОЕ
 begin
-     // if isOpen = FALSE then begin Result:= true; exit; end;
+     // если НЕ ОБЯЗАТЕЛЬНО - выходим
+     if isConnected = FALSE then begin Result:= true; exit; end;
+     //
      //
      AddToMemoMsg('----- startConnect FROM:', FALSE);
      AddToMemoMsg(MainForm.FormatFromDateTime_folder(now), FALSE);
@@ -667,10 +717,15 @@ begin
      AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Connect', FALSE);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-function TMainForm.IniConnectionTo (isGetDesc: Boolean) : Boolean;
+function TMainForm.IniConnectionTo (_PropertyName : String; isGetDesc: Boolean) : Boolean;
+//To:   соединение - ПРЯМОЕ
 var i : Integer;
 begin
-     AddToMemoMsg('----- startConnect To:', FALSE);
+     Result:= false;
+     //
+     try
+     //
+     AddToMemoMsg('----- startConnect To(' + _PropertyName + '):', FALSE);
      AddToMemoMsg(MainForm.FormatFromDateTime_folder(now), FALSE);
      //
      with toZConnection do begin
@@ -684,7 +739,8 @@ begin
         try Connected:=true; except AddToMemoMsg(' !!!!! not Connected To!!!!', TRUE);end;
         //
         Result:= Connected;
-        if Result then rgReplServer.ItemIndex:= 2
+
+        if Result then rgReplServer.ItemIndex:= 1
         else rgReplServer.ItemIndex:= 0;
 
      end;
@@ -695,6 +751,7 @@ begin
            Clear;
            //
            // список - существующие Desc в базе TO
+           // Object...
            Add('select Code AS DescName, Id from ObjectDesc');
            Add('union all');
            Add('select Code AS DescName, Id from ObjectStringDesc');
@@ -706,10 +763,21 @@ begin
            Add('select Code AS DescName, Id from ObjectBooleanDesc');
            Add('union all');
            Add('select Code AS DescName, Id from ObjectLinkDesc');
+           // ObjectHistory...
+           Add('union all');
+           Add('select Code AS DescName, Id from ObjectHistoryDesc');
+           Add('union all');
+           Add('select Code AS DescName, Id from ObjectHistoryStringDesc');
+           Add('union all');
+           Add('select Code AS DescName, Id from ObjectHistoryFloatDesc');
+           Add('union all');
+           Add('select Code AS DescName, Id from ObjectHistoryDateDesc');
+           Add('union all');
+           Add('select Code AS DescName, Id from ObjectHistoryLinkDesc');
            //
            Open;
            //
-           if Assigned (ArrayObjectDesc) then FreeAndNil(ArrayObjectDesc);
+           if Assigned (ArrayObjectDesc) then begin SetLength(ArrayObjectDesc, 0);Finalize(ArrayObjectDesc);ArrayObjectDesc:=nil;end;
            SetLength(ArrayObjectDesc,RecordCount);
            i:=0;
            //
@@ -721,68 +789,121 @@ begin
                 Next;
                 i:=i+1;
            end;
+           //
+           Close;
      end;
      //
      AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Connect', FALSE);
+     //
+     except on E:Exception do
+       begin
+          // ERROR
+          AddToMemoMsg ('', FALSE);
+          AddToMemoMsg (' ??? procedure IniConnectionTo ???', TRUE);
+          AddToMemoMsg (E.Message, TRUE);
+          Result:= false;
+          exit;
+       end;
+     end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pInsert_ReplObject : Boolean;
-//var tmp : Integer;
+//From: соединение от галки cbClientDataSet - если нет тогда ПРЯМОЕ
 begin
      Result:= false;
 
      try
+
      gSessionGUID:= GenerateGUID;
-     fOpenSqFromQuery ('select * from gpInsert_ReplObject('+ConvertFromVarChar(gSessionGUID)
-                      +',' + FormatFromDateTime(ArrayReplServer[1].Start_toChild)
-                      +',' + ConvertFromVarChar(EditObjectDescId.Text)
-                      +',' + ConvertFromBoolean(cbProtocol.Checked, FALSE)
-                      +', CAST (NULL AS TVarChar) '
-                      +')');
      //
-     with fromSqlQuery do
-     begin
-         //
-         outMinId          :=FieldByName('outMinId').AsInteger;
-         outCountIteration :=FieldByName('outCountIteration').AsInteger;
-         outMaxId          :=FieldByName('outMaxId').AsInteger;
-         outCountPack      :=FieldByName('outCountPack').AsInteger;
-         //
-         EditCountObject.Text          := IntToStr (FieldByName('outCount').AsInteger);
-         EditMinIdObject.Text          := IntToStr (FieldByName('outMinId').AsInteger);
-         EditMaxIdObject.Text          := IntToStr (FieldByName('outMaxId').AsInteger);
-         EditCountIterationObject.Text := IntToStr (FieldByName('outCountIteration').AsInteger) + ' / ' + IntToStr (FieldByName('outCountPack').AsInteger);
-         EditCountStringObject.Text    := IntToStr (FieldByName('outCountString').AsInteger);
-         EditCountFloatObject.Text     := IntToStr (FieldByName('outCountFloat').AsInteger);
-         EditCountDateObject.Text      := IntToStr (FieldByName('outCountDate').AsInteger);
-         EditCountBooleanObject.Text   := IntToStr (FieldByName('outCountBoolean').AsInteger);
-         EditCountLinkObject.Text      := IntToStr (FieldByName('outCountLink').AsInteger);
-         //
-         Gauge.Progress:=
-               FieldByName('outCount').AsInteger
-             + FieldByName('outCountString').AsInteger
-             + FieldByName('outCountFloat').AsInteger
-             + FieldByName('outCountDate').AsInteger
-             + FieldByName('outCountBoolean').AsInteger
-             + FieldByName('outCountLink').AsInteger
-              ;
-         //
-         AddToMemoMsg('----- gSessionGUID:', FALSE);
-         //
-         AddToMemoMsg('Count : ' + IntToStr (FieldByName('outCount').AsInteger), FALSE);
-         AddToMemoMsg('String : ' + IntToStr (FieldByName('outCountString').AsInteger), FALSE);
-         AddToMemoMsg('Float : ' + IntToStr (FieldByName('outCountFloat').AsInteger), FALSE);
-         AddToMemoMsg('Date : ' + IntToStr (FieldByName('outCountDate').AsInteger), FALSE);
-         AddToMemoMsg('Boolean : ' + IntToStr (FieldByName('outCountBoolean').AsInteger), FALSE);
-         AddToMemoMsg('Link : ' + IntToStr (FieldByName('outCountLink').AsInteger), FALSE);
-         AddToMemoMsg('MinId : ' + IntToStr (FieldByName('outMinId').AsInteger), FALSE);
-         AddToMemoMsg('MaxId : ' + IntToStr (FieldByName('outMaxId').AsInteger), FALSE);
-         AddToMemoMsg('CountIteration : ' + IntToStr (FieldByName('outCountIteration').AsInteger), FALSE);
-         AddToMemoMsg('CountPack : ' + IntToStr (FieldByName('outCountPack').AsInteger), FALSE);
-         //
-         AddToMemoMsg(gSessionGUID, FALSE);
-         AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Insert', FALSE);
-     end;
+     AddToMemoMsg('----- gSessionGUID:', FALSE);
+     AddToMemoMsg(gSessionGUID, FALSE);
+     //
+     if cbClientDataSet.Checked = TRUE
+     then
+       with spInsert_ReplObject do
+       begin
+           ParamByName('inSessionGUID').Value:= gSessionGUID;
+           ParamByName('inStartDate').Value  := ArrayReplServer[1].Start_toChild;
+           ParamByName('inDescCode').Value   := EditObjectDescId.Text;
+           ParamByName('gConnectHost').Value := ArrayReplServer[0].HostName;
+           ParamByName('inIsProtocol').Value := cbProtocol.Checked;
+           ParamByName('inDataBaseId').Value := ArrayReplServer[0].Id;
+           Execute;
+           //
+           outCount          :=ParamByName('outCount').Value;
+           outCountString    :=ParamByName('outCountString').Value;
+           outCountFloat     :=ParamByName('outCountFloat').Value;
+           outCountDate      :=ParamByName('outCountDate').Value;
+           outCountBoolean   :=ParamByName('outCountBoolean').Value;
+           outCountLink      :=ParamByName('outCountLink').Value;
+
+           outCountHistory       :=ParamByName('outCountHistory').Value;
+           outCountHistoryString :=ParamByName('outCountHistoryString').Value;
+           outCountHistoryFloat  :=ParamByName('outCountHistoryFloat').Value;
+           outCountHistoryDate   :=ParamByName('outCountHistoryDate').Value;
+           outCountHistoryLink   :=ParamByName('outCountHistoryLink').Value;
+
+           outMinId          :=ParamByName('outMinId').Value;
+           outMaxId          :=ParamByName('outMaxId').Value;
+           outCountIteration :=ParamByName('outCountIteration').Value;
+           outCountPack      :=ParamByName('outCountPack').Value;
+       end
+     else
+       with fromSqlQuery do
+       begin
+           // Подключились к серверу From - ОБЯЗАТЕЛЬНО
+           if not IniConnectionFrom (TRUE) then exit;
+           //
+           fOpenSqFromQuery ('select * from gpInsert_ReplObject('+ConvertFromVarChar(gSessionGUID)
+                            +',' + FormatFromDateTime(ArrayReplServer[1].Start_toChild)
+                            +',' + ConvertFromVarChar(EditObjectDescId.Text)
+                            +',' + ConvertFromBoolean(cbProtocol.Checked, FALSE)
+                            +',' + IntToStr(ArrayReplServer[0].Id)
+                            +', CAST (NULL AS TVarChar) '
+                            +', CAST (NULL AS TVarChar) '
+                            +')');
+           //
+           outCount          :=FieldByName('outCount').AsInteger;
+           outCountString    :=FieldByName('outCountString').AsInteger;
+           outCountFloat     :=FieldByName('outCountFloat').AsInteger;
+           outCountDate      :=FieldByName('outCountDate').AsInteger;
+           outCountBoolean   :=FieldByName('outCountBoolean').AsInteger;
+           outCountLink      :=FieldByName('outCountLink').AsInteger;
+
+           outCountHistory       :=FieldByName('outCountHistory').AsInteger;
+           outCountHistoryString :=FieldByName('outCountHistoryString').AsInteger;
+           outCountHistoryFloat  :=FieldByName('outCountHistoryFloat').AsInteger;
+           outCountHistoryDate   :=FieldByName('outCountHistoryDate').AsInteger;
+           outCountHistoryLink   :=FieldByName('outCountHistoryLink').AsInteger;
+
+           outMinId          :=FieldByName('outMinId').AsInteger;
+           outMaxId          :=FieldByName('outMaxId').AsInteger;
+           outCountIteration :=FieldByName('outCountIteration').AsInteger;
+           outCountPack      :=FieldByName('outCountPack').AsInteger;
+       end;
+     //
+     //
+     AddToMemoMsg('Count : ' + IntToStr (outCount), FALSE);
+     AddToMemoMsg('String : ' + IntToStr (outCountString), FALSE);
+     AddToMemoMsg('Float : ' + IntToStr (outCountFloat), FALSE);
+     AddToMemoMsg('Date : ' + IntToStr (outCountDate), FALSE);
+     AddToMemoMsg('Boolean : ' + IntToStr (outCountBoolean), FALSE);
+     AddToMemoMsg('Link : ' + IntToStr (outCountLink), FALSE);
+     AddToMemoMsg('-', FALSE);
+     AddToMemoMsg('CountHistory : ' + IntToStr (outCountHistory), FALSE);
+     AddToMemoMsg('HistoryString : ' + IntToStr (outCountHistoryString), FALSE);
+     AddToMemoMsg('HistoryFloat : ' + IntToStr (outCountHistoryFloat), FALSE);
+     AddToMemoMsg('HistoryDate : ' + IntToStr (outCountHistoryDate), FALSE);
+     AddToMemoMsg('HistoryLink : ' + IntToStr (outCountHistoryLink), FALSE);
+     AddToMemoMsg('-', FALSE);
+     AddToMemoMsg('MinId : ' + IntToStr (outMinId), FALSE);
+     AddToMemoMsg('MaxId : ' + IntToStr (outMaxId), FALSE);
+     AddToMemoMsg('CountIteration : ' + IntToStr (outCountIteration), FALSE);
+     AddToMemoMsg('CountPack : ' + IntToStr (outCountPack), FALSE);
+     AddToMemoMsg('-', FALSE);
+     //
+     AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Insert', FALSE);
 
      except on E:Exception do
        begin
@@ -796,11 +917,64 @@ begin
      Result:= true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-function TMainForm.pOpen_ReplObject (isObjectLink : Boolean; Num_main : Integer; StartId, EndId : LongInt) : Boolean;
+function TMainForm.pOpen_ReplObject (isObjectLink : Boolean; Num_main : Integer; StartId, EndId : LongInt; isHistory : Boolean) : Boolean;
+var lObject, lObjectString, lObjectFloat, lObjectDate, lObjectBoolean, lObjectLink : String;
+
+    procedure pExec_Select (spName : String; spSelect : TdsdStoredProc);
+    begin
+       with spSelect do
+       begin
+           StoredProcName:= spName;
+           //
+           ParamByName('inSessionGUID').Value:= gSessionGUID;
+           ParamByName('inStartId').Value    := StartId;
+           ParamByName('inEndId').Value      := EndId;
+           ParamByName('inDataBaseId').Value := ArrayReplServer[0].Id;
+           ParamByName('gConnectHost').Value := ArrayReplServer[0].HostName;
+           Execute;
+       end;
+    end;
+    procedure pOpen_Select (spName : String; lQuery : TZQuery);
+    begin
+       with lQuery, Sql do
+       begin
+           Clear;
+           Add ('SELECT * FROM ' + spName + '(' + ConvertFromVarChar(gSessionGUID)
+                                           +',' + IntToStr(StartId)
+                                           +',' + IntToStr(EndId)
+                                           +',' + IntToStr(ArrayReplServer[0].Id)
+                                           +',' + ConvertFromVarChar('')
+                                           +',zfCalc_UserAdmin())');
+           Open;
+       end;
+    end;
 begin
      Result:= false;
      //
+     if isHistory = TRUE then
+     begin
+          lObject        := 'ObjectHistory';
+          lObjectString  := 'ObjectHistoryString';
+          lObjectFloat   := 'ObjectHistoryFloat';
+          lObjectDate    := 'ObjectHistoryDate';
+          lObjectBoolean := '';
+          lObjectLink    := 'ObjectHistoryLink';
+     end
+     else
+     begin
+          lObject        := 'Object';
+          lObjectString  := 'ObjectString';
+          lObjectFloat   := 'ObjectFloat';
+          lObjectDate    := 'ObjectDate';
+          lObjectBoolean := 'ObjectBoolean';
+          lObjectLink    := 'ObjectLink';
+     end;
+     //
+     // Подключились к серверу From - если надо
      if not IniConnectionFrom (not cbClientDataSet.Checked) then exit;
+     //
+     // Коммент
+     if isObjectLink = TRUE then AddToMemoMsg(' ...', FALSE);
      //
      AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - Start Open ('+IntToStr(Num_main)+') ('+IntToStr(StartId)+')-('+IntToStr(EndId)+')', FALSE);
      //
@@ -818,181 +992,121 @@ begin
      end;
 
      //
-     {if cbClientDataSet.Checked = TRUE then
+     if cbClientDataSet.Checked = TRUE then
      begin
          if cbShowGrid.Checked = True then
          begin
            //
-           ObjectDS.DataSet:= ObjectCDS;
-           ObjectStringDS.DataSet:= ObjectStringCDS;
-           ObjectFloatDS.DataSet:= ObjectFloatCDS;
-           ObjectDateDS.DataSet:= ObjectDateCDS;
+           ObjectDS.DataSet       := ObjectCDS;
+           ObjectStringDS.DataSet := ObjectStringCDS;
+           ObjectFloatDS.DataSet  := ObjectFloatCDS;
+           ObjectDateDS.DataSet   := ObjectDateCDS;
            ObjectBooleanDS.DataSet:= ObjectBooleanCDS;
-           ObjectLinkDS.DataSet:= ObjectLinkCDS;
+           ObjectLinkDS.DataSet   := ObjectLinkCDS;
          end;
          //
          if isObjectLink = FALSE then
          begin
            //
-           with spSelect_ReplObject do
-           begin
-               ParamByName('inSessionGUID').Value:= spInsert_ReplObject.ParamByName('inSessionGUID').Value;
-               ParamByName('inStartId').Value    := StartId;
-               ParamByName('inEndId').Value      := EndId;
-               ParamByName('inDataBaseId').Value := ArrayReplServer[0].Id;
-               Execute;
-           end;
-           AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open Object');
+           pExec_Select ('gpSelect_Repl' + lObject, spSelect_ReplObject);
+           AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lObject, FALSE);
            //
-           with spSelect_ReplObjectString do
-           begin
-               ParamByName('inSessionGUID').Value:= spInsert_ReplObject.ParamByName('inSessionGUID').Value;
-               ParamByName('inStartId').Value    := StartId;
-               ParamByName('inEndId').Value      := EndId;
-               ParamByName('inDataBaseId').Value := ArrayReplServer[0].Id;
-               Execute;
+           if isHistory = FALSE
+           then begin
+             //
+             pExec_Select ('gpSelect_Repl' + lObjectString, spSelect_ReplObjectString);
+             AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lObjectString, FALSE);
+             //
+             pExec_Select ('gpSelect_Repl' + lObjectFloat, spSelect_ReplObjectFloat);
+             AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lObjectFloat, FALSE);
+             //
+             pExec_Select ('gpSelect_Repl' + lObjectDate, spSelect_ReplObjectDate);
+             AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lObjectDate, FALSE);
+             //
+             pExec_Select ('gpSelect_Repl' + lObjectBoolean, spSelect_ReplObjectBoolean);
+             AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lObjectBoolean, FALSE);
            end;
-           AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ObjectString');
-           //
-           with spSelect_ReplObjectFloat do
-           begin
-               ParamByName('inSessionGUID').Value:= spInsert_ReplObject.ParamByName('inSessionGUID').Value;
-               ParamByName('inStartId').Value    := StartId;
-               ParamByName('inEndId').Value      := EndId;
-               ParamByName('inDataBaseId').Value := ArrayReplServer[0].Id;
-               Execute;
-           end;
-           AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ObjectFloat');
-           //
-           with spSelect_ReplObjectDate do
-           begin
-               ParamByName('inSessionGUID').Value:= spInsert_ReplObject.ParamByName('inSessionGUID').Value;
-               ParamByName('inStartId').Value    := StartId;
-               ParamByName('inEndId').Value      := EndId;
-               ParamByName('inDataBaseId').Value := ArrayReplServer[0].Id;
-               Execute;
-           end;
-           AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ObjectDate');
-           //
-           with spSelect_ReplObjectBoolean do
-           begin
-               ParamByName('inSessionGUID').Value:= spInsert_ReplObject.ParamByName('inSessionGUID').Value;
-               ParamByName('inStartId').Value    := StartId;
-               ParamByName('inEndId').Value      := EndId;
-               ParamByName('inDataBaseId').Value := ArrayReplServer[0].Id;
-               Execute;
-           end;
-           AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ObjectBoolean');
          end
          else
-         begin
            //
-           with spSelect_ReplObjectLink do
-           begin
-               ParamByName('inSessionGUID').Value:= spInsert_ReplObject.ParamByName('inSessionGUID').Value;
-               ParamByName('inStartId').Value    := StartId;
-               ParamByName('inEndId').Value      := EndId;
-               ParamByName('inDataBaseId').Value := ArrayReplServer[0].Id;
-               Execute;
+           if isHistory = TRUE
+           then begin
+             //
+             pExec_Select ('gpSelect_Repl' + lObjectString, spSelect_ReplObjectString);
+             AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lObjectString, FALSE);
+             //
+             pExec_Select ('gpSelect_Repl' + lObjectFloat, spSelect_ReplObjectFloat);
+             AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lObjectFloat, FALSE);
+             //
+             pExec_Select ('gpSelect_Repl' + lObjectDate, spSelect_ReplObjectDate);
+             AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lObjectDate, FALSE);
+             //
+             pExec_Select ('gpSelect_Repl' + lObjectLink, spSelect_ReplObjectLink);
+             AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lObjectLink, FALSE);
+           end
+           else begin
+             //
+             pExec_Select ('gpSelect_Repl' + lObjectLink, spSelect_ReplObjectLink);
+             AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lObjectLink, FALSE);
            end;
-           AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ObjectLink');
-
-         end;
      end
-     else}
+     else
      begin
          if cbShowGrid.Checked = True then
          begin
            //
-           ObjectDS.DataSet:= fQueryObject;
-           ObjectLinkDS.DataSet:= ObjectLinkCDS;
-           ObjectStringDS.DataSet:= fQueryObjectString;
-           ObjectFloatDS.DataSet:= fQueryObjectFloat;
-           ObjectDateDS.DataSet:= fQueryObjectDate;
+           ObjectDS.DataSet       := fQueryObject;
+           ObjectStringDS.DataSet := fQueryObjectString;
+           ObjectFloatDS.DataSet  := fQueryObjectFloat;
+           ObjectDateDS.DataSet   := fQueryObjectDate;
            ObjectBooleanDS.DataSet:= fQueryObjectBoolean;
-           ObjectLinkDS.DataSet:= fQueryObjectLink;
+           ObjectLinkDS.DataSet   := fQueryObjectLink;
          end;
          //
          if isObjectLink = FALSE then
          begin
            //
-           with fQueryObject,Sql do
-           begin
-               Clear;
-               Add ('SELECT * FROM gpSelect_ReplObject(' + ConvertFromVarChar(gSessionGUID)
-                                                    +',' + IntToStr(StartId)
-                                                    +',' + IntToStr(EndId)
-                                                    +',' + IntToStr(ArrayReplServer[0].Id)
-                                                    +',zfCalc_UserAdmin())');
-               Open;
-           end;
-           AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open Object', FALSE);
+           pOpen_Select ('gpSelect_Repl' + lObject, fQueryObject);
+           AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lObject, FALSE);
            //
-           with fQueryObjectString,Sql do
-           begin
-               Clear;
-               Add ('SELECT * FROM gpSelect_ReplObjectString(' + ConvertFromVarChar(gSessionGUID)
-                                                    +',' + IntToStr(StartId)
-                                                    +',' + IntToStr(EndId)
-                                                    +',' + IntToStr(ArrayReplServer[0].Id)
-                                                    +',zfCalc_UserAdmin())');
-               Open;
+           if isHistory = FALSE
+           then begin
+             //
+             pOpen_Select ('gpSelect_Repl' + lObjectString, fQueryObjectString);
+             AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lObjectString, FALSE);
+             //
+             pOpen_Select ('gpSelect_Repl' + lObjectFloat, fQueryObjectFloat);
+             AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lObjectFloat, FALSE);
+             //
+             pOpen_Select ('gpSelect_Repl' + lObjectDate, fQueryObjectDate);
+             AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lObjectDate, FALSE);
+             //
+             pOpen_Select ('gpSelect_Repl' + lObjectBoolean, fQueryObjectBoolean);
+             AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lObjectBoolean, FALSE);
            end;
-           AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ObjectString', FALSE);
-           //
-           with fQueryObjectFloat,Sql do
-           begin
-               Clear;
-               Add ('SELECT * FROM gpSelect_ReplObjectFloat(' + ConvertFromVarChar(gSessionGUID)
-                                                    +',' + IntToStr(StartId)
-                                                    +',' + IntToStr(EndId)
-                                                    +',' + IntToStr(ArrayReplServer[0].Id)
-                                                    +',zfCalc_UserAdmin())');
-               Open;
-           end;
-           AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ObjectFloat', FALSE);
-           //
-           with fQueryObjectDate,Sql do
-           begin
-               Clear;
-               Add ('SELECT * FROM gpSelect_ReplObjectDate(' + ConvertFromVarChar(gSessionGUID)
-                                                    +',' + IntToStr(StartId)
-                                                    +',' + IntToStr(EndId)
-                                                    +',' + IntToStr(ArrayReplServer[0].Id)
-                                                    +',zfCalc_UserAdmin())');
-               Open;
-           end;
-           AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ObjectDate', FALSE);
-           //
-           with fQueryObjectBoolean,Sql do
-           begin
-               Clear;
-               Add ('SELECT * FROM gpSelect_ReplObjectBoolean(' + ConvertFromVarChar(gSessionGUID)
-                                                    +',' + IntToStr(StartId)
-                                                    +',' + IntToStr(EndId)
-                                                    +',' + IntToStr(ArrayReplServer[0].Id)
-                                                    +',zfCalc_UserAdmin())');
-               Open;
-           end;
-           AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ObjectBoolean', FALSE);
 
          end
          else
-         begin
-           //
-           with fQueryObjectLink,Sql do
-           begin
-               Clear;
-               Add ('SELECT * FROM gpSelect_ReplObjectLink(' + ConvertFromVarChar(gSessionGUID)
-                                                    +',' + IntToStr(StartId)
-                                                    +',' + IntToStr(EndId)
-                                                    +',' + IntToStr(ArrayReplServer[0].Id)
-                                                    +',zfCalc_UserAdmin())');
-               Open;
+           if isHistory = TRUE
+           then begin
+             //
+             pOpen_Select ('gpSelect_Repl' + lObjectString, fQueryObjectString);
+             AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lObjectString, FALSE);
+             //
+             pOpen_Select ('gpSelect_Repl' + lObjectFloat, fQueryObjectFloat);
+             AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lObjectFloat, FALSE);
+             //
+             pOpen_Select ('gpSelect_Repl' + lObjectDate, fQueryObjectDate);
+             AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lObjectDate, FALSE);
+             //
+             pOpen_Select ('gpSelect_Repl' + lObjectLink, fQueryObjectLink);
+             AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lObjectLink, FALSE);
+           end
+           else begin
+             //
+             pOpen_Select ('gpSelect_Repl' + lObjectLink, fQueryObjectLink);
+             AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lObjectLink, FALSE);
            end;
-           AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ObjectLink', FALSE);
-
-         end;
      end;
 
      except on E:Exception do
@@ -1007,16 +1121,26 @@ begin
      Result:= true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-function TMainForm.pSendPackTo_ReplObject (Num_main, CountPack : Integer) : Boolean;
-var StrPack : String;
+function TMainForm.pSendPackTo_ReplObject (Num_main, CountPack : Integer; isHistory : Boolean) : Boolean;
+//From: соединение от галки cbClientDataSet - если нет тогда ПРЯМОЕ (показ. в гриде)
+//To:   соединение - ПРЯМОЕ - выполняем Скрипт StrPack
+var sHist : String;
+var StrPack, nextL : String;
     i, num  : Integer;
-    nextL   : String;
     resStr  : String;
     myCDS : TClientDataSet;
+    lObject : String;
 begin
      Result:= false;
      //
-     if not IniConnectionTo (false) then exit;
+     //
+     if isHistory = TRUE then lObject := 'ObjectHistory' else lObject := 'Object';
+     if isHistory = TRUE then sHist   := 'History'       else sHist   := '';
+
+     //
+     //if cbClientDataSet.Checked = FALSE then
+       // Подключились к серверу To
+       if not IniConnectionTo (lObject, FALSE) then exit;
      //
      try
      //
@@ -1024,6 +1148,56 @@ begin
      num:=0;
      StrPack:= '';
      nextL  := #13;
+     //
+     // в самом начале для истории - удалили все из "временной истории"
+     if (Num_main = 1) and (isHistory = TRUE)
+     then begin
+         StrPack:= ' DO $$' + nextL
+                 + ' BEGIN' + nextL + nextL + nextL
+                 + ' IF NOT (EXISTS(Select table_name From INFORMATION_SCHEMA.tables Where Table_Name = lower(' + ConvertFromVarChar('ObjectHistory_repl') + '))) THEN'
+                 + nextL
+                 + '    CREATE TABLE ObjectHistory_repl (Id BigInt PRIMARY KEY,'
+                 +                                     ' DescId Integer NOT NULL,'
+                 +                                     ' StartDate TDateTime NOT NULL,'
+                 +                                     ' EndDate TDateTime NOT NULL,'
+                 +                                     ' ObjectId Integer NOT NULL'
+                 +                                     ' );'
+                 + nextL
+                 + ' END IF;'
+                 + nextL
+                 + nextL
+                 + ' TRUNCATE TABLE ObjectHistory_repl;'
+                 + nextL
+                 + nextL
+                 + ' END $$;'
+                 + nextL
+                 ;
+          //
+          // !!!сохранили - СКРИПТ!!!
+          resStr:= fExecSqToQuery (StrPack);
+          if resStr = ''
+          then
+              // результат = OK
+              StrPack:= StrPack + ' ------ Result = OK : ' + IntToStr(Num_main) + ':' + IntToStr(num) + nextL + nextL
+          else begin
+              // результат = ERROR
+              StrPack:= StrPack + ' ------ Result = ERROR : ' + IntToStr(Num_main) + ':' + IntToStr(num) + nextL + nextL;
+              // !!!сохранили - в ФАЙЛ!!!
+              AddToLog(StrPack, lObject, gSessionGUID, false);
+              //
+              // ERROR
+              AddToMemoMsg ('', FALSE);
+              AddToMemoMsg (lObject + ' : ' + IntToStr(Num_main) + ':' + IntToStr(num), FALSE);
+              AddToMemoMsg (resStr, TRUE);
+              //
+              exit;
+          end;
+          //
+          // !!!сохранили - в ФАЙЛ!!!
+          AddToLog(StrPack, lObject, gSessionGUID, false);
+          //
+          StrPack:= '';
+     end;
      //
      if cbClientDataSet.Checked = TRUE
      then myCDS:= TClientDataSet(ObjectCDS)
@@ -1040,7 +1214,12 @@ begin
              if StrPack = ''
              then begin
                   StrPack:= ' DO $$' + nextL
-                          + ' DECLARE vbId Integer;' + nextL
+                          + ' DECLARE vbId Integer;' + nextL;
+                  //
+                  if (isHistory = TRUE)
+                  then StrPack:= StrPack + ' DECLARE vbObjectId Integer;' + nextL;
+                  //
+                  StrPack:= StrPack
                           + ' BEGIN' + nextL + nextL + nextL
                           ;
                   num:= num + 1;
@@ -1056,7 +1235,7 @@ begin
                           + nextL
                           + '   CREATE OR REPLACE FUNCTION ' + FieldByName('DescName').AsString + '() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = ' + ConvertFromVarChar(FieldByName('DescName').AsString) + '); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;'
                           + nextL
-                          + '   INSERT INTO ObjectDesc (Id, Code, ItemName)'
+                          + '   INSERT INTO Object'+sHist+'Desc (Id, Code, ItemName)'
                           + '   SELECT ' + IntToStr(FieldByName('DescId').AsInteger) + ', ' + ConvertFromVarChar(FieldByName('DescName').AsString) + ', ' + ConvertFromVarChar(FieldByName('ItemName').AsString) + ' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = ' + ConvertFromVarChar(FieldByName('DescName').AsString) + ');'
                           + nextL
                           + nextL;
@@ -1067,9 +1246,16 @@ begin
              end;
              //
              // обнулили Id
-             StrPack:= StrPack + ' vbId:= 0;' + nextL;
+             if (isHistory = FALSE)
+             then
+                 StrPack:= StrPack + ' vbId:= 0;' + nextL;
              // Нашли Id
-             if cbGUID.Checked = TRUE
+             if (isHistory = TRUE)
+             then StrPack:= StrPack
+                          + ' vbId:= ' + IntToStr(FieldByName('ObjectHistoryId').AsInteger) + ';'
+                          + nextL
+             else
+             if (cbGUID.Checked = TRUE) and (isHistory = FALSE)
              then StrPack:= StrPack
                           + ' vbId:= (SELECT ObjectId FROM ObjectString WHERE ValueData = ' + ConvertFromVarChar(FieldByName('GUID').AsString) + ' and DescId = zc_ObjectString_GUID());'
                           + nextL
@@ -1079,25 +1265,51 @@ begin
                           + nextL
                           ;
              // попробовали UPDATE
-             StrPack:= StrPack
-                     + ' IF vbId > 0 THEN'
-                     + nextL
-                     + '    UPDATE Object SET DescId      = ' + IntToStr(FieldByName('DescId').AsInteger)
-                     + nextL
-                     + '                    , ObjectCode  = ' + IntToStr(FieldByName('ObjectCode').AsInteger)
-                     + nextL
-                     + '                    , ValueData   = ' + ConvertFromVarChar(FieldByName('ValueData').AsString)
-                     + nextL
-                     + '                    , isErased    = ' + ConvertFromBoolean(FieldByName('isErased').AsBoolean, FALSE)
-                     + nextL
-                     + '                    , AccessKeyId = ' + ConvertFromInt(FieldByName('AccessKeyId').AsInteger)
-                     + nextL
-                     + '    WHERE Id = vbId;'
-                     + nextL
-                     + ' END IF;'
-                     + nextL
-                     + nextL;
+             if (isHistory = FALSE)
+             then
+               StrPack:= StrPack
+                       + ' IF vbId > 0 THEN'
+                       + nextL
+                       + '    UPDATE Object SET DescId      = ' + IntToStr(FieldByName('DescId').AsInteger)
+                       + nextL
+                       + '                    , ObjectCode  = ' + IntToStr(FieldByName('ObjectCode').AsInteger)
+                       + nextL
+                       + '                    , ValueData   = ' + ConvertFromVarChar(FieldByName('ValueData').AsString)
+                       + nextL
+                       + '                    , isErased    = ' + ConvertFromBoolean(FieldByName('isErased').AsBoolean, FALSE)
+                       + nextL
+                       + '                    , AccessKeyId = ' + ConvertFromInt(FieldByName('AccessKeyId').AsInteger)
+                       + nextL
+                       + '    WHERE Id = vbId;'
+                       + nextL
+                       + ' END IF;'
+                       + nextL
+                       + nextL;
              // иначе INSERT
+             if (isHistory = TRUE) then
+             begin
+                 // Нашли ObjectId - для ObjectHistory
+                 StrPack:= StrPack
+                         + ' vbObjectId:= NULL;'
+                         + ' IF ' + ConvertFromVarChar(FieldByName('GUID').AsString) + ' <> ' + ConvertFromVarChar('')
+                         + ' THEN'
+                         +       ' vbObjectId:= (SELECT ObjectId FROM ObjectString WHERE ValueData = ' + ConvertFromVarChar(FieldByName('GUID').AsString) + ' and DescId = zc_ObjectString_GUID());'
+                         + ' END IF;'
+                         + nextL + nextL;
+                 //
+                 StrPack:= StrPack
+                              + '    INSERT INTO ObjectHistory_repl (Id, DescId, StartDate, EndDate, ObjectId)'
+                              + nextL
+                              + '    VALUES (vbId'
+                              +           ', ' + IntToStr(FieldByName('DescId').AsInteger)
+                              +           ', ' + ConvertFromDateTime(FieldByName('StartDate').AsDateTime, FALSE)
+                              +           ', ' + ConvertFromDateTime(FieldByName('EndDate').AsDateTime, FALSE)
+                              +           ', vbObjectId'
+                              +           ');'
+                              + nextL
+                              + nextL;
+             end
+             else
              if cbGUID.Checked = TRUE
              then StrPack:= StrPack
                           + ' IF NOT FOUND OR COALESCE (vbId, 0) = 0 THEN'
@@ -1133,26 +1345,30 @@ begin
                           + ' END IF;'
                           + nextL
                           + nextL;
-             // коммент
-             StrPack:= StrPack + ' -----' + nextL;
-             // всегда - сохранили  GUID
-             StrPack:= StrPack
-                        // попробовали UPDATE
-                   +    ' UPDATE ObjectString SET ValueData   = ' + ConvertFromVarChar(FieldByName('GUID').AsString)
-                   + nextL
-                   +    ' WHERE ObjectId = vbId AND DescId = zc_ObjectString_GUID();'
-                   + nextL
-                   + nextL
-                        // иначе INSERT
-                    + ' IF NOT FOUND THEN'
-                    + nextL
-                    + '    INSERT INTO ObjectString (ObjectId, DescId, ValueData)'
-                    + nextL
-                    + '    VALUES (vbId, zc_ObjectString_GUID(),' + ConvertFromVarChar(FieldByName('GUID').AsString) + ');'
-                    + nextL
-                    + ' END IF;'
-                    + nextL
-                    + nextL;
+             //
+             if (isHistory = FALSE) then
+             begin
+               // коммент
+               StrPack:= StrPack + ' -----' + nextL;
+               // всегда - сохранили  GUID
+               StrPack:= StrPack
+                          // попробовали UPDATE
+                     +    ' UPDATE ObjectString SET ValueData   = ' + ConvertFromVarChar(FieldByName('GUID').AsString)
+                     + nextL
+                     +    ' WHERE ObjectId = vbId AND DescId = zc_ObjectString_GUID();'
+                     + nextL
+                     + nextL
+                          // иначе INSERT
+                      + ' IF NOT FOUND THEN'
+                      + nextL
+                      + '    INSERT INTO ObjectString (ObjectId, DescId, ValueData)'
+                      + nextL
+                      + '    VALUES (vbId, zc_ObjectString_GUID(),' + ConvertFromVarChar(FieldByName('GUID').AsString) + ');'
+                      + nextL
+                      + ' END IF;'
+                      + nextL
+                      + nextL;
+             end;
              //
              //
              i:= i+1;
@@ -1175,9 +1391,12 @@ begin
                   else begin
                       // результат = ERROR
                       StrPack:= StrPack + ' ------ Result = ERROR : ' + IntToStr(Num_main) + ':' + IntToStr(num) + nextL + nextL;
+                      // !!!сохранили - в ФАЙЛ!!!
+                      AddToLog(StrPack, lObject, gSessionGUID, false);
+                      //
                       // ERROR
                       AddToMemoMsg ('', FALSE);
-                      AddToMemoMsg ('Object' + ' : ' + IntToStr(Num_main) + ':' + IntToStr(num), FALSE);
+                      AddToMemoMsg (lObject + ' : ' + IntToStr(Num_main) + ':' + IntToStr(num), FALSE);
                       AddToMemoMsg (resStr, TRUE);
                       //
                       exit;
@@ -1185,7 +1404,7 @@ begin
                   //
                   // !!!сохранили - в ФАЙЛ!!!
                   //ShowMessage (StrPack);
-                  AddToLog(StrPack, 'Object', gSessionGUID, false);
+                  AddToLog(StrPack, lObject, gSessionGUID, false);
                   //
                   // обнулили
                   StrPack:= '';
@@ -1215,17 +1434,19 @@ begin
           else begin
               // результат = ERROR
               StrPack:= StrPack + ' ------ Result = ERROR : ' + IntToStr(Num_main) + ':' + IntToStr(num) + nextL + nextL;
+              // !!!сохранили - в ФАЙЛ!!!
+              AddToLog(StrPack, lObject, gSessionGUID, false);
+              //
               // ERROR
               AddToMemoMsg ('', FALSE);
-              AddToMemoMsg ('Object' + ' : ' + IntToStr(Num_main) + ':' + IntToStr(num), FALSE);
+              AddToMemoMsg (lObject + ' : ' + IntToStr(Num_main) + ':' + IntToStr(num), FALSE);
               AddToMemoMsg (resStr, TRUE);
               //
               exit;
           end;
           //
           // !!!сохранили - в ФАЙЛ!!!
-          //ShowMessage (StrPack);
-          AddToLog(StrPack, 'Object', gSessionGUID, false);
+          AddToLog(StrPack, lObject, gSessionGUID, false);
           //
           //
      end;
@@ -1242,18 +1463,21 @@ begin
      Result:= true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-function TMainForm.pSendPackTo_ReplObjectProperty(Num_main, CountPack : Integer; QueryData : TClientDataSet) : Boolean;
-var StrPack : String;
+function TMainForm.pSendPackTo_ReplObjectProperty(Num_main, CountPack : Integer; CDSData : TClientDataSet; isHistory : Boolean) : Boolean;
+//From: соединение от галки cbClientDataSet - если нет тогда ПРЯМОЕ (показ. в гриде)
+//To:   соединение - ПРЯМОЕ - выполняем Скрипт StrPack
+var sHist : String;
+var StrPack, nextL : String;
     i, num  : Integer;
-    nextL   : String;
-    resStr  : String;
-    _PropertyName : String;
-    _PropertyValue: String;
-    DescId_ins1,DescId_ins2, Value_upd : String;
+    _PropertyName, _PropertyValue, DescId_ins1,DescId_ins2, Value_upd : String;
+    resStr : String;
+    lObject, lObjectLink : String;
 begin
      Result:= false;
      //
-     if not IniConnectionTo (false) then exit;
+     //
+     if isHistory = TRUE then lObject := 'ObjectHistory' else lObject := 'Object';
+     if isHistory = TRUE then sHist   := 'History'       else sHist   := '';
      //
      try
 
@@ -1262,13 +1486,19 @@ begin
      StrPack:= '';
      nextL  := #13;
      //
-     with QueryData do begin
+     with CDSData do begin
         //
-        if (Name =  'fQueryObjectString')  or (Name =  'ObjectStringCDS')  then _PropertyName:= 'ObjectString';
-        if (Name =  'fQueryObjectFloat')   or (Name =  'ObjectFloatCDS')   then _PropertyName:= 'ObjectFloat';
-        if (Name =  'fQueryObjectDate')    or (Name =  'ObjectDateCDS')    then _PropertyName:= 'ObjectDate';
-        if (Name =  'fQueryObjectBoolean') or (Name =  'ObjectBooleanCDS') then _PropertyName:= 'ObjectBoolean';
-        if (Name =  'fQueryObjectLink')    or (Name =  'ObjectLinkCDS')    then _PropertyName:= 'ObjectLink';
+        if (Name =  'fQueryObjectString')  or (Name =  'ObjectStringCDS')  then _PropertyName:= lObject + 'String';
+        if (Name =  'fQueryObjectFloat')   or (Name =  'ObjectFloatCDS')   then _PropertyName:= lObject + 'Float';
+        if (Name =  'fQueryObjectDate')    or (Name =  'ObjectDateCDS')    then _PropertyName:= lObject + 'Date';
+        if (Name =  'fQueryObjectBoolean') or (Name =  'ObjectBooleanCDS') then _PropertyName:= lObject + 'Boolean';
+        if (Name =  'fQueryObjectLink')    or (Name =  'ObjectLinkCDS')    then _PropertyName:= lObject + 'Link';
+        lObjectLink := lObject + 'Link';
+        //
+        //if cbClientDataSet.Checked = FALSE then
+          // Подключились к серверу To
+          if not IniConnectionTo (_PropertyName, FALSE) then exit;
+        //
         //
         First;
         while not EOF  do
@@ -1277,26 +1507,27 @@ begin
              if fStop then begin exit;end;
              //!!!
              // ЗНАЧЕНИЕ
-             if _PropertyName = 'ObjectLink'
+             if _PropertyName = lObjectLink
              then
-             _PropertyValue:= ConvertValueToVarChar(_PropertyName, ''
-                                                   , 0
-                                                   , StrToDate('01.01.2000'), FALSE
-                                                   , FALSE , FALSE
-                                                   , FieldByName('ChildObjectId').AsInteger
-                                                    )
+               _PropertyValue:= 'vbObjectId'
              else
-             _PropertyValue:= ConvertValueToVarChar(_PropertyName, FieldByName('ValueDataS').AsString
-                                                   , FieldByName('ValueDataF').AsFloat
-                                                   , FieldByName('ValueDataD').AsDateTime, FieldByName('isValuDNull').AsBoolean
-                                                   , FieldByName('ValueDataB').AsBoolean , FieldByName('isValuBNull').AsBoolean
-                                                   , 0
-                                                    );
+               _PropertyValue:= ConvertValueToVarChar(_PropertyName, FieldByName('ValueDataS').AsString
+                                                     , FieldByName('ValueDataF').AsFloat
+                                                     , FieldByName('ValueDataD').AsDateTime, FieldByName('isValuDNull').AsBoolean
+                                                     , FieldByName('ValueDataB').AsBoolean , FieldByName('isValuBNull').AsBoolean
+                                                     , 0
+                                                      );
              //сначала "шапка"
              if StrPack = ''
              then begin
                   StrPack:= ' DO $$' + nextL
                           + ' DECLARE vbId Integer;' + nextL
+                          ;
+                  //
+                  if (_PropertyName = lObjectLink)
+                  then StrPack:= StrPack + ' DECLARE vbObjectId Integer;' + nextL;
+                  //
+                  StrPack:= StrPack
                           + ' BEGIN' + nextL + nextL + nextL
                           ;
                   num:= num + 1;
@@ -1308,7 +1539,7 @@ begin
                    DescId_ins1:= '';
                    DescId_ins2:= '';
                    //
-                   if _PropertyName = 'ObjectLink'
+                   if (_PropertyName = lObjectLink) and (isHistory = FALSE)
                    then begin
                             DescId_ins1:= ', ChildObjectDescId';
                             DescId_ins2:= ', ' + ConvertFromInt(FieldByName('ChildObjectDescId').AsInteger);
@@ -1331,9 +1562,29 @@ begin
              end;
              //
              // обнулили Id
-             StrPack:= StrPack + ' vbId:= 0;' + nextL;
+             if (isHistory = FALSE)
+             then
+                 StrPack:= StrPack + ' vbId:= 0;' + nextL;
+             //
+             //
+             if (_PropertyName = lObjectLink)
+             then
+                 // Нашли ObjectId - для Link
+                 StrPack:= StrPack
+                         + ' vbObjectId:= NULL;'
+                         + ' IF ' + ConvertFromVarChar(FieldByName('GUID_child').AsString) + ' <> ' + ConvertFromVarChar('')
+                         + ' THEN'
+                               + ' vbObjectId:= (SELECT ObjectId FROM ObjectString WHERE ValueData = ' + ConvertFromVarChar(FieldByName('GUID_child').AsString) + ' and DescId = zc_ObjectString_GUID());'
+                         + ' END IF;'
+                         + nextL + nextL;
+             //
              // Нашли Id
-             if cbGUID.Checked = TRUE
+             if (isHistory = TRUE)
+             then StrPack:= StrPack
+                          + ' vbId:= ' + IntToStr(FieldByName('ObjectHistoryId').AsInteger) + ';'
+                          + nextL
+             else
+             if (cbGUID.Checked = TRUE) and (isHistory = FALSE)
              then StrPack:= StrPack
                           + ' vbId:= (SELECT ObjectId FROM ObjectString WHERE ValueData = ' + ConvertFromVarChar(FieldByName('GUID').AsString) + ' and DescId = zc_ObjectString_GUID());'
                           + nextL
@@ -1343,7 +1594,10 @@ begin
                           + nextL
                           ;
              //
-             if _PropertyName = 'ObjectLink'
+             if (_PropertyName = lObjectLink) and (isHistory = TRUE)
+             then Value_upd := 'ObjectId'
+             else
+             if (_PropertyName = lObjectLink) and (isHistory = FALSE)
              then Value_upd := 'ChildObjectId'
              else Value_upd := 'ValueData';
              //
@@ -1351,14 +1605,14 @@ begin
              StrPack:= StrPack
                      + '    UPDATE ' + _PropertyName + ' SET ' + Value_upd + ' = ' + _PropertyValue
                      + nextL
-                     + '    WHERE ObjectId = vbId and DescId = ' + IntToStr(FieldByName('DescId').AsInteger) + ' ;' + ' -- ' + FieldByName('DescName').AsString
+                     + '    WHERE Object'+sHist+'Id = vbId and DescId = ' + IntToStr(FieldByName('DescId').AsInteger) + ' ;' + ' -- ' + FieldByName('DescName').AsString
                      + nextL
                      + nextL;
              // иначе INSERT
              StrPack:= StrPack
                     + ' IF NOT FOUND THEN'
                     + nextL
-                    + '    INSERT INTO ' + _PropertyName + ' (DescId, ObjectId, ' + Value_upd + ')'
+                    + '    INSERT INTO ' + _PropertyName + ' (DescId, Object'+sHist+'Id, ' + Value_upd + ')'
                     + nextL
                     + '    VALUES (' + IntToStr(FieldByName('DescId').AsInteger)
                     +           ', vbId'
@@ -1380,7 +1634,6 @@ begin
                   // финиш - СКРИПТ
                   StrPack:= StrPack + ' END $$;' + nextL + nextL;
                   //
-                  //
                   // !!!сохранили - СКРИПТ!!!
                   resStr:= fExecSqToQuery (StrPack);
                   if resStr = ''
@@ -1390,6 +1643,9 @@ begin
                   else begin
                       // результат = ERROR
                       StrPack:= StrPack + ' ------ Result (' + _PropertyName + ') = ERROR : ' + IntToStr(Num_main) + ':' + IntToStr(num) + ':' + nextL + resStr + nextL + nextL;
+                      // !!!сохранили - в ФАЙЛ!!!
+                      AddToLog(StrPack, _PropertyName, gSessionGUID, false);
+                      //
                       // ERROR
                       AddToMemoMsg ('', FALSE);
                       AddToMemoMsg (_PropertyName + ' : ' + IntToStr(Num_main) + ':' + IntToStr(num), FALSE);
@@ -1430,6 +1686,9 @@ begin
           else begin
               // результат = ERROR
               StrPack:= StrPack + ' ------ Result (' + _PropertyName + ') = ERROR : ' + IntToStr(Num_main) + ':' + IntToStr(num) + ':' + nextL + resStr + nextL + nextL;
+              // !!!сохранили - в ФАЙЛ!!!
+              AddToLog(StrPack, _PropertyName, gSessionGUID, false);
+              //
               // ERROR
               AddToMemoMsg ('', FALSE);
               AddToMemoMsg (_PropertyName + ' : ' + IntToStr(Num_main) + ':' + IntToStr(num), FALSE);
@@ -1439,7 +1698,6 @@ begin
           end;
           //
           // !!!сохранили - в ФАЙЛ!!!
-          //ShowMessage (StrPack);
           AddToLog(StrPack, _PropertyName, gSessionGUID, false);
           //
           //
@@ -1457,21 +1715,201 @@ begin
      Result:= true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.fMove_ObjectHistory_repl : Boolean;
+var StrPack, nextL : String;
+    resStr : String;
+    minId, maxId, StepId : Integer;
+    //
+    function fStrDel_ObjectHistory (StartId, EndId : Integer) : String;
+    begin
+         Result:=
+               // коммент - Удалили "лишние" данные - ObjectHistoryString
+               ' -- Удалили "лишние" данные - ObjectHistoryString'
+             + nextL
+             + ' DELETE FROM ObjectHistoryString WHERE ObjectHistoryId IN'
+             + nextL
+             + '(SELECT Id FROM ObjectHistory'
+             + nextL
+             +'  WHERE Id NOT IN (SELECT _repl.Id FROM ObjectHistory_repl AS _repl WHERE _repl.Id BETWEEN ' + IntToStr(StartId) + ' AND ' + IntToStr(EndId) + ')'
+             + nextL
+             + '   AND ObjectId IN (SELECT DISTINCT _repl.ObjectId FROM ObjectHistory_repl AS _repl)'
+             + nextL
+             + '   AND Id BETWEEN ' + IntToStr(StartId) + ' AND ' + IntToStr(EndId)
+             + nextL
+             + ');'
+             + nextL
+             + nextL
+               // коммент - Удалили "лишние" данные - ObjectHistoryFloat
+             + ' -- Удалили "лишние" данные - ObjectHistoryFloat'
+             + nextL
+             + ' DELETE FROM ObjectHistoryFloat WHERE ObjectHistoryId IN'
+             + nextL
+             + '(SELECT Id FROM ObjectHistory'
+             + nextL
+             +'  WHERE Id NOT IN (SELECT _repl.Id FROM ObjectHistory_repl AS _repl WHERE _repl.Id BETWEEN ' + IntToStr(StartId) + ' AND ' + IntToStr(EndId) + ')'
+             + nextL
+             + '   AND ObjectId IN (SELECT DISTINCT _repl.ObjectId FROM ObjectHistory_repl AS _repl)'
+             + nextL
+             + '   AND Id BETWEEN ' + IntToStr(StartId) + ' AND ' + IntToStr(EndId)
+             + nextL
+             + ');'
+             + nextL
+             + nextL
+               // коммент - Удалили "лишние" данные - ObjectHistoryDate
+             + ' -- Удалили "лишние" данные - ObjectHistoryDate'
+             + nextL
+             + ' DELETE FROM ObjectHistoryDate WHERE ObjectHistoryId IN'
+             + nextL
+             + '(SELECT Id FROM ObjectHistory'
+             + nextL
+             +'  WHERE Id NOT IN (SELECT _repl.Id FROM ObjectHistory_repl AS _repl WHERE _repl.Id BETWEEN ' + IntToStr(StartId) + ' AND ' + IntToStr(EndId) + ')'
+             + nextL
+             + '   AND ObjectId IN (SELECT DISTINCT _repl.ObjectId FROM ObjectHistory_repl AS _repl)'
+             + nextL
+             + '   AND Id BETWEEN ' + IntToStr(StartId) + ' AND ' + IntToStr(EndId)
+             + nextL
+             + ');'
+             + nextL
+             + nextL
+               // коммент - Удалили "лишние" данные - ObjectHistoryLink
+             + ' -- Удалили "лишние" данные - ObjectHistoryLink'
+             + nextL
+             + ' DELETE FROM ObjectHistoryLink WHERE ObjectHistoryId IN'
+             + nextL
+             + '(SELECT Id FROM ObjectHistory'
+             + nextL
+             +'  WHERE Id NOT IN (SELECT _repl.Id FROM ObjectHistory_repl AS _repl WHERE _repl.Id BETWEEN ' + IntToStr(StartId) + ' AND ' + IntToStr(EndId) + ')'
+             + nextL
+             + '   AND ObjectId IN (SELECT DISTINCT _repl.ObjectId FROM ObjectHistory_repl AS _repl)'
+             + nextL
+             + '   AND Id BETWEEN ' + IntToStr(StartId) + ' AND ' + IntToStr(EndId)
+             + nextL
+             + ');'
+             + nextL
+             + nextL
+               // коммент - Удалили "лишние" данные - ObjectHistory
+             + ' -- Удалили "лишние" данные - ObjectHistory'
+             + nextL
+             + ' DELETE FROM ObjectHistory'
+             + nextL
+             +'  WHERE Id NOT IN (SELECT _repl.Id FROM ObjectHistory_repl AS _repl WHERE _repl.Id BETWEEN ' + IntToStr(StartId) + ' AND ' + IntToStr(EndId) + ')'
+             + nextL
+             + '   AND ObjectId IN (SELECT DISTINCT _repl.ObjectId FROM ObjectHistory_repl AS _repl)'
+             + nextL
+             + '   AND Id BETWEEN ' + IntToStr(StartId) + ' AND ' + IntToStr(EndId)
+             + ';'
+    end;
+begin
+     Result:= false;
+     //
+     // Подключились к серверу To
+     if not IniConnectionTo ('on Move_ObjectHistory_repl', FALSE) then exit;
+     //
+     StrPack:= '';
+     nextL  := #13;
+     //
+     fOpenSqToQuery ('SELECT MIN (Id) AS MinId, MAX(Id) AS MaxId FROM ObjectHistory_repl');
+     minId := toSqlQuery.FieldByName('MinId').AsInteger;
+     maxId := toSqlQuery.FieldByName('MaxId').AsInteger;
+     StepId:= 100000;
+     //
+     //сначала "шапка"
+     StrPack:= ' DO $$' + nextL
+             + ' BEGIN' + nextL + nextL
+               ;
+     //удаляем блоками, так быстрее
+     while minId <= maxId do
+     begin
+         StrPack:= StrPack
+                 + nextL
+                 + fStrDel_ObjectHistory (minId, minId + StepId)
+                 + nextL
+                 + nextL
+                  ;
+         // следующий
+         minId:= minId + StepId + 1;
+     end;
+     //
+     StrPack:= StrPack
+             + nextL
+             + nextL
+               // коммент - Обновили данные
+             + ' -- Обновили данные'
+             + nextL
+             + ' UPDATE ObjectHistory'
+             + nextL
+             + ' SET DescId = _repl.DescId'
+             +    ', StartDate = _repl.StartDate'
+             +    ', EndDate = _repl.EndDate'
+             +    ', ObjectId = _repl.ObjectId'
+             + ' FROM ObjectHistory_repl AS _repl'
+             + ' WHERE ObjectHistory.Id = _repl.Id'
+             + ';'
+             + nextL
+             + nextL
+               // коммент - Перенесли НОВЫЕ данные
+             + ' -- Перенесли НОВЫЕ данные'
+             + nextL
+             + ' INSERT INTO ObjectHistory (Id, DescId, StartDate, EndDate, ObjectId)'
+             + nextL
+             + '    SELECT _repl.Id, _repl.DescId, _repl.StartDate, _repl.EndDate, _repl.ObjectId'
+             + nextL
+             + '    FROM ObjectHistory_repl AS _repl'
+             + nextL
+             + '         LEFT JOIN ObjectHistory ON ObjectHistory.Id = _repl.Id'
+             + nextL
+             + '    WHERE ObjectHistory.Id IS NULL'
+             +    ';'
+             + nextL
+             + nextL
+             + ' END $$;'
+             + nextL
+             ;
+     //
+     AddToMemoMsg ('...', FALSE);
+     AddToMemoMsg ('start exec Move_ObjectHistory_repl', FALSE);
+     AddToMemoMsg ('...', FALSE);
+     //
+     // !!!сохранили - в ФАЙЛ!!!
+     AddToLog(StrPack, 'ObjectHistory', gSessionGUID, false);
+     //
+     // !!!сохранили - СКРИПТ!!!
+     resStr:= fExecSqToQuery (StrPack);
+     //
+     if resStr = ''
+     then
+         // !!!сохранили - в ФАЙЛ - результат = OK!!!
+         AddToLog(' ------ Result (exec Move_ObjectHistory_repl) = OK : ' + nextL + nextL, 'ObjectHistory', gSessionGUID, false)
+     else begin
+         // !!!сохранили - в ФАЙЛ - результат = ERROR!!!
+         AddToLog(' ------ Result (exec Move_ObjectHistory_repl) = ERROR : ' + nextL + nextL, 'ObjectHistory', gSessionGUID, false);
+         //
+         // ERROR
+         AddToMemoMsg ('', FALSE);
+         AddToMemoMsg ('ObjectHistory', FALSE);
+         AddToMemoMsg (resStr, TRUE);
+         //
+         exit;
+     end;
+     //
+     Result:= true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pSendAllTo_ReplObjectDesc;
+//From: соединение - ПРЯМОЕ
+//To:   соединение - ПРЯМОЕ - выполняем Скрипт StrPack
 var StrPack, nextL, resStr : String;
     lGUID : String;
     DescId_ins1,DescId_ins2,DescId_upd : String;
 begin
-     MemoMsg.Lines.Clear;
      //
-     //
-     nextL  := #13;
      lGUID:= GenerateGUID;
+     nextL  := #13;
      //
-     // Подключились к серверу From
+     // Подключились к серверу From - ОБЯЗАТЕЛЬНО
      if not IniConnectionFrom (TRUE) then exit;
      // Подключились к серверу To
-     if not IniConnectionTo (FALSE)   then exit;
+     if not IniConnectionTo ('ObjectDesc + ObjectHistoryDesc', FALSE)   then exit;
      //
      // открыли данные с... по...
      with fromSqlQuery,Sql do
@@ -1489,6 +1927,18 @@ begin
            Add('select 5 AS NPP, Id,      DescId, 0 AS ChildObjectDescId, Code, ItemName, ' + ConvertFromVarChar('ObjectBoolean') + ' as GroupId from ObjectBooleanDesc');
            Add('union all');
            Add('select 6 AS NPP, Id,      DescId,      ChildObjectDescId, Code, ItemName, ' + ConvertFromVarChar('ObjectLink') + ' as GroupId from ObjectLinkDesc');
+
+           Add('union all');
+           Add('select 11 AS NPP, Id, 0 AS DescId, 0 AS ChildObjectDescId, Code, ItemName, ' + ConvertFromVarChar('ObjectHistory') + ' as GroupId from ObjectHistoryDesc');
+           Add('union all');
+           Add('select 12 AS NPP, Id,      DescId, 0 AS ChildObjectDescId, Code, ItemName, ' + ConvertFromVarChar('ObjectHistoryString') + ' as GroupId from ObjectHistoryStringDesc');
+           Add('union all');
+           Add('select 13 AS NPP, Id,      DescId, 0 AS ChildObjectDescId, Code, ItemName, ' + ConvertFromVarChar('ObjectHistoryFloat') + ' as GroupId from ObjectHistoryFloatDesc');
+           Add('union all');
+           Add('select 14 AS NPP, Id,      DescId, 0 AS ChildObjectDescId, Code, ItemName, ' + ConvertFromVarChar('ObjectHistoryDate') + ' as GroupId from ObjectHistoryDateDesc');
+           Add('union all');
+           Add('select 16 AS NPP, Id,      DescId, 0 AS ChildObjectDescId, Code, ItemName, ' + ConvertFromVarChar('ObjectHistoryLink') + ' as GroupId from ObjectHistoryLinkDesc');
+
            Add('order by 1, 2');
            //
            Open;
@@ -1526,7 +1976,7 @@ begin
                        DescId_upd := ', DescId = '   + ConvertFromInt(FieldByName('DescId').AsInteger)
                                    + ', ChildObjectDescId = '   + ConvertFromInt(FieldByName('ChildObjectDescId').AsInteger);
              end else
-             if FieldByName('GroupId').AsString <> 'Object'
+             if (FieldByName('GroupId').AsString <> 'Object') and (FieldByName('GroupId').AsString <> 'ObjectHistory')
              then begin
                        DescId_ins1:= ', DescId';
                        DescId_ins2:= ', ' + ConvertFromInt(FieldByName('DescId').AsInteger);
@@ -1622,7 +2072,7 @@ begin
             end;
             //
             // !!!сохранили - в ФАЙЛ!!!
-            AddToLog(StrPack, 'ObjectDesc', lGUID, false);
+            AddToLog(StrPack, FieldByName('GroupId').AsString + 'Desc', lGUID, false);
             //
             //
             Next;
@@ -1631,23 +2081,25 @@ begin
             Application.ProcessMessages;
             //
            end;
+           //
+           Close;
      end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pSendAllTo_ReplProc : Boolean;
-var lGUID : String;
-    tmp : String;
-    lProcText : String;
+//From: соединение - ПРЯМОЕ
+//To:   соединение - !НЕ ПРЯМОЕ! - !текст ф-ции можно сохранить только через spExecSql!
+var lGUID, lProcText, tmp : String;
+    resStr : String;
 begin
     Result:= false;
-    //
-    MemoMsg.Lines.Clear;
     //
     //
     lGUID:= GenerateGUID;
     //
-    // Подключились к серверу From
+    // Подключились к серверу From - ОБЯЗАТЕЛЬНО
     if not IniConnectionFrom (TRUE) then exit;
+    //
     //
     try
     // открыли данные с... по...
@@ -1677,7 +2129,7 @@ begin
               //!!!
               if fStop then begin exit;end;
               //
-              fOpenSqFromQuery_two ('select * from gpSelect_ReplProc (' + FieldByName('oid').AsString + ', CAST (NULL AS TVarChar))');
+              fOpenSqFromQuery_two ('select * from gpSelect_ReplProc (' + FieldByName('oid').AsString + ', CAST (NULL AS TVarChar), CAST (NULL AS TVarChar))');
               //
               lProcText:= fromSqlQuery_two.FieldByName('ProcText').AsString;
               if System.Pos(AnsiUpperCase('CREATE OR REPLACE'),AnsiUpperCase(lProcText)) > 0
@@ -1688,24 +2140,21 @@ begin
               //
               if lProcText <> '' then
               begin
-                  spExecSql.ParamByName('inSqlText').Value  := fromSqlQuery_two.FieldByName('ProcText').AsString;
-                  try spExecSql.Execute;
-                      //
-                      MemoMsg.Lines.Add(FieldByName('ProName').AsString);
-                  except on E:Exception do
-                     begin
-                        // ERROR
-                        AddToMemoMsg ('', FALSE);
-                        AddToMemoMsg (' ..... ERROR .....', FALSE);
-                        AddToMemoMsg ('', FALSE);
-                        AddToMemoMsg (lProcText, FALSE);
-                        AddToMemoMsg ('', FALSE);
-                        AddToMemoMsg (FieldByName('ProName').AsString, FALSE);
-                        if Pos('zc_', FieldByName('ProName').AsString) = 1
-                        then AddToMemoMsg (E.Message, TRUE)
-                        else AddToMemoMsg (E.Message, TRUE);
-                        AddToMemoMsg ('', FALSE);
-                     end;
+                  // !!!через StoredProc!!!
+                  resStr:= fExecSql_repl_to (fromSqlQuery_two.FieldByName('ProcText').AsString);
+                  if resStr <> '' then
+                  begin
+                      // ERROR
+                      AddToMemoMsg ('', FALSE);
+                      AddToMemoMsg (' ..... ERROR .....', FALSE);
+                      AddToMemoMsg ('', FALSE);
+                      AddToMemoMsg (lProcText, FALSE);
+                      AddToMemoMsg ('', FALSE);
+                      AddToMemoMsg (FieldByName('ProName').AsString, FALSE);
+                      if Pos('zc_', FieldByName('ProName').AsString) = 1
+                      then AddToMemoMsg (resStr, TRUE)
+                      else AddToMemoMsg (resStr, TRUE);
+                      AddToMemoMsg ('', FALSE);
                   end;
                   //
                   // !!!сохранили - в ФАЙЛ!!!
@@ -1717,6 +2166,8 @@ begin
               Gauge.Progress:=Gauge.Progress+1;
               Application.ProcessMessages;
          end;
+         //
+         Close;
     end;
      except on E:Exception do
        begin
@@ -1786,7 +2237,7 @@ begin
 
   ForceDirectories(ChangeFileExt(Application.ExeName, '') + '\' + myFolder);
 
-  LogFileName := ChangeFileExt(Application.ExeName, '') + '\' + myFolder + '\' + myFile + '.log';
+  LogFileName := ChangeFileExt(Application.ExeName, '') + '\' + myFolder + '\' + myFile + '.sql';
 
   AssignFile(LogFile, LogFileName);
 
@@ -1799,26 +2250,14 @@ begin
   CloseFile(LogFile);
   Application.ProcessMessages;
 end;
-
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-function TMainForm.pSendAllTo_ReplObject : Boolean;
+function TMainForm.fObject_andProperty_while : Boolean;
 var StartId, EndId : Integer;
     num : Integer;
 begin
-  try
      Result:= false;
      //
-     MemoMsg.Lines.Clear;
-     //
-     // Подключились к серверу From
-     // --- if not IniConnectionFrom(not cbClientDataSet.Checked) then exit;
-     // Подключились к серверу To
-     // --- if not IniConnectionTo (TRUE) then exit;
-     //
-     // Зафиксировали ВСЕ данные на сервере From
-     if not pInsert_ReplObject then exit;
-     //
-     // стартовый период для Id
+     // стартовый период для Id - Object...
      StartId:= outMinId;
      EndId  := StartId + outCountIteration;
      num    := 0;
@@ -1833,39 +2272,46 @@ begin
           num:= num + 1;
 
           // открыли данные с... по...
-          if not pOpen_ReplObject (FALSE, num, StartId, EndId) then exit;
+          if not pOpen_ReplObject (FALSE, num, StartId, EndId, FALSE) then exit;
           //
           // если только просмотр - !!!ВЫХОД!!!
           if cbOnlyOpen.Checked = TRUE then exit;
           //
           //делаем скрипт на НЕСКОЛЬКО пакетов и сохраняем данные в БАЗЕ-To
-          if not pSendPackTo_ReplObject(num, outCountPack)
+          if not pSendPackTo_ReplObject(num, outCountPack, FALSE)
           then exit;
           //ObjectString - на НЕСКОЛЬКО пакетов и ...
           if cbClientDataSet.Checked = TRUE
-          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(ObjectStringCDS)) then exit else
-          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryObjectString)) then exit else;
+          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(ObjectStringCDS), FALSE) then exit else
+          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryObjectString), FALSE) then exit else;
           //ObjectFloat - на НЕСКОЛЬКО пакетов и ...
           if cbClientDataSet.Checked = TRUE
-          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(ObjectFloatCDS)) then exit else
-          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryObjectFloat)) then exit else;
+          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(ObjectFloatCDS), FALSE) then exit else
+          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryObjectFloat), FALSE) then exit else;
           //ObjectDate - на НЕСКОЛЬКО пакетов и ...
           if cbClientDataSet.Checked = TRUE
-          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(ObjectDateCDS)) then exit else
-          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryObjectDate)) then exit else;
+          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(ObjectDateCDS), FALSE) then exit else
+          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryObjectDate), FALSE) then exit else;
           //ObjectBoolean - на НЕСКОЛЬКО пакетов и ...
           if cbClientDataSet.Checked = TRUE
-          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(ObjectBooleanCDS)) then exit else
-          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryObjectBoolean)) then exit else;
+          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(ObjectBooleanCDS), FALSE) then exit else
+          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryObjectBoolean), FALSE) then exit else;
           //
           // следующий период для Id
           StartId:= EndId + 1;
           EndId  := StartId + outCountIteration;
      end;
      //
-
-
-     // стартовый период для Id
+     Result:= true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.fObjectLink_while : Boolean;
+var StartId, EndId : Integer;
+    num : Integer;
+begin
+     Result:= false;
+     //
+     // стартовый период для Id - ObjectLink
      StartId:= outMinId;
      EndId  := StartId + outCountIteration;
      num    := 0;
@@ -1875,23 +2321,172 @@ begin
           num:= num + 1;
 
           // открыли данные с... по...
-          if not pOpen_ReplObject (TRUE, num, StartId, EndId) then exit;
+          if not pOpen_ReplObject (TRUE, num, StartId, EndId, FALSE) then exit;
           //
           // если только просмотр - !!!ВЫХОД!!!
           if cbOnlyOpen.Checked = TRUE then exit;
           //
           //ObjectLink - на НЕСКОЛЬКО пакетов и ...
           if cbClientDataSet.Checked = TRUE
-          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(ObjectLinkCDS)) then exit else
-          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryObjectLink)) then exit else;
+          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(ObjectLinkCDS), FALSE) then exit else
+          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryObjectLink), FALSE) then exit else;
           //
           // следующий период для Id
           StartId:= EndId + 1;
           EndId  := StartId + outCountIteration;
      end;
      //
+     Result:= true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.fObjectHistory_while : Boolean;
+var StartId, EndId : Integer;
+    num : Integer;
+begin
+     Result:= false;
      //
-     AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' ..... end Guide', FALSE);
+     // стартовый период для Id - Object...
+     StartId:= outMinId;
+     EndId  := StartId + outCountIteration;
+     num    := 0;
+
+     while StartId <= outMaxId do
+     begin
+          AddToMemoMsg(' ....................', FALSE);
+          //!!!
+          Application.ProcessMessages;
+          if fStop then begin exit;end;
+          //!!!
+          num:= num + 1;
+
+          // открыли данные с... по...
+          if not pOpen_ReplObject (FALSE, num, StartId, EndId, TRUE) then exit;
+          //
+          // если только просмотр - !!!ВЫХОД!!!
+          if cbOnlyOpen.Checked = TRUE then exit;
+          //
+          //делаем скрипт на НЕСКОЛЬКО пакетов и сохраняем данные в БАЗЕ-To
+          if not pSendPackTo_ReplObject(num, outCountPack, TRUE)
+          then exit;
+          //
+          // следующий период для Id
+          StartId:= EndId + 1;
+          EndId  := StartId + outCountIteration;
+     end;
+     //
+     Result:= true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.fObjectHistory_Property_while : Boolean;
+var StartId, EndId : Integer;
+    num : Integer;
+begin
+     Result:= false;
+     //
+     // стартовый период для Id - Object...
+     StartId:= outMinId;
+     EndId  := StartId + outCountIteration;
+     num    := 0;
+
+     while StartId <= outMaxId do
+     begin
+          AddToMemoMsg(' ....................', FALSE);
+          //!!!
+          Application.ProcessMessages;
+          if fStop then begin exit;end;
+          //!!!
+          num:= num + 1;
+
+          // открыли данные с... по...
+          if not pOpen_ReplObject (TRUE, num, StartId, EndId, TRUE) then exit;
+          //
+          // если только просмотр - !!!ВЫХОД!!!
+          if cbOnlyOpen.Checked = TRUE then exit;
+          //
+          //ObjectHistoryString - на НЕСКОЛЬКО пакетов и ...
+          if cbClientDataSet.Checked = TRUE
+          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(ObjectStringCDS), TRUE) then exit else
+          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryObjectString), TRUE) then exit else;
+          //ObjectHistoryFloat - на НЕСКОЛЬКО пакетов и ...
+          if cbClientDataSet.Checked = TRUE
+          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(ObjectFloatCDS), TRUE) then exit else
+          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryObjectFloat), TRUE) then exit else;
+          //ObjectHistoryDate - на НЕСКОЛЬКО пакетов и ...
+          if cbClientDataSet.Checked = TRUE
+          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(ObjectDateCDS), TRUE) then exit else
+          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryObjectDate), TRUE) then exit else;
+          //ObjectHistoryLink - на НЕСКОЛЬКО пакетов и ...
+          if cbClientDataSet.Checked = TRUE
+          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(ObjectLinkCDS), TRUE) then exit else
+          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryObjectLink), TRUE) then exit else;
+          //
+          // следующий период для Id
+          StartId:= EndId + 1;
+          EndId  := StartId + outCountIteration;
+     end;
+     //
+     Result:= true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.pSendAllTo_ReplObject : Boolean;
+//To: соединение - ПРЯМОЕ - нужен load-Desc-list
+begin
+  try
+     Result:= false;
+     //
+     // Зафиксировали ВСЕ данные на сервере From
+     if not pInsert_ReplObject then exit;
+     //
+     // Подключились к серверу To + главное - получили ВСЕ Desc-ки (нужны только они)
+     if not IniConnectionTo ('load-Desc-list', TRUE) then exit;
+     //
+     // показали Итоги
+     EditCountObject.Text          := IntToStr(outCount)       +  ' / ' + IntToStr(outCountHistory);
+     EditCountStringObject.Text    := IntToStr(outCountString) +  ' / ' + IntToStr(outCountHistoryString);
+     EditCountFloatObject.Text     := IntToStr(outCountFloat)  +  ' / ' + IntToStr(outCountHistoryFloat);
+     EditCountDateObject.Text      := IntToStr(outCountDate)   +  ' / ' + IntToStr(outCountHistoryDate);
+     EditCountBooleanObject.Text   := IntToStr(outCountBoolean)+  ' / 0';
+     EditCountLinkObject.Text      := IntToStr(outCountLink)   + ' / ' + IntToStr(outCountHistoryLink);
+
+     EditMinIdObject.Text          := IntToStr(outMinId);
+     EditMaxIdObject.Text          := IntToStr(outMaxId);
+     EditCountIterationObject.Text := IntToStr(outCountIteration) + ' / ' + IntToStr(outCountPack);
+
+     Gauge.Progress:=0;
+     Gauge.MaxValue:= 0;
+     if cbObject.Checked = TRUE
+     then
+       Gauge.MaxValue:= Gauge.MaxValue + outCount + outCountString + outCountFloat
+                                       + outCountDate + outCountBoolean + outCountLink
+                                       ;
+     if cbObjectHistory.Checked = TRUE
+     then
+       Gauge.MaxValue:= Gauge.MaxValue + outCountHistory + outCountHistoryString + outCountHistoryFloat
+                                       + outCountHistoryDate + outCountHistoryLink
+                                       ;
+     //
+     if cbObject.Checked = TRUE then
+     begin
+          // Отправили ВСЕ Object + Property
+          if not fObject_andProperty_while then exit;
+          //
+          // Отправили ВСЕ ObjectLink
+          if not fObjectLink_while then exit;
+     end;
+     //
+     if cbObjectHistory.Checked = TRUE then
+     begin
+          // Отправили ВСЕ только ObjectHistory - во временную ObjectHistory_repl
+          if not fObjectHistory_while then exit;
+          // Перенесли из временной ObjectHistory_repl -> ObjectHistory
+          if not fMove_ObjectHistory_repl then exit;
+          // Отправили ВСЕ свойства ObjectHistory
+          if not fObjectHistory_Property_while then exit;
+     end;
+     //
+     //
+     AddToMemoMsg(' ....................', FALSE);
+     AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' ... end Guide', FALSE);
      //
      Result:= true;
 
@@ -1917,6 +2512,10 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
+     fBegin_All:= FALSE;
+     //
+     fStop:= true;
+     //
      Gauge.Visible:=false;
      Gauge.Progress:=0;
      //
@@ -1928,52 +2527,70 @@ begin
      //
      ArrayReplServer:= gpSelect_ReplServer_load;
      //
-     fStop:=true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.pBegin_All : Boolean;
+begin
+     Result:= TRUE;
      //
+     if fBegin_All = TRUE then exit;
+     //
+     try
+         fBegin_All := TRUE;
+         //
+         fStop:=false;
+         //
+         OKGuideButton.Enabled:=false;
+         Gauge.Visible:=true;
+         Gauge.Progress:= 0;
+         //
+         CursorGridChange;
+         //
+         MemoMsg.Lines.Clear;
+         //
+         if cbProc.Checked = TRUE
+         then
+             // Отправили Proc
+             pSendAllTo_ReplProc;
+         //
+         if cbDesc.Checked = TRUE
+         then
+             // Отправили Desc
+             pSendAllTo_ReplObjectDesc;
+
+         //
+         if (cbObject.Checked = TRUE) or (cbObjectHistory.Checked = TRUE)
+         then
+             // Отправили Object - Data
+             pSendAllTo_ReplObject;
+
+     finally
+           Result:= fStop;
+           //
+           fBegin_All := FALSE;
+           //
+           fStop:=true;
+           //
+           OKGuideButton.Enabled:=true;
+           Gauge.Visible:=false;
+           //
+     end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.OKGuideButtonClick(Sender: TObject);
 var tmpDate1,tmpDate2:TDateTime;
     Year, Month, Day, Hour, Min, Sec, MSec: Word;
     StrTime:String;
+    lResStop: Boolean;
 begin
-
-     //
      if MessageDlg('Действительно загрузить данные?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
      //
-     fStop:=false;
-
-     //DBGrid.Enabled:=false;
-
-     OKGuideButton.Enabled:=false;
-     //
-     Gauge.Visible:=true;
      //
      tmpDate1:=NOw;
-
-     CursorGridChange;
-
      //
      //
+     lResStop:= pBegin_All;
      //
-     if cbProc.Checked = TRUE then
-     begin
-          pSendAllTo_ReplProc;
-     end
-     else if cbDesc.Checked = TRUE then
-     begin
-          pSendAllTo_ReplObjectDesc;
-     end
-     else begin
-          pSendAllTo_ReplObject;
-     end;
-     //
-     //
-     Gauge.Visible:=false;
-     //DBGrid.Enabled:=true;
-     OKGuideButton.Enabled:=true;
-     //
-     //toZConnection.Connected:=false;
      //
      tmpDate2:=NOw;
      if (tmpDate2-tmpDate1)>=1
@@ -1985,21 +2602,9 @@ begin
 
      if System.Pos('auto',ParamStr(2))<=0
      then
-         if fStop then if cbProc.Checked = TRUE
-                       then ShowMessage('CREATE OR REPLACE FUNCTION НЕ загружены. Time=('+StrTime+').')
-                       else
-                       if cbDesc.Checked = TRUE
-                       then ShowMessage('ObjectDesc + MovementDesc + zc_ObjectString_Enum НЕ загружены. Time=('+StrTime+').')
-                       else ShowMessage('Данные НЕ загружены. Time=('+StrTime+').')
-                  else if cbProc.Checked = TRUE
-                       then ShowMessage('CREATE OR REPLACE FUNCTION загружены. Time=('+StrTime+').')
-                       else
-                       if cbDesc.Checked = TRUE
-                       then ShowMessage('ObjectDesc + MovementDesc + zc_ObjectString_Enum загружены. Time=('+StrTime+').')
-                       else ShowMessage('Данные загружены. Time=('+StrTime+').') ;
-//     else OKPOEdit.Text:=OKPOEdit.Text + ' Guide:'+StrTime;
-     //
-     fStop:=true;
+         if lResStop = TRUE
+         then ShowMessage('Данные НЕ загружены. Time=('+StrTime+').')
+         else ShowMessage('Данные загружены. Time=('+StrTime+').') ;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 

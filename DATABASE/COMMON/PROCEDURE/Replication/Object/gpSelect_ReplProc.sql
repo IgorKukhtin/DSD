@@ -2,10 +2,12 @@
 
 DROP FUNCTION IF EXISTS gpSelect_ReplProc (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_ReplProc (BigInt, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_ReplProc (BigInt, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_ReplProc(
-    IN inOId      BigInt,       --
-    IN inSession  TVarChar      -- сессия пользователя
+    IN inOId        BigInt,        --
+    IN gConnectHost TVarChar,      -- виртуальный, что б в exe - использовать другой сервак
+    IN inSession    TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (ProcText Text)
 AS
@@ -89,4 +91,4 @@ END;$BODY$
 
 -- тест
 -- 1479135194
--- SELECT * FROM gpSelect_ReplProc  (inOId:= 1479135194, inSession:= zfCalc_UserAdmin()) -- ORDER BY 1
+-- SELECT * FROM gpSelect_ReplProc  (inOId:= 1479135194, gConnectHost:= '', inSession:= zfCalc_UserAdmin()) -- ORDER BY 1

@@ -3046,7 +3046,7 @@ BEGIN
                    )
      THEN
           -- Админу только отладка
-          if inUserId <> 5
+          if inUserId <> 5 -- OR 1=1
           then
           --
           PERFORM lpInsertUpdate_Movement_Tax_From_Kind (inMovementId            := inMovementId

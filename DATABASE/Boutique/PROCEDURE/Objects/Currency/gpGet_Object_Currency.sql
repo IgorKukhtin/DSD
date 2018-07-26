@@ -10,9 +10,16 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , IncomeKoeff TFloat) 
 AS
 $BODY$
+   DECLARE vbUserId Integer;
+   DECLARE vbIsIncomeKoeff Boolean;
 BEGIN
   -- проверка прав пользователя на вызов процедуры
-  PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Object_Currency());
+  vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Get_Object_Currency());
+
+
+  -- !!!только у Админа!!!
+  vbIsIncomeKoeff:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin()));
+
 
   IF COALESCE (inId, 0) = 0
    THEN
@@ -34,6 +41,7 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_IncomeKoeff 
                                   ON ObjectFloat_IncomeKoeff.ObjectId = Object_Currency.Id 
                                  AND ObjectFloat_IncomeKoeff.DescId = zc_ObjectFloat_Currency_IncomeKoeff()
+                                 AND vbIsIncomeKoeff = TRUE
        WHERE Object_Currency.Id = inId;
    END IF;
 

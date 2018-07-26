@@ -1,12 +1,14 @@
 ﻿-- для SessionGUID - возвращает данные из табл. ReplObject -> Object - для формирования скриптов
 
 DROP FUNCTION IF EXISTS gpSelect_ReplObjectDate (TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_ReplObjectDate (TVarChar, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_ReplObjectDate(
     IN inSessionGUID  TVarChar,      --
     IN inStartId      Integer,       --
     IN inEndId        Integer,       --
     IN inDataBaseId   Integer,       -- для формирования "виртуального" GUID
+    IN gConnectHost   TVarChar,      -- виртуальный, что б в exe - использовать другой сервак
     IN inSession      TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (OperDate_last  TDateTime
@@ -75,4 +77,4 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_ReplObjectDate  (inSessionGUID:= CURRENT_TIMESTAMP :: TVarChar, inStartId:= 0, inEndId:= 0, inDataBaseId:= 0, inSession:= zfCalc_UserAdmin()) -- ORDER BY 1
+-- SELECT * FROM gpSelect_ReplObjectDate  (inSessionGUID:= CURRENT_TIMESTAMP :: TVarChar, inStartId:= 0, inEndId:= 0, inDataBaseId:= 0, gConnectHost:= '', inSession:= zfCalc_UserAdmin()) -- ORDER BY 1

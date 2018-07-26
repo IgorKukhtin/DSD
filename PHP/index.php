@@ -22,7 +22,7 @@
  
 // Соединение, выбор базы данных
 
-$dbconn = pg_pconnect($connectstring)
+$dbconn = pg_connect($connectstring)
     or die('Could not connect: ' . pg_last_error());
 $query = 'set client_encoding=WIN1251';
 $result = pg_query_params($query, array());

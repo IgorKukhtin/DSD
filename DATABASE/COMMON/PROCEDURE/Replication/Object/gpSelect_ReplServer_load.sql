@@ -1,8 +1,10 @@
 ﻿-- настройки Серверов - для Коннекта - куда будут переброшены данные
 
 DROP FUNCTION IF EXISTS gpSelect_ReplServer_load (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_ReplServer_load (TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_ReplServer_load(
+    IN gConnectHost       TVarChar,      -- виртуальный, что б в exe - использовать другой сервак
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id                Integer
@@ -15,7 +17,7 @@ RETURNS TABLE (Id                Integer
              , DataBases         TVarChar
              , Start_toChild     TDateTime
              , Start_fromChild   TDateTime
-             , OID_last          BigInt
+             , OID_last          Integer -- BigInt
               )
 AS
 $BODY$
@@ -54,4 +56,4 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_ReplServer_load  (inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_ReplServer_load  (gConnectHost:= '', inSession:= zfCalc_UserAdmin())

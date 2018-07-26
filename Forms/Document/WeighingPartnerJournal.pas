@@ -117,6 +117,7 @@ type
     StartBegin: TcxGridDBColumn;
     EndBegin: TcxGridDBColumn;
     diffBegin_sec: TcxGridDBColumn;
+    BranchCode: TcxGridDBColumn;
   private
   public
   end;

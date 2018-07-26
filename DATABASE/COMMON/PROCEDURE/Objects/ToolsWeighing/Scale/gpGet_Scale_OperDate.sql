@@ -20,7 +20,12 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-      SELECT CASE WHEN inBranchCode = 201 -- Dnepr-OBV: Scale + ScaleCeh
+      SELECT CASE /*WHEN inSession = '5' AND inBranchCode = 1
+                       THEN CASE WHEN EXTRACT ('HOUR' FROM '25.07.2018 06:38:51' :: TDateTime) >= 0 AND EXTRACT ('HOUR' FROM '25.07.2018 06:38:51' :: TDateTime) < 8
+                                      THEN (DATE_TRUNC ('DAY', '25.07.2018 06:38:51' :: TDateTime) - INTERVAL '1 DAY') :: TDateTime
+                                 ELSE DATE_TRUNC ('DAY', '25.07.2018 06:38:51' :: TDateTime) :: TDateTime
+                            END*/
+                  WHEN inBranchCode = 201 -- Dnepr-OBV: Scale + ScaleCeh
                        THEN CASE WHEN EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) >= 0 AND EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) < 4
                                       THEN (DATE_TRUNC ('DAY', CURRENT_TIMESTAMP) - INTERVAL '1 DAY') :: TDateTime
                                  ELSE DATE_TRUNC ('DAY', CURRENT_TIMESTAMP) :: TDateTime

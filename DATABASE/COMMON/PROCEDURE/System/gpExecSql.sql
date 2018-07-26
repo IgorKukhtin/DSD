@@ -1,3 +1,5 @@
+-- 
+
 DROP FUNCTION IF EXISTS gpExecSql (TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpExecSql (TBlob, TVarChar);
 

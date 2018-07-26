@@ -676,7 +676,7 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
      WHILE vbItearation < inItearationCount AND vbCountDiff > 0
      LOOP
          -- !!!¬–≈Ã≈ÕÕŒ!!!
-         -- DELETE FROM _tmpMaster WHERE ABS (_tmpMaster.calcSumm) > 1123123123;
+         DELETE FROM _tmpMaster WHERE ABS (_tmpMaster.calcSumm) > 1123123123;
 
          -- Ú.Í. Ó¯Ë·Í‡
          IF vbItearation = vbItearationCount_err AND inStartDate < '01.07.2018'

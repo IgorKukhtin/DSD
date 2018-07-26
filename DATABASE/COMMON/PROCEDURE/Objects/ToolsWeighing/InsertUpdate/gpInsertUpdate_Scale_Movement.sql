@@ -110,6 +110,7 @@ BEGIN
                                                    , inPaidKindId          := inPaidKindId
                                                    , inMovementId_Order    := inMovementId_Order
                                                    , inMovementId_Transport:= CASE WHEN inMovementDescId = zc_Movement_ReturnIn() THEN 0 ELSE inMovementId_Transport END
+                                                   , inBranchCode          := inBranchCode
                                                    , inPartionGoods        := '' :: TVarChar
                                                    , inChangePercent       := inChangePercent
                                                    , inSession             := inSession
