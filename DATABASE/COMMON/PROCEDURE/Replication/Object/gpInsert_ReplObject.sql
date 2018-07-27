@@ -27,7 +27,7 @@ CREATE OR REPLACE FUNCTION gpInsert_ReplObject(
    OUT outMinId          Integer,
    OUT outMaxId          Integer,
    OUT outCountIteration Integer,       -- захардкодили = 3000 - по сколько записей будет возвращать gpSelect_ReplObject, т.е. inStartId and inEndId
-   OUT outCountPack      Integer,       -- захардкодили =  100 - сколько записей в одном Sql для вызова
+   OUT outCountPack      Integer,       -- захардкодили = 100  - сколько записей в одном Sql для вызова
 
     IN gConnectHost      TVarChar,      -- виртуальный, что б в exe - использовать другой сервак
     IN inSession         TVarChar       -- сессия пользователя
@@ -38,7 +38,7 @@ $BODY$
     DECLARE vbDescId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight(inSession, zc_Enum_Process_PaidKind());
+     -- PERFORM lpCheckRight(inSession, zc_Enum_Process_...());
 
 
      -- !!!удаление "старых" сессий!!!
@@ -154,7 +154,7 @@ BEGIN
                           SELECT tmpList_4.DescId, tmpList_4.ObjectId FROM tmpList_4
                          )
      -- Результат
-     SELECT tmpList_all.ObjectId, tmpList_all.DescId, tmpProtocol.UserId AS UserId_last, tmpProtocol.OperDate AS OperDate_last, CURRENT_TIMESTAMP, inSessionGUID
+     SELECT tmpList_all.ObjectId, tmpList_all.DescId, tmpProtocol.UserId AS UserId_last, tmpProtocol.OperDate AS OperDate_last, CURRENT_TIMESTAMP AS OperDate, inSessionGUID
      FROM tmpList_all
           LEFT JOIN tmpProtocol ON tmpProtocol.ObjectId = tmpList_all.ObjectId AND tmpProtocol.Ord = 1 -- !!!последний!!!
      ORDER BY tmpList_all.ObjectId;
@@ -163,20 +163,24 @@ BEGIN
      -- Проверка
      IF EXISTS (SELECT ReplObject.ObjectId FROM ReplObject WHERE ReplObject.SessionGUID = inSessionGUID GROUP BY ReplObject.ObjectId HAVING COUNT(*) > 1)
      THEN
-         RAISE EXCEPTION 'ReplObject - COUNT() > 1 : <%>', (SELECT ReplObject.ObjectId FROM ReplObject WHERE ReplObject.SessionGUID = inSessionGUID GROUP BY ReplObject.ObjectId HAVING COUNT(*) > 1 ORDER BY 1 LIMIT 1)
-                                 , lfGet_Object_ValueData ((SELECT ReplObject.ObjectId FROM ReplObject WHERE ReplObject.SessionGUID = inSessionGUID GROUP BY ReplObject.ObjectId HAVING COUNT(*) > 1 ORDER BY 1 LIMIT 1))
-                                   ;
+         RAISE EXCEPTION 'ReplObject - COUNT() > 1 : <%> <%>', (SELECT ReplObject.ObjectId FROM ReplObject WHERE ReplObject.SessionGUID = inSessionGUID GROUP BY ReplObject.ObjectId HAVING COUNT(*) > 1 ORDER BY 1 LIMIT 1)
+                                     , lfGet_Object_ValueData ((SELECT ReplObject.ObjectId FROM ReplObject WHERE ReplObject.SessionGUID = inSessionGUID GROUP BY ReplObject.ObjectId HAVING COUNT(*) > 1 ORDER BY 1 LIMIT 1))
+                                      ;
      END IF;
 
 
-     -- для Результата - сформировали GUID
-     INSERT INTO ObjectString (ObjectId, DescId, ValueData)
-       SELECT ReplObject.ObjectId, zc_ObjectString_GUID(), ReplObject.ObjectId :: TVarChar || ' - ' || inDataBaseId :: TVarChar AS ValueData
-       FROM ReplObject
-            LEFT JOIN ObjectString ON ObjectString.ObjectId = ReplObject.ObjectId AND ObjectString.DescId = zc_ObjectString_GUID()
-       WHERE ReplObject.SessionGUID = inSessionGUID
-         AND ObjectString.ObjectId IS NULL
-      ;
+     -- кроме теста
+     IF inDataBaseId > 0
+     THEN
+         -- для Результата - сформировали GUID
+         INSERT INTO ObjectString (ObjectId, DescId, ValueData)
+           SELECT ReplObject.ObjectId, zc_ObjectString_GUID(), ReplObject.ObjectId :: TVarChar || ' - ' || inDataBaseId :: TVarChar AS ValueData
+           FROM ReplObject
+                LEFT JOIN ObjectString ON ObjectString.ObjectId = ReplObject.ObjectId AND ObjectString.DescId = zc_ObjectString_GUID()
+           WHERE ReplObject.SessionGUID = inSessionGUID
+             AND ObjectString.ObjectId IS NULL
+          ;
+     END IF;
 
 
      -- Результат
@@ -196,17 +200,17 @@ BEGIN
 
      -- Результат
      outCount          := COALESCE (outCount, 0);
-     outCountString    := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectString  ON ObjectString.ObjectId  = ReplObject.ObjectId WHERE ReplObject.SessionGUID = inSessionGUID), 0);
-     outCountFloat     := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectFloat   ON ObjectFloat.ObjectId   = ReplObject.ObjectId WHERE ReplObject.SessionGUID = inSessionGUID), 0);
-     outCountDate      := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectDate    ON ObjectDate.ObjectId    = ReplObject.ObjectId WHERE ReplObject.SessionGUID = inSessionGUID), 0);
-     outCountBoolean   := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectBoolean ON ObjectBoolean.ObjectId = ReplObject.ObjectId WHERE ReplObject.SessionGUID = inSessionGUID), 0);
-     outCountLink      := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectLink    ON ObjectLink.ObjectId    = ReplObject.ObjectId WHERE ReplObject.SessionGUID = inSessionGUID), 0);
+     outCountString    := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectString  AS OS  ON OS.ObjectId  = ReplObject.ObjectId WHERE ReplObject.SessionGUID = inSessionGUID), 0);
+     outCountFloat     := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectFloat   AS OFl ON OFl.ObjectId = ReplObject.ObjectId WHERE ReplObject.SessionGUID = inSessionGUID), 0);
+     outCountDate      := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectDate    AS OD  ON OD.ObjectId  = ReplObject.ObjectId WHERE ReplObject.SessionGUID = inSessionGUID), 0);
+     outCountBoolean   := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectBoolean AS OB  ON OB.ObjectId  = ReplObject.ObjectId WHERE ReplObject.SessionGUID = inSessionGUID), 0);
+     outCountLink      := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectLink    AS OL  ON OL.ObjectId  = ReplObject.ObjectId WHERE ReplObject.SessionGUID = inSessionGUID), 0);
 
-     outCountHistory       := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectHistory ON ObjectHistory.ObjectId = ReplObject.ObjectId WHERE ReplObject.SessionGUID = inSessionGUID), 0);
-     outCountHistoryString := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectHistory ON ObjectHistory.ObjectId = ReplObject.ObjectId INNER JOIN ObjectHistoryString ON ObjectHistoryString.ObjectHistoryId = ObjectHistory.Id WHERE ReplObject.SessionGUID = inSessionGUID), 0);
-     outCountHistoryFloat  := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectHistory ON ObjectHistory.ObjectId = ReplObject.ObjectId INNER JOIN ObjectHistoryFloat  ON ObjectHistoryFloat.ObjectHistoryId  = ObjectHistory.Id WHERE ReplObject.SessionGUID = inSessionGUID), 0);
-     outCountHistoryDate   := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectHistory ON ObjectHistory.ObjectId = ReplObject.ObjectId INNER JOIN ObjectHistoryDate   ON ObjectHistoryDate.ObjectHistoryId   = ObjectHistory.Id WHERE ReplObject.SessionGUID = inSessionGUID), 0);
-     outCountHistoryLink   := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectHistory ON ObjectHistory.ObjectId = ReplObject.ObjectId INNER JOIN ObjectHistoryLink   ON ObjectHistoryLink.ObjectHistoryId   = ObjectHistory.Id WHERE ReplObject.SessionGUID = inSessionGUID), 0);
+     outCountHistory       := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectHistory AS OH ON OH.ObjectId = ReplObject.ObjectId WHERE ReplObject.SessionGUID = inSessionGUID), 0);
+     outCountHistoryString := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectHistory AS OH ON OH.ObjectId = ReplObject.ObjectId INNER JOIN ObjectHistoryString AS OHS ON OHS.ObjectHistoryId = ObjectHistory.Id WHERE ReplObject.SessionGUID = inSessionGUID), 0);
+     outCountHistoryFloat  := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectHistory AS OH ON OH.ObjectId = ReplObject.ObjectId INNER JOIN ObjectHistoryFloat  AS OHF ON OHF.ObjectHistoryId = ObjectHistory.Id WHERE ReplObject.SessionGUID = inSessionGUID), 0);
+     outCountHistoryDate   := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectHistory AS OH ON OH.ObjectId = ReplObject.ObjectId INNER JOIN ObjectHistoryDate   AS OHD ON OHD.ObjectHistoryId = ObjectHistory.Id WHERE ReplObject.SessionGUID = inSessionGUID), 0);
+     outCountHistoryLink   := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectHistory AS OH ON OH.ObjectId = ReplObject.ObjectId INNER JOIN ObjectHistoryLink   AS OHL ON OHL.ObjectHistoryId = ObjectHistory.Id WHERE ReplObject.SessionGUID = inSessionGUID), 0);
 
      outMinId          := COALESCE (outMinId, 0);
      outMaxId          := COALESCE (outMaxId, 0);

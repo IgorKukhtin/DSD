@@ -132,6 +132,30 @@ type
     EditCountDateObject: TEdit;
     EditCountBooleanObject: TEdit;
     EditCountLinkObject: TEdit;
+    spSelect_ReplMovement: TdsdStoredProc;
+    fQueryMovement: TZQuery;
+    MovementCDS: TClientDataSet;
+    spInsert_ReplMovement: TdsdStoredProc;
+    fQueryMS: TZQuery;
+    spSelect_ReplMS: TdsdStoredProc;
+    MSCDS: TClientDataSet;
+    fQueryMF: TZQuery;
+    spSelect_ReplMF: TdsdStoredProc;
+    MFCDS: TClientDataSet;
+    spSelect_ReplMD: TdsdStoredProc;
+    MDCDS: TClientDataSet;
+    fQueryMD: TZQuery;
+    fQueryMB: TZQuery;
+    MBCDS: TClientDataSet;
+    spSelect_ReplMB: TdsdStoredProc;
+    fQueryMLO: TZQuery;
+    spSelect_ReplMLO: TdsdStoredProc;
+    MLOCDS: TClientDataSet;
+    fQueryMLM: TZQuery;
+    spSelect_ReplMLM: TdsdStoredProc;
+    MLMCDS: TClientDataSet;
+    cbMovement: TCheckBox;
+    cbMI: TCheckBox;
 
     procedure OKGuideButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -143,8 +167,8 @@ type
     fStop : Boolean;
     gSessionGUID : String;
     outMinId, outMaxId, outCountIteration, outCountPack : Integer;
-    outCount, outCountString, outCountFloat, outCountDate, outCountBoolean, outCountLink : Integer;
-    outCountHistory, outCountHistoryString, outCountHistoryFloat, outCountHistoryDate, outCountHistoryLink : Integer;
+    outCount, outCountString, outCountFloat, outCountDate, outCountBoolean, outCountLink, outCountLinkM : Integer;
+    outCountHistory, outCountHistoryString, outCountHistoryFloat, outCountHistoryDate, outCountHistoryBoolean, outCountHistoryLink : Integer;
 
     procedure myShowSql(mySql:TStrings);
     procedure MyDelay(mySec:Integer);
@@ -191,17 +215,30 @@ type
     function IniConnectionFrom (isConnected : Boolean): Boolean;
     function IniConnectionTo   (_PropertyName : String; isGetDesc   : Boolean): Boolean;
 
+    //Object
+    function pInsert_ReplObject : Boolean;
+    function pSendAllTo_ReplObject : Boolean;
+    function pOpen_ReplObject (isObjectLink : Boolean; Num_main : Integer; StartId, EndId : LongInt; isHistory : Boolean) : Boolean;
+    function pSendPackTo_ReplObject(Num_main, CountPack : Integer; isHistory : Boolean) : Boolean;
+    function pSendPackTo_ReplObjectProperty(Num_main, CountPack : Integer; CDSData : TClientDataSet; isHistory : Boolean) : Boolean;
+    function fMove_ObjectHistory_repl : Boolean;
+
     function fObject_andProperty_while : Boolean;
     function fObjectLink_while : Boolean;
     function fObjectHistory_while : Boolean;
     function fObjectHistory_Property_while : Boolean;
 
-    function pInsert_ReplObject : Boolean;
-    function pSendAllTo_ReplObject  : Boolean;
-    function pOpen_ReplObject (isObjectLink : Boolean; Num_main : Integer; StartId, EndId : LongInt; isHistory : Boolean) : Boolean;
-    function pSendPackTo_ReplObject(Num_main, CountPack : Integer; isHistory : Boolean) : Boolean;
-    function pSendPackTo_ReplObjectProperty(Num_main, CountPack : Integer; CDSData : TClientDataSet; isHistory : Boolean) : Boolean;
-    function fMove_ObjectHistory_repl : Boolean;
+    //Movement
+    function pInsert_ReplMovement : Boolean;
+    function pSendAllTo_ReplMovement : Boolean;
+    function pOpen_ReplMovement (isLinkM : Boolean; Num_main : Integer; StartId, EndId : LongInt; isMI : Boolean) : Boolean;
+    function pSendPackTo_ReplMovement(Num_main, CountPack : Integer; isMI : Boolean) : Boolean;
+    function pSendPackTo_ReplMovementProperty(Num_main, CountPack : Integer; CDSData : TClientDataSet; isMI : Boolean) : Boolean;
+
+    function fMovement_andProperty_while : Boolean;
+    function fMovementLinkM_while : Boolean;
+    function fMovementItem_andProperty_while : Boolean;
+
 
     procedure AddToLog(S, myFile, myFolder: string; isError : Boolean);
     procedure AddToMemoMsg(S: String; isError : Boolean);
@@ -807,11 +844,125 @@ begin
      end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.pInsert_ReplMovement : Boolean;
+//From: соединение от галки cbClientDataSet - если нет тогда ПРЯМОЕ
+begin
+     Result:= false;
+     //
+     try
+
+     gSessionGUID:= GenerateGUID;
+     //
+     AddToMemoMsg('----- gSessionGUID:', FALSE);
+     AddToMemoMsg(gSessionGUID, FALSE);
+     //
+     if cbClientDataSet.Checked = TRUE
+     then
+       with spInsert_ReplMovement do
+       begin
+           ParamByName('inSessionGUID').Value:= gSessionGUID;
+           ParamByName('inStartDate').Value  := ArrayReplServer[1].Start_toChild;
+           ParamByName('inDescCode').Value   := EditObjectDescId.Text;
+           ParamByName('gConnectHost').Value := ArrayReplServer[0].HostName;
+           ParamByName('inDataBaseId').Value := ArrayReplServer[0].Id;
+           Execute;
+           //
+           outCount          :=ParamByName('outCount').Value;
+           outCountString    :=ParamByName('outCountString').Value;
+           outCountFloat     :=ParamByName('outCountFloat').Value;
+           outCountDate      :=ParamByName('outCountDate').Value;
+           outCountBoolean   :=ParamByName('outCountBoolean').Value;
+           outCountLink      :=ParamByName('outCountLink').Value;
+           outCountLinkM     :=ParamByName('outCountLinkM').Value;
+
+           outCountHistory       :=ParamByName('outCountMI').Value;
+           outCountHistoryString :=ParamByName('outCountMIString').Value;
+           outCountHistoryFloat  :=ParamByName('outCountMIFloat').Value;
+           outCountHistoryDate   :=ParamByName('outCountMIDate').Value;
+           outCountHistoryBoolean:=ParamByName('outCountMIBoolean').Value;
+           outCountHistoryLink   :=ParamByName('outCountMILink').Value;
+
+           outMinId          :=ParamByName('outMinId').Value;
+           outMaxId          :=ParamByName('outMaxId').Value;
+           outCountIteration :=ParamByName('outCountIteration').Value;
+           outCountPack      :=ParamByName('outCountPack').Value;
+       end
+     else
+       with fromSqlQuery do
+       begin
+           // Подключились к серверу From - ОБЯЗАТЕЛЬНО
+           if not IniConnectionFrom (TRUE) then exit;
+           //
+           fOpenSqFromQuery ('select * from gpInsert_ReplMovement('+ConvertFromVarChar(gSessionGUID)
+                            +',' + FormatFromDateTime(ArrayReplServer[1].Start_toChild)
+                            +',' + ConvertFromVarChar(EditObjectDescId.Text)
+                            +',' + IntToStr(ArrayReplServer[0].Id)
+                            +', CAST (NULL AS TVarChar) '
+                            +', CAST (NULL AS TVarChar) '
+                            +')');
+           //
+           outCount          :=FieldByName('outCount').AsInteger;
+           outCountString    :=FieldByName('outCountString').AsInteger;
+           outCountFloat     :=FieldByName('outCountFloat').AsInteger;
+           outCountDate      :=FieldByName('outCountDate').AsInteger;
+           outCountBoolean   :=FieldByName('outCountBoolean').AsInteger;
+           outCountLink      :=FieldByName('outCountLink').AsInteger;
+           outCountLinkM     :=FieldByName('outCountLinkM').AsInteger;
+
+           outCountHistory       :=ParamByName('outCountMI').Value;
+           outCountHistoryString :=ParamByName('outCountMIString').Value;
+           outCountHistoryFloat  :=ParamByName('outCountMIFloat').Value;
+           outCountHistoryDate   :=ParamByName('outCountMIDate').Value;
+           outCountHistoryBoolean:=ParamByName('outCountMIBoolean').Value;
+           outCountHistoryLink   :=ParamByName('outCountMILink').Value;
+
+           outMinId          :=FieldByName('outMinId').AsInteger;
+           outMaxId          :=FieldByName('outMaxId').AsInteger;
+           outCountIteration :=FieldByName('outCountIteration').AsInteger;
+           outCountPack      :=FieldByName('outCountPack').AsInteger;
+       end;
+     //
+     //
+     AddToMemoMsg('Count : ' + IntToStr (outCount), FALSE);
+     AddToMemoMsg('String : ' + IntToStr (outCountString), FALSE);
+     AddToMemoMsg('Float : ' + IntToStr (outCountFloat), FALSE);
+     AddToMemoMsg('Date : ' + IntToStr (outCountDate), FALSE);
+     AddToMemoMsg('Boolean : ' + IntToStr (outCountBoolean), FALSE);
+     AddToMemoMsg('Link : ' + IntToStr (outCountLink), FALSE);
+     AddToMemoMsg('LinkM : ' + IntToStr (outCountLinkM), FALSE);
+     AddToMemoMsg('-', FALSE);
+     AddToMemoMsg('CountMI : ' + IntToStr (outCountHistory), FALSE);
+     AddToMemoMsg('MIString : ' + IntToStr (outCountHistoryString), FALSE);
+     AddToMemoMsg('MIFloat : ' + IntToStr (outCountHistoryFloat), FALSE);
+     AddToMemoMsg('MIDate : ' + IntToStr (outCountHistoryDate), FALSE);
+     AddToMemoMsg('MIBoolean : ' + IntToStr (outCountHistoryBoolean), FALSE);
+     AddToMemoMsg('MILink : ' + IntToStr (outCountHistoryLink), FALSE);
+     AddToMemoMsg('-', FALSE);
+     AddToMemoMsg('MinId : ' + IntToStr (outMinId), FALSE);
+     AddToMemoMsg('MaxId : ' + IntToStr (outMaxId), FALSE);
+     AddToMemoMsg('CountIteration : ' + IntToStr (outCountIteration), FALSE);
+     AddToMemoMsg('CountPack : ' + IntToStr (outCountPack), FALSE);
+     AddToMemoMsg('-', FALSE);
+     //
+     AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Insert', FALSE);
+
+     except on E:Exception do
+       begin
+          // ERROR
+          AddToMemoMsg ('', FALSE);
+          AddToMemoMsg (E.Message, TRUE);
+          exit;
+       end;
+     end;
+     //
+     Result:= true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pInsert_ReplObject : Boolean;
 //From: соединение от галки cbClientDataSet - если нет тогда ПРЯМОЕ
 begin
      Result:= false;
-
+     //
      try
 
      gSessionGUID:= GenerateGUID;
@@ -904,6 +1055,177 @@ begin
      AddToMemoMsg('-', FALSE);
      //
      AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Insert', FALSE);
+
+     except on E:Exception do
+       begin
+          // ERROR
+          AddToMemoMsg ('', FALSE);
+          AddToMemoMsg (E.Message, TRUE);
+          exit;
+       end;
+     end;
+     //
+     Result:= true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.pOpen_ReplMovement (isLinkM : Boolean; Num_main : Integer; StartId, EndId : LongInt; isMI : Boolean) : Boolean;
+var lMovement, lMovementString, lMovementFloat, lMovementDate, lMovementBoolean, lMovementLinkO, lMovementLinkM : String;
+
+    procedure pExec_Select (spName : String; spSelect : TdsdStoredProc);
+    begin
+       with spSelect do
+       begin
+           StoredProcName:= spName;
+           //
+           ParamByName('inSessionGUID').Value:= gSessionGUID;
+           ParamByName('inStartId').Value    := StartId;
+           ParamByName('inEndId').Value      := EndId;
+           ParamByName('inDataBaseId').Value := ArrayReplServer[0].Id;
+           ParamByName('gConnectHost').Value := ArrayReplServer[0].HostName;
+           Execute;
+       end;
+    end;
+    procedure pOpen_Select (spName : String; lQuery : TZQuery);
+    begin
+       with lQuery, Sql do
+       begin
+           Clear;
+           Add ('SELECT * FROM ' + spName + '(' + ConvertFromVarChar(gSessionGUID)
+                                           +',' + IntToStr(StartId)
+                                           +',' + IntToStr(EndId)
+                                           +',' + IntToStr(ArrayReplServer[0].Id)
+                                           +',' + ConvertFromVarChar('')
+                                           +',zfCalc_UserAdmin())');
+           Open;
+       end;
+    end;
+begin
+     Result:= false;
+     //
+     if isMI = TRUE then
+     begin
+          lMovement        := 'MovementItem';
+          lMovementString  := 'MovementItemString';
+          lMovementFloat   := 'MovementItemFloat';
+          lMovementDate    := 'MovementItemDate';
+          lMovementBoolean := 'MovementItemBoolean';
+          lMovementLinkO   := 'MovementItemLinkObject';
+          lMovementLinkM   := '';
+     end
+     else
+     begin
+          lMovement        := 'Movement';
+          lMovementString  := 'MovementString';
+          lMovementFloat   := 'MovementFloat';
+          lMovementDate    := 'MovementDate';
+          lMovementBoolean := 'MovementBoolean';
+          lMovementLinkO   := 'MovementLinkObject';
+          lMovementLinkM   := 'MovementLinkMovement';
+     end;
+     //
+     // Подключились к серверу From - если надо
+     if not IniConnectionFrom (not cbClientDataSet.Checked) then exit;
+     //
+     // Коммент
+     if isLinkM = TRUE then AddToMemoMsg(' ...', FALSE);
+     //
+     AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - Start Open ('+IntToStr(Num_main)+') ('+IntToStr(StartId)+')-('+IntToStr(EndId)+')', FALSE);
+     //
+     try
+
+     if cbShowGrid.Checked = false then
+     begin
+       //
+       ObjectDS.DataSet:= nil;
+       ObjectStringDS.DataSet:= nil;
+       ObjectFloatDS.DataSet:= nil;
+       ObjectDateDS.DataSet:= nil;
+       ObjectBooleanDS.DataSet:= nil;
+       ObjectLinkDS.DataSet:= nil;
+     end;
+
+     //
+     if cbClientDataSet.Checked = TRUE then
+     begin
+         if cbShowGrid.Checked = True then
+         begin
+           //
+           ObjectDS.DataSet       := MovementCDS;
+           ObjectStringDS.DataSet := MSCDS;
+           ObjectFloatDS.DataSet  := MFCDS;
+           ObjectDateDS.DataSet   := MDCDS;
+           ObjectBooleanDS.DataSet:= MBCDS;
+           ObjectLinkDS.DataSet   := MLOCDS;
+         end;
+         //
+         if isLinkM = FALSE then
+         begin
+           //
+           pExec_Select ('gpSelect_Repl' + lMovement, spSelect_ReplMovement);
+           AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lMovement, FALSE);
+           //
+           pExec_Select ('gpSelect_Repl' + lMovementString, spSelect_ReplMS);
+           AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lMovementString, FALSE);
+           //
+           pExec_Select ('gpSelect_Repl' + lMovementFloat, spSelect_ReplMF);
+           AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lMovementFloat, FALSE);
+           //
+           pExec_Select ('gpSelect_Repl' + lMovementDate, spSelect_ReplMD);
+           AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lMovementDate, FALSE);
+           //
+           pExec_Select ('gpSelect_Repl' + lMovementBoolean, spSelect_ReplMB);
+           AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lMovementBoolean, FALSE);
+           //
+           pExec_Select ('gpSelect_Repl' + lMovementLinkO, spSelect_ReplMLO);
+           AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lMovementLinkO, FALSE);
+         end
+         else begin
+           //
+           pExec_Select ('gpSelect_Repl' + lMovementLinkM, spSelect_ReplMLM);
+           AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lMovementLinkM, FALSE);
+         end;
+     end
+     else
+     begin
+         if cbShowGrid.Checked = True then
+         begin
+           //
+           ObjectDS.DataSet       := fQueryMovement;
+           ObjectStringDS.DataSet := fQueryMS;
+           ObjectFloatDS.DataSet  := fQueryMF;
+           ObjectDateDS.DataSet   := fQueryMD;
+           ObjectBooleanDS.DataSet:= fQueryMB;
+           ObjectLinkDS.DataSet   := fQueryMLO;
+         end;
+         //
+         if isLinkM = FALSE then
+         begin
+           //
+           pOpen_Select ('gpSelect_Repl' + lMovement, fQueryMovement);
+           AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lMovement, FALSE);
+           //
+           pOpen_Select ('gpSelect_Repl' + lMovementString, fQueryMS);
+           AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lMovementString, FALSE);
+           //
+           pOpen_Select ('gpSelect_Repl' + lMovementFloat, fQueryMF);
+           AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lMovementFloat, FALSE);
+           //
+           pOpen_Select ('gpSelect_Repl' + lMovementDate, fQueryMD);
+           AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lMovementDate, FALSE);
+           //
+           pOpen_Select ('gpSelect_Repl' + lMovementBoolean, fQueryMB);
+           AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lMovementBoolean, FALSE);
+           //
+           pOpen_Select ('gpSelect_Repl' + lMovementLinkO, fQueryMLO);
+           AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lMovementLinkO, FALSE);
+
+         end
+         else begin
+           //
+           pOpen_Select ('gpSelect_Repl' + lMovementLinkM, fQueryMLM);
+           AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Open ' + lMovementLinkM, FALSE);
+         end;
+     end;
 
      except on E:Exception do
        begin
@@ -1119,6 +1441,16 @@ begin
      end;
      //
      Result:= true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.pSendPackTo_ReplMovement(Num_main, CountPack : Integer; isMI : Boolean) : Boolean;
+begin
+
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.pSendPackTo_ReplMovementProperty(Num_main, CountPack : Integer; CDSData : TClientDataSet; isMI : Boolean) : Boolean;
+begin
+
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pSendPackTo_ReplObject (Num_main, CountPack : Integer; isHistory : Boolean) : Boolean;
@@ -2251,6 +2583,161 @@ begin
   Application.ProcessMessages;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.fMovement_andProperty_while : Boolean;
+var StartId, EndId : Integer;
+    num : Integer;
+begin
+     Result:= false;
+     //
+     // стартовый период для Id - Movement...
+     StartId:= outMinId;
+     EndId  := StartId + outCountIteration;
+     num    := 0;
+
+     while StartId <= outMaxId do
+     begin
+          AddToMemoMsg(' ....................', FALSE);
+          //!!!
+          Application.ProcessMessages;
+          if fStop then begin exit;end;
+          //!!!
+          num:= num + 1;
+
+          // открыли данные с... по...
+          if not pOpen_ReplMovement (FALSE, num, StartId, EndId, FALSE) then exit;
+          //
+          // если только просмотр - !!!ВЫХОД!!!
+          if cbOnlyOpen.Checked = TRUE then exit;
+          //
+          //делаем скрипт на НЕСКОЛЬКО пакетов и сохраняем данные в БАЗЕ-To
+          if not pSendPackTo_ReplMovement(num, outCountPack, FALSE)
+          then exit;
+          //MovementString - на НЕСКОЛЬКО пакетов и ...
+          if cbClientDataSet.Checked = TRUE
+          then if not pSendPackTo_ReplMovementProperty(num, outCountPack, TClientDataSet(MSCDS), FALSE) then exit else
+          else if not pSendPackTo_ReplMovementProperty(num, outCountPack, TClientDataSet(fQueryMS), FALSE) then exit else;
+          //MovementFloat - на НЕСКОЛЬКО пакетов и ...
+          if cbClientDataSet.Checked = TRUE
+          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(MFCDS), FALSE) then exit else
+          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryMF), FALSE) then exit else;
+          //MovementDate - на НЕСКОЛЬКО пакетов и ...
+          if cbClientDataSet.Checked = TRUE
+          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(MDCDS), FALSE) then exit else
+          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryMD), FALSE) then exit else;
+          //MovementBoolean - на НЕСКОЛЬКО пакетов и ...
+          if cbClientDataSet.Checked = TRUE
+          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(MBCDS), FALSE) then exit else
+          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryMB), FALSE) then exit else;
+          //MovementLinkObject - на НЕСКОЛЬКО пакетов и ...
+          if cbClientDataSet.Checked = TRUE
+          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(MLOCDS), FALSE) then exit else
+          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryMLO), FALSE) then exit else;
+          //
+          // следующий период для Id
+          StartId:= EndId + 1;
+          EndId  := StartId + outCountIteration;
+     end;
+     //
+     Result:= true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.fMovementLinkM_while : Boolean;
+var StartId, EndId : Integer;
+    num : Integer;
+begin
+     Result:= false;
+     //
+     // стартовый период для Id - Movement...
+     StartId:= outMinId;
+     EndId  := StartId + outCountIteration;
+     num    := 0;
+
+     while StartId <= outMaxId do
+     begin
+          AddToMemoMsg(' ....................', FALSE);
+          //!!!
+          Application.ProcessMessages;
+          if fStop then begin exit;end;
+          //!!!
+          num:= num + 1;
+
+          // открыли данные с... по...
+          if not pOpen_ReplMovement (TRUE, num, StartId, EndId, FALSE) then exit;
+          //
+          // если только просмотр - !!!ВЫХОД!!!
+          if cbOnlyOpen.Checked = TRUE then exit;
+          //
+          //MovementLinkMovement - на НЕСКОЛЬКО пакетов и ...
+          if cbClientDataSet.Checked = TRUE
+          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(MLMCDS), FALSE) then exit else
+          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryMLM), FALSE) then exit else;
+          //
+          // следующий период для Id
+          StartId:= EndId + 1;
+          EndId  := StartId + outCountIteration;
+     end;
+     //
+     Result:= true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.fMovementItem_andProperty_while : Boolean;
+var StartId, EndId : Integer;
+    num : Integer;
+begin
+     Result:= false;
+     //
+     // стартовый период для Id - Movement...
+     StartId:= outMinId;
+     EndId  := StartId + outCountIteration;
+     num    := 0;
+
+     while StartId <= outMaxId do
+     begin
+          AddToMemoMsg(' ....................', FALSE);
+          //!!!
+          Application.ProcessMessages;
+          if fStop then begin exit;end;
+          //!!!
+          num:= num + 1;
+
+          // открыли данные с... по...
+          if not pOpen_ReplMovement (FALSE, num, StartId, EndId, TRUE) then exit;
+          //
+          // если только просмотр - !!!ВЫХОД!!!
+          if cbOnlyOpen.Checked = TRUE then exit;
+          //
+          //делаем скрипт на НЕСКОЛЬКО пакетов и сохраняем данные в БАЗЕ-To
+          if not pSendPackTo_ReplMovement(num, outCountPack, TRUE)
+          then exit;
+          //MovementItemString - на НЕСКОЛЬКО пакетов и ...
+          if cbClientDataSet.Checked = TRUE
+          then if not pSendPackTo_ReplMovementProperty(num, outCountPack, TClientDataSet(MSCDS), TRUE) then exit else
+          else if not pSendPackTo_ReplMovementProperty(num, outCountPack, TClientDataSet(fQueryMS), TRUE) then exit else;
+          //MovementItemFloat - на НЕСКОЛЬКО пакетов и ...
+          if cbClientDataSet.Checked = TRUE
+          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(MFCDS), TRUE) then exit else
+          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryMF), TRUE) then exit else;
+          //MovementItemDate - на НЕСКОЛЬКО пакетов и ...
+          if cbClientDataSet.Checked = TRUE
+          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(MDCDS), TRUE) then exit else
+          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryMD), TRUE) then exit else;
+          //MovementItemBoolean - на НЕСКОЛЬКО пакетов и ...
+          if cbClientDataSet.Checked = TRUE
+          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(MBCDS), TRUE) then exit else
+          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryMB), TRUE) then exit else;
+          //MovementItemLinkObject - на НЕСКОЛЬКО пакетов и ...
+          if cbClientDataSet.Checked = TRUE
+          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(MLOCDS), TRUE) then exit else
+          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryMLO), TRUE) then exit else;
+          //
+          // следующий период для Id
+          StartId:= EndId + 1;
+          EndId  := StartId + outCountIteration;
+     end;
+     //
+     Result:= true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fObject_andProperty_while : Boolean;
 var StartId, EndId : Integer;
     num : Integer;
@@ -2428,6 +2915,82 @@ begin
      Result:= true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.pSendAllTo_ReplMovement : Boolean;
+//To: соединение - ПРЯМОЕ - нужен load-Desc-list
+begin
+  //
+  try
+     Result:= false;
+     //
+     // Зафиксировали ВСЕ данные на сервере From
+     if not pInsert_ReplMovement then exit;
+     //
+     // Подключились к серверу To + главное - получили ВСЕ Desc-ки (нужны только они)
+     if not IniConnectionTo ('load-Desc-list', TRUE) then exit;
+     //
+     // показали Итоги
+     EditCountObject.Text          := IntToStr(outCount)       + ' / ' + IntToStr(outCountHistory);
+     EditCountStringObject.Text    := IntToStr(outCountString) + ' / ' + IntToStr(outCountHistoryString);
+     EditCountFloatObject.Text     := IntToStr(outCountFloat)  + ' / ' + IntToStr(outCountHistoryFloat);
+     EditCountDateObject.Text      := IntToStr(outCountDate)   + ' / ' + IntToStr(outCountHistoryDate);
+     EditCountBooleanObject.Text   := IntToStr(outCountBoolean)+ ' / ' + IntToStr(outCountHistoryBoolean);
+     EditCountLinkObject.Text      := IntToStr(outCountLink)   + ' * ' + IntToStr(outCountLinkM) + ' / ' + IntToStr(outCountHistoryLink);
+
+     EditMinIdObject.Text          := IntToStr(outMinId);
+     EditMaxIdObject.Text          := IntToStr(outMaxId);
+     EditCountIterationObject.Text := IntToStr(outCountIteration) + ' / ' + IntToStr(outCountPack);
+
+     Gauge.Progress:=0;
+     Gauge.MaxValue:= 0;
+     Gauge.MaxValue:= Gauge.MaxValue + outCount + outCountString + outCountFloat
+                                     + outCountDate + outCountBoolean + outCountLink + outCountLinkM
+                                     + outCountHistory + outCountHistoryString + outCountHistoryFloat
+                                     + outCountHistoryDate + outCountHistoryBoolean + outCountHistoryLink
+                                     ;
+     //
+     if cbMovement.Checked = TRUE then
+     begin
+         // Отправили ВСЕ Movement + Property
+         if not fMovement_andProperty_while then exit;
+         //
+         // Отправили ВСЕ MovementLinkMovement
+         if not fMovementLinkM_while then exit;
+     end;
+     //
+     if cbMI.Checked = TRUE then
+     begin
+         // Отправили ВСЕ MovementItem + Property
+         if not fMovementItem_andProperty_while then exit;
+     end;
+     //
+     //
+     AddToMemoMsg(' ....................', FALSE);
+     AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' ... end Movement', FALSE);
+     //
+     Result:= true;
+
+  finally
+      if (cbOnlyOpen.Checked = FALSE) and (fStop = FALSE) then
+      begin
+         fQueryMovement.Close;
+         fQueryMS.Close;
+         fQueryMF.Close;
+         fQueryMD.Close;
+         fQueryMB.Close;
+         fQueryMLO.Close;
+         fQueryMLM.Close;
+         //
+         MovementCDS.Close;
+         MSCDS.Close;
+         MFCDS.Close;
+         MDCDS.Close;
+         MBCDS.Close;
+         MLOCDS.Close;
+         MLMCDS.Close;
+      end;
+  end;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pSendAllTo_ReplObject : Boolean;
 //To: соединение - ПРЯМОЕ - нужен load-Desc-list
 begin
@@ -2563,6 +3126,11 @@ begin
          then
              // Отправили Object - Data
              pSendAllTo_ReplObject;
+
+         if (cbMovement.Checked = TRUE) or (cbMI.Checked = TRUE)
+         then
+             // Отправили Movement - Data
+             pSendAllTo_ReplMovement;
 
      finally
            Result:= fStop;
