@@ -37,15 +37,12 @@ type
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
     GuidesUnit: TdsdGuides;
-    cbPartion: TcxCheckBox;
-    cbSize: TcxCheckBox;
     cxLabel1: TcxLabel;
     edBrand: TcxButtonEdit;
     cxLabel2: TcxLabel;
     edPartner: TcxButtonEdit;
     GuidesBrand: TdsdGuides;
     GuidesPartner: TdsdGuides;
-    cbPartner: TcxCheckBox;
     cxLabel5: TcxLabel;
     edPeriod: TcxButtonEdit;
     GuidesPeriod: TdsdGuides;
@@ -55,9 +52,8 @@ type
     edEndYear: TcxButtonEdit;
     GuidesStartYear: TdsdGuides;
     GuidesEndYear: TdsdGuides;
-    cbDiscount: TcxCheckBox;
     cbPeriodAll: TcxCheckBox;
-    cbGoods: TcxCheckBox;
+    cbUnit: TcxCheckBox;
   private
     { Private declarations }
   public

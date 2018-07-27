@@ -752,10 +752,6 @@ BEGIN
                                            ELSE 0
                                       END) AS Return_Summ_10200_OutDiscount
 
-
-                               --
-                               -- , 1 as x1
-                               
                                , Object_PartionGoods.Olap_Goods
                                , Object_PartionGoods.Olap_Partion
 
