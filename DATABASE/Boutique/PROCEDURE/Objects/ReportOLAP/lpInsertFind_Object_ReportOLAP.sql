@@ -16,7 +16,7 @@ BEGIN
      IF COALESCE (inCode, 0) <= 0 THEN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <inCode>.';
      END IF;
-     IF COALESCE (inCode, 0) NOT IN (zc_ReportOLAP_Brand(), zc_ReportOLAP_Goods(), zc_ReportOLAP_Partion()) THEN
+     IF COALESCE (inCode, 0) NOT IN (zc_ReportOLAP_Brand(), zc_ReportOLAP_Goods(), zc_ReportOLAP_Partion(), zc_ReportOLAP_Unit()) THEN
         RAISE EXCEPTION 'Ошибка.Нельзя такое значение <inCode> = <%>.', inCode;
      END IF;
      -- проверка - свойство должно быть установлено
