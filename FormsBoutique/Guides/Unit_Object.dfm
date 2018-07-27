@@ -38,7 +38,6 @@ object Unit_ObjectForm: TUnit_ObjectForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -49,6 +48,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 90
       end
       object Name: TcxGridDBColumn
@@ -57,7 +57,16 @@ object Unit_ObjectForm: TUnit_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 339
+      end
+      object isOLAP: TcxGridDBColumn
+        Caption = #1044#1083#1103' '#1054#1090#1095#1077#1090#1072
+        DataBinding.FieldName = 'isOLAP'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1090#1095#1077#1090' '#1092#1086#1088#1084#1080#1088#1091#1077#1090#1089#1103' '#1058#1054#1051#1068#1050#1054' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1058#1052
+        Width = 60
       end
       object PrintName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1088#1080' '#1087#1077#1095#1072#1090#1080
@@ -74,6 +83,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 100
       end
       object Phone: TcxGridDBColumn
@@ -82,6 +92,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 100
       end
       object Printer: TcxGridDBColumn
@@ -92,6 +103,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = #1055#1088#1080#1085#1090#1077#1088' ('#1087#1077#1095#1072#1090#1100' '#1095#1077#1082#1086#1074')'
+        Options.Editing = False
         Width = 100
       end
       object DiscountTax: TcxGridDBColumn
@@ -100,6 +112,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 120
       end
       object JuridicalName: TcxGridDBColumn
@@ -108,6 +121,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 165
       end
       object ParentName: TcxGridDBColumn
@@ -116,6 +130,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 165
       end
       object ChildName: TcxGridDBColumn
@@ -124,6 +139,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 165
       end
       object BankAccountName: TcxGridDBColumn
@@ -132,6 +148,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 100
       end
       object BankName: TcxGridDBColumn
@@ -140,6 +157,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 100
       end
       object AccountDirectionName: TcxGridDBColumn
@@ -157,6 +175,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 78
       end
     end
@@ -401,6 +420,18 @@ object Unit_ObjectForm: TUnit_ObjectForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Unit'
@@ -499,5 +530,31 @@ object Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 464
     Top = 144
+  end
+  object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Unit_ReportOLAP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsReportOLAP'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isOLAP'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 160
+    Top = 152
   end
 end

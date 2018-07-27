@@ -61,6 +61,8 @@ type
     ChildName: TcxGridDBColumn;
     BankAccountName: TcxGridDBColumn;
     BankName: TcxGridDBColumn;
+    spInsertUpdate: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

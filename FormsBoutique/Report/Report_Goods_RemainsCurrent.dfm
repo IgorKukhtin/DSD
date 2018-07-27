@@ -2739,7 +2739,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 944
+    Left = 888
     Top = 248
   end
   object spUpdate_Part_isOlap_Yes: TdsdStoredProc

@@ -179,7 +179,6 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Caption = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1043#1086#1076' '#1058#1052
       ParentShowHint = False
       ShowHint = True
-      State = cbsChecked
       TabOrder = 17
       Width = 130
     end
@@ -281,8 +280,8 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     Groups = <>
     OptionsView.RowGrandTotalWidth = 272
     TabOrder = 1
-    ExplicitLeft = 64
-    ExplicitTop = 61
+    ExplicitLeft = -8
+    ExplicitTop = 73
     object pvLabelName: TcxDBPivotGridField
       Area = faRow
       AreaIndex = 1

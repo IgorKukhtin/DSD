@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsGroupName  TVarChar
              , StartDate_sybase TDateTime
              , isPartnerBarCode Boolean
+             , isOLAP Boolean
              , isErased boolean)
 AS
 $BODY$
@@ -28,6 +29,20 @@ BEGIN
 
      -- Результат
      RETURN QUERY
+       WITH tmpReportOLAP AS (SELECT ObjectLink_Object.ChildObjectId AS UnitId
+                              FROM Object
+                                   INNER JOIN ObjectLink AS ObjectLink_User
+                                                         ON ObjectLink_User.ObjectId      = Object.Id
+                                                        AND ObjectLink_User.DescId        = zc_ObjectLink_ReportOLAP_User()
+                                                        AND ObjectLink_User.ChildObjectId = vbUserId
+                                   INNER JOIN ObjectLink AS ObjectLink_Object
+                                                         ON ObjectLink_Object.ObjectId    = Object.Id
+                                                        AND ObjectLink_Object.DescId      = zc_ObjectLink_ReportOLAP_Object()
+                              WHERE Object.DescId     = zc_Object_ReportOLAP()
+                                AND Object.ObjectCode = zc_ReportOLAP_Unit()
+                                AND Object.isErased   = FALSE
+                             )
+
        SELECT
              Object_Unit.Id                  AS Id
            , Object_Unit.ObjectCode          AS Code
@@ -93,6 +108,8 @@ BEGIN
              END :: TDateTime AS StartDate_sybase
 
            , COALESCE (ObjectBoolean_PartnerBarCode.ValueData, FALSE) :: Boolean  AS isPartnerBarCode
+           
+           , CASE WHEN tmpReportOLAP.UnitId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isOLAP
 
            , Object_Unit.isErased            AS isErased
 
@@ -157,6 +174,8 @@ BEGIN
                                  ON ObjectLink_User_Unit.ObjectId = vbUserId
                                 AND ObjectLink_User_Unit.DescId   = zc_ObjectLink_User_Unit()
 
+            LEFT JOIN tmpReportOLAP ON tmpReportOLAP.UnitId = Object_Unit.Id
+
      WHERE Object_Unit.DescId = zc_Object_Unit()
        AND (Object_Unit.isErased = FALSE OR inIsShowAll = TRUE)
        -- AND (Object_Unit.Id = ObjectLink_User_Unit.ChildObjectId OR ObjectLink_User_Unit.ChildObjectId IS NULL)
@@ -169,6 +188,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
+27.07.18          *
 22.03.18          *
 05.03.18          *
 27.02.18          * Printer
