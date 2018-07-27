@@ -54,7 +54,6 @@ type
     FormParams: TdsdFormParams;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    pvAmount: TcxDBPivotGridField;
     pvPartionGoods: TcxDBPivotGridField;
     dxBarStatic: TdxBarStatic;
     pvGoodsKindName: TcxDBPivotGridField;
