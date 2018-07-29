@@ -33,9 +33,9 @@ BEGIN
      -- 1. Movement
      RETURN QUERY
      SELECT
-          ReplMovement.OperDate_last                  AS OperDate_last
-        , ReplMovement.DescId                         AS MovementDescId
-        , ReplMovement.MovementId                     AS MovementId
+          ReplMovement.OperDate_last                        AS OperDate_last
+        , ReplMovement.DescId                               AS MovementDescId
+        , ReplMovement.MovementId                           AS MovementId
         , MovementLinkObject.DescId                         AS DescId
         , MovementLinkObjectDesc.Code      :: VarChar (100) AS DescName
         , MovementLinkObjectDesc.ItemName  :: VarChar (100) AS ItemName
@@ -47,7 +47,8 @@ BEGIN
 
      FROM ReplMovement
           INNER JOIN MovementLinkObject     ON MovementLinkObject.MovementId = ReplMovement.MovementId
-          LEFT JOIN  MovementLinkObjectDesc ON MovementLinkObjectDesc.Id   = MovementLinkObject.DescId
+          LEFT JOIN  MovementLinkObjectDesc ON MovementLinkObjectDesc.Id     = MovementLinkObject.DescId
+
           LEFT JOIN MovementString AS MovementString_GUID
                                    ON MovementString_GUID.MovementId = ReplMovement.MovementId
                                   AND MovementString_GUID.DescId     = zc_MovementString_GUID()

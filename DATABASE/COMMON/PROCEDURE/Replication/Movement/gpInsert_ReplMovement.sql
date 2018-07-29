@@ -72,10 +72,9 @@ BEGIN
                           WHERE tmpProtocol.Ord = 1 -- !!!последний!!!
                          )
      -- Результат
-     SELECT tmpList_all.MovementId, tmpList_all.DescId, tmpProtocol.UserId AS UserId_last, tmpProtocol.OperDate AS OperDate_last, CURRENT_TIMESTAMP AS OperDate, inSessionGUID
-     FROM tmpList_all
-          LEFT JOIN tmpProtocol ON tmpProtocol.MovementId = tmpList_all.MovementId AND tmpProtocol.Ord = 1 -- !!!последний!!!
-     ORDER BY tmpList_all.MovementId;
+     SELECT tmpProtocol.MovementId, tmpProtocol.DescId, tmpProtocol.UserId AS UserId_last, tmpProtocol.OperDate AS OperDate_last, CURRENT_TIMESTAMP AS OperDate, inSessionGUID
+     FROM tmpProtocol
+     WHERE tmpProtocol.Ord = 1; -- !!!последний!!!
 
 
      -- Проверка
@@ -97,6 +96,16 @@ BEGIN
                 LEFT JOIN MovementString ON MovementString.MovementId = ReplMovement.MovementId AND MovementString.DescId = zc_MovementString_GUID()
            WHERE ReplMovement.SessionGUID = inSessionGUID
              AND MovementString.MovementId IS NULL
+          ;
+
+         -- для Результата - сформировали GUID
+         INSERT INTO MovementItemString (MovementItemId, DescId, ValueData)
+           SELECT MovementItem.Id, zc_MIString_GUID(), MovementItem.Id :: TVarChar || ' - ' || inDataBaseId :: TVarChar AS ValueData
+           FROM ReplMovement
+                INNER JOIN MovementItem ON MovementItem.MovementId = ReplMovement.MovementId
+                LEFT JOIN MovementItemString ON MovementItemString.MovementItemId = MovementItem.Id AND MovementItemString.DescId = zc_MIString_GUID()
+           WHERE ReplMovement.SessionGUID = inSessionGUID
+             AND MovementItemString.MovementItemId IS NULL
           ;
      END IF;
 

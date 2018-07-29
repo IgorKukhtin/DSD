@@ -207,10 +207,10 @@ BEGIN
      outCountLink      := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectLink    AS OL  ON OL.ObjectId  = ReplObject.ObjectId WHERE ReplObject.SessionGUID = inSessionGUID), 0);
 
      outCountHistory       := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectHistory AS OH ON OH.ObjectId = ReplObject.ObjectId WHERE ReplObject.SessionGUID = inSessionGUID), 0);
-     outCountHistoryString := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectHistory AS OH ON OH.ObjectId = ReplObject.ObjectId INNER JOIN ObjectHistoryString AS OHS ON OHS.ObjectHistoryId = ObjectHistory.Id WHERE ReplObject.SessionGUID = inSessionGUID), 0);
-     outCountHistoryFloat  := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectHistory AS OH ON OH.ObjectId = ReplObject.ObjectId INNER JOIN ObjectHistoryFloat  AS OHF ON OHF.ObjectHistoryId = ObjectHistory.Id WHERE ReplObject.SessionGUID = inSessionGUID), 0);
-     outCountHistoryDate   := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectHistory AS OH ON OH.ObjectId = ReplObject.ObjectId INNER JOIN ObjectHistoryDate   AS OHD ON OHD.ObjectHistoryId = ObjectHistory.Id WHERE ReplObject.SessionGUID = inSessionGUID), 0);
-     outCountHistoryLink   := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectHistory AS OH ON OH.ObjectId = ReplObject.ObjectId INNER JOIN ObjectHistoryLink   AS OHL ON OHL.ObjectHistoryId = ObjectHistory.Id WHERE ReplObject.SessionGUID = inSessionGUID), 0);
+     outCountHistoryString := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectHistory AS OH ON OH.ObjectId = ReplObject.ObjectId INNER JOIN ObjectHistoryString AS OHS ON OHS.ObjectHistoryId = OH.Id WHERE ReplObject.SessionGUID = inSessionGUID), 0);
+     outCountHistoryFloat  := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectHistory AS OH ON OH.ObjectId = ReplObject.ObjectId INNER JOIN ObjectHistoryFloat  AS OHF ON OHF.ObjectHistoryId = OH.Id WHERE ReplObject.SessionGUID = inSessionGUID), 0);
+     outCountHistoryDate   := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectHistory AS OH ON OH.ObjectId = ReplObject.ObjectId INNER JOIN ObjectHistoryDate   AS OHD ON OHD.ObjectHistoryId = OH.Id WHERE ReplObject.SessionGUID = inSessionGUID), 0);
+     outCountHistoryLink   := COALESCE ((SELECT COUNT(*) FROM ReplObject INNER JOIN ObjectHistory AS OH ON OH.ObjectId = ReplObject.ObjectId INNER JOIN ObjectHistoryLink   AS OHL ON OHL.ObjectHistoryId = OH.Id WHERE ReplObject.SessionGUID = inSessionGUID), 0);
 
      outMinId          := COALESCE (outMinId, 0);
      outMaxId          := COALESCE (outMaxId, 0);

@@ -1,8 +1,8 @@
-﻿-- для SessionGUID - возвращает данные из табл. ReplMovement -> Movement - для формирования скриптов
+﻿-- для SessionGUID - возвращает данные из табл. ReplMovement -> MovementItem - для формирования скриптов
 
-DROP FUNCTION IF EXISTS gpSelect_ReplMovement (TVarChar, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_ReplMovementItem (TVarChar, Integer, Integer, Integer, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_ReplMovement(
+CREATE OR REPLACE FUNCTION gpSelect_ReplMovementItem(
     IN inSessionGUID      TVarChar,      --
     IN inStartId          Integer,       --
     IN inEndId            Integer,       --
@@ -10,17 +10,23 @@ CREATE OR REPLACE FUNCTION gpSelect_ReplMovement(
     IN gConnectHost       TVarChar,      -- виртуальный, что б в exe - использовать другой сервак
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (OperDate_last  TDateTime
-             , MovementId     Integer
+RETURNS TABLE (OperDate_last    TDateTime
+             , MovementId       Integer
+             , MovementDescId   Integer
+             , MovementDescName VarChar (100)
+             , InvNumber        VarChar (30)
+             , OperDate         TDateTime
+             , StatusName       VarChar (30)
+
+             , MovementItemId Integer
              , DescId         Integer
              , DescName       VarChar (100)
              , ItemName       VarChar (100)
-             , InvNumber      VarChar (30)
-             , OperDate       TDateTime
-             , StatusId       Integer
-             , StatusName     VarChar (30)
+             , ObjectId       Integer
+             , Amount         TFloat
              , ParentId       Integer
-             , AccessKeyId    Integer
+             , isErased       Boolean
+
              , UserId         Integer
              , UserCode       Integer
              , UserName       VarChar (30)
@@ -29,8 +35,10 @@ RETURNS TABLE (OperDate_last  TDateTime
              , UnitName       VarChar (30)
              , PositionName   VarChar (30)
              , BranchName     VarChar (30)
+
              , GUID           VarChar (35)
              , GUID_parent    VarChar (35)
+             , GUID_movement  VarChar (35)
               )
 AS
 $BODY$
@@ -71,15 +79,21 @@ BEGIN
      SELECT
           ReplMovement.OperDate_last                AS OperDate_last
         , Movement.Id                               AS MovementId
-        , Movement.DescId                           AS DescId
-        , MovementDesc.Code        :: VarChar (100) AS DescName
-        , MovementDesc.ItemName    :: VarChar (100) AS ItemName
+        , Movement.DescId                           AS MovementDescId
+        , MovementDesc.Code        :: VarChar (100) AS MovementDescName
         , Movement.InvNumber       :: VarChar (30)  AS InvNumber
         , Movement.OperDate                         AS OperDate
-        , Movement.StatusId                         AS StatusId
         , Object_Status.ValueData  :: VarChar (30)  AS StatusName
-        , Movement.ParentId                         AS ParentId
-        , Movement.AccessKeyId                      AS AccessKeyId
+
+        , MovementItem.Id                               AS MovementItemId
+        , MovementItem.DescId                           AS DescId
+        , MovementItemDesc.Code        :: VarChar (100) AS DescName
+        , MovementItemDesc.ItemName    :: VarChar (100) AS ItemName
+        , MovementItem.ObjectId                         AS ObjectId
+        , MovementItem.Amount                           AS Amount
+        , MovementItem.ParentId                         AS ParentId
+        , MovementItem.isErased                         AS isErased
+
         , Object_User.Id                            AS UserId
         , Object_User.ObjectCode                    AS UserCode
         , Object_User.ValueData    :: VarChar (30)  AS UserName
@@ -89,29 +103,34 @@ BEGIN
         , tmpPersonal.PositionName :: VarChar (30)  AS PositionName
         , tmpPersonal.BranchName   :: VarChar (30)  AS BranchName
 
-        , (CASE WHEN MovementString_GUID.ValueData        <> '' THEN MovementString_GUID.ValueData        ELSE Movement.Id       :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (35) AS GUID
-        , (CASE WHEN MovementString_GUID_parent.ValueData <> '' THEN MovementString_GUID_parent.ValueData ELSE Movement.ParentId :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (35) AS GUID_parent
+        , (CASE WHEN MIString_GUID.ValueData                <> '' THEN MIString_GUID.ValueData                ELSE MovementItem.Id         :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (35) AS GUID
+        , (CASE WHEN MIString_GUID_parent.ValueData         <> '' THEN MIString_GUID_parent.ValueData         ELSE MovementItem.ParentId   :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (35) AS GUID_parent
+        , (CASE WHEN MovementString_GUID_movement.ValueData <> '' THEN MovementString_GUID_movement.ValueData ELSE ReplMovement.MovementId :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (35) AS GUID_movement
 
      FROM ReplMovement
           INNER JOIN Movement     ON Movement.Id     = ReplMovement.MovementId
           LEFT JOIN  MovementDesc ON MovementDesc.Id = Movement.DescId
           LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
+          INNER JOIN MovementItem     ON MovementItem.MovementId = Movement.Id
+          LEFT JOIN  MovementItemDesc ON MovementItemDesc.Id     = MovementItem.DescId
+
           LEFT JOIN Object AS Object_User ON Object_User.Id = ReplMovement.UserId_last
           LEFT JOIN tmpPersonal ON tmpPersonal.UserId = ReplMovement.UserId_last
 
-          INNER JOIN Movement AS Movement_parent ON Movement_parent.Id = Movement.ParentId
-
-          LEFT JOIN MovementString AS MovementString_GUID
-                                   ON MovementString_GUID.MovementId = ReplMovement.MovementId
-                                  AND MovementString_GUID.DescId     = zc_MovementString_GUID()
-          LEFT JOIN MovementString AS MovementString_GUID_parent
-                                   ON MovementString_GUID_parent.MovementId = Movement_parent.Id
-                                  AND MovementString_GUID_parent.DescId     = zc_MovementString_GUID()
+          LEFT JOIN MovementItemString AS MIString_GUID
+                                       ON MIString_GUID.MovementItemId = MovementItem.Id
+                                      AND MIString_GUID.DescId         = zc_MovementString_GUID()
+          LEFT JOIN MovementItemString AS MIString_GUID_parent
+                                       ON MIString_GUID_parent.MovementItemId = MovementItem.ParentId
+                                      AND MIString_GUID_parent.DescId         = zc_MovementString_GUID()
+          LEFT JOIN MovementString AS MovementString_GUID_movement
+                                   ON MovementString_GUID_movement.MovementId = ReplMovement.MovementId
+                                  AND MovementString_GUID_movement.DescId     = zc_MovementString_GUID()
 
      WHERE ReplMovement.SessionGUID = inSessionGUID
        AND ((ReplMovement.Id BETWEEN inStartId AND inEndId) OR inEndId = 0)
-     ORDER BY Movement.Id
+     ORDER BY MovementItem.Id
     ;
 
 END;$BODY$
@@ -125,4 +144,4 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_ReplMovement  (inSessionGUID:= CURRENT_TIMESTAMP :: TVarChar, inStartId:= 0, inEndId:= 0, inDataBaseId:= 0, gConnectHost:= '', inSession:= zfCalc_UserAdmin()) -- ORDER BY 1
+-- SELECT * FROM gpSelect_ReplMovementItem  (inSessionGUID:= CURRENT_TIMESTAMP :: TVarChar, inStartId:= 0, inEndId:= 0, inDataBaseId:= 0, gConnectHost:= '', inSession:= zfCalc_UserAdmin()) -- ORDER BY 1

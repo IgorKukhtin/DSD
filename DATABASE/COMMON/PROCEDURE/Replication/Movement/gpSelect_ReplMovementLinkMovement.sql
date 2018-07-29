@@ -33,9 +33,9 @@ BEGIN
      -- 1. Movement
      RETURN QUERY
      SELECT
-          ReplMovement.OperDate_last                  AS OperDate_last
-        , ReplMovement.DescId                         AS MovementDescId
-        , ReplMovement.MovementId                     AS MovementId
+          ReplMovement.OperDate_last                          AS OperDate_last
+        , ReplMovement.DescId                                 AS MovementDescId
+        , ReplMovement.MovementId                             AS MovementId
         , MovementLinkMovement.DescId                         AS DescId
         , MovementLinkMovementDesc.Code      :: VarChar (100) AS DescName
         , MovementLinkMovementDesc.ItemName  :: VarChar (100) AS ItemName
