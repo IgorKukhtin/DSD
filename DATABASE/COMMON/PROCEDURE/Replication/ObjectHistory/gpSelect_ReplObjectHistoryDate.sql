@@ -1,6 +1,5 @@
-﻿-- для SessionGUID - возвращает данные из табл. ReplObject -> Object - для формирования скриптов
+﻿-- для SessionGUID - возвращает данные из табл. ReplObject -> ObjectHistory - для формирования скриптов
 
-DROP FUNCTION IF EXISTS gpSelect_ReplObjectHistoryDate (TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_ReplObjectHistoryDate (TVarChar, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_ReplObjectHistoryDate(
@@ -26,7 +25,7 @@ RETURNS TABLE (OperDate_last      TDateTime
              , isValuDNull        Boolean
              , isValuBNull        Boolean
 
-             , GUID               VarChar (35)
+             , GUID               VarChar (100)
               )
 AS
 $BODY$
@@ -55,7 +54,7 @@ BEGIN
         , CASE WHEN ObjectHistoryDate.ValueData IS NULL THEN TRUE ELSE FALSE END :: Boolean AS isValuDNull
         , FALSE                    :: Boolean       AS isValuBNull
 
-        , (CASE WHEN ObjectString_GUID.ValueData <> '' THEN ObjectString_GUID.ValueData ELSE ReplObject.ObjectId :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (35) AS GUID
+        , (CASE WHEN ObjectString_GUID.ValueData <> '' THEN ObjectString_GUID.ValueData ELSE ReplObject.ObjectId :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (100) AS GUID
 
      FROM ReplObject
           INNER JOIN ObjectHistory         ON ObjectHistory.ObjectId = ReplObject.ObjectId

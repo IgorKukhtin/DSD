@@ -1,6 +1,5 @@
 ﻿-- для SessionGUID - возвращает данные из табл. ReplObject -> Object - для формирования скриптов
 
-DROP FUNCTION IF EXISTS gpSelect_ReplObjectDate (TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_ReplObjectDate (TVarChar, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_ReplObjectDate(
@@ -25,7 +24,7 @@ RETURNS TABLE (OperDate_last  TDateTime
              , isValuDNull    Boolean
              , isValuBNull    Boolean
 
-             , GUID           VarChar (35)
+             , GUID           VarChar (100)
               )
 AS
 $BODY$
@@ -53,14 +52,16 @@ BEGIN
         , CASE WHEN ObjectDate.ValueData IS NULL THEN TRUE ELSE FALSE END :: Boolean AS isValuDNull
         , FALSE                    :: Boolean       AS isValuBNull
 
-        , (CASE WHEN ObjectString_GUID.ValueData <> '' THEN ObjectString_GUID.ValueData ELSE ReplObject.ObjectId :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (35) AS GUID
+        , (CASE WHEN ObjectString_GUID.ValueData <> '' THEN ObjectString_GUID.ValueData ELSE ReplObject.ObjectId :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (100) AS GUID
 
      FROM ReplObject
           INNER JOIN ObjectDate     ON ObjectDate.ObjectId = ReplObject.ObjectId
           LEFT JOIN  ObjectDateDesc ON ObjectDateDesc.Id   = ObjectDate.DescId
+
           LEFT JOIN ObjectString AS ObjectString_GUID
                                  ON ObjectString_GUID.ObjectId = ReplObject.ObjectId
                                 AND ObjectString_GUID.DescId   = zc_ObjectString_GUID()
+
      WHERE ReplObject.SessionGUID = inSessionGUID
        AND ((ReplObject.Id BETWEEN inStartId AND inEndId) OR inEndId = 0)
      ORDER BY ReplObject.ObjectId, ObjectDate.DescId

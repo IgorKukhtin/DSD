@@ -1,6 +1,5 @@
-﻿-- для SessionGUID - возвращает данные из табл. ReplObject -> Object - для формирования скриптов
+﻿-- для SessionGUID - возвращает данные из табл. ReplObject -> ObjectHistory - для формирования скриптов
 
-DROP FUNCTION IF EXISTS gpSelect_ReplObjectHistoryLink (TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_ReplObjectHistoryLink (TVarChar, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_ReplObjectHistoryLink(
@@ -20,8 +19,8 @@ RETURNS TABLE (OperDate_last      TDateTime
              , ItemName           VarChar (100)
              , ChildObjectDescId  Integer
              , ChildObjectId      Integer
-             , GUID               VarChar (35)
-             , GUID_child         VarChar (35)
+             , GUID               VarChar (100)
+             , GUID_child         VarChar (100)
               )
 AS
 $BODY$
@@ -45,8 +44,8 @@ BEGIN
         , ObjectHistoryLinkDesc.ObjectDescId               AS ChildObjectDescId
         , ObjectHistoryLink.ObjectId      :: Integer       AS ChildObjectId
 
-        , (CASE WHEN ObjectString_GUID.ValueData       <> '' THEN ObjectString_GUID.ValueData       ELSE ReplObject.ObjectId        :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (35) AS GUID
-        , (CASE WHEN ObjectString_GUID_child.ValueData <> '' THEN ObjectString_GUID_child.ValueData ELSE ObjectHistoryLink.ObjectId :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (35) AS GUID_child
+        , (CASE WHEN ObjectString_GUID.ValueData       <> '' THEN ObjectString_GUID.ValueData       ELSE ReplObject.ObjectId        :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (100) AS GUID
+        , (CASE WHEN ObjectString_GUID_child.ValueData <> '' THEN ObjectString_GUID_child.ValueData ELSE ObjectHistoryLink.ObjectId :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (100) AS GUID_child
 
      FROM ReplObject
           INNER JOIN ObjectHistory         ON ObjectHistory.ObjectId = ReplObject.ObjectId

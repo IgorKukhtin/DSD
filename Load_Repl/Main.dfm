@@ -109,7 +109,6 @@ object MainForm: TMainForm
           Height = 21
           Align = alBottom
           TabOrder = 0
-          ExplicitWidth = 98
         end
         object cbProc: TCheckBox
           Left = 3
@@ -154,7 +153,6 @@ object MainForm: TMainForm
           Height = 21
           Align = alBottom
           TabOrder = 5
-          ExplicitWidth = 98
         end
         object EditMinIdObject: TEdit
           Left = 1
@@ -163,7 +161,6 @@ object MainForm: TMainForm
           Height = 21
           Align = alBottom
           TabOrder = 6
-          ExplicitWidth = 98
         end
         object EditCountObject: TEdit
           Left = 1
@@ -172,7 +169,6 @@ object MainForm: TMainForm
           Height = 21
           Align = alTop
           TabOrder = 7
-          ExplicitWidth = 98
         end
         object cbMovement: TCheckBox
           Left = 63
@@ -242,7 +238,6 @@ object MainForm: TMainForm
           Height = 21
           Align = alTop
           TabOrder = 0
-          ExplicitWidth = 98
         end
       end
     end
@@ -292,7 +287,6 @@ object MainForm: TMainForm
           Height = 21
           Align = alTop
           TabOrder = 0
-          ExplicitWidth = 98
         end
       end
     end
@@ -342,7 +336,6 @@ object MainForm: TMainForm
           Height = 21
           Align = alBottom
           TabOrder = 0
-          ExplicitWidth = 98
         end
       end
     end
@@ -392,7 +385,6 @@ object MainForm: TMainForm
           Height = 21
           Align = alTop
           TabOrder = 0
-          ExplicitWidth = 98
         end
       end
     end
@@ -442,7 +434,6 @@ object MainForm: TMainForm
           Height = 21
           Align = alTop
           TabOrder = 0
-          ExplicitWidth = 98
         end
       end
     end

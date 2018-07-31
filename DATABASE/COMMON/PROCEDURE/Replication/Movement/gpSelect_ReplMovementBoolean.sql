@@ -24,7 +24,7 @@ RETURNS TABLE (OperDate_last  TDateTime
              , isValuDNull    Boolean
              , isValuBNull    Boolean
 
-             , GUID           VarChar (35)
+             , GUID           VarChar (100)
               )
 AS
 $BODY$
@@ -52,14 +52,16 @@ BEGIN
         , FALSE                     :: Boolean         AS isValuDNull
         , CASE WHEN MovementBoolean.ValueData IS NULL THEN TRUE ELSE FALSE END :: Boolean AS isValuBNull
 
-        , (CASE WHEN MovementString_GUID.ValueData <> '' THEN MovementString_GUID.ValueData ELSE ReplMovement.MovementId :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (35) AS GUID
+        , (CASE WHEN MovementString_GUID.ValueData <> '' THEN MovementString_GUID.ValueData ELSE ReplMovement.MovementId :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (100) AS GUID
 
      FROM ReplMovement
           INNER JOIN MovementBoolean     ON MovementBoolean.MovementId = ReplMovement.MovementId
           LEFT JOIN  MovementBooleanDesc ON MovementBooleanDesc.Id   = MovementBoolean.DescId
+
           LEFT JOIN MovementString AS MovementString_GUID
                                  ON MovementString_GUID.MovementId = ReplMovement.MovementId
                                 AND MovementString_GUID.DescId     = zc_MovementString_GUID()
+
      WHERE ReplMovement.SessionGUID = inSessionGUID
        AND ((ReplMovement.Id BETWEEN inStartId AND inEndId) OR inEndId = 0)
      ORDER BY ReplMovement.MovementId, MovementBoolean.DescId

@@ -18,8 +18,8 @@ RETURNS TABLE (OperDate_last      TDateTime
              , ItemName           VarChar (100)
              , ChildObjectDescId  Integer
              , ChildObjectId      Integer
-             , GUID               VarChar (35)
-             , GUID_child         VarChar (35)
+             , GUID               VarChar (100)
+             , GUID_child         VarChar (100)
               )
 AS
 $BODY$
@@ -42,18 +42,20 @@ BEGIN
         , ObjectLinkDesc.ChildObjectDescId          AS ChildObjectDescId
         , ObjectLink.ChildObjectId :: Integer       AS ChildObjectId
 
-        , (CASE WHEN ObjectString_GUID.ValueData       <> '' THEN ObjectString_GUID.ValueData       ELSE ReplObject.ObjectId      :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (35) AS GUID
-        , (CASE WHEN ObjectString_GUID_child.ValueData <> '' THEN ObjectString_GUID_child.ValueData ELSE ObjectLink.ChildObjectId :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (35) AS GUID_child
+        , (CASE WHEN ObjectString_GUID.ValueData       <> '' THEN ObjectString_GUID.ValueData       ELSE ReplObject.ObjectId      :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (100) AS GUID
+        , (CASE WHEN ObjectString_GUID_child.ValueData <> '' THEN ObjectString_GUID_child.ValueData ELSE ObjectLink.ChildObjectId :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (100) AS GUID_child
 
      FROM ReplObject
           INNER JOIN ObjectLink     ON ObjectLink.ObjectId = ReplObject.ObjectId
           LEFT JOIN  ObjectLinkDesc ON ObjectLinkDesc.Id   = ObjectLink.DescId
+
           LEFT JOIN ObjectString AS ObjectString_GUID
                                  ON ObjectString_GUID.ObjectId = ReplObject.ObjectId
                                 AND ObjectString_GUID.DescId   = zc_ObjectString_GUID()
           LEFT JOIN ObjectString AS ObjectString_GUID_child
                                  ON ObjectString_GUID_child.ObjectId = ObjectLink.ChildObjectId
                                 AND ObjectString_GUID_child.DescId   = zc_ObjectString_GUID()
+
      WHERE ReplObject.SessionGUID = inSessionGUID
        AND ((ReplObject.Id BETWEEN inStartId AND inEndId) OR inEndId = 0)
      ORDER BY ReplObject.ObjectId

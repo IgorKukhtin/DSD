@@ -54,6 +54,9 @@ BEGIN
                          WHERE (MovementDesc.Id = vbDescId OR vbDescId = 0)
                            AND (MovementDesc.Id IN (zc_Movement_OrderExternal()
                                                   , zc_Movement_EDI()
+                                                  , zc_Movement_Promo()
+                                                  , zc_Movement_PromoPartner()
+                                                  , zc_Movement_WeighingPartner()
                                                    )
                              OR vbDescId > 0)
                         )
@@ -66,15 +69,60 @@ BEGIN
                                   JOIN tmpDesc ON tmpDesc.DescId = Movement.DescId
                              WHERE inStartDate               > zc_DateStart()
                                AND MovementProtocol.OperDate >= inStartDate - INTERVAL '1 HOUR' -- на всякий случай, что отловить ВСЕ изменения
+                               AND (Movement.StatusId <> zc_Enum_StatusKind_Complete()
+                                 OR Movement.DescId <> zc_Movement_WeighingPartner()
+                                   )
                             )
-        , tmpList_all AS (SELECT tmpProtocol.DescId, tmpProtocol.MovementId
+          , tmpList_0 AS (SELECT tmpProtocol.DescId, tmpProtocol.MovementId
                           FROM tmpProtocol
                           WHERE tmpProtocol.Ord = 1 -- !!!последний!!!
                          )
+            , tmpList_1 AS (SELECT DISTINCT Movement.DescId, Movement.Id AS MovementId
+                            FROM tmpList_0
+                                 JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = tmpList_0.MovementId
+                                 JOIN Movement ON Movement.Id = MovementLinkMovement.MovementChildId
+                           UNION
+                            SELECT DISTINCT Movement.DescId, Movement.Id AS MovementId
+                            FROM tmpList_0
+                                 JOIN Movement AS Movement_find ON Movement_find.Id = tmpList_0.MovementId
+                                 JOIN Movement ON Movement.Id     = Movement_find.ParentId
+                                              AND Movement.DescId = zc_Movement_PromoPartner()
+                           )
+            , tmpList_2 AS (SELECT DISTINCT Movement.DescId, Movement.Id AS MovementId
+                            FROM tmpList_1
+                                 JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = tmpList_1.MovementId
+                                 JOIN Movement ON Movement.Id = MovementLinkMovement.MovementChildId
+                           UNION
+                            SELECT DISTINCT Movement.DescId, Movement.Id AS MovementId
+                            FROM tmpList_1
+                                 JOIN Movement AS Movement_find ON Movement_find.Id = tmpList_1.MovementId
+                                 JOIN Movement ON Movement.Id     = Movement_find.ParentId
+                                              AND Movement.DescId = zc_Movement_PromoPartner()
+                           )
+            , tmpList_3 AS (SELECT DISTINCT Movement.DescId, Movement.Id AS MovementId
+                            FROM tmpList_2
+                                 JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = tmpList_2.MovementId
+                                 JOIN Movement ON Movement.Id = MovementLinkMovement.MovementChildId
+                           UNION
+                            SELECT DISTINCT Movement.DescId, Movement.Id AS MovementId
+                            FROM tmpList_2
+                                 JOIN Movement AS Movement_find ON Movement_find.Id = tmpList_2.MovementId
+                                 JOIN Movement ON Movement.Id     = Movement_find.ParentId
+                                              AND Movement.DescId = zc_Movement_PromoPartner()
+                           )
+        , tmpList_all AS (SELECT tmpList_0.DescId, tmpList_0.MovementId FROM tmpList_0
+                         UNION
+                          SELECT tmpList_1.DescId, tmpList_1.MovementId FROM tmpList_1
+                         UNION
+                          SELECT tmpList_2.DescId, tmpList_2.MovementId FROM tmpList_2
+                         UNION
+                          SELECT tmpList_3.DescId, tmpList_3.MovementId FROM tmpList_3
+                         )
      -- Результат
-     SELECT tmpProtocol.MovementId, tmpProtocol.DescId, tmpProtocol.UserId AS UserId_last, tmpProtocol.OperDate AS OperDate_last, CURRENT_TIMESTAMP AS OperDate, inSessionGUID
-     FROM tmpProtocol
-     WHERE tmpProtocol.Ord = 1; -- !!!последний!!!
+     SELECT tmpList_all.MovementId, tmpList_all.DescId, tmpProtocol.UserId AS UserId_last, tmpProtocol.OperDate AS OperDate_last, CURRENT_TIMESTAMP AS OperDate, inSessionGUID
+     FROM tmpList_all
+          LEFT JOIN tmpProtocol ON tmpProtocol.MovementId = tmpList_all.MovementId AND tmpProtocol.Ord = 1 -- !!!последний!!!
+     ORDER BY tmpList_all.MovementId;
 
 
      -- Проверка
@@ -91,7 +139,11 @@ BEGIN
      THEN
          -- для Результата - сформировали GUID
          INSERT INTO MovementString (MovementId, DescId, ValueData)
-           SELECT ReplMovement.MovementId, zc_MovementString_GUID(), ReplMovement.MovementId :: TVarChar || ' - ' || inDataBaseId :: TVarChar AS ValueData
+           SELECT ReplMovement.MovementId, zc_MovementString_GUID()
+
+                  -- !!!КЛЮЧ!!!
+                , ReplMovement.MovementId :: TVarChar || ' - M - ' || inDataBaseId :: TVarChar AS ValueData
+
            FROM ReplMovement
                 LEFT JOIN MovementString ON MovementString.MovementId = ReplMovement.MovementId AND MovementString.DescId = zc_MovementString_GUID()
            WHERE ReplMovement.SessionGUID = inSessionGUID
@@ -100,7 +152,11 @@ BEGIN
 
          -- для Результата - сформировали GUID
          INSERT INTO MovementItemString (MovementItemId, DescId, ValueData)
-           SELECT MovementItem.Id, zc_MIString_GUID(), MovementItem.Id :: TVarChar || ' - ' || inDataBaseId :: TVarChar AS ValueData
+           SELECT MovementItem.Id, zc_MIString_GUID()
+
+                  -- !!!КЛЮЧ!!!
+                , MovementItem.Id :: TVarChar || ' - MI - ' || inDataBaseId :: TVarChar AS ValueData
+
            FROM ReplMovement
                 INNER JOIN MovementItem ON MovementItem.MovementId = ReplMovement.MovementId
                 LEFT JOIN MovementItemString ON MovementItemString.MovementItemId = MovementItem.Id AND MovementItemString.DescId = zc_MIString_GUID()

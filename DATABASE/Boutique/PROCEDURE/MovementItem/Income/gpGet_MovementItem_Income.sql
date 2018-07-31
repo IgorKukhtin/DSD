@@ -52,7 +52,7 @@ BEGIN
                , '' :: TVarChar             AS LabelName
                ,  0 :: Integer              AS GoodsSizeId
                , '' :: TVarChar             AS GoodsSizeName
-               , 0  :: TFloat               AS Amount
+               , 1  :: TFloat               AS Amount
                , 0  :: TFloat               AS OperPrice
                , 1  :: TFloat               AS CountForPrice
                , 0  :: TFloat               AS OperPriceList

@@ -1,6 +1,5 @@
 ﻿-- для SessionGUID - возвращает данные из табл. ReplObject -> Object - для формирования скриптов
 
-DROP FUNCTION IF EXISTS gpSelect_ReplObject (TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_ReplObject (TVarChar, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_ReplObject(
@@ -28,7 +27,7 @@ RETURNS TABLE (OperDate_last  TDateTime
              , UnitName       VarChar (30)
              , PositionName   VarChar (30)
              , BranchName     VarChar (30)
-             , GUID           VarChar (35)
+             , GUID           VarChar (100)
               )
 AS
 $BODY$
@@ -84,7 +83,7 @@ BEGIN
         , tmpPersonal.UnitName     :: VarChar (30)  AS UnitName
         , tmpPersonal.PositionName :: VarChar (30)  AS PositionName
         , tmpPersonal.BranchName   :: VarChar (30)  AS BranchName
-        , (CASE WHEN ObjectString_GUID.ValueData <> '' THEN ObjectString_GUID.ValueData ELSE Object.Id :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (35) AS GUID
+        , (CASE WHEN ObjectString_GUID.ValueData <> '' THEN ObjectString_GUID.ValueData ELSE Object.Id :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (100) AS GUID
 
      FROM ReplObject
           INNER JOIN Object     ON Object.Id     = ReplObject.ObjectId

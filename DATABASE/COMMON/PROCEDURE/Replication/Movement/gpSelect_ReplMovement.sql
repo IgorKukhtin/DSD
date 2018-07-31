@@ -29,8 +29,8 @@ RETURNS TABLE (OperDate_last  TDateTime
              , UnitName       VarChar (30)
              , PositionName   VarChar (30)
              , BranchName     VarChar (30)
-             , GUID           VarChar (35)
-             , GUID_parent    VarChar (35)
+             , GUID           VarChar (100)
+             , GUID_parent    VarChar (100)
               )
 AS
 $BODY$
@@ -89,8 +89,8 @@ BEGIN
         , tmpPersonal.PositionName :: VarChar (30)  AS PositionName
         , tmpPersonal.BranchName   :: VarChar (30)  AS BranchName
 
-        , (CASE WHEN MovementString_GUID.ValueData        <> '' THEN MovementString_GUID.ValueData        ELSE Movement.Id       :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (35) AS GUID
-        , (CASE WHEN MovementString_GUID_parent.ValueData <> '' THEN MovementString_GUID_parent.ValueData ELSE Movement.ParentId :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (35) AS GUID_parent
+        , (CASE WHEN MovementString_GUID.ValueData        <> '' THEN MovementString_GUID.ValueData        ELSE Movement.Id       :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (100) AS GUID
+        , (CASE WHEN MovementString_GUID_parent.ValueData <> '' THEN MovementString_GUID_parent.ValueData ELSE Movement.ParentId :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (100) AS GUID_parent
 
      FROM ReplMovement
           INNER JOIN Movement     ON Movement.Id     = ReplMovement.MovementId
@@ -100,13 +100,11 @@ BEGIN
           LEFT JOIN Object AS Object_User ON Object_User.Id = ReplMovement.UserId_last
           LEFT JOIN tmpPersonal ON tmpPersonal.UserId = ReplMovement.UserId_last
 
-          INNER JOIN Movement AS Movement_parent ON Movement_parent.Id = Movement.ParentId
-
           LEFT JOIN MovementString AS MovementString_GUID
                                    ON MovementString_GUID.MovementId = ReplMovement.MovementId
                                   AND MovementString_GUID.DescId     = zc_MovementString_GUID()
           LEFT JOIN MovementString AS MovementString_GUID_parent
-                                   ON MovementString_GUID_parent.MovementId = Movement_parent.Id
+                                   ON MovementString_GUID_parent.MovementId = Movement.ParentId
                                   AND MovementString_GUID_parent.DescId     = zc_MovementString_GUID()
 
      WHERE ReplMovement.SessionGUID = inSessionGUID
@@ -125,4 +123,5 @@ END;$BODY$
 */
 
 -- тест
+-- SELECT * FROM gpSelect_ReplMovement  (inSessionGUID:= '2018-07-30 18:45:52 - {C3667554-FEB8-4865-A777-B656574CF74C}', inStartId:= 27973, inEndId:= 27983, inDataBaseId:= 0, gConnectHost:= '', inSession:= zfCalc_UserAdmin()) -- ORDER BY 1
 -- SELECT * FROM gpSelect_ReplMovement  (inSessionGUID:= CURRENT_TIMESTAMP :: TVarChar, inStartId:= 0, inEndId:= 0, inDataBaseId:= 0, gConnectHost:= '', inSession:= zfCalc_UserAdmin()) -- ORDER BY 1

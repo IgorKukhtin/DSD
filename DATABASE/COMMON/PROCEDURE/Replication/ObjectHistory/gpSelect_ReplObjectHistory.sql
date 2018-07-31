@@ -1,24 +1,5 @@
-﻿/*select count(*)
-from Movement
-  inner join MovementItem on MovementItem.MovementId = Movement.Id
-                          AND MovementItem.DescId   = zc_MI_Master()
-                          AND MovementItem.isErased = FALSE
-  inner join MovementItem as MI_Child on MI_Child.MovementId = Movement.Id
-                          AND MI_Child.ParentId = MovementItem.Id
-                          AND MI_Child.DescId   = zc_MI_Child()
-                          AND MI_Child.isErased = FALSE
-                             inner JOIN MovementItemFloat AS MIFloat_AmountReceipt
-                                                         ON MIFloat_AmountReceipt.MovementItemId = MI_Child.Id
-                                                        AND MIFloat_AmountReceipt.DescId = zc_MIFloat_AmountReceipt()
-                                                        AND MIFloat_AmountReceipt.ValueData <> 0
-where Movement.DescId = zc_Movement_ProductionUnion()
-and Movement.OperDate between '01.06.2018' and '30.06.2018'
-and Movement.StatusId = zc_Enum_Status_Complete()
-*/
+﻿-- для SessionGUID - возвращает данные из табл. ReplObject -> ObjectHistory - для формирования скриптов
 
--- для SessionGUID - возвращает данные из табл. ReplObject -> Object - для формирования скриптов
-
-DROP FUNCTION IF EXISTS gpSelect_ReplObjectHistory (TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_ReplObjectHistory (TVarChar, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_ReplObjectHistory(
@@ -50,7 +31,7 @@ RETURNS TABLE (OperDate_last         TDateTime
              , UnitName              VarChar (30)
              , PositionName          VarChar (30)
              , BranchName            VarChar (30)
-             , GUID                  VarChar (35)
+             , GUID                  VarChar (100)
               )
 AS
 $BODY$
@@ -110,7 +91,8 @@ BEGIN
         , tmpPersonal.UnitName       :: VarChar (30)  AS UnitName
         , tmpPersonal.PositionName   :: VarChar (30)  AS PositionName
         , tmpPersonal.BranchName     :: VarChar (30)  AS BranchName
-        , (CASE WHEN ObjectString_GUID.ValueData <> '' THEN ObjectString_GUID.ValueData ELSE Object.Id :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (35) AS GUID
+
+        , (CASE WHEN ObjectString_GUID.ValueData <> '' THEN ObjectString_GUID.ValueData ELSE Object.Id :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (100) AS GUID
 
      FROM ReplObject
           INNER JOIN ObjectHistory ON ObjectHistory.ObjectId = ReplObject.ObjectId

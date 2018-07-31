@@ -18,8 +18,8 @@ RETURNS TABLE (OperDate_last        TDateTime
              , ItemName             VarChar (100)
              , MovementChildDescId  Integer
              , MovementChildId      Integer
-             , GUID                 VarChar (35)
-             , GUID_child           VarChar (35)
+             , GUID                 VarChar (100)
+             , GUID_child           VarChar (100)
               )
 AS
 $BODY$
@@ -42,18 +42,20 @@ BEGIN
         , 0                                  :: Integer       AS ChildMovementDescId
         , MovementLinkMovement.MovementChildId                AS MovementChildId
 
-        , (CASE WHEN MovementString_GUID.ValueData       <> '' THEN MovementString_GUID.ValueData       ELSE ReplMovement.MovementId              :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (35) AS GUID
-        , (CASE WHEN MovementString_GUID_child.ValueData <> '' THEN MovementString_GUID_child.ValueData ELSE MovementLinkMovement.MovementChildId :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (35) AS GUID_child
+        , (CASE WHEN MovementString_GUID.ValueData       <> '' THEN MovementString_GUID.ValueData       ELSE ReplMovement.MovementId              :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (100) AS GUID
+        , (CASE WHEN MovementString_GUID_child.ValueData <> '' THEN MovementString_GUID_child.ValueData ELSE MovementLinkMovement.MovementChildId :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (100) AS GUID_child
 
      FROM ReplMovement
           INNER JOIN MovementLinkMovement     ON MovementLinkMovement.MovementId = ReplMovement.MovementId
           LEFT JOIN  MovementLinkMovementDesc ON MovementLinkMovementDesc.Id   = MovementLinkMovement.DescId
+
           LEFT JOIN MovementString AS MovementString_GUID
                                    ON MovementString_GUID.MovementId = ReplMovement.MovementId
                                   AND MovementString_GUID.DescId     = zc_MovementString_GUID()
           LEFT JOIN MovementString AS MovementString_GUID_child
                                    ON MovementString_GUID_child.MovementId = MovementLinkMovement.MovementChildId
                                   AND MovementString_GUID_child.DescId     = zc_MovementString_GUID()
+
      WHERE ReplMovement.SessionGUID = inSessionGUID
        AND ((ReplMovement.Id BETWEEN inStartId AND inEndId) OR inEndId = 0)
      ORDER BY ReplMovement.MovementId

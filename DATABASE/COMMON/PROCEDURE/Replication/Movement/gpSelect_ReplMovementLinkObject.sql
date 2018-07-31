@@ -18,8 +18,8 @@ RETURNS TABLE (OperDate_last      TDateTime
              , ItemName           VarChar (100)
              , ChildObjectDescId  Integer
              , ChildObjectId      Integer
-             , GUID               VarChar (35)
-             , GUID_child         VarChar (35)
+             , GUID               VarChar (100)
+             , GUID_child         VarChar (100)
               )
 AS
 $BODY$
@@ -42,8 +42,8 @@ BEGIN
         , 0                                :: Integer       AS ChildObjectDescId
         , MovementLinkObject.ObjectId                       AS ChildObjectId
 
-        , (CASE WHEN MovementString_GUID.ValueData     <> '' THEN MovementString_GUID.ValueData     ELSE ReplMovement.MovementId     :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (35) AS GUID
-        , (CASE WHEN ObjectString_GUID_child.ValueData <> '' THEN ObjectString_GUID_child.ValueData ELSE MovementLinkObject.ObjectId :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (35) AS GUID_child
+        , (CASE WHEN MovementString_GUID.ValueData     <> '' THEN MovementString_GUID.ValueData     ELSE ReplMovement.MovementId     :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (100) AS GUID
+        , (CASE WHEN ObjectString_GUID_child.ValueData <> '' THEN ObjectString_GUID_child.ValueData ELSE MovementLinkObject.ObjectId :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (100) AS GUID_child
 
      FROM ReplMovement
           INNER JOIN MovementLinkObject     ON MovementLinkObject.MovementId = ReplMovement.MovementId
@@ -55,6 +55,7 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_GUID_child
                                  ON ObjectString_GUID_child.ObjectId = MovementLinkObject.ObjectId
                                 AND ObjectString_GUID_child.DescId   = zc_ObjectString_GUID()
+
      WHERE ReplMovement.SessionGUID = inSessionGUID
        AND ((ReplMovement.Id BETWEEN inStartId AND inEndId) OR inEndId = 0)
      ORDER BY ReplMovement.MovementId

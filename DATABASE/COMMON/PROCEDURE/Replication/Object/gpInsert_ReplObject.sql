@@ -1,7 +1,5 @@
 ﻿-- для SessionGUID - Insert всех данных Object в табл. ReplObject - из которой потом "блоками" идет чтение и формирование скриптов + возвращает сколько всего записей
 
-DROP FUNCTION IF EXISTS gpInsert_ReplObject (TVarChar, TDateTime, TVarChar, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsert_ReplObject (TVarChar, TDateTime, TVarChar, Boolean, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsert_ReplObject (TVarChar, TDateTime, TVarChar, Boolean, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_ReplObject(
@@ -90,7 +88,18 @@ BEGIN
                                AND inIsProtocol            = TRUE
                                AND ObjectProtocol.OperDate >= inStartDate - INTERVAL '1 HOUR' -- на всякий случай, что отловить ВСЕ изменения
                             )
-          , tmpList_0 AS (SELECT tmpProtocol.DescId, tmpProtocol.ObjectId
+          , tmpList_0 AS (WITH tmpReplMovement AS (SELECT ReplMovement.*
+                                                   FROM ReplMovement
+                                                   WHERE inIsProtocol = TRUE
+                                                     AND ReplMovement.OperDate >= CURRENT_DATE + INTERVAL '7 HOUR'
+                                                  )
+                                  , tmpSession AS (SELECT tmp.SessionGUID
+                                                   FROM (SELECT DISTINCT tmpReplMovement.SessionGUID, tmpReplMovement.OperDate FROM tmpReplMovement) AS tmp
+                                                   ORDER BY tmp.OperDate DESC
+                                                   LIMIT 2
+                                                  )
+
+                          SELECT tmpProtocol.DescId, tmpProtocol.ObjectId
                           FROM tmpProtocol
                           WHERE tmpProtocol.Ord = 1 -- !!!последний!!!
                          UNION
@@ -98,6 +107,28 @@ BEGIN
                           FROM tmpDesc
                                INNER JOIN Object ON Object.DescId = tmpDesc.DescId
                           WHERE inIsProtocol = FALSE
+                         UNION
+                          -- из MovementLinkObject
+                          SELECT DISTINCT Object.DescId, Object.Id AS ObjectId
+                          FROM tmpReplMovement AS ReplMovement
+                               INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = ReplMovement.MovementId
+                               INNER JOIN Object ON Object.Id = MovementLinkObject.ObjectId
+                          WHERE ReplMovement.SessionGUID IN (SELECT DISTINCT tmpSession.SessionGUID FROM tmpSession)
+                         UNION
+                          -- из MovementItem
+                          SELECT DISTINCT Object.DescId, Object.Id AS ObjectId
+                          FROM tmpReplMovement AS ReplMovement
+                               INNER JOIN MovementItem ON MovementItem.MovementId = ReplMovement.MovementId
+                               INNER JOIN Object ON Object.Id = MovementItem.ObjectId
+                          WHERE ReplMovement.SessionGUID IN (SELECT DISTINCT tmpSession.SessionGUID FROM tmpSession)
+                         UNION
+                          -- из MovementItemLinkObject
+                          SELECT DISTINCT Object.DescId, Object.Id AS ObjectId
+                          FROM tmpReplMovement AS ReplMovement
+                               INNER JOIN MovementItem ON MovementItem.MovementId = ReplMovement.MovementId
+                               INNER JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id
+                               INNER JOIN Object ON Object.Id = MovementItemLinkObject.ObjectId
+                          WHERE ReplMovement.SessionGUID IN (SELECT DISTINCT tmpSession.SessionGUID FROM tmpSession)
                          )
           , tmpList_1 AS (SELECT DISTINCT Object.DescId, ObjectLink.ChildObjectId AS ObjectId
                           FROM tmpList_0
@@ -174,7 +205,11 @@ BEGIN
      THEN
          -- для Результата - сформировали GUID
          INSERT INTO ObjectString (ObjectId, DescId, ValueData)
-           SELECT ReplObject.ObjectId, zc_ObjectString_GUID(), ReplObject.ObjectId :: TVarChar || ' - ' || inDataBaseId :: TVarChar AS ValueData
+           SELECT ReplObject.ObjectId, zc_ObjectString_GUID()
+
+                  -- !!!КЛЮЧ!!!
+                , ReplObject.ObjectId :: TVarChar || ' - O - ' || inDataBaseId :: TVarChar AS ValueData
+
            FROM ReplObject
                 LEFT JOIN ObjectString ON ObjectString.ObjectId = ReplObject.ObjectId AND ObjectString.DescId = zc_ObjectString_GUID()
            WHERE ReplObject.SessionGUID = inSessionGUID

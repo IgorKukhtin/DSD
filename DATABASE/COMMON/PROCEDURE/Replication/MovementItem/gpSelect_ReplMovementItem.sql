@@ -36,9 +36,10 @@ RETURNS TABLE (OperDate_last    TDateTime
              , PositionName   VarChar (30)
              , BranchName     VarChar (30)
 
-             , GUID           VarChar (35)
-             , GUID_parent    VarChar (35)
-             , GUID_movement  VarChar (35)
+             , GUID           VarChar (100)
+             , GUID_parent    VarChar (100)
+             , GUID_movement  VarChar (100)
+             , GUID_object    VarChar (100)
               )
 AS
 $BODY$
@@ -103,9 +104,11 @@ BEGIN
         , tmpPersonal.PositionName :: VarChar (30)  AS PositionName
         , tmpPersonal.BranchName   :: VarChar (30)  AS BranchName
 
-        , (CASE WHEN MIString_GUID.ValueData                <> '' THEN MIString_GUID.ValueData                ELSE MovementItem.Id         :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (35) AS GUID
-        , (CASE WHEN MIString_GUID_parent.ValueData         <> '' THEN MIString_GUID_parent.ValueData         ELSE MovementItem.ParentId   :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (35) AS GUID_parent
-        , (CASE WHEN MovementString_GUID_movement.ValueData <> '' THEN MovementString_GUID_movement.ValueData ELSE ReplMovement.MovementId :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (35) AS GUID_movement
+        , (CASE WHEN MIString_GUID.ValueData                <> '' THEN MIString_GUID.ValueData                ELSE MovementItem.Id         :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (100) AS GUID
+        , (CASE WHEN MIString_GUID_parent.ValueData         <> '' THEN MIString_GUID_parent.ValueData         ELSE MovementItem.ParentId   :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (100) AS GUID_parent
+        , (CASE WHEN MovementString_GUID_movement.ValueData <> '' THEN MovementString_GUID_movement.ValueData ELSE ReplMovement.MovementId :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (100) AS GUID_movement
+        , (CASE WHEN ObjectString_GUID.ValueData            <> '' THEN ObjectString_GUID.ValueData            ELSE MovementItem.ObjectId   :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (100) AS GUID_object
+        
 
      FROM ReplMovement
           INNER JOIN Movement     ON Movement.Id     = ReplMovement.MovementId
@@ -120,13 +123,17 @@ BEGIN
 
           LEFT JOIN MovementItemString AS MIString_GUID
                                        ON MIString_GUID.MovementItemId = MovementItem.Id
-                                      AND MIString_GUID.DescId         = zc_MovementString_GUID()
+                                      AND MIString_GUID.DescId         = zc_MIString_GUID()
           LEFT JOIN MovementItemString AS MIString_GUID_parent
                                        ON MIString_GUID_parent.MovementItemId = MovementItem.ParentId
-                                      AND MIString_GUID_parent.DescId         = zc_MovementString_GUID()
+                                      AND MIString_GUID_parent.DescId         = zc_MIString_GUID()
           LEFT JOIN MovementString AS MovementString_GUID_movement
                                    ON MovementString_GUID_movement.MovementId = ReplMovement.MovementId
                                   AND MovementString_GUID_movement.DescId     = zc_MovementString_GUID()
+
+          LEFT JOIN ObjectString AS ObjectString_GUID
+                                 ON ObjectString_GUID.ObjectId = MovementItem.ObjectId
+                                AND ObjectString_GUID.DescId   = zc_ObjectString_GUID()
 
      WHERE ReplMovement.SessionGUID = inSessionGUID
        AND ((ReplMovement.Id BETWEEN inStartId AND inEndId) OR inEndId = 0)

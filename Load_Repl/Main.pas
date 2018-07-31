@@ -568,19 +568,23 @@ function TMainForm.ConvertValueToVarChar(PropertyName : string;
                                   ):string;
 begin
      if (PropertyName = 'ObjectString')or(PropertyName = 'ObjectHistoryString')
+      or(PropertyName = 'MovementString')or(PropertyName = 'MovementItemString')
      then Result:= ConvertFromVarChar(_ValueS)
      else
      if (PropertyName = 'ObjectFloat')or(PropertyName = 'ObjectHistoryFloat')
+      or(PropertyName = 'MovementFloat')or(PropertyName = 'MovementItemFloat')
      then Result:= ConvertFromFloat(_ValueF)
      else
      if (PropertyName = 'ObjectDate')or(PropertyName = 'ObjectHistoryDate')
+      or(PropertyName = 'MovementDate')or(PropertyName = 'MovementItemDate')
      then Result:= ConvertFromDateTime(_ValueD, _isNullD)
      else
      if (PropertyName = 'ObjectBoolean')
+      or(PropertyName = 'MovementBoolean')or(PropertyName = 'MovementItemBoolean')
      then Result:= ConvertFromBoolean(_ValueB, _isNullB)
-     else
-     if (PropertyName = 'ObjectLink')or(PropertyName = 'ObjectHistoryLink')
-     then Result:= ConvertFromInt(ChildObjectId)
+     //else
+     //if (PropertyName = 'ObjectLink')or(PropertyName = 'ObjectHistoryLink')
+     //then Result:= ConvertFromInt(ChildObjectId)
      else ShowMessage('ConvertValueToVarChar - PropertyName : ' + PropertyName + ' ???')
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -812,6 +816,31 @@ begin
            Add('union all');
            Add('select Code AS DescName, Id from ObjectHistoryLinkDesc');
            //
+           // Movement...
+           Add('union all');
+           Add('select Code AS DescName, Id from MovementDesc');
+           Add('union all');
+           Add('select Code AS DescName, Id from MovementStringDesc');
+           Add('union all');
+           Add('select Code AS DescName, Id from MovementFloatDesc');
+           Add('union all');
+           Add('select Code AS DescName, Id from MovementDateDesc');
+           Add('union all');
+           Add('select Code AS DescName, Id from MovementLinkObjectDesc');
+           Add('union all');
+           Add('select Code AS DescName, Id from MovementLinkMovementDesc');
+           //
+           // MovementItem...
+           Add('union all');
+           Add('select Code AS DescName, Id from MovementItemDesc');
+           Add('union all');
+           Add('select Code AS DescName, Id from MovementItemStringDesc');
+           Add('union all');
+           Add('select Code AS DescName, Id from MovementItemFloatDesc');
+           Add('union all');
+           Add('select Code AS DescName, Id from MovementItemDateDesc');
+           Add('union all');
+           Add('select Code AS DescName, Id from MovementItemLinkObjectDesc');
            Open;
            //
            if Assigned (ArrayObjectDesc) then begin SetLength(ArrayObjectDesc, 0);Finalize(ArrayObjectDesc);ArrayObjectDesc:=nil;end;
@@ -1444,19 +1473,613 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pSendPackTo_ReplMovement(Num_main, CountPack : Integer; isMI : Boolean) : Boolean;
+//From: соединение от галки cbClientDataSet - если нет тогда ПРЯМОЕ (показ. в гриде)
+//To:   соединение - ПРЯМОЕ - выполняем Скрипт StrPack
+var StrPack, nextL : String;
+    i, num  : Integer;
+    resStr  : String;
+    myCDS : TClientDataSet;
+    lMovement, zc_Desc_GUID : String;
 begin
+     Result:= false;
+     //
+     //
+     if isMI = TRUE then lMovement := 'MovementItem' else lMovement := 'Movement';
+     //
+     //if cbClientDataSet.Checked = FALSE then
+       // Подключились к серверу To
+       if not IniConnectionTo (lMovement, FALSE) then exit;
+     //
+     try
+     //
+     i:=0;
+     num:=0;
+     StrPack:= '';
+     nextL  := #13;
+     //
+     //
+     if cbClientDataSet.Checked = TRUE
+     then myCDS:= TClientDataSet(MovementCDS)
+     else myCDS:= TClientDataSet(fQueryMovement);
+     //
+     with myCDS do begin
+        First;
+        while not EOF  do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //!!!
+             //сначала "шапка"
+             if StrPack = ''
+             then begin
+                  StrPack:= ' DO $$' + nextL
+                          + ' DECLARE vbId Integer;' + nextL
+                          + ' DECLARE vbParentId Integer;' + nextL;
+                  //
+                  if (isMI = TRUE)
+                  then StrPack:= StrPack + ' DECLARE vbMovementId Integer;' + nextL
+                                         + ' DECLARE vbObjectId   Integer;' + nextL
+                                          ;
+                  //
+                  StrPack:= StrPack
+                          + ' BEGIN' + nextL + nextL + nextL
+                          ;
+                  num:= num + 1;
+             end;
+             //
+             // сначала ObjectDesc
+             if GetArrayList_Index_byValue(ArrayObjectDesc,FieldByName('DescName').AsString) < 0 then
+             begin
+                  // коммент
+                  StrPack:= StrPack + ' -- NEW Desc' + nextL;
+                  //
+                  StrPack:= StrPack
+                          + nextL
+                          + '   CREATE OR REPLACE FUNCTION ' + FieldByName('DescName').AsString + '() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = ' + ConvertFromVarChar(FieldByName('DescName').AsString) + '); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;'
+                          + nextL
+                          + '   INSERT INTO '+lMovement+'Desc (Id, Code, ItemName)'
+                          + '   SELECT ' + IntToStr(FieldByName('DescId').AsInteger) + ', ' + ConvertFromVarChar(FieldByName('DescName').AsString) + ', ' + ConvertFromVarChar(FieldByName('ItemName').AsString) + ' WHERE NOT EXISTS (SELECT * FROM '+lMovement+'Desc WHERE Code = ' + ConvertFromVarChar(FieldByName('DescName').AsString) + ');'
+                          + nextL
+                          + nextL;
+                  //
+                  // добавляем в список - существующие Desc в базе TO
+                  SetLength(ArrayObjectDesc,Length(ArrayObjectDesc)+1);
+                  ArrayObjectDesc[Length(ArrayObjectDesc)-1]:=FieldByName('DescName').AsString;
+             end;
+             //
+             // обнулили Id
+             StrPack:= StrPack + ' vbId:= 0;' + nextL;
+             // Нашли Id
+             if (isMI = FALSE)
+             then //Movement
+                  StrPack:= StrPack
+                            // Поиск Id
+                          + ' vbId:= (SELECT MovementId FROM MovementString WHERE ValueData = ' + ConvertFromVarChar(FieldByName('GUID').AsString) + ' and DescId = zc_MovementString_GUID());'
+                          + nextL
+                            // Поиск "главного" Movement
+                          + ' vbParentId:= NULL;'
+                          + ' IF ' + ConvertFromVarChar(FieldByName('GUID_parent').AsString) + ' <> ' + ConvertFromVarChar('')
+                          + ' THEN'
+                          + nextL
+                          + '     vbParentId:= (SELECT MovementId FROM MovementString WHERE ValueData = ' + ConvertFromVarChar(FieldByName('GUID_parent').AsString) + ' and DescId = zc_MovementString_GUID());'
+                          + nextL
+                                  // Проверка
+                          + '     IF COALESCE (vbParentId, 0) = 0 THEN RAISE EXCEPTION '+ConvertFromVarChar('Ошибка.Не нашли GUID_parent = <'+FieldByName('GUID_parent').AsString+'>')+'; END IF;'
+                          + nextL
+                          + ' END IF;'
+                          + nextL
+             else //MovementItem
+                  StrPack:= StrPack
+                            // Поиск Id
+                          + ' vbId:= (SELECT MovementItemId FROM MovementItemString WHERE ValueData = ' + ConvertFromVarChar(FieldByName('GUID').AsString) + ' and DescId = zc_MIString_GUID());'
+                          + nextL
+                            // Поиск "главного" MovementItem
+                          + ' vbParentId:= NULL;'
+                          + ' IF ' + ConvertFromVarChar(FieldByName('GUID_parent').AsString) + ' <> ' + ConvertFromVarChar('')
+                          + ' THEN'
+                          + nextL
+                          + '     vbParentId:= (SELECT MovementItemId FROM MovementItemString WHERE ValueData = ' + ConvertFromVarChar(FieldByName('GUID_parent').AsString) + ' and DescId = zc_MIString_GUID());'
+                          + nextL
+                                  // Проверка
+                          + '     IF COALESCE (vbParentId, 0) = 0 THEN RAISE EXCEPTION '+ConvertFromVarChar('Ошибка.Не нашли GUID_parent = <'+FieldByName('GUID_parent').AsString+'>')+'; END IF;'
+                          + nextL
+                          + ' END IF;'
+                          + nextL
+                            // Поиск MovementId
+                          + ' vbMovementId:= (SELECT MovementId FROM MovementString WHERE ValueData = ' + ConvertFromVarChar(FieldByName('GUID_movement').AsString) + ' and DescId = zc_MovementString_GUID());'
+                          + nextL
+                            // Поиск ObjectId
+                         + ' vbObjectId:= NULL;'
+                         + ' IF ' + ConvertFromVarChar(FieldByName('GUID_object').AsString) + ' <> ' + ConvertFromVarChar('')
+                         + ' THEN'
+                         + nextL
+                         + '     vbObjectId:= (SELECT ObjectId FROM ObjectString WHERE ValueData = ' + ConvertFromVarChar(FieldByName('GUID_object').AsString) + ' and DescId = zc_ObjectString_GUID());'
+                         + nextL
+                                 // Проверка
+                         + '     IF COALESCE (vbObjectId, 0) = 0 THEN RAISE EXCEPTION '+ConvertFromVarChar('Ошибка.Не нашли GUID_object = <'+FieldByName('GUID_object').AsString+'>')+'; END IF;'
+                         + nextL
+                         + ' END IF;'
+                         + nextL
+                         + nextL;
+             // попробовали UPDATE
+             if (isMI = FALSE)
+             then
+               //Movement
+               StrPack:= StrPack
+                       + ' IF vbId > 0 THEN'
+                       + nextL
+                       + '    UPDATE Movement SET DescId      = ' + IntToStr(FieldByName('DescId').AsInteger)
+                       + nextL
+                       + '                      , StatusId    = ' + IntToStr(FieldByName('StatusId').AsInteger)
+                       + nextL
+                       + '                      , InvNumber   = ' + ConvertFromVarChar(FieldByName('InvNumber').AsString)
+                       + nextL
+                       + '                      , OperDate    = ' + ConvertFromDateTime(FieldByName('OperDate').AsDateTime, FALSE)
+                       + nextL
+                       + '                      , ParentId    = vbParentId'
+                       + nextL
+                       + '                      , AccessKeyId = ' + ConvertFromInt(FieldByName('AccessKeyId').AsInteger)
+                       + nextL
+                       + '    WHERE Id = vbId;'
+                       + nextL
+                       + ' END IF;'
+                       + nextL
+                       + nextL
+             else
+               //MovementItem
+               StrPack:= StrPack
+                       + ' IF vbId > 0 THEN'
+                       + nextL
+                       + '    UPDATE MovementItem SET DescId     = ' + IntToStr(FieldByName('DescId').AsInteger)
+                       + nextL
+                       + '                          , MovementId = vbMovementId'
+                       + nextL
+                       + '                          , ObjectId   = vbObjectId'
+                       + nextL
+                       + '                          , Amount     = ' + ConvertFromFloat(FieldByName('Amount').AsFloat)
+                       + nextL
+                       + '                          , ParentId   = vbParentId'
+                       + nextL
+                       + '                          , isErased   = ' + ConvertFromBoolean(FieldByName('isErased').AsBoolean, FALSE)
+                       + nextL
+                       + '    WHERE Id = vbId;'
+                       + nextL
+                       + ' END IF;'
+                       + nextL
+                       + nextL
+                        ;
+             //
+             // иначе INSERT
+             if (isMI = FALSE)
+             then
+                  //Movement
+                  StrPack:= StrPack
+                          + ' IF NOT FOUND OR COALESCE (vbId, 0) = 0 THEN'
+                          + nextL
+                          + '    INSERT INTO Movement (DescId, StatusId, InvNumber, OperDate, ParentId, AccessKeyId)'
+                          + nextL
+                          + '    VALUES (' + IntToStr(FieldByName('DescId').AsInteger)
+                          +           ', ' + IntToStr(FieldByName('StatusId').AsInteger)
+                          +           ', ' + ConvertFromVarChar(FieldByName('InvNumber').AsString)
+                          +           ', ' + ConvertFromDateTime(FieldByName('OperDate').AsDateTime, FALSE)
+                          +           ', vbParentId'
+                          +           ', ' + ConvertFromInt(FieldByName('AccessKeyId').AsInteger)
+                          +           ')'
+                          + nextL
+                          + '    RETURNING Id INTO vbId;'
+                          + nextL
+                          + ' END IF;'
+                          + nextL
+                          + nextL
+              else //MovementItem
+                   StrPack:= StrPack
+                          + ' IF NOT FOUND OR COALESCE (vbId, 0) = 0 THEN'
+                          + nextL
+                          + '    INSERT INTO MovementItem (DescId, MovementId, ObjectId, Amount, ParentId, isErased)'
+                          + nextL
+                          + '    VALUES (' + IntToStr(FieldByName('DescId').AsInteger)
+                          +           ', vbMovementId'
+                          +           ', vbObjectId'
+                          +           ', ' + ConvertFromFloat(FieldByName('Amount').AsFloat)
+                          +           ', vbParentId'
+                          +           ', ' + ConvertFromBoolean(FieldByName('isErased').AsBoolean, FALSE)
+                          +           ')'
+                          + nextL
+                          + '     RETURNING Id INTO vbId;'
+                          + nextL
+                          + nextL
+                          + ' END IF;'
+                          + nextL
+                          + nextL;
+             //
+             if (isMI = FALSE) then zc_Desc_GUID:='zc_MovementString_GUID()' else zc_Desc_GUID:='zc_MIString_GUID()';
+             // коммент
+             StrPack:= StrPack + ' -----' + nextL;
+             // всегда - сохранили  GUID
+             StrPack:= StrPack
+                      // попробовали UPDATE
+                 +    ' UPDATE '+lMovement+'String SET ValueData   = ' + ConvertFromVarChar(FieldByName('GUID').AsString)
+                 + nextL
+                 +    ' WHERE '+lMovement+'Id = vbId AND DescId = '+zc_Desc_GUID+';'
+                 + nextL
+                 + nextL
+                      // иначе INSERT
+                  + ' IF NOT FOUND THEN'
+                  + nextL
+                  + '    INSERT INTO '+lMovement+'String ('+lMovement+'Id, DescId, ValueData)'
+                  + nextL
+                  + '    VALUES (vbId, '+zc_Desc_GUID+',' + ConvertFromVarChar(FieldByName('GUID').AsString) + ');'
+                  + nextL
+                  + ' END IF;'
+                  + nextL
+                  + nextL;
+             //
+             //
+             i:= i+1;
+             // коммент
+             StrPack:= StrPack + ' ------ end ' + IntToStr(Num_main) + ':' + IntToStr(num) + '/' + IntToStr(i) +' ----------------------' + nextL + nextL;
+             //
+             if i = CountPack then
+             begin
+                  i:= 0;
+                  // финиш - СКРИПТ
+                  StrPack:= StrPack + ' END $$;';
+                  //
+                  //
+                  // !!!сохранили - СКРИПТ!!!
+                  resStr:= fExecSqToQuery (StrPack);
+                  if resStr = ''
+                  then
+                      // результат = OK
+                      StrPack:= StrPack + ' ------ Result = OK : ' + IntToStr(Num_main) + ':' + IntToStr(num) + nextL + nextL
+                  else begin
+                      // результат = ERROR
+                      StrPack:= StrPack + ' ------ Result = ERROR : ' + IntToStr(Num_main) + ':' + IntToStr(num) + nextL + nextL;
+                      // !!!сохранили - в ФАЙЛ!!!
+                      AddToLog(StrPack, lMovement, gSessionGUID, false);
+                      //
+                      // ERROR
+                      AddToMemoMsg ('', FALSE);
+                      AddToMemoMsg (lMovement + ' : ' + IntToStr(Num_main) + ':' + IntToStr(num), FALSE);
+                      AddToMemoMsg (resStr, TRUE);
+                      //
+                      exit;
+                  end;
+                  //
+                  // !!!сохранили - в ФАЙЛ!!!
+                  //ShowMessage (StrPack);
+                  AddToLog(StrPack, lMovement, gSessionGUID, false);
+                  //
+                  // обнулили
+                  StrPack:= '';
+                  //exit;
+             end;
+             //
+             //
+             Next;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     // еще РАЗ
+     if i > 0 then
+     begin
+          // финиш - СКРИПТ
+          StrPack:= StrPack + ' END $$;';
+          //
+          //
+          // !!!сохранили - СКРИПТ!!!
+          resStr:= fExecSqToQuery (StrPack);
+          if resStr = ''
+          then
+              // результат = OK
+              StrPack:= StrPack + ' ------ Result = OK : ' + IntToStr(Num_main) + ':' + IntToStr(num) + nextL + nextL
+          else begin
+              // результат = ERROR
+              StrPack:= StrPack + ' ------ Result = ERROR : ' + IntToStr(Num_main) + ':' + IntToStr(num) + nextL + nextL;
+              // !!!сохранили - в ФАЙЛ!!!
+              AddToLog(StrPack, lMovement, gSessionGUID, false);
+              //
+              // ERROR
+              AddToMemoMsg ('', FALSE);
+              AddToMemoMsg (lMovement + ' : ' + IntToStr(Num_main) + ':' + IntToStr(num), FALSE);
+              AddToMemoMsg (resStr, TRUE);
+              //
+              exit;
+          end;
+          //
+          // !!!сохранили - в ФАЙЛ!!!
+          AddToLog(StrPack, lMovement, gSessionGUID, false);
+          //
+          //
+     end;
 
+     except on E:Exception do
+       begin
+          // ERROR
+          AddToMemoMsg ('', FALSE);
+          AddToMemoMsg (E.Message, TRUE);
+          exit;
+       end;
+     end;
+     //
+     Result:= true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pSendPackTo_ReplMovementProperty(Num_main, CountPack : Integer; CDSData : TClientDataSet; isMI : Boolean) : Boolean;
+//From: соединение от галки cbClientDataSet - если нет тогда ПРЯМОЕ (показ. в гриде)
+//To:   соединение - ПРЯМОЕ - выполняем Скрипт StrPack
+var StrPack, nextL : String;
+    i, num  : Integer;
+    _PropertyName, _PropertyValue, Column_upd : String;
+    resStr : String;
+    lMovement: String;
 begin
+     Result:= false;
+     //
+     //
+     if isMI = TRUE then lMovement := 'MovementItem' else lMovement := 'Movement';
+     //
+     try
 
+     i:=0;
+     num:=0;
+     StrPack:= '';
+     nextL  := #13;
+     //
+     with CDSData do begin
+        //
+        if (Name =  'fQueryMS')  or (Name =  'MSCDS')  then _PropertyName:= lMovement + 'String';
+        if (Name =  'fQueryMF')  or (Name =  'MFCDS')  then _PropertyName:= lMovement + 'Float';
+        if (Name =  'fQueryMD')  or (Name =  'MDCDS')  then _PropertyName:= lMovement + 'Date';
+        if (Name =  'fQueryMB')  or (Name =  'MBCDS')  then _PropertyName:= lMovement + 'Boolean';
+        if (Name =  'fQueryMLO') or (Name =  'MLOCDS') then _PropertyName:= lMovement + 'LinkObject';
+        if (Name =  'fQueryMLM') or (Name =  'MLMCDS') then _PropertyName:= lMovement + 'LinkMovement';
+        //
+        //if cbClientDataSet.Checked = FALSE then
+          // Подключились к серверу To
+          if not IniConnectionTo (_PropertyName, FALSE) then exit;
+        //
+        //
+        First;
+        while not EOF  do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //!!!
+             // ЗНАЧЕНИЕ
+             if (_PropertyName = 'MovementLinkObject')or(_PropertyName = 'MovementItemLinkObject')
+             then
+               _PropertyValue:= 'vbObjectId'
+             else
+             if (_PropertyName = 'MovementLinkMovement')
+             then
+               _PropertyValue:= 'vbMovementId'
+             else
+               _PropertyValue:= ConvertValueToVarChar(_PropertyName, FieldByName('ValueDataS').AsString
+                                                     , FieldByName('ValueDataF').AsFloat
+                                                     , FieldByName('ValueDataD').AsDateTime, FieldByName('isValuDNull').AsBoolean
+                                                     , FieldByName('ValueDataB').AsBoolean , FieldByName('isValuBNull').AsBoolean
+                                                     , 0
+                                                      );
+             //сначала "шапка"
+             if StrPack = ''
+             then begin
+                  StrPack:= ' DO $$' + nextL
+                          + ' DECLARE vbId Integer;' + nextL
+                          ;
+                  //
+                  if (_PropertyName = 'MovementLinkMovement')
+                  then StrPack:= StrPack + ' DECLARE vbMovementId Integer;' + nextL;
+                  //
+                  if (_PropertyName = 'MovementLinkObject')or(_PropertyName = 'MovementItemLinkObject')
+                  then StrPack:= StrPack + ' DECLARE vbObjectId Integer;' + nextL;
+                  //
+                  StrPack:= StrPack
+                          + ' BEGIN' + nextL + nextL + nextL
+                          ;
+                  num:= num + 1;
+             end;
+             //
+             // сначала Object...Desc
+             if GetArrayList_Index_byValue(ArrayObjectDesc,FieldByName('DescName').AsString) < 0 then
+             begin
+                  // коммент
+                  StrPack:= StrPack + ' -- NEW ' + _PropertyName + 'Desc' + nextL;
+                  //
+                  StrPack:= StrPack
+                          + nextL
+                          + '   CREATE OR REPLACE FUNCTION ' + FieldByName('DescName').AsString + '() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ' + _PropertyName + 'Desc WHERE Code = ' + ConvertFromVarChar(FieldByName('DescName').AsString) + '); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;'
+                          + nextL
+                          + '   INSERT INTO ' + _PropertyName + 'Desc (Id, Code, ItemName)'
+                          + '   SELECT ' + IntToStr(FieldByName('DescId').AsInteger) + ', ' + ConvertFromVarChar(FieldByName('DescName').AsString) + ', ' + ConvertFromVarChar(FieldByName('ItemName').AsString) + ' WHERE NOT EXISTS (SELECT * FROM ' + _PropertyName + 'Desc WHERE Code = ' + ConvertFromVarChar(FieldByName('DescName').AsString) + ');'
+                          + nextL
+                          + nextL;
+                  //
+                  // добавляем в список - существующие Desc в базе TO
+                  SetLength(ArrayObjectDesc,Length(ArrayObjectDesc)+1);
+                  ArrayObjectDesc[Length(ArrayObjectDesc)-1]:=FieldByName('DescName').AsString;
+             end;
+             //
+             // обнулили Id
+             StrPack:= StrPack + ' vbId:= 0;' + nextL;
+             //
+             //
+             if (_PropertyName = 'MovementLinkMovement')
+             then
+                 // Нашли для MovementLinkMovement
+                 StrPack:= StrPack
+                         // Поиск подчиненного Movement
+                         + ' vbMovementId:= NULL;'
+                         + ' IF ' + ConvertFromVarChar(FieldByName('GUID_child').AsString) + ' <> ' + ConvertFromVarChar('')
+                         + ' THEN'
+                         + nextL
+                         + '     vbMovementId:= (SELECT MovementId FROM MovementString WHERE ValueData = ' + ConvertFromVarChar(FieldByName('GUID_child').AsString) + ' and DescId = zc_MovementString_GUID());'
+                         + nextL
+                                 // Проверка
+                         + '     IF COALESCE (vbMovementId, 0) = 0 THEN RAISE EXCEPTION '+ConvertFromVarChar('Ошибка.Не нашли GUID_child= <'+FieldByName('GUID_child').AsString+'>')+'; END IF;'
+                         + nextL
+                         + ' END IF;'
+                         + nextL + nextL;
+             //
+             if (_PropertyName = 'MovementLinkObject')or(_PropertyName = 'MovementItemLinkObject')
+             then
+                 // Нашли для Movement...LinkObject
+                 StrPack:= StrPack
+                         // Поиск подчиненного Object
+                         + ' vbObjectId:= NULL;'
+                         + ' IF ' + ConvertFromVarChar(FieldByName('GUID_child').AsString) + ' <> ' + ConvertFromVarChar('')
+                         + ' THEN'
+                         + nextL
+                         + '     vbObjectId:= (SELECT ObjectId FROM ObjectString WHERE ValueData = ' + ConvertFromVarChar(FieldByName('GUID_child').AsString) + ' and DescId = zc_ObjectString_GUID());'
+                         + nextL
+                                 // Проверка
+                         + '     IF COALESCE (vbObjectId, 0) = 0 THEN RAISE EXCEPTION '+ConvertFromVarChar('Ошибка.Не нашли GUID_child = <'+FieldByName('GUID_child').AsString+'>')+'; END IF;'
+                         + nextL
+                         + ' END IF;'
+                         + nextL + nextL;
+             //
+             // Нашли Id
+             if (_PropertyName = 'MovementItemString')or(_PropertyName = 'MovementItemFloat')
+              or(_PropertyName = 'MovementItemDate')  or(_PropertyName = 'MovementItemBoolean')
+              or(_PropertyName = 'MovementItemLinkObject')
+             then
+                 StrPack:= StrPack
+                         // Поиск Id
+                         + ' vbId:= (SELECT MovementItemId FROM MovementItemString WHERE ValueData = ' + ConvertFromVarChar(FieldByName('GUID').AsString) + ' and DescId = zc_MIString_GUID());'
+                         + nextL
+             else
+                 StrPack:= StrPack
+                         // Поиск Id
+                         + ' vbId:= (SELECT MovementId FROM MovementString WHERE ValueData = ' + ConvertFromVarChar(FieldByName('GUID').AsString) + ' and DescId = zc_MovementString_GUID());'
+                         + nextL
+                          ;
+             //
+             if (_PropertyName = 'MovementLinkObject')or(_PropertyName = 'MovementItemLinkObject')
+             then Column_upd := 'ObjectId'
+             else
+             if (_PropertyName = 'MovementLinkMovement')
+             then Column_upd := 'MovementChildId'
+             else Column_upd := 'ValueData';
+             //
+             // попробовали UPDATE
+             StrPack:= StrPack
+                     + '    UPDATE ' + _PropertyName + ' SET ' + Column_upd + ' = ' + _PropertyValue
+                     + nextL
+                     + '    WHERE '+lMovement+'Id = vbId and DescId = ' + IntToStr(FieldByName('DescId').AsInteger) + ' ;' + ' -- ' + FieldByName('DescName').AsString
+                     + nextL
+                     + nextL;
+             // иначе INSERT
+             StrPack:= StrPack
+                    + ' IF NOT FOUND THEN'
+                    + nextL
+                    + '    INSERT INTO ' + _PropertyName + ' (DescId, '+lMovement+'Id, ' + Column_upd + ')'
+                    + nextL
+                    + '    VALUES (' + IntToStr(FieldByName('DescId').AsInteger)
+                    +           ', vbId'
+                    +           ', ' + _PropertyValue
+                    +           ');'
+                    + nextL
+                    + ' END IF;'
+                    + nextL
+                    + nextL;
+             //
+             //
+             i:= i+1;
+             // коммент
+             StrPack:= StrPack + ' ------ end ' + IntToStr(Num_main) + ':' + IntToStr(num) + '/' + IntToStr(i) +' ----------------------' + nextL + nextL;
+             //
+             if i = CountPack then
+             begin
+                  i:= 0;
+                  // финиш - СКРИПТ
+                  StrPack:= StrPack + ' END $$;' + nextL + nextL;
+                  //
+                  // !!!сохранили - СКРИПТ!!!
+                  resStr:= fExecSqToQuery (StrPack);
+                  if resStr = ''
+                  then
+                      // результат = OK
+                      StrPack:= StrPack + ' ------ Result (' + _PropertyName + ') = OK : ' + IntToStr(Num_main) + ':' + IntToStr(num) + nextL + nextL
+                  else begin
+                      // результат = ERROR
+                      StrPack:= StrPack + ' ------ Result (' + _PropertyName + ') = ERROR : ' + IntToStr(Num_main) + ':' + IntToStr(num) + ':' + nextL + resStr + nextL + nextL;
+                      // !!!сохранили - в ФАЙЛ!!!
+                      AddToLog(StrPack, _PropertyName, gSessionGUID, false);
+                      //
+                      // ERROR
+                      AddToMemoMsg ('', FALSE);
+                      AddToMemoMsg (_PropertyName + ' : ' + IntToStr(Num_main) + ':' + IntToStr(num), FALSE);
+                      AddToMemoMsg (resStr, TRUE);
+                      //
+                      exit;
+                  end;
+                  //
+                  // !!!сохранили - в ФАЙЛ!!!
+                  AddToLog(StrPack, _PropertyName, gSessionGUID, false);
+                  //
+                  // обнулили
+                  StrPack:= '';
+                  //exit;
+             end;
+             //
+             //
+             Next;
+             //
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     // еще РАЗ
+     if i > 0 then
+     begin
+          // финиш - СКРИПТ
+          StrPack:= StrPack + ' END $$;' + nextL + nextL;
+          //
+          //
+          // !!!сохранили - СКРИПТ!!!
+          resStr:= fExecSqToQuery (StrPack);
+          if resStr = ''
+          then
+              // результат = OK
+              StrPack:= StrPack + ' ------ Result (' + _PropertyName + ') = OK : ' + IntToStr(Num_main) + ':' + IntToStr(num) + nextL + nextL
+          else begin
+              // результат = ERROR
+              StrPack:= StrPack + ' ------ Result (' + _PropertyName + ') = ERROR : ' + IntToStr(Num_main) + ':' + IntToStr(num) + ':' + nextL + resStr + nextL + nextL;
+              // !!!сохранили - в ФАЙЛ!!!
+              AddToLog(StrPack, _PropertyName, gSessionGUID, false);
+              //
+              // ERROR
+              AddToMemoMsg ('', FALSE);
+              AddToMemoMsg (_PropertyName + ' : ' + IntToStr(Num_main) + ':' + IntToStr(num), FALSE);
+              AddToMemoMsg (resStr, TRUE);
+              //
+              exit;
+          end;
+          //
+          // !!!сохранили - в ФАЙЛ!!!
+          AddToLog(StrPack, _PropertyName, gSessionGUID, false);
+          //
+          //
+     end;
+
+     except on E:Exception do
+       begin
+          // ERROR
+          AddToMemoMsg ('', FALSE);
+          AddToMemoMsg (E.Message, TRUE);
+          exit;
+       end;
+     end;
+     //
+     Result:= true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pSendPackTo_ReplObject (Num_main, CountPack : Integer; isHistory : Boolean) : Boolean;
 //From: соединение от галки cbClientDataSet - если нет тогда ПРЯМОЕ (показ. в гриде)
 //To:   соединение - ПРЯМОЕ - выполняем Скрипт StrPack
-var sHist : String;
 var StrPack, nextL : String;
     i, num  : Integer;
     resStr  : String;
@@ -1467,7 +2090,7 @@ begin
      //
      //
      if isHistory = TRUE then lObject := 'ObjectHistory' else lObject := 'Object';
-     if isHistory = TRUE then sHist   := 'History'       else sHist   := '';
+     //if isHistory = TRUE then sHist   := 'History'       else sHist   := '';
 
      //
      //if cbClientDataSet.Checked = FALSE then
@@ -1567,8 +2190,8 @@ begin
                           + nextL
                           + '   CREATE OR REPLACE FUNCTION ' + FieldByName('DescName').AsString + '() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = ' + ConvertFromVarChar(FieldByName('DescName').AsString) + '); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;'
                           + nextL
-                          + '   INSERT INTO Object'+sHist+'Desc (Id, Code, ItemName)'
-                          + '   SELECT ' + IntToStr(FieldByName('DescId').AsInteger) + ', ' + ConvertFromVarChar(FieldByName('DescName').AsString) + ', ' + ConvertFromVarChar(FieldByName('ItemName').AsString) + ' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = ' + ConvertFromVarChar(FieldByName('DescName').AsString) + ');'
+                          + '   INSERT INTO '+lObject+'Desc (Id, Code, ItemName)'
+                          + '   SELECT ' + IntToStr(FieldByName('DescId').AsInteger) + ', ' + ConvertFromVarChar(FieldByName('DescName').AsString) + ', ' + ConvertFromVarChar(FieldByName('ItemName').AsString) + ' WHERE NOT EXISTS (SELECT * FROM '+lObject+'Desc WHERE Code = ' + ConvertFromVarChar(FieldByName('DescName').AsString) + ');'
                           + nextL
                           + nextL;
                   //
@@ -1584,18 +2207,21 @@ begin
              // Нашли Id
              if (isHistory = TRUE)
              then StrPack:= StrPack
+                          // Поиск Id
                           + ' vbId:= ' + IntToStr(FieldByName('ObjectHistoryId').AsInteger) + ';'
                           + nextL
              else
-             if (cbGUID.Checked = TRUE) and (isHistory = FALSE)
-             then StrPack:= StrPack
-                          + ' vbId:= (SELECT ObjectId FROM ObjectString WHERE ValueData = ' + ConvertFromVarChar(FieldByName('GUID').AsString) + ' and DescId = zc_ObjectString_GUID());'
-                          + nextL
-             else StrPack:= StrPack
-                          + ' vbId:= (SELECT Id FROM Object WHERE Id = ' + IntToStr(FieldByName('ObjectId').AsInteger) + ');'
-                          + nextL
-                          + nextL
-                          ;
+               if (cbGUID.Checked = TRUE) and (isHistory = FALSE)
+               then StrPack:= StrPack
+                            // Поиск Id
+                            + ' vbId:= (SELECT ObjectId FROM ObjectString WHERE ValueData = ' + ConvertFromVarChar(FieldByName('GUID').AsString) + ' and DescId = zc_ObjectString_GUID());'
+                            + nextL
+               else StrPack:= StrPack
+                            // Поиск Id
+                            + ' vbId:= (SELECT Id FROM Object WHERE Id = ' + IntToStr(FieldByName('ObjectId').AsInteger) + ');'
+                            + nextL
+                            + nextL
+                            ;
              // попробовали UPDATE
              if (isHistory = FALSE)
              then
@@ -1620,12 +2246,18 @@ begin
              // иначе INSERT
              if (isHistory = TRUE) then
              begin
-                 // Нашли ObjectId - для ObjectHistory
+                 // Нашли для ObjectHistory
                  StrPack:= StrPack
+                         // Поиск Object
                          + ' vbObjectId:= NULL;'
                          + ' IF ' + ConvertFromVarChar(FieldByName('GUID').AsString) + ' <> ' + ConvertFromVarChar('')
                          + ' THEN'
-                         +       ' vbObjectId:= (SELECT ObjectId FROM ObjectString WHERE ValueData = ' + ConvertFromVarChar(FieldByName('GUID').AsString) + ' and DescId = zc_ObjectString_GUID());'
+                         + nextL
+                         + '     vbObjectId:= (SELECT ObjectId FROM ObjectString WHERE ValueData = ' + ConvertFromVarChar(FieldByName('GUID').AsString) + ' and DescId = zc_ObjectString_GUID());'
+                         + nextL
+                                 // Проверка
+                         + '     IF COALESCE (vbObjectId, 0) = 0 THEN RAISE EXCEPTION '+ConvertFromVarChar('Ошибка.Не нашли GUID = <'+FieldByName('GUID').AsString+'>')+'; END IF;'
+                         + nextL
                          + ' END IF;'
                          + nextL + nextL;
                  //
@@ -1798,10 +2430,9 @@ end;
 function TMainForm.pSendPackTo_ReplObjectProperty(Num_main, CountPack : Integer; CDSData : TClientDataSet; isHistory : Boolean) : Boolean;
 //From: соединение от галки cbClientDataSet - если нет тогда ПРЯМОЕ (показ. в гриде)
 //To:   соединение - ПРЯМОЕ - выполняем Скрипт StrPack
-var sHist : String;
 var StrPack, nextL : String;
     i, num  : Integer;
-    _PropertyName, _PropertyValue, DescId_ins1,DescId_ins2, Value_upd : String;
+    _PropertyName, _PropertyValue, DescId_ins1,DescId_ins2, Column_upd : String;
     resStr : String;
     lObject, lObjectLink : String;
 begin
@@ -1809,7 +2440,7 @@ begin
      //
      //
      if isHistory = TRUE then lObject := 'ObjectHistory' else lObject := 'Object';
-     if isHistory = TRUE then sHist   := 'History'       else sHist   := '';
+     //if isHistory = TRUE then sHist   := 'History'       else sHist   := '';
      //
      try
 
@@ -1901,50 +2532,59 @@ begin
              //
              if (_PropertyName = lObjectLink)
              then
-                 // Нашли ObjectId - для Link
+                 // Поиск подчиненного Object
                  StrPack:= StrPack
+                         // Поиск ObjectId
                          + ' vbObjectId:= NULL;'
                          + ' IF ' + ConvertFromVarChar(FieldByName('GUID_child').AsString) + ' <> ' + ConvertFromVarChar('')
                          + ' THEN'
-                               + ' vbObjectId:= (SELECT ObjectId FROM ObjectString WHERE ValueData = ' + ConvertFromVarChar(FieldByName('GUID_child').AsString) + ' and DescId = zc_ObjectString_GUID());'
+                         + nextL
+                         + '     vbObjectId:= (SELECT ObjectId FROM ObjectString WHERE ValueData = ' + ConvertFromVarChar(FieldByName('GUID_child').AsString) + ' and DescId = zc_ObjectString_GUID());'
+                         + nextL
+                                 // Проверка
+                         + '     IF COALESCE (vbObjectId, 0) = 0 THEN RAISE EXCEPTION '+ConvertFromVarChar('Ошибка.Не нашли GUID_child = <'+FieldByName('GUID_child').AsString+'>')+'; END IF;'
+                         + nextL
                          + ' END IF;'
                          + nextL + nextL;
              //
              // Нашли Id
              if (isHistory = TRUE)
              then StrPack:= StrPack
+                          // Поиск Id
                           + ' vbId:= ' + IntToStr(FieldByName('ObjectHistoryId').AsInteger) + ';'
                           + nextL
              else
              if (cbGUID.Checked = TRUE) and (isHistory = FALSE)
              then StrPack:= StrPack
+                          // Поиск Id
                           + ' vbId:= (SELECT ObjectId FROM ObjectString WHERE ValueData = ' + ConvertFromVarChar(FieldByName('GUID').AsString) + ' and DescId = zc_ObjectString_GUID());'
                           + nextL
              else StrPack:= StrPack
+                          // Поиск Id
                           + ' vbId:= ' + IntToStr(FieldByName('ObjectId').AsInteger) + ';'
                           + nextL
                           + nextL
                           ;
              //
              if (_PropertyName = lObjectLink) and (isHistory = TRUE)
-             then Value_upd := 'ObjectId'
+             then Column_upd := 'ObjectId'
              else
              if (_PropertyName = lObjectLink) and (isHistory = FALSE)
-             then Value_upd := 'ChildObjectId'
-             else Value_upd := 'ValueData';
+             then Column_upd := 'ChildObjectId'
+             else Column_upd := 'ValueData';
              //
              // попробовали UPDATE
              StrPack:= StrPack
-                     + '    UPDATE ' + _PropertyName + ' SET ' + Value_upd + ' = ' + _PropertyValue
+                     + '    UPDATE ' + _PropertyName + ' SET ' + Column_upd + ' = ' + _PropertyValue
                      + nextL
-                     + '    WHERE Object'+sHist+'Id = vbId and DescId = ' + IntToStr(FieldByName('DescId').AsInteger) + ' ;' + ' -- ' + FieldByName('DescName').AsString
+                     + '    WHERE '+lObject+'Id = vbId and DescId = ' + IntToStr(FieldByName('DescId').AsInteger) + ' ;' + ' -- ' + FieldByName('DescName').AsString
                      + nextL
                      + nextL;
              // иначе INSERT
              StrPack:= StrPack
                     + ' IF NOT FOUND THEN'
                     + nextL
-                    + '    INSERT INTO ' + _PropertyName + ' (DescId, Object'+sHist+'Id, ' + Value_upd + ')'
+                    + '    INSERT INTO ' + _PropertyName + ' (DescId, '+lObject+'Id, ' + Column_upd + ')'
                     + nextL
                     + '    VALUES (' + IntToStr(FieldByName('DescId').AsInteger)
                     +           ', vbId'
@@ -2248,6 +2888,7 @@ begin
      begin
            Clear;
            //
+           // Object...
            Add('select 1 AS NPP, Id, 0 AS DescId, 0 AS ChildObjectDescId, Code, ItemName, ' + ConvertFromVarChar('Object') + ' as GroupId from ObjectDesc');
            Add('union all');
            Add('select 2 AS NPP, Id,      DescId, 0 AS ChildObjectDescId, Code, ItemName, ' + ConvertFromVarChar('ObjectString') + ' as GroupId from ObjectStringDesc');
@@ -2259,7 +2900,7 @@ begin
            Add('select 5 AS NPP, Id,      DescId, 0 AS ChildObjectDescId, Code, ItemName, ' + ConvertFromVarChar('ObjectBoolean') + ' as GroupId from ObjectBooleanDesc');
            Add('union all');
            Add('select 6 AS NPP, Id,      DescId,      ChildObjectDescId, Code, ItemName, ' + ConvertFromVarChar('ObjectLink') + ' as GroupId from ObjectLinkDesc');
-
+           // ObjectHistory...
            Add('union all');
            Add('select 11 AS NPP, Id, 0 AS DescId, 0 AS ChildObjectDescId, Code, ItemName, ' + ConvertFromVarChar('ObjectHistory') + ' as GroupId from ObjectHistoryDesc');
            Add('union all');
@@ -2270,7 +2911,35 @@ begin
            Add('select 14 AS NPP, Id,      DescId, 0 AS ChildObjectDescId, Code, ItemName, ' + ConvertFromVarChar('ObjectHistoryDate') + ' as GroupId from ObjectHistoryDateDesc');
            Add('union all');
            Add('select 16 AS NPP, Id,      DescId, 0 AS ChildObjectDescId, Code, ItemName, ' + ConvertFromVarChar('ObjectHistoryLink') + ' as GroupId from ObjectHistoryLinkDesc');
-
+           // Movement...
+           Add('union all');
+           Add('select 21 AS NPP, Id, 0 AS DescId, 0 AS ChildObjectDescId, Code, ItemName, ' + ConvertFromVarChar('Movement') + ' as GroupId from MovementDesc');
+           Add('union all');
+           Add('select 22 AS NPP, Id, 0 AS DescId, 0 AS ChildObjectDescId, Code, ItemName, ' + ConvertFromVarChar('MovementString') + ' as GroupId from MovementStringDesc');
+           Add('union all');
+           Add('select 23 AS NPP, Id, 0 AS DescId, 0 AS ChildObjectDescId, Code, ItemName, ' + ConvertFromVarChar('MovementFloat') + ' as GroupId from MovementFloatDesc');
+           Add('union all');
+           Add('select 24 AS NPP, Id, 0 AS DescId, 0 AS ChildObjectDescId, Code, ItemName, ' + ConvertFromVarChar('MovementDate') + ' as GroupId from MovementDateDesc');
+           Add('union all');
+           Add('select 25 AS NPP, Id, 0 AS DescId, 0 AS ChildObjectDescId, Code, ItemName, ' + ConvertFromVarChar('MovementBoolean') + ' as GroupId from MovementBooleanDesc');
+           Add('union all');
+           Add('select 26 AS NPP, Id, 0 AS DescId, 0 AS ChildObjectDescId, Code, ItemName, ' + ConvertFromVarChar('MovementLinkObject') + ' as GroupId from MovementLinkObjectDesc');
+           Add('union all');
+           Add('select 27 AS NPP, Id, 0 AS DescId, 0 AS ChildObjectDescId, Code, ItemName, ' + ConvertFromVarChar('MovementLinkMovement') + ' as GroupId from MovementLinkMovementDesc');
+           // MovementItem...
+           Add('union all');
+           Add('select 31 AS NPP, Id, 0 AS DescId, 0 AS ChildObjectDescId, Code, ItemName, ' + ConvertFromVarChar('MovementItem') + ' as GroupId from MovementItemDesc');
+           Add('union all');
+           Add('select 32 AS NPP, Id, 0 AS DescId, 0 AS ChildObjectDescId, Code, ItemName, ' + ConvertFromVarChar('MovementItemString') + ' as GroupId from MovementItemStringDesc');
+           Add('union all');
+           Add('select 33 AS NPP, Id, 0 AS DescId, 0 AS ChildObjectDescId, Code, ItemName, ' + ConvertFromVarChar('MovementItemFloat') + ' as GroupId from MovementItemFloatDesc');
+           Add('union all');
+           Add('select 34 AS NPP, Id, 0 AS DescId, 0 AS ChildObjectDescId, Code, ItemName, ' + ConvertFromVarChar('MovementItemDate') + ' as GroupId from MovementItemDateDesc');
+           Add('union all');
+           Add('select 35 AS NPP, Id, 0 AS DescId, 0 AS ChildObjectDescId, Code, ItemName, ' + ConvertFromVarChar('MovementItemBoolean') + ' as GroupId from MovementItemBooleanDesc');
+           Add('union all');
+           Add('select 36 AS NPP, Id, 0 AS DescId, 0 AS ChildObjectDescId, Code, ItemName, ' + ConvertFromVarChar('MovementItemLinkObject') + ' as GroupId from MovementItemLinkObjectDesc');
+           //
            Add('order by 1, 2');
            //
            Open;
@@ -2308,7 +2977,10 @@ begin
                        DescId_upd := ', DescId = '   + ConvertFromInt(FieldByName('DescId').AsInteger)
                                    + ', ChildObjectDescId = '   + ConvertFromInt(FieldByName('ChildObjectDescId').AsInteger);
              end else
-             if (FieldByName('GroupId').AsString <> 'Object') and (FieldByName('GroupId').AsString <> 'ObjectHistory')
+             if   (FieldByName('GroupId').AsString <> 'Object')
+              and (FieldByName('GroupId').AsString <> 'ObjectHistory')
+              and (System.Pos('Movement', FieldByName('GroupId').AsString) <> 1)
+              and (System.Pos('MovementItem', FieldByName('GroupId').AsString) <> 1)
              then begin
                        DescId_ins1:= ', DescId';
                        DescId_ins2:= ', ' + ConvertFromInt(FieldByName('DescId').AsInteger);
@@ -2618,20 +3290,20 @@ begin
           else if not pSendPackTo_ReplMovementProperty(num, outCountPack, TClientDataSet(fQueryMS), FALSE) then exit else;
           //MovementFloat - на НЕСКОЛЬКО пакетов и ...
           if cbClientDataSet.Checked = TRUE
-          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(MFCDS), FALSE) then exit else
-          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryMF), FALSE) then exit else;
+          then if not pSendPackTo_ReplMovementProperty(num, outCountPack, TClientDataSet(MFCDS), FALSE) then exit else
+          else if not pSendPackTo_ReplMovementProperty(num, outCountPack, TClientDataSet(fQueryMF), FALSE) then exit else;
           //MovementDate - на НЕСКОЛЬКО пакетов и ...
           if cbClientDataSet.Checked = TRUE
-          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(MDCDS), FALSE) then exit else
-          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryMD), FALSE) then exit else;
+          then if not pSendPackTo_ReplMovementProperty(num, outCountPack, TClientDataSet(MDCDS), FALSE) then exit else
+          else if not pSendPackTo_ReplMovementProperty(num, outCountPack, TClientDataSet(fQueryMD), FALSE) then exit else;
           //MovementBoolean - на НЕСКОЛЬКО пакетов и ...
           if cbClientDataSet.Checked = TRUE
-          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(MBCDS), FALSE) then exit else
-          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryMB), FALSE) then exit else;
+          then if not pSendPackTo_ReplMovementProperty(num, outCountPack, TClientDataSet(MBCDS), FALSE) then exit else
+          else if not pSendPackTo_ReplMovementProperty(num, outCountPack, TClientDataSet(fQueryMB), FALSE) then exit else;
           //MovementLinkObject - на НЕСКОЛЬКО пакетов и ...
           if cbClientDataSet.Checked = TRUE
-          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(MLOCDS), FALSE) then exit else
-          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryMLO), FALSE) then exit else;
+          then if not pSendPackTo_ReplMovementProperty(num, outCountPack, TClientDataSet(MLOCDS), FALSE) then exit else
+          else if not pSendPackTo_ReplMovementProperty(num, outCountPack, TClientDataSet(fQueryMLO), FALSE) then exit else;
           //
           // следующий период для Id
           StartId:= EndId + 1;
@@ -2669,8 +3341,8 @@ begin
           //
           //MovementLinkMovement - на НЕСКОЛЬКО пакетов и ...
           if cbClientDataSet.Checked = TRUE
-          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(MLMCDS), FALSE) then exit else
-          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryMLM), FALSE) then exit else;
+          then if not pSendPackTo_ReplMovementProperty(num, outCountPack, TClientDataSet(MLMCDS), FALSE) then exit else
+          else if not pSendPackTo_ReplMovementProperty(num, outCountPack, TClientDataSet(fQueryMLM), FALSE) then exit else;
           //
           // следующий период для Id
           StartId:= EndId + 1;
@@ -2715,20 +3387,20 @@ begin
           else if not pSendPackTo_ReplMovementProperty(num, outCountPack, TClientDataSet(fQueryMS), TRUE) then exit else;
           //MovementItemFloat - на НЕСКОЛЬКО пакетов и ...
           if cbClientDataSet.Checked = TRUE
-          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(MFCDS), TRUE) then exit else
-          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryMF), TRUE) then exit else;
+          then if not pSendPackTo_ReplMovementProperty(num, outCountPack, TClientDataSet(MFCDS), TRUE) then exit else
+          else if not pSendPackTo_ReplMovementProperty(num, outCountPack, TClientDataSet(fQueryMF), TRUE) then exit else;
           //MovementItemDate - на НЕСКОЛЬКО пакетов и ...
           if cbClientDataSet.Checked = TRUE
-          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(MDCDS), TRUE) then exit else
-          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryMD), TRUE) then exit else;
+          then if not pSendPackTo_ReplMovementProperty(num, outCountPack, TClientDataSet(MDCDS), TRUE) then exit else
+          else if not pSendPackTo_ReplMovementProperty(num, outCountPack, TClientDataSet(fQueryMD), TRUE) then exit else;
           //MovementItemBoolean - на НЕСКОЛЬКО пакетов и ...
           if cbClientDataSet.Checked = TRUE
-          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(MBCDS), TRUE) then exit else
-          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryMB), TRUE) then exit else;
+          then if not pSendPackTo_ReplMovementProperty(num, outCountPack, TClientDataSet(MBCDS), TRUE) then exit else
+          else if not pSendPackTo_ReplMovementProperty(num, outCountPack, TClientDataSet(fQueryMB), TRUE) then exit else;
           //MovementItemLinkObject - на НЕСКОЛЬКО пакетов и ...
           if cbClientDataSet.Checked = TRUE
-          then if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(MLOCDS), TRUE) then exit else
-          else if not pSendPackTo_ReplObjectProperty(num, outCountPack, TClientDataSet(fQueryMLO), TRUE) then exit else;
+          then if not pSendPackTo_ReplMovementProperty(num, outCountPack, TClientDataSet(MLOCDS), TRUE) then exit else
+          else if not pSendPackTo_ReplMovementProperty(num, outCountPack, TClientDataSet(fQueryMLO), TRUE) then exit else;
           //
           // следующий период для Id
           StartId:= EndId + 1;
