@@ -676,7 +676,7 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
      WHILE vbItearation < inItearationCount AND vbCountDiff > 0
      LOOP
          -- !!!¬–≈Ã≈ÕÕŒ!!!
-         DELETE FROM _tmpMaster WHERE ABS (_tmpMaster.calcSumm) > 1123123123;
+         -- DELETE FROM _tmpMaster WHERE ABS (_tmpMaster.calcSumm) > 1123123123;
 
          -- Ú.Í. Ó¯Ë·Í‡
          IF vbItearation = vbItearationCount_err AND inStartDate < '01.07.2018'
@@ -1324,4 +1324,4 @@ SELECT * FROM HistoryCost WHERE ('01.03.2017' BETWEEN StartDate AND EndDate) and
 
 -- ÚÂÒÚ
 -- SELECT * FROM  ObjectProtocol WHERE ObjectId = zfCalc_UserAdmin() :: Integer ORDER BY ID DESC LIMIT 100
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.06.2018', inEndDate:= '30.06.2018', inBranchId:= 0, inItearationCount:= 200, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  ORDER BY ABS (Price) DESC -- WHERE ContainerId = 141708 -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.07.2018', inEndDate:= '31.07.2018', inBranchId:= 0, inItearationCount:= 900, inInsert:= -1, inDiffSumm:= 1, inSession:= '2')  ORDER BY ABS (Price) DESC -- WHERE ContainerId = 141708 -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext

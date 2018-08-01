@@ -54,7 +54,10 @@ BEGIN
         , (CASE WHEN ObjectString_GUID_child.ValueData <> '' THEN ObjectString_GUID_child.ValueData ELSE MovementItemLinkObject.ObjectId :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (100) AS GUID_child
 
      FROM ReplMovement
-          INNER JOIN Movement     ON Movement.Id             = ReplMovement.MovementId
+          INNER JOIN Movement     ON Movement.Id        = ReplMovement.MovementId
+                                 AND (Movement.StatusId <> zc_Enum_Status_Complete()
+                                   OR Movement.DescId   <> zc_Movement_WeighingPartner()
+                                     )
           LEFT JOIN  MovementDesc ON MovementDesc.Id         = Movement.DescId
           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
 

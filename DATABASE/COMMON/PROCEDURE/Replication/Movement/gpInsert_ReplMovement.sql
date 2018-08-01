@@ -66,12 +66,12 @@ BEGIN
                                   , ROW_NUMBER() OVER (PARTITION BY MovementProtocol.MovementId ORDER BY MovementProtocol.OperDate DESC) AS Ord
                              FROM MovementProtocol
                                   JOIN Movement ON Movement.Id = MovementProtocol.MovementId
+                                               AND (Movement.StatusId <> zc_Enum_Status_Complete()
+                                                 OR Movement.DescId <> zc_Movement_WeighingPartner()
+                                                   )
                                   JOIN tmpDesc ON tmpDesc.DescId = Movement.DescId
                              WHERE inStartDate               > zc_DateStart()
-                               AND MovementProtocol.OperDate >= inStartDate - INTERVAL '1 HOUR' -- на всякий случай, что отловить ВСЕ изменения
-                               AND (Movement.StatusId <> zc_Enum_StatusKind_Complete()
-                                 OR Movement.DescId <> zc_Movement_WeighingPartner()
-                                   )
+                               AND MovementProtocol.OperDate >= inStartDate - INTERVAL '1 HOUR' -- на всякий случай, что б отловить ВСЕ изменения
                             )
           , tmpList_0 AS (SELECT tmpProtocol.DescId, tmpProtocol.MovementId
                           FROM tmpProtocol
@@ -85,8 +85,12 @@ BEGIN
                             SELECT DISTINCT Movement.DescId, Movement.Id AS MovementId
                             FROM tmpList_0
                                  JOIN Movement AS Movement_find ON Movement_find.Id = tmpList_0.MovementId
-                                 JOIN Movement ON Movement.Id     = Movement_find.ParentId
-                                              AND Movement.DescId = zc_Movement_PromoPartner()
+                                 JOIN Movement ON Movement.Id = Movement_find.ParentId
+                           UNION
+                            SELECT DISTINCT Movement.DescId, Movement.Id AS MovementId
+                            FROM tmpList_0
+                                 JOIN Movement ON Movement.ParentId = tmpList_0.MovementId
+                                              AND Movement.DescId   = zc_Movement_PromoPartner()
                            )
             , tmpList_2 AS (SELECT DISTINCT Movement.DescId, Movement.Id AS MovementId
                             FROM tmpList_1
@@ -96,8 +100,12 @@ BEGIN
                             SELECT DISTINCT Movement.DescId, Movement.Id AS MovementId
                             FROM tmpList_1
                                  JOIN Movement AS Movement_find ON Movement_find.Id = tmpList_1.MovementId
-                                 JOIN Movement ON Movement.Id     = Movement_find.ParentId
-                                              AND Movement.DescId = zc_Movement_PromoPartner()
+                                 JOIN Movement ON Movement.Id = Movement_find.ParentId
+                           UNION
+                            SELECT DISTINCT Movement.DescId, Movement.Id AS MovementId
+                            FROM tmpList_1
+                                 JOIN Movement ON Movement.ParentId = tmpList_1.MovementId
+                                              AND Movement.DescId   = zc_Movement_PromoPartner()
                            )
             , tmpList_3 AS (SELECT DISTINCT Movement.DescId, Movement.Id AS MovementId
                             FROM tmpList_2
@@ -107,8 +115,12 @@ BEGIN
                             SELECT DISTINCT Movement.DescId, Movement.Id AS MovementId
                             FROM tmpList_2
                                  JOIN Movement AS Movement_find ON Movement_find.Id = tmpList_2.MovementId
-                                 JOIN Movement ON Movement.Id     = Movement_find.ParentId
-                                              AND Movement.DescId = zc_Movement_PromoPartner()
+                                 JOIN Movement ON Movement.Id = Movement_find.ParentId
+                           UNION
+                            SELECT DISTINCT Movement.DescId, Movement.Id AS MovementId
+                            FROM tmpList_2
+                                 JOIN Movement ON Movement.ParentId = tmpList_2.MovementId
+                                              AND Movement.DescId   = zc_Movement_PromoPartner()
                            )
         , tmpList_all AS (SELECT tmpList_0.DescId, tmpList_0.MovementId FROM tmpList_0
                          UNION
@@ -124,6 +136,13 @@ BEGIN
           LEFT JOIN tmpProtocol ON tmpProtocol.MovementId = tmpList_all.MovementId AND tmpProtocol.Ord = 1 -- !!!последний!!!
      ORDER BY tmpList_all.MovementId;
 
+
+     -- Проверка
+     /*IF NOT EXISTS (SELECT ReplMovement.MovementId FROM ReplMovement WHERE ReplMovement.SessionGUID = inSessionGUID AND ReplMovement.MovementId = 9725956)
+        AND EXISTS (SELECT ReplMovement.MovementId FROM ReplMovement WHERE ReplMovement.SessionGUID = inSessionGUID AND ReplMovement.MovementId = 9725941)
+     THEN
+         RAISE EXCEPTION 'NOT EXISTS';
+     END IF;*/
 
      -- Проверка
      IF EXISTS (SELECT ReplMovement.MovementId FROM ReplMovement WHERE ReplMovement.SessionGUID = inSessionGUID GROUP BY ReplMovement.MovementId HAVING COUNT(*) > 1)

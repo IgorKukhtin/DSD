@@ -4,8 +4,9 @@ inherited Report_SaleForm: TReport_SaleForm
   ClientWidth = 1176
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -403
   ExplicitWidth = 1192
-  ExplicitHeight = 463
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -880,6 +881,14 @@ inherited Report_SaleForm: TReport_SaleForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
             Width = 55
+          end
+          object UnitName_in: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'UnitName_in'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object DescName_doc: TcxGridDBColumn
             Caption = #1042#1080#1076'. '#1076#1086#1082'.'

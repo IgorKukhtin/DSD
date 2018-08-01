@@ -61,7 +61,10 @@ BEGIN
         , (CASE WHEN MIString_GUID.ValueData <> '' THEN MIString_GUID.ValueData ELSE MovementItem.Id :: TVarChar || ' - ' || inDataBaseId :: TVarChar END) :: VarChar (100) AS GUID
 
      FROM ReplMovement
-          INNER JOIN Movement     ON Movement.Id             = ReplMovement.MovementId
+          INNER JOIN Movement     ON Movement.Id        = ReplMovement.MovementId
+                                 AND (Movement.StatusId <> zc_Enum_Status_Complete()
+                                   OR Movement.DescId   <> zc_Movement_WeighingPartner()
+                                     )
           LEFT JOIN  MovementDesc ON MovementDesc.Id         = Movement.DescId
           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
 

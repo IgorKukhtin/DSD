@@ -76,6 +76,7 @@ type
     cbDiscount: TcxCheckBox;
     ChangePercent: TcxGridDBColumn;
     GoodsSizeName_real: TcxGridDBColumn;
+    UnitName_in: TcxGridDBColumn;
   private
     { Private declarations }
   public

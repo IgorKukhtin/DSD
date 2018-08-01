@@ -74,6 +74,10 @@ BEGIN
                                                 , zc_Object_Currency()
                                                 , zc_Object_BankAccountContract()
                                                 -- , zc_Object_CorrespondentAccountIntermediaryBank()
+                                                  --
+                                                , zc_Object_ToolsWeighing()
+                                                , zc_Object_GoodsKindWeighing()
+                                                , zc_Object_GoodsKindWeighingGroup()
                                                  )
                              OR vbDescId > 0)
                         )
@@ -96,7 +100,7 @@ BEGIN
                                   , tmpSession AS (SELECT tmp.SessionGUID
                                                    FROM (SELECT DISTINCT tmpReplMovement.SessionGUID, tmpReplMovement.OperDate FROM tmpReplMovement) AS tmp
                                                    ORDER BY tmp.OperDate DESC
-                                                   LIMIT 2
+                                                   LIMIT 1
                                                   )
 
                           SELECT tmpProtocol.DescId, tmpProtocol.ObjectId
@@ -113,14 +117,14 @@ BEGIN
                           FROM tmpReplMovement AS ReplMovement
                                INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = ReplMovement.MovementId
                                INNER JOIN Object ON Object.Id = MovementLinkObject.ObjectId
-                          WHERE ReplMovement.SessionGUID IN (SELECT DISTINCT tmpSession.SessionGUID FROM tmpSession)
+                          WHERE ReplMovement.SessionGUID = (SELECT DISTINCT tmpSession.SessionGUID FROM tmpSession)
                          UNION
                           -- из MovementItem
                           SELECT DISTINCT Object.DescId, Object.Id AS ObjectId
                           FROM tmpReplMovement AS ReplMovement
                                INNER JOIN MovementItem ON MovementItem.MovementId = ReplMovement.MovementId
                                INNER JOIN Object ON Object.Id = MovementItem.ObjectId
-                          WHERE ReplMovement.SessionGUID IN (SELECT DISTINCT tmpSession.SessionGUID FROM tmpSession)
+                          WHERE ReplMovement.SessionGUID = (SELECT DISTINCT tmpSession.SessionGUID FROM tmpSession)
                          UNION
                           -- из MovementItemLinkObject
                           SELECT DISTINCT Object.DescId, Object.Id AS ObjectId
@@ -128,7 +132,7 @@ BEGIN
                                INNER JOIN MovementItem ON MovementItem.MovementId = ReplMovement.MovementId
                                INNER JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id
                                INNER JOIN Object ON Object.Id = MovementItemLinkObject.ObjectId
-                          WHERE ReplMovement.SessionGUID IN (SELECT DISTINCT tmpSession.SessionGUID FROM tmpSession)
+                          WHERE ReplMovement.SessionGUID = (SELECT DISTINCT tmpSession.SessionGUID FROM tmpSession)
                          )
           , tmpList_1 AS (SELECT DISTINCT Object.DescId, ObjectLink.ChildObjectId AS ObjectId
                           FROM tmpList_0

@@ -111,7 +111,10 @@ BEGIN
         
 
      FROM ReplMovement
-          INNER JOIN Movement     ON Movement.Id     = ReplMovement.MovementId
+          INNER JOIN Movement     ON Movement.Id        = ReplMovement.MovementId
+                                 AND (Movement.StatusId <> zc_Enum_Status_Complete()
+                                   OR Movement.DescId   <> zc_Movement_WeighingPartner()
+                                     )
           LEFT JOIN  MovementDesc ON MovementDesc.Id = Movement.DescId
           LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
