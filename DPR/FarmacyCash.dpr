@@ -136,14 +136,13 @@ begin
       if not gc_User.Local then
       Begin
         TUpdater.AutomaticUpdateProgram;
-        TUpdater.AutomaticCheckConnect;
+        if not FindCmdLineSwitch('skipcheckconnect') then TUpdater.AutomaticCheckConnect;
       End
       else
         gc_isSetDefault := True;
       //
       Application.CreateForm(TdmMain, dmMain);
-
-      // определяет главную форму
+  // определяет главную форму
       if isMainForm_OLD = TRUE
       then
            Application.CreateForm(TMainCashForm, MainCash.MainCashForm) // имя модуля обязательно
