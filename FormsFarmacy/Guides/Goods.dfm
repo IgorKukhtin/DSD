@@ -248,7 +248,7 @@ inherited GoodsForm: TGoodsForm
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'PercentMarkup'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##; ; '
+            Properties.DisplayFormat = ',0.##;-,0.## ; '
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
