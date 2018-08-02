@@ -1672,15 +1672,18 @@ begin
       cxegExportToXlsx:
         ExportGridToXLSX(FileName, TcxGrid(FGrid), IsCtrlPressed);
       cxegExportToDbf:
-        with TcxGridDBTableView(TcxGrid(FGrid).Views[0])
-          .DataController.DataSource do
-          with TFileExternalSave.Create(DataSet.FieldDefs, DataSet,
-            FileName, true) do
-            try
-              Execute(FileName);
-            finally
-              Free
-            end;
+        begin
+          if FileExists(FileName) then DeleteFile(FileName);
+          with TcxGridDBTableView(TcxGrid(FGrid).Views[0])
+            .DataController.DataSource do
+            with TFileExternalSave.Create(DataSet.FieldDefs, DataSet,
+              FileName, true) do
+              try
+                Execute(FileName);
+              finally
+                Free
+              end;
+        end;
     end;
     if HideHeader AND HeaderVisible then
       if TcxGrid(FGrid).ViewCount > 0 then
