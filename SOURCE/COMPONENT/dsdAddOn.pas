@@ -2049,7 +2049,7 @@ begin
          NewColumnIndex := 1;
          while not HeaderDataSet.Eof do begin
            Column := View.CreateColumn;
-           Column.Name:=TcxGridDBColumn(TemplateColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+//           Column.Name:=TcxGridDBColumn(TemplateColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
            FCreateColumnList.Add(Column);
            with Column do begin
              Assign(TemplateColumn);
