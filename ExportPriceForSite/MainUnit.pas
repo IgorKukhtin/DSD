@@ -34,7 +34,7 @@ type
   private
     { Private declarations }
     FilePath: string;
-    procedure ReportExport(AUnitId: Integer; AUnitName: String);
+    function ReportExport(AUnitId: Integer; AUnitName: String) : boolean;
     procedure ReportCompress(AUnitId: Integer; AUnitName: String);
     procedure ReportCompressMyPharmacy(AUnitId: Integer; AUnitName: String);
   public
@@ -235,12 +235,13 @@ begin
   end;
 end;
 
-procedure TForm1.ReportExport(AUnitId: Integer; AUnitName: String);
+function TForm1.ReportExport(AUnitId: Integer; AUnitName: String) : boolean;
 var
   UnitFile: string;
   sl : TStringList;
 begin
   Add_Log('Начало выгрузки отчета');
+  Result := False;
 
   UnitFile := FilePath  + AUnitName + '\' + AUnitName + '.xml';
 
@@ -256,10 +257,16 @@ begin
     sl := TStringList.Create;
     try
       sl.LoadFromFile(UnitFile);
-      sl.SaveToFile(UnitFile, TEncoding.UTF8);
+      if Pos('</Offers>', sl.Strings[sl.Count - 1]) = 0 then
+      begin
+        DeleteFile(UnitFile);
+        Add_Log('Ошибка экпорта нет </Offers>');
+        Exit
+      end else sl.SaveToFile(UnitFile, TEncoding.UTF8)
     finally
       sl.Free;
     end;
+    Result := True;
   except
     on E: Exception do
     begin
@@ -293,9 +300,11 @@ begin
 
         if qryReport.RecordCount > 3 then
         Begin
-          ReportExport(qryUnit.FieldByName('RegNumber').AsInteger, qryUnit.FieldByName('Name').AsString);
-          ReportCompress(qryUnit.FieldByName('SerialNumber').AsInteger, qryUnit.FieldByName('Name').AsString);
-          ReportCompressMyPharmacy(qryUnit.FieldByName('RegNumber').AsInteger, qryUnit.FieldByName('Name').AsString);
+          if ReportExport(qryUnit.FieldByName('RegNumber').AsInteger, qryUnit.FieldByName('Name').AsString) then
+          begin
+            ReportCompress(qryUnit.FieldByName('SerialNumber').AsInteger, qryUnit.FieldByName('Name').AsString);
+            ReportCompressMyPharmacy(qryUnit.FieldByName('RegNumber').AsInteger, qryUnit.FieldByName('Name').AsString);
+          end;
         End;
         qryUnit.Next;
       End;

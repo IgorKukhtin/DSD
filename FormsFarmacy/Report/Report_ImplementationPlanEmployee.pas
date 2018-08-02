@@ -582,7 +582,7 @@ begin
       if Dataset['Amount' + FUnit.Strings[I]] >= Dataset['AmountPlanAwardTab' + FUnit.Strings[I]] then
       begin
         if cdsUnitCategory.Locate('UnitCategoryCode', FUnitCategory.Strings[I], []) then
-          nSum := Dataset['AmountPlanAwardTab' + FUnit.Strings[I]] * Dataset['Price' + FUnit.Strings[I]] *
+          nSum := Dataset['Amount' + FUnit.Strings[I]] * Dataset['Price' + FUnit.Strings[I]] *
           cdsUnitCategory.FieldByName('PremiumImplPlan').AsCurrency / 100;
       end;
       Dataset['BonusAmountTab' + FUnit.Strings[I]] := nSum;
@@ -631,7 +631,7 @@ begin
     if Dataset['Amount'] >= Dataset['AmountPlanAwardTab'] then
     begin
       if cdsUnitCategory.Locate('UnitCategoryCode', FUnitCategoryID, []) then
-        nSum := Dataset['AmountPlanAwardTab'] * Dataset['Price' + FUnit.Strings[FUnitCalck]] *
+        nSum := Dataset['Amount'] * Dataset['Price' + FUnit.Strings[FUnitCalck]] *
         cdsUnitCategory.FieldByName('PremiumImplPlan').AsCurrency / 100;
     end;
     Dataset['BonusAmountTab'] := nSum;
