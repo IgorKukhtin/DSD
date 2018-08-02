@@ -30,4 +30,4 @@ END;$BODY$
 ALTER FUNCTION gpGet_Object_Form(TVarChar, TVarChar)
   OWNER TO postgres;
 
--- SELECT length(gpGet_Object_Form) FROM gpGet_Object_Form('Form1', '')
+-- SELECT length(gpGet_Object_Form), gpGet_Object_Form AS FormValue  FROM gpGet_Object_Form('Form1', '')

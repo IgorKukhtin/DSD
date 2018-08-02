@@ -163,6 +163,7 @@ BEGIN
 
                          WHERE Movement.DescId = zc_Movement_Reestr() AND Movement.StatusId <> zc_Enum_Status_Erased()
                            AND Movement.Id <> inMovementId
+                           AND (inPersonalId <> 0 OR inPersonalTradeId <> 0 OR (inReestrKindId <> 0 AND inIsReestrKind = TRUE))
                          )
          -- все нужные строки реестров
         , tmpMI AS (SELECT tmpMI_Main.MovementItemId

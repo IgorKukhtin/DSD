@@ -176,6 +176,7 @@ BEGIN
 
        -- WHERE vbAccessKeyAll = TRUE
        WHERE (Object_Unit_View.BranchId = vbObjectId_Constraint
+              OR Object_Unit_View.BranchId > 0
               OR vbIsConstraint = FALSE
               OR Object_Unit_View.Id IN (8459 -- Склад Реализации
                                        , 8462 -- Склад Брак

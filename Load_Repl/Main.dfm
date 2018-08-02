@@ -36,7 +36,7 @@ object MainForm: TMainForm
       Left = 0
       Top = 0
       Width = 581
-      Height = 180
+      Height = 201
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
@@ -44,7 +44,7 @@ object MainForm: TMainForm
         Left = 0
         Top = 41
         Width = 471
-        Height = 139
+        Height = 160
         Align = alClient
         DataSource = ObjectDS
         TabOrder = 0
@@ -99,12 +99,12 @@ object MainForm: TMainForm
         Left = 471
         Top = 41
         Width = 110
-        Height = 139
+        Height = 160
         Align = alRight
         TabOrder = 2
         object EditCountIterationObject: TEdit
           Left = 1
-          Top = 75
+          Top = 96
           Width = 108
           Height = 21
           Align = alBottom
@@ -128,7 +128,7 @@ object MainForm: TMainForm
         end
         object cbObject: TCheckBox
           Left = 3
-          Top = 41
+          Top = 62
           Width = 48
           Height = 17
           Caption = 'Object'
@@ -138,8 +138,8 @@ object MainForm: TMainForm
         end
         object cbObjectHistory: TCheckBox
           Left = 3
-          Top = 56
-          Width = 85
+          Top = 77
+          Width = 56
           Height = 17
           Caption = 'OHistory'
           Checked = True
@@ -148,7 +148,7 @@ object MainForm: TMainForm
         end
         object EditMaxIdObject: TEdit
           Left = 1
-          Top = 96
+          Top = 117
           Width = 108
           Height = 21
           Align = alBottom
@@ -156,7 +156,7 @@ object MainForm: TMainForm
         end
         object EditMinIdObject: TEdit
           Left = 1
-          Top = 117
+          Top = 138
           Width = 108
           Height = 21
           Align = alBottom
@@ -172,7 +172,7 @@ object MainForm: TMainForm
         end
         object cbMovement: TCheckBox
           Left = 63
-          Top = 41
+          Top = 62
           Width = 42
           Height = 17
           Caption = 'Mov'
@@ -182,7 +182,7 @@ object MainForm: TMainForm
         end
         object cbMI: TCheckBox
           Left = 63
-          Top = 56
+          Top = 77
           Width = 42
           Height = 17
           Caption = 'MI'
@@ -190,11 +190,19 @@ object MainForm: TMainForm
           State = cbChecked
           TabOrder = 9
         end
+        object cbForms: TCheckBox
+          Left = 3
+          Top = 42
+          Width = 56
+          Height = 17
+          Caption = 'Forms'
+          TabOrder = 10
+        end
       end
     end
     object PanelGridObjectString: TPanel
       Left = 0
-      Top = 180
+      Top = 201
       Width = 581
       Height = 80
       Align = alBottom
@@ -243,7 +251,7 @@ object MainForm: TMainForm
     end
     object PanelGridObjectFloat: TPanel
       Left = 0
-      Top = 260
+      Top = 281
       Width = 581
       Height = 80
       Align = alBottom
@@ -292,9 +300,9 @@ object MainForm: TMainForm
     end
     object PanelGridObjectDate: TPanel
       Left = 0
-      Top = 340
+      Top = 361
       Width = 581
-      Height = 80
+      Height = 67
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 3
@@ -302,7 +310,7 @@ object MainForm: TMainForm
         Left = 0
         Top = 0
         Width = 471
-        Height = 80
+        Height = 67
         Align = alClient
         DataSource = ObjectDateDS
         TabOrder = 0
@@ -316,7 +324,7 @@ object MainForm: TMainForm
         Left = 471
         Top = 0
         Width = 110
-        Height = 80
+        Height = 67
         Align = alRight
         TabOrder = 1
         object LabelObjectDate: TLabel
@@ -331,7 +339,7 @@ object MainForm: TMainForm
         end
         object EditCountDateObject: TEdit
           Left = 1
-          Top = 58
+          Top = 45
           Width = 108
           Height = 21
           Align = alBottom
@@ -341,9 +349,9 @@ object MainForm: TMainForm
     end
     object PanelGridObjectBoolean: TPanel
       Left = 0
-      Top = 420
+      Top = 428
       Width = 581
-      Height = 80
+      Height = 72
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 4
@@ -351,7 +359,7 @@ object MainForm: TMainForm
         Left = 0
         Top = 0
         Width = 471
-        Height = 80
+        Height = 72
         Align = alClient
         DataSource = ObjectBooleanDS
         TabOrder = 0
@@ -365,7 +373,7 @@ object MainForm: TMainForm
         Left = 471
         Top = 0
         Width = 110
-        Height = 80
+        Height = 72
         Align = alRight
         TabOrder = 1
         object LabelObjectBoolean: TLabel
@@ -563,6 +571,10 @@ object MainForm: TMainForm
     object TabSheet2: TTabSheet
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' '#1092#1072#1081#1083#1086#1074
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
   end
   object ObjectDS: TDataSource
@@ -1736,5 +1748,35 @@ object MainForm: TMainForm
     Params = <>
     Left = 755
     Top = 537
+  end
+  object spExecForm_repl_to: TdsdStoredProc
+    StoredProcName = 'gpExecForm_repl'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inFormName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFormData'
+        Value = Null
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gConnectHost'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 136
+    Top = 272
   end
 end

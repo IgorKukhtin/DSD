@@ -34,7 +34,8 @@ RETURNS TABLE (PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
               )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId     Integer;
+   DECLARE vbIsList_all Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
@@ -56,8 +57,43 @@ BEGIN
      -- !!! округление !!!
      inServiceDate:= DATE_TRUNC ('MONTH', inServiceDate);
 
+
+     -- таблица - элементы
+     CREATE TEMP TABLE _tmpList (PersonalServiceListId Integer) ON COMMIT DROP;
+
+     -- таблица - элементы
+     INSERT INTO _tmpList (PersonalServiceListId)
+        SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+        FROM ObjectLink AS ObjectLink_User_Member
+             INNER JOIN ObjectLink AS ObjectLink_MemberPersonalServiceList
+                                   ON ObjectLink_MemberPersonalServiceList.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                  AND ObjectLink_MemberPersonalServiceList.DescId        = zc_ObjectLink_MemberPersonalServiceList_Member()
+             LEFT JOIN ObjectBoolean ON ObjectBoolean.ObjectId = ObjectLink_MemberPersonalServiceList.ObjectId
+                                    AND ObjectBoolean.DescId   = zc_ObjectBoolean_MemberPersonalServiceList_All()
+             LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList
+                                  ON ObjectLink_PersonalServiceList.ObjectId = ObjectLink_MemberPersonalServiceList.ObjectId
+                                 AND ObjectLink_PersonalServiceList.DescId   = zc_ObjectLink_MemberPersonalServiceList_PersonalServiceList()
+             LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+                                                           AND (Object_PersonalServiceList.Id    = ObjectLink_PersonalServiceList.ChildObjectId
+                                                             OR ObjectBoolean.ValueData          = TRUE)
+        WHERE ObjectLink_User_Member.ObjectId = vbUserId
+          AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+       UNION
+        SELECT ObjectLink_PersonalServiceList_Member.ObjectId AS PersonalServiceListId
+        FROM ObjectLink AS ObjectLink_User_Member
+             INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_Member
+                                   ON ObjectLink_PersonalServiceList_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                  AND ObjectLink_PersonalServiceList_Member.DescId        = zc_ObjectLink_MemberPersonalServiceList_Member()
+        WHERE ObjectLink_User_Member.ObjectId = vbUserId
+          AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+       ;
+     -- 
+     vbIsList_all:= NOT EXISTS (SELECT 1 FROM _tmpList);
+
+
+
      -- Результат
-  RETURN QUERY
+     RETURN QUERY
      SELECT
         Object_Personal.Id                                                                          AS PersonalId,
         Object_Personal.ObjectCode                                                                  AS PersonalCode,
@@ -137,7 +173,7 @@ BEGIN
                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_BankAccount()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySummCard
                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_Cash()) AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Cash_PersonalCardSecond() THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySummCardSecond
                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_Cash()) AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalService(), zc_Enum_AnalyzerId_Cash_PersonalAvance()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySummCash
-                
+
                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_PersonalService_Nalog() THEN CASE WHEN Movement.DescId IN (zc_Movement_PersonalService()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ServiceSumm
                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND Movement.DescId        = zc_Movement_Income()                       THEN  1 * MIContainer.Amount ELSE 0 END) AS IncomeSumm
                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Add()         THEN -1 * MIContainer.Amount ELSE 0 END) AS SummTransportAdd
@@ -165,6 +201,7 @@ BEGIN
                                                       ON CLO_PersonalServiceList.ContainerId = Container.Id
                                                      AND CLO_PersonalServiceList.DescId = zc_ContainerLinkObject_PersonalServiceList()
                                                      AND (CLO_PersonalServiceList.ObjectId = inPersonalServiceListId OR COALESCE (inPersonalServiceListId,0) = 0)
+
                        LEFT JOIN ContainerLinkObject AS CLO_Unit
                                                      ON CLO_Unit.ContainerId = Container.Id AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                        LEFT JOIN ContainerLinkObject AS CLO_Position
@@ -208,7 +245,11 @@ BEGIN
 
      LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId
 
-     WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0 OR Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0);
+     LEFT JOIN _tmpList ON _tmpList.PersonalServiceListId = Operation.PersonalServiceListId
+
+     WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0 OR Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0)
+       AND (_tmpList.PersonalServiceListId > 0 OR vbIsList_all = TRUE)
+     ;
 
 
 END;
@@ -219,8 +260,8 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 16.03.17         * add inPersonalId 
-                    add inPersonalServiceListId 
+ 16.03.17         * add inPersonalId
+                    add inPersonalServiceListId
  07.04.15                                        * all
  04.09.14                                                        *
 */

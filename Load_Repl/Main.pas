@@ -156,6 +156,8 @@ type
     MLMCDS: TClientDataSet;
     cbMovement: TCheckBox;
     cbMI: TCheckBox;
+    cbForms: TCheckBox;
+    spExecForm_repl_to: TdsdStoredProc;
 
     procedure OKGuideButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -205,6 +207,7 @@ type
     //function fExecSqToQuery_two (mySql:String):Boolean;
 
     function fExecSql_repl_to (mySql:String):String;
+    function fExecForm_repl_to (FormName, FormData:String):String;
 
     procedure CursorGridChange;
 
@@ -245,6 +248,7 @@ type
 
     procedure pSendAllTo_ReplObjectDesc;
     function pSendAllTo_ReplProc : Boolean;
+    function pSendAllTo_Forms : Boolean;
 
     function pBegin_All : Boolean;
 
@@ -461,6 +465,21 @@ begin
         end;}
      end;
      Result:=true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.fExecForm_repl_to (FormName, FormData:String):String;
+begin
+     Result:= '';
+     //
+     with spExecForm_repl_to do
+     begin
+          ParamByName('inFormName').Value   := FormName;
+          ParamByName('inFormData').Value   := FormData;
+          ParamByName('gConnectHost').Value := '';
+          try Execute;
+          except on E:Exception do Result:= E.Message;
+          end;
+     end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fExecSql_repl_to (mySql:String):String;
@@ -1553,7 +1572,7 @@ begin
              if (isMI = FALSE)
              then //Movement
                   StrPack:= StrPack
-                            // Поиск Id
+                            // Поиск Id - может быть NULL
                           + ' vbId:= (SELECT MovementId FROM MovementString WHERE ValueData = ' + ConvertFromVarChar(FieldByName('GUID').AsString) + ' and DescId = zc_MovementString_GUID());'
                           + nextL
                             // Поиск "главного" Movement
@@ -1570,7 +1589,7 @@ begin
                           + nextL
              else //MovementItem
                   StrPack:= StrPack
-                            // Поиск Id
+                            // Поиск Id - может быть NULL
                           + ' vbId:= (SELECT MovementItemId FROM MovementItemString WHERE ValueData = ' + ConvertFromVarChar(FieldByName('GUID').AsString) + ' and DescId = zc_MIString_GUID());'
                           + nextL
                             // Поиск "главного" MovementItem
@@ -1586,7 +1605,11 @@ begin
                           + ' END IF;'
                           + nextL
                             // Поиск MovementId
+                          + ' vbMovementId:= NULL;'
                           + ' vbMovementId:= (SELECT MovementId FROM MovementString WHERE ValueData = ' + ConvertFromVarChar(FieldByName('GUID_movement').AsString) + ' and DescId = zc_MovementString_GUID());'
+                          + nextL
+                           // Проверка
+                          + ' IF COALESCE (vbMovementId, 0) = 0 THEN RAISE EXCEPTION '+ConvertFromVarChar('Ошибка.Не нашли GUID_movement = <'+FieldByName('GUID_movement').AsString+'>')+'; END IF;'
                           + nextL
                             // Поиск ObjectId
                          + ' vbObjectId:= NULL;'
@@ -1949,10 +1972,16 @@ begin
                          // Поиск Id
                          + ' vbId:= (SELECT MovementItemId FROM MovementItemString WHERE ValueData = ' + ConvertFromVarChar(FieldByName('GUID').AsString) + ' and DescId = zc_MIString_GUID());'
                          + nextL
+                             // Проверка
+                         + ' IF COALESCE (vbId, 0) = 0 THEN RAISE EXCEPTION '+ConvertFromVarChar('Ошибка.Не нашли GUID = <'+FieldByName('GUID').AsString+'>')+'; END IF;'
+                         + nextL
              else
                  StrPack:= StrPack
                          // Поиск Id
                          + ' vbId:= (SELECT MovementId FROM MovementString WHERE ValueData = ' + ConvertFromVarChar(FieldByName('GUID').AsString) + ' and DescId = zc_MovementString_GUID());'
+                         + nextL
+                             // Проверка
+                         + ' IF COALESCE (vbId, 0) = 0 THEN RAISE EXCEPTION '+ConvertFromVarChar('Ошибка.Не нашли GUID = <'+FieldByName('GUID').AsString+'>')+'; END IF;'
                          + nextL
                           ;
              //
@@ -2213,11 +2242,11 @@ begin
              else
                if (cbGUID.Checked = TRUE) and (isHistory = FALSE)
                then StrPack:= StrPack
-                            // Поиск Id
+                            // Поиск Id - может быть NULL
                             + ' vbId:= (SELECT ObjectId FROM ObjectString WHERE ValueData = ' + ConvertFromVarChar(FieldByName('GUID').AsString) + ' and DescId = zc_ObjectString_GUID());'
                             + nextL
                else StrPack:= StrPack
-                            // Поиск Id
+                            // Поиск Id - может быть NULL
                             + ' vbId:= (SELECT Id FROM Object WHERE Id = ' + IntToStr(FieldByName('ObjectId').AsInteger) + ');'
                             + nextL
                             + nextL
@@ -2559,9 +2588,15 @@ begin
                           // Поиск Id
                           + ' vbId:= (SELECT ObjectId FROM ObjectString WHERE ValueData = ' + ConvertFromVarChar(FieldByName('GUID').AsString) + ' and DescId = zc_ObjectString_GUID());'
                           + nextL
+                          // Проверка
+                          + ' IF COALESCE (vbId, 0) = 0 THEN RAISE EXCEPTION '+ConvertFromVarChar('Ошибка.Не нашли GUID = <'+FieldByName('GUID').AsString+'>')+'; END IF;'
+                          + nextL
              else StrPack:= StrPack
                           // Поиск Id
                           + ' vbId:= ' + IntToStr(FieldByName('ObjectId').AsInteger) + ';'
+                          + nextL
+                          // Проверка
+                          + ' IF COALESCE (vbId, 0) = 0 THEN RAISE EXCEPTION '+ConvertFromVarChar('Ошибка.Не нашли GUID = <'+FieldByName('GUID').AsString+'>')+'; END IF;'
                           + nextL
                           + nextL
                           ;
@@ -3090,6 +3125,93 @@ begin
      end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.pSendAllTo_Forms : Boolean;
+//From: соединение - ПРЯМОЕ
+//To:   соединение - !НЕ ПРЯМОЕ! - !текст ф-ции можно сохранить только через spExecSql!
+var lGUID, lFormData, tmp : String;
+    resStr : String;
+begin
+    Result:= false;
+    //
+    //
+    lGUID:= GenerateGUID;
+    //
+    // Подключились к серверу From - ОБЯЗАТЕЛЬНО
+    if not IniConnectionFrom (TRUE) then exit;
+    //
+    //
+    try
+    // открыли данные с... по...
+    with fromSqlQuery,Sql do
+    begin
+         Clear;
+         //
+         if EditObjectDescId.Text <> ''
+         then tmp:= ' AND Object.ValueData = ' + EditObjectDescId.Text
+         else tmp:= '';
+         //
+         Add('select Id, ValueData AS FormName FROM Object WHERE Object.DescId = zc_Object_Form() ' + tmp + ' order by Id Desc');
+         //
+         Open;
+         //
+         ObjectDS.DataSet:=fromSqlQuery;
+         //
+         // если только просмотр - !!!ВЫХОД!!!
+         if cbOnlyOpen.Checked = TRUE then exit;
+         //
+         Gauge.Progress:= 0;
+         Gauge.MaxValue:= RecordCount;
+         AddToMemoMsg('Form Count : ' + IntToStr (RecordCount), FALSE);
+         //
+         while not EOF  do
+         begin
+              //!!!
+              if fStop then begin exit;end;
+              //
+              fOpenSqFromQuery_two ('SELECT gpGet_Object_Form AS FormValue FROM gpGet_Object_Form (' + ConvertFromVarChar(FieldByName('FormName').AsString) + ', CAST (NULL AS TVarChar))');
+              //
+              lFormData:= fromSqlQuery_two.FieldByName('FormValue').AsString;
+              //
+              if FieldByName('FormName').AsString <> '' then
+              begin
+                  // !!!через StoredProc!!!
+                  resStr:= fExecForm_repl_to (FieldByName('FormName').AsString, lFormData);
+                  if resStr <> '' then
+                  begin
+                      // ERROR
+                      AddToMemoMsg ('', FALSE);
+                      AddToMemoMsg (' ..... ERROR .....', FALSE);
+                      AddToMemoMsg ('', FALSE);
+                      AddToMemoMsg (FieldByName('FormName').AsString, FALSE);
+                      AddToMemoMsg ('', FALSE);
+                      AddToMemoMsg (resStr, TRUE);
+                      AddToMemoMsg ('', FALSE);
+                  end;
+                  //
+                  // !!!сохранили - в ФАЙЛ!!!
+                  AddToLog(FieldByName('FormName').AsString, 'FormData', lGUID, false);
+              end;
+              //
+              Next;
+              //
+              Gauge.Progress:=Gauge.Progress+1;
+              Application.ProcessMessages;
+         end;
+         //
+         Close;
+    end;
+     except on E:Exception do
+       begin
+          // ERROR
+          AddToMemoMsg ('', FALSE);
+          AddToMemoMsg (E.Message, TRUE);
+          exit;
+       end;
+     end;
+     //
+     Result:= true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pSendAllTo_ReplProc : Boolean;
 //From: соединение - ПРЯМОЕ
 //To:   соединение - !НЕ ПРЯМОЕ! - !текст ф-ции можно сохранить только через spExecSql!
@@ -3115,7 +3237,7 @@ begin
          then tmp:= ' AND p.oid = ' + EditObjectDescId.Text
          else tmp:= '';
          //
-         Add('select p.oid, p.ProName from pg_proc AS p join pg_namespace AS n on n.oid = p.pronamespace where n.nspname = ' + ConvertFromVarChar('public') + ' and p.oid > ' + IntToStr(ArrayReplServer[1].OID_last) + tmp + ' order by p.oid');
+         Add('select p.oid, p.ProName from pg_proc AS p join pg_namespace AS n on n.oid = p.pronamespace where n.nspname = ' + ConvertFromVarChar('public') + ' and p.oid > ' + IntToStr(ArrayReplServer[1].OID_last) + tmp + ' order by p.oid desc');
          //
          Open;
          //
@@ -3145,6 +3267,7 @@ begin
               if lProcText <> '' then
               begin
                   // !!!через StoredProc!!!
+                  //resStr:= fExecSql_repl_to (lProcText);
                   resStr:= fExecSql_repl_to (fromSqlQuery_two.FieldByName('ProcText').AsString);
                   if resStr <> '' then
                   begin
@@ -3782,6 +3905,11 @@ begin
          CursorGridChange;
          //
          MemoMsg.Lines.Clear;
+         //
+         if cbForms.Checked = TRUE
+         then
+             // Отправили Forms
+             pSendAllTo_Forms;
          //
          if cbProc.Checked = TRUE
          then

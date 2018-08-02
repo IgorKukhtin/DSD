@@ -66,10 +66,11 @@ BEGIN
 
      -- Проверка - кроме админа ? - не меняется Путевой лист
      IF NOT EXISTS (SELECT 1 FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = ioId AND MLM.DescId = zc_MovementLinkMovement_Transport() AND COALESCE (MLM.MovementChildId, 0) = COALESCE (inMovementId_Transport, 0))
-       -- AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin()) AND UserId = vbUserId)
      THEN
-         RAISE EXCEPTION 'Ошибка.Нет прав менять <Путевой лист>.';
+         -- RAISE EXCEPTION 'Ошибка.Нет прав менять <Путевой лист>.';
+         PERFORM lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Reestr_Transport());   
      END IF;
+
 
      -- Проверка - кроме админа ? - не меняется Автомобиль или Сотрудник (водитель) если установлен Путевой лист
      IF inMovementId_Transport > 0
@@ -78,7 +79,8 @@ BEGIN
             )
         -- AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin()) AND UserId = vbUserId)
      THEN
-         RAISE EXCEPTION 'Ошибка.Нет прав менять дату <Автомобиль> или <Сотрудник (водитель)>.';
+         -- RAISE EXCEPTION 'Ошибка.Нет прав менять <Автомобиль> или <Сотрудник (водитель)>.';
+         PERFORM lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Reestr_Transport());   
      END IF;
 
 

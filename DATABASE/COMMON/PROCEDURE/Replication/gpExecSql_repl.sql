@@ -19,3 +19,6 @@ END; $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  23.07.18                                        *
 */
+
+-- тест
+-- SELECT * FROM gpExecSql_repl ('select 1', '', zfCalc_UserAdmin())

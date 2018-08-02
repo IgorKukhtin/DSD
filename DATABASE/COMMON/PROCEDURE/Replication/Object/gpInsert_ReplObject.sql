@@ -35,13 +35,13 @@ AS
 $BODY$
     DECLARE vbDescId Integer;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
+     -- проверка прав пользователя на вызов процедуры-*
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_...());
 
 
      -- !!!удаление "старых" сессий!!!
      DELETE FROM ReplObject WHERE OperDate < CURRENT_DATE - INTERVAL '2 DAY';
-
++
      -- если надо только один Desc
      vbDescId:= COALESCE((SELECT ObjectDesc.Id FROM ObjectDesc WHERE LOWER (ObjectDesc.Code) = LOWER (inDescCode)), 0);
 

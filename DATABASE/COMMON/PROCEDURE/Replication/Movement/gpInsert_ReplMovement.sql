@@ -147,9 +147,9 @@ BEGIN
      -- Проверка
      IF EXISTS (SELECT ReplMovement.MovementId FROM ReplMovement WHERE ReplMovement.SessionGUID = inSessionGUID GROUP BY ReplMovement.MovementId HAVING COUNT(*) > 1)
      THEN
-         RAISE EXCEPTION 'ReplMovement - COUNT() > 1 : <%>', (SELECT ReplMovement.MovementId FROM ReplMovement WHERE ReplMovement.SessionGUID = inSessionGUID GROUP BY ReplMovement.MovementId HAVING COUNT(*) > 1 ORDER BY 1 LIMIT 1)
-                                                           , (SELECT Movement.InvNumber || ' от ' || zfConvert_DateToString (Movement.OperDate) FROM ReplMovement JOIN Movement ON Movement.Id = ReplMovement.MovementId WHERE ReplMovement.SessionGUID = inSessionGUID GROUP BY ReplMovement.MovementId HAVING COUNT(*) > 1 ORDER BY 1 LIMIT 1)
-                                                            ;
+         RAISE EXCEPTION 'ReplMovement - COUNT() > 1 : <%> <%>', (SELECT ReplMovement.MovementId FROM ReplMovement WHERE ReplMovement.SessionGUID = inSessionGUID GROUP BY ReplMovement.MovementId HAVING COUNT(*) > 1 ORDER BY 1 LIMIT 1)
+                                                               , (SELECT Movement.InvNumber || ' от ' || zfConvert_DateToString (Movement.OperDate) FROM ReplMovement JOIN Movement ON Movement.Id = ReplMovement.MovementId WHERE ReplMovement.SessionGUID = inSessionGUID GROUP BY ReplMovement.MovementId HAVING COUNT(*) > 1 ORDER BY 1 LIMIT 1)
+                                                                ;
      END IF;
 
 
