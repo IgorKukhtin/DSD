@@ -202,6 +202,7 @@ type
     cbGoodsListSale: TCheckBox;
     cbOnlyTwo: TCheckBox;
     cbPromo: TCheckBox;
+    PanelErr: TPanel;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -221,6 +222,8 @@ type
     fStop:Boolean;
     isGlobalLoad,zc_rvYes,zc_rvNo:Integer;
     zc_Enum_PaidKind_FirstForm,zc_Enum_PaidKind_SecondForm:Integer;
+
+    procedure AddToLog(num, lMovementId : Integer; S: string);
 
     procedure EADO_EngineErrorMsg(E:EADOError);
     procedure EDB_EngineErrorMsg(E:EDBEngineError);
@@ -1442,6 +1445,33 @@ begin
      if Erased=Erased_del
      then fOpenSqToQuery ('select * from lfExecSql('+FormatToVarCharServer_notNULL('update Object set isErased = true where Id = '+IntToStr(ObjectId))+')')
      else fOpenSqToQuery ('select * from lfExecSql('+FormatToVarCharServer_notNULL('update Object set isErased = false where Id = '+IntToStr(ObjectId))+')');
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.AddToLog(num, lMovementId : Integer; S: string);
+var
+  LogFileName: string;
+  LogFile: TextFile;
+begin
+  Application.ProcessMessages;
+
+  LogFileName := ChangeFileExt(Application.ExeName, '') + '\' + FormatDateTime('yyyy-mm-dd', Date) + '-ERR' + '.log';
+  ForceDirectories(ChangeFileExt(Application.ExeName, ''));
+
+  AssignFile(LogFile, LogFileName);
+
+  if FileExists(LogFileName) then
+    Append(LogFile)
+  else
+    Rewrite(LogFile);
+
+  WriteLn(LogFile, DateTimeToStr(Now) + ' : ');
+  Writeln(LogFile, 'є '+IntToStr(num)+' : '+IntToStr(lMovementId));
+  Writeln(LogFile, s);
+  WriteLn(LogFile, '');
+  CloseFile(LogFile);
+  Application.ProcessMessages;
+  PanelErr.Caption:= 'є '+IntToStr(num)+' : '+IntToStr(lMovementId);
+  Application.ProcessMessages;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.EADO_EngineErrorMsg(E:EADOError);
@@ -20508,6 +20538,7 @@ var ExecStr1,ExecStr2,ExecStr3,ExecStr4,addStr:String;
     i,SaveRecord:Integer;
     MSec_complete:Integer;
     isSale_str:String;
+    strErr:String;
 begin
      if (isPartion = FALSE) and (isDiff = FALSE) then if (not cbComplete_List.Checked)or(not cbComplete_List.Enabled) then exit;
      //
@@ -20628,7 +20659,40 @@ begin
                        toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
                        toStoredProc_two.Params.ParamByName('inIsNoHistoryCost').Value:=cbLastComplete.Checked;
 
-                       if not myExecToStoredProc_two then ;//exit;
+                       // перва€ попытка
+                       try
+                          strErr:= '';
+                          if not myExecToStoredProc_two then ;//exit;
+                       except on E:Exception do
+                              strErr:= E.Message;
+                       end;
+                       // обработка
+                       if strErr <> '' then begin AddToLog(1, FieldByName('MovementId').AsInteger, strErr); MyDelay(3 * 1000); end;
+
+                       //
+                       // втора€ попытка
+                       if strErr <> ''
+                       then
+                       try
+                          strErr:= '';
+                          if not myExecToStoredProc_two then ;//exit;
+                       except on E:Exception do
+                              strErr:= E.Message;
+                       end;
+                       // обработка
+                       if strErr <> '' then begin AddToLog(2, FieldByName('MovementId').AsInteger, strErr); MyDelay(3 * 1000); end;
+                       //
+                       // ѕќ—Ћ≈ƒЌяя попытка
+                       if strErr <> ''
+                       then
+                       try
+                          strErr:= '';
+                          if not myExecToStoredProc_two then ;//exit;
+                       except on E:Exception do
+                              strErr:= E.Message;
+                       end;
+                       // обработка
+                       if strErr <> '' then AddToLog(3, FieldByName('MovementId').AsInteger, strErr);
                   end;
              end;
              //
@@ -20871,6 +20935,7 @@ var ExecStr1,ExecStr2,ExecStr3,ExecStr4,addStr:String;
     i,SaveRecord:Integer;
     MSec_complete:Integer;
     isSale_str:String;
+    strErr:String;
 begin
      // "текущий" мес€ц
      fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-2)+') as RetV');
@@ -20956,7 +21021,18 @@ begin
              if fStop then begin exit;end;
              //
              toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
-             if not myExecToStoredProc_two then ;//exit;
+
+                       // ќƒЌј попытка
+                       try
+                          strErr:= '';
+                          if not myExecToStoredProc_two then ;//exit;
+                       except on E:Exception do
+                              strErr:= E.Message;
+                       end;
+                       // обработка
+                       if strErr <> '' then begin AddToLog(0, FieldByName('MovementId').AsInteger, strErr); MyDelay(1 * 1000); end;
+
+
              //
              Next;
              Application.ProcessMessages;

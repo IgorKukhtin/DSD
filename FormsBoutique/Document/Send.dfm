@@ -1167,7 +1167,7 @@ object SendForm: TSendForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'GoodsCode;GoodsSizeName'
+          IndexFieldNames = 'PartnerName;GoodsCode;GoodsSizeName'
         end>
       Params = <
         item
@@ -1228,6 +1228,7 @@ object SendForm: TSendForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDItems'
+          IndexFieldNames = 'PartnerName;GoodsCode;GoodsSizeName'
         end>
       Params = <
         item

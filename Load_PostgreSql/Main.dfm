@@ -172,7 +172,7 @@ object MainForm: TMainForm
       Tag = 10
       Left = 15
       Top = 21
-      Width = 225
+      Width = 106
       Height = 17
       Caption = '1.1. '#1045#1076'.'#1080#1079#1084'.'
       Font.Charset = DEFAULT_CHARSET
@@ -720,6 +720,19 @@ object MainForm: TMainForm
       Caption = '2.9. PrintKindItem'
       Enabled = False
       TabOrder = 53
+    end
+    object PanelErr: TPanel
+      Left = 138
+      Top = 2
+      Width = 127
+      Height = 38
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clRed
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 54
     end
   end
   object DocumentPanel: TPanel
