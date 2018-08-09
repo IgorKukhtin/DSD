@@ -2,8 +2,9 @@ inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 529
   ClientWidth = 1229
+  ExplicitLeft = -456
   ExplicitWidth = 1245
-  ExplicitHeight = 567
+  ExplicitHeight = 564
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -63,6 +64,26 @@ inherited OrderInternalForm: TOrderInternalForm
               Format = ',0.####'
               Kind = skSum
               Column = SendAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsInUnit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = MCS
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Income_Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CheckAmount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -130,6 +151,26 @@ inherited OrderInternalForm: TOrderInternalForm
               Format = ',0.####'
               Kind = skSum
               Column = SendAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsInUnit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = MCS
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Income_Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CheckAmount
             end>
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False

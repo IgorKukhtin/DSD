@@ -3,7 +3,7 @@
   ClientHeight = 516
   ClientWidth = 1054
   ExplicitWidth = 1070
-  ExplicitHeight = 554
+  ExplicitHeight = 551
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -54,6 +54,11 @@
               Format = ',0.00'
               Kind = skSum
               Column = Summ
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = OrderAmount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -103,6 +108,11 @@
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = OrderAmount
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -1192,6 +1202,9 @@
       ReportNameParam.Value = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintReestr: TdsdPrintAction [26]
       Category = 'DSDLib'
@@ -1227,6 +1240,9 @@
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object mactEditPartnerData: TMultiAction [27]
       Category = 'PartnerData'
@@ -1369,6 +1385,9 @@
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintSticker: TdsdPrintAction
       Category = 'DSDLib'
@@ -1423,6 +1442,9 @@
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object spUpdateisDeferredNo: TdsdExecStoredProc
       Category = 'Deferred'
@@ -2482,6 +2504,9 @@
       end
       item
         Guides = GuidesTo
+      end
+      item
+        Guides = ContractGuides
       end>
     Left = 160
     Top = 192
