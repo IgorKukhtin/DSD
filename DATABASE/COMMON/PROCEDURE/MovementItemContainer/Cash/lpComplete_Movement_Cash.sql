@@ -200,6 +200,7 @@ BEGIN
              , 0 AS ContainerId                                               -- сформируем позже
              , 0 AS AccountGroupId, 0 AS AccountDirectionId                   -- сформируем позже
              , CASE WHEN Object.DescId IN (zc_Object_Cash()) AND _tmpItem.ObjectId <> COALESCE (MILinkObject_MoneyPlace.ObjectId, 0)
+                     -- AND _tmpItem.CurrencyId <> COALESCE (MILinkObject_CurrencyPartner.ObjectId, zc_Enum_Currency_Basis())
                          THEN zc_Enum_Account_110201() -- Транзит + деньги в пути
                     WHEN Object.DescId IN (zc_Object_BankAccount())
                          THEN zc_Enum_Account_110301() -- Транзит + расчетный счет
@@ -257,7 +258,7 @@ BEGIN
 
              , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
              , CASE WHEN -- если Контрагент - "Павильоны" + это Бизнес у кассы - "Павильоны"
-                     AND ObjectLink_Partner_Unit.ChildObjectId > 0
+                         ObjectLink_Partner_Unit.ChildObjectId > 0
                      AND ObjectLink_Cash_Business.ChildObjectId > 0
                          THEN zc_Enum_PaidKind_SecondForm() -- !!!меняется на НАЛ!!!
                     ELSE _tmpItem.PaidKindId -- !!!НЕ Всегда НАЛ!!!

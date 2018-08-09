@@ -1,7 +1,8 @@
 -- Function: lpInsertUpdate_Movement_Cash()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer);
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer, TFloat, TFloat, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Cash(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -25,6 +26,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Cash(
     IN inCurrencyId            Integer   , -- Валюта
     IN inCurrencyValue         TFloat    , -- Курс для перевода в валюту баланса
     IN inParValue              TFloat    , -- Номинал для перевода в валюту баланса
+    IN inCurrencyPartnerId     Integer   , -- Валюта
     IN inCurrencyPartnerValue  TFloat    , -- Курс для расчета суммы операции
     IN inParPartnerValue       TFloat    , -- Номинал для расчета суммы операции
     IN inMovementId_Partion    Integer   , -- Id документа продажи
@@ -104,8 +106,13 @@ BEGIN
      END IF;
 
      -- определяем
-     vbCurrencyPartnerId:= COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inContractId AND OL.DescId = zc_ObjectLink_Contract_Currency())
-                                   , zc_Enum_Currency_Basis());
+     IF inCurrencyPartnerId > 0 AND EXISTS (SELECT 1 FROM Object WHERE Object.Id = inMoneyPlaceId AND Object.DescId = zc_Object_Cash())
+     THEN
+        vbCurrencyPartnerId:= inCurrencyPartnerId;
+     ELSE
+        vbCurrencyPartnerId:= COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inContractId AND OL.DescId = zc_ObjectLink_Contract_Currency())
+                                      , zc_Enum_Currency_Basis());
+     END IF;
 
      -- определяем ключ доступа
 -- 280297;9;"Касса Крым";f;"грн";"филиал Крым";"ТОВ АЛАН";"";"Нал"

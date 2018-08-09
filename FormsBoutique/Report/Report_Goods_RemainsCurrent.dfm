@@ -7,7 +7,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1147
-  ExplicitHeight = 471
+  ExplicitHeight = 468
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -1523,7 +1523,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       DataSets = <
         item
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'GoodsGroupNameFull;LabelName;GoodsName;GoodsSizeName'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -1598,7 +1597,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       DataSets = <
         item
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'GoodsGroupNameFull;LabelName;GoodsName;GoodsSizeName'
           GridView = cxGridDBTableView
         end>
       Params = <

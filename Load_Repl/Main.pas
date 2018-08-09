@@ -1611,11 +1611,11 @@ begin
      //
      if isMI = TRUE then lMovement := 'MovementItem' else lMovement := 'Movement';
      //
+     // Подключились к серверу Child
      if isFromMain = TRUE then
-       // Подключились к серверу Child
        if not IniConnection_Child (lMovement, FALSE) then exit;
+     // Подключились к серверу Main - ОБЯЗАТЕЛЬНО
      if isFromMain = FALSE then
-       // Подключились к серверу Main - ОБЯЗАТЕЛЬНО
        if not IniConnection_Main (TRUE) then exit;
      //
      try
@@ -1975,9 +1975,12 @@ begin
         if (Name =  'fQueryMLO') or (Name =  'MLOCDS') then _PropertyName:= lMovement + 'LinkObject';
         if (Name =  'fQueryMLM') or (Name =  'MLMCDS') then _PropertyName:= lMovement + 'LinkMovement';
         //
-        //if cbClientDataSet.Checked = FALSE then
-          // Подключились к серверу Child
+        // Подключились к серверу Child
+        if isFromMain = TRUE then
           if not IniConnection_Child (_PropertyName, FALSE) then exit;
+        // Подключились к серверу Main - ОБЯЗАТЕЛЬНО
+        if isFromMain = FALSE then
+          if not IniConnection_Main (TRUE) then exit;
         //
         //
         First;
@@ -2141,7 +2144,10 @@ begin
                   StrPack:= StrPack + ' END $$;' + nextL + nextL;
                   //
                   // !!!сохранили - СКРИПТ!!!
-                  resStr:= fExecSqToQuery (StrPack);
+                  if (isFromMain = TRUE)
+                  then resStr:= fExecSqToQuery (StrPack)
+                  else resStr:= fExecSqFromQuery (StrPack);
+                  //
                   if resStr = ''
                   then
                       // результат = OK
@@ -2182,9 +2188,11 @@ begin
           // финиш - СКРИПТ
           StrPack:= StrPack + ' END $$;' + nextL + nextL;
           //
-          //
           // !!!сохранили - СКРИПТ!!!
-          resStr:= fExecSqToQuery (StrPack);
+          if (isFromMain = TRUE)
+          then resStr:= fExecSqToQuery (StrPack)
+          else resStr:= fExecSqFromQuery (StrPack);
+          //
           if resStr = ''
           then
               // результат = OK

@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash (Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash (Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash (Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash (Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash (Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -25,6 +26,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash(
     IN inCurrencyId           Integer   , -- Валюта
    OUT outCurrencyValue       TFloat    , -- Курс для перевода в валюту баланса
    OUT outParValue            TFloat    , -- Номинал для перевода в валюту баланса
+    IN inCurrencyPartnerId    Integer   , -- Валюта
     IN inCurrencyPartnerValue TFloat    , -- Курс для расчета суммы операции
     IN inParPartnerValue      TFloat    , -- Номинал для расчета суммы операции
     IN inMovementId_Partion   Integer   , -- Id документа продажи
@@ -117,7 +119,9 @@ BEGIN
          END IF;
 
          -- если обмен
-         IF inAmountSumm <> 0 OR EXISTS (SELECT 1 FROM Object WHERE Object.Id = inMoneyPlaceId AND Object.DescId = zc_Object_Cash())
+         IF inAmountSumm <> 0 OR (EXISTS (SELECT 1 FROM Object WHERE Object.Id = inMoneyPlaceId AND Object.DescId = zc_Object_Cash())
+                             AND inCurrencyId <> COALESCE (inCurrencyPartnerId, 0)
+                                )
          THEN
             -- Замена - курс - расчет
             inCurrencyPartnerValue:= CASE WHEN inAmountSumm > 0 THEN inAmountSumm / (inAmountIn + inAmountOut) ELSE inCurrencyPartnerValue END;
@@ -210,6 +214,7 @@ BEGIN
                                          , inCurrencyId           := inCurrencyId
                                          , inCurrencyValue        := outCurrencyValue
                                          , inParValue             := outParValue
+                                         , inCurrencyPartnerId    := inCurrencyPartnerId
                                          , inCurrencyPartnerValue := inCurrencyPartnerValue
                                          , inParPartnerValue      := inParPartnerValue
                                          , inMovementId_Partion   := inMovementId_Partion

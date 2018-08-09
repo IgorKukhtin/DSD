@@ -339,7 +339,6 @@
     Properties.Buttons = <
       item
         Default = True
-        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
@@ -504,6 +503,14 @@
         Name = 'inCurrencyId'
         Value = Null
         Component = CurrencyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyPartnerId'
+        Value = Null
+        Component = CurrencyPartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1380,30 +1387,6 @@
         Component = CurrencyPartnerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDate'
-        Value = 42475d
-        Component = ceOperDate
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ParValue'
-        Value = 1.000000000000000000
-        Component = ceParPartnerValue
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CurrencyValue'
-        Value = 0.000000000000000000
-        Component = ceCurrencyPartnerValue
-        DataType = ftFloat
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 493

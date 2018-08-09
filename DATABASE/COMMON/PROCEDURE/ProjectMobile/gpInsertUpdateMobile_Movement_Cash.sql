@@ -106,6 +106,7 @@ BEGIN
                                          , inCurrencyId           := zc_Enum_Currency_Basis()
                                          , inCurrencyValue        := 0
                                          , inParValue             := 0
+                                         , inCurrencyPartnerId    := NULL
                                          , inCurrencyPartnerValue := 0
                                          , inParPartnerValue      := 0
                                          , inMovementId_Partion   := COALESCE (vbSaleId, 0)

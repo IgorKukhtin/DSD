@@ -45,6 +45,7 @@ BEGIN
                                                          , inCurrencyId          := zc_Enum_Currency_Basis()
                                                          , inCurrencyValue       := NULL
                                                          , inParValue            := NULL
+                                                         , inCurrencyPartnerId   := NULL
                                                          , inCurrencyPartnerValue:= NULL
                                                          , inParPartnerValue     := NULL
                                                          , inMovementId_Partion  := 0

@@ -88,7 +88,7 @@ BEGIN
           AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
        ;
      -- 
-     vbIsList_all:= NOT EXISTS (SELECT 1 FROM _tmpList);
+     vbIsList_all:= NOT EXISTS (SELECT 1 FROM _tmpList) OR EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin());
 
 
 
