@@ -1118,10 +1118,20 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_GoodsPropertyBox_CountOnBox() RETURNS 
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_GoodsPropertyBox(), 'zc_ObjectFloat_GoodsPropertyBox_CountOnBox', 'количество ед. в ящ.' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsPropertyBox_CountOnBox');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Maker_CashBack() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Maker_CashBack'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Maker(), 'zc_ObjectFloat_Maker_CashBack', 'Сумма Cash Back для отчета леквидности' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Maker_CashBack');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Bank_Overdraft() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Bank_Overdraft'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Bank(), 'zc_ObjectFloat_Bank_Overdraft', 'Сумма овердрафт для отчета леквидности' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Bank_Overdraft');
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 09.08.18                                                                                     * zc_ObjectFloat_Maker_CashBack, zc_ObjectFloat_Bank_Overdraft
  24.06.18         * zc_ObjectFloat_Box_...
                     zc_ObjectFloat_GoodsPropertyBox_...
  22.06.18         * zc_ObjectFloat_GoodsByGoodsKind_...

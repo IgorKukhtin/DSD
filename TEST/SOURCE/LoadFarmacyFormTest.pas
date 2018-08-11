@@ -662,12 +662,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckErrorForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckErrorDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckErrorDialogForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Payment_PlanForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Payment_PlanForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Payment_PlanDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Payment_PlanDialogForm');
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_UnLiquidForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_UnLiquidForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_UnLiquidDialogForm'));
@@ -802,6 +802,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsDialogForm');
    }
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_LiquidityForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_LiquidityForm');
 end;
 
 procedure TLoadFormTest.LoadReportForSiteTest;

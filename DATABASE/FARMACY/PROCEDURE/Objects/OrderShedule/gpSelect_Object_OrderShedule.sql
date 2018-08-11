@@ -25,13 +25,33 @@ RETURNS TABLE (Id Integer, Code Integer,
                OrderSumm TVarChar, OrderTime TVarChar, OrderSummComment TVarChar
                ) AS
 $BODY$
+   DECLARE vbUserId Integer;
+   DECLARE vbObjectId Integer;
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_OrderShedule());
+    vbUserId:= lpGetUserBySession (inSession);
+    -- Ограничение на просмотр товарного справочника
+    vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
+
+    -- Контролшь использования подразделения
+   IF COALESCE (inUnitId, 0) <> 0
+   THEN
+      inUnitId := gpGet_CheckingUser_Unit(inUnitId, inSession);
+   END IF;
+
 
    RETURN QUERY 
    WITH 
+   tmpUnit  AS  (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
+                        FROM ObjectLink AS ObjectLink_Unit_Juridical
+                           INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                                AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
+                        WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                        ),
    tmpObject AS (SELECT Object_OrderShedule.Id                           AS Id
                       , Object_OrderShedule.ObjectCode                   AS Code
                       , ObjectLink_OrderShedule_Unit.ChildObjectId       AS UnitId 
@@ -51,6 +71,7 @@ BEGIN
                                             ON ObjectLink_OrderShedule_Unit.ObjectId = Object_OrderShedule.Id
                                            AND ObjectLink_OrderShedule_Unit.DescId = zc_ObjectLink_OrderShedule_Unit()
                                            AND (ObjectLink_OrderShedule_Unit.ChildObjectId = inUnitId OR inUnitId = 0)
+                      INNER JOIN tmpUnit ON tmpUnit.UnitId = ObjectLink_OrderShedule_Unit.ChildObjectId
                       LEFT JOIN ObjectLink AS ObjectLink_OrderShedule_Contract
                                            ON ObjectLink_OrderShedule_Contract.ObjectId = Object_OrderShedule.Id
                                           AND ObjectLink_OrderShedule_Contract.DescId = zc_ObjectLink_OrderShedule_Contract()
@@ -204,10 +225,11 @@ $BODY$
 LANGUAGE plpgsql VOLATILE;
 
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 11.08.18                                                        *
  22.02.18         *
  23.01.18         *
  08.08.17         *
