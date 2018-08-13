@@ -231,10 +231,10 @@ BEGIN
             tmpMI_Send.Amount,
             Income.Amount_Income,
             tmpMI_OrderExternal.Amount
-        HAVING CASE WHEN Object_Price.MCSValue >= 0.1 AND Object_Price.MCSValue < 10 AND 1 >= CEIL (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
+        HAVING CASE WHEN Object_Price.MCSValue >= 0.1 AND Object_Price.MCSValue < 10 AND 1 >= ROUND (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
                          THEN CEIL  (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
                     WHEN Object_Price.MCSValue >= 10 AND 1 >= CEIL (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
-                         THEN ROUND  (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0)- COALESCE (tmpMI_OrderExternal.Amount,0))
+                         THEN ROUND (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
                     ELSE FLOOR (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
                END > 0
        ) AS tmp;
@@ -269,7 +269,7 @@ BEGIN
                     AND 
                     Movement.DescId = zc_Movement_OrderInternal() 
                     AND 
-                    Movement.OperDate = vbOperDate 
+                    Movement.OperDate = vbOperDate
                     AND 
                     MovementLinkObject_Unit.ObjectId = inUnitId
              )
