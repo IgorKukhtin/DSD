@@ -709,7 +709,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
     Top = 24
   end
   inherited spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_Loss'
+    StoredProcName = 'gpUpdate_Status_GoodsSP'
     NeedResetData = True
     ParamKeyField = 'inMovementId'
     Left = 120
@@ -1299,17 +1299,16 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsCurrentData'
         Value = 'FALSE'
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outOperDate'
         Value = 'NULL'
         Component = edOperDate
         DataType = ftDateTime
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     PackSize = 1

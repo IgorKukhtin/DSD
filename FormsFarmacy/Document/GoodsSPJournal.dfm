@@ -372,18 +372,17 @@ inherited GoodsSPJournalForm: TGoodsSPJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsCurrentData'
         Value = 'TRUE'
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outOperDate'
         Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 80
