@@ -425,6 +425,8 @@ type
     N116: TMenuItem;
     actReport_ImplementationPlanEmployeeAll: TdsdOpenForm;
     N163: TMenuItem;
+    actGoodsSPJournal: TdsdOpenForm;
+    miGoodsSPJournal: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

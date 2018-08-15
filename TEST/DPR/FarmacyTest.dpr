@@ -584,7 +584,9 @@ uses
   JuridicalActualAddressEdit in '..\..\FormsFarmacy\Guides\JuridicalActualAddressEdit.pas' {JuridicalActualAddressEditForm: TParentForm},
   Report_ImplementationPlanEmployeeAll in '..\..\FormsFarmacy\Report\Report_ImplementationPlanEmployeeAll.pas' {Report_ImplementationPlanEmployeeAllForm: TParentForm},
   DataDialog in '..\..\Forms\Document\DataDialog.pas' {DataDialogForm: TParentForm},
-  ContractChoice in '..\..\FormsFarmacy\Guides\ContractChoice.pas' {ContractChoiceForm: TParentForm};
+  ContractChoice in '..\..\FormsFarmacy\Guides\ContractChoice.pas' {ContractChoiceForm: TParentForm},
+  GoodsSP_Movement in '..\..\FormsFarmacy\Document\GoodsSP_Movement.pas' {GoodsSP_MovementForm: TParentForm},
+  GoodsSPJournal in '..\..\FormsFarmacy\Document\GoodsSPJournal.pas' {GoodsSPJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
