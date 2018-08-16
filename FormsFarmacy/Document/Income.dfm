@@ -3,7 +3,7 @@
   ClientHeight = 516
   ClientWidth = 1054
   ExplicitWidth = 1070
-  ExplicitHeight = 551
+  ExplicitHeight = 554
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2841,8 +2841,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 264
-    Top = 8
+    Left = 312
+    Top = 40
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -2905,10 +2905,10 @@
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edContract
-    FormNameParam.Value = 'TContractForm'
+    FormNameParam.Value = 'TContractChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TContractForm'
+    FormName = 'TContractChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -2926,6 +2926,21 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 631

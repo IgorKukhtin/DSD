@@ -21,42 +21,29 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
 
   vbStartDate := DATE_TRUNC ('DAY', inStartDate);
-  vbEndDate := DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY';
+  vbEndDate := DATE_TRUNC ('DAY', inEndDate);
 
   OPEN cur1 FOR
   WITH
     tmpContainer AS (
-                        SELECT tmpContainer_AllPrice.Id
-                             , tmpContainer_AllPrice.UnitID                                                      AS UnitID
-                             , tmpContainer_AllPrice.GoodsId                                                     AS GoodsId
-                             , (tmpContainer_AllPrice.Saldo - COALESCE(SUM(MovementItem.Amount), 0))::TFloat     AS SaldoIn
-                             , (((tmpContainer_AllPrice.Saldo - COALESCE(SUM(MovementItem.Amount), 0)) *
-                                 tmpContainer_AllPrice.Price)::NUMERIC (16, 2))::TFloat                          AS SummaIn
-                             , (tmpContainer_AllPrice.Saldo - COALESCE(SUM(CASE WHEN
-                                 MovementItem.Operdate >= vbEndDate THEN MovementItem.Amount
-                                 ELSE 0 END), 0))::TFloat                                                        AS SaldoOut
-                             , (((tmpContainer_AllPrice.Saldo - COALESCE(SUM(CASE WHEN
-                                 MovementItem.Operdate >= vbEndDate THEN MovementItem.Amount
-                                 ELSE 0 END), 0)) * tmpContainer_AllPrice.Price)::NUMERIC (16, 2))::TFloat       AS SummaOut
-                        FROM AnalysisContainer AS tmpContainer_AllPrice
-                           LEFT JOIN MovementItemContainer AS MovementItem
-                                                           ON MovementItem.ContainerId = tmpContainer_AllPrice.Id
-                                                          AND MovementItem.Operdate >= vbStartDate
-                        GROUP BY tmpContainer_AllPrice.Id
-                               , tmpContainer_AllPrice.UnitID
-                               , tmpContainer_AllPrice.GoodsId
-                               , tmpContainer_AllPrice.Saldo
-                               , tmpContainer_AllPrice.Price),
+                        SELECT AnalysisContainer.UnitID                                                      AS UnitID
+                             , AnalysisContainer.GoodsId                                                     AS GoodsId
+                             , SUM(AnalysisContainer.Saldo)::TFloat                                          AS Saldo
+                             , SUM((AnalysisContainer.Saldo  *
+                                 AnalysisContainer.Price)::NUMERIC (16, 2))::TFloat                          AS Summa
+                        FROM AnalysisContainer AS AnalysisContainer
+                        GROUP BY AnalysisContainer.UnitID
+                               , AnalysisContainer.GoodsId),
 
-    tmpSaldo AS (
-                        SELECT tmpContainer.UnitID                                               AS UnitID
-                             , tmpContainer.GoodsId                                              AS GoodsId
-                             , Sum(tmpContainer.SaldoIn)                                         AS SaldoIn
-                             , Sum(tmpContainer.SummaIn)                                         AS SummaIn
-                             , Sum(tmpContainer.SaldoOut)                                        AS SaldoOut
-                             , Sum(tmpContainer.SummaOut)                                        AS SummaOut
-                        FROM tmpContainer AS tmpContainer
-                        GROUP BY tmpContainer.UnitID, tmpContainer.GoodsId),
+    tmpSaldoOut AS (
+                        SELECT MovementItem.UnitID                                                       AS UnitID
+                             , MovementItem.GoodsId                                                      AS GoodsId
+                             , SUM(MovementItem.Saldo)                                                   AS Saldo
+                             , SUM(MovementItem.SaldoSum)                                                AS Summa
+                        FROM AnalysisContainerItem AS MovementItem
+                        WHERE MovementItem.Operdate > vbEndDate
+                        GROUP BY MovementItem.UnitID
+                               , MovementItem.GoodsId ),
 
     tmContainerItem AS (
       SELECT
@@ -87,10 +74,13 @@ BEGIN
         , SUM(AnalysisContainerItem.AmountSend)              AS AmountSend               -- Перемещение
         , SUM(AnalysisContainerItem.AmountSendSum)           AS AmountSendSum
 
+        , SUM(AnalysisContainerItem.Saldo)                   AS Saldo
+        , SUM(AnalysisContainerItem.SaldoSum)                AS Summa
+
         , Count(*)                                           AS CountItem
       FROM AnalysisContainerItem AS AnalysisContainerItem
       WHERE AnalysisContainerItem.Operdate >= vbStartDate
-        AND AnalysisContainerItem.Operdate < vbEndDate
+        AND AnalysisContainerItem.Operdate <= vbEndDate
       GROUP BY AnalysisContainerItem.UnitID, AnalysisContainerItem.GoodsId)
 
     SELECT
@@ -100,8 +90,10 @@ BEGIN
       , Object_Goods.ObjectCode              AS GoodsId
       , Object_Goods.ValueData               AS GoodsName
 
-      , tmpSaldo.SaldoIn                     AS SaldoIn
-      , tmpSaldo.SummaIn                     AS SummaIn
+      , tmpContainer.Saldo - COALESCE(tmpSaldoOut.Saldo, 0) - 
+           COALESCE(tmpMovement.Saldo, 0)    AS SaldoIn
+      , tmpContainer.Summa - COALESCE(tmpSaldoOut.Summa, 0) - 
+           COALESCE(tmpMovement.Summa, 0)    AS SummaIn
 
       , tmpMovement.AmountIncome             AS AmountIncome       -- Приход
       , tmpMovement.AmountIncomeSumWith      AS AmountIncomeSumWith
@@ -127,18 +119,21 @@ BEGIN
       , tmpMovement.AmountSend               AS AmountSend        -- Перемещение
       , tmpMovement.AmountSendSum            AS AmountSendSum
 
-      , tmpSaldo.SaldoOut                    AS SaldoOut
-      , tmpSaldo.SummaOut                    AS SummaOut
+      , tmpContainer.Saldo - COALESCE(tmpSaldoOut.Saldo, 0)    AS SaldoOut
+      , tmpContainer.Summa - COALESCE(tmpSaldoOut.Summa, 0)    AS SummaOut
 
-    FROM tmpSaldo as tmpSaldo
+    FROM tmpContainer as tmpContainer
+    
+        LEFT JOIN tmpSaldoOut AS tmpSaldoOut ON tmpSaldoOut.UnitID = tmpContainer.UnitID
+                             AND tmpSaldoOut.GoodsId = tmpContainer.GoodsId
 
-        LEFT JOIN tmContainerItem AS tmpMovement ON tmpMovement.UnitID = tmpSaldo.UnitID
-                                 AND tmpMovement.GoodsId = tmpSaldo.GoodsId
+        LEFT JOIN tmContainerItem AS tmpMovement ON tmpMovement.UnitID = tmpContainer.UnitID
+                                 AND tmpMovement.GoodsId = tmpContainer.GoodsId
 
         INNER JOIN Object AS Object_Unit
-                          ON Object_Unit.ID = tmpSaldo.UnitID
+                          ON Object_Unit.ID = tmpContainer.UnitID
         INNER JOIN Object AS Object_Goods
-                          ON Object_Goods.Id = tmpSaldo.GoodsId
+                          ON Object_Goods.Id = tmpContainer.GoodsId
 
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
                              ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
@@ -146,7 +141,7 @@ BEGIN
         LEFT JOIN Object AS Object_Parent
                          ON Object_Parent.Id = ObjectLink_Unit_Parent.ChildObjectId
 
-    WHERE COALESCE(tmpMovement.CountItem, tmpSaldo.SaldoOut) > 0
+    WHERE COALESCE(tmpMovement.CountItem, tmpContainer.Saldo - COALESCE(tmpSaldoOut.Saldo, 0)) <> 0
     ORDER BY Object_Goods.ObjectCode, Object_Parent.ValueData, Object_Unit.ValueData;
 
     RETURN NEXT cur1;
@@ -169,9 +164,9 @@ BEGIN
          LEFT OUTER JOIN
          (SELECT AnalysisContainerItem.UnitID                                               AS UnitID
                , AnalysisContainerItem.GoodsId                                              AS GoodsId
-               , Sum(CASE WHEN AnalysisContainerItem.OperDate < vbEndDate THEN
+               , Sum(CASE WHEN AnalysisContainerItem.OperDate <= vbEndDate THEN
                     AnalysisContainerItem.AmountCheck END)                                  AS Amount
-               , Sum(CASE WHEN AnalysisContainerItem.OperDate >= vbEndDate THEN
+               , Sum(CASE WHEN AnalysisContainerItem.OperDate <= vbEndDate THEN
                    AnalysisContainerItem.Saldo END)                                         AS Saldo
           FROM AnalysisContainerItem AS AnalysisContainerItem
           WHERE AnalysisContainerItem.OperDate >= vbStartDate

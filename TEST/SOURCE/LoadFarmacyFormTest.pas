@@ -46,6 +46,7 @@ type
     procedure LoadFiscalFormTest;
     procedure LoadGoodsGroupFormTest;
     procedure LoadGoodsFormTest;
+    procedure LoadGoodsSPMovementFormTest;
     procedure LoadImportSettingsFormTest;
     procedure LoadImportTypeFormTest;
     procedure LoadIncomeFormTest;
@@ -311,6 +312,7 @@ end;
 
 procedure TLoadFormTest.LoadContractFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractEditForm'));
@@ -318,6 +320,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContract_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContract_ObjectForm');
+  }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractChoiceForm');
 end;
 
 procedure TLoadFormTest.LoadCreateOrderFromMCSFormTest;
@@ -662,12 +667,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckErrorForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckErrorDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckErrorDialogForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Payment_PlanForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Payment_PlanForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Payment_PlanDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Payment_PlanDialogForm');
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_UnLiquidForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_UnLiquidForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_UnLiquidDialogForm'));
@@ -802,6 +807,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsDialogForm');
    }
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_LiquidityForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_LiquidityForm');
 end;
 
 procedure TLoadFormTest.LoadReportForSiteTest;
@@ -1163,6 +1171,15 @@ procedure TLoadFormTest.LoadInvoiceFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInvoiceJournalForm');
+end;
+
+procedure TLoadFormTest.LoadGoodsSPMovementFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsSPJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSP_MovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsSP_MovementForm');
 end;
 
 procedure TLoadFormTest.LoadLossFormTest;

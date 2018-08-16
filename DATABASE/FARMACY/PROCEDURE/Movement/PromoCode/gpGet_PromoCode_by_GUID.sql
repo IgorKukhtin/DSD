@@ -71,15 +71,15 @@ BEGIN
                 ON Promo.id = StartPromo.movementid AND StartPromo.descid = zc_MovementDate_StartPromo()
         INNER JOIN MovementDate EndPromo
                 ON Promo.id = EndPromo.movementid AND EndPromo.descid = zc_MovementDate_EndPromo()
-        INNER JOIN MovementBoolean ForSite
+        LEFT JOIN MovementBoolean ForSite
                 ON Promo.id = ForSite.movementid AND ForSite.descid = zc_MovementBoolean_Electron()
-        INNER JOIN MovementBoolean OneCode
+        LEFT JOIN MovementBoolean OneCode
                 ON Promo.id = OneCode.movementid AND OneCode.descid = zc_MovementBoolean_One()
-        INNER JOIN MovementFloat ChangePercent
+        LEFT JOIN MovementFloat ChangePercent
                 ON Promo.id = ChangePercent.movementid AND ChangePercent.descid = zc_MovementFloat_ChangePercent()
-        INNER JOIN MovementLinkObject LinkPromoAction
+        LEFT JOIN MovementLinkObject LinkPromoAction
                 ON LinkPromoAction.movementid = Promo.id AND LinkPromoAction.descid = zc_MovementLinkObject_PromoCode()
-        INNER JOIN Object PromoAction
+        LEFT JOIN Object PromoAction
                 ON PromoAction.id = LinkPromoAction.objectid
         LEFT JOIN MovementItemString MIString_Bayer
                 ON PromoCode.ID = MIString_Bayer.MovementItemId AND MIString_Bayer.DescId = zc_MIString_Bayer()
@@ -149,7 +149,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
- 16.06.18               
+ 07.08.18                                                                                                        *
+ 16.06.18                                                                                                        *
  02.02.18                                                                                        *
 */
 
