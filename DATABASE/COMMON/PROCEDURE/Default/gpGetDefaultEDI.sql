@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpGetDefaultEDI(TVarChar);
 CREATE OR REPLACE FUNCTION gpGetDefaultEDI(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Host TVarChar, UserName TVarChar, Password TVarChar)
+RETURNS TABLE (Host TVarChar, UserName TVarChar, Password TVarChar, gIsDelete Boolean, HoursInterval_del Integer)
 AS
 $BODY$
 BEGIN
@@ -14,15 +14,23 @@ BEGIN
    IF 1=1 -- inSession <> zfCalc_UserAdmin()
    THEN
    RETURN QUERY
-    -- SELECT  'ftpex.edi.su'::TVarChar AS Host
-    SELECT  'ftp.edi-n.com'::TVarChar AS Host
-          , 'uatovalanftp'::TVarChar   AS UserName
-          , 'ftp349067'::TVarChar      AS Password;
+--  SELECT  'ftpex.edi.su'   :: TVarChar AS Host
+    SELECT  'ftp.edi-n.com'  :: TVarChar AS Host
+          , 'uatovalanftp'   :: TVarChar AS UserName
+          , 'ftp349067'      :: TVarChar AS Password
+--        , FALSE            :: Boolean  AS gIsDelete
+          , TRUE             :: Boolean  AS gIsDelete
+          , 2                :: Integer  AS HoursInterval_del
+           ;
    ELSE
    RETURN QUERY
-    SELECT  'ruftpex.edi.su'::TVarChar AS Host
-          , 'uatovalanftp'::TVarChar   AS UserName
-          , 'ftp349067'::TVarChar      AS Password;
+    SELECT  'ruftpex.edi.su' :: TVarChar AS Host
+          , 'uatovalanftp'   :: TVarChar AS UserName
+          , 'ftp349067'      :: TVarChar AS Password
+--        , FALSE            :: Boolean  AS gIsDelete
+          , TRUE             :: Boolean  AS gIsDelete
+          , 2                :: Integer  AS HoursInterval_del
+            ;
    END IF;
     
 END;

@@ -10366,6 +10366,17 @@ object MainForm: TMainForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'gIsDelete'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'HoursInterval_del'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'MovementId_toEDI'
         Value = Null
         MultiSelectSeparator = ','
@@ -10411,6 +10422,21 @@ object MainForm: TMainForm
         Component = FormParams
         ComponentItem = 'Password'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gIsDelete'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'gIsDelete'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'HoursInterval_del'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'HoursInterval_del'
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -10658,6 +10684,15 @@ object MainForm: TMainForm
         Name = 'inGLNPlace'
         Value = Null
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gIsDelete'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'gIsDelete'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

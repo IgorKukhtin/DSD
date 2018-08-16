@@ -1,82 +1,39 @@
 ﻿-- возвращает скрипт ПРОЦ.
 
-DROP FUNCTION IF EXISTS gpSelect_ReplProc (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_ReplProc (BigInt, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_ReplProc (BigInt, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_ReplProc (Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_ReplProc (BigInt, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_ReplProc(
-    IN inOId        BigInt,        --
+    IN inOID_last   BigInt  ,      --
+    IN inOneProc    TVarChar,      --
     IN gConnectHost TVarChar,      -- виртуальный, что б в exe - использовать другой сервак
     IN inSession    TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (ProcText Text)
+RETURNS TABLE (oid BigInt , ProName TVarChar)
 AS
 $BODY$
-   DECLARE vbDrop Text;
-   DECLARE vbRes  Text;
+   DECLARE vbOID     BigInt;
+   DECLARE vbProName TVarChar;
 BEGIN
 
 
-     -- Результат
-     vbDrop:= COALESCE ((SELECT FORMAT ('DROP %s IF EXISTS %s;'
-                                      , CASE WHEN proisagg THEN 'AGGREGATE' ELSE 'FUNCTION' END
-                                      , p.oid :: regprocedure
-                                       ) AS ResDrop
-                         FROM pg_catalog.pg_proc p
-                              INNER JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace
-                         WHERE p.oid = inOId
-                           AND p.ProName NOT ILIKE ('zc_%')
-                        ), '');
+     vbOID:= zfConvert_StringToFloat (inOneProc) :: BigInt;
+     IF vbOID > 0 THEN vbProName:= ''; ELSE vbProName:= LOWER (TRIM (inOneProc)); END IF;
 
+     
      -- Результат
-     vbRes := (SELECT UNNEST (STRING_TO_ARRAY (pg_catalog.pg_get_functiondef (inOId), '')) :: Text);
-
-
-     -- Результат
-     IF vbRes ILIKE 'IMMUTABLE'
-     THEN
-         RETURN QUERY
-           SELECT vbDrop
-               || CHR(10)
-               || CASE WHEN LOWER (p.ProName) NOT IN (LOWER ('gpSelect_ReplProc')
---                                                    , LOWER ('gpExecSql')
-  --                                                  , LOWER ('lfExecSql')
-                                                     )
-                  THEN
-                  SPLIT_PART (vbRes, 'LANGUAGE plpgsql', 1)
-               || ' AS '
-               || CHR(10) || ' $' || 'BODY' || '$ '
-               || SPLIT_PART (vbRes, '$function$', 2)
-               || ' $' || 'BODY' || '$ '
-               || CHR(10) || ' LANGUAGE plpgsql IMMUTABLE;'
-               -- || CHR(10) || ' --- replicate ---' || CHR(10)
-                  ELSE ''
-                  END
-           FROM  pg_catalog.pg_proc p
-           WHERE p.oid = inOId
-          ;
-     ELSE
-         RETURN QUERY
-           SELECT vbDrop
-               || CHR(10)
-               || CASE WHEN LOWER (p.ProName) NOT IN (LOWER ('gpSelect_ReplProc')
-    --                                                , LOWER ('gpExecSql')
---                                                    , LOWER ('lfExecSql')
-                                                     )
-                  THEN
-                  SPLIT_PART (vbRes, 'LANGUAGE plpgsql', 1)
-               || ' AS '
-               || CHR(10) || ' $' || 'BODY' || '$ '
-               || SPLIT_PART (vbRes, '$function$', 2)
-               || ' $' || 'BODY' || '$ '
-               || CHR(10) || ' LANGUAGE plpgsql VOLATILE;'
-               -- || CHR(10) || ' --- replicate ---' || CHR(10)
-                  ELSE ''
-                  END
-           FROM  pg_catalog.pg_proc p
-           WHERE p.oid = inOId
-          ;
-     END IF;
+     RETURN QUERY
+       SELECT p.oid     :: BigInt   AS oid
+            , p.ProName :: TVarChar AS ProName
+       FROM pg_proc AS p
+            JOIN pg_namespace AS n ON n.oid = p.pronamespace
+       WHERE n.nspname = 'public'
+         AND p.oid > inOID_last
+         AND (p.oid     = vbOID     OR vbOID     = 0)
+         AND (p.ProName = vbProName OR vbProName = '')
+         AND  probin <> '$libdir/tablefunc'
+       ORDER BY p.oid DESC
+      ;
 
 
 END;$BODY$
@@ -86,9 +43,8 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 18.06.18                                        *
+ 14.08.18                                        *
 */
 
 -- тест
--- 1479135194
--- SELECT * FROM gpSelect_ReplProc  (inOId:= 1479135194, gConnectHost:= '', inSession:= zfCalc_UserAdmin()) -- ORDER BY 1
+-- SELECT * FROM gpSelect_ReplProc  (inOID_last:= 0, inOneProc:= '', gConnectHost:= '', inSession:= zfCalc_UserAdmin()) -- ORDER BY 1

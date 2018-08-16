@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_Movement_EDI()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIOrder (TVarChar, TDateTime, TVarChar, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIOrder (TVarChar, TDateTime, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIOrder (TVarChar, TDateTime, TVarChar, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDIOrder(
     IN inOrderInvNumber      TVarChar  , -- Номер документа
     IN inOrderOperDate       TDateTime , -- Дата документа
     IN inGLN                 TVarChar  , -- Код GLN - Покупатель
     IN inGLNPlace            TVarChar  , -- Код GLN - место доставки
+    IN gIsDelete             Boolean   , -- виртуальный, что б в компоненте понимать - надо ли удалять заявки "за сегодня", а "за вчера" - они удаляются всегда
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId Integer, GoodsPropertyID Integer) -- Классификатор товаров)

@@ -73,6 +73,7 @@ type
     FIntervalVal: Integer;
     FProccessing: Boolean;
     isPrevDay_begin: Boolean;
+    Hour_onDel: Integer;
     fStartTime: TDateTime;
     procedure AddToLog(S: string);
     procedure StartEDI;
@@ -155,6 +156,7 @@ begin
   Application.OnMinimize := AppMinimize;
   Timer.Enabled := False;
   Proccessing := False;
+  Hour_onDel := -1;
 
   cbLoad.Checked:= TRUE;
   cbSend.Checked:= TRUE;
@@ -196,7 +198,13 @@ end;
 
 function TMainForm.fEdi_LoadData_from : Boolean;
 var Old_stat : Integer;
+    Present: TDateTime;
+    Year, Month, Day, Hour, Min, Sec, MSec: Word;
+    lHoursInterval_del : Integer;
 begin
+  Present:=Now;
+  DecodeTime(Present, Hour, Min, Sec, MSec);
+
   if isPrevDay_begin = false then cbPrevDay.Checked:= true;
 
   try
@@ -204,11 +212,30 @@ begin
     //
     AddToLog('.....');
     actSetDefaults.Execute;
-    AddToLog('Обновили Default для EDI');
+    AddToLog('Обновили Default для EDI : ' + DateTimeToStr(now));
 
+    // напрямую - работает криво
+    lHoursInterval_del:= FormParams.ParamByName('HoursInterval_del').Value;
+
+    // если пришло время и за "текущий" Hour еще не было удаления
+    if ((Hour mod lHoursInterval_del) = 0)
+    and (Hour_onDel <> Hour)
+    and (spGetDefaultEDI.ParamByName('gIsDelete').Value = TRUE)
+    then begin
+              //переопределили Признак - "удаление на ФТП" - будем делать каждые Х часов :)
+              FormParams.ParamByName('gIsDelete').Value := TRUE;
+              //запомнили текущий Hour кода сделали удаление
+              Hour_onDel:= Hour;
+         end
+    // поставили что НЕ надо удалить
+    else FormParams.ParamByName('gIsDelete').Value := FALSE;
+
+    //
     OptionsMemo.Lines.Clear;
     OptionsMemo.Lines.Add('Старт: '+FormatDateTime('dd.mm.yy hh:mm', fStartTime));
-    OptionsMemo.Lines.Add('Текущий интервал: ' + IntToStr(IntervalVal));
+    if FormParams.ParamByName('gIsDelete').Value = TRUE
+    then OptionsMemo.Lines.Add('Текущий интервал: ' + IntToStr(IntervalVal) + ' : del = TRUE')
+    else OptionsMemo.Lines.Add('Текущий интервал: ' + IntToStr(IntervalVal) + ' : del = FALSE');
     OptionsMemo.Lines.Add('Host: ' +  FormParams.ParamByName('Host').AsString);
     OptionsMemo.Lines.Add('UserName: ' +  FormParams.ParamByName('UserName').AsString);
     OptionsMemo.Lines.Add('Password: ' +  FormParams.ParamByName('Password').AsString);
@@ -367,8 +394,10 @@ begin
 
   if Hour > 18 then
   begin
-    Timer.Interval := (IntervalVal * 3)  * 60 * 1000;
-    AddToLog('Текущий интервал изменен до : ' + IntToStr(IntervalVal * 3) + ' мин.');
+    //Timer.Interval := (IntervalVal * 15)  * 60 * 1000;
+    //AddToLog('Текущий интервал изменен до : ' + IntToStr(IntervalVal * 15) + ' мин.');
+    Timer.Interval := 30  * 60 * 1000;
+    AddToLog('Текущий интервал изменен до : ' + IntToStr(30) + ' мин.');
   end
   else
     Timer.Interval := (IntervalVal * 1)  * 60 * 1000;

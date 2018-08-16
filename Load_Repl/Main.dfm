@@ -232,11 +232,12 @@ object MainForm: TMainForm
         object LabelObjectString: TLabel
           Left = 1
           Top = 1
-          Width = 58
+          Width = 108
           Height = 13
           Align = alTop
           Alignment = taCenter
           Caption = 'ObjectString'
+          ExplicitWidth = 58
         end
         object EditCountStringObject: TEdit
           Left = 1
@@ -280,11 +281,12 @@ object MainForm: TMainForm
         object LabelObjectFloat: TLabel
           Left = 1
           Top = 1
-          Width = 54
+          Width = 108
           Height = 13
           Align = alTop
           Alignment = taCenter
           Caption = 'ObjectFloat'
+          ExplicitWidth = 54
         end
         object EditCountFloatObject: TEdit
           Left = 1
@@ -328,11 +330,12 @@ object MainForm: TMainForm
         object LabelObjectDate: TLabel
           Left = 1
           Top = 1
-          Width = 54
+          Width = 108
           Height = 13
           Align = alTop
           Alignment = taCenter
           Caption = 'ObjectDate'
+          ExplicitWidth = 54
         end
         object EditCountDateObject: TEdit
           Left = 1
@@ -376,11 +379,12 @@ object MainForm: TMainForm
         object LabelObjectBoolean: TLabel
           Left = 1
           Top = 1
-          Width = 70
+          Width = 108
           Height = 13
           Align = alTop
           Alignment = taCenter
           Caption = 'ObjectBoolean'
+          ExplicitWidth = 70
         end
         object EditCountBooleanObject: TEdit
           Left = 1
@@ -424,11 +428,12 @@ object MainForm: TMainForm
         object LabelObjectLink: TLabel
           Left = 1
           Top = 1
-          Width = 51
+          Width = 108
           Height = 13
           Align = alTop
           Alignment = taCenter
           Caption = 'ObjectLink'
+          ExplicitWidth = 51
         end
         object EditCountLinkObject: TEdit
           Left = 1
@@ -530,13 +535,8 @@ object MainForm: TMainForm
     ActivePage = TabSheet1
     Align = alRight
     TabOrder = 2
-    ExplicitLeft = 576
     object TabSheet1: TTabSheet
       Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080' - '#1044#1086#1082#1091#1084#1077#1085#1090#1099
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object PanelReplServer: TPanel
         Left = 0
         Top = 0
@@ -580,10 +580,6 @@ object MainForm: TMainForm
     object TabSheet2: TTabSheet
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' '#1092#1072#1081#1083#1086#1074
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
   end
   object ObjectDS: TDataSource
@@ -938,7 +934,7 @@ object MainForm: TMainForm
       'select  * from Object')
     Params = <>
     Left = 232
-    Top = 264
+    Top = 268
   end
   object fQueryObjectDate: TZQuery
     Connection = mainZConnection
@@ -1050,7 +1046,7 @@ object MainForm: TMainForm
       end>
     PackSize = 1
     Left = 232
-    Top = 293
+    Top = 296
   end
   object spSelect_ReplObjectDate: TdsdStoredProc
     StoredProcName = 'gpSelect_ReplObjectDate'
@@ -1786,7 +1782,7 @@ object MainForm: TMainForm
       end>
     PackSize = 1
     Left = 136
-    Top = 272
+    Top = 283
   end
   object spInsert_ReplMovement_fromChild: TdsdStoredProc
     StoredProcName = 'gpInsert_ReplMovement_fromChild'

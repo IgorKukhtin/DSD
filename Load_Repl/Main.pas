@@ -232,7 +232,8 @@ type
 
     function gpSelect_ReplServer_load: TArrayReplServer;
     function IniConnection_Main (isConnected : Boolean): Boolean;
-    function IniConnection_Child(_PropertyName : String; isGetDesc   : Boolean): Boolean;
+    function IniConnection_Child(isMsg : Boolean; _PropertyName : String; isGetDesc : Boolean): Boolean;
+    function IniConnection_Child_cycle(isMsg : Boolean; _PropertyName : String; isGetDesc : Boolean): Boolean;
 
     //Object
     function pInsert_ReplObject : Boolean;
@@ -265,7 +266,7 @@ type
     procedure AddToLog(S, myFile, myFolder: string; isError : Boolean);
     procedure AddToMemoMsg(S: String; isError : Boolean);
 
-    procedure pSendAllTo_ReplObjectDesc;
+    function pSendAllTo_ReplObjectDesc : Boolean;
     function pSendAllTo_ReplProc : Boolean;
     function pSendAllTo_Forms : Boolean;
 
@@ -504,6 +505,7 @@ begin
      //
      with spExecSql_repl_to do
      begin
+          //ParamByName('inSqlText').Value    := ReplaceStr(mySql, chr(9), '        ');
           ParamByName('inSqlText').Value    := mySql;
           ParamByName('gConnectHost').Value := '';
           try Execute;
@@ -793,7 +795,33 @@ begin
      AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Connect', FALSE);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-function TMainForm.IniConnection_Child (_PropertyName : String; isGetDesc: Boolean) : Boolean;
+function TMainForm.IniConnection_Child_cycle(isMsg : Boolean; _PropertyName : String; isGetDesc: Boolean) : Boolean;
+//Child: соединение - ПРЯМОЕ
+begin
+     Result:= false;
+     //
+     if not IniConnection_Child (isMsg, _PropertyName + ' try 0', isGetDesc)
+     then begin
+               MyDelay(3*1000);
+               //
+               if not IniConnection_Child (TRUE, _PropertyName + ' try 1', isGetDesc)
+               then begin
+                         MyDelay(5*1000);
+                         //
+                         if not IniConnection_Child (TRUE, _PropertyName + ' try 2', isGetDesc)
+                         then begin
+                                   MyDelay(10*1000);
+                                   //
+                                   if not IniConnection_Child (TRUE, _PropertyName + ' try 3', isGetDesc)
+                                   then exit;
+                         end;
+               end;
+          end;
+     //
+     Result:= true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.IniConnection_Child (isMsg : Boolean; _PropertyName : String; isGetDesc: Boolean) : Boolean;
 //Child: соединение - ПРЯМОЕ
 var i : Integer;
 begin
@@ -801,8 +829,11 @@ begin
      //
      try
      //
-     AddToMemoMsg('----- startConnect Child(' + _PropertyName + '):', FALSE);
-     AddToMemoMsg(MainForm.FormatFromDateTime_folder(now), FALSE);
+     if isMsg = TRUE then
+     begin
+       AddToMemoMsg('----- startConnect Child(' + _PropertyName + '):', FALSE);
+       AddToMemoMsg(MainForm.FormatFromDateTime_folder(now), FALSE);
+     end;
      //
      with childZConnection do begin
         Connected:=false;
@@ -894,7 +925,8 @@ begin
            Close;
      end;
      //
-     AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Connect', FALSE);
+     if isMsg = TRUE then
+       AddToMemoMsg(MainForm.FormatFromDateTime_folder(now) + ' - end Connect', FALSE);
      //
      except on E:Exception do
        begin
@@ -1613,7 +1645,7 @@ begin
      //
      // Подключились к серверу Child
      if isFromMain = TRUE then
-       if not IniConnection_Child (lMovement, FALSE) then exit;
+       if not IniConnection_Child (TRUE, lMovement, FALSE) then exit;
      // Подключились к серверу Main - ОБЯЗАТЕЛЬНО
      if isFromMain = FALSE then
        if not IniConnection_Main (TRUE) then exit;
@@ -1977,7 +2009,7 @@ begin
         //
         // Подключились к серверу Child
         if isFromMain = TRUE then
-          if not IniConnection_Child (_PropertyName, FALSE) then exit;
+          if not IniConnection_Child (TRUE, _PropertyName, FALSE) then exit;
         // Подключились к серверу Main - ОБЯЗАТЕЛЬНО
         if isFromMain = FALSE then
           if not IniConnection_Main (TRUE) then exit;
@@ -2237,6 +2269,7 @@ var StrPack, nextL : String;
     resStr  : String;
     myCDS : TClientDataSet;
     lObject : String;
+    isMsg : Boolean;
 begin
      Result:= false;
      //
@@ -2246,8 +2279,11 @@ begin
 
      //
      //if cbClientDataSet.Checked = FALSE then
+     // !!!коннект, когда НЕ ВСЕ данные!!!
+     if cbProtocol.Checked = TRUE
+     then
        // Подключились к серверу Child
-       if not IniConnection_Child (lObject, FALSE) then exit;
+       if not IniConnection_Child (TRUE, lObject, FALSE) then exit;
      //
      try
      //
@@ -2255,6 +2291,8 @@ begin
      num:=0;
      StrPack:= '';
      nextL  := #13;
+     //выводим в протокол инфу - 1 РАЗ
+     isMsg:= TRUE;
      //
      // в самом начале для истории - удалили все из "временной истории"
      if (Num_main = 1) and (isHistory = TRUE)
@@ -2497,9 +2535,16 @@ begin
                   // финиш - СКРИПТ
                   StrPack:= StrPack + ' END $$;';
                   //
-                  //
+                  // !!!дополнительно - коннект, когда ВСЕ данные!!!
+                  if cbProtocol.Checked = FALSE
+                  then
+                     if not IniConnection_Child_cycle (isMsg, lObject, FALSE)
+                     then exit;
+                  //выводим в протокол инфу - 1 РАЗ
+                  isMsg:= FALSE;
                   // !!!сохранили - СКРИПТ!!!
                   resStr:= fExecSqToQuery (StrPack);
+                  //
                   if resStr = ''
                   then
                       // результат = OK
@@ -2540,9 +2585,14 @@ begin
           // финиш - СКРИПТ
           StrPack:= StrPack + ' END $$;';
           //
-          //
+          // !!!дополнительно - коннект, когда ВСЕ данные!!!
+          if cbProtocol.Checked = FALSE
+          then
+             if not IniConnection_Child_cycle (FALSE, lObject, FALSE)
+             then exit;
           // !!!сохранили - СКРИПТ!!!
           resStr:= fExecSqToQuery (StrPack);
+          //
           if resStr = ''
           then
               // результат = OK
@@ -2587,6 +2637,7 @@ var StrPack, nextL : String;
     _PropertyName, _PropertyValue, DescId_ins1,DescId_ins2, Column_upd : String;
     resStr : String;
     lObject, lObjectLink : String;
+    isMsg : Boolean;
 begin
      Result:= false;
      //
@@ -2600,6 +2651,8 @@ begin
      num:=0;
      StrPack:= '';
      nextL  := #13;
+     //выводим в протокол инфу - 1 РАЗ
+     isMsg:= TRUE;
      //
      with CDSData do begin
         //
@@ -2611,8 +2664,11 @@ begin
         lObjectLink := lObject + 'Link';
         //
         //if cbClientDataSet.Checked = FALSE then
+        // !!!коннект, когда НЕ ВСЕ данные!!!
+        if cbProtocol.Checked = TRUE
+        then
           // Подключились к серверу Child
-          if not IniConnection_Child (_PropertyName, FALSE) then exit;
+          if not IniConnection_Child (TRUE, _PropertyName, FALSE) then exit;
         //
         //
         First;
@@ -2764,8 +2820,16 @@ begin
                   // финиш - СКРИПТ
                   StrPack:= StrPack + ' END $$;' + nextL + nextL;
                   //
+                  // !!!дополнительно - коннект, когда ВСЕ данные!!!
+                  if cbProtocol.Checked = FALSE
+                  then
+                     if not IniConnection_Child_cycle (isMsg, _PropertyName, FALSE)
+                     then exit;
+                  //выводим в протокол инфу - 1 РАЗ
+                  isMsg:= FALSE;
                   // !!!сохранили - СКРИПТ!!!
                   resStr:= fExecSqToQuery (StrPack);
+                  //
                   if resStr = ''
                   then
                       // результат = OK
@@ -2806,9 +2870,14 @@ begin
           // финиш - СКРИПТ
           StrPack:= StrPack + ' END $$;' + nextL + nextL;
           //
-          //
+          // !!!дополнительно - коннект, когда ВСЕ данные!!!
+          if cbProtocol.Checked = FALSE
+          then
+             if not IniConnection_Child_cycle (FALSE, _PropertyName, FALSE)
+             then exit;
           // !!!сохранили - СКРИПТ!!!
           resStr:= fExecSqToQuery (StrPack);
+          //
           if resStr = ''
           then
               // результат = OK
@@ -2933,7 +3002,7 @@ begin
      Result:= false;
      //
      // Подключились к серверу Child
-     if not IniConnection_Child ('on Move_ObjectHistory_repl', FALSE) then exit;
+     if not IniConnection_Child (TRUE, 'on Move_ObjectHistory_repl', FALSE) then exit;
      //
      StrPack:= '';
      nextL  := #13;
@@ -3025,13 +3094,16 @@ begin
      Result:= true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pSendAllTo_ReplObjectDesc;
+function TMainForm.pSendAllTo_ReplObjectDesc : Boolean;
 //Main:  соединение - ПРЯМОЕ
 //Child: соединение - ПРЯМОЕ - выполняем Скрипт StrPack
 var StrPack, nextL, resStr : String;
     lGUID : String;
     DescId_ins1,DescId_ins2,DescId_upd : String;
+var fOk : Boolean;
 begin
+     fOk:= TRUE;
+     //
      //
      lGUID:= GenerateGUID (TRUE);
      nextL  := #13;
@@ -3039,7 +3111,9 @@ begin
      // Подключились к серверу Main - ОБЯЗАТЕЛЬНО
      if not IniConnection_Main (TRUE) then exit;
      // Подключились к серверу Child
-     if not IniConnection_Child ('ObjectDesc + ObjectHistoryDesc', FALSE)   then exit;
+     if not IniConnection_Child (TRUE, 'ObjectDesc + ObjectHistoryDesc', FALSE) then exit;
+     //
+     try
      //
      // открыли данные с... по...
      with fromSqlQuery,Sql do
@@ -3225,6 +3299,7 @@ begin
                 // результат = OK
                 StrPack:= StrPack + ' ------ Result = OK' + nextL + nextL
             else begin
+                fOk:= FALSE;
                 // результат = ERROR
                 StrPack:= StrPack + ' ------ Result = ERROR : ' + nextL + nextL;
                 // ERROR
@@ -3246,6 +3321,17 @@ begin
            //
            Close;
      end;
+
+     except on E:Exception do
+       begin
+          fOk:= FALSE;
+          // ERROR
+          AddToMemoMsg ('', FALSE);
+          AddToMemoMsg (E.Message, TRUE);
+       end;
+     end;
+     //
+     Result:= fOk;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pSendAllTo_Forms : Boolean;
@@ -3253,8 +3339,9 @@ function TMainForm.pSendAllTo_Forms : Boolean;
 //Child: соединение - !НЕ ПРЯМОЕ! - !текст ф-ции можно сохранить только через spExecSql!
 var lGUID, lFormData, tmp : String;
     resStr : String;
+var fOk : Boolean;
 begin
-    Result:= false;
+    fOk:= TRUE;
     //
     //
     lGUID:= GenerateGUID (TRUE);
@@ -3301,6 +3388,7 @@ begin
                   resStr:= fExecForm_repl_to (FieldByName('FormName').AsString, lFormData);
                   if resStr <> '' then
                   begin
+                      fOk:= FALSE;
                       // ERROR
                       AddToMemoMsg ('', FALSE);
                       AddToMemoMsg (' ..... ERROR .....', FALSE);
@@ -3325,6 +3413,7 @@ begin
     end;
      except on E:Exception do
        begin
+          fOk:= FALSE;
           // ERROR
           AddToMemoMsg ('', FALSE);
           AddToMemoMsg (E.Message, TRUE);
@@ -3332,16 +3421,17 @@ begin
        end;
      end;
      //
-     Result:= true;
+     Result:= fOk;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pSendAllTo_ReplProc : Boolean;
 //Main:  соединение - ПРЯМОЕ
 //Child: соединение - !НЕ ПРЯМОЕ! - !текст ф-ции можно сохранить только через spExecSql!
-var lGUID, lProcText, tmp : String;
+var lGUID, lProcText : String;
     resStr : String;
+var fOk : Boolean;
 begin
-    Result:= false;
+    fOk:= TRUE;
     //
     //
     lGUID:= GenerateGUID (TRUE);
@@ -3355,13 +3445,7 @@ begin
     with fromSqlQuery,Sql do
     begin
          Clear;
-         //
-         if EditObjectDescId.Text <> ''
-         then tmp:= ' AND p.oid = ' + EditObjectDescId.Text
-         else tmp:= '';
-         //
-         Add('select p.oid, p.ProName from pg_proc AS p join pg_namespace AS n on n.oid = p.pronamespace where n.nspname = ' + ConvertFromVarChar('public') + ' and p.oid > ' + IntToStr(ArrayReplServer[1].OID_last) + tmp + ' order by p.oid desc');
-         //
+         Add('select * from gpSelect_ReplProc ('+ IntToStr(ArrayReplServer[1].OID_last) + ',' + ConvertFromVarChar(EditObjectDescId.Text) + ', CAST (NULL AS TVarChar), CAST (NULL AS TVarChar))');
          Open;
          //
          ObjectDS.DataSet:=fromSqlQuery;
@@ -3378,22 +3462,23 @@ begin
               //!!!
               if fStop then begin exit;end;
               //
-              fOpenSqFromQuery_two ('select * from gpSelect_ReplProc (' + FieldByName('oid').AsString + ', CAST (NULL AS TVarChar), CAST (NULL AS TVarChar))');
+              fOpenSqFromQuery_two ('select * from gpSelect_ReplProc_text (' + FieldByName('oid').AsString + ', CAST (NULL AS TVarChar), CAST (NULL AS TVarChar))');
               //
               lProcText:= fromSqlQuery_two.FieldByName('ProcText').AsString;
-              if System.Pos(AnsiUpperCase('CREATE OR REPLACE'),AnsiUpperCase(lProcText)) > 0
+              {if System.Pos(AnsiUpperCase('CREATE OR REPLACE'),AnsiUpperCase(lProcText)) > 0
               then
                 if System.Pos(AnsiUpperCase('begin'),AnsiUpperCase(lProcText)) > 0
                 then System.Insert(#10+#13 + ' --- replicate --- ' +#10+#13, lProcText, System.Pos(AnsiUpperCase('begin'),AnsiUpperCase(lProcText)))
-                else ShowMessage ('not find - begin : ' + FieldByName('ProName').AsString);
+                else ShowMessage ('not find - begin : ' + FieldByName('ProName').AsString);}
               //
               if lProcText <> '' then
               begin
                   // !!!через StoredProc!!!
-                  //resStr:= fExecSql_repl_to (lProcText);
-                  resStr:= fExecSql_repl_to (fromSqlQuery_two.FieldByName('ProcText').AsString);
+                  resStr:= fExecSql_repl_to (lProcText);
+                  //resStr:= fExecSql_repl_to (fromSqlQuery_two.FieldByName('ProcText').AsString);
                   if resStr <> '' then
                   begin
+                      fOk:= FALSE;
                       // ERROR
                       AddToMemoMsg ('', FALSE);
                       AddToMemoMsg (' ..... ERROR .....', FALSE);
@@ -3408,7 +3493,9 @@ begin
                   end;
                   //
                   // !!!сохранили - в ФАЙЛ!!!
-                  AddToLog(lProcText, FieldByName('ProName').AsString, lGUID, false);
+                  if resStr <> ''
+                  then AddToLog(lProcText, '_err_'+FieldByName('ProName').AsString, lGUID, false)
+                  else AddToLog(lProcText, FieldByName('ProName').AsString, lGUID, false);
               end;
               //
               Next;
@@ -3421,14 +3508,14 @@ begin
     end;
      except on E:Exception do
        begin
+          fOk:= FALSE;
           // ERROR
           AddToMemoMsg ('', FALSE);
           AddToMemoMsg (E.Message, TRUE);
-          exit;
        end;
      end;
      //
-     Result:= true;
+     Result:= fOk;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.AddToMemoMsg(S : String; isError : Boolean);
@@ -3918,7 +4005,7 @@ begin
      if not pInsert_ReplMovement then exit;
      //
      // Подключились к серверу Child + главное - получили ВСЕ Desc-ки (нужны только они)
-     if not IniConnection_Child ('load-Desc-list', TRUE) then exit;
+     if not IniConnection_Child (TRUE, 'load-Desc-list', TRUE) then exit;
      //
      // показали Итоги
      EditCountObject.Text          := IntToStr(outCount)       + ' / ' + IntToStr(outCountHistory);
@@ -3993,7 +4080,7 @@ begin
      if not pInsert_ReplObject then exit;
      //
      // Подключились к серверу Child + главное - получили ВСЕ Desc-ки (нужны только они)
-     if not IniConnection_Child ('load-Desc-list', TRUE) then exit;
+     if not IniConnection_Child (TRUE, 'load-Desc-list', TRUE) then exit;
      //
      // показали Итоги
      EditCountObject.Text          := IntToStr(outCount)       +  ' / ' + IntToStr(outCountHistory);
@@ -4085,12 +4172,14 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pBegin_All (isFromMain, isFromChild: Boolean) : Boolean;
+var fOk : Boolean;
 begin
-     Result:= TRUE;
+     fOk:= TRUE;
      //
-     if fBegin_All = TRUE then exit;
+     if fBegin_All = TRUE then begin Result:= true; exit; end;
      //
      try
+         //
          fBegin_All := TRUE;
          //
          fStop:=false;
@@ -4104,39 +4193,39 @@ begin
          //
          MemoMsg.Lines.Clear;
          //
-         if (cbForms.Checked = TRUE) and (isFromMain = TRUE)
+         if (cbForms.Checked = TRUE) and (isFromMain = TRUE) and (fStop = FALSE)
          then
              // Отправили Forms
-             pSendAllTo_Forms;
+             fOk:= pSendAllTo_Forms and fOk;
          //
-         if (cbProc.Checked = TRUE) and (isFromMain = TRUE)
+         if (cbProc.Checked = TRUE) and (isFromMain = TRUE) and (fStop = FALSE)
          then
              // Отправили Proc
-             pSendAllTo_ReplProc;
+             fOk:= pSendAllTo_ReplProc and fOk;
          //
-         if (cbDesc.Checked = TRUE) and (isFromMain = TRUE)
+         if (cbDesc.Checked = TRUE) and (isFromMain = TRUE) and (fStop = FALSE)
          then
              // Отправили Desc
-             pSendAllTo_ReplObjectDesc;
+             fOk:= pSendAllTo_ReplObjectDesc and fOk;
 
          //
-         if ((cbObject.Checked = TRUE) or (cbObjectHistory.Checked = TRUE)) and (isFromMain = TRUE)
+         if ((cbObject.Checked = TRUE) or (cbObjectHistory.Checked = TRUE)) and (isFromMain = TRUE) and (fStop = FALSE)
          then
              // Отправили Object - Data
-             pSendAllTo_ReplObject;
+             fOk:= pSendAllTo_ReplObject and fOk;
 
-         if ((cbMovement.Checked = TRUE) or (cbMI.Checked = TRUE)) and (isFromMain = TRUE)
+         if ((cbMovement.Checked = TRUE) or (cbMI.Checked = TRUE)) and (isFromMain = TRUE) and (fStop = FALSE)
          then
              // Отправили Movement - Data
-             pSendAllTo_ReplMovement;
+             fOk:= pSendAllTo_ReplMovement and fOk;
 
-         if ((cbMovement.Checked = TRUE) or (cbMI.Checked = TRUE)) and (isFromChild = TRUE)
+         if ((cbMovement.Checked = TRUE) or (cbMI.Checked = TRUE)) and (isFromChild = TRUE) and (fStop = FALSE)
          then
              // Отправили Movement - Data
-             pSendAllTo_ReplMovement_fromChild;
+             fOk:= pSendAllTo_ReplMovement_fromChild and fOk;
 
      finally
-           Result:= fStop;
+           Result:= fOk and not fStop;
            //
            fBegin_All := FALSE;
            //
@@ -4153,7 +4242,7 @@ procedure TMainForm.btnOKChild_toMainClick(Sender: TObject);
 var tmpDate1,tmpDate2:TDateTime;
     Year, Month, Day, Hour, Min, Sec, MSec: Word;
     StrTime:String;
-    lResStop: Boolean;
+    lResOk: Boolean;
 begin
      if MessageDlg('Действительно отправить данные в Main?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
      //
@@ -4161,7 +4250,7 @@ begin
      tmpDate1:=NOw;
      //
      //
-     lResStop:= pBegin_All(FALSE, TRUE);
+     lResOk:= pBegin_All(FALSE, TRUE);
      //
      //
      tmpDate2:=NOw;
@@ -4174,7 +4263,7 @@ begin
 
      if System.Pos('auto',ParamStr(2))<=0
      then
-         if lResStop = TRUE
+         if lResOk = FALSE
          then ShowMessage('Данные в Main НЕ загружены. Time = ('+StrTime+').')
          else ShowMessage('Данные в Main загружены. Time = ('+StrTime+').') ;
 end;
@@ -4183,7 +4272,7 @@ procedure TMainForm.btnOKMain_toChildClick(Sender: TObject);
 var tmpDate1,tmpDate2:TDateTime;
     Year, Month, Day, Hour, Min, Sec, MSec: Word;
     StrTime:String;
-    lResStop: Boolean;
+    lResOk: Boolean;
 begin
      if MessageDlg('Действительно отправить данные в Child?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
      //
@@ -4191,7 +4280,7 @@ begin
      tmpDate1:=NOw;
      //
      //
-     lResStop:= pBegin_All(TRUE,FALSE);
+     lResOk:= pBegin_All(TRUE,FALSE);
      //
      //
      tmpDate2:=NOw;
@@ -4204,7 +4293,7 @@ begin
 
      if System.Pos('auto',ParamStr(2))<=0
      then
-         if lResStop = TRUE
+         if lResOk = FALSE
          then ShowMessage('Данные в Child НЕ загружены. Time = ('+StrTime+').')
          else ShowMessage('Данные в Child загружены. Time = ('+StrTime+').') ;
 end;

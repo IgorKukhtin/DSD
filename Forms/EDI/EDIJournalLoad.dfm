@@ -4,8 +4,6 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
   ClientWidth = 1362
   AddOnFormData.OnLoadAction = actSetDefaults
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -398
-  ExplicitTop = -31
   ExplicitWidth = 1378
   ExplicitHeight = 488
   PixelsPerInch = 96
@@ -842,7 +840,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
     object deStart: TcxDateEdit
       Left = 107
       Top = 5
-      EditValue = 42856d
+      EditValue = 43313d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -851,7 +849,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 42856d
+      EditValue = 43313d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -2110,6 +2108,15 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'gIsDelete'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'gIsDelete'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'MovementId'
         Value = Null
         MultiSelectSeparator = ','
@@ -2502,6 +2509,14 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
         ComponentItem = 'Password'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gIsDelete'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'gIsDelete'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 464
@@ -2525,6 +2540,12 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
         Name = 'Password'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gIsDelete'
+        Value = Null
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 520

@@ -2980,6 +2980,7 @@ var
   Stream: TStringStream;
   ORDER: IXMLORDERType;
   DocData: TDateTime;
+  fIsDelete : Boolean; // add 10.08.2018
 begin
   try
     FTPSetConnection;
@@ -3016,8 +3017,13 @@ begin
                   ORDER := LoadORDER(Utf8ToAnsi(Stream.DataString));
                   // загружаем в базенку
                   InsertUpdateOrder(ORDER, spHeader, spList);
+                  //
+                  //ѕытаемс€ найти параметр
+                  if Assigned(spHeader.Params.ParamByName('gIsDelete'))
+                  then fIsDelete:= spHeader.ParamByName('gIsDelete').Value
+                  else fIsDelete:= false;
                   // теперь перенесли файл в директроию Archive
-                  if DocData < Date then
+                  if (DocData < Date) or (fIsDelete = true) then
                     try
                       FIdFTP.ChangeDir('/archive');
                       FIdFTP.Put(Stream, List[i]);

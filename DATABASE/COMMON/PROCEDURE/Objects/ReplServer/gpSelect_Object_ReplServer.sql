@@ -43,7 +43,8 @@ BEGIN
           , COALESCE (ObjectBoolean_ErrFrom.ValueData, FALSE) ::Boolean  AS isErrFrom
           
 --        , (863668436)                :: BigInt  AS OID_last
-          , (863668436)                :: Integer AS OID_last
+--          , (863668436)              :: Integer AS OID_last
+          , (1102263)                  :: Integer AS OID_last
  
           , Object_ReplServer.isErased            AS isErased
          
