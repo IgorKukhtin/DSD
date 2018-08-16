@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Classes, Vcl.Forms, Vcl.Dialogs, Authentication,
-  VKDBFDataSet, DB, DataSnap.DBClient;
+  VKDBFDataSet, DB, DataSnap.DBClient, Windows;
 
 type
   TSaveLocalMode = (slmRewrite, slmUpdate, slmAppend);
@@ -33,8 +33,25 @@ function VipDfm_lcl: String;
 
 procedure SaveLocalData(ASrc: TClientDataSet; AFileName: String);
 procedure LoadLocalData(ADst: TClientDataSet; AFileName: String);
+function GetFileSizeByName(AFileName: String): DWord;
+function GetBackupFileName(AFileName: String): string;
 
 implementation
+
+function GetBackupFileName(AFileName: String): string;
+begin
+  Result := ChangeFileExt(AFileName, '.backup');
+end;
+
+function GetFileSizeByName(AFileName: string): DWord;
+var
+  Handle: THandle;
+begin
+  if not FileExists(AFilename) then exit;
+  Handle := FileOpen(AFilename, fmOpenRead or fmShareDenyNone);
+  Result := GetFileSize(Handle, nil);
+  CloseHandle(Handle);
+end;
 
 function Users_lcl: String;
 Begin
@@ -236,11 +253,29 @@ End;
 
 procedure SaveLocalData(ASrc: TClientDataSet; AFileName: String);
 Begin
+  if FileExists(AFileName) and (GetFileSizeByName(AFileName) > 0) then
+    CopyFile(PChar(AFileName), PChar(GetBackupFileName(AFileName)), false);
   ASrc.SaveToFile(AFileName,dfBinary);
 End;
 
 procedure LoadLocalData(ADst: TClientDataSet; AFileName: String); overload;
 Begin
+  if not FileExists(AFileName) then
+  begin
+    ShowMessage('Файл '+ AFileName + ' не найден!');
+    Exit;
+  end;
+  if GetFileSizeByName(AFileName) = 0 then
+  begin
+    if FileExists(GetBackupFileName(AFileName)) and
+       (GetFileSizeByName(GetBackupFileName(AFileName)) > 0) then
+      CopyFile(PChar(GetBackupFileName(AFileName)), PChar(AFileName), false)
+    else
+    begin
+      ShowMessage('Файл '+ AFileName + ' пустой!');
+      Exit;
+    end;
+  end;
   ADst.Close;
   ADst.LoadFromFile(AFileName);
   ADst.Open;
