@@ -41,7 +41,7 @@ var
 implementation
 
 uses Storage, Authentication, CommonData, MessagesUnit, StrUtils, LocalWorkUnit,
-  IniUtils, MainCash;
+  IniUtils;
 
 {$R *.dfm}
 

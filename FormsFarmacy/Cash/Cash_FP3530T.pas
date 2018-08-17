@@ -22,6 +22,7 @@ type
     function ProgrammingGoods(const GoodsCode: integer; const GoodsName: string; const Price, NDS: double): boolean;
     function ClosureFiscal: boolean;
     function TotalSumm(Summ: double; PaidType: TPaidType): boolean;
+    function DiscountGoods(Summ: double): boolean;
     function DeleteArticules(const GoodsCode: integer): boolean;
     function XReport: boolean;
     function GetLastErrorCode: integer;
@@ -464,6 +465,11 @@ begin
        result := false;
     end;
   end;
+end;
+
+function TCashFP3530T.DiscountGoods(Summ: double): boolean;
+begin
+
 end;
 
 function TCashFP3530T.ClosureFiscal: boolean;

@@ -87,6 +87,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 2
+        ExplicitTop = 2
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SignDS

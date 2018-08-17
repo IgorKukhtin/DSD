@@ -22,6 +22,7 @@ type
     function ProgrammingGoods(const GoodsCode: integer; const GoodsName: string; const Price, NDS: double): boolean;
     function ClosureFiscal: boolean;
     function TotalSumm(Summ: double; PaidType: TPaidType): boolean;
+    function DiscountGoods(Summ: double): boolean;
     function DeleteArticules(const GoodsCode: integer): boolean;
     function XReport: boolean;
     function GetLastErrorCode: integer;
@@ -256,7 +257,13 @@ end;
 function TCashFP3530T_NEW.TotalSumm(Summ: double; PaidType: TPaidType): boolean;
 begin
   FPrinter.PAYMENT[integer(PaidType), ReplaceStr(FormatFloat('0.00', Summ), FormatSettings.DecimalSeparator, '.'), Password];
-  result := СообщениеКА(FPrinter.GETERROR)
+  result := СообщениеКА(FPrinter.GETERROR);
+end;
+
+function TCashFP3530T_NEW.DiscountGoods(Summ: double): boolean;
+begin
+  FPrinter.DISCOUNT[ReplaceStr(FormatFloat('0.00', Summ), FormatSettings.DecimalSeparator, '.'), Password];
+  result := СообщениеКА(FPrinter.GETERROR);
 end;
 
 function TCashFP3530T_NEW.ClosureFiscal: boolean;
@@ -314,7 +321,13 @@ function TCashFP3530T_NEW.SubTotal(isPrint, isDisplay: WordBool; Percent,
   Disc: Double): boolean;
 begin
   FPrinter.PRNTOTAL[1, Password];
-  result := СообщениеКА(FPrinter.GETERROR)
+  result := СообщениеКА(FPrinter.GETERROR);
+
+  if result and (Disc <> 0) then
+  begin
+    FPrinter.DISCOUNTTOTAL[ReplaceStr(FormatFloat('0.00', Disc), FormatSettings.DecimalSeparator, '.'), Password];
+    result := СообщениеКА(FPrinter.GETERROR);
+  end;
 end;
 
 
