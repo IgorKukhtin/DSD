@@ -1043,6 +1043,9 @@ CREATE OR REPLACE FUNCTION zc_Object_GoodsPropertyBox() RETURNS Integer AS $BODY
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_GoodsPropertyBox', 'Cвойства товаров для ящиков' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_GoodsPropertyBox');
 
+CREATE OR REPLACE FUNCTION zc_Object_PriceChange() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_PriceChange'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_PriceChange', 'Справочник Элемент цены СО СКИДКОЙ' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PriceChange');
 
 
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1061,6 +1064,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 16.08.18         * zc_Object_PriceChange
  24.06.18         * zc_Object_GoodsPropertyBox
  20.06.18         * zc_Object_ReplMovement
                     zc_Object_ReplObject

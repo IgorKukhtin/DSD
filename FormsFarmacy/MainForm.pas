@@ -427,6 +427,13 @@ type
     N163: TMenuItem;
     actGoodsSPJournal: TdsdOpenForm;
     miGoodsSPJournal: TMenuItem;
+    actReport_Liquidity: TdsdOpenForm;
+    N164: TMenuItem;
+    actPriceChangeOnDate: TdsdOpenForm;
+    actPriceChange: TdsdOpenForm;
+    N165: TMenuItem;
+    miPriceChange: TMenuItem;
+    miPriceChangeOnDate: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

@@ -366,8 +366,14 @@ begin
                 ftDate, ftDateTime, ftTime:
                   if LStoredProc.Fields[I].IsNull then Result := Result + ' ' + LStoredProc.Fields[I].FieldName + '=""'
                   else Result := Result + ' ' + LStoredProc.Fields[I].FieldName + '="' + DateToISO8601(LStoredProc.Fields[I].asDateTime) + '"';
-                ftString:
-                  Result := Result + ' ' + LStoredProc.Fields[I].FieldName + '="' + StringsReplace(VarToStr(LStoredProc.Fields[I].Value), ['"'], ['&quot;']) + '"';
+                ftString, ftMemo:
+                  Result := Result + ' ' + LStoredProc.Fields[I].FieldName + '="' +
+                    StringsReplace(StringsReplace(StringsReplace(StringsReplace(StringsReplace(VarToStr(LStoredProc.Fields[I].Value),
+                      ['"'], ['&quot;']),
+                      [''''], ['&apos;']),
+                      ['&'], ['&amp;']),
+                      ['<'], ['&lt;']),
+                      ['>'], ['&gt;']) + '"';
                 else
                   Result := Result + ' ' + LStoredProc.Fields[I].FieldName + '="' + VarToStr(LStoredProc.Fields[I].Value) + '"';
               end;

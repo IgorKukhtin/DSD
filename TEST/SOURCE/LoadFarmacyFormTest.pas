@@ -83,6 +83,7 @@ type
     procedure LoadPositionEducationFormTest;
     procedure LoadPriceListFormTest;
     procedure LoadPriceFormTest;
+    procedure LoadPriceChangeFormTest;
     procedure LoadProfitLossFormTest;
     procedure LoadProfitLossGroupFormTest;
     procedure LoadProfitLossDirectionFormTest;
@@ -1277,6 +1278,23 @@ begin
 
 end;
 
+procedure TLoadFormTest.LoadPriceChangeFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceChangeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceChangeForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceChangeHistoryForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceChangeHistoryForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceChangeOnDateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceChangeOnDateForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceChangeDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceChangeDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceChangeGoodsDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceChangeGoodsDialogForm');
+end;
 procedure TLoadFormTest.LoadAlternativeGroupFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAlternativeGroupForm'));
