@@ -498,8 +498,8 @@ inherited Report_LiquidityForm: TReport_LiquidityForm
       ExplicitLeft = 316
     end
     inherited cxLabel1: TcxLabel
-      Caption = #1052#1077#1089#1103#1094' '#1088#1072#1089#1095#1077#1090#1072':'
-      ExplicitWidth = 83
+      Caption = #1044#1072#1090#1072' '#1088#1072#1089#1095#1077#1090#1072':'
+      ExplicitWidth = 78
     end
     inherited cxLabel2: TcxLabel
       Visible = False

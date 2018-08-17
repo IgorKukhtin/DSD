@@ -427,6 +427,8 @@ type
     N163: TMenuItem;
     actGoodsSPJournal: TdsdOpenForm;
     miGoodsSPJournal: TMenuItem;
+    actReport_Liquidity: TdsdOpenForm;
+    N164: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

@@ -15,12 +15,14 @@ $BODY$
    DECLARE cur4 refcursor;
    DECLARE vbStartDate TDateTime;
    DECLARE vbIncomeDate TDateTime;
+   DECLARE vbIncomeDateStart TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
 
   vbStartDate := DATE_TRUNC ('DAY', inStartDate);
   vbIncomeDate := DATE_TRUNC ('DAY', now());
+  vbIncomeDateStart := vbIncomeDate - interval '1 year';
   IF vbStartDate < vbIncomeDate
   THEN
     vbIncomeDate := vbStartDate;
@@ -29,17 +31,33 @@ BEGIN
     -- Остаки
   OPEN cur1 FOR
   WITH
+    tmpUnit AS (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
+                        FROM ObjectLink AS ObjectLink_Unit_Juridical
+
+                           INNER JOIN Object AS Object_Juridical
+                                             ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
+                                            AND Object_Juridical.isErased = False
+
+                           INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                                AND ObjectLink_Juridical_Retail.ChildObjectId = 4
+                        WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                          AND ObjectLink_Unit_Juridical.ChildObjectId <> 393053
+                        ),
     tmpContainer AS (SELECT AnalysisContainer.UnitID                                                     AS UnitID
                           , SUM(AnalysisContainer.Saldo)                                                 AS Saldo
                           , SUM((AnalysisContainer.Saldo *
                                  AnalysisContainer.Price)::NUMERIC (16, 2))::TFloat                      AS Summa
                         FROM AnalysisContainer AS AnalysisContainer
+                             INNER JOIN tmpUnit as tmpUnit ON tmpUnit.UnitId = AnalysisContainer.UnitID
                         GROUP BY AnalysisContainer.UnitID),
 
     tmpItemContainer AS (SELECT MovementItem.UnitID                                                      AS UnitID
                              , SUM(MovementItem.Saldo)                                                   AS Saldo
                              , SUM(MovementItem.SaldoSum)                                                AS Summa
                         FROM AnalysisContainerItem AS MovementItem
+                             INNER JOIN tmpUnit as tmpUnit ON tmpUnit.UnitId = MovementItem.UnitID
                         WHERE MovementItem.Operdate >= vbStartDate
                         GROUP BY MovementItem.UnitID),
     tmpContainerRemainder AS (SELECT
@@ -62,7 +80,8 @@ BEGIN
                             LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                                  ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
                                                 AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId)
+                            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
+                         )
 
 
     SELECT
@@ -81,11 +100,9 @@ BEGIN
     -- Неоплаченые накладные
   OPEN cur2 FOR
   WITH
-    tmpMovement_Income AS (SELECT Movement_Income.Id
-             , Object_Juridical.ObjectCode      AS JuridicalId
+    tmpMovement_Income AS (SELECT Movement_Income.Id      AS ID
+             , Object_Juridical.ObjectCode                AS JuridicalId
              , Object_Juridical.ValueData                 AS JuridicalName
-             , Object_To.Id                               AS ToId
-             , Object_To.Name                             AS ToName
              , MovementFloat_TotalSumm.ValueData          AS TotalSumm
              , MovementFloat_TotalSumm.ValueData +
                COALESCE(SUM(MovementItemContainer.Amount), 0)          AS SummNoPay
@@ -94,16 +111,23 @@ BEGIN
 
         FROM Movement AS Movement_Income
 
-        LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
+        INNER JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                      ON MovementLinkObject_Juridical.MovementId = Movement_Income.Id
                                     AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+                                    AND MovementLinkObject_Juridical.ObjectId <> 393053
 
-        LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                     ON MovementLinkObject_To.MovementId = Movement_Income.Id
-                                    AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+        INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                             ON ObjectLink_Juridical_Retail.ObjectId = MovementLinkObject_Juridical.ObjectId
+                            AND ObjectLink_Juridical_Retail.ChildObjectId = 4
+                            AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
 
-        LEFT JOIN Object_Unit_View AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
+        INNER JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
+                                             AND Object_Juridical.isErased = False
+
+        INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                      ON MovementLinkObject_From.MovementId = Movement_Income.Id
+                                     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                     AND MovementLinkObject_From.ObjectId not in (722768, 1475015)
 
         LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                 ON MovementFloat_TotalSumm.MovementId = Movement_Income.Id
@@ -122,12 +146,11 @@ BEGIN
 
         WHERE Movement_Income.DescId = zc_Movement_Income()
           AND Movement_Income.StatusId = zc_Enum_Status_Complete()
-          AND Movement_Income.OperDate < vbIncomeDate
+          AND Movement_Income.OperDate <= vbIncomeDate
+          AND Movement_Income.OperDate >= vbIncomeDateStart
         GROUP BY Movement_Income.Id
              , Object_Juridical.ObjectCode
              , Object_Juridical.ValueData
-             , Object_To.Id
-             , Object_To.Name
              , MovementFloat_TotalSumm.ValueData)
 
         SELECT Movement_Income.JuridicalId       AS JuridicalId
@@ -186,4 +209,3 @@ $BODY$
 -- BEGIN TRANSACTION;
 -- select * from gpReport_Liquidity (inStartDate := ('01.08.2018')::TDateTime , inSession := '3');
 -- COMMIT TRANSACTION;
-

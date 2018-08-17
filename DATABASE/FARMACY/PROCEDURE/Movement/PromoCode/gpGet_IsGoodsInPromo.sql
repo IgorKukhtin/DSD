@@ -17,12 +17,16 @@ BEGIN
     IF EXISTS(SELECT  * 
               FROM MovementItem PromoCode
                   INNER JOIN Movement Promo ON Promo.id = PromoCode.movementid
-                  INNER JOIN MovementItem PromoGoods ON Promo.id = PromoGoods.movementid AND PromoGoods.descid = zc_MI_Master()                  
+                  INNER JOIN MovementItem PromoGoods ON Promo.id = PromoGoods.movementid 
+                                                    AND PromoGoods.descid = zc_MI_Master()                  
+                                                    AND PromoGoods.Amount = 1
               WHERE PromoCode.id = inPromoCodeId) THEN
     	IF EXISTS(SELECT  * 
               FROM MovementItem PromoCode
                   INNER JOIN Movement Promo ON Promo.id = PromoCode.movementid
-                  INNER JOIN MovementItem PromoGoods ON Promo.id = PromoGoods.movementid AND PromoGoods.descid = zc_MI_Master()                  
+                  INNER JOIN MovementItem PromoGoods ON Promo.id = PromoGoods.movementid 
+                                                    AND PromoGoods.descid = zc_MI_Master()                  
+                                                    AND PromoGoods.Amount = 1
               WHERE PromoCode.id = inPromoCodeId AND PromoGoods.objectid = inGoodsId) THEN
         	outResult := True;
         END IF;

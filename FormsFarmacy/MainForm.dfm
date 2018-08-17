@@ -2283,6 +2283,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_Liquidity: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1083#1080#1082#1074#1080#1076#1085#1086#1089#1090#1080
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1083#1080#1082#1074#1080#1076#1085#1086#1089#1090#1080
+      FormName = 'TReport_LiquidityForm'
+      FormNameParam.Value = 'TReport_LiquidityForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -2763,6 +2775,9 @@ inherited MainForm: TMainForm
       end
       object N154: TMenuItem
         Action = actMarginCategory_Movement
+      end
+      object N164: TMenuItem
+        Action = actReport_Liquidity
       end
     end
     object N131: TMenuItem [7]
