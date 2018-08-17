@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_UnitForReprice(
     IN inProvinceCityId   Integer,       -- район
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, UnitName TVarChar) AS
+RETURNS TABLE (Id Integer, UnitName TVarChar)
+AS
 $BODY$
 BEGIN
 
@@ -63,4 +64,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_UnitForReprice (0, 0,'2');
+-- SELECT * FROM gpSelect_Object_UnitForReprice (0, 0, zfCalc_UserAdmin());
