@@ -434,6 +434,7 @@ type
     N165: TMenuItem;
     miPriceChange: TMenuItem;
     miPriceChangeOnDate: TMenuItem;
+    miRepriceChange: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
@@ -442,6 +443,7 @@ type
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure actReport_IncomeConsumptionBalanceExecute(Sender: TObject);
+    procedure miRepriceChangeClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -456,7 +458,7 @@ implementation
 {$R *.dfm}
 
 uses
-  UploadUnloadData, Dialogs, Forms, SysUtils, IdGlobal, RepriceUnit, ExportSalesForSupp,
+  UploadUnloadData, Dialogs, Forms, SysUtils, IdGlobal, RepriceUnit, RepriceChangeRetail, ExportSalesForSupp,
   Report_Analysis_Remains_Selling, Report_ImplementationPlanEmployee,
   Report_IncomeConsumptionBalance;
 
@@ -519,6 +521,16 @@ end;
 procedure TMainForm.miRepriceClick(Sender: TObject);
 begin
   with TRepriceUnitForm.Create(nil) do
+  try
+     Show;
+  finally
+     //Free;
+  end;
+end;
+
+procedure TMainForm.miRepriceChangeClick(Sender: TObject);
+begin
+  with TReprice—hangeRetailForm.Create(nil) do
   try
      Show;
   finally

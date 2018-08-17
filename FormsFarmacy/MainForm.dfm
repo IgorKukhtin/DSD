@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 666
   KeyPreview = True
   ExplicitWidth = 682
-  ExplicitHeight = 229
+  ExplicitHeight = 226
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -3063,7 +3063,11 @@ inherited MainForm: TMainForm
         Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072
         OnClick = miRepriceClick
       end
-      object miExportSalesForSupp: TMenuItem [25]
+      object miRepriceChange: TMenuItem [25]
+        Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1094#1077#1085' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+        OnClick = miRepriceChangeClick
+      end
+      object miExportSalesForSupp: TMenuItem [26]
         Action = actExportSalesForSuppClick
       end
     end

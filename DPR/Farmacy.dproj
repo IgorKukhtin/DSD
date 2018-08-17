@@ -212,7 +212,9 @@
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdXMLTransform.pas"/>
 			<DCCReference Include="..\FormsFarmacy\ConnectWithOld\RepriceUnit.pas">
 				<Form>RepriceUnitForm</Form>
-				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\FormsFarmacy\ConnectWithOld\RepriceChangeRetail.pas">
+				<Form>RepriceСhangeRetailForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\EDI\RecadvXML.pas"/>
 			<DCCReference Include="..\SOURCE\LocalWorkUnit.pas"/>

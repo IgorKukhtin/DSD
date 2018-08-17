@@ -285,7 +285,7 @@ uses
   PriceTest in '..\SOURCE\Objects\All\Farmacy\PriceTest.pas',
   AlternativeGroupTest in '..\SOURCE\Objects\All\Farmacy\AlternativeGroupTest.pas',
   AlternativeGroup in '..\..\FormsFarmacy\Guides\AlternativeGroup.pas' {AlternativeGroupForm: TParentForm},
-  RepriceUnit in '..\..\FormsFarmacy\ConnectWithOld\RepriceUnit.pas' {RepriceUnitForm},
+  RepriceChangeRetail in '..\..\FormsFarmacy\ConnectWithOld\RepriceChangeRetail.pas' {Reprice—hangeRetailForm},
   CheckVIP in '..\..\FormsFarmacy\Document\CheckVIP.pas' {CheckVIPForm: TParentForm},
   CheckDeferred in '..\..\FormsFarmacy\Document\CheckDeferred.pas' {CheckDeferredForm: TParentForm},
   PaidType in '..\..\Forms\Guides\PaidType.pas' {PaidTypeForm: TParentForm},

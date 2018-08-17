@@ -830,8 +830,8 @@
 				<Form>AlternativeGroupForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\ConnectWithOld\RepriceUnit.pas">
-				<Form>RepriceUnitForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\ConnectWithOld\RepriceChangeRetail.pas">
+				<Form>RepriceСhangeRetailForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\CheckVIP.pas">
 				<Form>CheckVIPForm</Form>

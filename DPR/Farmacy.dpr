@@ -66,6 +66,7 @@ uses
   dsdException in '..\SOURCE\dsdException.pas',
   dsdXMLTransform in '..\SOURCE\COMPONENT\dsdXMLTransform.pas',
   RepriceUnit in '..\FormsFarmacy\ConnectWithOld\RepriceUnit.pas' {RepriceUnitForm},
+  RepriceChangeRetail in '..\FormsFarmacy\ConnectWithOld\RepriceChangeRetail.pas' {Reprice—hangeRetailForm},
   RecadvXML in '..\SOURCE\EDI\RecadvXML.pas',
   LocalWorkUnit in '..\SOURCE\LocalWorkUnit.pas',
   RoleUnion in '..\Forms\RoleUnion.pas' {RoleUnionForm: TParentForm},
