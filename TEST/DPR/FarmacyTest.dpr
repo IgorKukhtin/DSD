@@ -586,7 +586,12 @@ uses
   DataDialog in '..\..\Forms\Document\DataDialog.pas' {DataDialogForm: TParentForm},
   ContractChoice in '..\..\FormsFarmacy\Guides\ContractChoice.pas' {ContractChoiceForm: TParentForm},
   GoodsSP_Movement in '..\..\FormsFarmacy\Document\GoodsSP_Movement.pas' {GoodsSP_MovementForm: TParentForm},
-  GoodsSPJournal in '..\..\FormsFarmacy\Document\GoodsSPJournal.pas' {GoodsSPJournalForm: TParentForm};
+  GoodsSPJournal in '..\..\FormsFarmacy\Document\GoodsSPJournal.pas' {GoodsSPJournalForm: TParentForm},
+  PriceChangeHistory in '..\..\FormsFarmacy\Guides\PriceChangeHistory.pas' {PriceChangeHistoryForm: TParentForm},
+  PriceChangeGoodsDialog in '..\..\FormsFarmacy\Guides\PriceChangeGoodsDialog.pas' {PriceChangeGoodsDialogForm: TParentForm},
+  PriceChange in '..\..\FormsFarmacy\Guides\PriceChange.pas' {PriceChangeForm: TParentForm},
+  PriceChangeOnDate in '..\..\FormsFarmacy\Guides\PriceChangeOnDate.pas' {PriceChangeOnDateForm: TParentForm},
+  PriceChangeDialog in '..\..\FormsFarmacy\Guides\PriceChangeDialog.pas' {PriceChangeDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -611,6 +616,5 @@ begin
   gc_isSetDefault := true;
   Application.CreateForm(TdmMain, dmMain);
   Application.Run;
-
   DUnitTestRunner.RunRegisteredTests;
 end.
