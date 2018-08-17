@@ -1003,7 +1003,7 @@ begin
                     dsdSave.Execute(False, False);
                   end;
                   // сохранил шапку
-                  dsdSave.StoredProcName := 'gpInsertUpdate_Movement_Check_ver2';
+                  dsdSave.StoredProcName := 'gpInsertUpdate_Movement_Check_ver3';
                   dsdSave.OutputType := otResult;
                   dsdSave.Params.Clear;
                   dsdSave.Params.AddParam('ioId', ftInteger, ptInputOutput, Head.ID);
@@ -1036,10 +1036,10 @@ begin
                   // ***24.01.17
                   dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
 
-                  Add_Log('Start Execute gpInsertUpdate_Movement_Check_ver2');
+                  Add_Log('Start Execute gpInsertUpdate_Movement_Check_ver3');
                   Add_Log('      ' + Head.UID);
                   dsdSave.Execute(False, False);
-                  Add_Log('End Execute gpInsertUpdate_Movement_Check_ver2'+
+                  Add_Log('End Execute gpInsertUpdate_Movement_Check_ver3'+
                           ' ID = '+ dsdSave.Params.ParamByName('ioID').AsString);
                   // сохранили в локальной базе полученный номер
                   if Head.ID <> StrToInt(dsdSave.Params.ParamByName('ioID').AsString) then

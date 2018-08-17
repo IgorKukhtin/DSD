@@ -440,6 +440,7 @@ var
   LastErr: Integer;
 
   function GetSumm(Amount,Price:currency): currency;
+  function GetSummFull(Amount,Price:currency): currency;
   function GenerateGUID: String;
 
 implementation
@@ -457,6 +458,30 @@ const
   StatusCompleteId = 15;
 
 function GetSumm(Amount,Price:currency): currency;
+var
+  A, P, RI: Cardinal;
+  S1,S2:String;
+begin
+  if (Amount = 0) or (Price = 0) then
+  Begin
+    result := 0;
+    exit;
+  End;
+  A := trunc(Amount * 1000);
+  P := trunc(Price * 100);
+  RI := A*P;
+  S1 := IntToStr(RI);
+  if Length(S1) < 4 then
+    RI := 0
+  else
+    RI := StrToInt(Copy(S1,1,length(S1)-4));
+  if (Length(S1)>=4) AND
+     (StrToint(S1[length(S1)-3])>=5) then
+    RI := RI + 1;
+  Result := (RI / 10);
+end;
+
+function GetSummFull(Amount,Price:currency): currency;
 var
   A, P, RI: Cardinal;
   S1,S2:String;
@@ -2294,7 +2319,7 @@ end;
 
 function TMainCashForm.PutCheckToCash(SalerCash: Currency;
   PaidType: TPaidType; out AFiscalNumber, ACheckNumber: String; isFiscal: boolean = true): boolean;
-var str_log_xml : String;
+var str_log_xml : String;   Disc: Currency;
     i : Integer;
 {------------------------------------------------------------------------------}
   function PutOneRecordToCash: boolean; //Продажа одного наименования
@@ -2321,7 +2346,7 @@ begin
       AFiscalNumber := Cash.FiscalNumber
     else
       AFiscalNumber := '';
-    str_log_xml:=''; i:=0;
+    str_log_xml:=''; i:=0; Disc:= 0;
     result := not Assigned(Cash) or Cash.AlwaysSold or Cash.OpenReceipt(isFiscal);
     with CheckCDS do
     begin
@@ -2345,6 +2370,7 @@ begin
                               + '<Amount>"' + FloatToStr(FieldByName('Amount').asCurrency) + '"</Amount>'
                               + '<Price>"' + FloatToStr(FieldByName('Price').asCurrency) + '"</Price>'
                               + '<List_UID>"' + FieldByName('List_UID').AsString + '"</List_UID>'
+                              + '<Discount>"' + CurrToStr(FieldByName('Summ').asCurrency - GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency)) + '"</Discount>'
                               + '</Items>';
                   except
                   str_log_xml:= str_log_xml
@@ -2352,14 +2378,17 @@ begin
                               + '<GoodsCode>"' + FieldByName('GoodsCode').asString + '"</GoodsCode>'
                               + '<GoodsName>"???"</GoodsName>'
                               + '<List_UID>"' + FieldByName('List_UID').AsString + '"</List_UID>'
+                              + '<Discount>"' + CurrToStr(FieldByName('Summ').asCurrency - GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency)) + '"</Discount>'
                               + '</Items>';
                   end;
+                  Disc := Disc + (FieldByName('Summ').asCurrency - GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency));
               end;
            end;
         Next;
       end;
       if Assigned(Cash) AND not Cash.AlwaysSold then
       begin
+        if Disc <> 0 then Cash.DiscountGoods(Disc);
         Cash.SubTotal(true, true, 0, 0);
         Cash.TotalSumm(SalerCash, PaidType);
         result := Cash.CloseReceiptEx(ACheckNumber); //Закрыли чек

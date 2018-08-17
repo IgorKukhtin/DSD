@@ -26,6 +26,7 @@ type
     function ProgrammingGoods(const GoodsCode: integer; const GoodsName: string; const Price, NDS: double): boolean;
     function ClosureFiscal: boolean;
     function TotalSumm(Summ: double; PaidType: TPaidType): boolean;
+    function DiscountGoods(Summ: double): boolean;
     function DeleteArticules(const GoodsCode: integer): boolean;
     function XReport: boolean;
     function GetLastErrorCode: integer;
@@ -280,18 +281,30 @@ begin
     ShowMessage('Неизвестное состояние фискального регистратора');
     exit;
   End;
-  FTotalSummaCheck := FTotalSummaCheck + ROUND(Amount*Price);
+  FTotalSummaCheck := FTotalSummaCheck + RoundTo(Amount*Price, -2);
   Result := not PrinterException;
 end;
 
 function TCashFP320.SubTotal(isPrint, isDisplay: WordBool; Percent,
   Disc: Double): boolean;
 begin
-  result := True;
-  exit; //В новых не нужно печатать
+  result := false;
   if not Connected then exit;
-  FPrinter.PrintRecSubtotal(FTotalSummaCheck);
-  Result := not PrinterException;
+
+  if Disc <> 0 then
+  begin
+    if FPrinter.CheckTotal then
+      FPrinter.CheckTotal := False;
+
+    FPrinter.PrintRecSubtotal(FTotalSummaCheck);
+    Result := not PrinterException;
+    if not Result then Exit;
+
+    if Disc < 0 then
+      FPrinter.PrintRecSubtotalAdjustment(1, 'СКИДКА', Abs(Disc))
+    else FPrinter.PrintRecSubtotalAdjustment(2, 'НАЦЕНКА', Disc);
+    Result := not PrinterException;
+  end else result := True;
 end;
 
 function TCashFP320.TotalSumm(Summ: double; PaidType: TPaidType): boolean;
@@ -302,6 +315,7 @@ var
 begin
   if not Connected then exit;
   Result := True;
+
   if FPrinter.CheckTotal then
     FPrinter.CheckTotal := False;
 
@@ -312,6 +326,11 @@ begin
   else
     FPrinter.PrintRecTotal(Summ, Summ, '0');
   Result := not PrinterException;
+end;
+
+function TCashFP320.DiscountGoods(Summ: double): boolean;
+begin
+
 end;
 
 function TCashFP320.XReport: boolean;

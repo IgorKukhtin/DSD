@@ -106,7 +106,7 @@ begin
     if not gc_User.Local then
     Begin
       TUpdater.AutomaticUpdateProgram;
-      TUpdater.AutomaticCheckConnect;
+      if ParamStr(2) = '' then TUpdater.AutomaticCheckConnect;
     End
     else
       gc_isSetDefault := True;

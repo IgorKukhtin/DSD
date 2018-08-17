@@ -19,6 +19,7 @@ type
      function ClosureFiscal: boolean;
      function XReport: boolean;
      function TotalSumm(Summ: double; PaidType: TPaidType): boolean;
+     function DiscountGoods(Summ: double): boolean;
      function DeleteArticules(const GoodsCode: integer): boolean;
      function GetLastErrorCode: integer;
      function GetArticulInfo(const GoodsCode: integer; var ArticulInfo: WideString): boolean;

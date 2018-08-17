@@ -58,8 +58,11 @@ begin
   end
   else
   begin
-    ActiveControl := edPromoCode;
-    ShowMessage ('Ошибка. Значение <Промокод> не определено. Длина промокода должна быть 8 символов');
+    if Length(trim(edPromoCode.Text)) <> 0 then
+    begin
+      ActiveControl := edPromoCode;
+      ShowMessage ('Ошибка. Значение <Промокод> не определено. Длина промокода должна быть 8 символов');
+    end else ModalResult := mrOk;
   end;
 end;
 
@@ -68,12 +71,12 @@ function TPromoCodeDialogForm.PromoCodeDialogExecute(var APromoCodeID: Integer; 
 begin
   edPromoCode.Text:= APromoCodeGUID;
   Result := ShowModal = mrOK;
-  if Result then
+  if Result and (Length(trim(edPromoCode.Text)) <> 0) then
   begin
     APromoCodeID := FormParams.ParamByName('PromoCodeID').Value;
     APromoCodeGUID := FormParams.ParamByName('PromoCodeGUID').Value;
     APromoName := FormParams.ParamByName('PromoName').Value;
-    APromoCodeChangePercent := FormParams.ParamByName('PromoCodeChangePercent').Value;
+    APromoCodeChangePercent := FormParams.ParamByName('PromoCodeChangePercent').AsFloat;
   end
   else
   begin

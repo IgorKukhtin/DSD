@@ -93,7 +93,7 @@ var
 implementation
 {$R *.dfm}
 uses Soap.XSBuiltIns
-   , MainCash, UtilConvert
+   , MainCash2, UtilConvert
    , XMLIntf, XMLDoc, OPToSOAPDomConv;
 
 function TDiscountServiceForm.GetMorionList: TMorionList;

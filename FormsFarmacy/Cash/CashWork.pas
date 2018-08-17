@@ -7,7 +7,7 @@ uses
   Dialogs, StdCtrls, Mask, CashInterface, DB, Buttons,
   Gauges, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, cxTextEdit, cxCurrencyEdit,
-  cxClasses, cxPropertiesStore, dsdAddOn;
+  cxClasses, cxPropertiesStore, dsdAddOn, dxSkinsCore, dxSkinsDefaultPainters;
 
 type
   TCashWorkForm = class(TForm)
@@ -24,6 +24,7 @@ type
     Button6: TButton;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
+    Button7: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -54,7 +55,15 @@ end;
 
 procedure TCashWorkForm.Button1Click(Sender: TObject);
 begin
-  m_Cash.CashInputOutput(ceInputOutput.Value)
+  if ceInputOutput.Value <= 0 then
+  begin
+    ShowMessage('Сумма должна быть больше нуля...');
+    Exit;
+  end;
+
+  if TButton(Sender).Tag = 0 then
+    m_Cash.CashInputOutput(ceInputOutput.Value)
+  else m_Cash.CashInputOutput(- ceInputOutput.Value);
 end;
 
 procedure TCashWorkForm.Button2Click(Sender: TObject);

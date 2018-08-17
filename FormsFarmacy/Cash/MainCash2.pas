@@ -106,7 +106,6 @@ type
     spSelectRemains: TdsdStoredProc;
     RemainsDS: TDataSource;
     RemainsCDS: TClientDataSet;
-    ceAmount: TcxCurrencyEdit;
     cxLabel1: TcxLabel;
     lcName: TcxLookupComboBox;
     actChoiceGoodsInRemainsGrid: TAction;
@@ -262,7 +261,7 @@ type
     actGetJuridicalList: TAction;
     miGetJuridicalList: TMenuItem;
     lblAmount: TLabel;
-    edAmount: TcxCurrencyEdit;
+    edDiscountAmount: TcxCurrencyEdit;
     BarCode: TcxGridDBColumn;
     MorionCode: TcxGridDBColumn;
     actSetMemdataFromDBF: TAction; // только 2 форма
@@ -296,14 +295,14 @@ type
     Label9: TLabel;
     Label15: TLabel;
     edManualDiscount: TcxCurrencyEdit;
+    actDivisibilityDialog: TAction;
+    edAmount: TcxTextEdit;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
     procedure lcNameKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure actSoldExecute(Sender: TObject);
     procedure actInsertUpdateCheckItemsExecute(Sender: TObject);
-    procedure ceAmountKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
     procedure ceAmountExit(Sender: TObject);
     procedure actPutCheckToCashExecute(Sender: TObject);           {********************}
     procedure ParentFormKeyDown(Sender: TObject; var Key: Word;
@@ -360,7 +359,11 @@ type
     procedure miPrintNotFiscalCheckClick(Sender: TObject);
     procedure mmSaveToExcelClick(Sender: TObject);
     procedure TimerServiceRunTimer(Sender: TObject);
-    procedure actManualDiscountExecute(Sender: TObject); //***12.02.18
+    procedure actManualDiscountExecute(Sender: TObject);
+    procedure edAmountKeyPress(Sender: TObject; var Key: Char);
+    procedure edAmountKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure edAmountExit(Sender: TObject); //***12.02.18
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -426,6 +429,7 @@ type
     procedure ConnectionModeChange(var Msg: TMessage); message UM_LOCAL_CONNECTION;
     procedure SetWorkMode(ALocal: Boolean);
     procedure AppMsgHandler(var Msg: TMsg; var Handled: Boolean);  // только 2 форма
+    function GetAmount : currency;
   public
     procedure pGet_OldSP(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP: String; var AOperDateSP : TDateTime);
   end;
@@ -445,7 +449,9 @@ var
   MutexDBF, MutexDBFDiff, MutexVip, MutexRemains, MutexAlternative, MutexAllowedConduct : THandle;  // MutexAllowedConduct только 2 форма
   LastErr: Integer;
   FM_SERVISE: Integer;  // для передачи сообщений между приложение и сервисом // только 2 форма
+  function GetPrice(Price, Discount:currency): currency;
   function GetSumm(Amount,Price:currency): currency;
+  function GetSummFull(Amount,Price:currency): currency;
   function GenerateGUID: String;
   procedure Add_Log(AMessage: String);
 
@@ -525,12 +531,58 @@ begin
     end;
 end;
 
-
+function GetPrice(Price, Discount:currency): currency;
+var
+  D, P, RI: Cardinal;
+  S1: String;
+begin
+  if (Price = 0) then
+  Begin
+    result := 0;
+    exit;
+  End;
+  D := trunc(Discount * 100);
+  P := trunc(Price * 100);
+  RI := P * (10000 - D);
+  S1 := IntToStr(RI);
+  if Length(S1) < 5 then
+    RI := 0
+  else
+    RI := StrToInt(Copy(S1,1,length(S1)-4));
+  if (Length(S1)>=4) AND
+     (StrToint(S1[length(S1)-3])>=5) then
+    RI := RI + 1;
+  Result := (RI / 100);
+end;
 
 function GetSumm(Amount,Price:currency): currency;
 var
   A, P, RI: Cardinal;
-  S1,S2:String;
+  S1: String;
+begin
+  if (Amount = 0) or (Price = 0) then
+  Begin
+    result := 0;
+    exit;
+  End;
+  A := trunc(Amount * 1000);
+  P := trunc(Price * 100);
+  RI := A*P;
+  S1 := IntToStr(RI);
+  if Length(S1) < 4 then
+    RI := 0
+  else
+    RI := StrToInt(Copy(S1,1,length(S1)-4));
+  if (Length(S1)>=4) AND
+     (StrToint(S1[length(S1)-3])>=5) then
+    RI := RI + 1;
+  Result := (RI / 10);
+end;
+
+function GetSummFull(Amount,Price:currency): currency;
+var
+  A, P, RI: Cardinal;
+  S1: String;
 begin
   if (Amount = 0) or (Price = 0) then
   Begin
@@ -621,9 +673,9 @@ begin
        SourceClientDataSet := RemainsCDS;
        SoldRegim := true;
        lcName.Text := RemainsCDS.FieldByName('GoodsName').asString;
-       ceAmount.Enabled := true;
-       ceAmount.Value := 1;
-       ActiveControl := ceAmount;
+       edAmount.Enabled := true;
+       edAmount.Text := '1';
+       ActiveControl := edAmount;
     end
   end
   else
@@ -634,9 +686,9 @@ begin
        SourceClientDataSet := AlternativeCDS;
        SoldRegim := true;
        lcName.Text := AlternativeCDS.FieldByName('GoodsName').asString;
-       ceAmount.Enabled := true;
-       ceAmount.Value := 1;
-       ActiveControl := ceAmount;
+       edAmount.Enabled := true;
+       edAmount.Text := '1';
+       ActiveControl := edAmount;
     end
   End
   else
@@ -646,9 +698,9 @@ begin
        SourceClientDataSet := CheckCDS;
        SoldRegim := False;
        lcName.Text := CheckCDS.FieldByName('GoodsName').asString;
-       ceAmount.Enabled := true;
-       ceAmount.Value := -1;
-       ActiveControl := ceAmount;
+       edAmount.Enabled := true;
+       edAmount.Text := '-1';
+       ActiveControl := edAmount;
     end;
   End;
 end;
@@ -694,8 +746,8 @@ begin
   pnlVIP.Visible := False;
   edPrice.Value := 0.0;
   edPrice.Visible := False;
-  edAmount.Value := 0.0;
-  edAmount.Visible := False;
+  edDiscountAmount.Value := 0.0;
+  edDiscountAmount.Visible := False;
   lblPrice.Visible := False;
   lblAmount.Visible := False;
   pnlDiscount.Visible := False;
@@ -803,9 +855,9 @@ begin
       edManualDiscount.Value := FormParams.ParamByName('ManualDiscount').Value;
 
       CheckCDS.DisableControls;
+      CheckCDS.Filtered := False;
+      nRecNo := CheckCDS.RecNo;
       try
-        CheckCDS.Filtered := False;
-        nRecNo := CheckCDS.RecNo;
 
         CheckCDS.First;
         while not CheckCDS.Eof do
@@ -814,12 +866,12 @@ begin
           if checkCDS.FieldByName('ChangePercent').asCurrency <> FormParams.ParamByName('ManualDiscount').Value then
           begin
             checkCDS.Edit;
-            checkCDS.FieldByName('Price').asCurrency    := checkCDS.FieldByName('PriceSale').asCurrency
-                                                           * (1 - Self.FormParams.ParamByName('ManualDiscount').Value/100);
+            checkCDS.FieldByName('Price').asCurrency    := GetPrice(checkCDS.FieldByName('PriceSale').asCurrency,
+                                                                    Self.FormParams.ParamByName('ManualDiscount').Value);
             checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('ManualDiscount').Value;
             CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency);
-            checkCDS.FieldByName('SummChangePercent').asCurrency :=  GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('PriceSale').asCurrency) -
-              CheckCDS.FieldByName('Summ').asCurrency;
+            checkCDS.FieldByName('SummChangePercent').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+                CheckCDS.FieldByName('PriceSale').asCurrency) - CheckCDS.FieldByName('Summ').asCurrency;
             checkCDS.Post;
           end;
           CheckCDS.Next;
@@ -849,17 +901,17 @@ end;
 
 procedure TMainCashForm2.actGetJuridicalListExecute(Sender: TObject);
 begin
-  if edAmount.Visible and (edAmount.Value > 0.0) then
+  if edDiscountAmount.Visible and (edDiscountAmount.Value > 0.0) then
   begin
     spGet_JuridicalList.ParamByName('inGoodsId').Value := RemainsCDS.FieldByName('Id').AsInteger;
-    spGet_JuridicalList.ParamByName('inAmount').Value := edAmount.Value;
+    spGet_JuridicalList.ParamByName('inAmount').Value := edDiscountAmount.Value;
     ShowMessage(spGet_JuridicalList.Execute());
   end;
 end;
 
 procedure TMainCashForm2.actGetJuridicalListUpdate(Sender: TObject);
 begin
-  actGetJuridicalList.Enabled := edAmount.Visible and (edAmount.Value > 0);
+  actGetJuridicalList.Enabled := edDiscountAmount.Visible and (edDiscountAmount.Value > 0);
 end;
 
 procedure TMainCashForm2.actGetMoneyInCashExecute(Sender: TObject);
@@ -890,7 +942,7 @@ end;
 
 procedure TMainCashForm2.actInsertUpdateCheckItemsExecute(Sender: TObject);
 begin
-  if ceAmount.Value <> 0 then begin //ЕСЛИ введенное кол-во 0 то просто переходим к следующему коду
+  if GetAmount <> 0 then begin //ЕСЛИ введенное кол-во 0 то просто переходим к следующему коду
     if not Assigned(SourceClientDataSet) then
       SourceClientDataSet := RemainsCDS;
 
@@ -946,9 +998,9 @@ begin
   edManualDiscount.Value := FormParams.ParamByName('ManualDiscount').Value;
 
   CheckCDS.DisableControls;
+  CheckCDS.Filtered := False;
+  nRecNo := CheckCDS.RecNo;
   try
-    CheckCDS.Filtered := False;
-    nRecNo := CheckCDS.RecNo;
 
     CheckCDS.First;
     while not CheckCDS.Eof do
@@ -957,8 +1009,8 @@ begin
       if checkCDS.FieldByName('ChangePercent').asCurrency <> FormParams.ParamByName('ManualDiscount').Value then
       begin
         checkCDS.Edit;
-        checkCDS.FieldByName('Price').asCurrency    := checkCDS.FieldByName('PriceSale').asCurrency
-                                                       * (1 - Self.FormParams.ParamByName('ManualDiscount').Value/100);
+        checkCDS.FieldByName('Price').asCurrency    := GetPrice(checkCDS.FieldByName('PriceSale').asCurrency,
+                                                                Self.FormParams.ParamByName('ManualDiscount').Value);
         checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('ManualDiscount').Value;
         CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency);
         checkCDS.FieldByName('SummChangePercent').asCurrency :=  GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('PriceSale').asCurrency) -
@@ -1039,7 +1091,7 @@ begin
   begin// если с Shift, то считаем, что дали без сдачи
     if not CashCloseDialogExecute(FTotalSumm,ASalerCash,PaidType) then
     Begin
-      if Self.ActiveControl <> ceAmount then
+      if Self.ActiveControl <> edAmount then
         Self.ActiveControl := MainGrid;
       exit;
     End;
@@ -1518,15 +1570,10 @@ end;
 
 procedure TMainCashForm2.actSetPromoCodeExecute(Sender: TObject);
 var
-  PromoCodeId: Integer;
+  PromoCodeId, nRecNo: Integer;
   PromoName, PromoCodeGUID: String;
   PromoCodeChangePercent: currency;
 begin
-  if (not CheckCDS.IsEmpty) then
-  Begin
-    ShowMessage('Текущий чек не пустой. Сначала очистите чек!');
-    exit;
-  End;
 
   with TPromoCodeDialogForm.Create(nil) do
   try
@@ -1540,18 +1587,71 @@ begin
      Free;
   end;
   //
-  FormParams.ParamByName('PromoCodeID').Value             := PromoCodeId;
-  FormParams.ParamByName('PromoCodeGUID').Value           := PromoCodeGUID;
-  FormParams.ParamByName('PromoName').Value               := PromoName;
-  FormParams.ParamByName('PromoCodeChangePercent').Value  := PromoCodeChangePercent;
-  //***27.06.18
-  FormParams.ParamByName('ManualDiscount').Value          := 0;
 
+  if PromoCodeId = 0 then
+  begin
+    FormParams.ParamByName('PromoCodeID').Value             := 0;
+    FormParams.ParamByName('PromoCodeGUID').Value           := '';
+    FormParams.ParamByName('PromoName').Value               := '';
+    FormParams.ParamByName('PromoCodeChangePercent').Value  := 0;
 
-  pnlPromoCode.Visible          := PromoCodeId > 0;
-  lblPromoName.Caption          := '  ' + PromoName + '  ';
-  lblPromoCode.Caption          := '  ' + PromoCodeGUID + '  ';
-  edPromoCodeChangePrice.Value  := PromoCodeChangePercent;
+    pnlPromoCode.Visible          := False;
+    lblPromoName.Caption          := '';
+    lblPromoCode.Caption          := '';
+    edPromoCodeChangePrice.Value  := 0;
+  end else
+  begin
+    FormParams.ParamByName('PromoCodeID').Value             := PromoCodeId;
+    FormParams.ParamByName('PromoCodeGUID').Value           := PromoCodeGUID;
+    FormParams.ParamByName('PromoName').Value               := PromoName;
+    FormParams.ParamByName('PromoCodeChangePercent').Value  := PromoCodeChangePercent;
+    //***27.06.18
+
+    FormParams.ParamByName('ManualDiscount').Value          := 0;
+
+    pnlPromoCode.Visible          := PromoCodeId > 0;
+    lblPromoName.Caption          := '  ' + PromoName + '  ';
+    lblPromoCode.Caption          := '  ' + PromoCodeGUID + '  ';
+    edPromoCodeChangePrice.Value  := PromoCodeChangePercent;
+  end;
+
+  CheckCDS.DisableControls;
+  CheckCDS.Filtered := False;
+  nRecNo := CheckCDS.RecNo;
+  try
+
+    CheckCDS.First;
+    while not CheckCDS.Eof do
+    begin
+
+      if (Self.FormParams.ParamByName('PromoCodeID').Value > 0) and
+        CheckIfGoodsIdInPromo(Self.FormParams.ParamByName('PromoCodeID').Value, checkCDS.FieldByName('GoodsId').AsInteger) then
+      begin
+        checkCDS.Edit;
+        checkCDS.FieldByName('Price').asCurrency    := GetPrice(checkCDS.FieldByName('PriceSale').asCurrency,
+                                                                Self.FormParams.ParamByName('PromoCodeChangePercent').Value);
+        checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('PromoCodeChangePercent').Value;
+        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency);
+        checkCDS.FieldByName('SummChangePercent').asCurrency :=  GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('PriceSale').asCurrency) -
+          CheckCDS.FieldByName('Summ').asCurrency;
+        checkCDS.Post;
+      end else
+      begin
+        checkCDS.Edit;
+        checkCDS.FieldByName('Price').asCurrency    := checkCDS.FieldByName('PriceSale').asCurrency;
+        checkCDS.FieldByName('ChangePercent').asCurrency     := 0;
+        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency);
+        checkCDS.FieldByName('SummChangePercent').asCurrency :=  0;
+        checkCDS.Post;
+      end;
+      CheckCDS.Next;
+    end;
+  finally
+    CheckCDS.RecNo := nRecNo;
+    CheckCDS.Filtered := True;
+    CheckCDS.EnableControls;
+  end;
+  CalcTotalSumm;
 end;
 
 procedure TMainCashForm2.actSetRimainsFromMemdataExecute(Sender: TObject);  // только 2 форма
@@ -1959,7 +2059,7 @@ begin
   lblPrice.Visible := (DiscountServiceForm.gCode = 2);
   edPrice.Visible := lblPrice.Visible;
   lblAmount.Visible := lblPrice.Visible;
-  edAmount.Visible := lblAmount.Visible;
+  edDiscountAmount.Visible := lblAmount.Visible;
 end;
 
 //***20.04.17
@@ -2071,7 +2171,7 @@ end;
 procedure TMainCashForm2.actSoldExecute(Sender: TObject);
 begin
   SoldRegim:= not SoldRegim;
-  ceAmount.Enabled := false;
+  edAmount.Enabled := false;
   lcName.Text := '';
   if isScaner = true
   then ActiveControl := ceScaner
@@ -2101,15 +2201,8 @@ end;
 
 procedure TMainCashForm2.ceAmountExit(Sender: TObject);
 begin
-  ceAmount.Enabled := false;
+  edAmount.Enabled := false;
   lcName.Text := '';
-end;
-
-procedure TMainCashForm2.ceAmountKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-  if Key=VK_Return then
-     actInsertUpdateCheckItems.Execute
 end;
 
 procedure TMainCashForm2.ceScanerKeyPress(Sender: TObject; var Key: Char);
@@ -2214,6 +2307,30 @@ end;
 procedure TMainCashForm2.ConnectionModeChange(var Msg: TMessage);
 begin
   SetWorkMode(gc_User.Local);
+end;
+
+procedure TMainCashForm2.edAmountExit(Sender: TObject);
+begin
+  edAmount.Enabled := false;
+  lcName.Text := '';
+end;
+
+procedure TMainCashForm2.edAmountKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key=VK_Return then
+     actInsertUpdateCheckItems.Execute
+end;
+
+procedure TMainCashForm2.edAmountKeyPress(Sender: TObject; var Key: Char);
+begin
+  if not CharInSet(Key, ['-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '/', FormatSettings.DecimalSeparator, #8]) or
+    CharInSet(Key, ['/', FormatSettings.DecimalSeparator]) and
+    ((Pos(FormatSettings.DecimalSeparator, edAmount.Text) > 0) or (Pos('/', edAmount.Text) > 0)) or
+    (Key = '-') and (edAmount.SelStart <> 0) or
+    (Pos(FormatSettings.DecimalSeparator, edAmount.Text) > 0) and CharInSet(Key, ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']) and
+    (edAmount.SelStart >= Pos(FormatSettings.DecimalSeparator, edAmount.Text)) and((Length(edAmount.Text) - Pos(FormatSettings.DecimalSeparator, edAmount.Text)) >= 3)
+    then Key:= #0;
 end;
 
 procedure TMainCashForm2.miMCSAutoClick(Sender: TObject);
@@ -2373,26 +2490,27 @@ begin
 end;
 
 procedure TMainCashForm2.InsertUpdateBillCheckItems;
-var lQuantity, lPrice, lPriceSale, lChangePercent, lSummChangePercent : Currency;
+var lQuantity, lPrice, lPriceSale, lChangePercent, lSummChangePercent, nAmount : Currency;
     lMsg : String;
     lGoodsId_bySoldRegim : Integer;
     lPriceSale_bySoldRegim, lPrice_bySoldRegim : Currency;
 begin
 
-  if ceAmount.Value = 0 then
+  nAmount := GetAmount;
+  if nAmount = 0 then
      exit;
   if not assigned(SourceClientDataSet) then
     SourceClientDataSet := RemainsCDS;
   if SoldRegim AND
-     (ceAmount.Value > 0) and
-     (ceAmount.Value > SourceClientDataSet.FieldByName('Remains').asFloat) then
+     (nAmount > 0) and
+     (nAmount > SourceClientDataSet.FieldByName('Remains').AsCurrency) then
   begin
     ShowMessage('Не хватает количества для продажи!');
     exit;
   end;
   if not SoldRegim AND
-     (ceAmount.Value < 0) and
-     (abs(ceAmount.Value) > abs(CheckCDS.FieldByName('Amount').asFloat)) then
+     (nAmount < 0) and
+     (abs(nAmount) > abs(CheckCDS.FieldByName('Amount').AsCurrency)) then
   begin
     ShowMessage('Не хватает количества для возврата!');
     exit;
@@ -2452,13 +2570,13 @@ begin
                // цена БЕЗ скидки
                lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
                // цена СО скидкой
-               lPrice_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency * (1 - Self.FormParams.ParamByName('PromoCodeChangePercent').Value/100);
+               lPrice_bySoldRegim := GetPrice(SourceClientDataSet.FieldByName('Price').asCurrency, Self.FormParams.ParamByName('PromoCodeChangePercent').Value);
              end else if (Self.FormParams.ParamByName('ManualDiscount').Value > 0) then
              begin
                // цена БЕЗ скидки
                lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
                // цена СО скидкой
-               lPrice_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency * (1 - Self.FormParams.ParamByName('ManualDiscount').Value/100);
+               lPrice_bySoldRegim := GetPrice(SourceClientDataSet.FieldByName('Price').asCurrency, Self.FormParams.ParamByName('ManualDiscount').Value);
              end else
                   begin
                        // цена БЕЗ скидки
@@ -2477,7 +2595,7 @@ begin
        end;
   {
   //Находится "ИТОГО" кол-во - сколько уже набрали в продаже и к нему плюсуется или минусуется "новое" кол-во
-  lQuantity := fGetCheckAmountTotal (lGoodsId_bySoldRegim, ceAmount.Value);
+  lQuantity := fGetCheckAmountTotal (lGoodsId_bySoldRegim, edAmount.Value);
   //если установлен Проект (дисконтные карты) ***20.07.16
   if (FormParams.ParamByName('DiscountExternalId').Value > 0)
     and (lQuantity > 0)
@@ -2528,7 +2646,7 @@ begin
   end; // else если установлен Проект (дисконтные карты) ***20.07.16
   //
   //
-  if SoldRegim AND (ceAmount.Value > 0) then
+  if SoldRegim AND (nAmount > 0) then
   Begin
     CheckCDS.DisableControls;
     try
@@ -2591,7 +2709,7 @@ begin
       CheckCDS.Filtered := True;
       CheckCDS.EnableControls;
     end;
-    UpdateRemainsFromCheck(SourceClientDataSet.FieldByName('Id').asInteger,ceAmount.Value, lPriceSale);
+    UpdateRemainsFromCheck(SourceClientDataSet.FieldByName('Id').asInteger,nAmount, lPriceSale);
     //Update Дисконт в CDS - по всем "обновим" Дисконт
     if FormParams.ParamByName('DiscountExternalId').Value > 0
     then DiscountServiceForm.fUpdateCDS_Discount (CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
@@ -2599,9 +2717,9 @@ begin
     CalcTotalSumm;
   End
   else
-  if not SoldRegim AND (ceAmount.Value < 0) then
+  if not SoldRegim AND (nAmount < 0) then
   Begin
-    UpdateRemainsFromCheck(CheckCDS.FieldByName('GoodsId').AsInteger,ceAmount.Value,CheckCDS.FieldByName('PriceSale').asCurrency);
+    UpdateRemainsFromCheck(CheckCDS.FieldByName('GoodsId').AsInteger,nAmount,CheckCDS.FieldByName('PriceSale').asCurrency);
     //Update Дисконт в CDS - по всем "обновим" Дисконт
     if FormParams.ParamByName('DiscountExternalId').Value > 0
     then DiscountServiceForm.fUpdateCDS_Discount (CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
@@ -2609,10 +2727,10 @@ begin
     CalcTotalSumm;
   End
   else
-  if SoldRegim AND (ceAmount.Value < 0) then
+  if SoldRegim AND (nAmount < 0) then
     ShowMessage('Для продажи можно указывать только количество больше 0!')
   else
-  if not SoldRegim AND (ceAmount.Value > 0) then
+  if not SoldRegim AND (nAmount > 0) then
     ShowMessage('Для возврата можно указывать только количество меньше 0!');
 end;
 
@@ -2798,12 +2916,12 @@ begin
          (lcName.Text = CheckCDS.FieldByName('GoodsName').AsString)
        )
      ) then begin
-     ceAmount.Enabled := true;
+     edAmount.Enabled := true;
      if SoldRegim then
-        ceAmount.Value := 1
+        edAmount.Text := '1'
      else
-        ceAmount.Value := - 1;
-     ActiveControl := ceAmount;
+        edAmount.Text := '-1';
+     ActiveControl := edAmount;
   end;
   if Key = VK_TAB then
     ActiveControl:=MainGrid;
@@ -2887,8 +3005,8 @@ begin
   pnlVIP.Visible := False;
   edPrice.Value := 0.0;
   edPrice.Visible := False;
-  edAmount.Value := 0.0;
-  edAmount.Visible := False;
+  edDiscountAmount.Value := 0.0;
+  edDiscountAmount.Visible := False;
   lblPrice.Visible := False;
   lblAmount.Visible := False;
   pnlDiscount.Visible := False;
@@ -2925,7 +3043,7 @@ begin
     actRefreshAllExecute(nil);
   End;
   CalcTotalSumm;
-  ceAmount.Value := 0;
+  edAmount.Text := '0';
   isScaner:=false;
   ActiveControl := lcName;
 end;
@@ -3065,7 +3183,7 @@ end;
 
 function TMainCashForm2.PutCheckToCash(SalerCash: Currency;
   PaidType: TPaidType; out AFiscalNumber, ACheckNumber: String; isFiscal: boolean = true): boolean;
-var str_log_xml : String;
+var str_log_xml : String; Disc: Currency;
     i : Integer;
 {------------------------------------------------------------------------------}
   function PutOneRecordToCash: boolean; //Продажа одного наименования
@@ -3080,7 +3198,7 @@ var str_log_xml : String;
                                       AnsiUpperCase(FieldByName('GoodsName').Text),
                                       FieldByName('Amount').asCurrency,
                                       FieldByName('Price').asCurrency,
-                                      FieldByName('NDS').asCurrency)
+                                      FieldByName('NDS').asCurrency);
          end
        else result:=true;
   end;
@@ -3092,7 +3210,7 @@ begin
       AFiscalNumber := Cash.FiscalNumber
     else
       AFiscalNumber := '';
-    str_log_xml:=''; i:=0;
+    str_log_xml:=''; i:=0; Disc:= 0;
     result := not Assigned(Cash) or Cash.AlwaysSold or Cash.OpenReceipt(isFiscal);
     with CheckCDS do
     begin
@@ -3116,6 +3234,7 @@ begin
                               + '<Amount>"' + FloatToStr(FieldByName('Amount').asCurrency) + '"</Amount>'
                               + '<Price>"' + FloatToStr(FieldByName('Price').asCurrency) + '"</Price>'
                               + '<List_UID>"' + FieldByName('List_UID').AsString + '"</List_UID>'
+                              + '<Discount>"' + CurrToStr(FieldByName('Summ').asCurrency - GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency)) + '"</Discount>'
                               + '</Items>';
                   except
                   str_log_xml:= str_log_xml
@@ -3123,14 +3242,17 @@ begin
                               + '<GoodsCode>"' + FieldByName('GoodsCode').asString + '"</GoodsCode>'
                               + '<GoodsName>"???"</GoodsName>'
                               + '<List_UID>"' + FieldByName('List_UID').AsString + '"</List_UID>'
+                              + '<Discount>"' + CurrToStr(FieldByName('Summ').asCurrency - GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency)) + '"</Discount>'
                               + '</Items>';
                   end;
+                  Disc := Disc + (FieldByName('Summ').asCurrency - GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency));
               end;
            end;
         Next;
       end;
       if Assigned(Cash) AND not Cash.AlwaysSold then
       begin
+        if Disc <> 0 then Cash.DiscountGoods(Disc);
         Cash.SubTotal(true, true, 0, 0);
         Cash.TotalSumm(SalerCash, PaidType);
         result := Cash.CloseReceiptEx(ACheckNumber); //Закрыли чек
@@ -3342,25 +3464,25 @@ begin
         begin
            // на всяк случай - УСТАНОВИМ скидку еще разок
             checkCDS.FieldByName('PriceSale').asCurrency:= RemainsCDS.FieldByName('Price').asCurrency;
-            checkCDS.FieldByName('Price').asCurrency    := RemainsCDS.FieldByName('Price').asCurrency
-                                                           * (1 - Self.FormParams.ParamByName('PromoCodeChangePercent').Value/100);
+            checkCDS.FieldByName('Price').asCurrency    := GetPrice(RemainsCDS.FieldByName('Price').asCurrency,
+                                                                    Self.FormParams.ParamByName('PromoCodeChangePercent').Value);
             // и УСТАНОВИМ скидку
             checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('PromoCodeChangePercent').Value;
-            checkCDS.FieldByName('SummChangePercent').asCurrency := CheckCDS.FieldByName('Amount').asCurrency
-                                                                    * RemainsCDS.FieldByName('Price').asCurrency
-                                                                    * (Self.FormParams.ParamByName('PromoCodeChangePercent').Value/100);
+            checkCDS.FieldByName('SummChangePercent').asCurrency :=
+                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency) -
+                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency);
         end else
         if (Self.FormParams.ParamByName('ManualDiscount').Value > 0) then
         begin
            // на всяк случай - УСТАНОВИМ скидку еще разок
             checkCDS.FieldByName('PriceSale').asCurrency:= RemainsCDS.FieldByName('Price').asCurrency;
-            checkCDS.FieldByName('Price').asCurrency    := RemainsCDS.FieldByName('Price').asCurrency
-                                                           * (1 - Self.FormParams.ParamByName('ManualDiscount').Value/100);
+            checkCDS.FieldByName('Price').asCurrency    := GetPrice(RemainsCDS.FieldByName('Price').asCurrency,
+                                                                   Self.FormParams.ParamByName('ManualDiscount').Value);
             // и УСТАНОВИМ скидку
             checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('ManualDiscount').Value;
-            checkCDS.FieldByName('SummChangePercent').asCurrency := CheckCDS.FieldByName('Amount').asCurrency
-                                                                    * RemainsCDS.FieldByName('Price').asCurrency
-                                                                    * (Self.FormParams.ParamByName('ManualDiscount').Value/100);
+            checkCDS.FieldByName('SummChangePercent').asCurrency :=
+                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency) -
+                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency);
         end else
         begin
             // на всяк случай условие - восстановим если Цена БЕЗ скидки была запонена
@@ -3371,7 +3493,7 @@ begin
             checkCDS.FieldByName('SummChangePercent').asCurrency := 0;
         end;
 
-        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency);
+        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency);
 
         CheckCDS.Post;
       End;
@@ -3805,11 +3927,11 @@ begin
   FSoldRegim := Value;
   if SoldRegim then begin
      actSold.Caption := 'Продажа';
-     ceAmount.Value := 1;
+     edAmount.Text := '1';
   end
   else begin
      actSold.Caption := 'Возврат';
-     ceAmount.Value := -1;
+     edAmount.Text := '-1';
   end;
 end;
 
@@ -4036,8 +4158,7 @@ end;
 
 procedure TMainCashForm2.LoadFromLocalStorage;
 var
-  lMsg: String;
-  nRemainsID, nAlternativeID, nCheckID, I: integer;
+  nRemainsID, nAlternativeID, nCheckID: integer;
 begin
   startSplash('Начало обновления данных с сервера !!');
 
@@ -4114,6 +4235,97 @@ begin
   end;
 end;
 
+function TMainCashForm2.GetAmount : currency;
+  var nAmount : Currency; nOne : Extended; nOut, nPack, nOst : Integer;
+begin
+  Result := 0;
+
+  if edAmount.Text = '' then
+  begin
+    ActiveControl := edAmount;
+    ShowMessage ('Ошибка. Не заполнено количество.'#13#10'Должно быть или дробь:'#13#10'Количество продажи / Количество в упаковке');
+  end;
+
+  if Pos('/', edAmount.Text) > 0 then
+  begin
+    if not TryStrToInt(Copy(edAmount.Text, 1, Pos('/', edAmount.Text) - 1), nOut) or (nOut = 0) then
+    begin
+      ActiveControl := edAmount;
+      ShowMessage ('Ошибка. Не заполнено количество едениц продажи.');
+    end;
+
+    if not TryStrToInt(Copy(edAmount.Text, Pos('/', edAmount.Text) + 1, Length(edAmount.Text)),  nPack) or (nPack = 0) then
+    begin
+      ActiveControl := edAmount;
+      ShowMessage ('Ошибка. Не заполнено количество едениц в упаковке.');
+    end;
+
+    nOut := Abs(nOut);
+    nAmount := RoundTo(nOut / nPack, - 3);
+    nOne := 1 / nPack;
+
+    if SoldRegim then
+    begin
+
+      if Abs(Frac(RemainsCDS.FieldByName('Remains').asCurrency) -
+        Round(Frac(RemainsCDS.FieldByName('Remains').asCurrency) / nOne) * nOne) / nOne * 100 >= 2 then
+      begin
+        ShowMessage('Остаток не соответствует введеной делимости.');
+        Exit;
+      end;
+
+      if (Frac(nAmount) = (Frac(RemainsCDS.FieldByName('Remains').asCurrency) + 0.001)) and (nPack < 500) then
+        nAmount := nAmount - 0.001
+      else if (Frac(nAmount) = (Frac(RemainsCDS.FieldByName('Remains').asCurrency) - 0.001)) and (nPack < 500) then
+        nAmount := nAmount + 0.001
+      else if Frac(nAmount) <> Frac(RemainsCDS.FieldByName('Remains').asCurrency) then
+      begin
+        if Frac(RemainsCDS.FieldByName('Remains').asCurrency) = 0 then nOst := nPack - (nOut mod nPack)
+        else nOst := Round(Frac(RemainsCDS.FieldByName('Remains').asCurrency) / nOne) - (nOut mod nPack);
+        if nOst = 0 then
+          nAmount := nAmount + (Frac(RemainsCDS.FieldByName('Remains').asCurrency) - Frac(nAmount))
+        else if Frac(RemainsCDS.FieldByName('Remains').asCurrency) = 0 then
+          nAmount := nAmount + (1 - RoundTo(nOst * nOne, - 3) - Frac(nAmount))
+        else nAmount := nAmount + (Frac(RemainsCDS.FieldByName('Remains').asCurrency) - RoundTo(nOst * nOne, - 3) - Frac(nAmount));
+      end;
+    end else
+    begin
+
+      if Abs(Frac(CheckCDS.FieldByName('Amount').asCurrency) -
+        Round(Frac(CheckCDS.FieldByName('Amount').asCurrency) / nOne) * nOne) / nOne * 100 >= 2 then
+      begin
+        ShowMessage('Остаток не соответствует введеной делимости.');
+        Exit;
+      end;
+
+      if (Frac(nAmount) = (Frac(CheckCDS.FieldByName('Amount').asCurrency) + 0.001)) and (nPack < 500) then
+        nAmount := nAmount - 0.001
+      else if (Frac(nAmount) = (Frac(CheckCDS.FieldByName('Amount').asCurrency) - 0.001)) and (nPack < 500) then
+        nAmount := nAmount + 0.001
+      else if Frac(nAmount) <> Frac(CheckCDS.FieldByName('Amount').asCurrency) then
+      begin
+        if Frac(CheckCDS.FieldByName('Amount').asCurrency) = 0 then nOst := nPack - (nOut mod nPack)
+        else nOst := Round(Frac(CheckCDS.FieldByName('Amount').asCurrency) / nOne) - (nOut mod nPack);
+        if nOst = 0 then
+          nAmount := nAmount + (Frac(CheckCDS.FieldByName('Amount').asCurrency) - Frac(nAmount))
+        else if Frac(CheckCDS.FieldByName('Amount').asCurrency) = 0 then
+          nAmount := nAmount + (1 - RoundTo(nOst * nOne, - 3) - Frac(nAmount))
+        else nAmount := nAmount + (Frac(CheckCDS.FieldByName('Amount').asCurrency) - RoundTo(nOst * nOne, - 3) - Frac(nAmount));
+      end;
+      nAmount := - nAmount;
+    end;
+
+    Result := nAmount;
+  end else
+  begin
+    if not TryStrToCurr(edAmount.Text, nAmount) then
+    begin
+      ActiveControl := edAmount;
+      ShowMessage ('Ошибка. Невозможно преобразовать строку "' + edAmount.Text + '" в число.');
+    end else Result := RoundTo(nAmount, - 3);
+  end;
+end;
+
 { TSaveRealThread }
 { TRefreshDiffThread }
 { TSaveRealAllThread }
@@ -4134,3 +4346,4 @@ finalization
   DeleteCriticalSection(csCriticalSection_Save);
   DeleteCriticalSection(csCriticalSection_All);
 end.
+

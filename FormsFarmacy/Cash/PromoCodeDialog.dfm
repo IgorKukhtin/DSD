@@ -6,7 +6,7 @@ inherited PromoCodeDialogForm: TPromoCodeDialogForm
   ClientWidth = 283
   Position = poDesktopCenter
   ExplicitWidth = 289
-  ExplicitHeight = 145
+  ExplicitHeight = 146
   PixelsPerInch = 96
   TextHeight = 13
   object Label2: TLabel [0]
