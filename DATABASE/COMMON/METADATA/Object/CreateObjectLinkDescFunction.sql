@@ -1862,6 +1862,14 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_GoodsPropertyBox_Box', 'Связь с ящиком', zc_Object_GoodsPropertyBox(), zc_Object_Box() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsPropertyBox_Box');
 
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_PriceChange_Goods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PriceChange_Goods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+ SELECT 'zc_ObjectLink_PriceChange_Goods', 'Товар сети', zc_Object_PriceChange(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PriceChange_Goods');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_PriceChange_Retail() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PriceChange_Retail'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+ SELECT 'zc_ObjectLink_PriceChange_Retail', 'Торговая сеть', zc_Object_PriceChange(), zc_Object_Retail() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PriceChange_Retail');
+
 
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
@@ -1949,6 +1957,8 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 16.08.18         * zc_ObjectLink_PriceChange_Goods
+                    zc_ObjectLink_PriceChange_Retail
  28.05.18                                                                                      * zc_ObjectLink_JuridicalLegalAddress_Juridical, zc_ObjectLink_JuridicalActualAddress_Juridical,
                                                                                                  zc_ObjectLink_JuridicalLegalAddress_Address, zc_ObjectLink_JuridicalActualAddress_Address  
  10.05.18         * zc_ObjectLink_ContactPerson_Area

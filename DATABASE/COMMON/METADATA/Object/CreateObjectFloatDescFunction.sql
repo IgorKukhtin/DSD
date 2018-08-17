@@ -1127,10 +1127,24 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Bank(), 'zc_ObjectFloat_Bank_Overdraft', 'Сумма овердрафт для отчета леквидности' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Bank_Overdraft');
 
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PriceChange_Value() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PriceChange_Value'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PriceChange(), 'zc_ObjectFloat_PriceChange_Value', 'Расчетная цена' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PriceChange_Value');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PriceChange_FixValue() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PriceChange_FixValue'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PriceChange(), 'zc_ObjectFloat_PriceChange_FixValue', 'Расчетная цена' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PriceChange_FixValue');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PriceChange_PercentMarkup() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PriceChange_PercentMarkup'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PriceChange(), 'zc_ObjectFloat_PriceChange_PercentMarkup', 'Расчетная цена' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PriceChange_PercentMarkup');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 16.08.18         * zc_ObjectFloat_PriceChange_Value
+                    zc_ObjectFloat_PriceChange_FixValue
+                    zc_ObjectFloat_PriceChange_PercentMarkup
  09.08.18                                                                                     * zc_ObjectFloat_Maker_CashBack, zc_ObjectFloat_Bank_Overdraft
  24.06.18         * zc_ObjectFloat_Box_...
                     zc_ObjectFloat_GoodsPropertyBox_...
