@@ -67,7 +67,7 @@ uses
   Vcl.DBActns, cxMemo, cxGridDBChartView, ShellAPI, CommonData,
   SHDocVw, GMClasses, GMMap, GMMapVCL, GMLinkedComponents,
   GMMarker, GMMarkerVCL, GMGeoCode, GMDirection, GMDirectionVCL, cxImage,
-  cxEditRepositoryItems{, DataModul};
+  cxEditRepositoryItems, dsdPivotGrid{DataModul};
 
 {$R *.dfm}
 
@@ -436,6 +436,7 @@ initialization
   RegisterClass (TdsdLoadXMLKS);
   RegisterClass (TdsdStoredProcExportToFile);
   RegisterClass (TdsdPartnerMapAction);
+  RegisterClass (TdsdPivotGridCalcFields);
 
   RegisterClass (TExecuteDialog);
   RegisterClass (TFileDialogAction);
