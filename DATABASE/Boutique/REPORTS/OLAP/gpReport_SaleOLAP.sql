@@ -165,6 +165,9 @@ RETURNS TABLE (BrandName             VarChar (100)
              , Result_Summ_10200      TFloat
              , Result_Summ_10200_curr TFloat
 
+
+             , Tax_Amount_calc1       TFloat
+             , Tax_Amount_calc2       TFloat
                -- % ѕродаж: кол-во продажи    / кол-во приход
              , Tax_Amount            TFloat
              , Tax_Amount_real       TFloat
@@ -1551,6 +1554,9 @@ BEGIN
              , (tmpData.Sale_Summ_10200_curr - tmpData.Return_Summ_10200_curr)   :: TFloat AS Result_Summ_10200_curr
              
              -- 
+
+             , (tmpData.Result_Amount + tmpData.Debt_Amount)   :: TFloat AS Tax_Amount_calc1
+             , (tmpData.Income_Amount + tmpData.SendIn_Amount) :: TFloat AS Tax_Amount_calc2
 
                -- % ѕродаж: кол-во продажи    / кол-во приход - с учетом "долга"
              , CASE WHEN (tmpData.Result_Amount + tmpData.Debt_Amount) > 0 AND (tmpData.Income_Amount + tmpData.SendIn_Amount) > 0

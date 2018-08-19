@@ -83,7 +83,8 @@ uses
   IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas',
   LookAndFillSettings in '..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm},
   DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm},
-  GuideArticleLoss in '..\ScaleCeh\GuideArticleLoss.pas' {GuideArticleLossForm};
+  GuideArticleLoss in '..\ScaleCeh\GuideArticleLoss.pas' {GuideArticleLossForm},
+  dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas';
 
 {$R *.res}
 

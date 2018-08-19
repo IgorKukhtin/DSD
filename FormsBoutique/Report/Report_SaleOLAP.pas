@@ -24,7 +24,7 @@ uses
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, cxCustomPivotGrid,
   cxDBPivotGrid, cxLabel, ChoicePeriod, dxBarExtItems, cxCheckBox, dsdGuides,
-  cxButtonEdit;
+  cxButtonEdit, dsdPivotGrid;
 
 type
   TReport_SaleOLAPForm = class(TParentForm)
@@ -148,6 +148,10 @@ type
     pvIncomeReal_Summ: TcxDBPivotGridField;
     pvLoss_Summ: TcxDBPivotGridField;
     pvIncomeReal_Amount: TcxDBPivotGridField;
+    pvTax_Amount_calc: TcxDBPivotGridField;
+    CalcFieldsTax_Amount: TdsdPivotGridCalcFields;
+    pvTax_Amount_calc1: TcxDBPivotGridField;
+    pvTax_Amount_calc2: TcxDBPivotGridField;
   private
   public
   end;

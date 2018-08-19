@@ -71,6 +71,7 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+			<Debugger_RunParams> /realboutique</Debugger_RunParams>
 			<DCC_Define>Boutique;$(DCC_Define)</DCC_Define>
 			<DCC_ExeOutput>..\..\BIN</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
@@ -1116,19 +1117,9 @@
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
 					<Excluded_Packages>
-						<Excluded_Packages Name="C:\Program Files\FastReports\LibD16\dclfs16.bpl">File C:\Program Files\FastReports\LibD16\dclfs16.bpl not found</Excluded_Packages>
-						<Excluded_Packages Name="C:\Program Files\FastReports\LibD16\dclfsDB16.bpl">File C:\Program Files\FastReports\LibD16\dclfsDB16.bpl not found</Excluded_Packages>
 						<Excluded_Packages Name="$(BDSBIN)\dcloffice2k160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
 						<Excluded_Packages Name="$(BDSBIN)\dclofficexp160.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfrxcs16.bpl">FastReport 4.0 Client/Server Components</Excluded_Packages>
-						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfsbde16.bpl">FastScript 1.9 BDE Components</Excluded_Packages>
-						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfrxbde16.bpl">FastReport 4.0 BDE Components</Excluded_Packages>
-						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfsado16.bpl">FastScript 1.9 ADO Components</Excluded_Packages>
-						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfrxado16.bpl">FastReport 4.0 ADO Components</Excluded_Packages>
-						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfsibx16.bpl">FastScript 1.9 IBX Components</Excluded_Packages>
-						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfrxibx16.bpl">FastReport 4.0 IBX Components</Excluded_Packages>
-						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfrxdbx16.bpl">FastReport 4.0 DBX Components</Excluded_Packages>
-						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfstee16.bpl">FastScript 1.9 Tee Components</Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl160.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>
 					</Excluded_Packages>
 					<Source>
 						<Source Name="MainSource">BoutiqueTest.dpr</Source>
