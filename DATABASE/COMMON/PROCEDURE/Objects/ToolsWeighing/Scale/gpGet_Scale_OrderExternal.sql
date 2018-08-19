@@ -106,7 +106,7 @@ BEGIN
                                        ) AS tmp
                                        INNER JOIN Movement ON Movement.Id = tmp.MovementId
                                                           AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal(), zc_Movement_SendOnPrice())
-                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '8 DAY' AND inOperDate + INTERVAL '8 DAY'
+                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '18 DAY' AND inOperDate + INTERVAL '8 DAY'
                                                           AND Movement.StatusId <> zc_Enum_Status_Erased()
                                  UNION
                                   -- по Ш/К - Приход, т.к. период 80 дней
@@ -131,7 +131,7 @@ BEGIN
                                        ) AS tmp
                                        INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode
                                                           AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal(), zc_Movement_SendOnPrice())
-                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '8 DAY' AND inOperDate + INTERVAL '8 DAY'
+                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '18 DAY' AND inOperDate + INTERVAL '8 DAY'
                                                           AND Movement.StatusId <> zc_Enum_Status_Erased()
                                  UNION
                                   -- по № документа - Приход, т.к. период 80 дней

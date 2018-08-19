@@ -33,6 +33,7 @@ $BODY$
    -- DECLARE vbAccessKeyAll Boolean;
 
    DECLARE vbIsConstraint Boolean;
+   DECLARE vbIsBranch_Kharkov Boolean;
    DECLARE vbObjectId_Constraint Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
@@ -50,6 +51,15 @@ BEGIN
        vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
    END IF;
    vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0;
+   
+
+   -- если Пользователь из филиал Харьков
+   vbIsBranch_Kharkov:= EXISTS (SELECT 1
+                                FROM Object_RoleAccessKeyGuide_View 
+                                WHERE Object_RoleAccessKeyGuide_View.BranchId <> 0
+                                  AND Object_RoleAccessKeyGuide_View.AccessKeyId_guide = zc_Enum_Process_AccessKey_GuideKharkov()
+                               );
+
 
 
    -- Результат
@@ -176,7 +186,7 @@ BEGIN
 
        -- WHERE vbAccessKeyAll = TRUE
        WHERE (Object_Unit_View.BranchId = vbObjectId_Constraint
-              OR Object_Unit_View.BranchId > 0
+              OR (Object_Unit_View.BranchId > 0 AND vbIsBranch_Kharkov = FALSE)
               OR vbIsConstraint = FALSE
               OR Object_Unit_View.Id IN (8459 -- Склад Реализации
                                        , 8462 -- Склад Брак

@@ -1,15 +1,14 @@
 -- Function: gpSelect_AllGoodsPriceChange()
 
--- DROP FUNCTION IF EXISTS gpSelect_AllGoodsPriceChange (Integer, Integer, TFloat, Boolean, TVarChar);
--- DROP FUNCTION IF EXISTS gpSelect_AllGoodsPriceChange (Integer, Integer, TFloat, Boolean, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_AllGoodsPriceChange (Integer, Integer, TFloat, Boolean, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_AllGoodsPriceChange(
---  IN inGoodsCode     Integer    -- поиск товаров
-    IN inUnitId        Integer     -- Торговая сеть
-  , IN inUnitId_to     Integer     -- Торговая сеть (с которым есть сравнение цен)
+--  IN inGoodsCode     Integer     -- поиск товаров
+    IN inUnitId        Integer     -- !!!Торговая сеть!!!
+  , IN inUnitId_to     Integer     -- !!!Торговая сеть!!! (с которым есть сравнение цен)
   , IN inMinPercent    TFloat      -- Минимальный % для подразделений, у которых категория переоценки не установлена
   , IN inVAT20         Boolean     -- Переоценивать товары с 20% НДС
+
   , IN inTaxTo         TFloat      -- % отклонения ТОЛЬКО при уравнивании цен
   , IN inPriceMaxTo    TFloat      -- Цена до ТОЛЬКО при уравнивании цен
   , IN inSession       TVarChar    -- сессия пользователя
@@ -420,17 +419,8 @@ ALTER FUNCTION gpSelect_AllGoodsPriceChange (Integer,  Integer,  TFloat, Boolean
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
- 03.05.18                                                                                      *
- 17.04.18                                                                                      *
- 01.11.17                                        * add inTaxTo
- 17.10.17         * add Area
- 18.06.16                                        *
- 11.05.16         *
- 16.02.16         * add isOneJuridical
- 19.11.15                                                                      *
- 01.07.15                                                                      *
- 30.06.15                        *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.   Шаблий О.В.
+ 18.08.17                                        *
 
 */
 
