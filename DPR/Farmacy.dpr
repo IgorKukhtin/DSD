@@ -77,7 +77,8 @@ uses
   IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas',
   Report_Analysis_Remains_Selling in '..\FormsFarmacy\Report\Report_Analysis_Remains_Selling.pas' {Report_Analysis_Remains_SellingForm},
   Report_ImplementationPlanEmployee in '..\FormsFarmacy\Report\Report_ImplementationPlanEmployee.pas',
-  Report_IncomeConsumptionBalance in '..\FormsFarmacy\Report\Report_IncomeConsumptionBalance.pas' {Report_IncomeConsumptionBalanceForm};
+  Report_IncomeConsumptionBalance in '..\FormsFarmacy\Report\Report_IncomeConsumptionBalance.pas' {Report_IncomeConsumptionBalanceForm},
+  dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas';
 
 {$R *.res}
 

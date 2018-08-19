@@ -72,7 +72,8 @@ uses
   IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas',
   dsdOlap in '..\SOURCE\COMPONENT\dsdOlap.pas',
   dsdOLAPXMLBind in '..\SOURCE\COMPONENT\dsdOLAPXMLBind.pas',
-  GridGroupCalculate in '..\SOURCE\GridGroupCalculate.pas';
+  GridGroupCalculate in '..\SOURCE\GridGroupCalculate.pas',
+  dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas';
 
 {$R *.res}
 

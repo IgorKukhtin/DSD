@@ -68,9 +68,9 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-			<VerInfo_Build>21</VerInfo_Build>
+			<VerInfo_Build>22</VerInfo_Build>
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.1.21;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.1.22;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 			<VerInfo_Release>1</VerInfo_Release>
 			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
@@ -190,6 +190,7 @@
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdOlap.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdOLAPXMLBind.pas"/>
 			<DCCReference Include="..\SOURCE\GridGroupCalculate.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdPivotGrid.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

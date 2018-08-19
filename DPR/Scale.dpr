@@ -87,7 +87,8 @@ uses
   LookAndFillSettings in '..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm},
   GuideGoods in '..\Scale\GuideGoods.pas' {GuideGoodsForm},
   DialogStringValue in '..\Scale\DialogStringValue.pas' {DialogStringValueForm},
-  DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm};
+  DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm},
+  dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas';
 
 {$R *.res}
 
@@ -109,8 +110,8 @@ begin
          if gpCheck_BranchCode = FALSE then exit;
          //
          Application.CreateForm(TdmMain, dmMain);
-         Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
-         //
+  Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
+  //
          // !!!важно первым!!!
          Application.CreateForm(TMainForm, MainForm);
          //

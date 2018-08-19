@@ -56,7 +56,8 @@ uses
   RecadvXML in '..\SOURCE\EDI\RecadvXML.pas',
   IFIN_J1201009 in '..\SOURCE\MeDOC\IFIN_J1201009.pas',
   IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas',
-  Main in '..\Load_Repl\Main.pas' {MainForm};
+  Main in '..\Load_Repl\Main.pas' {MainForm},
+  dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas';
 
 {$R *.res}
 
