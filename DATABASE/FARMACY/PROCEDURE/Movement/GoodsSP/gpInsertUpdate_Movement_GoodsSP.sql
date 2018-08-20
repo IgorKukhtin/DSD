@@ -35,7 +35,7 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateStart(), ioId, inOperDateStart);
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateStart(), ioId, inOperDateStart);
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateEnd(), ioId, inOperDateEnd);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);

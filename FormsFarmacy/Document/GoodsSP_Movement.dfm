@@ -849,8 +849,10 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
         Control = edOperDate
       end
       item
+        Control = edOperDateEnd
       end
       item
+        Control = edOperDateStart
       end
       item
       end>
