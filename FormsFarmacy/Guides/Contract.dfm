@@ -112,6 +112,7 @@ inherited ContractForm: TContractForm
           object Deferment: TcxGridDBColumn
             Caption = #1054#1090#1089#1088#1086#1095#1082#1072
             DataBinding.FieldName = 'Deferment'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 98
@@ -142,6 +143,18 @@ inherited ContractForm: TContractForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = '% '#1089#1082#1080#1076#1082#1080' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
+            Options.Editing = False
+            Width = 86
+          end
+          object TotalSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1086#1089#1085'. '#1076#1086#1075#1086#1074#1086#1088#1072
+            DataBinding.FieldName = 'TotalSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1086#1089#1085#1086#1074#1085#1086#1075#1086' '#1076#1086#1075#1086#1074#1086#1088#1072
             Options.Editing = False
             Width = 86
           end

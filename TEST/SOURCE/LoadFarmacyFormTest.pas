@@ -314,7 +314,7 @@ end;
 
 procedure TLoadFormTest.LoadContractFormTest;
 begin
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractEditForm'));
@@ -322,7 +322,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContract_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContract_ObjectForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoiceForm');
 end;

@@ -12,15 +12,17 @@ inherited ContractChoiceForm: TContractChoiceForm
     Top = 61
     Width = 828
     Height = 247
+    ExplicitTop = 61
     ExplicitWidth = 828
+    ExplicitHeight = 247
     ClientRectBottom = 247
     ClientRectRight = 828
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 828
+      ExplicitHeight = 247
       inherited cxGrid: TcxGrid
         Width = 828
         Height = 247
-        ExplicitLeft = -3
         ExplicitWidth = 828
         ExplicitHeight = 247
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -153,6 +155,18 @@ inherited ContractChoiceForm: TContractChoiceForm
             Options.Editing = False
             Width = 86
           end
+          object TotalSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1086#1089#1085'. '#1076#1086#1075#1086#1074#1086#1088#1072
+            DataBinding.FieldName = 'TotalSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1086#1089#1085#1086#1074#1085#1086#1075#1086' '#1076#1086#1075#1086#1074#1086#1088#1072
+            Options.Editing = False
+            Width = 86
+          end
           object OrderSumm: TcxGridDBColumn
             Caption = #1052#1080#1085'. '#1089#1091#1084#1084#1072' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072
             DataBinding.FieldName = 'OrderSumm'
@@ -202,8 +216,6 @@ inherited ContractChoiceForm: TContractChoiceForm
     Height = 35
     Align = alTop
     TabOrder = 5
-    ExplicitLeft = 8
-    ExplicitTop = -14
     object cxLabel6: TcxLabel
       Left = 6
       Top = 9

@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer
              , TotalSumm TFloat
              , TotalSummWithOutVAT TFloat
              , TotalSummVAT TFloat
+             , TotalSumm_Contract TFloat
 
              , JuridicalId Integer
              , JuridicalName TVarChar
@@ -94,9 +95,10 @@ BEGIN
       , Movement.OperDate
       , Object_Status.ObjectCode                               AS StatusCode
       , Object_Status.ValueData                                AS StatusName
-      , COALESCE (MovementFloat_TotalSumm.ValueData,0)::TFloat  AS TotalSumm
+      , COALESCE (MovementFloat_TotalSumm.ValueData,0)::TFloat AS TotalSumm
       , COALESCE (CAST (MovementFloat_TotalSumm.ValueData/(1.07) AS NUMERIC (16,2)),0) ::TFloat  AS TotalSummWithOutVAT
       , COALESCE (CAST (MovementFloat_TotalSumm.ValueData - (MovementFloat_TotalSumm.ValueData/(1.07))  AS NUMERIC (16,2)),0) ::TFloat  AS TotalSummVAT
+      , COALESCE (ObjectFloat_TotalSumm.ValueData, 0):: TFloat AS TotalSumm_Contract
 
       , MovementLinkObject_Juridical.ObjectId                  AS JuridicalId
       , Object_Juridical.ValueData                             AS JuridicalName
@@ -171,6 +173,10 @@ BEGIN
         LEFT JOIN ObjectDate AS ObjectDate_Signing
                              ON ObjectDate_Signing.ObjectId = Object_Contract.Id
                             AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
+        -- сумма осн. договора
+        LEFT JOIN ObjectFloat AS ObjectFloat_TotalSumm
+                              ON ObjectFloat_TotalSumm.ObjectId = Object_Contract.Id
+                             AND ObjectFloat_TotalSumm.DescId = zc_ObjectFloat_Contract_TotalSumm()
 
         LEFT JOIN ObjectLink AS ObjectLink_PartnerMedical_Juridical 
                              ON ObjectLink_PartnerMedical_Juridical.ObjectId = Object_PartnerMedical.Id
@@ -201,6 +207,7 @@ ALTER FUNCTION gpSelect_Movement_Invoice (TDateTime, TDateTime, Boolean, TVarCha
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.08.18         *
  14.05.18         *
  15.08.17         * add InvNumber_int
  13.05.17         * add SPName

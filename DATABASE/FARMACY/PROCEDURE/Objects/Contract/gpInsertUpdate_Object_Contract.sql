@@ -18,7 +18,9 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract
      (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract 
      (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Tvarchar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract 
+     (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Tvarchar);
+     
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Договор>
     IN inCode                    Integer   ,    -- Код объекта <>
@@ -30,6 +32,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inDeferment               Integer   ,    -- Дней отсрочки
     IN inPercent                 TFloat    ,    -- % Корректировки наценки
     IN inPercentSP               TFloat    ,    -- % cкидки Соц.проект
+    IN inTotalSumm               TFloat    ,    -- сумма осн. договора
     IN inOrderSumm               TFloat    ,    -- минимальная сумма для заказа
     IN inOrderSummComment        TVarChar  ,    -- Примечание к минимальной сумме для заказа
     IN inOrderTime               TVarChar  ,    -- информативно - максимальное время отправки
@@ -78,6 +81,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Contract_PercentSP(), ioId, inPercentSP);
    -- сохранили свойство <минимальная сумма для заказа>
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Contract_OrderSumm(), ioId, inOrderSumm);
+   -- сохранили свойство <сумма осн. договора>
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Contract_TotalSumm(), ioId, inTotalSumm);
    
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_Signing(), ioId, inSigningDate);
@@ -103,6 +108,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.08.18         * inTotalSumm
  14.02.18         *
  08.08.17         *
  03.05.17         * add BankAccountId
