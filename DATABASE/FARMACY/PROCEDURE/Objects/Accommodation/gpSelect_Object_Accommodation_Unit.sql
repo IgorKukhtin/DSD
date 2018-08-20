@@ -1,29 +1,39 @@
 -- Function: gpSelect_Object_Accommodation_Unit(Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Accommodation_Unit (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Accommodation_Unit (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Accommodation_Unit(
-    IN inUnitId      Integer,       -- Подразделение 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar)
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean)
 AS
 $BODY$
+   DECLARE vbUserId Integer;
+   DECLARE vbUnitId Integer;
+   DECLARE vbUnitKey TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Account());
    
-     -- Результат
-     RETURN QUERY 
+    vbUserId:= lpGetUserBySession (inSession);
+    vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
+    IF vbUnitKey = '' THEN
+       vbUnitKey := '0';
+    END IF;
+    vbUnitId := vbUnitKey::Integer;
+
+    -- Результат
+    RETURN QUERY 
        SELECT
               Object_Accommodation.Id                       AS GoodsID 
             , Object_Accommodation.ObjectCode               AS AccommodationID
             , Object_Accommodation.ValueData                AS AccommodationName
+            , Object_Accommodation.isErased                 AS isErased
        FROM Object AS Object_Accommodation
 
            INNER JOIN ObjectLink AS ObjectLink_Accommodation_Unit
-                                 ON ObjectLink_Accommodation_Unit.ObjectId = inUnitId
-                                AND ObjectLink_Accommodation_Unit.ChildObjectId = Object_Accommodation.Id
+                                 ON ObjectLink_Accommodation_Unit.ChildObjectId = vbUnitId
+                                AND ObjectLink_Accommodation_Unit.ObjectId = Object_Accommodation.Id
                                 AND ObjectLink_Accommodation_Unit.DescId = zc_Object_Accommodation_Unit()
 
        WHERE Object_Accommodation.DescId = zc_Object_Accommodation();
@@ -31,7 +41,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Accommodation_Unit (Integer, TVarChar) OWNER TO postgres;
+  ALTER FUNCTION gpSelect_Object_Accommodation_Unit (TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
@@ -41,4 +51,4 @@ ALTER FUNCTION gpSelect_Object_Accommodation_Unit (Integer, TVarChar) OWNER TO p
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Accommodation_Unit (183292, zfCalc_UserAdmin()) ORDER BY Code
+-- SELECT * FROM gpSelect_Object_Accommodation_Unit (zfCalc_UserAdmin()) ORDER BY Code
