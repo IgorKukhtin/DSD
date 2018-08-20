@@ -26,7 +26,7 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
 
-    outPriceChange := inFixValue;
+    
 /*    -- проверили корректность цены
     IF inPriceChange = 0
     THEN
@@ -37,6 +37,7 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Цена <%> должна быть больше 0.', inPriceChange;
     END IF;
 */
+    
 
     -- Если такая запись есть - достаем её ключу торг.сеть - товар
     SELECT Id, 
@@ -80,6 +81,13 @@ BEGIN
                                                    AND ObjectDate_DateChange.DescId = zc_ObjectDate_PriceChange_DateChange()
                            WHERE Object_PriceChange.DescId = zc_Object_PriceChange())
           SELECT * FROM tmp1) AS tmp;
+
+    IF COALESCE (inFixValue, 0) <> 0
+    THEN
+        outPriceChange := inFixValue;
+    ELSE 
+        outPriceChange := vbPriceChange;
+    END IF;
 
     -- проверили корректность записи по дате
     IF ioStartDate > zc_DateStart()
