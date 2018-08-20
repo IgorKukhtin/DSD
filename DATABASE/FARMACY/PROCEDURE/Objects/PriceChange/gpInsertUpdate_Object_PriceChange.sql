@@ -1,17 +1,18 @@
 -- Function: gpInsertUpdate_Object_PriceChange (Integer, TFloat, Integer, Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PriceChange (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PriceChange (Integer, Integer, Integer, TDateTime, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PriceChange(
  INOUT ioId                       Integer   ,    -- ключ объекта < Цена >
- INOUT ioStartDate                TDateTime , 
-    IN inPriceChange              TFloat    ,    -- цена
-    IN inFixValue                 TFloat    ,    -- 
-    IN inPercentMarkup            TFloat    ,    -- % наценки
     IN inGoodsId                  Integer   ,    -- Товар
     IN inRetailId                 Integer   ,    -- подразделение
+ INOUT ioStartDate                TDateTime , 
    OUT outDateChange              TDateTime ,    -- Дата изменения цены
    OUT outStartDate               TDateTime ,    -- Дата
+   OUT outPriceChange             TFloat    ,    -- цена
+    IN inFixValue                 TFloat    ,    -- 
+    IN inPercentMarkup            TFloat    ,    -- % наценки
     IN inSession                  TVarChar       -- сессия пользователя
 )
 AS
@@ -25,7 +26,8 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
 
-    -- проверили корректность цены
+    
+/*    -- проверили корректность цены
     IF inPriceChange = 0
     THEN
         inPriceChange := null;
@@ -34,46 +36,58 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Ошибка.Цена <%> должна быть больше 0.', inPriceChange;
     END IF;
+*/
+    
 
     -- Если такая запись есть - достаем её ключу торг.сеть - товар
     SELECT Id, 
            PriceChange, 
            FixValue, 
            DateChange, 
-           PercentMarkup,
+           PercentMarkup
 
       INTO ioId, 
            vbPriceChange, 
            vbFixValue, 
            outDateChange, 
-           vbPercentMarkup,
+           vbPercentMarkup
     FROM (WITH tmp1 AS (SELECT Object_PriceChange.Id                        AS Id
-                             , ROUND(PriceChange_Value.ValueData,2)::TFloat AS PriceChange
+                             , ROUND(ObjectFloat_Value.ValueData,2)::TFloat AS PriceChange
                              , ObjectFloat_FixValue.ValueData               AS FixValue
                              , PriceChange_Goods.ChildObjectId              AS GoodsId
-                             , ObjectLink_PriceChange_Retail.ChildObjectId  AS RetailId
-                             , PriceChange_datechange.valuedata             AS DateChange
-                             , COALESCE(PriceChange_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup
+                             , ObjectLink_Retail.ChildObjectId  AS RetailId
+                             , ObjectDate_DateChange.valuedata             AS DateChange
+                             , COALESCE(ObjectFloat_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup
                            FROM Object AS Object_PriceChange
                                INNER JOIN ObjectLink AS PriceChange_Goods
                                                      ON PriceChange_Goods.ObjectId = Object_PriceChange.Id
                                                     AND PriceChange_Goods.DescId = zc_ObjectLink_PriceChange_Goods()
                                                     AND PriceChange_Goods.ChildObjectId = inGoodsId
-                               INNER JOIN ObjectLink AS ObjectLink_PriceChange_Retail
-                                                     ON ObjectLink_PriceChange_Retail.ObjectId = Object_PriceChange.Id
-                                                    AND ObjectLink_PriceChange_Retail.DescId = zc_ObjectLink_PriceChange_Retail()
-                                                    AND ObjectLink_PriceChange_Retail.ChildObjectId = inRetailId
-                               LEFT JOIN ObjectFloat AS PriceChange_Value
-                                                     ON PriceChange_Value.ObjectId = Object_PriceChange.Id
-                                                    AND PriceChange_Value.DescId = zc_ObjectFloat_PriceChange_Value()
+                               INNER JOIN ObjectLink AS ObjectLink_Retail
+                                                     ON ObjectLink_Retail.ObjectId = Object_PriceChange.Id
+                                                    AND ObjectLink_Retail.DescId = zc_ObjectLink_PriceChange_Retail()
+                                                    AND ObjectLink_Retail.ChildObjectId = inRetailId
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Value
+                                                     ON ObjectFloat_Value.ObjectId = Object_PriceChange.Id
+                                                    AND ObjectFloat_Value.DescId = zc_ObjectFloat_PriceChange_Value()
                                LEFT JOIN ObjectFloat AS ObjectFloat_FixValue
                                                      ON ObjectFloat_FixValue.ObjectId = Object_PriceChange.Id
                                                     AND ObjectFloat_FixValue.DescId = zc_ObjectFloat_PriceChange_FixValue()
-                               LEFT JOIN ObjectDate AS PriceChange_DateChange
-                                                    ON PriceChange_DateChange.ObjectId = Object_PriceChange.Id
-                                                   AND PriceChange_DateChange.DescId = zc_ObjectDate_PriceChange_DateChange()
-                           WHERE  Object_PriceChange.DescId = zc_Object_PriceChange())
+                               LEFT JOIN ObjectFloat AS ObjectFloat_PercentMarkup
+                                                     ON ObjectFloat_PercentMarkup.ObjectId = Object_PriceChange.Id
+                                                    AND ObjectFloat_PercentMarkup.DescId = zc_ObjectFloat_PriceChange_PercentMarkup()
+                               LEFT JOIN ObjectDate AS ObjectDate_DateChange
+                                                    ON ObjectDate_DateChange.ObjectId = Object_PriceChange.Id
+                                                   AND ObjectDate_DateChange.DescId = zc_ObjectDate_PriceChange_DateChange()
+                           WHERE Object_PriceChange.DescId = zc_Object_PriceChange())
           SELECT * FROM tmp1) AS tmp;
+
+    IF COALESCE (inFixValue, 0) <> 0
+    THEN
+        outPriceChange := inFixValue;
+    ELSE 
+        outPriceChange := vbPriceChange;
+    END IF;
 
     -- проверили корректность записи по дате
     IF ioStartDate > zc_DateStart()
@@ -97,9 +111,9 @@ BEGIN
     END IF;
     
     -- сохранили св-во < Цена >
-    IF (inPriceChange is not null) AND (inPriceChange <> COALESCE(vbPriceChange,0))
+    IF (outPriceChange is not null) AND (outPriceChange <> COALESCE(vbPriceChange,0))
     THEN
-        PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_PriceChange_Value(), ioId, inPriceChange);
+        PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_PriceChange_Value(), ioId, outPriceChange);
         -- сохранили св-во < Дата изменения >
         outDateChange := CURRENT_DATE;
         PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_PriceChange_DateChange(), ioId, outDateChange);
@@ -125,7 +139,7 @@ BEGIN
 
 
     -- сохранили историю
-    IF ((inPriceChange is not null) AND (inPriceChange <> COALESCE(vbPriceChange,0))) 
+    IF ((outPriceChange is not null) /* AND (outPriceChange <> COALESCE(vbPriceChange,0)) */ ) 
        OR
        ((inFixValue is not null) AND (inFixValue <> COALESCE(vbFixValue,0)))
        
@@ -134,10 +148,10 @@ BEGIN
         PERFORM gpInsertUpdate_ObjectHistory_PriceChange(ioId             := 0 :: Integer,    -- ключ объекта <Элемент истории>
                                                          inPriceChangeId  := ioId,    -- Прайс
                                                          inOperDate       := CURRENT_TIMESTAMP                       :: TDateTime, -- Дата действия прайса
-                                                         inPriceChange    := COALESCE (inPriceChange, vbPriceChange) :: TFloat,    -- Цена
+                                                         inPriceChange    := COALESCE (outPriceChange, vbPriceChange) :: TFloat,    -- Цена
                                                          inFixValue       := COALESCE (inFixValue, vbFixValue)       :: TFloat,
-                                                         inPercentMarkup:= COALESCE (inPercentMarkup, 0)             :: TFloat,
-                                                         inSession  := inSession);
+                                                         inPercentMarkup  := COALESCE (inPercentMarkup, 0)           :: TFloat,
+                                                         inSession        := inSession);
        -- определили
        ioStartDate:= (SELECT MAX (StartDate) FROM ObjectHistory WHERE ObjectHistory.ObjectId = ioId AND DescId = zc_ObjectHistory_PriceChange());
        outStartDate:= ioStartDate;

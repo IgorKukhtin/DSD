@@ -22,6 +22,8 @@ RETURNS TABLE (Id Integer
              , MinExpirationDate TDateTime
              , Remains TFloat, SummaRemains TFloat
              , PriceRetSP TFloat, PriceOptSP TFloat
+             , PriceSP   TFloat
+             , PaymentSP TFloat
              , isSP Boolean
              , isErased boolean
              , isClose boolean, isFirst boolean , isSecond boolean
@@ -76,6 +78,7 @@ BEGIN
                ,NULL::Integer                    AS GoodsCode
                ,NULL::TVarChar                   AS BarCode
                ,NULL::TVarChar                   AS GoodsName
+               ,NUll::TVarChar                   AS IntenalSPName
                ,NULL::TVarChar                   AS GoodsGroupName
                ,NULL::TVarChar                   AS NDSKindName
                ,NULL::TFloat                     AS NDS
@@ -87,7 +90,8 @@ BEGIN
                ,NULL::TFloat                     AS SummaRemains
                ,NULL::TFloat                     AS PriceRetSP
                ,NULL::TFloat                     AS PriceOptSP
-
+               ,NULL::TFloat                     AS PriceSP
+               ,NULL::TFloat                     AS PaymentSP
                ,NULL::Boolean                    AS isSP
                ,NULL::Boolean                    AS isErased
                ,NULL::Boolean                    AS isClose 
@@ -110,6 +114,7 @@ BEGIN
                                 WHERE Container.descid = zc_Container_Count() 
                                   AND Amount<>0
                                   AND (Container.ObjectId = inGoodsId OR inGoodsId = 0)
+and 1=0
                                 GROUP BY Container.ObjectId, Container.Id
                                 HAVING SUM(COALESCE (Container.Amount, 0)) <> 0
                                 )
@@ -214,7 +219,7 @@ BEGIN
                , COALESCE (tmpPriceChange.FixValue,0)                     :: TFloat AS FixValue
                , COALESCE (tmpPriceChange.PercentMarkup,0)                :: TFloat AS PercentMarkup
                
-               , COALESCE (ObjectHistoryFloat_Value,0)                    :: TFloat AS PriceChange_OH
+               , COALESCE (ObjectHistoryFloat_Value.ValueData,0)          :: TFloat AS PriceChange_OH
                , COALESCE (ObjectHistoryFloat_FixValue.ValueData, 0)      :: TFloat AS FixValue_OH
                , COALESCE (ObjectHistoryFloat_PercentMarkup.ValueData, 0) :: TFloat AS PercentMarkup_OH
 
@@ -233,7 +238,7 @@ BEGIN
                , Object_Goods_View.isTop                         AS Goods_isTop
                , Object_Goods_View.PercentMarkup                 AS Goods_PercentMarkup
                
-               , Object_Remains.MinExpirationDate                AS MinExpirationDate   --SelectMinPriceChange_AllGoods.MinExpirationDate AS MinExpirationDate
+               , Object_Remains.MinExpirationDate                AS MinExpirationDate
 
                , Object_Remains.Remains                          AS Remains
                , (Object_Remains.Remains * COALESCE (tmpPriceChange.PriceChange,0)) ::TFloat AS SummaRemains
@@ -241,6 +246,9 @@ BEGIN
                , COALESCE (ObjectFloat_Goods_PriceRetSP.ValueData,0) ::TFloat  AS PriceRetSP
                , COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) ::TFloat  AS PriceOptSP
 
+               , COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)        :: TFloat AS PriceSP
+               , COALESCE (ObjectFloat_Goods_PaymentSP.ValueData, 0)      :: TFloat AS PaymentSP
+               
                , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
                , Object_Goods_View.isErased                      AS isErased 
 
@@ -336,6 +344,7 @@ BEGIN
                                 WHERE Container.descid = zc_Container_count() 
                                   AND Amount<>0
                                   AND (Container.ObjectId = inGoodsId OR inGoodsId = 0)
+and 1=0
                                 GROUP BY Container.ObjectId, Container.Id
                                 HAVING SUM(COALESCE (Container.Amount, 0)) <> 0
                                 )
@@ -565,8 +574,8 @@ BEGIN
                                                      AND ObjectBoolean_Second.DescId = zc_ObjectBoolean_Goods_Second() 
                          
                               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PercentMarkup
-                                                     ON ObjectFloat_Goods_PercentMarkup.ObjectId = tmpGoods.GoodsId 
-                                                    AND ObjectFloat_Goods_PercentMarkup.DescId = zc_ObjectFloat_Goods_PercentMarkup()  
+                                                    ON ObjectFloat_Goods_PercentMarkup.ObjectId = tmpGoods.GoodsId 
+                                                   AND ObjectFloat_Goods_PercentMarkup.DescId = zc_ObjectFloat_Goods_PercentMarkup()  
                           )
 
       , tmpGoodsMainParam AS (SELECT tmpPriceChange_All.GoodsId
@@ -661,10 +670,10 @@ BEGIN
                  , tmpPriceChange_All.Remains                AS Remains
                  , (tmpPriceChange_All.Remains * COALESCE (tmpPriceChange_All.PriceChange,0)) ::TFloat AS SummaRemains
                                 
-                 , tmpGoodsMainParam.PriceRetSP ::TFloat  AS PriceRetSP
+                 , tmpGoodsMainParam.PriceRetSP      ::TFloat  AS PriceRetSP
                  , tmpGoodsMainParam.PriceChangeOptS ::TFloat  AS PriceOptSP
-                -- , tmpGoodsMainParam.PriceSP    ::TFloat  AS PriceSP
-                -- , tmpGoodsMainParam.PaymentSP  ::TFloat  AS PaymentSP
+                 , tmpGoodsMainParam.PriceSP         ::TFloat  AS PriceSP
+                 , tmpGoodsMainParam.PaymentSP       ::TFloat  AS PaymentSP
   
                  , tmpGoodsMainParam.isSP :: Boolean  AS isSP
                  , Object_Goods_View.isErased                                    AS isErased 
@@ -723,4 +732,4 @@ $BODY$
 */
 
 -- тест
---select * from gpSelect_Object_PriceChange(inRetailId := 4 , inGoodsId := 0 , inisShowAll := 'False' ::Boolean, inisShowDel := 'False' ::Boolean,  inSession := '3' ::TVarChar);
+--select * from gpSelect_Object_PriceChange(inRetailId := 5630261 , inGoodsId := 0 , inisShowAll := 'True' , inisShowDel := 'False' ,  inSession := '3');

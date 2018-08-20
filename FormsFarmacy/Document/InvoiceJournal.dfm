@@ -26,8 +26,6 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       inherited cxGrid: TcxGrid
         Width = 745
         Height = 434
-        ExplicitLeft = 80
-        ExplicitTop = 16
         ExplicitWidth = 745
         ExplicitHeight = 434
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -206,6 +204,17 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 69
+          end
+          object TotalSumm_Contract: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1086#1089#1085'. '#1076#1086#1075#1086#1074#1086#1088#1072
+            DataBinding.FieldName = 'TotalSumm_Contract'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1086#1089#1085#1086#1074#1085#1086#1075#1086' '#1076#1086#1075#1086#1074#1086#1088#1072
+            Options.Editing = False
+            Width = 87
           end
           object OperDateStart: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1087#1077#1088#1080#1086#1076#1072' '#1086#1090#1095#1077#1090#1072

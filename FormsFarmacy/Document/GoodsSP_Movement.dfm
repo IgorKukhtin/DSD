@@ -701,6 +701,13 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMask'
+        Value = 'false'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 848
   end
@@ -727,9 +734,12 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InvNumber'
-        Value = ''
-        Component = edInvNumber
+        Name = 'inMask'
+        Value = 'false'
+        Component = FormParams
+        ComponentItem = 'inMask'
+        DataType = ftBoolean
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -739,6 +749,12 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber'
+        Value = ''
+        Component = edInvNumber
         MultiSelectSeparator = ','
       end
       item
@@ -849,8 +865,10 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
         Control = edOperDate
       end
       item
+        Control = edOperDateEnd
       end
       item
+        Control = edOperDateStart
       end
       item
       end>

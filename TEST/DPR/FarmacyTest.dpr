@@ -593,7 +593,9 @@ uses
   PriceChangeOnDate in '..\..\FormsFarmacy\Guides\PriceChangeOnDate.pas' {PriceChangeOnDateForm: TParentForm},
   PriceChangeDialog in '..\..\FormsFarmacy\Guides\PriceChangeDialog.pas' {PriceChangeDialogForm: TParentForm},
   dsdPivotGrid in '..\..\SOURCE\COMPONENT\dsdPivotGrid.pas',
-  RepriceUnit in '..\..\FormsFarmacy\ConnectWithOld\RepriceUnit.pas' {RepriceUnitForm};
+  RepriceUnit in '..\..\FormsFarmacy\ConnectWithOld\RepriceUnit.pas' {RepriceUnitForm},
+  RepriceChange in '..\..\FormsFarmacy\Document\RepriceChange.pas' {RepriceChangeForm: TParentForm},
+  RepriceChangeJournal in '..\..\FormsFarmacy\Document\RepriceChangeJournal.pas' {RepriceChangeJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

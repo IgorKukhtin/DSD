@@ -1,27 +1,27 @@
 inherited PriceChangeHistoryForm: TPriceChangeHistoryForm
   Caption = #1048#1089#1090#1086#1088#1080#1103' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1094#1077#1085#1099' '#1057#1054' '#1057#1050#1048#1044#1050#1054#1049
   ClientHeight = 406
-  ClientWidth = 432
+  ClientWidth = 439
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 448
+  ExplicitWidth = 455
   ExplicitHeight = 444
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 432
+    Width = 439
     Height = 380
-    ExplicitWidth = 504
+    ExplicitWidth = 432
     ExplicitHeight = 380
     ClientRectBottom = 380
-    ClientRectRight = 432
+    ClientRectRight = 439
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 504
+      ExplicitWidth = 432
       ExplicitHeight = 380
       inherited cxGrid: TcxGrid
-        Width = 432
+        Width = 439
         Height = 380
-        ExplicitWidth = 504
+        ExplicitWidth = 432
         ExplicitHeight = 380
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Deleting = False
@@ -39,9 +39,9 @@ inherited PriceChangeHistoryForm: TPriceChangeHistoryForm
             HeaderAlignmentVert = vaCenter
             Width = 104
           end
-          object Price: TcxGridDBColumn
+          object PriceChange: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
-            DataBinding.FieldName = 'Price'
+            DataBinding.FieldName = 'PriceChange'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 118
@@ -75,7 +75,7 @@ inherited PriceChangeHistoryForm: TPriceChangeHistoryForm
     StoredProcName = 'gpSelect_ObjectHistory_PriceChange'
     Params = <
       item
-        Name = 'inPriceId'
+        Name = 'inPriceChangeId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'

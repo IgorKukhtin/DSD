@@ -37,13 +37,13 @@ type
     dxBarButton2: TdxBarButton;
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
-    Price: TcxGridDBColumn;
+    PriceChange: TcxGridDBColumn;
     DateChange: TcxGridDBColumn;
     isErased: TcxGridDBColumn;
     spInsertUpdate: TdsdStoredProc;
     dsdUpdatePrice: TdsdUpdateDataSet;
     rdUnit: TRefreshDispatcher;
-    MCSValue: TcxGridDBColumn;
+    FixValue: TcxGridDBColumn;
     MCSDateChange: TcxGridDBColumn;
     actStartLoadMCS: TMultiAction;
     actDoLoadMCS: TExecuteImportSettingsAction;
@@ -66,7 +66,7 @@ type
     spDelete_Object_MCS: TdsdStoredProc;
     actDelete_Object_MCS: TdsdExecStoredProc;
     dxBarButton6: TdxBarButton;
-    Fix: TcxGridDBColumn;
+    FixValueEnd: TcxGridDBColumn;
     MCSIsCloseDateChange: TcxGridDBColumn;
     MCSNotRecalcDateChange: TcxGridDBColumn;
     FixDateChange: TcxGridDBColumn;

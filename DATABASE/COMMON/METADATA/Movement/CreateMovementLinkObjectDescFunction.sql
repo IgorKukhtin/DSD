@@ -363,6 +363,9 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_ActualAddress() RETURNS Integer
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_ActualAddress', 'Фактический адрес' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_ActualAddress');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_RetailForwarding() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_RetailForwarding'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_RetailForwarding', 'Торговая сеть(основание для равенства цен)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_RetailForwarding');
 
 /*-------------------------------------------------------------------------------
 
@@ -370,6 +373,7 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 20.08.18         * zc_MovementLinkObject_RetailForwarding
  28.05.18                                                                                      * zc_MovementLinkObject_LegalAddress, zc_MovementLinkObject_ActualAddress
  07.05.18                                                                                      * zc_MovementLinkObject_UnitCategory
  13.12.17         * zc_MovementLinkObject_PromoCode

@@ -38,14 +38,12 @@ type
     dxBarButton2: TdxBarButton;
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
-    Price: TcxGridDBColumn;
     DateChange: TcxGridDBColumn;
     isErased: TcxGridDBColumn;
     spInsertUpdate: TdsdStoredProc;
     dsdUpdatePrice: TdsdUpdateDataSet;
     rdUnit: TRefreshDispatcher;
-    MCSValue: TcxGridDBColumn;
-    MCSDateChange: TcxGridDBColumn;
+    PaymentSP: TcxGridDBColumn;
     actStartLoadMCS: TMultiAction;
     actDoLoadMCS: TExecuteImportSettingsAction;
     dxBarButton3: TdxBarButton;
@@ -82,7 +80,6 @@ type
     GoodsGuides: TdsdGuides;
     RefreshDispatcher: TRefreshDispatcher;
     Color_ExpirationDate: TcxGridDBColumn;
-    DiffSP2: TcxGridDBColumn;
     CheckPriceDate: TcxGridDBColumn;
     spUpdate_CheckPrice: TdsdStoredProc;
     actUpdate_CheckPrice: TdsdExecStoredProc;

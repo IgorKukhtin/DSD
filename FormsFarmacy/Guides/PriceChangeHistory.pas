@@ -27,7 +27,7 @@ type
   TPriceChangeHistoryForm = class(TAncestorEnumForm)
     FormParams: TdsdFormParams;
     StartDate: TcxGridDBColumn;
-    Price: TcxGridDBColumn;
+    PriceChange: TcxGridDBColumn;
     PercentMarkup: TcxGridDBColumn;
   private
     { Private declarations }

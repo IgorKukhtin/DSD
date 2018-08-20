@@ -98,6 +98,7 @@ type
     procedure LoadReportForSiteTest;
     procedure LoadReportUploadFormTest;
     procedure LoadRepriceFormTest;
+    procedure LoadRepriceChangeFormTest;
     procedure LoadRetailFormTest;
     procedure LoadReturnTypeFormTest;
     procedure LoadReturnOutFormTest;
@@ -313,7 +314,7 @@ end;
 
 procedure TLoadFormTest.LoadContractFormTest;
 begin
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractEditForm'));
@@ -321,7 +322,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContract_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContract_ObjectForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoiceForm');
 end;
@@ -848,6 +849,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TRepriceJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRepriceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRepriceForm');
+end;
+
+procedure TLoadFormTest.LoadRepriceChangeFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRepriceChangeJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRepriceChangeJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRepriceChangeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRepriceChangeForm');
 end;
 
 procedure TLoadFormTest.LoadRetailFormTest;

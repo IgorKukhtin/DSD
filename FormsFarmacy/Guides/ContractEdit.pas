@@ -62,6 +62,8 @@ type
     ceOrderTime: TcxTextEdit;
     edSigningDate: TcxDateEdit;
     cxLabel17: TcxLabel;
+    cxLabel18: TcxLabel;
+    ceTotalSumm: TcxCurrencyEdit;
   private
     { Private declarations }
   public
