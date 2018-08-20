@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpSelect_Object_PriceChangeHistory(Integer, TDateTime, Boolean,Boolean,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_PriceChangeHistory(
-    IN inRetailId      Integer,       -- подразделение
+    IN inRetailId    Integer,       -- подразделение
     IN inStartDate   TDateTime ,    -- Дата действия
     IN inisShowAll   Boolean,        --True - показать все товары, False - показать только с ценами
     IN inisShowDel   Boolean,       --True - показать так же удаленные, False - показать только рабочие
