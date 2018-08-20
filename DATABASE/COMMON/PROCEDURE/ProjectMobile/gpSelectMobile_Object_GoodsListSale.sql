@@ -126,7 +126,8 @@ BEGIN
                                                 , tmpGoodsListSale_add.PartnerId
                                                 , FALSE AS isErased
                                                   --  ╧ О/О - !!!бпелеммн!!!
-                                                , ROW_NUMBER() OVER (PARTITION BY tmpGoodsListSale_add.GoodsId, tmpGoodsListSale_add.PartnerId) AS Ord
+                                                , ROW_NUMBER() OVER (PARTITION BY tmpGoodsListSale_add.GoodsId ORDER BY tmpGoodsListSale_add.PartnerId) AS Ord
+                                                -- , ROW_NUMBER() OVER (PARTITION BY tmpGoodsListSale_add.GoodsId, tmpGoodsListSale_add.PartnerId) AS Ord
                                            FROM tmpGoodsListSale_add
                                                 LEFT JOIN tmpGoodsListSaleKind_all ON tmpGoodsListSaleKind_all.GoodsId     = tmpGoodsListSale_add.GoodsId
                                                                                   AND tmpGoodsListSaleKind_all.GoodsKindId = tmpGoodsListSale_add.GoodsKindId

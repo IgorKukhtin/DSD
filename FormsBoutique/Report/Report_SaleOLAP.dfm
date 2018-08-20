@@ -517,7 +517,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvResult_InDiscount: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 18
+      AreaIndex = 19
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076'. '#1055#1054' '#1089#1082'.'
       DataBinding.FieldName = 'Result_InDiscount'
@@ -529,7 +529,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvResult_OutDiscount: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 22
+      AreaIndex = 23
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076'. '#1044#1054' '#1089#1082'.'
       DataBinding.FieldName = 'Result_OutDiscount'
@@ -541,7 +541,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvResult_SummCost_curr_InD: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 19
+      AreaIndex = 20
       IsCaptionAssigned = True
       Caption = #1057'\'#1089' '#1074' '#1074#1072#1083'. '#1055#1054' '#1089#1082'.'
       DataBinding.FieldName = 'Result_SummCost_curr_InD'
@@ -553,7 +553,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvResult_SummCost_curr_OutD: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 23
+      AreaIndex = 24
       IsCaptionAssigned = True
       Caption = #1057'\'#1089' '#1074' '#1074#1072#1083'. '#1044#1054' '#1089#1082'.'
       DataBinding.FieldName = 'Result_SummCost_curr_OutD'
@@ -565,7 +565,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvResult_Summ_InD: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 20
+      AreaIndex = 21
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076'. '#1074' '#1043#1056#1053' '#1055#1054' '#1089#1082'.'
       DataBinding.FieldName = 'Result_Summ_InD'
@@ -577,7 +577,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvResult_Summ_OutD: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 24
+      AreaIndex = 25
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076'. '#1074' '#1043#1056#1053' '#1044#1054' '#1089#1082'.'
       DataBinding.FieldName = 'Result_Summ_OutD'
@@ -589,7 +589,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvResult_Summ_10200_InD: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 21
+      AreaIndex = 22
       IsCaptionAssigned = True
       Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1043#1056#1053' '#1055#1054' '#1089#1082'.'
       DataBinding.FieldName = 'Result_Summ_10200_InD'
@@ -601,7 +601,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvResult_Summ_10200_OutD: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 25
+      AreaIndex = 26
       IsCaptionAssigned = True
       Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1043#1056#1053' '#1044#1054' '#1089#1082'.'
       DataBinding.FieldName = 'Result_Summ_10200_OutD'
@@ -737,7 +737,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvRemains_Amount: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 12
+      AreaIndex = 13
       IsCaptionAssigned = True
       Caption = #1054#1089#1090'. '#1082#1086#1083'. '
       DataBinding.FieldName = 'Remains_Amount'
@@ -750,7 +750,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvRemains_Summ: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 13
+      AreaIndex = 14
       IsCaptionAssigned = True
       Caption = #1054#1089#1090'. '#1074' '#1074#1072#1083'. '
       DataBinding.FieldName = 'Remains_Summ'
@@ -774,7 +774,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvResult_Amount: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 8
+      AreaIndex = 9
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076'. '#1082#1086#1083'.'
       DataBinding.FieldName = 'Result_Amount'
@@ -799,7 +799,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvResult_Summ_curr: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 10
+      AreaIndex = 11
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076'. '#1074' '#1074#1072#1083'.'
       DataBinding.FieldName = 'Result_Summ_curr'
@@ -813,7 +813,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvResult_Summ: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 9
+      AreaIndex = 10
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076'. '#1074' '#1043#1056#1053
       DataBinding.FieldName = 'Result_Summ'
@@ -827,7 +827,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvResult_SummCost_curr: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 11
+      AreaIndex = 12
       IsCaptionAssigned = True
       Caption = #1057'\'#1089' '#1074' '#1074#1072#1083'.'
       DataBinding.FieldName = 'Result_SummCost_curr'
@@ -841,7 +841,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvResult_SummCost: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 36
+      AreaIndex = 37
       IsCaptionAssigned = True
       Caption = #1057'\'#1089' '#1074' '#1043#1056#1053
       DataBinding.FieldName = 'Result_SummCost'
@@ -853,7 +853,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvResult_Summ_10200_curr: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 15
+      AreaIndex = 16
       IsCaptionAssigned = True
       Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1074#1072#1083'.'
       DataBinding.FieldName = 'Result_Summ_10200_curr'
@@ -867,7 +867,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvResult_Summ_10200: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 37
+      AreaIndex = 38
       IsCaptionAssigned = True
       Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1043#1056#1053
       DataBinding.FieldName = 'Result_Summ_10200'
@@ -879,7 +879,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvResult_Summ_prof_curr: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 14
+      AreaIndex = 15
       IsCaptionAssigned = True
       Caption = #1055#1088#1080#1073#1099#1083#1100' '#1074' '#1074#1072#1083'.'
       DataBinding.FieldName = 'Result_Summ_prof_curr'
@@ -893,7 +893,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvResult_Summ_prof: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 16
+      AreaIndex = 17
       IsCaptionAssigned = True
       Caption = #1055#1088#1080#1073#1099#1083#1100' '#1074' '#1043#1056#1053
       DataBinding.FieldName = 'Result_Summ_prof'
@@ -925,7 +925,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvSale_Amount: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 17
+      AreaIndex = 18
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076'. '#1082#1086#1083': +'#1044'. -'#1042'. '
       DataBinding.FieldName = 'Sale_Amount'
@@ -959,7 +959,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvSale_Summ: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 27
+      AreaIndex = 28
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076'. '#1074' '#1043#1056#1053' '#1073#1077#1079' '#1074#1086#1079#1074#1088'.'
       DataBinding.FieldName = 'Sale_Summ'
@@ -982,7 +982,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvSale_SummCost: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 28
+      AreaIndex = 29
       IsCaptionAssigned = True
       Caption = #1057'\'#1089' '#1074' '#1043#1056#1053' '#1073#1077#1079' '#1074#1086#1079#1074#1088'.'
       DataBinding.FieldName = 'Sale_SummCost'
@@ -1005,7 +1005,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvSale_Summ_10200: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 32
+      AreaIndex = 33
       IsCaptionAssigned = True
       Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1043#1056#1053' '#1073#1077#1079' '#1074#1086#1079#1074#1088'.'
       DataBinding.FieldName = 'Sale_Summ_10200'
@@ -1017,7 +1017,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvSale_Summ_10100: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 29
+      AreaIndex = 30
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076'. '#1073#1077#1079' '#1089#1082#1080#1076'. '#1074' '#1043#1056#1053
       DataBinding.FieldName = 'Sale_Summ_10100'
@@ -1029,7 +1029,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvSale_Summ_10201: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 30
+      AreaIndex = 31
       IsCaptionAssigned = True
       Caption = #1057#1077#1079#1086#1085#1085#1072#1103' '#1089#1082#1080#1076#1082#1072
       DataBinding.FieldName = 'Sale_Summ_10201'
@@ -1041,7 +1041,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvSale_Summ_10202: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 38
+      AreaIndex = 39
       IsCaptionAssigned = True
       Caption = #1057#1082#1080#1076#1082#1072' outlet'
       DataBinding.FieldName = 'Sale_Summ_10202'
@@ -1053,7 +1053,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvSale_Summ_10203: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 39
+      AreaIndex = 40
       IsCaptionAssigned = True
       Caption = #1057#1082#1080#1076#1082#1072' '#1082#1083#1080#1077#1085#1090#1072
       DataBinding.FieldName = 'Sale_Summ_10203'
@@ -1065,7 +1065,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvSale_Summ_10204: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 31
+      AreaIndex = 32
       IsCaptionAssigned = True
       Caption = #1057#1082#1080#1076#1082#1072' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1072#1103
       DataBinding.FieldName = 'Sale_Summ_10204'
@@ -1077,7 +1077,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvReturn_Amount: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 26
+      AreaIndex = 27
       IsCaptionAssigned = True
       Caption = #1042#1086#1079#1074#1088'. '#1082#1086#1083'. '
       DataBinding.FieldName = 'Return_Amount'
@@ -1098,7 +1098,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvReturn_Summ: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 33
+      AreaIndex = 34
       IsCaptionAssigned = True
       Caption = #1042#1086#1079#1074#1088'. '#1074' '#1043#1056#1053
       DataBinding.FieldName = 'Return_Summ'
@@ -1119,7 +1119,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvReturn_SummCost: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 34
+      AreaIndex = 35
       IsCaptionAssigned = True
       Caption = #1057'\'#1089' '#1074#1086#1079#1074#1088'. '#1074' '#1043#1056#1053
       DataBinding.FieldName = 'Return_SummCost'
@@ -1140,7 +1140,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvReturn_Summ_10200: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 35
+      AreaIndex = 36
       IsCaptionAssigned = True
       Caption = #1057#1082#1080#1076#1082#1072' '#1074#1086#1079#1074#1088'. '#1074' '#1043#1056#1053
       DataBinding.FieldName = 'Return_Summ_10200'
@@ -1201,10 +1201,47 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       DataBinding.FieldName = 'DayName_doc'
       UniqueName = #1044#1077#1085#1100' ('#1087#1088#1086#1076'.)'
     end
+    object pvTax_Amount: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 8
+      IsCaptionAssigned = True
+      Caption = '% '#1055#1088#1086#1076'.*'
+      DataBinding.FieldName = 'Tax_Amount'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.;-,0.; ;'
+      Styles.ColumnHeader = dmMain.cxSelection
+      Width = 55
+      UniqueName = '% '#1050#1086#1083'-'#1074#1086
+    end
+    object pvTax_Summ_prof: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 4
+      IsCaptionAssigned = True
+      Caption = '% '#1056#1077#1085#1090'.*'
+      DataBinding.FieldName = 'Tax_Summ_prof'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.;-,0.; ;'
+      Styles.ColumnHeader = dmMain.cxSelection
+      Width = 50
+      UniqueName = '% '#1056#1077#1085#1090'.'
+    end
+    object pvTax_Amount_real: TcxDBPivotGridField
+      AreaIndex = 39
+      IsCaptionAssigned = True
+      Caption = '% '#1055#1088#1086#1076'. -'#1044'.*'
+      DataBinding.FieldName = 'Tax_Amount_real'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.;-,0.; ;'
+      Width = 50
+      UniqueName = '% '#1055#1088#1086#1076'. -'#1044'.'
+    end
     object pvTax_Summ_curr: TcxDBPivotGridField
       AreaIndex = 27
       IsCaptionAssigned = True
-      Caption = '% '#1055#1088#1086#1076'. '#1074#1072#1083'. -'#1044'.'
+      Caption = '% '#1055#1088#1086#1076'. '#1074#1072#1083'. -'#1044'.*'
       DataBinding.FieldName = 'Tax_Summ_curr'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
@@ -1213,34 +1250,42 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Width = 68
       UniqueName = '% '#1057#1091#1084#1084#1072' '#1074#1093'.'
     end
-    object pvTax_Amount: TcxDBPivotGridField
+    object pvTax_Amount_calc: TcxDBPivotGridField
       Area = faData
       AreaIndex = 7
       IsCaptionAssigned = True
-      Caption = '% '#1055#1088#1086#1076'.*'
-      DataBinding.FieldName = 'Tax_Amount'
+      Caption = '% '#1055#1088#1086#1076'.'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.;-,0.; ;'
       Styles.ColumnHeader = dmMain.cxSelection
       Visible = True
-      Width = 55
-      UniqueName = '% '#1050#1086#1083'-'#1074#1086
+      Width = 45
+      UniqueName = '% '#1055#1088#1086#1076'.'
     end
-    object pvTax_Amount_real: TcxDBPivotGridField
-      AreaIndex = 39
-      IsCaptionAssigned = True
-      Caption = '% '#1055#1088#1086#1076'. -'#1044'.'
-      DataBinding.FieldName = 'Tax_Amount_real'
-      Width = 50
-      UniqueName = '% '#1055#1088#1086#1076'. -'#1044'.'
-    end
-    object pvTax_Summ_prof: TcxDBPivotGridField
+    object pvTax_Amount_calc1: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 4
+      AreaIndex = 41
+      AllowedAreas = []
+      IsCaptionAssigned = True
+      Caption = 'A1'
+      DataBinding.FieldName = 'Tax_Amount_calc1'
+      UniqueName = 'Tax_Amount_calc1'
+    end
+    object pvTax_Amount_calc2: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 42
+      AllowedAreas = []
+      IsCaptionAssigned = True
+      Caption = 'A2'
+      DataBinding.FieldName = 'Tax_Amount_calc2'
+      UniqueName = 'Tax_Amount_calc2'
+    end
+    object pvTax_Summ_prof_calc: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 0
       IsCaptionAssigned = True
       Caption = '% '#1056#1077#1085#1090'.'
-      DataBinding.FieldName = 'Tax_Summ_prof'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.;-,0.; ;'
@@ -1249,24 +1294,83 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Width = 50
       UniqueName = '% '#1056#1077#1085#1090'.'
     end
-    object pvTax_Amount_calc: TcxDBPivotGridField
+    object pvTax_Summ_prof_calc1: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 0
+      AreaIndex = 43
+      AllowedAreas = []
       IsCaptionAssigned = True
-      Caption = '% '#1055#1088#1086#1076'.'
+      Caption = #1056'1'
+      DataBinding.FieldName = 'Tax_Summ_prof_calc1'
+      UniqueName = #1056'1'
+    end
+    object pvTax_Summ_prof_calc2: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 44
+      AllowedAreas = []
+      IsCaptionAssigned = True
+      Caption = #1056'2'
+      DataBinding.FieldName = 'Tax_Summ_prof_calc2'
+      UniqueName = #1056'2'
+    end
+    object pvTax_Amount_real_calc: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 45
+      IsCaptionAssigned = True
+      Caption = '% '#1055#1088#1086#1076'. -'#1044'.'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.;-,0.; ;'
       Visible = True
-      Width = 45
-      UniqueName = '% '#1055#1088#1086#1076'.'
+      Width = 50
+      UniqueName = '% '#1055#1088#1086#1076'. -'#1044'.'
     end
-    object pvTax_Amount_calc1: TcxDBPivotGridField
-      AreaIndex = 46
-      DataBinding.FieldName = 'Tax_Amount_calc1'
-      UniqueName = 'Tax_Amount_calc1'
-    end
-    object pvTax_Amount_calc2: TcxDBPivotGridField
+    object pvTax_Amount_real_calc1: TcxDBPivotGridField
+      Area = faData
       AreaIndex = 47
-      DataBinding.FieldName = 'Tax_Amount_calc2'
-      UniqueName = 'Tax_Amount_calc2'
+      AllowedAreas = []
+      IsCaptionAssigned = True
+      Caption = 'AR1'
+      DataBinding.FieldName = 'Tax_Amount_real_calc1'
+      UniqueName = 'AR1'
+    end
+    object pvTax_Amount_real_calc2: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 48
+      AllowedAreas = []
+      IsCaptionAssigned = True
+      Caption = 'AR2'
+      DataBinding.FieldName = 'Tax_Amount_real_calc2'
+      UniqueName = 'AR2'
+    end
+    object pvTax_Summ_curr_calc: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 46
+      IsCaptionAssigned = True
+      Caption = '% '#1055#1088#1086#1076'. '#1074#1072#1083'. -'#1044'.'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.;-,0.; ;'
+      Visible = True
+      Width = 68
+      UniqueName = '% '#1055#1088#1086#1076'. '#1074#1072#1083'. -'#1044'.'
+    end
+    object pvTax_Summ_curr_calc1: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 49
+      AllowedAreas = []
+      IsCaptionAssigned = True
+      Caption = 'S1'
+      DataBinding.FieldName = 'Tax_Summ_curr_calc1'
+      UniqueName = 'S1'
+    end
+    object pvTax_Summ_curr_calc2: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 50
+      AllowedAreas = []
+      IsCaptionAssigned = True
+      Caption = 'S2'
+      DataBinding.FieldName = 'Tax_Summ_curr_calc2'
+      UniqueName = 'S2'
     end
   end
   object DataSource: TDataSource
@@ -1820,8 +1924,8 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     Top = 288
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 544
-    Top = 280
+    Left = 520
+    Top = 200
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -2112,7 +2216,8 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     Left = 861
     Top = 19
   end
-  object CalcFieldsTax_Amount: TdsdPivotGridCalcFields
+  object cfTax_Amount: TdsdPivotGridCalcFields
+    PivotGrid = cxDBPivotGrid
     CalcField = pvTax_Amount_calc
     GridFields = <
       item
@@ -2123,6 +2228,48 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       end>
     CalcFieldsType = cfPercent
     Left = 656
-    Top = 232
+    Top = 208
+  end
+  object cfTax_Summ_prof_calc: TdsdPivotGridCalcFields
+    PivotGrid = cxDBPivotGrid
+    CalcField = pvTax_Summ_prof_calc
+    GridFields = <
+      item
+        Field = pvTax_Summ_prof_calc1
+      end
+      item
+        Field = pvTax_Summ_prof_calc2
+      end>
+    CalcFieldsType = cfPercent
+    Left = 656
+    Top = 256
+  end
+  object cfTax_Amount_real_calc: TdsdPivotGridCalcFields
+    PivotGrid = cxDBPivotGrid
+    CalcField = pvTax_Amount_real_calc
+    GridFields = <
+      item
+        Field = pvTax_Amount_real_calc1
+      end
+      item
+        Field = pvTax_Amount_real_calc2
+      end>
+    CalcFieldsType = cfPercent
+    Left = 656
+    Top = 304
+  end
+  object cfTax_Summ_curr_calc: TdsdPivotGridCalcFields
+    PivotGrid = cxDBPivotGrid
+    CalcField = pvTax_Summ_curr_calc
+    GridFields = <
+      item
+        Field = pvTax_Summ_curr_calc1
+      end
+      item
+        Field = pvTax_Summ_curr_calc2
+      end>
+    CalcFieldsType = cfPercent
+    Left = 656
+    Top = 360
   end
 end

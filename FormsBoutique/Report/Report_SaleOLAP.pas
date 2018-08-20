@@ -149,9 +149,21 @@ type
     pvLoss_Summ: TcxDBPivotGridField;
     pvIncomeReal_Amount: TcxDBPivotGridField;
     pvTax_Amount_calc: TcxDBPivotGridField;
-    CalcFieldsTax_Amount: TdsdPivotGridCalcFields;
+    cfTax_Amount: TdsdPivotGridCalcFields;
     pvTax_Amount_calc1: TcxDBPivotGridField;
     pvTax_Amount_calc2: TcxDBPivotGridField;
+    pvTax_Summ_prof_calc: TcxDBPivotGridField;
+    pvTax_Summ_prof_calc1: TcxDBPivotGridField;
+    pvTax_Summ_prof_calc2: TcxDBPivotGridField;
+    cfTax_Summ_prof_calc: TdsdPivotGridCalcFields;
+    pvTax_Amount_real_calc: TcxDBPivotGridField;
+    pvTax_Amount_real_calc1: TcxDBPivotGridField;
+    pvTax_Amount_real_calc2: TcxDBPivotGridField;
+    pvTax_Summ_curr_calc: TcxDBPivotGridField;
+    pvTax_Summ_curr_calc1: TcxDBPivotGridField;
+    pvTax_Summ_curr_calc2: TcxDBPivotGridField;
+    cfTax_Amount_real_calc: TdsdPivotGridCalcFields;
+    cfTax_Summ_curr_calc: TdsdPivotGridCalcFields;
   private
   public
   end;

@@ -166,14 +166,24 @@ RETURNS TABLE (BrandName             VarChar (100)
              , Result_Summ_10200_curr TFloat
 
 
-             , Tax_Amount_calc1       TFloat
-             , Tax_Amount_calc2       TFloat
-               -- % Продаж: кол-во продажи    / кол-во приход
+               -- 1. % Продаж: кол-во продажи    / кол-во приход
+             , Tax_Amount_calc1      TFloat
+             , Tax_Amount_calc2      TFloat
              , Tax_Amount            TFloat
+
+               -- 2.
+             , Tax_Amount_real_calc1 TFloat
+             , Tax_Amount_real_calc2 TFloat
              , Tax_Amount_real       TFloat
-               -- % Продаж: сумма с/с продажи / сумма с/с приход
+
+               -- 3. % Продаж: сумма с/с продажи / сумма с/с приход
+             , Tax_Summ_curr_calc1   TFloat
+             , Tax_Summ_curr_calc2   TFloat
              , Tax_Summ_curr         TFloat
-               -- % Рентабельности: сумма продажи / сумма с/с
+
+               -- 4. % Рентабельности: сумма продажи / сумма с/с
+             , Tax_Summ_prof_calc1   TFloat
+             , Tax_Summ_prof_calc2   TFloat
              , Tax_Summ_prof         TFloat
 
              , GroupsName1           VarChar (50)
@@ -1550,33 +1560,36 @@ BEGIN
              , (tmpData.Sale_Summ_curr - tmpData.Sale_SummCost_curr - tmpData.Return_Summ_curr + tmpData.Return_SummCost_curr)         :: TFloat AS Result_Summ_prof_curr
 
                -- Скидка Итог
-             , (tmpData.Sale_Summ_10200      - tmpData.Return_Summ_10200)        :: TFloat AS Result_Summ_10200
-             , (tmpData.Sale_Summ_10200_curr - tmpData.Return_Summ_10200_curr)   :: TFloat AS Result_Summ_10200_curr
+             , (tmpData.Sale_Summ_10200      - tmpData.Return_Summ_10200)      :: TFloat AS Result_Summ_10200
+             , (tmpData.Sale_Summ_10200_curr - tmpData.Return_Summ_10200_curr) :: TFloat AS Result_Summ_10200_curr
              
-             -- 
-
+               -- 1. % Продаж: кол-во продажи    / кол-во приход - с учетом "долга"
              , (tmpData.Result_Amount + tmpData.Debt_Amount)   :: TFloat AS Tax_Amount_calc1
              , (tmpData.Income_Amount + tmpData.SendIn_Amount) :: TFloat AS Tax_Amount_calc2
-
-               -- % Продаж: кол-во продажи    / кол-во приход - с учетом "долга"
              , CASE WHEN (tmpData.Result_Amount + tmpData.Debt_Amount) > 0 AND (tmpData.Income_Amount + tmpData.SendIn_Amount) > 0
                          THEN (tmpData.Result_Amount + tmpData.Debt_Amount) / (tmpData.Income_Amount + tmpData.SendIn_Amount) * 100
                     ELSE 0
                END :: TFloat AS Tax_Amount
-               -- % Продаж: кол-во продажи    / кол-во приход - без учета "долга"
+
+               -- 2. % Продаж: кол-во продажи    / кол-во приход - без учета "долга"
+             , (tmpData.Result_Amount) :: TFloat AS Tax_Amount_real_calc1
+             , (tmpData.Income_Amount) :: TFloat AS Tax_Amount_real_calc2
              , CASE WHEN tmpData.Result_Amount > 0 AND tmpData.Income_Amount > 0
                          THEN tmpData.Result_Amount / tmpData.Income_Amount * 100
                     ELSE 0
                END :: TFloat AS Tax_Amount_real
 
-               -- % Продаж: сумма с/с продажи / сумма с/с приход - без учета "долга"
+               -- 3. % Продаж: сумма с/с продажи / сумма с/с приход - без учета "долга"
+             , (tmpData.Sale_SummCost_curr - tmpData.Return_SummCost_curr) :: TFloat AS Tax_Summ_curr_calc1
+             , (tmpData.Income_Summ)                                       :: TFloat AS Tax_Summ_curr_calc2
              , CASE WHEN (tmpData.Sale_SummCost_curr - tmpData.Return_SummCost_curr) > 0 AND tmpData.Income_Summ > 0
                          THEN (tmpData.Sale_SummCost_curr - tmpData.Return_SummCost_curr) / tmpData.Income_Summ * 100
                     ELSE 0
                END :: TFloat AS Tax_Summ_curr
 
-               -- % Рентабельности: сумма продажи / сумма с/с - без учета "долга"
-          -- , (select count(*) from tmpOLAP) :: TFloat AS Tax_Summ_prof
+               -- 4. % Рентабельности: сумма продажи / сумма с/с - без учета "долга"
+             , ((tmpData.Sale_Summ_curr     - tmpData.Return_Summ_curr) - (tmpData.Sale_SummCost_curr - tmpData.Return_SummCost_curr))   :: TFloat AS Tax_Summ_prof_calc1
+             , (tmpData.Sale_SummCost_curr - tmpData.Return_SummCost_curr) :: TFloat AS Tax_Summ_prof_calc2
              , CASE WHEN (tmpData.Sale_Summ_curr     - tmpData.Return_Summ_curr) > 0 AND (tmpData.Sale_SummCost_curr - tmpData.Return_SummCost_curr) > 0
                          THEN (tmpData.Sale_Summ_curr     - tmpData.Return_Summ_curr) / (tmpData.Sale_SummCost_curr - tmpData.Return_SummCost_curr) * 100 - 100
                     ELSE 0
