@@ -38,6 +38,8 @@ type
     bbPrint: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
     bbUpdate_OperDateList: TdxBarButton;
+    actInsertMask1: TdsdInsertUpdateAction;
+    actInsertMaskMulti: TMultiAction;
   private
     { Private declarations }
   public

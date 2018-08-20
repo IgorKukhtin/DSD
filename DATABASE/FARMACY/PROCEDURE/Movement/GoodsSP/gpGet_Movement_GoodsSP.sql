@@ -1,9 +1,11 @@
 -- Function: gpGet_Movement_GoodsSP()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_GoodsSP (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_GoodsSP (Integer, Boolean, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_GoodsSP(
     IN inMovementId        Integer  , -- ключ Документа
+    IN inMask              Boolean  ,
     IN inOperDate          TDateTime, -- дата Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
@@ -19,6 +21,13 @@ BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      vbUserId := inSession;
+
+     IF COALESCE (inMask, False) = True
+     THEN
+     inMovementId := gpInsert_Movement_GoodsSP_Mask (ioId        := inMovementId
+                                                   , inOperDate  := inOperDate
+                                                   , inSession   := inSession); 
+     END IF;
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
