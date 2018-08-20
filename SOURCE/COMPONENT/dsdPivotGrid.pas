@@ -184,7 +184,7 @@ begin
   begin
     if not (csLoading in ComponentState) then
     begin
-      if not Assigned(FDBPivotGrid) then
+      if not Assigned(FDBPivotGrid) or not Assigned(Value) then
       begin
         FCalcField := Nil;
         Exit;
@@ -225,6 +225,9 @@ procedure TdsdPivotGridCalcFields.CalculateCustomSummary(
 var
   Value1, Value2, Value3: Variant; I: integer;
 begin
+  if not Assigned(FDBPivotGrid) then Exit;
+  if not Assigned(FDBPivotGrid.DataSource) then Exit;
+  if not Assigned(FDBPivotGrid.DataSource.DataSet) then Exit;
   if FDBPivotGrid.DataSource.DataSet.IsEmpty then Exit;
   if FPivotGridFields.Count <= 0 then Exit;
 
@@ -233,17 +236,24 @@ begin
       begin
         Value1 := 0.0;
         for I := 0 to FPivotGridFields.Count - 1 do
-          if ASummary.Owner.Row.GetCellByCrossItem(ASummary.Owner.Column).GetSummaryByField(FPivotGridFields.Items[I].Field,stSum) <> Null then
-          Value1 := Value1 + ASummary.Owner.Row.GetCellByCrossItem(ASummary.Owner.Column).GetSummaryByField(FPivotGridFields.Items[I].Field,stSum);
+          if Assigned(FPivotGridFields.Items[I].Field) and (FPivotGridFields.Items[I].Field.Area = faData) then
+          begin
+            if ASummary.Owner.Row.GetCellByCrossItem(ASummary.Owner.Column).GetSummaryByField(FPivotGridFields.Items[I].Field,stSum) <> Null then
+            Value1 := Value1 + ASummary.Owner.Row.GetCellByCrossItem(ASummary.Owner.Column).GetSummaryByField(FPivotGridFields.Items[I].Field,stSum);
+          end;
         ASummary.Custom := Value1;
       end;
     cfMultiplication :
       begin
-        Value1 := ASummary.Owner.Row.GetCellByCrossItem(ASummary.Owner.Column).GetSummaryByField(FPivotGridFields.Items[0].Field,stSum);
+        if Assigned(FPivotGridFields.Items[0].Field) and (FPivotGridFields.Items[0].Field.Area = faData) then
+          Value1 := ASummary.Owner.Row.GetCellByCrossItem(ASummary.Owner.Column).GetSummaryByField(FPivotGridFields.Items[0].Field,stSum)
+        else Value1 := 0;
         if Value1 = null then Value1 := 0;
         for I := 1 to FPivotGridFields.Count - 1 do
         begin
-          Value2 := ASummary.Owner.Row.GetCellByCrossItem(ASummary.Owner.Column).GetSummaryByField(FPivotGridFields.Items[I].Field,stSum);
+          if Assigned(FPivotGridFields.Items[I].Field) and (FPivotGridFields.Items[I].Field.Area = faData) then
+            Value2 := ASummary.Owner.Row.GetCellByCrossItem(ASummary.Owner.Column).GetSummaryByField(FPivotGridFields.Items[I].Field,stSum)
+          else Value2 := 0;
           if Value2 = null then Value2 := 0;
           Value1 := Value1 * Value2;
         end;
@@ -251,28 +261,43 @@ begin
       end;
     cfDivision : if FPivotGridFields.Count >= 2 then
       begin
-        Value1 := ASummary.Owner.Row.GetCellByCrossItem(ASummary.Owner.Column).GetSummaryByField(FPivotGridFields.Items[0].Field,stSum);
-        Value2 := ASummary.Owner.Row.GetCellByCrossItem(ASummary.Owner.Column).GetSummaryByField(FPivotGridFields.Items[1].Field,stSum);
+        if Assigned(FPivotGridFields.Items[0].Field) and (FPivotGridFields.Items[0].Field.Area = faData) then
+          Value1 := ASummary.Owner.Row.GetCellByCrossItem(ASummary.Owner.Column).GetSummaryByField(FPivotGridFields.Items[0].Field,stSum)
+        else Value1 := 0;
+        if Assigned(FPivotGridFields.Items[1].Field) and (FPivotGridFields.Items[1].Field.Area = faData) then
+          Value2 := ASummary.Owner.Row.GetCellByCrossItem(ASummary.Owner.Column).GetSummaryByField(FPivotGridFields.Items[1].Field,stSum)
+        else Value2 := 0;
         if (Value1 = null) or (Value2 = null) or (Value2 = 0) then Exit;
         ASummary.Custom := Value1 / Value2;
       end;
     cfPercent : if FPivotGridFields.Count >= 2 then
       begin
-        Value1 := ASummary.Owner.Row.GetCellByCrossItem(ASummary.Owner.Column).GetSummaryByField(FPivotGridFields.Items[0].Field,stSum);
-        Value2 := ASummary.Owner.Row.GetCellByCrossItem(ASummary.Owner.Column).GetSummaryByField(FPivotGridFields.Items[1].Field,stSum);
+        if Assigned(FPivotGridFields.Items[0].Field) and (FPivotGridFields.Items[0].Field.Area = faData) then
+          Value1 := ASummary.Owner.Row.GetCellByCrossItem(ASummary.Owner.Column).GetSummaryByField(FPivotGridFields.Items[0].Field,stSum)
+        else Value1 := 0;
+        if Assigned(FPivotGridFields.Items[1].Field) and (FPivotGridFields.Items[1].Field.Area = faData) then
+          Value2 := ASummary.Owner.Row.GetCellByCrossItem(ASummary.Owner.Column).GetSummaryByField(FPivotGridFields.Items[1].Field,stSum)
+        else Value2 := 0;
         if (Value1 = null) or (Value2 = null) or (Value2 = 0) then Exit;
         ASummary.Custom := Value1 / Value2 * 100;
       end;
     cfMulDiv : if FPivotGridFields.Count >= 3 then
       begin
-        Value1 := ASummary.Owner.Row.GetCellByCrossItem(ASummary.Owner.Column).GetSummaryByField(FPivotGridFields.Items[0].Field,stSum);
-        Value2 := ASummary.Owner.Row.GetCellByCrossItem(ASummary.Owner.Column).GetSummaryByField(FPivotGridFields.Items[1].Field,stSum);
-        Value3 := ASummary.Owner.Row.GetCellByCrossItem(ASummary.Owner.Column).GetSummaryByField(FPivotGridFields.Items[2].Field,stSum);
+        if Assigned(FPivotGridFields.Items[0].Field) and (FPivotGridFields.Items[0].Field.Area = faData) then
+          Value1 := ASummary.Owner.Row.GetCellByCrossItem(ASummary.Owner.Column).GetSummaryByField(FPivotGridFields.Items[0].Field,stSum)
+        else Value1 := 0;
+        if Assigned(FPivotGridFields.Items[1].Field) and (FPivotGridFields.Items[1].Field.Area = faData) then
+          Value2 := ASummary.Owner.Row.GetCellByCrossItem(ASummary.Owner.Column).GetSummaryByField(FPivotGridFields.Items[1].Field,stSum)
+        else Value2 := 0;
+        if Assigned(FPivotGridFields.Items[2].Field) and (FPivotGridFields.Items[2].Field.Area = faData) then
+          Value3 := ASummary.Owner.Row.GetCellByCrossItem(ASummary.Owner.Column).GetSummaryByField(FPivotGridFields.Items[2].Field,stSum)
+        else Value3 := 0;
         if (Value1 = null) or (Value2 = null) or (Value3 = null) or (Value3 = 0) then Exit;
         ASummary.Custom := Value1 * Value2 / Value3;
       end;
   end;
 end;
+
 
 procedure Register;
 begin
@@ -281,6 +306,6 @@ end;
 
 initialization
 
-  Classes.RegisterClass(TdsdPivotGridFields);
+  Classes.RegisterClass(TdsdPivotGridCalcFields);
 
 end.
