@@ -98,6 +98,7 @@ type
     procedure LoadReportForSiteTest;
     procedure LoadReportUploadFormTest;
     procedure LoadRepriceFormTest;
+    procedure LoadRepriceChangeFormTest;
     procedure LoadRetailFormTest;
     procedure LoadReturnTypeFormTest;
     procedure LoadReturnOutFormTest;
@@ -848,6 +849,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TRepriceJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRepriceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRepriceForm');
+end;
+
+procedure TLoadFormTest.LoadRepriceChangeFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRepriceChangeJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRepriceChangeJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRepriceChangeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRepriceChangeForm');
 end;
 
 procedure TLoadFormTest.LoadRetailFormTest;

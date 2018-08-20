@@ -435,6 +435,8 @@ type
     miPriceChange: TMenuItem;
     miPriceChangeOnDate: TMenuItem;
     miRepriceChange: TMenuItem;
+    actRepriceChangeJournal: TdsdOpenForm;
+    miRepriceChangeJournal: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
