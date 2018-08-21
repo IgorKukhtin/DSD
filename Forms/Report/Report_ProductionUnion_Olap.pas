@@ -24,7 +24,7 @@ uses
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, cxCustomPivotGrid,
   cxDBPivotGrid, cxLabel, ChoicePeriod, dxBarExtItems, cxCheckBox, dsdGuides,
-  cxButtonEdit;
+  cxButtonEdit, dsdPivotGrid;
 
 type
   TReport_ProductionUnion_OlapForm = class(TParentForm)
@@ -91,6 +91,9 @@ type
     cxLabel10: TcxLabel;
     PeriodChoice2: TPeriodChoice;
     cbisPartion: TcxCheckBox;
+    cfMainPrice_Calc: TdsdPivotGridCalcFields;
+    cfChildPrice_Calc: TdsdPivotGridCalcFields;
+    cfPrice_Calc: TdsdPivotGridCalcFields;
   private
   public
   end;
