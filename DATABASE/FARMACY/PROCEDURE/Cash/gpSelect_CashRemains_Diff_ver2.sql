@@ -115,12 +115,42 @@ BEGIN
       GROUP BY Container.ObjectId
      )
     -- Отложенные чеки
-  , RESERVE AS (SELECT gpSelect.GoodsId      AS GoodsId
-                     , SUM (gpSelect.Amount) AS Amount
-                 FROM gpSelect_MovementItem_CheckDeferred (inSession) AS gpSelect
-                 WHERE gpSelect.MovementId <> inMovementId
-                 GROUP BY gpSelect.GoodsId
-                )
+  , tmpMov AS (
+        SELECT Movement.Id
+        FROM MovementBoolean AS MovementBoolean_Deferred
+                  INNER JOIN Movement ON Movement.Id     = MovementBoolean_Deferred.MovementId
+                                     AND Movement.DescId = zc_Movement_Check()
+                                     AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                  INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                               AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                               AND MovementLinkObject_Unit.ObjectId = vbUnitId
+                WHERE MovementBoolean_Deferred.DescId    = zc_MovementBoolean_Deferred()
+                  AND MovementBoolean_Deferred.ValueData = TRUE
+               UNION
+                SELECT Movement.Id
+                FROM MovementString AS MovementString_CommentError
+                  INNER JOIN Movement ON Movement.Id     = MovementString_CommentError.MovementId
+                                     AND Movement.DescId = zc_Movement_Check()
+                                     AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                  INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                               AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                               AND MovementLinkObject_Unit.ObjectId = vbUnitId
+               WHERE MovementString_CommentError.DescId = zc_MovementString_CommentError()
+                 AND MovementString_CommentError.ValueData <> ''
+       )
+  , RESERVE
+    AS
+    (
+        SELECT MovementItem.ObjectId            AS GoodsId
+             , Sum(MovementItem.Amount)::TFloat AS Amount
+        FROM tmpMov
+                     INNER JOIN MovementItem ON MovementItem.MovementId = tmpMov.Id
+                                            AND MovementItem.DescId     = zc_MI_Master()
+                                            AND MovementItem.isErased   = FALSE
+        GROUP BY MovementItem.ObjectId
+    )
     -- состояние в сессии
   , SESSIONDATA AS (SELECT CashSessionSnapShot.ObjectId
                          , CashSessionSnapShot.Price
@@ -306,5 +336,5 @@ ALTER FUNCTION gpSelect_CashRemains_Diff_ver2 (Integer, TVarChar, TVarChar) OWNE
 */
 
 -- тест
--- SELECT * FROM gpSelect_CashRemains_Diff_ver2 (0, '{ACAF6C5B-24C4-43F0-B920-55444A167EC31}', '390016')
+-- SELECT * FROM gpSelect_CashRemains_Diff_ver2 (0, '{1590AD6F-681A-4B34-992A-87AEABB4D33F}', '308120')
 -- SELECT * FROM gpSelect_CashRemains_Diff_ver2 (0, 'tmp1', '3')

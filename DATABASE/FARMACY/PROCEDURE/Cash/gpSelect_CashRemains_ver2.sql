@@ -21,7 +21,8 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                MorionCode Integer, BarCode TVarChar,
                MCSValueOld TFloat,
                StartDateMCSAuto TDateTime, EndDateMCSAuto TDateTime,
-               isMCSAuto Boolean, isMCSNotRecalcOld Boolean
+               isMCSAuto Boolean, isMCSNotRecalcOld Boolean,
+               AccommodationId Integer, AccommodationName TVarChar
                )
 AS
 $BODY$
@@ -111,20 +112,42 @@ BEGIN
         GROUP BY Container.ObjectId
       )
 
+    , tmpMov AS (
+        SELECT Movement.Id
+        FROM MovementBoolean AS MovementBoolean_Deferred
+                  INNER JOIN Movement ON Movement.Id     = MovementBoolean_Deferred.MovementId
+                                     AND Movement.DescId = zc_Movement_Check()
+                                     AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                  INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                               AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                               AND MovementLinkObject_Unit.ObjectId = vbUnitId
+                WHERE MovementBoolean_Deferred.DescId    = zc_MovementBoolean_Deferred()
+                  AND MovementBoolean_Deferred.ValueData = TRUE
+               UNION
+                SELECT Movement.Id
+                FROM MovementString AS MovementString_CommentError
+                  INNER JOIN Movement ON Movement.Id     = MovementString_CommentError.MovementId
+                                     AND Movement.DescId = zc_Movement_Check()
+                                     AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                  INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                               AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                               AND MovementLinkObject_Unit.ObjectId = vbUnitId
+               WHERE MovementString_CommentError.DescId = zc_MovementString_CommentError()
+                 AND MovementString_CommentError.ValueData <> ''
+       )
   , RESERVE
     AS
     (
-        SELECT
-            MovementItem_Reserve.GoodsId,
-            SUM (MovementItem_Reserve.Amount)::TFloat as Amount
-        FROM
-            gpSelect_MovementItem_CheckDeferred(inSession) as MovementItem_Reserve
-        WHERE
-            MovementItem_Reserve.MovementId <> inMovementId
-        Group By
-            MovementItem_Reserve.GoodsId
+        SELECT MovementItem.ObjectId            AS GoodsId
+             , Sum(MovementItem.Amount)::TFloat AS Amount
+        FROM tmpMov
+                     INNER JOIN MovementItem ON MovementItem.MovementId = tmpMov.Id
+                                            AND MovementItem.DescId     = zc_MI_Master()
+                                            AND MovementItem.isErased   = FALSE
+        GROUP BY MovementItem.ObjectId
     )
-
 
 
     --залили снапшот
@@ -279,6 +302,22 @@ BEGIN
                                     INNER JOIN tmpObject_Price ON tmpObject_Price.GoodsId = CashSessionSnapShot.ObjectId
                                WHERE CashSessionSnapShot.CashSessionId = inCashSessionId
                               )
+              , tmpAccommodation AS (SELECT
+                                            ObjectLink_Accommodation_Goods.ChildObjectId   AS GoodsID
+                                          , Object_Accommodation.Id                        AS AccommodationID
+                                          , Object_Accommodation.ValueData                 AS AccommodationName
+                                     FROM Object AS Object_Accommodation
+
+                                                INNER JOIN ObjectLink AS ObjectLink_Accommodation_Unit
+                                                                      ON ObjectLink_Accommodation_Unit.ChildObjectId = vbUnitId
+                                                                     AND ObjectLink_Accommodation_Unit.ObjectId = Object_Accommodation.Id
+                                                                     AND ObjectLink_Accommodation_Unit.DescId = zc_Object_Accommodation_Unit()
+
+                                                INNER JOIN ObjectLink AS ObjectLink_Accommodation_Goods
+                                                                      ON ObjectLink_Accommodation_Goods.ObjectId = Object_Accommodation.Id
+                                                                     AND ObjectLink_Accommodation_Goods.DescId = zc_Object_Accommodation_Goods()
+
+                                     WHERE Object_Accommodation.DescId = zc_Object_Accommodation())
 
         -- Результат
         SELECT
@@ -479,6 +518,8 @@ BEGIN
           , tmpMCSAuto.EndDateMCSAuto
           , tmpMCSAuto.isMCSAuto
           , tmpMCSAuto.isMCSNotRecalcOld
+          , tmpAccommodation.AccommodationId
+          , tmpAccommodation.AccommodationName
          FROM
             CashSessionSnapShot
             INNER JOIN Object AS Goods ON Goods.Id = CashSessionSnapShot.ObjectId
@@ -543,6 +584,9 @@ BEGIN
             LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = ObjectLink_Main.ChildObjectId
             -- код Мориона
             LEFT JOIN tmpGoodsMorion ON tmpGoodsMorion.GoodsMainId = ObjectLink_Main.ChildObjectId
+            -- Размещение товара
+            LEFT JOIN tmpAccommodation ON tmpAccommodation.GoodsID = Goods.Id
+
         WHERE
             CashSessionSnapShot.CashSessionId = inCashSessionId
         ORDER BY
@@ -574,4 +618,4 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (Integer, TVarChar, TVarChar) OWNER TO 
 
 -- тест
 -- SELECT * FROM gpSelect_CashRemains (inSession:= '308120')
--- SELECT * FROM gpSelect_CashRemains_ver2(inMovementId := 0 , inCashSessionId := '{1590AD6F-681A-4B34-992A-87AEABB4D33F}' ,  inSession := '3');
+-- SELECT * FROM gpSelect_CashRemains_ver2(inMovementId := 0 , inCashSessionId := '{1590AD6F-681A-4B34-992A-87AEABB4D33F}' ,  inSession := '308120');

@@ -263,6 +263,12 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashRegisterKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashRegisterKindForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccommodationForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAccommodationForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccommodationEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAccommodationEditForm');
 end;
 
 procedure TLoadFormTest.LoadCalendarFormTest;

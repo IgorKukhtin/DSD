@@ -595,7 +595,9 @@ uses
   dsdPivotGrid in '..\..\SOURCE\COMPONENT\dsdPivotGrid.pas',
   RepriceUnit in '..\..\FormsFarmacy\ConnectWithOld\RepriceUnit.pas' {RepriceUnitForm},
   RepriceChange in '..\..\FormsFarmacy\Document\RepriceChange.pas' {RepriceChangeForm: TParentForm},
-  RepriceChangeJournal in '..\..\FormsFarmacy\Document\RepriceChangeJournal.pas' {RepriceChangeJournalForm: TParentForm};
+  RepriceChangeJournal in '..\..\FormsFarmacy\Document\RepriceChangeJournal.pas' {RepriceChangeJournalForm: TParentForm},
+  Accommodation in '..\..\FormsFarmacy\Cash\Accommodation.pas' {AccommodationForm: TParentForm},
+  AccommodationEdit in '..\..\FormsFarmacy\Cash\AccommodationEdit.pas' {AccommodationEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -612,7 +614,7 @@ begin
 
   if FindCmdLineSwitch('realfarmacy', true)
   then gc_AdminPassword := 'Админ1234'
-  else gc_AdminPassword := 'Админ1234';
+  else gc_AdminPassword := 'Админ1111';
 
   gc_ProgramName := 'Farmacy.exe';
 
