@@ -1256,6 +1256,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       IsCaptionAssigned = True
       Caption = '% '#1055#1088#1086#1076'.'
       PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.Alignment.Horz = taRightJustify
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.;-,0.; ;'
       Styles.ColumnHeader = dmMain.cxSelection
@@ -1287,6 +1288,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       IsCaptionAssigned = True
       Caption = '% '#1056#1077#1085#1090'.'
       PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.Alignment.Horz = taRightJustify
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.;-,0.; ;'
       Styles.ColumnHeader = dmMain.cxSelection
@@ -1318,6 +1320,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       IsCaptionAssigned = True
       Caption = '% '#1055#1088#1086#1076'. -'#1044'.'
       PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.Alignment.Horz = taRightJustify
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.;-,0.; ;'
       Visible = True
@@ -1348,6 +1351,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       IsCaptionAssigned = True
       Caption = '% '#1055#1088#1086#1076'. '#1074#1072#1083'. -'#1044'.'
       PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.Alignment.Horz = taRightJustify
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.;-,0.; ;'
       Visible = True
