@@ -1,7 +1,8 @@
-inherited GoodsSPJournalForm: TGoodsSPJournalForm
+inherited GoodsSPJournalChoiceForm: TGoodsSPJournalChoiceForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1058#1086#1074#1072#1088#1099' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072'>'
   ClientHeight = 535
   ClientWidth = 821
+  AddOnFormData.ChoiceAction = ChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.AddOnFormRefresh.SelfList = 'Loss'
   AddOnFormData.AddOnFormRefresh.DataSet = MasterCDS
@@ -399,31 +400,13 @@ inherited GoodsSPJournalForm: TGoodsSPJournalForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbComplete'
+          ItemName = 'bbChoiceGuides'
         end
         item
-          Visible = True
-          ItemName = 'bbUnComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbDelete'
-        end
-        item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -470,8 +453,21 @@ inherited GoodsSPJournalForm: TGoodsSPJournalForm
       Visible = ivAlways
       ImageIndex = 67
     end
+    object bbChoiceGuides: TdxBarButton
+      Action = ChoiceGuides
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = ChoiceGuides
+      end>
+    ActionItemList = <
+      item
+        Action = ChoiceGuides
+        ShortCut = 13
+      end>
     Left = 320
     Top = 224
   end

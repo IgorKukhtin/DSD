@@ -25,7 +25,6 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_GoodsSP(
     IN inMakerSP              TVarChar,
     IN inReestrSP             TVarChar,
     IN inReestrDateSP         TVarChar,
-
     IN inUserId               Integer     -- пользователь
 )
 RETURNS Integer

@@ -597,7 +597,8 @@ uses
   RepriceChange in '..\..\FormsFarmacy\Document\RepriceChange.pas' {RepriceChangeForm: TParentForm},
   RepriceChangeJournal in '..\..\FormsFarmacy\Document\RepriceChangeJournal.pas' {RepriceChangeJournalForm: TParentForm},
   Accommodation in '..\..\FormsFarmacy\Cash\Accommodation.pas' {AccommodationForm: TParentForm},
-  AccommodationEdit in '..\..\FormsFarmacy\Cash\AccommodationEdit.pas' {AccommodationEditForm: TParentForm};
+  AccommodationEdit in '..\..\FormsFarmacy\Cash\AccommodationEdit.pas' {AccommodationEditForm: TParentForm},
+  GoodsSPJournalChoice in '..\..\FormsFarmacy\Document\GoodsSPJournalChoice.pas' {GoodsSPJournalChoiceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
