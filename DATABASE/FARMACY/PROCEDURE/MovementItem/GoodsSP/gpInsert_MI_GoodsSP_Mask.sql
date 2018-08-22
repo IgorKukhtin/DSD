@@ -22,7 +22,7 @@ BEGIN
                                                 , inIntenalSPId        := COALESCE (MI_Mask.IntenalSPId, MI_Master.IntenalSPId, 0)
                                                 , inBrandSPId          := COALESCE (MI_Mask.BrandSPId, MI_Master.BrandSPId, 0)
                                                 , inKindOutSPId        := COALESCE (MI_Mask.KindOutSPId, MI_Master.KindOutSPId, 0)
-                                                , inColSP              := COALESCE (MI_Mask.ColSP, 0)                                :: TFloat
+                                                , inColSP              := COALESCE (MI_Mask.ColSP, MI_Master.ColSP, 0)               :: TFloat
                                                 , inCountSP            := COALESCE (MI_Mask.CountSP, MI_Master.CountSP, 0)           :: TFloat
                                                 , inPriceOptSP         := COALESCE (MI_Mask.PriceOptSP, MI_Master.PriceOptSP, 0)     :: TFloat
                                                 , inPriceRetSP         := COALESCE (MI_Mask.PriceRetSP, MI_Master.PriceRetSP, 0)     :: TFloat
