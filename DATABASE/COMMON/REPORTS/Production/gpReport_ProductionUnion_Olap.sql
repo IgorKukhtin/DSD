@@ -35,7 +35,6 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
              , ChildAmount_Weight TFloat, ChildAmountReceipt_Weight TFloat, ChildAmountCalc_Weight    TFloat
 
              , ChildSumm TFloat
-             , MainPrice TFloat, ChildPrice TFloat
 
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InfoMoneyId_Detail Integer, InfoMoneyCode_Detail Integer, InfoMoneyGroupName_Detail TVarChar, InfoMoneyDestinationName_Detail TVarChar, InfoMoneyName_Detail TVarChar, InfoMoneyName_all_Detail TVarChar
@@ -1025,9 +1024,6 @@ BEGIN
            , (tmpOperationGroup.AmountReceiptForWeght * (CASE WHEN tmpGoodsChildParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsChildParam.Weight ELSE 1 END ))  :: TFloat AS ChildAmountReceipt_Weight
            , (tmpOperationGroup.AmountCalcForWeght    * (CASE WHEN tmpGoodsChildParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsChildParam.Weight ELSE 1 END ))  :: TFloat AS ChildAmountCalc_Weight
            , tmpOperationGroup.OperSumm_out   :: TFloat AS ChildSumm
-
-           , CASE WHEN tmpOperationGroup.OperCount     <> 0 THEN tmpOperationGroup.OperSumm     / tmpOperationGroup.OperCount     ELSE 0 END :: TFloat AS MainPrice
-           , CASE WHEN tmpOperationGroup.OperCount_out <> 0 THEN tmpOperationGroup.OperSumm_out / tmpOperationGroup.OperCount_out ELSE 0 END :: TFloat AS ChildPrice
 
            , View_InfoMoney.InfoMoneyId
            , View_InfoMoney.InfoMoneyCode

@@ -55,7 +55,6 @@ type
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     pvAmount: TcxDBPivotGridField;
-    pvMainPrice: TcxDBPivotGridField;
     pvChildGoodsGroupName: TcxDBPivotGridField;
     pvPartionGoods: TcxDBPivotGridField;
     pvChildPartionGoods: TcxDBPivotGridField;
