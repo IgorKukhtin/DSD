@@ -238,7 +238,7 @@ object Report_Sale_OlapForm: TReport_Sale_OlapForm
     end
     object pvCountSale: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 1
+      AreaIndex = 4
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076#1072#1078#1072' '#1082#1086#1083'.'
       DataBinding.FieldName = 'CountSale'
@@ -251,7 +251,7 @@ object Report_Sale_OlapForm: TReport_Sale_OlapForm
     end
     object pvCountSale_10500: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 2
+      AreaIndex = 5
       IsCaptionAssigned = True
       Caption = #1057#1082#1080#1076#1082#1072', '#1082#1086#1083'.'
       DataBinding.FieldName = 'CountSale_10500'
@@ -264,7 +264,7 @@ object Report_Sale_OlapForm: TReport_Sale_OlapForm
     end
     object pvCountSale_40208: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 3
+      AreaIndex = 6
       IsCaptionAssigned = True
       Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1082#1086#1083'.'
       DataBinding.FieldName = 'CountSale_40208'
@@ -277,7 +277,7 @@ object Report_Sale_OlapForm: TReport_Sale_OlapForm
     end
     object pvCountSaleReal: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 4
+      AreaIndex = 7
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076#1072#1078#1072' '#1082#1086#1083'. ('#1087#1086#1082'.)'
       DataBinding.FieldName = 'CountSaleReal'
@@ -290,7 +290,7 @@ object Report_Sale_OlapForm: TReport_Sale_OlapForm
     end
     object pvCountSendOnPriceIn: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 5
+      AreaIndex = 8
       IsCaptionAssigned = True
       Caption = #1055#1077#1088#1077#1084'. '#1092#1080#1083'. '#1087#1088#1080#1093'. '#1082#1086#1083'.'
       DataBinding.FieldName = 'CountSendOnPriceIn'
@@ -303,7 +303,7 @@ object Report_Sale_OlapForm: TReport_Sale_OlapForm
     end
     object pvCountSendOnPrice_10500: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 6
+      AreaIndex = 9
       IsCaptionAssigned = True
       Caption = #1057#1082#1080#1076#1082#1072' '#1082#1086#1083'. ('#1087#1088#1080' '#1087#1077#1088#1077#1084'. '#1085#1072' '#1092#1080#1083'.)'
       DataBinding.FieldName = 'CountSendOnPrice_10500'
@@ -316,7 +316,7 @@ object Report_Sale_OlapForm: TReport_Sale_OlapForm
     end
     object pvCountSendOnPrice_40200: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 7
+      AreaIndex = 10
       IsCaptionAssigned = True
       Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1082#1086#1083'. ('#1087#1088#1080' '#1087#1077#1088#1077#1084'. '#1085#1072' '#1092#1080#1083'.)'
       DataBinding.FieldName = 'CountSendOnPrice_40200'
@@ -329,7 +329,7 @@ object Report_Sale_OlapForm: TReport_Sale_OlapForm
     end
     object pvCountSendOnPriceOut: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 8
+      AreaIndex = 11
       IsCaptionAssigned = True
       Caption = #1055#1077#1088#1077#1084'. '#1092#1080#1083'. '#1088#1072#1089#1093'. '#1082#1086#1083'.'
       DataBinding.FieldName = 'CountSendOnPriceOut'
@@ -353,10 +353,46 @@ object Report_Sale_OlapForm: TReport_Sale_OlapForm
       Width = 70
       UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
     end
+    object pvPrice: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 1
+      IsCaptionAssigned = True
+      Caption = #1062#1077#1085#1072' '#1089'/'#1089
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Visible = True
+      Width = 70
+      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
+    end
+    object pvPriceSale: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 2
+      IsCaptionAssigned = True
+      Caption = #1062#1077#1085#1072' '#1089'/'#1089' '#1087#1088#1086#1076'.'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Visible = True
+      Width = 70
+      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
+    end
+    object pvPriceSaleReal: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 3
+      IsCaptionAssigned = True
+      Caption = #1062#1077#1085#1072' '#1089'/'#1089' '#1087#1088#1086#1076'. ('#1082#1086#1083'. '#1087#1086#1082#1091#1087'.)'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Visible = True
+      Width = 70
+      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
+    end
     object pvSummSale: TcxDBPivotGridField
       AreaIndex = 13
       IsCaptionAssigned = True
-      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1089#1091#1084#1084#1072
+      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1089#1091#1084#1084#1072' ('#1089'/'#1089')'
       DataBinding.FieldName = 'SummSale'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
@@ -1097,5 +1133,47 @@ object Report_Sale_OlapForm: TReport_Sale_OlapForm
     DateEnd = deEnd2
     Left = 520
     Top = 328
+  end
+  object cfPrice: TdsdPivotGridCalcFields
+    PivotGrid = cxDBPivotGrid
+    CalcField = pvPrice
+    GridFields = <
+      item
+        Field = pvSumm
+      end
+      item
+        Field = pvCountSale
+      end>
+    CalcFieldsType = cfDivision
+    Left = 656
+    Top = 208
+  end
+  object cfPriceSale: TdsdPivotGridCalcFields
+    PivotGrid = cxDBPivotGrid
+    CalcField = pvPriceSale
+    GridFields = <
+      item
+        Field = pvSummSale
+      end
+      item
+        Field = pvCountSale
+      end>
+    CalcFieldsType = cfDivision
+    Left = 656
+    Top = 256
+  end
+  object cfPriceSaleReal: TdsdPivotGridCalcFields
+    PivotGrid = cxDBPivotGrid
+    CalcField = pvPriceSaleReal
+    GridFields = <
+      item
+        Field = pvSummSale
+      end
+      item
+        Field = pvCountSaleReal
+      end>
+    CalcFieldsType = cfDivision
+    Left = 656
+    Top = 312
   end
 end

@@ -278,7 +278,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     Align = alClient
     DataSource = DataSource
     Groups = <>
-    OptionsView.RowGrandTotalWidth = 272
+    OptionsView.RowGrandTotalWidth = 173
     TabOrder = 1
     object pvLabelName: TcxDBPivotGridField
       Area = faRow
