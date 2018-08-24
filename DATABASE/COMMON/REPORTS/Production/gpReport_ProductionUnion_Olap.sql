@@ -26,31 +26,31 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
              , GoodsGroupName TVarChar
              , GoodsCode Integer, GoodsName TVarChar
              , GoodsKindName TVarChar, GoodsKindName_complete TVarChar
-             , Amount TFloat, Summ TFloat
+             , Amount TFloat, Amount_Weight TFloat
+             , Summ TFloat
              , ChildPartionGoods TVarChar, ChildPartionGoods_Date TDateTime
              , ChildGoodsGroupName TVarChar
              , ChildGoodsCode Integer, ChildGoodsName TVarChar
              , ChildGoodsKindName TVarChar
              , ChildAmount TFloat, ChildAmountReceipt TFloat, ChildAmountCalc TFloat
              , ChildAmount_Weight TFloat, ChildAmountReceipt_Weight TFloat, ChildAmountCalc_Weight    TFloat
-
-             , ChildSumm TFloat
+             , ChildSumm TFloat, ChildSummReceipt TFloat, ChildSummCalc TFloat
+             , CuterCount TFloat
              , MainPrice TFloat, ChildPrice TFloat
 
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InfoMoneyId_Detail Integer, InfoMoneyCode_Detail Integer, InfoMoneyGroupName_Detail TVarChar, InfoMoneyDestinationName_Detail TVarChar, InfoMoneyName_Detail TVarChar, InfoMoneyName_all_Detail TVarChar
 
-            , GoodsGroupNameFull TVarChar
-            , GoodsGroupAnalystName TVarChar
-            , TradeMarkName TVarChar
-            , GoodsTagName TVarChar
-            , GoodsPlatformName TVarChar
-            , ChildGoodsGroupNameFull TVarChar
-            , ChildGoodsGroupAnalystName TVarChar
-            , ChildTradeMarkName TVarChar
-            , ChildGoodsTagName TVarChar
-            , ChildGoodsPlatformName TVarChar
-
+             , GoodsGroupNameFull TVarChar
+             , GoodsGroupAnalystName TVarChar
+             , TradeMarkName TVarChar
+             , GoodsTagName TVarChar
+             , GoodsPlatformName TVarChar
+             , ChildGoodsGroupNameFull TVarChar
+             , ChildGoodsGroupAnalystName TVarChar
+             , ChildTradeMarkName TVarChar
+             , ChildGoodsTagName TVarChar
+             , ChildGoodsPlatformName TVarChar
              )   
 AS
 $BODY$
@@ -118,16 +118,19 @@ BEGIN
            -- данные первого периода
            tmpMI_ContainerIn1 AS
                        (SELECT MIContainer.OperDate                                 AS OperDate
+                             , MIContainer.ObjectExtId_Analyzer                     AS FromId
+                             , MIContainer.WhereObjectId_Analyzer                   AS ToId
                              , MIContainer.MovementId                               AS MovementId
                              , MIContainer.MovementItemId                           AS MovementItemId 
                              , MILO_Receipt.ObjectId                                AS ReceiptId
                              , COALESCE (MovementBoolean_Peresort.ValueData, FALSE) AS isPeresort
                              , COALESCE (MLO_DocumentKind.ObjectId, 0)              AS DocumentKindId
-                             , MIContainer.DescId                 AS MIContainerDescId
-                             , MIContainer.ContainerId            AS ContainerId
-                             , MIContainer.ObjectId_Analyzer      AS GoodsId
+                             , MIContainer.DescId                                   AS MIContainerDescId
+                             , MIContainer.ContainerId                              AS ContainerId
+                             , MIContainer.ObjectId_Analyzer                        AS GoodsId
                              , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)       AS GoodsKindId
-                             , SUM (MIContainer.Amount)           AS Amount
+                             , SUM (MIContainer.Amount)                             AS Amount
+                             
                         FROM MovementItemContainer AS MIContainer
 			     INNER JOIN _tmpFromGroup ON _tmpFromGroup.FromId = MIContainer.ObjectExtId_Analyzer
  		             INNER JOIN _tmpToGroup   ON _tmpToGroup.ToId     = MIContainer.WhereObjectId_Analyzer
@@ -155,7 +158,52 @@ BEGIN
                                , MIContainer.ObjectId_Analyzer
                                , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
                                , MIContainer.OperDate
+                               , MIContainer.ObjectExtId_Analyzer
+                               , MIContainer.WhereObjectId_Analyzer
                        )
+         , tmpMI_Master_Cuter1 AS (SELECT MIFloat_CuterCount.*
+                                   FROM MovementItemFloat AS MIFloat_CuterCount
+                                   WHERE MIFloat_CuterCount.MovementItemId IN (SELECT DISTINCT tmpMI_ContainerIn1.MovementItemId FROM tmpMI_ContainerIn1)
+                                     AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
+                                   )
+         , tmpMI_Partion_Cuter1 AS (SELECT tmpMI_ContainerIn.MovementItemId
+                                        , SUM (CASE WHEN COALESCE (MI_Partion.Amount, 0) <> 0 
+                                                    THEN MI_Child.Amount / MI_Partion.Amount * COALESCE (MIFloat_CuterCount.ValueData, 0)
+                                                    ELSE 0
+                                               END )  AS CuterCount
+                                    FROM tmpMI_ContainerIn1 AS tmpMI_ContainerIn
+                                         INNER JOIN MovementItem AS MI_Child
+                                                                 ON MI_Child.ParentId   = tmpMI_ContainerIn.MovementItemId
+                                                                AND MI_Child.MovementId = tmpMI_ContainerIn.MovementId
+                                                                AND MI_Child.DescId = zc_MI_Child()
+                                                                AND MI_Child.isErased = FALSE
+                                         INNER JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                           ON MILinkObject_GoodsKind.MovementItemId = MI_Child.Id
+                                                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                                                          AND MILinkObject_GoodsKind.ObjectId = zc_GoodsKind_WorkProgress()
+                                         INNER JOIN MovementItemContainer AS MIContainer_Child
+                                                                          ON MIContainer_Child.MovementItemId = MI_Child.Id
+                                                                         AND MIContainer_Child.DescId = zc_MIContainer_Count()
+
+                                         LEFT JOIN MovementItemContainer AS MIContainer
+                                                                         ON MIContainer.ContainerId    = MIContainer_Child.ContainerId
+                                                                        AND MIContainer.DescId         = zc_MIContainer_Count()
+                                                                        AND MIContainer.WhereObjectId_Analyzer = tmpMI_ContainerIn.FromId
+                                                                        AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                                                                        AND MIContainer.IsActive       = TRUE
+                                                                        AND MIContainer.Amount         <> 0
+
+                                         LEFT JOIN MovementItem AS MI_Partion ON MI_Partion.Id = MIContainer.MovementItemId
+      
+                                         LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
+                                                                     ON MIFloat_CuterCount.MovementItemId = MI_Partion.Id
+                                                                    AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
+                                                      
+                                    WHERE tmpMI_ContainerIn.FromId <> tmpMI_ContainerIn.ToId
+                                      AND tmpMI_ContainerIn.MIContainerDescId = zc_MIContainer_Count()
+                                    GROUP BY tmpMI_ContainerIn.MovementItemId
+                                    )
+
          , tmpContainer_in1 AS (SELECT DISTINCT tmp.ContainerId
                                      , tmp.GoodsId
                                      , tmp.GoodsKindId
@@ -262,7 +310,7 @@ BEGIN
                              , MIContainer.GoodsId       
                              , MIContainer.GoodsKindId
                              , -1 * SUM (MIContainer.Amount)     AS Amount
-                             , SUM (MIContainer.Amount_Master)  AS Amount_Master
+                             , SUM (MIContainer.Amount_Master)   AS Amount_Master
                         FROM tmpOut1 AS MIContainer
                              LEFT JOIN tmpMovementBoolean1 AS MovementBoolean_Peresort
                                                            ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
@@ -385,6 +433,7 @@ BEGIN
                                  , COALESCE (MIBoolean_TaxExit.ValueData, FALSE)
                                  , COALESCE (MIBoolean_WeightMain.ValueData, FALSE)
                          )
+
          , tmpOperationGroup1 AS (SELECT DATE_TRUNC ('Month', tmpMI_ContainerIn.OperDate) AS OperDate
                                        , CASE WHEN inIsMovement = TRUE THEN tmpMI_ContainerIn.MovementId ELSE 0 END AS MovementId
                                        , tmpMI_ContainerIn.isPeresort
@@ -399,20 +448,28 @@ BEGIN
                                        , tmpContainer_in.GoodsKindId_complete             AS GoodsKindId_complete
                                        , SUM (CASE WHEN tmpMI_ContainerIn.MIContainerDescId = zc_MIContainer_Count() THEN tmpMI_ContainerIn.Amount ELSE 0 END) AS OperCount
                                        , SUM (CASE WHEN tmpMI_ContainerIn.MIContainerDescId = zc_MIContainer_Summ()  THEN tmpMI_ContainerIn.Amount ELSE 0 END) AS OperSumm
-
-
-                                      , 0 AS PartionGoodsId_out
-                                      , 0 AS GoodsId_out
-                                      , 0 AS GoodsKindId_out
-                                      , 0 AS OperCount_out
-                                      , 0 AS OperSumm_out    
-                                      , 0 AS AmountReceipt_out                                        
-                                      , 0 AS AmountCalc_out 
-                                      , 0 AS AmountCalcForWeght
-                                      , 0 AS AmountForWeght 
-                                      , 0 AS AmountReceiptForWeght
+                                       , SUM (COALESCE (tmpMI_Master_Cuter.ValueData,0) + COALESCE (tmpMI_Partion_Cuter.CuterCount, 0))                        AS CuterCount
+                                       , 0 AS PartionGoodsId_out
+                                       , 0 AS GoodsId_out
+                                       , 0 AS GoodsKindId_out
+                                       , 0 AS OperCount_out
+                                       , 0 AS OperSumm_out    
+                                       , 0 AS AmountReceipt_out   
+                                       , 0 AS SummReceipt_out
+                                       , 0 AS AmountCalc_out 
+                                       , 0 AS AmountCalcForWeght
+                                       , 0 AS SummCalc_out
+                                       , 0 AS AmountForWeght 
+                                       , 0 AS AmountReceiptForWeght
                                   FROM tmpMI_ContainerIn1 AS tmpMI_ContainerIn
                                        LEFT JOIN tmpContainer_in1 AS tmpContainer_in ON tmpContainer_in.ContainerId = tmpMI_ContainerIn.ContainerId
+                                       LEFT JOIN tmpMI_Master_Cuter1 AS tmpMI_Master_Cuter 
+                                                                     ON tmpMI_Master_Cuter.MovementItemId = tmpMI_ContainerIn.MovementItemId
+                                                                    AND tmpMI_ContainerIn.MIContainerDescId = zc_MIContainer_Count()
+                                       LEFT JOIN tmpMI_Partion_Cuter1 AS tmpMI_Partion_Cuter 
+                                                                      ON tmpMI_Partion_Cuter.MovementItemId = tmpMI_ContainerIn.MovementItemId
+                                                                     AND tmpMI_ContainerIn.MIContainerDescId = zc_MIContainer_Count()
+
                                   GROUP BY CASE WHEN inIsMovement = TRUE THEN tmpMI_ContainerIn.MovementId ELSE 0 END
                                          , tmpMI_ContainerIn.isPeresort
                                          , tmpMI_ContainerIn.DocumentKindId
@@ -439,6 +496,7 @@ BEGIN
                                        , tmpMI_out.GoodsKindId_complete_in AS GoodsKindId_complete
                                        , 0 AS OperCount
                                        , 0 AS OperSumm
+                                       , 0 AS CuterCount
 
                                        , tmpMI_out.PartionGoodsId       AS PartionGoodsId_out
                                        , tmpMI_out.GoodsId              AS GoodsId_out
@@ -447,6 +505,7 @@ BEGIN
                                        , SUM (tmpMI_out.OperCount)      AS OperCount_out
                                        , SUM (tmpMI_out.OperSumm)       AS OperSumm_out 
                                        , SUM (tmpMI_out.AmountReceipt)  AS AmountReceipt_out
+                                       , SUM (CASE WHEN COALESCE (tmpMI_out.OperCount,0) <> 0 THEN tmpMI_out.AmountReceipt * (tmpMI_out.OperSumm / tmpMI_out.OperCount) ELSE 0 END)  AS SummReceipt_out
                                        , SUM (CASE WHEN tmpMI_out.GoodsKindId_in = zc_GoodsKind_WorkProgress()
                                                    THEN CASE WHEN tmpMI_out.isTaxExit = FALSE
                                                                   THEN tmpMI_out.CuterCount_Master * tmpMI_out.Value
@@ -480,6 +539,22 @@ BEGIN
                                                         END
                                                    ELSE 0    
                                               END)                      AS AmountCalcForWeght
+
+                                       , SUM (CASE WHEN COALESCE (tmpMI_out.OperCount,0) <> 0 THEN 
+                                                   (CASE WHEN tmpMI_out.GoodsKindId_in = zc_GoodsKind_WorkProgress()
+                                                         THEN CASE WHEN tmpMI_out.isTaxExit = FALSE
+                                                                        THEN tmpMI_out.CuterCount_Master * tmpMI_out.Value
+                                                                   WHEN tmpMI_out.Value_master <> 0
+                                                                        THEN tmpMI_out.Amount_Master * tmpMI_out.Value / tmpMI_out.Value_master
+                                                                   ELSE 0
+                                                              END
+                                                              
+                                                         WHEN tmpMI_out.Value_master <> 0
+                                                              THEN tmpMI_out.Amount_Master * tmpMI_out.Value / tmpMI_out.Value_master
+                                                         ELSE 0
+                                                     END) * (tmpMI_out.OperSumm / tmpMI_out.OperCount)
+                                              ELSE 0 END)  AS SummCalc_out
+
                                        , SUM (CASE WHEN TRUE = zfCalc_ReceiptChild_isWeightTotal (inGoodsId                := tmpMI_out.GoodsId
                                                                                                 , inGoodsKindId            := tmpMI_out.GoodsKindId
                                                                                                 , inInfoMoneyDestinationId := Object_InfoMoney_Goods.InfoMoneyDestinationId
@@ -514,12 +589,10 @@ BEGIN
                                          , tmpMI_out.InfoMoneyId_in
                                          , tmpMI_out.InfoMoneyId_Detail_in
                                          , tmpMI_out.GoodsId_in       
-                                         --, CASE WHEN inIsMovement = FALSE THEN 0 ELSE tmpMI_out.GoodsKindId_in END
                                          , tmpMI_out.GoodsKindId_in
                                          , tmpMI_out.GoodsKindId_complete_in
                                          , tmpMI_out.PartionGoodsId
                                          , tmpMI_out.GoodsId
-                                         --, CASE WHEN inIsMovement = FALSE THEN 0 ELSE tmpMI_out.GoodsKindId END
                                          , tmpMI_out.GoodsKindId
                                  )
 
@@ -527,15 +600,17 @@ BEGIN
          , tmpMI_ContainerIn2 AS
                        (SELECT MIContainer.OperDate                                 AS OperDate
                              , MIContainer.MovementId                               AS MovementId
+                             , MIContainer.ObjectExtId_Analyzer                     AS FromId
+                             , MIContainer.WhereObjectId_Analyzer                   AS ToId
                              , MIContainer.MovementItemId                           AS MovementItemId 
                              , MILO_Receipt.ObjectId                                AS ReceiptId
                              , COALESCE (MovementBoolean_Peresort.ValueData, FALSE) AS isPeresort
                              , COALESCE (MLO_DocumentKind.ObjectId, 0)              AS DocumentKindId
-                             , MIContainer.DescId                 AS MIContainerDescId
-                             , MIContainer.ContainerId            AS ContainerId
-                             , MIContainer.ObjectId_Analyzer      AS GoodsId
+                             , MIContainer.DescId                                   AS MIContainerDescId
+                             , MIContainer.ContainerId                              AS ContainerId
+                             , MIContainer.ObjectId_Analyzer                        AS GoodsId
                              , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)       AS GoodsKindId
-                             , SUM (MIContainer.Amount)           AS Amount
+                             , SUM (MIContainer.Amount)                             AS Amount
                         FROM MovementItemContainer AS MIContainer
 			     INNER JOIN _tmpFromGroup ON _tmpFromGroup.FromId = MIContainer.ObjectExtId_Analyzer
  		             INNER JOIN _tmpToGroup   ON _tmpToGroup.ToId     = MIContainer.WhereObjectId_Analyzer
@@ -563,7 +638,53 @@ BEGIN
                                , MIContainer.ObjectId_Analyzer
                                , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
                                , MIContainer.OperDate
+                               , MIContainer.ObjectExtId_Analyzer
+                               , MIContainer.WhereObjectId_Analyzer
                        )
+         , tmpMI_Master_Cuter2 AS (SELECT MIFloat_CuterCount.*
+                                   FROM MovementItemFloat AS MIFloat_CuterCount
+                                   WHERE MIFloat_CuterCount.MovementItemId IN (SELECT DISTINCT tmpMI_ContainerIn2.MovementItemId FROM tmpMI_ContainerIn2)
+                                     AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
+                                   )
+
+         , tmpMI_Partion_Cuter2 AS (SELECT tmpMI_ContainerIn.MovementItemId
+                                        , SUM (CASE WHEN COALESCE (MI_Partion.Amount, 0) <> 0 
+                                                    THEN MI_Child.Amount / MI_Partion.Amount * COALESCE (MIFloat_CuterCount.ValueData, 0)
+                                                    ELSE 0
+                                               END )  AS CuterCount
+                                    FROM tmpMI_ContainerIn2 AS tmpMI_ContainerIn
+                                         INNER JOIN MovementItem AS MI_Child
+                                                                 ON MI_Child.ParentId   = tmpMI_ContainerIn.MovementItemId
+                                                                AND MI_Child.MovementId = tmpMI_ContainerIn.MovementId
+                                                                AND MI_Child.DescId = zc_MI_Child()
+                                                                AND MI_Child.isErased = FALSE
+                                         INNER JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                           ON MILinkObject_GoodsKind.MovementItemId = MI_Child.Id
+                                                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                                                          AND MILinkObject_GoodsKind.ObjectId = zc_GoodsKind_WorkProgress()
+                                         INNER JOIN MovementItemContainer AS MIContainer_Child
+                                                                          ON MIContainer_Child.MovementItemId = MI_Child.Id
+                                                                         AND MIContainer_Child.DescId = zc_MIContainer_Count()
+
+                                         LEFT JOIN MovementItemContainer AS MIContainer
+                                                                         ON MIContainer.ContainerId    = MIContainer_Child.ContainerId
+                                                                        AND MIContainer.DescId         = zc_MIContainer_Count()
+                                                                        AND MIContainer.WhereObjectId_Analyzer = tmpMI_ContainerIn.FromId
+                                                                        AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                                                                        AND MIContainer.IsActive       = TRUE
+                                                                        AND MIContainer.Amount         <> 0
+
+                                         LEFT JOIN MovementItem AS MI_Partion ON MI_Partion.Id = MIContainer.MovementItemId
+      
+                                         LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
+                                                                     ON MIFloat_CuterCount.MovementItemId = MI_Partion.Id
+                                                                    AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
+                                                      
+                                    WHERE tmpMI_ContainerIn.FromId <> tmpMI_ContainerIn.ToId
+                                      AND tmpMI_ContainerIn.MIContainerDescId = zc_MIContainer_Count()
+                                    GROUP BY tmpMI_ContainerIn.MovementItemId
+                                    )
+
          , tmpContainer_in2 AS (SELECT DISTINCT tmp.ContainerId
                                      , tmp.GoodsId
                                      , tmp.GoodsKindId
@@ -669,7 +790,7 @@ BEGIN
                              , MIContainer.ContainerId
                              , MIContainer.GoodsId       
                              , MIContainer.GoodsKindId
-                             , -1 * SUM (MIContainer.Amount)     AS Amount
+                             , -1 * SUM (MIContainer.Amount)    AS Amount
                              , SUM (MIContainer.Amount_Master)  AS Amount_Master
                         FROM tmpOut2 AS MIContainer
                              LEFT JOIN tmpMovementBoolean2 AS MovementBoolean_Peresort
@@ -696,32 +817,32 @@ BEGIN
 
          -- данные из рецептур
          , tmpReceipt2 AS (SELECT tmp.ReceiptId                                                  AS ReceiptId
-                               , tmp.MovementItemId                                             AS MovementItemId
-                               , COALESCE (ObjectLink_ReceiptChild_Goods.ChildObjectId, 0)      AS GoodsId
-                               , COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, 0)  AS GoodsKindId
-                               , ObjectFloat_Value.ValueData                                    AS Value
-                               , ObjectFloat_Value_master.ValueData                             AS Value_master
-                          FROM (SELECT DISTINCT tmpMI_ContainerIn2.ReceiptId, tmpMI_ContainerIn2.MovementItemId FROM tmpMI_ContainerIn2
-                               ) AS tmp
-                               INNER JOIN ObjectLink AS ObjectLink_ReceiptChild_Receipt
-                                                     ON ObjectLink_ReceiptChild_Receipt.ChildObjectId = tmp.ReceiptId
-                                                    AND ObjectLink_ReceiptChild_Receipt.DescId = zc_ObjectLink_ReceiptChild_Receipt()
-                               INNER JOIN Object AS Object_ReceiptChild ON Object_ReceiptChild.Id = ObjectLink_ReceiptChild_Receipt.ObjectId
-                                                                       AND Object_ReceiptChild.isErased = FALSE
-                               LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Goods
-                                                    ON ObjectLink_ReceiptChild_Goods.ObjectId = Object_ReceiptChild.Id
-                                                   AND ObjectLink_ReceiptChild_Goods.DescId = zc_ObjectLink_ReceiptChild_Goods()
-                               LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_GoodsKind
-                                                   ON ObjectLink_ReceiptChild_GoodsKind.ObjectId = Object_ReceiptChild.Id
-                                                  AND ObjectLink_ReceiptChild_GoodsKind.DescId = zc_ObjectLink_ReceiptChild_GoodsKind()
-                               INNER JOIN ObjectFloat AS ObjectFloat_Value_master
-                                                      ON ObjectFloat_Value_master.ObjectId = tmp.ReceiptId
-                                                     AND ObjectFloat_Value_master.DescId = zc_ObjectFloat_Receipt_Value()
-                                                     AND ObjectFloat_Value_master.ValueData <> 0
-                               INNER JOIN ObjectFloat AS ObjectFloat_Value
-                                                      ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
-                                                     AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
-                          )
+                                , tmp.MovementItemId                                             AS MovementItemId
+                                , COALESCE (ObjectLink_ReceiptChild_Goods.ChildObjectId, 0)      AS GoodsId
+                                , COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, 0)  AS GoodsKindId
+                                , ObjectFloat_Value.ValueData                                    AS Value
+                                , ObjectFloat_Value_master.ValueData                             AS Value_master
+                           FROM (SELECT DISTINCT tmpMI_ContainerIn2.ReceiptId, tmpMI_ContainerIn2.MovementItemId FROM tmpMI_ContainerIn2
+                                ) AS tmp
+                                INNER JOIN ObjectLink AS ObjectLink_ReceiptChild_Receipt
+                                                      ON ObjectLink_ReceiptChild_Receipt.ChildObjectId = tmp.ReceiptId
+                                                     AND ObjectLink_ReceiptChild_Receipt.DescId = zc_ObjectLink_ReceiptChild_Receipt()
+                                INNER JOIN Object AS Object_ReceiptChild ON Object_ReceiptChild.Id = ObjectLink_ReceiptChild_Receipt.ObjectId
+                                                                        AND Object_ReceiptChild.isErased = FALSE
+                                LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Goods
+                                                     ON ObjectLink_ReceiptChild_Goods.ObjectId = Object_ReceiptChild.Id
+                                                    AND ObjectLink_ReceiptChild_Goods.DescId = zc_ObjectLink_ReceiptChild_Goods()
+                                LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_GoodsKind
+                                                    ON ObjectLink_ReceiptChild_GoodsKind.ObjectId = Object_ReceiptChild.Id
+                                                   AND ObjectLink_ReceiptChild_GoodsKind.DescId = zc_ObjectLink_ReceiptChild_GoodsKind()
+                                INNER JOIN ObjectFloat AS ObjectFloat_Value_master
+                                                       ON ObjectFloat_Value_master.ObjectId = tmp.ReceiptId
+                                                      AND ObjectFloat_Value_master.DescId = zc_ObjectFloat_Receipt_Value()
+                                                      AND ObjectFloat_Value_master.ValueData <> 0
+                                INNER JOIN ObjectFloat AS ObjectFloat_Value
+                                                       ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
+                                                      AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
+                           )
 
          , tmpMI_out2 AS (SELECT tmpMI_ContainerOut.OperDate
                                , tmpMI_ContainerOut.MovementId
@@ -806,19 +927,28 @@ BEGIN
                                        , tmpContainer_in.GoodsKindId_complete             AS GoodsKindId_complete
                                        , SUM (CASE WHEN tmpMI_ContainerIn.MIContainerDescId = zc_MIContainer_Count() THEN tmpMI_ContainerIn.Amount ELSE 0 END) AS OperCount
                                        , SUM (CASE WHEN tmpMI_ContainerIn.MIContainerDescId = zc_MIContainer_Summ()  THEN tmpMI_ContainerIn.Amount ELSE 0 END) AS OperSumm
+                                       , SUM (COALESCE (tmpMI_Master_Cuter.ValueData,0) + COALESCE (tmpMI_Partion_Cuter.CuterCount, 0))                        AS CuterCount
 
-                                      , 0 AS PartionGoodsId_out
-                                      , 0 AS GoodsId_out
-                                      , 0 AS GoodsKindId_out
-                                      , 0 AS OperCount_out
-                                      , 0 AS OperSumm_out    
-                                      , 0 AS AmountReceipt_out                                        
-                                      , 0 AS AmountCalc_out 
-                                      , 0 AS AmountCalcForWeght
-                                      , 0 AS AmountForWeght 
-                                      , 0 AS AmountReceiptForWeght
+                                       , 0 AS PartionGoodsId_out
+                                       , 0 AS GoodsId_out
+                                       , 0 AS GoodsKindId_out
+                                       , 0 AS OperCount_out
+                                       , 0 AS OperSumm_out    
+                                       , 0 AS AmountReceipt_out   
+                                       , 0 AS SummReceipt_out
+                                       , 0 AS AmountCalc_out 
+                                       , 0 AS AmountCalcForWeght
+                                       , 0 AS SummCalc_out
+                                       , 0 AS AmountForWeght 
+                                       , 0 AS AmountReceiptForWeght
                                   FROM tmpMI_ContainerIn2 AS tmpMI_ContainerIn
                                        LEFT JOIN tmpContainer_in2 AS tmpContainer_in ON tmpContainer_in.ContainerId = tmpMI_ContainerIn.ContainerId
+                                       LEFT JOIN tmpMI_Master_Cuter2 AS tmpMI_Master_Cuter 
+                                                                     ON tmpMI_Master_Cuter.MovementItemId = tmpMI_ContainerIn.MovementItemId
+                                                                    AND tmpMI_ContainerIn.MIContainerDescId = zc_MIContainer_Count()
+                                       LEFT JOIN tmpMI_Partion_Cuter2 AS tmpMI_Partion_Cuter 
+                                                                      ON tmpMI_Partion_Cuter.MovementItemId = tmpMI_ContainerIn.MovementItemId
+                                                                     AND tmpMI_ContainerIn.MIContainerDescId = zc_MIContainer_Count()
                                   GROUP BY CASE WHEN inIsMovement = TRUE THEN tmpMI_ContainerIn.MovementId ELSE 0 END
                                          , tmpMI_ContainerIn.isPeresort
                                          , tmpMI_ContainerIn.DocumentKindId
@@ -845,6 +975,7 @@ BEGIN
                                        , tmpMI_out.GoodsKindId_complete_in AS GoodsKindId_complete
                                        , 0 AS OperCount
                                        , 0 AS OperSumm
+                                       , 0 AS CuterCount
 
                                        , tmpMI_out.PartionGoodsId       AS PartionGoodsId_out
                                        , tmpMI_out.GoodsId              AS GoodsId_out
@@ -853,6 +984,7 @@ BEGIN
                                        , SUM (tmpMI_out.OperCount)      AS OperCount_out
                                        , SUM (tmpMI_out.OperSumm)       AS OperSumm_out 
                                        , SUM (tmpMI_out.AmountReceipt)  AS AmountReceipt_out
+                                       , SUM (CASE WHEN COALESCE (tmpMI_out.OperCount,0) <> 0 THEN tmpMI_out.AmountReceipt * (tmpMI_out.OperSumm / tmpMI_out.OperCount) ELSE 0 END)  AS SummReceipt_out
                                        , SUM (CASE WHEN tmpMI_out.GoodsKindId_in = zc_GoodsKind_WorkProgress()
                                                    THEN CASE WHEN tmpMI_out.isTaxExit = FALSE
                                                                   THEN tmpMI_out.CuterCount_Master * tmpMI_out.Value
@@ -886,6 +1018,21 @@ BEGIN
                                                         END
                                                    ELSE 0    
                                               END)                      AS AmountCalcForWeght
+                                       , SUM (CASE WHEN COALESCE (tmpMI_out.OperCount,0) <> 0 THEN 
+                                                   (CASE WHEN tmpMI_out.GoodsKindId_in = zc_GoodsKind_WorkProgress()
+                                                         THEN CASE WHEN tmpMI_out.isTaxExit = FALSE
+                                                                        THEN tmpMI_out.CuterCount_Master * tmpMI_out.Value
+                                                                   WHEN tmpMI_out.Value_master <> 0
+                                                                        THEN tmpMI_out.Amount_Master * tmpMI_out.Value / tmpMI_out.Value_master
+                                                                   ELSE 0
+                                                              END
+                                                              
+                                                         WHEN tmpMI_out.Value_master <> 0
+                                                              THEN tmpMI_out.Amount_Master * tmpMI_out.Value / tmpMI_out.Value_master
+                                                         ELSE 0
+                                                     END) * (tmpMI_out.OperSumm / tmpMI_out.OperCount)
+                                              ELSE 0 END)  AS SummCalc_out
+
                                        , SUM (CASE WHEN TRUE = zfCalc_ReceiptChild_isWeightTotal (inGoodsId                := tmpMI_out.GoodsId
                                                                                                 , inGoodsKindId            := tmpMI_out.GoodsKindId
                                                                                                 , inInfoMoneyDestinationId := Object_InfoMoney_Goods.InfoMoneyDestinationId
@@ -1006,8 +1153,9 @@ BEGIN
            , Object_GoodsKind.ValueData       AS GoodsKindName
            , Object_GoodsKind_complete.ValueData  AS GoodsKindName_complete
            
-           , (tmpOperationGroup.OperCount * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS Amount
-           , tmpOperationGroup.OperSumm  :: TFloat AS Summ
+           , (tmpOperationGroup.OperCount)  :: TFloat AS Amount
+           , (tmpOperationGroup.OperCount * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS Amount_Weight
+           , tmpOperationGroup.OperSumm     :: TFloat AS Summ
 
            , Object_PartionGoodsChild.ValueData AS ChildPartionGoods
            , ObjectDate_PartionGoodsChild_Value.ValueData :: TDateTime AS ChildPartionGoods_Date
@@ -1024,7 +1172,11 @@ BEGIN
            , (tmpOperationGroup.AmountForWeght        * (CASE WHEN tmpGoodsChildParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsChildParam.Weight ELSE 1 END ))  :: TFloat AS ChildAmount_Weight
            , (tmpOperationGroup.AmountReceiptForWeght * (CASE WHEN tmpGoodsChildParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsChildParam.Weight ELSE 1 END ))  :: TFloat AS ChildAmountReceipt_Weight
            , (tmpOperationGroup.AmountCalcForWeght    * (CASE WHEN tmpGoodsChildParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsChildParam.Weight ELSE 1 END ))  :: TFloat AS ChildAmountCalc_Weight
-           , tmpOperationGroup.OperSumm_out   :: TFloat AS ChildSumm
+           , tmpOperationGroup.OperSumm_out        :: TFloat AS ChildSumm
+           , tmpOperationGroup.SummReceipt_out     :: TFloat AS ChildSummReceipt
+           , tmpOperationGroup.SummCalc_out        :: TFloat AS ChildSummCalc
+           
+           , CAST (tmpOperationGroup.CuterCount AS NUMERIC (16,1))          :: TFloat AS CuterCount
 
            , CASE WHEN tmpOperationGroup.OperCount     <> 0 THEN tmpOperationGroup.OperSumm     / tmpOperationGroup.OperCount     ELSE 0 END :: TFloat AS MainPrice
            , CASE WHEN tmpOperationGroup.OperCount_out <> 0 THEN tmpOperationGroup.OperSumm_out / tmpOperationGroup.OperCount_out ELSE 0 END :: TFloat AS ChildPrice

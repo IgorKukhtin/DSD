@@ -94,6 +94,12 @@ type
     cfMainPrice_Calc: TdsdPivotGridCalcFields;
     cfChildPrice_Calc: TdsdPivotGridCalcFields;
     cfPrice_Calc: TdsdPivotGridCalcFields;
+    cfPercentOut: TdsdPivotGridCalcFields;
+    cfMainPrice_CalcW: TdsdPivotGridCalcFields;
+    cfChildPrice_w: TdsdPivotGridCalcFields;
+    cfPrice_Calcw: TdsdPivotGridCalcFields;
+    cfReceiptPrice_Calc: TdsdPivotGridCalcFields;
+    cfReceiptPrice_w: TdsdPivotGridCalcFields;
   private
   public
   end;
