@@ -1,4 +1,4 @@
-unit GoodsSPJournal;
+unit GoodsSPJournalChoice;
 
 interface
 
@@ -28,7 +28,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TGoodsSPJournalForm = class(TAncestorJournalForm)
+  TGoodsSPJournalChoiceForm = class(TAncestorJournalForm)
     OperDateStart: TcxGridDBColumn;
     OperDateEnd: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
@@ -41,6 +41,7 @@ type
     actInsertMask1: TdsdInsertUpdateAction;
     actInsertMaskMulti: TMultiAction;
     ChoiceGuides: TdsdChoiceGuides;
+    bbChoiceGuides: TdxBarButton;
   private
     { Private declarations }
   public
@@ -51,5 +52,5 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TGoodsSPJournalForm);
+  RegisterClass(TGoodsSPJournalChoiceForm);
 end.

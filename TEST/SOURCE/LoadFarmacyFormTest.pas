@@ -1191,6 +1191,9 @@ end;
 
 procedure TLoadFormTest.LoadGoodsSPMovementFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsSPJournalChoiceForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSPJournalForm');
 

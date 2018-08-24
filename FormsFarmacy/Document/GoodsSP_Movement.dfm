@@ -20,42 +20,15 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
       inherited cxGrid: TcxGrid
         Width = 1043
         Height = 444
+        ExplicitLeft = -3
         ExplicitWidth = 1043
         ExplicitHeight = 444
         inherited cxGridDBTableView: TcxGridDBTableView
-          DataController.Summary.DefaultGroupSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end>
           DataController.Summary.FooterSummaryItems = <
             item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = GoodsName
             end>
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
@@ -334,8 +307,32 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
   inherited ActionList: TActionList
     Left = 55
     Top = 303
+    object actRefreshMI: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = True
+    end
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
+    end
+    object actInsertMI: TdsdExecStoredProc [6]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertMI
+      StoredProcList = <
+        item
+          StoredProc = spInsertMI
+        end>
+      Caption = 'actInsertMI'
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint_GoodsSP
@@ -381,7 +378,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
           StoredProc = spGet
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [13]
+    object actGoodsKindChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -518,6 +515,42 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
         end>
       isShowModal = True
     end
+    object actChoiceMovGoodsSP: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TBrandSPForm'
+      FormName = 'TGoodsSPJournalChoiceForm'
+      FormNameParam.Value = 'TGoodsSPJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MovementId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object macInsertMI: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actChoiceMovGoodsSP
+        end
+        item
+          Action = actInsertMI
+        end
+        item
+          Action = actRefreshMI
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1080#1079' '#1076#1088#1091#1075#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1076#1086#1073#1072#1074#1083#1077#1085#1099
+      Caption = #1057#1082#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1076#1088#1091#1075#1086#1075#1086' '#1076#1086#1082'-'#1090#1072
+    end
   end
   inherited MasterDS: TDataSource
     Left = 192
@@ -586,7 +619,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
         end
         item
           Visible = True
-          ItemName = 'bbAddMask'
+          ItemName = 'bbInsertMI'
         end
         item
           Visible = True
@@ -633,6 +666,11 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
       Action = actComplete
       Category = 0
     end
+    object bbInsertMI: TdxBarButton
+      Action = macInsertMI
+      Category = 0
+      ImageIndex = 27
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -662,7 +700,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
     Params = <
       item
         Name = 'Id'
-        Value = Null
+        Value = '0'
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
@@ -1332,5 +1370,31 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
     PackSize = 1
     Left = 72
     Top = 376
+  end
+  object spInsertMI: TdsdStoredProc
+    StoredProcName = 'gpInsert_MI_GoodsSP_Mask'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Mask'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    Left = 767
+    Top = 312
   end
 end

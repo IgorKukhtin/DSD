@@ -48,6 +48,12 @@ type
     actIntenalSPChoice: TOpenChoiceForm;
     actKindOutSPChoice: TOpenChoiceForm;
     actBrandSPChoice: TOpenChoiceForm;
+    actChoiceMovGoodsSP: TOpenChoiceForm;
+    spInsertMI: TdsdStoredProc;
+    macInsertMI: TMultiAction;
+    actInsertMI: TdsdExecStoredProc;
+    actRefreshMI: TdsdDataSetRefresh;
+    bbInsertMI: TdxBarButton;
   private
     { Private declarations }
   public
