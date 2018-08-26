@@ -1,7 +1,7 @@
 -- Function: gpInsertUpdate_MI_GoodsSP_From_Excel()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_GoodsSP_From_Excel (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,
-                                                                  TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_GoodsSP_From_Excel (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                            , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_GoodsSP_From_Excel(
     IN inMovementId          Integer   ,    -- 
@@ -97,17 +97,18 @@ BEGIN
         THEN
             vbId := (SELECT MovementItem.Id
                      FROM MovementItem
-                          LEFT JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id
-                                                     AND MovementItemFloat.DescId = zc_ObjectFloat_Goods_ColSP()
-                                                     AND MovementItemFloat.ValueData = inColSP
+                          INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id
+                                                      AND MovementItemFloat.DescId = zc_ObjectFloat_Goods_ColSP()
+                                                      AND MovementItemFloat.ValueData = inColSP
                      WHERE MovementItem.MovementId = inMovementId
                        AND MovementItem.ObjectId <> COALESCE (vbMainId, 0)
+                     Limit 1 -- на всякий случай
                     );
 
             IF COALESCE (vbId, 0) <> 0 
                THEN
                    --убираем № п.п. если нашли
-                   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ColSP(), vbId, Null);
+                   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ColSP(), vbId, 0);
             END IF;
      END IF;
 
@@ -118,21 +119,22 @@ BEGIN
                    AND MovementItem.ObjectId = COALESCE (vbMainId, 0)
                  Limit 1 -- на всякий случай
                 );
-                                              -- сохранить запись
+    
+    -- сохранить запись
     PERFORM lpInsertUpdate_MovementItem_GoodsSP (ioId                  := COALESCE(vbMI_Id, 0)
                                                , inMovementId          := inMovementId
                                                , inGoodsId             := vbMainId
                                                , inIntenalSPId         := vbIntenalSPId
                                                , inBrandSPId           := vbBrandSPId
                                                , inKindOutSPId         := vbKindOutSPId
-                                               , inColSP               := inColSP
-                                               , inCountSP             := inCountSP
-                                               , inPriceOptSP          := inPriceOptSP
-                                               , inPriceRetSP          := inPriceRetSP
-                                               , inDailyNormSP         := inDailyNormSP
-                                               , inDailyCompensationSP := inDailyCompensationSP
-                                               , inPriceSP             := inPriceSP
-                                               , inPaymentSP           := inPaymentSP
+                                               , inColSP               := COALESCE (inColSP, 0) :: TFloat
+                                               , inCountSP             := COALESCE (inCountSP, 0) :: TFloat
+                                               , inPriceOptSP          := COALESCE (inPriceOptSP, 0) :: TFloat
+                                               , inPriceRetSP          := COALESCE (inPriceRetSP, 0) :: TFloat
+                                               , inDailyNormSP         := COALESCE (inDailyNormSP, 0) :: TFloat
+                                               , inDailyCompensationSP := COALESCE (inDailyCompensationSP, 0) :: TFloat
+                                               , inPriceSP             := COALESCE (inPriceSP, 0) :: TFloat
+                                               , inPaymentSP           := COALESCE (inPaymentSP, 0) :: TFloat
                                                , inGroupSP             := 0 ::TFloat
                                                , inPack                := TRIM(inPack)          ::TVarChar
                                                , inCodeATX             := TRIM(inCodeATX)       ::TVarChar

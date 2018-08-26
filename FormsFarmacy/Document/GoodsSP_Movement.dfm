@@ -308,6 +308,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
     Top = 303
     object actRefreshMI: TdsdDataSetRefresh [0]
       Category = 'DSDLib'
+      TabSheet = tsMain
       MoveParams = <>
       StoredProc = spSelect
       StoredProcList = <
@@ -317,7 +318,6 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
-      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     inherited actRefresh: TdsdDataSetRefresh
@@ -601,9 +601,10 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
           Action = actDoLoad
         end
         item
-          Action = actRefresh
+          Action = actRefreshMI
         end>
       QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1072#1085#1085#1099#1093' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099'?'
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091
       ImageIndex = 41
