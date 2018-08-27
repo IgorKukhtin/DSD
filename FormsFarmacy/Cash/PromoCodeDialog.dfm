@@ -35,7 +35,9 @@ inherited PromoCodeDialogForm: TPromoCodeDialogForm
   object edPromoCode: TcxTextEdit [3]
     Left = 15
     Top = 27
+    Properties.MaxLength = 8
     TabOrder = 0
+    OnKeyPress = edPromoCodeKeyPress
     Width = 250
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

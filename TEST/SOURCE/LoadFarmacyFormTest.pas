@@ -818,6 +818,12 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_LiquidityForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_LiquidityForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdraftForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOverdraftForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdraftEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOverdraftEditForm');
 end;
 
 procedure TLoadFormTest.LoadReportForSiteTest;

@@ -1,8 +1,9 @@
--- Function: gpSelect_Object_Accommodation_Unit(Integer, TVarChar)
+-- Function: gpSelect_Object_Accommodation_Unit(Boolean, TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Accommodation_Unit (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Accommodation_Unit (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Accommodation_Unit(
+    IN inIsShowAll   Boolean,
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean)
@@ -36,12 +37,13 @@ BEGIN
                                 AND ObjectLink_Accommodation_Unit.ObjectId = Object_Accommodation.Id
                                 AND ObjectLink_Accommodation_Unit.DescId = zc_Object_Accommodation_Unit()
 
-       WHERE Object_Accommodation.DescId = zc_Object_Accommodation();
+       WHERE Object_Accommodation.DescId = zc_Object_Accommodation()
+         AND (Object_Accommodation.isErased = False OR inIsShowAll = TRUE);
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-  ALTER FUNCTION gpSelect_Object_Accommodation_Unit (TVarChar) OWNER TO postgres;
+  ALTER FUNCTION gpSelect_Object_Accommodation_Unit (Boolean, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------

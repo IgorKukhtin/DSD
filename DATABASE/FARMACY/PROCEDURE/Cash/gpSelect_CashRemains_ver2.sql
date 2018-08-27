@@ -22,7 +22,8 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                MCSValueOld TFloat,
                StartDateMCSAuto TDateTime, EndDateMCSAuto TDateTime,
                isMCSAuto Boolean, isMCSNotRecalcOld Boolean,
-               AccommodationId Integer, AccommodationName TVarChar
+               AccommodationId Integer, AccommodationName TVarChar,
+               PriceChange TFloat
                )
 AS
 $BODY$
@@ -151,7 +152,7 @@ BEGIN
 
 
     --залили снапшот
-    INSERT INTO CashSessionSnapShot(CashSessionId,ObjectId,Price,Remains,MCSValue,Reserved,MinExpirationDate)
+    INSERT INTO CashSessionSnapShot(CashSessionId,ObjectId,Price,Remains,MCSValue,Reserved,MinExpirationDate,AccommodationId)
     WITH
     tmpObject_Price AS (SELECT ROUND(Price_Value.ValueData,2)::TFloat  AS Price
                              , MCS_Value.ValueData                     AS MCSValue
@@ -178,11 +179,15 @@ BEGIN
        ,tmpObject_Price.MCSValue                    AS MCSValue
        ,Reserve.Amount::TFloat                      AS Reserved
        ,GoodsRemains.MinExpirationDate              AS MinExpirationDate
+       ,Accommodation.AccommodationId               AS AccommodationId
 
     FROM
         GoodsRemains
         LEFT OUTER JOIN tmpObject_Price ON tmpObject_Price.GoodsId = GoodsRemains.ObjectId
-        LEFT OUTER JOIN RESERVE ON RESERVE.GoodsId = GoodsRemains.ObjectId;
+        LEFT OUTER JOIN RESERVE ON RESERVE.GoodsId = GoodsRemains.ObjectId
+        LEFT OUTER JOIN AccommodationLincGoods AS Accommodation
+                                               ON Accommodation.UnitId = vbUnitId
+                                              AND Accommodation.GoodsId = GoodsRemains.ObjectId;
 
     RETURN QUERY
       -- Маркетинговый контракт
@@ -302,22 +307,27 @@ BEGIN
                                     INNER JOIN tmpObject_Price ON tmpObject_Price.GoodsId = CashSessionSnapShot.ObjectId
                                WHERE CashSessionSnapShot.CashSessionId = inCashSessionId
                               )
-              , tmpAccommodation AS (SELECT
-                                            ObjectLink_Accommodation_Goods.ChildObjectId   AS GoodsID
-                                          , Object_Accommodation.Id                        AS AccommodationID
-                                          , Object_Accommodation.ValueData                 AS AccommodationName
-                                     FROM Object AS Object_Accommodation
+                -- Цена со скидкой            
+              , tmpPriceChange AS (SELECT PriceChange_Goods.ChildObjectId                 AS GoodsId
+                                        , ROUND(PriceChange_Value.ValueData,2)  ::TFloat  AS PriceChange 
+                                   FROM ObjectLink AS ObjectLink_Unit_Juridical
+                                       INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                             ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                                            AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                           
+                                       INNER JOIN ObjectLink AS ObjectLink_PriceChange_Retail
+                                                             ON ObjectLink_PriceChange_Retail.ChildObjectId = ObjectLink_Juridical_Retail.ChildObjectId
+                                                            AND ObjectLink_PriceChange_Retail.DescId = zc_ObjectLink_PriceChange_Retail()
 
-                                                INNER JOIN ObjectLink AS ObjectLink_Accommodation_Unit
-                                                                      ON ObjectLink_Accommodation_Unit.ChildObjectId = vbUnitId
-                                                                     AND ObjectLink_Accommodation_Unit.ObjectId = Object_Accommodation.Id
-                                                                     AND ObjectLink_Accommodation_Unit.DescId = zc_Object_Accommodation_Unit()
-
-                                                INNER JOIN ObjectLink AS ObjectLink_Accommodation_Goods
-                                                                      ON ObjectLink_Accommodation_Goods.ObjectId = Object_Accommodation.Id
-                                                                     AND ObjectLink_Accommodation_Goods.DescId = zc_Object_Accommodation_Goods()
-
-                                     WHERE Object_Accommodation.DescId = zc_Object_Accommodation())
+                                       INNER JOIN ObjectLink AS PriceChange_Goods
+                                                             ON PriceChange_Goods.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
+                                                            AND PriceChange_Goods.DescId = zc_ObjectLink_PriceChange_Goods()
+                                       INNER JOIN ObjectFloat AS PriceChange_Value
+                                                              ON PriceChange_Value.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
+                                                             AND PriceChange_Value.DescId = zc_ObjectFloat_PriceChange_Value()
+                                                             AND ROUND(PriceChange_Value.ValueData,2) > 0
+                                   WHERE ObjectLink_Unit_Juridical.ObjectId = vbUnitId
+                                     AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical())
 
         -- Результат
         SELECT
@@ -518,8 +528,10 @@ BEGIN
           , tmpMCSAuto.EndDateMCSAuto
           , tmpMCSAuto.isMCSAuto
           , tmpMCSAuto.isMCSNotRecalcOld
-          , tmpAccommodation.AccommodationId
-          , tmpAccommodation.AccommodationName
+          , CashSessionSnapShot.AccommodationId
+          , Object_Accommodation.ValueData AS AccommodationName
+          , tmpPriceChange.PriceChange
+
          FROM
             CashSessionSnapShot
             INNER JOIN Object AS Goods ON Goods.Id = CashSessionSnapShot.ObjectId
@@ -585,7 +597,9 @@ BEGIN
             -- код Мориона
             LEFT JOIN tmpGoodsMorion ON tmpGoodsMorion.GoodsMainId = ObjectLink_Main.ChildObjectId
             -- Размещение товара
-            LEFT JOIN tmpAccommodation ON tmpAccommodation.GoodsID = Goods.Id
+            LEFT JOIN Object AS Object_Accommodation  ON Object_Accommodation.ID = CashSessionSnapShot.AccommodationId
+            -- Цена со скидкой            
+            LEFT JOIN tmpPriceChange ON tmpPriceChange.GoodsId = Goods.Id
 
         WHERE
             CashSessionSnapShot.CashSessionId = inCashSessionId

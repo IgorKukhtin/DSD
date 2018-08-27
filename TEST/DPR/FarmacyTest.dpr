@@ -598,7 +598,10 @@ uses
   RepriceChangeJournal in '..\..\FormsFarmacy\Document\RepriceChangeJournal.pas' {RepriceChangeJournalForm: TParentForm},
   Accommodation in '..\..\FormsFarmacy\Cash\Accommodation.pas' {AccommodationForm: TParentForm},
   AccommodationEdit in '..\..\FormsFarmacy\Cash\AccommodationEdit.pas' {AccommodationEditForm: TParentForm},
-  GoodsSPJournalChoice in '..\..\FormsFarmacy\Document\GoodsSPJournalChoice.pas' {GoodsSPJournalChoiceForm: TParentForm};
+  GoodsSPJournalChoice in '..\..\FormsFarmacy\Document\GoodsSPJournalChoice.pas' {GoodsSPJournalChoiceForm: TParentForm},
+  Report_Liquidity in '..\..\FormsFarmacy\Report\Report_Liquidity.pas' {Report_LiquidityForm: TParentForm},
+  Overdraft in '..\..\FormsFarmacy\Guides\Overdraft.pas' {OverdraftForm: TParentForm},
+  OverdraftEdit in '..\..\FormsFarmacy\Guides\OverdraftEdit.pas' {OverdraftEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -611,6 +611,19 @@ inherited Report_LiquidityForm: TReport_LiquidityForm
       Caption = 'UpdateisOverdraft'
       DataSource = dsOverdraft
     end
+    object actOverdraft: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' "'#1054#1074#1077#1088#1076#1088#1072#1092#1090'"'
+      Hint = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' "'#1054#1074#1077#1088#1076#1088#1072#1092#1090'"'
+      ImageIndex = 43
+      FormName = 'TOverdraftForm'
+      FormNameParam.Value = 'TOverdraftForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 88
@@ -684,10 +697,18 @@ inherited Report_LiquidityForm: TReport_LiquidityForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
         end>
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actOverdraft
       Category = 0
     end
   end

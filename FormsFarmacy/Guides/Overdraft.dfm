@@ -1,7 +1,7 @@
-object AccommodationForm: TAccommodationForm
+object OverdraftForm: TOverdraftForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1087#1077#1094#1080#1072#1083#1100#1085#1086#1089#1090#1080'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1054#1074#1077#1088#1076#1088#1072#1092#1090'>'
   ClientHeight = 379
   ClientWidth = 507
   Color = clBtnFace
@@ -76,7 +76,7 @@ object AccommodationForm: TAccommodationForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 56
+    Left = 48
     Top = 104
   end
   object ClientDataSet: TClientDataSet
@@ -159,6 +159,10 @@ object AccommodationForm: TAccommodationForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -225,6 +229,10 @@ object AccommodationForm: TAccommodationForm
       Action = ProtocolOpenForm
       Category = 0
     end
+    object dxBarButton1: TdxBarButton
+      Action = actShowAll
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -250,8 +258,8 @@ object AccommodationForm: TAccommodationForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TAccommodationEditForm'
-      FormNameParam.Value = 'TAccommodationEditForm'
+      FormName = 'TOverdraftEditForm'
+      FormNameParam.Value = 'TOverdraftEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -271,8 +279,8 @@ object AccommodationForm: TAccommodationForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TAccommodationEditForm'
-      FormNameParam.Value = 'TAccommodationEditForm'
+      FormName = 'TOverdraftEditForm'
+      FormNameParam.Value = 'TOverdraftEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -360,7 +368,6 @@ object AccommodationForm: TAccommodationForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
-          DataType = ftString
           MultiSelectSeparator = ','
         end
         item
@@ -385,18 +392,45 @@ object AccommodationForm: TAccommodationForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = dsdStoredProc
+      StoredProcList = <
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Accommodation'
+    StoredProcName = 'gpSelect_Object_Overdraft'
     DataSet = ClientDataSet
     DataSets = <
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inIsShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 48
-    Top = 216
+    Top = 224
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 168
