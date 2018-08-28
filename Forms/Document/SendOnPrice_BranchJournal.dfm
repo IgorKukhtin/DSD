@@ -1119,6 +1119,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'MovementId;WeighingNumber;GoodsName'
         end>
       Params = <
         item

@@ -334,10 +334,10 @@ begin
   LoadReportFromFile('PrintMovement_TaxCorrectiveReestr', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrectiveReestr.fr3');
   LoadReportFromFile('PrintMovement_TTN', ReportPath + '\Товарный Учет\PrintMovement_TTN.fr3');
   exit;
-
+  }
   LoadReportFromFile('PrintMovement_SalePackGross', ReportPath + '\Товарный Учет\PrintMovement_SalePackGross.fr3');
   exit;
-
+  {
   LoadReportFromFile('PrintMovement_SalePack21', ReportPath + '\Товарный Учет\PrintMovement_SalePack21.fr3');
   LoadReportFromFile('PrintMovement_SalePack22', ReportPath + '\Товарный Учет\PrintMovement_SalePack22.fr3');
 

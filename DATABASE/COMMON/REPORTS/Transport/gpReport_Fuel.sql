@@ -37,82 +37,81 @@ BEGIN
            -- Получили все нужные нам контейнеры по талонам, топливу и деньгам, в разрезе авто и топлива
            -- Еще и ограничили их по топливу и авто
         WITH tmpContainer AS (
-             WITH TicketFuel AS
-              (SELECT Container.Id, 
-                      Container.DescId, 
-                      Container.Amount, 
-                      Container.ObjectId AS ObjectID, 
-                      tmpMemberCar.CarId -- здесь талоны в разрезе авто
-               FROM Container
-                    JOIN ObjectLink AS ObjectLink_TicketFuel_Goods
-                                    ON ObjectLink_TicketFuel_Goods.DescId = zc_ObjectLink_TicketFuel_Goods()
-                                   AND ObjectLink_TicketFuel_Goods.ChildObjectId = Container.ObjectId 
-                                   AND (ObjectLink_TicketFuel_Goods.ObjectId = inFuelId OR inFuelId = 0) 
-                    JOIN ContainerLinkObject AS ContainerLinkObject_Member
-                                             ON ContainerLinkObject_Member.DescId = zc_ContainerLinkObject_Member()
-                                            AND ContainerLinkObject_Member.ContainerId = Container.Id
-                    LEFT JOIN (SELECT MAX (ObjectLink_Car_PersonalDriver.ObjectId) AS CarId
-                                    , ObjectLink_Personal_Member.ChildObjectId AS MemberId
-                               FROM ObjectLink AS ObjectLink_Car_PersonalDriver
-                                    LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
-                                                         ON ObjectLink_Personal_Member.ObjectId = ObjectLink_Car_PersonalDriver.ChildObjectId
-                                                        AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
-                                WHERE ObjectLink_Car_PersonalDriver.DescId = zc_ObjectLink_Car_PersonalDriver()
-                                 AND (ObjectLink_Car_PersonalDriver.ObjectId = inCarId OR inCarId = 0)
-                                GROUP BY ObjectLink_Personal_Member.ChildObjectId
-                               ) AS tmpMemberCar
-                                 ON tmpMemberCar.MemberId = ContainerLinkObject_Member.ObjectId
-              ),
-              Fuel AS
-              (SELECT Container.Id, 
-                      Container.DescId, 
-                      Container.Amount, 
-                      Container.ObjectId AS ObjectID, 
-                      ContainerLinkObject_Car.ObjectId AS CarId-- здесь топливо в разрезе авто
-                FROM Container 
-                     JOIN Object AS Object_Fuel
-                                 ON Object_Fuel.DescId = zc_Object_Fuel()
-                                AND Object_Fuel.Id = Container.ObjectId 
-                                AND (Object_Fuel.Id = inFuelId OR inFuelId = 0) 
-                     JOIN ContainerLinkObject AS ContainerLinkObject_Car
-                                              ON ContainerLinkObject_Car.DescId = zc_ContainerLinkObject_Car()
-                                             AND ContainerLinkObject_Car.ContainerId = Container.Id
-                                             AND (ContainerLinkObject_Car.ObjectId = inCarId OR inCarId = 0)
-              )
-         -- Конец WITH. Начало запроса
+                              WITH 
+                              TicketFuel AS (SELECT Container.Id, 
+                                                    Container.DescId, 
+                                                    Container.Amount, 
+                                                    Container.ObjectId AS ObjectId, 
+                                                    tmpMemberCar.CarId -- здесь талоны в разрезе авто
+                                             FROM Container
+                                                  JOIN ObjectLink AS ObjectLink_TicketFuel_Goods
+                                                                  ON ObjectLink_TicketFuel_Goods.DescId = zc_ObjectLink_TicketFuel_Goods()
+                                                                 AND ObjectLink_TicketFuel_Goods.ChildObjectId = Container.ObjectId 
+                                                                 AND (ObjectLink_TicketFuel_Goods.ObjectId = inFuelId OR inFuelId = 0) 
+                                                  JOIN ContainerLinkObject AS ContainerLinkObject_Member
+                                                                           ON ContainerLinkObject_Member.DescId = zc_ContainerLinkObject_Member()
+                                                                          AND ContainerLinkObject_Member.ContainerId = Container.Id
+                                                  LEFT JOIN (SELECT MAX (ObjectLink_Car_PersonalDriver.ObjectId) AS CarId
+                                                                  , ObjectLink_Personal_Member.ChildObjectId AS MemberId
+                                                             FROM ObjectLink AS ObjectLink_Car_PersonalDriver
+                                                                  LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                                                       ON ObjectLink_Personal_Member.ObjectId = ObjectLink_Car_PersonalDriver.ChildObjectId
+                                                                                      AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+                                                              WHERE ObjectLink_Car_PersonalDriver.DescId = zc_ObjectLink_Car_PersonalDriver()
+                                                               AND (ObjectLink_Car_PersonalDriver.ObjectId = inCarId OR inCarId = 0)
+                                                              GROUP BY ObjectLink_Personal_Member.ChildObjectId
+                                                             ) AS tmpMemberCar
+                                                               ON tmpMemberCar.MemberId = ContainerLinkObject_Member.ObjectId
+                                             )
+                            , Fuel AS (SELECT Container.Id, 
+                                              Container.DescId, 
+                                              Container.Amount, 
+                                              Container.ObjectId AS ObjectId, 
+                                              ContainerLinkObject_Car.ObjectId AS CarId-- здесь топливо в разрезе авто
+                                       FROM Container 
+                                            JOIN Object AS Object_Fuel
+                                                        ON Object_Fuel.DescId = zc_Object_Fuel()
+                                                       AND Object_Fuel.Id = Container.ObjectId 
+                                                       AND (Object_Fuel.Id = inFuelId OR inFuelId = 0) 
+                                            JOIN ContainerLinkObject AS ContainerLinkObject_Car
+                                                                     ON ContainerLinkObject_Car.DescId = zc_ContainerLinkObject_Car()
+                                                                    AND ContainerLinkObject_Car.ContainerId = Container.Id
+                                                                    AND (ContainerLinkObject_Car.ObjectId = inCarId OR inCarId = 0)
+                                      )
+                                     -- Конец WITH. Начало запроса
         
-         SELECT Container.Id, Container.DescId, Container.Amount, TicketFuel.ObjectId, TicketFuel.CarId, vb_Kind_Ticket as KindId -- здесь талоны деньги
-           FROM Container 
-           JOIN TicketFuel on Container.ParentId = TicketFuel.id
-           JOIN Object_account_view ON Object_account_view.AccountId = Container.ObjectId
-            AND Object_Account_View.AccountDirectionId = zc_Enum_AccountDirection_20500()
-            AND Object_account_view.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400()
-      UNION All 
-         SELECT TicketFuel.Id, TicketFuel.DescId, TicketFuel.Amount, TicketFuel.ObjectId, TicketFuel.CarId, vb_Kind_Ticket as KindId -- здесь талоны кол-во
-           FROM TicketFuel       
-      UNION ALL 
-        SELECT Container.Id, Container.DescId, Container.Amount, Fuel.ObjectId, Fuel.CarId, vb_Kind_Fuel as KindId -- здесь топливо деньги
-          FROM Container 
-          JOIN Fuel on Container.ParentId = Fuel.id
-          JOIN Object_account_view ON Object_account_view.AccountId = Container.ObjectId
-           AND Object_Account_View.AccountGroupId = zc_Enum_AccountGroup_20000()
-           AND Object_account_view.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400()
-     UNION All 
-        SELECT Fuel.Id, Fuel.DescId, Fuel.Amount, Fuel.ObjectId, Fuel.CarId, vb_Kind_Fuel as KindId -- здесь топливо кол-во
-          FROM Fuel                            
-     UNION ALL
-        SELECT Container.Id, Container.DescId, Container.Amount, 0  AS ObjectID, ContainerLinkObject_Car.ObjectId AS CarId,  vb_Kind_Money as KindId -- деньги
-          FROM Container 
-          JOIN Object_account_view ON Object_account_view.AccountId = Container.ObjectId
-           AND Object_account_view.AccountDirectionId = zc_Enum_AccountDirection_30500()
-           AND Object_account_view.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400()
-           -- Ограничили по авто, если надо
-         JOIN ContainerLinkObject AS ContainerLinkObject_Car 
-           ON Container.iD = ContainerId AND ContainerLinkObject_Car.DescId = zc_ContainerLinkObject_Car() 
-          AND COALESCE(ContainerLinkObject_Car.ObjectId, 0) <> 0
-          AND (ContainerLinkObject_Car.ObjectId = inCarId OR inCarId = 0) )
-
-               -- Конец. Получили все нужные нам контейнеры
+                          SELECT Container.Id, Container.DescId, Container.Amount, TicketFuel.ObjectId, TicketFuel.CarId, vb_Kind_Ticket as KindId -- здесь талоны деньги
+                          FROM Container 
+                               JOIN TicketFuel ON Container.ParentId = TicketFuel.id
+                               JOIN Object_Account_View ON Object_Account_View.AccountId = Container.ObjectId
+                                                       AND Object_Account_View.AccountDirectionId = zc_Enum_AccountDirection_20500()
+                                                       AND Object_Account_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400()
+                       UNION All 
+                          SELECT TicketFuel.Id, TicketFuel.DescId, TicketFuel.Amount, TicketFuel.ObjectId, TicketFuel.CarId, vb_Kind_Ticket as KindId -- здесь талоны кол-во
+                          FROM TicketFuel       
+                       UNION ALL 
+                         SELECT Container.Id, Container.DescId, Container.Amount, Fuel.ObjectId, Fuel.CarId, vb_Kind_Fuel as KindId -- здесь топливо деньги
+                         FROM Container 
+                              JOIN Fuel ON Container.ParentId = Fuel.id
+                              JOIN Object_Account_View ON Object_Account_View.AccountId = Container.ObjectId
+                                                      AND Object_Account_View.AccountGroupId = zc_Enum_AccountGroup_20000()
+                                                      AND Object_Account_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400()
+                      UNION All 
+                         SELECT Fuel.Id, Fuel.DescId, Fuel.Amount, Fuel.ObjectId, Fuel.CarId, vb_Kind_Fuel as KindId -- здесь топливо кол-во
+                         FROM Fuel                            
+                      UNION ALL
+                         SELECT Container.Id, Container.DescId, Container.Amount, 0  AS ObjectId, ContainerLinkObject_Car.ObjectId AS CarId,  vb_Kind_Money as KindId -- деньги
+                         FROM Container 
+                              JOIN Object_Account_View ON Object_Account_View.AccountId = Container.ObjectId
+                                                      AND Object_Account_View.AccountDirectionId = zc_Enum_AccountDirection_30500()
+                                                      AND Object_Account_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400()
+                                -- Ограничили по авто, если надо
+                              JOIN ContainerLinkObject AS ContainerLinkObject_Car 
+                                                       ON Container.iD = ContainerId AND ContainerLinkObject_Car.DescId = zc_ContainerLinkObject_Car() 
+                                                      AND COALESCE(ContainerLinkObject_Car.ObjectId, 0) <> 0
+                                                      AND (ContainerLinkObject_Car.ObjectId = inCarId OR inCarId = 0)
+                      )
+                              -- Конец. Получили все нужные нам контейнеры
 
     -- Добавили строковые данные. 
     SELECT Object_CarModel.ValueData AS CarModelName,
@@ -129,7 +128,8 @@ BEGIN
            ViewObject_Unit.BranchName,
            
            StartCount::TFloat, IncomeCount::TFloat, OutcomeCount::TFloat, EndCount::TFloat,
-           Report.StartSumm::TFloat, Report.IncomeSumm::TFloat, Report.OutcomeSumm::TFloat, Report.EndSumm::TFloat
+           Report.StartSumm::TFloat, Report.IncomeSumm::TFloat, Report.OutcomeSumm::TFloat
+           , Report.EndSumm::TFloat
            
     FROM
         -- Получили оборотку, развернутую на количество и сумму, cгруппированную по топливу и автомобилю

@@ -823,7 +823,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'WeighingNumber;NumOrder'
+          IndexFieldNames = 'MovementId;WeighingNumber;GoodsName'
         end>
       Params = <
         item

@@ -5,8 +5,9 @@ inherited SaleJournalForm: TSaleJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -134
   ExplicitWidth = 1253
-  ExplicitHeight = 676
+  ExplicitHeight = 679
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1043,6 +1044,7 @@ inherited SaleJournalForm: TSaleJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'MovementId;WeighingNumber;GoodsName'
         end>
       Params = <
         item

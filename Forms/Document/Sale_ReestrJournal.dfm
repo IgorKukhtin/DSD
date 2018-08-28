@@ -5,6 +5,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -139
   ExplicitWidth = 1193
   ExplicitHeight = 573
   PixelsPerInch = 96
@@ -3012,6 +3013,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'MovementId;WeighingNumber;GoodsName'
         end>
       Params = <
         item
