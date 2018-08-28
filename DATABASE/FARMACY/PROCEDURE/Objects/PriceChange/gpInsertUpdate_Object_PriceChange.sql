@@ -1,6 +1,5 @@
 -- Function: gpInsertUpdate_Object_PriceChange (Integer, TFloat, Integer, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PriceChange (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PriceChange (Integer, Integer, Integer, TDateTime, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PriceChange(
@@ -80,14 +79,25 @@ BEGIN
                                                     ON ObjectDate_DateChange.ObjectId = Object_PriceChange.Id
                                                    AND ObjectDate_DateChange.DescId = zc_ObjectDate_PriceChange_DateChange()
                            WHERE Object_PriceChange.DescId = zc_Object_PriceChange())
-          SELECT * FROM tmp1) AS tmp;
+          -- 
+          SELECT * FROM tmp1
+         ) AS tmp;
 
+
+    -- Расчет Цены со скидкой
     IF COALESCE (inFixValue, 0) <> 0
     THEN
+        -- Приоритет - фиксированная цена
         outPriceChange := inFixValue;
-    ELSE 
+    ELSEIF COALESCE (inFixValue, 0) = 0 AND COALESCE (inPercentMarkup, 0) = 0
+    THEN
+        -- в этом случае - обнуляем, типа удалили
+        outPriceChange := 0;
+    ELSE
+        -- иначе оставляем значение какое было
         outPriceChange := vbPriceChange;
     END IF;
+
 
     -- проверили корректность записи по дате
     IF ioStartDate > zc_DateStart()
@@ -98,52 +108,35 @@ BEGIN
         END IF;
     END IF;
 
-    IF COALESCE(ioId,0)=0
+    -- если не нашли - создание
+    IF COALESCE (ioId, 0) = 0
     THEN
-        -- сохранили/получили <Объект> по ИД
+        -- создание
         ioId := lpInsertUpdate_Object (ioId, zc_Object_PriceChange(), 0, '');
 
         -- сохранили связь с <товар>
         PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PriceChange_Goods(), ioId, inGoodsId);
 
-        -- сохранили связь с <подразделение>
+        -- сохранили связь с <Торговая сеть >
         PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PriceChange_Retail(), ioId, inRetailId);
     END IF;
     
-    -- сохранили св-во < Цена >
-    IF (outPriceChange is not null) AND (outPriceChange <> COALESCE(vbPriceChange,0))
-    THEN
-        PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_PriceChange_Value(), ioId, outPriceChange);
-        -- сохранили св-во < Дата изменения >
-        outDateChange := CURRENT_DATE;
-        PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_PriceChange_DateChange(), ioId, outDateChange);
-    END IF;
-
-    -- сохранили св-во < Неснижаемый товарный запас >
-    IF (inFixValue is not null) AND (inFixValue <> COALESCE(vbFixValue,0))
-    THEN
-        PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_PriceChange_FixValue(), ioId, inFixValue);
-        -- сохранили св-во < Дата изменения>
-        outDateChange := CURRENT_DATE;
-        PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_PriceChange_DateChange(), ioId, outDateChange);
-    END IF;
-
-    -- сохранили св-во < % наценки >
-    IF (inPercentMarkup is not null) AND (inPercentMarkup <> COALESCE(vbPercentMarkup,0))
-    THEN
-        PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_PriceChange_PercentMarkup(), ioId, inPercentMarkup);
-        -- сохранили св-во < Дата изменения >
-        outDateChange := CURRENT_DATE;
-        PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_PriceChange_DateChange(), ioId, outDateChange);
-    END IF;
+    -- сохранили св-во <расчетная цена>
+    PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_PriceChange_Value(), ioId, outPriceChange);
+    -- сохранили св-во <фиксированная цена>
+    PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_PriceChange_FixValue(), ioId, inFixValue);
+    -- сохранили св-во <% наценки >
+    PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_PriceChange_PercentMarkup(), ioId, inPercentMarkup);
 
 
     -- сохранили историю
-    IF ((outPriceChange is not null) /* AND (outPriceChange <> COALESCE(vbPriceChange,0)) */ ) 
-       OR
-       ((inFixValue is not null) AND (inFixValue <> COALESCE(vbFixValue,0)))
-       
+    IF  COALESCE (inPercentMarkup, 0) <> COALESCE (vbPercentMarkup, 0)
+     OR COALESCE (inFixValue, 0)      <> COALESCE (vbFixValue, 0)
     THEN
+        -- сохранили св-во < Дата изменения >
+        outDateChange := CURRENT_DATE;
+        PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_PriceChange_DateChange(), ioId, outDateChange);
+
         -- сохранили историю
         PERFORM gpInsertUpdate_ObjectHistory_PriceChange(ioId             := 0 :: Integer,    -- ключ объекта <Элемент истории>
                                                          inPriceChangeId  := ioId,    -- Прайс
@@ -151,15 +144,18 @@ BEGIN
                                                          inPriceChange    := COALESCE (outPriceChange, vbPriceChange) :: TFloat,    -- Цена
                                                          inFixValue       := COALESCE (inFixValue, vbFixValue)       :: TFloat,
                                                          inPercentMarkup  := COALESCE (inPercentMarkup, 0)           :: TFloat,
-                                                         inSession        := inSession);
-       -- определили
-       ioStartDate:= (SELECT MAX (StartDate) FROM ObjectHistory WHERE ObjectHistory.ObjectId = ioId AND DescId = zc_ObjectHistory_PriceChange());
-       outStartDate:= ioStartDate;
+                                                         inSession        := inSession
+                                                        );
+
+        -- сохранили протокол
+        PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
     END IF;
 
-    -- сохранили протокол
-    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+    -- определили
+    ioStartDate:= (SELECT MAX (StartDate) FROM ObjectHistory WHERE ObjectHistory.ObjectId = ioId AND DescId = zc_ObjectHistory_PriceChange());
+    outStartDate:= ioStartDate;
+
     
 END;
 $BODY$

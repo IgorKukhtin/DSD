@@ -33,7 +33,7 @@ RETURNS TABLE (
     JuridicalId         Integer,    -- Поставщик Id
     JuridicalName       TVarChar,   -- Поставщик
     Juridical_Price     TFloat,     -- Цена у поставщика
-    MarginPercent       TFloat,     -- % наценки по точке
+    MarginPercent       TFloat,     -- % наценки для цены со скидкой
     Juridical_GoodsName TVarChar,   -- Наименование у поставщика
     ProducerName        TVarChar,   -- производитель
     ContractId          Integer,    -- договор Ид
@@ -45,76 +45,85 @@ RETURNS TABLE (
     SumReprice          TFloat,     -- сумма переоценки
     MidPriceSale        TFloat,     -- средняя цена остатка
     MidPriceDiff        TFloat,     -- отклонение от средняя цена остатка
-    MinExpirationDate   TDateTime,  -- Минимальный срок годности препарата на точке
-    MinExpirationDate_to TDateTime, -- Минимальный срок годности препарата на точке  - Подразделение (с которым есть сравнение цен)
+--    MinExpirationDate   TDateTime,  -- Минимальный срок годности препарата на точке
     isOneJuridical      Boolean ,   -- один поставщик (да/нет)
-    isPriceFix          Boolean ,   -- фиксированная цена точки
-    isIncome            Boolean ,   -- приход сегодня
-    IsTop               Boolean ,   -- Топ точки
+--    isPriceFix          Boolean ,   -- фиксированная цена точки
+--    isIncome            Boolean ,   -- приход сегодня
+--    IsTop               Boolean ,   -- Топ точки
     IsTop_Goods         Boolean ,   -- Топ сети
-    IsPromo             Boolean ,   -- Акция
-    Reprice             Boolean     -- 
+--    IsPromo             Boolean ,   -- Акция
+    Reprice             Boolean     --
     )
 
 AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbObjectId Integer;
-  DECLARE vbMarginCategoryId Integer;
 BEGIN
     vbUserId := inSession;
     vbObjectId := COALESCE (lpGet_DefaultValue('zc_Object_Retail', vbUserId), '0');
 
-    SELECT
-        COALESCE(Object_Unit_View.MarginCategoryId,0)
-    INTO
-        vbMarginCategoryId
-    FROM
-        Object_Unit_View
-    WHERE
-        Object_Unit_View.Id = inUnitId;
 
+    -- Список - товары по которым ЕСТЬ цены СО СКИДКОЙ + PercentMarkup - оптимизация
+    CREATE TEMP TABLE _tmpPriceChange ON COMMIT DROP AS
+       (SELECT
+            Object_PriceChange.Id                                  AS Id
+          , OL_PriceChange_Retail.ChildObjectId                    AS UnitId
+          , OL_PriceChange_Goods.ChildObjectId                     AS GoodsId       -- здесь товар "сети"
+          , COALESCE (OF_PriceChange_Value.ValueData, 0) :: TFloat AS Price         -- текущая цена со скидкой
+          , COALESCE (OF_PercentMarkup.ValueData, 0)     :: TFloat AS PercentMarkup -- % наценки
+          , COALESCE (OF_FixValue.ValueData, 0)          :: TFloat AS FixValue      -- Фиксированная цена
+        FROM Object AS Object_PriceChange
+             INNER JOIN ObjectLink AS OL_PriceChange_Retail
+                                   ON OL_PriceChange_Retail.ObjectId      = Object_PriceChange.Id
+                                  AND OL_PriceChange_Retail.DescId        = zc_ObjectLink_PriceChange_Retail()
+                                  AND OL_PriceChange_Retail.ChildObjectId IN (inUnitId_to, inUnitId)
+             INNER JOIN ObjectLink AS OL_PriceChange_Goods
+                                   ON OL_PriceChange_Goods.ObjectId = Object_PriceChange.Id
+                                  AND OL_PriceChange_Goods.DescId   = zc_ObjectLink_PriceChange_Goods()
+             LEFT JOIN ObjectFloat AS OF_PriceChange_Value
+                                   ON OF_PriceChange_Value.ObjectId = Object_PriceChange.Id
+                                  AND OF_PriceChange_Value.DescId   = zc_ObjectFloat_PriceChange_Value()
+             LEFT JOIN ObjectFloat AS OF_FixValue
+                                   ON OF_FixValue.ObjectId = Object_PriceChange.Id
+                                  AND OF_FixValue.DescId   = zc_ObjectFloat_PriceChange_FixValue()
+             LEFT JOIN ObjectFloat AS OF_PercentMarkup
+                                   ON OF_PercentMarkup.ObjectId = Object_PriceChange.Id
+                                  AND OF_PercentMarkup.DescId   = zc_ObjectFloat_PriceChange_PercentMarkup()
+        WHERE Object_PriceChange.DescId   = zc_Object_PriceChange()
+          AND Object_PriceChange.isErased = FALSE
+          AND OF_PercentMarkup.ValueData > 0
+          AND COALESCE (OF_FixValue.ValueData, 0) = 0
+       );
+
+    ANALYZE _tmpPriceChange;
+
+
+  -- Результат
   RETURN QUERY
-    WITH DD 
-    AS 
-    (
-        SELECT DISTINCT 
-            Object_MarginCategoryItem_View.MarginPercent, 
-            Object_MarginCategoryItem_View.MinPrice, 
-            Object_MarginCategoryItem_View.MarginCategoryId,
-            ROW_NUMBER()OVER(PARTITION BY Object_MarginCategoryItem_View.MarginCategoryId ORDER BY Object_MarginCategoryItem_View.MinPrice) as ORD
-        FROM Object_MarginCategoryItem_View
-             INNER JOIN Object AS Object_MarginCategoryItem ON Object_MarginCategoryItem.Id = Object_MarginCategoryItem_View.Id
-                                                           AND Object_MarginCategoryItem.isErased = FALSE
-    ),
-    MarginCondition 
-    AS 
-    (
-        SELECT 
-            D1.MarginCategoryId, 
-            D1.MarginPercent, 
-            D1.MinPrice,
-            COALESCE(D2.MinPrice, 1000000) AS MaxPrice 
-        FROM DD AS D1
-            LEFT OUTER JOIN DD AS D2 ON D1.MarginCategoryId = D2.MarginCategoryId AND D1.ORD = D2.ORD-1
-    )
-  , ObjectLink_Child_NB 
-    AS 
-        (SELECT 
-            ObjectLink_Child.ChildObjectId,
-            ObjectLink_Child_NB.ChildObjectId as ChildObjectIdNB 
-         FROM ObjectLink AS ObjectLink_Child
-            INNER JOIN ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                 AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-            INNER JOIN ObjectLink AS ObjectLink_Main_NB ON ObjectLink_Main_NB.ChildObjectId = ObjectLink_Main.ChildObjectId
-                                 AND ObjectLink_Main_NB.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
-            INNER JOIN ObjectLink AS ObjectLink_Child_NB ON ObjectLink_Child_NB.ObjectId = ObjectLink_Main_NB.ObjectId
-                                 AND ObjectLink_Child_NB.DescId   = zc_ObjectLink_LinkGoods_Goods()
-            INNER JOIN ObjectLink AS ObjectLink_Goods_Object
-                                  ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_NB.ChildObjectId
-                                 AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-                                 AND ObjectLink_Goods_Object.ChildObjectId = 4  
-         WHERE ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods())
+    WITH -- Товар НБ + Товар "сети"
+         ObjectLink_Child_NB AS
+             (SELECT
+                 ObjectLink_Child.ChildObjectId,
+                 ObjectLink_Child_NB.ChildObjectId as ChildObjectIdNB
+              FROM _tmpPriceChange
+                 INNER JOIN ObjectLink AS ObjectLink_Child
+                                       ON ObjectLink_Child.ChildObjectId = _tmpPriceChange.GoodsId
+                                      AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                 INNER JOIN ObjectLink AS ObjectLink_Main
+                                       ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                      AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                 INNER JOIN ObjectLink AS ObjectLink_Main_NB
+                                       ON ObjectLink_Main_NB.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                      AND ObjectLink_Main_NB.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                 INNER JOIN ObjectLink AS ObjectLink_Child_NB
+                                       ON ObjectLink_Child_NB.ObjectId = ObjectLink_Main_NB.ObjectId
+                                      AND ObjectLink_Child_NB.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                 INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                       ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_NB.ChildObjectId
+                                      AND ObjectLink_Goods_Object.DescId   = zc_ObjectLink_Goods_Object()
+                                      AND ObjectLink_Goods_Object.ChildObjectId = 4
+             )
   , RemainsTo AS
        (SELECT
             -- !!!временно захардкодил, будет всегда товар НеБолей!!!
@@ -124,11 +133,11 @@ BEGIN
           , SUM (Container.Amount)  :: TFloat   AS Amount
         FROM Container
             INNER JOIN ObjectLink_Child_NB AS ObjectLink_Child_NB
-                                        ON ObjectLink_Child_NB.ChildObjectId = Container.ObjectID
+                                           ON ObjectLink_Child_NB.ChildObjectId = Container.ObjectID
             LEFT OUTER JOIN ContainerLinkObject AS CLO_PartionMovementItem
                                                 ON CLO_PartionMovementItem.ContainerId = Container.Id
                                                AND CLO_PartionMovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
-            LEFT OUTER JOIN Object AS Object_PartionMovementItem 
+            LEFT OUTER JOIN Object AS Object_PartionMovementItem
                                    ON Object_PartionMovementItem.Id = CLO_PartionMovementItem.ObjectId
             LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
                                               ON MIDate_ExpirationDate.MovementItemId = Object_PartionMovementItem.ObjectCode
@@ -142,54 +151,38 @@ BEGIN
        )
   , tmpGoodsView AS (SELECT Object_Goods_View.*
                           , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
-                     FROM Object_Goods_View 
+                     FROM Object_Goods_View
+                         INNER JOIN _tmpPriceChange ON _tmpPriceChange.GoodsId = Object_Goods_View.Id
                          -- получаем GoodsMainId
-                         LEFT JOIN  ObjectLink AS ObjectLink_Child 
+                         LEFT JOIN  ObjectLink AS ObjectLink_Child
                                                ON ObjectLink_Child.ChildObjectId = Object_Goods_View.Id
-                                              AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
-                         LEFT JOIN  ObjectLink AS ObjectLink_Main 
+                                              AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                         LEFT JOIN  ObjectLink AS ObjectLink_Main
                                                ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                              AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                                              AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
 
-                         LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
-                                                  ON ObjectBoolean_Goods_SP.ObjectId =ObjectLink_Main.ChildObjectId 
-                                                 AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
-                     WHERE Object_Goods_View.ObjectId = vbObjectId
-               )
-               
-  , tmpPrice_View AS (SELECT ObjectLink_Price_Unit.ObjectId          AS Id
-                           , ObjectLink_Price_Unit.ChildObjectId     AS UnitId
-                           , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
-                           , Price_Goods.ChildObjectId               AS GoodsId
-                           , ObjectLink_Main.ChildObjectId           AS GoodsMainId
-                           , COALESCE(Price_Fix.ValueData,False)     AS Fix 
-                           , COALESCE(Price_Top.ValueData,False)     AS isTop   
-                      FROM ObjectLink AS ObjectLink_Price_Unit
-                           LEFT JOIN ObjectLink AS Price_Goods
-                                  ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                 AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
-                           LEFT JOIN ObjectFloat AS Price_Value
-                                  ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                 AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
-                           LEFT JOIN ObjectBoolean AS Price_Fix
-                                  ON Price_Fix.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                 AND Price_Fix.DescId = zc_ObjectBoolean_Price_Fix()
-                           LEFT JOIN ObjectBoolean AS Price_Top
-                                  ON Price_Top.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                 AND Price_Top.DescId = zc_ObjectBoolean_Price_Top()
-                                 
+                         LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP
+                                                  ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId
+                                                 AND ObjectBoolean_Goods_SP.DescId   = zc_ObjectBoolean_Goods_SP()
+                     WHERE Object_Goods_View.ObjectId = inUnitId
+                    )
+
+  , tmpPrice_View AS (SELECT _tmpPriceChange.Id
+                           , _tmpPriceChange.UnitId
+                           , _tmpPriceChange.GoodsId
+                           , ROUND (_tmpPriceChange.Price, 2) :: TFloat AS Price
+                           , ObjectLink_Main.ChildObjectId              AS GoodsMainId
+                           , FALSE                                      AS Fix
+                           , FALSE                                      AS isTop
+                      FROM _tmpPriceChange
                            -- получаем GoodsMainId
-                           LEFT JOIN  ObjectLink AS ObjectLink_Child 
-                                                 ON ObjectLink_Child.ChildObjectId = Price_Goods.ChildObjectId
-                                                AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
-                           LEFT JOIN  ObjectLink AS ObjectLink_Main 
+                           LEFT JOIN  ObjectLink AS ObjectLink_Child
+                                                 ON ObjectLink_Child.ChildObjectId = _tmpPriceChange.GoodsId
+                                                AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                           LEFT JOIN  ObjectLink AS ObjectLink_Main
                                                  ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-                                                  
-                      WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                        AND ObjectLink_Price_Unit.ChildObjectId IN (inUnitId_to, inUnitId)
-                      )
-
+                                                AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                     )
   , ResultSet AS
     (
         SELECT
@@ -206,16 +199,17 @@ BEGIN
             Object_Goods.NDS                  AS NDS
           , CASE WHEN SelectMinPrice_AllGoods.isTop = TRUE
                       THEN COALESCE (NULLIF (SelectMinPrice_AllGoods.PercentMarkup, 0), COALESCE (Object_Goods.PercentMarkup, 0)) /*- COALESCE(ObjectFloat_Juridical_Percent.ValueData, 0)*/
-                 ELSE CASE WHEN COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) <> 0 
-                                THEN COALESCE (MarginCondition.MarginPercent,0) + COALESCE (ObjectFloat_Contract_Percent.ValueData, 0)
-                           ELSE COALESCE (MarginCondition.MarginPercent,0) + COALESCE (ObjectFloat_Juridical_Percent.ValueData, 0)
+                 ELSE CASE WHEN COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) <> 0
+                                THEN COALESCE (SelectMinPrice_AllGoods.PercentMarkup,0) + COALESCE (ObjectFloat_Contract_Percent.ValueData, 0)
+                           ELSE COALESCE (SelectMinPrice_AllGoods.PercentMarkup,0) + COALESCE (ObjectFloat_Juridical_Percent.ValueData, 0)
                       END
             END::TFloat AS MarginPercent
+          , SelectMinPrice_AllGoods.PercentMarkup
           , (SelectMinPrice_AllGoods.Price * (100 + Object_Goods.NDS)/100)::TFloat AS Juridical_Price
           , zfCalc_SalePrice((SelectMinPrice_AllGoods.Price * (100 + Object_Goods.NDS)/100)               -- Цена С НДС
-                            , CASE WHEN COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) <> 0 
-                                       THEN MarginCondition.MarginPercent + COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) -- % наценки в КАТЕГОРИИ
-                                   ELSE MarginCondition.MarginPercent + COALESCE (ObjectFloat_Juridical_Percent.ValueData, 0) -- % наценки в КАТЕГОРИИ
+                            , CASE WHEN COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) <> 0
+                                       THEN SelectMinPrice_AllGoods.PercentMarkup + COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) -- % наценки в КАТЕГОРИИ
+                                   ELSE SelectMinPrice_AllGoods.PercentMarkup + COALESCE (ObjectFloat_Juridical_Percent.ValueData, 0) -- % наценки в КАТЕГОРИИ
                               END
                             , SelectMinPrice_AllGoods.isTop                                               -- ТОП позиция
                             , COALESCE (NULLIF (SelectMinPrice_AllGoods.PercentMarkup, 0), Object_Goods.PercentMarkup) -- % наценки у товара
@@ -237,19 +231,18 @@ BEGIN
             Object_Goods.NDSKindId,
             SelectMinPrice_AllGoods.isOneJuridical,
             CASE WHEN Select_Income_AllGoods.IncomeCount > 0 THEN TRUE ELSE FALSE END :: Boolean AS isIncome,
-            SelectMinPrice_AllGoods.isTop AS isTop_calc, 
+            SelectMinPrice_AllGoods.isTop AS isTop_calc,
             Object_Price.IsTop    AS IsTop,
             Object_Goods.IsTop    AS IsTop_Goods,
             Coalesce(ObjectBoolean_Goods_IsPromo.ValueData, False) :: Boolean   AS IsPromo,
             Object_Goods.Price    AS PriceFix_Goods
         FROM
-            lpSelectMinPrice_AllGoods(inUnitId   := inUnitId
-                                    , inObjectId := -1 * vbObjectId -- !!!со знаком "-" что бы НЕ учитывать маркет. контракт!!!
-                                    , inUserId   := vbUserId
-                                    ) AS SelectMinPrice_AllGoods
+            lpSelectMinPrice_AllGoods_retail (inObjectId := inUnitId
+                                            , inUserId   := vbUserId
+                                             ) AS SelectMinPrice_AllGoods
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = SelectMinPrice_AllGoods.ContractId
             LEFT JOIN Object AS Object_Area ON Object_Area.Id = SelectMinPrice_AllGoods.AreaId
-            
+
             LEFT OUTER JOIN RemainsTo ON RemainsTo.GoodsId = SelectMinPrice_AllGoods.GoodsId
 
 
@@ -260,7 +253,7 @@ BEGIN
             LEFT OUTER JOIN tmpPrice_View AS Object_Price_to
                                           ON Object_Price_to.GoodsMainId = Object_Price.GoodsMainId --SelectMinPrice_AllGoods.GoodsId_retail
                                          AND Object_Price_to.UnitId = CASE WHEN inUnitId_to = 0 THEN NULL ELSE inUnitId_to END
-                                         
+
             LEFT OUTER JOIN tmpGoodsView AS Object_Goods
                                          -- !!!берем из сети!!!
                                          ON Object_Goods.Id = SelectMinPrice_AllGoods.GoodsId_retail -- SelectMinPrice_AllGoods.GoodsId
@@ -272,26 +265,13 @@ BEGIN
                                   ON ObjectFloat_Contract_Percent.ObjectId = SelectMinPrice_AllGoods.ContractId
                                  AND ObjectFloat_Contract_Percent.DescId = zc_ObjectFloat_Contract_Percent()
 
-            LEFT JOIN Object_MarginCategoryLink_View AS Object_MarginCategoryLink_unit
-                                                     ON Object_MarginCategoryLink_unit.UnitId      = inUnitId
-                                                    AND Object_MarginCategoryLink_unit.JuridicalId = SelectMinPrice_AllGoods.JuridicalId
-                                                    AND Object_MarginCategoryLink_unit.isErased    = FALSE
-            LEFT JOIN Object_MarginCategoryLink_View AS Object_MarginCategoryLink_all
-                                                     ON COALESCE (Object_MarginCategoryLink_all.UnitId, 0) = 0
-                                                    AND Object_MarginCategoryLink_all.JuridicalId = SelectMinPrice_AllGoods.JuridicalId
-                                                    AND Object_MarginCategoryLink_all.isErased    = FALSE
-                                                    AND Object_MarginCategoryLink_unit.JuridicalId IS NULL
-
-            LEFT JOIN MarginCondition ON MarginCondition.MarginCategoryId = COALESCE (Object_MarginCategoryLink_unit.MarginCategoryId, Object_MarginCategoryLink_all.MarginCategoryId)
-                                      AND (SelectMinPrice_AllGoods.Price * (100 + Object_Goods.NDS)/100)::TFloat BETWEEN MarginCondition.MinPrice AND MarginCondition.MaxPrice
-
             LEFT JOIN lpSelect_Income_AllGoods(inUnitId := inUnitId,
-                                               inUserId := vbUserId) AS Select_Income_AllGoods 
+                                               inUserId := vbUserId) AS Select_Income_AllGoods
                                                                      ON Select_Income_AllGoods.GoodsId = SelectMinPrice_AllGoods.GoodsId_retail
 
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_IsPromo
                                     ON ObjectBoolean_Goods_IsPromo.ObjectId = SelectMinPrice_AllGoods.Partner_GoodsId
-                                   AND ObjectBoolean_Goods_IsPromo.DescId = zc_ObjectBoolean_Goods_Promo()  
+                                   AND ObjectBoolean_Goods_IsPromo.DescId = zc_ObjectBoolean_Goods_Promo()
 
         WHERE Object_Goods.isSp = FALSE
     )
@@ -309,13 +289,13 @@ BEGIN
         ResultSet.NewPrice,
         ResultSet.NewPrice_to,
         ResultSet.PriceFix_Goods,
-        COALESCE(MarginCondition.MarginPercent,inMinPercent)::TFloat AS MinMarginPercent,
+        COALESCE(ResultSet.PercentMarkup,inMinPercent)::TFloat AS MinMarginPercent,
         CAST (CASE WHEN COALESCE(ResultSet.LastPrice,0) = 0 THEN 0.0
                    ELSE (ResultSet.NewPrice / ResultSet.LastPrice) * 100 - 100
               END AS NUMERIC (16, 1)) :: TFloat AS PriceDiff,
         CAST (CASE WHEN COALESCE (ResultSet.LastPrice,0) = 0 THEN 0.0
                    ELSE (ResultSet.NewPrice_to / ResultSet.LastPrice) * 100 - 100
-                   
+
               END AS NUMERIC (16, 1)) :: TFloat AS PriceDiff_to,
 
         ResultSet.ExpirationDate         AS ExpirationDate,
@@ -337,7 +317,7 @@ BEGIN
                )
            , 2) :: TFloat AS SumReprice,
         ResultSet.MidPriceSale,
-        CAST (CASE WHEN COALESCE(ResultSet.MidPriceSale,0) = 0 THEN 0 ELSE ((ResultSet.NewPrice / ResultSet.MidPriceSale) * 100 - 100) END AS NUMERIC (16, 1)) :: TFloat AS MidPriceDiff, 
+        CAST (CASE WHEN COALESCE(ResultSet.MidPriceSale,0) = 0 THEN 0 ELSE ((ResultSet.NewPrice / ResultSet.MidPriceSale) * 100 - 100) END AS NUMERIC (16, 1)) :: TFloat AS MidPriceDiff,
         ResultSet.MinExpirationDate,
         ResultSet.MinExpirationDate_to,
         ResultSet.isOneJuridical,
@@ -357,26 +337,22 @@ BEGIN
              WHEN COALESCE (inUnitId_to, 0) = 0
                   THEN TRUE
 
-             WHEN inUnitId_to <> 0 AND (ResultSet.MinExpirationDate < (CURRENT_DATE + Interval '6 month') 
+             WHEN inUnitId_to <> 0 AND (ResultSet.MinExpirationDate < (CURRENT_DATE + Interval '6 month')
                                     OR  ResultSet.MinExpirationDate_to < (CURRENT_DATE + Interval '6 month')
                                     OR  ResultSet.isIncome = TRUE)
                   THEN FALSE
 
-             WHEN inUnitId_to <> 0 
-              AND ResultSet.NewPrice_to > 0 
+             WHEN inUnitId_to <> 0
+              AND ResultSet.NewPrice_to > 0
               AND 0 <> CAST (CASE WHEN COALESCE (ResultSet.LastPrice,0) = 0 THEN 0.0
                                   ELSE (ResultSet.NewPrice_to / ResultSet.LastPrice) * 100 - 100
                              END AS NUMERIC (16, 1))
                   THEN TRUE
-                
+
              ELSE FALSE
         END  AS Reprice
-    FROM 
+    FROM
         ResultSet
-        LEFT OUTER JOIN MarginCondition ON MarginCondition.MarginCategoryId = vbMarginCategoryId
-                                       AND ResultSet.LastPrice >= MarginCondition.MinPrice 
-                                       AND ResultSet.LastPrice < MarginCondition.MaxPrice
-
         LEFT JOIN ObjectFloat AS ObjectFloat_Juridical_Percent
                               ON ObjectFloat_Juridical_Percent.ObjectId = ResultSet.JuridicalId
                              AND ObjectFloat_Juridical_Percent.DescId = zc_ObjectFloat_Juridical_Percent()
@@ -404,7 +380,7 @@ BEGIN
            OR ABS (CASE WHEN COALESCE (ResultSet.LastPrice,0) = 0 THEN 0.0
                         ELSE (ResultSet.NewPrice / ResultSet.LastPrice) * 100 - 100
                    END
-                  ) >= COALESCE (MarginCondition.MarginPercent, inMinPercent)
+                  ) >= COALESCE (ResultSet.PercentMarkup, inMinPercent)
              )
        ))
    AND (inUnitId_to = 0 or ResultSet.isPriceFix = FALSE)
@@ -421,7 +397,6 @@ ALTER FUNCTION gpSelect_AllGoodsPriceChange (Integer,  Integer,  TFloat, Boolean
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.   Шаблий О.В.
  18.08.17                                        *
-
 */
 
 -- тест

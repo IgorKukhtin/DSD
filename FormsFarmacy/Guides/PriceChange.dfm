@@ -5,7 +5,7 @@ inherited PriceChangeForm: TPriceChangeForm
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 805
-  ExplicitHeight = 451
+  ExplicitHeight = 448
   PixelsPerInch = 96
   TextHeight = 13
   object Panel: TPanel [0]
@@ -68,12 +68,10 @@ inherited PriceChangeForm: TPriceChangeForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = PriceChange_OH
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = PercentMarkup_OH
             end
             item
               Format = ',0.####'
@@ -94,12 +92,10 @@ inherited PriceChangeForm: TPriceChangeForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = PriceChange_OH
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = PercentMarkup_OH
             end
             item
               Format = ',0.####'
@@ -129,14 +125,6 @@ inherited PriceChangeForm: TPriceChangeForm
             Options.Editing = False
             Width = 101
           end
-          object GoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 62
-          end
           object BarCode: TcxGridDBColumn
             Caption = #1064'/'#1050' '#1087#1088#1086#1080#1079#1074'.'
             DataBinding.FieldName = 'BarCode'
@@ -145,6 +133,14 @@ inherited PriceChangeForm: TPriceChangeForm
             HeaderHint = #1064'/'#1050' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1103
             Options.Editing = False
             Width = 70
+          end
+          object GoodsCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 62
           end
           object GoodsName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
@@ -159,33 +155,59 @@ inherited PriceChangeForm: TPriceChangeForm
             DataBinding.FieldName = 'NDS'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 50
           end
-          object IntenalSPName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1057#1055' (2)'
-            DataBinding.FieldName = 'IntenalSPName'
+          object StartDate: TcxGridDBColumn
+            Caption = #1048#1089#1090#1086#1088#1080#1103' '#1089
+            DataBinding.FieldName = 'StartDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 102
+            Width = 58
           end
-          object isClose: TcxGridDBColumn
-            Caption = #1047#1072#1082#1088#1099#1090' '#1082#1086#1076' '#1087#1086' '#1074#1089#1077#1081' '#1089#1077#1090#1080
-            DataBinding.FieldName = 'IsClose'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Options.Editing = False
-            Width = 67
-          end
-          object Goods_isTop: TcxGridDBColumn
-            Caption = #1058#1054#1055' ('#1087#1086' '#1089#1077#1090#1080')'
-            DataBinding.FieldName = 'Goods_isTop'
-            GroupSummaryAlignment = taCenter
+          object DateChange: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083'. '#1080#1079#1084'. '#1094#1077#1085#1099
+            DataBinding.FieldName = 'DateChange'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 71
+          end
+          object PriceChange: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' ('#1089#1082'.)'
+            DataBinding.FieldName = 'PriceChange'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.MinValue = True
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090#1085#1072#1103' '#1094#1077#1085#1072' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+            Options.Editing = False
+            Width = 56
+          end
+          object PercentMarkup: TcxGridDBColumn
+            Caption = '% '#1085#1072#1094#1077#1085#1082#1080' ('#1089#1082'.)'
+            DataBinding.FieldName = 'PercentMarkup'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080' '#1076#1083#1103' '#1094#1077#1085#1099' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+            Width = 70
+          end
+          object FixValue: TcxGridDBColumn
+            Caption = #1060#1080#1082#1089'. '#1094#1077#1085#1072' ('#1089#1082'.)'
+            DataBinding.FieldName = 'FixValue'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1072#1103' '#1094#1077#1085#1072' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+            Width = 53
           end
           object Goods_PercentMarkup: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080' ('#1087#1086' '#1089#1077#1090#1080')'
@@ -198,6 +220,24 @@ inherited PriceChangeForm: TPriceChangeForm
             HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080
             Options.Editing = False
             Width = 70
+          end
+          object Goods_isTop: TcxGridDBColumn
+            Caption = #1058#1054#1055' ('#1087#1086' '#1089#1077#1090#1080')'
+            DataBinding.FieldName = 'Goods_isTop'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object isClose: TcxGridDBColumn
+            Caption = #1047#1072#1082#1088#1099#1090' '#1082#1086#1076' '#1087#1086' '#1074#1089#1077#1081' '#1089#1077#1090#1080
+            DataBinding.FieldName = 'IsClose'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 67
           end
           object isFirst: TcxGridDBColumn
             Caption = '1-'#1074#1099#1073#1086#1088
@@ -216,196 +256,6 @@ inherited PriceChangeForm: TPriceChangeForm
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
             Width = 60
-          end
-          object isPromo: TcxGridDBColumn
-            Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1082#1086#1085#1090#1088#1072#1082#1090
-            DataBinding.FieldName = 'isPromo'
-            PropertiesClassName = 'TcxCheckBoxProperties'
-            Properties.AllowGrayed = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 100
-          end
-          object StartDate: TcxGridDBColumn
-            Caption = #1048#1089#1090#1086#1088#1080#1103' '#1089
-            DataBinding.FieldName = 'StartDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 58
-          end
-          object DateChange: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083'. '#1080#1079#1084'. '#1094#1077#1085#1099
-            DataBinding.FieldName = 'DateChange'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 71
-          end
-          object PriceChange: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072
-            DataBinding.FieldName = 'PriceChange'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.AssignedValues.MinValue = True
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 56
-          end
-          object PercentMarkup: TcxGridDBColumn
-            Caption = '% '#1085#1072#1094#1077#1085#1082#1080' ('#1072#1087#1090#1077#1082#1072')'
-            DataBinding.FieldName = 'PercentMarkup'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080
-            Width = 70
-          end
-          object FixValue: TcxGridDBColumn
-            Caption = #1060#1080#1082#1089'. '#1094#1077#1085#1072
-            DataBinding.FieldName = 'FixValue'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1072#1103' '#1094#1077#1085#1072
-            Width = 53
-          end
-          object PriceChange_OH: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' ('#1080#1089#1090#1086#1088#1080#1103')'
-            DataBinding.FieldName = 'PriceChange_OH'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object PercentMarkup_OH: TcxGridDBColumn
-            Caption = '% '#1085#1072#1094#1077#1085#1082#1080' ('#1080#1089#1090#1086#1088#1080#1103')'
-            DataBinding.FieldName = 'PercentMarkup_OH'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1086#1089#1090#1072#1090#1082#1072' '#1089#1074#1077#1088#1093' '#1053#1058#1047
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 80
-          end
-          object FixValue_OH: TcxGridDBColumn
-            Caption = #1060#1080#1082#1089'. '#1094#1077#1085#1072
-            DataBinding.FieldName = 'FixValue_OH'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1072#1103' '#1094#1077#1085#1072
-            Width = 48
-          end
-          object PriceRetSP: TcxGridDBColumn
-            Caption = #1052#1072#1082#1089'. '#1094#1077#1085#1072' '#1088#1077#1072#1083#1080#1079' '#1087#1086' '#1057#1055' (12)'
-            DataBinding.FieldName = 'PriceRetSP'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 87
-          end
-          object PriceOptSP: TcxGridDBColumn
-            Caption = #1054#1087#1090#1086#1074#1086'- '#1074#1110#1076#1087#1091#1089#1082#1085#1072' '#1094#1110#1085#1072' '#1079#1072' '#1091#1087'. (11)'
-            DataBinding.FieldName = 'PriceOptSP'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 91
-          end
-          object PaymentSP: TcxGridDBColumn
-            Caption = #1044#1086#1087#1083#1072#1090#1072' '#1087#1072#1094#1080#1077#1085#1090#1086#1084' '#1087#1086' '#1057#1055', '#1075#1088#1085
-            DataBinding.FieldName = 'PaymentSP'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1086#1087#1083#1072#1090#1072' '#1087#1072#1094#1080#1077#1085#1090#1086#1084' '#1087#1086' '#1057#1055', '#1075#1088#1085' (16)'
-            Options.Editing = False
-            Width = 84
-          end
-          object PriceSP: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1057#1055
-            DataBinding.FieldName = 'PriceSP'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1077#1085#1072' '#1057#1055
-            Options.Editing = False
-            Width = 61
-          end
-          object MCSDateChange: TcxGridDBColumn
-            AlternateCaption = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1085#1077#1089#1085#1080#1078#1072#1077#1084#1086#1075#1086' '#1090#1086#1074#1072#1088#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
-            Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083'. '#1080#1079#1084'. '#1053#1058#1047
-            DataBinding.FieldName = 'MCSDateChange'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1085#1077#1089#1085#1080#1078#1072#1077#1084#1086#1075#1086' '#1090#1086#1074#1072#1088#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 81
-          end
-          object MCSPeriod: TcxGridDBColumn
-            Caption = #1087#1077#1088#1080#1086#1076' '#1072#1085#1072#1083#1080#1079#1072'***'
-            DataBinding.FieldName = 'MCSPeriod'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1085#1077#1081' '#1076#1083#1103' '#1072#1085#1072#1083#1080#1079#1072' '#1053#1058#1047
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 70
-          end
-          object PercentMarkupDateChange: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' % '#1085#1072#1094#1077#1085#1082#1080' ('#1072#1087#1090#1077#1082#1072')'
-            DataBinding.FieldName = 'PercentMarkupDateChange'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' % '#1085#1072#1094#1077#1085#1082#1080
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 74
-          end
-          object MCSDay: TcxGridDBColumn
-            Caption = #1079#1072#1087#1072#1089' '#1076#1085#1077#1081'***'
-            DataBinding.FieldName = 'MCSDay'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1090#1088#1072#1093#1086#1074#1086#1081' '#1079#1072#1087#1072#1089' '#1076#1085#1077#1081' '#1076#1083#1103' '#1053#1058#1047
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 53
           end
           object Remains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
@@ -428,55 +278,6 @@ inherited PriceChangeForm: TPriceChangeForm
             Options.Editing = False
             Width = 80
           end
-          object MCSIsClose: TcxGridDBColumn
-            Caption = #1059#1073#1080#1090#1100' '#1082#1086#1076
-            DataBinding.FieldName = 'MCSIsClose'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
-            Width = 44
-          end
-          object MCSIsCloseDateChange: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' "'#1091#1073#1080#1090#1100' '#1082#1086#1076'"'
-            DataBinding.FieldName = 'MCSIsCloseDateChange'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 52
-          end
-          object MCSNotRecalc: TcxGridDBColumn
-            Caption = #1057#1087#1077#1094#1082#1086#1085#1090#1088#1086#1083#1100' '#1082#1086#1076#1072
-            DataBinding.FieldName = 'MCSNotRecalc'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1053#1077' '#1087#1077#1088#1077#1089#1095#1080#1090#1099#1074#1072#1090#1100' '#1053#1058#1047
-            VisibleForCustomization = False
-            Width = 59
-          end
-          object MCSNotRecalcDateChange: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' "'#1057#1087#1077#1094#1082#1086#1085#1090#1088#1086#1083#1100' '#1082#1086#1076#1072'"'
-            DataBinding.FieldName = 'MCSNotRecalcDateChange'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 85
-          end
-          object FixDateChange: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' "'#1060#1080#1082#1089'. '#1094#1077#1085#1072'"'
-            DataBinding.FieldName = 'FixDateChange'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 70
-          end
           object MinExpirationDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1086#1089#1090#1072#1090#1082#1072
             DataBinding.FieldName = 'MinExpirationDate'
@@ -485,14 +286,14 @@ inherited PriceChangeForm: TPriceChangeForm
             Options.Editing = False
             Width = 112
           end
-          object isSp: TcxGridDBColumn
-            Caption = #1057#1086#1094'. '#1087#1088#1086#1077#1082#1090
-            DataBinding.FieldName = 'isSp'
+          object ConditionsKeepName: TcxGridDBColumn
+            Caption = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'ConditionsKeepName'
+            GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042' '#1089#1087#1080#1089#1082#1077' '#1087#1088#1086#1077#1082#1090#1072' '#171#1044#1086#1089#1090#1091#1087#1085#1099#1077' '#1083#1077#1082#1072#1088#1089#1090#1074#1072#187
             Options.Editing = False
-            Width = 60
+            Width = 75
           end
           object isErased: TcxGridDBColumn
             AlternateCaption = #1058#1086#1074#1072#1088' '#1091#1076#1072#1083#1077#1085
@@ -505,192 +306,12 @@ inherited PriceChangeForm: TPriceChangeForm
             Options.Editing = False
             Width = 27
           end
-          object ConditionsKeepName: TcxGridDBColumn
-            Caption = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
-            DataBinding.FieldName = 'ConditionsKeepName'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 75
-          end
-          object MCSValueOld: TcxGridDBColumn
-            Caption = #1053#1058#1047' - '#1074#1077#1088#1085#1077#1090#1089#1103' '#1087#1086' '#1086#1082#1086#1085#1095#1072#1085#1080#1080' '#1087#1077#1088#1080#1086#1076#1072
-            DataBinding.FieldName = 'MCSValueOld'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1053#1058#1047' - '#1074#1077#1088#1085#1077#1090#1089#1103' '#1087#1086' '#1086#1082#1086#1085#1095#1072#1085#1080#1080' '#1087#1077#1088#1080#1086#1076#1072
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 88
-          end
-          object StartDateMCSAuto: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1076#1077#1081#1089#1090#1074#1080#1103' '#1053#1058#1047
-            DataBinding.FieldName = 'StartDateMCSAuto'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 70
-          end
-          object EndDateMCSAuto: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095'. '#1076#1077#1081#1089#1090#1074#1080#1103' '#1053#1058#1047
-            DataBinding.FieldName = 'EndDateMCSAuto'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 70
-          end
-          object isMCSAuto: TcxGridDBColumn
-            Caption = #1056#1077#1078#1080#1084' - '#1053#1058#1047' '#1085#1072' '#1087#1077#1088#1080#1086#1076
-            DataBinding.FieldName = 'isMCSAuto'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1056#1077#1078#1080#1084' - '#1053#1058#1047' '#1074#1099#1089#1090#1072#1074#1080#1083' '#1092#1072#1088#1084#1072#1094#1077#1074#1090' '#1085#1072' '#1087#1077#1088#1080#1086#1076
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 60
-          end
-          object isMCSNotRecalcOld: TcxGridDBColumn
-            Caption = ' '#9#1057#1087#1077#1094#1082#1086#1085#1090#1088#1086#1083#1100' '#1082#1086#1076#1072' - '#1074#1077#1088#1085#1077#1090#1089#1103' '#1087#1086' '#1086#1082#1086#1085#1095#1072#1085#1080#1080' '#1087#1077#1088#1080#1086#1076#1072
-            DataBinding.FieldName = 'isMCSNotRecalcOld'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = ' '#9#1057#1087#1077#1094#1082#1086#1085#1090#1088#1086#1083#1100' '#1082#1086#1076#1072' - '#1074#1077#1088#1085#1077#1090#1089#1103' '#1087#1086' '#1086#1082#1086#1085#1095#1072#1085#1080#1080' '#1087#1077#1088#1080#1086#1076#1072
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 100
-          end
-          object CheckPriceDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1055#1086#1103#1074#1080#1083#1089#1103' '#1085#1072' '#1088#1099#1085#1082#1077' + '#1080#1089#1087#1088'. '#1053#1058#1047' '
-            DataBinding.FieldName = 'CheckPriceDate'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1055#1086#1103#1074#1080#1083#1089#1103' '#1085#1072' '#1088#1099#1085#1082#1077' + '#1080#1089#1087#1088#1072#1074#1080#1090#1100' '#1053#1058#1047' '
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 82
-          end
-          object isCorrectMCS: TcxGridDBColumn
-            Caption = #1055#1086#1103#1074#1080#1083#1089#1103' '#1085#1072' '#1088#1099#1085#1082#1077' - '#1080#1089#1087#1088#1072#1074#1080#1090#1100' '#1053#1058#1047
-            DataBinding.FieldName = 'isCorrectMCS'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1086#1103#1074#1080#1083#1089#1103' '#1085#1072' '#1088#1099#1085#1082#1077' - '#1080#1089#1087#1088#1072#1074#1080#1090#1100' '#1053#1058#1047' ('#1076#1072'/'#1085#1077#1090') '
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 72
-          end
           object Color_ExpirationDate: TcxGridDBColumn
             DataBinding.FieldName = 'Color_ExpirationDate'
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False
             Width = 30
-          end
-          object isExcludeMCS: TcxGridDBColumn
-            Caption = #1048#1089#1082#1083'. '#1080#1079' '#1089#1087'. '#1076#1083#1103' '#1080#1089#1087#1088'. '#1053#1058#1047
-            DataBinding.FieldName = 'isExcludeMCS'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1048#1089#1082#1083#1102#1095#1072#1077#1090#1089#1103' '#1080#1079' '#1089#1087#1080#1089#1082#1072' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1103' '#1053#1058#1047' ('#1076#1072'/'#1085#1077#1090')'
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 65
-          end
-          object isChecked: TcxGridDBColumn
-            Caption = #1057#1040#1059#1062
-            DataBinding.FieldName = 'isChecked'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1040#1059#1062' ('#1076#1072'/'#1085#1077#1090')'
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 49
-          end
-          object AmountDiff: TcxGridDBColumn
-            Caption = '%  '#1080#1079#1084'. '#1085#1072#1094'-'#1082#1080
-            DataBinding.FieldName = 'AmountDiff'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 63
-          end
-          object MarginPercentNew: TcxGridDBColumn
-            Caption = '% '#1085#1072#1094#1077#1085#1082#1080' ('#1057#1040#1059#1062')'
-            DataBinding.FieldName = 'MarginPercentNew'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 70
-          end
-          object OperDateStart: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1085#1072#1094'-'#1082#1080' ('#1057#1040#1059#1062')'
-            DataBinding.FieldName = 'OperDateStart'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 70
-          end
-          object OperDateEnd: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085'. '#1085#1072#1094'-'#1082#1080' ('#1057#1040#1059#1062')'
-            DataBinding.FieldName = 'OperDateEnd'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 83
-          end
-          object InvNumber_Full: TcxGridDBColumn
-            Caption = #1044#1086#1082'. '#1057#1040#1059#1062
-            DataBinding.FieldName = 'InvNumber_Full'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 82
-          end
-          object isTop: TcxGridDBColumn
-            Caption = #1058#1054#1055' ('#1072#1087#1090#1077#1082#1072')'
-            DataBinding.FieldName = 'isTop'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            VisibleForCustomization = False
-            Width = 60
-          end
-          object isError_MarginPercent: TcxGridDBColumn
-            Caption = #1054#1090#1082#1083'.'
-            DataBinding.FieldName = 'isError_MarginPercent'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1053#1072#1094'. '#1072#1087#1090#1077#1082#1080' '#1080' '#1053#1072#1094#1077#1085#1082#1080' ('#1057#1040#1059#1062')'
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 43
           end
         end
       end
@@ -1329,12 +950,7 @@ inherited PriceChangeForm: TPriceChangeForm
         ColorValueList = <>
       end
       item
-        ColorColumn = Goods_isTop
-        ValueColumn = Color_ExpirationDate
-        ColorValueList = <>
-      end
-      item
-        ColorColumn = Goods_PercentMarkup
+        ColorColumn = StartDate
         ValueColumn = Color_ExpirationDate
         ColorValueList = <>
       end
@@ -1354,12 +970,22 @@ inherited PriceChangeForm: TPriceChangeForm
         ColorValueList = <>
       end
       item
-        ColorColumn = isClose
+        ColorColumn = NDS
         ValueColumn = Color_ExpirationDate
         ColorValueList = <>
       end
       item
-        ColorColumn = isErased
+        ColorColumn = Goods_isTop
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Goods_PercentMarkup
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = isClose
         ValueColumn = Color_ExpirationDate
         ColorValueList = <>
       end
@@ -1369,57 +995,12 @@ inherited PriceChangeForm: TPriceChangeForm
         ColorValueList = <>
       end
       item
-        ColorColumn = isPromo
-        ValueColumn = Color_ExpirationDate
-        ColorValueList = <>
-      end
-      item
         ColorColumn = isSecond
         ValueColumn = Color_ExpirationDate
         ColorValueList = <>
       end
       item
-        ColorColumn = isTop
-        ValueColumn = Color_ExpirationDate
-        ColorValueList = <>
-      end
-      item
-        ColorColumn = MCSDateChange
-        ValueColumn = Color_ExpirationDate
-        ColorValueList = <>
-      end
-      item
-        ColorColumn = MCSDay
-        ValueColumn = Color_ExpirationDate
-        ColorValueList = <>
-      end
-      item
-        ColorColumn = MCSIsClose
-        ValueColumn = Color_ExpirationDate
-        ColorValueList = <>
-      end
-      item
-        ColorColumn = MCSNotRecalc
-        ValueColumn = Color_ExpirationDate
-        ColorValueList = <>
-      end
-      item
-        ColorColumn = MCSPeriod
-        ValueColumn = Color_ExpirationDate
-        ColorValueList = <>
-      end
-      item
-        ColorColumn = FixValue
-        ValueColumn = Color_ExpirationDate
-        ColorValueList = <>
-      end
-      item
-        ColorColumn = NDS
-        ValueColumn = Color_ExpirationDate
-        ColorValueList = <>
-      end
-      item
-        ColorColumn = PercentMarkup
+        ColorColumn = isErased
         ValueColumn = Color_ExpirationDate
         ColorValueList = <>
       end
@@ -1429,32 +1010,12 @@ inherited PriceChangeForm: TPriceChangeForm
         ColorValueList = <>
       end
       item
-        ColorColumn = PriceChange_OH
+        ColorColumn = PercentMarkup
         ValueColumn = Color_ExpirationDate
         ColorValueList = <>
       end
       item
-        ColorColumn = PercentMarkup_OH
-        ValueColumn = Color_ExpirationDate
-        ColorValueList = <>
-      end
-      item
-        ColorColumn = FixValue_OH
-        ValueColumn = Color_ExpirationDate
-        ColorValueList = <>
-      end
-      item
-        ColorColumn = FixDateChange
-        ValueColumn = Color_ExpirationDate
-        ColorValueList = <>
-      end
-      item
-        ColorColumn = MCSIsCloseDateChange
-        ValueColumn = Color_ExpirationDate
-        ColorValueList = <>
-      end
-      item
-        ColorColumn = MCSNotRecalcDateChange
+        ColorColumn = FixValue
         ValueColumn = Color_ExpirationDate
         ColorValueList = <>
       end
@@ -1464,21 +1025,7 @@ inherited PriceChangeForm: TPriceChangeForm
         ColorValueList = <>
       end
       item
-        ColorColumn = PercentMarkupDateChange
-        ValueColumn = Color_ExpirationDate
-        ColorValueList = <>
-      end
-      item
         ColorColumn = Remains
-        ValueColumn = Color_ExpirationDate
-        ColorValueList = <>
-      end
-      item
-        ValueColumn = Color_ExpirationDate
-        ColorValueList = <>
-      end
-      item
-        ColorColumn = StartDate
         ValueColumn = Color_ExpirationDate
         ColorValueList = <>
       end

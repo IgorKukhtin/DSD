@@ -43,7 +43,6 @@ type
     spInsertUpdate: TdsdStoredProc;
     dsdUpdatePrice: TdsdUpdateDataSet;
     rdUnit: TRefreshDispatcher;
-    PaymentSP: TcxGridDBColumn;
     actStartLoadMCS: TMultiAction;
     actDoLoadMCS: TExecuteImportSettingsAction;
     dxBarButton3: TdxBarButton;
@@ -80,19 +79,11 @@ type
     GoodsGuides: TdsdGuides;
     RefreshDispatcher: TRefreshDispatcher;
     Color_ExpirationDate: TcxGridDBColumn;
-    CheckPriceDate: TcxGridDBColumn;
     spUpdate_CheckPrice: TdsdStoredProc;
     actUpdate_CheckPrice: TdsdExecStoredProc;
     bb: TdxBarButton;
     macUpdate_CheckPriceList: TMultiAction;
     macUpdate_CheckPrice: TMultiAction;
-    InvNumber_Full: TcxGridDBColumn;
-    isChecked: TcxGridDBColumn;
-    OperDateStart: TcxGridDBColumn;
-    OperDateEnd: TcxGridDBColumn;
-    AmountDiff: TcxGridDBColumn;
-    MarginPercentNew: TcxGridDBColumn;
-    isError_MarginPercent: TcxGridDBColumn;
   private
     { Private declarations }
   public

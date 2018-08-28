@@ -479,15 +479,10 @@ begin
           cdsResult.FieldByName('ContractName').AsString := AllGoodsPriceCDS.FieldByName('ContractName').AsString;
           cdsResult.FieldByName('SumReprice').AsCurrency := AllGoodsPriceCDS.FieldByName('SumReprice').AsCurrency;
           cdsResult.FieldByName('MinExpirationDate').AsDateTime := AllGoodsPriceCDS.FieldByName('MinExpirationDate').AsDateTime;
-          cdsResult.FieldByName('MinExpirationDate_to').AsDateTime := AllGoodsPriceCDS.FieldByName('MinExpirationDate_to').AsDateTime;
           cdsResult.FieldByName('isOneJuridical').AsBoolean := AllGoodsPriceCDS.FieldByName('isOneJuridical').AsBoolean;
           cdsResult.FieldByName('JuridicalId').AsInteger := AllGoodsPriceCDS.FieldByName('JuridicalId').AsInteger;
           cdsResult.FieldByName('ContractId').AsInteger := AllGoodsPriceCDS.FieldByName('ContractId').AsInteger;
-          cdsResult.FieldByName('isPriceFix').AsBoolean := AllGoodsPriceCDS.FieldByName('isPriceFix').AsBoolean;
-          cdsResult.FieldByName('isIncome').AsBoolean := AllGoodsPriceCDS.FieldByName('isIncome').AsBoolean;
-          cdsResult.FieldByName('isTop').AsBoolean := AllGoodsPriceCDS.FieldByName('isTop').AsBoolean;
           cdsResult.FieldByName('isTop_Goods').AsBoolean := AllGoodsPriceCDS.FieldByName('isTop_Goods').AsBoolean;
-          cdsResult.FieldByName('isPromo').AsBoolean := AllGoodsPriceCDS.FieldByName('isPromo').AsBoolean;
           cdsResult.FieldByName('MidPriceDiff').AsCurrency := AllGoodsPriceCDS.FieldByName('MidPriceDiff').AsCurrency;
           cdsResult.FieldByName('MidPriceSale').AsCurrency := AllGoodsPriceCDS.FieldByName('MidPriceSale').AsCurrency;
           cdsResult.FieldByName('Juridical_Percent').AsCurrency := AllGoodsPriceCDS.FieldByName('Juridical_Percent').AsCurrency;
@@ -543,6 +538,8 @@ begin
     CheckListBox.Items.AddObject(UnitsCDS.FieldByName('UnitName').asString,TObject(UnitsCDS.FieldByName('Id').AsInteger));
     UnitsCDS.Next;
   end;
+  //
+  if CheckListBox.Count > 0 then CheckListBox.Checked[0]:= true;
 end;
 
 procedure TReprice—hangeRetailForm.FormShow(Sender: TObject);
