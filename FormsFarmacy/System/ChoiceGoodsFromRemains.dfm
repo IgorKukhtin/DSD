@@ -183,6 +183,30 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
             Options.Editing = False
             Width = 70
           end
+          object JuridicalName_Unit: TcxGridDBColumn
+            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName_Unit'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 94
+          end
+          object ProvinceCityName_Unit: TcxGridDBColumn
+            Caption = #1056#1072#1081#1086#1085
+            DataBinding.FieldName = 'ProvinceCityName_Unit'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Address_Unit: TcxGridDBColumn
+            Caption = #1040#1076#1088#1077#1089
+            DataBinding.FieldName = 'Address_Unit'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
         end
       end
       object Panel1: TPanel
