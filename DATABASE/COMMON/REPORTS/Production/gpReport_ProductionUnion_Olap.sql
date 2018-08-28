@@ -26,12 +26,14 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
              , GoodsGroupName TVarChar
              , GoodsCode Integer, GoodsName TVarChar
              , GoodsKindName TVarChar, GoodsKindName_complete TVarChar
+             , MeasureName TVarChar
              , Amount TFloat, Amount_Weight TFloat
              , Summ TFloat
              , ChildPartionGoods TVarChar, ChildPartionGoods_Date TDateTime
              , ChildGoodsGroupName TVarChar
              , ChildGoodsCode Integer, ChildGoodsName TVarChar
              , ChildGoodsKindName TVarChar
+             , ChildMeasureName TVarChar
              , ChildAmount TFloat, ChildAmountReceipt TFloat, ChildAmountCalc TFloat
              , ChildAmount_Weight TFloat, ChildAmountReceipt_Weight TFloat, ChildAmountCalc_Weight    TFloat
              , ChildSumm TFloat, ChildSummReceipt TFloat, ChildSummCalc TFloat
@@ -1152,6 +1154,7 @@ BEGIN
            , Object_Goods.ValueData           AS GoodsName  
            , Object_GoodsKind.ValueData       AS GoodsKindName
            , Object_GoodsKind_complete.ValueData  AS GoodsKindName_complete
+           , Object_Measure.ValueData         AS MeasureName
            
            , (tmpOperationGroup.OperCount)  :: TFloat AS Amount
            , (tmpOperationGroup.OperCount * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS Amount_Weight
@@ -1164,6 +1167,7 @@ BEGIN
            , Object_GoodsChild.ObjectCode           AS ChildGoodsCode
            , Object_GoodsChild.ValueData            AS ChildGoodsName
            , Object_GoodsKindChild.ValueData        AS ChildGoodsKindName
+           , Object_MeasureChild.ValueData          AS ChildMeasureName
            
            , tmpOperationGroup.OperCount_out       :: TFloat AS ChildAmount
            , tmpOperationGroup.AmountReceipt_out   :: TFloat AS ChildAmountReceipt
@@ -1217,7 +1221,7 @@ BEGIN
 
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup.GoodsKindId
              LEFT JOIN Object AS Object_GoodsKindChild ON Object_GoodsKindChild.Id = tmpOperationGroup.GoodsKindId_out
-                    
+                   
              LEFT JOIN Object AS Object_GoodsKind_complete ON Object_GoodsKind_complete.Id = tmpOperationGroup.GoodsKindId_complete
 
              LEFT JOIN Object AS Object_Receipt on Object_Receipt.Id = tmpOperationGroup.ReceiptId
@@ -1227,6 +1231,9 @@ BEGIN
         
              LEFT JOIN tmpGoodsParam ON tmpGoodsParam.GoodsId = Object_Goods.Id
              LEFT JOIN tmpGoodsParam AS tmpGoodsChildParam ON tmpGoodsChildParam.GoodsId = Object_GoodsChild.Id
+
+             LEFT JOIN Object AS Object_Measure on Object_Measure.Id = tmpGoodsParam.MeasureId
+             LEFT JOIN Object AS Object_MeasureChild on Object_MeasureChild.Id = tmpGoodsChildParam.MeasureId
              
              LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpOperationGroup.PartionGoodsId
              LEFT JOIN Object AS Object_PartionGoodsChild ON Object_PartionGoodsChild.Id = tmpOperationGroup.PartionGoodsId_out
