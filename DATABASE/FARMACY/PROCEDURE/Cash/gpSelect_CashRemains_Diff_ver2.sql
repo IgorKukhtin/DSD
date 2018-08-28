@@ -17,6 +17,8 @@ RETURNS TABLE (
     MCSValue TFloat,
     Reserved TFloat,
     NewRow Boolean,
+    AccommodationId Integer,
+    AccommodationName TVarChar,
     Color_calc Integer
 )
 AS
@@ -59,6 +61,7 @@ BEGIN
                            , MCSValue  TFloat
                            , Reserved  TFloat
                            , NewRow    Boolean
+                           , AccommodationId Integer
                            , Color_calc Integer
                            , MinExpirationDate TDateTime) ON COMMIT DROP;
 
@@ -158,6 +161,7 @@ BEGIN
                          , CashSessionSnapShot.MCSValue
                          , CashSessionSnapShot.Reserved
                          , CashSessionSnapShot.MinExpirationDate
+                         , CashSessionSnapShot.AccommodationId
                     FROM CashSessionSnapShot
                     WHERE CashSessionSnapShot.CashSessionId = inCashSessionId
                    )
@@ -210,7 +214,7 @@ BEGIN
                         AND ObjectLink_Goods.DescId        = zc_ObjectLink_Price_Goods()
                      )*/
     -- –≈«”À‹“¿“ - Á‡ÎË‚‡ÂÏ ‡ÁÌËˆÛ
-    INSERT INTO _DIFF (ObjectId, GoodsCode, GoodsName, Price, Remains, MCSValue, Reserved, NewRow, Color_calc,MinExpirationDate)
+    INSERT INTO _DIFF (ObjectId, GoodsCode, GoodsName, Price, Remains, MCSValue, Reserved, NewRow, AccommodationId, Color_calc, MinExpirationDate)
        WITH tmpDiff AS (SELECT tmpPrice.ObjectId                                                 AS ObjectId
                              , tmpPrice.Price                                                    AS Price
                              , tmpPrice.MCSValue                                                 AS MCSValue
@@ -220,15 +224,20 @@ BEGIN
                                          THEN TRUE
                                      ELSE FALSE
                                END                                                               AS NewRow
+                             , Accommodation.AccommodationId                                     AS AccommodationID 
                              , GoodsRemains.MinExpirationDate                                    AS MinExpirationDate
                         FROM tmpPrice
                              LEFT JOIN GoodsRemains ON GoodsRemains.ObjectId = tmpPrice.ObjectId
                              LEFT JOIN SESSIONDATA  ON SESSIONDATA.ObjectId  = tmpPrice.ObjectId
                              LEFT JOIN RESERVE      ON RESERVE.GoodsId       = tmpPrice.ObjectId
+                             LEFT JOIN AccommodationLincGoods AS Accommodation
+                                                              ON Accommodation.UnitId = vbUnitId
+                                                             AND Accommodation.GoodsId = tmpPrice.ObjectId
                         WHERE tmpPrice.Price    <> COALESCE (SESSIONDATA.Price, 0)
                            OR tmpPrice.MCSValue <> COALESCE (SESSIONDATA.MCSValue, 0)
                            OR COALESCE (GoodsRemains.Remains, 0) - COALESCE (Reserve.Amount, 0) <> COALESCE (SESSIONDATA.Remains, 0)
                            OR COALESCE (Reserve.Amount,0) <> COALESCE (SESSIONDATA.Reserved, 0)
+                           OR COALESCE (Accommodation.AccommodationID,0) <> COALESCE (SESSIONDATA.AccommodationId, 0)
                        )
        -- –≈«”À‹“¿“
        SELECT tmpDiff.ObjectId
@@ -239,6 +248,7 @@ BEGIN
             , tmpDiff.MCSValue
             , tmpDiff.Reserved
             , tmpDiff.NewRow
+            , tmpDiff.AccommodationID 
             , CASE WHEN COALESCE (ObjectBoolean_First.ValueData, FALSE) = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc
             , tmpDiff.MinExpirationDate
        FROM tmpDiff
@@ -255,7 +265,8 @@ BEGIN
       , Remains           = _DIFF.Remains
       , MCSValue          = _DIFF.MCSValue
       , Reserved          = _DIFF.Reserved
-      , MinExpirationDate = _DIFF.MinExpirationDate
+      , AccommodationId   = _DIFF.AccommodationId
+      , MinExpirationDate = _DIFF.MinExpirationDate      
     FROM
         _DIFF
     WHERE CashSessionSnapShot.CashSessionId = inCashSessionId
@@ -319,9 +330,11 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
             _DIFF.MCSValue,
             _DIFF.Reserved,
             _DIFF.NewRow,
+            _DIFF.AccommodationId,
+            Object_Accommodation.ValueData AS AccommodationName,
             _DIFF.Color_calc
-        FROM
-            _DIFF;
+        FROM _DIFF
+            LEFT JOIN Object AS Object_Accommodation  ON Object_Accommodation.ID = _DIFF.AccommodationId;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

@@ -7,7 +7,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1147
-  ExplicitHeight = 468
+  ExplicitHeight = 471
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -488,6 +488,16 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
             Options.Editing = False
             Width = 70
+          end
+          object UpdateDate_Price: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/ '#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088'.) '#1094#1077#1085#1099
+            DataBinding.FieldName = 'UpdateDate_Price'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'/ '#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088'.) '#1094#1077#1085#1099
+            Options.Editing = False
+            Width = 107
           end
           object DiscountTax: TcxGridDBColumn
             Caption = '% '#1089#1082'.'

@@ -1126,10 +1126,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Maker_CashBack() RETURNS Integer AS $B
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Maker(), 'zc_ObjectFloat_Maker_CashBack', 'Сумма Cash Back для отчета леквидности' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Maker_CashBack');
 
-CREATE OR REPLACE FUNCTION zc_ObjectFloat_Bank_Overdraft() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Bank_Overdraft'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Overdraft_Summa() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Overdraft_Summa'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
-  SELECT zc_Object_Bank(), 'zc_ObjectFloat_Bank_Overdraft', 'Сумма овердрафт для отчета леквидности' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Bank_Overdraft');
-
+  SELECT zc_Object_Overdraft(), 'zc_ObjectFloat_Overdraft_Summa', 'Сумма овердрафт для отчета леквидности' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Overdraft_Summa');
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_PriceChange_Value() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PriceChange_Value'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
@@ -1146,6 +1145,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 27.08.18                                                                                     * zc_ObjectFloat_Overdraft_Summa
  20.08.18         * zc_ObjectFloat_Contract_TotalSumm
  16.08.18         * zc_ObjectFloat_PriceChange_Value
                     zc_ObjectFloat_PriceChange_FixValue

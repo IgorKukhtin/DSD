@@ -3180,6 +3180,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'MovementId;WeighingNumber;GoodsName'
         end>
       Params = <
         item

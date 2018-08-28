@@ -1,0 +1,27 @@
+-- DROP TABLE AccommodationLincGoods;
+
+-------------------------------------------------------------------------------
+CREATE TABLE AccommodationLincGoods
+(
+  AccommodationId   Integer     NOT NULL, -- Размещение товара
+  UnitId            Integer     NOT NULL, -- Код подразделения
+  GoodsId           Integer     NOT NULL, -- Код медикамента
+  CONSTRAINT PK_AccommodationLincGoods PRIMARY KEY(AccommodationId, UnitId, GoodsId)
+);
+
+ALTER TABLE AccommodationLincGoods
+  OWNER TO postgres;
+
+
+-------------------------------------------------------------------------------
+
+
+
+/*
+ ПРИМЕЧАНИЯ:
+ ИСТОРИЯ РАЗРАБОТКИ:
+ ДАТА         АВТОР
+ ----------------
+                 Шаблий О.В.
+22.08.2018         *
+*/

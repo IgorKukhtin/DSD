@@ -350,7 +350,7 @@ BEGIN
 
       -- Результат
      SELECT tmpMovementItem.MovementId	                                            AS MovementId
-           , CAST (ROW_NUMBER() OVER (PARTITION BY MovementFloat_WeighingNumber.ValueData ORDER BY MovementFloat_WeighingNumber.ValueData, ObjectString_Goods_GoodsGroupFull.ValueData, Object_Goods.ValueData, Object_GoodsKind.ValueData) AS Integer) AS NumOrder
+           , CAST (ROW_NUMBER() OVER (PARTITION BY MovementFloat_WeighingNumber.ValueData, tmpMovementItem.MovementId ORDER BY MovementFloat_WeighingNumber.ValueData, tmpMovementItem.MovementId, ObjectString_Goods_GoodsGroupFull.ValueData, Object_Goods.ValueData, Object_GoodsKind.ValueData) AS Integer) AS NumOrder
            , tmpMovementParam.OperDate
            , tmpMovementParam.OperDatePartner
            , MovementFloat_WeighingNumber.ValueData                                 AS WeighingNumber
@@ -365,7 +365,7 @@ BEGIN
 
            , tmpMovementParam.JuridicalName_To
            , tmpMovementParam.JuridicalAddress_To
-           ,  tmpMovementParam.PartnerAddress_To
+           , tmpMovementParam.PartnerAddress_To
 
            , tmpMovementParam.FromName
            , tmpMovementParam.ToName
@@ -522,16 +522,16 @@ BEGIN
                                       AND tmpStickerProperty.Ord         = 1
           
           LEFT JOIN tmpObjectLink AS ObjectLink_Goods_InfoMoney
-                               ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMovementItem.GoodsId
-                             AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                  ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMovementItem.GoodsId
+                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
           LEFT JOIN tmpMovementFloat AS MovementFloat_WeighingNumber
-                                  ON MovementFloat_WeighingNumber.MovementId = tmpMovementItem.MovementId
-                                 AND MovementFloat_WeighingNumber.DescId = zc_MovementFloat_WeighingNumber()
+                                     ON MovementFloat_WeighingNumber.MovementId = tmpMovementItem.MovementId
+                                    AND MovementFloat_WeighingNumber.DescId = zc_MovementFloat_WeighingNumber()
           LEFT JOIN tmpMovementFloat AS MovementFloat_TotalCountKg
-                                  ON MovementFloat_TotalCountKg.MovementId = tmpMovementItem.MovementId
-                                 AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
+                                     ON MovementFloat_TotalCountKg.MovementId = tmpMovementItem.MovementId
+                                    AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
 
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMovementItem.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMovementItem.GoodsKindId
@@ -550,7 +550,6 @@ BEGIN
                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-
           -- Товар и Вид товара
           LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId     = tmpMovementItem.GoodsId
                                                 AND Object_GoodsByGoodsKind_View.GoodsKindId = tmpMovementItem.GoodsKindId
@@ -563,10 +562,11 @@ BEGIN
                                 ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
                                AND ObjectFloat_WeightTotal.DescId   = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
 
-      -- ORDER BY MovementFloat_WeighingNumber
-             -- , tmpMovementItem.MovementId
-             -- , tmpMovementItem.BoxNumber
-             -- , tmpMovementItem.Num
+       ORDER BY tmpMovementItem.MovementId
+              --MovementFloat_WeighingNumber
+
+              --, tmpMovementItem.BoxNumber
+              --, tmpMovementItem.Num*/
       ;
      RETURN NEXT Cursor1;
 

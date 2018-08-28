@@ -45,6 +45,7 @@ CREATE TABLE CashSessionSnapShot
   EndDateMCSAuto    TDateTime   NULL,     -- дата оконч. периода
   isMCSAuto         Boolean     NULL,     -- Режим - НТЗ выставил фармацевт на период
   isMCSNotRecalcOld Boolean     NULL,     -- Спецконтроль кода - значение которое вернется по окончании периода
+  AccommodationId   Integer     NULL,     -- Размещение товара
   CONSTRAINT PK_CashSessionSnapShot PRIMARY KEY(CashSessionId,ObjectId)
 );
 
@@ -66,7 +67,8 @@ CREATE INDEX idx_CashSessionSnapShot_ObjectId ON CashSessionSnapShot(ObjectId);
  ИСТОРИЯ РАЗРАБОТКИ:
  ДАТА         АВТОР
  ----------------
-                 Климентьев К.И.   Кухтин И.В.   Воробкало А.А.   Фелонюк И.В.
+                 Климентьев К.И.   Кухтин И.В.   Воробкало А.А.   Фелонюк И.В.   Шаблий О.В.
+22.08.2018                                                                         *
 09.06.2017                                                           *
 10.09.2015                                           *
 */

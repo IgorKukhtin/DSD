@@ -20,7 +20,6 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
       inherited cxGrid: TcxGrid
         Width = 1043
         Height = 444
-        ExplicitLeft = -3
         ExplicitWidth = 1043
         ExplicitHeight = 444
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -309,6 +308,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
     Top = 303
     object actRefreshMI: TdsdDataSetRefresh [0]
       Category = 'DSDLib'
+      TabSheet = tsMain
       MoveParams = <>
       StoredProc = spSelect
       StoredProcList = <
@@ -551,6 +551,64 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1076#1086#1073#1072#1074#1083#1077#1085#1099
       Caption = #1057#1082#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1076#1088#1091#1075#1086#1075#1086' '#1076#1086#1082'-'#1090#1072
     end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inMovementId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
+    object actGetImportSetting: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSetting'
+    end
+    object actSetErasedGoodsSp: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isSp_SetErased
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isSp_SetErased
+        end>
+      Caption = 'actGetImportSetting'
+    end
+    object macStartLoad: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefreshMI
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1072#1085#1085#1099#1093' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099'?'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091
+      ImageIndex = 41
+    end
   end
   inherited MasterDS: TDataSource
     Left = 192
@@ -647,6 +705,14 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -670,6 +736,10 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
       Action = macInsertMI
       Category = 0
       ImageIndex = 27
+    end
+    object bbStartLoad: TdxBarButton
+      Action = macStartLoad
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -745,6 +815,21 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
         Value = 'false'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ImportSettingId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ImportSettingIsUploadId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ImportSettingIsSpecConditionId'
+        Value = Null
         MultiSelectSeparator = ','
       end>
     Left = 848
@@ -1396,5 +1481,46 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
     NeedResetData = True
     Left = 767
     Top = 312
+  end
+  object spUpdate_isSp_SetErased: TdsdStoredProc
+    StoredProcName = 'gpSetErased_GoodsSP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <>
+    PackSize = 1
+    Left = 947
+    Top = 310
+  end
+  object spGetImportSettingId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TGoodsSPMovementForm;zc_Object_ImportSetting_GoodsSPMovement'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 912
+    Top = 240
   end
 end

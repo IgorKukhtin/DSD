@@ -1,4 +1,4 @@
-unit Accommodation;
+unit Overdraft;
 
 interface
 
@@ -24,7 +24,7 @@ uses
   DataModul;
 
 type
-  TAccommodationForm = class(TParentForm)
+  TOverdraftForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     Code: TcxGridDBColumn;
@@ -58,6 +58,8 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    actShowAll: TBooleanStoredProcAction;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public
@@ -70,5 +72,5 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TAccommodationForm);
+  RegisterClass(TOverdraftForm);
 end.

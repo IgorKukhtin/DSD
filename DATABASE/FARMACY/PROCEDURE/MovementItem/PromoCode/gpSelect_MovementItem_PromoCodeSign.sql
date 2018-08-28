@@ -58,7 +58,7 @@ BEGIN
                                   , MovementFloat_MovementItemId.ValueData :: Integer As MovementItemId
                              FROM MovementFloat AS MovementFloat_MovementItemId
                              WHERE MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
-                               AND vbIsOne = TRUE
+                               --AND vbIsOne = TRUE
                             )
       -- Документ чек, по идее должен быть 1 , но чтоб не задвоилось берем макс и считаем сколько чеков
       , tmpCheck_Mov AS (SELECT tmpMI.Id
@@ -165,8 +165,10 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.   Шаблий О.В.
+ 22.08.18                                                                         *
  13.12.17         *
 */
+
 
 --select * from gpSelect_MovementItem_PromoCodeSign(inMovementId := 0 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

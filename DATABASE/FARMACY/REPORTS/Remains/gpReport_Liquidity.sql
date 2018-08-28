@@ -182,17 +182,17 @@ BEGIN
     -- cash back
   OPEN cur4 FOR
          SELECT
-                Object_Bank.ID                        AS ID
-              , Object_Bank.ObjectCode                AS BankID
-              , Object_Bank.ValueData                 AS BankName
-              , ObjectFloat_Bank_Overdraft.ValueData  AS Summa
-         FROM Object AS Object_Bank
-             LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Bank_Overdraft
-                                         ON ObjectFloat_Bank_Overdraft.ObjectId = Object_Bank.id
-                                        and ObjectFloat_Bank_Overdraft.descid = zc_ObjectFloat_Bank_Overdraft()
-         WHERE Object_Bank.DescId = zc_Object_Bank()
-           AND Object_Bank.IsErased = False
-         ORDER BY Object_Bank.ValueData;
+                Object_Overdraft.ID                        AS ID
+              , Object_Overdraft.ObjectCode                AS BankID
+              , Object_Overdraft.ValueData                 AS BankName
+              , ObjectFloat_Overdraft_Summa.ValueData  AS Summa
+         FROM Object AS Object_Overdraft
+             LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Overdraft_Summa
+                                         ON ObjectFloat_Overdraft_Summa.ObjectId = Object_Overdraft.id
+                                        and ObjectFloat_Overdraft_Summa.descid = zc_ObjectFloat_Overdraft_Summa()
+         WHERE Object_Overdraft.DescId = zc_Object_Overdraft()
+           AND Object_Overdraft.IsErased = False
+         ORDER BY Object_Overdraft.ValueData;
     RETURN NEXT cur4;
 
 END;
@@ -202,6 +202,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ÿ‡·ÎËÈ Œ.¬.
+ 27.08.18        *
  09.08.18        *
 */
 

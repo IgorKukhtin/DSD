@@ -2515,6 +2515,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'MovementId;WeighingNumber;GoodsName'
         end>
       Params = <
         item

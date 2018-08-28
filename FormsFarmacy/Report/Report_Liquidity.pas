@@ -55,6 +55,8 @@ type
     spUpdateisOverdraft: TdsdStoredProc;
     UpdateisMarketCompany: TdsdUpdateDataSet;
     UpdateisOverdraft: TdsdUpdateDataSet;
+    actOverdraft: TdsdOpenForm;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

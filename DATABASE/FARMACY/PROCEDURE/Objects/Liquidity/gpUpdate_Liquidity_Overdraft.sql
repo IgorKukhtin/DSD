@@ -1,11 +1,11 @@
--- Function: gpUpdate_Goods_isNotUploadSites()
+-- Function: gpUpdate_Liquidity_Overdraft()
 
 DROP FUNCTION IF EXISTS gpUpdate_Liquidity_Overdraft (Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Liquidity_Overdraft(
     IN inId                  Integer   ,   -- ключ объекта <>
  INOUT inoutSumma            TFloat   ,    -- Сума
-    IN inSession             TVarChar       -- текущий пользователь
+    IN inSession             TVarChar      -- текущий пользователь
 )
 RETURNS TFloat AS
 $BODY$
@@ -20,7 +20,7 @@ BEGIN
 
    vbUserId := lpGetUserBySession (inSession);
 
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Bank_Overdraft(), inId, inoutSumma);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Overdraft_Summa(), inId, inoutSumma);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
@@ -32,6 +32,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Шаблий О.В.
+ 27.08.18        *
  11.08.18        *
 
 */

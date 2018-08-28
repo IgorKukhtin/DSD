@@ -535,10 +535,10 @@ begin
  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListLoadForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListLoadForm');
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemsLoadForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListItemsLoadForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementLoadForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovenentLoadForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemsLoadForm'));
@@ -547,19 +547,19 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceGoodsFromPriceListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceGoodsFromPriceListForm');
   exit;
-
+  }
   // отчет поиск товара по всей сети
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceGoodsFromRemainsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceGoodsFromRemainsForm');
-
+  exit;
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TColorForm'));
   TdsdFormStorageFactory.GetStorage.Load('TColorForm');
-
+  exit;
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsBarCodeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsBarCodeForm');
-  }
+
 end;
 
 procedure TLoadFormTest.LoadLossDebtFormTest;
@@ -818,6 +818,12 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_LiquidityForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_LiquidityForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdraftForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOverdraftForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdraftEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOverdraftEditForm');
 end;
 
 procedure TLoadFormTest.LoadReportForSiteTest;

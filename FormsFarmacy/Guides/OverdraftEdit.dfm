@@ -1,7 +1,7 @@
-﻿object AccommodationEditForm: TAccommodationEditForm
+﻿object OverdraftEditForm: TOverdraftEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1076#1099' '#1087#1088#1080#1074#1103#1079#1082#1080'>'
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1054#1074#1077#1088#1076#1088#1072#1092#1090'>'
   ClientHeight = 155
   ClientWidth = 370
   Color = clBtnFace
@@ -19,7 +19,7 @@
   object edMeasureName: TcxTextEdit
     Left = 32
     Top = 86
-    Properties.MaxLength = 3
+    Properties.MaxLength = 0
     TabOrder = 0
     Width = 273
   end
@@ -96,7 +96,7 @@
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Accommodation_Unit'
+    StoredProcName = 'gpInsertUpdate_Object_Overdraft'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -139,7 +139,7 @@
     Top = 104
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_Accommodation_Unit'
+    StoredProcName = 'gpGet_Object_Overdraft'
     DataSets = <>
     OutputType = otResult
     Params = <

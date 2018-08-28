@@ -14,6 +14,9 @@ RETURNS TABLE (Id integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupName TVarChar
              , UnitName TVarChar
              , AreaName TVarChar
+             , Address_Unit TVarChar
+             , ProvinceCityName_Unit TVarChar
+             , JuridicalName_Unit TVarChar
              , Phone TVarChar
              , Amount TFloat, AmountIncome TFloat, AmountAll TFloat
              , PriceSale  TFloat
@@ -133,7 +136,6 @@ BEGIN
                               , MovementLinkObject_To.ObjectId 
                     )                          
 
-
         SELECT Object_Goods_View.Id                         AS Id
              , Object_Goods_View.GoodsCodeInt    :: Integer AS GoodsCode
              , Object_Goods_View.GoodsName                  AS GoodsName
@@ -142,6 +144,10 @@ BEGIN
              , Object_Goods_View.GoodsGroupName             AS GoodsGroupName
              , Object_Unit.ValueData                        AS UnitName
              , Object_Area.ValueData                        AS AreaName
+             , ObjectString_Unit_Address.ValueData          AS Address_Unit
+             , Object_ProvinceCity.ValueData                AS ProvinceCityName_Unit
+             , Object_Juridical.ValueData                   AS JuridicalName_Unit
+
              , ObjectString_Phone.ValueData                 AS Phone
              , COALESCE(tmpData.Amount,0)         :: TFloat AS Amount
              , COALESCE(tmpIncome.AmountIncome,0)                                  :: TFloat AS AmountIncome
@@ -185,6 +191,20 @@ BEGIN
                                    ON ObjectString_Phone.ObjectId = ContactPerson_ContactPerson_Object.ObjectId
                                   AND ObjectString_Phone.DescId = zc_ObjectString_ContactPerson_Phone()
                                   
+            -- параметры для подразделения
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                 ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
+                                AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_ProvinceCity
+                                 ON ObjectLink_Unit_ProvinceCity.ObjectId = Object_Unit.Id
+                                AND ObjectLink_Unit_ProvinceCity.DescId = zc_ObjectLink_Unit_ProvinceCity()
+            LEFT JOIN Object AS Object_ProvinceCity ON Object_ProvinceCity.Id = ObjectLink_Unit_ProvinceCity.ChildObjectId
+
+            LEFT JOIN ObjectString AS ObjectString_Unit_Address
+                                   ON ObjectString_Unit_Address.ObjectId = Object_Unit.Id
+                                  AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
           WHERE COALESCE(tmpData.Amount,0)<>0 OR COALESCE(tmpIncome.AmountIncome,0)<>0
           ORDER BY Object_Unit.ValueData 
                  , Object_Goods_View.GoodsGroupName
@@ -198,6 +218,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 28.08.18         *
  05.01.18         *
  08.07.16         *
  11.05.16         *

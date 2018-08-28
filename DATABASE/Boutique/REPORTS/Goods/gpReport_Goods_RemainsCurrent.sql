@@ -70,6 +70,7 @@ RETURNS TABLE (PartionId            Integer
 
              , PriceListId_Basis    Integer  --
              , PriceListName_Basis  TVarChar --
+             , UpdateDate_Price     TDateTime
 
              , isOlap Boolean
               )
@@ -435,6 +436,21 @@ BEGIN
                            AND Object.Id     <> zc_Currency_Basis()
                            AND vbIsOperPrice = TRUE
                         )
+
+       , tmpPriceInfo AS (SELECT ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
+                               , MAX (ObjectDate_Protocol_Update.ValueData )      AS UpdateDate
+                          FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
+                               LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
+                                                    ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                                   AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
+                               LEFT JOIN ObjectDate AS ObjectDate_Protocol_Update
+                                                    ON ObjectDate_Protocol_Update.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId --tmpPrice.PriceListItemObjectId
+                                                   AND ObjectDate_Protocol_Update.DescId = zc_ObjectDate_Protocol_Update()
+                          WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
+                            AND ObjectLink_PriceListItem_PriceList.ChildObjectId = zc_PriceList_Basis() --  inPriceListId
+                          GROUP BY ObjectLink_PriceListItem_Goods.ChildObjectId
+                         )
+                  
         -- Результат
         SELECT
              tmpData.PartionId                      AS PartionId
@@ -512,6 +528,7 @@ BEGIN
            
            , zc_PriceList_Basis()  AS PriceListId_Basis
            , vbPriceListName_Basis AS PriceListName_Basis
+           , COALESCE (tmpPriceInfo.UpdateDate, NULL) :: TDateTime AS UpdateDate_Price
            
            , CASE WHEN COALESCE (tmpData.byOlap, 0) > 0 THEN TRUE ELSE FALSE END :: Boolean AS isOlap
 
@@ -548,6 +565,8 @@ BEGIN
             LEFT JOIN tmpGoodsPrint ON tmpGoodsPrint.UnitId    = tmpData.UnitId
                                    AND tmpGoodsPrint.PartionId = tmpData.PartionId
                                    AND tmpGoodsPrint.GoodsId   = tmpData.GoodsId
+
+            LEFT JOIN tmpPriceInfo ON tmpPriceInfo.GoodsId = tmpData.GoodsId
            ;
 
            

@@ -1002,7 +1002,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'WeighingNumber;NumOrder'
+          IndexFieldNames = 'MovementId;WeighingNumber;GoodsName'
         end>
       Params = <
         item
