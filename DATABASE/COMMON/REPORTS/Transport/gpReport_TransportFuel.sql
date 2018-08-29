@@ -55,9 +55,12 @@ BEGIN
                       INNER JOIN ObjectLink AS ObjectLink_Car_Unit 
                                             ON ObjectLink_Car_Unit.ChildObjectId =  ObjectLink_Unit_Branch.ObjectId
                                            AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
-                 WHERE ObjectLink_Unit_Branch.descid = zc_Objectlink_Unit_Branch()
-                     AND (ObjectLink_Unit_Branch.ChildObjectId = inBranchId OR inBranchId = 0)
-                     AND COALESCE (inCarId, 0) = 0
+                 WHERE COALESCE (inCarId, 0) = 0
+                     AND ObjectLink_Unit_Branch.descid = zc_Objectlink_Unit_Branch()
+                     AND ( (ObjectLink_Unit_Branch.ChildObjectId = inBranchId 
+                           OR inBranchId = 0
+                           OR (inBranchId = zc_Branch_Basis() AND COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) = 0)    
+                         )
                 )
 
            -- ѕолучили все нужные нам контейнеры по талонам, топливу и деньгам, в разрезе авто и топлива
@@ -236,7 +239,7 @@ BEGIN
               
         FROM tmpDataAll
              LEFT JOIN Object ON Object.Id = tmpDataAll.ObjectId
-             LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpDataAll.CarId
+             
              LEFT JOIN Object AS Object_From ON Object_From.Id = tmpDataAll.FromId
              LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpDataAll.MemberId
              
