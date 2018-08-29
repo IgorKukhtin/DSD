@@ -60,11 +60,12 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
           Styles.Footer = nil
           Styles.Header = nil
           object c0lPhone: TcxGridDBColumn
-            Caption = #1058#1077#1083#1077#1092#1086#1085
+            Caption = #1058#1077#1083#1077#1092#1086#1085' ('#1082#1086#1085#1090'.'#1083#1080#1094#1086')'
             DataBinding.FieldName = 'Phone'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1058#1077#1083#1077#1092#1086#1085' '#1082#1086#1085#1090#1072#1082#1090#1085#1086#1075#1086' '#1083#1080#1094#1072
             Options.Editing = False
             Width = 109
           end
@@ -206,6 +207,15 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
+          end
+          object Phone_Unit: TcxGridDBColumn
+            Caption = #1058#1077#1083#1077#1092#1086#1085' ('#1087#1086#1076#1088#1072#1079#1076'.)'
+            DataBinding.FieldName = 'Phone_Unit'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1077#1083#1077#1092#1086#1085' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+            Options.Editing = False
+            Width = 71
           end
         end
       end

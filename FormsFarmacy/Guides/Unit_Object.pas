@@ -64,6 +64,7 @@ type
     actUpdateDataSet: TdsdUpdateDataSet;
     AreaName: TcxGridDBColumn;
     actOpenAreaForm: TOpenChoiceForm;
+    Phone: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -15,6 +15,7 @@ RETURNS TABLE (Id integer, GoodsCode Integer, GoodsName TVarChar
              , UnitName TVarChar
              , AreaName TVarChar
              , Address_Unit TVarChar
+             , Phone_Unit TVarChar
              , ProvinceCityName_Unit TVarChar
              , JuridicalName_Unit TVarChar
              , Phone TVarChar
@@ -145,6 +146,7 @@ BEGIN
              , Object_Unit.ValueData                        AS UnitName
              , Object_Area.ValueData                        AS AreaName
              , ObjectString_Unit_Address.ValueData          AS Address_Unit
+             , ObjectString_Unit_Phone.ValueData            AS Phone_Unit
              , Object_ProvinceCity.ValueData                AS ProvinceCityName_Unit
              , Object_Juridical.ValueData                   AS JuridicalName_Unit
 
@@ -205,6 +207,10 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Unit_Address
                                    ON ObjectString_Unit_Address.ObjectId = Object_Unit.Id
                                   AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
+            LEFT JOIN ObjectString AS ObjectString_Unit_Phone
+                                   ON ObjectString_Unit_Phone.ObjectId = Object_Unit.Id
+                                  AND ObjectString_Unit_Phone.DescId = zc_ObjectString_Unit_Phone()
+
           WHERE COALESCE(tmpData.Amount,0)<>0 OR COALESCE(tmpIncome.AmountIncome,0)<>0
           ORDER BY Object_Unit.ValueData 
                  , Object_Goods_View.GoodsGroupName

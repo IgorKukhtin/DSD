@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Unit(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , Address TVarChar
+             , Address TVarChar, Phone TVarChar
              , ProvinceCityId Integer, ProvinceCityName TVarChar
              , ParentId Integer, ParentName TVarChar
              , UserManagerId Integer, UserManagerName TVarChar, MemberName TVarChar
@@ -45,7 +45,8 @@ BEGIN
       , Object_Unit.ObjectCode                               AS Code
       , Object_Unit.ValueData                                AS Name
       , ObjectString_Unit_Address.ValueData                  AS Address
-                                                            
+      , ObjectString_Unit_Phone.ValueData                    AS Phone
+
       , Object_ProvinceCity.Id                               AS ProvinceCityId
       , Object_ProvinceCity.ValueData                        AS ProvinceCityName
                                                             
@@ -129,6 +130,10 @@ BEGIN
                                ON ObjectString_Unit_Address.ObjectId = Object_Unit.Id
                               AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
 
+        LEFT JOIN ObjectString AS ObjectString_Unit_Phone
+                               ON ObjectString_Unit_Phone.ObjectId = Object_Unit.Id
+                              AND ObjectString_Unit_Phone.DescId = zc_ObjectString_Unit_Phone()
+
         LEFT JOIN ObjectFloat AS ObjectFloat_TaxService
                               ON ObjectFloat_TaxService.ObjectId = Object_Unit.Id
                              AND ObjectFloat_TaxService.DescId = zc_ObjectFloat_Unit_TaxService()
@@ -183,6 +188,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.08.18         * Phone
  15.09.17         * add inisShowAll
  09.08.17         * add isReport
  08.08.17         * add ProvinceCity
