@@ -56,66 +56,45 @@ $BODY$
 BEGIN
 
     -- Ограничения по товару
-    CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
+    /*CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpChildGoods (ChildGoodsId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpFromGroup (FromId Integer) ON COMMIT DROP;
-    CREATE TEMP TABLE _tmpToGroup (ToId  Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpToGroup (ToId  Integer) ON COMMIT DROP;*/
   
-    IF inGoodsGroupId <> 0
-    THEN
-        INSERT INTO _tmpGoods (GoodsId)
-          SELECT GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup;
-    ELSE IF inGoodsId <> 0
-         THEN
-             INSERT INTO _tmpGoods (GoodsId)
-              SELECT inGoodsId;
-         ELSE
-             INSERT INTO _tmpGoods (GoodsId)
-               SELECT Object.Id FROM Object WHERE DescId = zc_Object_Goods();
-         END IF;
-    END IF;
-
-    IF inChildGoodsGroupId <> 0
-    THEN
-        INSERT INTO _tmpChildGoods (ChildGoodsId)
-          SELECT GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inChildGoodsGroupId) AS lfObject_Goods_byGoodsGroup;
-    ELSE IF inChildGoodsId <> 0
-         THEN
-             INSERT INTO _tmpChildGoods (ChildGoodsId)
-              SELECT inChildGoodsId;
-         ELSE
-             INSERT INTO _tmpChildGoods (ChildGoodsId)
-               SELECT Object.Id FROM Object WHERE DescId = zc_Object_Goods();
-         END IF;
-    END IF;
 
 
-    -- ограничения по ОТ КОГО
-    IF inFromId <> 0
-    THEN
-        INSERT INTO _tmpFromGroup (FromId)
-           SELECT UnitId FROM lfSelect_Object_Unit_byGroup (inFromId) AS lfSelect_Object_Unit_byGroup;
-    ELSE
-         INSERT INTO _tmpFromGroup (FromId)
-          SELECT Id FROM Object_Unit_View;
-    END IF;
-
-    -- ограничения по КОМУ
-    IF inToId <> 0
-    THEN
-        INSERT INTO _tmpToGroup (ToId)
-           SELECT UnitId FROM lfSelect_Object_Unit_byGroup (inToId) AS lfSelect_Object_Unit_byGroup;
-    ELSE
-        INSERT INTO _tmpToGroup (ToId)
-          SELECT Id FROM Object_Unit_View ;
-    END IF;
-
-  
     -- Результат
     RETURN QUERY
-      WITH 
+
+    WITH _tmpGoods AS (SELECT lfSelect.GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect
+                       WHERE inGoodsGroupId <> 0 AND inGoodsId = 0
+                      UNION
+                       SELECT inGoodsId AS GoodsId WHERE inGoodsId <> 0
+                      UNION
+                       SELECT Object.Id AS GoodsId FROM Object WHERE Object.DescId = zc_Object_Goods() AND inGoodsGroupId = 0 AND inGoodsId = 0
+                      )
+
+ , _tmpChildGoods AS (SELECT lfSelect.GoodsId AS ChildGoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inChildGoodsGroupId) AS lfSelect
+                       WHERE inChildGoodsGroupId <> 0 AND inChildGoodsId = 0
+                      UNION
+                       SELECT inChildGoodsId AS ChildGoodsId WHERE inChildGoodsId <> 0
+                      UNION
+                       SELECT Object.Id AS ChildGoodsId FROM Object WHERE Object.DescId = zc_Object_Goods() AND inChildGoodsGroupId = 0 AND inChildGoodsId = 0
+                      )
+    -- ограничения по ОТ КОГО
+   , _tmpFromGroup AS (SELECT lfSelect.UnitId AS FromId FROM  lfSelect_Object_Unit_byGroup (inFromId) AS lfSelect
+                       WHERE inFromId <> 0
+                      UNION
+                       SELECT Object.Id AS FromId FROM Object WHERE Object.DescId = zc_Object_Unit() AND inFromId = 0
+                      )
+       -- ограничения по КОМУ
+     , _tmpToGroup AS (SELECT lfSelect.UnitId AS ToId FROM  lfSelect_Object_Unit_byGroup (inToId) AS lfSelect
+                       WHERE inToId <> 0
+                      UNION
+                       SELECT Object.Id AS ToId FROM Object WHERE Object.DescId = zc_Object_Unit() AND inToId = 0
+                      )
            -- данные первого периода
-           tmpMI_ContainerIn1 AS
+         , tmpMI_ContainerIn1 AS
                        (SELECT MIContainer.OperDate                                 AS OperDate
                              , MIContainer.MovementId                               AS MovementId
                              , MIContainer.MovementItemId                           AS MovementItemId 
@@ -1097,4 +1076,6 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_ProductionUnion_Olap (inStartDate:= '01.06.2018', inEndDate:= '01.06.2018', inStartDate2:= '05.06.2017', inEndDate2:= '05.06.2017', inIsMovement:= FALSE, inIsPartion:= FALSE, inGoodsGroupId:= 0, inGoodsId:= 0, inChildGoodsGroupId:= 0, inChildGoodsId:=0, inFromId:= 0, inToId:= 0, inSession:= zfCalc_UserAdmin()) limit 1;
+-- SELECT * FROM gpReport_ProductionUnion_Olap (inStartDate:= '01.06.2018', inEndDate:= '30.06.2018', inStartDate2:= '01.07.2018', inEndDate2:= '31.07.2018', inIsMovement:= FALSE, inIsPartion:= FALSE, inGoodsGroupId:= 0, inGoodsId:= 0, inChildGoodsGroupId:= 0, inChildGoodsId:=0, inFromId:= 8449, inToId:= 8458, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_ProductionUnion_Olap (inStartDate:= '01.06.2018', inEndDate:= '30.06.2018', inStartDate2:= '01.07.2018', inEndDate2:= '31.07.2018', inIsMovement:= FALSE, inIsPartion:= FALSE, inGoodsGroupId:= 0, inGoodsId:= 0, inChildGoodsGroupId:= 0, inChildGoodsId:=0, inFromId:= 8447, inToId:= 8458, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_ProductionUnion_Olap (inStartDate:= '01.06.2018', inEndDate:= '30.06.2018', inStartDate2:= '01.07.2018', inEndDate2:= '31.07.2018', inIsMovement:= FALSE, inIsPartion:= FALSE, inGoodsGroupId:= 0, inGoodsId:= 0, inChildGoodsGroupId:= 0, inChildGoodsId:=0, inFromId:= 8447, inToId:= 8447, inSession:= zfCalc_UserAdmin());
