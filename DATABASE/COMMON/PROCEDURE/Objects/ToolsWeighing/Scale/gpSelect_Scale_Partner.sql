@@ -92,9 +92,6 @@ BEGIN
                                 LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
                                                                                -- AND View_Contract.isErased = FALSE
                                                                                -- AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
-
-where Object_Partner.DescId = zc_Object_Partner()
-   and Object_Partner.Id = 256487 
                            LIMIT 1
                           )
           , tmpPrintKindItem AS (SELECT * FROM lpSelect_Object_PrintKindItem())

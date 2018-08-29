@@ -18,22 +18,22 @@ RETURNS TABLE (
     Id_retail           Integer,    -- ИД товара  !!!ВСЕГДА НБ, не так как в дргих запросах!!!
     Code                Integer,    -- Код товара
     GoodsName           TVarChar,   -- Наименование товара
-    LastPrice           TFloat,     -- Текущая цена
-    LastPrice_to        TFloat,     -- Текущая цена - inUnitId_to
+    LastPrice           TFloat,     -- !!! Текущая цена со скидкой !!!
+--    LastPrice_to        TFloat,     -- Текущая цена - inUnitId_to
     RemainsCount        TFloat,     -- Остаток
-    RemainsCount_to     TFloat,     -- Остаток - Подразделение (с которым есть сравнение цен)
+--    RemainsCount_to     TFloat,     -- Остаток - Подразделение (с которым есть сравнение цен)
     NDS                 TFloat,     -- ставка НДС
     NewPrice            TFloat,     -- Новая цена
-    NewPrice_to         TFloat,     -- Новая цена
+--    NewPrice_to         TFloat,     -- Новая цена
     PriceFix_Goods      TFloat  ,   -- фиксированная цена сети
     MinMarginPercent    TFloat,     -- минимальный % отклонения
     PriceDiff           TFloat,     -- % отклонения
-    PriceDiff_to        TFloat,     -- % отклонения - inUnitId_to
+--    PriceDiff_to        TFloat,     -- % отклонения - inUnitId_to
     ExpirationDate      TDateTime,  -- Срок годности
     JuridicalId         Integer,    -- Поставщик Id
     JuridicalName       TVarChar,   -- Поставщик
     Juridical_Price     TFloat,     -- Цена у поставщика
-    MarginPercent       TFloat,     -- % наценки для цены со скидкой
+    MarginPercent       TFloat,     -- !!! % наценки для цены со скидкой !!!
     Juridical_GoodsName TVarChar,   -- Наименование у поставщика
     ProducerName        TVarChar,   -- производитель
     ContractId          Integer,    -- договор Ид
@@ -45,7 +45,8 @@ RETURNS TABLE (
     SumReprice          TFloat,     -- сумма переоценки
     MidPriceSale        TFloat,     -- средняя цена остатка
     MidPriceDiff        TFloat,     -- отклонение от средняя цена остатка
---    MinExpirationDate   TDateTime,  -- Минимальный срок годности препарата на точке
+    MinExpirationDate   TDateTime,  -- Минимальный срок годности препарата на точке
+--    MinExpirationDate_to TDateTime, -- Минимальный срок годности препарата на точке  - Подразделение (с которым есть сравнение цен)
     isOneJuridical      Boolean ,   -- один поставщик (да/нет)
 --    isPriceFix          Boolean ,   -- фиксированная цена точки
 --    isIncome            Boolean ,   -- приход сегодня
@@ -77,7 +78,8 @@ BEGIN
              INNER JOIN ObjectLink AS OL_PriceChange_Retail
                                    ON OL_PriceChange_Retail.ObjectId      = Object_PriceChange.Id
                                   AND OL_PriceChange_Retail.DescId        = zc_ObjectLink_PriceChange_Retail()
-                                  AND OL_PriceChange_Retail.ChildObjectId IN (inUnitId_to, inUnitId)
+                                  AND OL_PriceChange_Retail.ChildObjectId = inUnitId
+                                  -- AND OL_PriceChange_Retail.ChildObjectId = IN (inUnitId_to, inUnitId)
              INNER JOIN ObjectLink AS OL_PriceChange_Goods
                                    ON OL_PriceChange_Goods.ObjectId = Object_PriceChange.Id
                                   AND OL_PriceChange_Goods.DescId   = zc_ObjectLink_PriceChange_Goods()
@@ -92,8 +94,8 @@ BEGIN
                                   AND OF_PercentMarkup.DescId   = zc_ObjectFloat_PriceChange_PercentMarkup()
         WHERE Object_PriceChange.DescId   = zc_Object_PriceChange()
           AND Object_PriceChange.isErased = FALSE
-          AND OF_PercentMarkup.ValueData > 0
-          AND COALESCE (OF_FixValue.ValueData, 0) = 0
+          AND OF_PercentMarkup.ValueData > 0          -- !!! только если установлен % наценки для цены со скидкой
+          AND COALESCE (OF_FixValue.ValueData, 0) = 0 -- !!! только если НЕ установлена фиксированная цена со скидкой !!!
        );
 
     ANALYZE _tmpPriceChange;
@@ -124,37 +126,12 @@ BEGIN
                                       AND ObjectLink_Goods_Object.DescId   = zc_ObjectLink_Goods_Object()
                                       AND ObjectLink_Goods_Object.ChildObjectId = 4
              )
-  , RemainsTo AS
-       (SELECT
-            -- !!!временно захардкодил, будет всегда товар НеБолей!!!
-            ObjectLink_Child_NB.ChildObjectIdNB AS GoodsId         -- здесь товар
-          , Container.ObjectId                  AS GoodsId_retail  -- здесь товар "сети"
-          , MIN (COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())) :: TDateTime AS MinExpirationDate -- Срок годности
-          , SUM (Container.Amount)  :: TFloat   AS Amount
-        FROM Container
-            INNER JOIN ObjectLink_Child_NB AS ObjectLink_Child_NB
-                                           ON ObjectLink_Child_NB.ChildObjectId = Container.ObjectID
-            LEFT OUTER JOIN ContainerLinkObject AS CLO_PartionMovementItem
-                                                ON CLO_PartionMovementItem.ContainerId = Container.Id
-                                               AND CLO_PartionMovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
-            LEFT OUTER JOIN Object AS Object_PartionMovementItem
-                                   ON Object_PartionMovementItem.Id = CLO_PartionMovementItem.ObjectId
-            LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
-                                              ON MIDate_ExpirationDate.MovementItemId = Object_PartionMovementItem.ObjectCode
-                                             AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
-        WHERE Container.DescId = zc_Container_Count()
-          AND Container.WhereObjectId = inUnitId_to
-          AND Container.Amount <> 0
-        GROUP BY ObjectLink_Child_NB.ChildObjectIdNB
-               , Container.ObjectId
-        HAVING SUM (Container.Amount) > 0
-       )
   , tmpGoodsView AS (SELECT Object_Goods_View.*
-                          , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
+                          -- , COALESCE (ObjectBoolean_Goods_SP.ValueData, False) :: Boolean  AS isSP
                      FROM Object_Goods_View
                          INNER JOIN _tmpPriceChange ON _tmpPriceChange.GoodsId = Object_Goods_View.Id
                          -- получаем GoodsMainId
-                         LEFT JOIN  ObjectLink AS ObjectLink_Child
+                         /*LEFT JOIN  ObjectLink AS ObjectLink_Child
                                                ON ObjectLink_Child.ChildObjectId = Object_Goods_View.Id
                                               AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
                          LEFT JOIN  ObjectLink AS ObjectLink_Main
@@ -163,7 +140,7 @@ BEGIN
 
                          LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP
                                                   ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId
-                                                 AND ObjectBoolean_Goods_SP.DescId   = zc_ObjectBoolean_Goods_SP()
+                                                 AND ObjectBoolean_Goods_SP.DescId   = zc_ObjectBoolean_Goods_SP()*/
                      WHERE Object_Goods_View.ObjectId = inUnitId
                     )
 
@@ -273,7 +250,7 @@ BEGIN
                                     ON ObjectBoolean_Goods_IsPromo.ObjectId = SelectMinPrice_AllGoods.Partner_GoodsId
                                    AND ObjectBoolean_Goods_IsPromo.DescId = zc_ObjectBoolean_Goods_Promo()
 
-        WHERE Object_Goods.isSp = FALSE
+        -- WHERE Object_Goods.isSp = FALSE
     )
 
     SELECT

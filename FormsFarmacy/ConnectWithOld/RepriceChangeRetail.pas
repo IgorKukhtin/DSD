@@ -96,16 +96,12 @@ type
     colJuridicalId: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cdsResultisPriceFix: TBooleanField;
-    colisPriceFix: TcxGridDBColumn;
     cdsResultisIncome: TBooleanField;
-    colisIncome: TcxGridDBColumn;
     btnRepriceSelYes: TButton;
     btnRepriceSelNo: TButton;
     colId: TcxGridDBColumn;
     cdsResultisTop: TBooleanField;
     cdsResultisPromo: TBooleanField;
-    colisTop: TcxGridDBColumn;
-    colisPromo: TcxGridDBColumn;
     cdsResultMidPriceSale: TCurrencyField;
     colMidPriceSale: TcxGridDBColumn;
     cdsResultMidPriceDiff: TCurrencyField;
@@ -116,12 +112,8 @@ type
     GuidesUnit: TdsdGuides;
     cdsResultLastPrice_to: TFloatField;
     cdsResultPriceDiff_to: TFloatField;
-    colLastPrice_to: TcxGridDBColumn;
-    colPriceDiff_to: TcxGridDBColumn;
-    colRemainsCount_to: TcxGridDBColumn;
     cdsResultRemainsCount_to: TCurrencyField;
     cdsResultMinExpirationDate_to: TDateField;
-    MinExpirationDate_to: TcxGridDBColumn;
     cdsResultIsTop_Goods: TBooleanField;
     cdsResultPriceFix_Goods: TFloatField;
     colIsTop_Goods: TcxGridDBColumn;
@@ -136,7 +128,6 @@ type
     colAreaName: TcxGridDBColumn;
     cxLabel2: TcxLabel;
     TaxEdit: TcxCurrencyEdit;
-    colNewPrice_to: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     PriceMaxEdit: TcxCurrencyEdit;
     cdsResultNewPrice_to: TCurrencyField;
