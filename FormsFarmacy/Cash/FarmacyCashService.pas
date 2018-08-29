@@ -379,6 +379,8 @@ begin
               FLocalDataBaseDiff.Fields[5].AsString:=DiffCDS.Fields[5].AsString;
               FLocalDataBaseDiff.Fields[6].AsString:=DiffCDS.Fields[6].AsString;
               FLocalDataBaseDiff.Fields[7].AsString:=DiffCDS.Fields[7].AsString;
+              FLocalDataBaseDiff.Fields[8].AsString:=DiffCDS.Fields[8].AsString;
+              FLocalDataBaseDiff.Fields[9].AsString:=DiffCDS.Fields[9].AsString;
               FLocalDataBaseDiff.Post;
               DiffCDS.Next;
            end;

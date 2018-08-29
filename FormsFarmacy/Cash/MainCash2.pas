@@ -16,7 +16,8 @@ uses
   cxButtons, cxNavigator, CashInterface, IniFIles, cxImageComboBox, dxmdaset,
   ActiveX,  Math, ShellApi,
   VKDBFDataSet, FormStorage, CommonData, ParentForm, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, LocalStorage, cxGridExportLink;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, LocalStorage, cxGridExportLink,
+  cxButtonEdit;
 
 type
   THeadRecord = record
@@ -297,6 +298,18 @@ type
     edManualDiscount: TcxCurrencyEdit;
     actDivisibilityDialog: TAction;
     edAmount: TcxTextEdit;
+    AccommodationName: TcxGridDBColumn;
+    spUpdate_Accommodation: TdsdStoredProc;
+    actOpenAccommodation: TOpenChoiceForm;
+    MemDataACCOMID: TIntegerField;
+    Label11: TLabel;
+    edPromoCode: TcxTextEdit;
+    spGet_PromoCode_by_GUID: TdsdStoredProc;
+    MainGridPriceChange: TcxGridDBColumn;
+    MemDataACCOMNAME: TStringField;
+    actDeleteAccommodation: TAction;
+    mmDeleteAccommodation: TMenuItem;
+    spDelete_Accommodation: TdsdStoredProc;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -363,7 +376,14 @@ type
     procedure edAmountKeyPress(Sender: TObject; var Key: Char);
     procedure edAmountKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
-    procedure edAmountExit(Sender: TObject); //***12.02.18
+    procedure edAmountExit(Sender: TObject);
+    procedure edPromoCodeExit(Sender: TObject);
+    procedure edPromoCodeKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure edPromoCodeKeyPress(Sender: TObject; var Key: Char);
+    procedure actDeleteAccommodationExecute(Sender: TObject);
+    procedure AccommodationNamePropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer); //***12.02.18
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -432,6 +452,8 @@ type
     function GetAmount : currency;
   public
     procedure pGet_OldSP(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP: String; var AOperDateSP : TDateTime);
+    procedure SetPromoCode(APromoCodeId: Integer; APromoName, APromoCodeGUID: String;
+      APromoCodeChangePercent: currency);
   end;
 
 
@@ -569,7 +591,7 @@ begin
   P := trunc(Price * 100);
   RI := A*P;
   S1 := IntToStr(RI);
-  if Length(S1) < 4 then
+  if Length(S1) <= 4 then
     RI := 0
   else
     RI := StrToInt(Copy(S1,1,length(S1)-4));
@@ -613,6 +635,24 @@ end;
 
 
 
+procedure TMainCashForm2.AccommodationNamePropertiesButtonClick(Sender: TObject;
+  AButtonIndex: Integer);
+begin
+
+  actOpenAccommodation.Execute;
+  if actOpenAccommodation.GuiParams.ParamByName('Key').Value <> Null then
+  try
+    RemainsCDS.DisableControls;
+    RemainsCDS.Edit;
+    RemainsCDS.FieldByName('AccommodationId').AsVariant     := actOpenAccommodation.GuiParams.ParamByName('Key').Value;
+    RemainsCDS.FieldByName('AccommodationName').AsVariant   := actOpenAccommodation.GuiParams.ParamByName('TextValue').Value;
+    RemainsCDS.Post;
+  finally
+    RemainsCDS.EnableControls;
+  end;
+
+end;
+
 procedure TMainCashForm2.actAddDiffMemdataExecute(Sender: TObject);  // только 2 форма
 begin
 //  ShowMessage('memdat-begin');
@@ -634,6 +674,8 @@ begin
         MemData.FieldByName('MCSVALUE').AsFloat:=FLocalDataBaseDiff.FieldByName('MCSVALUE').AsFloat;
         MemData.FieldByName('RESERVED').AsFloat:=FLocalDataBaseDiff.FieldByName('RESERVED').AsFloat;
         MemData.FieldByName('NEWROW').AsBoolean:=FLocalDataBaseDiff.FieldByName('NEWROW').AsBoolean;
+        MemData.FieldByName('ACCOMID').AsVariant:=FLocalDataBaseDiff.FieldByName('ACCOMID').AsVariant;
+        MemData.FieldByName('ACCOMNAME').AsVariant:=FLocalDataBaseDiff.FieldByName('ACCOMNAME').AsVariant;
         FLocalDataBaseDiff.Edit;
         FLocalDataBaseDiff.DeleteRecord;
         FLocalDataBaseDiff.Post;
@@ -764,11 +806,35 @@ begin
   edPromoCodeChangePrice.Value := 0;
   pnlManualDiscount.Visible := false;
   edManualDiscount.Value := 0;
+  edPromoCode.Text := '';
 end;
 
 procedure TMainCashForm2.actClearMoneyExecute(Sender: TObject);
 begin
   lblMoneyInCash.Caption := '0.00';
+end;
+
+procedure TMainCashForm2.actDeleteAccommodationExecute(Sender: TObject);
+begin
+  if RemainsCDS.FieldByName('AccommodationID').IsNull then
+  begin
+    ShowMessage('Медикамент не привязан к размещению!');
+    Exit;
+  end;
+
+  if MessageDlg('Удалить привязку медикамента к размещению?',mtConfirmation,[mbYes,mbCancel], 0) <> mrYes then Exit;
+
+  spDelete_Accommodation.Execute;
+
+  try
+    RemainsCDS.DisableControls;
+    RemainsCDS.Edit;
+    RemainsCDS.FieldByName('AccommodationId').AsVariant     := Null;
+    RemainsCDS.FieldByName('AccommodationName').AsVariant   := Null;
+    RemainsCDS.Post;
+  finally
+    RemainsCDS.EnableControls;
+  end;
 end;
 
 procedure TMainCashForm2.actExecuteLoadVIPExecute(Sender: TObject);
@@ -961,8 +1027,6 @@ end;
 procedure TMainCashForm2.actManualDiscountExecute(Sender: TObject);
   var S : string; I, nRecNo : integer;
 begin
-  inherited;
-
   if (Self.FormParams.ParamByName('SPTax').Value <> 0)
      and (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
   begin
@@ -978,7 +1042,7 @@ begin
 
   if FormParams.ParamByName('PromoCodeGUID').Value <> '' then
   begin
-    ShowMessage('Установлен промокод.'#13#10'Для променениея ручной скидки обнулите чек и набрать позиции заново..');
+    ShowMessage('Установлен промокод.'#13#10'Для променениея ручной скидки обнулите промокод..');
     Exit;
   end;
 
@@ -996,6 +1060,16 @@ begin
   FormParams.ParamByName('ManualDiscount').Value := I;
   pnlManualDiscount.Visible := FormParams.ParamByName('ManualDiscount').Value > 0;
   edManualDiscount.Value := FormParams.ParamByName('ManualDiscount').Value;
+
+  FormParams.ParamByName('PromoCodeID').Value             := 0;
+  FormParams.ParamByName('PromoCodeGUID').Value           := '';
+  FormParams.ParamByName('PromoName').Value               := '';
+  FormParams.ParamByName('PromoCodeChangePercent').Value  := 0;
+
+  pnlPromoCode.Visible          := False;
+  lblPromoName.Caption          := '';
+  lblPromoCode.Caption          := '';
+  edPromoCodeChangePrice.Value  := 0;
 
   CheckCDS.DisableControls;
   CheckCDS.Filtered := False;
@@ -1568,27 +1642,13 @@ begin
 
 end;
 
-procedure TMainCashForm2.actSetPromoCodeExecute(Sender: TObject);
+procedure TMainCashForm2.SetPromoCode(APromoCodeId: Integer; APromoName, APromoCodeGUID: String;
+  APromoCodeChangePercent: currency);
 var
-  PromoCodeId, nRecNo: Integer;
-  PromoName, PromoCodeGUID: String;
-  PromoCodeChangePercent: currency;
+  nRecNo: Integer;
 begin
 
-  with TPromoCodeDialogForm.Create(nil) do
-  try
-     PromoCodeId            := Self.FormParams.ParamByName('PromoCodeID').Value;
-     PromoCodeGUID          := Self.FormParams.ParamByName('PromoCodeGUID').Value;
-     PromoName              := Self.FormParams.ParamByName('PromoName').Value;
-     PromoCodeChangePercent := Self.FormParams.ParamByName('PromoCodeChangePercent').Value;
-     if not PromoCodeDialogExecute(PromoCodeId, PromoCodeGUID, PromoName, PromoCodeChangePercent)
-     then exit;
-  finally
-     Free;
-  end;
-  //
-
-  if PromoCodeId = 0 then
+  if APromoCodeId = 0 then
   begin
     FormParams.ParamByName('PromoCodeID').Value             := 0;
     FormParams.ParamByName('PromoCodeGUID').Value           := '';
@@ -1601,19 +1661,23 @@ begin
     edPromoCodeChangePrice.Value  := 0;
   end else
   begin
-    FormParams.ParamByName('PromoCodeID').Value             := PromoCodeId;
-    FormParams.ParamByName('PromoCodeGUID').Value           := PromoCodeGUID;
-    FormParams.ParamByName('PromoName').Value               := PromoName;
-    FormParams.ParamByName('PromoCodeChangePercent').Value  := PromoCodeChangePercent;
+    FormParams.ParamByName('PromoCodeID').Value             := APromoCodeId;
+    FormParams.ParamByName('PromoCodeGUID').Value           := APromoCodeGUID;
+    FormParams.ParamByName('PromoName').Value               := APromoName;
+    FormParams.ParamByName('PromoCodeChangePercent').Value  := APromoCodeChangePercent;
     //***27.06.18
 
     FormParams.ParamByName('ManualDiscount').Value          := 0;
 
-    pnlPromoCode.Visible          := PromoCodeId > 0;
-    lblPromoName.Caption          := '  ' + PromoName + '  ';
-    lblPromoCode.Caption          := '  ' + PromoCodeGUID + '  ';
-    edPromoCodeChangePrice.Value  := PromoCodeChangePercent;
+    pnlPromoCode.Visible          := APromoCodeId > 0;
+    lblPromoName.Caption          := '  ' + APromoName + '  ';
+    lblPromoCode.Caption          := '  ' + APromoCodeGUID + '  ';
+    edPromoCodeChangePrice.Value  := APromoCodeChangePercent;
   end;
+
+  FormParams.ParamByName('ManualDiscount').Value            := 0;
+  pnlManualDiscount.Visible := false;
+  edManualDiscount.Value := 0;
 
   CheckCDS.DisableControls;
   CheckCDS.Filtered := False;
@@ -1652,6 +1716,78 @@ begin
     CheckCDS.EnableControls;
   end;
   CalcTotalSumm;
+end;
+
+procedure TMainCashForm2.actSetPromoCodeExecute(Sender: TObject);
+var
+  PromoCodeId, nRecNo: Integer;
+  PromoName, PromoCodeGUID: String;
+  PromoCodeChangePercent: currency;
+begin
+
+  with TPromoCodeDialogForm.Create(nil) do
+  try
+     PromoCodeId            := Self.FormParams.ParamByName('PromoCodeID').Value;
+     PromoCodeGUID          := Self.FormParams.ParamByName('PromoCodeGUID').Value;
+     PromoName              := Self.FormParams.ParamByName('PromoName').Value;
+     PromoCodeChangePercent := Self.FormParams.ParamByName('PromoCodeChangePercent').Value;
+     if not PromoCodeDialogExecute(PromoCodeId, PromoCodeGUID, PromoName, PromoCodeChangePercent)
+     then exit;
+  finally
+     Free;
+  end;
+
+  SetPromoCode(PromoCodeId, PromoName, PromoCodeGUID, PromoCodeChangePercent);
+end;
+
+procedure TMainCashForm2.edPromoCodeExit(Sender: TObject);
+begin
+  if Length(trim(edPromoCode.Text)) = 8 then
+  begin
+    try
+      FormParams.ParamByName('PromoCodeGUID').Value := trim(edPromoCode.Text);
+      spGet_PromoCode_by_GUID.Execute;
+      SetPromoCode(FormParams.ParamByName('PromoCodeID').Value,
+        FormParams.ParamByName('PromoName').Value,
+        FormParams.ParamByName('PromoCodeGUID').Value,
+        FormParams.ParamByName('PromoCodeChangePercent').Value);
+        ActiveControl := MainGrid;
+    Except ON E:Exception do
+      Begin
+        ShowMessage('Ошибка: ' + E.Message);
+        ActiveControl := edPromoCode;
+      End;
+    end;
+  end
+  else
+  begin
+    if Length(trim(edPromoCode.Text)) <> 0 then
+    begin
+      ActiveControl := edPromoCode;
+      ShowMessage ('Ошибка. Значение <Промокод> не определено. Длина промокода должна быть 8 символов');
+    end else SetPromoCode(0, '', '', 0);
+  end;
+end;
+
+procedure TMainCashForm2.edPromoCodeKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (Shift = []) then
+    case Key of
+      VK_RETURN : PostMessage(Handle, CM_DIALOGKEY, VK_Tab, 0);
+      VK_ESCAPE :
+        begin
+          edPromoCode.Text := FormParams.ParamByName('PromoCodeGUID').Value;
+          PostMessage(Handle, CM_DIALOGKEY, VK_Tab, 0);
+        end;
+    end;
+end;
+
+procedure TMainCashForm2.edPromoCodeKeyPress(Sender: TObject; var Key: Char);
+begin
+{  if not CharInSet(Key, [#8, '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+    'a', 'b', 'c', 'd', 'e', 'f',
+    'A', 'B', 'C', 'D', 'E', 'F']) then Key:= #0;}
 end;
 
 procedure TMainCashForm2.actSetRimainsFromMemdataExecute(Sender: TObject);  // только 2 форма
@@ -1700,6 +1836,8 @@ begin
         RemainsCDS.FieldByName('Remains').asCurrency := MemData.FieldByName('Remains').asCurrency;
         RemainsCDS.FieldByName('MCSValue').asCurrency := MemData.FieldByName('MCSValue').asCurrency;
         RemainsCDS.FieldByName('Reserved').asCurrency := MemData.FieldByName('Reserved').asCurrency;
+        RemainsCDS.FieldByName('AccommodationID').AsVariant := MemData.FieldByName('ACCOMID').AsVariant;
+        RemainsCDS.FieldByName('AccommodationName').AsVariant := MemData.FieldByName('ACCOMNAME').AsVariant;
         RemainsCDS.Post;
       End
       else
@@ -1717,6 +1855,8 @@ begin
               - CheckCDS.FieldByName('Amount').asCurrency;}
           RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency
                                                         - Amount_find;
+          RemainsCDS.FieldByName('AccommodationID').AsVariant := MemData.FieldByName('ACCOMID').AsVariant;
+          RemainsCDS.FieldByName('AccommodationName').AsVariant := MemData.FieldByName('ACCOMNAME').AsVariant;
           RemainsCDS.Post;
         End;
       End;
@@ -1808,6 +1948,8 @@ begin
         RemainsCDS.FieldByName('Price').asCurrency := MemData.FieldByName('Price').asCurrency;
         RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency - MemData.FieldByName('Remains').asCurrency - MemData.FieldByName('Reserved').asCurrency;
         RemainsCDS.FieldByName('Reserved').asCurrency :=  RemainsCDS.FieldByName('Reserved').asCurrency + MemData.FieldByName('Reserved').asCurrency;
+        RemainsCDS.FieldByName('AccommodationID').AsVariant := MemData.FieldByName('ACCOMID').AsVariant;
+        RemainsCDS.FieldByName('AccommodationName').AsVariant := MemData.FieldByName('ACCOMNAME').AsVariant;
         RemainsCDS.Post;
       End
       else
@@ -1824,6 +1966,8 @@ begin
               - CheckCDS.FieldByName('Amount').asCurrency;}
           RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency
                                                         - Amount_find;
+          RemainsCDS.FieldByName('AccommodationID').AsVariant := MemData.FieldByName('ACCOMID').AsVariant;
+          RemainsCDS.FieldByName('AccommodationName').AsVariant := MemData.FieldByName('ACCOMNAME').AsVariant;
           RemainsCDS.Post;
         End;
       End;
@@ -2579,10 +2723,82 @@ begin
                lPrice_bySoldRegim := GetPrice(SourceClientDataSet.FieldByName('Price').asCurrency, Self.FormParams.ParamByName('ManualDiscount').Value);
              end else
                   begin
+                      // Если есть цена со скидкой
+                    if SourceClientDataSet.FieldByName('PriceChange').asCurrency > 0 then
+                    begin
+                   {   with TTaskDialog.Create(self) do
+                      try
+                        Caption := Self.Caption;
+                        Title := 'Вставка медикамента в чек';
+                        Text := 'Выбор цены для медикамента';
+                        CommonButtons := [];
+                        with TTaskDialogButtonItem(Buttons.Add) do
+                        begin
+                          Caption := 'Использовать прайсовую цену: ' + SourceClientDataSet.FieldByName('Price').AsString;
+                          ModalResult := mrOk;
+                        end;
+                        with TTaskDialogButtonItem(Buttons.Add) do
+                        begin
+                          Caption := 'Использовать цену со скидкой: ' + SourceClientDataSet.FieldByName('PriceChange').AsString;
+                          ModalResult := mrYes;
+                        end;
+                        with TTaskDialogButtonItem(Buttons.Add) do
+                        begin
+                          Caption := 'Отмена';
+                          ModalResult := mrCancel;
+                        end;
+                        Flags := [tfUseCommandLinks];
+                        MainIcon := tdiNone;
+                        if Execute then
+                          case ModalResult of
+                            mrOk :
+                              begin
+                                 // цена БЕЗ скидки
+                                 lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
+                                 // цена СО скидкой в этом случае такая же
+                                 lPrice_bySoldRegim := lPriceSale_bySoldRegim;
+                              end;
+                            mrYes :
+                              begin
+                                 // цена БЕЗ скидки
+                                 lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
+                                 // цена СО скидкой в этом случае такая же
+                                 lPrice_bySoldRegim := SourceClientDataSet.FieldByName('PriceChange').asCurrency;
+                              end;
+                            mrCancel : Exit;
+                          end
+                        else Exit;
+                      finally
+                        Free;
+                      end;}
+
+                      case MessageDlg('Выбор цены для медикамента'#13#10#13#10 +
+                        'Yes - Использовать прайсовую цену: ' + SourceClientDataSet.FieldByName('Price').AsString + #13#10 +
+                        'No - Использовать цену со скидкой: ' + SourceClientDataSet.FieldByName('PriceChange').AsString
+                        ,mtConfirmation,[mbYes,mbNo,mbCancel], 0) of
+                        mrYes :
+                          begin
+                             // цена БЕЗ скидки
+                             lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
+                             // цена СО скидкой в этом случае такая же
+                             lPrice_bySoldRegim := lPriceSale_bySoldRegim;
+                          end;
+                        mrNo :
+                          begin
+                             // цена БЕЗ скидки
+                             lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
+                             // цена СО скидкой
+                             lPrice_bySoldRegim := SourceClientDataSet.FieldByName('PriceChange').asCurrency;
+                          end;
+                         mrCancel : Exit;
+                      end;
+                    end else
+                    begin
                        // цена БЕЗ скидки
                        lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
                        // цена СО скидкой в этом случае такая же
                        lPrice_bySoldRegim := lPriceSale_bySoldRegim;
+                    end;
                   end
        end
   else //это ВОЗВРАТ
@@ -2636,6 +2852,13 @@ begin
               begin
                  lChangePercent     := Self.FormParams.ParamByName('ManualDiscount').Value;
                  lSummChangePercent := (lPriceSale_bySoldRegim - lPrice_bySoldRegim);
+              end
+         else if Assigned(SourceClientDataSet.FindField('PriceChange')) and
+                 (SourceClientDataSet.FieldByName('PriceChange').asCurrency > 0) and
+                 (SourceClientDataSet.FieldByName('PriceChange').asCurrency = lPrice_bySoldRegim) then
+              begin
+                lChangePercent     := 0;
+                lSummChangePercent := (lPriceSale_bySoldRegim - lPrice_bySoldRegim);
               end
          else begin
                 lChangePercent     := 0;
@@ -3021,6 +3244,7 @@ begin
   edPromoCodeChangePrice.Value := 0;
   pnlManualDiscount.Visible := false;
   edManualDiscount.Value := 0;
+  edPromoCode.Text := '';
   try
     CheckCDS.EmptyDataSet;
   finally
@@ -3184,7 +3408,7 @@ end;
 function TMainCashForm2.PutCheckToCash(SalerCash: Currency;
   PaidType: TPaidType; out AFiscalNumber, ACheckNumber: String; isFiscal: boolean = true): boolean;
 var str_log_xml : String; Disc: Currency;
-    i : Integer;
+    i, PosDisc : Integer;
 {------------------------------------------------------------------------------}
   function PutOneRecordToCash: boolean; //Продажа одного наименования
   begin
@@ -3210,7 +3434,60 @@ begin
       AFiscalNumber := Cash.FiscalNumber
     else
       AFiscalNumber := '';
-    str_log_xml:=''; i:=0; Disc:= 0;
+    Disc:= 0; PosDisc:= 0;
+
+    // Контроль чека до печати
+    with CheckCDS do
+    begin
+      // Определяем сумму скидки наценки (скидки)
+      First;
+      while not EOF do
+      begin
+        if CheckCDS.FieldByName('Amount').asCurrency >= 0.001 then
+            Disc := Disc + (FieldByName('Summ').asCurrency - GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency));
+        Next;
+      end;
+
+      // Если есть скидка находим товар с суммой больше скидки
+      if Disc < 0 then
+      begin
+        Last;
+        while not BOF do
+        begin
+          if (GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency) + Disc) > 0 then
+          begin
+            PosDisc:= RecNo;
+            Break;
+          end;
+          Prior;
+        end;
+      end;
+
+      // Если есть скидка и нет товара с суммой больше скидки то ищем товар рапвный скидке
+      if Disc < 0 then
+      begin
+        Last;
+        while not BOF do
+        begin
+          if (GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency) + Disc) >= 0 then
+          begin
+            PosDisc:= RecNo;
+            Break;
+          end;
+          Prior;
+        end;
+      end;
+
+      if (Disc < 0) and (PosDisc = 0) then
+      begin
+        ShowMessage('Сумма скидки по чеку:' + FormatCurr('0.00', Disc) + #13#10 +
+          'В чеке не найден товар на который можно применить скидку по округлению копеек...');
+        Exit;
+      end;
+    end;
+
+    // Непосредственно печать чека
+    str_log_xml:=''; i:=0;
     result := not Assigned(Cash) or Cash.AlwaysSold or Cash.OpenReceipt(isFiscal);
     with CheckCDS do
     begin
@@ -3245,14 +3522,18 @@ begin
                               + '<Discount>"' + CurrToStr(FieldByName('Summ').asCurrency - GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency)) + '"</Discount>'
                               + '</Items>';
                   end;
-                  Disc := Disc + (FieldByName('Summ').asCurrency - GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency));
+                  if (Disc <> 0) and (PosDisc = RecNo) then
+                  begin
+                    if Assigned(Cash) then Cash.DiscountGoods(Disc);
+                    Disc := 0;
+                  end;
               end;
            end;
         Next;
       end;
       if Assigned(Cash) AND not Cash.AlwaysSold then
       begin
-        if Disc <> 0 then Cash.DiscountGoods(Disc);
+        if (Disc <> 0) and (PosDisc = 0) then Cash.DiscountGoods(Disc);
         Cash.SubTotal(true, true, 0, 0);
         Cash.TotalSumm(SalerCash, PaidType);
         result := Cash.CloseReceiptEx(ACheckNumber); //Закрыли чек
@@ -3480,6 +3761,14 @@ begin
                                                                    Self.FormParams.ParamByName('ManualDiscount').Value);
             // и УСТАНОВИМ скидку
             checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('ManualDiscount').Value;
+            checkCDS.FieldByName('SummChangePercent').asCurrency :=
+                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency) -
+                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency);
+        end else if (checkCDS.FieldByName('PriceSale').asCurrency <> checkCDS.FieldByName('Price').asCurrency) and
+          (checkCDS.FieldByName('Price').asCurrency = RemainsCDS.FieldByName('PriceChange').asCurrency) then
+        begin
+            // пересчитаем сумму скидки
+            checkCDS.FieldByName('ChangePercent').asCurrency     := 0;
             checkCDS.FieldByName('SummChangePercent').asCurrency :=
                 GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency) -
                 GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency);

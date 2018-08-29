@@ -313,6 +313,15 @@ inherited MainCashForm2: TMainCashForm2
           Options.Editing = False
           Width = 80
         end
+        object MainGridPriceChange: TcxGridDBColumn
+          Caption = #1062#1077#1085#1072' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+          DataBinding.FieldName = 'PriceChange'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.00'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 55
+        end
         object DiffSP1: TcxGridDBColumn
           Caption = #1089#1082'1'
           DataBinding.FieldName = 'DiffSP1'
@@ -700,6 +709,21 @@ inherited MainCashForm2: TMainCashForm2
           Options.Editing = False
           Width = 100
         end
+        object AccommodationName: TcxGridDBColumn
+          Caption = #1050#1086#1076' '#1087#1088#1080#1074'.'
+          DataBinding.FieldName = 'AccommodationName'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Caption = 'actOpenAccommodation'
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          Properties.OnButtonClick = AccommodationNamePropertiesButtonClick
+          HeaderAlignmentHorz = taCenter
+          Width = 46
+        end
       end
       object MainGridLevel: TcxGridLevel
         GridView = MainGridDBTableView
@@ -933,7 +957,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 1
       Top = 1
       Width = 71
-      Height = 13
+      Height = 15
       Align = alLeft
       Caption = '     '#1052#1077#1085#1077#1076#1078#1077#1088' '
       Font.Charset = DEFAULT_CHARSET
@@ -942,12 +966,13 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblCashMember: TLabel
       Left = 72
       Top = 1
-      Width = 12
-      Height = 13
+      Width = 379
+      Height = 15
       Align = alClient
       Caption = '...'
       Font.Charset = DEFAULT_CHARSET
@@ -956,12 +981,14 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = [fsItalic]
       ParentFont = False
+      ExplicitWidth = 12
+      ExplicitHeight = 13
     end
     object Label2: TLabel
       Left = 451
       Top = 1
       Width = 64
-      Height = 13
+      Height = 15
       Align = alRight
       Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' '
       Font.Charset = DEFAULT_CHARSET
@@ -970,6 +997,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblBayer: TLabel
       Left = 515
@@ -1002,7 +1030,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 1
       Top = 1
       Width = 55
-      Height = 13
+      Height = 19
       Align = alLeft
       Caption = '     '#1055#1088#1086#1077#1082#1090' '
       Font.Charset = DEFAULT_CHARSET
@@ -1011,6 +1039,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblDiscountExternalName: TLabel
       Left = 56
@@ -1031,7 +1060,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 265
       Top = 1
       Width = 114
-      Height = 13
+      Height = 19
       Align = alLeft
       Caption = #8470' '#1076#1080#1089#1082#1086#1085#1090#1085#1086#1081' '#1082#1072#1088#1090#1099' '
       Font.Charset = DEFAULT_CHARSET
@@ -1040,6 +1069,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblDiscountCardNumber: TLabel
       Left = 379
@@ -1060,7 +1090,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 489
       Top = 1
       Width = 74
-      Height = 13
+      Height = 19
       Align = alLeft
       Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
       Font.Charset = DEFAULT_CHARSET
@@ -1069,6 +1099,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblAmount: TLabel
       Left = 650
@@ -1106,11 +1137,24 @@ inherited MainCashForm2: TMainCashForm2
     Align = alTop
     TabOrder = 5
     object lbScaner: TLabel
-      Left = 185
-      Top = 2
+      Left = 159
+      Top = 3
       Width = 68
       Height = 13
       Caption = #1087#1086#1080#1089#1082' '#1087#1086' '#1064'/'#1050
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clGray
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label11: TLabel
+      Left = 241
+      Top = 3
+      Width = 50
+      Height = 13
+      Caption = #1055#1088#1086#1084#1086#1082#1086#1076
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clGray
       Font.Height = -11
@@ -1125,7 +1169,7 @@ inherited MainCashForm2: TMainCashForm2
       Properties.MaxLength = 13
       TabOrder = 0
       OnKeyPress = ceScanerKeyPress
-      Width = 172
+      Width = 146
     end
     object PanelMCSAuto: TPanel
       Left = 391
@@ -1141,7 +1185,7 @@ inherited MainCashForm2: TMainCashForm2
         Left = 0
         Top = 0
         Width = 137
-        Height = 13
+        Height = 19
         Align = alLeft
         Caption = #1040#1074#1090#1086' '#1053#1058#1047' '#1085#1072' '#1082#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' : '
         Font.Charset = DEFAULT_CHARSET
@@ -1150,6 +1194,7 @@ inherited MainCashForm2: TMainCashForm2
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
+        ExplicitHeight = 13
       end
       object edDays: TcxCurrencyEdit
         Left = 138
@@ -1157,9 +1202,20 @@ inherited MainCashForm2: TMainCashForm2
         EditValue = 0.000000000000000000
         Properties.DecimalPlaces = 2
         Properties.DisplayFormat = ',0;-,0'
+        Properties.ReadOnly = False
         TabOrder = 0
         Width = 38
       end
+    end
+    object edPromoCode: TcxTextEdit
+      Left = 297
+      Top = -1
+      Properties.MaxLength = 8
+      TabOrder = 2
+      OnExit = edPromoCodeExit
+      OnKeyDown = edPromoCodeKeyDown
+      OnKeyPress = edPromoCodeKeyPress
+      Width = 80
     end
   end
   object pnlSP: TPanel [6]
@@ -1176,7 +1232,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 1
       Top = 1
       Width = 63
-      Height = 13
+      Height = 16
       Align = alLeft
       Caption = '     '#1052#1077#1076'.'#1091#1095'.: '
       Font.Charset = DEFAULT_CHARSET
@@ -1185,12 +1241,13 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblPartnerMedicalName: TLabel
       Left = 64
       Top = 1
-      Width = 12
-      Height = 14
+      Width = 331
+      Height = 16
       Align = alClient
       Caption = '...'
       Font.Charset = DEFAULT_CHARSET
@@ -1199,12 +1256,14 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
       ParentFont = False
+      ExplicitWidth = 12
+      ExplicitHeight = 14
     end
     object Label7: TLabel
       Left = 395
       Top = 1
       Width = 26
-      Height = 13
+      Height = 16
       Align = alRight
       Caption = #1060#1048#1054' '
       Font.Charset = DEFAULT_CHARSET
@@ -1213,6 +1272,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblMedicSP: TLabel
       Left = 421
@@ -1245,7 +1305,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 1
       Top = 1
       Width = 53
-      Height = 13
+      Height = 19
       Align = alLeft
       Caption = '     '#1040#1082#1094#1080#1103': '
       Font.Charset = DEFAULT_CHARSET
@@ -1254,6 +1314,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblPromoName: TLabel
       Left = 54
@@ -1275,7 +1336,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 263
       Top = 1
       Width = 57
-      Height = 13
+      Height = 19
       Align = alLeft
       Caption = #1055#1088#1086#1084#1086#1082#1086#1076': '
       Font.Charset = DEFAULT_CHARSET
@@ -1284,6 +1345,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblPromoCode: TLabel
       Left = 320
@@ -1319,6 +1381,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 567
       Top = -1
       Properties.DisplayFormat = ',0.00;-,0.00'
+      Properties.ReadOnly = True
       TabOrder = 0
       Width = 60
     end
@@ -1337,7 +1400,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 1
       Top = 1
       Width = 94
-      Height = 13
+      Height = 19
       Align = alLeft
       Caption = '     '#1056#1091#1095#1085#1072#1103' '#1089#1082#1080#1076#1082#1072'.'
       Font.Charset = DEFAULT_CHARSET
@@ -1346,6 +1409,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object Label15: TLabel
       Left = 522
@@ -1365,6 +1429,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 567
       Top = -1
       Properties.DisplayFormat = ',0.00;-,0.00'
+      Properties.ReadOnly = True
       TabOrder = 0
       Width = 60
     end
@@ -1990,6 +2055,39 @@ inherited MainCashForm2: TMainCashForm2
     object actDivisibilityDialog: TAction
       Caption = 'actDivisibilityDialog'
     end
+    object actOpenAccommodation: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenAccommodation'
+      FormName = 'TAccommodationForm'
+      FormNameParam.Value = 'TAccommodationForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = RemainsCDS
+          ComponentItem = 'AccommodationId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = RemainsCDS
+          ComponentItem = 'AccommodationName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actDeleteAccommodation: TAction
+      Category = 'DSDLib'
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1087#1088#1080#1074#1103#1079#1082#1091' '#1090#1086#1074#1072#1088#1072' '#1082' '#1088#1072#1079#1084#1077#1097#1077#1085#1080#1102
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1087#1088#1080#1074#1103#1079#1082#1091' '#1090#1086#1074#1072#1088#1072' '#1082' '#1088#1072#1079#1084#1077#1097#1077#1085#1080#1102
+      OnExecute = actDeleteAccommodationExecute
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -2246,6 +2344,9 @@ inherited MainCashForm2: TMainCashForm2
     object mmSaveToExcel: TMenuItem
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1074' '#1101#1082#1089#1077#1083#1100
       OnClick = mmSaveToExcelClick
+    end
+    object mmDeleteAccommodation: TMenuItem
+      Action = actDeleteAccommodation
     end
   end
   object FormParams: TdsdFormParams
@@ -2978,6 +3079,13 @@ inherited MainCashForm2: TMainCashForm2
     object MemDataNEWROW: TBooleanField
       FieldName = 'NEWROW'
     end
+    object MemDataACCOMID: TIntegerField
+      FieldName = 'ACCOMID'
+    end
+    object MemDataACCOMNAME: TStringField
+      FieldName = 'ACCOMNAME'
+      Size = 3
+    end
   end
   object mdCheck: TdxMemData
     Indexes = <>
@@ -3000,5 +3108,97 @@ inherited MainCashForm2: TMainCashForm2
     OnTimer = TimerServiceRunTimer
     Left = 728
     Top = 8
+  end
+  object spUpdate_Accommodation: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Cash_Accommodation'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = RemainsCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioAccommodationId'
+        Value = Null
+        Component = RemainsCDS
+        ComponentItem = 'AccommodationId'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioAccommodationName'
+        Value = Null
+        Component = RemainsCDS
+        ComponentItem = 'AccommodationName'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 56
+    Top = 171
+  end
+  object spGet_PromoCode_by_GUID: TdsdStoredProc
+    StoredProcName = 'gpGet_PromoCode_by_GUID'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inPromoGUID'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'PromoCodeGUID'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPromoCodeID'
+        Value = 0
+        Component = FormParams
+        ComponentItem = 'PromoCodeID'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPromoName'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'PromoName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPromoCodeChangePercent'
+        Value = 0c
+        Component = FormParams
+        ComponentItem = 'PromoCodeChangePercent'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 192
+    Top = 168
+  end
+  object spDelete_Accommodation: TdsdStoredProc
+    StoredProcName = 'gpDelete_Cash_Accommodation'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = RemainsCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 56
+    Top = 219
   end
 end
