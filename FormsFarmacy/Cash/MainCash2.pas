@@ -2772,18 +2772,18 @@ begin
                         Free;
                       end;}
 
-                      case MessageDlg('Выбор цены для медикамента'#13#10#13#10 +
-                        'Yes - Использовать прайсовую цену: ' + SourceClientDataSet.FieldByName('Price').AsString + #13#10 +
-                        'No - Использовать цену со скидкой: ' + SourceClientDataSet.FieldByName('PriceChange').AsString
+                      case MessageDlg('Подтверждение цены со скидкой препарата'#13#10#13#10 +
+                        'Yes - Цена со скидкой: ' + SourceClientDataSet.FieldByName('PriceChange').AsString + #13#10 +
+                        'No - Цена БЕЗ скидки: ' + SourceClientDataSet.FieldByName('Price').AsString
                         ,mtConfirmation,[mbYes,mbNo,mbCancel], 0) of
-                        mrYes :
+                        mrNo :
                           begin
                              // цена БЕЗ скидки
                              lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
                              // цена СО скидкой в этом случае такая же
                              lPrice_bySoldRegim := lPriceSale_bySoldRegim;
                           end;
-                        mrNo :
+                        mrYes :
                           begin
                              // цена БЕЗ скидки
                              lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
