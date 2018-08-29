@@ -75,6 +75,8 @@ type
     GuidesUnitCategory: TdsdGuides;
     ceNormOfManDays: TcxCurrencyEdit;
     cxLabel16: TcxLabel;
+    cxLabel17: TcxLabel;
+    edPhone: TcxTextEdit;
   private
     { Private declarations }
   public

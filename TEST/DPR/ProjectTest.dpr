@@ -1030,7 +1030,9 @@ uses
   Report_ProductionUnion_OlapDialog in '..\..\Forms\Report\Report_ProductionUnion_OlapDialog.pas' {Report_ProductionUnion_OlapDialogForm: TParentForm},
   Report_Sale_Olap in '..\..\Forms\Report\Report_Sale_Olap.pas' {Report_Sale_OlapForm: TParentForm},
   Report_Sale_OlapDialog in '..\..\Forms\Report\Report_Sale_OlapDialog.pas' {Report_Sale_OlapDialogForm: TParentForm},
-  dsdPivotGrid in '..\..\SOURCE\COMPONENT\dsdPivotGrid.pas';
+  dsdPivotGrid in '..\..\SOURCE\COMPONENT\dsdPivotGrid.pas',
+  Report_TransportFuel in '..\..\Forms\Report\Report_TransportFuel.pas' {Report_TransportFuelForm: TParentForm},
+  Report_TransportFuelDialog in '..\..\Forms\Report\Report_TransportFuelDialog.pas' {Report_TransportFuelDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

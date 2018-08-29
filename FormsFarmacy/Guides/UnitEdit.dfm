@@ -298,6 +298,17 @@
     Top = 347
     Caption = #1053#1086#1088#1084#1072' '#1095#1077#1083#1086#1074#1077#1082#1086#1076#1085#1077#1081' '#1074' '#1084#1077#1089#1103#1094#1077
   end
+  object cxLabel17: TcxLabel
+    Left = 255
+    Top = 347
+    Caption = #1058#1077#1083#1077#1092#1086#1085
+  end
+  object edPhone: TcxTextEdit
+    Left = 255
+    Top = 370
+    TabOrder = 38
+    Width = 209
+  end
   object ActionList: TActionList
     Left = 356
     Top = 358
@@ -367,6 +378,14 @@
         Name = 'inAddress'
         Value = Null
         Component = edAddress
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPhone'
+        Value = Null
+        Component = edPhone
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -616,6 +635,13 @@
         Value = Null
         Component = edAddress
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Phone'
+        Value = Null
+        Component = edPhone
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item

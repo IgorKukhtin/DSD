@@ -3470,6 +3470,14 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdPivotGrid.pas"/>
+			<DCCReference Include="..\..\Forms\Report\Report_TransportFuel.pas">
+				<Form>Report_TransportFuelForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_TransportFuelDialog.pas">
+				<Form>Report_TransportFuelDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

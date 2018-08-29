@@ -326,6 +326,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
     object pvAmount: TcxDBPivotGridField
       Area = faData
       AreaIndex = 0
+      AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
       DataBinding.FieldName = 'Amount'
@@ -340,6 +341,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
     object pvAmount_Weight: TcxDBPivotGridField
       Area = faData
       AreaIndex = 1
+      AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076') '#1074#1077#1089
       DataBinding.FieldName = 'Amount_Weight'
@@ -354,6 +356,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
     object pvCuterCount: TcxDBPivotGridField
       Area = faData
       AreaIndex = 2
+      AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1050#1091#1090#1090#1077#1088#1086#1074' ('#1087#1088#1080#1093#1086#1076')'
       DataBinding.FieldName = 'CuterCount'
@@ -367,6 +370,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
     end
     object pvMainPrice_Calc: TcxDBPivotGridField
       AreaIndex = 27
+      AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1062#1077#1085#1072' c/c ('#1087#1088#1080#1093#1086#1076')'
       PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -378,6 +382,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
     end
     object pvMainPrice_W: TcxDBPivotGridField
       AreaIndex = 28
+      AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1062#1077#1085#1072' c/c ('#1087#1088#1080#1093#1086#1076') / '#1082#1075
       PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -389,6 +394,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
     end
     object pvSumm: TcxDBPivotGridField
       AreaIndex = 29
+      AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1057#1091#1084#1084#1072' c/c ('#1087#1088#1080#1093#1086#1076')'
       DataBinding.FieldName = 'Summ'
@@ -401,6 +407,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
     object pvChildAmount: TcxDBPivotGridField
       Area = faData
       AreaIndex = 13
+      AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
       DataBinding.FieldName = 'ChildAmount'
@@ -415,6 +422,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
     object pvChildAmount_Weight: TcxDBPivotGridField
       Area = faData
       AreaIndex = 14
+      AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076') '#1074#1077#1089
       DataBinding.FieldName = 'ChildAmount_Weight'
@@ -429,6 +437,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
     object pvChildPrice_Calc: TcxDBPivotGridField
       Area = faData
       AreaIndex = 3
+      AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1062#1077#1085#1072' c/c  ('#1088#1072#1089#1093#1086#1076')'
       PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -440,6 +449,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
     object pvChildPrice_w: TcxDBPivotGridField
       Area = faData
       AreaIndex = 4
+      AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1062#1077#1085#1072' c/c  ('#1088#1072#1089#1093#1086#1076') / '#1082#1075
       PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -451,6 +461,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
     object pvPercentOut: TcxDBPivotGridField
       Area = faData
       AreaIndex = 5
+      AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = '% '#1074#1099#1093#1086#1076#1072
       PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -462,6 +473,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
     object pvChildSumm: TcxDBPivotGridField
       Area = faData
       AreaIndex = 10
+      AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1057#1091#1084#1084#1072' c/c ('#1088#1072#1089#1093#1086#1076')'
       DataBinding.FieldName = 'ChildSumm'
@@ -474,6 +486,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
     object pvChildAmountReceipt: TcxDBPivotGridField
       Area = faData
       AreaIndex = 18
+      AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1053#1086#1088#1084#1072' ('#1088#1072#1089#1093#1086#1076')'
       DataBinding.FieldName = 'ChildAmountReceipt'
@@ -488,6 +501,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
     object pvChildAmountReceipt_Weight: TcxDBPivotGridField
       Area = faData
       AreaIndex = 15
+      AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1053#1086#1088#1084#1072' ('#1088#1072#1089#1093#1086#1076') / '#1082#1075
       DataBinding.FieldName = 'ChildAmountReceipt_Weight'
@@ -502,6 +516,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
     object pvChildSummReceipt: TcxDBPivotGridField
       Area = faData
       AreaIndex = 11
+      AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1057#1091#1084#1084#1072' '#1085#1086#1088#1084#1072' ('#1088#1072#1089#1093#1086#1076')'
       DataBinding.FieldName = 'ChildSummReceipt'
@@ -514,6 +529,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
     object pvChildSummCalc: TcxDBPivotGridField
       Area = faData
       AreaIndex = 12
+      AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1057#1091#1084#1084#1072' '#1088#1072#1089#1095#1077#1090' ('#1088#1072#1089#1093#1086#1076')'
       DataBinding.FieldName = 'ChildSummCalc'
@@ -526,6 +542,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
     object pvChildAmountCalc: TcxDBPivotGridField
       Area = faData
       AreaIndex = 16
+      AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1095#1077#1090' ('#1088#1072#1089#1093#1086#1076')'
       DataBinding.FieldName = 'ChildAmountCalc'
@@ -540,6 +557,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
     object pvChildAmountCalc_Weight: TcxDBPivotGridField
       Area = faData
       AreaIndex = 17
+      AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1095#1077#1090' ('#1088#1072#1089#1093#1086#1076') '#1074#1077#1089
       DataBinding.FieldName = 'ChildAmountCalc_Weight'
@@ -554,6 +572,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
     object pvPrice_Calc: TcxDBPivotGridField
       Area = faData
       AreaIndex = 6
+      AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1062#1077#1085#1072' c/c ('#1088#1072#1089#1093#1086#1076') '#1076#1083#1103' '#1082#1086#1083'-'#1074#1086' '#1088#1072#1089#1095#1077#1090
       PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -565,6 +584,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
     object pvPrice_w: TcxDBPivotGridField
       Area = faData
       AreaIndex = 7
+      AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1062#1077#1085#1072' c/c ('#1088#1072#1089#1093#1086#1076') '#1076#1083#1103' '#1082#1086#1083'-'#1074#1086' '#1088#1072#1089#1095#1077#1090' / '#1082#1075
       PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -576,6 +596,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
     object pvReceiptPrice_Calc: TcxDBPivotGridField
       Area = faData
       AreaIndex = 8
+      AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1062#1077#1085#1072' c/c ('#1088#1072#1089#1093#1086#1076') '#1076#1083#1103' '#1082#1086#1083'-'#1074#1086' '#1088#1072#1089#1095#1077#1090
       PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -587,6 +608,7 @@ object Report_ProductionUnion_OlapForm: TReport_ProductionUnion_OlapForm
     object pvReceiptPrice_w: TcxDBPivotGridField
       Area = faData
       AreaIndex = 9
+      AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1062#1077#1085#1072' c/c ('#1088#1072#1089#1093#1086#1076') '#1076#1083#1103' '#1082#1086#1083'-'#1074#1086' '#1088#1072#1089#1095#1077#1090' / '#1082#1075
       PropertiesClassName = 'TcxCurrencyEditProperties'

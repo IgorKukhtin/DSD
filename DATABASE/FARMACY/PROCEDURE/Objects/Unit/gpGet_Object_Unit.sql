@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Unit(
     IN inSession     TVarChar       -- сессия пользователя 
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
-               Address TVarChar, 
+               Address TVarChar, Phone TVarChar,
                ProvinceCityId Integer, ProvinceCityName TVarChar,
                ParentId Integer, ParentName TVarChar,
                UserManagerId Integer, UserManagerName TVarChar,
@@ -35,6 +35,7 @@ BEGIN
            , lfGet_ObjectCode(0, zc_Object_Unit()) AS Code
            , CAST ('' as TVarChar) AS Name
            , CAST ('' as TVarChar) AS Address
+           , CAST ('' as TVarChar) AS Phone
            
            , CAST (0 as Integer)   AS ProvinceCityId
            , CAST ('' as TVarChar) AS ProvinceCityName
@@ -78,6 +79,7 @@ BEGIN
       , Object_Unit.ObjectCode                             AS Code
       , Object_Unit.ValueData                              AS Name
       , ObjectString_Unit_Address.ValueData                AS Address
+      , ObjectString_Unit_Phone.ValueData                  AS Phone
 
       , Object_ProvinceCity.Id                             AS ProvinceCityId
       , Object_ProvinceCity.ValueData                      AS ProvinceCityName
@@ -165,6 +167,10 @@ BEGIN
                                ON ObjectString_Unit_Address.ObjectId = Object_Unit.Id
                               AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
 
+        LEFT JOIN ObjectString AS ObjectString_Unit_Phone
+                               ON ObjectString_Unit_Phone.ObjectId = Object_Unit.Id
+                              AND ObjectString_Unit_Phone.DescId = zc_ObjectString_Unit_Phone()
+
         LEFT JOIN ObjectFloat AS ObjectFloat_TaxService
                               ON ObjectFloat_TaxService.ObjectId = Object_Unit.Id
                              AND ObjectFloat_TaxService.DescId = zc_ObjectFloat_Unit_TaxService()
@@ -211,6 +217,7 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 29.08.18         * Phone
  14.05.18                                                        * add NormOfManDays
  05.05.18                                                        * add UnitCategory
  08.08.17         * add ProvinceCity

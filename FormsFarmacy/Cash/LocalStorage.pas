@@ -286,6 +286,8 @@ begin
       AddFloatField(LocalDataBaseDiff, 'MCSVALUE'); //
       AddFloatField(LocalDataBaseDiff, 'RESERVED'); //
       AddBoolField(LocalDataBaseDiff,  'NEWROW'); //
+      AddIntField(LocalDataBaseDiff,   'ACCOMID'); //
+      AddStrField(LocalDataBaseDiff,   'ACCOMNAME',3); //наименование товара
 
       LocalDataBaseDiff.CreateTable;
     end;
@@ -295,6 +297,12 @@ begin
     begin
       Open;
 
+      if FindField('LIST_UID') = nil then
+        AddIntField(LocalDataBaseDiff,  'ACCOMID');
+
+      if FindField('ACCOMNAME') = nil then
+        AddStrField(LocalDataBaseDiff,   'ACCOMNAME',3);
+
       Result := not ((FindField('ID') = nil) or
         (FindField('GOODSCODE') = nil) or
         (FindField('GOODSNAME') = nil) or
@@ -302,7 +310,9 @@ begin
         (FindField('REMAINS') = nil) or
         (FindField('MCSVALUE') = nil) or
         (FindField('RESERVED') = nil) or
-        (FindField('NEWROW') = nil));
+        (FindField('NEWROW') = nil) or
+        (FindField('ACCOMID') = nil) or
+        (FindField('ACCOMNAME') = nil));
 
       Close;
 
