@@ -1922,6 +1922,11 @@ end;
 
 procedure TLoadFormTest.LoadReportTransportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportFuelForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_TransportFuelForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportFuelDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_TransportFuelDialogForm');
+  exit;
   {
 //exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FuelForm'));

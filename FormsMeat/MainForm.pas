@@ -969,6 +969,8 @@ type
     N116: TMenuItem;
     actReport_Sale_Olap: TdsdOpenForm;
     miReport_Sale_Olap: TMenuItem;
+    actReport_TransportFuel: TdsdOpenForm;
+    miReport_TransportFuel: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
