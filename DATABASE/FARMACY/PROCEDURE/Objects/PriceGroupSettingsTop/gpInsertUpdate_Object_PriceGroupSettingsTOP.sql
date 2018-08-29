@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Object_Unit()
+-- Function: gpInsertUpdate_Object_PriceGroupSettingsTOP()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PriceGroupSettingsTOP(Integer, TVarChar, TFloat, TFloat, TVarChar);
 
