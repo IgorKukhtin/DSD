@@ -16,14 +16,15 @@ $BODY$
    DECLARE ProtocolXML TBlob;
 BEGIN
 
-   -- -- !!!ВРЕМЕННО-выкл. для всех кроме спр. физ.лиц
-   IF (SELECT Object.DescId FROM Object WHERE Object.Id = inObjectId) <> zc_Object_Member()
-   THEN
-       -- !!!ВРЕМЕННО-выкл.
-       RETURN;
-   END IF;
+       -- -- !!!ВРЕМЕННО-выкл. для всех кроме спр. физ.лиц
+       /*IF (SELECT Object.DescId FROM Object WHERE Object.Id = inObjectId) <> zc_Object_Member()
+       THEN
+           -- !!!ВРЕМЕННО-выкл.
+           RETURN;
+       END IF;*/
 
-     -- Подготавливаем XML для "стандартного" протокола
+
+       -- Подготавливаем XML для "стандартного" протокола
        WITH 
        tmpObject AS (SELECT '<Field FieldName = "Значение" FieldValue = "' || zfStrToXmlStr(Object.ValueData) || '"/>'
                          || '<Field FieldName = "Код" FieldValue = "' || Object.ObjectCode || '"/>'
