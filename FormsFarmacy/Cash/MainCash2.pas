@@ -841,9 +841,7 @@ procedure TMainCashForm2.actExecuteLoadVIPExecute(Sender: TObject);
   var lMsg: String; nRecNo : integer;
 begin
   inherited;
-  //
-  SetBlinkVIP(true);
-  //
+
   if not CheckCDS.IsEmpty then
   Begin
     ShowMessage('Текущий чек не пустой. Сначала очистите чек!');
@@ -953,6 +951,9 @@ begin
 
     pnlVIP.Visible := true;
   End;
+  //
+  SetBlinkVIP(true);
+  //
   if not gc_User.Local then
   Begin
     WaitForSingleObject(MutexVip, INFINITE);
