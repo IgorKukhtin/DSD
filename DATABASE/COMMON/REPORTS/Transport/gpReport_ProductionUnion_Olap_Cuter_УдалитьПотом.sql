@@ -1,131 +1,130 @@
--- Function: gpReport_GoodsMI_ProductionUnion ()
+-- Function: gpreport_productionunion_olap(tdatetime, tdatetime, tdatetime, tdatetime, boolean, boolean, integer, integer, integer, integer, integer, integer, tvarchar)
 
-DROP FUNCTION IF EXISTS gpReport_ProductionUnion_Olap (TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_ProductionUnion_Olap (TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+-- DROP FUNCTION gpreport_productionunion_olap(tdatetime, tdatetime, tdatetime, tdatetime, boolean, boolean, integer, integer, integer, integer, integer, integer, tvarchar);
 
-CREATE OR REPLACE FUNCTION gpReport_ProductionUnion_Olap (
-    IN inStartDate          TDateTime ,  
-    IN inEndDate            TDateTime ,
-    IN inStartDate2         TDateTime ,  
-    IN inEndDate2           TDateTime ,
-    IN inIsMovement         Boolean   ,
-    IN inIsPartion          Boolean   ,
-    IN inGoodsGroupId       Integer   ,
-    IN inGoodsId            Integer   ,
-    IN inChildGoodsGroupId  Integer   ,
-    IN inChildGoodsId       Integer   ,
-    IN inFromId             Integer   ,    -- от кого 
-    IN inToId               Integer   ,    -- кому
-    IN inSession            TVarChar       -- сессия пользователя
-)
-RETURNS TABLE (Invnumber TVarchar, OperDate TDatetime, MonthDate TDatetime
-             , isPeresort boolean, DocumentKindName TVarchar, ReceiptName TVarchar
-             , partionGoods TVarchar, partionGoods_Date TDatetime
-             , GoodsGroupName TVarchar, Goodscode integer, GoodsName TVarchar
-             , GoodskindName TVarchar, GoodskindName_Complete TVarchar
-             , MeasureName TVarchar
-             , Amount TFloat, Amount_weight TFloat, Summ TFloat
-             , ChildpartionGoods TVarchar, ChildpartionGoods_Date TDatetime
-             , ChildGoodsGroupName TVarchar, ChildGoodscode integer, ChildGoodsName TVarchar
-             , ChildGoodskindName TVarchar, ChildMeasureName TVarchar
-             , ChildAmount TFloat, ChildAmountReceipt TFloat, ChildAmountcalc TFloat, ChildAmount_weight TFloat
-             , ChildAmountReceipt_weight TFloat, ChildAmountcalc_weight TFloat
-             , ChildSumm TFloat, ChildSummReceipt TFloat, ChildSummcalc TFloat
-             , CuterCount TFloat
-             , InfoMoneyId integer, InfoMoneycode integer, InfoMoneyGroupName TVarchar
-             , InfoMoneydestinationName TVarchar, InfoMoneyName TVarchar, InfoMoneyName_all TVarchar
-             , InfoMoneyId_Detail integer, InfoMoneycode_Detail integer, InfoMoneyGroupName_Detail TVarchar
-             , InfoMoneydestinationName_Detail TVarchar, InfoMoneyName_Detail TVarchar
-             , InfoMoneyName_all_Detail TVarchar, GoodsGroupNamefull TVarchar, GoodsGroupAnalystName TVarchar
-             , TradeMarkName TVarchar, GoodstagName TVarchar, GoodsplatformName TVarchar, ChildGoodsGroupNamefull TVarchar
-             , ChildGoodsGroupAnalystName TVarchar, ChildTradeMarkName TVarchar, ChildGoodstagName TVarchar, ChildGoodsplatformName TVarchar
-             )
-AS
+CREATE OR REPLACE FUNCTION gpreport_productionunion_olap(
+    IN instartdate tdatetime,
+    IN inenddate tdatetime,
+    IN instartdate2 tdatetime,
+    IN inenddate2 tdatetime,
+    IN inismovement boolean,
+    IN inispartion boolean,
+    IN ingoodsgroupid integer,
+    IN ingoodsid integer,
+    IN inchildgoodsgroupid integer,
+    IN inchildgoodsid integer,
+    IN infromid integer,
+    IN intoid integer,
+    IN insession tvarchar)
+  RETURNS TABLE(invnumber tvarchar, operdate tdatetime, monthdate tdatetime, isperesort boolean, documentkindname tvarchar, receiptname tvarchar, partiongoods tvarchar, partiongoods_date tdatetime, goodsgroupname tvarchar, goodscode integer, goodsname tvarchar, goodskindname tvarchar, goodskindname_complete tvarchar, measurename tvarchar, amount tfloat, amount_weight tfloat, summ tfloat, childpartiongoods tvarchar, childpartiongoods_date tdatetime, childgoodsgroupname tvarchar, childgoodscode integer, childgoodsname tvarchar, childgoodskindname tvarchar, childmeasurename tvarchar, childamount tfloat, childamountreceipt tfloat, childamountcalc tfloat, childamount_weight tfloat, childamountreceipt_weight tfloat, childamountcalc_weight tfloat, childsumm tfloat, childsummreceipt tfloat, childsummcalc tfloat, cutercount tfloat, mainprice tfloat, childprice tfloat, infomoneyid integer, infomoneycode integer, infomoneygroupname tvarchar, infomoneydestinationname tvarchar, infomoneyname tvarchar, infomoneyname_all tvarchar, infomoneyid_detail integer, infomoneycode_detail integer, infomoneygroupname_detail tvarchar, infomoneydestinationname_detail tvarchar, infomoneyname_detail tvarchar, infomoneyname_all_detail tvarchar, goodsgroupnamefull tvarchar, goodsgroupanalystname tvarchar, trademarkname tvarchar, goodstagname tvarchar, goodsplatformname tvarchar, childgoodsgroupnamefull tvarchar, childgoodsgroupanalystname tvarchar, childtrademarkname tvarchar, childgoodstagname tvarchar, childgoodsplatformname tvarchar) AS
 $BODY$
 BEGIN
 
     -- Ограничения по товару
-    /*CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpChildGoods (ChildGoodsId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpFromGroup (FromId Integer) ON COMMIT DROP;
-    CREATE TEMP TABLE _tmpToGroup (ToId  Integer) ON COMMIT DROP;*/
+    CREATE TEMP TABLE _tmpToGroup (ToId  Integer) ON COMMIT DROP;
+  
+    IF inGoodsGroupId <> 0
+    THEN
+        INSERT INTO _tmpGoods (GoodsId)
+          SELECT GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup;
+    ELSE IF inGoodsId <> 0
+         THEN
+             INSERT INTO _tmpGoods (GoodsId)
+              SELECT inGoodsId;
+         ELSE
+             INSERT INTO _tmpGoods (GoodsId)
+               SELECT Object.Id FROM Object WHERE DescId = zc_Object_Goods();
+         END IF;
+    END IF;
+
+    IF inChildGoodsGroupId <> 0
+    THEN
+        INSERT INTO _tmpChildGoods (ChildGoodsId)
+          SELECT GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inChildGoodsGroupId) AS lfObject_Goods_byGoodsGroup;
+    ELSE IF inChildGoodsId <> 0
+         THEN
+             INSERT INTO _tmpChildGoods (ChildGoodsId)
+              SELECT inChildGoodsId;
+         ELSE
+             INSERT INTO _tmpChildGoods (ChildGoodsId)
+               SELECT Object.Id FROM Object WHERE DescId = zc_Object_Goods();
+         END IF;
+    END IF;
+
+
+    -- ограничения по ОТ КОГО
+    IF inFromId <> 0
+    THEN
+        INSERT INTO _tmpFromGroup (FromId)
+           SELECT UnitId FROM lfSelect_Object_Unit_byGroup (inFromId) AS lfSelect_Object_Unit_byGroup;
+    ELSE
+         INSERT INTO _tmpFromGroup (FromId)
+          SELECT Id FROM Object_Unit_View;
+    END IF;
+
+    -- ограничения по КОМУ
+    IF inToId <> 0
+    THEN
+        INSERT INTO _tmpToGroup (ToId)
+           SELECT UnitId FROM lfSelect_Object_Unit_byGroup (inToId) AS lfSelect_Object_Unit_byGroup;
+    ELSE
+        INSERT INTO _tmpToGroup (ToId)
+          SELECT Id FROM Object_Unit_View ;
+    END IF;
+
   
     -- Результат
     RETURN QUERY
-
-    WITH   _tmpGoods AS (SELECT lfSelect.GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect
-                         WHERE inGoodsGroupId <> 0 AND inGoodsId = 0
-                        UNION
-                         SELECT inGoodsId AS GoodsId WHERE inGoodsId <> 0
-                        UNION
-                         SELECT Object.Id AS GoodsId FROM Object WHERE Object.DescId = zc_Object_Goods() AND inGoodsGroupId = 0 AND inGoodsId = 0
-                        )
-
-         , _tmpChildGoods AS (SELECT lfSelect.GoodsId AS ChildGoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inChildGoodsGroupId) AS lfSelect
-                               WHERE inChildGoodsGroupId <> 0 AND inChildGoodsId = 0
-                              UNION
-                               SELECT inChildGoodsId AS ChildGoodsId WHERE inChildGoodsId <> 0
-                              UNION
-                               SELECT Object.Id AS ChildGoodsId FROM Object WHERE Object.DescId = zc_Object_Goods() AND inChildGoodsGroupId = 0 AND inChildGoodsId = 0
-                              )
-         -- ограничения по ОТ КОГО
-         , _tmpFromGroup AS (SELECT lfSelect.UnitId AS FromId FROM  lfSelect_Object_Unit_byGroup (inFromId) AS lfSelect
-                             WHERE inFromId <> 0
-                            UNION
-                             SELECT Object.Id AS FromId FROM Object WHERE Object.DescId = zc_Object_Unit() AND inFromId = 0
-                            )
-         -- ограничения по КОМУ
-         , _tmpToGroup AS (SELECT lfSelect.UnitId AS ToId FROM  lfSelect_Object_Unit_byGroup (inToId) AS lfSelect
-                           WHERE inToId <> 0
-                          UNION
-                           SELECT Object.Id AS ToId FROM Object WHERE Object.DescId = zc_Object_Unit() AND inToId = 0
-                          )
-
+      WITH 
            -- данные первого периода
-         , tmpMI_ContainerIn1 AS (SELECT MIContainer.OperDate                                 AS OperDate
-                                       , MIContainer.ObjectExtId_Analyzer                     AS FromId
-                                       , MIContainer.WhereObjectId_Analyzer                   AS ToId
-                                       , MIContainer.MovementId                               AS MovementId
-                                       , MIContainer.MovementItemId                           AS MovementItemId 
-                                       , MILO_Receipt.ObjectId                                AS ReceiptId
-                                       , COALESCE (MovementBoolean_Peresort.ValueData, FALSE) AS isPeresort
-                                       , COALESCE (MLO_DocumentKind.ObjectId, 0)              AS DocumentKindId
-                                       , MIContainer.DescId                                   AS MIContainerDescId
-                                       , MIContainer.ContainerId                              AS ContainerId
-                                       , MIContainer.ObjectId_Analyzer                        AS GoodsId
-                                       , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)       AS GoodsKindId
-                                       , SUM (MIContainer.Amount)                             AS Amount
-                                       
-                                  FROM MovementItemContainer AS MIContainer
-                                       INNER JOIN _tmpFromGroup ON _tmpFromGroup.FromId = MIContainer.ObjectExtId_Analyzer
-                                       INNER JOIN _tmpToGroup   ON _tmpToGroup.ToId     = MIContainer.WhereObjectId_Analyzer
-                                       INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
-                                       LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
-                                                                  ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
-                                                                 AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
-                                       LEFT JOIN MovementLinkObject AS MLO_DocumentKind
-                                                                    ON MLO_DocumentKind.MovementId = MIContainer.MovementId
-                                                                   AND MLO_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
-                                       -- связь с рецептурой
-                                       LEFT JOIN MovementItemLinkObject AS MILO_Receipt
-                                                                        ON MILO_Receipt.MovementItemId = MIContainer.MovementItemId
-                                                                       AND MILO_Receipt.DescId = zc_MILinkObject_Receipt()
-                                  WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                    AND MIContainer.isActive = TRUE
-                                    AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
-                                  GROUP BY MIContainer.MovementId
-                                         , MIContainer.MovementItemId 
-                                         , MILO_Receipt.ObjectId
-                                         , MovementBoolean_Peresort.ValueData
-                                         , MLO_DocumentKind.ObjectId
-                                         , MIContainer.DescId
-                                         , MIContainer.ContainerId
-                                         , MIContainer.ObjectId_Analyzer
-                                         , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
-                                         , MIContainer.OperDate
-                                         , MIContainer.ObjectExtId_Analyzer
-                                         , MIContainer.WhereObjectId_Analyzer
-                                 )
+           tmpMI_ContainerIn1 AS
+                       (SELECT MIContainer.OperDate                                 AS OperDate
+                             , MIContainer.ObjectExtId_Analyzer                     AS FromId
+                             , MIContainer.WhereObjectId_Analyzer                   AS ToId
+                             , MIContainer.MovementId                               AS MovementId
+                             , MIContainer.MovementItemId                           AS MovementItemId 
+                             , MILO_Receipt.ObjectId                                AS ReceiptId
+                             , COALESCE (MovementBoolean_Peresort.ValueData, FALSE) AS isPeresort
+                             , COALESCE (MLO_DocumentKind.ObjectId, 0)              AS DocumentKindId
+                             , MIContainer.DescId                                   AS MIContainerDescId
+                             , MIContainer.ContainerId                              AS ContainerId
+                             , MIContainer.ObjectId_Analyzer                        AS GoodsId
+                             , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)       AS GoodsKindId
+                             , SUM (MIContainer.Amount)                             AS Amount
+                             
+                        FROM MovementItemContainer AS MIContainer
+			     INNER JOIN _tmpFromGroup ON _tmpFromGroup.FromId = MIContainer.ObjectExtId_Analyzer
+ 		             INNER JOIN _tmpToGroup   ON _tmpToGroup.ToId     = MIContainer.WhereObjectId_Analyzer
+ 		             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
+                             LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
+                                                        ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
+                                                       AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
+                             LEFT JOIN MovementLinkObject AS MLO_DocumentKind
+                                                          ON MLO_DocumentKind.MovementId = MIContainer.MovementId
+                                                         AND MLO_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
+                             -- связь с рецептурой
+                             LEFT JOIN MovementItemLinkObject AS MILO_Receipt
+                                                              ON MILO_Receipt.MovementItemId = MIContainer.MovementItemId
+                                                             AND MILO_Receipt.DescId = zc_MILinkObject_Receipt()
+                        WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                          AND MIContainer.isActive = TRUE
+                          AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                        GROUP BY MIContainer.MovementId
+                               , MIContainer.MovementItemId 
+                               , MILO_Receipt.ObjectId
+                               , MovementBoolean_Peresort.ValueData
+                               , MLO_DocumentKind.ObjectId
+                               , MIContainer.DescId
+                               , MIContainer.ContainerId
+                               , MIContainer.ObjectId_Analyzer
+                               , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
+                               , MIContainer.OperDate
+                               , MIContainer.ObjectExtId_Analyzer
+                               , MIContainer.WhereObjectId_Analyzer
+                       )
          , tmpMI_Master_Cuter1 AS (SELECT MIFloat_CuterCount.*
                                    FROM MovementItemFloat AS MIFloat_CuterCount
                                    WHERE MIFloat_CuterCount.MovementItemId IN (SELECT DISTINCT tmpMI_ContainerIn1.MovementItemId FROM tmpMI_ContainerIn1)
@@ -1145,6 +1144,9 @@ BEGIN
            
            , CAST (tmpOperationGroup.CuterCount AS NUMERIC (16,1))          :: TFloat AS CuterCount
 
+           , CASE WHEN tmpOperationGroup.OperCount     <> 0 THEN tmpOperationGroup.OperSumm     / tmpOperationGroup.OperCount     ELSE 0 END :: TFloat AS MainPrice
+           , CASE WHEN tmpOperationGroup.OperCount_out <> 0 THEN tmpOperationGroup.OperSumm_out / tmpOperationGroup.OperCount_out ELSE 0 END :: TFloat AS ChildPrice
+
            , View_InfoMoney.InfoMoneyId
            , View_InfoMoney.InfoMoneyCode
            , View_InfoMoney.InfoMoneyGroupName
@@ -1206,19 +1208,13 @@ BEGIN
                                  AND ObjectDate_PartionGoodsChild_Value.DescId = zc_ObjectDate_PartionGoods_Value()
 
              LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = tmpOperationGroup.DocumentKindId
-             ;
+
+  ;
          
 END;
 $BODY$
-  LANGUAGE plpgsql VOLATILE;
-
-/* -------------------------------------------------------------------------------
- ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 17.07.18         *
-*/
-
--- тест
--- SELECT * FROM gpReport_ProductionUnion_Olap (inStartDate:= '01.06.2018', inEndDate:= '30.06.2018', inStartDate2:= '01.07.2018', inEndDate2:= '31.07.2018', inIsMovement:= FALSE, inIsPartion:= FALSE, inGoodsGroupId:= 0, inGoodsId:= 0, inChildGoodsGroupId:= 0, inChildGoodsId:=0, inFromId:= 8449, inToId:= 8458, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpReport_ProductionUnion_Olap (inStartDate:= '01.06.2018', inEndDate:= '30.06.2018', inStartDate2:= '01.07.2018', inEndDate2:= '31.07.2018', inIsMovement:= FALSE, inIsPartion:= FALSE, inGoodsGroupId:= 0, inGoodsId:= 0, inChildGoodsGroupId:= 0, inChildGoodsId:=0, inFromId:= 8447, inToId:= 8458, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpReport_ProductionUnion_Olap (inStartDate:= '01.06.2018', inEndDate:= '30.06.2018', inStartDate2:= '01.07.2018', inEndDate2:= '31.07.2018', inIsMovement:= FALSE, inIsPartion:= FALSE, inGoodsGroupId:= 0, inGoodsId:= 0, inChildGoodsGroupId:= 0, inChildGoodsId:=0, inFromId:= 8447, inToId:= 8447, inSession:= zfCalc_UserAdmin());
+  LANGUAGE plpgsql VOLATILE
+  COST 100
+  ROWS 1000;
+ALTER FUNCTION gpreport_productionunion_olap(tdatetime, tdatetime, tdatetime, tdatetime, boolean, boolean, integer, integer, integer, integer, integer, integer, tvarchar)
+  OWNER TO admin;

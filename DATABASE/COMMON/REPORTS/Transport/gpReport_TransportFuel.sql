@@ -37,7 +37,7 @@ BEGIN
       vb_Kind_Ticket := 3;
 
       RETURN QUERY 
-      WITH 
+      WITH
       tmpCar AS (SELECT tmp.CarId
                       , ObjectLink_Unit_Branch.ChildObjectId AS BranchId
                  FROM (SELECT inCarId AS CarId) AS tmp
@@ -48,17 +48,21 @@ BEGIN
                                            ON ObjectLink_Unit_Branch.ObjectId = ObjectLink_Car_Unit.ChildObjectId
                                           AND ObjectLink_Unit_Branch.DescId = zc_Objectlink_Unit_Branch()
                  WHERE COALESCE (inCarId, 0) <> 0
+                     AND (ObjectLink_Unit_Branch.ChildObjectId = inBranchId OR inBranchId = 0 OR (inBranchId = zc_Branch_Basis() AND COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) = 0)) 
                 UNION
                  SELECT ObjectLink_Car_Unit.ObjectId         AS CarId
                       , ObjectLink_Unit_Branch.ChildObjectId AS BranchId
-                 FROM Objectlink AS ObjectLink_Unit_Branch
-                      INNER JOIN ObjectLink AS ObjectLink_Car_Unit 
-                                            ON ObjectLink_Car_Unit.ChildObjectId =  ObjectLink_Unit_Branch.ObjectId
-                                           AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
-                 WHERE ObjectLink_Unit_Branch.descid = zc_Objectlink_Unit_Branch()
-                     AND (ObjectLink_Unit_Branch.ChildObjectId = inBranchId OR inBranchId = 0)
-                     AND COALESCE (inCarId, 0) = 0
-                )
+                 FROM Object AS Object_Car
+                      LEFT JOIN ObjectLink AS ObjectLink_Car_Unit 
+                                           ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id    --ObjectLink_Unit_Branch.ObjectId
+                                          AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
+                      LEFT JOIN Objectlink AS ObjectLink_Unit_Branch
+                                           ON ObjectLink_Unit_Branch.ObjectId = ObjectLink_Car_Unit.ChildObjectId
+                                          AND ObjectLink_Unit_Branch.descid = zc_Objectlink_Unit_Branch()
+                 WHERE Object_Car.DescId = zc_Object_Car()
+                   AND COALESCE (inCarId, 0) = 0
+                   AND (ObjectLink_Unit_Branch.ChildObjectId = inBranchId OR inBranchId = 0 OR (inBranchId = zc_Branch_Basis() AND COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) = 0))
+                 )
 
            -- ѕолучили все нужные нам контейнеры по талонам, топливу и деньгам, в разрезе авто и топлива
            -- ≈ще и ограничили их по топливу и авто
@@ -236,7 +240,7 @@ BEGIN
               
         FROM tmpDataAll
              LEFT JOIN Object ON Object.Id = tmpDataAll.ObjectId
-             LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpDataAll.CarId
+             
              LEFT JOIN Object AS Object_From ON Object_From.Id = tmpDataAll.FromId
              LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpDataAll.MemberId
              

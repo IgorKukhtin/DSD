@@ -36,9 +36,11 @@ BEGIN
         RAISE EXCEPTION 'ќшибка.Ќе выбрано кол-во дней периода дл€ анализа.';
     END IF;
         
-    vbPeriodCount := (ROUND( (date_part('DAY', inEndSale - inStartSale) / inDayCount) ::TFloat, 0)) :: Integer;
+    vbPeriodCount := (CEIL( (date_part('DAY', inEndSale - inStartSale) / inDayCount) ::TFloat)) :: Integer;
+    --должно быть мин. 2 периода дл€ анализа
+    IF vbPeriodCount < 2 THEN vbPeriodCount := 2; END IF;
+
     vbOperDateStart := (inEndSale - ('' ||(vbPeriodCount * inDayCount)-1 || 'DAY ')  :: interval ) TDateTime;
-    
     
     --IF (vbPeriodCount * inDayCount) <> date_part('DAY', inEndSale - inStartSale)+1
     IF vbOperDateStart <> inStartSale
@@ -129,9 +131,9 @@ BEGIN
                    FROM (
                          SELECT tmpData_Container.*
                               , ROW_NUMBER() OVER (PARTITION BY tmpData_Container.GoodsId ORDER BY tmpData_Container.Amount desc) AS OrdMax
-                              , ROW_NUMBER() OVER (PARTITION BY tmpData_Container.GoodsId ORDER BY tmpData_Container.Amount ) AS OrdMin
+                              , ROW_NUMBER() OVER (PARTITION BY tmpData_Container.GoodsId ORDER BY tmpData_Container.Amount )     AS OrdMin
                          FROM tmpData_Container 
-                         WHERE tmpData_Container.NumPeriod <> 4
+                         WHERE tmpData_Container.NumPeriod <> vbPeriodCount -- 4 
                          ) AS tmp
                    WHERE tmp.OrdMax = 1 OR tmp.OrdMin = 1
                    GROUP BY tmp.GoodsId, tmp.Price
@@ -160,15 +162,15 @@ BEGIN
                     , COALESCE (tmpRemains.Amount_Remains, 0)  :: Tfloat AS Remains
                     , tmpData.Price                            :: Tfloat AS Price
                  FROM (SELECT tmpData_Container.*
-                            , CASE WHEN tmpData_Container.NumPeriod = 4 THEN (tmpData_Container.Amount + tmpData_Container.Amount * 20/100) ELSE 0 END AS Amount_WithPerSent
-                            , CASE WHEN tmpData_Container.NumPeriod = 4 THEN (tmpData_Container.Amount - tmpData_Container.Amount * 20/100) ELSE 0 END AS Amount_WithOutPerSent
+                            , CASE WHEN tmpData_Container.NumPeriod = vbPeriodCount /*4*/ THEN (tmpData_Container.Amount + tmpData_Container.Amount * inChangePercent/100) ELSE 0 END AS Amount_WithPerSent
+                            , CASE WHEN tmpData_Container.NumPeriod = vbPeriodCount /*4*/ THEN (tmpData_Container.Amount - tmpData_Container.Amount * inChangePercent/100) ELSE 0 END AS Amount_WithOutPerSent
                             --, SUM (tmpData_Container.Amount) OVER (PARTITION BY tmpData_Container.GoodsId) AS TotalAmount
                        FROM tmpData_Container
 
                        ) AS tmpData
                        LEFT JOIN tmpMin_Max ON tmpMin_Max.GoodsId = tmpData.GoodsId
                        LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpData.GoodsId                                                                              
-                 WHERE tmpData.NumPeriod = 4 
+                 WHERE tmpData.NumPeriod = vbPeriodCount -- 4 
                    ;
 
    --провер€ем дл€ строк , возможно какойто товар выпал из отчета, такую строку удал€ем
