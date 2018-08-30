@@ -1020,7 +1020,8 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         item
           Action = actRefresh
         end>
-      Caption = 'MultiAction1'
+      Caption = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1076#1072#1085#1085#1099#1077
     end
     object actOpenReportSimple: TdsdOpenForm
       Category = 'DSDLib'
@@ -1208,6 +1209,10 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         end>
       isShowModal = False
     end
+    object actShowMessage: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_MarginCategory'
@@ -1374,7 +1379,6 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
     end
     object bbLoad_SAMP: TdxBarButton
       Action = macLoad_SAMP
-      Caption = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1076#1072#1085#1085#1099#1077
       Category = 0
       ImageIndex = 74
     end
@@ -1768,6 +1772,14 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     NeedResetData = True
