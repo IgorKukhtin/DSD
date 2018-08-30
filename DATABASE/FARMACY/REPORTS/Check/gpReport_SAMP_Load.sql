@@ -36,9 +36,11 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не выбрано кол-во дней периода для анализа.';
     END IF;
         
-    vbPeriodCount := (ROUND( (date_part('DAY', inEndSale - inStartSale) / inDayCount) ::TFloat, 0)) :: Integer;
+    vbPeriodCount := (CEIL( (date_part('DAY', inEndSale - inStartSale) / inDayCount) ::TFloat)) :: Integer;
+    --должно быть мин. 2 периода для анализа
+    IF vbPeriodCount < 2 THEN vbPeriodCount := 2; END IF;
+
     vbOperDateStart := (inEndSale - ('' ||(vbPeriodCount * inDayCount)-1 || 'DAY ')  :: interval ) TDateTime;
-    
     
     --IF (vbPeriodCount * inDayCount) <> date_part('DAY', inEndSale - inStartSale)+1
     IF vbOperDateStart <> inStartSale
