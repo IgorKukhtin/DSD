@@ -98,7 +98,7 @@ BEGIN
 
     IF vbOperDateStart <> inStartSale
     THEN
-        outMessageText:= 'Ошибка.Кол-во дней периода не кратно периоду для анализа.Рекомендуемая нач.дата '|| vbOperDateStart || ;
+        outMessageText:= 'Ошибка.Кол-во дней периода не кратно периоду для анализа.Рекомендуемая нач.дата ' || CAST (vbOperDateStart AS Date)  ;
     END IF; 
     
     
