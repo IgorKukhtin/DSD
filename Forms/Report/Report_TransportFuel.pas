@@ -55,7 +55,6 @@ type
     EndAmount: TcxGridDBColumn;
     EndSumm: TcxGridDBColumn;
     OutAmount: TcxGridDBColumn;
-    OutSumm: TcxGridDBColumn;
     PeriodChoice: TPeriodChoice;
     bbDialogForm: TdxBarButton;
     edCar: TcxButtonEdit;
@@ -80,8 +79,8 @@ type
     dxBarStatic: TdxBarButton;
     FromName: TcxGridDBColumn;
     MemberName: TcxGridDBColumn;
-    cbMember: TcxCheckBox;
-    actRefreshMember: TdsdDataSetRefresh;
+    cbCar: TcxCheckBox;
+    actRefreshCar: TdsdDataSetRefresh;
     cbPartner: TcxCheckBox;
     actRefreshPartner: TdsdDataSetRefresh;
   private

@@ -24,8 +24,6 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
     Height = 315
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 57
-    ExplicitHeight = 341
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -118,7 +116,6 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
         item
           Format = ',0.00'
           Kind = skSum
-          Column = OutSumm
         end
         item
           Format = ',0.00'
@@ -129,6 +126,26 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
           Format = ',0.00'
           Kind = skSum
           Column = EndSumm
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = outSumm_Transport
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = outSumm_ZP
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = outSumm_Zatraty
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = outSumm_Kompensaciya
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -220,7 +237,26 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
         item
           Format = ',0.00'
           Kind = skSum
-          Column = OutSumm
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = outSumm_Transport
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = outSumm_ZP
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = outSumm_Zatraty
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = outSumm_Kompensaciya
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -320,7 +356,7 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
         Width = 80
       end
       object OutAmount: TcxGridDBColumn
-        Caption = #1056#1072#1089#1093#1086#1076' '#1082#1086#1083'.'
+        Caption = #1056#1072#1089#1093#1086#1076' '#1082#1086#1083'. '#1048#1058#1054#1043#1054
         DataBinding.FieldName = 'OutAmount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -329,14 +365,47 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object OutSumm: TcxGridDBColumn
-        Caption = #1056#1072#1089#1093#1086#1076' '#1089#1091#1084#1084#1072
-        DataBinding.FieldName = 'OutSumm'
+      object outSumm_ZP: TcxGridDBColumn
+        Caption = #1056#1072#1089#1093#1086#1076'  '#1089#1091#1084#1084#1072' ('#1047#1055')'
+        DataBinding.FieldName = 'outSumm_ZP'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object outSumm_Zatraty: TcxGridDBColumn
+        Caption = #1056#1072#1089#1093#1086#1076' '#1089#1091#1084#1084#1072' ('#1079#1072#1090#1088'.)'
+        DataBinding.FieldName = 'outSumm_Zatraty'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1056#1072#1089#1093#1086#1076' '#1089#1091#1084#1084#1072' ('#1079#1072#1090#1088#1072#1090#1099')'
+        Width = 80
+      end
+      object outSumm_Kompensaciya: TcxGridDBColumn
+        Caption = #1056#1072#1089#1093#1086#1076' '#1089#1091#1084#1084#1072' ('#1082#1086#1084#1087#1077#1085#1089'.)'
+        DataBinding.FieldName = 'outSumm_Kompensaciya'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1056#1072#1089#1093#1086#1076' '#1089#1091#1084#1084#1072' ('#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103')'
+        Width = 80
+      end
+      object outSumm_Transport: TcxGridDBColumn
+        Caption = #1056#1072#1089#1093#1086#1076' '#1089#1091#1084#1084#1072' ('#1087#1091#1090'.)'
+        DataBinding.FieldName = 'outSumm_Transport'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1056#1072#1089#1093#1086#1076' '#1089#1091#1084#1084#1072' ('#1087#1091#1090#1077#1074#1086#1081')'
         Width = 80
       end
       object EndAmount: TcxGridDBColumn
@@ -369,6 +438,7 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
       end
       object MemberName: TcxGridDBColumn
         Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
+        DataBinding.FieldName = 'MemberName'
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -465,16 +535,17 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
       TabOrder = 9
       Width = 126
     end
-    object cbMember: TcxCheckBox
+    object cbCar: TcxCheckBox
       Left = 217
       Top = 32
-      Action = actRefreshMember
+      Action = actRefreshCar
+      Caption = #1087#1086' '#1084#1072#1096#1080#1085#1072#1084' / '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
       Properties.ReadOnly = False
       TabOrder = 10
-      Width = 112
+      Width = 168
     end
     object cbPartner: TcxCheckBox
-      Left = 345
+      Left = 391
       Top = 32
       Action = actRefreshPartner
       Properties.ReadOnly = False
@@ -554,8 +625,8 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 80
-    Top = 200
+    Left = 104
+    Top = 152
     DockControlHeights = (
       0
       0
@@ -633,7 +704,6 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
     object bbPrint: TdxBarButton
       Action = dsdPrintAction
       Category = 0
-      Visible = ivNever
     end
   end
   object ActionList: TActionList
@@ -654,7 +724,7 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actRefreshMember: TdsdDataSetRefresh
+    object actRefreshCar: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -662,9 +732,10 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
         item
           StoredProc = spSelect
         end>
-      Caption = #1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
-      Hint = #1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
+      Caption = #1087#1086' '#1084#1072#1096#1080#1085#1072#1084
+      Hint = #1087#1086' '#1084#1072#1096#1080#1085#1072#1084
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh
@@ -700,45 +771,25 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
         item
           DataSet = ClientDataSet
           UserName = 'frxDBDataset'
-          IndexFieldNames = 'CarName'
+          IndexFieldNames = 'FuelName'
         end>
       Params = <
         item
-          Name = 'PeriodStart'
+          Name = 'StartDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PeriodEnd'
+          Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
-        end
-        item
-          Name = 'FuelBenzin'
-          Value = '1'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'FuelDizel'
-          Value = '2'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'FuelPropan'
-          Value = '3'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'FuelMetan'
-          Value = '4'
-          MultiSelectSeparator = ','
         end>
-      ReportName = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1088#1072#1089#1093#1086#1076#1072' '#1090#1086#1087#1083#1080#1074#1072
-      ReportNameParam.Value = ''
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1043#1057#1052
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1043#1057#1052
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -827,7 +878,7 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
         item
           Name = 'isMember'
           Value = Null
-          Component = cbMember
+          Component = cbCar
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -894,9 +945,9 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsMember'
+        Name = 'inIsCar'
         Value = Null
-        Component = cbMember
+        Component = cbCar
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -32,7 +32,7 @@ type
     edCar: TcxButtonEdit;
     GuidesFuel: TdsdGuides;
     CarGuides: TdsdGuides;
-    cbMember: TcxCheckBox;
+    cbCar: TcxCheckBox;
     cbPartner: TcxCheckBox;
   private
     { Private declarations }
