@@ -50,7 +50,7 @@ BEGIN
        -- вернем обратно, что б gpSelect вернул "текущие" данные
        PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Document(), inInternalOrder, FALSE);
 
-       CREATE TEMP TABLE _tmpMI_OrderInternal_Master (MovementItemId Integer, PartionGoods TDateTime, MinimumLot TFloat, MCS TFloat, PriceFrom TFloat, JuridicalPrice TFloat, Remains TFloat, Income TFloat, CheckAmount TFloat, SendAmount TFloat, AmountDeferred TFloat, Maker TVarChar, isClose Boolean, isFirst Boolean, isSecond Boolean, isTOP Boolean, isUnitTOP Boolean, isMCSNotRecalc Boolean, isMCSIsClose Boolean, GoodsId_partner Integer, JuridicalId Integer, ContractId Integer) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpMI_OrderInternal_Master (MovementItemId Integer, PartionGoods TDateTime, MinimumLot TFloat, MCS TFloat, PriceFrom TFloat, JuridicalPrice TFloat, Remains TFloat, Reserved TFloat, Income TFloat, CheckAmount TFloat, SendAmount TFloat, AmountDeferred TFloat, Maker TVarChar, isClose Boolean, isFirst Boolean, isSecond Boolean, isTOP Boolean, isUnitTOP Boolean, isMCSNotRecalc Boolean, isMCSIsClose Boolean, GoodsId_partner Integer, JuridicalId Integer, ContractId Integer) ON COMMIT DROP;
        CREATE TEMP TABLE _tmpMI_OrderInternal_Child  (MovementItemId Integer, GoodsId Integer, PartionGoods TDateTime, Price TFloat, JuridicalPrice TFloat, PriceListMovementItemId Integer, Maker TVarChar, JuridicalId Integer, ContractId Integer) ON COMMIT DROP;
        --
        SELECT zfCalc_Word_Split (tmp.CurName_all, ';', 1) AS CurName1
@@ -64,8 +64,8 @@ BEGIN
        -- 
        FOR vbRec IN EXECUTE 'FETCH ALL IN' || QUOTE_IDENT (vbCurName1)
        LOOP
-           INSERT INTO _tmpMI_OrderInternal_Master (MovementItemId, PartionGoods, MinimumLot, MCS, PriceFrom, JuridicalPrice, Remains, Income, CheckAmount, SendAmount, AmountDeferred, Maker, isClose, isFirst, isSecond, isTOP, isUnitTOP, isMCSNotRecalc, isMCSIsClose, GoodsId_partner, JuridicalId, ContractId)
-             VALUES (vbRec.Id, vbRec.PartionGoodsDate, vbRec.MinimumLot, vbRec.MCS, vbRec.Price, vbRec.SuperFinalPrice, vbRec.RemainsInUnit, vbRec.Income_Amount, vbRec.CheckAmount, vbRec.SendAmount, vbRec.AmountDeferred, vbRec.MakerName, vbRec.isClose, vbRec.isFirst, vbRec.isSecond, vbRec.isTOP, vbRec.isTOP_Price, vbRec.MCSNotRecalc, vbRec.MCSIsClose, COALESCE (vbRec.PartnerGoodsId, 0), COALESCE (vbRec.JuridicalId, 0), COALESCE (vbRec.ContractId, 0));
+           INSERT INTO _tmpMI_OrderInternal_Master (MovementItemId, PartionGoods, MinimumLot, MCS, PriceFrom, JuridicalPrice, Remains, Reserved, Income, CheckAmount, SendAmount, AmountDeferred, Maker, isClose, isFirst, isSecond, isTOP, isUnitTOP, isMCSNotRecalc, isMCSIsClose, GoodsId_partner, JuridicalId, ContractId)
+             VALUES (vbRec.Id, vbRec.PartionGoodsDate, vbRec.MinimumLot, vbRec.MCS, vbRec.Price, vbRec.SuperFinalPrice, vbRec.RemainsInUnit, vbRec.Reserved, vbRec.Income_Amount, vbRec.CheckAmount, vbRec.SendAmount, vbRec.AmountDeferred, vbRec.MakerName, vbRec.isClose, vbRec.isFirst, vbRec.isSecond, vbRec.isTOP, vbRec.isTOP_Price, vbRec.MCSNotRecalc, vbRec.MCSIsClose, COALESCE (vbRec.PartnerGoodsId, 0), COALESCE (vbRec.JuridicalId, 0), COALESCE (vbRec.ContractId, 0));
        END LOOP;
        --
        FOR vbRec IN EXECUTE 'FETCH ALL IN' || QUOTE_IDENT (vbCurName2)
@@ -75,27 +75,28 @@ BEGIN
        END LOOP;
 
        -- Сохранили 
-       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), MovementItem.Id, _tmpMI_OrderInternal_Master.PartionGoods)
-             , lpInsertUpdate_MovementItemFloat (zc_MIFloat_MinimumLot(), MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.MinimumLot, 0))
-             , lpInsertUpdate_MovementItemFloat (zc_MIFloat_MCS(), MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.MCS, 0))
-             , lpInsertUpdate_MovementItemFloat (zc_MIFloat_Remains(), MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.Remains, 0))
-             , lpInsertUpdate_MovementItemFloat (zc_MIFloat_Check(), MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.CheckAmount, 0))
-             , lpInsertUpdate_MovementItemFloat (zc_MIFloat_Send(), MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.SendAmount, 0))
-             , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountDeferred(), MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.AmountDeferred, 0))
-             , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceFrom(), MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.PriceFrom, 0))
-             , lpInsertUpdate_MovementItemFloat (zc_MIFloat_JuridicalPrice(), MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.JuridicalPrice, 0))
-             , lpInsertUpdate_MovementItemString (zc_MIString_Maker(), MovementItem.Id, _tmpMI_OrderInternal_Master.Maker)
-             , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Close(), MovementItem.Id, _tmpMI_OrderInternal_Master.isClose)
-             , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_First(), MovementItem.Id, _tmpMI_OrderInternal_Master.isFirst)
-             , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Second(), MovementItem.Id, _tmpMI_OrderInternal_Master.isSecond)
-             , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_TOP(), MovementItem.Id, _tmpMI_OrderInternal_Master.isTOP)
-             , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_UnitTOP(), MovementItem.Id, _tmpMI_OrderInternal_Master.isUnitTOP)
+       PERFORM lpInsertUpdate_MovementItemDate    (zc_MIDate_PartionGoods()   , MovementItem.Id, _tmpMI_OrderInternal_Master.PartionGoods)
+             , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_MinimumLot()    , MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.MinimumLot, 0))
+             , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_MCS()           , MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.MCS, 0))
+             , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_Remains()       , MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.Remains, 0))
+             , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_Reserved()      , MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.Reserved, 0))
+             , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_Check()         , MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.CheckAmount, 0))
+             , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_Send()          , MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.SendAmount, 0))
+             , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_AmountDeferred(), MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.AmountDeferred, 0))
+             , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_PriceFrom()     , MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.PriceFrom, 0))
+             , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_JuridicalPrice(), MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.JuridicalPrice, 0))
+             , lpInsertUpdate_MovementItemString  (zc_MIString_Maker()        , MovementItem.Id, _tmpMI_OrderInternal_Master.Maker)
+             , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Close()       , MovementItem.Id, _tmpMI_OrderInternal_Master.isClose)
+             , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_First()       , MovementItem.Id, _tmpMI_OrderInternal_Master.isFirst)
+             , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Second()      , MovementItem.Id, _tmpMI_OrderInternal_Master.isSecond)
+             , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_TOP()         , MovementItem.Id, _tmpMI_OrderInternal_Master.isTOP)
+             , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_UnitTOP()     , MovementItem.Id, _tmpMI_OrderInternal_Master.isUnitTOP)
              , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_MCSNotRecalc(), MovementItem.Id, _tmpMI_OrderInternal_Master.isMCSNotRecalc)
-             , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_MCSIsClose(), MovementItem.Id, _tmpMI_OrderInternal_Master.isMCSIsClose)
+             , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_MCSIsClose()  , MovementItem.Id, _tmpMI_OrderInternal_Master.isMCSIsClose)
                --
-             , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), MovementItem.Id, _tmpMI_OrderInternal_Master.GoodsId_partner)
+             , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods()    , MovementItem.Id, _tmpMI_OrderInternal_Master.GoodsId_partner)
              , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Juridical(), MovementItem.Id, _tmpMI_OrderInternal_Master.JuridicalId)
-             , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), MovementItem.Id, _tmpMI_OrderInternal_Master.ContractId)
+             , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract() , MovementItem.Id, _tmpMI_OrderInternal_Master.ContractId)
        FROM MovementItem
             LEFT JOIN _tmpMI_OrderInternal_Master ON _tmpMI_OrderInternal_Master.MovementItemId = MovementItem.Id
        WHERE MovementItem.MovementId = inInternalOrder
@@ -164,28 +165,28 @@ BEGIN
                    inComment := MIString_Comment.ValueData,
                     inUserId := vbUserId)
          FROM  MovementItem 
-                       LEFT JOIN MovementItemLinkObject AS MILinkObject_Juridical 
-                                                        ON MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()
-                                                       AND MILinkObject_Juridical.MovementItemId = MovementItem.Id  
-                                                       
-                       LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract 
-                                                        ON MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-                                                       AND MILinkObject_Contract.MovementItemId = MovementItem.Id  
+               LEFT JOIN MovementItemLinkObject AS MILinkObject_Juridical 
+                                                ON MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()
+                                               AND MILinkObject_Juridical.MovementItemId = MovementItem.Id  
+                                               
+               LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract 
+                                                ON MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                                               AND MILinkObject_Contract.MovementItemId = MovementItem.Id  
 
-                       LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods 
-                                                        ON MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-                                                       AND MILinkObject_Goods.MovementItemId = MovementItem.Id  
+               LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods 
+                                                ON MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                                               AND MILinkObject_Goods.MovementItemId = MovementItem.Id  
 
-                       LEFT JOIN _tmpMI AS PriceList ON COALESCE(PriceList.ContractId, 0) = COALESCE(MILinkObject_Contract.ObjectId, 0)
-                                                    AND PriceList.JuridicalId = MILinkObject_Juridical.ObjectId
-                                                    AND PriceList.GoodsId = MILinkObject_Goods.ObjectId
-                                                    AND PriceList.MovementItemId = MovementItem.Id 
-                       LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSecond
-                                                         ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
-                       LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountManual
-                                                         ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+               LEFT JOIN _tmpMI AS PriceList ON COALESCE(PriceList.ContractId, 0) = COALESCE(MILinkObject_Contract.ObjectId, 0)
+                                            AND PriceList.JuridicalId = MILinkObject_Juridical.ObjectId
+                                            AND PriceList.GoodsId = MILinkObject_Goods.ObjectId
+                                            AND PriceList.MovementItemId = MovementItem.Id 
+               LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                                 ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+               LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountManual
+                                                 ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                                                AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
                                              
              LEFT JOIN (SELECT * FROM 
                                       (SELECT *, MIN(Id) OVER(PARTITION BY MovementItemId) AS MinId FROM
@@ -207,8 +208,6 @@ BEGIN
               AND COALESCE(MIFloat_AmountManual.ValueData,(MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0))) > 0
               AND COALESCE(COALESCE(PriceList.Price, MinPrice.Price), 0) <> 0;
                        
-
-
 -- А тут вставляются те, которых нет в прайсе
 
     PERFORM lpCreate_ExternalOrder(
@@ -306,6 +305,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 31.08.18         * add Reserved
  22.12.16         * add zc_MIFloat_AmountDeferred
  19.09.14                         *
 */

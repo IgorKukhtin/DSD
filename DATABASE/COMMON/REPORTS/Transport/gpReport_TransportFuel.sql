@@ -406,7 +406,6 @@ BEGIN
              LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = tmpData.ObjectId
              LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpData.CarId
              LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.FromId
-             LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpData.MemberId
              
              LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel 
                                   ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
@@ -415,6 +414,12 @@ BEGIN
              
              LEFT JOIN tmpCar ON tmpCar.CarId = tmpData.CarId
              LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpCar.BranchId
+             
+             LEFT JOIN ObjectLink AS ObjectLink_Car_PersonalDriver 
+                                  ON ObjectLink_Car_PersonalDriver.ObjectId = Object_Car.Id
+                                 AND ObjectLink_Car_PersonalDriver.DescId = zc_ObjectLink_Car_PersonalDriver()
+                                 
+             LEFT JOIN Object AS Object_Member ON Object_Member.Id = COALESCE (tmpData.MemberId, ObjectLink_Car_PersonalDriver.ChildObjectId)
     ;
 
 END;

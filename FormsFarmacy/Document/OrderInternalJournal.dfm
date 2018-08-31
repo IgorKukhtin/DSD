@@ -9,23 +9,20 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 828
-    Height = 476
+    Height = 478
     TabOrder = 3
-    ExplicitTop = 59
     ExplicitWidth = 828
-    ExplicitHeight = 476
-    ClientRectBottom = 472
-    ClientRectRight = 824
+    ExplicitHeight = 478
+    ClientRectBottom = 478
+    ClientRectRight = 828
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 4
-      ExplicitWidth = 820
-      ExplicitHeight = 468
+      ExplicitWidth = 828
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 820
-        Height = 468
-        ExplicitWidth = 820
-        ExplicitHeight = 468
+        Width = 828
+        Height = 478
+        ExplicitWidth = 828
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -316,6 +313,9 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actCalculateExternalZakaz: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -424,7 +424,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
