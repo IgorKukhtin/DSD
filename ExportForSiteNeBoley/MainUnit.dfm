@@ -40,6 +40,14 @@ object MainForm: TMainForm
       Action = RunAction
       TabOrder = 0
     end
+    object RunExportButton: TButton
+      Left = 223
+      Top = 10
+      Width = 290
+      Height = 25
+      Action = RunAndExport
+      TabOrder = 2
+    end
   end
   object ExportGrid: TcxGrid
     Left = 0
@@ -139,6 +147,10 @@ object MainForm: TMainForm
       Caption = #1045#1082#1089#1087#1086#1088#1090
       OnExecute = SaveActionExecute
       OnUpdate = SaveActionUpdate
+    end
+    object RunAndExport: TAction
+      Caption = #1057#1092#1086#1088#1084#1080#1085#1088#1086#1074#1072#1090' '#1080' '#1077#1082#1089#1087#1086#1088#1090#1080#1088#1086#1074#1072#1090#1100' '#1074#1089#1077' '#1086#1089#1090#1072#1083#1100#1085#1099#1077
+      OnExecute = RunAndExportExecute
     end
   end
   object Timer: TTimer

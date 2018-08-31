@@ -9,7 +9,7 @@ uses
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData, Vcl.StdCtrls,
   cxGridLevel, cxClasses, cxGridCustomView, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGrid, Vcl.ExtCtrls, ZAbstractConnection, ZConnection, ZAbstractRODataset,
-  ZDataset, Vcl.ActnList, cxGridExportLink, System.StrUtils, System.Zip;
+  ZDataset, Vcl.ActnList, cxGridExportLink, System.StrUtils, System.Zip, System.RegularExpressions;
 
 type
   TMainForm = class(TForm)
@@ -34,19 +34,24 @@ type
     RunAction: TAction;
     SaveAction: TAction;
     Timer: TTimer;
+    RunExportButton: TButton;
+    RunAndExport: TAction;
     procedure FormCreate(Sender: TObject);
     procedure RunActionExecute(Sender: TObject);
     procedure RunActionUpdate(Sender: TObject);
     procedure SaveActionExecute(Sender: TObject);
     procedure SaveActionUpdate(Sender: TObject);
     procedure TimerTimer(Sender: TObject);
+    procedure RunAndExportExecute(Sender: TObject);
   private
     { Private declarations }
-    FilePath, RestFilePath, InetFilePath, ExportFilePath, InetDostFilePath, ExportDostFilePath: string;
+    FilePath, RestFilePath, InetFilePath, ExportFilePath, InetDostFilePath, ExportDostFilePath, ExportListID, ExportListName: string;
     Running, Saving: Boolean;
     procedure AddToLog(S: string);
     procedure ExportRun;
+    procedure ExportRunOne(AUnit: string);
     procedure ExportSave;
+    procedure ExportSaveOne(AUnit, AName: string);
     procedure ExportCompress(AFileName: string);
     function EscSpecChars(S: string): string;
     procedure SaveToXML;
@@ -107,6 +112,36 @@ begin
 
   try
     ZQuery.Close;
+    ZQuery.SQL.Text := 'SELECT DISTINCT * FROM gpSelect_GoodsOnUnit_ForSite_NeBoley (0, zfCalc_UserSite())';
+
+    try
+      ZQuery.Open;
+    except
+      on E: Exception do
+        AddToLog(E.Message);
+    end;
+  finally
+    Screen.Cursor := OldCursor;
+    ZQuery.EnableControls;
+    Running := False;
+  end;
+end;
+
+procedure TMainForm.ExportRunOne(AUnit: string);
+var
+  OldCursor: TCursor;
+begin
+  AddToLog('Формирование отчета ...');
+
+  Running := True;
+  Application.ProcessMessages;
+  ZQuery.DisableControls;
+  OldCursor := Screen.Cursor;
+  Screen.Cursor := crHourGlass;
+
+  try
+    ZQuery.Close;
+    ZQuery.SQL.Text := 'SELECT DISTINCT * FROM gpSelect_GoodsOnUnit_ForSite_OneUnit (' + AUnit + ', zfCalc_UserSite())';
 
     try
       ZQuery.Open;
@@ -147,6 +182,39 @@ begin
     SaveToXML;
     FormatSettings.DecimalSeparator := OldDecimalSeparator;
     Saving := False;
+  except
+    on E: Exception do
+    begin
+      AddToLog(E.Message);
+      Saving := False;
+    end;
+  end;
+end;
+
+procedure TMainForm.ExportSaveOne(AUnit, AName: string);
+var
+  OldDecimalSeparator: Char;
+  CSVFile: TStringList;
+begin
+  Saving := True;
+  AddToLog('Выгрузка отчета ...');
+
+  if not ForceDirectories(ExtractFilePath(FilePath)) then
+  begin
+    AddToLog(Format('Не могу создать директорию выгрузки "%s"', [ExtractFilePath(FilePath)]));
+    Saving := False;
+    Exit;
+  end;
+
+  try
+    OldDecimalSeparator := FormatSettings.DecimalSeparator;
+    FormatSettings.DecimalSeparator := '.';
+    ExportGridToText(ExtractFilePath(FilePath) + AName + '.CSV', ExportGrid, True, True, ';', '', '', 'CSV');
+    CSVFile := TStringList.Create;
+    CSVFile.LoadFromFile(ExtractFilePath(FilePath) + AName + '.CSV');
+    CSVFile.SaveToFile(ExtractFilePath(FilePath) + AName + '.CSV', TEncoding.ANSI);
+    CSVFile.Free;
+    FormatSettings.DecimalSeparator := OldDecimalSeparator;
   except
     on E: Exception do
     begin
@@ -228,6 +296,9 @@ begin
     ExportDostFilePath := IniFile.ReadString('Options', 'ExportDostFilePath', ExePath + 'export-dostavka.xml');
     IniFile.WriteString('Options', 'ExportDostFilePath', ExportDostFilePath);
 
+    ExportListID := IniFile.ReadString('Options', 'ExportListID', '');
+    ExportListName := IniFile.ReadString('Options', 'ExportListName', '');
+
     // Connect
 
     ZConnection.HostName := IniFile.ReadString('Connect', 'HostName', '91.210.37.210');
@@ -272,6 +343,21 @@ end;
 procedure TMainForm.RunActionUpdate(Sender: TObject);
 begin
   RunAction.Enabled := not Running;
+end;
+
+procedure TMainForm.RunAndExportExecute(Sender: TObject);
+  var I : integer; S : string; Res, ResName: TArray<string>;
+begin
+  if ExportListID = '' then Exit;
+  Res := TRegEx.Split(ExportListID, '[,]');
+  ResName := TRegEx.Split(ExportListName, '[,]');
+  for I := Low(Res) to High(Res) do
+  begin
+    ExportRunOne(Res[I]);
+    if I <= High(ResName) then S := ResName[I]
+    else S := Res[I];
+    ExportSaveOne(Res[I], S);
+  end;
 end;
 
 procedure TMainForm.SaveActionExecute(Sender: TObject);
@@ -340,6 +426,7 @@ begin
     ExportSave;
     ExportCompress(RestFilePath);
     ExportCopies;
+    RunAndExportExecute(Sender);
   finally
     Close;
   end;
