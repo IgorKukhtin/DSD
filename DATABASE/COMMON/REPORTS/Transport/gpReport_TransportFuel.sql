@@ -348,10 +348,12 @@ BEGIN
                           LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Car
                                                         ON ContainerLinkObject_Car.DescId = zc_ContainerLinkObject_Car()
                                                        AND ContainerLinkObject_Car.ContainerId = tmpData.ContainerId
+                          INNER JOIN tmpCar ON tmpCar.CarId = ContainerLinkObject_Car.ObjectId
 
                           LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Member
                                                         ON ContainerLinkObject_Member.DescId = zc_ContainerLinkObject_Member()
                                                        AND ContainerLinkObject_Member.ContainerId = tmpData.ContainerId
+                                                       
                      GROUP BY tmpData.ObjectId
                             , tmpData.FromId
                             , CASE WHEN inIsCar = TRUE THEN ContainerLinkObject_Car.ObjectId ELSE 0 END 
