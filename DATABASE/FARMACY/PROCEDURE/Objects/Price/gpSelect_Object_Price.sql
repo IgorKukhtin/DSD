@@ -30,6 +30,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , MCSNotRecalc Boolean, MCSNotRecalcDateChange TDateTime
              , Fix Boolean, FixDateChange TDateTime
              , MinExpirationDate TDateTime
+             , Reserved TFloat
              , Remains TFloat, SummaRemains TFloat
              , RemainsNotMCS TFloat, SummaNotMCS TFloat
              , PriceRetSP TFloat, PriceOptSP TFloat, PriceSP TFloat, PaymentSP TFloat, DiffSP2 TFloat
@@ -107,6 +108,7 @@ BEGIN
                ,NULL::Boolean                    AS Fix
                ,NULL::TDateTime                  AS FixDateChange
                ,NULL::TDateTime                  AS MinExpirationDate
+               ,NULL::TFloat                     AS Reserved
                ,NULL::TFloat                     AS Remains
                ,NULL::TFloat                     AS SummaRemains
                ,NULL::TFloat                     AS RemainsNotMCS
@@ -337,8 +339,40 @@ BEGIN
                            AND ObjectLink_Main_BarCode.ChildObjectId > 0
                            AND TRIM (Object_Goods_BarCode.ValueData) <> ''
                         )
-                       
-   
+   -- выбираем отложенные Чеки (как в кассе колонка VIP) 
+   , tmpMovementChek AS (SELECT Movement.Id
+                         FROM MovementBoolean AS MovementBoolean_Deferred
+                              INNER JOIN Movement ON Movement.Id     = MovementBoolean_Deferred.MovementId
+                                                 AND Movement.DescId = zc_Movement_Check()
+                                                 AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                           AND MovementLinkObject_Unit.ObjectId = inUnitId
+                         WHERE MovementBoolean_Deferred.DescId    = zc_MovementBoolean_Deferred()
+                           AND MovementBoolean_Deferred.ValueData = TRUE
+                        UNION
+                         SELECT Movement.Id
+                         FROM MovementString AS MovementString_CommentError
+                              INNER JOIN Movement ON Movement.Id     = MovementString_CommentError.MovementId
+                                                 AND Movement.DescId = zc_Movement_Check()
+                                                 AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                           AND MovementLinkObject_Unit.ObjectId = inUnitId
+                        WHERE MovementString_CommentError.DescId = zc_MovementString_CommentError()
+                          AND MovementString_CommentError.ValueData <> ''
+                        )
+   , tmpReserve AS (SELECT MovementItem.ObjectId             AS GoodsId
+                         , SUM (MovementItem.Amount)::TFloat AS Amount
+                    FROM tmpMovementChek
+                         INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovementChek.Id
+                                                AND MovementItem.DescId     = zc_MI_Master()
+                                                AND MovementItem.isErased   = FALSE
+                    GROUP BY MovementItem.ObjectId
+                    )
+       
             -- Результат
             SELECT
                  tmpPrice_View.Id                                                   AS Id
@@ -371,6 +405,7 @@ BEGIN
                , tmpPrice_View.FixDateChange                     AS FixDateChange
                , Object_Remains.MinExpirationDate                AS MinExpirationDate   --SelectMinPrice_AllGoods.MinExpirationDate AS MinExpirationDate
 
+               , COALESCE (tmpReserve.Amount, 0) :: TFloat       AS Reserved    -- кол-во в отложенных чеках
                , Object_Remains.Remains                          AS Remains
                , (Object_Remains.Remains * COALESCE (tmpPrice_View.Price,0)) ::TFloat AS SummaRemains
                
@@ -612,6 +647,8 @@ BEGIN
                LEFT JOIN tmpMarginCategory ON tmpMarginCategory.GoodsId = Object_Goods_View.Id
                
                LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = ObjectLink_Main.ChildObjectId
+               -- кол-во отложенные чеки
+               LEFT JOIN tmpReserve ON tmpReserve.GoodsId = Object_Goods_View.Id
                
             WHERE (inisShowDel = True OR Object_Goods_View.isErased = False)
               AND (Object_Goods_View.Id = inGoodsId OR inGoodsId = 0)
@@ -1015,8 +1052,6 @@ BEGIN
                                LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = ObjectLink_Main.ChildObjectId
                          )
 
-
-
         -- условия хранения
          , tmpGoods_ConditionsKeep AS (SELECT ObjectLink_Goods_ConditionsKeep.*
                                        FROM ObjectLink AS ObjectLink_Goods_ConditionsKeep 
@@ -1037,6 +1072,39 @@ BEGIN
                            AND ObjectHistoryFloat.ObjectHistoryId IN (SELECT DISTINCT tmpOH_Price.Id FROM tmpOH_Price)
                         )
 
+   -- выбираем отложенные Чеки (как в кассе колонка VIP) 
+   , tmpMovementChek AS (SELECT Movement.Id
+                         FROM MovementBoolean AS MovementBoolean_Deferred
+                              INNER JOIN Movement ON Movement.Id     = MovementBoolean_Deferred.MovementId
+                                                 AND Movement.DescId = zc_Movement_Check()
+                                                 AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                           AND MovementLinkObject_Unit.ObjectId = inUnitId
+                         WHERE MovementBoolean_Deferred.DescId    = zc_MovementBoolean_Deferred()
+                           AND MovementBoolean_Deferred.ValueData = TRUE
+                        UNION
+                         SELECT Movement.Id
+                         FROM MovementString AS MovementString_CommentError
+                              INNER JOIN Movement ON Movement.Id     = MovementString_CommentError.MovementId
+                                                 AND Movement.DescId = zc_Movement_Check()
+                                                 AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                           AND MovementLinkObject_Unit.ObjectId = inUnitId
+                        WHERE MovementString_CommentError.DescId = zc_MovementString_CommentError()
+                          AND MovementString_CommentError.ValueData <> ''
+                        )
+   , tmpReserve AS (SELECT MovementItem.ObjectId             AS GoodsId
+                         , SUM (MovementItem.Amount)::TFloat AS Amount
+                    FROM tmpMovementChek
+                         INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovementChek.Id
+                                                AND MovementItem.DescId     = zc_MI_Master()
+                                                AND MovementItem.isErased   = FALSE
+                    GROUP BY MovementItem.ObjectId
+                    )
 
             -- Результат     
             SELECT tmpPrice_All.Id                                                       AS Id
@@ -1067,6 +1135,9 @@ BEGIN
                , tmpPrice_All.Fix                          AS Fix
                , tmpPrice_All.FixDateChange                AS FixDateChange
                , tmpPrice_All.MinExpirationDate            AS MinExpirationDate   --, CASE WHEN inGoodsId = 0 THEN SelectMinPrice_AllGoods.MinExpirationDate ELSE SelectMinPrice_List.PartionGoodsDate END AS MinExpirationDate
+
+               , COALESCE (tmpReserve.Amount, 0) :: TFloat AS Reserved           -- кол-во в отложенных чеках
+
                , tmpPrice_All.Remains                      AS Remains
                , (tmpPrice_All.Remains * COALESCE (tmpPrice_All.Price,0)) ::TFloat AS SummaRemains
 
@@ -1261,6 +1332,9 @@ BEGIN
                LEFT JOIN tmpGoodsMainParam ON tmpGoodsMainParam.GoodsId = Object_Goods_View.Id
                
                LEFT JOIN tmpMarginCategory ON tmpMarginCategory.GoodsId = Object_Goods_View.Id
+               -- кол-во отложенные чеки
+               LEFT JOIN tmpReserve ON tmpReserve.GoodsId = Object_Goods_View.Id
+               
             WHERE (inisShowDel = True OR Object_Goods_View.isErased = False)
               AND (Object_Goods_View.Id = inGoodsId OR inGoodsId = 0)
             ORDER BY GoodsGroupName, GoodsName;
@@ -1273,6 +1347,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Шаблий О.В.
+ 31.08.18         * add Reserved
  11.08.18                                                                       *
  05.01.18         *
  06.12.17         *
