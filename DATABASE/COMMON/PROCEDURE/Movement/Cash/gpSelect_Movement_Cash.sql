@@ -28,6 +28,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , MemberName TVarChar, PositionName TVarChar, PersonalServiceListId Integer, PersonalServiceListCode Integer, PersonalServiceListName TVarChar
              , ContractCode Integer, ContractInvNumber TVarChar, ContractTagName TVarChar
              , UnitCode Integer, UnitName TVarChar
+             , CarId Integer, CarName TVarChar
+             , CarModelId Integer, CarModelName TVarChar
+             , UnitId_Car Integer, UnitName_Car TVarChar
              , CurrencyName TVarChar, CurrencyPartnerName TVarChar
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
@@ -159,6 +162,13 @@ BEGIN
            , View_Contract_InvNumber.ContractTagName
            , Object_Unit.ObjectCode             AS UnitCode
            , Object_Unit.ValueData              AS UnitName
+
+           , Object_CarModel.Id                 AS CarId
+           , Object_CarModel.ValueData          AS CarName
+           , Object_CarModel.Id                 AS CarModelId
+           , Object_CarModel.ValueData          AS CarModelName
+           , Object_Unit_Car.Id                 AS UnitId_Car
+           , Object_Unit_Car.ValueData          AS UnitName_Car
 
            , Object_Currency.ValueData                     AS CurrencyName
            , Object_CurrencyPartner.ValueData              AS CurrencyPartnerName
@@ -299,6 +309,11 @@ BEGIN
                                             AND MILinkObject_CurrencyPartner.DescId = zc_MILinkObject_CurrencyPartner()
             LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MILinkObject_CurrencyPartner.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Car
+                                             ON MILinkObject_Car.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Car.DescId = zc_MILinkObject_Car()
+            LEFT JOIN Object AS Object_Car ON Object_Car.Id = MILinkObject_Car.ObjectId
+
             LEFT JOIN MovementFloat AS MovementFloat_AmountCurrency
                                     ON MovementFloat_AmountCurrency.MovementId = tmpMovement.Id
                                    AND MovementFloat_AmountCurrency.DescId = zc_MovementFloat_AmountCurrency()
@@ -319,6 +334,17 @@ BEGIN
                                     ON MovementFloat_ParPartnerValue.MovementId = tmpMovement.Id
                                    AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
 
+            --свойства авто
+            LEFT JOIN ObjectLink AS Car_CarModel
+                                 ON Car_CarModel.ObjectId = MILinkObject_Car.ObjectId
+                                AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
+            LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
+            
+            LEFT JOIN ObjectLink AS ObjectLink_Car_Unit 
+                                 ON ObjectLink_Car_Unit.ObjectId = MILinkObject_Car.ObjectId
+                                AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
+            LEFT JOIN Object AS Object_Unit_Car ON Object_Unit_Car.Id = ObjectLink_Car_Unit.ChildObjectId
+            --
        WHERE MILinkObject_Currency.ObjectId = inCurrencyId
              OR (inCurrencyId = zc_Enum_Currency_Basis() AND MovementFloat_AmountSumm.ValueData <> 0)
        ;
@@ -331,6 +357,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 01.09.18         * add Car
  21.05.17         * add CurrencyPartner
  06.10.16         * add inJuridicalBasisId
  26.07.16         * invoice

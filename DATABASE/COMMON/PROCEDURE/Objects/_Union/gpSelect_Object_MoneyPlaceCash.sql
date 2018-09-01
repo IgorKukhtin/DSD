@@ -17,6 +17,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ItemName TVarChar, isEra
              , BranchName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , CurrencyId Integer, CurrencyName TVarChar
+             , CarId Integer, CarName TVarChar
+             , CarModelName TVarChar, UnitName_Car TVarChar
               )
 AS
 $BODY$
@@ -90,6 +92,10 @@ BEGIN
           , ''::TVarChar AS PaidKindName
           , Object_Currency.Id        AS CurrencyId
           , Object_Currency.ValueData AS CurrencyName
+          , 0            AS CarId
+          , ''::TVarChar AS CarName
+          , ''::TVarChar AS CarModelName
+          , ''::TVarChar AS UnitName_Car
      FROM Object AS Object_Cash
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Cash.DescId
           LEFT JOIN View_InfoMoney_40801 AS View_InfoMoney ON 1 = 1
@@ -129,6 +135,10 @@ BEGIN
           , ''::TVarChar AS PaidKindName
           , Object_Currency.Id        AS CurrencyId
           , Object_Currency.ValueData AS CurrencyName
+          , 0            AS CarId
+          , ''::TVarChar AS CarName
+          , ''::TVarChar AS CarModelName
+          , ''::TVarChar AS UnitName_Car
      FROM Object_BankAccount_View
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = zc_Object_BankAccount()
           LEFT JOIN View_InfoMoney_40801 AS View_InfoMoney ON 1 = 1
@@ -166,6 +176,10 @@ BEGIN
           , ''::TVarChar AS PaidKindName
           , Object_Currency.Id        AS CurrencyId
           , Object_Currency.ValueData AS CurrencyName
+          , 0            AS CarId
+          , ''::TVarChar AS CarName
+          , ''::TVarChar AS CarModelName
+          , ''::TVarChar AS UnitName_Car
      FROM Object AS Object_Member
           LEFT JOIN tmpPersonal_Branch ON tmpPersonal_Branch.MemberId = Object_Member.Id
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Member.DescId
@@ -204,8 +218,12 @@ BEGIN
           , Object_Branch.ValueData   AS BranchName
           , Object_PaidKind.Id        AS PaidKindId
           , Object_PaidKind.ValueData AS PaidKindName
-          , Object_Currency.Id         AS CurrencyId 
-          , Object_Currency.ValueData  AS CurrencyName 
+          , Object_Currency.Id         AS CurrencyId
+          , Object_Currency.ValueData  AS CurrencyName
+          , 0            AS CarId
+          , ''::TVarChar AS CarName
+          , ''::TVarChar AS CarModelName
+          , ''::TVarChar AS UnitName_Car
      FROM Object AS Object_Partner
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Partner.DescId
 
@@ -275,8 +293,12 @@ BEGIN
           , ''::TVarChar AS BranchName
           , Object_PaidKind.Id            AS PaidKindId
           , Object_PaidKind.ValueData     AS PaidKindName
-          , Object_Currency.Id         AS CurrencyId 
-          , Object_Currency.ValueData  AS CurrencyName 
+          , Object_Currency.Id         AS CurrencyId
+          , Object_Currency.ValueData  AS CurrencyName
+          , 0            AS CarId
+          , ''::TVarChar AS CarName
+          , ''::TVarChar AS CarModelName
+          , ''::TVarChar AS UnitName_Car
      FROM Object AS Object_Juridical
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Juridical.DescId
           LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.JuridicalId = Object_Juridical.Id 
@@ -325,6 +347,10 @@ BEGIN
           , ''::TVarChar AS PaidKindName
           , Object_Currency.Id        AS CurrencyId
           , Object_Currency.ValueData AS CurrencyName
+          , 0            AS CarId
+          , ''::TVarChar AS CarName
+          , ''::TVarChar AS CarModelName
+          , ''::TVarChar AS UnitName_Car
      FROM Object AS Object_Founder
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Founder.DescId
           LEFT JOIN ObjectLink AS ObjectLink_Founder_InfoMoney
@@ -345,6 +371,7 @@ ALTER FUNCTION gpSelect_Object_MoneyPlaceCash (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 01.09.18         * add Car
  21.05.17         * 
  03.09.14                                        * add zc_Object_Founder
  28.08.14                                        *

@@ -5,7 +5,7 @@
   ClientWidth = 563
   AddOnFormData.isSingle = False
   ExplicitWidth = 569
-  ExplicitHeight = 390
+  ExplicitHeight = 393
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -122,15 +122,15 @@
     Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091
   end
   object cxLabel10: TcxLabel [15]
-    Left = 15
-    Top = 278
+    Left = 245
+    Top = 277
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [16]
-    Left = 15
+    Left = 245
     Top = 297
     TabOrder = 10
-    Width = 535
+    Width = 305
   end
   object cxLabel8: TcxLabel [17]
     Left = 430
@@ -346,17 +346,34 @@
     TabOrder = 43
     Width = 75
   end
+  object cxLabel21: TcxLabel [44]
+    Left = 15
+    Top = 277
+    Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
+  end
+  object edCar: TcxButtonEdit [45]
+    Left = 15
+    Top = 300
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 45
+    Width = 215
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 59
-    Top = 318
+    Left = 83
+    Top = 326
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 24
     Top = 326
   end
   inherited ActionList: TActionList
-    Left = 95
-    Top = 325
+    Left = 135
+    Top = 317
     inherited InsertUpdateGuides: TdsdInsertUpdateGuides [0]
     end
     inherited actRefresh: TdsdDataSetRefresh [1]
@@ -365,8 +382,8 @@
     end
   end
   inherited FormParams: TdsdFormParams
-    Left = 136
-    Top = 326
+    Left = 160
+    Top = 318
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Cash'
@@ -432,6 +449,14 @@
         Value = ''
         Component = ceComment
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCarId'
+        Value = Null
+        Component = GuidesCar
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -812,6 +837,21 @@
         Component = ceComment_Invoice
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CarId'
+        Value = Null
+        Component = GuidesCar
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CarName'
+        Value = Null
+        Component = GuidesCar
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 411
     Top = 254
@@ -1012,9 +1052,24 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CarId'
+        Value = Null
+        Component = GuidesCar
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CarName'
+        Value = Null
+        Component = GuidesCar
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 368
-    Top = 140
+    Left = 328
+    Top = 156
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Name = 'Id'
@@ -1391,5 +1446,32 @@
       end>
     Left = 493
     Top = 160
+  end
+  object GuidesCar: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCar
+    FormNameParam.Value = 'TCar_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCar_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesCar
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesCar
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 96
+    Top = 278
   end
 end

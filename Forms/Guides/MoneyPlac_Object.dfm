@@ -3,7 +3,7 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
   ClientHeight = 411
   ClientWidth = 881
   ExplicitWidth = 897
-  ExplicitHeight = 450
+  ExplicitHeight = 449
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -219,6 +219,33 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
             Options.Editing = False
             Width = 60
           end
+          object CarName: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
+            DataBinding.FieldName = 'CarName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' '#1043#1086#1089'.'#1085#1086#1084#1077#1088
+            Options.Editing = False
+            Width = 88
+          end
+          object CarModelName: TcxGridDBColumn
+            Caption = #1052#1072#1088#1082#1072' '#1072#1074#1090#1086'.'
+            DataBinding.FieldName = 'CarModelName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1072#1088#1082#1072' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+            Options.Editing = False
+            Width = 100
+          end
+          object UnitName_Car: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1072#1074#1090#1086'.'
+            DataBinding.FieldName = 'UnitName_Car'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+            Options.Editing = False
+            Width = 100
+          end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
@@ -388,6 +415,21 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'CurrencyName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CarId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CarId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CarName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CarName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
